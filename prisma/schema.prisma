@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  USER
+  EDITOR
+  SUPPORT
+  FINANCE
+  OWNER
+  ADMIN
+}
+
+enum InvitationType {
+  WEDDING
+  ADAT_AKAD
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum InvitationAssetType {
+  IMAGE
+  AUDIO
+}
+
+enum RsvpStatus {
+  PENDING
+  ATTENDING
+  NOT_ATTENDING
+  TENTATIVE
+}
+
+model User {
+  id                 String                   @id @default(cuid())
+  email              String                   @unique
+  passwordHash       String
+  firstName          String
+  lastName           String?
+  role               UserRole                 @default(USER)
+  emailVerifiedAt    DateTime?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  sessions           Session[]
+  verificationTokens EmailVerificationToken[]
+  invitations        Invitation[]
+  invitationAssets   InvitationAsset[]
+  payments           Payment[]
+  auditLogs          AuditLog[]               @relation("ActorLogs")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Invitation {
+  id          String            @id @default(cuid())
+  ownerId     String
+  slug        String            @unique
+  type        InvitationType
+  title       String
+  templateKey String            @default("eternal-blossom")
+  groomName   String            @default("Rio")
+  brideName   String            @default("Lyvia")
+  venue       String            @default("Gedung Pernikahan")
+  eventDate   DateTime          @default(now())
+  ceremonyTime String?
+  receptionTime String?
+  description String?           @db.Text
+  weddingHashtag String?
+  dressCode   String?
+  liveStreamUrl String?
+  eventNotes  String?           @db.Text
+  giftBankName String?
+  giftAccountName String?
+  giftAccountNumber String?
+  musicUrl    String?
+  isPublished Boolean           @default(false)
+  viewCount   Int               @default(0)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  owner       User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  payment     Payment?
+  assets      InvitationAsset[]
+  tables      WeddingTable[]
+  guests      Guest[]
+
+  @@index([ownerId, type])
+}
+
+model InvitationAsset {
+  id           String              @id @default(cuid())
+  invitationId String
+  type         InvitationAssetType
+  url          String
+  title        String?
+  createdAt    DateTime            @default(now())
+  invitation   Invitation          @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  owner        User                @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  ownerId      String
+
+  @@index([invitationId, type])
+  @@index([ownerId])
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  userId        String
+  invitationId  String        @unique
+  packageKey    String        @default("INVITATION_BASIC")
+  status        PaymentStatus @default(PENDING)
+  amount        Int           @default(0)
+  provider      String        @default("mock")
+  externalRef   String?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invitation    Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  proofUrl      String?
+  note          String?       @db.Text
+  confirmedAt   DateTime?
+  confirmedById String?
+}
+
+model WeddingTable {
+  id           String     @id @default(cuid())
+  invitationId String
+  name         String
+  shape        String     @default("ROUND")
+  capacity     Int        @default(8)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  guests       Guest[]
+
+  @@index([invitationId])
+}
+
+model Guest {
+  id           String        @id @default(cuid())
+  invitationId String
+  tableId      String?
+  name         String
+  phone        String?
+  rsvpStatus   RsvpStatus    @default(PENDING)
+  plusOnes     Int           @default(0)
+  checkedIn    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  invitation   Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  table        WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+
+  @@index([invitationId, rsvpStatus])
+  @@index([tableId])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  action    String
+  entity    String
+  entityId  String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+  actor     User?    @relation("ActorLogs", fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId])
+}
