@@ -1,9 +1,14 @@
 import { redirect } from "next/navigation";
-import { getCurrentUser } from "@/lib/auth";
 
-export default async function DashboardLayout() {
-  const user = await getCurrentUser();
-
-  if (!user) redirect("/login");
-  redirect(user.role === "ADMIN" || user.role === "OWNER" ? "/admin" : "/dashboard");
+/**
+ * This dynamic route is a legacy catch-all kept for compatibility.
+ * The real dashboard lives at /dashboard, which has its own layout.
+ *
+ * Do not redirect unknown public routes to /dashboard: Next.js can resolve
+ * an unmatched single-segment URL through this dynamic route. Sending those
+ * requests home prevents unrelated public pages from unexpectedly becoming
+ * the dashboard.
+ */
+export default function LegacyDashboardLayout() {
+  redirect("/");
 }
