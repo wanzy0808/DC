@@ -50,7 +50,6 @@ async function getOrCreateInvitation(user: { id: string; firstName: string }) {
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-
   return NextResponse.json({ invitation: await getOrCreateInvitation(user) });
 }
 
@@ -63,13 +62,16 @@ export async function PUT(request: Request) {
     const body = await request.json();
     const groomName = String(body.groomName ?? "").trim();
     const brideName = String(body.brideName ?? "").trim();
-    const venue = String(body.venue ?? "").trim();
-    const eventDate = new Date(String(body.eventDate ?? ""));
+    const venue = String(body.venue ?? invitation.venue).trim();
+    const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim() || invitation.templateKey;
 
     if (!groomName || !brideName || !venue || Number.isNaN(eventDate.getTime())) {
       return NextResponse.json({ error: "Nama pasangan, tempat, dan tanggal wajib diisi." }, { status: 400 });
     }
+
+    // A user may edit the template/data while unpaid, but publication is only
+    // allowed when the actual Digital Invitation package is PAID.
     const canPublish = hasPaidDigitalInvitation(invitation.payment);
 
     const updated = await prisma.invitation.update({
