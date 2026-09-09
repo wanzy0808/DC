@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { hasPaidGuestbook } from "@/lib/packages/access";
 
 async function getUsherInvitation(userId: string) {
-  const invitation = await prisma.invitation.findFirst({
-    where: { ownerId: userId },
-    include: { payment: true },
-    orderBy: { createdAt: "asc" },
-  });
-  if (!invitation?.payment || invitation.payment.status !== "PAID" || invitation.payment.packageKey !== "GUESTBOOK_DIGITAL") return null;
+  const invitation = await prisma.invitation.findFirst({ where: { ownerId: userId }, include: { payment: true }, orderBy: { createdAt: "asc" } });
+  if (!hasPaidGuestbook(invitation?.payment)) return null;
   return invitation;
 }
 
@@ -18,11 +15,7 @@ export async function GET() {
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
     const invitation = await getUsherInvitation(user.id);
     if (!invitation) return NextResponse.json({ error: "Usher App belum aktif. Aktifkan paket Guestbook Digital terlebih dahulu." }, { status: 402 });
-
-    const guests = await prisma.guest.findMany({
-      where: { invitationId: invitation.id },
-      orderBy: { name: "asc" },
-    });
+    const guests = await prisma.guest.findMany({ where: { invitationId: invitation.id }, orderBy: { name: "asc" } });
     return NextResponse.json({ guests });
   } catch (error) {
     console.error("GET /api/usher/guests failed", error);
