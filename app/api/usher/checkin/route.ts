@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { hasPaidGuestbook } from "@/lib/packages/access";
 
 async function getUsherInvitation(userId: string) {
-  const invitation = await prisma.invitation.findFirst({
-    where: { ownerId: userId },
-    include: { payment: true },
-    orderBy: { createdAt: "asc" },
-  });
-  if (!invitation?.payment || invitation.payment.status !== "PAID" || invitation.payment.packageKey !== "GUESTBOOK_DIGITAL") return null;
+  const invitation = await prisma.invitation.findFirst({ where: { ownerId: userId }, include: { payment: true }, orderBy: { createdAt: "asc" } });
+  if (!hasPaidGuestbook(invitation?.payment)) return null;
   return invitation;
 }
 
