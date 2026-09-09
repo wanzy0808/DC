@@ -3,5 +3,7 @@ import { destroySession } from "@/lib/auth";
 
 export async function POST() {
   await destroySession();
-  return NextResponse.json({ ok: true });
+  const response = NextResponse.json({ ok: true });
+  response.cookies.delete("dc_dashboard_nickname");
+  return response;
 }
