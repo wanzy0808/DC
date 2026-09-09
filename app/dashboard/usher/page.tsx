@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { CheckCircle2, Gift, LockKeyhole, QrCode, ScanLine, Users } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { hasPaidGuestbook } from "@/lib/packages/access";
 import UsherApp from "@/components/UsherApp/UsherApp";
 
 export const dynamic = "force-dynamic";
@@ -17,9 +18,7 @@ export default async function UsherPage() {
     orderBy: { createdAt: "asc" },
   });
 
-  const usherActive = Boolean(
-    invitation?.payment?.status === "PAID" && invitation.payment.packageKey === "GUESTBOOK_DIGITAL",
-  );
+  const usherActive = hasPaidGuestbook(invitation?.payment);
 
   if (usherActive) return <UsherApp />;
 
@@ -30,41 +29,20 @@ export default async function UsherPage() {
         <section className="mt-6 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
           <div className="grid lg:grid-cols-[1.05fr_.95fr]">
             <div className="p-7 sm:p-10">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#E60087]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#E60087]">
-                <LockKeyhole className="h-3.5 w-3.5" /> Add-on belum aktif
-              </div>
+              <div className="inline-flex items-center gap-2 rounded-full bg-[#E60087]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#E60087]"><LockKeyhole className="h-3.5 w-3.5" /> Add-on belum aktif</div>
               <h1 className="mt-5 font-serif text-4xl sm:text-5xl">Usher App</h1>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">
-                Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan RSVP undangan digital.
-              </p>
-
+              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan RSVP undangan digital.</p>
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                {[
-                  [ScanLine, "QR Check-in"],
-                  [Users, "Realtime Attendance"],
-                  [QrCode, "Smart RSVP"],
-                  [Gift, "Gift & Giving Management"],
-                ].map(([Icon, label]) => {
-                  const FeatureIcon = Icon as typeof ScanLine;
-                  return <div key={String(label)} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>;
-                })}
+                {[[ScanLine, "QR Check-in"], [Users, "Realtime Attendance"], [QrCode, "Smart RSVP"], [Gift, "Gift & Giving Management"]].map(([Icon, label]) => { const FeatureIcon = Icon as typeof ScanLine; return <div key={String(label)} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>; })}
               </div>
-
-              <Link href="/packages" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white hover:bg-[#c90077]">
-                Aktifkan Guestbook Digital →
-              </Link>
+              <Link href="/packages" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white hover:bg-[#c90077]">Aktifkan Guestbook Digital →</Link>
             </div>
-
             <div className="flex min-h-[430px] items-center justify-center bg-[#fff1fa] p-8">
               <div className="w-full max-w-sm rounded-3xl border border-black/10 bg-white p-7 shadow-xl">
                 <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#E60087] text-white"><ScanLine className="h-8 w-8" /></div>
                 <p className="mt-6 text-center text-[10px] uppercase tracking-[0.2em] text-[#E60087]">Venue access</p>
                 <h2 className="mt-2 text-center font-serif text-2xl">QR adalah tiket masuk</h2>
-                <div className="mt-6 grid grid-cols-3 gap-2">
-                  <Mini label="Scan" icon={ScanLine} />
-                  <Mini label="Verify" icon={CheckCircle2} />
-                  <Mini label="Enter" icon={Users} />
-                </div>
+                <div className="mt-6 grid grid-cols-3 gap-2"><Mini label="Scan" icon={ScanLine} /><Mini label="Verify" icon={CheckCircle2} /><Mini label="Enter" icon={Users} /></div>
                 <p className="mt-6 text-center text-[10px] leading-5 text-black/40">Tanpa QR, usher dapat mencari nama tamu yang sudah terdaftar sebagai jalur bantuan manual.</p>
               </div>
             </div>
