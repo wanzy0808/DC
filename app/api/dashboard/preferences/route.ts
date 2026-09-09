@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { getCurrentUser } from "@/lib/auth";
 import { cookies } from "next/headers";
+import { getCurrentUser } from "@/lib/auth";
 
 const nicknameCookie = "dc_dashboard_nickname";
 
@@ -19,13 +19,13 @@ export async function PUT(request: Request) {
   if (!nickname) return NextResponse.json({ error: "Nama panggilan wajib diisi." }, { status: 400 });
   if (nickname.length > 40) return NextResponse.json({ error: "Nama panggilan maksimal 40 karakter." }, { status: 400 });
 
+  // Session cookie: a new login asks for the dashboard greeting again.
   const response = NextResponse.json({ nickname });
   response.cookies.set(nicknameCookie, nickname, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: 60 * 60 * 24 * 365,
   });
   return response;
 }
