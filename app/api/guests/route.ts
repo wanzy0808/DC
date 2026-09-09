@@ -4,11 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation, hasPaidGuestbook } from "@/lib/packages/access";
 
 async function getInvitation(userId: string) {
-  return prisma.invitation.findFirst({
-    where: { ownerId: userId },
-    include: { payment: true },
-    orderBy: { createdAt: "asc" },
-  });
+  return prisma.invitation.findFirst({ where: { ownerId: userId }, include: { payment: true }, orderBy: { createdAt: "asc" } });
 }
 
 export async function GET() {
@@ -16,25 +12,20 @@ export async function GET() {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
     const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json({ error: "RSVP membutuhkan paket Undangan Digital yang aktif." }, { status: 402 });
+    if (!invitation) return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
+
+    // RSVP stays visible in the dashboard even before purchase. Once the Digital
+    // Invitation package is active, the RSVP data is available normally.
+    if (!hasPaidDigitalInvitation(invitation.payment)) {
+      return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
     }
 
     const canManageGuests = hasPaidGuestbook(invitation.payment);
-    const guests = await prisma.guest.findMany({
-      where: { invitationId: invitation.id },
-      include: { table: true },
-      orderBy: { name: "asc" },
-    });
+    const guests = await prisma.guest.findMany({ where: { invitationId: invitation.id }, include: { table: true }, orderBy: { name: "asc" } });
     const tables = canManageGuests
-      ? await prisma.weddingTable.findMany({
-          where: { invitationId: invitation.id },
-          include: { _count: { select: { guests: true } } },
-          orderBy: { name: "asc" },
-        })
+      ? await prisma.weddingTable.findMany({ where: { invitationId: invitation.id }, include: { _count: { select: { guests: true } } }, orderBy: { name: "asc" } })
       : [];
-
-    return NextResponse.json({ guests, tables, canManageGuests });
+    return NextResponse.json({ guests, tables, canManageGuests, canUseRsvp: true });
   } catch (error) {
     console.error("GET /api/guests failed", error);
     return NextResponse.json({ error: "Data tamu gagal dimuat. Periksa koneksi database." }, { status: 500 });
@@ -46,21 +37,11 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
     const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidGuestbook(invitation.payment)) {
-      return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Guestbook Digital." }, { status: 402 });
-    }
+    if (!invitation || !hasPaidGuestbook(invitation.payment)) return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Guestbook Digital." }, { status: 402 });
     const body = await request.json();
     const name = String(body.name ?? "").trim();
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
-    const guest = await prisma.guest.create({
-      data: {
-        invitationId: invitation.id,
-        name,
-        phone: String(body.phone ?? "").trim() || null,
-        tableId: String(body.tableId ?? "").trim() || null,
-        plusOnes: Number(body.plusOnes ?? 0),
-      },
-    });
+    const guest = await prisma.guest.create({ data: { invitationId: invitation.id, name, phone: String(body.phone ?? "").trim() || null, tableId: String(body.tableId ?? "").trim() || null, plusOnes: Number(body.plusOnes ?? 0) } });
     return NextResponse.json({ guest }, { status: 201 });
   } catch (error) {
     console.error("POST /api/guests failed", error);
