@@ -2,11 +2,10 @@ import HeroSection from "@/components/InvitationPage/HeroSection";
 import FeatureSection from "@/components/InvitationPage/FeatureSection";
 import TemplateCollection from "@/components/InvitationPage/TemplateSection";
 import CtaStudioSection from "@/components/InvitationPage/StudioSection";
-import ReviewsSection from "@/components/InvitationPage/ReviewsSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
 import FaqSection from "@/components/Marketing/FaqSection";
-import { digitalInvitationReviews, digitalInvitationFaq } from "@/data/digital-invitation";
 import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
+import { digitalInvitationReviews, digitalInvitationFaq } from "@/data/digital-invitation";
 
 export default function DigitalInvitationPage() {
   return (
@@ -17,7 +16,7 @@ export default function DigitalInvitationPage() {
         <FeatureSection />
         <TemplateCollection />
         <CtaStudioSection />
-        <ReviewsSection />
+        <ReviewsGrid eyebrow="Client Stories" title="Bukan cuma cantik, tapi membantu persiapan" description="Cerita singkat pasangan yang memakai undangan digital DC untuk mengurangi pekerjaan manual sebelum hari-H." reviews={digitalInvitationReviews} />
         <PackageShowcase
           eyebrow="Invitation Packages"
           title="Undangan Digital untuk setiap tahap persiapan"
@@ -25,7 +24,6 @@ export default function DigitalInvitationPage() {
           packageKeys={["INVITATION_BASIC", "INVITATION_GUESTBOOK"]}
           note="Workspace template dapat digunakan sebelum paket aktif. Publikasi dan upload aset pribadi mengikuti paket Digital Invitation yang sudah aktif."
         />
-        <ReviewsGrid eyebrow="More Client Stories" title="Bukan cuma cantik, tapi membantu persiapan" description="Cerita singkat pasangan yang memakai undangan digital DC untuk mengurangi pekerjaan manual sebelum hari-H." reviews={digitalInvitationReviews} />
         <FaqSection title="Pertanyaan tentang Undangan Digital" description="Jawaban singkat tentang template, RSVP, asset, publikasi, dan perbedaan paket." items={digitalInvitationFaq} />
       </div>
     </main>
