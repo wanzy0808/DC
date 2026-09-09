@@ -31,7 +31,7 @@ export default async function UsherPage() {
             <div className="p-7 sm:p-10">
               <div className="inline-flex items-center gap-2 rounded-full bg-[#E60087]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#E60087]"><LockKeyhole className="h-3.5 w-3.5" /> Add-on belum aktif</div>
               <h1 className="mt-5 font-serif text-4xl sm:text-5xl">Usher App</h1>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan RSVP undangan digital.</p>
+              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan.</p>
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
                 {[[ScanLine, "QR Check-in"], [Users, "Realtime Attendance"], [QrCode, "Smart RSVP"], [Gift, "Gift & Giving Management"]].map(([Icon, label]) => { const FeatureIcon = Icon as typeof ScanLine; return <div key={String(label)} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>; })}
               </div>
@@ -43,7 +43,7 @@ export default async function UsherPage() {
                 <p className="mt-6 text-center text-[10px] uppercase tracking-[0.2em] text-[#E60087]">Venue access</p>
                 <h2 className="mt-2 text-center font-serif text-2xl">QR adalah tiket masuk</h2>
                 <div className="mt-6 grid grid-cols-3 gap-2"><Mini label="Scan" icon={ScanLine} /><Mini label="Verify" icon={CheckCircle2} /><Mini label="Enter" icon={Users} /></div>
-                <p className="mt-6 text-center text-[10px] leading-5 text-black/40">Tanpa QR, usher dapat mencari nama tamu yang sudah terdaftar sebagai jalur bantuan manual.</p>
+                <p className="mt-6 text-center text-[10px] leading-5 text-black/40">Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.</p>
               </div>
             </div>
           </div>
