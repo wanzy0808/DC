@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
+import DashboardGate from "@/components/Dashboard/DashboardGate";
 
 // Always resolve the session on the server for every dashboard request.
 // This layout wraps /dashboard and every route nested below it, so an
@@ -14,14 +15,10 @@ export default async function DashboardLayout({
 }>) {
   const user = await getCurrentUser();
 
-  if (!user) {
-    redirect("/login");
-  }
+  if (!user) redirect("/login");
 
   // Staff/admin accounts use the separate admin workspace.
-  if (user.role === "ADMIN" || user.role === "OWNER") {
-    redirect("/admin");
-  }
+  if (user.role === "ADMIN" || user.role === "OWNER") redirect("/admin");
 
-  return children;
+  return <DashboardGate>{children}</DashboardGate>;
 }
