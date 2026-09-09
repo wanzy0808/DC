@@ -3,8 +3,6 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Heart, LockKeyhole, Sparkles } from "lucide-react";
 
-const setupKey = "dc-dashboard-setup-v2";
-
 type Invitation = {
   groomName: string;
   brideName: string;
@@ -47,7 +45,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
         let savedNickname = "";
         if (preferenceResponse.ok) savedNickname = (await preferenceResponse.json()).nickname ?? "";
         setNickname(savedNickname);
-        setShowSetup(window.localStorage.getItem(setupKey) !== "1" || !savedNickname);
+        setShowSetup(!savedNickname);
       })
       .catch(() => setError("Data dashboard belum dapat dimuat."))
       .finally(() => setLoading(false));
@@ -60,10 +58,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
     const groomName = String(form.get("groomName") ?? "").trim();
     const brideName = String(form.get("brideName") ?? "").trim();
     const nextNickname = String(form.get("nickname") ?? "").trim();
-    if (!groomName || !brideName || !nextNickname) {
-      setError("Nama pasangan dan nama panggilan wajib diisi.");
-      return;
-    }
+    if (!groomName || !brideName || !nextNickname) return setError("Nama pasangan dan nama panggilan wajib diisi.");
     setSaving(true);
     setError("");
     try {
@@ -74,16 +69,11 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
       });
       const invitationData = await invitationResponse.json();
       if (!invitationResponse.ok) throw new Error(invitationData.error ?? "Data pasangan belum dapat disimpan.");
-      const preferenceResponse = await fetch("/api/dashboard/preferences", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nickname: nextNickname }),
-      });
+      const preferenceResponse = await fetch("/api/dashboard/preferences", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ nickname: nextNickname }) });
       const preferenceData = await preferenceResponse.json();
       if (!preferenceResponse.ok) throw new Error(preferenceData.error ?? "Nama panggilan belum dapat disimpan.");
       setInvitation(invitationData.invitation);
       setNickname(preferenceData.nickname);
-      window.localStorage.setItem(setupKey, "1");
       setShowSetup(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Setup dashboard gagal disimpan.");
@@ -103,7 +93,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
             <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#7A1C25]/10 text-[#7A1C25]"><Heart className="h-5 w-5" /></div>
             <p className="mt-5 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7A1C25]">Sebelum masuk workspace</p>
             <h1 className="mt-2 text-center font-serif text-3xl">Kenalan dulu dengan pasanganmu</h1>
-            <p className="mx-auto mt-2 max-w-md text-center text-xs leading-5 text-black/50">Data ini dipakai untuk judul undangan dan sapaan di dashboard. Kamu bisa mengubahnya lagi nanti dari pengaturan undangan.</p>
+            <p className="mx-auto mt-2 max-w-md text-center text-xs leading-5 text-black/50">Data ini dipakai untuk judul undangan dan sapaan di dashboard.</p>
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
               <label className="text-xs font-semibold">Nama pasangan pria<input name="groomName" defaultValue={invitation.groomName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Andi" /></label>
               <label className="text-xs font-semibold">Nama pasangan wanita<input name="brideName" defaultValue={invitation.brideName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Sinta" /></label>
