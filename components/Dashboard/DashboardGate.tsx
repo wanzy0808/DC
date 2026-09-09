@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Heart, LockKeyhole, Sparkles } from "lucide-react";
 
 const setupKey = "dc-dashboard-setup-v2";
@@ -24,11 +24,7 @@ type Invitation = {
   musicUrl?: string | null;
 };
 
-type Access = {
-  digitalInvitation: boolean;
-  guestbook: boolean;
-  bundle: boolean;
-};
+type Access = { digitalInvitation: boolean; guestbook: boolean; bundle: boolean };
 
 export default function DashboardGate({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -46,14 +42,8 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
       fetch("/api/dashboard/preferences", { cache: "no-store" }),
     ])
       .then(async ([invitationResponse, accessResponse, preferenceResponse]) => {
-        if (invitationResponse.ok) {
-          const data = await invitationResponse.json();
-          setInvitation(data.invitation);
-        }
-        if (accessResponse.ok) {
-          const data = await accessResponse.json();
-          setAccess(data);
-        }
+        if (invitationResponse.ok) setInvitation((await invitationResponse.json()).invitation);
+        if (accessResponse.ok) setAccess(await accessResponse.json());
         let savedNickname = "";
         if (preferenceResponse.ok) savedNickname = (await preferenceResponse.json()).nickname ?? "";
         setNickname(savedNickname);
@@ -63,7 +53,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
       .finally(() => setLoading(false));
   }, []);
 
-  async function saveSetup(event: React.FormEvent<HTMLFormElement>) {
+  async function saveSetup(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!invitation) return;
     const form = new FormData(event.currentTarget);
@@ -74,26 +64,16 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
       setError("Nama pasangan dan nama panggilan wajib diisi.");
       return;
     }
-
     setSaving(true);
     setError("");
     try {
       const invitationResponse = await fetch("/api/invitations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...invitation,
-          groomName,
-          brideName,
-          eventDate: invitation.eventDate,
-          venue: invitation.venue,
-          templateKey: invitation.templateKey,
-          isPublished: false,
-        }),
+        body: JSON.stringify({ ...invitation, groomName, brideName, eventDate: invitation.eventDate, venue: invitation.venue, templateKey: invitation.templateKey, isPublished: false }),
       });
       const invitationData = await invitationResponse.json();
       if (!invitationResponse.ok) throw new Error(invitationData.error ?? "Data pasangan belum dapat disimpan.");
-
       const preferenceResponse = await fetch("/api/dashboard/preferences", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -101,7 +81,6 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
       });
       const preferenceData = await preferenceResponse.json();
       if (!preferenceResponse.ok) throw new Error(preferenceData.error ?? "Nama panggilan belum dapat disimpan.");
-
       setInvitation(invitationData.invitation);
       setNickname(preferenceData.nickname);
       window.localStorage.setItem(setupKey, "1");
@@ -113,9 +92,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
     }
   }
 
-  if (loading) {
-    return <div className="grid min-h-screen place-items-center bg-[#FAF7F2] text-sm text-black/50">Menyiapkan workspace...</div>;
-  }
+  if (loading) return <div className="grid min-h-screen place-items-center bg-[#FAF7F2] text-sm text-black/50">Menyiapkan workspace...</div>;
 
   return (
     <>
@@ -127,27 +104,18 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
             <p className="mt-5 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7A1C25]">Sebelum masuk workspace</p>
             <h1 className="mt-2 text-center font-serif text-3xl">Kenalan dulu dengan pasanganmu</h1>
             <p className="mx-auto mt-2 max-w-md text-center text-xs leading-5 text-black/50">Data ini dipakai untuk judul undangan dan sapaan di dashboard. Kamu bisa mengubahnya lagi nanti dari pengaturan undangan.</p>
-
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
               <label className="text-xs font-semibold">Nama pasangan pria<input name="groomName" defaultValue={invitation.groomName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Andi" /></label>
               <label className="text-xs font-semibold">Nama pasangan wanita<input name="brideName" defaultValue={invitation.brideName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Sinta" /></label>
             </div>
             <label className="mt-4 block text-xs font-semibold">Nama panggilan kamu di dashboard<input name="nickname" defaultValue={nickname} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Hendro" /></label>
-
             {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700">{error}</p>}
-            <button disabled={saving} className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#7A1C25] px-5 py-3.5 text-xs font-medium text-white disabled:opacity-50">
-              <Sparkles className="h-4 w-4" />
-              {saving ? "Menyimpan..." : "Masuk ke Dashboard"}
-            </button>
+            <button disabled={saving} className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#7A1C25] px-5 py-3.5 text-xs font-medium text-white disabled:opacity-50"><Sparkles className="h-4 w-4" />{saving ? "Menyimpan..." : "Masuk ke Dashboard"}</button>
           </form>
         </div>
       )}
-
       {!showSetup && !access.digitalInvitation && (
-        <div className="pointer-events-none fixed bottom-5 right-5 z-40 hidden rounded-2xl border border-black/10 bg-white/95 px-4 py-3 shadow-lg sm:block">
-          <div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-[#7A1C25]" /><span className="text-[10px] font-semibold">Mode template</span></div>
-          <p className="mt-1 text-[9px] text-black/45">Publikasi & upload asset terbuka setelah paket aktif.</p>
-        </div>
+        <div className="pointer-events-none fixed bottom-5 right-5 z-40 hidden rounded-2xl border border-black/10 bg-white/95 px-4 py-3 shadow-lg sm:block"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-[#7A1C25]" /><span className="text-[10px] font-semibold">Mode template</span></div><p className="mt-1 text-[9px] text-black/45">Publikasi &amp; upload asset terbuka setelah paket aktif.</p></div>
       )}
     </>
   );
