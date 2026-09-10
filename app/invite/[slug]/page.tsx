@@ -15,9 +15,7 @@ export default async function InvitationPage({ params, searchParams }: { params:
 
   if (!invitation) notFound();
   if (!invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) notFound();
-  const guest = guestId
-    ? await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } })
-    : null;
+  const guest = guestId ? await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } }) : null;
   await prisma.invitation.update({ where: { id: invitation.id }, data: { viewCount: { increment: 1 } } });
 
   const images = invitation.assets.filter((asset) => asset.type === "IMAGE");
@@ -41,25 +39,17 @@ export default async function InvitationPage({ params, searchParams }: { params:
       </section>
 
       <section className="mx-auto max-w-4xl space-y-12 px-6 py-20 text-center">
-        <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-[#9b5b51]">Save The Date</p>
-          <h2 className="mt-3 font-serif text-4xl">Sebuah hari untuk dikenang</h2>
-          <p className="mx-auto mt-5 max-w-2xl text-sm leading-7 opacity-70">Terima kasih telah menjadi bagian dari cerita kami. Kehadiran dan doa baik Anda adalah hadiah paling berarti.</p>
-        </div>
-
-          <div className="grid gap-4 text-left sm:grid-cols-2">
+        <div><p className="text-xs uppercase tracking-[0.3em] text-[#9b5b51]">Save The Date</p><h2 className="mt-3 font-serif text-4xl">Sebuah hari untuk dikenang</h2><p className="mx-auto mt-5 max-w-2xl text-sm leading-7 opacity-70">Terima kasih telah menjadi bagian dari cerita kami. Kehadiran dan doa baik Anda adalah hadiah paling berarti.</p></div>
+        <div className="grid gap-4 text-left sm:grid-cols-2">
           <div className="border border-[#9b5b51]/20 bg-white/60 p-6"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Tanggal</p><p className="mt-3 font-serif text-2xl">{date}</p></div>
           <div className="border border-[#9b5b51]/20 bg-white/60 p-6"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Lokasi</p><p className="mt-3 font-serif text-2xl">{invitation.venue}</p></div>
           {(invitation.ceremonyTime || invitation.receptionTime) && <div className="border border-[#9b5b51]/20 bg-white/60 p-6"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Waktu acara</p>{invitation.ceremonyTime && <p className="mt-3 text-sm">Akad / pemberkatan: <strong>{invitation.ceremonyTime}</strong></p>}{invitation.receptionTime && <p className="mt-2 text-sm">Resepsi: <strong>{invitation.receptionTime}</strong></p>}</div>}
           {invitation.dressCode && <div className="border border-[#9b5b51]/20 bg-white/60 p-6"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Dress code</p><p className="mt-3 text-sm leading-6">{invitation.dressCode}</p></div>}
         </div>
-
         {(invitation.weddingHashtag || invitation.eventNotes || invitation.liveStreamUrl) && <div className="space-y-4 border border-[#9b5b51]/20 bg-white/60 p-6 text-left"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Informasi untuk tamu</p>{invitation.weddingHashtag && <p className="font-serif text-2xl text-[#9b5b51]">{invitation.weddingHashtag}</p>}{invitation.eventNotes && <p className="whitespace-pre-line text-sm leading-7">{invitation.eventNotes}</p>}{invitation.liveStreamUrl && <a href={invitation.liveStreamUrl} target="_blank" rel="noreferrer" className="inline-block text-sm font-medium text-[#9b5b51] underline">Tonton live streaming</a>}</div>}
-
         {hasGiftDetails && <div className="border border-[#9b5b51]/20 bg-white/60 p-6 text-left"><p className="text-xs uppercase tracking-widest text-[#9b5b51]">Amplop digital</p><p className="mt-3 text-sm leading-7">Doa dan kehadiran Anda adalah hadiah terindah. Jika berkenan mengirim tanda kasih secara cashless:</p>{invitation.giftBankName && <p className="mt-4 font-medium">{invitation.giftBankName}</p>}{invitation.giftAccountName && <p className="text-sm">a.n. {invitation.giftAccountName}</p>}{invitation.giftAccountNumber && <p className="mt-1 font-serif text-2xl tracking-wide">{invitation.giftAccountNumber}</p>}</div>}
-
         {images.length > 0 && <div className="grid grid-cols-2 gap-3 md:grid-cols-3">{images.map((image) => <img key={image.id} src={image.url} alt={image.title ?? "Galeri pernikahan"} className="aspect-square w-full object-cover" />)}</div>}
-        <RsvpForm slug={invitation.slug} guestId={guest?.id} guestName={guest?.name} />
+        <RsvpForm slug={invitation.slug} guestId={guest?.id} guestName={guest?.name} eventDate={invitation.eventDate} venue={invitation.venue} title={invitation.title} start={invitation.ceremonyTime ?? invitation.receptionTime} end={invitation.receptionTime ?? invitation.ceremonyTime} description={invitation.description} />
         <p className="pt-8 text-xs uppercase tracking-[0.3em] text-[#9b5b51]">With love, {invitation.groomName} &amp; {invitation.brideName}</p>
       </section>
     </main>

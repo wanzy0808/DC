@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { Heart, LockKeyhole, Sparkles } from "lucide-react";
+import { Heart, LockKeyhole, MessageCircle, Sparkles } from "lucide-react";
 
 type Invitation = {
   groomName: string;
@@ -82,31 +82,29 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
     }
   }
 
-  if (loading) return <div className="grid min-h-screen place-items-center bg-[#FAF7F2] text-sm text-black/50">Menyiapkan workspace...</div>;
+  if (loading) return <div className="grid min-h-screen place-items-center bg-[#FAF7F2] text-sm text-[#4A3434]">Menyiapkan workspace...</div>;
 
   return (
     <>
       {children}
       {showSetup && invitation && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-[#171217]/55 p-4 backdrop-blur-sm">
-          <form onSubmit={saveSetup} className="w-full max-w-xl rounded-[28px] border border-black/10 bg-[#fffdfa] p-7 shadow-2xl sm:p-9">
-            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#7A1C25]/10 text-[#7A1C25]"><Heart className="h-5 w-5" /></div>
-            <p className="mt-5 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7A1C25]">Sebelum masuk workspace</p>
+          <form onSubmit={saveSetup} className="w-full max-w-xl rounded-[28px] border border-black/10 bg-[#f3ede6] p-7 shadow-2xl sm:p-9 dark:border-white/10 dark:bg-[#121116]">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-2xl bg-[#7A1C25]/10 text-[#7A1C25] dark:bg-[#C26B70]/15 dark:text-[#E8A5AE]"><Heart className="h-5 w-5" /></div>
+            <p className="mt-5 text-center text-[10px] font-semibold uppercase tracking-[0.22em] text-[#7A1C25] dark:text-[#E8A5AE]">Sebelum masuk workspace</p>
             <h1 className="mt-2 text-center font-serif text-3xl">Kenalan dulu dengan pasanganmu</h1>
-            <p className="mx-auto mt-2 max-w-md text-center text-xs leading-5 text-black/50">Data ini dipakai untuk judul undangan dan sapaan di dashboard.</p>
+            <p className="mx-auto mt-2 max-w-md text-center text-xs leading-5 text-[#5f4a4a] dark:text-white/65">Data ini dipakai untuk judul undangan dan sapaan di dashboard.</p>
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              <label className="text-xs font-semibold">Nama pasangan pria<input name="groomName" defaultValue={invitation.groomName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Andi" /></label>
-              <label className="text-xs font-semibold">Nama pasangan wanita<input name="brideName" defaultValue={invitation.brideName} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Sinta" /></label>
+              <label className="text-xs font-semibold">Nama pasangan pria<input name="groomName" defaultValue={invitation.groomName} className="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25] dark:border-white/10" placeholder="Contoh: Andi" /></label>
+              <label className="text-xs font-semibold">Nama pasangan wanita<input name="brideName" defaultValue={invitation.brideName} className="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25] dark:border-white/10" placeholder="Contoh: Sinta" /></label>
             </div>
-            <label className="mt-4 block text-xs font-semibold">Nama panggilan kamu di dashboard<input name="nickname" defaultValue={nickname} className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25]" placeholder="Contoh: Hendro" /></label>
-            {error && <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-xs text-red-700">{error}</p>}
+            <label className="mt-4 block text-xs font-semibold">Nama panggilan kamu di dashboard<input name="nickname" defaultValue={nickname} className="mt-2 w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-sm font-normal outline-none focus:border-[#7A1C25] dark:border-white/10" placeholder="Contoh: Hendro" /></label>
+            {error && <p className="mt-4 rounded-xl bg-red-500/10 px-4 py-3 text-xs text-red-700 dark:text-red-300">{error}</p>}
             <button disabled={saving} className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-[#7A1C25] px-5 py-3.5 text-xs font-medium text-white disabled:opacity-50"><Sparkles className="h-4 w-4" />{saving ? "Menyimpan..." : "Masuk ke Dashboard"}</button>
           </form>
         </div>
       )}
-      {!showSetup && !access.digitalInvitation && (
-        <div className="pointer-events-none fixed bottom-5 right-5 z-40 hidden rounded-2xl border border-black/10 bg-white/95 px-4 py-3 shadow-lg sm:block"><div className="flex items-center gap-2"><LockKeyhole className="h-4 w-4 text-[#7A1C25]" /><span className="text-[10px] font-semibold">Mode template</span></div><p className="mt-1 text-[9px] text-black/45">Publikasi &amp; upload asset terbuka setelah paket aktif.</p></div>
-      )}
+      <a href="https://wa.me/6281234567890?text=Halo%20DC%20Wedding%2C%20saya%20butuh%20bantuan%20dengan%20dashboard." target="_blank" rel="noreferrer" aria-label="Chat bantuan WhatsApp" className="fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full border border-black/10 bg-[#25D366] text-white shadow-xl transition hover:scale-105 hover:shadow-2xl dark:border-white/10"><MessageCircle className="h-5 w-5" /></a>
     </>
   );
 }
