@@ -22,13 +22,16 @@ export function PublicContent({ children }: { children: ReactNode }) {
   const isPrivateArea = privatePrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
+  const isLanding = pathname === "/";
 
   return (
     <main
       className={
         isPrivateArea
           ? "w-full min-h-screen"
-          : "public-content w-full max-w-[80%] lg:max-w-[70%] mx-auto flex-1 flex flex-col justify-center items-center relative z-10"
+          : isLanding
+            ? "public-content landing-page w-full mx-auto flex-1 flex flex-col justify-center items-center relative z-10"
+            : "public-content public-page w-[75vw] max-w-[75vw] mx-auto flex-1 flex flex-col relative z-10"
       }
     >
       {children}

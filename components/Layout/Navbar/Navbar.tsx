@@ -11,59 +11,38 @@ import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const { isDarkMode } = useTheme();
-
-  const accentColor = isDarkMode ? "text-[#C26B70]" : "text-[#7A1C25]";
+  const accentColor = isDarkMode ? "text-dc-pink-light" : "text-dc-maroon";
 
   return (
-    <header
-      className={`w-full transition-colors duration-500 sticky top-0 z-50 bg-[var(--background)]/75 border-none backdrop-blur-md ${
-        isDarkMode
-          ? "text-white"
-          : "text-[#1A1A1A]"
-      }`}
-    >
-      <div className="w-full max-w-[70%] mx-auto px-6 md:px-8 py-5 flex justify-between items-center relative">
-        
-        {/* LOGO */}
-        <div>
-          <Link href="/" className="block">
-            <div
-              className={`font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] transition-colors duration-500 ${accentColor}`}
-            >
-              D C
-            </div>
-            <span
-              className={`text-[8px] md:text-[9px] font-sans tracking-[0.35em] uppercase block mt-0.5 ${
-                isDarkMode ? "text-white/50" : "text-[#1A1A1A]/50"
-              }`}
-            >
-              WEDDING
-            </span>
-          </Link>
-        </div>
+    <header className="sticky top-0 z-50 w-full border-none bg-[var(--background)]/75 text-[var(--foreground)] backdrop-blur-md transition-colors duration-500">
+      <div className="mx-auto flex w-[75vw] items-center justify-between px-0 py-5 relative">
+        <Link href="/" className="block">
+          <div className={`font-[family-name:var(--font-dc-heading)] text-2xl font-bold tracking-[0.2em] ${accentColor}`}>
+            D C
+          </div>
+          <span className="mt-0.5 block font-[family-name:var(--font-dc-sans)] text-[8px] uppercase tracking-[0.35em] opacity-50 md:text-[9px]">
+            WEDDING
+          </span>
+        </Link>
 
-        {/* KANAN: Theme Toggle & Burger Menu */}
         <div className="flex items-center gap-3">
           <ThemeToggle />
-
           <Sheet>
             <SheetTrigger
               render={
                 <Button
-                variant="outline"
-                size="icon"
-                aria-label="Toggle Menu"
-                className="rounded-full w-11 h-11 border border-primary bg-primary text-white transition-all duration-300 cursor-pointer hover:brightness-110"
+                  variant="default"
+                  size="icon"
+                  aria-label="Buka menu navigasi"
+                  className="h-11 w-11 rounded-full bg-primary text-primary-foreground hover:bg-primary/85"
                 >
-                  <Menu className="w-5 h-5 text-white" />
+                  <Menu className="h-5 w-5" />
                 </Button>
               }
             />
-
             <BurgerMenuContent isDarkMode={isDarkMode} />
           </Sheet>
         </div>
-
       </div>
     </header>
   );
