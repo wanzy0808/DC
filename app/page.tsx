@@ -81,7 +81,7 @@ export default function Home() {
             >
               {isIdle ? (
                 <>
-                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--primary)] sm:text-xs">
+                  <span className="block font-mono text-[15px] font-semibold uppercase tracking-[0.24em] text-[var(--primary)] sm:text-xs">
                     DC Wedding · Platform Digitalisasi Pernikahan Terpadu
                   </span>
                   <h1 className="flex max-w-xl flex-wrap gap-x-[0.25em] gap-y-1 font-[family-name:var(--font-dc-heading)] text-3xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
