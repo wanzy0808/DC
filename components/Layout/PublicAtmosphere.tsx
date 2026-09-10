@@ -12,7 +12,9 @@ export default function PublicAtmosphere() {
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
 
-  if (isPrivateArea) return null;
+  // The landing page already owns its interactive background. Keeping a
+  // second global background here causes duplicated visual layers there.
+  if (isPrivateArea || pathname === "/") return null;
 
   return <RomanticBackground />;
 }
