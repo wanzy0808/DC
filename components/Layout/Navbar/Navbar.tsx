@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
@@ -9,7 +10,11 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
+  const pathname = usePathname();
   const { isDarkMode } = useTheme();
+
+  if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
+
   const accentColor = isDarkMode ? "text-dc-pink-light" : "text-dc-maroon";
 
   return (
