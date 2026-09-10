@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import Link from "next/link";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
@@ -14,7 +13,7 @@ export default function Navbar() {
   const accentColor = isDarkMode ? "text-dc-pink-light" : "text-dc-maroon";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-none bg-[var(--background)]/75 text-[var(--foreground)] backdrop-blur-md transition-colors duration-500">
+    <header className="dc-navbar sticky top-0 z-50 w-full text-[var(--foreground)] transition-colors duration-500">
       <div className="mx-auto flex w-[75vw] items-center justify-between px-0 py-5 relative">
         <Link href="/" className="block">
           <div className={`font-[family-name:var(--font-dc-heading)] text-2xl font-bold tracking-[0.2em] ${accentColor}`}>
