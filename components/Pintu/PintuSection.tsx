@@ -3,7 +3,6 @@
 import React, { useRef } from "react";
 import PintuCard from "@/components/Pintu/PintuCard";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/components/Theme/ThemeContext";
 
 type DoorValue = 1 | 2 | 3 | null;
 
@@ -13,19 +12,12 @@ type PintuSectionProps = {
 };
 
 export default function PintuSection({ activeDoor, setActiveDoor }: PintuSectionProps) {
-  const { isDarkMode } = useTheme();
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
-
-  // Jika belum ada pintu yang dipilih/hover, default posisi terdepan adalah Pintu 1
   const currentSelected = activeDoor === null ? 1 : activeDoor;
 
-  // Fungsi Hover dengan Delay (Debounce) agar kursor lewat tidak langsung memicu perputaran
   const handleDoorHover = (doorNumber: DoorValue) => {
     if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-
-    hoverTimerRef.current = setTimeout(() => {
-      setActiveDoor(doorNumber);
-    }, 180); // jeda 180ms
+    hoverTimerRef.current = setTimeout(() => setActiveDoor(doorNumber), 180);
   };
 
   const handleMouseLeaveSection = () => {
@@ -43,135 +35,89 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     setActiveDoor((prev) => (prev === null ? 3 : prev === 1 ? 3 : ((prev - 1) as DoorValue)));
   };
 
-  // Menentukan Style Transformasi 3D berdasarkan pintu mana yang sedang berada di posisi DEPAN
   const getDoorTransform = (doorId: number) => {
-    // 1. Pintu berada di DEPAN (Center Focus) -> DIBESARKAN KE scale(1.18)
     if (currentSelected === doorId) {
-      return {
-        transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.18)",
-        zIndex: 30,
-        opacity: 1,
-        filter: "blur(0px)",
-      };
+      return { transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.18)", zIndex: 30, opacity: 1, filter: "blur(0px)" };
     }
 
-    // 2. Pintu berada di KIRI Belakang -> JARAK DIJAUHKAN KE -220px
     const isLeft =
       (currentSelected === 1 && doorId === 3) ||
       (currentSelected === 2 && doorId === 1) ||
       (currentSelected === 3 && doorId === 2);
 
-    if (isLeft) {
-      return {
-        transform: "translateX(-220px) translateZ(-120px) rotateY(28deg) scale(0.85)",
-        zIndex: 10,
-        opacity: 0.65,
-        filter: "blur(0.5px)",
-      };
-    }
-
-    // 3. Pintu berada di KANAN Belakang -> JARAK DIJAUHKAN KE 220px
-    return {
-      transform: "translateX(220px) translateZ(-120px) rotateY(-28deg) scale(0.85)",
-      zIndex: 10,
-      opacity: 0.65,
-      filter: "blur(0.5px)",
-    };
+    return isLeft
+      ? { transform: "translateX(-220px) translateZ(-120px) rotateY(28deg) scale(0.85)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" }
+      : { transform: "translateX(220px) translateZ(-120px) rotateY(-28deg) scale(0.85)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" };
   };
 
+  const doors = [
+    {
+      id: 1,
+      title: "Perencana Pernikahan",
+      href: "/wedding-planner",
+      bgImage: "wo.png",
+      tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
+      desc: "Perencanaan dan koordinasi pernikahan.",
+    },
+    {
+      id: 2,
+      title: "Undangan Digital",
+      href: "/d-invitation",
+      bgImage: "hp-digital.png",
+      tags: ["UNDANGAN", "RSVP"],
+      desc: "Undangan digital untuk acara pernikahan.",
+    },
+    {
+      id: 3,
+      title: "Buku Tamu Digital",
+      href: "/guestbook",
+      bgImage: "bukutamu.png",
+      tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
+      desc: "Automasi kehadiran tamu dengan QR code.",
+    },
+  ];
+
   return (
-    <div className="w-full flex flex-col items-center justify-center relative my-4">
-      {/* Container 3D Carousel Orbit */}
-      <div
-        onMouseLeave={handleMouseLeaveSection}
-        className="relative w-full h-[480px] md:h-[520px] flex items-center justify-center [perspective:1000px]"
-      >
-        {/* PINTU 01 - Wedding Organizer */}
-        <div
-          onClick={() => setActiveDoor(1)}
-          onMouseEnter={() => handleDoorHover(1)}
-          style={getDoorTransform(1)}
-          className="absolute transition-all duration-700 ease-in-out cursor-pointer"
-        >
-          <PintuCard
-            number=""
-            title="Perencana Pernikahan"
-            href="/wedding-planner"
-            bgImage="wo.png"
-            innerDetails={{
-              tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
-              desc: "Perencanaan dan koordinasi pernikahan.",
-            }}
-            isActive={activeDoor === 1}
-          />
-        </div>
-
-        {/* PINTU 02 - Digital Wedding */}
-        <div
-          onClick={() => setActiveDoor(2)}
-          onMouseEnter={() => handleDoorHover(2)}
-          style={getDoorTransform(2)}
-          className="absolute transition-all duration-700 ease-in-out cursor-pointer"
-        >
-          <PintuCard
-            number=" "
-            title="Undangan Digital"
-            href="/d-invitation"
-            bgImage="hp-digital.png"
-            innerDetails={{
-              tags: ["UNDANGAN", "RSVP"],
-              desc: "Undangan digital untuk acara pernikahan.",
-            }}
-            isActive={activeDoor === 2}
-          />
-        </div>
-
-        {/* PINTU 03 - Buku Tamu Digital */}
-        <div
-          onClick={() => setActiveDoor(3)}
-          onMouseEnter={() => handleDoorHover(3)}
-          style={getDoorTransform(3)}
-          className="absolute transition-all duration-700 ease-in-out cursor-pointer"
-        >
-          <PintuCard
-            number=" "
-            title="Buku Tamu Digital"
-            href="/guestbook"
-            bgImage="bukutamu.png"
-            innerDetails={{
-              tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
-              desc: "Automasi kehadiran tamu dengan QR code.",
-            }}
-            isActive={activeDoor === 3}
-          />
-        </div>
+    <div className="relative my-4 flex w-full flex-col items-center justify-center">
+      <div onMouseLeave={handleMouseLeaveSection} className="relative flex h-[480px] w-full items-center justify-center [perspective:1000px] md:h-[520px]">
+        {doors.map((door) => (
+          <div
+            key={door.id}
+            onClick={() => setActiveDoor(door.id as DoorValue)}
+            onMouseEnter={() => handleDoorHover(door.id as DoorValue)}
+            style={getDoorTransform(door.id)}
+            className="absolute cursor-pointer transition-all duration-700 ease-in-out"
+          >
+            <PintuCard
+              number=""
+              title={door.title}
+              href={door.href}
+              bgImage={door.bgImage}
+              innerDetails={{ tags: door.tags, desc: door.desc }}
+              isActive={activeDoor === door.id}
+            />
+          </div>
+        ))}
       </div>
 
-<div className="flex items-center justify-between w-full max-w-[320px] z-30 mt-10">
-  <Button
-    size="icon"
-    onClick={togglePrev}
-    className={`rounded-full w-12 h-12 border-2 border-white/80 transition-all duration-300 backdrop-blur-md shadow-xl cursor-pointer hover:border-white hover:scale-110 active:scale-95 ${
-      isDarkMode
-        ? "bg-[#C26B70]/80 text-white shadow-[0_0_20px_rgba(194,107,112,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)]"
-        : "bg-[#7A1C25]/80 text-white shadow-[0_0_20px_rgba(122,28,37,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)]"
-    }`}
-  >
-    ←
-  </Button>
-
-  <Button
-    size="icon"
-    onClick={toggleNext}
-    className={`rounded-full w-12 h-12 border-2 border-white/80 transition-all duration-300 backdrop-blur-md shadow-xl cursor-pointer hover:border-white hover:scale-110 active:scale-95 ${
-      isDarkMode
-        ? "bg-[#C26B70]/80 text-white shadow-[0_0_20px_rgba(194,107,112,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)]"
-        : "bg-[#7A1C25]/80 text-white shadow-[0_0_20px_rgba(122,28,37,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)]"
-    }`}
-  >
-    →
-  </Button>
-</div>
+      <div className="z-30 mt-10 flex w-full max-w-[320px] items-center justify-between">
+        <Button
+          size="icon"
+          onClick={togglePrev}
+          aria-label="Pintu sebelumnya"
+          className="h-12 w-12 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:bg-primary/85 hover:scale-110 active:scale-95"
+        >
+          ←
+        </Button>
+        <Button
+          size="icon"
+          onClick={toggleNext}
+          aria-label="Pintu berikutnya"
+          className="h-12 w-12 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:bg-primary/85 hover:scale-110 active:scale-95"
+        >
+          →
+        </Button>
+      </div>
     </div>
   );
 }
