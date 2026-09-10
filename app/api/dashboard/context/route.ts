@@ -10,11 +10,21 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-  const invitation = await prisma.invitation.findFirst({
-    where: { ownerId: user.id },
-    include: { payment: true },
-    orderBy: { createdAt: "asc" },
-  });
+  const [invitation, invitationCount, guestCount, rsvpCount] = await Promise.all([
+    prisma.invitation.findFirst({
+      where: { ownerId: user.id },
+      include: { payment: true },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.invitation.count({ where: { ownerId: user.id } }),
+    prisma.guest.count({ where: { invitation: { ownerId: user.id } } }),
+    prisma.guest.count({
+      where: {
+        invitation: { ownerId: user.id },
+        rsvpStatus: { not: "PENDING" },
+      },
+    }),
+  ]);
 
   const nickname = (await cookies()).get(nicknameCookie)?.value?.trim() || user.firstName;
   const entitlements = getPackageEntitlements(invitation?.payment);
@@ -39,5 +49,13 @@ export async function GET() {
         }
       : { key: null, status: "UNPAID" },
     entitlements,
+    overview: {
+      invitationsCreated: invitationCount,
+      invitationsLimit: 2,
+      totalRsvp: rsvpCount,
+      totalGuests: guestCount,
+      invitationsShared: invitation?.viewCount ?? 0,
+      invitationPublished: Boolean(invitation?.isPublished),
+    },
   });
 }
