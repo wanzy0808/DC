@@ -1,941 +1,187 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  LayoutDashboard,
-  Mail,
-  Users,
-  MessageSquareHeart,
-  LogOut,
-  Edit3,
-  ChevronDown,
-  Plus,
-  Search,
-  Eye,
-  Share2,
-  CalendarDays,
-  Image as ImageIcon,
-  Music2,
-  Gift,
-  Send,
-  Settings,
-  ExternalLink,
-  Bell,
-  CheckCircle2,
-  QrCode,
+  Bell, CalendarDays, ChevronDown, Edit3, ExternalLink, Eye, Gift,
+  Image as ImageIcon, LayoutDashboard, LockKeyhole, LogOut, Mail,
+  MapPin, Menu, MessageSquareHeart, Music2, Plus, QrCode, Send,
+  Settings, Users, X,
 } from "lucide-react";
 import { useTheme } from "@/components/Theme/ThemeContext";
-import { Button } from "@/components/ui/button";
 import GuestManagement from "@/components/InvitationStudio/GuestManagement";
+import FeatureGate from "@/components/Dashboard/FeatureGate";
 
-type DashboardGuest = {
-  id: string;
-  name: string;
-  phone: string | null;
-  rsvpStatus: string;
-  plusOnes: number;
+type Context = {
+  profile: { displayName: string; email: string };
+  wedding: { invitationId: string | null; groomName: string; brideName: string; title: string };
+  package: { key: string; status: string };
+  entitlements: {
+    hasDigitalInvitation: boolean;
+    hasGuestbook: boolean;
+    canPublishInvitation: boolean;
+    canUploadInvitationAssets: boolean;
+    canUseGuestPlacement: boolean;
+    canUseUsherApp: boolean;
+  };
 };
-type Profile = {
-  id: string;
-  firstName: string;
-  lastName: string | null;
-  email: string;
-};
+type Guest = { id: string; name: string; phone: string | null; rsvpStatus: string; plusOnes: number };
+type Tab = "dashboard" | "events" | "invitation" | "rsvp" | "placement" | "usher" | "gallery" | "music";
 
-function whatsappNumber(phone: string) {
-  const digits = phone.replace(/\D/g, "");
-  return digits.startsWith("0") ? `62${digits.slice(1)}` : digits;
+const nav = [
+  { id: "dashboard" as Tab, label: "Beranda", icon: LayoutDashboard },
+  { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
+  { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
+  { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
+  { id: "placement" as Tab, label: "Penempatan Tamu", icon: Users, gate: "guestbook" },
+  { id: "usher" as Tab, label: "Usher App", icon: QrCode, gate: "guestbook" },
+  { id: "gallery" as Tab, label: "Galeri & Foto", icon: ImageIcon, gate: "digital" },
+  { id: "music" as Tab, label: "Musik Undangan", icon: Music2, gate: "digital" },
+];
+
+function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <section className={`rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-[#121116] ${className}`}>{children}</section>;
 }
 
-function ThankYouAndQr({
-  guests,
-  invitationSlug,
-}: {
-  guests: DashboardGuest[];
-  invitationSlug: string;
-}) {
-  const confirmed = guests.filter((guest) => guest.rsvpStatus === "ATTENDING");
-  return (
-    <div className="mx-auto w-full max-w-7xl space-y-6 p-5 sm:p-8">
-      <section className="rounded-2xl border border-dc-maroon/20 bg-white p-6 dark:bg-[#121116]">
-        <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-maroon dark:text-dc-pink-light">
-          Ucapan &amp; QR
-        </p>
-        <h1 className="mt-2 font-serif text-3xl">Terima kasih untuk tamu</h1>
-        <p className="mt-2 max-w-2xl text-sm opacity-60">
-          Setiap tamu yang mengonfirmasi hadir mendapatkan ucapan terima kasih
-          dan QR check-in personal.
-        </p>
-      </section>
-      {confirmed.length === 0 ? (
-        <section className="rounded-2xl border border-dc-maroon/20 bg-white p-8 text-center dark:bg-[#121116]">
-          <CheckCircle2 className="mx-auto h-8 w-8 text-dc-maroon dark:text-dc-pink-light" />
-          <p className="mt-3 text-sm">
-            Belum ada tamu yang mengonfirmasi hadir.
-          </p>
-          <p className="mt-1 text-xs opacity-60">
-            QR akan muncul otomatis setelah RSVP diterima.
-          </p>
-        </section>
-      ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {confirmed.map((guest) => {
-            const inviteUrl = `${typeof window === "undefined" ? "" : window.location.origin}/invite/${invitationSlug}?guestId=${guest.id}`;
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(inviteUrl)}`;
-            const whatsappText = `Terima kasih, ${guest.name}. RSVP kamu sudah kami terima. Tunjukkan QR ini saat check-in: ${inviteUrl}`;
-            return (
-              <article
-                key={guest.id}
-                className="rounded-2xl border border-dc-maroon/20 bg-white p-5 dark:bg-[#121116]"
-              >
-                <div className="flex items-start justify-between">
-                  <div>
-                    <p className="font-serif text-xl">
-                      Terima kasih, {guest.name}
-                    </p>
-                    <p className="mt-1 text-xs text-dc-maroon dark:text-dc-pink-light">
-                      Konfirmasi hadir diterima
-                    </p>
-                  </div>
-                  <QrCode className="h-5 w-5 text-dc-maroon dark:text-dc-pink-light" />
-                </div>
-                <img
-                  src={qrUrl}
-                  alt={`QR check-in ${guest.name}`}
-                  className="mx-auto mt-5 h-44 w-44"
-                />
-                <a
-                  href={
-                    guest.phone
-                      ? `https://wa.me/${whatsappNumber(guest.phone)}?text=${encodeURIComponent(whatsappText)}`
-                      : undefined
-                  }
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-5 flex items-center justify-center rounded-xl bg-dc-maroon px-4 py-2.5 text-xs text-white aria-disabled:pointer-events-none aria-disabled:opacity-50"
-                  aria-disabled={!guest.phone}
-                >
-                  Kirim ucapan via WhatsApp
-                </a>
-              </article>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
+function GateLabel() {
+  return <span className="ml-auto flex items-center gap-1 text-[9px] opacity-50"><LockKeyhole className="h-3 w-3" /> Upgrade</span>;
 }
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
-  const [activeTab, setActiveTab] = useState("dashboard");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [dashboardGuests, setDashboardGuests] = useState<DashboardGuest[]>([]);
-  const [invitationSlug, setInvitationSlug] = useState("");
-  const [notificationsOpen, setNotificationsOpen] = useState(false);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [showWelcome, setShowWelcome] = useState(false);
+  const [tab, setTab] = useState<Tab>("dashboard");
+  const [ctx, setCtx] = useState<Context | null>(null);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [slug, setSlug] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [groom, setGroom] = useState("");
+  const [bride, setBride] = useState("");
+  const [nickname, setNickname] = useState("");
 
-  useEffect(() => {
-    Promise.all([
+  const load = async () => {
+    const [contextRes, guestsRes, invitationRes] = await Promise.all([
+      fetch("/api/dashboard/context", { cache: "no-store" }),
       fetch("/api/guests", { cache: "no-store" }),
       fetch("/api/invitations", { cache: "no-store" }),
-      fetch("/api/profile", { cache: "no-store" }),
-    ])
-      .then(async ([guestsResponse, invitationResponse, profileResponse]) => {
-        if (guestsResponse.ok)
-          setDashboardGuests((await guestsResponse.json()).guests ?? []);
-        if (invitationResponse.ok)
-          setInvitationSlug(
-            (await invitationResponse.json()).invitation?.slug ?? "",
-          );
-        if (profileResponse.ok) {
-          const nextProfile = (await profileResponse.json()).user as Profile;
-          setProfile(nextProfile);
-          setShowWelcome(
-            window.localStorage.getItem(`dc-welcome-seen:${nextProfile.id}`) !==
-              "1",
-          );
-        }
-      })
-      .catch(() => undefined);
-  }, []);
+    ]);
+    if (contextRes.ok) {
+      const next = await contextRes.json() as Context;
+      setCtx(next);
+      setGroom(next.wedding.groomName || "");
+      setBride(next.wedding.brideName || "");
+      setNickname(next.profile.displayName || "");
+      if (!next.wedding.groomName || !next.wedding.brideName || !next.profile.displayName) setOnboarding(true);
+    }
+    if (guestsRes.ok) setGuests((await guestsRes.json()).guests ?? []);
+    if (invitationRes.ok) setSlug((await invitationRes.json()).invitation?.slug ?? "");
+  };
 
-  const confirmedGuests = dashboardGuests.filter(
-    (guest) => guest.rsvpStatus === "ATTENDING",
-  );
-  const displayName = profile?.firstName || "kamu";
+  useEffect(() => { load().catch(() => undefined); }, []);
 
-  const accentColor = isDarkMode ? "text-[#C26B70]" : "text-[#7A1C25]";
-  const bgAccent = isDarkMode
-    ? "bg-[#C26B70] hover:bg-[#A9565C]"
-    : "bg-[#7A1C25] hover:bg-[#5E141C]";
-  const borderColor = isDarkMode ? "border-white/10" : "border-black/10";
-  const cardBg = isDarkMode ? "bg-[#121116]" : "bg-white";
-  const hoverBg = isDarkMode ? "hover:bg-white/5" : "hover:bg-black/5";
+  const confirmed = guests.filter(g => g.rsvpStatus === "ATTENDING").length;
+  const pending = guests.filter(g => g.rsvpStatus === "PENDING").length;
+  const canDigital = ctx?.entitlements.hasDigitalInvitation ?? false;
+  const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
+  const accent = isDarkMode ? "text-[#E8A5AE]" : "text-[#7A1C25]";
+  const button = isDarkMode ? "bg-[#C26B70] hover:bg-[#A9565C]" : "bg-[#7A1C25] hover:bg-[#5E141C]";
+  const surface = isDarkMode ? "bg-[#0B0A0E]" : "bg-[#FAF7F2]";
+  const title = nav.find(n => n.id === tab)?.label ?? "Beranda";
 
-  async function handleLogout() {
+  async function saveOnboarding() {
+    if (!groom.trim() || !bride.trim() || !nickname.trim()) return;
+    setSaving(true);
+    try {
+      await Promise.all([
+        fetch("/api/profile", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ firstName: nickname.trim() }) }),
+        ctx?.wedding.invitationId ? fetch("/api/invitations", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ groomName: groom.trim(), brideName: bride.trim() }) }) : Promise.resolve(),
+      ]);
+      setOnboarding(false);
+      await load();
+    } finally { setSaving(false); }
+  }
+
+  async function logout() {
     await fetch("/api/auth/logout", { method: "POST" });
     router.push("/login");
   }
 
+  function go(id: Tab) { setTab(id); setMobileOpen(false); }
+
   return (
-    <div
-      className={`min-h-screen w-full flex font-sans [font-family:var(--font-dc-sans)] transition-colors duration-500 ${isDarkMode ? "bg-[#060508] text-white" : "bg-[#FAF7F2] text-[#1A1A1A]"}`}
-    >
-      <aside
-        className={`w-60 shrink-0 border-r ${borderColor} ${isDarkMode ? "bg-[#0B0A0E]" : "bg-white"}`}
-      >
-        <div className="sticky top-0 flex min-h-screen flex-col">
-          <Link href="/" className={`border-b px-5 py-5 ${borderColor}`}>
-            <div
-              className={`font-serif text-2xl font-bold tracking-[0.18em] ${accentColor}`}
-            >
-              D C
-            </div>
-            <span className="mt-1 block text-[9px] uppercase tracking-[0.3em] opacity-50">
-              Wedding
-            </span>
-          </Link>
-          <nav className="space-y-1 p-3 text-xs">
-            <p className="px-3 pb-2 pt-3 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-40">
-              Workspace
-            </p>
-            {[
-              { id: "dashboard", label: "Beranda", icon: LayoutDashboard },
-              { id: "undangan", label: "Undangan Digital", icon: Mail },
-              { id: "tamu", label: "Tamu Undangan", icon: Users },
-              { id: "rsvp", label: "Ucapan & QR", icon: MessageSquareHeart },
-            ].map((item) => {
-              const Icon = item.icon;
-              const active = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition ${active ? (isDarkMode ? "bg-[#C26B70]/15 text-[#E8A5AE]" : "bg-[#FCE8EF] text-[#7A1C25]") : `opacity-70 hover:opacity-100 ${hoverBg}`}`}
-                >
-                  <Icon className="h-4 w-4" />
-                  <span>{item.label}</span>
-                  {item.id === "rsvp" && confirmedGuests.length > 0 && (
-                    <span className="ml-auto rounded-full bg-dc-maroon px-1.5 py-0.5 text-[9px] text-white">
-                      {confirmedGuests.length}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-            <p className="px-3 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-40">
-              Kelola Undangan
-            </p>
-            <button
-              onClick={() => setActiveTab("undangan")}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left opacity-70 hover:opacity-100 ${hoverBg}`}
-            >
-              <ImageIcon className="h-4 w-4" />
-              <span>Galeri & Foto</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("undangan")}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left opacity-70 hover:opacity-100 ${hoverBg}`}
-            >
-              <Music2 className="h-4 w-4" />
-              <span>Musik Undangan</span>
-            </button>
-            <Link
-              href="/packages"
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 opacity-70 hover:opacity-100 ${hoverBg}`}
-            >
-              <Plus className="h-4 w-4" />
-              <span>Tambah layanan</span>
-            </Link>
-          </nav>
-          <div className="mt-auto space-y-2 border-t p-3">
-            <Link
-              href="/"
-              className={`flex items-center gap-3 rounded-lg px-3 py-3 text-xs opacity-70 hover:opacity-100 ${hoverBg}`}
-            >
-              <ExternalLink className="h-4 w-4" />
-              Lihat website DC
-            </Link>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-xs ${isDarkMode ? "text-red-300" : "text-red-700"}`}
-            >
-              <LogOut className="h-4 w-4" />
-              Keluar
-            </button>
-          </div>
+    <div className={`min-h-screen ${surface} ${isDarkMode ? "text-white" : "text-[#1A1A1A]"}`}>
+      <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-black/10 bg-white/90 px-4 backdrop-blur dark:border-white/10 dark:bg-[#0B0A0E]/90 sm:px-7">
+        <div className="flex items-center gap-3">
+          <button className="rounded-lg p-2 lg:hidden" onClick={() => setMobileOpen(v => !v)} aria-label="Buka menu">{mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
+          <Link href="/" className="font-serif text-xl font-bold tracking-[0.16em] text-dc-maroon dark:text-dc-pink-light">DC Wedding</Link>
         </div>
-      </aside>
+        <div className="flex items-center gap-3">
+          <span className="hidden text-xs opacity-60 sm:block">{ctx?.wedding.groomName || "Pasangan"} &amp; {ctx?.wedding.brideName || "Kamu"}</span>
+          <button className="flex items-center gap-2 rounded-full border border-black/10 px-2 py-1.5 text-xs dark:border-white/10">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-dc-maroon text-white">{(ctx?.profile.displayName || "D").slice(0,1).toUpperCase()}</span>
+            <span className="hidden sm:block">{ctx?.profile.displayName || "Dashboard"}</span><ChevronDown className="h-3 w-3 opacity-50" />
+          </button>
+        </div>
+      </header>
 
-      <main className="min-w-0 flex-1">
-        <header
-          className={`flex h-[72px] items-center justify-between border-b px-5 sm:px-8 ${borderColor}`}
-        >
-          <div>
-            <p className="text-[10px] uppercase tracking-[0.2em] opacity-50">
-              DC Workspace
-            </p>
-            <p className="mt-1 text-sm font-medium">
-              {activeTab === "dashboard"
-                ? "Beranda"
-                : activeTab === "undangan"
-                  ? "Undangan Digital"
-                  : activeTab === "tamu"
-                    ? "Tamu Undangan"
-                    : "RSVP & Ucapan"}
-            </p>
-          </div>
-          <div className="relative flex items-center gap-3">
-            <button
-              onClick={() => setNotificationsOpen((open) => !open)}
-              className={`relative rounded-full p-2 ${confirmedGuests.length > 0 ? "text-dc-maroon dark:text-dc-pink-light" : "opacity-40"}`}
-              aria-label="Notifikasi RSVP"
-            >
-              <Bell className="h-4 w-4" />
-              {confirmedGuests.length > 0 && (
-                <span className="absolute right-1 top-1 h-1.5 w-1.5 rounded-full bg-dc-maroon dark:bg-dc-pink-light" />
-              )}
-            </button>
-            {notificationsOpen && (
-              <div
-                className={`absolute right-20 top-12 z-20 w-72 rounded-xl border p-4 text-xs shadow-xl ${cardBg} ${borderColor}`}
-              >
-                <p className="font-medium text-dc-maroon dark:text-dc-pink-light">
-                  Notifikasi RSVP
-                </p>
-                <p className="mt-2 opacity-60">
-                  {confirmedGuests.length
-                    ? `${confirmedGuests.length} tamu baru mengonfirmasi hadir.`
-                    : "Belum ada RSVP baru."}
-                </p>
-                {confirmedGuests.length > 0 && (
-                  <button
-                    onClick={() => {
-                      setActiveTab("rsvp");
-                      setNotificationsOpen(false);
-                    }}
-                    className="mt-3 text-dc-maroon underline dark:text-dc-pink-light"
-                  >
-                    Lihat ucapan &amp; QR
-                  </button>
-                )}
-              </div>
-            )}
-            <div
-              className={`flex items-center gap-2 rounded-full border px-2 py-1.5 text-xs ${borderColor}`}
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-dc-maroon text-white">
-                {displayName.slice(0, 1).toUpperCase()}
-              </span>
-              <span className="hidden sm:block">{displayName}</span>
-              <ChevronDown className="h-3 w-3 opacity-50" />
-            </div>
-          </div>
-        </header>
+      <div className="flex">
+        <aside className={`${mobileOpen ? "fixed inset-y-16 left-0 z-30 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-black/10 bg-white dark:border-white/10 dark:bg-[#0B0A0E] lg:flex lg:min-h-[calc(100vh-4rem)]`}>
+          <nav className="flex-1 space-y-1 p-3">
+            <p className="px-3 pb-2 pt-3 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-40">Workspace</p>
+            {nav.map(item => {
+              const Icon = item.icon;
+              const locked = item.gate === "digital" ? !canDigital : item.gate === "guestbook" ? !canGuestbook : false;
+              return <button key={item.id} onClick={() => go(item.id)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-xs transition ${tab === item.id ? "bg-dc-maroon/10 text-dc-maroon dark:bg-dc-pink-light/10 dark:text-dc-pink-light" : "opacity-70 hover:bg-black/5 dark:hover:bg-white/5"}`}>
+                <Icon className="h-4 w-4" /><span>{item.label}</span>{locked && <GateLabel />}
+              </button>;
+            })}
+            <p className="px-3 pb-2 pt-5 text-[10px] font-semibold uppercase tracking-[0.2em] opacity-40">Akun</p>
+            <Link href="/packages" className="flex items-center gap-3 rounded-xl px-3 py-3 text-xs opacity-70 hover:bg-black/5 dark:hover:bg-white/5"><Plus className="h-4 w-4" />Tambah Paket</Link>
+            <Link href="/faq" className="flex items-center gap-3 rounded-xl px-3 py-3 text-xs opacity-70 hover:bg-black/5 dark:hover:bg-white/5"><Gift className="h-4 w-4" />FAQ &amp; Bantuan</Link>
+          </nav>
+          <div className="border-t border-black/10 p-3 dark:border-white/10"><button onClick={logout} className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-xs text-red-700 dark:text-red-300"><LogOut className="h-4 w-4" />Keluar</button></div>
+        </aside>
 
-        {activeTab === "dashboard" && profile && showWelcome && (
-          <WelcomeProfile
-            profile={profile}
-            onSaved={(nextProfile) => {
-              setProfile(nextProfile);
-              setShowWelcome(false);
-              window.localStorage.setItem(
-                `dc-welcome-seen:${nextProfile.id}`,
-                "1",
-              );
-            }}
-          />
-        )}
-        {activeTab === "dashboard" && (
-          <div className="mx-auto max-w-7xl space-y-6 p-5 sm:p-8">
-            <section
-              className={`flex flex-col justify-between gap-5 rounded-2xl border p-6 sm:flex-row sm:items-center ${cardBg} ${borderColor}`}
-            >
-              <div>
-                <p
-                  className={`text-xs font-semibold uppercase tracking-[0.22em] ${accentColor}`}
-                >
-                  Selamat datang kembali
-                </p>
-                <h1 className="mt-2 font-serif text-3xl">
-                  Halo, {displayName}
-                </h1>
-                <p className="mt-2 text-sm opacity-60">
-                  Atur semua kebutuhan pernikahanmu dari satu tempat.
-                </p>
-              </div>
-              <button
-                type="button"
-                onClick={() => setActiveTab("undangan")}
-                className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-medium text-white ${bgAccent}`}
-              >
-                <Edit3 className="h-4 w-4" />
-                Buka undangan
-              </button>
-            </section>
-            <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-              {[
-                { label: "Undangan dilihat", value: "376", icon: Eye },
-                { label: "Total RSVP", value: "41", icon: MessageSquareHeart },
-                { label: "Tamu terdaftar", value: "98", icon: Users },
-                {
-                  label: "Hari menuju acara",
-                  value: "142",
-                  icon: CalendarDays,
-                },
-              ].map((stat) => {
-                const Icon = stat.icon;
-                return (
-                  <div
-                    key={stat.label}
-                    className={`rounded-2xl border p-5 ${cardBg} ${borderColor}`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs opacity-60">{stat.label}</span>
-                      <Icon className={`h-4 w-4 ${accentColor}`} />
-                    </div>
-                    <p className="mt-3 font-serif text-3xl">{stat.value}</p>
-                  </div>
-                );
-              })}
-            </section>
-            <section className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-              <div className={`rounded-2xl border ${cardBg} ${borderColor}`}>
-                <div
-                  className={`flex items-center justify-between border-b p-5 ${borderColor}`}
-                >
-                  <div>
-                    <h2 className="font-serif text-xl">Undangan Saya</h2>
-                    <p className="mt-1 text-xs opacity-60">
-                      Kelola dan pantau undanganmu.
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-600">
-                    LUNAS
-                  </span>
-                </div>
-                <div className="p-5">
-                  <div
-                    className={`flex flex-col justify-between gap-5 rounded-xl border p-4 sm:flex-row sm:items-center ${borderColor}`}
-                  >
-                    <div>
-                      <p className="font-serif text-lg">riolyvi.momentus.id</p>
-                      <p className="mt-1 text-xs opacity-60">
-                        Nisha &middot; Holy Matrimony &middot; 26 September 2026
-                      </p>
-                      <div className="mt-3 flex items-center gap-2 text-[10px] opacity-60">
-                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                        Publik dan siap dibagikan
-                      </div>
-                    </div>
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setActiveTab("undangan")}
-                        className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-xs ${borderColor} ${hoverBg}`}
-                      >
-                        <Edit3 className="h-3.5 w-3.5" />
-                        Buka
-                      </button>
-                      <button
-                        className={`inline-flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-white ${bgAccent}`}
-                      >
-                        <Share2 className="h-3.5 w-3.5" />
-                        Bagikan
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={`rounded-2xl border ${cardBg} ${borderColor}`}>
-                <div
-                  className={`flex items-center justify-between border-b p-5 ${borderColor}`}
-                >
-                  <div>
-                    <h2 className="font-serif text-xl">Rangkaian Acara</h2>
-                    <p className="mt-1 text-xs opacity-60">
-                      Agenda utama pernikahan.
-                    </p>
-                  </div>
-                  <button
-                    className={`rounded-lg border p-2 ${borderColor}`}
-                    aria-label="Tambah acara"
-                  >
-                    <Plus className="h-4 w-4" />
-                  </button>
-                </div>
-                <div className="space-y-4 p-5">
-                  <div className="flex gap-3">
-                    <span
-                      className={`mt-1 h-2.5 w-2.5 rounded-full ${isDarkMode ? "bg-[#C26B70]" : "bg-[#7A1C25]"}`}
-                    />
-                    <div>
-                      <p className="text-sm font-medium">Holy Matrimony</p>
-                      <p className="mt-1 text-xs opacity-60">
-                        26 September 2026 &middot; 16:00
-                      </p>
-                      <p className="mt-1 text-xs opacity-60">
-                        Saint Christopher Cathedral Church
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex gap-3">
-                    <span className="mt-1 h-2.5 w-2.5 rounded-full bg-[#E60087]" />
-                    <div>
-                      <p className="text-sm font-medium">Resepsi Pernikahan</p>
-                      <p className="mt-1 text-xs opacity-60">
-                        26 September 2026 &middot; 19:00
-                      </p>
-                      <p className="mt-1 text-xs opacity-60">
-                        The Glass House, Bandung
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-            <section
-              className={`rounded-2xl border p-5 ${cardBg} ${borderColor}`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-serif text-xl">Aksi Cepat</h2>
-                  <p className="mt-1 text-xs opacity-60">
-                    Lanjutkan persiapanmu.
-                  </p>
-                </div>
-                <Settings className="h-4 w-4 opacity-40" />
-              </div>
-              <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <button
-                  onClick={() => setActiveTab("tamu")}
-                  className={`flex items-center gap-2 rounded-xl border p-3 text-left text-xs ${borderColor} ${hoverBg}`}
-                >
-                  <Users className={accentColor + " h-4 w-4"} />
-                  Kelola tamu
-                </button>
-                <button
-                  onClick={() => setActiveTab("rsvp")}
-                  className={`flex items-center gap-2 rounded-xl border p-3 text-left text-xs ${borderColor} ${hoverBg}`}
-                >
-                  <MessageSquareHeart className={accentColor + " h-4 w-4"} />
-                  Cek RSVP
-                </button>
-                <Link
-                  href="/packages"
-                  className={`flex items-center gap-2 rounded-xl border p-3 text-xs ${borderColor} ${hoverBg}`}
-                >
-                  <Gift className={accentColor + " h-4 w-4"} />
-                  Lihat add-on
-                </Link>
-                <button
-                  onClick={() => setActiveTab("undangan")}
-                  className={`flex items-center gap-2 rounded-xl border p-3 text-left text-xs ${borderColor} ${hoverBg}`}
-                >
-                  <Send className={accentColor + " h-4 w-4"} />
-                  Bagikan undangan
-                </button>
-              </div>
-            </section>
-          </div>
-        )}
+        <main className="min-w-0 flex-1">
+          <div className="border-b border-black/10 px-5 py-4 dark:border-white/10 sm:px-8"><p className="text-[10px] uppercase tracking-[0.2em] opacity-40">DC Wedding Workspace</p><h1 className="mt-1 font-serif text-xl">{title}</h1></div>
 
-        {/* TAB 2: RINGKASAN UNDANGAN */}
-        {activeTab === "undangan" && (
-          <div className="mx-auto max-w-7xl space-y-6 p-5 sm:p-8">
-            <section
-              className={`flex flex-col justify-between gap-5 rounded-2xl border p-6 sm:flex-row sm:items-center ${cardBg} ${borderColor}`}
-            >
-              <div>
-                <p
-                  className={`text-xs font-semibold uppercase tracking-[0.22em] ${accentColor}`}
-                >
-                  Undangan Digital
-                </p>
-                <h1 className="mt-2 font-serif text-3xl">Undangan Saya</h1>
-                <p className="mt-2 text-sm opacity-60">
-                  Kelola tampilan, konten, dan publikasi undangan pernikahanmu.
-                </p>
-              </div>
-              <Link
-                href="/dashboard/editor"
-                className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-xs font-medium text-white ${bgAccent}`}
-              >
-                <Edit3 className="h-4 w-4" />
-                Buka Invitation Studio
-              </Link>
-            </section>
-            <section className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
-              <div
-                className={`overflow-hidden rounded-2xl border ${cardBg} ${borderColor}`}
-              >
-                <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden bg-gradient-to-br from-[#f5d7dc] via-[#fff7f1] to-[#e8d8c6]">
-                  <div className="absolute left-6 top-6 h-24 w-24 rounded-full bg-[#C26B70]/20 blur-2xl" />
-                  <div className="absolute bottom-6 right-6 h-32 w-32 rounded-full bg-[#C5A059]/25 blur-2xl" />
-                  <div className="relative w-2/3 rounded-xl border border-white/70 bg-white/55 p-6 text-center shadow-xl backdrop-blur-sm">
-                    <p className="text-[10px] uppercase tracking-[0.25em] text-[#7A1C25]">
-                      The Wedding Of
-                    </p>
-                    <h2 className="mt-3 font-serif text-3xl text-[#251b1e]">
-                      Rio &amp; Lyvia
-                    </h2>
-                    <p className="mt-3 text-xs text-[#7A1C25]">
-                      26 September 2026
-                    </p>
-                    <p className="mt-1 text-[10px] text-[#251b1e]/60">
-                      Eternal Blossom
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-5">
-                  <div>
-                    <h2 className="font-serif text-xl">Eternal Blossom</h2>
-                    <p className="mt-1 text-xs opacity-60">
-                      Diperbarui beberapa saat lalu
-                    </p>
-                  </div>
-                  <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-[10px] font-medium text-emerald-600">
-                    AKTIF
-                  </span>
-                </div>
-              </div>
-              <div
-                className={`rounded-2xl border p-6 ${cardBg} ${borderColor}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="font-serif text-xl">Kelola Undangan</h2>
-                    <p className="mt-1 text-xs opacity-60">
-                      Pilih tindakan yang ingin kamu lakukan.
-                    </p>
-                  </div>
-                  <Mail className={`h-5 w-5 ${accentColor}`} />
-                </div>
-                <div className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <Link
-                    href="/dashboard/editor"
-                    className={`group rounded-xl border p-4 transition hover:-translate-y-0.5 ${borderColor} ${hoverBg}`}
-                  >
-                    <Edit3 className={`h-5 w-5 ${accentColor}`} />
-                    <p className="mt-3 text-sm font-medium">Edit desain</p>
-                    <p className="mt-1 text-xs opacity-60">
-                      Buka studio visual dan atur layout undangan.
-                    </p>
-                    <span
-                      className={`mt-4 block text-xs font-medium ${accentColor}`}
-                    >
-                      Buka editor →
-                    </span>
-                  </Link>
-                  <Link
-                    href="/dashboard/editor"
-                    className={`group rounded-xl border p-4 transition hover:-translate-y-0.5 ${borderColor} ${hoverBg}`}
-                  >
-                    <ImageIcon className={`h-5 w-5 ${accentColor}`} />
-                    <p className="mt-3 text-sm font-medium">
-                      Galeri &amp; foto
-                    </p>
-                    <p className="mt-1 text-xs opacity-60">
-                      Atur foto pasangan dan asset undangan.
-                    </p>
-                    <span
-                      className={`mt-4 block text-xs font-medium ${accentColor}`}
-                    >
-                      Kelola asset →
-                    </span>
-                  </Link>
-                  <Link
-                    href="/dashboard/editor"
-                    className={`group rounded-xl border p-4 transition hover:-translate-y-0.5 ${borderColor} ${hoverBg}`}
-                  >
-                    <Music2 className={`h-5 w-5 ${accentColor}`} />
-                    <p className="mt-3 text-sm font-medium">Musik undangan</p>
-                    <p className="mt-1 text-xs opacity-60">
-                      Tambahkan musik untuk halaman undangan.
-                    </p>
-                    <span
-                      className={`mt-4 block text-xs font-medium ${accentColor}`}
-                    >
-                      Atur musik →
-                    </span>
-                  </Link>
-                  <button
-                    type="button"
-                    className={`group rounded-xl border p-4 text-left transition hover:-translate-y-0.5 ${borderColor} ${hoverBg}`}
-                  >
-                    <Share2 className={`h-5 w-5 ${accentColor}`} />
-                    <p className="mt-3 text-sm font-medium">Bagikan undangan</p>
-                    <p className="mt-1 text-xs opacity-60">
-                      Salin link atau kirim ke tamu undangan.
-                    </p>
-                    <span
-                      className={`mt-4 block text-xs font-medium ${accentColor}`}
-                    >
-                      Bagikan →
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </section>
-            <section
-              className={`rounded-2xl border p-6 ${cardBg} ${borderColor}`}
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="font-serif text-xl">Status Undangan</h2>
-                  <p className="mt-1 text-xs opacity-60">
-                    Pastikan semua bagian sudah siap sebelum dibagikan.
-                  </p>
-                </div>
-                <span className="text-xs font-medium text-emerald-600">
-                  80% selesai
-                </span>
-              </div>
-              <div className="mt-4 h-2 overflow-hidden rounded-full bg-black/5 dark:bg-white/10">
-                <div className="h-full w-4/5 rounded-full bg-[#E60087]" />
-              </div>
-              <div className="mt-5 grid gap-3 text-xs sm:grid-cols-3">
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  Data pasangan lengkap
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                  Rangkaian acara siap
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="h-2 w-2 rounded-full bg-amber-500" />
-                  Tambahkan galeri foto
-                </div>
-              </div>
-            </section>
-            <section
-              className={`grid gap-6 rounded-2xl border p-6 lg:grid-cols-[1fr_auto] lg:items-center ${cardBg} ${borderColor}`}
-            >
-              <div>
-                <p
-                  className={`text-xs font-semibold uppercase tracking-[0.22em] ${accentColor}`}
-                >
-                  DC Design Studio
-                </p>
-                <h2 className="mt-2 font-serif text-2xl">
-                  Bangun undanganmu dengan lebih leluasa.
-                </h2>
-                <p className="mt-2 max-w-2xl text-sm opacity-60">
-                  Pilih template, atur tipografi, tambahkan foto dan musik, lalu
-                  lihat perubahanmu dalam preview yang langsung hidup.
-                </p>
-                <div className="mt-5 flex flex-wrap gap-2 text-[10px] opacity-70">
-                  <span className="rounded-full border border-current px-3 py-1">
-                    Template editorial
-                  </span>
-                  <span className="rounded-full border border-current px-3 py-1">
-                    Musik &amp; galeri
-                  </span>
-                  <span className="rounded-full border border-current px-3 py-1">
-                    RSVP &amp; QR
-                  </span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href="/template-design"
-                  className={`inline-flex items-center gap-2 rounded-xl border px-4 py-3 text-xs ${borderColor} ${hoverBg}`}
-                >
-                  <LayoutDashboard className="h-4 w-4" />
-                  Lihat template
-                </Link>
-                <Link
-                  href="/dashboard/editor"
-                  className={`inline-flex items-center gap-2 rounded-xl px-4 py-3 text-xs text-white ${bgAccent}`}
-                >
-                  <Edit3 className="h-4 w-4" />
-                  Buka Studio
-                </Link>
-              </div>
-            </section>
-          </div>
-        )}
+          {tab === "dashboard" && <DashboardHome ctx={ctx} guests={guests} confirmed={confirmed} pending={pending} accent={accent} button={button} go={go} />}
+          {tab === "events" && <EventPanel ctx={ctx} onSaved={load} accent={accent} button={button} />}
+          {tab === "invitation" && <FeatureGate allowed={canDigital} title="Undangan Digital" description="Paket Digital Invitation diperlukan untuk publish, upload foto/video, dan mengelola aset undangan." onUpgrade={() => router.push("/packages")}><InvitationPanel slug={slug} accent={accent} button={button} published={ctx?.entitlements.canPublishInvitation ?? false} /></FeatureGate>}
+          {tab === "rsvp" && <RsvpPanel guests={guests} slug={slug} accent={accent} />}
+          {tab === "placement" && <FeatureGate allowed={canGuestbook} title="Penempatan Tamu" description="Penempatan tamu dan Usher App termasuk dalam paket Guestbook." onUpgrade={() => router.push("/packages")}><GuestManagement /></FeatureGate>}
+          {tab === "usher" && <FeatureGate allowed={canGuestbook} title="Usher App" description="Scan QR tamu pada hari acara, verifikasi pax, meja, dan status check-in." onUpgrade={() => router.push("/packages")}><UsherPreview accent={accent} /></FeatureGate>}
+          {tab === "gallery" && <FeatureGate allowed={canDigital} title="Galeri & Foto" description="Upload dan kelola foto undangan setelah paket Digital Invitation aktif." onUpgrade={() => router.push("/packages")}><SimplePanel icon={ImageIcon} title="Galeri & Foto" text="Kelola foto pasangan dan galeri undangan dari Invitation Studio." href="/dashboard/editor" button="Buka Studio" buttonClass={button} /></FeatureGate>}
+          {tab === "music" && <FeatureGate allowed={canDigital} title="Musik Undangan" description="Gunakan musik bawaan secara gratis. Upload musik sendiri tersedia setelah Digital Invitation aktif." onUpgrade={() => router.push("/packages")}><SimplePanel icon={Music2} title="Musik Undangan" text="Atur musik latar undangan. Musik bawaan tetap tersedia tanpa paket berbayar." href="/dashboard/editor" button="Atur Musik" buttonClass={button} /></FeatureGate>}
+        </main>
+      </div>
 
-        {/* TAB 3: MANAJEMEN TAMU */}
-        {activeTab === "tamu" && <GuestManagement />}
-
-        {activeTab === "rsvp" && (
-          <ThankYouAndQr
-            guests={dashboardGuests}
-            invitationSlug={invitationSlug}
-          />
-        )}
-
-        {activeTab === "tamu-old" && (
-          <div className="p-8 space-y-6 max-w-6xl w-full mx-auto">
-            <div>
-              <h1 className="text-2xl font-serif font-normal">
-                Manajemen Tamu
-              </h1>
-              <p className="text-xs opacity-60 mt-1">
-                Kelola 98 tamu, kirim undangan, dan pantau kehadiran
-              </p>
-            </div>
-
-            {/* Statistik Tamu */}
-            <div
-              className={`grid grid-cols-1 sm:grid-cols-4 rounded-2xl border overflow-hidden ${cardBg} ${borderColor}`}
-            >
-              <div className="p-5 border-r border-inherit">
-                <span className="text-xs opacity-60">Total Tamu</span>
-                <h3 className="text-2xl font-serif font-normal mt-1">98</h3>
-                <span className="text-[10px] opacity-40">206 total orang</span>
-              </div>
-              <div className="p-5 border-r border-inherit">
-                <span className="text-xs opacity-60">Terkirim</span>
-                <h3 className="text-2xl font-serif font-normal mt-1">72</h3>
-                <span className="text-[10px] opacity-40">26 belum dikirim</span>
-              </div>
-              <div className="p-5 border-r border-inherit">
-                <span className="text-xs opacity-60">Dilihat</span>
-                <h3 className="text-2xl font-serif font-normal mt-1">83</h3>
-                <span className="text-[10px] opacity-40">15 belum dibuka</span>
-              </div>
-              <div className="p-5">
-                <span className="text-xs opacity-60">Hadir</span>
-                <h3 className="text-2xl font-serif font-normal mt-1">37</h3>
-                <span className="text-[10px] opacity-40">1 tidak • 3 ragu</span>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center gap-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-3 w-4 h-4 opacity-40" />
-                <input
-                  type="text"
-                  placeholder="Cari nama tamu..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2.5 rounded-xl border text-sm focus:outline-none ${cardBg} ${borderColor}`}
-                />
-              </div>
-              <Button
-                className={`gap-2 rounded-xl text-xs text-white ${bgAccent}`}
-              >
-                <Plus className="w-4 h-4" /> Tambah Tamu
-              </Button>
-            </div>
-
-            {/* List Tamu Sample */}
-            <div
-              className={`p-4 rounded-xl border flex justify-between items-center ${cardBg} ${borderColor}`}
-            >
-              <div className="flex items-center gap-3">
-                <input type="checkbox" className="rounded" />
-                <div>
-                  <h4 className="font-medium text-sm">Alicia & Partner</h4>
-                  <p className="text-xs opacity-60">
-                    📅 Holy Matrimony, Reception
-                  </p>
-                  <div className="flex gap-2 mt-2">
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-500 font-medium">
-                      Teman
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-medium">
-                      ✓ Dilihat
-                    </span>
-                    <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 font-medium">
-                      ● Hadir
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <Button
-                size="sm"
-                variant="outline"
-                className={`text-xs gap-1 border ${borderColor} text-emerald-500 ${hoverBg}`}
-              >
-                <Share2 className="w-3.5 h-3.5" /> Kirim
-              </Button>
-            </div>
-          </div>
-        )}
-      </main>
+      {onboarding && <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"><div className="w-full max-w-lg rounded-3xl bg-white p-6 shadow-2xl dark:bg-[#121116] sm:p-8"><p className={`text-xs font-semibold uppercase tracking-[0.2em] ${accent}`}>Welcome to DC Wedding</p><h2 className="mt-2 font-serif text-3xl">Kenalan dulu dengan wedding workspace-mu.</h2><p className="mt-2 text-sm opacity-60">Data ini dipakai untuk sapaan dashboard dan nama pasangan di undangan.</p><div className="mt-6 space-y-4"><Field label="Nama pasangan pria" value={groom} onChange={setGroom} placeholder="Contoh: Rio" /><Field label="Nama pasangan wanita" value={bride} onChange={setBride} placeholder="Contoh: Lyvia" /><Field label="Nama panggilan pengisi dashboard" value={nickname} onChange={setNickname} placeholder="Contoh: Hendro" /></div><button disabled={saving} onClick={saveOnboarding} className={`mt-6 w-full rounded-xl px-4 py-3 text-sm font-medium text-white ${button} disabled:opacity-50`}>{saving ? "Menyimpan..." : "Masuk ke Workspace"}</button></div></div>}
     </div>
   );
 }
 
-function WelcomeProfile({
-  profile,
-  onSaved,
-}: {
-  profile: Profile;
-  onSaved: (profile: Profile) => void;
-}) {
-  const [firstName, setFirstName] = useState(profile.firstName);
-  const [lastName, setLastName] = useState(profile.lastName ?? "");
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-
-  async function save(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSaving(true);
-    setError("");
-    const response = await fetch("/api/profile", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ firstName, lastName }),
-    });
-    const data = await response.json();
-    if (response.ok) onSaved(data.user);
-    else setError(data.error ?? "Profil belum dapat disimpan.");
-    setSaving(false);
-  }
-
-  return (
-    <section className="border-b border-dc-maroon/20 bg-[#fff8f5] px-5 py-8 dark:bg-[#1b1518] sm:px-8">
-      <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_360px] lg:items-center">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.22em] text-dc-maroon dark:text-dc-pink-light">
-            Selamat datang di DC Workspace
-          </p>
-          <h1 className="mt-2 font-serif text-3xl">
-            Halo, {profile.firstName}.
-          </h1>
-          <p className="mt-2 max-w-xl text-sm opacity-65">
-            Lengkapi nama kamu dulu supaya sapaan, undangan, dan komunikasi dari
-            kami terasa lebih personal.
-          </p>
-        </div>
-        <form
-          onSubmit={save}
-          className="space-y-3 rounded-2xl border border-dc-maroon/20 bg-white p-4 dark:bg-[#121116]"
-        >
-          <p className="font-serif text-lg">Data diri singkat</p>
-          <input
-            required
-            value={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
-            placeholder="Nama depan"
-            className="w-full rounded-xl border border-black/10 px-3 py-2.5 text-sm dark:border-white/10 dark:bg-white/5"
-          />
-          <input
-            value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
-            placeholder="Nama belakang (opsional)"
-            className="w-full rounded-xl border border-black/10 px-3 py-2.5 text-sm dark:border-white/10 dark:bg-white/5"
-          />
-          {error && <p className="text-xs text-red-600">{error}</p>}
-          <button
-            disabled={saving}
-            className="w-full rounded-xl bg-dc-maroon px-4 py-2.5 text-sm text-white disabled:opacity-60"
-          >
-            {saving ? "Menyimpan..." : "Simpan dan mulai"}
-          </button>
-        </form>
-      </div>
-    </section>
-  );
+function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (v:string)=>void; placeholder: string }) {
+  return <label className="block"><span className="mb-1.5 block text-xs font-medium">{label}</span><input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} className="w-full rounded-xl border border-black/10 bg-transparent px-4 py-3 text-sm outline-none focus:border-dc-maroon dark:border-white/10" /></label>;
 }
+
+function DashboardHome({ ctx, guests, confirmed, pending, accent, button, go }: { ctx: Context|null; guests:Guest[]; confirmed:number; pending:number; accent:string; button:string; go:(id:Tab)=>void }) {
+  const days = useMemo(() => { const raw = (ctx?.wedding as any)?.eventDate; if (!raw) return "—"; const d = new Date(raw); if (Number.isNaN(d.getTime())) return "—"; return Math.max(0, Math.ceil((d.getTime()-Date.now())/86400000)); }, [ctx]);
+  return <div className="mx-auto max-w-7xl space-y-6 p-5 sm:p-8"><div className="rounded-3xl border border-dc-maroon/15 bg-gradient-to-br from-white to-[#f8ece9] p-6 dark:from-[#121116] dark:to-[#21151a] sm:p-8"><p className={`text-xs uppercase tracking-[0.22em] ${accent}`}>Selamat datang, {ctx?.profile.displayName || "kamu"}</p><h2 className="mt-2 font-serif text-3xl sm:text-4xl">{ctx?.wedding.groomName || "Pasangan"} &amp; {ctx?.wedding.brideName || "Kamu"}</h2><p className="mt-2 text-sm opacity-60">Wedding workspace untuk mengatur undangan, RSVP, tamu, dan kebutuhan hari H.</p></div><div className="grid grid-cols-2 gap-3 lg:grid-cols-4"><Stat label="Undangan dibagikan" value={String((ctx as any)?.wedding?.invitationId ? guests.length : 0)} icon={Send} /><Stat label="Total RSVP" value={String(confirmed)} icon={MessageSquareHeart} /><Stat label="Undangan dibuat" value="1 / 2" icon={Mail} /><Stat label="Hari menuju acara" value={String(days)} icon={CalendarDays} /></div><div className="grid gap-6 lg:grid-cols-2"><Card className="p-6"><div className="flex items-center justify-between"><div><h3 className="font-serif text-xl">Ringkasan RSVP</h3><p className="mt-1 text-xs opacity-60">Pantau respons tamu secara real-time.</p></div><Bell className={`h-5 w-5 ${accent}`} /></div><div className="mt-5 grid grid-cols-3 gap-3 text-center"><MiniStat label="Hadir" value={confirmed} /><MiniStat label="Belum jawab" value={pending} /><MiniStat label="Total tamu" value={guests.length} /></div><button onClick={()=>go("rsvp")} className={`mt-5 w-full rounded-xl px-4 py-3 text-xs text-white ${button}`}>Lihat RSVP</button></Card><Card className="p-6"><h3 className="font-serif text-xl">Aksi cepat</h3><p className="mt-1 text-xs opacity-60">Bagian yang paling sering digunakan.</p><div className="mt-5 grid grid-cols-2 gap-3"><Quick icon={Edit3} text="Edit Undangan" onClick={()=>go("invitation")} /><Quick icon={CalendarDays} text="Rangkaian Acara" onClick={()=>go("events")} /><Quick icon={Users} text="Penempatan Tamu" onClick={()=>go("placement")} /><Quick icon={QrCode} text="Usher App" onClick={()=>go("usher")} /></div></Card></div></div>;
+}
+function Stat({label,value,icon:Icon}:{label:string;value:string;icon:any}) { return <Card className="p-5"><div className="flex justify-between text-xs opacity-60"><span>{label}</span><Icon className="h-4 w-4 text-dc-maroon dark:text-dc-pink-light" /></div><p className="mt-3 font-serif text-3xl">{value}</p></Card>; }
+function MiniStat({label,value}:{label:string;value:number}) { return <div className="rounded-xl bg-black/[.03] p-4 dark:bg-white/[.04]"><p className="font-serif text-2xl">{value}</p><p className="mt-1 text-[10px] opacity-50">{label}</p></div>; }
+function Quick({icon:Icon,text,onClick}:{icon:any;text:string;onClick:()=>void}) { return <button onClick={onClick} className="flex items-center gap-2 rounded-xl border border-black/10 p-3 text-left text-xs hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"><Icon className="h-4 w-4 text-dc-maroon dark:text-dc-pink-light" />{text}</button>; }
+
+function EventPanel({ ctx, onSaved, accent, button }: { ctx: Context|null; onSaved:()=>void; accent:string; button:string }) { const [date,setDate]=useState(""); const [start,setStart]=useState(""); const [end,setEnd]=useState(""); const [venue,setVenue]=useState(""); const [address,setAddress]=useState(""); const [description,setDescription]=useState(""); const [saving,setSaving]=useState(false); useEffect(()=>{ const w:any=ctx?.wedding; setDate(w?.eventDate ? String(w.eventDate).slice(0,10):""); setVenue(w?.venue||""); },[ctx]); async function save(){setSaving(true);try{await fetch("/api/invitations",{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({eventDate:date,ceremonyTime:start,receptionTime:end,venue,description,eventNotes:address})});onSaved();}finally{setSaving(false)}} return <div className="mx-auto max-w-4xl space-y-6 p-5 sm:p-8"><Card className="p-6"><p className={`text-xs uppercase tracking-[.2em] ${accent}`}>Event setup</p><h2 className="mt-2 font-serif text-3xl">Rangkaian Acara</h2><p className="mt-2 text-sm opacity-60">Data tersimpan di undangan dan akan otomatis tampil di halaman publik.</p><div className="mt-6 grid gap-4 sm:grid-cols-2"><Field label="Nama Acara / Lokasi" value={venue} onChange={setVenue} placeholder="Contoh: Holy Matrimony & Reception" /><Field label="Tanggal Acara" value={date} onChange={setDate} placeholder="YYYY-MM-DD" /><Field label="Zona Waktu" value="Asia/Jakarta (WIB)" onChange={()=>{}} placeholder="Asia/Jakarta" /><Field label="Waktu mulai" value={start} onChange={setStart} placeholder="16:00" /><Field label="Waktu selesai" value={end} onChange={setEnd} placeholder="22:00" /><Field label="Lokasi peta / Google Maps" value={address} onChange={setAddress} placeholder="Paste link Google Maps" /></div><label className="mt-4 block"><span className="mb-1.5 block text-xs font-medium">Deskripsi Acara</span><textarea value={description} onChange={e=>setDescription(e.target.value)} rows={5} className="w-full rounded-xl border border-black/10 bg-transparent p-4 text-sm outline-none dark:border-white/10" placeholder="Tuliskan detail acara..." /></label><button disabled={saving} onClick={save} className={`mt-5 rounded-xl px-5 py-3 text-xs text-white ${button}`}>{saving?"Menyimpan...":"Simpan Rangkaian Acara"}</button></Card><Card className="p-6"><div className="flex gap-3"><MapPin className={`h-5 w-5 ${accent}`} /><div><h3 className="font-serif text-xl">See Location</h3><p className="mt-1 text-xs opacity-60">Link lokasi yang disimpan akan dipakai tombol See Location pada undangan publik.</p></div></div></Card></div>; }
+
+function InvitationPanel({ slug, accent, button, published }: { slug:string; accent:string; button:string; published:boolean }) { const [copied,setCopied]=useState(false); const link=slug?`${typeof window!=="undefined"?window.location.origin:""}/invite/${slug}`:""; return <div className="mx-auto max-w-6xl space-y-6 p-5 sm:p-8"><Card className="p-6"><div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"><div><p className={`text-xs uppercase tracking-[.2em] ${accent}`}>Undangan Digital</p><h2 className="mt-2 font-serif text-3xl">Kelola Undangan</h2><p className="mt-2 text-sm opacity-60">Edit desain, password, link, publikasi, galeri, dan musik.</p></div><Link href="/dashboard/editor" className={`inline-flex items-center gap-2 rounded-xl px-4 py-3 text-xs text-white ${button}`}><Edit3 className="h-4 w-4" />Buka Studio</Link></div><div className="mt-6 grid gap-3 sm:grid-cols-2"><ActionCard icon={Edit3} title="Edit desain" text="Atur template dan layout." href="/dashboard/editor" accent={accent} /><ActionCard icon={LockKeyhole} title="Password undangan" text="Buat atau ubah password akses tamu." href="/dashboard/editor" accent={accent} /><ActionCard icon={ImageIcon} title="Galeri & foto" text="Kelola foto dan asset undangan." href="/dashboard/editor" accent={accent} /><ActionCard icon={Music2} title="Musik undangan" text="Gunakan musik bawaan atau upload sendiri." href="/dashboard/editor" accent={accent} /></div><div className="mt-6 rounded-xl border border-black/10 p-4 dark:border-white/10"><p className="text-xs font-medium">Link undangan</p><div className="mt-2 flex flex-col gap-2 sm:flex-row"><input readOnly value={link} className="min-w-0 flex-1 rounded-lg bg-black/5 px-3 py-2 text-xs dark:bg-white/5" /><button disabled={!link} onClick={()=>{navigator.clipboard.writeText(link);setCopied(true);setTimeout(()=>setCopied(false),1500)}} className={`rounded-lg px-4 py-2 text-xs text-white ${button}`}>{copied?"Tersalin":"Salin Link"}</button></div><p className="mt-2 text-[10px] opacity-50">Status: {published?"siap dipublikasi":"belum aktif / belum publish"}</p></div></Card></div>; }
+function ActionCard({icon:Icon,title,text,href,accent}:{icon:any;title:string;text:string;href:string;accent:string}) { return <Link href={href} className="rounded-xl border border-black/10 p-4 hover:bg-black/5 dark:border-white/10 dark:hover:bg-white/5"><Icon className={`h-5 w-5 ${accent}`} /><p className="mt-3 text-sm font-medium">{title}</p><p className="mt-1 text-xs opacity-60">{text}</p></Link>; }
+
+function RsvpPanel({ guests, slug, accent }: { guests:Guest[]; slug:string; accent:string }) { const confirmed=guests.filter(g=>g.rsvpStatus==="ATTENDING"); return <div className="mx-auto max-w-6xl space-y-6 p-5 sm:p-8"><Card className="p-6"><p className={`text-xs uppercase tracking-[.2em] ${accent}`}>Smart RSVP</p><h2 className="mt-2 font-serif text-3xl">RSVP &amp; Digital Ticket</h2><p className="mt-2 text-sm opacity-60">Setelah tamu submit RSVP, halaman sukses menampilkan ucapan terima kasih dan QR unik untuk check-in.</p></Card><div className="grid gap-4 md:grid-cols-3"><Stat label="Hadir" value={String(confirmed.length)} icon={MessageSquareHeart}/><Stat label="Tidak hadir" value={String(guests.filter(g=>g.rsvpStatus==="NOT_ATTENDING").length)} icon={Users}/><Stat label="Total RSVP" value={String(guests.length)} icon={QrCode}/></div><Card className="overflow-hidden"><div className="grid grid-cols-5 border-b border-black/10 px-5 py-3 text-[10px] font-semibold uppercase tracking-wider opacity-50 dark:border-white/10"><span className="col-span-2">Nama</span><span>RSVP</span><span>Pax</span><span>QR</span></div>{guests.slice(0,20).map(g=><div key={g.id} className="grid grid-cols-5 items-center px-5 py-4 text-xs"><span className="col-span-2 font-medium">{g.name}</span><span>{g.rsvpStatus}</span><span>{1+g.plusOnes}</span><QrCode className={`h-4 w-4 ${accent}`} /></div>)}{guests.length===0&&<p className="p-8 text-center text-sm opacity-50">Belum ada RSVP.</p>}</Card><p className="text-xs opacity-50">QR tamu terhubung dengan invitation slug {slug || "—"}.</p></div>; }
+
+function UsherPreview({ accent }: { accent:string }) { return <div className="mx-auto max-w-4xl p-5 sm:p-8"><Card className="p-8 text-center"><QrCode className={`mx-auto h-16 w-16 ${accent}`} /><h2 className="mt-5 font-serif text-3xl">Usher App</h2><p className="mx-auto mt-2 max-w-xl text-sm opacity-60">Pada hari H, usher melakukan scan QR tamu untuk memverifikasi nama, pax, meja, kursi, lalu check-in. QR tidak valid ditolak.</p><button className="mt-6 rounded-xl bg-black px-5 py-3 text-xs text-white dark:bg-white dark:text-black">Mulai Scan</button></Card></div>; }
+function SimplePanel({icon:Icon,title,text,href,button,buttonClass}:{icon:any;title:string;text:string;href:string;button:string;buttonClass:string}) { return <div className="mx-auto max-w-4xl p-5 sm:p-8"><Card className="p-8"><Icon className="h-8 w-8 text-dc-maroon dark:text-dc-pink-light" /><h2 className="mt-4 font-serif text-3xl">{title}</h2><p className="mt-2 max-w-xl text-sm opacity-60">{text}</p><Link href={href} className={`mt-6 inline-flex rounded-xl px-5 py-3 text-xs text-white ${buttonClass}`}>{button}</Link></Card></div>; }
