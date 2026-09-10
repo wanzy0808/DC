@@ -31,7 +31,14 @@ aside nav > p { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] form button[type="submit"] { background-color: var(--primary); color: var(--primary-foreground); }
 [data-slot="dialog-content"] form button[type="submit"]:hover { background-color: color-mix(in oklab, var(--primary), black 12%); }
 
-/* Public pages use one restrained DC palette: maroon in light mode, pink in dark mode. */
+/* Dashboard navigation styling: Cinzel for menu items, Fauna One for section labels, maroon instead of pink. */
+aside nav button, aside nav a { font-family: var(--font-cinzel); }
+aside nav > p { font-family: var(--font-fauna); }
+aside nav button[class*="bg-[#FCE8EF]"], aside nav button[class*="bg-[#C26B70]/15"] { background-color: #7A1C25 !important; color: #FFFFFF !important; }
+aside nav button[class*="text-[#7A1C25]"], aside nav button[class*="text-[#C26B70]"], aside nav button[class*="text-[#E8A5AE]"], aside nav a[class*="text-[#C26B70]"], aside nav a[class*="text-[#E8A5AE]"] { color: #7A1C25 !important; }
+.dark aside nav button[class*="bg-[#C26B70]/15"] { background-color: #7A1C25 !important; color: #FFFFFF !important; }
+
+/* Public pages keep their existing palette; these dashboard overrides are intentionally scoped to the sidebar. */
 .public-page .bg-dc-maroon, .public-page .bg-dc-pink { background-color: var(--primary) !important; color: var(--primary-foreground) !important; }
 .public-page .text-dc-maroon { color: var(--primary) !important; }
 .public-page .border-dc-maroon, .public-page .border-dc-pink { border-color: var(--border) !important; }
