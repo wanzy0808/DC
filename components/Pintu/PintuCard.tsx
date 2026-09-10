@@ -38,7 +38,6 @@ export default function PintuCard({
             : "hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
         }`}
       >
-        {/* Gambar & Detail Dalam Pintu (Terbuka) */}
         <div
           className={`absolute inset-0 bg-cover bg-center transition-all duration-700 scale-105 flex flex-col justify-end p-5 ${
             isActive ? "grayscale-0" : "grayscale"
@@ -49,60 +48,32 @@ export default function PintuCard({
               : `linear-gradient(to top, rgba(26,26,26,0.95), rgba(26,26,26,0.2)), url('${bgImage}')`,
           }}
         >
-          <div
-            className={`transition-all duration-500 transform text-white ${
-              isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
-            }`}
-          >
+          <div className={`transition-all duration-500 transform text-white ${isActive ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"}`}>
             <div className="flex gap-1.5 mb-2 flex-wrap">
               {innerDetails?.tags?.map((tag, idx) => (
-                <span
-                  key={idx}
-                  className="text-[9px] px-2 py-0.5 rounded font-mono uppercase border bg-white/20 border-white/40 text-white"
-                >
+                <span key={idx} className="text-[9px] px-2 py-0.5 rounded font-mono uppercase border bg-white/20 border-white/40 text-white">
                   {tag}
                 </span>
               ))}
             </div>
-            <h4 className="font-serif text-lg font-bold mb-1 leading-snug">
-              {title}
-            </h4>
-            <p className="text-[11px] text-gray-300 leading-relaxed mb-3">
-              {innerDetails?.desc}
-            </p>
-            <div className="text-[10px] font-semibold tracking-wider flex items-center gap-1 uppercase text-white">
-              MASUK <span>→</span>
-            </div>
+            <h4 className="font-[family-name:var(--font-dc-heading)] text-lg font-bold mb-1 leading-snug">{title}</h4>
+            <p className="text-[11px] text-gray-300 leading-relaxed mb-3">{innerDetails?.desc}</p>
+            <div className="text-[10px] font-semibold tracking-wider flex items-center gap-1 uppercase text-white">MASUK <span>→</span></div>
           </div>
         </div>
 
-        {/* Pintu Kiri (Merah + Gagang Putih) */}
         <div
-          className={`absolute top-0 bottom-0 left-0 w-1/2 transition-transform duration-700 ease-in-out z-10 flex items-center justify-end pr-[3px] border-r border-white/40 ${
-            isDarkMode ? "bg-[#C26B70]" : "bg-[#7A1C25]"
-          } ${isActive ? "-translate-x-full" : "translate-x-0"}`}
+          className={`absolute top-0 bottom-0 left-0 w-1/2 transition-transform duration-700 ease-in-out z-10 flex items-center justify-end pr-[3px] border-r border-white/40 bg-[var(--primary)] ${isActive ? "-translate-x-full" : "translate-x-0"}`}
         >
-          <div
-            className={`w-[3px] h-10 rounded-l-sm bg-white shadow-[0_0_8px_#ffffff] transition-opacity ${
-              isActive ? "opacity-0" : "opacity-90"
-            }`}
-          />
+          <div className={`w-[3px] h-10 rounded-l-sm bg-white shadow-[0_0_8px_#ffffff] transition-opacity ${isActive ? "opacity-0" : "opacity-90"}`} />
         </div>
 
-        {/* Pintu Kanan (Merah + Gagang Putih) */}
         <div
-          className={`absolute top-0 bottom-0 right-0 w-1/2 transition-transform duration-700 ease-in-out z-10 flex items-center justify-start pl-[3px] border-l border-white/40 ${
-            isDarkMode ? "bg-[#C26B70]" : "bg-[#7A1C25]"
-          } ${isActive ? "translate-x-full" : "translate-x-0"}`}
+          className={`absolute top-0 bottom-0 right-0 w-1/2 transition-transform duration-700 ease-in-out z-10 flex items-center justify-start pl-[3px] border-l border-white/40 bg-[var(--primary)] ${isActive ? "translate-x-full" : "translate-x-0"}`}
         >
-          <div
-            className={`w-[3px] h-10 rounded-r-sm bg-white shadow-[0_0_8px_#ffffff] transition-opacity ${
-              isActive ? "opacity-0" : "opacity-90"
-            }`}
-          />
+          <div className={`w-[3px] h-10 rounded-r-sm bg-white shadow-[0_0_8px_#ffffff] transition-opacity ${isActive ? "opacity-0" : "opacity-90"}`} />
         </div>
 
-        {/* Hiasan Bunga (Floral Ornament) di bagian Atas Pintu */}
         <div className="absolute top-2 left-0 right-0 z-20 flex justify-center pointer-events-none opacity-80">
           <svg width="70" height="28" viewBox="0 0 100 40" fill="none" stroke="white" strokeWidth="1.5">
             <path d="M50 35 C 30 35, 20 15, 5 20 C 20 20, 30 10, 50 25 C 70 10, 80 20, 95 20 C 80 15, 70 35, 50 35 Z" fill="rgba(255,255,255,0.15)" />
@@ -112,18 +83,9 @@ export default function PintuCard({
           </svg>
         </div>
 
-        {/* Cover Depan (Menampilkan Nomor dan Judul Pintu) */}
-        <div
-          className={`absolute inset-0 z-20 flex flex-col justify-end p-5 text-center pointer-events-none transition-opacity duration-500 bg-gradient-to-t from-black/80 via-black/20 to-transparent ${
-            isActive ? "opacity-0" : "opacity-100"
-          }`}
-        >
-          <span className="text-[10px] tracking-widest uppercase mb-1 font-semibold text-white/80 font-mono">
-            {number}
-          </span>
-          <h3 className="font-serif text-base font-bold text-white tracking-wide">
-            {title}
-          </h3>
+        <div className={`absolute inset-0 z-20 flex flex-col justify-end p-5 text-center pointer-events-none transition-opacity duration-500 bg-gradient-to-t from-black/80 via-black/20 to-transparent ${isActive ? "opacity-0" : "opacity-100"}`}>
+          <span className="text-[10px] tracking-widest uppercase mb-1 font-semibold text-white/80 font-mono">{number}</span>
+          <h3 className="font-[family-name:var(--font-dc-heading)] text-base font-bold text-white tracking-wide">{title}</h3>
         </div>
       </div>
     </Link>
