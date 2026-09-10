@@ -9,164 +9,107 @@ import { Button } from "@/components/ui/button";
 const doorContents = {
   1: {
     badge: "[ Perencanaan Pernikahan ]",
-    title: (
-      <>
-        Kami yang berdiri di belakang hari besarmu.
-      </>
-    ),
+    title: <>Kami yang berdiri di belakang hari besarmu.</>,
     description: "Dari konsep sampai vendor, dan rundown sampai menit terakhir resepsi: Kamu hanya perlu hadir dan menikmatinya.",
-    features: [
-      "Konsep acara & vendor match",
-      "Manajemen anggaran & jadwal",
-      "Tim eksekusi di lapangan"
-    ],
+    features: ["Konsep acara & vendor match", "Manajemen anggaran & jadwal", "Tim eksekusi di lapangan"],
     quote: "Rundown-nya rapi, kami berasa tenang tanpa harus lelah memikirkan detail.",
     quoteAuthor: "Riko & Sarah — WO Client",
     buttonText: "Pilih pintunya →",
-    href: "/wedding-planner"
+    href: "/wedding-planner",
   },
   2: {
     badge: "[ Undangan Digital ]",
-    title: (
-      <>
-        Undanganmu tak hanya cantik tetapi, cepat dan mudah.
-      </>
-    ),
+    title: <>Undanganmu tak hanya cantik tetapi, cepat dan mudah.</>,
     description: "Satu tautan berisi undangan, RSVP, buku tamu digital, dan galeri. Tamu cukup membuka ponsel, kamu langsung tahu siapa yang datang.",
-    features: [
-      "Undangan digital dengan desain kustom",
-      "Buku Tamu Digital & QR Check-in",
-      "RSVP realtime dan peta lokasi",
-      "Katalog pilihan, galeri, dan cerita kamu"
-    ],
-    quote: "Tamu-tamu senang, absen tetap teratur tanpa antre di meja.",
+    features: ["Undangan digital dengan desain kustom", "Buku Tamu Digital & QR Check-in", "RSVP realtime dan peta lokasi", "Katalog pilihan, galeri, dan cerita kamu"],
+    quote: "Tamu-tamu senang, absen tetap teratur tanpa antre di meja penerima tamu.",
     quoteAuthor: "Adit & Maya — Digital Client",
     buttonText: "Pilih pintunya →",
-    href: "/d-invitation"
+    href: "/d-invitation",
   },
   3: {
     badge: "[ Buku Tamu Digital ]",
-    title: (
-      <>
-        Pencatatan tamu presisi tanpa antrean panjang.
-      </>
-    ),
+    title: <>Pencatatan tamu presisi tanpa antrean panjang.</>,
     description: "Sistem buku tamu digital dengan QR Code check-in instan, ucapan digital real-time, dan laporan kehadiran tamu secara rinci.",
-    features: [
-      "QR Code Check-in kilat & WhatsApp scanner",
-      "Laporan kehadiran tamu otomatis & real-time",
-      "Display ucapan layar langsung di venue"
-    ],
+    features: ["QR Code Check-in kilat & WhatsApp scanner", "Laporan kehadiran tamu otomatis & real-time", "Display ucapan layar langsung di venue"],
     quote: "Gak ada antrean menumpuk di meja penerima tamu, jadi serba cepat!",
     quoteAuthor: "Dion & Nina — Guestbook Client",
     buttonText: "Pilih pintunya →",
-    href: "/guestbook"
-  }
+    href: "/guestbook",
+  },
 };
 
 const idleHeadlineText = "Pernikahan terkadang terasa rumit tetapi kami hadir untuk menyederhanakannya. Dari konsep, vendor, hingga undangan digital: semua dalam satu platform.";
 
 export default function Home() {
   const [activeDoor, setActiveDoor] = useState<1 | 2 | 3 | null>(null);
-
   const isIdle = activeDoor === null;
   const selectedDoor = activeDoor ?? 1;
   const currentContent = doorContents[selectedDoor as keyof typeof doorContents];
-
   const idleWords = idleHeadlineText.split(" ");
 
   return (
-    <div className="h-[calc(100svh-80px)] min-h-[calc(100svh-80px)] max-h-[calc(100svh-80px)] w-full relative overflow-hidden select-none flex flex-col justify-between transition-colors duration-500 bg-[var(--background)] text-[var(--foreground)]">
-      
+    <div className="relative flex h-[calc(100svh-80px)] min-h-[calc(100svh-80px)] max-h-[calc(100svh-80px)] w-full select-none flex-col justify-between overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-500">
       <RomanticBackground />
 
-      {/* KONTEN UTAMA */}
-      <main className="mx-auto px-4 flex-1 flex items-center relative z-10 pt-20 pb-12">
-        <section className="grid grid-cols-1 md:grid-cols-12 gap-4 lg:gap-8 items-center w-full">
-          
-          {/* SISI KIRI: DESKRIPSI DINAMIS */}
-          <div className="md:col-span-5 space-y-2 lg:space-y-3">
-            <div 
-              key={isIdle ? "idle" : selectedDoor} 
-              className="animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out space-y-2 lg:space-y-3"
-            >
+      <main className="relative z-10 mx-auto flex w-[92vw] max-w-[1400px] flex-1 items-center px-2 pt-12 pb-8 lg:pt-16 lg:pb-10">
+        <section className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-12 lg:gap-10">
+          <div className="space-y-3 md:col-span-5 lg:space-y-5">
+            <div key={isIdle ? "idle" : selectedDoor} className="animate-in fade-in slide-in-from-bottom-3 space-y-3 duration-500 ease-out lg:space-y-5">
               {isIdle ? (
                 <>
-                  <span className="tracking-[0.22em] text-sm font-semibold uppercase font-mono block text-[var(--primary)]">
-                    DC Wedding - Platform Digitalisasi Pernikahan Terpadu
+                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-[var(--primary)] sm:text-xs">
+                    DC Wedding · Platform Digitalisasi Pernikahan Terpadu
                   </span>
-
-                  {/* Headline dengan animasi stretch yang singkat dan bertahap */}
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-[family-name:var(--font-dc-heading)] leading-[1.2] tracking-tight text-[var(--foreground)] flex flex-wrap gap-x-[0.25em] gap-y-1">
+                  <h1 className="flex max-w-xl flex-wrap gap-x-[0.25em] gap-y-1 font-[family-name:var(--font-dc-heading)] text-3xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
                     {idleWords.map((word, index) => (
-                      <span
-                        key={index}
-                        className="dc-snappy-word inline-block"
-                        style={{
-                          animationDelay: `${index * 55}ms`
-                        }}
-                      >
+                      <span key={index} className="dc-snappy-word inline-block" style={{ animationDelay: `${index * 45}ms` }}>
                         {word}
                       </span>
                     ))}
                   </h1>
-
-                  <p className="text-sm lg:text-base leading-relaxed text-[color:var(--muted-foreground)] opacity-80">
+                  <p className="max-w-lg text-sm leading-relaxed text-[color:var(--muted-foreground)] sm:text-base">
                     Buka salah satu pintu di kanan untuk melihat. Biarkan kami membantu mewujudkan hari bahagiamu.
                   </p>
                 </>
               ) : (
                 <>
-                  <span className="tracking-[0.22em] text-xs md:text-sm font-semibold uppercase font-mono block text-[var(--primary)]">
+                  <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)] sm:text-xs">
                     {currentContent.badge}
                   </span>
-
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-[family-name:var(--font-dc-heading)] leading-[1.2] tracking-tight text-[var(--foreground)]">
+                  <h1 className="max-w-xl font-[family-name:var(--font-dc-heading)] text-3xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
                     {currentContent.title}
                   </h1>
-
-                  <p className="text-sm lg:text-base leading-relaxed text-[color:var(--muted-foreground)] opacity-80">
+                  <p className="max-w-lg text-sm leading-relaxed text-[color:var(--muted-foreground)] sm:text-base">
                     {currentContent.description}
                   </p>
-
-                  <ul className="space-y-1 pt-1">
+                  <ul className="space-y-1.5 pt-1">
                     {currentContent.features.map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm lg:text-base text-[color:var(--muted-foreground)]">
-                        <span className="inline-flex h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
+                      <li key={idx} className="flex items-center gap-2 text-sm text-[color:var(--muted-foreground)] sm:text-base">
+                        <span className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)]" />
                         <span>{item}</span>
                       </li>
                     ))}
                   </ul>
-
-                  <div className="pt-1 pb-1 border-l-2 border-[var(--primary)] pl-3 my-1">
-                    <p className="italic text-sm lg:text-base leading-relaxed text-[var(--foreground)]">
-                      “{currentContent.quote}”
-                    </p>
-                    <span className="text-[11px] font-mono uppercase tracking-[0.18em] text-[color:var(--muted-foreground)] block mt-0.5">
-                      — {currentContent.quoteAuthor}
-                    </span>
+                  <div className="my-1 border-l-2 border-[var(--primary)] py-1 pl-3">
+                    <p className="text-sm italic leading-relaxed text-[var(--foreground)] sm:text-base">“{currentContent.quote}”</p>
+                    <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.16em] text-[color:var(--muted-foreground)]">— {currentContent.quoteAuthor}</span>
                   </div>
-
-                  <div className="pt-1">
-                    <Link href={currentContent.href}>
-                      <Button className="rounded-full text-xs lg:text-sm tracking-[0.2em] uppercase px-5 py-3 font-semibold shadow-xl text-white transition-all duration-300 transform hover:scale-[1.02] bg-[var(--primary)] hover:brightness-110">
-                        {currentContent.buttonText}
-                      </Button>
-                    </Link>
-                  </div>
+                  <Link href={currentContent.href} className="inline-flex pt-1">
+                    <Button className="rounded-full bg-primary px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-lg transition hover:bg-primary/85">
+                      {currentContent.buttonText}
+                    </Button>
+                  </Link>
                 </>
               )}
             </div>
           </div>
 
-          {/* SISI KANAN: PINTU INTERAKTIF */}
-          <div className="md:col-span-7 flex justify-center items-center">
+          <div className="flex items-center justify-center md:col-span-7">
             <PintuSection activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
           </div>
-
         </section>
       </main>
-
     </div>
   );
 }
