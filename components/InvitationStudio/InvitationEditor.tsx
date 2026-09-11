@@ -118,7 +118,16 @@ export default function InvitationEditor() {
   }
 
   const publicUrl = invitation
-    ? `${typeof window === "undefined" ? "" : window.location.origin}/invite/${invitation.slug}`
+    ? (() => {
+        if (typeof window === "undefined") return "";
+        const hostname = window.location.hostname;
+        const port = window.location.port ? `:${window.location.port}` : "";
+        const rootDomain = process.env.NEXT_PUBLIC_INVITATION_ROOT_DOMAIN ?? "dcwedding.com";
+        const host = hostname === "localhost" || hostname.endsWith(".localhost")
+          ? `${invitation.slug}.localhost${port}`
+          : `${invitation.slug}.${rootDomain}`;
+        return `${window.location.protocol}//${host}`;
+      })()
     : "";
 
   async function copyLink() {
@@ -179,7 +188,7 @@ export default function InvitationEditor() {
 
       <div className="flex items-start justify-center lg:col-span-5">
         <div className="sticky top-8 w-[280px] overflow-hidden rounded-[38px] border-8 border-neutral-300 bg-black p-2 shadow-2xl">
-          <div className="relative aspect-[9/16] overflow-hidden rounded-[28px] bg-[#251b1e] text-white"><img src={image} alt="Preview undangan" className="absolute inset-0 h-full w-full object-cover opacity-60" /><div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/80" /><div className="relative flex h-full flex-col items-center justify-end p-6 pb-12 text-center"><p className="text-[9px] uppercase tracking-[0.3em]">The Wedding Of</p><h2 className="mt-3 font-serif text-3xl">{form.groomName || "Rio"} &amp; {form.brideName || "Lyvia"}</h2><p className="mt-3 text-[10px] opacity-80">{form.eventDate || "2026-09-26"}</p><p className="mt-1 text-[10px] opacity-80">{form.venue || "Gedung Pernikahan"}</p><a href={invitation ? `/invite/${invitation.slug}` : "#"} target="_blank" className="mt-6 inline-flex items-center gap-1 text-[9px] uppercase tracking-widest underline"><ExternalLink className="h-3 w-3" /> Buka undangan</a></div></div>
+          <div className="relative aspect-[9/16] overflow-hidden rounded-[28px] bg-[#251b1e] text-white"><img src={image} alt="Preview undangan" className="absolute inset-0 h-full w-full object-cover opacity-60" /><div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/10 to-black/80" /><div className="relative flex h-full flex-col items-center justify-end p-6 pb-12 text-center"><p className="text-[9px] uppercase tracking-[0.3em]">The Wedding Of</p><h2 className="mt-3 font-serif text-3xl">{form.groomName || "Rio"} &amp; {form.brideName || "Lyvia"}</h2><p className="mt-3 text-[10px] opacity-80">{form.eventDate || "2026-09-26"}</p><p className="mt-1 text-[10px] opacity-80">{form.venue || "Gedung Pernikahan"}</p><a href={publicUrl || "#"} target="_blank" className="mt-6 inline-flex items-center gap-1 text-[9px] uppercase tracking-widest underline"><ExternalLink className="h-3 w-3" /> Buka undangan</a></div></div>
         </div>
       </div>
     </div>
