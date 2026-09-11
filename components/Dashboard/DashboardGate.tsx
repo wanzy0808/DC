@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { Heart, LockKeyhole, MessageCircle, Sparkles } from "lucide-react";
+import { Heart, LockKeyhole, Sparkles } from "lucide-react";
 
 type Invitation = {
   groomName: string;
@@ -85,7 +85,7 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
   if (loading) return <div className="grid min-h-screen place-items-center bg-[#FAF7F2] text-sm text-[#4A3434]">Menyiapkan workspace...</div>;
 
   return (
-    <>
+    <div className="dashboard-gate-shell">
       {children}
       {showSetup && invitation && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-[#171217]/55 p-4 backdrop-blur-sm">
@@ -104,7 +104,11 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
           </form>
         </div>
       )}
-      <a href="https://wa.me/6281234567890?text=Halo%20DC%20Wedding%2C%20saya%20butuh%20bantuan%20dengan%20dashboard." target="_blank" rel="noreferrer" aria-label="Chat bantuan WhatsApp" className="fixed bottom-5 right-5 z-40 grid h-12 w-12 place-items-center rounded-full border border-black/10 bg-[#25D366] text-white shadow-xl transition hover:scale-105 hover:shadow-2xl dark:border-white/10"><MessageCircle className="h-5 w-5" /></a>
-    </>
+      <style jsx global>{`
+        .dashboard-gate-shell .dc-dashboard > a[aria-label="Bantuan WhatsApp"] {
+          display: none !important;
+        }
+      `}</style>
+    </div>
   );
 }
