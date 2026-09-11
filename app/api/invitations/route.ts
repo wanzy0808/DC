@@ -3,54 +3,64 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
-function makeSlug(firstName: string, userId: string) {
+function makeSlug(firstName: string, userId: string, type: "WEDDING" | "ADAT_AKAD") {
   const name = firstName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  return `${name || "wedding"}-moment-${userId.slice(-6)}`;
+  const suffix = type === "ADAT_AKAD" ? "-akad" : "-moment";
+  return `${name || "wedding"}${suffix}-${userId.slice(-6)}`;
 }
 
-async function getOrCreateInvitation(user: { id: string; firstName: string }) {
+async function getUserPayment(userId: string) {
+  return prisma.payment.findFirst({
+    where: { userId, status: "PAID", packageKey: { in: ["INVITATION_BASIC", "INVITATION_GUESTBOOK"] } },
+    orderBy: { paidAt: "desc" },
+  });
+}
+
+async function getOrCreateInvitation(user: { id: string; firstName: string }, type: "WEDDING" | "ADAT_AKAD") {
   const existing = await prisma.invitation.findFirst({
-    where: { ownerId: user.id },
+    where: { ownerId: user.id, type },
     include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
     orderBy: { createdAt: "asc" },
   });
-  if (existing) {
-    await prisma.payment.upsert({
-      where: { invitationId: existing.id },
-      update: {},
-      create: { userId: user.id, invitationId: existing.id, amount: 0 },
-    });
-    return prisma.invitation.findUniqueOrThrow({
-      where: { id: existing.id },
-      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-    });
-  }
+  if (existing) return existing;
 
   const invitation = await prisma.invitation.create({
     data: {
       ownerId: user.id,
-      slug: makeSlug(user.firstName, user.id),
-      type: "WEDDING",
-      title: "Rio & Lyvia",
+      slug: makeSlug(user.firstName, user.id, type),
+      type,
+      title: type === "ADAT_AKAD" ? "Akad & Sangjit" : "Rio & Lyvia",
       groomName: "Rio",
       brideName: "Lyvia",
       venue: "Gedung Pernikahan",
       eventDate: new Date("2026-09-26T09:00:00.000Z"),
-      description: "Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir di hari istimewa kami.",
-      assets: { create: [] },
+      ceremonyTime: type === "ADAT_AKAD" ? "09:00" : null,
+      description: type === "ADAT_AKAD"
+        ? "Dengan penuh rasa syukur, kami mengundang Anda untuk hadir di rangkaian akad dan sangjit kami."
+        : "Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir di hari istimewa kami.",
     },
   });
-  await prisma.payment.create({ data: { userId: user.id, invitationId: invitation.id, amount: 0 } });
+
+  // One Digital Invitation purchase unlocks both the main wedding invitation
+  // and its separate Akad/Sangjit invitation. The payment itself stays on the
+  // main WEDDING record so one purchase is not counted twice.
+  if (type === "WEDDING") {
+    await prisma.payment.create({ data: { userId: user.id, invitationId: invitation.id, amount: 0 } });
+  }
+
   return prisma.invitation.findUniqueOrThrow({
     where: { id: invitation.id },
     include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
   });
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-  return NextResponse.json({ invitation: await getOrCreateInvitation(user) });
+  const type = new URL(request.url).searchParams.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+  const invitation = await getOrCreateInvitation(user, type);
+  const paid = Boolean(await getUserPayment(user.id));
+  return NextResponse.json({ invitation: { ...invitation, accessPaid: paid } });
 }
 
 export async function PUT(request: Request) {
@@ -58,10 +68,11 @@ export async function PUT(request: Request) {
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   try {
-    const invitation = await getOrCreateInvitation(user);
     const body = await request.json();
-    const groomName = String(body.groomName ?? "").trim();
-    const brideName = String(body.brideName ?? "").trim();
+    const type = body.type === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+    const invitation = await getOrCreateInvitation(user, type);
+    const groomName = String(body.groomName ?? invitation.groomName).trim();
+    const brideName = String(body.brideName ?? invitation.brideName).trim();
     const venue = String(body.venue ?? invitation.venue).trim();
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim() || invitation.templateKey;
@@ -70,12 +81,11 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Nama pasangan, tempat, dan tanggal wajib diisi." }, { status: 400 });
     }
 
-    // A user may edit the template/data while unpaid, but publication is only
-    // allowed when the actual Digital Invitation package is PAID.
-    const canPublish = hasPaidDigitalInvitation(invitation.payment);
+    const userPayment = await getUserPayment(user.id);
+    const canPublish = Boolean(userPayment) || hasPaidDigitalInvitation(invitation.payment);
 
     const updated = await prisma.invitation.update({
-      where: { id: invitation.id, ownerId: user.id },
+      where: { id: invitation.id },
       data: {
         groomName,
         brideName,
@@ -83,7 +93,7 @@ export async function PUT(request: Request) {
         eventDate,
         ceremonyTime: String(body.ceremonyTime ?? "").trim() || null,
         receptionTime: String(body.receptionTime ?? "").trim() || null,
-        title: `${groomName} & ${brideName}`,
+        title: type === "ADAT_AKAD" ? `${groomName} & ${brideName} · Akad & Sangjit` : `${groomName} & ${brideName}`,
         templateKey,
         description: String(body.description ?? "").trim() || null,
         weddingHashtag: String(body.weddingHashtag ?? "").trim() || null,
@@ -99,7 +109,7 @@ export async function PUT(request: Request) {
       include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
     });
 
-    return NextResponse.json({ invitation: updated });
+    return NextResponse.json({ invitation: updated, accessPaid: Boolean(userPayment) });
   } catch {
     return NextResponse.json({ error: "Undangan belum dapat disimpan." }, { status: 500 });
   }
