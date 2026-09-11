@@ -1,42 +1,92 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 const maxAudioSize = 10 * 1024 * 1024;
+const maxImageSize = 15 * 1024 * 1024;
+const maxAssets = 30;
 const allowedAudioTypes = new Set(["audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/aac", "audio/mp4", "audio/x-m4a"]);
+const allowedImageTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
+
+export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
+  let savedPath: string | null = null;
+
   try {
     const formData = await request.formData();
     const invitationId = String(formData.get("invitationId") ?? "");
+    const type = String(formData.get("type") ?? "").toUpperCase() === "IMAGE" ? "IMAGE" : "AUDIO";
     const file = formData.get("file");
-    if (!(file instanceof File) || !invitationId) return NextResponse.json({ error: "File musik dan undangan wajib diisi." }, { status: 400 });
-    if (!allowedAudioTypes.has(file.type) || file.size > maxAudioSize) {
+
+    if (!(file instanceof File) || !invitationId) {
+      return NextResponse.json({ error: type === "IMAGE" ? "File gambar dan undangan wajib diisi." : "File musik dan undangan wajib diisi." }, { status: 400 });
+    }
+
+    if (type === "IMAGE") {
+      if (!allowedImageTypes.has(file.type) || file.size > maxImageSize) {
+        return NextResponse.json({ error: "Gunakan JPG, PNG, atau WebP maksimal 15 MB." }, { status: 400 });
+      }
+    } else if (!allowedAudioTypes.has(file.type) || file.size > maxAudioSize) {
       return NextResponse.json({ error: "Gunakan audio MP3, WAV, OGG, AAC, atau M4A maksimal 10 MB." }, { status: 400 });
     }
 
     const invitation = await prisma.invitation.findFirst({ where: { id: invitationId, ownerId: user.id } });
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+
     const assetCount = await prisma.invitationAsset.count({ where: { invitationId } });
-    if (assetCount >= 30) return NextResponse.json({ error: "Maksimal 30 asset per undangan." }, { status: 400 });
+    if (assetCount >= maxAssets) {
+      return NextResponse.json({ error: `Maksimal ${maxAssets} asset per undangan (gambar + musik).` }, { status: 400 });
+    }
 
-    const extension = path.extname(file.name).toLowerCase() || ".mp3";
-    const fileName = `${randomUUID()}${extension}`;
-    const uploadDirectory = path.join(process.cwd(), "public", "uploads", "music");
+    const originalBuffer = Buffer.from(await file.arrayBuffer());
+    let outputBuffer: Buffer;
+    let fileName: string;
+    let uploadDirectory: string;
+    let url: string;
+    let title = file.name;
+
+    if (type === "IMAGE") {
+      outputBuffer = await sharp(originalBuffer)
+        .rotate()
+        .resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: 82 })
+        .toBuffer();
+      fileName = `${randomUUID()}.webp`;
+      uploadDirectory = path.join(process.cwd(), "public", "uploads", "images");
+      url = `/uploads/images/${fileName}`;
+      title = path.basename(file.name, path.extname(file.name)) + ".webp";
+    } else {
+      outputBuffer = originalBuffer;
+      const extension = path.extname(file.name).toLowerCase() || ".mp3";
+      fileName = `${randomUUID()}${extension}`;
+      uploadDirectory = path.join(process.cwd(), "public", "uploads", "music");
+      url = `/uploads/music/${fileName}`;
+    }
+
     await mkdir(uploadDirectory, { recursive: true });
-    await writeFile(path.join(uploadDirectory, fileName), Buffer.from(await file.arrayBuffer()));
+    savedPath = path.join(uploadDirectory, fileName);
+    await writeFile(savedPath, outputBuffer);
 
-    const asset = await prisma.invitationAsset.create({
-      data: { invitationId, ownerId: user.id, type: "AUDIO", url: `/uploads/music/${fileName}`, title: file.name },
-    });
-    return NextResponse.json({ asset }, { status: 201 });
+    try {
+      const asset = await prisma.invitationAsset.create({
+        data: { invitationId, ownerId: user.id, type, url, title },
+      });
+      return NextResponse.json({ asset, optimized: type === "IMAGE", bytes: outputBuffer.byteLength }, { status: 201 });
+    } catch (error) {
+      await unlink(savedPath).catch(() => undefined);
+      savedPath = null;
+      throw error;
+    }
   } catch {
-    return NextResponse.json({ error: "File musik belum dapat diunggah." }, { status: 500 });
+    if (savedPath) await unlink(savedPath).catch(() => undefined);
+    return NextResponse.json({ error: "File belum dapat diunggah." }, { status: 500 });
   }
 }
