@@ -53,7 +53,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
   const doors = [
     {
       id: 1,
-      title: "Perencana Pernikahan",
+      title: "",
       href: "/wedding-planner",
       bgImage: "wo.png",
       tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
@@ -61,7 +61,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     },
     {
       id: 2,
-      title: "Undangan Digital",
+      title: "",
       href: "/d-invitation",
       bgImage: "hp-digital.png",
       tags: ["UNDANGAN", "RSVP"],
@@ -69,7 +69,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     },
     {
       id: 3,
-      title: "Buku Tamu Digital",
+      title: "",
       href: "/guestbook",
       bgImage: "bukutamu.png",
       tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
@@ -102,7 +102,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         ))}
       </div>
 
-      <div className="z-30 -mt-1 flex w-full max-w-[460px] items-center justify-center gap-5">
+      <div className="z-30 -mt-10 flex w-full max-w-[500px] items-center justify-center gap-48">
         <Button
           size="icon"
           onClick={togglePrev}
