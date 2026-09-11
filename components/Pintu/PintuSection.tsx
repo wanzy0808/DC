@@ -37,7 +37,12 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
 
   const getDoorTransform = (doorId: number) => {
     if (currentSelected === doorId) {
-      return { transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.08)", zIndex: 30, opacity: 1, filter: "blur(0px)" };
+      return {
+        transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.08)",
+        zIndex: 30,
+        opacity: 1,
+        filter: "blur(0px)",
+      };
     }
 
     const isLeft =
@@ -46,8 +51,18 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
       (currentSelected === 3 && doorId === 2);
 
     return isLeft
-      ? { transform: "translateX(-170px) translateZ(-120px) rotateY(28deg) scale(0.8)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" }
-      : { transform: "translateX(170px) translateZ(-120px) rotateY(-28deg) scale(0.8)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" };
+      ? {
+          transform: "translateX(-170px) translateZ(-120px) rotateY(28deg) scale(0.8)",
+          zIndex: 10,
+          opacity: 0.65,
+          filter: "blur(0.5px)",
+        }
+      : {
+          transform: "translateX(170px) translateZ(-120px) rotateY(-28deg) scale(0.8)",
+          zIndex: 10,
+          opacity: 0.65,
+          filter: "blur(0.5px)",
+        };
   };
 
   const doors = [
@@ -80,8 +95,11 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
   const currentDoor = doors.find((door) => door.id === currentSelected) ?? doors[0];
 
   return (
-    <div className="relative -my-1 flex w-full flex-col items-center justify-center">
-      <div onMouseLeave={handleMouseLeaveSection} className="relative flex h-[540px] w-full items-center justify-center [perspective:1000px] md:h-[600px]">
+    <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
+      <div
+        onMouseLeave={handleMouseLeaveSection}
+        className="relative flex h-[430px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[500px] md:h-[600px]"
+      >
         {doors.map((door) => (
           <div
             key={door.id}
@@ -102,23 +120,23 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         ))}
       </div>
 
-      <div className="z-30 -mt-1 flex w-full max-w-[460px] items-center justify-center gap-5">
+      <div className="z-30 -mt-1 flex w-full max-w-[460px] items-center justify-center gap-3 px-3 sm:gap-5 sm:px-0">
         <Button
           size="icon"
           onClick={togglePrev}
           aria-label="Pintu sebelumnya"
-          className="h-10 w-10 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
+          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95 sm:h-10 sm:w-10"
         >
           ←
         </Button>
-        <span className="min-w-0 text-center font-[family-name:var(--font-dc-heading)] text-sm font-bold tracking-wide text-[var(--foreground)] sm:text-base">
+        <span className="min-w-0 max-w-[210px] text-center font-[family-name:var(--font-dc-heading)] text-xs font-bold leading-tight tracking-wide text-[var(--foreground)] sm:max-w-none sm:text-base">
           {currentDoor.title}
         </span>
         <Button
           size="icon"
           onClick={toggleNext}
           aria-label="Pintu berikutnya"
-          className="h-10 w-10 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
+          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95 sm:h-10 sm:w-10"
         >
           →
         </Button>
