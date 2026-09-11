@@ -33,11 +33,6 @@ async function getOrCreateInvitation(
   });
   if (existing) return existing;
 
-  // The invitation is the user's workspace record. Payment records are created
-  // by the package/payment flow, not by simply opening the Studio. This prevents
-  // a new user from accidentally receiving a fake PENDING/zero-value transaction.
-  // templateKey starts empty so the dashboard only counts the invitation after
-  // the user actually chooses/saves a template in the Studio.
   const invitation = await prisma.invitation.create({
     data: {
       ownerId: user.id,
@@ -48,6 +43,7 @@ async function getOrCreateInvitation(
       groomName: "Rio",
       brideName: "Lyvia",
       venue: "Gedung Pernikahan",
+      timezone: "Asia/Jakarta",
       eventDate: new Date("2026-09-26T09:00:00.000Z"),
       ceremonyTime: type === "ADAT_AKAD" ? "09:00" : null,
       description:
@@ -88,6 +84,9 @@ export async function PUT(request: Request) {
     const groomName = String(body.groomName ?? invitation.groomName).trim();
     const brideName = String(body.brideName ?? invitation.brideName).trim();
     const venue = String(body.venue ?? invitation.venue).trim();
+    const address = String(body.address ?? invitation.address ?? "").trim() || null;
+    const mapUrl = String(body.mapUrl ?? invitation.mapUrl ?? "").trim() || null;
+    const timezone = String(body.timezone ?? invitation.timezone ?? "Asia/Jakarta").trim() || "Asia/Jakarta";
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
 
@@ -104,6 +103,9 @@ export async function PUT(request: Request) {
         groomName,
         brideName,
         venue,
+        address,
+        mapUrl,
+        timezone,
         eventDate,
         ceremonyTime: String(body.ceremonyTime ?? "").trim() || null,
         receptionTime: String(body.receptionTime ?? "").trim() || null,
