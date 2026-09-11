@@ -84,7 +84,7 @@ export default function Home() {
                   <span className="block font-mono text-[15px] font-semibold uppercase tracking-[0.24em] text-[var(--primary)] sm:text-xs">
                     DC Wedding · Platform Digitalisasi Pernikahan Terpadu
                   </span>
-                  <h1 className="flex max-w-xl flex-wrap gap-x-[0.25em] gap-y-1 font-[family-name:var(--font-dc-heading)] text-3xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
+                  <h1 className="flex max-w-xl flex-wrap gap-x-[0.25em] gap-y-1 font-[family-name:var(--font-dc-heading)] text-2xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-3xl lg:text-4xl">
                     {idleWords.map((word, index) => (
                       <span
                         key={index}
@@ -105,7 +105,7 @@ export default function Home() {
                   <span className="block font-mono text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)] sm:text-xs">
                     {currentContent.badge}
                   </span>
-                  <h1 className="max-w-xl font-[family-name:var(--font-dc-heading)] text-3xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-4xl lg:text-5xl">
+                  <h1 className="max-w-xl font-[family-name:var(--font-dc-heading)] text-2xl leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-3xl lg:text-4xl">
                     {currentContent.title}
                   </h1>
                   <p className="max-w-lg text-sm leading-relaxed text-[color:var(--muted-foreground)] sm:text-base">
