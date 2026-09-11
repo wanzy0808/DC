@@ -32,7 +32,7 @@ export default function PintuCard({
     <Link href={href}>
       <div
         onMouseEnter={onHover}
-        className={`group relative w-[clamp(220px,17vw,280px)] h-[clamp(370px,52vh,500px)] rounded-t-[130px] rounded-b-2xl overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 border-2 border-white/80 hover:border-white ${
+        className={`group relative w-[170px] h-[330px] md:w-[clamp(220px,17vw,280px)] md:h-[clamp(370px,52vh,500px)] rounded-t-[90px] md:rounded-t-[130px] rounded-b-2xl overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 border-2 border-white/80 hover:border-white ${
           isActive
             ? "shadow-[0_0_40px_rgba(255,255,255,0.6)] scale-105"
             : "hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
