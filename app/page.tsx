@@ -72,12 +72,12 @@ export default function Home() {
     <div className="relative flex h-[calc(100svh-80px)] min-h-[calc(100svh-80px)] max-h-[calc(100svh-80px)] w-full select-none flex-col justify-between overflow-hidden bg-[var(--background)] text-[var(--foreground)] transition-colors duration-500">
       <RomanticBackground />
 
-      <main className="relative z-10 mx-auto flex w-[92vw] max-w-[1400px] flex-1 items-center px-2 pt-12 pb-8 lg:pt-16 lg:pb-10">
-        <section className="grid w-full grid-cols-1 items-center gap-6 md:grid-cols-12 lg:gap-10">
-          <div className="space-y-3 md:col-span-5 lg:space-y-5">
+      <main className="relative z-10 mx-auto flex w-[75vw] max-w-[1400px] flex-1 items-center px-0 pt-6 pb-5 lg:pt-8 lg:pb-6">
+        <section className="grid w-full grid-cols-1 items-center gap-3 md:grid-cols-12 lg:gap-6">
+          <div className="space-y-2 md:col-span-5 lg:space-y-4">
             <div
               key={isIdle ? "idle" : selectedDoor}
-              className="animate-in fade-in slide-in-from-bottom-3 space-y-3 duration-500 ease-out lg:space-y-5"
+              className="animate-in fade-in slide-in-from-bottom-3 space-y-2 duration-500 ease-out lg:space-y-4"
             >
               {isIdle ? (
                 <>
