@@ -37,7 +37,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
 
   const getDoorTransform = (doorId: number) => {
     if (currentSelected === doorId) {
-      return { transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.18)", zIndex: 30, opacity: 1, filter: "blur(0px)" };
+      return { transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.08)", zIndex: 30, opacity: 1, filter: "blur(0px)" };
     }
 
     const isLeft =
@@ -46,8 +46,8 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
       (currentSelected === 3 && doorId === 2);
 
     return isLeft
-      ? { transform: "translateX(-220px) translateZ(-120px) rotateY(28deg) scale(0.85)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" }
-      : { transform: "translateX(220px) translateZ(-120px) rotateY(-28deg) scale(0.85)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" };
+      ? { transform: "translateX(-170px) translateZ(-120px) rotateY(28deg) scale(0.8)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" }
+      : { transform: "translateX(170px) translateZ(-120px) rotateY(-28deg) scale(0.8)", zIndex: 10, opacity: 0.65, filter: "blur(0.5px)" };
   };
 
   const doors = [
@@ -78,8 +78,8 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
   ];
 
   return (
-    <div className="relative my-4 flex w-full flex-col items-center justify-center">
-      <div onMouseLeave={handleMouseLeaveSection} className="relative flex h-[480px] w-full items-center justify-center [perspective:1000px] md:h-[520px]">
+    <div className="relative -my-1 flex w-full flex-col items-center justify-center">
+      <div onMouseLeave={handleMouseLeaveSection} className="relative flex h-[540px] w-full items-center justify-center [perspective:1000px] md:h-[600px]">
         {doors.map((door) => (
           <div
             key={door.id}
@@ -100,7 +100,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         ))}
       </div>
 
-      <div className="z-30 mt-10 flex w-full max-w-[320px] items-center justify-between">
+      <div className="z-30 -mt-1 flex w-full max-w-[280px] items-center justify-between">
         <Button
           size="icon"
           onClick={togglePrev}
