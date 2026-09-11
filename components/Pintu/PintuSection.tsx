@@ -77,6 +77,8 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     },
   ];
 
+  const currentDoor = doors.find((door) => door.id === currentSelected) ?? doors[0];
+
   return (
     <div className="relative -my-1 flex w-full flex-col items-center justify-center">
       <div onMouseLeave={handleMouseLeaveSection} className="relative flex h-[540px] w-full items-center justify-center [perspective:1000px] md:h-[600px]">
@@ -98,20 +100,25 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
             />
           </div>
         ))}
+      </div>
 
+      <div className="z-30 -mt-1 flex w-full max-w-[460px] items-center justify-center gap-5">
         <Button
           size="icon"
           onClick={togglePrev}
           aria-label="Pintu sebelumnya"
-          className="absolute left-[calc(50%-190px)] top-1/2 z-40 h-12 w-12 -translate-y-1/2 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
+          className="h-10 w-10 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
         >
           ←
         </Button>
+        <span className="min-w-0 text-center font-[family-name:var(--font-dc-heading)] text-sm font-bold tracking-wide text-[var(--foreground)] sm:text-base">
+          {currentDoor.title}
+        </span>
         <Button
           size="icon"
           onClick={toggleNext}
           aria-label="Pintu berikutnya"
-          className="absolute right-[calc(50%-190px)] top-1/2 z-40 h-12 w-12 -translate-y-1/2 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
+          className="h-10 w-10 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
         >
           →
         </Button>
