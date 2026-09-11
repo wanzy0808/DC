@@ -89,6 +89,7 @@ export async function PUT(request: Request) {
     const timezone = String(body.timezone ?? invitation.timezone ?? "Asia/Jakarta").trim() || "Asia/Jakarta";
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
+    const title = String(body.title ?? "").trim() || (type === "ADAT_AKAD" ? `${groomName} & ${brideName} · Akad & Sangjit` : `${groomName} & ${brideName}`);
 
     if (!groomName || !brideName || !venue || Number.isNaN(eventDate.getTime())) {
       return NextResponse.json({ error: "Nama pasangan, tempat, dan tanggal wajib diisi." }, { status: 400 });
@@ -109,10 +110,7 @@ export async function PUT(request: Request) {
         eventDate,
         ceremonyTime: String(body.ceremonyTime ?? "").trim() || null,
         receptionTime: String(body.receptionTime ?? "").trim() || null,
-        title:
-          type === "ADAT_AKAD"
-            ? `${groomName} & ${brideName} · Akad & Sangjit`
-            : `${groomName} & ${brideName}`,
+        title,
         templateKey,
         description: String(body.description ?? "").trim() || null,
         weddingHashtag: String(body.weddingHashtag ?? "").trim() || null,
