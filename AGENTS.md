@@ -49,6 +49,16 @@ The primary light theme is an elegant **maroon + creamy** visual system.
 - Text color must always have sufficient contrast against its background.
 - Do not create unrelated accent colors unless required by a specific product state or accessibility need.
 
+### Text Color Hierarchy — Anti AI-Slop Rule
+
+- **Do not use two text colors everywhere just to create visual variety.** Avoid the common pattern of turning ordinary black/dark text into maroon without a clear purpose.
+- **Default body and functional text should use one primary readable text color** appropriate to the background. On light/creamy surfaces, black or dark brown is normally preferred.
+- **Maroon is an accent, not a default replacement for black text.** Use it selectively for emphasis, active states, important headings/labels, links, branding, or other elements that genuinely need emphasis.
+- Do **not** turn body text, descriptions, helper text, metadata, navigation text, or other secondary text maroon merely to create a second text color.
+- Establish hierarchy primarily through **typography, weight, size, spacing, layout, and contrast**, rather than excessive text-color variation.
+- If black/dark text is already readable and visually appropriate, **do not change it to maroon without a specific design reason**.
+- When in doubt, choose the simpler single-text-color treatment rather than adding another text color.
+
 ## 3. Dark Mode
 
 Dark mode uses a **black + pink** visual system.
@@ -96,5 +106,6 @@ DC Wedding should feel like one coherent premium wedding platform.
 - **DM Mono = utility / technical detail.**
 - **Light mode = maroon + creamy.**
 - **Dark mode = black + pink.**
+- **Text color should remain restrained; do not create unnecessary multi-color text hierarchy.**
 
 When choosing between two visually valid implementations, prefer the one that is simpler, more consistent, more readable, and closer to this design system.

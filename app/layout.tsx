@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cinzel, Fauna_One } from "next/font/google";
+import { Cinzel, DM_Mono, Fauna_One } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/Theme/ThemeContext";
 import Navbar from "@/components/Layout/Navbar/Navbar";
@@ -8,6 +8,7 @@ import PublicAtmosphere, { PublicContent } from "@/components/Layout/PublicAtmos
 
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
 const faunaOne = Fauna_One({ subsets: ["latin"], weight: "400", variable: "--font-fauna" });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
   title: "DC - Wedding & Digital Invitation",
@@ -21,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="scroll-smooth">
-      <body className={`${cinzel.variable} ${faunaOne.variable} antialiased min-h-screen flex flex-col justify-between overflow-x-hidden`}>
+      <body className={`${cinzel.variable} ${faunaOne.variable} ${dmMono.variable} antialiased min-h-screen flex flex-col justify-between overflow-x-hidden`}>
         <ThemeProvider>
           <PublicAtmosphere />
           <Navbar />
