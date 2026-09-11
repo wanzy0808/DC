@@ -21,12 +21,9 @@ export default function Navbar() {
     <header className="dc-navbar sticky top-0 z-50 w-full text-[var(--foreground)] transition-colors duration-500">
       <div className="mx-auto flex w-[75vw] items-center justify-between px-0 py-5 relative">
         <Link href="/" className="block">
-          <div className={`font-[family-name:var(--font-dc-heading)] text-2xl font-bold tracking-[0.2em] ${accentColor}`}>
-            D C
+          <div className={`font-[family-name:var(--font-dc-heading)] text-3xl font-bold tracking-[0.18em] leading-none ${accentColor} sm:text-4xl`}>
+            DC Wedding
           </div>
-          <span className="mt-0.5 block font-[family-name:var(--font-dc-sans)] text-[8px] uppercase tracking-[0.35em] opacity-50 md:text-[9px]">
-            WEDDING
-          </span>
         </Link>
 
         <div className="flex items-center gap-3">
