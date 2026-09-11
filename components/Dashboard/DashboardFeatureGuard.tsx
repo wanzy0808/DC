@@ -140,7 +140,7 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
 
   return <>
     {children}
-    <div className="fixed right-0 top-0 z-[70] hidden h-16 items-center gap-1 border-b border-[#d8cbc2] bg-[#FAF7F2]/95 px-4 backdrop-blur dark:border-white/10 dark:bg-[#0B0A0E]/95 sm:flex">
+    <div className="fixed right-44 top-0 z-[70] hidden h-16 items-center gap-1 border-b border-[#d8cbc2] bg-[#FAF7F2]/95 px-4 backdrop-blur dark:border-white/10 dark:bg-[#0B0A0E]/95 sm:flex">
       <span className="mr-2 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[.14em] text-[#5A4545] dark:text-white/60">Menu</span>
       <Link href="/transactions" className="rounded-xl px-3 py-2 font-[family-name:var(--font-fauna)] text-xs font-semibold text-[#3F3030] hover:bg-[#7A1C25]/10 dark:text-white/80 dark:hover:bg-white/5">Transaksi</Link>
       <Link href="/packages" className="rounded-xl bg-[#7A1C25] px-3 py-2 font-[family-name:var(--font-fauna)] text-xs font-semibold text-white hover:bg-[#5E141C]">Tambah paket</Link>
