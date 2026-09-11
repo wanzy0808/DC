@@ -98,14 +98,12 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
             />
           </div>
         ))}
-      </div>
 
-      <div className="z-30 -mt-1 flex w-full max-w-[280px] items-center justify-between">
         <Button
           size="icon"
           onClick={togglePrev}
           aria-label="Pintu sebelumnya"
-          className="h-12 w-12 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:bg-primary/85 hover:scale-110 active:scale-95"
+          className="absolute left-[calc(50%-190px)] top-1/2 z-40 h-12 w-12 -translate-y-1/2 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
         >
           ←
         </Button>
@@ -113,7 +111,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
           size="icon"
           onClick={toggleNext}
           aria-label="Pintu berikutnya"
-          className="h-12 w-12 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:bg-primary/85 hover:scale-110 active:scale-95"
+          className="absolute right-[calc(50%-190px)] top-1/2 z-40 h-12 w-12 -translate-y-1/2 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95"
         >
           →
         </Button>
