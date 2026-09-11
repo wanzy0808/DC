@@ -104,6 +104,38 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
           </form>
         </div>
       )}
+      <style jsx global>{`
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div {
+          background: #fffaf6 !important;
+          color: #2d2222 !important;
+          border-color: #cdbdb3 !important;
+          box-shadow: 0 18px 45px rgba(45, 34, 34, 0.16) !important;
+        }
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div button {
+          color: #2d2222 !important;
+        }
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div button:hover {
+          background: rgba(122, 28, 37, 0.08) !important;
+        }
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div svg {
+          color: #7a1c25;
+        }
+        .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div {
+          background: #1b171c !important;
+          color: #f8f1eb !important;
+          border-color: rgba(255,255,255,.15) !important;
+          box-shadow: 0 18px 45px rgba(0,0,0,.4) !important;
+        }
+        .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div button {
+          color: #f8f1eb !important;
+        }
+        .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div button:hover {
+          background: rgba(255,255,255,.08) !important;
+        }
+        .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div svg {
+          color: #e8a5ae;
+        }
+      `}</style>
     </div>
   );
 }
