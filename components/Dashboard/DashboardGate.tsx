@@ -104,11 +104,6 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
           </form>
         </div>
       )}
-      <style jsx global>{`
-        .dashboard-gate-shell .dc-dashboard > a[aria-label="Bantuan WhatsApp"] {
-          display: none !important;
-        }
-      `}</style>
     </div>
   );
 }
