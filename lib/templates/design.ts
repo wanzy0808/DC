@@ -57,15 +57,18 @@ export const invitationFonts = {
 export type PaletteKey = keyof typeof invitationPalettes;
 export type FontKey = keyof typeof invitationFonts;
 
-export function makeDesignKey(template: string, palette: PaletteKey, font: FontKey) {
-  return `${template}::${palette}::${font}`;
+export function makeDesignKey(template: string, palette: PaletteKey, font: FontKey, decor?: string) {
+  const base = `${template}::${palette}::${font}`;
+  return decor ? `${base}::decor=${encodeURIComponent(decor)}` : base;
 }
 
 export function parseDesignKey(key: string) {
-  const [template = "eternal-blossom", palette = "rose", font = "cinzelFauna"] = key.split("::");
+  const [template = "eternal-blossom", palette = "rose", font = "cinzelFauna", ...parts] = key.split("::");
+  const decorPart = parts.find((part) => part.startsWith("decor="));
   return {
     template,
     palette: (palette in invitationPalettes ? palette : "rose") as PaletteKey,
     font: (font in invitationFonts ? font : "cinzelFauna") as FontKey,
+    decor: decorPart ? decodeURIComponent(decorPart.slice("decor=".length)) : null,
   };
 }
