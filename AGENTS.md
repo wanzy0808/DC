@@ -7,3 +7,94 @@ This version has breaking changes — APIs, conventions, and file structure may 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+# DC Wedding — Design System Rules
+
+These rules apply to the entire project unless a specific component explicitly requires otherwise.
+
+## 1. Typography
+
+Use only these three fonts throughout the DC Wedding project:
+
+- **Cinzel** — primary display, heading, title, branding, section heading, and elegant editorial text.
+- **Fauna One** — primary body/UI font for readable paragraphs, labels, descriptions, navigation, forms, buttons, and general interface text.
+- **DM Mono** — utility/technical typography only: metadata, codes, numbers, timestamps, technical labels, status values, small uppercase utility text, and similar supporting information.
+
+### Typography rules
+
+- Do **not** introduce additional fonts.
+- Do **not** use browser/system fallback fonts as an intentional visual style.
+- Do **not** use `font-mono` unless it resolves to the project's **DM Mono** font.
+- Do **not** use random Google Fonts, template fonts, or component-library fonts.
+- Existing invitation-template typography may be dynamic when it is part of the invitation content/editor feature; this must not introduce extra fonts into the surrounding DC Wedding application UI.
+- Keep typography consistent across landing page, dashboard, editor, RSVP, Usher App, forms, dialogs, menus, cards, and other application UI.
+
+## 2. Light Mode / Default Visual Theme
+
+The primary light theme is an elegant **maroon + creamy** visual system.
+
+### Color direction
+
+- **Primary:** maroon / burgundy / deep wine tones.
+- **Background:** creamy, warm off-white, ivory, parchment, or similar warm neutral tones.
+- **Text:** use **black/dark brown** on light backgrounds when it provides the best readability.
+- **Text:** use **white/cream** on sufficiently dark maroon surfaces when it provides better contrast.
+- Supporting neutrals should remain warm and harmonious with the creamy background.
+
+### Light-theme rules
+
+- Prefer maroon for primary actions, important accents, active states, branding, borders, and key decorative elements.
+- Prefer creamy backgrounds over cold pure white for major surfaces.
+- Never sacrifice readability for color matching.
+- Text color must always have sufficient contrast against its background.
+- Do not create unrelated accent colors unless required by a specific product state or accessibility need.
+
+## 3. Dark Mode
+
+Dark mode uses a **black + pink** visual system.
+
+### Color direction
+
+- **Background:** black or near-black.
+- **Primary accent:** pink / soft rose / hot pink tones as appropriate to the surface.
+- **Text:** white or light neutral text on dark backgrounds.
+- **Text:** pink may be used for emphasis, headings, labels, links, or accents when readability remains strong.
+
+### Dark-theme rules
+
+- Do not simply invert the light theme.
+- Dark surfaces should remain genuinely dark/black.
+- Pink is the primary accent family in dark mode.
+- White text is preferred for long-form readability on black backgrounds.
+- Pink text is allowed for emphasis but must remain clearly readable.
+- Avoid low-contrast combinations such as dark gray text on black or dark pink on black.
+
+## 4. Contrast & Readability
+
+Readability always takes priority over strict color matching.
+
+- On **light/creamy backgrounds:** use black, dark brown, or sufficiently dark maroon text.
+- On **dark/black backgrounds:** use white, light neutral, or sufficiently bright pink text.
+- Buttons, badges, inputs, menus, overlays, and cards must maintain clear text/background contrast.
+- Hover, active, disabled, and selected states must remain readable in both themes.
+- Decorative colors must never make functional text difficult to read.
+
+## 5. Implementation Guidance
+
+- Reuse the project's existing CSS variables, theme tokens, and font variables whenever possible.
+- Prefer semantic theme tokens over hard-coded colors when a token already exists.
+- If a new token is necessary, keep it within the DC Wedding maroon/creamy light palette or black/pink dark palette.
+- Keep light and dark variants intentionally designed rather than relying on automatic color inversion.
+- Before adding a new UI component, check that its typography and colors follow these rules.
+
+## 6. Design Consistency
+
+DC Wedding should feel like one coherent premium wedding platform.
+
+- **Cinzel = elegance / display.**
+- **Fauna One = readable application UI.**
+- **DM Mono = utility / technical detail.**
+- **Light mode = maroon + creamy.**
+- **Dark mode = black + pink.**
+
+When choosing between two visually valid implementations, prefer the one that is simpler, more consistent, more readable, and closer to this design system.
