@@ -9,7 +9,25 @@ const fallbackImage = "https://images.unsplash.com/photo-1519741497674-611481863
 export default async function InvitationPage({ params, searchParams }: { params: Promise<{ slug: string }>; searchParams: Promise<{ guestId?: string }> }) {
   const { slug } = await params; const { guestId } = await searchParams;
   const invitation = await prisma.invitation.findUnique({ where: { slug }, include: { assets: { orderBy: { createdAt: "asc" } }, payment: true } });
-  if (!invitation || !invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) notFound();
+  if (!invitation || !invitation.isPublished) notFound();
+
+  // Digital Invitation is purchased once for the main WEDDING invitation.
+  // The included ADAT_AKAD invitation shares that entitlement and does not need a second payment.
+  let hasAccess = hasPaidDigitalInvitation(invitation.payment);
+  if (!hasAccess && invitation.type === "ADAT_AKAD") {
+    const weddingPayment = await prisma.payment.findFirst({
+      where: {
+        userId: invitation.ownerId,
+        status: "PAID",
+        packageKey: { in: ["INVITATION_BASIC", "INVITATION_GUESTBOOK"] },
+        invitation: { type: "WEDDING" },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    hasAccess = Boolean(weddingPayment);
+  }
+  if (!hasAccess) notFound();
+
   const guest = guestId ? await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } }) : null;
   await prisma.invitation.update({ where: { id: invitation.id }, data: { viewCount: { increment: 1 } } });
   const images = invitation.assets.filter(a => a.type === "IMAGE"); const audio = invitation.musicUrl ?? invitation.assets.find(a => a.type === "AUDIO")?.url;
