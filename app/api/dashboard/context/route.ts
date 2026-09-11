@@ -31,7 +31,7 @@ export async function GET() {
 
   const nickname = (await cookies()).get(nicknameCookie)?.value?.trim() || user.firstName;
   const entitlements = getPackageEntitlements(invitation?.payment);
-  const invitationsCreated = invitations.filter(item => item.templateKey && item.templateKey !== "eternal-blossom").length;
+  const invitationsCreated = invitations.filter(item => item.templateKey.trim().length > 0).length;
 
   return NextResponse.json({
     profile: {
