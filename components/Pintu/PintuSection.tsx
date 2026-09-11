@@ -120,11 +120,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         ))}
       </div>
 
-<<<<<<< HEAD
-      <div className="z-30 -mt-10 flex w-full max-w-[500px] items-center justify-center gap-48">
-=======
       <div className="z-30 -mt-1 flex w-full max-w-[460px] items-center justify-center gap-3 px-3 sm:gap-5 sm:px-0">
->>>>>>> 02c81d82166299983742c9b860a2c26f6db20697
         <Button
           size="icon"
           onClick={togglePrev}
