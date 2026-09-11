@@ -105,6 +105,15 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
         </div>
       )}
       <style jsx global>{`
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] {
+          color: #ffffff !important;
+        }
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] svg {
+          color: #ffffff !important;
+        }
+        .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"]:hover {
+          color: #ffffff !important;
+        }
         .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div {
           background: #fffaf6 !important;
           color: #2d2222 !important;
@@ -119,6 +128,9 @@ export default function DashboardGate({ children }: { children: ReactNode }) {
         }
         .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div svg {
           color: #7a1c25;
+        }
+        .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] {
+          color: #ffffff !important;
         }
         .dark .dashboard-gate-shell .dc-dashboard header [aria-label="Menu akun"] + div {
           background: #1b171c !important;
