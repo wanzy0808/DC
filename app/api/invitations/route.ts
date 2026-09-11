@@ -36,11 +36,14 @@ async function getOrCreateInvitation(
   // The invitation is the user's workspace record. Payment records are created
   // by the package/payment flow, not by simply opening the Studio. This prevents
   // a new user from accidentally receiving a fake PENDING/zero-value transaction.
+  // templateKey starts empty so the dashboard only counts the invitation after
+  // the user actually chooses/saves a template in the Studio.
   const invitation = await prisma.invitation.create({
     data: {
       ownerId: user.id,
       slug: makeSlug(user.firstName, user.id, type),
       type,
+      templateKey: "",
       title: type === "ADAT_AKAD" ? "Akad & Sangjit" : "Rio & Lyvia",
       groomName: "Rio",
       brideName: "Lyvia",
@@ -86,7 +89,7 @@ export async function PUT(request: Request) {
     const brideName = String(body.brideName ?? invitation.brideName).trim();
     const venue = String(body.venue ?? invitation.venue).trim();
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
-    const templateKey = String(body.templateKey ?? invitation.templateKey).trim() || invitation.templateKey;
+    const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
 
     if (!groomName || !brideName || !venue || Number.isNaN(eventDate.getTime())) {
       return NextResponse.json({ error: "Nama pasangan, tempat, dan tanggal wajib diisi." }, { status: 400 });
