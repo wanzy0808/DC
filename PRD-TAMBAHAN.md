@@ -169,7 +169,6 @@ Code-level review; build/CI **Not verified**.
 ### Validation
 - Schema/API code reviewed against `prd.md`, `AGENTS.md`, `README.md`, and existing entitlement implementation.
 - Build/CI: **Not verified**.
-- UI drag-and-drop Konva integration belum diklaim selesai; endpoint/data layer ini merupakan foundation untuk wiring visual seating chart berikutnya.
 
 ## 18. Interactive Konva Seating Chart & Primary Sidebar Cleanup
 ### PRD Requirement / Gap
@@ -197,7 +196,6 @@ PRD meminta visual 2D seating chart berbasis Konva, side roster tamu yang dapat 
 ### Validation
 - `package.json` reviewed: `konva` dan `react-konva` memang sudah menjadi dependency repository.
 - `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum perubahan.
-- Combined commit status untuk `81634833fad01f07e137687cdb2753ab018cf244` tidak memiliki status checks yang tersedia.
 - Build/CI: **Not verified**. Tidak diklaim PASS.
 
 ## 19. Seating Roster: RSVP Hadir + Tamu Manual
@@ -250,7 +248,29 @@ Organizer tidak ingin canvas hanya menampilkan jumlah meja yang hard-coded. User
 - `b39148d69622e1537c08b1ec7d43d773fa1fafb1` — keep generated table grid inside canvas.
 ### Validation
 - `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
-- Existing `/api/wedding-tables` dan Konva seating implementation diperiksa sebelum perubahan.
+- Existing `/api/wedding-tables` dan Konva seating implementation diperiksa.
+- Build/CI: **Not verified**.
+
+## 21. Reassign / Move Seated Guests
+### User Requirement
+Tamu yang sudah duduk harus dapat dipindahkan lagi ke kursi kosong lain, termasuk pindah meja.
+### Implemented
+- Seat yang sedang ditempati guest sekarang menjadi draggable langsung pada Konva canvas.
+- Guest dapat dipindahkan ke kursi kosong pada meja yang sama maupun meja lain.
+- Seat asal guest yang sedang dipindahkan dikeluarkan sementara dari occupied set agar tidak dianggap bentrok dengan dirinya sendiri.
+- Seat milik guest lain tetap occupied dan tidak dapat ditimpa.
+- Reassignment memakai callback `onAssigned` yang sama dengan placement awal, sehingga persistence tetap melalui API server-side yang sudah ada.
+- Drop di luar kursi kosong tidak mengirim assignment dan posisi visual dikembalikan.
+- Helper text canvas diperbarui untuk menjelaskan bahwa guest yang sudah duduk dapat dipindahkan.
+### Safety / Entitlement
+- Tidak menambah jalur persistence baru atau bypass authorization.
+- Unique constraint database dan validasi `PATCH /api/guests/[id]` tetap menjadi authority terhadap konflik seat.
+- DIGITAL_INVITATION / GUEST_BOOK mengikuti entitlement guest management yang sudah ada.
+### Commit
+- `f088ca3eab59673f89d15a6f14559f3483989b3d` — allow seated guests to move between seats.
+### Validation
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
+- Existing `PATCH /api/guests/[id]`, `seatNumber` persistence, dan Konva seating implementation diperiksa.
 - Build/CI: **Not verified**.
 
 # Current Source-of-Truth Order
@@ -290,3 +310,4 @@ Organizer tidak ingin canvas hanya menampilkan jumlah meja yang hard-coded. User
 | Studio | `/dashboard/editor` |
 | Legacy Event Khusus alias | `/event-khusus` |
 | Legacy internal invitation | `/invite/[slug]` |
+|
