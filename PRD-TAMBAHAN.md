@@ -119,6 +119,13 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Build validation pada dokumentasi deep-link `bef7624c` juga berhasil.
 - Perubahan custom asset entitlement pada commit `eca7fe3ced6feab34bdacf3aadc3bc09f9334bb6` menunggu workflow validation GitHub Actions.
 
+### Dashboard Onboarding Save Hardening
+- Mengubah penyimpanan onboarding dari dua request paralel menjadi urutan deterministik: **simpan invitation WEDDING terlebih dahulu, lalu simpan nickname pada User**.
+- Response dari masing-masing API sekarang diperiksa dan pesan error server diteruskan ke UI, sehingga kegagalan tidak lagi terlihat seperti form hanya “nyangkut”.
+- Setelah kedua penyimpanan berhasil, state dashboard langsung diperbarui dari data yang baru disimpan sebelum melakukan refresh context.
+- Modal hanya ditutup setelah kedua sumber database berhasil disimpan.
+- Tidak menambahkan cookie/localStorage atau sumber data kedua; database tetap menjadi single source of truth.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
