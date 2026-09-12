@@ -59,9 +59,19 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Tidak menghapus atau mengganti route Beranda.
 - Tidak mengubah API entitlement; perubahan ini berfokus pada pemulihan fitur UI dashboard yang sebelumnya terpotong saat refactor.
 
+### Complete Digital Invitation Management
+- Memindahkan pengelolaan Undangan Digital ke komponen khusus `InvitationManagementPanel` agar halaman dashboard utama tidak terus menambah logic invitation.
+- Dashboard sekarang memuat dua invitation independen dari `/api/invitations`: `WEDDING` dan `ADAT_AKAD`.
+- Masing-masing invitation memiliki preview, salin link, Edit Desain, dan Publish/Unpublish sendiri.
+- Publish/Unpublish tetap menggunakan authorization server-side pada `/api/invitations` dan hanya aktif untuk entitlement Digital Invitation.
+- Menambahkan kembali kontrol Password Protection pada workspace Undangan Digital menggunakan endpoint password existing.
+- Studio tetap terbuka untuk pengguna tanpa paket; publish tetap terkunci sebelum Digital Invitation aktif.
+- Link event khusus menggunakan pola `/invite/[slug]/event-khusus` yang sudah tersedia pada public invitation route.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation terbaru berhasil setelah perbaikan TypeScript.
+- Commit terbaru pada perubahan Digital Invitation masih menunggu workflow validation dari GitHub Actions sebelum dinyatakan build-verified.
 
 ## Implementation Notes
 
