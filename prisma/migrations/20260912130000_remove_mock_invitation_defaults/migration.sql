@@ -1,0 +1,4 @@
+ALTER TABLE "Invitation"
+  ALTER COLUMN "groomName" SET DEFAULT '',
+  ALTER COLUMN "brideName" SET DEFAULT '',
+  ALTER COLUMN "venue" SET DEFAULT '';
