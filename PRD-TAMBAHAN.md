@@ -167,7 +167,7 @@ Code-level review; build/CI **Not verified**.
 - `6bf1ee3c96bc8265854be1fcc041742f4dc4126e` — seat assignment migration.
 - `2dfd0d2252e0a1c1e400abb8c3dfb6c771535a59` — atomic guest placement API.
 ### Validation
-- Schema/API code reviewed against `prd.md`, `AGENTS.md`, `README.md`, and existing entitlement implementation.
+- Schema/API code reviewed against `prd.md`, `AGENTS.md`, `README.md`, dan existing entitlement implementation.
 - Build/CI: **Not verified**.
 
 ## 18. Interactive Konva Seating Chart & Primary Sidebar Cleanup
@@ -273,6 +273,34 @@ Tamu yang sudah duduk harus dapat dipindahkan lagi ke kursi kosong lain, termasu
 - Existing `PATCH /api/guests/[id]`, `seatNumber` persistence, dan Konva seating implementation diperiksa.
 - Build/CI: **Not verified**.
 
+## 22. Seat Target Highlight, Explicit Swap Confirmation & Manual Form Cleanup
+### User Requirement
+Saat guest di-drag ke kursi, target harus terlihat jelas. Jika target sudah ditempati guest lain, sistem tidak boleh langsung melakukan swap. User harus mendapat pilihan eksplisit `Tukar Posisi` atau `Batal`.
+User juga meminta field WhatsApp pada input `Tambah Tamu Manual` dihilangkan.
+### Implemented
+- Target seat yang sedang dituju saat drag sekarang di-highlight secara visual.
+- Drop ke kursi kosong tetap melakukan assignment normal melalui `PATCH /api/guests/[id]`.
+- Drop ke kursi yang sudah ditempati tidak langsung mengubah database; UI menampilkan konfirmasi `Tukar Posisi` / `Batal`.
+- Endpoint baru `POST /api/guests/[id]/swap` melakukan pertukaran dua guest secara atomic dalam Prisma transaction.
+- Swap hanya dapat terjadi untuk dua guest dalam invitation user yang sama dan keduanya harus sudah memiliki meja + kursi.
+- Transaction mengosongkan kedua seat terlebih dahulu lalu memasangkan posisi secara silang untuk menjaga unique constraint `[tableId, seatNumber]`.
+- UI menyimpan hasil swap pada local override agar dua posisi langsung tervisualisasi tanpa mock data atau reload paksa.
+- Field `WhatsApp (opsional)` dihapus dari form tamu manual. Form sekarang hanya meminta `Nama tamu manual`.
+- Payload pembuatan guest manual juga tidak lagi mengirim field phone.
+### Safety / Entitlement
+- Endpoint swap tetap memeriksa session user dan `hasPaidDigitalInvitation()` server-side.
+- Guest sumber dan guest target wajib berada pada invitation owner yang sama.
+- Tidak ada automatic swap saat drop ke seat terisi.
+- Database tetap menjadi authority; UI hanya menampilkan state sementara sampai persistence berhasil.
+### Commits
+- `eed3db40ec6fae970911fafde78698a4df04f649` — target highlighting, explicit swap confirmation, and manual guest WhatsApp input removal.
+- `38e058f37e1c78eebd0c9b285069ff65ed7ecc63` — atomic guest swap API.
+- `feb720acb53eb2fab2a8b05f099bfad9857baf3c` — preserve swap confirmation through drag-end lifecycle.
+### Validation
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
+- Existing seat assignment API dan Prisma unique constraint diperiksa sebelum menambah swap transaction.
+- Build/CI: **Not verified**. Tidak diklaim PASS.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
@@ -310,4 +338,3 @@ Tamu yang sudah duduk harus dapat dipindahkan lagi ke kursi kosong lain, termasu
 | Studio | `/dashboard/editor` |
 | Legacy Event Khusus alias | `/event-khusus` |
 | Legacy internal invitation | `/invite/[slug]` |
-|
