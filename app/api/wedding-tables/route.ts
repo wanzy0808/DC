@@ -5,7 +5,7 @@ import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
 async function getInvitation(userId: string) {
   return prisma.invitation.findFirst({
-    where: { ownerId: userId },
+    where: { ownerId: userId, type: "WEDDING" },
     include: { payment: true },
     orderBy: { createdAt: "asc" },
   });
@@ -25,9 +25,10 @@ export async function POST(request: Request) {
     if (!invitation) return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     const body = await request.json();
     const name = String(body.name ?? "").trim();
-    const capacity = Math.max(1, Number(body.capacity ?? 8));
+    const capacity = Math.max(1, Math.floor(Number(body.capacity ?? 8)));
     const shape = String(body.shape ?? "ROUND").trim() || "ROUND";
     if (!name) return NextResponse.json({ error: "Nama meja wajib diisi." }, { status: 400 });
+    if (!Number.isFinite(capacity)) return NextResponse.json({ error: "Kapasitas bangku tidak valid." }, { status: 400 });
 
     const table = await prisma.weddingTable.create({
       data: { invitationId: invitation.id, name, capacity, shape },
@@ -52,7 +53,7 @@ export async function PATCH(request: Request) {
       where: { id, invitationId: invitation.id },
       data: {
         ...(body.name !== undefined ? { name: String(body.name).trim() } : {}),
-        ...(body.capacity !== undefined ? { capacity: Math.max(1, Number(body.capacity)) } : {}),
+        ...(body.capacity !== undefined ? { capacity: Math.max(1, Math.floor(Number(body.capacity))) } : {}),
         ...(body.shape !== undefined ? { shape: String(body.shape).trim() || "ROUND" } : {}),
       },
     });
