@@ -41,6 +41,8 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Memastikan Manajemen Tamu menggunakan entitlement **Digital Invitation**, bukan Guest Book.
 - Edit dan hapus tamu pada `/api/guests/manage` sekarang tersedia untuk pengguna dengan paket Digital Invitation.
 - Pengguna Guest Book tetap mewarisi akses tersebut karena Guest Book mencakup Digital Invitation.
+- Dashboard `Manajemen Tamu` sekarang menggunakan gate `hasDigitalInvitation`, bukan `hasGuestbook`.
+- Label dan deskripsi UI menegaskan bahwa manajemen tamu, nomor meja, dan seat assignment termasuk Digital Invitation.
 - Usher App dan operasional check-in tetap khusus entitlement Guest Book.
 
 ### CI / Build
