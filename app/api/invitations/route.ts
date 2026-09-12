@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitation-slug";
 
 type InvitationType = "WEDDING" | "ADAT_AKAD";
 
@@ -60,6 +61,21 @@ async function getOrCreateInvitation(
   });
 }
 
+async function resolveWeddingSlug(invitationId: string, groomName: string, brideName: string, currentSlug: string) {
+  if (!isLegacyInvitationSlug(currentSlug)) return currentSlug;
+
+  const base = slugifyCouple(groomName, brideName);
+  let candidate = base;
+  let suffix = 2;
+
+  while (await prisma.invitation.findFirst({ where: { slug: candidate, id: { not: invitationId } }, select: { id: true } })) {
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
+}
+
 export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
@@ -102,10 +118,14 @@ export async function PUT(request: Request) {
 
     const userPayment = await getUserPayment(user.id);
     const canPublish = Boolean(userPayment) || hasPaidDigitalInvitation(invitation.payment);
+    const slug = type === "WEDDING"
+      ? await resolveWeddingSlug(invitation.id, groomName, brideName, invitation.slug)
+      : invitation.slug;
 
     const updated = await prisma.invitation.update({
       where: { id: invitation.id },
       data: {
+        slug,
         groomName,
         brideName,
         venue,
