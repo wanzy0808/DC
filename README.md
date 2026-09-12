@@ -34,10 +34,12 @@ A modern, high-performance digital wedding invitation and management platform bu
 
 ### Public Invitation Architecture
 - Main invitation: `https://[nama-pasangan].dcwedding.com`
-- Special event: `https://[nama-pasangan].dcwedding.com/event-khusus`
-- Invitation slug is generated from the couple names stored in the database.
-- The database remains the source of truth; browser cookies/localStorage are not used for invitation identity.
+- Event invitation: `https://[nama-pasangan].dcwedding.com/[nama-event]`
+- The event path is generated from the Event Khusus name stored in the database (currently the ADAT_AKAD invitation title).
+- Example: `Akad & Sangjit` → `https://rio-lyvia.dcwedding.com/akad-sangjit`
+- The old `/event-khusus` path remains only as a backward-compatible alias and redirects to the event-name path.
 - Legacy `/invite/[slug]` routes remain only for internal routing and backward-compatible redirects.
+- Invitation identity and event names remain database-first; browser cookies/localStorage are not used as a source of truth.
 
 ## 🚀 Getting Started
 
