@@ -6,6 +6,14 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidGuestbook } from "@/lib/packages/access";
 import UsherApp from "@/components/UsherApp/UsherApp";
 
+type Feature = { icon: typeof ScanLine; label: string };
+const features: Feature[] = [
+  { icon: ScanLine, label: "QR Check-in" },
+  { icon: Users, label: "Realtime Attendance" },
+  { icon: QrCode, label: "Smart RSVP" },
+  { icon: Gift, label: "Gift & Giving Management" },
+];
+
 export const dynamic = "force-dynamic";
 
 export default async function UsherPage() {
@@ -33,7 +41,7 @@ export default async function UsherPage() {
               <h1 className="mt-5 font-serif text-4xl sm:text-5xl">Usher App</h1>
               <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan.</p>
               <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                {[[ScanLine, "QR Check-in"], [Users, "Realtime Attendance"], [QrCode, "Smart RSVP"], [Gift, "Gift & Giving Management"]].map(([Icon, label]) => { const FeatureIcon = Icon as typeof ScanLine; return <div key={String(label)} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>; })}
+                {features.map(({ icon: FeatureIcon, label }) => <div key={label} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>)}
               </div>
               <Link href="/packages" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white hover:bg-[#c90077]">Aktifkan Guestbook Digital →</Link>
             </div>
