@@ -22,7 +22,7 @@ export default function Navbar() {
       <div className="mx-auto flex w-[75vw] items-center justify-between px-0 py-5 relative">
         <Link href="/" className="block">
           <div className={`font-[family-name:var(--font-dc-heading)] text-3xl font-bold tracking-[0.18em] leading-none ${accentColor} sm:text-4xl`}>
-            DC Wedding
+            DC Organizer
           </div>
         </Link>
 
