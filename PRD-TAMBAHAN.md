@@ -324,6 +324,45 @@ API mutation sebelumnya mengambil `prisma.invitation.findFirst({ where: { ownerI
 - Prisma schema dikonfirmasi memiliki `InvitationType { WEDDING, ADAT_AKAD }`.
 - Build/CI: **Not verified**. Tidak diklaim PASS.
 
+## 24. Light Theme Palette — Deep Rose Wood / Dusty Pink
+### User Requirement
+Light mode diganti dari palette Maroon/Burgundy + Creamy/Ivory menjadi palette baru yang eksplisit:
+- Primary Accent / Action: Deep Rose Wood `#8C4A56`
+- Brand Accent: Dusty Pink `#E8B4B8`
+- Primary Hover: Dark Rose Wood `#6E3843`
+- Background Utama: Soft Rose Neutral / Warm White `#FAFAFA`
+- Surface Secondary (Card/Input): Pale Blush `#F5EBEB`
+- Text Utama: Charcoal Black `#1E1B1C`
+
+### Implemented
+- `app/globals.css` light theme semantic tokens now use the six canonical colors above.
+- Primary, secondary, accent, background, card, input, border, ring, sidebar, and chart light-theme tokens were aligned to the new palette.
+- Dashboard light surfaces and actions were moved from the previous maroon palette to Deep Rose Wood / Dark Rose Wood / Dusty Pink / Warm White.
+- Invitation Studio light surfaces were moved to the new Rose Wood / Pale Blush palette.
+- Dark theme variables were not intentionally redesigned in this change.
+- `AGENTS.md` now defines the six canonical light-theme colors and explicitly prohibits returning to the previous maroon/cream light palette.
+- `prd.md` section 3.2 now records the same palette as the product requirement.
+- `README.md` Design System & Themes now documents the same light-theme palette.
+
+### Source-of-Truth Impact
+The design system is now explicit and synchronized across:
+1. `AGENTS.md` — implementation/design constraints.
+2. `prd.md` — product decision.
+3. `PRD-TAMBAHAN.md` — implementation history.
+4. `README.md` — public technical overview.
+5. `app/globals.css` — runtime light-theme tokens.
+
+### Commits
+- `5083493c1ceac3fa120328f2c911515aa3738263` — update runtime light theme palette.
+- `221bc714fcd6e6f1fab42595023aeb39c557c0a9` — update AGENTS design rules.
+- `2b5bb257051b327e14cb73af323892d0213f2dae` — update README design system.
+- `c2d28c21d527175ae524ab6ec16aec3d97f34f93` — update master PRD design system.
+
+### Validation
+- Repository source-of-truth files were re-read before the change: `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, and `README.md`.
+- Runtime theme implementation in `app/globals.css` was inspected and updated.
+- Build/CI: **Not verified**. No PASS claim is made without an actual build/CI result.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
