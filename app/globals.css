@@ -69,5 +69,5 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .public-page .bg-dc-maroon, .public-page .bg-dc-pink { background-color: var(--primary) !important; color: var(--primary-foreground) !important; }
 .public-page .text-dc-maroon { color: var(--primary) !important; }
 .public-page .border-dc-maroon, .public-page .border-dc-pink { border-color: var(--border) !important; }
-.public-page .hover\\:bg-dc-pink:hover, .public-page .hover\\:bg-dc-maroon:hover { background-color: color-mix(in oklab, var(--primary), black 12%) !important; }
+.public-page .hover\:bg-dc-pink:hover, .public-page .hover\:bg-dc-maroon:hover { background-color: color-mix(in oklab, var(--primary), black 12%) !important; }
 @media (prefers-reduced-motion: reduce) { .public-content h1, .public-content h2, .dc-snappy-word { animation: none; } }
