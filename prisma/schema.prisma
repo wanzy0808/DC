@@ -56,6 +56,7 @@ model User {
   invitationAssets   InvitationAsset[]
   payments           Payment[]
   auditLogs          AuditLog[]               @relation("ActorLogs")
+  guestCheckIns      Guest[]                  @relation("GuestCheckInActor")
 }
 
 model Session {
@@ -168,21 +169,25 @@ model WeddingTable {
 }
 
 model Guest {
-  id           String        @id @default(cuid())
-  invitationId String
-  tableId      String?
-  name         String
-  phone        String?
-  rsvpStatus   RsvpStatus    @default(PENDING)
-  plusOnes     Int           @default(0)
-  checkedIn    Boolean       @default(false)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  invitation   Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-  table        WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  id            String        @id @default(cuid())
+  invitationId  String
+  tableId       String?
+  name          String
+  phone         String?
+  rsvpStatus    RsvpStatus    @default(PENDING)
+  plusOnes      Int           @default(0)
+  checkedIn     Boolean       @default(false)
+  checkedInAt   DateTime?
+  checkedInById String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  invitation    Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  table         WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  checkedInBy   User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
 
   @@index([invitationId, rsvpStatus])
   @@index([tableId])
+  @@index([checkedInById])
 }
 
 model AuditLog {
