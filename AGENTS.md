@@ -89,7 +89,17 @@ Readability always takes priority over strict color matching.
 - Hover, active, disabled, and selected states must remain readable in both themes.
 - Decorative colors must never make functional text difficult to read.
 
-## 5. Implementation Guidance
+## 5. UI Components & Libraries (Shadcn UI & Lucide React)
+
+Gunakan komponen **Shadcn UI** dan ikon dari **Lucide React** untuk kebutuhan UI/UX interaktif seluruh aplikasi.
+
+### Rules penggunaan Shadcn UI & Lucide:
+- **Shadcn UI Components:** Manfaatkan komponen standar seperti `Dialog`, `Sheet`, `Table`, `DropdownMenu`, `Button`, `Switch`, `Badge`, `Select`, dan `Card`.
+- **Styling Customization:** Setiap komponen Shadcn UI yang digunakan **wajib disesuaikan warna dan tipografinya** menginduk pada *theme tokens* DC Wedding (Light: Maroon/Cream, Dark: Black/Pink). Jangan biarkan warna default Shadcn (seperti slate/zinc/neutral bawaan) tanpa penyesuaian.
+- **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas (misal `w-4 h-4` atau `w-5 h-5`) untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki *accent color* halaman (maroon di light mode, pink/white di dark mode).
+- **Interactive Triggers:** Gunakan properti `asChild` pada `SheetTrigger` atau `DialogTrigger` jika dibungkus oleh komponen khusus untuk menghindari *nested button error* di DOM.
+
+## 6. Implementation Guidance
 
 - Reuse the project's existing CSS variables, theme tokens, and font variables whenever possible.
 - Prefer semantic theme tokens over hard-coded colors when a token already exists.
@@ -97,7 +107,7 @@ Readability always takes priority over strict color matching.
 - Keep light and dark variants intentionally designed rather than relying on automatic color inversion.
 - Before adding a new UI component, check that its typography and colors follow these rules.
 
-## 6. Design Consistency
+## 7. Design Consistency
 
 DC Wedding should feel like one coherent premium wedding platform.
 
