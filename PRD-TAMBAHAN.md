@@ -154,6 +154,18 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Nama pasangan yang sudah tersimpan tetap dikirim ke record event khusus saat data event disimpan, sehingga Studio dan public invitation membaca database tanpa form identitas pasangan kedua.
 - Field yang tetap dapat diedit pada Rangkaian Acara hanya data yang memang spesifik event, seperti nama acara, tanggal, waktu, venue, alamat, Maps, deskripsi, dan catatan.
 
+### Public Invitation Subdomain Routing
+- Public URL utama sekarang menggunakan pola **`https://[nama-pasangan].dcwedding.com`**.
+- Nama subdomain diambil dari nama pasangan pria + wanita yang sudah tersimpan pada onboarding/database, misalnya `rio-lyvia.dcwedding.com`.
+- Slug WEDDING lama yang masih memakai pola `-moment-[id]` otomatis dimigrasikan saat data pasangan pertama kali disimpan.
+- Jika slug pasangan bentrok dengan milik akun lain, sistem menggunakan suffix numerik untuk menjaga uniqueness database.
+- Undangan Event Khusus menggunakan **subdomain pasangan yang sama** dengan path `/event-khusus`, bukan subdomain/slug kedua.
+- `proxy.ts` melakukan rewrite dari root subdomain ke route internal invitation dan dari `/event-khusus` ke route Event Khusus.
+- Link lama `/invite/[slug]` dan `/invite/[slug]/event-khusus` tetap diarahkan 308 ke URL subdomain agar URL baru menjadi canonical tanpa memutus link lama.
+- Dashboard `Undangan Digital` sekarang menampilkan, preview, dan menyalin URL subdomain; slug internal `ADAT_AKAD` tidak lagi dipakai sebagai URL publik.
+- Tidak ada perubahan pada `/dashboard` atau menu **Beranda**.
+- Tidak ditemukan route/path `invite2` pada tree repository saat audit ini; route `/invite/[slug]` yang ada dipertahankan sebagai route internal/compatibility target untuk rewrite dan redirect, bukan sebagai URL publik utama.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
