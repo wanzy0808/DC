@@ -90,6 +90,9 @@ model Invitation {
   groomName   String            @default("Rio")
   brideName   String            @default("Lyvia")
   venue       String            @default("Gedung Pernikahan")
+  address     String?
+  mapUrl      String?
+  timezone    String            @default("Asia/Jakarta")
   eventDate   DateTime          @default(now())
   ceremonyTime String?
   receptionTime String?

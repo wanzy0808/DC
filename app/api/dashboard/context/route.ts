@@ -44,6 +44,14 @@ export async function GET() {
           groomName: invitation.groomName,
           brideName: invitation.brideName,
           title: invitation.title,
+          venue: invitation.venue,
+          address: invitation.address,
+          mapUrl: invitation.mapUrl,
+          timezone: invitation.timezone,
+          eventDate: invitation.eventDate,
+          ceremonyTime: invitation.ceremonyTime,
+          receptionTime: invitation.receptionTime,
+          description: invitation.description,
         }
       : null,
     package: invitation?.payment
