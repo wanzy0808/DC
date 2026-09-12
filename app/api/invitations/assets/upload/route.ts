@@ -4,11 +4,13 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { prisma } from "@/lib/prisma";
 
 const maxAudioSize = 10 * 1024 * 1024;
 const maxImageSize = 15 * 1024 * 1024;
-const maxAssets = 30;
+const maxImages = 30;
+const maxAudio = 1;
 const allowedAudioTypes = new Set(["audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/aac", "audio/mp4", "audio/x-m4a"]);
 const allowedImageTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 
@@ -38,12 +40,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Gunakan audio MP3, WAV, OGG, AAC, atau M4A maksimal 10 MB." }, { status: 400 });
     }
 
-    const invitation = await prisma.invitation.findFirst({ where: { id: invitationId, ownerId: user.id } });
+    const invitation = await prisma.invitation.findFirst({
+      where: { id: invitationId, ownerId: user.id },
+      include: { payment: true },
+    });
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
 
-    const assetCount = await prisma.invitationAsset.count({ where: { invitationId } });
-    if (assetCount >= maxAssets) {
-      return NextResponse.json({ error: `Maksimal ${maxAssets} asset per undangan (gambar + musik).` }, { status: 400 });
+    if (!hasPaidDigitalInvitation(invitation.payment)) {
+      return NextResponse.json({ error: "Custom asset tersedia setelah paket Digital Invitation aktif." }, { status: 402 });
+    }
+
+    const assetCount = await prisma.invitationAsset.count({ where: { invitationId, type } });
+    if (type === "IMAGE" && assetCount >= maxImages) {
+      return NextResponse.json({ error: `Maksimal ${maxImages} foto per undangan.` }, { status: 400 });
+    }
+    if (type === "AUDIO" && assetCount >= maxAudio) {
+      return NextResponse.json({ error: "Maksimal 1 musik custom per undangan." }, { status: 400 });
     }
 
     const originalBuffer = Buffer.from(await file.arrayBuffer());
