@@ -68,6 +68,13 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Studio tetap terbuka untuk pengguna tanpa paket; publish tetap terkunci sebelum Digital Invitation aktif.
 - Link event khusus menggunakan pola `/invite/[slug]/event-khusus` yang sudah tersedia pada public invitation route.
 
+### Invitation Studio Type Deep Link
+- `InvitationDesigner` sekarang membaca query `?type=ADAT_AKAD` dari URL saat pertama kali dibuka.
+- Link **Edit Desain** untuk Undangan Event Khusus dari dashboard sekarang dapat membuka Studio langsung pada invitation `ADAT_AKAD`.
+- Default tanpa query tetap `WEDDING`, sehingga akses `/dashboard/editor` lama tidak berubah.
+- Pergantian tab WEDDING/ADAT_AKAD di dalam Studio tetap menggunakan data invitation terpisah dan endpoint `/api/invitations?type=...`.
+- Perubahan ini tidak mengubah entitlement publish/custom asset; kontrol server/API existing tetap menjadi sumber authorization.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation terbaru berhasil setelah perbaikan TypeScript.
