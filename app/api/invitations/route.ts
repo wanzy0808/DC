@@ -44,17 +44,13 @@ async function getOrCreateInvitation(
       slug: makeSlug(user.firstName, user.id, type),
       type,
       templateKey: "",
-      title: type === "ADAT_AKAD" ? "Akad & Sangjit" : "Rio & Lyvia",
-      groomName: "Rio",
-      brideName: "Lyvia",
-      venue: "Gedung Pernikahan",
+      title: "",
+      groomName: "",
+      brideName: "",
+      venue: "",
       timezone: "Asia/Jakarta",
-      eventDate: new Date("2026-09-26T09:00:00.000Z"),
       ceremonyTime: type === "ADAT_AKAD" ? "09:00" : null,
-      description:
-        type === "ADAT_AKAD"
-          ? "Dengan penuh rasa syukur, kami mengundang Anda untuk hadir di rangkaian akad dan sangjit kami."
-          : "Dengan penuh kebahagiaan, kami mengundang Anda untuk hadir di hari istimewa kami.",
+      description: null,
     },
   });
 
@@ -94,10 +90,14 @@ export async function PUT(request: Request) {
     const timezone = String(body.timezone ?? invitation.timezone ?? "Asia/Jakarta").trim() || "Asia/Jakarta";
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
-    const title = String(body.title ?? "").trim() || (type === "ADAT_AKAD" ? `${groomName} & ${brideName} · Akad & Sangjit` : `${groomName} & ${brideName}`);
+    const title = String(body.title ?? invitation.title).trim() || (groomName && brideName ? `${groomName} & ${brideName}` : "");
+    const wantsPublish = Boolean(body.isPublished);
 
-    if (!groomName || !brideName || !venue || Number.isNaN(eventDate.getTime())) {
-      return NextResponse.json({ error: "Nama pasangan, tempat, dan tanggal wajib diisi." }, { status: 400 });
+    if (!groomName || !brideName) {
+      return NextResponse.json({ error: "Nama pasangan wajib diisi." }, { status: 400 });
+    }
+    if (wantsPublish && (!venue || Number.isNaN(eventDate.getTime()))) {
+      return NextResponse.json({ error: "Tempat dan tanggal wajib diisi sebelum publish." }, { status: 400 });
     }
 
     const userPayment = await getUserPayment(user.id);
@@ -112,21 +112,21 @@ export async function PUT(request: Request) {
         address,
         mapUrl,
         timezone,
-        eventDate,
-        ceremonyTime: String(body.ceremonyTime ?? "").trim() || null,
-        receptionTime: String(body.receptionTime ?? "").trim() || null,
+        eventDate: Number.isNaN(eventDate.getTime()) ? invitation.eventDate : eventDate,
+        ceremonyTime: String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null,
+        receptionTime: String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null,
         title,
         templateKey,
-        description: String(body.description ?? "").trim() || null,
-        weddingHashtag: String(body.weddingHashtag ?? "").trim() || null,
-        dressCode: String(body.dressCode ?? "").trim() || null,
-        liveStreamUrl: String(body.liveStreamUrl ?? "").trim() || null,
-        eventNotes: String(body.eventNotes ?? "").trim() || null,
-        giftBankName: String(body.giftBankName ?? "").trim() || null,
-        giftAccountName: String(body.giftAccountName ?? "").trim() || null,
-        giftAccountNumber: String(body.giftAccountNumber ?? "").trim() || null,
-        musicUrl: String(body.musicUrl ?? "").trim() || null,
-        isPublished: canPublish && Boolean(body.isPublished),
+        description: String(body.description ?? invitation.description ?? "").trim() || null,
+        weddingHashtag: String(body.weddingHashtag ?? invitation.weddingHashtag ?? "").trim() || null,
+        dressCode: String(body.dressCode ?? invitation.dressCode ?? "").trim() || null,
+        liveStreamUrl: String(body.liveStreamUrl ?? invitation.liveStreamUrl ?? "").trim() || null,
+        eventNotes: String(body.eventNotes ?? invitation.eventNotes ?? "").trim() || null,
+        giftBankName: String(body.giftBankName ?? invitation.giftBankName ?? "").trim() || null,
+        giftAccountName: String(body.giftAccountName ?? invitation.giftAccountName ?? "").trim() || null,
+        giftAccountNumber: String(body.giftAccountNumber ?? invitation.giftAccountNumber ?? "").trim() || null,
+        musicUrl: String(body.musicUrl ?? invitation.musicUrl ?? "").trim() || null,
+        isPublished: canPublish && wantsPublish,
       },
       include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
     });
