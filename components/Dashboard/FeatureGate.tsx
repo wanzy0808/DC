@@ -22,7 +22,9 @@ export default function FeatureGate({
   onUpgrade,
   children,
 }: FeatureGateProps) {
-  if (allowed) return <>{children}</>;
+  // Manajemen Tamu tetap dapat dibuka untuk melihat workspace.
+  // Mutasi data tamu tetap diamankan oleh API berdasarkan entitlement Digital Invitation.
+  if (allowed || title === "Manajemen Tamu") return <>{children}</>;
 
   return (
     <section className="relative overflow-hidden rounded-2xl border border-[#d9cbc2] bg-[#f3ede6] dark:border-white/10 dark:bg-[#121116]">
