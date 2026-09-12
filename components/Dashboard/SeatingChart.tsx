@@ -112,19 +112,37 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
     finally { setManualSaving(false); }
   }
 
-  async function assignFromDrop(event: React.DragEvent<HTMLDivElement>) {
-    event.preventDefault();
-    if (!draggedGuestId || !visibleTables.length) return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    const scaleX = STAGE_WIDTH / rect.width; const scaleY = STAGE_HEIGHT / rect.height;
-    const point = { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY };
+  async function assignGuestAtPoint(guestId: string, point: Point) {
+    if (!visibleTables.length) return;
     let selected: { table: Table; seat: number } | null = null;
-    visibleTables.forEach((table, index) => { const seat = findSeat(point, table, tablePoint(index, visibleTables.length), occupiedByTable.get(table.id) ?? new Set()); if (seat && !selected) selected = { table, seat }; });
+    visibleTables.forEach((table, index) => {
+      const occupied = new Set(occupiedByTable.get(table.id) ?? []);
+      const draggedGuest = visibleGuests.find((guest) => guest.id === guestId);
+      if (draggedGuest?.tableId === table.id && draggedGuest.seatNumber) occupied.delete(draggedGuest.seatNumber);
+      const seat = findSeat(point, table, tablePoint(index, visibleTables.length), occupied);
+      if (seat && !selected) selected = { table, seat };
+    });
     if (!selected) { setMessage("Jatuhkan tamu tepat di kursi yang kosong."); return; }
-    setSavingGuestId(draggedGuestId); setMessage("");
-    try { await onAssigned(draggedGuestId, selected.table.id, selected.seat); setMessage("Penempatan tamu tersimpan."); }
+    setSavingGuestId(guestId); setMessage("");
+    try { await onAssigned(guestId, selected.table.id, selected.seat); setMessage("Penempatan tamu tersimpan."); }
     catch (error) { setMessage(error instanceof Error ? error.message : "Penempatan tamu gagal disimpan."); }
     finally { setSavingGuestId(null); setDraggedGuestId(null); }
+  }
+
+  async function assignFromDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault();
+    if (!draggedGuestId) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    const scaleX = STAGE_WIDTH / rect.width; const scaleY = STAGE_HEIGHT / rect.height;
+    await assignGuestAtPoint(draggedGuestId, { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY });
+  }
+
+  async function handleCanvasGuestDragEnd(guestId: string, event: any) {
+    const stage = event.target.getStage();
+    const point = stage?.getPointerPosition();
+    event.target.position({ x: 0, y: 0 });
+    if (!point) { setDraggedGuestId(null); return; }
+    await assignGuestAtPoint(guestId, point);
   }
 
   return (
@@ -159,14 +177,14 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
             <Rect x={center.x - 48} y={center.y - 30} width={96} height={60} cornerRadius={table.shape === "ROUND" ? 48 : 12} fill="#7A1C25" opacity={0.95} />
             <Text x={center.x - 44} y={center.y - 8} width={88} align="center" text={table.name} fontSize={13} fontStyle="bold" fill="#FFF8F2" />
             {Array.from({ length: table.capacity }).map((_, index) => { const seat = index + 1; const point = seatPoint(center, index, table.capacity); const guest = visibleGuests.find((item) => item.tableId === table.id && item.seatNumber === seat); return <Group key={`${table.id}-${seat}`}>
-              <Circle x={point.x} y={point.y} radius={SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke="#7A1C25" strokeWidth={2} />
+              <Circle x={point.x} y={point.y} radius={SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke="#7A1C25" strokeWidth={2} draggable={Boolean(guest)} onDragStart={() => guest && setDraggedGuestId(guest.id)} onDragEnd={(event) => guest && handleCanvasGuestDragEnd(guest.id, event)} />
               <Text x={point.x - 12} y={point.y - 6} width={24} align="center" text={String(seat)} fontSize={10} fontStyle="bold" fill={guest ? "#FFF8F2" : "#7A1C25"} />
-              {guest && <Text x={point.x - 42} y={point.y + 20} width={84} align="center" text={guest.name} fontSize={9} fill="#2D2222" />}
+              {guest && <Text x={point.x - 42} y={point.y + 20} width={84} align="center" text={guest.name} fontSize={9} fill="#2D2222" listening={false} />}
             </Group>; })}
           </Group>; })}
           {!visibleTables.length && <Text x={80} y={285} width={940} align="center" text="Masukkan jumlah meja dan bangku di panel kiri untuk membuat denah." fontSize={16} fontStyle="bold" fill="#5A4545" />}
         </Layer></Stage></div>
-        <div className="flex items-center justify-between gap-3 px-3 py-2"><p className="font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">Tarik tamu RSVP Hadir atau tamu manual ke kursi kosong.</p>{savingGuestId && <span className="font-[family-name:var(--font-dm-mono)] text-[10px] font-semibold uppercase tracking-wider">Menyimpan...</span>}</div>
+        <div className="flex items-center justify-between gap-3 px-3 py-2"><p className="font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">Tarik tamu ke kursi kosong. Tamu yang sudah duduk juga bisa dipindahkan ke meja/kursi lain.</p>{savingGuestId && <span className="font-[family-name:var(--font-dm-mono)] text-[10px] font-semibold uppercase tracking-wider">Menyimpan...</span>}</div>
         {message && <p className="px-3 pb-3 font-[family-name:var(--font-fauna)] text-xs font-semibold text-[#7A1C25] dark:text-[#E8A5AE]">{message}</p>}
       </div>
     </div>
