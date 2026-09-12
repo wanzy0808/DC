@@ -91,6 +91,16 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Jika data ADAT_AKAD kosong, nama pasangan tetap diambil dari WEDDING.
 - Data yang dapat diedit di panel ini hanya data event: nama acara, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan.
 
+### Invitation Studio Data Audit & Mock-State Cleanup
+- Menghapus initial state contoh `Rio`, `Lyvia`, `Gedung Pernikahan`, tanggal `2026-09-26`, dan deskripsi contoh dari Studio.
+- Form Studio sekarang dimulai kosong lalu diisi dari database; tidak membuat data contoh saat first render.
+- Menambahkan `address` dan `mapUrl` ke data Studio agar preview menggunakan data event yang sama dengan Rangkaian Acara.
+- Preview tidak lagi gagal saat tanggal database masih kosong; menggunakan status "Tanggal acara belum diatur".
+- Undo/Redo sekarang ikut memulihkan dekorasi karena `designKey` juga menyimpan state dekorasi.
+- Font preview menggunakan contoh generik, bukan nama pasangan palsu.
+- Kuota asset diperjelas menjadi **30 foto + 1 musik**, bukan satu kuota gabungan.
+- Preview menampilkan alamat dan tautan Maps bila data tersebut tersedia.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
