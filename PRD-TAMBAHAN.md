@@ -174,7 +174,6 @@ Code-level review; build/CI **Not verified**.
 ## 18. Interactive Konva Seating Chart & Primary Sidebar Cleanup
 ### PRD Requirement / Gap
 PRD meminta visual 2D seating chart berbasis Konva, side roster tamu yang dapat di-drag, penempatan ke seat kosong, serta Galeri & Foto dan Musik Undangan dikeluarkan dari primary sidebar.
-
 ### Implemented
 - Komponen baru `components/Dashboard/SeatingChart.tsx` menggunakan `react-konva`.
 - Roster tamu yang belum memiliki `tableId` dapat di-drag ke canvas.
@@ -186,23 +185,48 @@ PRD meminta visual 2D seating chart berbasis Konva, side roster tamu yang dapat 
 - `Galeri & Foto` dan `Musik Undangan` dihapus dari array primary sidebar serta tab dashboard yang sebelumnya menampilkannya.
 - Fitur Galeri/Musik tidak dihapus dari Studio; dashboard hanya tidak lagi menjadikannya menu primary sesuai PRD.
 - Floating WhatsApp button tetap dipertahankan karena perubahan sebelumnya sudah diklarifikasi user hanya menyasar tulisan support copy kecil di sidebar.
-
 ### Entitlement Impact
 - Seating UI tetap berada di `FeatureGate` Digital Invitation.
 - Guest Book mewarisi guest management sesuai access model yang sudah ada.
 - Server API tetap menjadi authority; UI tidak dapat melewati entitlement.
 - Galeri/Musik tetap mengikuti entitlement Studio dan tidak dihapus dari fitur produk.
-
 ### Commits
 - `58d8c4834b56b9d8a77048327fc8210853af2883` — initial Konva seating chart component.
 - `bca764705f4c1832d1f5f6fb430bcc12ebe4cb9b` — fix canvas drop target coordinate resolution.
 - `81634833fad01f07e137687cdb2753ab018cf244` — wire seating chart into dashboard and remove legacy primary sidebar entries.
-
 ### Validation
 - `package.json` reviewed: `konva` dan `react-konva` memang sudah menjadi dependency repository.
 - `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum perubahan.
 - Combined commit status untuk `81634833fad01f07e137687cdb2753ab018cf244` tidak memiliki status checks yang tersedia.
 - Build/CI: **Not verified**. Tidak diklaim PASS.
+
+## 19. Seating Roster: RSVP Hadir + Tamu Manual
+### User Clarification / Requirement
+Roster seating tidak hanya berasal dari RSVP. User menegaskan bahwa tamu yang sudah RSVP `ATTENDING` dapat ditempatkan, tetapi organizer juga harus dapat memasukkan tamu manual langsung dari Manajemen Tamu.
+### Implemented
+- Enum `GuestSource` ditambahkan dengan nilai `RSVP` dan `MANUAL`.
+- `Guest.source` ditambahkan dengan default `MANUAL` agar guest lama tetap dapat dikelola sebagai roster manual tanpa membuat asumsi palsu tentang histori RSVP.
+- Migration PostgreSQL: `prisma/migrations/20260912153000_add_guest_source/migration.sql`.
+- Public RSVP endpoint menandai guest sebagai `source: RSVP`, baik saat membuat guest baru maupun saat guest existing melakukan RSVP.
+- Dashboard `/api/guests` POST menandai guest baru sebagai `source: MANUAL`.
+- Seating Chart hanya menampilkan guest yang belum ditempatkan jika sumbernya `MANUAL` atau status RSVP-nya `ATTENDING`.
+- Guest RSVP `PENDING`, `TENTATIVE`, dan `NOT_ATTENDING` tidak otomatis masuk roster seating.
+- Form `Tambah Tamu Manual` ditambahkan langsung pada roster seating; guest dibuat melalui server API dengan entitlement yang sama dan langsung muncul di roster tanpa mock/local-only persistence.
+- Label roster membedakan `RSVP · Hadir` dan `Manual`.
+### Entitlement Impact
+- Semua penambahan guest manual tetap membutuhkan Digital Invitation melalui server-side `/api/guests` authorization.
+- RSVP public tetap mengikuti entitlement Digital Invitation.
+- Seating assignment tetap menggunakan `PATCH /api/guests/[id]` sebagai server authority.
+### Commits
+- `ab9446c059744a722da61bd6cd943c9b43c9cb1e` — add `GuestSource` to Prisma schema.
+- `213c013382d8679b51adfa7e37793065395ee450` — add PostgreSQL migration for guest source.
+- `9f9640892a096e720fe5bb8e1de9c156f04cb5de` — mark dashboard-created guests as manual.
+- `7385075e9a9548ba6fb0caa7671a6b5abb3ca43c` — mark public RSVP guests as RSVP source.
+- `927a2896790e4e8a5cc3ab5347b3f87aa3765242` — add RSVP/manual roster UI and manual guest input.
+### Validation
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
+- Existing RSVP route dan guest management API inspected before changing source semantics.
+- Build/CI: **Not verified**.
 
 # Current Source-of-Truth Order
 
@@ -262,18 +286,21 @@ PRD meminta visual 2D seating chart berbasis Konva, side roster tamu yang dapat 
 
 - Angpao/Kado tracking dan status pengiriman QR belum fully tracked karena schema/API tracking belum lengkap.
 - UI tidak boleh mengarang tracking state.
-- Interactive seating chart UI Konva/drag-and-drop sekarang sudah wired ke endpoint `PATCH /api/guests/[id]`; peningkatan layout untuk jumlah meja di atas enam dan drag/reassignment guest yang sudah ditempatkan masih dapat dilanjutkan.
+- Interactive seating chart UI Konva/drag-and-drop sekarang sudah wired ke endpoint `PATCH /api/guests/[id]` dan roster sudah mendukung RSVP Hadir + tamu manual; peningkatan layout untuk jumlah meja di atas enam dan drag/reassignment guest yang sudah ditempatkan masih dapat dilanjutkan.
 - Seat-level persistence tersedia melalui `Guest.seatNumber`.
+- `Guest.source` sekarang membedakan guest dari RSVP publik dan input manual dashboard.
 - Galeri & Foto dan Musik Undangan sudah dikeluarkan dari primary sidebar; fitur tetap dikelola melalui Studio.
 
 # Validation / CI Status
 
 Latest implementation commits in this addendum:
-- `58d8c4834b56b9d8a77048327fc8210853af2883`
-- `bca764705f4c1832d1f5f6fb430bcc12ebe4cb9b`
-- `81634833fad01f07e137687cdb2753ab018cf244`
+- `ab9446c059744a722da61bd6cd943c9b43c9cb1e`
+- `213c013382d8679b51adfa7e37793065395ee450`
+- `9f9640892a096e720fe5bb8e1de9c156f04cb5de`
+- `7385075e9a9548ba6fb0caa7671a6b5abb3ca43c`
+- `927a2896790e4e8a5cc3ab5347b3f87aa3765242`
 
-Build/CI untuk perubahan terbaru: **Not verified**. Combined status tidak menyediakan checks pada commit dashboard terbaru. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
+Build/CI untuk perubahan terbaru: **Not verified**. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
 
 # Working Protocol for Next Changes
 
