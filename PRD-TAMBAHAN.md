@@ -106,6 +106,13 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - `/api/profile` juga membaca dan mengembalikan nama langsung dari database.
 - Dengan demikian nama panggilan tidak diminta atau disimpan pada sumber kedua; dashboard, profile, dan onboarding menggunakan data yang sama.
 
+### Onboarding → Event Data Single Source of Truth
+- Invitation baru tidak lagi dibuat dengan data contoh `Rio & Lyvia` atau venue contoh yang terlihat seperti data pengguna.
+- Record baru dimulai sebagai draft kosong; `WEDDING` dan `ADAT_AKAD` tetap menggunakan record database masing-masing.
+- Endpoint invitation sekarang mengizinkan penyimpanan awal nama pasangan dari onboarding sebelum detail acara seperti venue dan tanggal dilengkapi.
+- Venue dan tanggal menjadi wajib saat pengguna mencoba **Publish**, sehingga draft kosong tetap aman untuk tahap setup.
+- Alur menjadi: **Onboarding → simpan nama pasangan + nickname → Rangkaian Acara melengkapi detail event → Studio membaca database yang sama**, tanpa meminta data inti dua kali.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation pada commit Studio deep-link `b76cb466` berhasil.
