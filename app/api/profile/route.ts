@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
-const nicknameCookie = "dc_dashboard_nickname";
 
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-  const nickname = (await cookies()).get(nicknameCookie)?.value?.trim();
-  return NextResponse.json({ user: { id: user.id, firstName: nickname || user.firstName, lastName: user.lastName, email: user.email } });
+  return NextResponse.json({ user: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email } });
 }
 
 export async function PATCH(request: Request) {
