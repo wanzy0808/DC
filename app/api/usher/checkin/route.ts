@@ -35,12 +35,17 @@ export async function POST(request: Request) {
     if (!guest) return NextResponse.json({ error: "QR tidak terdaftar pada undangan ini." }, { status: 404 });
     if (guest.checkedIn) return NextResponse.json({ error: `${guest.name} sudah check-in sebelumnya.`, guest }, { status: 409 });
 
+    const checkedInAt = new Date();
     const updated = await prisma.guest.update({
       where: { id: guest.id },
-      data: { checkedIn: true },
+      data: {
+        checkedIn: true,
+        checkedInAt,
+        checkedInById: user.id,
+      },
     });
 
-    return NextResponse.json({ guest: updated, checkedInAt: updated.updatedAt });
+    return NextResponse.json({ guest: updated, checkedInAt: updated.checkedInAt });
   } catch (error) {
     console.error("POST /api/usher/checkin failed", error);
     return NextResponse.json({ error: "Check-in gagal diproses." }, { status: 500 });
