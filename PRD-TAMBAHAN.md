@@ -232,12 +232,10 @@ Roster seating tidak hanya berasal dari RSVP. User menegaskan bahwa tamu yang su
 ### User Requirement
 Organizer tidak ingin canvas hanya menampilkan jumlah meja yang hard-coded. User meminta input `jumlah meja` dan `bangku per meja`, lalu grafik/denah dibuat berdasarkan input tersebut.
 ### Implemented
-- `components/Dashboard/SeatingChart.tsx` sekarang menyediakan form `Setup Denah` dengan:
-  - `Jumlah meja` (1–100).
-  - `Bangku per meja` (1–50).
+- `components/Dashboard/SeatingChart.tsx` sekarang menyediakan form `Setup Denah` dengan `Jumlah meja` (1–100) dan `Bangku per meja` (1–50).
 - Saat belum ada meja, tombol `Buat Denah` membuat setiap meja melalui `/api/wedding-tables` sehingga data tetap tersimpan di PostgreSQL, bukan hanya state canvas.
 - Setiap meja awal diberi nama `Meja 1`, `Meja 2`, dan seterusnya dengan bentuk `ROUND`.
-- Canvas tidak lagi dibatasi enam meja. Posisi meja dihitung dinamis menjadi grid hingga empat kolom dan baris sesuai jumlah meja.
+- Canvas tidak lagi dibatasi enam meja. Posisi meja dihitung dinamis menjadi grid hingga empat kolom dan baris yang tetap berada di dalam area canvas.
 - Jumlah kursi pada setiap meja dibaca dari `Table.capacity`, sehingga grafik mengikuti kapasitas database.
 - Ringkasan `X meja · Y bangku` ditampilkan berdasarkan total kapasitas meja yang aktif.
 - Setelah generator selesai, meja hasil POST langsung dimasukkan ke state lokal agar grafik tampil tanpa menunggu reload halaman.
@@ -247,8 +245,9 @@ Organizer tidak ingin canvas hanya menampilkan jumlah meja yang hard-coded. User
 - Generator hanya dapat digunakan di Manajemen Tamu yang sudah dilindungi `FeatureGate` Digital Invitation.
 - Endpoint `/api/wedding-tables` tetap melakukan authorization server-side dan `hasPaidDigitalInvitation()`.
 - Tidak ada bypass entitlement melalui canvas/local state.
-### Commit
-- `522e53bd0f842c571c449a82a058d4486451a7fa` — configurable table/seat floor-plan generator.
+### Commits
+- `522e53bd0f842c571c449a82a058d4486451a7fa` — initial configurable table/seat floor-plan generator.
+- `b39148d69622e1537c08b1ec7d43d773fa1fafb1` — keep generated table grid inside canvas.
 ### Validation
 - `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
 - Existing `/api/wedding-tables` dan Konva seating implementation diperiksa sebelum perubahan.
