@@ -11,8 +11,8 @@ const faunaOne = Fauna_One({ subsets: ["latin"], weight: "400", variable: "--fon
 const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
-  title: "DC - Wedding & Digital Invitation",
-  description: "Layanan Wedding Organizer & Undangan Digital Premium.",
+  title: "DC Organizer — Wedding & Digital Invitation",
+  description: "DC Organizer — layanan wedding organizer dan undangan digital premium.",
 };
 
 export default function RootLayout({
@@ -26,11 +26,7 @@ export default function RootLayout({
         <ThemeProvider>
           <PublicAtmosphere />
           <Navbar />
-          
-          <PublicContent>
-            {children}
-          </PublicContent>
-
+          <PublicContent>{children}</PublicContent>
           <Footer />
         </ThemeProvider>
       </body>
