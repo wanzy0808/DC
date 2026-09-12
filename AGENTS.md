@@ -2,137 +2,123 @@
 
 # This is NOT the Next.js you know
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
-
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 
 <!-- END:nextjs-agent-rules -->
 
-# DC Wedding — Design System Rules
+# DC Organizer — Design System, Animation & Engineering Rules
 
 These rules apply to the entire project unless a specific component explicitly requires otherwise.
 
-## 1. Typography
+---
 
-Use only these three fonts throughout the DC Wedding project:
+## 1. Brand Identity & Naming Authority
 
-- **Cinzel** — primary display, heading, title, branding, section heading, and elegant editorial text.
-- **Fauna One** — primary body/UI font for readable paragraphs, labels, descriptions, navigation, forms, buttons, and general interface text.
-- **DM Mono** — utility/technical typography only: metadata, codes, numbers, timestamps, technical labels, status values, small uppercase utility text, and similar supporting information.
+- **Official Brand Name:** **DC Organizer**[cite: 12]
+- Do **not** use legacy brand names (such as Citin or DC Wedding)[cite: 12].
+- Ensure all visual logos, header titles, HTML metadata, page titles, and footers consistently reflect **DC Organizer**[cite: 12].
 
-### Typography rules
+---
 
-- Do **not** introduce additional fonts.
-- Do **not** use browser/system fallback fonts as an intentional visual style.
-- Do **not** use `font-mono` unless it resolves to the project's **DM Mono** font.
-- Do **not** use random Google Fonts, template fonts, or component-library fonts.
-- Existing invitation-template typography may be dynamic when it is part of the invitation content/editor feature; this must not introduce extra fonts into the surrounding DC Wedding application UI.
-- Keep typography consistent across landing page, dashboard, editor, RSVP, Usher App, forms, dialogs, menus, cards, and other application UI.
+## 2. Typography
 
-## 2. Light Mode / Default Visual Theme
+Use only these three fonts throughout the DC Organizer project[cite: 12]:
 
-The primary light theme is an elegant **maroon + creamy** visual system.
+- **Cinzel** — primary display, heading, title, branding, section heading, and elegant editorial text[cite: 12].
+- **Fauna One** — primary body/UI font for readable paragraphs, labels, descriptions, navigation, forms, buttons, and general interface text[cite: 12].
+- **DM Mono** — utility/technical typography only: metadata, codes, numbers, timestamps, technical labels, status values, small uppercase utility text, and similar supporting information[cite: 12].
 
-### Color direction
+### Typography Rules
+- Do **not** introduce additional fonts[cite: 12].
+- Do **not** use browser/system fallback fonts as an intentional visual style[cite: 12].
+- Do **not** use `font-mono` unless it resolves to the project's **DM Mono** font[cite: 12].
+- Existing invitation-template typography may be dynamic when it is part of the invitation editor feature; this must not introduce extra fonts into the surrounding DC Organizer application UI[cite: 12].
 
-- **Primary:** maroon / burgundy / deep wine tones.
-- **Background:** creamy, warm off-white, ivory, parchment, or similar warm neutral tones.
-- **Text:** use **black/dark brown** on light backgrounds when it provides the best readability.
-- **Text:** use **white/cream** on sufficiently dark maroon surfaces when it provides better contrast.
-- Supporting neutrals should remain warm and harmonious with the creamy background.
+---
 
-### Light-theme rules
+## 3. Light & Dark Theme Visual System
 
-- Prefer maroon for primary actions, important accents, active states, branding, borders, and key decorative elements.
-- Prefer creamy backgrounds over cold pure white for major surfaces.
-- Never sacrifice readability for color matching.
-- Text color must always have sufficient contrast against its background.
-- Do not create unrelated accent colors unless required by a specific product state or accessibility need.
+### Light Theme (Dusty Pink & Rose Wood System)
+- **Brand Accent (Logo Base):** Dusty Pink (`#E8B4B8`) — used for monogram badges, active tab highlights, and soft accents[cite: 12].
+- **Primary Action / Accent:** Deep Rose Wood (`#8C4A56`) — used for primary buttons, key CTAs, branding titles, active borders, and focus rings[cite: 12].
+- **Primary Hover:** Dark Rose Wood (`#6E3843`) — hover/pressed state for primary actions[cite: 12].
+- **Background Main:** Soft Rose Neutral / Warm White (`#FAFAFA`) — main canvas background for app, dashboard, and studio editor[cite: 12].
+- **Surface Secondary:** Pale Blush (`#F5EBEB`) — cards, inputs, dropdown menus, and hover states[cite: 12].
+- **Text Primary:** Charcoal Black (`#1E1B1C`) — body text, labels, and form values for maximum readability[cite: 12].
+- **Text Accent:** Deep Rose Wood (`#8C4A56`) — section titles, active links, and key emphasis[cite: 12].
+- **No Maroon / Creamy:** Maroon and Creamy tones are fully deprecated. Do not introduce maroon or heavy ivory/cream backgrounds[cite: 12].
 
-### Text Color Hierarchy — Anti AI-Slop Rule
+### Dark Theme (Black + Pink System)
+- **Background Main:** Obsidian Black (`#0F0E11`)[cite: 12].
+- **Surface Card:** Dark Charcoal (`#1A181E`)[cite: 12].
+- **Primary Accent:** Dusty Pink (`#E8B4B8`)[cite: 12].
+- **Text Primary:** Pure White / Soft White (`#F8F9FA`)[cite: 12].
+- **Text Accent:** Soft Pink Blush (`#F4C2C7`)[cite: 12].
 
-- **Do not use two text colors everywhere just to create visual variety.** Avoid the common pattern of turning ordinary black/dark text into maroon without a clear purpose.
-- **Default body and functional text should use one primary readable text color** appropriate to the background. On light/creamy surfaces, black or dark brown is normally preferred.
-- **Maroon is an accent, not a default replacement for black text.** Use it selectively for emphasis, active states, important headings/labels, links, branding, or other elements that genuinely need emphasis.
-- Do **not** turn body text, descriptions, helper text, metadata, navigation text, or other secondary text maroon merely to create a second text color.
-- Establish hierarchy primarily through **typography, weight, size, spacing, layout, and contrast**, rather than excessive text-color variation.
-- If black/dark text is already readable and visually appropriate, **do not change it to maroon without a specific design reason**.
-- When in doubt, choose the simpler single-text-color treatment rather than adding another text color.
+---
 
-## 3. Dark Mode
+## 4. Text Color Hierarchy — Anti AI-Slop Rule
 
-Dark mode uses a **black + pink** visual system.
+- **Do not use two text colors everywhere just to create visual variety.** Avoid turning ordinary black/dark text into Rose Wood without a clear purpose[cite: 12].
+- **Default body and functional text should use one primary readable text color** appropriate to the background (`#1E1B1C` on light, `#F8F9FA` on dark)[cite: 12].
+- **Rose Wood / Pink is an accent, not a default replacement for black body text.**[cite: 12]
+- Establish hierarchy primarily through **typography, weight, size, spacing, layout, and contrast**, rather than excessive text-color variation[cite: 12].
 
-### Color direction
+---
 
-- **Background:** black or near-black.
-- **Primary accent:** pink / soft rose / hot pink tones as appropriate to the surface.
-- **Text:** white or light neutral text on dark backgrounds.
-- **Text:** pink may be used for emphasis, headings, labels, links, or accents when readability remains strong.
+## 5. Animation & Motion Design Rules (Framer Motion)
 
-### Dark-theme rules
+AI Agent **must** strictly adhere to the following animation standards to ensure smooth, high-end, and non-distracting user experiences[cite: 7]:
 
-- Do not simply invert the light theme.
-- Dark surfaces should remain genuinely dark/black.
-- Pink is the primary accent family in dark mode.
-- White text is preferred for long-form readability on black backgrounds.
-- Pink text is allowed for emphasis but must remain clearly readable.
-- Avoid low-contrast combinations such as dark gray text on black or dark pink on black.
+### Core Motion Principles
+- **Directives:** Always include `"use client";` at the top of any file utilizing `framer-motion`[cite: 7].
+- **Performance First:** Animate only transform (`x`, `y`, `scale`, `rotate`) and `opacity` properties to ensure GPU hardware acceleration (60-120fps). Avoid animating `width`, `height`, `margin`, or `padding` directly[cite: 7].
+- **Micro-Interactions (Buttons & Cards):**
+  - Buttons must feature soft hover scaling: `whileHover={{ scale: 1.02 }}` and active click feedback: `whileTap={{ scale: 0.98 }}`[cite: 7].
+  - Interactive cards should use smooth vertical lift: `whileHover={{ y: -4 }}` with a spring transition[cite: 7].
+- **Easings & Curves:** Use custom cubic-bezier curves for premium feel instead of generic linear transitions[cite: 7]:
+  - Natural Entrance: `ease: [0.22, 1, 0.36, 1]` (duration: `0.4s` to `0.6s`)[cite: 7].
+  - Snappy Interactive Elements: `type: "spring", stiffness: 400, damping: 25`[cite: 7].
+- **Scroll Animations & Staggering:**
+  - Use `motion.div` with `initial={{ opacity: 0, y: 20 }}` and `whileInView={{ opacity: 1, y: 0 }}` with `viewport={{ once: true, margin: "-50px" }}` to prevent continuous re-triggering[cite: 7].
+  - For lists or grids, use `variants` with `staggerChildren: 0.08` to reveal elements sequentially[cite: 7].
+- **Layout Transitions:** Use `<AnimatePresence mode="wait">` for seamless tab switching, modal dialog openings, and page transitions[cite: 7].
+- **Accessibility (Reduced Motion):** Respect user system settings by utilizing `useReducedMotion()` from Framer Motion to disable heavy animations when requested[cite: 7].
 
-## 4. Contrast & Readability
+---
 
-Readability always takes priority over strict color matching.
+## 6. Code Formatting & Quality Rules (Prettier & ESLint)
 
-- On **light/creamy backgrounds:** use black, dark brown, or sufficiently dark maroon text.
-- On **dark/black backgrounds:** use white, light neutral, or sufficiently bright pink text.
-- Buttons, badges, inputs, menus, overlays, and cards must maintain clear text/background contrast.
-- Hover, active, disabled, and selected states must remain readable in both themes.
-- Decorative colors must never make functional text difficult to read.
+- **Code Formatting Rules:** All generated code must be clean and compliant with **Prettier** formatting rules:
+  - Indentation: 2 spaces.
+  - Double Quotes: Use standard double quotes for JSX attributes.
+  - Class Ordering: Group Tailwind CSS utility classes logically (Prettier Tailwind Plugin standard)[cite: 7].
+- **ESLint Compliance:** Avoid unused variables, missing React hook dependencies, or invalid DOM elements. Ensure `asChild` patterns are used correctly on Shadcn UI components[cite: 12].
 
-## 5. UI Components & Libraries (Shadcn UI & Lucide React)
+---
 
-Gunakan komponen **Shadcn UI** dan ikon dari **Lucide React** untuk kebutuhan UI/UX interaktif seluruh aplikasi.
+## 7. UI Components & Libraries (Shadcn UI & Lucide React)
 
-### Rules penggunaan Shadcn UI & Lucide:
-- **Shadcn UI Components:** Manfaatkan komponen standar seperti `Dialog`, `Sheet`, `Table`, `DropdownMenu`, `Button`, `Switch`, `Badge`, `Select`, dan `Card`.
-- **Styling Customization:** Setiap komponen Shadcn UI yang digunakan **wajib disesuaikan warna dan tipografinya** menginduk pada *theme tokens* DC Wedding (Light: Maroon/Cream, Dark: Black/Pink). Jangan biarkan warna default Shadcn (seperti slate/zinc/neutral bawaan) tanpa penyesuaian.
-- **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas (misal `w-4 h-4` atau `w-5 h-5`) untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki *accent color* halaman (maroon di light mode, pink/white di dark mode).
-- **Interactive Triggers:** Gunakan properti `asChild` pada `SheetTrigger` atau `DialogTrigger` jika dibungkus oleh komponen khusus untuk menghindari *nested button error* di DOM.
+Use **Shadcn UI** components and **Lucide React** icons across the application[cite: 12].
 
-## 6. Implementation Guidance
+### Implementation Rules
+- **Shadcn UI Customization:** All Shadcn UI components (`Dialog`, `Sheet`, `Table`, `DropdownMenu`, `Button`, `Switch`, `Badge`, `Select`, `Card`) **must be styled using DC Organizer theme tokens**[cite: 12]. Override default slate/zinc/neutral colors[cite: 12].
+- **Lucide Icons:** Use Lucide icons (`LucideIcon`) with a minimum size of `w-5 h-5` or `w-6 h-6` for high legibility[cite: 12]. Icon colors must follow theme accents (Rose Wood in light mode, Dusty Pink/White in dark mode)[cite: 12].
+- **Interactive Triggers:** Use `asChild` on `SheetTrigger` or `DialogTrigger` when wrapping custom trigger elements to prevent DOM nesting errors[cite: 12].
 
-- Reuse the project's existing CSS variables, theme tokens, and font variables whenever possible.
-- Prefer semantic theme tokens over hard-coded colors when a token already exists.
-- If a new token is necessary, keep it within the DC Wedding maroon/creamy light palette or black/pink dark palette.
-- Keep light and dark variants intentionally designed rather than relying on automatic color inversion.
-- Before adding a new UI component, check that its typography and colors follow these rules.
-
-## 7. Design Consistency
-
-DC Wedding should feel like one coherent premium wedding platform.
-
-- **Cinzel = elegance / display.**
-- **Fauna One = readable application UI.**
-- **DM Mono = utility / technical detail.**
-- **Light mode = maroon + creamy.**
-- **Dark mode = black + pink.**
-- **Text color should remain restrained; do not create unnecessary multi-color text hierarchy.**
-
-When choosing between two visually valid implementations, prefer the one that is simpler, more consistent, more readable, and closer to this design system.
+---
 
 ## 8. Code Maintainability & Refactoring Rules
 
-Untuk menjaga kualitas basis kode (*codebase*) agar tetap bersih, modular, dan mudah dipelihara:
+- **File Length Limit:** Keep component and module files within **200–250 lines of code**[cite: 12]. Refactor long files (especially canvas editors or dashboard pages)[cite: 12].
+- **Extract Sub-components:** Modularize complex UI into smaller sub-components inside `components/`[cite: 12].
+- **Custom Hooks for Logic:** Isolate complex state management, data fetching, or Konva Canvas interactions into custom hooks (e.g., `useCanvasEditor.ts`, `useInvitationData.ts`)[cite: 12].
+- **Constants & Helpers Extraction:** Move validation schemas, dropdown options, and formatting helpers to `lib/` or `constants/`[cite: 12].
 
-- **File Length Limit:** Usahakan setiap file komponen atau modul **tidak melebihi 200–250 baris kode**. Jika file sudah terlalu panjang (terutama file halaman atau canvas editor), lakukan refactoring.
-- **Extract Sub-components:** Pisahkan UI yang kompleks atau independen menjadi komponen-komponents kecil tersendiri di dalam direktori `components/` (misalnya: memisahkan modal, form section, toolbar, atau item list).
-- **Custom Hooks for Logic:** Ekstrak logika state yang berat, data fetching, event handler kompleks, atau integrasi Konva Canvas ke dalam *custom hooks* (misalnya: `useCanvasEditor.ts`, `useInvitationData.ts`) untuk memisahkan logika dari layer UI.
-- **Single Responsibility Principle:** Pastikan satu file/komponen hanya menangani satu tugas utama.
-- **Constants & Helpers Extraction:** Pindahkan data konstan, opsi dropdown, skema validasi, atau fungsi utility matematika/formatting keluar dari file komponen utama ke file terpisah di `lib/` atau `constants/`.
+---
 
-## 9. Layout, Spacing & Visual Clarity Rules
+## 9. Layout, Spacing & Visual Clarity
 
-- **Anti-Blur & High Legibility:** Seluruh teks, label menu, dan tombol wajib menggunakan font-weight yang tegas (minimal `font-medium` atau `font-semibold` untuk UI/menu) dengan warna kontras tinggi. Dilarang keras menggunakan warna teks samar/buram (seperti muted gray yang terlalu muda) tanpa alasan spesifik.
-- **Generous Spacing & Layout Scaling:** Manfaatkan area/ruang layar yang luas secara maksimal. Gunakan padding, margin, dan gap yang proporsional (misal: `p-4`, `p-6`, `gap-4`) agar elemen UI/menu tidak berdesakan dan mudah dibaca.
-- **Icon Sizing & Touch Targets:** Ikon tidak boleh terlalu kecil. Gunakan ukuran minimal `w-5 h-5` atau `w-6 h-6` untuk menu/action button utama, serta pastikan area klik/sentuh (*touch target*) memiliki padding memadai (minimal 44x44px).
-- **Navigation & Menu Readability:** Menu navigasi, dropdown, dan sidebar harus memiliki ukuran font yang nyaman dibaca (minimal `text-sm` hingga `text-base`), tingkat keterbacaan tinggi, serta indikator state aktif/hover yang jelas.
+- **Anti-Blur & High Legibility:** Use strong font weights (`font-medium` or `font-semibold` for UI/menus) with high contrast[cite: 12]. Never use washed-out/muted grays[cite: 12].
+- **Generous Spacing:** Use proportional padding, margins, and gaps (`p-4`, `p-6`, `gap-4`) so UI elements do not feel cluttered[cite: 12].
+- **Touch Targets:** Ensure interactive touch targets have a minimum clickable area of 44x44px[cite: 12].
