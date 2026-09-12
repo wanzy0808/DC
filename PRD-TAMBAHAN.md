@@ -100,6 +100,12 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Deskripsi onboarding menjelaskan bahwa data dipakai untuk **judul undangan dan sapaan di dashboard**.
 - Data onboarding tetap menjadi sumber data yang sama untuk invitation dan dashboard; tidak membuat form data pasangan kedua di Studio.
 
+### Dashboard Profile Single Source of Truth
+- Nickname dashboard sekarang sepenuhnya dibaca dari `User.firstName` di database.
+- Menghapus ketergantungan dashboard terhadap cookie nickname agar nilai sapaan tidak berbeda antara session/perangkat.
+- `/api/profile` juga membaca dan mengembalikan nama langsung dari database.
+- Dengan demikian nama panggilan tidak diminta atau disimpan pada sumber kedua; dashboard, profile, dan onboarding menggunakan data yang sama.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation pada commit Studio deep-link `b76cb466` berhasil.
