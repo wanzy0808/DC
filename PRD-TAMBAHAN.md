@@ -92,6 +92,14 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Editor event mempertahankan status publish saat menyimpan perubahan dan tidak melakukan unpublish secara tidak sengaja.
 - Dua tipe undangan tetap memiliki record database terpisah (`WEDDING` dan `ADAT_AKAD`).
 
+### Dashboard Onboarding Fix
+- Memperbaiki race condition saat `/api/dashboard/context` dan `/api/invitations` dipanggil bersamaan pada first load. Context sekarang memastikan invitation `WEDDING` tersedia sebelum mengembalikan data onboarding.
+- Dashboard sekarang memuat invitation `WEDDING` terlebih dahulu, kemudian mengambil context dan guest data, sehingga `invitationId` tersedia ketika onboarding disimpan.
+- Penyimpanan onboarding selalu mengirim `type: "WEDDING"` dan memvalidasi response API sebelum menutup modal, sehingga modal tidak hilang jika data gagal disimpan.
+- Copy onboarding diubah menjadi **“Hi, sebelum masuk”** dan **“Mari kita berkenalan”**.
+- Deskripsi onboarding menjelaskan bahwa data dipakai untuk **judul undangan dan sapaan di dashboard**.
+- Data onboarding tetap menjadi sumber data yang sama untuk invitation dan dashboard; tidak membuat form data pasangan kedua di Studio.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation pada commit Studio deep-link `b76cb466` berhasil.
