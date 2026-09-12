@@ -18,21 +18,21 @@ type Invitation = {
 type Props = { accent: string; button: string; paid: boolean };
 
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_INVITATION_ROOT_DOMAIN || "dcwedding.com";
-const invitationOrigin = `https://${ROOT_DOMAIN}`;
 
 const emptyInvitation = (type: Invitation["type"]): Invitation => ({
   id: "",
   slug: "",
   type,
-  title: type === "WEDDING" ? "Undangan Pernikahan" : "Undangan Event Khusus",
+  title: "",
   isPublished: false,
   passwordProtected: false,
 });
 
 function publicInvitationUrl(weddingSlug: string, specialInvitation?: Invitation) {
   if (!weddingSlug) return "";
-  if (!specialInvitation) return `${invitationOrigin}/`;
-  return `${invitationOrigin}/${slugifyEvent(specialInvitation.title || "event")}`;
+  const origin = `https://${weddingSlug}.${ROOT_DOMAIN}`;
+  if (!specialInvitation?.title.trim()) return specialInvitation ? "" : `${origin}/`;
+  return `${origin}/${slugifyEvent(specialInvitation.title)}`;
 }
 
 export default function InvitationManagementPanel({ accent, button, paid }: Props) {
@@ -185,7 +185,7 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
 function InvitationCard({ invitation, publicUrl, paid, loading, button, special, onCopy, onPublish, busy }: { invitation: Invitation; publicUrl: string; paid: boolean; loading: boolean; button: string; special?: boolean; onCopy: () => void; onPublish: () => void; busy: boolean }) {
   return <section className="rounded-2xl border border-[#d8cbc2] bg-[#fffaf6] p-5 dark:border-white/10 dark:bg-black/20">
     <div className="flex items-start justify-between gap-3"><div><p className="font-[family-name:var(--font-cinzel)] text-base font-semibold">{special ? "Undangan Event Khusus" : "Undangan Pernikahan"}</p><p className="mt-1 text-xs text-[#5A4545] dark:text-white/75">{special ? "Akad, seserahan, sangjit, atau event privat." : "Undangan utama untuk acara pernikahan dan resepsi."}</p></div><span className="rounded-full border border-[#d8cbc2] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase dark:border-white/10">{loading ? "Loading" : invitation.isPublished ? "Published" : "Draft"}</span></div>
-    <div className="mt-5 rounded-xl border border-[#d8cbc2] bg-[#f3ede6] p-3 dark:border-white/10 dark:bg-black/20"><p className="break-all font-[family-name:var(--font-dm-mono)] text-[10px] opacity-70">{publicUrl || "Link belum tersedia"}</p></div>
+    <div className="mt-5 rounded-xl border border-[#d8cbc2] bg-[#f3ede6] p-3 dark:border-white/10 dark:bg-black/20"><p className="break-all font-[family-name:var(--font-dm-mono)] text-[10px] opacity-70">{publicUrl || (special ? "Nama event belum diatur" : "Link belum tersedia")}</p></div>
     <div className="mt-4 grid grid-cols-2 gap-2">
       <Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs dark:border-white/10 ${!publicUrl ? "pointer-events-none opacity-40" : ""}`}><Eye className="h-3.5 w-3.5"/>Preview</Link>
       <button disabled={!publicUrl} onClick={onCopy} className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs disabled:opacity-40 dark:border-white/10"><Copy className="h-3.5 w-3.5"/>Salin Link</button>
