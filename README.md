@@ -29,7 +29,8 @@ A modern, high-performance digital wedding invitation and management platform bu
 - Typography: Cinzel — Display, Headings, Titles, & Branding
 - Typography: Fauna One — Primary Body Text & Interface UI
 - Typography: DM Mono — Technical Labels, Codes, & Metadata
-- Light Theme: Maroon + Creamy Visual System
+- Light Theme: Deep Rose Wood `#8C4A56` + Dusty Pink `#E8B4B8` + Warm White `#FAFAFA` + Pale Blush `#F5EBEB` + Charcoal `#1E1B1C`
+- Primary Hover: Dark Rose Wood `#6E3843`
 - Dark Theme: Black + Pink Accent Palette
 
 ### Public Invitation Architecture
