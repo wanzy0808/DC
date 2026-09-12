@@ -11,6 +11,10 @@ function makeSlug(firstName: string, userId: string, type: InvitationType) {
   return `${name || "wedding"}${suffix}-${userId.slice(-6)}`;
 }
 
+function sanitizeInvitation<T extends { passwordHash?: string | null }>(invitation: T) {
+  return { ...invitation, passwordHash: undefined };
+}
+
 async function getUserPayment(userId: string) {
   return prisma.payment.findFirst({
     where: {
@@ -69,7 +73,7 @@ export async function GET(request: Request) {
   const paid = Boolean(await getUserPayment(user.id));
 
   return NextResponse.json({
-    invitation: { ...invitation, accessPaid: paid },
+    invitation: { ...sanitizeInvitation(invitation), accessPaid: paid },
   });
 }
 
@@ -127,7 +131,7 @@ export async function PUT(request: Request) {
     });
 
     return NextResponse.json({
-      invitation: { ...updated, accessPaid: Boolean(userPayment) },
+      invitation: { ...sanitizeInvitation(updated), accessPaid: Boolean(userPayment) },
       accessPaid: Boolean(userPayment),
     });
   } catch {
