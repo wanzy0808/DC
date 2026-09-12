@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Circle, Group, Layer, Rect, Stage, Text } from "react-konva";
+import type { KonvaEventObject } from "konva/lib/Node";
 
 type Guest = { id: string; name: string; tableId?: string | null; seatNumber?: number | null; rsvpStatus?: string; source?: "RSVP" | "MANUAL" };
 type Table = { id: string; name: string; shape: string; capacity: number };
@@ -137,7 +138,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
     await assignGuestAtPoint(draggedGuestId, { x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY });
   }
 
-  async function handleCanvasGuestDragEnd(guestId: string, event: any) {
+  async function handleCanvasGuestDragEnd(guestId: string, event: KonvaEventObject<DragEvent>) {
     const stage = event.target.getStage();
     const point = stage?.getPointerPosition();
     event.target.position({ x: 0, y: 0 });
