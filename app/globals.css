@@ -13,10 +13,10 @@
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --font-sans: var(--font-dc-sans); --font-serif: var(--font-dc-serif); --font-heading: var(--font-dc-heading); --font-mono: var(--font-dc-mono);
-  --color-background: var(--background); --color-foreground: var(--foreground); --color-dc-pink: #C26B70; --color-dc-pink-light: #E8A5AE; --color-dc-maroon: #7A1C25; --color-dc-gold: #C5A059; --color-dc-gold-bright: #D4AF37; --color-dc-dark: #060508; --color-dc-card: #08070A; --color-dc-cream: #FAF7F2;
+  --color-background: var(--background); --color-foreground: var(--foreground); --color-dc-pink: #E8B4B8; --color-dc-pink-light: #E8B4B8; --color-dc-maroon: #8C4A56; --color-dc-rose-wood: #8C4A56; --color-dc-rose-wood-dark: #6E3843; --color-dc-gold: #E8B4B8; --color-dc-gold-bright: #E8B4B8; --color-dc-dark: #060508; --color-dc-card: #F5EBEB; --color-dc-cream: #FAFAFA;
   --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6);
 }
-:root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: oklch(0.98 0.01 75); --foreground: oklch(0.18 0 0); --card: oklch(1 0 0); --card-foreground: oklch(0.18 0 0); --popover: oklch(1 0 0); --popover-foreground: oklch(0.18 0 0); --primary: oklch(0.35 0.15 25); --primary-foreground: oklch(0.98 0 0); --secondary: oklch(0.72 0.11 80); --secondary-foreground: oklch(0.18 0 0); --muted: oklch(0.94 0.01 75); --muted-foreground: oklch(0.45 0 0); --accent: oklch(0.93 0.02 75); --accent-foreground: oklch(0.35 0.15 25); --destructive: oklch(0.577 0.245 27.325); --border: oklch(0.35 0.15 25 / 15%); --input: oklch(0.35 0.15 25 / 15%); --ring: oklch(0.72 0.11 80); --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --sidebar: oklch(0.98 0.01 75); --sidebar-foreground: oklch(0.18 0 0); --sidebar-primary: oklch(0.35 0.15 25); --sidebar-primary-foreground: oklch(0.98 0 0); --sidebar-accent: oklch(0.94 0.01 75); --sidebar-accent-foreground: oklch(0.35 0.15 25); --sidebar-border: oklch(0.35 0.15 25 / 15%); --sidebar-ring: oklch(0.72 0.11 80); }
+:root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: #FAFAFA; --foreground: #1E1B1C; --card: #F5EBEB; --card-foreground: #1E1B1C; --popover: #F5EBEB; --popover-foreground: #1E1B1C; --primary: #8C4A56; --primary-foreground: #FAFAFA; --secondary: #E8B4B8; --secondary-foreground: #1E1B1C; --muted: #F5EBEB; --muted-foreground: #6E3843; --accent: #E8B4B8; --accent-foreground: #1E1B1C; --destructive: #B42318; --border: color-mix(in srgb, #8C4A56 18%, #FAFAFA); --input: color-mix(in srgb, #8C4A56 18%, #FAFAFA); --ring: #8C4A56; --chart-1: #8C4A56; --chart-2: #E8B4B8; --chart-3: #6E3843; --chart-4: #1E1B1C; --chart-5: #F5EBEB; --sidebar: #FAFAFA; --sidebar-foreground: #1E1B1C; --sidebar-primary: #8C4A56; --sidebar-primary-foreground: #FAFAFA; --sidebar-accent: #F5EBEB; --sidebar-accent-foreground: #6E3843; --sidebar-border: color-mix(in srgb, #8C4A56 18%, #FAFAFA); --sidebar-ring: #8C4A56; }
 .dark { --background: oklch(0.12 0.01 320); --foreground: oklch(0.985 0 0); --card: oklch(0.14 0.01 320); --card-foreground: oklch(0.985 0 0); --popover: oklch(0.14 0.01 320); --popover-foreground: oklch(0.985 0 0); --primary: #E8A5AE; --primary-foreground: #241014; --secondary: oklch(0.78 0.09 18); --secondary-foreground: #241014; --muted: oklch(0.20 0.01 320); --muted-foreground: oklch(0.708 0 0); --accent: oklch(0.20 0.01 320); --accent-foreground: #E8A5AE; --destructive: oklch(0.704 0.191 22.216); --border: oklch(0.60 0.13 18 / 30%); --input: oklch(0.60 0.13 18 / 20%); --ring: #E8A5AE; --chart-1: oklch(0.87 0 0); --chart-2: oklch(0.556 0 0); --chart-3: oklch(0.439 0 0); --chart-4: oklch(0.371 0 0); --chart-5: oklch(0.269 0 0); --sidebar: oklch(0.14 0.01 320); --sidebar-foreground: oklch(0.985 0 0); --sidebar-primary: #E8A5AE; --sidebar-primary-foreground: #241014; --sidebar-accent: oklch(0.20 0.01 320); --sidebar-accent-foreground: #E8A5AE; --sidebar-border: oklch(0.60 0.13 18 / 30%); --sidebar-ring: #E8A5AE; }
 @layer base { * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); } html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; } h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); } }
 
@@ -27,7 +27,7 @@
   .font-dc-mono { font-family: var(--font-dc-mono); }
 }
 
-/* Keep text hierarchy restrained: maroon/pink is an accent, not a replacement for body text. */
+/* Keep text hierarchy restrained: rose wood/pink is an accent, not a replacement for body text. */
 .text-dc-maroon { color: var(--primary); }
 
 .dc-navbar { background: linear-gradient(to bottom, color-mix(in oklab, var(--background) 94%, transparent), color-mix(in oklab, var(--background) 62%, transparent) 58%, transparent 100%); }
@@ -42,28 +42,28 @@ aside nav > p { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] form button[type="submit"] { background-color: var(--primary); color: var(--primary-foreground); }
 [data-slot="dialog-content"] form button[type="submit"]:hover { background-color: color-mix(in oklab, var(--primary), black 12%); }
 
-/* Dashboard: stronger DC maroon presence in both themes. */
-.dc-dashboard aside { background: linear-gradient(180deg, #7A1C25 0%, #5E141C 100%) !important; color: #FFF8F5; border-color: #5E141C !important; }
-.dc-dashboard aside nav > p { color: #F7DDE0 !important; }
-.dc-dashboard aside nav button { color: #FFF8F5 !important; }
+/* Dashboard light mode: Deep Rose Wood / Dusty Pink palette. */
+.dc-dashboard aside { background: linear-gradient(180deg, #8C4A56 0%, #6E3843 100%) !important; color: #FAFAFA; border-color: #6E3843 !important; }
+.dc-dashboard aside nav > p { color: #E8B4B8 !important; }
+.dc-dashboard aside nav button { color: #FAFAFA !important; }
 .dc-dashboard aside nav button:hover { background-color: rgb(255 255 255 / 12%) !important; }
-.dc-dashboard aside nav button[class*="bg-[#7A1C25]/10"] { background-color: #FFF8F5 !important; color: #7A1C25 !important; box-shadow: inset 3px 0 0 #C5A059; }
-.dc-dashboard aside > div { border-color: rgb(255 255 255 / 18%) !important; color: #F7DDE0 !important; }
-.dc-dashboard aside > div p.font-semibold { color: #FFF8F5 !important; }
-.dc-dashboard header { background: linear-gradient(90deg, #7A1C25 0%, #681820 60%, #5E141C 100%) !important; color: #FFF8F5; border-color: #5E141C !important; }
-.dc-dashboard header a { color: #FFF8F5 !important; }
-.dc-dashboard header button { color: #FFF8F5; }
-.dc-dashboard header button span.flex { background-color: #FFF8F5 !important; color: #7A1C25 !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"] { background: #7A1C25 !important; color: #FFF8F5 !important; border-color: #C5A059 !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"]:hover { background: #5E141C !important; }
+.dc-dashboard aside nav button[class*="bg-[#7A1C25]/10"] { background-color: #FAFAFA !important; color: #8C4A56 !important; box-shadow: inset 3px 0 0 #E8B4B8; }
+.dc-dashboard aside > div { border-color: rgb(255 255 255 / 18%) !important; color: #E8B4B8 !important; }
+.dc-dashboard aside > div p.font-semibold { color: #FAFAFA !important; }
+.dc-dashboard header { background: linear-gradient(90deg, #8C4A56 0%, #7A404B 60%, #6E3843 100%) !important; color: #FAFAFA; border-color: #6E3843 !important; }
+.dc-dashboard header a { color: #FAFAFA !important; }
+.dc-dashboard header button { color: #FAFAFA; }
+.dc-dashboard header button span.flex { background-color: #FAFAFA !important; color: #8C4A56 !important; }
+.dc-dashboard > a[aria-label="Bantuan WhatsApp"] { background: #8C4A56 !important; color: #FAFAFA !important; border-color: #E8B4B8 !important; }
+.dc-dashboard > a[aria-label="Bantuan WhatsApp"]:hover { background: #6E3843 !important; }
 
-/* Invitation Studio: eliminate the pale/white top strip and make the tool rail obvious. */
-.dc-invitation-studio > div:first-child { background: linear-gradient(90deg, #7A1C25, #651820) !important; color: #FFF8F5; border-color: #5E141C !important; }
-.dc-invitation-studio > div:first-child button { color: #FFF8F5; }
-.dc-invitation-studio .studio-tool-rail { background: #651820; color: #FFF8F5; border-color: #5E141C; }
-.dc-invitation-studio .studio-tool-rail button { color: #FFF8F5; }
-.dc-invitation-studio .studio-tool-rail button[data-active="true"] { background: #FFF8F5; color: #7A1C25; }
-.dc-invitation-studio .studio-control-panel { background: #fffaf7; }
+/* Invitation Studio light mode: Deep Rose Wood / Dusty Pink palette. */
+.dc-invitation-studio > div:first-child { background: linear-gradient(90deg, #8C4A56, #6E3843) !important; color: #FAFAFA; border-color: #6E3843 !important; }
+.dc-invitation-studio > div:first-child button { color: #FAFAFA; }
+.dc-invitation-studio .studio-tool-rail { background: #6E3843; color: #FAFAFA; border-color: #8C4A56; }
+.dc-invitation-studio .studio-tool-rail button { color: #FAFAFA; }
+.dc-invitation-studio .studio-tool-rail button[data-active="true"] { background: #FAFAFA; color: #8C4A56; }
+.dc-invitation-studio .studio-control-panel { background: #F5EBEB; }
 .dark .dc-invitation-studio .studio-control-panel { background: #211318; }
 
 .public-page .bg-dc-maroon, .public-page .bg-dc-pink { background-color: var(--primary) !important; color: var(--primary-foreground) !important; }
