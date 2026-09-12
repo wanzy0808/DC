@@ -1,112 +1,104 @@
 # DC Wedding — PRD Implementation Addendum
 
-Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808/DC` tanpa mengubah PRD utama.
+Dokumen ini adalah changelog implementasi repository `wanzy0808/DC`. `prd.md` tetap menjadi product source of truth; dokumen ini mencatat keputusan teknis dan perubahan yang sudah benar-benar masuk ke codebase.
 
 ## 2026-09-12
 
-### Invitation Password Protection
-- Menambahkan field password protection pada `Invitation`.
-- Menambahkan migration database, bcrypt password hashing, signed access cookie, owner settings API, public verification endpoint, password gate, dan sanitasi `passwordHash`.
-- Menambahkan dashboard UI untuk pengaturan password invitation.
+### 1. Invitation Password Protection
+- Menambahkan password protection pada `Invitation`.
+- Password disimpan sebagai bcrypt hash dan `passwordHash` tidak pernah dikirim ke client.
+- Public access menggunakan signed access cookie.
+- Dashboard menyediakan pengaturan aktif, ganti password, dan Matikan.
 
-### RSVP Analytics & Guest Actions
-- Menambahkan metric RSVP, tabel analytics, pencarian, sorting, CSV export, QR guest ticket modal, dan manual check-in server-side.
-- Check-in menggunakan atomic update untuk mencegah duplicate check-in.
-- QR guest ticket tersedia untuk Digital Invitation dan Guest Book; Usher App/check-in tetap khusus Guest Book.
+### 2. RSVP Analytics & Guest Actions
+- Menambahkan metric RSVP, pencarian, sorting, CSV export, QR guest ticket, dan manual check-in.
+- Check-in menggunakan update atomik untuk mencegah duplicate check-in.
+- Angpao/Kado tetap ditampilkan secara jujur sebagai belum tersedia karena schema belum memiliki tracking field tersebut.
 
-### Guest Management Entitlement
-- Manajemen Tamu menggunakan entitlement Digital Invitation.
-- Edit/hapus tamu, nomor meja, dan seat assignment mengikuti Digital Invitation.
+### 3. Guest Management Entitlement
+- Manajemen Tamu mengikuti entitlement Digital Invitation.
+- Edit/hapus tamu, session, table, dan seat assignment tetap tersedia sesuai package.
+- Blocking popup lama yang menghalangi workspace Manajemen Tamu dihapus.
 - Usher App tetap menggunakan entitlement Guest Book.
-- Menghapus blocking popup lama yang menghalangi workspace Manajemen Tamu.
 
-### Dashboard Invitation Feature Restoration
-- Mengembalikan Galeri & Foto, Musik Undangan, dan workspace Undangan Digital.
-- Dashboard menyediakan pengelolaan WEDDING dan ADAT_AKAD, Preview, Salin Link, Edit Desain, Publish/Unpublish, asset, dan Password Protection.
-- Tidak menghapus atau mengganti route/menu Beranda.
+### 4. Dashboard Invitation Workspace
+- Mengembalikan workspace Undangan Digital, Galeri & Foto, dan Musik Undangan.
+- Dashboard mengelola WEDDING dan ADAT_AKAD dengan Preview, Salin Link, Edit Desain, Publish/Unpublish, asset, dan password protection.
+- Menu dan route **Beranda** tidak dihapus atau diganti.
 
-### Invitation Studio Type Deep Link
-- Studio membaca `?type=ADAT_AKAD`.
-- Edit Desain Event Khusus membuka Studio pada tipe yang benar.
-- Tanpa query tetap membuka WEDDING.
+### 5. Onboarding & Single Source of Truth
+- Onboarding meminta Groom Name, Bride Name, dan Dashboard Nickname hanya saat data wajib belum ada.
+- Nama pasangan disimpan pada WEDDING invitation; nickname disimpan pada `User.firstName`.
+- Setelah tersimpan, onboarding tidak muncul lagi pada login berikutnya.
+- Implementasi onboarding duplikat pada `DashboardGate` dihapus.
+- Dashboard greeting membaca `User.firstName` dari database, bukan cookie/localStorage.
+- Rangkaian Acara menggunakan data pasangan dari onboarding secara read-only.
+- Studio membaca data event dari database yang sama dan tidak meminta ulang data inti.
 
-### Invitation Studio Custom Asset Entitlement
-- Upload custom asset divalidasi server-side menggunakan entitlement Digital Invitation.
-- Foto maksimal 30 per invitation, maksimal 15 MB sebelum optimasi WebP.
-- Musik custom maksimal 1 track per invitation, maksimal 10 MB.
-
-### Centralized Event Data / Single Source of Truth
-- `EventPanel` menjadi editor utama data rangkaian acara untuk WEDDING dan ADAT_AKAD.
-- Data pasangan, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan disimpan pada `Invitation`.
-- Studio membaca data database yang sama dan tidak lagi menjadi tempat input ulang data inti event.
+### 6. Event Data Reuse / No Duplicate Input
+- `EventPanel` menjadi editor utama data event: nama acara, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan.
+- Nama pasangan WEDDING dan ADAT_AKAD dikunci sebagai data onboarding.
+- ADAT_AKAD menggunakan identitas pasangan yang sama dengan WEDDING bila draft belum memiliki nilai sendiri.
 - Field invitation-specific seperti hashtag dan dress code tetap dikelola di Studio.
 
-### Dashboard Onboarding Fix & Single Source of Truth
-- Memperbaiki race condition onboarding dan memastikan invitation WEDDING tersedia sebelum penyimpanan onboarding.
-- Onboarding menyimpan nama pasangan ke WEDDING dan nickname ke `User.firstName`.
-- Modal hanya muncul ketika data wajib belum lengkap; setelah tersimpan tidak meminta onboarding lagi pada login berikutnya.
-- Menghapus implementasi onboarding duplikat pada `DashboardGate`.
+### 7. No Mock Invitation Data
+- Menghapus default mock `Rio`, `Lyvia`, dan `Gedung Pernikahan` dari schema.
+- Invitation baru memakai nilai kosong untuk nama pasangan dan venue.
+- Menambahkan migration untuk default PostgreSQL yang baru.
+- Studio juga tidak lagi melakukan first-render dengan data contoh.
 
-### Dashboard Profile Single Source of Truth
-- Nickname dashboard sepenuhnya membaca `User.firstName`.
-- Tidak menggunakan cookie/localStorage sebagai sumber nickname kedua.
+### 8. Invitation Studio Data Audit
+- Initial Studio form sekarang kosong dan diisi dari database.
+- `address` dan `mapUrl` ikut dibaca dari Invitation.
+- Preview aman ketika tanggal belum tersedia.
+- Undo/Redo memulihkan template, palette, font, dan dekorasi.
+- Font preview memakai contoh generik, bukan nama pasangan palsu.
+- Asset quota diperjelas menjadi **maksimal 30 foto + 1 musik custom**, bukan satu kuota gabungan.
+- Preview menampilkan alamat dan link Maps bila tersedia.
 
-### Onboarding → Event Data Reuse
-- Invitation baru dimulai sebagai draft kosong, tanpa data contoh Rio & Lyvia atau venue contoh.
-- Nama pasangan berasal dari onboarding.
-- Rangkaian Acara hanya melengkapi data event.
-- WEDDING dan ADAT_AKAD tetap memiliki record database masing-masing.
+### 9. Public Invitation Subdomain — Canonical URL
+Keputusan terbaru: URL publik DC Wedding menggunakan subdomain pasangan + nama event.
 
-### Duplicate Dashboard Feature Guard Removal
-- Menghapus wrapper `DashboardFeatureGuard` yang memiliki click interceptor lama dan dapat memblokir Manajemen Tamu.
-- Entitlement UI sekarang mengikuti gate dashboard yang benar dan authorization API tetap server-side.
+- Undangan utama:
+  `https://[nama-pasangan].dcwedding.com`
+- Event khusus:
+  `https://[nama-pasangan].dcwedding.com/[nama-event]`
+- Contoh:
+  `Akad & Sangjit` → `https://rio-lyvia.dcwedding.com/akad-sangjit`
+- Nama event berasal dari data database, saat ini menggunakan `Invitation.title` pada record `ADAT_AKAD`.
+- Helper `slugifyEvent()` digunakan agar nama event menjadi path URL yang aman dan konsisten.
+- `proxy.ts` melakukan tenant routing berdasarkan subdomain dan me-rewrite path event ke route internal.
+- Route internal baru menangani `/invite/[slug]/[eventSlug]`.
+- Password protection tetap menggunakan password milik invitation utama sehingga root invitation dan event pada subdomain yang sama memakai satu access gate.
+- Event lama `/event-khusus` dipertahankan sebagai compatibility alias dan diarahkan ke `/{nama-event}`.
+- Legacy `/invite/[slug]` tetap dipertahankan untuk internal routing/backward compatibility, bukan URL publik canonical.
+- Tidak ada route publik baru bernama `invite2`.
 
-### Invitation Password UI Hardening
-- Password protection aktif tidak dapat tidak sengaja dimatikan karena input password baru kosong.
-- Tombol Matikan digunakan khusus untuk menonaktifkan protection.
+### 10. Dashboard Public Link Synchronization
+- `InvitationManagementPanel` tidak lagi membuat URL Event Khusus dengan `/event-khusus`.
+- Card Event Khusus sekarang membentuk URL berdasarkan `slugifyEvent(ADAT_AKAD.title)` pada subdomain WEDDING.
+- Preview dan Salin Link menggunakan URL canonical yang sama.
+- Edit Desain tetap deep-link ke Studio dengan `?type=ADAT_AKAD`.
 
-### Event Data Reuse / No Duplicate Couple Input
-- Nama pasangan pada WEDDING berasal dari onboarding dan dibuat read-only pada Rangkaian Acara.
-- ADAT_AKAD mengambil nama pasangan dari WEDDING bila draft belum memilikinya.
-- Data event-specific tetap dapat diedit tanpa membuat sumber data pasangan kedua.
+### 11. Duplicate Dashboard Guard Cleanup
+- Wrapper `DashboardFeatureGuard` lama yang memiliki click interceptor dihapus dari `/dashboard`.
+- Authorization API tetap server-side dan entitlement dashboard mengikuti package access layer.
 
-### Public Invitation Subdomain Routing
-- URL publik utama menggunakan `https://[nama-pasangan].dcwedding.com`.
-- Event Khusus menggunakan subdomain yang sama dengan path `/event-khusus`.
-- Slug WEDDING lama dengan pola `-moment-[id]` atau `-akad-[id]` dapat dimigrasikan ke slug pasangan saat data pasangan disimpan.
-- Slug bentrok diberi suffix numerik agar tetap unik.
-- `proxy.ts` melakukan tenant routing berdasarkan subdomain.
-- Route `/invite/[slug]` tetap dipertahankan untuk internal rewrite dan backward compatibility, bukan sebagai URL publik utama.
-- Tidak ditemukan route/path `invite2` pada audit repository.
+### 12. Invitation Studio Type Deep Link
+- Studio membaca `?type=ADAT_AKAD` untuk Event Khusus.
+- Tanpa query, Studio membuka WEDDING.
+- Edit Desain pada masing-masing card mengarah ke type yang sesuai.
 
-### No Mock Invitation Defaults
-- Menghapus default schema `Rio`, `Lyvia`, dan `Gedung Pernikahan` dari model `Invitation`.
-- Invitation baru menggunakan nilai kosong untuk nama pasangan dan venue sehingga database tidak membuat data pengguna palsu.
-- Menambahkan migration untuk mengubah default PostgreSQL menjadi string kosong.
-- Flow onboarding tetap menjadi sumber pengisian nama pasangan pertama.
+### 13. Custom Asset Entitlement
+- Upload custom asset divalidasi server-side berdasarkan Digital Invitation entitlement.
+- Maksimal 30 foto per invitation, dengan optimasi WebP.
+- Maksimal 1 track musik custom per invitation.
 
-### Event Panel Couple Lock
-- Field nama pasangan pada Rangkaian Acara sekarang read-only untuk **WEDDING maupun ADAT_AKAD**.
-- Rangkaian Acara tidak lagi menjadi tempat kedua untuk mengubah identitas pasangan.
-- Jika data ADAT_AKAD kosong, nama pasangan tetap diambil dari WEDDING.
-- Data yang dapat diedit di panel ini hanya data event: nama acara, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan.
-
-### Invitation Studio Data Audit & Mock-State Cleanup
-- Menghapus initial state contoh `Rio`, `Lyvia`, `Gedung Pernikahan`, tanggal `2026-09-26`, dan deskripsi contoh dari Studio.
-- Form Studio sekarang dimulai kosong lalu diisi dari database; tidak membuat data contoh saat first render.
-- Menambahkan `address` dan `mapUrl` ke data Studio agar preview menggunakan data event yang sama dengan Rangkaian Acara.
-- Preview tidak lagi gagal saat tanggal database masih kosong; menggunakan status "Tanggal acara belum diatur".
-- Undo/Redo sekarang ikut memulihkan dekorasi karena `designKey` juga menyimpan state dekorasi.
-- Font preview menggunakan contoh generik, bukan nama pasangan palsu.
-- Kuota asset diperjelas menjadi **30 foto + 1 musik**, bukan satu kuota gabungan.
-- Preview menampilkan alamat dan tautan Maps bila data tersebut tersedia.
-
-## Implementation Notes
-
-- `prd.md` tetap menjadi product source of truth.
-- `README.md` menjadi pedoman technology stack dan sekarang mendokumentasikan arsitektur subdomain.
-- `AGENTS.md` menjadi pedoman coding dan design system.
-- Database adalah single source of truth untuk data bersama; hindari duplicate forms dan browser storage sebagai sumber data.
-- Fitur Angpao/Kado dan status pengiriman QR belum dianggap benar-benar tracked karena schema saat ini belum memiliki field tracking tersebut; UI menampilkan status yang jujur daripada mengarang data.
-- Brand tetap **DC Wedding**. Tidak diganti menjadi Citin.
-- Menu dan route **Beranda** tetap dipertahankan.
+## Implementation Rules Going Forward
+- **Database first:** data bersama tidak boleh dibuat ulang di browser, cookie, localStorage, atau form kedua.
+- **Extend over replace:** audit route/API/schema existing sebelum menambah implementasi.
+- **Brand:** tetap **DC Wedding**, bukan Citin.
+- **Navigation:** **Beranda** dan `/dashboard` wajib dipertahankan.
+- **Typography:** Cinzel, Fauna One, dan DM Mono sesuai `AGENTS.md`.
+- **Routing:** canonical public event URL sekarang `https://[nama-pasangan].dcwedding.com/[nama-event]`.
+- **Compatibility:** legacy route boleh dipertahankan sebagai redirect/internal target, tetapi tidak boleh dianggap sebagai canonical public URL.
