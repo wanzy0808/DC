@@ -82,41 +82,41 @@ model EmailVerificationToken {
 }
 
 model Invitation {
-  id          String            @id @default(cuid())
-  ownerId     String
-  slug        String            @unique
-  type        InvitationType
-  title       String
-  templateKey String            @default("")
-  groomName   String            @default("Rio")
-  brideName   String            @default("Lyvia")
-  venue       String            @default("Gedung Pernikahan")
-  address     String?
-  mapUrl      String?
-  timezone    String            @default("Asia/Jakarta")
-  eventDate   DateTime          @default(now())
-  ceremonyTime String?
-  receptionTime String?
-  description String?           @db.Text
-  weddingHashtag String?
-  dressCode   String?
-  liveStreamUrl String?
-  eventNotes  String?           @db.Text
-  giftBankName String?
-  giftAccountName String?
-  giftAccountNumber String?
-  musicUrl    String?
-  isPublished Boolean           @default(false)
-  passwordProtected Boolean     @default(false)
-  passwordHash String?
-  viewCount   Int               @default(0)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
-  owner       User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  payment     Payment?
-  assets      InvitationAsset[]
-  tables      WeddingTable[]
-  guests      Guest[]
+  id                 String            @id @default(cuid())
+  ownerId            String
+  slug               String            @unique
+  type               InvitationType
+  title              String
+  templateKey        String            @default("")
+  groomName          String            @default("")
+  brideName          String            @default("")
+  venue              String            @default("")
+  address            String?
+  mapUrl             String?
+  timezone           String            @default("Asia/Jakarta")
+  eventDate          DateTime          @default(now())
+  ceremonyTime       String?
+  receptionTime      String?
+  description        String?           @db.Text
+  weddingHashtag     String?
+  dressCode          String?
+  liveStreamUrl      String?
+  eventNotes         String?           @db.Text
+  giftBankName       String?
+  giftAccountName    String?
+  giftAccountNumber  String?
+  musicUrl           String?
+  isPublished        Boolean           @default(false)
+  passwordProtected  Boolean           @default(false)
+  passwordHash       String?
+  viewCount          Int               @default(0)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  owner              User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  payment            Payment?
+  assets             InvitationAsset[]
+  tables             WeddingTable[]
+  guests             Guest[]
 
   @@index([ownerId, type])
 }
