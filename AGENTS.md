@@ -129,3 +129,10 @@ Untuk menjaga kualitas basis kode (*codebase*) agar tetap bersih, modular, dan m
 - **Custom Hooks for Logic:** Ekstrak logika state yang berat, data fetching, event handler kompleks, atau integrasi Konva Canvas ke dalam *custom hooks* (misalnya: `useCanvasEditor.ts`, `useInvitationData.ts`) untuk memisahkan logika dari layer UI.
 - **Single Responsibility Principle:** Pastikan satu file/komponen hanya menangani satu tugas utama.
 - **Constants & Helpers Extraction:** Pindahkan data konstan, opsi dropdown, skema validasi, atau fungsi utility matematika/formatting keluar dari file komponen utama ke file terpisah di `lib/` atau `constants/`.
+
+## 9. Layout, Spacing & Visual Clarity Rules
+
+- **Anti-Blur & High Legibility:** Seluruh teks, label menu, dan tombol wajib menggunakan font-weight yang tegas (minimal `font-medium` atau `font-semibold` untuk UI/menu) dengan warna kontras tinggi. Dilarang keras menggunakan warna teks samar/buram (seperti muted gray yang terlalu muda) tanpa alasan spesifik.
+- **Generous Spacing & Layout Scaling:** Manfaatkan area/ruang layar yang luas secara maksimal. Gunakan padding, margin, dan gap yang proporsional (misal: `p-4`, `p-6`, `gap-4`) agar elemen UI/menu tidak berdesakan dan mudah dibaca.
+- **Icon Sizing & Touch Targets:** Ikon tidak boleh terlalu kecil. Gunakan ukuran minimal `w-5 h-5` atau `w-6 h-6` untuk menu/action button utama, serta pastikan area klik/sentuh (*touch target*) memiliki padding memadai (minimal 44x44px).
+- **Navigation & Menu Readability:** Menu navigasi, dropdown, dan sidebar harus memiliki ukuran font yang nyaman dibaca (minimal `text-sm` hingga `text-base`), tingkat keterbacaan tinggi, serta indikator state aktif/hover yang jelas.
