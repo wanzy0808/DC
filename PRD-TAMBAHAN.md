@@ -75,10 +75,19 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Pergantian tab WEDDING/ADAT_AKAD di dalam Studio tetap menggunakan data invitation terpisah dan endpoint `/api/invitations?type=...`.
 - Perubahan ini tidak mengubah entitlement publish/custom asset; kontrol server/API existing tetap menjadi sumber authorization.
 
+### Invitation Studio Custom Asset Entitlement
+- Endpoint `/api/invitations/assets/upload` sekarang memvalidasi entitlement **Digital Invitation** di server sebelum menerima custom asset.
+- Pengguna tanpa paket tetap dapat memakai Studio dan built-in assets, tetapi upload foto/musik custom ditolak dengan status `402` sampai paket Digital Invitation aktif.
+- Batas foto custom ditegakkan menjadi maksimal **30 foto per undangan**, sesuai PRD.
+- Musik custom dibatasi **1 sumber musik per undangan** agar konsisten dengan Studio yang menyimpan satu `musicUrl` aktif.
+- Batas file tetap: gambar maksimal 15 MB sebelum optimasi WebP, audio maksimal 10 MB.
+- Check entitlement menggunakan helper terpusat `hasPaidDigitalInvitation`, sehingga aturan UI/API tetap konsisten.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
-- Build validation terbaru berhasil setelah perbaikan TypeScript.
-- Commit terbaru pada perubahan Digital Invitation masih menunggu workflow validation dari GitHub Actions sebelum dinyatakan build-verified.
+- Build validation pada commit Studio deep-link `b76cb466` berhasil.
+- Build validation pada dokumentasi deep-link `bef7624c` juga berhasil.
+- Perubahan custom asset entitlement pada commit `eca7fe3ced6feab34bdacf3aadc3bc09f9334bb6` menunggu workflow validation GitHub Actions.
 
 ## Implementation Notes
 
