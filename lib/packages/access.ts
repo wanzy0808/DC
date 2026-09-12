@@ -46,6 +46,8 @@ export function hasPaidBundle(
 /**
  * Single source of truth for dashboard feature access.
  * Guestbook and Usher App are intentionally one entitlement.
+ * Table/seat placement belongs to the paid Digital Invitation scope;
+ * Guest Book users inherit it because Guest Book includes Digital Invitation.
  */
 export function getPackageEntitlements(
   payment: { packageKey: string; status: string } | null | undefined,
@@ -58,7 +60,7 @@ export function getPackageEntitlements(
     hasGuestbook,
     canPublishInvitation: hasDigitalInvitation,
     canUploadInvitationAssets: hasDigitalInvitation,
-    canUseGuestPlacement: hasGuestbook,
+    canUseGuestPlacement: hasDigitalInvitation,
     canUseUsherApp: hasGuestbook,
   };
 }
