@@ -126,6 +126,15 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Modal hanya ditutup setelah kedua sumber database berhasil disimpan.
 - Tidak menambahkan cookie/localStorage atau sumber data kedua; database tetap menjadi single source of truth.
 
+### Duplicate Dashboard Onboarding Removal
+- Ditemukan dua implementasi onboarding aktif pada dashboard: `DashboardGate` lama di `app/dashboard/layout.tsx` dan onboarding baru di halaman dashboard.
+- `DashboardGate` lama membaca nickname dari `/api/dashboard/preferences`, sedangkan onboarding utama membaca nickname dari `User.firstName` melalui `/api/profile`.
+- Perbedaan sumber data ini dapat membuat onboarding lama terus muncul walaupun data onboarding utama sudah tersimpan.
+- Menghapus logic form, fetch preferences, penyimpanan pasangan, dan modal onboarding dari `DashboardGate`.
+- `DashboardGate` sekarang hanya menjadi shell/layout wrapper; onboarding tunggal dikelola oleh halaman `/dashboard` menggunakan database sebagai single source of truth.
+- Onboarding tetap hanya muncul ketika data wajib belum lengkap: nama pasangan pria, nama pasangan wanita, atau nickname belum tersimpan. Setelah ketiganya tersedia, login berikutnya tidak meminta onboarding lagi.
+- Tidak mengubah atau menghapus route/menu **Beranda**.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
