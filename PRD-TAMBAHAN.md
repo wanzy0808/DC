@@ -301,6 +301,29 @@ User juga meminta field WhatsApp pada input `Tambah Tamu Manual` dihilangkan.
 - Existing seat assignment API dan Prisma unique constraint diperiksa sebelum menambah swap transaction.
 - Build/CI: **Not verified**. Tidak diklaim PASS.
 
+## 23. Seating Mutation Fix — Always Resolve the WEDDING Invitation
+### User Report
+User melaporkan `Setup Denah` dan `Tambah Tamu Manual` tidak berfungsi.
+### Root Cause Found
+API mutation sebelumnya mengambil `prisma.invitation.findFirst({ where: { ownerId } })` tanpa membatasi `Invitation.type`. Karena satu owner memiliki WEDDING dan ADAT_AKAD, `findFirst` berdasarkan `createdAt` dapat memilih invitation yang bukan sumber data utama guest/seating atau tidak memiliki payment entitlement yang diharapkan. Akibatnya POST meja dan POST guest dapat ditolak atau diarahkan ke invitation yang salah.
+### Implemented
+- `/api/wedding-tables` sekarang selalu resolve invitation dengan `where: { ownerId: userId, type: "WEDDING" }` sebelum authorization dan table creation.
+- `/api/guests` GET/POST sekarang selalu memakai WEDDING invitation sebagai sumber guest/table utama.
+- `/api/guests/[id]/swap` juga dibatasi ke WEDDING invitation agar swap tidak lintas invitation/event.
+- Capacity meja dan plusOnes dinormalisasi menjadi integer; capacity harus finite dan minimal 1, plusOnes minimal 0.
+### Entitlement Impact
+- Digital Invitation authorization tetap server-side menggunakan `hasPaidDigitalInvitation()`.
+- Tidak ada bypass package gate.
+- WEDDING menjadi canonical database source untuk guest management dan seating.
+### Commits
+- `3206aa4e67051c9b34c8055e56fee5a3291a4060` — resolve table mutations against WEDDING invitation.
+- `4c7b851e3022f4ed1459aff3004ae758b4a0bd9d` — resolve guest mutations/read against WEDDING invitation.
+- `beaebcdf5c9a6c6490c8e3fa8d46dd3a0a9d61c2` — scope guest swap to WEDDING invitation.
+### Validation
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum perubahan.
+- Prisma schema dikonfirmasi memiliki `InvitationType { WEDDING, ADAT_AKAD }`.
+- Build/CI: **Not verified**. Tidak diklaim PASS.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
