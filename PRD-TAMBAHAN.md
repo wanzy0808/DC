@@ -83,6 +83,15 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Batas file tetap: gambar maksimal 15 MB sebelum optimasi WebP, audio maksimal 10 MB.
 - Check entitlement menggunakan helper terpusat `hasPaidDigitalInvitation`, sehingga aturan UI/API tetap konsisten.
 
+### Centralized Event Data / Single Source of Truth
+- Menambahkan `components/Dashboard/EventPanel.tsx` sebagai editor utama data rangkaian acara untuk `WEDDING` dan `ADAT_AKAD`.
+- Data pasangan, tanggal, timezone, waktu acara, venue, alamat, Google Maps URL, deskripsi, dan catatan acara sekarang diinput melalui **Rangkaian Acara** dan disimpan pada record `Invitation` yang sama.
+- Invitation Studio tidak lagi menyediakan input ulang untuk nama pasangan, tanggal, waktu, venue, Maps, atau deskripsi acara.
+- Studio menampilkan ringkasan data acara yang tersinkron dan hanya meminta field yang memang bersifat invitation-specific seperti hashtag dan dress code.
+- Saat data acara diubah, Studio membaca ulang data database sehingga preview menggunakan sumber data yang sama.
+- Editor event mempertahankan status publish saat menyimpan perubahan dan tidak melakukan unpublish secara tidak sengaja.
+- Dua tipe undangan tetap memiliki record database terpisah (`WEDDING` dan `ADAT_AKAD`).
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation pada commit Studio deep-link `b76cb466` berhasil.
