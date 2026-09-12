@@ -119,3 +119,13 @@ DC Wedding should feel like one coherent premium wedding platform.
 - **Text color should remain restrained; do not create unnecessary multi-color text hierarchy.**
 
 When choosing between two visually valid implementations, prefer the one that is simpler, more consistent, more readable, and closer to this design system.
+
+## 8. Code Maintainability & Refactoring Rules
+
+Untuk menjaga kualitas basis kode (*codebase*) agar tetap bersih, modular, dan mudah dipelihara:
+
+- **File Length Limit:** Usahakan setiap file komponen atau modul **tidak melebihi 200–250 baris kode**. Jika file sudah terlalu panjang (terutama file halaman atau canvas editor), lakukan refactoring.
+- **Extract Sub-components:** Pisahkan UI yang kompleks atau independen menjadi komponen-komponents kecil tersendiri di dalam direktori `components/` (misalnya: memisahkan modal, form section, toolbar, atau item list).
+- **Custom Hooks for Logic:** Ekstrak logika state yang berat, data fetching, event handler kompleks, atau integrasi Konva Canvas ke dalam *custom hooks* (misalnya: `useCanvasEditor.ts`, `useInvitationData.ts`) untuk memisahkan logika dari layer UI.
+- **Single Responsibility Principle:** Pastikan satu file/komponen hanya menangani satu tugas utama.
+- **Constants & Helpers Extraction:** Pindahkan data konstan, opsi dropdown, skema validasi, atau fungsi utility matematika/formatting keluar dari file komponen utama ke file terpisah di `lib/` atau `constants/`.
