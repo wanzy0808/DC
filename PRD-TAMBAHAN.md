@@ -1,392 +1,205 @@
 # DC Wedding — PRD Implementation Addendum
 
-Dokumen ini adalah **implementation log / PRD tambahan** untuk repository `wanzy0808/DC`.
+Dokumen ini adalah implementation log / PRD tambahan untuk repository `wanzy0808/DC`.
 
-- `prd.md` = **Master Product Requirements Document / Product Source of Truth**.
-- `PRD-TAMBAHAN.md` = **catatan implementasi, perubahan keputusan, alasan, entitlement impact, commit, dan validation**.
-- `AGENTS.md` = **coding + design-system rules** yang wajib dipatuhi sebelum implementasi.
-- `README.md` = **technology stack + arsitektur publik tingkat tinggi**.
+- `prd.md` = Master Product Requirements / Product Source of Truth.
+- `PRD-TAMBAHAN.md` = implementation history, rationale, entitlement impact, commit, dan validation.
+- `AGENTS.md` = coding/design-system rules.
+- `README.md` = technology stack dan public architecture.
 
 ## Aturan Dokumentasi
 
-Setiap perubahan produk/teknis baru wajib dicatat di dokumen ini tanpa menghapus history sebelumnya. Minimal catatan perubahan mencakup:
-
-1. Feature / UI / API / routing / database change.
-2. Rationale atau alasan perubahan.
-3. Entitlement / package impact bila ada.
-4. Commit SHA terkait.
-5. Build / CI / validation status yang benar-benar sudah diverifikasi.
-
-Jangan menyatakan build berhasil hanya berdasarkan perubahan kode. Jika GitHub Actions atau validation belum tersedia, status harus ditulis **Not verified / Not run**.
+Setiap perubahan baru dicatat tanpa menghapus keputusan/history sebelumnya. Validation tidak boleh diklaim PASS tanpa hasil build/CI yang benar-benar tersedia.
 
 ---
 
 # 2026-09-12 — Implementation History
 
 ## 1. Invitation Password Protection
-
-### Implemented
-- Menambahkan password protection pada `Invitation`.
-- Menambahkan migration dan penyimpanan password menggunakan bcrypt hashing.
-- Menambahkan signed access cookie untuk sesi akses invitation yang sudah tervalidasi.
-- Menambahkan owner settings API dan public password verification endpoint.
-- Menambahkan public password gate.
-- Sanitasi response agar `passwordHash` tidak pernah dikirim sebagai data publik.
-- Dashboard menyediakan pengaturan password invitation.
-- Satu password melindungi root invitation dan event path pada subdomain yang sama.
-
-### Entitlement Impact
-- Password Protection tetap mengikuti entitlement **DIGITAL_INVITATION** / **GUEST_BOOK** sesuai package model pada `prd.md`.
-
-### Commit
-- `fc11e21`
-- `cc99458`
-- `cdba01f`
-
-### Validation
-- Implementation completed.
-- GitHub Actions/build result untuk rangkaian perubahan ini tidak diklaim berhasil apabila run belum tersedia.
-
----
+- Password protection ditambahkan pada `Invitation` dengan bcrypt hash dan signed access cookie.
+- Owner settings API dan public password verification/gate ditambahkan.
+- `passwordHash` tidak dikirim sebagai public response.
+- Satu password berlaku untuk root invitation dan event path pada tenant yang sama.
+- Entitlement: DIGITAL_INVITATION / GUEST_BOOK.
+- Commits: `fc11e21`, `cc99458`, `cdba01f`.
+- Validation: implementation recorded; build/CI tidak diklaim PASS tanpa run terverifikasi.
 
 ## 2. RSVP Analytics & Guest Actions
-
-### Implemented
-- RSVP metrics.
-- RSVP analytics table.
-- Search dan sorting.
-- CSV export.
-- QR guest ticket modal.
-- Manual server-side check-in.
+- RSVP metrics, analytics table, search/sort, CSV export, QR guest ticket, dan manual server-side check-in.
 - Check-in menggunakan atomic update untuk mencegah duplicate check-in.
-
-### Entitlement Impact
-- RSVP analytics dan guest actions mengikuti entitlement **DIGITAL_INVITATION**.
-- QR guest ticket tersedia untuk **DIGITAL_INVITATION** dan **GUEST_BOOK**.
-- Usher App dan onsite check-in tetap khusus **GUEST_BOOK**.
-
-### Validation
-- Implementation recorded.
-- Build/CI tidak boleh dinyatakan PASS tanpa hasil validation yang nyata.
-
----
+- RSVP analytics mengikuti DIGITAL_INVITATION; QR ticket mengikuti DIGITAL_INVITATION/GUEST_BOOK; onsite Usher tetap GUEST_BOOK.
 
 ## 3. Guest Management Entitlement
-
-### Implemented
-- Manajemen Tamu menggunakan entitlement **DIGITAL_INVITATION**.
-- Edit/hapus tamu, nomor meja, dan seat assignment mengikuti Digital Invitation.
-- Usher App tetap menggunakan entitlement **GUEST_BOOK**.
-- Menghapus blocking popup lama yang menghalangi workspace Manajemen Tamu.
-
-### Rationale
-Manajemen Tamu merupakan bagian dari workflow digital guest-management dan tidak seharusnya tertutup oleh guard lama yang tidak sesuai dengan package entitlement terbaru.
-
-### Validation
-- Server-side authorization tetap menjadi source of truth.
-- UI gate harus mengikuti entitlement server-side.
-
----
+- Manajemen Tamu diselaraskan ke DIGITAL_INVITATION.
+- Guest edit/delete, table management, dan seat assignment mengikuti Digital Invitation.
+- Usher App tetap GUEST_BOOK.
+- Blocking popup lama yang menghalangi Manajemen Tamu dihapus.
 
 ## 4. Dashboard Invitation Feature Restoration
-
-### Implemented
-- Mengembalikan workspace **Undangan Digital**.
-- Mengembalikan Galeri & Foto serta Musik Undangan sebagai bagian dari workflow Studio/asset management.
-- Dashboard menyediakan WEDDING dan ADAT_AKAD.
-- Preview.
-- Salin Link.
-- Edit Desain.
-- Publish / Unpublish.
-- Asset management.
-- Password Protection.
-- Route/menu **Beranda** dan `/dashboard` tetap dipertahankan.
-
-### Rationale
-Feature restoration dilakukan untuk mempertahankan functionality yang sudah ada dan memenuhi aturan **Extend Over Replace**. Fitur yang bekerja tidak boleh dihapus hanya karena struktur dashboard sedang direfactor.
-
-### Commit
-- `7312929`
-- `be89ba4`
-
-### Validation
-- Feature restoration implemented.
-- GitHub Actions/build belum boleh diklaim PASS tanpa run yang terverifikasi.
-
----
+- Workspace Undangan Digital, WEDDING/ADAT_AKAD, Preview, Salin Link, Edit Desain, Publish/Unpublish, asset management, dan Password Protection dipertahankan/dipulihkan.
+- `/dashboard` dan Beranda tetap dipertahankan.
+- Commits: `7312929`, `be89ba4`.
+- Rationale: Extend Over Replace.
 
 ## 5. Invitation Studio
-
-### Implemented
-- Studio mendukung deep link `?type=ADAT_AKAD`.
-- Upload custom asset divalidasi server-side menggunakan entitlement Digital Invitation.
-- Maksimal **30 foto per invitation** dan **1 musik custom**.
-- Menghapus initial state contoh seperti Rio, Lyvia, venue, tanggal, dan deskripsi.
-- Studio membaca data event dari database dan tidak menjadi sumber input ulang untuk data inti.
-- Preview mendukung alamat dan Maps.
-- Preview aman ketika tanggal belum tersedia.
-- Undo/Redo ikut memulihkan dekorasi.
-
-### Rationale
-Studio harus menjadi editor presentation/design, sedangkan data inti event tetap berasal dari database sebagai single source of truth.
-
-### Entitlement Impact
-- Custom assets: **DIGITAL_INVITATION** dan **GUEST_BOOK**.
-- Limit asset mengikuti package model di `prd.md`.
-
----
+- Deep link ADAT_AKAD.
+- Custom asset server-side entitlement, maksimal 30 foto + 1 custom music.
+- Mock/example state dihapus.
+- Data event dibaca dari database; Studio bukan sumber data inti.
+- Preview alamat/Maps dan undo/redo dekorasi.
+- Custom assets mengikuti DIGITAL_INVITATION/GUEST_BOOK.
 
 ## 6. Centralized Event Data / Single Source of Truth
-
-### Implemented
-- `EventPanel` menjadi editor utama data rangkaian acara untuk WEDDING dan ADAT_AKAD.
-- Data yang disimpan pada `Invitation` mencakup nama pasangan, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan.
-- Nama pasangan berasal dari onboarding dan bersifat read-only pada Rangkaian Acara.
-- ADAT_AKAD menggunakan data pasangan WEDDING bila draft belum memiliki data pasangan sendiri.
-- Tidak membuat duplicate form untuk data yang sudah tersedia di database.
-
-### Rationale
-Database adalah single source of truth. Browser cookie/localStorage tidak boleh menjadi sumber data inti dan Studio tidak boleh meminta user memasukkan ulang data yang sudah tersimpan.
-
----
+- `EventPanel` menjadi editor utama WEDDING/ADAT_AKAD.
+- Data event disimpan di `Invitation`.
+- Couple names berasal dari onboarding/database dan read-only pada Rangkaian Acara.
+- ADAT_AKAD memakai data pasangan WEDDING bila belum memiliki data sendiri.
+- Tidak ada duplicate form untuk data inti yang sudah tersedia.
 
 ## 7. Dashboard Onboarding Fix
-
-### Implemented
-- Memperbaiki race condition onboarding.
-- Memastikan invitation WEDDING tersedia sebelum penyimpanan data onboarding.
-- Onboarding menyimpan nama pasangan ke WEDDING.
-- Nickname disimpan ke `User.firstName`.
-- Modal hanya muncul ketika data wajib belum lengkap.
-- Setelah onboarding tersimpan, modal tidak meminta setup ulang pada login berikutnya.
-- Menghapus implementasi onboarding duplikat pada `DashboardGate`.
-- Nickname dashboard membaca `User.firstName`, bukan cookie/localStorage.
-
-### Rationale
-Onboarding harus menjadi initialization flow satu kali dan tidak boleh memiliki dua sumber logic yang dapat menghasilkan race condition atau state yang berbeda.
-
----
+- Race condition onboarding diperbaiki.
+- WEDDING invitation dipastikan tersedia sebelum onboarding disimpan.
+- Couple names disimpan ke WEDDING; nickname ke `User.firstName`.
+- Modal hanya muncul jika data wajib belum lengkap.
+- Logic onboarding duplikat pada `DashboardGate` dihapus.
 
 ## 8. Dashboard Guard Cleanup
-
-### Implemented
-- Menghapus wrapper `DashboardFeatureGuard` yang memiliki click interceptor lama dan dapat memblokir Manajemen Tamu.
-- Authorization API tetap server-side.
-- Entitlement UI mengikuti gate yang benar.
-
-### Rationale
-UI blocker tidak boleh menggantikan authorization server-side dan tidak boleh mencegah feature yang sebenarnya entitled untuk package user.
-
----
+- Wrapper `DashboardFeatureGuard` dengan click interceptor lama dihapus.
+- Authorization tetap server-side dan UI gate mengikuti entitlement.
 
 ## 9. No Mock Invitation Defaults
-
-### Implemented
-- Menghapus default schema `Rio`, `Lyvia`, dan `Gedung Pernikahan` dari model `Invitation`.
+- Default `Rio`, `Lyvia`, dan `Gedung Pernikahan` dihapus dari schema.
 - Invitation baru menggunakan nilai kosong.
-- Menambahkan migration PostgreSQL untuk default string kosong.
-
-### Rationale
-Tidak boleh ada fake/mock user data pada invitation baru. Data harus berasal dari onboarding/user/database.
-
----
+- Migration PostgreSQL untuk default string kosong dibuat.
 
 ## 10. Event Panel Couple Lock
+- Couple names pada WEDDING dan ADAT_AKAD read-only.
+- Data yang dapat diedit: nama event, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, catatan.
 
-### Implemented
-- Nama pasangan pada Rangkaian Acara dibuat read-only untuk **WEDDING maupun ADAT_AKAD**.
-- Field yang dapat diedit hanya data event: nama acara, tanggal, timezone, waktu, venue, alamat, Maps, deskripsi, dan catatan.
-
-### Rationale
-Nama pasangan adalah identity inti wedding dan harus konsisten pada seluruh invitation/event yang terhubung.
-
----
-
-# 2026-09-12 — Canonical Public Invitation URL Architecture
+# Canonical Public Invitation URL Architecture
 
 ## 11. Canonical Public Invitation URL — Event Name Path
-
-### Final Architecture
-
-**Main Wedding**
-
-`https://[nama-pasangan].dcwedding.com/`
-
-**Event Khusus**
-
-`https://[nama-pasangan].dcwedding.com/[nama-event]`
-
-### Implemented
-- `[nama-pasangan]` berasal dari slug pasangan pada invitation WEDDING.
-- `[nama-event]` berasal dari nama event database, saat ini `Invitation.title` pada record `ADAT_AKAD`.
-- Nama event diubah menjadi URL-safe slug melalui helper `slugifyEvent()`.
-- Tidak membuat field/input event name kedua hanya untuk URL.
-- `proxy.ts` melakukan tenant routing berdasarkan subdomain.
-- Event path diteruskan ke `/invite/[slug]/[eventSlug]`.
-- Route event memvalidasi `eventSlug` terhadap nama event database sebelum menampilkan invitation.
-- `/event-khusus` lama dipertahankan sebagai compatibility alias, bukan canonical public URL.
-- `/invite/[slug]` tetap untuk internal routing/backward compatibility.
-
-### Rationale
-URL event harus terbaca oleh manusia dan merepresentasikan nama event yang memang sudah dimiliki database. Tidak boleh ada duplicate event-name field hanya demi routing.
-
-### Commit History
-- `46828c0` — support event-name public paths
-- `663fc9c` — add event-name invitation route
-- `3f775e1` — redirect legacy special event path
-- `22e0dc9` — use event-name public invitation URLs
-
----
+- Main Wedding: `https://[nama-pasangan].dcwedding.com/`.
+- Event Khusus: `https://[nama-pasangan].dcwedding.com/[nama-event]`.
+- Event name berasal dari database (`Invitation.title`) dan di-slugify melalui `slugifyEvent()`.
+- Tidak membuat duplicate event-name field hanya untuk URL.
+- `proxy.ts` melakukan tenant routing dan event path diteruskan ke `/invite/[slug]/[eventSlug]`.
+- `/event-khusus` dipertahankan sebagai compatibility alias; `/invite/[slug]` untuk internal/backward compatibility.
+- Commits: `46828c0`, `663fc9c`, `3f775e1`, `22e0dc9`.
 
 ## 12. Dashboard Canonical URL Fix
-
-### Implemented
-- `InvitationManagementPanel` membentuk URL dari subdomain pasangan yang sebenarnya.
-- Main Wedding menggunakan canonical subdomain URL.
-- Event Khusus menggunakan slug nama event dari database.
-- Jika nama event belum diatur, dashboard tidak membuat URL placeholder palsu.
-- Dashboard menampilkan `Nama event belum diatur` ketika title/event name belum tersedia.
-- Preview dan Salin Link menggunakan canonical URL yang sama.
-
-### Commit
-- `98d1eaf`
-
-### Rationale
-Dashboard tidak boleh menghasilkan link yang berbeda dari routing publik yang sebenarnya. URL yang ditampilkan, Preview, dan Salin Link harus menggunakan satu canonical URL architecture.
-
----
+- `InvitationManagementPanel` memakai canonical subdomain/event-name URL.
+- Tidak membuat URL placeholder jika event name belum tersedia.
+- Preview dan Salin Link memakai canonical URL yang sama.
+- Commit: `98d1eaf`.
 
 ## 13. PRD / README Documentation Alignment
+- `prd.md` diselaraskan dengan canonical event-name architecture.
+- `README.md` diselaraskan dengan public invitation architecture.
+- `PRD-TAMBAHAN.md` disatukan tanpa menghilangkan implementation history.
+- Commits: `9b927f6`, `cdc1304`, `368e92e`, `248c41d`, `a25726a`.
 
-### Implemented
-- `prd.md` diperbarui agar canonical event-name URL architecture menjadi bagian dari Master PRD.
-- `README.md` diperbarui agar public invitation architecture sesuai dengan implementasi terbaru.
-- `PRD-TAMBAHAN.md` direwrite untuk menyatukan implementation history tanpa menghilangkan keputusan sebelumnya.
-
-### Commit
-- `9b927f6` — PRD update
-- `cdc1304` — PRD update
-- `368e92e` — README public event URL architecture
-- `248c41d` — PRD-TAMBAHAN rewrite for event URL architecture
-- `a25726a` — latest PRD-TAMBAHAN rewrite with canonical event routing
-
----
-
-# 2026-09-12 — PRD Gap Review & Implementation
+# PRD Gap Review & Implementation
 
 ## 14. Guest Management Entitlement Mismatch Fixed
-
-### PRD Requirement
-`prd.md` menetapkan **Manajemen Tamu & Interactive Seating** sebagai entitlement penuh untuk `DIGITAL_INVITATION`, dan `GUEST_BOOK` mewarisi akses tersebut.
-
-### Gap Found
-Runtime API masih menggunakan `hasPaidGuestbook()` pada beberapa endpoint sehingga Digital Invitation biasa tidak dapat:
-- membuat tamu;
-- mengambil daftar meja untuk placement;
-- membuat/update/delete meja;
-- export daftar tamu.
-
-Ini bertentangan dengan entitlement source of truth di `lib/packages/access.ts`, yang sudah menetapkan `canUseGuestPlacement: hasDigitalInvitation`.
-
+### Gap
+Beberapa API masih memakai `hasPaidGuestbook()` sehingga Digital Invitation tidak dapat melakukan guest management.
 ### Implemented
-- `/api/guests` sekarang menggunakan `hasPaidDigitalInvitation()`.
-- GET guests mengembalikan guest + tables untuk Digital Invitation.
-- POST guest dapat digunakan oleh Digital Invitation.
-- `/api/wedding-tables` menggunakan Digital Invitation untuk POST/PATCH/DELETE.
-- `/api/guests/export` menggunakan Digital Invitation.
-- `/api/tables` sudah aligned dengan Digital Invitation.
-
-### Commit
-- `e72f8f7` — guest management entitlement
-- `a17a4b4` — wedding table entitlement
-- `25282fe` — guest export entitlement
-
+- `/api/guests` → `hasPaidDigitalInvitation()`.
+- `/api/wedding-tables` → Digital Invitation.
+- `/api/guests/export` → Digital Invitation.
+- `/api/tables` aligned dengan Digital Invitation.
+### Commits
+- `e72f8f7`
+- `a17a4b4`
+- `25282fe`
 ### Validation
-- Code-level review completed against `prd.md` and `lib/packages/access.ts`.
-- Build/CI: **Not verified**.
-
----
+Code review terhadap `prd.md` dan `lib/packages/access.ts`; build/CI **Not verified**.
 
 ## 15. Canonical Undangan Digital Workspace Route
-
-### PRD Requirement
-Studio Back harus kembali ke workspace **Undangan Digital**, bukan Beranda. PRD mendefinisikan `/dashboard/undangan-digital` sebagai workspace tujuan.
-
-### Gap Found
-- Route `/dashboard/undangan-digital` belum tersedia.
-- Studio Back sebelumnya menuju `/dashboard`.
-
 ### Implemented
-- Menambahkan `/dashboard/undangan-digital`.
-- Route menjadi workspace server-side yang membaca entitlement dari database.
-- Workspace menampilkan `InvitationManagementPanel`.
-- Studio Back dan breadcrumb sekarang kembali ke `/dashboard/undangan-digital`.
-
-### Commit
-- `f8ad75f` — digital invitation workspace route
-- `94e665b` — Studio Back routing fix
-
+- `/dashboard/undangan-digital` ditambahkan sebagai workspace server-side.
+- Workspace memakai `InvitationManagementPanel` dan entitlement database.
+- Studio Back/breadcrumb kembali ke `/dashboard/undangan-digital`.
+### Commits
+- `f8ad75f`
+- `94e665b`
 ### Validation
-- Route and server-side entitlement implementation reviewed.
-- Build/CI: **Not verified**.
-
----
+Route dan server-side entitlement reviewed; build/CI **Not verified**.
 
 ## 16. Dashboard Sidebar Support Copy Cleanup
-
 ### User Clarification
-PRD sebelumnya menyebut penghapusan floating support widget secara umum. User mengklarifikasi bahwa yang dimaksud pada dashboard sidebar adalah **tulisan bantuan kecil di bagian bawah kiri**:
+Yang diminta user untuk dihapus adalah tulisan kecil di kiri bawah sidebar:
 - `Butuh bantuan?`
 - `Chat WhatsApp di kanan bawah.`
-
-User meminta copy tersebut dihapus karena tidak penting dan mengganggu sidebar.
-
 ### Implemented
-- Menghapus blok support copy dari bagian bawah sidebar pada `app/[dashboard]/page.tsx`.
-- Tidak mengubah fungsi workspace, navigasi, entitlement, atau data flow lainnya.
-- Floating WhatsApp button di kanan bawah **tidak diubah pada perubahan ini**, karena scope yang diklarifikasi user adalah tulisan bantuan di bawah kiri.
-
+- Blok support copy dihapus dari `app/[dashboard]/page.tsx`.
+- Workspace, navigation, entitlement, dan data flow tidak diubah.
+- Floating WhatsApp button tidak diubah pada perubahan ini karena scope yang diklarifikasi user adalah tulisan kiri bawah.
 ### Rationale
-Perubahan ini mengikuti klarifikasi user dan prinsip **Extend Over Replace**: hanya elemen UI yang diminta yang dihapus, tanpa mengganggu feature dashboard lain yang masih berjalan.
-
-### Entitlement Impact
-- Tidak ada perubahan entitlement atau authorization.
-
+Mengikuti instruksi user secara minimal dan prinsip Extend Over Replace.
 ### Commit
 - `5d771d1206dfee3b651c043da0182b369cf50dd5` — remove dashboard sidebar support copy
+### Validation
+Code-level review; build/CI **Not verified**.
+
+## 17. Guest Seat Assignment Persistence & Placement API
+### PRD Requirement / Gap
+`prd.md` menetapkan interactive seating dengan `tableId` + `seatNumber`, tetapi schema `Guest` sebelumnya hanya memiliki `tableId`. Seat-level persistence belum tersedia.
+
+### Implemented
+- `Guest.seatNumber Int?` ditambahkan ke Prisma schema.
+- Unique constraint `@@unique([tableId, seatNumber])` mencegah dua guest memakai seat yang sama pada meja yang sama.
+- PostgreSQL migration ditambahkan: `prisma/migrations/20260912150000_add_guest_seat_assignment/migration.sql`.
+- Endpoint baru `PATCH /api/guests/[id]` untuk assignment/unassignment meja + kursi.
+- Endpoint memverifikasi user/session dan entitlement DIGITAL_INVITATION server-side.
+- Endpoint memastikan table berasal dari invitation user yang sama.
+- Seat number harus integer >= 1 dan tidak boleh melebihi kapasitas meja.
+- Meja penuh ditolak.
+- Seat yang sudah digunakan ditolak.
+- Assignment disimpan dalam Prisma transaction.
+- Unassign mengosongkan `tableId` dan `seatNumber` secara bersamaan.
+
+### Entitlement Impact
+- DIGITAL_INVITATION: full access.
+- GUEST_BOOK: mewarisi guest management melalui entitlement model.
+- NONE: tetap locked.
+
+### Commits
+- `adeb575abdaf923f18d241f153800d7c030012b8` — Prisma seat persistence/schema.
+- `6bf1ee3c96bc8265854be1fcc041742f4dc4126e` — seat assignment migration.
+- `2dfd0d2252e0a1c1e400abb8c3dfb6c771535a59` — atomic guest placement API.
 
 ### Validation
-- Code-level review dilakukan terhadap `app/[dashboard]/page.tsx` setelah perubahan.
-- `Butuh bantuan?` dan `Chat WhatsApp di kanan bawah.` sudah dihapus dari sidebar.
+- Schema/API code reviewed against `prd.md`, `AGENTS.md`, `README.md`, and existing entitlement implementation.
 - Build/CI: **Not verified**.
-
----
+- UI drag-and-drop Konva integration belum diklaim selesai; endpoint/data layer ini merupakan foundation untuk wiring visual seating chart berikutnya.
 
 # Current Source-of-Truth Order
 
-1. **AGENTS.md** — coding/design-system constraints.
-2. **prd.md** — product requirements and product decisions.
-3. **PRD-TAMBAHAN.md** — implementation history and validation record.
-4. **README.md** — public technical overview and architecture.
-5. **Database/schema/API implementation** — runtime source of truth for actual persisted product data.
+1. `AGENTS.md` — coding/design-system constraints.
+2. `prd.md` — product requirements and product decisions.
+3. `PRD-TAMBAHAN.md` — implementation history and validation record.
+4. `README.md` — public technical overview and architecture.
+5. Database/schema/API implementation — runtime source of truth.
 
 # Current Non-Negotiable Product Rules
 
-- Brand tetap **DC Wedding**. Jangan mengganti product name menjadi Citin.
-- `/dashboard` dan menu **Beranda** tidak boleh dihapus.
-- Database adalah single source of truth untuk data bersama.
-- Jangan menggunakan fake/mock invitation data.
-- Jangan membuat duplicate form untuk data inti yang sudah tersedia di database.
+- Brand tetap **DC Wedding**; jangan mengganti menjadi Citin.
+- `/dashboard` dan Beranda tidak boleh dihapus.
+- Database adalah single source of truth.
+- Tidak boleh ada fake/mock invitation data.
+- Jangan membuat duplicate form untuk data inti yang sudah ada di database.
 - Couple names harus konsisten antara WEDDING dan Event Khusus.
-- Couple names pada Rangkaian Acara bersifat read-only.
-- Authorization harus server-side.
+- Couple names pada Rangkaian Acara read-only.
+- Authorization wajib server-side.
 - UI entitlement harus mencerminkan server entitlement.
-- Jangan mengganti implementation yang masih bekerja tanpa instruksi.
-- Legacy route dipertahankan selama masih dibutuhkan untuk backward compatibility dan tidak mengganggu canonical route.
+- Extend Over Replace.
+- Legacy route dipertahankan jika dibutuhkan untuk backward compatibility.
 - Event URL canonical menggunakan nama event sebagai path.
-- Password protection harus berlaku konsisten untuk root invitation dan event path pada tenant yang sama.
-- Asset custom tetap dibatasi sesuai entitlement dan limit package.
-- Usher App/check-in onsite tetap merupakan feature Guest Book.
+- Password protection berlaku konsisten untuk root dan event path.
+- Asset custom mengikuti entitlement dan package limits.
+- Usher App/check-in onsite tetap Guest Book.
 
 # Current Public URL Rules
 
@@ -396,8 +209,8 @@ Perubahan ini mengikuti klarifikasi user dan prinsip **Extend Over Replace**: ha
 | Event Khusus | `https://[nama-pasangan].dcwedding.com/[nama-event]` |
 | Digital Invitation Workspace | `/dashboard/undangan-digital` |
 | Studio | `/dashboard/editor` |
-| Legacy special-event alias | `/event-khusus` — compatibility only |
-| Legacy internal invitation route | `/invite/[slug]` — backward/internal routing |
+| Legacy special-event alias | `/event-khusus` |
+| Legacy internal invitation route | `/invite/[slug]` |
 
 # Current Entitlement Summary
 
@@ -416,44 +229,33 @@ Perubahan ini mengikuti klarifikasi user dan prinsip **Extend Over Replace**: ha
 | Onsite hardware | Locked | Locked | Included |
 | Onsite tech support | Locked | Locked | Included |
 
-# Validation / CI Status
-
-### Latest Implementation Commits
-- `e72f8f7` — guest management entitlement
-- `a17a4b4` — wedding table entitlement
-- `25282fe` — guest export entitlement
-- `f8ad75f` — digital invitation workspace route
-- `94e665b` — Studio Back routing fix
-- `5d771d1` — dashboard sidebar support copy cleanup
-
-### CI
-- No verified build/check result is available for the latest implementation commits.
-- Therefore build/CI is **Not verified**, not PASS.
-
-### Rule
-Jangan menulis "build berhasil" atau "CI PASS" sebelum terdapat hasil workflow/check yang benar-benar dapat diverifikasi.
-
 # Known / Explicitly Untracked Items
 
-- Fitur **Angpao/Kado** dan status pengiriman QR belum dianggap fully tracked karena schema saat ini belum memiliki field tracking yang diperlukan.
-- UI harus menampilkan status yang jujur dan tidak boleh mengarang data tracking.
-- Jangan menganggap feature fully complete hanya karena UI sudah tersedia jika database/API belum mendukung state tersebut.
-- Interactive seating chart masih perlu audit lanjutan terhadap detail seat-level (`seatNumber`) karena schema `Guest` saat ini hanya menyimpan `tableId`.
-- Dashboard utama masih memiliki legacy sidebar entries untuk **Galeri & Foto**, **Musik Undangan**, dan floating WhatsApp UI; PRD meminta item tersebut tidak berada di primary sidebar / viewport. Floating WhatsApp UI belum diubah pada scope klarifikasi terakhir user; perubahan terakhir hanya menghapus copy bantuan di bawah kiri sidebar.
+- Angpao/Kado tracking dan status pengiriman QR belum fully tracked karena schema/API tracking belum lengkap.
+- UI tidak boleh mengarang tracking state.
+- Interactive seating chart UI Konva/drag-and-drop masih perlu wiring ke endpoint `PATCH /api/guests/[id]` yang sekarang sudah tersedia.
+- Seat-level persistence sekarang tersedia melalui `Guest.seatNumber`.
+- Dashboard primary sidebar masih perlu audit/cleanup terhadap legacy Galeri & Foto dan Musik Undangan karena PRD meminta keduanya dikeluarkan dari primary sidebar; fitur tetap dikelola melalui Studio.
+
+# Validation / CI Status
+
+Latest implementation commits in this addendum:
+- `adeb575abdaf923f18d241f153800d7c030012b8`
+- `6bf1ee3c96bc8265854be1fcc041742f4dc4126e`
+- `2dfd0d2252e0a1c1e400abb8c3dfb6c771535a59`
+
+Build/CI untuk perubahan terbaru: **Not verified**. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
 
 # Working Protocol for Next Changes
 
-Sebelum coding perubahan berikutnya:
-
+Sebelum coding:
 1. Baca ulang `AGENTS.md`.
 2. Baca ulang `prd.md`.
 3. Baca ulang `PRD-TAMBAHAN.md`.
 4. Baca ulang `README.md`.
-5. Inspect implementation/API/schema yang relevan.
-6. Extend existing implementation; jangan replace feature yang sudah bekerja tanpa instruksi.
-7. Setelah perubahan, lakukan validation yang tersedia.
-8. Catat perubahan di `PRD-TAMBAHAN.md` dengan rationale, entitlement impact, commit, dan validation status.
-9. Jika PRD atau README perlu sinkronisasi, update dokumen tersebut juga.
-10. Jangan mengklaim hasil build/CI yang belum diverifikasi.
-
-Dokumen ini sengaja mempertahankan history implementasi sebelumnya agar keputusan dan alasan perubahan tidak hilang pada refactor berikutnya.
+5. Inspect implementation/API/schema relevan.
+6. Extend existing implementation; jangan replace feature yang bekerja tanpa instruksi.
+7. Lakukan validation yang tersedia.
+8. Catat perubahan di `PRD-TAMBAHAN.md` dengan rationale, entitlement, commit, dan validation.
+9. Sinkronkan PRD/README bila keputusan arsitektur berubah.
+10. Jangan mengklaim build/CI yang belum diverifikasi.
