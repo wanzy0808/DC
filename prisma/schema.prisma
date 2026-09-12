@@ -107,6 +107,8 @@ model Invitation {
   giftAccountNumber String?
   musicUrl    String?
   isPublished Boolean           @default(false)
+  passwordProtected Boolean     @default(false)
+  passwordHash String?
   viewCount   Int               @default(0)
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
