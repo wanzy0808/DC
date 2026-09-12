@@ -228,6 +228,32 @@ Roster seating tidak hanya berasal dari RSVP. User menegaskan bahwa tamu yang su
 - Existing RSVP route dan guest management API inspected before changing source semantics.
 - Build/CI: **Not verified**.
 
+## 20. Configurable Seating Floor Plan Generator
+### User Requirement
+Organizer tidak ingin canvas hanya menampilkan jumlah meja yang hard-coded. User meminta input `jumlah meja` dan `bangku per meja`, lalu grafik/denah dibuat berdasarkan input tersebut.
+### Implemented
+- `components/Dashboard/SeatingChart.tsx` sekarang menyediakan form `Setup Denah` dengan:
+  - `Jumlah meja` (1–100).
+  - `Bangku per meja` (1–50).
+- Saat belum ada meja, tombol `Buat Denah` membuat setiap meja melalui `/api/wedding-tables` sehingga data tetap tersimpan di PostgreSQL, bukan hanya state canvas.
+- Setiap meja awal diberi nama `Meja 1`, `Meja 2`, dan seterusnya dengan bentuk `ROUND`.
+- Canvas tidak lagi dibatasi enam meja. Posisi meja dihitung dinamis menjadi grid hingga empat kolom dan baris sesuai jumlah meja.
+- Jumlah kursi pada setiap meja dibaca dari `Table.capacity`, sehingga grafik mengikuti kapasitas database.
+- Ringkasan `X meja · Y bangku` ditampilkan berdasarkan total kapasitas meja yang aktif.
+- Setelah generator selesai, meja hasil POST langsung dimasukkan ke state lokal agar grafik tampil tanpa menunggu reload halaman.
+- Roster RSVP `ATTENDING` dan tamu manual tetap memakai mekanisme drag-and-drop yang sama.
+- Collision seat tetap dihitung dari `seatNumber` dan assignment tetap dikirim ke API server-side.
+### Entitlement Impact
+- Generator hanya dapat digunakan di Manajemen Tamu yang sudah dilindungi `FeatureGate` Digital Invitation.
+- Endpoint `/api/wedding-tables` tetap melakukan authorization server-side dan `hasPaidDigitalInvitation()`.
+- Tidak ada bypass entitlement melalui canvas/local state.
+### Commit
+- `522e53bd0f842c571c449a82a058d4486451a7fa` — configurable table/seat floor-plan generator.
+### Validation
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum coding.
+- Existing `/api/wedding-tables` dan Konva seating implementation diperiksa sebelum perubahan.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
@@ -260,58 +286,8 @@ Roster seating tidak hanya berasal dari RSVP. User menegaskan bahwa tamu yang su
 |---|---|
 | Main Wedding | `https://[nama-pasangan].dcwedding.com/` |
 | Event Khusus | `https://[nama-pasangan].dcwedding.com/[nama-event]` |
-| Digital Invitation Workspace | `/dashboard/undangan-digital` |
+| Dashboard | `/dashboard` |
+| Undangan Digital workspace | `/dashboard/undangan-digital` |
 | Studio | `/dashboard/editor` |
-| Legacy special-event alias | `/event-khusus` |
-| Legacy internal invitation route | `/invite/[slug]` |
-
-# Current Entitlement Summary
-
-| Feature | NONE | DIGITAL_INVITATION | GUEST_BOOK |
-|---|---:|---:|---:|
-| Studio / template | Open | Open | Open |
-| Publish invitation | Locked | Open | Open |
-| Custom assets | Locked | Open | Open |
-| Custom subdomain | Locked | Open | Open |
-| Dual invitations | Locked | Open | Open |
-| Password protection | Locked | Open | Open |
-| RSVP analytics/export | Basic/read-only | Full | Full |
-| Guest management | Locked | Full | Full |
-| QR guest ticket | Locked | Open | Open |
-| Usher App / onsite check-in | Locked | Locked | Included |
-| Onsite hardware | Locked | Locked | Included |
-| Onsite tech support | Locked | Locked | Included |
-
-# Known / Explicitly Untracked Items
-
-- Angpao/Kado tracking dan status pengiriman QR belum fully tracked karena schema/API tracking belum lengkap.
-- UI tidak boleh mengarang tracking state.
-- Interactive seating chart UI Konva/drag-and-drop sekarang sudah wired ke endpoint `PATCH /api/guests/[id]` dan roster sudah mendukung RSVP Hadir + tamu manual; peningkatan layout untuk jumlah meja di atas enam dan drag/reassignment guest yang sudah ditempatkan masih dapat dilanjutkan.
-- Seat-level persistence tersedia melalui `Guest.seatNumber`.
-- `Guest.source` sekarang membedakan guest dari RSVP publik dan input manual dashboard.
-- Galeri & Foto dan Musik Undangan sudah dikeluarkan dari primary sidebar; fitur tetap dikelola melalui Studio.
-
-# Validation / CI Status
-
-Latest implementation commits in this addendum:
-- `ab9446c059744a722da61bd6cd943c9b43c9cb1e`
-- `213c013382d8679b51adfa7e37793065395ee450`
-- `9f9640892a096e720fe5bb8e1de9c156f04cb5de`
-- `7385075e9a9548ba6fb0caa7671a6b5abb3ca43c`
-- `927a2896790e4e8a5cc3ab5347b3f87aa3765242`
-
-Build/CI untuk perubahan terbaru: **Not verified**. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
-
-# Working Protocol for Next Changes
-
-Sebelum coding:
-1. Baca ulang `AGENTS.md`.
-2. Baca ulang `prd.md`.
-3. Baca ulang `PRD-TAMBAHAN.md`.
-4. Baca ulang `README.md`.
-5. Inspect implementation/API/schema relevan.
-6. Extend existing implementation; jangan replace feature yang bekerja tanpa instruksi.
-7. Lakukan validation yang tersedia.
-8. Catat perubahan di `PRD-TAMBAHAN.md` dengan rationale, entitlement, commit, dan validation.
-9. Sinkronkan PRD/README bila keputusan arsitektur berubah.
-10. Jangan mengklaim build/CI yang belum diverifikasi.
+| Legacy Event Khusus alias | `/event-khusus` |
+| Legacy internal invitation | `/invite/[slug]` |
