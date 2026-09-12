@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidGuestbook } from "@/lib/packages/access";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
 async function getInvitation(userId: string) {
   return prisma.invitation.findFirst({
@@ -11,14 +11,18 @@ async function getInvitation(userId: string) {
   });
 }
 
+async function authorize(userId: string) {
+  const invitation = await getInvitation(userId);
+  if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) return null;
+  return invitation;
+}
+
 export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidGuestbook(invitation.payment)) {
-      return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Guestbook Digital." }, { status: 402 });
-    }
+    const invitation = await authorize(user.id);
+    if (!invitation) return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     const body = await request.json();
     const name = String(body.name ?? "").trim();
     const capacity = Math.max(1, Number(body.capacity ?? 8));
@@ -39,10 +43,8 @@ export async function PATCH(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidGuestbook(invitation.payment)) {
-      return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Guestbook Digital." }, { status: 402 });
-    }
+    const invitation = await authorize(user.id);
+    if (!invitation) return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     const body = await request.json();
     const id = String(body.id ?? "").trim();
     if (!id) return NextResponse.json({ error: "ID meja wajib diisi." }, { status: 400 });
@@ -66,10 +68,8 @@ export async function DELETE(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidGuestbook(invitation.payment)) {
-      return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Guestbook Digital." }, { status: 402 });
-    }
+    const invitation = await authorize(user.id);
+    if (!invitation) return NextResponse.json({ error: "Penempatan Tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     const id = String(new URL(request.url).searchParams.get("id") ?? "").trim();
     if (!id) return NextResponse.json({ error: "ID meja wajib diisi." }, { status: 400 });
     const result = await prisma.weddingTable.deleteMany({ where: { id, invitationId: invitation.id } });
