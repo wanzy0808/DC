@@ -146,7 +146,6 @@ Code-level review; build/CI **Not verified**.
 ## 17. Guest Seat Assignment Persistence & Placement API
 ### PRD Requirement / Gap
 `prd.md` menetapkan interactive seating dengan `tableId` + `seatNumber`, tetapi schema `Guest` sebelumnya hanya memiliki `tableId`. Seat-level persistence belum tersedia.
-
 ### Implemented
 - `Guest.seatNumber Int?` ditambahkan ke Prisma schema.
 - Unique constraint `@@unique([tableId, seatNumber])` mencegah dua guest memakai seat yang sama pada meja yang sama.
@@ -159,21 +158,51 @@ Code-level review; build/CI **Not verified**.
 - Seat yang sudah digunakan ditolak.
 - Assignment disimpan dalam Prisma transaction.
 - Unassign mengosongkan `tableId` dan `seatNumber` secara bersamaan.
-
 ### Entitlement Impact
 - DIGITAL_INVITATION: full access.
 - GUEST_BOOK: mewarisi guest management melalui entitlement model.
 - NONE: tetap locked.
-
 ### Commits
 - `adeb575abdaf923f18d241f153800d7c030012b8` — Prisma seat persistence/schema.
 - `6bf1ee3c96bc8265854be1fcc041742f4dc4126e` — seat assignment migration.
 - `2dfd0d2252e0a1c1e400abb8c3dfb6c771535a59` — atomic guest placement API.
-
 ### Validation
 - Schema/API code reviewed against `prd.md`, `AGENTS.md`, `README.md`, and existing entitlement implementation.
 - Build/CI: **Not verified**.
 - UI drag-and-drop Konva integration belum diklaim selesai; endpoint/data layer ini merupakan foundation untuk wiring visual seating chart berikutnya.
+
+## 18. Interactive Konva Seating Chart & Primary Sidebar Cleanup
+### PRD Requirement / Gap
+PRD meminta visual 2D seating chart berbasis Konva, side roster tamu yang dapat di-drag, penempatan ke seat kosong, serta Galeri & Foto dan Musik Undangan dikeluarkan dari primary sidebar.
+
+### Implemented
+- Komponen baru `components/Dashboard/SeatingChart.tsx` menggunakan `react-konva`.
+- Roster tamu yang belum memiliki `tableId` dapat di-drag ke canvas.
+- Canvas menampilkan meja dan seat berdasarkan `Table.capacity`.
+- Drop dihitung berdasarkan koordinat canvas dan hanya diterima jika mengenai seat kosong.
+- Assignment memanggil `PATCH /api/guests/[id]` sehingga persistence tetap server-authoritative.
+- Setelah assignment berhasil, dashboard melakukan refresh data sehingga roster dan chart kembali sinkron dengan database.
+- Guest type pada dashboard diperluas dengan `seatNumber`.
+- `Galeri & Foto` dan `Musik Undangan` dihapus dari array primary sidebar serta tab dashboard yang sebelumnya menampilkannya.
+- Fitur Galeri/Musik tidak dihapus dari Studio; dashboard hanya tidak lagi menjadikannya menu primary sesuai PRD.
+- Floating WhatsApp button tetap dipertahankan karena perubahan sebelumnya sudah diklarifikasi user hanya menyasar tulisan support copy kecil di sidebar.
+
+### Entitlement Impact
+- Seating UI tetap berada di `FeatureGate` Digital Invitation.
+- Guest Book mewarisi guest management sesuai access model yang sudah ada.
+- Server API tetap menjadi authority; UI tidak dapat melewati entitlement.
+- Galeri/Musik tetap mengikuti entitlement Studio dan tidak dihapus dari fitur produk.
+
+### Commits
+- `58d8c4834b56b9d8a77048327fc8210853af2883` — initial Konva seating chart component.
+- `bca764705f4c1832d1f5f6fb430bcc12ebe4cb9b` — fix canvas drop target coordinate resolution.
+- `81634833fad01f07e137687cdb2753ab018cf244` — wire seating chart into dashboard and remove legacy primary sidebar entries.
+
+### Validation
+- `package.json` reviewed: `konva` dan `react-konva` memang sudah menjadi dependency repository.
+- `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, dan `README.md` dibaca ulang sebelum perubahan.
+- Combined commit status untuk `81634833fad01f07e137687cdb2753ab018cf244` tidak memiliki status checks yang tersedia.
+- Build/CI: **Not verified**. Tidak diklaim PASS.
 
 # Current Source-of-Truth Order
 
@@ -233,18 +262,18 @@ Code-level review; build/CI **Not verified**.
 
 - Angpao/Kado tracking dan status pengiriman QR belum fully tracked karena schema/API tracking belum lengkap.
 - UI tidak boleh mengarang tracking state.
-- Interactive seating chart UI Konva/drag-and-drop masih perlu wiring ke endpoint `PATCH /api/guests/[id]` yang sekarang sudah tersedia.
-- Seat-level persistence sekarang tersedia melalui `Guest.seatNumber`.
-- Dashboard primary sidebar masih perlu audit/cleanup terhadap legacy Galeri & Foto dan Musik Undangan karena PRD meminta keduanya dikeluarkan dari primary sidebar; fitur tetap dikelola melalui Studio.
+- Interactive seating chart UI Konva/drag-and-drop sekarang sudah wired ke endpoint `PATCH /api/guests/[id]`; peningkatan layout untuk jumlah meja di atas enam dan drag/reassignment guest yang sudah ditempatkan masih dapat dilanjutkan.
+- Seat-level persistence tersedia melalui `Guest.seatNumber`.
+- Galeri & Foto dan Musik Undangan sudah dikeluarkan dari primary sidebar; fitur tetap dikelola melalui Studio.
 
 # Validation / CI Status
 
 Latest implementation commits in this addendum:
-- `adeb575abdaf923f18d241f153800d7c030012b8`
-- `6bf1ee3c96bc8265854be1fcc041742f4dc4126e`
-- `2dfd0d2252e0a1c1e400abb8c3dfb6c771535a59`
+- `58d8c4834b56b9d8a77048327fc8210853af2883`
+- `bca764705f4c1832d1f5f6fb430bcc12ebe4cb9b`
+- `81634833fad01f07e137687cdb2753ab018cf244`
 
-Build/CI untuk perubahan terbaru: **Not verified**. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
+Build/CI untuk perubahan terbaru: **Not verified**. Combined status tidak menyediakan checks pada commit dashboard terbaru. Jangan menyatakan PASS sebelum workflow/check yang nyata tersedia.
 
 # Working Protocol for Next Changes
 
