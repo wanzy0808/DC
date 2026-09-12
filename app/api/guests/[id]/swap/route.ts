@@ -9,7 +9,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ id:
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
     const invitation = await prisma.invitation.findFirst({
-      where: { ownerId: user.id },
+      where: { ownerId: user.id, type: "WEDDING" },
       include: { payment: true },
       orderBy: { createdAt: "asc" },
     });
