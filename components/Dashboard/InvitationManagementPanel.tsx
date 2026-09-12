@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Copy, ExternalLink, Eye, LockKeyhole, Settings2 } from "lucide-react";
+import { Copy, Eye, LockKeyhole, Settings2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type Invitation = {
@@ -14,11 +14,7 @@ type Invitation = {
   passwordProtected: boolean;
 };
 
-type Props = {
-  accent: string;
-  button: string;
-  paid: boolean;
-};
+type Props = { accent: string; button: string; paid: boolean };
 
 const emptyInvitation = (type: Invitation["type"]): Invitation => ({
   id: "",
@@ -83,13 +79,18 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
 
   async function savePassword() {
     if (!paid) return;
+    const trimmed = password.trim();
+    if (passwordProtected && !trimmed) {
+      setMessage("Masukkan password baru untuk mengganti password, atau gunakan tombol Matikan.");
+      return;
+    }
     setBusy("password");
     setMessage("");
     try {
       const response = await fetch("/api/invitations/password", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: !passwordProtected || Boolean(password), password }),
+        body: JSON.stringify({ enabled: true, password: trimmed }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Gagal menyimpan password.");
@@ -149,8 +150,8 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
             <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">Password Protection</p>
             <p className="mt-1 text-xs text-[#5A4545] dark:text-white/75">Satu pengaturan password melindungi link undangan utama dan event khusus.</p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={passwordProtected ? "Password baru (opsional)" : "Password minimal 6 karakter"} disabled={!paid || loading} className="min-w-0 flex-1 rounded-xl border border-[#d8cbc2] bg-[#fffaf6] px-3 py-2 text-sm outline-none focus:border-[#7A1C25] dark:border-white/10 dark:bg-black/20" />
-              <Button disabled={!paid || loading || busy === "password"} onClick={savePassword} className={`rounded-xl ${button} text-white`}>{passwordProtected ? "Ganti Password" : "Aktifkan"}</Button>
+              <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={passwordProtected ? "Password baru (wajib diisi)" : "Password minimal 6 karakter"} disabled={!paid || loading} className="min-w-0 flex-1 rounded-xl border border-[#d8cbc2] bg-[#fffaf6] px-3 py-2 text-sm outline-none focus:border-[#7A1C25] dark:border-white/10 dark:bg-black/20" />
+              <Button disabled={!paid || loading || busy === "password" || !password.trim()} onClick={savePassword} className={`rounded-xl ${button} text-white`}>{passwordProtected ? "Ganti Password" : "Aktifkan"}</Button>
               {passwordProtected && <Button disabled={busy === "password-off"} onClick={disablePassword} variant="outline" className="rounded-xl">Matikan</Button>}
             </div>
             <p className="mt-3 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[.12em] opacity-60">Status: {passwordProtected ? "Protected" : "Public access"}</p>
