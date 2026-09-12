@@ -19,7 +19,7 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Menambahkan 6 metric RSVP pada dashboard.
 - Menambahkan tabel analitik tamu RSVP.
 - Menambahkan pencarian berdasarkan nama/nomor telepon.
-- Menambahkan sorting nama, status, pax, dan check-in.
+- Menambahkan sorting nama/status, pax, dan check-in.
 - Menambahkan export CSV.
 - Menghubungkan panel analytics ke tab RSVP dashboard.
 
@@ -41,9 +41,14 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Memastikan Manajemen Tamu menggunakan entitlement **Digital Invitation**, bukan Guest Book.
 - Edit dan hapus tamu pada `/api/guests/manage` sekarang tersedia untuk pengguna dengan paket Digital Invitation.
 - Pengguna Guest Book tetap mewarisi akses tersebut karena Guest Book mencakup Digital Invitation.
-- Dashboard `Manajemen Tamu` sekarang menggunakan gate `hasDigitalInvitation`, bukan `hasGuestbook`.
+- Dashboard `Manajemen Tamu` menggunakan gate `hasDigitalInvitation`, bukan `hasGuestbook`.
 - Label dan deskripsi UI menegaskan bahwa manajemen tamu, nomor meja, dan seat assignment termasuk Digital Invitation.
 - Usher App dan operasional check-in tetap khusus entitlement Guest Book.
+
+### Guest Management UI Gate
+- Menghapus blocking popup pada halaman **Manajemen Tamu**, sehingga workspace tamu dapat dibuka tanpa tertahan modal upgrade.
+- Proteksi entitlement tetap berada di server/API untuk operasi yang mengubah data tamu.
+- **Usher App tetap menggunakan FeatureGate dan tetap dibatasi entitlement Guest Book.**
 
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
