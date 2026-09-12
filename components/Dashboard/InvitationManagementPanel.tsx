@@ -16,6 +16,9 @@ type Invitation = {
 
 type Props = { accent: string; button: string; paid: boolean };
 
+const ROOT_DOMAIN = process.env.NEXT_PUBLIC_INVITATION_ROOT_DOMAIN || "dcwedding.com";
+const invitationOrigin = `https://${ROOT_DOMAIN}`;
+
 const emptyInvitation = (type: Invitation["type"]): Invitation => ({
   id: "",
   slug: "",
@@ -24,6 +27,16 @@ const emptyInvitation = (type: Invitation["type"]): Invitation => ({
   isPublished: false,
   passwordProtected: false,
 });
+
+function publicInvitationPath(slug: string, special = false) {
+  if (!slug) return "";
+  return `/${slug}${special ? "/event-khusus" : ""}`;
+}
+
+function publicInvitationUrl(slug: string, special = false) {
+  const path = publicInvitationPath(slug, special);
+  return path ? `${invitationOrigin}${path}` : "";
+}
 
 export default function InvitationManagementPanel({ accent, button, paid }: Props) {
   const [invitations, setInvitations] = useState<Record<Invitation["type"], Invitation>>({
@@ -123,24 +136,28 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
     }
   }
 
-  function copyLink(slug: string, special = false) {
-    if (!slug) return;
-    const path = special ? `/invite/${slug}/event-khusus` : `/invite/${slug}`;
-    navigator.clipboard.writeText(`${window.location.origin}${path}`).then(() => setMessage("Link berhasil disalin."));
+  function copyLink(special = false) {
+    const slug = invitations.WEDDING.slug;
+    const url = publicInvitationUrl(slug, special);
+    if (!url) return;
+    navigator.clipboard.writeText(url).then(() => setMessage("Link berhasil disalin."));
   }
+
+  const weddingUrl = publicInvitationUrl(invitations.WEDDING.slug);
+  const specialUrl = publicInvitationUrl(invitations.WEDDING.slug, true);
 
   return (
     <div className="mx-auto max-w-6xl space-y-5 p-5 sm:p-8">
       <section className="rounded-2xl border border-[#d9cbc2] bg-[#f3ede6] p-6 dark:border-white/10 dark:bg-[#121116]">
         <p className={`font-[family-name:var(--font-cinzel)] text-xs font-semibold uppercase tracking-[.16em] ${accent}`}>Undangan Digital</p>
         <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Kelola dua jenis undangan</h1>
-        <p className="mt-2 max-w-3xl text-sm text-[#5A4545] dark:text-white/75">Undangan Pernikahan dan Undangan Event Khusus memiliki status publish dan link masing-masing. Studio tetap bisa dibuka tanpa paket; publish dan asset custom mengikuti Digital Invitation.</p>
+        <p className="mt-2 max-w-3xl text-sm text-[#5A4545] dark:text-white/75">Link publik menggunakan subdomain pasangan. Undangan Pernikahan berada di root subdomain, sedangkan Event Khusus berada di <code>/event-khusus</code>.</p>
         {message && <p className="mt-4 rounded-xl border border-[#d8cbc2] bg-[#fffaf6] px-3 py-2 text-xs dark:border-white/10 dark:bg-black/20">{message}</p>}
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <InvitationCard invitation={invitations.WEDDING} paid={paid} loading={loading} button={button} onCopy={() => copyLink(invitations.WEDDING.slug)} onPublish={() => togglePublish("WEDDING")} busy={busy === "publish-WEDDING"} />
-        <InvitationCard invitation={invitations.ADAT_AKAD} paid={paid} loading={loading} button={button} special onCopy={() => copyLink(invitations.ADAT_AKAD.slug, true)} onPublish={() => togglePublish("ADAT_AKAD")} busy={busy === "publish-ADAT_AKAD"} />
+        <InvitationCard invitation={invitations.WEDDING} publicUrl={weddingUrl} paid={paid} loading={loading} button={button} onCopy={() => copyLink()} onPublish={() => togglePublish("WEDDING")} busy={busy === "publish-WEDDING"} />
+        <InvitationCard invitation={invitations.ADAT_AKAD} publicUrl={specialUrl} paid={paid} loading={loading} button={button} special onCopy={() => copyLink(true)} onPublish={() => togglePublish("ADAT_AKAD")} busy={busy === "publish-ADAT_AKAD"} />
       </div>
 
       <section className="rounded-2xl border border-[#d9cbc2] bg-[#f3ede6] p-6 dark:border-white/10 dark:bg-[#121116]">
@@ -148,7 +165,7 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
           <LockKeyhole className="mt-0.5 h-5 w-5 text-[#7A1C25] dark:text-[#E8A5AE]" />
           <div className="min-w-0 flex-1">
             <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">Password Protection</p>
-            <p className="mt-1 text-xs text-[#5A4545] dark:text-white/75">Satu pengaturan password melindungi link undangan utama dan event khusus.</p>
+            <p className="mt-1 text-xs text-[#5A4545] dark:text-white/75">Satu pengaturan password melindungi subdomain undangan dan event khusus.</p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={passwordProtected ? "Password baru (wajib diisi)" : "Password minimal 6 karakter"} disabled={!paid || loading} className="min-w-0 flex-1 rounded-xl border border-[#d8cbc2] bg-[#fffaf6] px-3 py-2 text-sm outline-none focus:border-[#7A1C25] dark:border-white/10 dark:bg-black/20" />
               <Button disabled={!paid || loading || busy === "password" || !password.trim()} onClick={savePassword} className={`rounded-xl ${button} text-white`}>{passwordProtected ? "Ganti Password" : "Aktifkan"}</Button>
@@ -170,14 +187,14 @@ export default function InvitationManagementPanel({ accent, button, paid }: Prop
   );
 }
 
-function InvitationCard({ invitation, paid, loading, button, special, onCopy, onPublish, busy }: { invitation: Invitation; paid: boolean; loading: boolean; button: string; special?: boolean; onCopy: () => void; onPublish: () => void; busy: boolean }) {
-  const path = invitation.slug ? `/invite/${invitation.slug}${special ? "/event-khusus" : ""}` : "";
+function InvitationCard({ invitation, publicUrl, paid, loading, button, special, onCopy, onPublish, busy }: { invitation: Invitation; publicUrl: string; paid: boolean; loading: boolean; button: string; special?: boolean; onCopy: () => void; onPublish: () => void; busy: boolean }) {
+  const previewPath = publicUrl ? new URL(publicUrl).pathname : "";
   return <section className="rounded-2xl border border-[#d8cbc2] bg-[#fffaf6] p-5 dark:border-white/10 dark:bg-black/20">
     <div className="flex items-start justify-between gap-3"><div><p className="font-[family-name:var(--font-cinzel)] text-base font-semibold">{special ? "Undangan Event Khusus" : "Undangan Pernikahan"}</p><p className="mt-1 text-xs text-[#5A4545] dark:text-white/75">{special ? "Akad, seserahan, sangjit, atau event privat." : "Undangan utama untuk acara pernikahan dan resepsi."}</p></div><span className="rounded-full border border-[#d8cbc2] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase dark:border-white/10">{loading ? "Loading" : invitation.isPublished ? "Published" : "Draft"}</span></div>
-    <div className="mt-5 rounded-xl border border-[#d8cbc2] bg-[#f3ede6] p-3 dark:border-white/10 dark:bg-black/20"><p className="break-all font-[family-name:var(--font-dm-mono)] text-[10px] opacity-70">{path || "Link belum tersedia"}</p></div>
+    <div className="mt-5 rounded-xl border border-[#d8cbc2] bg-[#f3ede6] p-3 dark:border-white/10 dark:bg-black/20"><p className="break-all font-[family-name:var(--font-dm-mono)] text-[10px] opacity-70">{publicUrl || "Link belum tersedia"}</p></div>
     <div className="mt-4 grid grid-cols-2 gap-2">
-      <Link href={path || "#"} target="_blank" aria-disabled={!path} className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs dark:border-white/10 ${!path ? "pointer-events-none opacity-40" : ""}`}><Eye className="h-3.5 w-3.5"/>Preview</Link>
-      <button disabled={!path} onClick={onCopy} className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs disabled:opacity-40 dark:border-white/10"><Copy className="h-3.5 w-3.5"/>Salin Link</button>
+      <Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={`inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs dark:border-white/10 ${!publicUrl ? "pointer-events-none opacity-40" : ""}`}><Eye className="h-3.5 w-3.5"/>Preview</Link>
+      <button disabled={!publicUrl} onClick={onCopy} className="inline-flex items-center justify-center gap-2 rounded-xl border border-[#d8cbc2] px-3 py-2 text-xs disabled:opacity-40 dark:border-white/10"><Copy className="h-3.5 w-3.5"/>Salin Link</button>
       <Link href={`/dashboard/editor${special ? "?type=ADAT_AKAD" : "?type=WEDDING"}`} className={`inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-white ${button}`}><Settings2 className="h-3.5 w-3.5"/>Edit Desain</Link>
       <button disabled={!paid || busy} onClick={onPublish} className={`inline-flex items-center justify-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-white ${paid ? button : "bg-black/20 dark:bg-white/10"}`}>{busy ? "Menyimpan..." : invitation.isPublished ? "Unpublish" : "Publish"}</button>
     </div>
