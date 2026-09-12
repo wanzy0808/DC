@@ -31,33 +31,37 @@ Use only these three fonts throughout the DC Wedding project:
 
 ## 2. Light Mode / Default Visual Theme
 
-The primary light theme is an elegant **maroon + creamy** visual system.
+The primary light theme is an elegant **Deep Rose Wood + Dusty Pink** visual system with warm neutral surfaces.
 
-### Color direction
+### Canonical light-theme palette
 
-- **Primary:** maroon / burgundy / deep wine tones.
-- **Background:** creamy, warm off-white, ivory, parchment, or similar warm neutral tones.
-- **Text:** use **black/dark brown** on light backgrounds when it provides the best readability.
-- **Text:** use **white/cream** on sufficiently dark maroon surfaces when it provides better contrast.
-- Supporting neutrals should remain warm and harmonious with the creamy background.
+1. **Primary Accent / Action:** Deep Rose Wood — `#8C4A56`
+2. **Brand Accent:** Dusty Pink — `#E8B4B8`
+3. **Primary Hover:** Dark Rose Wood — `#6E3843`
+4. **Background Utama:** Soft Rose Neutral / Warm White — `#FAFAFA`
+5. **Surface Secondary (Card/Input):** Pale Blush — `#F5EBEB`
+6. **Text Utama:** Charcoal Black — `#1E1B1C`
 
 ### Light-theme rules
 
-- Prefer maroon for primary actions, important accents, active states, branding, borders, and key decorative elements.
-- Prefer creamy backgrounds over cold pure white for major surfaces.
+- Use `#8C4A56` for primary actions, important accents, active states, branding, and key controls.
+- Use `#E8B4B8` as the supporting brand accent, selected-state highlight, subtle emphasis, and decorative accent.
+- Use `#6E3843` for primary hover/pressed states and stronger rose-wood contrast.
+- Use `#FAFAFA` as the main application/page background rather than cream, ivory, parchment, or warm beige.
+- Use `#F5EBEB` for cards, inputs, secondary surfaces, soft panels, and grouped content areas.
+- Use `#1E1B1C` as the default functional/body text color on light surfaces.
+- Do not introduce unrelated accent colors unless required by a specific product state or accessibility need.
+- Prefer semantic theme tokens over hard-coded colors when a token already exists.
 - Never sacrifice readability for color matching.
-- Text color must always have sufficient contrast against its background.
-- Do not create unrelated accent colors unless required by a specific product state or accessibility need.
 
 ### Text Color Hierarchy — Anti AI-Slop Rule
 
-- **Do not use two text colors everywhere just to create visual variety.** Avoid the common pattern of turning ordinary black/dark text into maroon without a clear purpose.
-- **Default body and functional text should use one primary readable text color** appropriate to the background. On light/creamy surfaces, black or dark brown is normally preferred.
-- **Maroon is an accent, not a default replacement for black text.** Use it selectively for emphasis, active states, important headings/labels, links, branding, or other elements that genuinely need emphasis.
-- Do **not** turn body text, descriptions, helper text, metadata, navigation text, or other secondary text maroon merely to create a second text color.
-- Establish hierarchy primarily through **typography, weight, size, spacing, layout, and contrast**, rather than excessive text-color variation.
-- If black/dark text is already readable and visually appropriate, **do not change it to maroon without a specific design reason**.
-- When in doubt, choose the simpler single-text-color treatment rather than adding another text color.
+- **Do not use two text colors everywhere just to create visual variety.** Avoid the common pattern of turning ordinary black/dark text into rose wood without a clear purpose.
+- **Default body and functional text should use `#1E1B1C`** on light surfaces.
+- **Deep Rose Wood is an accent, not a default replacement for charcoal text.** Use it selectively for emphasis, active states, important headings/labels, links, branding, or controls that genuinely need emphasis.
+- Do **not** turn body text, descriptions, helper text, metadata, navigation text, or other secondary text Deep Rose Wood merely to create a second text color.
+- Establish hierarchy primarily through typography, weight, size, spacing, layout, and contrast.
+- If charcoal text is already readable and visually appropriate, **do not change it to rose wood without a specific design reason**.
 
 ## 3. Dark Mode
 
@@ -83,7 +87,7 @@ Dark mode uses a **black + pink** visual system.
 
 Readability always takes priority over strict color matching.
 
-- On **light/creamy backgrounds:** use black, dark brown, or sufficiently dark maroon text.
+- On **light backgrounds:** use `#1E1B1C`, or sufficiently dark rose wood text where an accent is intentional.
 - On **dark/black backgrounds:** use white, light neutral, or sufficiently bright pink text.
 - Buttons, badges, inputs, menus, overlays, and cards must maintain clear text/background contrast.
 - Hover, active, disabled, and selected states must remain readable in both themes.
@@ -95,15 +99,15 @@ Gunakan komponen **Shadcn UI** dan ikon dari **Lucide React** untuk kebutuhan UI
 
 ### Rules penggunaan Shadcn UI & Lucide:
 - **Shadcn UI Components:** Manfaatkan komponen standar seperti `Dialog`, `Sheet`, `Table`, `DropdownMenu`, `Button`, `Switch`, `Badge`, `Select`, dan `Card`.
-- **Styling Customization:** Setiap komponen Shadcn UI yang digunakan **wajib disesuaikan warna dan tipografinya** menginduk pada *theme tokens* DC Wedding (Light: Maroon/Cream, Dark: Black/Pink). Jangan biarkan warna default Shadcn (seperti slate/zinc/neutral bawaan) tanpa penyesuaian.
-- **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas (misal `w-4 h-4` atau `w-5 h-5`) untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki *accent color* halaman (maroon di light mode, pink/white di dark mode).
+- **Styling Customization:** Setiap komponen Shadcn UI yang digunakan **wajib disesuaikan warna dan tipografinya** menginduk pada *theme tokens* DC Wedding (Light: Deep Rose Wood/Dusty Pink/Warm White/Pale Blush, Dark: Black/Pink). Jangan biarkan warna default Shadcn (seperti slate/zinc/neutral bawaan) tanpa penyesuaian.
+- **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas (misal `w-4 h-4` atau `w-5 h-5`) untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki *accent color* halaman.
 - **Interactive Triggers:** Gunakan properti `asChild` pada `SheetTrigger` atau `DialogTrigger` jika dibungkus oleh komponen khusus untuk menghindari *nested button error* di DOM.
 
 ## 6. Implementation Guidance
 
 - Reuse the project's existing CSS variables, theme tokens, and font variables whenever possible.
 - Prefer semantic theme tokens over hard-coded colors when a token already exists.
-- If a new token is necessary, keep it within the DC Wedding maroon/creamy light palette or black/pink dark palette.
+- If a new light-theme token is necessary, keep it within the canonical `#8C4A56`, `#E8B4B8`, `#6E3843`, `#FAFAFA`, `#F5EBEB`, `#1E1B1C` palette.
 - Keep light and dark variants intentionally designed rather than relying on automatic color inversion.
 - Before adding a new UI component, check that its typography and colors follow these rules.
 
@@ -114,7 +118,7 @@ DC Wedding should feel like one coherent premium wedding platform.
 - **Cinzel = elegance / display.**
 - **Fauna One = readable application UI.**
 - **DM Mono = utility / technical detail.**
-- **Light mode = maroon + creamy.**
+- **Light mode = Deep Rose Wood + Dusty Pink + Soft Rose Neutral + Pale Blush + Charcoal.**
 - **Dark mode = black + pink.**
 - **Text color should remain restrained; do not create unnecessary multi-color text hierarchy.**
 
