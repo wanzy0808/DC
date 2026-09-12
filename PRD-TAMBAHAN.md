@@ -75,7 +75,7 @@ Jangan menyatakan build berhasil hanya berdasarkan perubahan kode. Jika GitHub A
 
 ### Implemented
 - Manajemen Tamu menggunakan entitlement **DIGITAL_INVITATION**.
-- Edit/hapus tamu, nomor meja, dan seat assignment mengikuti entitlement Digital Invitation.
+- Edit/hapus tamu, nomor meja, dan seat assignment mengikuti Digital Invitation.
 - Usher App tetap menggunakan entitlement **GUEST_BOOK**.
 - Menghapus blocking popup lama yang menghalangi workspace Manajemen Tamu.
 
@@ -272,6 +272,66 @@ Dashboard tidak boleh menghasilkan link yang berbeda dari routing publik yang se
 
 ---
 
+# 2026-09-12 — PRD Gap Review & Implementation
+
+## 14. Guest Management Entitlement Mismatch Fixed
+
+### PRD Requirement
+`prd.md` menetapkan **Manajemen Tamu & Interactive Seating** sebagai entitlement penuh untuk `DIGITAL_INVITATION`, dan `GUEST_BOOK` mewarisi akses tersebut.
+
+### Gap Found
+Runtime API masih menggunakan `hasPaidGuestbook()` pada beberapa endpoint sehingga Digital Invitation biasa tidak dapat:
+- membuat tamu;
+- mengambil daftar meja untuk placement;
+- membuat/update/delete meja;
+- export daftar tamu.
+
+Ini bertentangan dengan entitlement source of truth di `lib/packages/access.ts`, yang sudah menetapkan `canUseGuestPlacement: hasDigitalInvitation`.
+
+### Implemented
+- `/api/guests` sekarang menggunakan `hasPaidDigitalInvitation()`.
+- GET guests mengembalikan guest + tables untuk Digital Invitation.
+- POST guest dapat digunakan oleh Digital Invitation.
+- `/api/wedding-tables` menggunakan Digital Invitation untuk POST/PATCH/DELETE.
+- `/api/guests/export` menggunakan Digital Invitation.
+- `/api/tables` sudah aligned dengan Digital Invitation.
+
+### Commit
+- `e72f8f7` — guest management entitlement
+- `a17a4b4` — wedding table entitlement
+- `25282fe` — guest export entitlement
+
+### Validation
+- Code-level review completed against `prd.md` and `lib/packages/access.ts`.
+- Build/CI: **Not verified**.
+
+---
+
+## 15. Canonical Undangan Digital Workspace Route
+
+### PRD Requirement
+Studio Back harus kembali ke workspace **Undangan Digital**, bukan Beranda. PRD mendefinisikan `/dashboard/undangan-digital` sebagai workspace tujuan.
+
+### Gap Found
+- Route `/dashboard/undangan-digital` belum tersedia.
+- Studio Back sebelumnya menuju `/dashboard`.
+
+### Implemented
+- Menambahkan `/dashboard/undangan-digital`.
+- Route menjadi workspace server-side yang membaca entitlement dari database.
+- Workspace menampilkan `InvitationManagementPanel`.
+- Studio Back dan breadcrumb sekarang kembali ke `/dashboard/undangan-digital`.
+
+### Commit
+- `f8ad75f` — digital invitation workspace route
+- `94e665b` — Studio Back routing fix
+
+### Validation
+- Route and server-side entitlement implementation reviewed.
+- Build/CI: **Not verified**.
+
+---
+
 # Current Source-of-Truth Order
 
 1. **AGENTS.md** — coding/design-system constraints.
@@ -304,6 +364,8 @@ Dashboard tidak boleh menghasilkan link yang berbeda dari routing publik yang se
 |---|---|
 | Main Wedding | `https://[nama-pasangan].dcwedding.com/` |
 | Event Khusus | `https://[nama-pasangan].dcwedding.com/[nama-event]` |
+| Digital Invitation Workspace | `/dashboard/undangan-digital` |
+| Studio | `/dashboard/editor` |
 | Legacy special-event alias | `/event-khusus` — compatibility only |
 | Legacy internal invitation route | `/invite/[slug]` — backward/internal routing |
 
@@ -326,12 +388,15 @@ Dashboard tidak boleh menghasilkan link yang berbeda dari routing publik yang se
 
 # Validation / CI Status
 
-### Latest Documentation Commit
-- `a25726ad887cf98358a1c018f5534e8391438544`
-- Message: `docs(prd): rewrite implementation addendum with canonical event routing`
+### Latest Implementation Commits
+- `e72f8f7` — guest management entitlement
+- `a17a4b4` — wedding table entitlement
+- `25282fe` — guest export entitlement
+- `f8ad75f` — digital invitation workspace route
+- `94e665b` — Studio Back routing fix
 
-### Latest Commit Status
-- GitHub combined status returned **no status checks** for the latest documentation commit.
+### CI
+- No verified build/check result is available for the latest implementation commits.
 - Therefore build/CI is **Not verified**, not PASS.
 
 ### Rule
@@ -342,6 +407,8 @@ Jangan menulis "build berhasil" atau "CI PASS" sebelum terdapat hasil workflow/c
 - Fitur **Angpao/Kado** dan status pengiriman QR belum dianggap fully tracked karena schema saat ini belum memiliki field tracking yang diperlukan.
 - UI harus menampilkan status yang jujur dan tidak boleh mengarang data tracking.
 - Jangan menganggap feature fully complete hanya karena UI sudah tersedia jika database/API belum mendukung state tersebut.
+- Interactive seating chart masih perlu audit lanjutan terhadap detail seat-level (`seatNumber`) karena schema `Guest` saat ini hanya menyimpan `tableId`.
+- Dashboard utama masih memiliki legacy sidebar entries untuk **Galeri & Foto**, **Musik Undangan**, dan floating WhatsApp UI; PRD meminta item tersebut tidak berada di primary sidebar / viewport. Ini dicatat sebagai gap berikutnya dan belum diklaim selesai.
 
 # Working Protocol for Next Changes
 
