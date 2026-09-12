@@ -1,16 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const RESERVED_SUBDOMAINS = new Set([
-  "www",
-  "app",
-  "admin",
-  "api",
-  "mail",
-  "ftp",
-]);
+const RESERVED_SUBDOMAINS = new Set(["www", "app", "admin", "api", "mail", "ftp"]);
+const ROOT_DOMAIN = (process.env.INVITATION_ROOT_DOMAIN ?? "dcwedding.com").toLowerCase();
 
 function getInvitationSlug(hostname: string) {
-  const rootDomain = (process.env.INVITATION_ROOT_DOMAIN ?? "dcwedding.com").toLowerCase();
   const host = hostname.toLowerCase().split(":")[0];
 
   // Local development: slug.localhost
@@ -19,30 +12,49 @@ function getInvitationSlug(hostname: string) {
     return slug && !slug.includes(".") ? slug : null;
   }
 
-  if (host === rootDomain || !host.endsWith(`.${rootDomain}`)) return null;
+  if (host === ROOT_DOMAIN || !host.endsWith(`.${ROOT_DOMAIN}`)) return null;
 
-  const subdomain = host.slice(0, -(rootDomain.length + 1));
+  const subdomain = host.slice(0, -(ROOT_DOMAIN.length + 1));
   if (!subdomain || subdomain.includes(".") || RESERVED_SUBDOMAINS.has(subdomain)) return null;
 
-  // Keep invitation slugs URL-safe and predictable.
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(subdomain) ? subdomain : null;
 }
 
 export default function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
-
-  // Only the invitation homepage is tenant-routed by subdomain.
-  // Normal application routes continue to use their existing paths.
-  if (pathname !== "/") return NextResponse.next();
-
   const slug = getInvitationSlug(request.nextUrl.hostname);
-  if (!slug) return NextResponse.next();
 
-  const url = request.nextUrl.clone();
-  url.pathname = `/invite/${slug}`;
-  return NextResponse.rewrite(url);
+  if (slug) {
+    if (pathname === "/") {
+      const url = request.nextUrl.clone();
+      url.pathname = `/invite/${slug}`;
+      return NextResponse.rewrite(url);
+    }
+
+    if (pathname === "/event-khusus" || pathname === "/event-khusus/") {
+      const url = request.nextUrl.clone();
+      url.pathname = `/invite/${slug}/event-khusus`;
+      return NextResponse.rewrite(url);
+    }
+
+    return NextResponse.next();
+  }
+
+  // Keep the old /invite links working, but make the canonical public URL the subdomain.
+  if (pathname.startsWith("/invite/")) {
+    const parts = pathname.split("/").filter(Boolean);
+    const legacySlug = parts[1];
+    if (legacySlug) {
+      const suffix = parts[2] === "event-khusus" ? "/event-khusus" : "";
+      const target = new URL(`https://${legacySlug}.${ROOT_DOMAIN}${suffix}`);
+      target.search = request.nextUrl.search;
+      return NextResponse.redirect(target, 308);
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/"],
+  matcher: ["/", "/event-khusus", "/event-khusus/", "/invite/:path*"],
 };
