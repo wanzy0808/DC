@@ -135,6 +135,12 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Onboarding tetap hanya muncul ketika data wajib belum lengkap: nama pasangan pria, nama pasangan wanita, atau nickname belum tersimpan. Setelah ketiganya tersedia, login berikutnya tidak meminta onboarding lagi.
 - Tidak mengubah atau menghapus route/menu **Beranda**.
 
+### Duplicate Dashboard Feature Guard Removal
+- Menemukan `DashboardFeatureGuard` pada `app/dashboard/page.tsx` yang memasang click interceptor global di seluruh dashboard.
+- Interceptor tersebut memiliki aturan lama yang dapat memblokir klik **Manajemen Tamu** dan menampilkan popup upgrade Guest Book, padahal PRD menetapkan Manajemen Tamu sebagai fitur Digital Invitation.
+- Menghapus wrapper `DashboardFeatureGuard` dari route `/dashboard` agar entitlement UI dikontrol langsung oleh dashboard dan FeatureGate yang sudah sesuai aturan paket.
+- Tidak menghapus fitur Manajemen Tamu, Usher App, atau Beranda; perubahan hanya menghilangkan lapisan gate duplikat yang konflik.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
