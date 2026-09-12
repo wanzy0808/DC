@@ -147,6 +147,13 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Request update password selalu mengirim `enabled: true` saat membuat atau mengganti password.
 - Tidak mengubah authorization server-side atau mekanisme hashing/password verification.
 
+### Event Data Reuse / No Duplicate Couple Input
+- Data nama pasangan pada `WEDDING` menjadi sumber awal dari onboarding dan tidak lagi diperlakukan sebagai data yang harus diketik ulang di Rangkaian Acara.
+- Field nama pasangan pada editor `WEDDING` dibuat read-only karena identitas pasangan sudah dikumpulkan saat onboarding.
+- Saat `ADAT_AKAD` masih kosong, editor otomatis mengambil nama pasangan dari `WEDDING` daripada meminta pengguna mengetik ulang.
+- Nama pasangan yang sudah tersimpan tetap dikirim ke record event khusus saat data event disimpan, sehingga Studio dan public invitation membaca database tanpa form identitas pasangan kedua.
+- Field yang tetap dapat diedit pada Rangkaian Acara hanya data yang memang spesifik event, seperti nama acara, tanggal, waktu, venue, alamat, Maps, deskripsi, dan catatan.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
