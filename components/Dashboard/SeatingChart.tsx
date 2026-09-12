@@ -8,6 +8,7 @@ type Guest = { id: string; name: string; tableId?: string | null; seatNumber?: n
 type Table = { id: string; name: string; shape: string; capacity: number };
 type Props = { guests: Guest[]; tables: Table[]; accent: string; onAssigned: (guestId: string, tableId: string, seatNumber: number) => Promise<void> };
 type Point = { x: number; y: number };
+type SeatTarget = { table: Table; seat: number; guest: Guest | null };
 
 const STAGE_WIDTH = 1100;
 const STAGE_HEIGHT = 620;
@@ -31,15 +32,19 @@ function seatPoint(center: Point, index: number, capacity: number): Point {
   return { x: center.x + Math.cos(angle) * TABLE_RADIUS, y: center.y + Math.sin(angle) * TABLE_RADIUS };
 }
 
-function findSeat(point: Point, table: Table, center: Point, occupied: Set<number>) {
-  let nearest = -1;
+function findSeatTarget(point: Point, tables: Table[], guests: Guest[], draggedGuestId: string | null): SeatTarget | null {
+  let nearest: SeatTarget | null = null;
   let distance = Number.POSITIVE_INFINITY;
-  for (let index = 0; index < table.capacity; index += 1) {
-    const seat = seatPoint(center, index, table.capacity);
-    const currentDistance = Math.hypot(point.x - seat.x, point.y - seat.y);
-    if (currentDistance < distance) { distance = currentDistance; nearest = index + 1; }
-  }
-  if (distance > 38 || occupied.has(nearest)) return null;
+  tables.forEach((table, tableIndex) => {
+    const center = tablePoint(tableIndex, tables.length);
+    for (let index = 0; index < table.capacity; index += 1) {
+      const seat = seatPoint(center, index, table.capacity);
+      const currentDistance = Math.hypot(point.x - seat.x, point.y - seat.y);
+      if (currentDistance >= distance || currentDistance > 38) continue;
+      nearest = { table, seat: index + 1, guest: guests.find((item) => item.tableId === table.id && item.seatNumber === index + 1 && item.id !== draggedGuestId) ?? null };
+      distance = currentDistance;
+    }
+  });
   return nearest;
 }
 
@@ -48,10 +53,12 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
   const [savingGuestId, setSavingGuestId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [manualName, setManualName] = useState("");
-  const [manualPhone, setManualPhone] = useState("");
   const [manualSaving, setManualSaving] = useState(false);
   const [localGuests, setLocalGuests] = useState<Guest[]>([]);
   const [localTables, setLocalTables] = useState<Table[]>([]);
+  const [guestOverrides, setGuestOverrides] = useState<Record<string, Partial<Guest>>>({});
+  const [hoverTarget, setHoverTarget] = useState<SeatTarget | null>(null);
+  const [swapCandidate, setSwapCandidate] = useState<{ guestId: string; target: SeatTarget } | null>(null);
   const [tableCount, setTableCount] = useState(tables.length || 1);
   const [seatsPerTable, setSeatsPerTable] = useState(tables[0]?.capacity || 8);
   const [generating, setGenerating] = useState(false);
@@ -63,8 +70,9 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
 
   const visibleGuests = useMemo(() => {
     const known = new Set(guests.map((guest) => guest.id));
-    return [...guests, ...localGuests.filter((guest) => !known.has(guest.id))];
-  }, [guests, localGuests]);
+    const merged = [...guests, ...localGuests.filter((guest) => !known.has(guest.id))];
+    return merged.map((guest) => guestOverrides[guest.id] ? { ...guest, ...guestOverrides[guest.id] } : guest);
+  }, [guests, localGuests, guestOverrides]);
 
   const occupiedByTable = useMemo(() => {
     const map = new Map<string, Set<number>>();
@@ -77,6 +85,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
   }, [visibleGuests]);
 
   const unassigned = visibleGuests.filter((guest) => !guest.tableId && (guest.source === "MANUAL" || guest.rsvpStatus === "ATTENDING"));
+  const draggedGuest = draggedGuestId ? visibleGuests.find((guest) => guest.id === draggedGuestId) ?? null : null;
 
   async function generateTables(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -100,34 +109,72 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
 
   async function addManualGuest(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const name = manualName.trim(); const phone = manualPhone.trim();
+    const name = manualName.trim();
     if (!name) { setMessage("Nama tamu manual wajib diisi."); return; }
     setManualSaving(true); setMessage("");
     try {
-      const response = await fetch("/api/guests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name, phone }) });
+      const response = await fetch("/api/guests", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error || "Tamu manual gagal ditambahkan.");
       setLocalGuests((current) => [...current, data.guest as Guest]);
-      setManualName(""); setManualPhone(""); setMessage("Tamu manual ditambahkan ke roster.");
+      setManualName(""); setMessage("Tamu manual ditambahkan ke roster.");
     } catch (error) { setMessage(error instanceof Error ? error.message : "Tamu manual gagal ditambahkan."); }
     finally { setManualSaving(false); }
   }
 
+  function targetAtPoint(point: Point) {
+    return findSeatTarget(point, visibleTables, visibleGuests, draggedGuestId);
+  }
+
+  function setHoverFromPoint(point: Point) {
+    if (!draggedGuestId) return;
+    setHoverTarget(targetAtPoint(point));
+  }
+
   async function assignGuestAtPoint(guestId: string, point: Point) {
-    if (!visibleTables.length) return;
-    let selected: { table: Table; seat: number } | null = null;
-    visibleTables.forEach((table, index) => {
-      const occupied = new Set(occupiedByTable.get(table.id) ?? []);
-      const draggedGuest = visibleGuests.find((guest) => guest.id === guestId);
-      if (draggedGuest?.tableId === table.id && draggedGuest.seatNumber) occupied.delete(draggedGuest.seatNumber);
-      const seat = findSeat(point, table, tablePoint(index, visibleTables.length), occupied);
-      if (seat && !selected) selected = { table, seat };
-    });
-    if (!selected) { setMessage("Jatuhkan tamu tepat di kursi yang kosong."); return; }
+    const target = targetAtPoint(point);
+    setHoverTarget(null);
+    if (!target) { setMessage("Jatuhkan tamu tepat di kursi."); return; }
+    if (target.guest) {
+      setSwapCandidate({ guestId, target });
+      return;
+    }
     setSavingGuestId(guestId); setMessage("");
-    try { await onAssigned(guestId, selected.table.id, selected.seat); setMessage("Penempatan tamu tersimpan."); }
-    catch (error) { setMessage(error instanceof Error ? error.message : "Penempatan tamu gagal disimpan."); }
+    try {
+      await onAssigned(guestId, target.table.id, target.seat);
+      setGuestOverrides((current) => ({ ...current, [guestId]: { tableId: target.table.id, seatNumber: target.seat } }));
+      setMessage("Penempatan tamu tersimpan.");
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Penempatan tamu gagal disimpan."); }
     finally { setSavingGuestId(null); setDraggedGuestId(null); }
+  }
+
+  async function confirmSwap() {
+    if (!swapCandidate) return;
+    const { guestId, target } = swapCandidate;
+    if (!target.guest) return;
+    const source = visibleGuests.find((guest) => guest.id === guestId);
+    if (!source) return;
+    setSavingGuestId(guestId); setMessage("");
+    try {
+      const response = await fetch(`/api/guests/${guestId}/swap`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ targetGuestId: target.guest.id }) });
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || "Tukar posisi gagal disimpan.");
+      const swapped = data.guests as Guest[];
+      const sourceResult = swapped.find((guest) => guest.id === guestId);
+      const targetResult = swapped.find((guest) => guest.id === target.guest?.id);
+      setGuestOverrides((current) => ({
+        ...current,
+        ...(sourceResult ? { [sourceResult.id]: { tableId: sourceResult.tableId, seatNumber: sourceResult.seatNumber } } : {}),
+        ...(targetResult ? { [targetResult.id]: { tableId: targetResult.tableId, seatNumber: targetResult.seatNumber } } : {}),
+      }));
+      setMessage(`Posisi ${source.name} dan ${target.guest.name} ditukar.`);
+      setSwapCandidate(null);
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Tukar posisi gagal disimpan."); }
+    finally { setSavingGuestId(null); setDraggedGuestId(null); setHoverTarget(null); }
+  }
+
+  function cancelSwap() {
+    setSwapCandidate(null); setDraggedGuestId(null); setHoverTarget(null); setMessage("Tukar posisi dibatalkan.");
   }
 
   async function assignFromDrop(event: React.DragEvent<HTMLDivElement>) {
@@ -142,7 +189,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
     const stage = event.target.getStage();
     const point = stage?.getPointerPosition();
     event.target.position({ x: 0, y: 0 });
-    if (!point) { setDraggedGuestId(null); return; }
+    if (!point) { setDraggedGuestId(null); setHoverTarget(null); return; }
     await assignGuestAtPoint(guestId, point);
   }
 
@@ -162,30 +209,30 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
           <p className="mt-1 font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">RSVP Hadir dan tamu manual bisa ditempatkan.</p>
           <form onSubmit={addManualGuest} className="mt-3 space-y-2">
             <input value={manualName} onChange={(event) => setManualName(event.target.value)} placeholder="Nama tamu manual" className="h-10 w-full rounded-xl border border-[#d8cbc2] bg-transparent px-3 font-[family-name:var(--font-fauna)] text-xs font-medium outline-none focus:border-[#7A1C25] dark:border-white/10" />
-            <input value={manualPhone} onChange={(event) => setManualPhone(event.target.value)} placeholder="WhatsApp (opsional)" className="h-10 w-full rounded-xl border border-[#d8cbc2] bg-transparent px-3 font-[family-name:var(--font-fauna)] text-xs font-medium outline-none focus:border-[#7A1C25] dark:border-white/10" />
             <button type="submit" disabled={manualSaving} className="h-10 w-full rounded-xl bg-[#7A1C25] px-3 font-[family-name:var(--font-fauna)] text-xs font-semibold text-white transition hover:bg-[#5E141C] disabled:opacity-60">{manualSaving ? "Menambahkan..." : "Tambah Tamu Manual"}</button>
           </form>
           <div className="mt-3 space-y-2">
             {unassigned.length === 0 && <p className="font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">Tidak ada tamu yang siap ditempatkan.</p>}
-            {unassigned.map((guest) => <div key={guest.id} draggable onDragStart={() => setDraggedGuestId(guest.id)} onDragEnd={() => setDraggedGuestId(null)} className="cursor-grab rounded-xl border border-[#d8cbc2] bg-[#f3ede6] px-3 py-2.5 font-[family-name:var(--font-fauna)] text-xs font-semibold active:cursor-grabbing dark:border-white/10 dark:bg-[#121116]"><div>{guest.name}</div><div className="mt-0.5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-wider text-[#765f5f] dark:text-white/60">{guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}</div></div>)}
+            {unassigned.map((guest) => <div key={guest.id} draggable onDragStart={() => { setDraggedGuestId(guest.id); setSwapCandidate(null); }} onDragEnd={() => { if (!swapCandidate) setDraggedGuestId(null); }} className="cursor-grab rounded-xl border border-[#d8cbc2] bg-[#f3ede6] px-3 py-2.5 font-[family-name:var(--font-fauna)] text-xs font-semibold active:cursor-grabbing dark:border-white/10 dark:bg-[#121116]"><div>{guest.name}</div><div className="mt-0.5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-wider text-[#765f5f] dark:text-white/60">{guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}</div></div>)}
           </div>
         </div>
       </div>
-      <div className="min-w-0 overflow-hidden rounded-2xl border border-[#d8cbc2] bg-[#fffaf6] p-2 dark:border-white/10 dark:bg-black/20" onDragOver={(event) => event.preventDefault()} onDrop={assignFromDrop}>
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-[#d8cbc2] bg-[#fffaf6] p-2 dark:border-white/10 dark:bg-black/20" onDragOver={(event) => { event.preventDefault(); const rect = event.currentTarget.getBoundingClientRect(); const scaleX = STAGE_WIDTH / rect.width; const scaleY = STAGE_HEIGHT / rect.height; setHoverFromPoint({ x: (event.clientX - rect.left) * scaleX, y: (event.clientY - rect.top) * scaleY }); }} onDrop={assignFromDrop}>
         <div className="overflow-auto"><Stage width={STAGE_WIDTH} height={STAGE_HEIGHT}><Layer>
           <Rect x={0} y={0} width={STAGE_WIDTH} height={STAGE_HEIGHT} fill="#F3EDE6" cornerRadius={18} listening={false} />
           {visibleTables.map((table, tableIndex) => { const center = tablePoint(tableIndex, visibleTables.length); return <Group key={table.id}>
             <Rect x={center.x - 48} y={center.y - 30} width={96} height={60} cornerRadius={table.shape === "ROUND" ? 48 : 12} fill="#7A1C25" opacity={0.95} />
             <Text x={center.x - 44} y={center.y - 8} width={88} align="center" text={table.name} fontSize={13} fontStyle="bold" fill="#FFF8F2" />
-            {Array.from({ length: table.capacity }).map((_, index) => { const seat = index + 1; const point = seatPoint(center, index, table.capacity); const guest = visibleGuests.find((item) => item.tableId === table.id && item.seatNumber === seat); return <Group key={`${table.id}-${seat}`}>
-              <Circle x={point.x} y={point.y} radius={SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke="#7A1C25" strokeWidth={2} draggable={Boolean(guest)} onDragStart={() => guest && setDraggedGuestId(guest.id)} onDragEnd={(event) => guest && handleCanvasGuestDragEnd(guest.id, event)} />
-              <Text x={point.x - 12} y={point.y - 6} width={24} align="center" text={String(seat)} fontSize={10} fontStyle="bold" fill={guest ? "#FFF8F2" : "#7A1C25"} />
+            {Array.from({ length: table.capacity }).map((_, index) => { const seat = index + 1; const point = seatPoint(center, index, table.capacity); const guest = visibleGuests.find((item) => item.tableId === table.id && item.seatNumber === seat); const highlighted = hoverTarget?.table.id === table.id && hoverTarget.seat === seat; const occupiedTarget = highlighted && Boolean(hoverTarget?.guest); return <Group key={`${table.id}-${seat}`}>
+              <Circle x={point.x} y={point.y} radius={highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke={highlighted ? "#7A1C25" : "#7A1C25"} strokeWidth={highlighted ? 5 : 2} opacity={occupiedTarget ? 0.92 : 1} draggable={Boolean(guest)} onDragStart={() => { if (guest) { setDraggedGuestId(guest.id); setSwapCandidate(null); } }} onDragMove={(event) => { if (!guest) return; const stage = event.target.getStage(); const pointer = stage?.getPointerPosition(); if (pointer) setHoverFromPoint(pointer); }} onDragEnd={(event) => guest && handleCanvasGuestDragEnd(guest.id, event)} />
+              <Text x={point.x - 12} y={point.y - 6} width={24} align="center" text={String(seat)} fontSize={10} fontStyle="bold" fill="#FFF8F2" />
               {guest && <Text x={point.x - 42} y={point.y + 20} width={84} align="center" text={guest.name} fontSize={9} fill="#2D2222" listening={false} />}
             </Group>; })}
           </Group>; })}
           {!visibleTables.length && <Text x={80} y={285} width={940} align="center" text="Masukkan jumlah meja dan bangku di panel kiri untuk membuat denah." fontSize={16} fontStyle="bold" fill="#5A4545" />}
         </Layer></Stage></div>
         <div className="flex items-center justify-between gap-3 px-3 py-2"><p className="font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">Tarik tamu ke kursi kosong. Tamu yang sudah duduk juga bisa dipindahkan ke meja/kursi lain.</p>{savingGuestId && <span className="font-[family-name:var(--font-dm-mono)] text-[10px] font-semibold uppercase tracking-wider">Menyimpan...</span>}</div>
+        {swapCandidate && <div className="mx-3 mb-3 rounded-xl border border-[#7A1C25]/30 bg-[#f3ede6] px-4 py-3 dark:border-[#E8A5AE]/30 dark:bg-[#121116]"><p className="font-[family-name:var(--font-fauna)] text-xs font-semibold">Kursi sudah ditempati {swapCandidate.target.guest?.name}. Tukar posisi dengan {draggedGuest?.name}?</p><div className="mt-3 flex gap-2"><button type="button" onClick={confirmSwap} disabled={Boolean(savingGuestId)} className="h-10 rounded-xl bg-[#7A1C25] px-4 font-[family-name:var(--font-fauna)] text-xs font-semibold text-white transition hover:bg-[#5E141C] disabled:opacity-60">Tukar Posisi</button><button type="button" onClick={cancelSwap} disabled={Boolean(savingGuestId)} className="h-10 rounded-xl border border-[#d8cbc2] bg-transparent px-4 font-[family-name:var(--font-fauna)] text-xs font-semibold dark:border-white/10">Batal</button></div></div>}
         {message && <p className="px-3 pb-3 font-[family-name:var(--font-fauna)] text-xs font-semibold text-[#7A1C25] dark:text-[#E8A5AE]">{message}</p>}
       </div>
     </div>
