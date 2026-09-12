@@ -74,16 +74,6 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
     return merged.map((guest) => guestOverrides[guest.id] ? { ...guest, ...guestOverrides[guest.id] } : guest);
   }, [guests, localGuests, guestOverrides]);
 
-  const occupiedByTable = useMemo(() => {
-    const map = new Map<string, Set<number>>();
-    for (const guest of visibleGuests) {
-      if (!guest.tableId || !guest.seatNumber) continue;
-      if (!map.has(guest.tableId)) map.set(guest.tableId, new Set());
-      map.get(guest.tableId)?.add(guest.seatNumber);
-    }
-    return map;
-  }, [visibleGuests]);
-
   const unassigned = visibleGuests.filter((guest) => !guest.tableId && (guest.source === "MANUAL" || guest.rsvpStatus === "ATTENDING"));
   const draggedGuest = draggedGuestId ? visibleGuests.find((guest) => guest.id === draggedGuestId) ?? null : null;
 
@@ -134,7 +124,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
   async function assignGuestAtPoint(guestId: string, point: Point) {
     const target = targetAtPoint(point);
     setHoverTarget(null);
-    if (!target) { setMessage("Jatuhkan tamu tepat di kursi."); return; }
+    if (!target) { setMessage("Jatuhkan tamu tepat di kursi."); setDraggedGuestId(null); return; }
     if (target.guest) {
       setSwapCandidate({ guestId, target });
       return;
@@ -213,7 +203,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
           </form>
           <div className="mt-3 space-y-2">
             {unassigned.length === 0 && <p className="font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/70">Tidak ada tamu yang siap ditempatkan.</p>}
-            {unassigned.map((guest) => <div key={guest.id} draggable onDragStart={() => { setDraggedGuestId(guest.id); setSwapCandidate(null); }} onDragEnd={() => { if (!swapCandidate) setDraggedGuestId(null); }} className="cursor-grab rounded-xl border border-[#d8cbc2] bg-[#f3ede6] px-3 py-2.5 font-[family-name:var(--font-fauna)] text-xs font-semibold active:cursor-grabbing dark:border-white/10 dark:bg-[#121116]"><div>{guest.name}</div><div className="mt-0.5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-wider text-[#765f5f] dark:text-white/60">{guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}</div></div>)}
+            {unassigned.map((guest) => <div key={guest.id} draggable onDragStart={() => { setDraggedGuestId(guest.id); setSwapCandidate(null); }} className="cursor-grab rounded-xl border border-[#d8cbc2] bg-[#f3ede6] px-3 py-2.5 font-[family-name:var(--font-fauna)] text-xs font-semibold active:cursor-grabbing dark:border-white/10 dark:bg-[#121116]"><div>{guest.name}</div><div className="mt-0.5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-wider text-[#765f5f] dark:text-white/60">{guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}</div></div>)}
           </div>
         </div>
       </div>
@@ -224,7 +214,7 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
             <Rect x={center.x - 48} y={center.y - 30} width={96} height={60} cornerRadius={table.shape === "ROUND" ? 48 : 12} fill="#7A1C25" opacity={0.95} />
             <Text x={center.x - 44} y={center.y - 8} width={88} align="center" text={table.name} fontSize={13} fontStyle="bold" fill="#FFF8F2" />
             {Array.from({ length: table.capacity }).map((_, index) => { const seat = index + 1; const point = seatPoint(center, index, table.capacity); const guest = visibleGuests.find((item) => item.tableId === table.id && item.seatNumber === seat); const highlighted = hoverTarget?.table.id === table.id && hoverTarget.seat === seat; const occupiedTarget = highlighted && Boolean(hoverTarget?.guest); return <Group key={`${table.id}-${seat}`}>
-              <Circle x={point.x} y={point.y} radius={highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke={highlighted ? "#7A1C25" : "#7A1C25"} strokeWidth={highlighted ? 5 : 2} opacity={occupiedTarget ? 0.92 : 1} draggable={Boolean(guest)} onDragStart={() => { if (guest) { setDraggedGuestId(guest.id); setSwapCandidate(null); } }} onDragMove={(event) => { if (!guest) return; const stage = event.target.getStage(); const pointer = stage?.getPointerPosition(); if (pointer) setHoverFromPoint(pointer); }} onDragEnd={(event) => guest && handleCanvasGuestDragEnd(guest.id, event)} />
+              <Circle x={point.x} y={point.y} radius={highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS} fill={guest ? "#C26B70" : "#FFF8F2"} stroke="#7A1C25" strokeWidth={highlighted ? 5 : 2} opacity={occupiedTarget ? 0.92 : 1} draggable={Boolean(guest)} onDragStart={() => { if (guest) { setDraggedGuestId(guest.id); setSwapCandidate(null); } }} onDragMove={(event) => { if (!guest) return; const stage = event.target.getStage(); const pointer = stage?.getPointerPosition(); if (pointer) setHoverFromPoint(pointer); }} onDragEnd={(event) => guest && handleCanvasGuestDragEnd(guest.id, event)} />
               <Text x={point.x - 12} y={point.y - 6} width={24} align="center" text={String(seat)} fontSize={10} fontStyle="bold" fill="#FFF8F2" />
               {guest && <Text x={point.x - 42} y={point.y + 20} width={84} align="center" text={guest.name} fontSize={9} fill="#2D2222" listening={false} />}
             </Group>; })}
