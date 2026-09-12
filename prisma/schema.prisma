@@ -40,6 +40,11 @@ enum RsvpStatus {
   TENTATIVE
 }
 
+enum GuestSource {
+  RSVP
+  MANUAL
+}
+
 model User {
   id                 String                   @id @default(cuid())
   email              String                   @unique
@@ -177,6 +182,7 @@ model Guest {
   seatNumber    Int?
   name          String
   phone         String?
+  source        GuestSource   @default(MANUAL)
   rsvpStatus    RsvpStatus    @default(PENDING)
   plusOnes      Int           @default(0)
   checkedIn     Boolean       @default(false)
@@ -189,6 +195,7 @@ model Guest {
   checkedInBy   User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
 
   @@index([invitationId, rsvpStatus])
+  @@index([invitationId, source])
   @@index([tableId])
   @@index([checkedInById])
   @@unique([tableId, seatNumber])
