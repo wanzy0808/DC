@@ -31,6 +31,12 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Menghubungkan tombol Check In Manual ke endpoint baru.
 - Metric check-in membaca status aktual dari data Guest.
 
+### RSVP QR Entitlement Fix
+- QR guest ticket pada dashboard RSVP sekarang dapat dibuat untuk pengguna dengan paket Digital Invitation maupun Guest Book.
+- Endpoint tetap memvalidasi kepemilikan guest terhadap invitation milik user.
+- Token QR tetap menggunakan signed opaque guest identifier dari helper QR existing.
+- Check-in manual dan Usher App tetap berada di entitlement Guest Book sesuai PRD.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation terbaru berhasil setelah perbaikan TypeScript.
