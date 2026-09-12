@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidGuestbook } from "@/lib/packages/access";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { createGuestQrToken } from "@/lib/usher-qr";
 
-async function getUsherInvitation(userId: string) {
+async function getInvitationForQr(userId: string) {
   const invitation = await prisma.invitation.findFirst({
     where: { ownerId: userId },
     include: { payment: true },
     orderBy: { createdAt: "asc" },
   });
-  if (!hasPaidGuestbook(invitation?.payment)) return null;
+  if (!hasPaidDigitalInvitation(invitation?.payment)) return null;
   return invitation;
 }
 
@@ -19,8 +19,8 @@ export async function POST(request: Request) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-    const invitation = await getUsherInvitation(user.id);
-    if (!invitation) return NextResponse.json({ error: "Usher App belum aktif." }, { status: 402 });
+    const invitation = await getInvitationForQr(user.id);
+    if (!invitation) return NextResponse.json({ error: "QR tamu membutuhkan paket Undangan Digital." }, { status: 402 });
 
     const body = await request.json();
     const guestId = String(body.guestId ?? "").trim();
