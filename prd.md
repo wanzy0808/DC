@@ -1,13 +1,10 @@
-Berikut adalah pembaruan dokumen Master PRD (PRD Single Source of Truth) yang telah disesuaikan dan diperbaiki berdasarkan seluruh instruksi reparasi dashboard milikmu. Semua perubahan teknis dan aturan baru sudah langsung dimasukkan ke dalam struktur PRD.
-
-# DC Wedding — Master Product Requirements Document (PRD)
+# DC Organizer — Master Product Requirements Document (PRD)
 Document Status: Master Source of Truth (Single Consolidated Document — Post-Dashboard Refactor)
 Repository: wanzy0808/DC
-Brand Name: DC Wedding
-CRITICAL RULE: Do NOT rename this product to Citin. Citin is an entirely separate project.
+Brand Name: DC Organizer
 
 ## 1. Product Definition & Vision
-DC Wedding is a SaaS wedding platform centered around a Digital Wedding Invitation and a connected, real-time guest-management workflow.
+DC Organizer is a SaaS wedding platform centered around a Digital Wedding Invitation and a connected, real-time guest-management workflow.
 
 The product supports the complete wedding lifecycle:
 
@@ -29,7 +26,7 @@ Wedding-Day Check-in (Server-Authoritative)
 ↓
 Usher App & Onsite Guest Book
 
-Positioning Statement: DC Wedding is NOT merely a digital invitation generator. Its core positioning is an End-to-end digital wedding guest management platform with a Digital Invitation as the entry point.
+Positioning Statement: DC Organizer is NOT merely a digital invitation generator. Its core positioning is an end-to-end digital wedding guest management platform with a Digital Invitation as the entry point.
 
 ## 2. Technical Stack & Development Principles
 ### 2.1 Technology Stack & Architecture
@@ -45,7 +42,7 @@ Deployment & CI/CD: Hostinger VPS (Linux) & GitHub Actions (Node 22 validation)
 ### 2.2 Core Development Principles for Agents & Developers
 Preserve Existing Functionality: Do NOT remove working routes, API endpoints, or UI features unless explicitly instructed.
 Do NOT remove Beranda or the /dashboard route.
-Do NOT rename the brand from DC Wedding.
+Brand identity and product-facing references MUST use DC Organizer.
 Do NOT replace existing implementations with fake/mock data.
 Single Source of Truth (Database First): Shared data (such as couple names, event dates, and user profiles) MUST be saved to and read from the database. Couple names for both main wedding and special events (Event Khusus) MUST be strictly identical and read-only across all modules once onboarded.
 No Mock Invitation Data: New invitations start as empty drafts. Do not populate default fields with placeholder names like Rio or Lyvia.
@@ -69,13 +66,19 @@ Light Theme (Default):
 - Do not use the previous maroon/burgundy + creamy/ivory palette for the light application theme.
 - Body and functional text should default to `#1E1B1C`; Rose Wood is an accent, not a replacement for normal body text.
 
-Dark Theme: Black / Near-Black background with Pink / Soft Rose primary accents and clean White / Light Neutral body text.
+Dark Theme:
+- Background Main: Obsidian Black `#0F0E11`.
+- Surface Card: Dark Charcoal `#1A181E`.
+- Primary Accent: Dusty Pink `#E8B4B8`.
+- Text Primary: Pure White / Soft White `#F8F9FA`.
+- Text Accent: Soft Pink Blush `#F4C2C7`.
+
 Header & User Menu Contrast Rule: The Top-Right User Menu MUST strictly adhere to the high-contrast theme style guide. Standardize text color, avatar borders, visible drop-down chevron icons (minimum w-5 h-5), and high-contrast menu popovers to prevent illegibility on light/dark headers.
 
 ### 3.3 Layout, Spacing & Readability Rules
 Anti-Blur & High Contrast: All text, UI menus, and button labels MUST use bold/semi-bold weights (font-medium / font-semibold) with high-contrast colors. Never use washed-out/muted grays that hinder readability.
 Icon Sizing & Touch Targets: Icons MUST NOT be overly tiny. Standardize icons to at least w-5 h-5 or w-6 h-6 for primary menu items and actions. Ensure interactive elements have a minimum clickable area of 44x44px.
-No Unnecessary Floating Widgets: Do NOT render floating support widgets (e.g., floating WhatsApp "Butuh bantuan?" chat widget at bottom-right). All support channels must live cleanly within dedicated support pages or settings.
+No Unnecessary Floating Widgets: Do NOT render floating support widgets (e.g., floating WhatsApp chat widget at bottom-right). All support channels must live cleanly within dedicated support pages or settings.
 
 ## 4. Code Base Rules & File Maintainability
 To maintain a clean and modular Next.js codebase:
@@ -138,7 +141,7 @@ Guest Book & Usher App: Onsite check-in portal.
 
 REMOVED ITEMS:
 Galeri Foto & Music Menu: Completely removed from the primary sidebar menu. Photos and music are now exclusively managed directly inside the Studio Editor asset panel.
-Right-bottom WhatsApp Chat Widget ("Butuh bantuan?"): Completely removed from the viewport interface.
+Right-bottom WhatsApp Chat Widget: Completely removed from the viewport interface.
 
 ### 7.2 Rangkaian Acara (Event Details Editor)
 Couple Name Integrity: Couple names for both main wedding and Event Khusus are read-only and inherited directly from the onboarding database record.
