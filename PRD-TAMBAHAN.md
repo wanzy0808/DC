@@ -37,6 +37,12 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Token QR tetap menggunakan signed opaque guest identifier dari helper QR existing.
 - Check-in manual dan Usher App tetap berada di entitlement Guest Book sesuai PRD.
 
+### Guest Management Entitlement Correction
+- Memastikan Manajemen Tamu menggunakan entitlement **Digital Invitation**, bukan Guest Book.
+- Edit dan hapus tamu pada `/api/guests/manage` sekarang tersedia untuk pengguna dengan paket Digital Invitation.
+- Pengguna Guest Book tetap mewarisi akses tersebut karena Guest Book mencakup Digital Invitation.
+- Usher App dan operasional check-in tetap khusus entitlement Guest Book.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation terbaru berhasil setelah perbaikan TypeScript.
