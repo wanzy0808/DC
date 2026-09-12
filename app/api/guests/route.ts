@@ -4,7 +4,11 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
 async function getInvitation(userId: string) {
-  return prisma.invitation.findFirst({ where: { ownerId: userId }, include: { payment: true }, orderBy: { createdAt: "asc" } });
+  return prisma.invitation.findFirst({
+    where: { ownerId: userId, type: "WEDDING" },
+    include: { payment: true },
+    orderBy: { createdAt: "asc" },
+  });
 }
 
 export async function GET() {
@@ -36,7 +40,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const name = String(body.name ?? "").trim();
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
-    const guest = await prisma.guest.create({ data: { invitationId: invitation.id, name, phone: String(body.phone ?? "").trim() || null, tableId: String(body.tableId ?? "").trim() || null, plusOnes: Number(body.plusOnes ?? 0), source: "MANUAL" } });
+    const guest = await prisma.guest.create({
+      data: {
+        invitationId: invitation.id,
+        name,
+        phone: String(body.phone ?? "").trim() || null,
+        tableId: String(body.tableId ?? "").trim() || null,
+        plusOnes: Math.max(0, Math.floor(Number(body.plusOnes ?? 0))),
+        source: "MANUAL",
+      },
+    });
     return NextResponse.json({ guest }, { status: 201 });
   } catch (error) {
     console.error("POST /api/guests failed", error);
