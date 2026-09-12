@@ -11,8 +11,9 @@ function makeSlug(firstName: string, userId: string, type: InvitationType) {
   return `${name || "wedding"}${suffix}-${userId.slice(-6)}`;
 }
 
-function sanitizeInvitation<T extends { passwordHash?: string | null }>(invitation: T) {
-  return { ...invitation, passwordHash: undefined };
+function sanitizeInvitation<T extends object>(invitation: T) {
+  const { passwordHash: _passwordHash, ...safeInvitation } = invitation as T & { passwordHash?: string | null };
+  return safeInvitation;
 }
 
 async function getUserPayment(userId: string) {
