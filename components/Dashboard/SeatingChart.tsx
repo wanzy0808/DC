@@ -21,8 +21,8 @@ function tablePoint(index: number, total: number): Point {
   const row = Math.floor(index / columns);
   const column = index % columns;
   const width = (columns - 1) * TABLE_GAP_X;
-  const height = (rows - 1) * TABLE_GAP_Y;
-  return { x: STAGE_WIDTH / 2 - width / 2 + column * TABLE_GAP_X, y: 100 + row * TABLE_GAP_Y - height / 2 + 60 };
+  const rowGap = rows > 1 ? Math.min(TABLE_GAP_Y, (STAGE_HEIGHT - 190) / (rows - 1)) : 0;
+  return { x: STAGE_WIDTH / 2 - width / 2 + column * TABLE_GAP_X, y: 95 + row * rowGap };
 }
 
 function seatPoint(center: Point, index: number, capacity: number): Point {
@@ -93,9 +93,8 @@ export default function SeatingChart({ guests, tables, accent, onAssigned }: Pro
       }
       setLocalTables(created);
       setMessage(`Denah dibuat: ${count} meja × ${capacity} bangku.`);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Denah gagal dibuat.");
-    } finally { setGenerating(false); }
+    } catch (error) { setMessage(error instanceof Error ? error.message : "Denah gagal dibuat."); }
+    finally { setGenerating(false); }
   }
 
   async function addManualGuest(event: React.FormEvent<HTMLFormElement>) {
