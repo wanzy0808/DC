@@ -5,7 +5,7 @@ import { getServicePackage } from "@/lib/packages/catalog";
 
 const invitationKey = "INVITATION_BASIC";
 const guestbookKey = "GUESTBOOK_DIGITAL";
-const bundleKey = "INVITATION_GUESTBOOK";
+const legacyBundleKey = "INVITATION_GUESTBOOK";
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
@@ -15,9 +15,16 @@ export async function POST(request: Request) {
     const body = await request.json();
     const requestedKey = String(body.packageKey ?? "");
     const selected = getServicePackage(requestedKey);
-    if (!selected) return NextResponse.json({ error: "Paket tidak ditemukan." }, { status: 400 });
+    if (!selected || ![invitationKey, guestbookKey].includes(requestedKey)) {
+      return NextResponse.json({ error: "Paket tidak ditemukan." }, { status: 400 });
+    }
 
-    let invitation = await prisma.invitation.findFirst({ where: { ownerId: user.id }, include: { payment: true }, orderBy: { createdAt: "asc" } });
+    let invitation = await prisma.invitation.findFirst({
+      where: { ownerId: user.id },
+      include: { payment: true },
+      orderBy: { createdAt: "asc" },
+    });
+
     if (!invitation) {
       invitation = await prisma.invitation.create({
         data: {
@@ -31,20 +38,41 @@ export async function POST(request: Request) {
     }
 
     const currentPaidKey = invitation.payment?.status === "PAID" ? invitation.payment.packageKey : null;
-    const upgradingToBundle = (currentPaidKey === invitationKey && requestedKey === guestbookKey) || (currentPaidKey === guestbookKey && requestedKey === invitationKey);
-    const packageKey = upgradingToBundle ? bundleKey : requestedKey;
-    const packageData = getServicePackage(packageKey) ?? selected;
 
-    if (currentPaidKey === bundleKey && requestedKey !== bundleKey) {
-      return NextResponse.json({ error: "Paket Undangan Digital + Guestbook sudah aktif." }, { status: 409 });
+    // Guest Book already includes every Digital Invitation entitlement,
+    // so it is a terminal paid package rather than a package to downgrade.
+    if (currentPaidKey === guestbookKey || currentPaidKey === legacyBundleKey) {
+      return NextResponse.json({ error: "Paket Guest Book sudah aktif dan sudah mencakup Undangan Digital." }, { status: 409 });
     }
+
+    // A paid Digital Invitation can be upgraded to Guest Book.
+    const packageKey = currentPaidKey === invitationKey && requestedKey === guestbookKey
+      ? guestbookKey
+      : requestedKey;
+
+    const packageData = getServicePackage(packageKey);
+    if (!packageData) return NextResponse.json({ error: "Paket tidak ditemukan." }, { status: 400 });
 
     const proofUrl = String(body.proofUrl ?? "").trim() || null;
     const payment = await prisma.payment.upsert({
       where: { invitationId: invitation.id },
-      update: { packageKey, amount: packageData.price, proofUrl, status: "PENDING", confirmedAt: null, confirmedById: null },
-      create: { userId: user.id, invitationId: invitation.id, packageKey, amount: packageData.price, proofUrl },
+      update: {
+        packageKey,
+        amount: packageData.price,
+        proofUrl,
+        status: "PENDING",
+        confirmedAt: null,
+        confirmedById: null,
+      },
+      create: {
+        userId: user.id,
+        invitationId: invitation.id,
+        packageKey,
+        amount: packageData.price,
+        proofUrl,
+      },
     });
+
     return NextResponse.json({ payment, package: packageData });
   } catch {
     return NextResponse.json({ error: "Paket belum dapat dipilih." }, { status: 500 });
