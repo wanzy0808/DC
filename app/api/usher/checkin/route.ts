@@ -33,17 +33,34 @@ export async function POST(request: Request) {
       where: { id: guestId, invitationId: invitation.id },
     });
     if (!guest) return NextResponse.json({ error: "QR tidak terdaftar pada undangan ini." }, { status: 404 });
-    if (guest.checkedIn) return NextResponse.json({ error: `${guest.name} sudah check-in sebelumnya.`, guest }, { status: 409 });
 
+    // Make the state transition atomic so two near-simultaneous scans cannot both succeed.
     const checkedInAt = new Date();
-    const updated = await prisma.guest.update({
-      where: { id: guest.id },
+    const result = await prisma.guest.updateMany({
+      where: {
+        id: guest.id,
+        invitationId: invitation.id,
+        checkedIn: false,
+      },
       data: {
         checkedIn: true,
         checkedInAt,
         checkedInById: user.id,
       },
     });
+
+    if (result.count === 0) {
+      const current = await prisma.guest.findUnique({ where: { id: guest.id } });
+      return NextResponse.json(
+        { error: `${current?.name ?? guest.name} sudah check-in sebelumnya.`, guest: current ?? guest },
+        { status: 409 },
+      );
+    }
+
+    const updated = await prisma.guest.findUnique({ where: { id: guest.id } });
+    if (!updated) {
+      return NextResponse.json({ error: "Data check-in tidak dapat dimuat ulang." }, { status: 500 });
+    }
 
     return NextResponse.json({ guest: updated, checkedInAt: updated.checkedInAt });
   } catch (error) {
