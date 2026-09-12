@@ -50,6 +50,15 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Proteksi entitlement tetap berada di server/API untuk operasi yang mengubah data tamu.
 - **Usher App tetap menggunakan FeatureGate dan tetap dibatasi entitlement Guest Book.**
 
+### Dashboard Invitation Feature Restoration
+- Mengembalikan menu **Galeri & Foto** dan **Musik Undangan** yang sempat hilang dari sidebar dashboard setelah refactor workspace.
+- Kedua menu kembali menggunakan entitlement **Digital Invitation**.
+- Memulihkan panel **Undangan Digital** agar tidak hanya menampilkan tombol preview, tetapi kembali menyediakan workspace untuk Undangan Pernikahan dan Undangan Event Khusus.
+- Menambahkan akses **Edit Desain**, **Preview**, **Kelola Asset**, dan **Pengaturan** dari workspace Undangan Digital.
+- Menampilkan status draft/published dan ringkasan entitlement edit template, publish, serta custom asset.
+- Tidak menghapus atau mengganti route Beranda.
+- Tidak mengubah API entitlement; perubahan ini berfokus pada pemulihan fitur UI dashboard yang sebelumnya terpotong saat refactor.
+
 ### CI / Build
 - GitHub Actions menggunakan Node.js 22 untuk kompatibilitas pnpm 11.
 - Build validation terbaru berhasil setelah perbaikan TypeScript.
@@ -59,6 +68,7 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - `prd.md` tetap menjadi product source of truth.
 - `README.md` menjadi pedoman technology stack.
 - `AGENTS.md` menjadi pedoman coding dan design system.
+- `PRD-TAMBAHAN.md` mencatat perubahan implementasi dari sesi pengerjaan.
 - Fitur Angpao/Kado dan status pengiriman QR belum dianggap benar-benar tracked karena schema saat ini belum memiliki field tracking tersebut; UI menampilkan status yang jujur (`—` / `Not tracked`) daripada mengarang data.
 - Brand tetap **DC Wedding**. Tidak diganti menjadi Citin.
 - Menu dan route **Beranda** tetap dipertahankan.
