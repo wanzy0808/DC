@@ -141,6 +141,12 @@ Dokumen ini mencatat implementasi yang sudah dikerjakan di repository `wanzy0808
 - Menghapus wrapper `DashboardFeatureGuard` dari route `/dashboard` agar entitlement UI dikontrol langsung oleh dashboard dan FeatureGate yang sudah sesuai aturan paket.
 - Tidak menghapus fitur Manajemen Tamu, Usher App, atau Beranda; perubahan hanya menghilangkan lapisan gate duplikat yang konflik.
 
+### Invitation Password UI Hardening
+- Memperbaiki `InvitationManagementPanel` agar password yang sudah aktif tidak dapat tidak sengaja dimatikan hanya karena input password baru kosong.
+- Saat protection sudah aktif, tombol **Ganti Password** hanya dapat digunakan setelah password baru diisi; untuk menonaktifkan protection pengguna harus memakai tombol **Matikan**.
+- Request update password selalu mengirim `enabled: true` saat membuat atau mengganti password.
+- Tidak mengubah authorization server-side atau mekanisme hashing/password verification.
+
 ## Implementation Notes
 
 - `prd.md` tetap menjadi product source of truth.
