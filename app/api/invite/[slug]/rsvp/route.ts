@@ -28,7 +28,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
       guest = await prisma.guest.update({
         where: { id: guest.id },
-        data: { rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE", plusOnes },
+        data: { source: "RSVP", rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE", plusOnes },
       });
     } else {
       if (!name || !phone) return NextResponse.json({ error: "Nama dan nomor WhatsApp wajib diisi." }, { status: 400 });
@@ -37,6 +37,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
           invitationId: invitation.id,
           name,
           phone,
+          source: "RSVP",
           rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE",
           plusOnes,
         },
