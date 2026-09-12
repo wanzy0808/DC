@@ -332,6 +332,36 @@ Studio Back harus kembali ke workspace **Undangan Digital**, bukan Beranda. PRD 
 
 ---
 
+## 16. Dashboard Sidebar Support Copy Cleanup
+
+### User Clarification
+PRD sebelumnya menyebut penghapusan floating support widget secara umum. User mengklarifikasi bahwa yang dimaksud pada dashboard sidebar adalah **tulisan bantuan kecil di bagian bawah kiri**:
+- `Butuh bantuan?`
+- `Chat WhatsApp di kanan bawah.`
+
+User meminta copy tersebut dihapus karena tidak penting dan mengganggu sidebar.
+
+### Implemented
+- Menghapus blok support copy dari bagian bawah sidebar pada `app/[dashboard]/page.tsx`.
+- Tidak mengubah fungsi workspace, navigasi, entitlement, atau data flow lainnya.
+- Floating WhatsApp button di kanan bawah **tidak diubah pada perubahan ini**, karena scope yang diklarifikasi user adalah tulisan bantuan di bawah kiri.
+
+### Rationale
+Perubahan ini mengikuti klarifikasi user dan prinsip **Extend Over Replace**: hanya elemen UI yang diminta yang dihapus, tanpa mengganggu feature dashboard lain yang masih berjalan.
+
+### Entitlement Impact
+- Tidak ada perubahan entitlement atau authorization.
+
+### Commit
+- `5d771d1206dfee3b651c043da0182b369cf50dd5` — remove dashboard sidebar support copy
+
+### Validation
+- Code-level review dilakukan terhadap `app/[dashboard]/page.tsx` setelah perubahan.
+- `Butuh bantuan?` dan `Chat WhatsApp di kanan bawah.` sudah dihapus dari sidebar.
+- Build/CI: **Not verified**.
+
+---
+
 # Current Source-of-Truth Order
 
 1. **AGENTS.md** — coding/design-system constraints.
@@ -394,6 +424,7 @@ Studio Back harus kembali ke workspace **Undangan Digital**, bukan Beranda. PRD 
 - `25282fe` — guest export entitlement
 - `f8ad75f` — digital invitation workspace route
 - `94e665b` — Studio Back routing fix
+- `5d771d1` — dashboard sidebar support copy cleanup
 
 ### CI
 - No verified build/check result is available for the latest implementation commits.
@@ -408,7 +439,7 @@ Jangan menulis "build berhasil" atau "CI PASS" sebelum terdapat hasil workflow/c
 - UI harus menampilkan status yang jujur dan tidak boleh mengarang data tracking.
 - Jangan menganggap feature fully complete hanya karena UI sudah tersedia jika database/API belum mendukung state tersebut.
 - Interactive seating chart masih perlu audit lanjutan terhadap detail seat-level (`seatNumber`) karena schema `Guest` saat ini hanya menyimpan `tableId`.
-- Dashboard utama masih memiliki legacy sidebar entries untuk **Galeri & Foto**, **Musik Undangan**, dan floating WhatsApp UI; PRD meminta item tersebut tidak berada di primary sidebar / viewport. Ini dicatat sebagai gap berikutnya dan belum diklaim selesai.
+- Dashboard utama masih memiliki legacy sidebar entries untuk **Galeri & Foto**, **Musik Undangan**, dan floating WhatsApp UI; PRD meminta item tersebut tidak berada di primary sidebar / viewport. Floating WhatsApp UI belum diubah pada scope klarifikasi terakhir user; perubahan terakhir hanya menghapus copy bantuan di bawah kiri sidebar.
 
 # Working Protocol for Next Changes
 
