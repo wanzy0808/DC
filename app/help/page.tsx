@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { ArrowRight, CircleHelp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import FaqSection from "@/components/Marketing/FaqSection";
 
 const helpFaq = [
@@ -64,14 +63,12 @@ export default function HelpPage() {
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button asChild>
-            <Link href="/packages">
-              Lihat Package <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-          <Button asChild variant="outline">
-            <Link href="/login">Masuk</Link>
-          </Button>
+          <Link href="/packages" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+            Lihat Package <ArrowRight className="ml-2 h-4 w-4" />
+          </Link>
+          <Link href="/login" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
+            Masuk
+          </Link>
         </div>
       </section>
     </div>
