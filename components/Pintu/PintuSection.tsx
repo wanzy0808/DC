@@ -88,12 +88,14 @@ function LoopingPintu({
   index,
   progress,
   reducedMotion,
+  active,
   onHover,
 }: {
   door: Door;
   index: number;
   progress: MotionValue<number>;
   reducedMotion: boolean | null;
+  active: boolean;
   onHover: (door: DoorValue) => void;
 }) {
   const phase = (offset: number) => ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
@@ -109,11 +111,6 @@ function LoopingPintu({
     <motion.div
       onMouseEnter={() => onHover(door.id)}
       style={{ x, y, z, scale, opacity, rotateY }}
-      initial={reducedMotion ? false : { opacity: 0, scale: 0.72 }}
-      animate={reducedMotion ? undefined : { opacity: 1 }}
-      transition={{
-        opacity: { duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] },
-      }}
       className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
@@ -122,7 +119,7 @@ function LoopingPintu({
         href={door.href}
         bgImage={door.bgImage}
         innerDetails={{ tags: door.tags, desc: door.desc }}
-        isActive={true}
+        isActive={active}
         reducedMotion={reducedMotion}
       />
     </motion.div>
@@ -205,6 +202,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
             index={index}
             progress={progress}
             reducedMotion={reduced}
+            active={activeDoor === door.id}
             onHover={pauseLoop}
           />
         ))}
