@@ -110,6 +110,12 @@ function LoopingPintu({
     return BACK_SCALE + depth * (FRONT_SCALE - BACK_SCALE);
   });
   const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
+  // Keep every door's stacking order tied to the same orbit depth. Without this,
+  // equal CSS z-index leaves DOM order in control, so some rear doors paint above
+  // a front/active door while Wedding Planner happens to look correct by ordering.
+  const stackOrder = useTransform(progress, (offset) =>
+    Math.round(Math.sin(phase(offset)) * 100) + 100,
+  );
 
   useEffect(() => {
     setMounted(true);
@@ -118,8 +124,8 @@ function LoopingPintu({
   return (
     <motion.div
       onMouseEnter={() => onHover(door.id)}
-      style={mounted ? { x, y, z, scale, rotateY } : undefined}
-      className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
+      style={mounted ? { x, y, z, scale, rotateY, zIndex: stackOrder } : undefined}
+      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
         number=""
