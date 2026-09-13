@@ -40,15 +40,15 @@ export default function Home() {
                 transition={{ duration: reduced ? 0.15 : 0.42, ease }}
               >
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.3em] text-foreground/60">{content.eyebrow}</p>
-                <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-foreground sm:text-5xl lg:text-[4.05rem]">{content.title}</h1>
-                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground sm:text-base sm:leading-8">{content.description}</p>
+                <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-primary sm:text-5xl lg:text-[4.05rem]">{content.title}</h1>
+                <p className="mt-5 max-w-xl text-sm leading-7 text-foreground/75 sm:text-base sm:leading-8">{content.description}</p>
                 <div className="mt-6 flex flex-wrap items-center gap-3">
                   <Link href={href} className={buttonVariants({ variant: "default", size: "lg" })}>
                     {messages.home.openWorkspace}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
                 </div>
-                <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-muted-foreground">
+                <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/60">
                   {content.capabilities.map((item) => (
                     <span key={item} className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>
                   ))}
