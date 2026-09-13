@@ -53,36 +53,29 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - All application accent colors must stay within this Rose family unless a semantic status color is required.
 
 ### Light
-- Primary/action: `#C07A84` Rose
-- Supporting accent: `#D9A3AA`
-- Hover/pressed: `#A65E69`
-- Main background: `#FAF8F8`
-- Secondary surface: `#F7ECEE`
-- Primary text: `#241D1F`
-- Muted text: `#7F4B55`
+- **Background:** `#FFFFFF` pure white.
+- **Headings, icons, buttons, links, help chat, menu, and accents:** Rose `#C07A84` as the canonical brand accent. Supporting Rose `#D9A3AA` and Deep Rose `#A65E69` may be used for states and emphasis.
+- **Primary text:** `#111111` near-black.
+- **Secondary text:** black with opacity, preferably the semantic muted token, rather than introducing another text color.
+- Surfaces should stay white; do not use pink as a page background or repeated card fill.
 
 ### Dark
-- Background: `#100D0F`
-- Surface: `#21181A`
-- Primary accent: `#D9A3AA`
-- Secondary brand accent: `#C07A84`
-- Highlight accent: `#F1C9CE`
-- Primary text: `#F8F3F4`
+- **Background:** `#0B0B0C` almost black.
+- **Headings, icons, buttons, links, help chat, menu, and accents:** Rose `#C07A84` as the canonical brand accent. Supporting Rose `#D9A3AA` and Deep Rose `#A65E69` may be used for states and emphasis.
+- **Primary text:** `#FFFFFF` white.
+- **Secondary text:** white with opacity, preferably the semantic muted token, rather than introducing another text color.
+- Surfaces should remain near-black/dark neutral; do not use pink as a page background or repeated card fill.
 
-Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E`. Do not reintroduce the deprecated palette. Readability always outranks color matching.
-
-### Neutral-First 60 / 30 / 10 Composition
-- Customer-facing application surfaces should be **neutral-first**: approximately 60% clean white/warm-white background and whitespace, with roughly 30% Rose reserved for meaningful brand surfaces such as primary buttons, selected controls, or deliberate outline treatments, and roughly 10% for remaining visual accents such as icons, rules, status marks, or supporting brand details.
-- Treat the ratio as a visual-balance guideline, not a literal pixel calculation.
-- **Do not use Rose as a page background, large decorative glow, repeated card fill, or default body-text color.**
-- Body/headline text should remain near-black/primary text. Muted text may use the semantic muted token only where hierarchy requires it.
-- Rose should be concentrated into actions, selected states, outlines, and small icon/status accents so the interface reads editorial and calm rather than monochromatic.
-- When a component can communicate hierarchy through typography, spacing, borders, or whitespace, prefer those before adding another color.
+### Neutral / Accent Balance
+- The visual goal is a white or almost-black canvas with Rose concentrated on meaningful brand elements: headings, icons, buttons, links, menus, help chat, selected states, outlines, and small accents.
+- Treat 60/30/10 as a visual-balance principle, not literal pixel coverage. Do not force large pink areas merely to satisfy a ratio.
+- Do not use Rose as a large decorative glow, repeated card fill, or default body-text color.
+- Text hierarchy should come primarily from typography, spacing, layout, and opacity.
 
 ### Button Color Standard
 - All reusable application buttons MUST use the shared `components/ui/button.tsx` variants instead of arbitrary background/text color classes.
 - `default` is the canonical primary CTA: `var(--primary)` with `var(--primary-foreground)`.
-- `secondary` is the canonical soft-rose secondary action.
+- `secondary` is the canonical secondary action.
 - `outline`, `ghost`, `link`, and `destructive` retain semantic meaning and must not be recolored per page without a documented product reason.
 - Do not introduce one-off button colors such as `bg-blue-*`, `bg-green-*`, arbitrary rose hex values, gradients, or legacy palette values for ordinary actions.
 - Primary button hover/pressed states must resolve through the shared theme tokens so light and dark mode remain visually consistent.
@@ -91,8 +84,8 @@ Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E`. D
 
 - Do not color every piece of text differently.
 - Functional/body text should remain the primary readable text color.
-- Rose is an accent, not a default replacement for body text.
-- Establish hierarchy through typography, weight, size, spacing, layout, and contrast first.
+- Rose is an accent for the specified brand elements, not a replacement for body text.
+- Establish secondary hierarchy through opacity, typography, weight, size, spacing, layout, and contrast first.
 
 ## 6. Motion & Accessibility
 
