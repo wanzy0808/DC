@@ -404,3 +404,26 @@ The invitation workspace still carried too much visual color. The desired direct
 
 ## Validation
 Reviewed source against AGENTS, SKILL, PRD, README, canonical Button variants, and responsive layout rules. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Landing Page Neutral-First Palette Refinement
+
+## Problem
+The landing page still used page-level Rose styling for the main CTA, eyebrow/capability text, and a decorative shadow. This made the hero feel more color-heavy than the newly established neutral-first 60 / 30 / 10 direction.
+
+## Implementation
+- Returned the landing-page canvas and primary text hierarchy to neutral semantic theme tokens.
+- Replaced the landing CTA's one-off Rose background, shadow, hover, and motion styling with the canonical shared `buttonVariants({ variant: "default" })` implementation.
+- Reduced accent usage in the hero copy: eyebrow and supporting metadata now stay neutral, while the capability check icon remains a small Rose accent.
+- Preserved the Pintu navigation surface, existing landing copy, bilingual locale behavior, protected rose-petal background, motion, and responsive layout.
+- No dependency, schema, API, route, or Pintu behavior changes.
+
+## Affected Files
+- `app/page.tsx`
+
+## Commit
+- `d7301f5e77e775681951550b293210ea066f738b` — refine landing page with neutral-first visual hierarchy.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, canonical Button variants, existing landing-page i18n, Pintu navigation, and protected background behavior. Build/CI not verified.
