@@ -99,6 +99,7 @@ function LoopingPintu({
   active: boolean;
   onHover: (door: DoorValue) => void;
 }) {
+  const [mounted, setMounted] = useState(false);
   const phase = (offset: number) => ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
 
   const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
@@ -110,10 +111,14 @@ function LoopingPintu({
   });
   const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
     <motion.div
       onMouseEnter={() => onHover(door.id)}
-      style={{ x, y, z, scale, rotateY }}
+      style={mounted ? { x, y, z, scale, rotateY } : undefined}
       className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
