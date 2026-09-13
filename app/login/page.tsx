@@ -2,6 +2,8 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 function GoogleIcon() {
   return (
@@ -88,14 +90,14 @@ export default function LoginPage() {
         className="w-full max-w-md space-y-5 rounded-3xl border border-black/10 bg-white p-8 shadow-xl"
       >
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-[#7A1C25]">DC Workspace</p>
+          <p className="text-xs uppercase tracking-[0.25em] text-primary">DC Workspace</p>
           <h1 className="mt-2 font-serif text-3xl">Masuk ke dashboard</h1>
           <p className="mt-2 text-sm opacity-60">Kelola undangan dan wedding workspace kamu.</p>
         </div>
 
         <a
           href="/api/auth/google"
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-black/10 bg-white px-4 py-3 font-medium text-sm shadow-sm transition hover:bg-neutral-50"
+          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full gap-3 rounded-xl")}
         >
           <GoogleIcon />
           <span>Masuk dengan Google</span>
@@ -115,7 +117,7 @@ export default function LoginPage() {
             autoComplete="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none transition focus:border-[#7A1C25] focus:ring-1 focus:ring-[#7A1C25]"
+            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </label>
         <label className="block text-sm">
@@ -126,23 +128,19 @@ export default function LoginPage() {
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none transition focus:border-[#7A1C25] focus:ring-1 focus:ring-[#7A1C25]"
+            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </label>
 
         {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-[#7A1C25] px-4 py-3 font-medium text-white transition hover:bg-[#64161e] disabled:opacity-60"
-        >
+        <Button type="submit" disabled={loading} className="w-full rounded-xl py-6">
           {loading ? "Memproses..." : "Masuk"}
-        </button>
+        </Button>
 
         <p className="text-center text-sm opacity-70">
           Belum punya akun?{" "}
-          <Link href="/?register=1" className="font-medium text-[#7A1C25] underline">
+          <Link href="/?register=1" className="font-medium text-primary underline">
             Daftar
           </Link>
         </p>
