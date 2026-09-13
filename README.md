@@ -27,12 +27,15 @@ A modern, high-performance wedding organizer, digital wedding invitation, and gu
 
 ### Design System & Themes
 - Brand: **DC Organizer**
+- Brand color: Rose `#C07A84`
+- Supporting rose: `#D9A3AA`
+- Deep hover rose: `#A65E69`
 - Typography: Cinzel — Display, Headings, Titles, & Branding
 - Typography: Fauna One — Primary Body Text & Interface UI
 - Typography: DM Mono — Technical Labels, Codes, & Metadata
-- Light Theme: Deep Rose Wood `#8C4A56` + Dusty Pink `#E8B4B8` + Warm White `#FAFAFA` + Pale Blush `#F5EBEB` + Charcoal `#1E1B1C`
-- Primary Hover: Dark Rose Wood `#6E3843`
-- Dark Theme: Obsidian Black `#0F0E11` + Dark Charcoal `#1A181E` + Dusty Pink `#E8B4B8` + Soft White `#F8F9FA` + Pink Blush `#F4C2C7`
+- Light Theme: `#C07A84` + `#D9A3AA` + `#FAF8F8` + `#F7ECEE` + `#241D1F`
+- Dark Theme: `#100D0F` + `#21181A` + `#D9A3AA` + `#C07A84` + `#F1C9CE` + `#F8F3F4`
+- Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, `#1A181E`
 
 ### Public Invitation Architecture
 - Main invitation: `https://[nama-pasangan].dcwedding.com`
