@@ -6,21 +6,39 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 <!-- END:nextjs-agent-rules -->
 
+<<<<<<< HEAD
 # DC Organizer — Design System, Animation & Engineering Rules
+=======
+# DC Organizer — Design System Rules
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 
 These rules apply to the entire project unless a specific component explicitly requires otherwise.
 
 ---
 
+<<<<<<< HEAD
 ## 1. Brand Identity & Naming Authority
+=======
+Use only these three fonts throughout the DC Organizer project:
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 
 - **Official Brand Name:** **DC Organizer**[cite: 12]
 - Do **not** use legacy brand names (such as Citin or DC Wedding)[cite: 12].
 - Ensure all visual logos, header titles, HTML metadata, page titles, and footers consistently reflect **DC Organizer**[cite: 12].
 
+<<<<<<< HEAD
 ---
 
 ## 2. Typography
+=======
+### Typography rules
+- Do not introduce additional fonts.
+- Do not use browser/system fallback fonts as an intentional visual style.
+- Do not use `font-mono` unless it resolves to the project's **DM Mono** font.
+- Do not use random Google Fonts, template fonts, or component-library fonts.
+- Existing invitation-template typography may be dynamic when it is part of invitation content/editor functionality; this must not introduce extra fonts into surrounding application UI.
+- Keep typography consistent across landing page, dashboard, editor, RSVP, Usher App, forms, dialogs, menus, cards, and other application UI.
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 
 Use only these three fonts throughout the DC Organizer project[cite: 12]:
 
@@ -40,7 +58,6 @@ Use only these three fonts throughout the DC Organizer project[cite: 12]:
 The primary light theme is an elegant **Deep Rose Wood + Dusty Pink** visual system with warm neutral surfaces.
 
 ### Canonical light-theme palette
-
 1. **Primary Accent / Action:** Deep Rose Wood — `#8C4A56`
 2. **Brand Accent:** Dusty Pink — `#E8B4B8`
 3. **Primary Hover:** Dark Rose Wood — `#6E3843`
@@ -49,6 +66,7 @@ The primary light theme is an elegant **Deep Rose Wood + Dusty Pink** visual sys
 6. **Text Utama:** Charcoal Black — `#1E1B1C`
 >>>>>>> 5b425fef1c1818abf20176ab71e6f3592112246a
 
+<<<<<<< HEAD
 ## 3. Light & Dark Theme Visual System
 
 <<<<<<< HEAD
@@ -62,6 +80,9 @@ The primary light theme is an elegant **Deep Rose Wood + Dusty Pink** visual sys
 - **Text Accent:** Deep Rose Wood (`#8C4A56`) — section titles, active links, and key emphasis[cite: 12].
 - **No Maroon / Creamy:** Maroon and Creamy tones are fully deprecated. Do not introduce maroon or heavy ivory/cream backgrounds[cite: 12].
 =======
+=======
+### Light-theme rules
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 - Use `#8C4A56` for primary actions, important accents, active states, branding, and key controls.
 - Use `#E8B4B8` as the supporting brand accent, selected-state highlight, subtle emphasis, and decorative accent.
 - Use `#6E3843` for primary hover/pressed states and stronger rose-wood contrast.
@@ -73,6 +94,7 @@ The primary light theme is an elegant **Deep Rose Wood + Dusty Pink** visual sys
 - Never sacrifice readability for color matching.
 >>>>>>> 5b425fef1c1818abf20176ab71e6f3592112246a
 
+<<<<<<< HEAD
 ### Dark Theme (Black + Pink System)
 - **Background Main:** Obsidian Black (`#0F0E11`)[cite: 12].
 - **Surface Card:** Dark Charcoal (`#1A181E`)[cite: 12].
@@ -118,9 +140,32 @@ AI Agent **must** strictly adhere to the following animation standards to ensure
   - For lists or grids, use `variants` with `staggerChildren: 0.08` to reveal elements sequentially[cite: 7].
 - **Layout Transitions:** Use `<AnimatePresence mode="wait">` for seamless tab switching, modal dialog openings, and page transitions[cite: 7].
 - **Accessibility (Reduced Motion):** Respect user system settings by utilizing `useReducedMotion()` from Framer Motion to disable heavy animations when requested[cite: 7].
+=======
+## 3. Dark Mode
+
+Dark mode uses the canonical **Obsidian Black + Dusty Pink** visual system.
+
+### Canonical dark-theme palette
+1. **Background Main:** Obsidian Black — `#0F0E11`
+2. **Surface Card:** Dark Charcoal — `#1A181E`
+3. **Primary Accent:** Dusty Pink — `#E8B4B8`
+4. **Text Primary:** Pure White / Soft White — `#F8F9FA`
+5. **Text Accent:** Soft Pink Blush — `#F4C2C7`
+
+### Dark-theme rules
+- Use `#0F0E11` as the primary application/page background.
+- Use `#1A181E` for cards, inputs, dialogs, tables, grouped surfaces, and secondary containers.
+- Use `#E8B4B8` for primary actions, active states, key controls, and the main dark-theme accent.
+- Use `#F8F9FA` as the default text color for long-form and functional content.
+- Use `#F4C2C7` selectively for headings, labels, links, metadata, selected states, and secondary emphasis.
+- Do not simply invert the light theme.
+- Avoid unrelated accent colors and avoid the old black + hot-pink palette.
+- Maintain strong contrast between text and dark surfaces.
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 
 ---
 
+<<<<<<< HEAD
 ## 6. Code Formatting & Quality Rules (Prettier & ESLint)
 
 <<<<<<< HEAD
@@ -132,6 +177,11 @@ AI Agent **must** strictly adhere to the following animation standards to ensure
 =======
 - On **light backgrounds:** use `#1E1B1C`, or sufficiently dark rose wood text where an accent is intentional.
 - On **dark/black backgrounds:** use white, light neutral, or sufficiently bright pink text.
+=======
+Readability always takes priority over strict color matching.
+- On light backgrounds: use `#1E1B1C`, or sufficiently dark rose wood text where an accent is intentional.
+- On dark backgrounds: use `#F8F9FA`, `#F4C2C7`, or sufficiently bright `#E8B4B8` text according to hierarchy.
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 - Buttons, badges, inputs, menus, overlays, and cards must maintain clear text/background contrast.
 - Hover, active, disabled, and selected states must remain readable in both themes.
 - Decorative colors must never make functional text difficult to read.
@@ -146,6 +196,7 @@ Use **Shadcn UI** components and **Lucide React** icons across the application[c
 =======
 ### Rules penggunaan Shadcn UI & Lucide:
 - **Shadcn UI Components:** Manfaatkan komponen standar seperti `Dialog`, `Sheet`, `Table`, `DropdownMenu`, `Button`, `Switch`, `Badge`, `Select`, dan `Card`.
+<<<<<<< HEAD
 - **Styling Customization:** Setiap komponen Shadcn UI yang digunakan **wajib disesuaikan warna dan tipografinya** menginduk pada *theme tokens* DC Wedding (Light: Deep Rose Wood/Dusty Pink/Warm White/Pale Blush, Dark: Black/Pink). Jangan biarkan warna default Shadcn (seperti slate/zinc/neutral bawaan) tanpa penyesuaian.
 - **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas (misal `w-4 h-4` atau `w-5 h-5`) untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki *accent color* halaman.
 - **Interactive Triggers:** Gunakan properti `asChild` pada `SheetTrigger` atau `DialogTrigger` jika dibungkus oleh komponen khusus untuk menghindari *nested button error* di DOM.
@@ -159,27 +210,36 @@ Use **Shadcn UI** components and **Lucide React** icons across the application[c
 <<<<<<< HEAD
 ---
 =======
+=======
+- **Styling Customization:** Setiap komponen Shadcn UI yang digunakan wajib disesuaikan warna dan tipografinya menginduk pada theme tokens DC Organizer (Light: Deep Rose Wood/Dusty Pink/Warm White/Pale Blush, Dark: Obsidian Black/Dark Charcoal/Dusty Pink/Soft White/Pink Blush).
+- **Lucide Icons:** Gunakan ikon Lucide (`LucideIcon`) dengan ukuran ringkas untuk keterbacaan yang rapi. Warna ikon harus mengikuti hierarki accent color halaman.
+- **Interactive Triggers:** Gunakan properti `asChild` pada `SheetTrigger` atau `DialogTrigger` jika dibungkus oleh komponen khusus untuk menghindari nested button error di DOM.
+
+## 6. Implementation Guidance
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba
 - Reuse the project's existing CSS variables, theme tokens, and font variables whenever possible.
 - Prefer semantic theme tokens over hard-coded colors when a token already exists.
-- If a new light-theme token is necessary, keep it within the canonical `#8C4A56`, `#E8B4B8`, `#6E3843`, `#FAFAFA`, `#F5EBEB`, `#1E1B1C` palette.
+- If a new light-theme token is necessary, keep it within the canonical light palette.
+- If a new dark-theme token is necessary, keep it within `#0F0E11`, `#1A181E`, `#E8B4B8`, `#F8F9FA`, and `#F4C2C7`, except for explicit product-state colors required for accessibility.
 - Keep light and dark variants intentionally designed rather than relying on automatic color inversion.
 - Before adding a new UI component, check that its typography and colors follow these rules.
 
 ## 7. Design Consistency
 
-DC Wedding should feel like one coherent premium wedding platform.
-
+The application should feel like one coherent premium wedding platform.
+- **Brand = DC Organizer.**
 - **Cinzel = elegance / display.**
 - **Fauna One = readable application UI.**
 - **DM Mono = utility / technical detail.**
 - **Light mode = Deep Rose Wood + Dusty Pink + Soft Rose Neutral + Pale Blush + Charcoal.**
-- **Dark mode = black + pink.**
+- **Dark mode = Obsidian Black + Dark Charcoal + Dusty Pink + Soft White + Pink Blush.**
 - **Text color should remain restrained; do not create unnecessary multi-color text hierarchy.**
 
 When choosing between two visually valid implementations, prefer the one that is simpler, more consistent, more readable, and closer to this design system.
 >>>>>>> 5b425fef1c1818abf20176ab71e6f3592112246a
 
 ## 8. Code Maintainability & Refactoring Rules
+<<<<<<< HEAD
 
 - **File Length Limit:** Keep component and module files within **200–250 lines of code**[cite: 12]. Refactor long files (especially canvas editors or dashboard pages)[cite: 12].
 - **Extract Sub-components:** Modularize complex UI into smaller sub-components inside `components/`[cite: 12].
@@ -193,3 +253,16 @@ When choosing between two visually valid implementations, prefer the one that is
 - **Anti-Blur & High Legibility:** Use strong font weights (`font-medium` or `font-semibold` for UI/menus) with high contrast[cite: 12]. Never use washed-out/muted grays[cite: 12].
 - **Generous Spacing:** Use proportional padding, margins, and gaps (`p-4`, `p-6`, `gap-4`) so UI elements do not feel cluttered[cite: 12].
 - **Touch Targets:** Ensure interactive touch targets have a minimum clickable area of 44x44px[cite: 12].
+=======
+- **File Length Limit:** Usahakan setiap file komponen atau modul tidak melebihi 200–250 baris kode. Jika file sudah terlalu panjang, lakukan refactoring.
+- **Extract Sub-components:** Pisahkan UI yang kompleks atau independen menjadi komponen-komponen kecil tersendiri di `components/`.
+- **Custom Hooks for Logic:** Ekstrak logika state yang berat, data fetching, event handler kompleks, atau integrasi Konva Canvas ke dalam custom hooks.
+- **Single Responsibility Principle:** Pastikan satu file/komponen hanya menangani satu tugas utama.
+- **Constants & Helpers Extraction:** Pindahkan data konstan, opsi dropdown, skema validasi, atau fungsi utility matematika/formatting keluar dari file komponen utama ke `lib/` atau `constants/`.
+
+## 9. Layout, Spacing & Visual Clarity Rules
+- **Anti-Blur & High Legibility:** Seluruh teks, label menu, dan tombol wajib menggunakan font-weight yang tegas dengan warna kontras tinggi.
+- **Generous Spacing & Layout Scaling:** Manfaatkan area/ruang layar yang luas secara maksimal dengan padding, margin, dan gap yang proporsional.
+- **Icon Sizing & Touch Targets:** Ikon utama gunakan ukuran minimal `w-5 h-5` atau `w-6 h-6`, dengan touch target minimal 44x44px.
+- **Navigation & Menu Readability:** Menu navigasi, dropdown, dan sidebar harus memiliki ukuran font yang nyaman dibaca dan indikator state aktif/hover yang jelas.
+>>>>>>> 0aa923d7384554393256ffb41e53b3072207e2ba

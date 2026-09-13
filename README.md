@@ -1,6 +1,6 @@
-# DC Wedding 💒
+# DC Organizer 💒
 
-A modern, high-performance digital wedding invitation and management platform built with Next.js, Prisma, and Tailwind CSS v4.
+A modern, high-performance wedding organizer, digital wedding invitation, and guest-management platform built with Next.js, Prisma, and Tailwind CSS v4.
 
 ## 🛠 Tech Stack
 
@@ -26,12 +26,13 @@ A modern, high-performance digital wedding invitation and management platform bu
 - Image Engine: Sharp (sharp) untuk optimasi, kompresi, dan cropping media/gambar
 
 ### Design System & Themes
+- Brand: **DC Organizer**
 - Typography: Cinzel — Display, Headings, Titles, & Branding
 - Typography: Fauna One — Primary Body Text & Interface UI
 - Typography: DM Mono — Technical Labels, Codes, & Metadata
 - Light Theme: Deep Rose Wood `#8C4A56` + Dusty Pink `#E8B4B8` + Warm White `#FAFAFA` + Pale Blush `#F5EBEB` + Charcoal `#1E1B1C`
 - Primary Hover: Dark Rose Wood `#6E3843`
-- Dark Theme: Black + Pink Accent Palette
+- Dark Theme: Obsidian Black `#0F0E11` + Dark Charcoal `#1A181E` + Dusty Pink `#E8B4B8` + Soft White `#F8F9FA` + Pink Blush `#F4C2C7`
 
 ### Public Invitation Architecture
 - Main invitation: `https://[nama-pasangan].dcwedding.com`
