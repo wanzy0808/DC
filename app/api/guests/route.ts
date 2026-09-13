@@ -37,16 +37,35 @@ export async function POST(request: Request) {
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
     const invitation = await getInvitation(user.id);
     if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Digital Invitation." }, { status: 402 });
+
     const body = await request.json();
     const name = String(body.name ?? "").trim();
+    const tableId = String(body.tableId ?? "").trim() || null;
+    const plusOnes = Number(body.plusOnes ?? 0);
+
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
+    if (!Number.isInteger(plusOnes) || plusOnes < 0) {
+      return NextResponse.json({ error: "Jumlah plus one tidak valid." }, { status: 400 });
+    }
+
+    if (tableId) {
+      const table = await prisma.weddingTable.findFirst({
+        where: { id: tableId, invitationId: invitation.id },
+        include: { _count: { select: { guests: true } } },
+      });
+      if (!table) return NextResponse.json({ error: "Meja tidak ditemukan pada undangan ini." }, { status: 404 });
+      if (table._count.guests >= table.capacity) {
+        return NextResponse.json({ error: "Meja sudah penuh. Pilih meja lain atau simpan tamu tanpa meja." }, { status: 409 });
+      }
+    }
+
     const guest = await prisma.guest.create({
       data: {
         invitationId: invitation.id,
         name,
         phone: String(body.phone ?? "").trim() || null,
-        tableId: String(body.tableId ?? "").trim() || null,
-        plusOnes: Math.max(0, Math.floor(Number(body.plusOnes ?? 0))),
+        tableId,
+        plusOnes,
         source: "MANUAL",
       },
     });
