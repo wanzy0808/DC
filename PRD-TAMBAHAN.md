@@ -32,7 +32,7 @@ Implementation log for material changes. `prd.md` remains the master source of t
 - Maximum 100 tables per invitation is enforced server-side.
 - Shape is restricted to `ROUND`, `RECTANGLE`, or `SQUARE`.
 - Affected: `app/api/tables/route.ts`
-- Commit: `ae73a728be0610e8e1c6437a33bb7924d1588eed`
+- Commit: `ae73a728be0610e8c1e6437a33bb7924d1588eed`
 - Validation: source reviewed against AGENTS, SKILL, PRD, README, and seating implementation. Build/CI not verified.
 
 ---
@@ -427,3 +427,39 @@ The landing page still used page-level Rose styling for the main CTA, eyebrow/ca
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, canonical Button variants, existing landing-page i18n, Pintu navigation, and protected background behavior. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Landing Page & Navbar Canonical Light/Dark Refinement
+
+## Problem
+The landing page had been tuned toward the previous neutral-first interpretation, but the current canonical rule is more explicit: light mode uses a white canvas with Rose on headings, icons, buttons, links, menus, and accents; dark mode uses an almost-black canvas with the same Rose brand elements, while the majority of text stays black in light mode and white in dark mode. Navbar controls also needed one consistent button language.
+
+## Implementation
+- Updated the landing hero heading to the semantic `text-primary` Rose accent while keeping the eyebrow, body copy, and metadata in neutral/opacity-based text.
+- Kept the landing canvas on `bg-background`, so the global light theme resolves to pure white and dark theme resolves to almost black.
+- Preserved the canonical shared `buttonVariants({ variant: "default" })` CTA so the primary action remains Rose without introducing one-off button colors.
+- Preserved the Pintu navigation surface, bilingual behavior, protected rose-petal background, motion, and existing routes.
+- Refined the public navbar so the brand remains Rose, the subtitle uses neutral opacity, and all interactive controls follow the shared Button system.
+- Reworked the theme toggle to use the shared `Button` `outline` variant with a Rose icon/focus treatment while preserving existing localStorage theme persistence and dark-mode behavior.
+- Reworked the ID/EN selector to use shared `default` for the selected locale and `ghost` for the inactive locale, removing the previous pill-heavy treatment while keeping the explicit two-locale model.
+- Simplified the menu trigger to the shared `default` button without an extra custom background, hover color, or rounded-pill treatment.
+- Synchronized `README.md` with the canonical Light/Dark theme rules so documentation no longer describes the deprecated tinted background palette.
+- No dependency, schema, API, route, invitation, or Pintu architecture changes.
+
+## Affected Files
+- `app/page.tsx`
+- `components/Theme/ThemeContext.tsx`
+- `components/I18n/LanguageToggle.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `README.md`
+
+## Commits
+- `4c963b15dc8d0a30c45ce8715f22c22114cc7f11` — apply canonical Rose/neutral hierarchy to the landing hero.
+- `25b3f1cd3ba71c234fd443d36e9465d7b8aa23fd` — standardize theme toggle with shared Button variants.
+- `1ef78a501d45dc007555bae0864263aebba4943d` — refine ID/EN navbar control.
+- `610e7e169398f67c697743fb5fb0fdd274808611` — refine navbar button hierarchy and menu trigger.
+- `c65ba223c470f18d71fcc2ccceb2ac2e05a38f41` — synchronize README theme documentation.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing i18n/theme architecture, shared Button variants, Pintu navigation, and protected background behavior. Build/CI not verified.
