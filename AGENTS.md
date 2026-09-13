@@ -71,6 +71,14 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 
 Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E`. Do not reintroduce the deprecated palette. Readability always outranks color matching.
 
+### Neutral-First 60 / 30 / 10 Composition
+- Customer-facing application surfaces should be **neutral-first**: approximately 60% clean white/warm-white background and whitespace, with roughly 30% Rose reserved for meaningful brand surfaces such as primary buttons, selected controls, or deliberate outline treatments, and roughly 10% for remaining visual accents such as icons, rules, status marks, or supporting brand details.
+- Treat the ratio as a visual-balance guideline, not a literal pixel calculation.
+- **Do not use Rose as a page background, large decorative glow, repeated card fill, or default body-text color.**
+- Body/headline text should remain near-black/primary text. Muted text may use the semantic muted token only where hierarchy requires it.
+- Rose should be concentrated into actions, selected states, outlines, and small icon/status accents so the interface reads editorial and calm rather than monochromatic.
+- When a component can communicate hierarchy through typography, spacing, borders, or whitespace, prefer those before adding another color.
+
 ### Button Color Standard
 - All reusable application buttons MUST use the shared `components/ui/button.tsx` variants instead of arbitrary background/text color classes.
 - `default` is the canonical primary CTA: `var(--primary)` with `var(--primary-foreground)`.
