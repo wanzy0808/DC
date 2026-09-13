@@ -463,3 +463,28 @@ The landing page had been tuned toward the previous neutral-first interpretation
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing i18n/theme architecture, shared Button variants, Pintu navigation, and protected background behavior. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Landing Page Romantic Copywriting Refinement
+
+## Problem
+The landing page copy was functional and product-oriented but did not yet create the emotional pull expected from a premium wedding product. The wording needed to feel romantic, intimate, and memorable while still communicating the purpose of each DC Organizer workspace clearly.
+
+## Implementation
+- Rewrote the Indonesian landing-page hero copy with a warmer romantic narrative centered on the couple's journey, the meaning of the invitation, and the people who become part of the celebration.
+- Rewrote the English copy as natural brand copy rather than literal translation, preserving the same emotional intent and product meaning.
+- Refined capability labels so they sound polished while remaining short enough for the compact landing layout.
+- Changed the primary landing CTA from a generic `Buka workspace` / `Open workspace` to a more emotional action: `Mulai merangkai` / `Begin your story`.
+- Refined navbar/burger-menu supporting copy such as `Mulai perjalananmu` / `Begin your journey` and the service descriptions to make the overall landing experience feel more cohesive and invitation-like.
+- Preserved the existing `id` / `en` locale model, Pintu navigation, routes, protected rose-petal background, motion behavior, and Button system.
+- No dependency, schema, API, or route changes.
+
+## Affected Files
+- `lib/i18n.ts`
+
+## Commit
+- `0ce34bf201dac516e2109890f840c167e88a30f8` — elevate landing page romantic messaging.
+
+## Validation
+Reviewed the copy and affected locale structure against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, and the existing landing/Pintu implementation. Build/CI not verified.
