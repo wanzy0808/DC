@@ -369,11 +369,26 @@ Seluruh warna aplikasi dikembalikan mengikuti warna logo utama `#C07A84`, dengan
 - Palette lama `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, dan `#1A181E` dinyatakan deprecated.
 - Pintu, route, motion, dan rose petals tidak diubah.
 - Tidak menambah dependency.
-### Commit
+### Commits
 - `bfeb821b5cdd392dfa8bedd1fc8cf75dcfbe5d3c` — `style(theme): align palette with C07A84 logo`.
 - `2d756f1c7f9b6de190d6d86c2bc5bc62b90ec1ea` — `docs(prd): align theme with C07A84 brand`.
 - `d9303fe69b50a45192eff04975c1001c777dbbb9` — `docs(readme): align theme palette with C07A84`.
 ### Validation
 - `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `app/globals.css` reviewed.
 - Code-level theme consistency reviewed.
+- Build/CI/browser runtime verification: **Not verified**.
+
+## 38. Brand Contrast Calibration
+### Implemented
+- `app/brand-theme.css` ditambahkan sebagai layer token kecil untuk memastikan foreground pada brand Rose tetap readable di light dan dark theme.
+- Light `#C07A84` memakai foreground `#241D1F`, menghindari teks putih berkontras rendah pada tombol/brand surface.
+- Dark theme mempertahankan `#D9A3AA` sebagai primary accent dengan foreground `#100D0F`, sementara `#C07A84` secondary memakai foreground `#100D0F`.
+- `app/layout.tsx` memuat `brand-theme.css` setelah global/design overrides sehingga calibration menjadi layer terakhir tanpa mengganti architecture existing.
+- Pintu, rose petals, routes, data flow, dan motion tidak diubah.
+### Commits
+- `dc20eba10cbd96082ca6be566170e7beb4d7b4ef` — `style(theme): tune C07A84 contrast tokens`.
+- `5fbc0d2352101036fef2fa6a34e6eff3d6d99855` — `style(theme): load brand contrast calibration`.
+### Validation
+- Source-of-truth docs dan theme implementation reviewed.
+- Code-level contrast/token review completed.
 - Build/CI/browser runtime verification: **Not verified**.
