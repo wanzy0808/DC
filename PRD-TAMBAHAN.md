@@ -290,6 +290,39 @@ Seluruh front page, dashboard shell, component surface, submenu, dan public navi
 - Existing routes and entitlement/data logic were not intentionally removed.
 - Build/CI: **Not verified**. Tidak ada klaim PASS tanpa hasil build/CI aktual.
 
+# 2026-09-13 — Landing Background & Pintu Navigation Refinement
+
+## 26. Landing Page Visual Refinement — Keep Rose Petals, Replace Blurry Pink Orbs
+### User Requirement
+Background landing terasa terlalu blurry karena treatment pink berbentuk lingkaran. Rose petal yang sudah menjadi identitas visual landing **tidak boleh diubah**.
+
+### Implemented
+- `components/Layout/background.tsx` mempertahankan seluruh mekanisme dan styling rose petal yang sudah ada.
+- Pink circular glow besar di background diganti menjadi ambient light berlapis yang lebih tenang: radial light yang tipis dan diagonal linear wash.
+- Tidak menambahkan decorative blob baru, glassmorphism, atau blur besar pada canvas background.
+- Kontras visual diarahkan ke typography, Pintu, whitespace, dan surface hierarchy.
+
+## 27. Pintu as Primary Landing Navigation
+### Implemented
+- `app/page.tsx` kembali menjadikan `PintuSection` sebagai focal interaction landing page.
+- Tiga pintu dan route aslinya dipertahankan:
+  - Wedding Planner → `/wedding-planner`
+  - Digital Invitation → `/d-invitation`
+  - Guestbook → `/guestbook`
+- Hero tidak lagi memakai fake workspace preview sebagai focal visual.
+- Tagline canonical diperjelas menjadi: `DC Organizer, your best consultant for wedding & event.`
+- Reduced motion tetap dihormati melalui `useReducedMotion()`.
+- Existing product sections dan CTA tetap dipertahankan.
+
+### Commits
+- `0d5e8838975fd76e6439ca253deee84ddf7a7af7` — refine landing background ambient treatment.
+- `3bedf33e1113c8b0f360afadc633ae4920cec859` — redesign landing around Pintu navigation.
+
+### Validation
+- `README.md`, `SKILL.md`, `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `PintuSection`, landing page, dan background component inspected before implementation.
+- Rose petal implementation was intentionally preserved.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
