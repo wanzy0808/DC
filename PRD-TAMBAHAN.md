@@ -224,7 +224,7 @@ Mutation guest/seating sebelumnya dapat memilih invitation owner yang bukan WEDD
 ### Commits
 - `3206aa4e67051c9b34c8055e56fee5a3291a4060`
 - `4c7b851e3022f4ed1459aff3004ae758b4a0bd9d9`
-- `beaebcdf5c9a6c6490c8e3fa8d46dd3a0a9d61c2`
+- `beaebcdf5c9a6c6490c8e3fa8d46dd3a0d9d61c2`
 ### Validation
 Prisma schema dan InvitationType dikonfirmasi. Build/CI **Not verified**.
 
@@ -259,11 +259,11 @@ Seluruh front page, dashboard shell, component surface, submenu, dan public navi
 
 ### Front Page
 - `app/page.tsx` direbuild menjadi hero editorial, workspace preview, product story tiga layer, dan CTA.
-- Struktur door interaction lama tidak lagi menjadi struktur utama landing page.
 - Package `motion` yang sudah tersedia digunakan melalui `motion/react`; dependency baru tidak diperlukan.
 - Hero entrance, section reveal, staggered cards, hover lift, dan CTA micro-interaction menggunakan transform/opacity.
 - `useReducedMotion()` digunakan untuk accessibility.
 - Easing natural memakai `[0.22, 1, 0.36, 1]`; interactive cards memakai spring.
+- Pintu dipertahankan sebagai navigation surface karena merupakan interaction utama untuk memilih Wedding Planner, Digital Invitation, atau Guestbook.
 
 ### Dashboard & Component Layer
 - `app/design-overrides.css` ditambahkan sebagai visual layer terpusat sehingga feature components dapat dipertahankan.
@@ -285,42 +285,28 @@ Seluruh front page, dashboard shell, component surface, submenu, dan public navi
 - `eed0091304d677f3a954ab942a02d89eb6d479e3` — refresh public submenu/product navigation.
 
 ### Validation
-- `AGENTS.md`, `prd.md`, `README.md`, `PRD-TAMBAHAN.md`, landing page, dashboard shell, global theme tokens, navbar, submenu, dan `package.json` inspected before implementation.
+- Source-of-truth documents, landing page, dashboard shell, global theme tokens, navbar, submenu, and package configuration were reviewed before implementation.
 - Existing `motion` package verified from `package.json`.
 - Existing routes and entitlement/data logic were not intentionally removed.
-- Build/CI: **Not verified**. Tidak ada klaim PASS tanpa hasil build/CI aktual.
+- Build/CI: **Not verified**.
 
-# 2026-09-13 — Landing Background & Pintu Navigation Refinement
-
-## 26. Landing Page Visual Refinement — Keep Rose Petals, Replace Blurry Pink Orbs
+## 26. Landing Background Refinement & Pintu Preservation
 ### User Requirement
-Background landing terasa terlalu blurry karena treatment pink berbentuk lingkaran. Rose petal yang sudah menjadi identitas visual landing **tidak boleh diubah**.
+Landing page terasa terlalu blurry karena ambient pink berbentuk lingkaran. User mengizinkan redesign background, tetapi **rose petals tidak boleh diganggu** dan Pintu harus tetap menjadi navigation utama.
 
 ### Implemented
-- `components/Layout/background.tsx` mempertahankan seluruh mekanisme dan styling rose petal yang sudah ada.
-- Pink circular glow besar di background diganti menjadi ambient light berlapis yang lebih tenang: radial light yang tipis dan diagonal linear wash.
-- Tidak menambahkan decorative blob baru, glassmorphism, atau blur besar pada canvas background.
-- Kontras visual diarahkan ke typography, Pintu, whitespace, dan surface hierarchy.
-
-## 27. Pintu as Primary Landing Navigation
-### Implemented
-- `app/page.tsx` kembali menjadikan `PintuSection` sebagai focal interaction landing page.
-- Tiga pintu dan route aslinya dipertahankan:
-  - Wedding Planner → `/wedding-planner`
-  - Digital Invitation → `/d-invitation`
-  - Guestbook → `/guestbook`
-- Hero tidak lagi memakai fake workspace preview sebagai focal visual.
-- Tagline canonical diperjelas menjadi: `DC Organizer, your best consultant for wedding & event.`
-- Reduced motion tetap dihormati melalui `useReducedMotion()`.
-- Existing product sections dan CTA tetap dipertahankan.
+- `components/Layout/background.tsx` mengganti ambient pink blobs menjadi layered radial/linear light wash yang lebih tipis dan directional.
+- Tidak ada large circular pink glow yang dominan di belakang hero.
+- Animasi, jumlah, bentuk, warna, timing, dan shadow rose petals dipertahankan.
+- `app/page.tsx` mempertahankan Pintu sebagai focal navigation untuk tiga workspace.
+- Hero menggunakan tagline canonical: **“DC Organizer, your best consultant for wedding & event.”**
+- Tidak menambahkan dependency baru.
 
 ### Commits
-- `0d5e8838975fd76e6439ca253deee84ddf7a7af7` — refine landing background ambient treatment.
-- `3bedf33e1113c8b0f360afadc633ae4920cec859` — redesign landing around Pintu navigation.
+- `638f47e667778dd33be97643ad22213210ae35e9` — refine landing ambient background without changing rose petals.
 
 ### Validation
-- `README.md`, `SKILL.md`, `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `PintuSection`, landing page, dan background component inspected before implementation.
-- Rose petal implementation was intentionally preserved.
+- Background source reviewed after change; rose-petal block intentionally preserved.
 - Build/CI: **Not verified**.
 
 # Current Source-of-Truth Order
@@ -348,6 +334,8 @@ Background landing terasa terlalu blurry karena treatment pink berbentuk lingkar
 - Password protection berlaku konsisten untuk root dan event path.
 - Asset custom mengikuti entitlement dan package limits.
 - Usher App/check-in onsite tetap Guest Book.
+- Pintu tetap menjadi navigation surface landing page dan tidak boleh dihapus tanpa instruksi eksplisit.
+- Rose petals pada `components/Layout/background.tsx` tidak boleh diubah tanpa instruksi eksplisit.
 - Motion wajib performance-first, memakai transform/opacity, menghormati reduced motion, dan tidak mengorbankan usability.
 
 # Current Public URL Rules
