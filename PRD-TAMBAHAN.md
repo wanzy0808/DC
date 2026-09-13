@@ -381,11 +381,10 @@ Tulisan `Wedding Planner` yang tampil hitam di bawah Pintu dianggap duplikat dan
 
 ### Implemented
 - Label judul hitam di bawah Pintu dihapus; judul tetap tersedia pada card Pintu sebagai label visual utama.
-- `PintuSection.tsx` sekarang memiliki autoplay loop setiap `4.2s` yang memindahkan fokus Pintu secara berurutan `1 → 2 → 3 → 1`.
-- Transisi loop tetap memakai Motion spring dan transform 3D sehingga Pintu bergerak antar posisi kiri/tengah/kanan secara kontinu.
+- `PintuSection.tsx` memiliki autoplay loop yang memindahkan fokus Pintu secara berurutan `1 → 2 → 3 → 1`.
+- Transisi loop memakai Motion transform 3D sehingga Pintu bergerak antar posisi kiri/tengah/kanan secara kontinu.
 - Hover pada area Pintu menghentikan autoplay agar user dapat memilih Pintu tanpa layout bergerak di bawah pointer.
 - Saat pointer keluar, autoplay dilanjutkan kembali.
-- Tombol previous/next tetap tersedia dan sekarang memenuhi target interaktif minimum `44x44px`.
 - `useReducedMotion()` menonaktifkan autoplay dan memakai transisi minimal untuk pengguna yang meminta reduced motion.
 - Tidak mengubah rose petals, route Pintu, atau dependency.
 
@@ -410,7 +409,7 @@ Pintu diminta mengikuti pola circular/looping motion seperti referensi `LoopingI
 - `useReducedMotion()` tetap dihormati; autoplay tidak dijalankan saat reduced motion aktif.
 - Rose petals, route Pintu, dan dependency tidak diubah.
 
-### Commit
+### Commits
 - `ae8949d9a65b56d89b5537a207da803a239a76ad` — refine Pintu cards and remove navigation buttons.
 - Circular-loop implementation sebelumnya tetap tercatat pada `6d825ea64a721ced97afea63257fb7efa58d37a3`.
 
@@ -437,5 +436,24 @@ Tulisan di dalam card banyak terpotong di kiri/kanan. Gambar juga diminta sediki
 
 ### Validation
 - `PintuSection.tsx` dan `PintuCard.tsx` reviewed against `AGENTS.md`, `prd.md`, `README.md`, dan `SKILL.md`.
+- Code-level review completed.
+- Build/CI: **Not verified**.
+
+## 33. Pintu Uniform Image/Card Scale
+### User Requirement
+Ketiga Pintu terlihat memiliki ukuran gambar yang berbeda saat bergerak pada circular loop. User meminta ketiganya dibuat konsisten ukurannya.
+
+### Implemented
+- `components/Pintu/PintuSection.tsx` tidak lagi menggunakan scale dinamis berdasarkan posisi orbit.
+- Semua Pintu sekarang memakai `CARD_SCALE = 0.92` yang sama sepanjang loop.
+- Posisi `x`, `y`, `z`, dan `rotateY` tetap berubah agar efek circular/3D tetap terasa, tetapi ukuran ketiga card/gambar tidak ikut membesar-mengecil berdasarkan posisi.
+- Hover pause, direct-link behavior, reduced-motion handling, dan route Pintu tetap dipertahankan.
+- Tidak menambahkan dependency baru dan rose petals tidak disentuh.
+
+### Commit
+- `8b276ceda76dfdcd9205547b4930d2e555b547f8` — normalize Pintu card sizing across circular loop.
+
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `PintuSection.tsx`, dan `PintuCard.tsx` reviewed before implementation.
 - Code-level review completed.
 - Build/CI: **Not verified**.
