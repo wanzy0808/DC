@@ -1,7 +1,6 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 function GoogleIcon() {
@@ -16,7 +15,6 @@ function GoogleIcon() {
 }
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -32,7 +30,18 @@ export default function LoginPage() {
           : "Google Sign-In gagal. Silakan coba lagi.",
       );
       window.history.replaceState({}, "", "/login");
+      return;
     }
+
+    fetch("/api/auth/session", { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) return null;
+        return response.json() as Promise<{ authenticated?: boolean }>;
+      })
+      .then((data) => {
+        if (data?.authenticated) window.location.replace("/dashboard");
+      })
+      .catch(() => undefined);
   }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -59,7 +68,7 @@ export default function LoginPage() {
       if (!response.ok || !data.user) {
         setError(data.error ?? "Login gagal.");
       } else {
-        router.push(
+        window.location.replace(
           data.user.role === "ADMIN" || data.user.role === "OWNER"
             ? "/admin"
             : "/dashboard",
