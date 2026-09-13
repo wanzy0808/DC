@@ -213,3 +213,29 @@ After establishing the canonical shared Button variants, several existing auth a
 
 ## Validation
 Reviewed the changed source against AGENTS, SKILL, PRD, README, and the canonical Button implementation. GitHub combined status for the latest commit returned no status checks; build/CI therefore remains unverified.
+
+---
+
+# 2026-09-13 — Simplify Manual Registration
+
+## Problem
+Manual registration asked for first name and last name even though the dashboard onboarding flow already collects the information needed to personalize the workspace. This added unnecessary friction to account creation.
+
+## Implementation
+- Removed `Nama Depan` and `Nama Belakang` fields from `RegisterDialog`.
+- Manual registration now asks only for email, password, password confirmation, terms/privacy consent, and optional marketing consent.
+- Updated the registration request payload to send only `email` and `password`.
+- Updated `POST /api/auth/register` so manual accounts can be created with an empty `firstName`; the existing dashboard onboarding flow can collect the name later.
+- Kept Google registration unchanged; Google-provided profile names are still available when supplied by Google.
+- Preserved email verification, duplicate-email protection, password validation, routes, and existing database schema.
+
+## Affected Files
+- `components/Layout/Navbar/RegisterDialog.tsx`
+- `app/api/auth/register/route.ts`
+
+## Commits
+- `930acf2554fca988ec7cfc2aacaf64a0901e3fda` — remove manual registration name requirement from the API.
+- `d796bb0300b57a99890a9429b0b8e9f6ba93ecbc` — remove manual registration name fields from the UI.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, existing dashboard onboarding behavior, Prisma schema, and current authentication flow. Build/CI not verified.
