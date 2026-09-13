@@ -331,6 +331,27 @@ Landing diminta menjadi **satu halaman/viewport** tanpa scroll section lanjutan.
 - `app/page.tsx` dan `components/Pintu/PintuSection.tsx` reviewed after implementation.
 - Build/CI: **Not verified**.
 
+## 28. Landing Background Continuity — Remove Hero Surface Boundary
+### User Requirement
+Navbar dibuat menyatu dengan background landing, tetapi masih terlihat jeda/kotak pembatas antara navbar/background dan area hero.
+
+### Root Cause
+Landing `app/page.tsx` masih memberikan `bg-[var(--background)]` pada wrapper hero. Karena `RomanticBackground` juga berada di dalam hero sementara navbar berada di luar wrapper tersebut, warna surface hero membentuk bidang opaque yang memutus kontinuitas visual background.
+
+### Implemented
+- `bg-[var(--background)]` di wrapper landing `app/page.tsx` dihapus.
+- `RomanticBackground` tetap menjadi background visual landing dan rose petals tidak disentuh.
+- Struktur viewport, Pintu, CTA, routes, dan interaction model tidak diubah.
+- Navbar tetap menggunakan surface transparan/non-sticky yang sudah ada; perbaikan kali ini menghilangkan sumber boundary dari hero itu sendiri.
+
+### Commit
+- `5ead256324e6c5d1e07c66066eb58ea6f6e57d15` — fix landing background continuity.
+
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `app/layout.tsx`, `components/Layout/PublicAtmosphere.tsx`, dan `app/page.tsx` reviewed before the change.
+- Code-level review completed.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
