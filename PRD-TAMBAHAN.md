@@ -352,6 +352,29 @@ Landing `app/page.tsx` masih memberikan `bg-[var(--background)]` pada wrapper he
 - Code-level review completed.
 - Build/CI: **Not verified**.
 
+## 29. Dynamic Pintu Story + Motion Polish
+### User Requirement
+Copy di sisi kiri landing harus kembali mengikuti Pintu yang sedang dipilih. Saat Pintu berubah, area kiri harus menjelaskan fungsi workspace tersebut. Pintu juga diminta memiliki animasi yang lebih hidup menggunakan Motion.
+
+### Implemented
+- `app/page.tsx` sekarang memiliki konten kontekstual untuk setiap Pintu: Wedding Planner, Digital Invitation, dan Guestbook.
+- Pergantian konten kiri memakai `AnimatePresence mode="wait"` dengan enter/exit berbasis opacity + y transform.
+- CTA kiri mengikuti workspace aktif dan langsung menuju route Pintu terkait.
+- `PintuSection.tsx` menggunakan Motion spring untuk perpindahan Pintu dengan `stiffness: 400`, `damping: 25`, transform 3D (`x`, `z`, `rotateY`, `scale`), opacity, dan hover lift ringan.
+- `PintuCard.tsx` menggunakan Motion untuk hover/tap, zoom gambar halus, panel pintu membuka dengan transform, dan reveal informasi aktif.
+- `useReducedMotion()` dipakai pada Pintu Section dan diteruskan ke card agar motion berat dilewati saat reduced-motion aktif.
+- Tidak menambahkan dependency baru; package `motion` yang sudah ada digunakan.
+- Pintu tetap menjadi navigation utama dan seluruh route existing dipertahankan.
+
+### Commits
+- `627dd521da8df3e19881042a2600395efad40e2d` — restore dynamic landing story per selected Pintu.
+- `743e870e469b76702608e904d1de44e37132b393` — animate Pintu navigation with Motion springs.
+- `3d8db676f978db98b145e55a52893430161edcb0` — polish Pintu card opening and hover motion.
+
+### Validation
+- `app/page.tsx`, `components/Pintu/PintuSection.tsx`, dan `components/Pintu/PintuCard.tsx` reviewed against `AGENTS.md`, `prd.md`, `README.md`, dan `SKILL.md`.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
