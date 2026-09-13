@@ -46,31 +46,39 @@ Wedding Setup → Invitation Creation → Publication → Distribution & Guest R
 - **Fauna One:** body/UI copy, navigation, forms, buttons.
 - **DM Mono:** metadata, codes, timestamps, status and technical labels.
 
-### 3.2 Light Theme
-- Primary/action: Deep Rose Wood `#8C4A56`
-- Brand accent: Dusty Pink `#E8B4B8`
-- Hover: Dark Rose Wood `#6E3843`
-- Main background: Warm White `#FAFAFA`
-- Secondary surface: Pale Blush `#F5EBEB`
-- Primary text: Charcoal `#1E1B1C`
+### 3.2 Canonical Brand Color
+- Brand anchor / primary identity: **Rose `#C07A84`**.
+- Supporting light rose: `#D9A3AA`.
+- Deep rose hover/pressed: `#A65E69`.
+- The entire application palette must derive from the `#C07A84` brand family rather than the deprecated Deep Rose Wood `#8C4A56` palette.
 
-### 3.3 Dark Theme
-- Background: Obsidian Black `#0F0E11`
-- Surface: Dark Charcoal `#1A181E`
-- Accent: Dusty Pink `#E8B4B8`
-- Primary text: `#F8F9FA`
-- Secondary accent: `#F4C2C7`
+### 3.3 Light Theme
+- Primary/action: Rose `#C07A84`
+- Supporting accent: Soft Rose `#D9A3AA`
+- Hover/pressed: Deep Rose `#A65E69`
+- Main background: Warm Rose White `#FAF8F8`
+- Secondary surface: Blush `#F7ECEE`
+- Primary text: Warm Charcoal `#241D1F`
+- Muted text: `#7F4B55`
 
-Maroon, heavy cream/ivory backgrounds, and unrelated accent systems are deprecated. Readability has priority over color matching.
+### 3.4 Dark Theme
+- Background: Rose Obsidian `#100D0F`
+- Surface: Dark Rose Charcoal `#21181A`
+- Primary accent: Soft Rose `#D9A3AA`
+- Secondary accent: Brand Rose `#C07A84`
+- Highlight accent: `#F1C9CE`
+- Primary text: Warm White `#F8F3F4`
 
-### 3.4 Layout & Accessibility
+The previous `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E` theme palette is deprecated. Readability remains higher priority than color matching.
+
+### 3.5 Layout & Accessibility
 - Minimum interactive target: `44x44px`.
 - Functional text remains primarily charcoal/light neutral according to theme.
-- Rose Wood/Pink is selective accent only.
+- Rose is the brand accent, not a replacement for body text.
 - Avoid decorative divider-heavy layouts and excessive glass/blur effects.
 - Prefer hierarchy through typography, spacing, composition, and contrast.
 
-### 3.5 Motion
+### 3.6 Motion
 - Use existing `motion/react`; no unnecessary animation dependency.
 - Animate transform/opacity rather than layout properties.
 - Natural easing: `[0.22, 1, 0.36, 1]`.
@@ -79,7 +87,7 @@ Maroon, heavy cream/ivory backgrounds, and unrelated accent systems are deprecat
 - Use `useReducedMotion()` for accessibility.
 - Motion must remain subtle, performance-first, and never obstruct usability.
 
-### 3.6 Landing Navigation
+### 3.7 Landing Navigation
 The landing page uses the existing **Pintu** interaction as the visual navigation surface for:
 1. Wedding Planner → `/wedding-planner`
 2. Digital Invitation → `/d-invitation`
@@ -191,6 +199,7 @@ Password protection applies consistently to the root invitation and event paths 
 - Landing motion uses existing `motion/react` and reduced-motion support.
 - Pintu remains the landing navigation interaction.
 - Ambient landing background refined to reduce blurry pink-circle treatment while keeping rose petals unchanged.
+- Brand palette realigned to logo Rose `#C07A84` across light and dark themes.
 
 Detailed implementation rationale and validation remain in `PRD-TAMBAHAN.md`.
 

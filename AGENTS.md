@@ -46,28 +46,36 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 
 ## 4. Canonical Theme
 
+### Brand Anchor
+- Logo / brand primary: `#C07A84` Rose.
+- Supporting rose: `#D9A3AA`.
+- Deep hover/pressed rose: `#A65E69`.
+- All application accent colors must stay within this Rose family unless a semantic status color is required.
+
 ### Light
-- Primary/action: `#8C4A56` Deep Rose Wood
-- Brand accent: `#E8B4B8` Dusty Pink
-- Hover/pressed: `#6E3843` Dark Rose Wood
-- Main background: `#FAFAFA` Warm White
-- Secondary surface: `#F5EBEB` Pale Blush
-- Primary text: `#1E1B1C` Charcoal
+- Primary/action: `#C07A84` Rose
+- Supporting accent: `#D9A3AA`
+- Hover/pressed: `#A65E69`
+- Main background: `#FAF8F8`
+- Secondary surface: `#F7ECEE`
+- Primary text: `#241D1F`
+- Muted text: `#7F4B55`
 
 ### Dark
-- Background: `#0F0E11` Obsidian Black
-- Surface: `#1A181E` Dark Charcoal
-- Primary accent: `#E8B4B8` Dusty Pink
-- Primary text: `#F8F9FA`
-- Secondary accent: `#F4C2C7`
+- Background: `#100D0F`
+- Surface: `#21181A`
+- Primary accent: `#D9A3AA`
+- Secondary brand accent: `#C07A84`
+- Highlight accent: `#F1C9CE`
+- Primary text: `#F8F3F4`
 
-Do not reintroduce old maroon/cream or unrelated accent palettes. Readability always outranks color matching.
+Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E`. Do not reintroduce the deprecated palette. Readability always outranks color matching.
 
 ## 5. Anti AI-Slop Text Hierarchy
 
 - Do not color every piece of text differently.
 - Functional/body text should remain the primary readable text color.
-- Rose Wood/Pink is an accent, not a default replacement for body text.
+- Rose is an accent, not a default replacement for body text.
 - Establish hierarchy through typography, weight, size, spacing, layout, and contrast first.
 
 ## 6. Motion & Accessibility

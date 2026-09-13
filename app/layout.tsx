@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cinzel, DM_Mono, Fauna_One } from "next/font/google";
 import "./globals.css";
 import "./design-overrides.css";
+import "./brand-theme.css";
 import { ThemeProvider } from "@/components/Theme/ThemeContext";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import Footer from "@/components/Layout/Footer";

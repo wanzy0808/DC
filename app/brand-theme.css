@@ -1,0 +1,16 @@
+/* Brand contrast calibration for the #C07A84 logo family. */
+:root {
+  --primary-foreground: #241D1F;
+  --secondary-foreground: #241D1F;
+  --accent-foreground: #241D1F;
+  --sidebar-primary-foreground: #241D1F;
+}
+
+.dark {
+  --primary: #D9A3AA;
+  --primary-foreground: #100D0F;
+  --secondary: #C07A84;
+  --secondary-foreground: #100D0F;
+  --accent-foreground: #F1C9CE;
+  --sidebar-primary-foreground: #100D0F;
+}
