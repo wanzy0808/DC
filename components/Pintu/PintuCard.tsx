@@ -50,14 +50,14 @@ export default function PintuCard({
         <motion.div
           animate={reducedMotion ? { scale: 0.92 } : { scale: isActive ? 0.92 : 0.9 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 flex items-center justify-center overflow-hidden"
+          className="absolute inset-0 overflow-hidden"
         >
           <Image
             src={`/${bgImage}`}
             alt=""
             fill
             sizes="(max-width: 767px) 190px, 280px"
-            className={`object-contain object-center ${isActive ? "grayscale-0" : "grayscale"}`}
+            className={`object-cover object-center ${isActive ? "grayscale-0" : "grayscale"}`}
             priority={isActive}
           />
         </motion.div>
