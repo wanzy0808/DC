@@ -488,3 +488,31 @@ The landing page copy was functional and product-oriented but did not yet create
 
 ## Validation
 Reviewed the copy and affected locale structure against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, and the existing landing/Pintu implementation. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Navbar Seamless Background & Control Color Harmony
+
+## Problem
+The public navbar controls still looked like separate visual systems: the menu trigger used a filled primary treatment while the theme toggle and language selector used outlined controls. The navbar also explicitly painted its own background, which could make the header feel visually detached from the landing-page canvas.
+
+## Implementation
+- Changed the navbar shell to `bg-transparent` so it inherits the exact light/dark canvas of the body instead of creating a visually separate panel.
+- Kept the navbar brand Rose and subtitle neutral/opacity-based according to the canonical Light/Dark theme rules.
+- Standardized the burger/menu trigger to the same Rose `outline` treatment as the theme control: `h-11`, transparent background, Rose border/icon, and subtle Rose hover state.
+- Standardized the theme toggle to the same `outline` geometry and color treatment while preserving `Sun` / `Moon`, localStorage persistence, and dark-mode behavior.
+- Reworked the ID/EN selector so its container and language buttons use the same transparent Rose-outline family; the active locale receives only a subtle Rose tint instead of a separate filled-button language style.
+- Preserved the existing burger Sheet architecture, navigation, bilingual locale model, accessibility labels, routes, Pintu, rose petals, and no new dependencies.
+
+## Affected Files
+- `components/Layout/Navbar/Navbar.tsx`
+- `components/Theme/ThemeContext.tsx`
+- `components/I18n/LanguageToggle.tsx`
+
+## Commits
+- `a18ee63d3602bd4ab1493608f11d41a0018a2eb3` — make navbar background seamless and standardize menu trigger.
+- `6b19a09ace4cedde986e7b7927afe8e1ccaaf472` — align dark/light mode toggle with navbar controls.
+- `0eca5bb570506e8720100bd6961c9d17be01481e` — align language selector with navbar controls.
+
+## Validation
+Reviewed the changed source against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing Button/theme/i18n architecture, and the navbar Sheet implementation. Build/CI not verified.
