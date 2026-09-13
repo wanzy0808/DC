@@ -68,7 +68,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
   const doors = [
     {
       id: 1,
-      title: "",
+      title: "Wedding Planner",
       href: "/wedding-planner",
       bgImage: "wo.png",
       tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
@@ -76,7 +76,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     },
     {
       id: 2,
-      title: "",
+      title: "Digital Invitation",
       href: "/d-invitation",
       bgImage: "hp-digital.png",
       tags: ["UNDANGAN", "RSVP"],
@@ -84,7 +84,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     },
     {
       id: 3,
-      title: "",
+      title: "Guestbook",
       href: "/guestbook",
       bgImage: "bukutamu.png",
       tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
@@ -98,7 +98,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
       <div
         onMouseLeave={handleMouseLeaveSection}
-        className="relative flex h-[430px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[500px] md:h-[600px]"
+        className="relative flex h-[310px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[410px] md:h-[500px]"
       >
         {doors.map((door) => (
           <div
@@ -120,7 +120,7 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         ))}
       </div>
 
-      <div className="z-30 -mt-12 flex w-full max-w-[750px] items-center justify-center gap-30">
+      <div className="z-30 -mt-8 flex w-full max-w-[750px] items-center justify-center gap-24 sm:-mt-10 sm:gap-30">
         <Button
           size="icon"
           onClick={togglePrev}
