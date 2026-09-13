@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { useTheme, ThemeToggle } from "@/components/Theme/ThemeContext";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
@@ -22,6 +22,7 @@ export default function Navbar() {
           <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.22em] text-[var(--muted-foreground)]">Your best consultant for wedding & event</div>
         </Link>
         <div className="flex items-center gap-2 sm:gap-3">
+          <ThemeToggle />
           <LanguageToggle />
           <Sheet>
             <SheetTrigger render={<Button variant="default" size="icon" aria-label="Buka menu navigasi" className="h-11 w-11 rounded-full bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-[var(--dc-rose-wood-dark)]"><Menu className="h-5 w-5" /></Button>} />
