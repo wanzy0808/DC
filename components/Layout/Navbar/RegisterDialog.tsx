@@ -4,7 +4,8 @@ import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface RegisterDialogProps {
@@ -37,9 +38,9 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPromo, setAgreedPromo] = useState(false);
 
-  const accentColor = isDarkMode ? "text-[#C26B70]" : "text-[#7A1C25]";
-  const borderColor = isDarkMode ? "border-white/10" : "border-black/10";
-  const inputBg = isDarkMode ? "bg-black/40 text-white" : "bg-transparent text-[#1A1A1A]";
+  const accentColor = "text-primary";
+  const borderColor = isDarkMode ? "border-white/10" : "border-border";
+  const inputBg = isDarkMode ? "bg-black/40 text-white" : "bg-transparent text-foreground";
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -80,21 +81,19 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
 
   return (
     <DialogContent className={`max-h-[90vh] overflow-y-auto sm:max-w-md ${
-      isDarkMode ? "border-white/10 bg-[#121116] text-white" : "bg-white text-[#1A1A1A]"
+      isDarkMode ? "border-white/10 bg-[#121116] text-white" : "bg-white text-foreground"
     }`}>
-      <DialogHeader className="flex flex-row items-center justify-between border-b border-neutral-200 pb-4 dark:border-neutral-800">
+      <DialogHeader className="flex flex-row items-center justify-between border-b border-border pb-4 dark:border-neutral-800">
         <DialogTitle className="font-serif text-2xl font-normal">Daftar</DialogTitle>
-        <button type="button" onClick={onSwitchToLogin} className={`text-sm font-medium ${accentColor} hover:underline`}>
+        <Button type="button" variant="link" size="sm" onClick={onSwitchToLogin} className={accentColor}>
           Masuk
-        </button>
+        </Button>
       </DialogHeader>
 
       <form onSubmit={submit} className="space-y-5 py-4">
         <a
           href="/api/auth/google"
-          className={`flex w-full items-center justify-center gap-3 rounded-xl border px-4 py-3 text-sm font-medium shadow-sm transition ${borderColor} ${
-            isDarkMode ? "bg-neutral-900 hover:bg-neutral-800" : "bg-white hover:bg-neutral-50"
-          }`}
+          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full gap-3 rounded-xl")}
         >
           <GoogleIcon />
           <span>Daftar dengan Google</span>
@@ -113,14 +112,14 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
             placeholder="Nama Depan"
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-[#7A1C25]`}
+            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
           />
           <input
             type="text"
             placeholder="Nama Belakang"
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-[#7A1C25]`}
+            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
           />
         </div>
 
@@ -131,7 +130,7 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
           placeholder="Alamat Email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-[#7A1C25]`}
+          className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
         />
 
         <div className="relative">
@@ -143,11 +142,11 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
             placeholder="Kata Sandi"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-[#7A1C25]`}
+            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
           />
-          <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 opacity-50 hover:opacity-100" aria-label="Tampilkan password">
-            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
+          <Button type="button" variant="ghost" size="icon-xs" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan password">
+            {showPassword ? <EyeOff /> : <Eye />}
+          </Button>
         </div>
 
         <div className="relative">
@@ -159,11 +158,11 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
             placeholder="Konfirmasi Kata Sandi"
             value={confirmPassword}
             onChange={(event) => setConfirmPassword(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-[#7A1C25]`}
+            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
           />
-          <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 opacity-50 hover:opacity-100" aria-label="Tampilkan konfirmasi password">
-            {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </button>
+          <Button type="button" variant="ghost" size="icon-xs" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan konfirmasi password">
+            {showConfirmPassword ? <EyeOff /> : <Eye />}
+          </Button>
         </div>
 
         <div className="space-y-3 pt-1 text-xs">
@@ -173,7 +172,7 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
               type="checkbox"
               checked={agreedTerms}
               onChange={(event) => setAgreedTerms(event.target.checked)}
-              className="mt-0.5 rounded accent-[#7A1C25]"
+              className="mt-0.5 rounded accent-[var(--primary)]"
             />
             <span className="leading-relaxed opacity-80">
               Saya menyetujui <span className={`${accentColor} underline`}>Syarat & Ketentuan</span> beserta <span className={`${accentColor} underline`}>Kebijakan Privasi</span>.
@@ -184,7 +183,7 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
               type="checkbox"
               checked={agreedPromo}
               onChange={(event) => setAgreedPromo(event.target.checked)}
-              className="mt-0.5 rounded accent-[#7A1C25]"
+              className="mt-0.5 rounded accent-[var(--primary)]"
             />
             <span className="leading-relaxed opacity-80">Saya ingin menerima email promo dan newsletter dari rekanannya.</span>
           </label>
@@ -192,20 +191,16 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
 
         {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
 
-        <Button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-neutral-300 py-6 font-medium tracking-wide text-neutral-700 transition-all hover:bg-neutral-400 disabled:opacity-60 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-700"
-        >
+        <Button type="submit" disabled={loading} className="w-full rounded-xl py-6 font-medium tracking-wide">
           {loading ? "Memproses..." : "Lanjutkan"}
         </Button>
 
         <div className="space-y-3 pt-1 text-center text-xs">
           <p className="opacity-70">
             Sudah punya akun?{" "}
-            <button type="button" onClick={onSwitchToLogin} className={`${accentColor} font-medium hover:underline`}>
+            <Button type="button" variant="link" size="xs" onClick={onSwitchToLogin} className={`${accentColor} p-0`}>
               Masuk
-            </button>
+            </Button>
           </p>
           <div className={`-mx-6 -mb-4 mt-6 rounded-b-lg border-t p-3 ${borderColor} ${isDarkMode ? "bg-black/30" : "bg-neutral-50"}`}>
             <span className="opacity-70">Punya bisnis terkait pernikahan? </span>
