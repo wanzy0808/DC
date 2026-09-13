@@ -457,3 +457,21 @@ Ketiga Pintu terlihat memiliki ukuran gambar yang berbeda saat bergerak pada cir
 - `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `PintuSection.tsx`, dan `PintuCard.tsx` reviewed before implementation.
 - Code-level review completed.
 - Build/CI: **Not verified**.
+
+## 34. Pintu Image Frame Normalization — Digital Invitation Consistency
+### User Requirement
+Digital Invitation (`hp-digital.png`) masih terlihat memiliki ukuran visual yang berbeda dibanding Wedding Planner dan Guestbook walaupun ukuran card/orbit sudah diseragamkan.
+
+### Implemented
+- `components/Pintu/PintuCard.tsx` image layer diubah dari `object-contain` menjadi `object-cover`.
+- Semua source image sekarang mengisi frame card yang sama secara konsisten, sehingga perbedaan aspect ratio/whitespace intrinsic pada asset tidak lagi membuat Digital Invitation tampak lebih kecil.
+- Ukuran card, orbit, Motion, hover pause, direct link, reduced motion, dan Pintu navigation tidak diubah.
+- Rose petals tetap untouched dan tidak ada dependency baru.
+
+### Commit
+- `948368a50fac8a6f690edb00dd5bc855428a8b32` — fix: normalize Pintu image framing.
+
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `components/Pintu/PintuSection.tsx`, dan `components/Pintu/PintuCard.tsx` reviewed before implementation.
+- Code-level review completed.
+- Build/CI: **Not verified**.
