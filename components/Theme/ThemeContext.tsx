@@ -62,7 +62,7 @@ export function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
       title={isDarkMode ? "Light mode" : "Dark mode"}
-      className="h-11 w-11 border-primary/35 bg-background text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
+      className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
     >
       {isDarkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
     </Button>
