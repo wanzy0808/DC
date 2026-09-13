@@ -27,12 +27,13 @@ type Door = {
   desc: string;
 };
 
-const LOOP_DURATION = 7;
+const LOOP_DURATION = 9;
 const LOOP_RADIUS_X = 235;
 const LOOP_RADIUS_Y = 72;
 const LOOP_PHASES = 3;
 const FRONT_PHASE = 0.25;
-const CARD_SCALE = 0.92;
+const FRONT_SCALE = 0.92;
+const BACK_SCALE = 0.68;
 
 const doors: Door[] = [
   {
@@ -103,12 +104,16 @@ function LoopingPintu({
   const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
   const y = useTransform(progress, (offset) => Math.sin(phase(offset)) * LOOP_RADIUS_Y);
   const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 90);
+  const scale = useTransform(progress, (offset) => {
+    const depth = (Math.sin(phase(offset)) + 1) / 2;
+    return BACK_SCALE + depth * (FRONT_SCALE - BACK_SCALE);
+  });
   const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
 
   return (
     <motion.div
       onMouseEnter={() => onHover(door.id)}
-      style={{ x, y, z, scale: CARD_SCALE, rotateY }}
+      style={{ x, y, z, scale, rotateY }}
       className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
