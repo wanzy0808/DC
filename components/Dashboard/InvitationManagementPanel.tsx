@@ -237,165 +237,64 @@ export default function InvitationManagementPanel({ paid }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
-      <section className="relative overflow-hidden rounded-[2rem] border border-border bg-card px-6 py-9 shadow-sm sm:px-10 sm:py-12">
-        <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+      <section className="relative overflow-hidden rounded-[2rem] border border-border bg-background px-6 py-10 sm:px-10 sm:py-14">
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_80%_20%,color-mix(in_srgb,var(--primary)_10%,transparent),transparent_62%)]" />
         <div className="relative max-w-3xl">
           <div className="flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
             {copy.eyebrow}
           </div>
-          <h1 className="mt-4 max-w-2xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">
-            {copy.title}
-          </h1>
+          <h1 className="mt-4 max-w-2xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">{copy.title}</h1>
           <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">{copy.intro}</p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/dashboard/editor?type=WEDDING" className={cn(buttonVariants({ variant: "default" }), "rounded-full px-5")}> 
-              <PenLine className="h-4 w-4" />
-              {copy.openStudio}
-            </Link>
-            <Link href="/dashboard" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-5")}> 
-              {locale === "en" ? "Back to dashboard" : "Kembali ke dashboard"}
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            <Link href="/dashboard/editor?type=WEDDING" className={cn(buttonVariants({ variant: "default" }), "rounded-full px-5")}> <PenLine className="h-4 w-4" /> {copy.openStudio}</Link>
+            <Link href="/dashboard" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-5")}>{locale === "en" ? "Back to dashboard" : "Kembali ke dashboard"} <ArrowUpRight className="h-4 w-4" /></Link>
           </div>
         </div>
       </section>
 
-      {message && (
-        <div className="mt-5 flex items-center gap-2 rounded-2xl border border-border bg-secondary/50 px-4 py-3 text-xs text-muted-foreground" role="status">
-          <Check className="h-4 w-4 text-primary" />
-          {message}
-        </div>
-      )}
+      {message && <div className="mt-5 flex items-center gap-2 border-y border-border px-1 py-3 text-xs text-muted-foreground" role="status"><Check className="h-4 w-4 text-primary" />{message}</div>}
 
-      <section className="mt-8">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">01 / Invitation</p>
-            <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">{locale === "en" ? "Your invitations" : "Undangan kalian"}</h2>
-          </div>
+      <section className="mt-12">
+        <div className="mb-5 flex items-end justify-between gap-4">
+          <div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">01 / Invitation</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">{locale === "en" ? "Your invitations" : "Undangan kalian"}</h2></div>
           <span className="hidden text-xs text-muted-foreground sm:block">{loading ? copy.loading : copy.ready}</span>
         </div>
-        <div className="grid gap-5 lg:grid-cols-2">
+        <div className="grid gap-8 lg:grid-cols-2">
           <InvitationCard invitation={invitations.WEDDING} publicUrl={weddingUrl} paid={paid} loading={loading} special={false} copy={copy} onCopy={() => copyLink(weddingUrl)} onPublish={() => togglePublish("WEDDING")} busy={busy === "publish-WEDDING"} />
           <InvitationCard invitation={invitations.ADAT_AKAD} publicUrl={specialUrl} paid={paid} loading={loading} special copy={copy} onCopy={() => copyLink(specialUrl)} onPublish={() => togglePublish("ADAT_AKAD")} busy={busy === "publish-ADAT_AKAD"} />
         </div>
       </section>
 
-      <section className="mt-8 grid gap-5 lg:grid-cols-[1.15fr_.85fr]">
-        <div className="rounded-[1.75rem] border border-border bg-card p-6 sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-secondary text-primary"><LockKeyhole className="h-5 w-5" /></div>
-            <div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">02 / {copy.accessEyebrow}</p>
-              <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.accessTitle}</h2>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{copy.accessDesc}</p>
-            </div>
-          </div>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder={copy.passwordPlaceholder}
-              disabled={!paid || loading}
-              className="min-h-11 min-w-0 flex-1 rounded-xl border border-border bg-background px-4 text-sm outline-none transition focus:border-primary"
-            />
-            <Button disabled={!paid || loading || busy === "password" || password.trim().length < 6} onClick={savePassword} className="rounded-xl">
-              {passwordProtected ? copy.change : copy.enable}
-            </Button>
-            {passwordProtected && <Button disabled={busy === "password-off"} onClick={disablePassword} variant="outline" className="rounded-xl">{copy.disable}</Button>}
-          </div>
-          <div className="mt-4 flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            {passwordProtected ? copy.protected : copy.publicAccess}
-          </div>
+      <section className="mt-12 grid gap-10 border-t border-border pt-10 lg:grid-cols-[1.15fr_.85fr]">
+        <div>
+          <div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-primary"><LockKeyhole className="h-4 w-4" /></div><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">02 / {copy.accessEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.accessTitle}</h2><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{copy.accessDesc}</p></div></div>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row"><input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={copy.passwordPlaceholder} disabled={!paid || loading} className="min-h-11 min-w-0 flex-1 border-b border-border bg-transparent px-1 text-sm outline-none transition focus:border-primary" /><Button disabled={!paid || loading || busy === "password" || password.trim().length < 6} onClick={savePassword} className="rounded-full">{passwordProtected ? copy.change : copy.enable}</Button>{passwordProtected && <Button disabled={busy === "password-off"} onClick={disablePassword} variant="outline" className="rounded-full">{copy.disable}</Button>}</div>
+          <div className="mt-4 flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5" />{passwordProtected ? copy.protected : copy.publicAccess}</div>
         </div>
 
-        <div className="rounded-[1.75rem] border border-primary/20 bg-secondary/55 p-6 sm:p-8">
-          <div className="flex items-start gap-4">
-            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-background text-primary"><KeyRound className="h-5 w-5" /></div>
-            <div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">03 / {copy.studioEyebrow}</p>
-              <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.studioTitle}</h2>
-              <p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.studioDesc}</p>
-            </div>
-          </div>
-          <div className="mt-6 grid gap-2 sm:grid-cols-2">
-            <Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "default" }), "rounded-xl")}>{copy.openStudio}</Link>
-            <Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "outline" }), "rounded-xl")}>{copy.manageAssets}</Link>
-          </div>
+        <div className="border-l border-border pl-0 lg:pl-10">
+          <div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-primary"><KeyRound className="h-4 w-4" /></div><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">03 / {copy.studioEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.studioTitle}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.studioDesc}</p></div></div>
+          <div className="mt-6 flex flex-wrap gap-2"><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "default" }), "rounded-full")}>{copy.openStudio}</Link><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>{copy.manageAssets}</Link></div>
         </div>
       </section>
     </div>
   );
 }
 
-function InvitationCard({
-  invitation,
-  publicUrl,
-  paid,
-  loading,
-  special,
-  copy,
-  onCopy,
-  onPublish,
-  busy,
-}: {
-  invitation: Invitation;
-  publicUrl: string;
-  paid: boolean;
-  loading: boolean;
-  special: boolean;
-  copy: Record<string, string>;
-  onCopy: () => void;
-  onPublish: () => void;
-  busy: boolean;
-}) {
+function InvitationCard({ invitation, publicUrl, paid, loading, special, copy, onCopy, onPublish, busy }: { invitation: Invitation; publicUrl: string; paid: boolean; loading: boolean; special: boolean; copy: Record<string, string>; onCopy: () => void; onPublish: () => void; busy: boolean }) {
   const title = special ? copy.special : copy.main;
   const description = special ? copy.specialDesc : copy.mainDesc;
   const emptyText = special ? copy.noSpecial : copy.noMain;
 
   return (
-    <article className="group overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-sm transition-transform duration-300 hover:-translate-y-1">
-      <div className="border-b border-border bg-secondary/40 px-6 py-5 sm:px-7">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{special ? "EVENT / 02" : "WEDDING / 01"}</p>
-            <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold">{title}</h3>
-          </div>
-          <span className={cn("rounded-full border px-3 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em]", invitation.isPublished ? "border-primary/30 bg-primary/10 text-primary" : "border-border text-muted-foreground")}>
-            {loading ? "..." : invitation.isPublished ? copy.published : copy.draft}
-          </span>
-        </div>
-        <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
+    <article className="group border-b border-border pb-7 transition-transform duration-300 hover:-translate-y-0.5">
+      <div className="flex items-start justify-between gap-4 pb-5">
+        <div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{special ? "EVENT / 02" : "WEDDING / 01"}</p><h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold">{title}</h3><p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p></div><span className={cn("shrink-0 border-b pb-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em]", invitation.isPublished ? "border-primary text-primary" : "border-border text-muted-foreground")}>{loading ? "..." : invitation.isPublished ? copy.published : copy.draft}</span>
       </div>
-
-      <div className="p-6 sm:p-7">
-        <div className="min-h-24 rounded-2xl border border-border bg-background p-4">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Public URL</p>
-          <p className="mt-3 break-all text-xs leading-5 text-foreground/80">{publicUrl || emptyText}</p>
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-xl", !publicUrl && "pointer-events-none opacity-40")}>
-            <Eye className="h-3.5 w-3.5" />
-            {copy.preview}
-          </Link>
-          <Button variant="outline" size="sm" disabled={!publicUrl} onClick={onCopy} className="rounded-xl">
-            <Copy className="h-3.5 w-3.5" />
-            {copy.copyLink}
-          </Button>
-          <Link href={`/dashboard/editor${special ? "?type=ADAT_AKAD" : "?type=WEDDING"}`} className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "rounded-xl")}>
-            <PenLine className="h-3.5 w-3.5" />
-            {copy.edit}
-          </Link>
-          <Button disabled={!paid || busy} onClick={onPublish} size="sm" className="rounded-xl">
-            {busy ? copy.saving : invitation.isPublished ? copy.unpublish : copy.publish}
-          </Button>
-        </div>
-        {!paid && <p className="mt-4 text-xs text-muted-foreground">{copy.packageRequired}</p>}
-      </div>
+      <div className="border-y border-border py-4"><p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Public URL</p><p className="mt-2 break-all text-xs leading-5 text-foreground/75">{publicUrl || emptyText}</p></div>
+      <div className="mt-4 flex flex-wrap gap-2"><Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-full", !publicUrl && "pointer-events-none opacity-40")}><Eye className="h-3.5 w-3.5" />{copy.preview}</Link><Button variant="outline" size="sm" disabled={!publicUrl} onClick={onCopy} className="rounded-full"><Copy className="h-3.5 w-3.5" />{copy.copyLink}</Button><Link href={`/dashboard/editor${special ? "?type=ADAT_AKAD" : "?type=WEDDING"}`} className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "rounded-full")}><PenLine className="h-3.5 w-3.5" />{copy.edit}</Link><Button disabled={!paid || busy} onClick={onPublish} size="sm" className="rounded-full">{busy ? copy.saving : invitation.isPublished ? copy.unpublish : copy.publish}</Button></div>
+      {!paid && <p className="mt-4 text-xs text-muted-foreground">{copy.packageRequired}</p>}
     </article>
   );
 }
