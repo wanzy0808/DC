@@ -262,3 +262,27 @@ The package catalog was migrated from plain strings/arrays to localized objects.
 
 ## Validation
 Reviewed the component against the current `lib/packages/catalog.ts` localized type contract, shared language provider, AGENTS, SKILL, PRD, README, and package localization changes. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Package Showcase CTA Standardization
+
+## Problem
+After fixing the localized package catalog access, the showcase CTA still used a page-specific Tailwind color implementation. This bypassed the canonical Button Color Standard and could cause visual drift from the rest of the application.
+
+## Implementation
+- Reused `buttonVariants` from `components/ui/button.tsx` for the package showcase navigation CTA.
+- Featured package uses the shared `default` variant.
+- Non-featured packages use the shared `outline` variant.
+- Preserved the existing `Link` navigation behavior to `/packages`.
+- Removed the one-off CTA background, border, hover, and text color definitions.
+- No dependency, route, catalog, or API changes.
+
+## Affected Files
+- `components/Marketing/PackageShowcase.tsx`
+
+## Commit
+- `021db3b94c6b244b394a82c044fa4ac464c12643` — standardize PackageShowcase CTA variants.
+
+## Validation
+Reviewed against AGENTS button rules, SKILL, PRD, README, shared Button implementation, and the localized package catalog contract. Build/CI not verified.
