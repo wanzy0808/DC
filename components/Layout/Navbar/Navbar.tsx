@@ -15,7 +15,7 @@ export default function Navbar() {
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
-    <header className="dc-navbar relative z-50 w-full bg-background text-foreground transition-colors duration-500">
+    <header className="dc-navbar relative z-50 w-full bg-transparent text-foreground transition-colors duration-500">
       <div className="mx-auto flex w-[92vw] max-w-[1400px] items-center justify-between py-5">
         <Link href="/" className="group block min-w-0">
           <div className="font-[family-name:var(--font-dc-heading)] text-2xl font-bold leading-none tracking-[0.12em] text-primary transition-transform group-hover:scale-[1.01] sm:text-3xl">DC Organizer</div>
@@ -25,7 +25,18 @@ export default function Navbar() {
           <ThemeToggle />
           <LanguageToggle />
           <Sheet>
-            <SheetTrigger render={<Button variant="default" size="icon" aria-label="Buka menu navigasi" className="h-11 w-11 rounded-none shadow-none"><Menu className="h-5 w-5" /></Button>} />
+            <SheetTrigger
+              render={
+                <Button
+                  variant="outline"
+                  size="icon"
+                  aria-label="Buka menu navigasi"
+                  className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              }
+            />
             <BurgerMenuContent isDarkMode={isDarkMode} />
           </Sheet>
         </div>
