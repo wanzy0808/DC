@@ -147,7 +147,7 @@ The bilingual navbar migration unintentionally removed the existing light/dark t
 ## Commits
 - `9523a9b53a061f2a8ceb4e25d42063c3c54b7e85` — clean ID/EN language selector.
 - `c4a7706c66b3fa222959d7ab64a189825443c816` — restore accessible light/dark theme toggle.
-- `ef86cecd20e95558c014850e8683311aa65ca5b5` — restore theme control in navbar.
+- `ef86ce40020e95558c014850e8683311aa65ca5b5` — restore theme control in navbar.
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, and the existing theme/i18n architecture. Build/CI not verified.
