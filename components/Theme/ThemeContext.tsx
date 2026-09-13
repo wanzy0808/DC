@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type ThemeContextType = {
   isDarkMode: boolean;
@@ -54,14 +55,16 @@ export function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
 
   return (
-    <button
+    <Button
       type="button"
+      variant="outline"
+      size="icon"
       onClick={toggleTheme}
       aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
       title={isDarkMode ? "Light mode" : "Dark mode"}
-      className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--background)]/70 text-[var(--foreground)] shadow-sm backdrop-blur-md transition duration-300 hover:-translate-y-0.5 hover:border-[var(--primary)] hover:text-[var(--primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
+      className="h-11 w-11 border-primary/35 bg-background text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
     >
       {isDarkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
-    </button>
+    </Button>
   );
 }
