@@ -35,19 +35,17 @@ export default function RomanticBackground() {
       <div
         className={`absolute inset-0 transition-all duration-1000 ${
           isDarkMode
-            ? "bg-[radial-gradient(circle_at_18%_12%,rgba(194,107,112,0.10),transparent_28%),radial-gradient(circle_at_82%_88%,rgba(232,180,184,0.06),transparent_30%)]"
-            : "bg-[radial-gradient(ellipse_at_18%_8%,rgba(140,74,86,0.07),transparent_30%),radial-gradient(ellipse_at_82%_92%,rgba(232,180,184,0.14),transparent_34%)]"
+            ? "bg-[radial-gradient(ellipse_at_72%_18%,rgba(226,133,138,0.08),transparent_34%),linear-gradient(125deg,transparent_0%,rgba(226,133,138,0.025)_48%,transparent_78%)]"
+            : "bg-[radial-gradient(ellipse_at_74%_14%,rgba(140,74,86,0.07),transparent_32%),linear-gradient(125deg,rgba(255,255,255,0.35)_0%,transparent_42%,rgba(232,180,184,0.08)_76%,transparent_100%)]"
         }`}
       />
       <div
-        className={`absolute inset-0 opacity-60 transition-all duration-1000 ${
-          isDarkMode
-            ? "bg-[linear-gradient(115deg,transparent_0%,rgba(232,180,184,0.025)_42%,transparent_68%)]"
-            : "bg-[linear-gradient(115deg,transparent_0%,rgba(140,74,86,0.025)_42%,transparent_68%)]"
+        className={`absolute -right-[18%] top-[8%] h-[52vh] w-[48vw] rotate-[-14deg] blur-3xl transition-all duration-1000 ${
+          isDarkMode ? "bg-[#C26B70]/[0.045]" : "bg-[#8C4A56]/[0.035]"
         }`}
       />
 
-      {/* 3. EFEK KELOPAK BUNGA (ROSE PETALS) - JATUH SAAT LANDING */}
+      {/* ROSE PETALS — intentionally unchanged. */}
       {petals.map((_, i) => {
         const left = (i * 5 + (i * 37) % 5) % 100;
         const duration = 8 + (i % 5) * 2;
