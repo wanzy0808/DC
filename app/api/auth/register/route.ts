@@ -6,13 +6,11 @@ import { createToken } from "@/lib/auth";
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const firstName = String(body.firstName ?? "").trim();
-    const lastName = String(body.lastName ?? "").trim();
     const email = String(body.email ?? "").trim().toLowerCase();
     const password = String(body.password ?? "");
 
-    if (!firstName || !email || password.length < 8) {
-      return NextResponse.json({ error: "Nama, email, dan password minimal 8 karakter wajib diisi." }, { status: 400 });
+    if (!email || password.length < 8) {
+      return NextResponse.json({ error: "Email dan password minimal 8 karakter wajib diisi." }, { status: 400 });
     }
     if (await prisma.user.findUnique({ where: { email } })) {
       return NextResponse.json({ error: "Email sudah terdaftar." }, { status: 409 });
@@ -20,8 +18,8 @@ export async function POST(request: Request) {
 
     const user = await prisma.user.create({
       data: {
-        firstName,
-        lastName: lastName || null,
+        firstName: "",
+        lastName: null,
         email,
         passwordHash: await bcrypt.hash(password, 12),
         role: "USER",
