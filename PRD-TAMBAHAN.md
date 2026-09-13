@@ -44,3 +44,31 @@ Dokumen ini adalah implementation log / PRD tambahan untuk repository `wanzy0808
 ## 6. Validation
 - Code-level review completed against `AGENTS.md`, `prd.md`, `README.md`, dan `SKILL.md`.
 - Build/CI: **Not verified**; tidak ada hasil build/CI yang diklaim.
+
+---
+
+# 2026-09-13 — Guest Create API Validation Hardening
+
+## 1. Problem / Gap
+- Endpoint `POST /api/guests` sebelumnya menerima `tableId` tanpa memverifikasi bahwa meja tersebut milik invitation yang sedang dikelola.
+- Endpoint juga dapat menempatkan tamu baru ke meja yang sudah mencapai kapasitas.
+- Validasi `plusOnes` belum menolak nilai negatif atau pecahan.
+- Ini tidak selaras dengan prinsip server-authoritative pada `prd.md` dan aturan collision-safe guest management di `AGENTS.md`.
+
+## 2. Implementation
+- `tableId` sekarang diverifikasi terhadap `invitation.id` sebelum guest dibuat.
+- Meja penuh menghasilkan HTTP `409` dan guest tidak dibuat.
+- Guest tetap boleh dibuat tanpa meja dengan `tableId = null`.
+- `plusOnes` harus berupa integer non-negatif.
+- Validasi existing payment/entitlement dan authentication tetap dipertahankan.
+- Tidak ada perubahan schema atau dependency.
+
+## 3. Affected Files
+- `app/api/guests/route.ts`
+
+## 4. Commit
+- `e3f7d384f7480bd4ce0fa4085c9c080196cb740c` — validate table ownership and capacity on create.
+
+## 5. Validation
+- Source reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, dan existing guest/seating APIs.
+- Build/CI: **Not verified**; workflow run belum tersedia untuk commit ini.
