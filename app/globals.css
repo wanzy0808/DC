@@ -2,25 +2,23 @@
 
 @import "tailwindcss";
 
-/* Keep dense dashboard data surfaces readable when the theme is dark. */
-.dark table { background-color: #21181A; color: #F8F3F4; }
-.dark table thead { background-color: #21181A; color: #F1C9CE; }
+.dark table { background-color: #111113; color: #FFFFFF; }
+.dark table thead { background-color: #111113; color: #D9A3AA; }
 .dark table tbody tr { border-color: rgb(255 255 255 / 10%); }
 .dark table tbody tr:hover { background-color: rgb(192 122 132 / 8%); }
 .dark table td, .dark table th { border-color: rgb(192 122 132 / 16%); }
-.dark input, .dark select, .dark textarea { border-color: rgb(192 122 132 / 24%); background-color: #21181A; color: #F8F3F4; }
-.dark input::placeholder, .dark textarea::placeholder { color: rgb(248 243 244 / 45%); }
+.dark input, .dark select, .dark textarea { border-color: rgb(192 122 132 / 28%); background-color: #111113; color: #FFFFFF; }
+.dark input::placeholder, .dark textarea::placeholder { color: rgb(255 255 255 / 45%); }
 @custom-variant dark (&:is(.dark *));
 @theme inline {
   --font-sans: var(--font-dc-sans); --font-serif: var(--font-dc-serif); --font-heading: var(--font-dc-heading); --font-mono: var(--font-dc-mono);
-  --color-background: var(--background); --color-foreground: var(--foreground); --color-dc-pink: #D9A3AA; --color-dc-pink-light: #F1C9CE; --color-dc-maroon: #C07A84; --color-dc-rose-wood: #C07A84; --color-dc-rose-wood-dark: #A65E69; --color-dc-gold: #D9A3AA; --color-dc-gold-bright: #F1C9CE; --color-dc-dark: #100D0F; --color-dc-card: #21181A; --color-dc-cream: #FAF8F8;
-  --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6);
+  --color-background: var(--background); --color-foreground: var(--foreground); --color-dc-pink: #C07A84; --color-dc-pink-light: #D9A3AA; --color-dc-maroon: #C07A84; --color-dc-rose-wood: #C07A84; --color-dc-rose-wood-dark: #A65E69; --color-dc-gold: #D9A3AA; --color-dc-gold-bright: #F1C9CE; --color-dc-dark: #0B0B0C; --color-dc-card: #111113; --color-dc-cream: #FFFFFF;
+  --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6);
 }
-:root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: #FAF8F8; --foreground: #241D1F; --card: #F7ECEE; --card-foreground: #241D1F; --popover: #F7ECEE; --popover-foreground: #241D1F; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #D9A3AA; --secondary-foreground: #241D1F; --muted: #F7ECEE; --muted-foreground: #7F4B55; --accent: #D9A3AA; --accent-foreground: #241D1F; --destructive: #B42318; --border: color-mix(in srgb, #C07A84 18%, #FAF8F8); --input: color-mix(in srgb, #C07A84 22%, #FAF8F8); --ring: #C07A84; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #241D1F; --chart-5: #F7ECEE; --sidebar: #FAF8F8; --sidebar-foreground: #241D1F; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #F7ECEE; --sidebar-accent-foreground: #7F4B55; --sidebar-border: color-mix(in srgb, #C07A84 18%, #FAF8F8); --sidebar-ring: #C07A84; }
-.dark { --background: #100D0F; --foreground: #F8F3F4; --card: #21181A; --card-foreground: #F8F3F4; --popover: #21181A; --popover-foreground: #F8F3F4; --primary: #D9A3AA; --primary-foreground: #100D0F; --secondary: #C07A84; --secondary-foreground: #FFFFFF; --muted: #21181A; --muted-foreground: #F1C9CE; --accent: #21181A; --accent-foreground: #F1C9CE; --destructive: #F87171; --border: rgb(192 122 132 / 24%); --input: rgb(192 122 132 / 24%); --ring: #D9A3AA; --chart-1: #D9A3AA; --chart-2: #F1C9CE; --chart-3: #C07A84; --chart-4: #F8F3F4; --chart-5: #21181A; --sidebar: #100D0F; --sidebar-foreground: #F8F3F4; --sidebar-primary: #D9A3AA; --sidebar-primary-foreground: #100D0F; --sidebar-accent: #21181A; --sidebar-accent-foreground: #F1C9CE; --sidebar-border: rgb(192 122 132 / 24%); --sidebar-ring: #D9A3AA; }
-@layer base { * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); } html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; } h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); } }
+:root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: #FFFFFF; --foreground: #111111; --card: #FFFFFF; --card-foreground: #111111; --popover: #FFFFFF; --popover-foreground: #111111; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #FFFFFF; --secondary-foreground: #111111; --muted: #FFFFFF; --muted-foreground: rgb(17 17 17 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --destructive: #B42318; --border: rgb(17 17 17 / 12%); --input: rgb(17 17 17 / 16%); --ring: #C07A84; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #111111; --chart-5: #FFFFFF; --sidebar: #FFFFFF; --sidebar-foreground: #111111; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #FFFFFF; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(17 17 17 / 12%); --sidebar-ring: #C07A84; }
+.dark { --background: #0B0B0C; --foreground: #FFFFFF; --card: #111113; --card-foreground: #FFFFFF; --popover: #111113; --popover-foreground: #FFFFFF; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #111113; --secondary-foreground: #FFFFFF; --muted: #111113; --muted-foreground: rgb(255 255 255 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --destructive: #F87171; --border: rgb(255 255 255 / 12%); --input: rgb(255 255 255 / 16%); --ring: #D9A3AA; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #FFFFFF; --chart-5: #111113; --sidebar: #0B0B0C; --sidebar-foreground: #FFFFFF; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #111113; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(255 255 255 / 12%); --sidebar-ring: #D9A3AA; }
+@layer base { * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); } html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; } h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); color: var(--primary); } a { color: var(--primary); } }
 
-/* DC Organizer typography hierarchy: body/UI = Fauna One, display = Cinzel, metadata = DM Mono. */
 @layer utilities {
   .font-dc-heading { font-family: var(--font-dc-heading); }
   .font-dc-body { font-family: var(--font-dc-sans); }
@@ -28,8 +26,7 @@
 }
 
 .text-dc-maroon { color: var(--primary); }
-
-.dc-navbar { background: linear-gradient(to bottom, color-mix(in oklab, var(--background) 94%, transparent), color-mix(in oklab, var(--background) 62%, transparent) 58%, transparent 100%); }
+.dc-navbar { background: var(--background); }
 @keyframes publicTextReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dcSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
 .dc-snappy-word { animation: dcSnappyTextStretch 560ms cubic-bezier(0.22, 1.4, 0.36, 1) both; }
@@ -41,29 +38,28 @@ aside nav > p { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] form button[type="submit"] { background-color: var(--primary); color: var(--primary-foreground); }
 [data-slot="dialog-content"] form button[type="submit"]:hover { background-color: color-mix(in oklab, var(--primary), black 12%); }
 
-/* Dashboard theme-aware shell. */
-.dc-dashboard aside { background: linear-gradient(180deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 78%, #000) 100%) !important; color: var(--primary-foreground); border-color: var(--border) !important; }
-.dc-dashboard aside nav > p { color: var(--secondary) !important; }
-.dc-dashboard aside nav button { color: var(--primary-foreground) !important; }
-.dc-dashboard aside nav button:hover { background-color: rgb(255 255 255 / 12%) !important; }
-.dc-dashboard aside > div { border-color: rgb(255 255 255 / 18%) !important; color: var(--secondary) !important; }
-.dc-dashboard aside > div p.font-semibold { color: var(--primary-foreground) !important; }
-.dc-dashboard header { background: linear-gradient(90deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 88%, #000) 60%, color-mix(in srgb, var(--primary) 78%, #000) 100%) !important; color: var(--primary-foreground); border-color: var(--border) !important; }
-.dc-dashboard header a, .dc-dashboard header button { color: var(--primary-foreground) !important; }
-.dc-dashboard header button span.flex { background-color: var(--primary-foreground) !important; color: var(--primary) !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"] { background: var(--primary) !important; color: var(--primary-foreground) !important; border-color: var(--secondary) !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"]:hover { background: color-mix(in srgb, var(--primary) 78%, #000) !important; }
+/* Neutral shell: Rose is reserved for navigation, actions, links and accents. */
+.dc-dashboard aside { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
+.dc-dashboard aside nav > p { color: var(--primary) !important; }
+.dc-dashboard aside nav button { color: var(--primary) !important; }
+.dc-dashboard aside nav button:hover { background-color: color-mix(in srgb, var(--primary) 10%, transparent) !important; }
+.dc-dashboard aside > div { border-color: var(--border) !important; color: var(--muted-foreground) !important; }
+.dc-dashboard aside > div p.font-semibold { color: var(--foreground) !important; }
+.dc-dashboard header { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
+.dc-dashboard header a, .dc-dashboard header button { color: var(--primary) !important; }
+.dc-dashboard header button span.flex { background-color: var(--primary) !important; color: var(--primary-foreground) !important; }
+.dc-dashboard > a[aria-label="Bantuan WhatsApp"] { background: var(--primary) !important; color: var(--primary-foreground) !important; border-color: var(--primary) !important; }
+.dc-dashboard > a[aria-label="Bantuan WhatsApp"]:hover { background: color-mix(in srgb, var(--primary) 88%, #000) !important; }
 
-/* Invitation Studio theme-aware shell. */
-.dc-invitation-studio > div:first-child { background: linear-gradient(90deg, var(--primary), color-mix(in srgb, var(--primary) 78%, #000)) !important; color: var(--primary-foreground); border-color: var(--border) !important; }
-.dc-invitation-studio > div:first-child button { color: var(--primary-foreground); }
-.dc-invitation-studio .studio-tool-rail { background: color-mix(in srgb, var(--background) 82%, var(--primary)); color: var(--foreground); border-color: var(--border); }
-.dc-invitation-studio .studio-tool-rail button { color: var(--foreground); }
+.dc-invitation-studio > div:first-child { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
+.dc-invitation-studio > div:first-child button { color: var(--primary); }
+.dc-invitation-studio .studio-tool-rail { background: var(--background); color: var(--foreground); border-color: var(--border); }
+.dc-invitation-studio .studio-tool-rail button { color: var(--primary); }
 .dc-invitation-studio .studio-tool-rail button[data-active="true"] { background: var(--primary); color: var(--primary-foreground); }
 .dc-invitation-studio .studio-control-panel { background: var(--card); }
 
 .public-page .bg-dc-maroon, .public-page .bg-dc-pink { background-color: var(--primary) !important; color: var(--primary-foreground) !important; }
 .public-page .text-dc-maroon { color: var(--primary) !important; }
-.public-page .border-dc-maroon, .public-page .border-dc-pink { border-color: var(--border) !important; }
+.public-page .border-dc-maroon, .public-page .border-dc-pink { border-color: var(--primary) !important; }
 .public-page .hover\\:bg-dc-pink:hover, .public-page .hover\\:bg-dc-maroon:hover { background-color: color-mix(in oklab, var(--primary), black 12%) !important; }
 @media (prefers-reduced-motion: reduce) { .public-content h1, .public-content h2, .dc-snappy-word { animation: none; } }
