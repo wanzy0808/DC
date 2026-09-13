@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import PintuCard from "@/components/Pintu/PintuCard";
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +14,7 @@ type PintuSectionProps = {
 
 export default function PintuSection({ activeDoor, setActiveDoor }: PintuSectionProps) {
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const reduced = useReducedMotion();
   const currentSelected = activeDoor === null ? 1 : activeDoor;
 
   const handleDoorHover = (doorNumber: DoorValue) => {
@@ -38,7 +40,10 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
   const getDoorTransform = (doorId: number) => {
     if (currentSelected === doorId) {
       return {
-        transform: "translateX(0px) translateZ(140px) rotateY(0deg) scale(1.08)",
+        x: 0,
+        z: 140,
+        rotateY: 0,
+        scale: 1.08,
         zIndex: 30,
         opacity: 1,
         filter: "blur(0px)",
@@ -52,13 +57,19 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
 
     return isLeft
       ? {
-          transform: "translateX(-170px) translateZ(-120px) rotateY(28deg) scale(0.8)",
+          x: -170,
+          z: -120,
+          rotateY: 28,
+          scale: 0.8,
           zIndex: 10,
           opacity: 0.65,
           filter: "blur(0.5px)",
         }
       : {
-          transform: "translateX(170px) translateZ(-120px) rotateY(-28deg) scale(0.8)",
+          x: 170,
+          z: -120,
+          rotateY: -28,
+          scale: 0.8,
           zIndex: 10,
           opacity: 0.65,
           filter: "blur(0.5px)",
@@ -100,24 +111,42 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
         onMouseLeave={handleMouseLeaveSection}
         className="relative flex h-[310px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[410px] md:h-[500px]"
       >
-        {doors.map((door) => (
-          <div
-            key={door.id}
-            onClick={() => setActiveDoor(door.id as DoorValue)}
-            onMouseEnter={() => handleDoorHover(door.id as DoorValue)}
-            style={getDoorTransform(door.id)}
-            className="absolute cursor-pointer transition-all duration-700 ease-in-out"
-          >
-            <PintuCard
-              number=""
-              title={door.title}
-              href={door.href}
-              bgImage={door.bgImage}
-              innerDetails={{ tags: door.tags, desc: door.desc }}
-              isActive={activeDoor === door.id}
-            />
-          </div>
-        ))}
+        {doors.map((door, index) => {
+          const transform = getDoorTransform(door.id);
+          return (
+            <motion.div
+              key={door.id}
+              onClick={() => setActiveDoor(door.id as DoorValue)}
+              onMouseEnter={() => handleDoorHover(door.id as DoorValue)}
+              initial={reduced ? false : { opacity: 0, y: 24, scale: 0.94 }}
+              animate={transform}
+              transition={
+                reduced
+                  ? { duration: 0.1 }
+                  : {
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 25,
+                      mass: 0.75,
+                      delay: index * 0.04,
+                    }
+              }
+              whileHover={reduced ? undefined : { y: -6 }}
+              className="absolute cursor-pointer"
+              style={{ zIndex: transform.zIndex }}
+            >
+              <PintuCard
+                number=""
+                title={door.title}
+                href={door.href}
+                bgImage={door.bgImage}
+                innerDetails={{ tags: door.tags, desc: door.desc }}
+                isActive={activeDoor === door.id}
+                reducedMotion={reduced}
+              />
+            </motion.div>
+          );
+        })}
       </div>
 
       <div className="z-30 -mt-8 flex w-full max-w-[750px] items-center justify-center gap-24 sm:-mt-10 sm:gap-30">
@@ -125,18 +154,24 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
           size="icon"
           onClick={togglePrev}
           aria-label="Pintu sebelumnya"
-          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95 sm:h-10 sm:w-10"
+          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] sm:h-10 sm:w-10"
         >
           ←
         </Button>
-        <span className="min-w-0 max-w-[210px] text-center font-[family-name:var(--font-dc-heading)] text-xs font-bold leading-tight tracking-wide text-[var(--foreground)] sm:max-w-none sm:text-base">
+        <motion.span
+          key={currentDoor.id}
+          initial={reduced ? false : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: reduced ? 0.1 : 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="min-w-0 max-w-[210px] text-center font-[family-name:var(--font-dc-heading)] text-xs font-bold leading-tight tracking-wide text-[var(--foreground)] sm:max-w-none sm:text-base"
+        >
           {currentDoor.title}
-        </span>
+        </motion.span>
         <Button
           size="icon"
           onClick={toggleNext}
           aria-label="Pintu berikutnya"
-          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary/85 active:scale-95 sm:h-10 sm:w-10"
+          className="h-9 w-9 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98] sm:h-10 sm:w-10"
         >
           →
         </Button>
