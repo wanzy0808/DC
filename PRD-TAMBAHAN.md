@@ -328,10 +328,43 @@ Next.js 16.3.3/Turbopack menampilkan console error hydration mismatch pada `comp
 - Pada SSR dan client initial render, `motion.div` tidak menerima MotionValue style (`style={undefined}`), sehingga markup awal konsisten.
 - Setelah `useEffect` pertama berjalan di browser, `mounted` menjadi `true` dan style `{ x, y, z, scale, rotateY }` dipasang untuk mengaktifkan orbit Motion.
 - Tidak mengubah durasi loop, depth scaling, hover pause, direct link, reduced-motion, route Pintu, atau rose petals.
-- Tidak menambah dependency baru.
 ### Commit
 - `f773ecf31911b05713e4b1b863836c4ff4a6f94c` — `fix(pintu): prevent hydration mismatch from motion styles`.
 ### Validation
 - `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `components/Pintu/PintuSection.tsx` reviewed.
+- Code-level review completed.
+- Build/CI/browser runtime verification: **Not verified**.
+
+## 36. Pintu Depth Stacking Consistency
+### User Requirement
+Saat Pintu berputar ke belakang, Digital Invitation/Guestbook kadang terlihat paint di atas Pintu yang sedang berada di depan. Wedding Planner terlihat benar karena kebetulan urutan DOM sebelumnya membantu stacking.
+### Implemented
+- `components/Pintu/PintuSection.tsx` menambahkan `stackOrder` MotionValue berdasarkan depth orbit yang sama dengan `sin(phase)` yang dipakai untuk z/scale.
+- Setiap Pintu sekarang memperoleh `zIndex` dinamis sehingga Pintu paling depan selalu memiliki stacking order lebih tinggi daripada Pintu yang berada di belakang.
+- Static `z-20` pada orbit wrapper tidak lagi menjadi sumber stacking order.
+- Hydration-safe `mounted` guard tetap dipertahankan.
+- PintuCard, routes, hover pause, reduced motion, loop 9 detik, dan rose petals tidak diubah.
+### Commit
+- `f139e8d7ca09da40280106efbc04de69d47e33c7` — `fix(pintu): sync stacking order with orbit depth`.
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `components/Pintu/PintuSection.tsx` reviewed.
+- Code-level review completed.
+- Build/CI/browser runtime verification: **Not verified**.
+
+## 37. Pintu Image Sharpness / High-Resolution Rendering
+### User Requirement
+Gambar Digital Invitation terlihat burem di Pintu, sementara file sumber aslinya tajam.
+### Root Cause
+`next/image` sebelumnya memakai ukuran kandidat maksimal sekitar ukuran CSS card (`190px`/`280px`) dan default image quality, sementara Pintu juga menggunakan transform/orbit scaling. Untuk artwork dengan detail teks seperti Digital Invitation, hasil optimasi/downsampling tersebut dapat terlihat soft.
+### Implemented
+- `components/Pintu/PintuCard.tsx` tidak lagi melakukan internal image scale `0.82`/`1` yang membuat raster image ikut mengalami scaling tambahan.
+- `next/image` sekarang meminta source candidate lebih besar melalui `sizes="(max-width: 767px) 380px, 560px"`.
+- `quality={100}` digunakan agar optimizer tidak menurunkan kualitas artwork secara agresif.
+- `object-cover`, grayscale state, overlay, panel opening, hover/tap, reduced motion, dan Pintu navigation tetap dipertahankan.
+- Tidak mengubah source asset `hp-digital.png`.
+### Commit
+- `e58f0d1792933ef43417dcd7078cc77eef3258b3` — `fix: render Pintu images at native sharpness`.
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `components/Pintu/PintuCard.tsx` reviewed.
 - Code-level review completed.
 - Build/CI/browser runtime verification: **Not verified**.
