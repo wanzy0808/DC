@@ -236,7 +236,7 @@ Navbar dibuat menyatu dengan background landing, tetapi masih terlihat jeda/kota
 - Struktur viewport, Pintu, CTA, routes, dan interaction model tidak diubah.
 - Navbar tetap transparan/non-sticky.
 ### Commit
-- `5ead256324e6c5d1e07c66066eb58ea6f6e57d15`.
+- `5ead256324e6c5d1e07c66066eb58c5d1e07c66066eb58ea6f6e57d15`.
 ### Validation
 - Source-of-truth docs dan landing implementation reviewed.
 - Code-level review completed.
@@ -317,3 +317,21 @@ Image Pintu masih terlihat memiliki background abu-abu/ruang kosong sehingga kur
 - `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `PintuSection.tsx`, dan `PintuCard.tsx` reviewed before implementation.
 - Code-level review completed.
 - Build/CI: **Not verified**.
+
+## 35. Pintu Motion Hydration Mismatch Fix
+### User Report
+Next.js 16.3.3/Turbopack menampilkan console error hydration mismatch pada `components/Pintu/PintuSection.tsx`. Mismatch terjadi pada inline `transform` yang dihasilkan Motion untuk `x`, `y`, `z`, dan `scale`: nilai server dan client berbeda pada render awal.
+### Root Cause
+`MotionValue`/`useTransform` diberikan langsung ke `motion.div` pada SSR render. Motion dapat menghasilkan serialisasi transform awal yang berbeda antara server dan client sebelum browser-mounted state tersedia, sehingga atribut `style.transform` tidak identik saat hydration.
+### Implemented
+- `LoopingPintu` sekarang memakai local `mounted` state.
+- Pada SSR dan client initial render, `motion.div` tidak menerima MotionValue style (`style={undefined}`), sehingga markup awal konsisten.
+- Setelah `useEffect` pertama berjalan di browser, `mounted` menjadi `true` dan style `{ x, y, z, scale, rotateY }` dipasang untuk mengaktifkan orbit Motion.
+- Tidak mengubah durasi loop, depth scaling, hover pause, direct link, reduced-motion, route Pintu, atau rose petals.
+- Tidak menambah dependency baru.
+### Commit
+- `f773ecf31911b05713e4b1b863836c4ff4a6f94c` — `fix(pintu): prevent hydration mismatch from motion styles`.
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `components/Pintu/PintuSection.tsx` reviewed.
+- Code-level review completed.
+- Build/CI/browser runtime verification: **Not verified**.
