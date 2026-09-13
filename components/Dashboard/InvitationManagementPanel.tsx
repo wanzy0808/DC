@@ -2,299 +2,45 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Check, Copy, Eye, KeyRound, LockKeyhole, PenLine, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowUpRight, Check, Copy, Eye, KeyRound, LockKeyhole, PenLine, ShieldCheck } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { slugifyEvent } from "@/lib/invitation-slug";
 import { cn } from "@/lib/utils";
 
-type Invitation = {
-  id: string;
-  slug: string;
-  type: "WEDDING" | "ADAT_AKAD";
-  title: string;
-  isPublished: boolean;
-  passwordProtected: boolean;
-};
-
+type Invitation = { id: string; slug: string; type: "WEDDING" | "ADAT_AKAD"; title: string; isPublished: boolean; passwordProtected: boolean };
 type Props = { paid: boolean };
-
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_INVITATION_ROOT_DOMAIN || "dcwedding.com";
-
-const emptyInvitation = (type: Invitation["type"]): Invitation => ({
-  id: "",
-  slug: "",
-  type,
-  title: "",
-  isPublished: false,
-  passwordProtected: false,
-});
-
-function publicInvitationUrl(weddingSlug: string, specialInvitation?: Invitation) {
-  if (!weddingSlug) return "";
-  const origin = `https://${weddingSlug}.${ROOT_DOMAIN}`;
-  if (!specialInvitation?.title.trim()) return specialInvitation ? "" : `${origin}/`;
-  return `${origin}/${slugifyEvent(specialInvitation.title)}`;
-}
+const emptyInvitation = (type: Invitation["type"]): Invitation => ({ id: "", slug: "", type, title: "", isPublished: false, passwordProtected: false });
+function publicInvitationUrl(weddingSlug: string, specialInvitation?: Invitation) { if (!weddingSlug) return ""; const origin = `https://${weddingSlug}.${ROOT_DOMAIN}`; if (!specialInvitation?.title.trim()) return specialInvitation ? "" : `${origin}/`; return `${origin}/${slugifyEvent(specialInvitation.title)}`; }
 
 export default function InvitationManagementPanel({ paid }: Props) {
   const { locale } = useLanguage();
-  const copy = useMemo(
-    () =>
-      locale === "en"
-        ? {
-            eyebrow: "Digital invitation workspace",
-            title: "Make every first impression unforgettable.",
-            intro: "Shape the invitation, publish when it feels right, and keep every guest-facing detail under your control.",
-            main: "Main wedding",
-            special: "Special event",
-            mainDesc: "Your primary invitation for the wedding celebration and reception.",
-            specialDesc: "A dedicated experience for akad, sangjit, family gatherings, or private moments.",
-            published: "Published",
-            draft: "Draft",
-            preview: "Preview",
-            copyLink: "Copy link",
-            copied: "Link copied.",
-            edit: "Edit design",
-            publish: "Publish",
-            unpublish: "Unpublish",
-            saving: "Saving...",
-            noMain: "Your public link will appear here once the invitation is ready.",
-            noSpecial: "Set an event name in the studio to create its public path.",
-            accessEyebrow: "Privacy & access",
-            accessTitle: "Decide who gets through the door.",
-            accessDesc: "One password protects both the main invitation and every special-event page.",
-            protected: "Protected",
-            publicAccess: "Public access",
-            passwordPlaceholder: "New password",
-            enable: "Protect invitation",
-            change: "Change password",
-            disable: "Remove protection",
-            studioEyebrow: "Design studio",
-            studioTitle: "Turn your story into a beautiful experience.",
-            studioDesc: "Choose a template, refine the palette, shape the typography, then preview the full invitation before publishing.",
-            openStudio: "Open invitation studio",
-            manageAssets: "Manage templates & assets",
-            packageRequired: "Publishing requires a Digital Invitation package.",
-            loading: "Loading invitation...",
-            ready: "Ready to edit.",
-            error: "Something went wrong.",
-            passwordError: "Enter a new password or remove protection.",
-            passwordSaved: "Password protection updated.",
-            passwordMin: "Password must be at least 6 characters.",
-          }
-        : {
-            eyebrow: "Ruang kerja undangan digital",
-            title: "Buat kesan pertama yang tak terlupakan.",
-            intro: "Rancang undangan, publikasikan saat sudah terasa tepat, dan kendalikan setiap detail yang dilihat tamu.",
-            main: "Pernikahan utama",
-            special: "Event khusus",
-            mainDesc: "Undangan utama untuk perayaan pernikahan dan resepsi.",
-            specialDesc: "Pengalaman khusus untuk akad, sangjit, kumpul keluarga, atau momen privat.",
-            published: "Terbit",
-            draft: "Draft",
-            preview: "Preview",
-            copyLink: "Salin link",
-            copied: "Link berhasil disalin.",
-            edit: "Edit desain",
-            publish: "Publish",
-            unpublish: "Unpublish",
-            saving: "Menyimpan...",
-            noMain: "Link publik akan muncul di sini setelah undangan siap.",
-            noSpecial: "Atur nama event di studio untuk membuat alamat publiknya.",
-            accessEyebrow: "Privasi & akses",
-            accessTitle: "Tentukan siapa yang boleh masuk.",
-            accessDesc: "Satu password melindungi undangan utama dan seluruh halaman event khusus.",
-            protected: "Terlindungi",
-            publicAccess: "Akses publik",
-            passwordPlaceholder: "Password baru",
-            enable: "Lindungi undangan",
-            change: "Ganti password",
-            disable: "Matikan proteksi",
-            studioEyebrow: "Design studio",
-            studioTitle: "Ubah cerita kalian menjadi pengalaman yang indah.",
-            studioDesc: "Pilih template, rapikan warna, bentuk tipografi, lalu preview seluruh undangan sebelum dipublikasikan.",
-            openStudio: "Buka invitation studio",
-            manageAssets: "Kelola template & asset",
-            packageRequired: "Publish membutuhkan paket Digital Invitation.",
-            loading: "Memuat undangan...",
-            ready: "Siap diedit.",
-            error: "Terjadi kesalahan.",
-            passwordError: "Masukkan password baru atau matikan proteksi.",
-            passwordSaved: "Proteksi password berhasil diperbarui.",
-            passwordMin: "Password minimal 6 karakter.",
-          },
-    [locale],
-  );
+  const copy = useMemo(() => locale === "en" ? {
+    eyebrow: "Digital invitation workspace", title: "A considered invitation, from first glance to final RSVP.", intro: "Build the experience, check every detail, then publish when it feels unmistakably yours.", main: "Main wedding", special: "Special event", mainDesc: "The primary invitation for your ceremony, reception, and celebration.", specialDesc: "A focused invitation for akad, sangjit, family gatherings, or private moments.", published: "Published", draft: "Draft", preview: "Preview", copyLink: "Copy link", copied: "Link copied.", edit: "Edit design", publish: "Publish", unpublish: "Unpublish", saving: "Saving...", noMain: "The public address will appear once the invitation is ready.", noSpecial: "Add an event name in the studio to create its public address.", accessEyebrow: "Privacy & access", accessTitle: "Keep the guest experience intentional.", accessDesc: "Protect the main invitation and every special-event page with one shared password.", protected: "Protected", publicAccess: "Public access", passwordPlaceholder: "New password", enable: "Protect invitation", change: "Change password", disable: "Remove protection", studioEyebrow: "Design studio", studioTitle: "Make the visual language feel like you.", studioDesc: "Choose a direction, refine the details, and preview the complete invitation before it goes live.", openStudio: "Open invitation studio", manageAssets: "Manage templates & assets", packageRequired: "Publishing requires a Digital Invitation package.", loading: "Loading invitation...", ready: "Ready to edit.", error: "Something went wrong.", passwordSaved: "Password protection updated.", passwordMin: "Password must be at least 6 characters."
+  } : {
+    eyebrow: "Ruang kerja undangan digital", title: "Undangan yang terasa personal, dari kesan pertama hingga RSVP terakhir.", intro: "Bangun pengalamannya, cek setiap detail, lalu publikasikan saat semuanya benar-benar terasa milik kalian.", main: "Pernikahan utama", special: "Event khusus", mainDesc: "Undangan utama untuk prosesi, resepsi, dan seluruh perayaan kalian.", specialDesc: "Undangan khusus untuk akad, sangjit, kumpul keluarga, atau momen yang lebih intim.", published: "Terbit", draft: "Draft", preview: "Preview", copyLink: "Salin link", copied: "Link berhasil disalin.", edit: "Edit desain", publish: "Publish", unpublish: "Unpublish", saving: "Menyimpan...", noMain: "Alamat publik akan muncul setelah undangan siap.", noSpecial: "Tambahkan nama event di studio untuk membuat alamat publiknya.", accessEyebrow: "Privasi & akses", accessTitle: "Jaga pengalaman tamu tetap intentional.", accessDesc: "Lindungi undangan utama dan seluruh halaman event khusus dengan satu password.", protected: "Terlindungi", publicAccess: "Akses publik", passwordPlaceholder: "Password baru", enable: "Lindungi undangan", change: "Ganti password", disable: "Matikan proteksi", studioEyebrow: "Design studio", studioTitle: "Bentuk bahasa visual yang terasa seperti kalian.", studioDesc: "Pilih arahnya, rapikan detailnya, lalu preview seluruh undangan sebelum ditayangkan.", openStudio: "Buka invitation studio", manageAssets: "Kelola template & asset", packageRequired: "Publish membutuhkan paket Digital Invitation.", loading: "Memuat undangan...", ready: "Siap diedit.", error: "Terjadi kesalahan.", passwordSaved: "Proteksi password berhasil diperbarui.", passwordMin: "Password minimal 6 karakter."
+  }, [locale]);
 
-  const [invitations, setInvitations] = useState<Record<Invitation["type"], Invitation>>({
-    WEDDING: emptyInvitation("WEDDING"),
-    ADAT_AKAD: emptyInvitation("ADAT_AKAD"),
-  });
-  const [passwordProtected, setPasswordProtected] = useState(false);
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [busy, setBusy] = useState<string | null>(null);
-  const [message, setMessage] = useState("");
+  const [invitations, setInvitations] = useState<Record<Invitation["type"], Invitation>>({ WEDDING: emptyInvitation("WEDDING"), ADAT_AKAD: emptyInvitation("ADAT_AKAD") });
+  const [passwordProtected, setPasswordProtected] = useState(false); const [password, setPassword] = useState(""); const [loading, setLoading] = useState(true); const [busy, setBusy] = useState<string | null>(null); const [message, setMessage] = useState("");
 
-  async function load() {
-    setLoading(true);
-    try {
-      const [weddingRes, specialRes, passwordRes] = await Promise.all([
-        fetch("/api/invitations?type=WEDDING", { cache: "no-store" }),
-        fetch("/api/invitations?type=ADAT_AKAD", { cache: "no-store" }),
-        fetch("/api/invitations/password", { cache: "no-store" }),
-      ]);
-      const next = { ...invitations };
-      if (weddingRes.ok) next.WEDDING = await weddingRes.json().then((x) => x.invitation);
-      if (specialRes.ok) next.ADAT_AKAD = await specialRes.json().then((x) => x.invitation);
-      setInvitations(next);
-      if (passwordRes.ok) setPasswordProtected(Boolean((await passwordRes.json()).passwordProtected));
-    } finally {
-      setLoading(false);
-    }
-  }
+  async function load() { setLoading(true); try { const [weddingRes, specialRes, passwordRes] = await Promise.all([fetch("/api/invitations?type=WEDDING", { cache: "no-store" }), fetch("/api/invitations?type=ADAT_AKAD", { cache: "no-store" }), fetch("/api/invitations/password", { cache: "no-store" })]); const next = { ...invitations }; if (weddingRes.ok) next.WEDDING = await weddingRes.json().then((x) => x.invitation); if (specialRes.ok) next.ADAT_AKAD = await specialRes.json().then((x) => x.invitation); setInvitations(next); if (passwordRes.ok) setPasswordProtected(Boolean((await passwordRes.json()).passwordProtected)); } finally { setLoading(false); } }
+  useEffect(() => { load().catch(() => setLoading(false)); }, []);
+  async function togglePublish(type: Invitation["type"]) { if (!paid) return; const invitation = invitations[type]; setBusy(`publish-${type}`); setMessage(""); try { const response = await fetch("/api/invitations", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ type, isPublished: !invitation.isPublished }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || copy.error); setInvitations((current) => ({ ...current, [type]: data.invitation })); } catch (error) { setMessage(error instanceof Error ? error.message : copy.error); } finally { setBusy(null); } }
+  async function savePassword() { const trimmed = password.trim(); if (trimmed.length < 6) { setMessage(copy.passwordMin); return; } setBusy("password"); setMessage(""); try { const response = await fetch("/api/invitations/password", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ enabled: true, password: trimmed }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || copy.error); setPasswordProtected(Boolean(data.passwordProtected)); setPassword(""); setMessage(copy.passwordSaved); } catch (error) { setMessage(error instanceof Error ? error.message : copy.error); } finally { setBusy(null); } }
+  async function disablePassword() { setBusy("password-off"); setMessage(""); try { const response = await fetch("/api/invitations/password", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ enabled: false }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || copy.error); setPasswordProtected(false); setPassword(""); setMessage(copy.passwordSaved); } catch (error) { setMessage(error instanceof Error ? error.message : copy.error); } finally { setBusy(null); } }
+  const weddingUrl = publicInvitationUrl(invitations.WEDDING.slug); const specialUrl = publicInvitationUrl(invitations.WEDDING.slug, invitations.ADAT_AKAD); function copyLink(url: string) { if (!url) return; navigator.clipboard.writeText(url).then(() => setMessage(copy.copied)); }
 
-  useEffect(() => {
-    load().catch(() => setLoading(false));
-  }, []);
-
-  async function togglePublish(type: Invitation["type"]) {
-    if (!paid) return;
-    const invitation = invitations[type];
-    setBusy(`publish-${type}`);
-    setMessage("");
-    try {
-      const response = await fetch("/api/invitations", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type, isPublished: !invitation.isPublished }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || copy.error);
-      setInvitations((current) => ({ ...current, [type]: data.invitation }));
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : copy.error);
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  async function savePassword() {
-    const trimmed = password.trim();
-    if (trimmed.length < 6) {
-      setMessage(copy.passwordMin);
-      return;
-    }
-    setBusy("password");
-    setMessage("");
-    try {
-      const response = await fetch("/api/invitations/password", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: true, password: trimmed }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || copy.error);
-      setPasswordProtected(Boolean(data.passwordProtected));
-      setPassword("");
-      setMessage(copy.passwordSaved);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : copy.error);
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  async function disablePassword() {
-    setBusy("password-off");
-    setMessage("");
-    try {
-      const response = await fetch("/api/invitations/password", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ enabled: false }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || copy.error);
-      setPasswordProtected(false);
-      setPassword("");
-      setMessage(copy.passwordSaved);
-    } catch (error) {
-      setMessage(error instanceof Error ? error.message : copy.error);
-    } finally {
-      setBusy(null);
-    }
-  }
-
-  const weddingUrl = publicInvitationUrl(invitations.WEDDING.slug);
-  const specialUrl = publicInvitationUrl(invitations.WEDDING.slug, invitations.ADAT_AKAD);
-
-  function copyLink(url: string) {
-    if (!url) return;
-    navigator.clipboard.writeText(url).then(() => setMessage(copy.copied));
-  }
-
-  return (
-    <div className="mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
-      <section className="relative overflow-hidden rounded-[2rem] border border-border bg-background px-6 py-10 sm:px-10 sm:py-14">
-        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/2 bg-[radial-gradient(circle_at_80%_20%,color-mix(in_srgb,var(--primary)_10%,transparent),transparent_62%)]" />
-        <div className="relative max-w-3xl">
-          <div className="flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            {copy.eyebrow}
-          </div>
-          <h1 className="mt-4 max-w-2xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl">{copy.title}</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">{copy.intro}</p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <Link href="/dashboard/editor?type=WEDDING" className={cn(buttonVariants({ variant: "default" }), "rounded-full px-5")}> <PenLine className="h-4 w-4" /> {copy.openStudio}</Link>
-            <Link href="/dashboard" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-5")}>{locale === "en" ? "Back to dashboard" : "Kembali ke dashboard"} <ArrowUpRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-      </section>
-
-      {message && <div className="mt-5 flex items-center gap-2 border-y border-border px-1 py-3 text-xs text-muted-foreground" role="status"><Check className="h-4 w-4 text-primary" />{message}</div>}
-
-      <section className="mt-12">
-        <div className="mb-5 flex items-end justify-between gap-4">
-          <div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">01 / Invitation</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">{locale === "en" ? "Your invitations" : "Undangan kalian"}</h2></div>
-          <span className="hidden text-xs text-muted-foreground sm:block">{loading ? copy.loading : copy.ready}</span>
-        </div>
-        <div className="grid gap-8 lg:grid-cols-2">
-          <InvitationCard invitation={invitations.WEDDING} publicUrl={weddingUrl} paid={paid} loading={loading} special={false} copy={copy} onCopy={() => copyLink(weddingUrl)} onPublish={() => togglePublish("WEDDING")} busy={busy === "publish-WEDDING"} />
-          <InvitationCard invitation={invitations.ADAT_AKAD} publicUrl={specialUrl} paid={paid} loading={loading} special copy={copy} onCopy={() => copyLink(specialUrl)} onPublish={() => togglePublish("ADAT_AKAD")} busy={busy === "publish-ADAT_AKAD"} />
-        </div>
-      </section>
-
-      <section className="mt-12 grid gap-10 border-t border-border pt-10 lg:grid-cols-[1.15fr_.85fr]">
-        <div>
-          <div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-primary"><LockKeyhole className="h-4 w-4" /></div><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">02 / {copy.accessEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.accessTitle}</h2><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{copy.accessDesc}</p></div></div>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row"><input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={copy.passwordPlaceholder} disabled={!paid || loading} className="min-h-11 min-w-0 flex-1 border-b border-border bg-transparent px-1 text-sm outline-none transition focus:border-primary" /><Button disabled={!paid || loading || busy === "password" || password.trim().length < 6} onClick={savePassword} className="rounded-full">{passwordProtected ? copy.change : copy.enable}</Button>{passwordProtected && <Button disabled={busy === "password-off"} onClick={disablePassword} variant="outline" className="rounded-full">{copy.disable}</Button>}</div>
-          <div className="mt-4 flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5" />{passwordProtected ? copy.protected : copy.publicAccess}</div>
-        </div>
-
-        <div className="border-l border-border pl-0 lg:pl-10">
-          <div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center rounded-full border border-border text-primary"><KeyRound className="h-4 w-4" /></div><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">03 / {copy.studioEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.studioTitle}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.studioDesc}</p></div></div>
-          <div className="mt-6 flex flex-wrap gap-2"><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "default" }), "rounded-full")}>{copy.openStudio}</Link><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "outline" }), "rounded-full")}>{copy.manageAssets}</Link></div>
-        </div>
-      </section>
-    </div>
-  );
+  return <div className="mx-auto min-w-0 max-w-7xl overflow-x-clip px-5 pb-16 pt-8 sm:px-8 sm:pt-12">
+    <section className="border-y border-border py-10 sm:py-14"><div className="grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,.85fr)] lg:items-end"><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{copy.eyebrow}</p><h1 className="mt-4 max-w-4xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-[1.12] tracking-tight sm:text-5xl lg:text-6xl">{copy.title}</h1></div><div className="min-w-0 lg:border-l lg:border-border lg:pl-8"><p className="max-w-xl text-sm leading-7 text-muted-foreground sm:text-base">{copy.intro}</p><div className="mt-6 flex flex-wrap gap-2"><Link href="/dashboard/editor?type=WEDDING" className={cn(buttonVariants({ variant: "default" }), "shrink-0")}><PenLine className="h-4 w-4" />{copy.openStudio}</Link><Link href="/dashboard" className={cn(buttonVariants({ variant: "ghost" }), "shrink-0")}><ArrowUpRight className="h-4 w-4" />Dashboard</Link></div></div></div></section>
+    {message && <div className="mt-5 flex min-w-0 items-center gap-2 border-y border-border px-1 py-3 text-xs text-muted-foreground" role="status"><Check className="h-4 w-4 shrink-0" />{message}</div>}
+    <section className="mt-14 min-w-0"><div className="mb-6 flex items-end justify-between gap-4 border-b border-border pb-4"><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">01 / Invitation</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">{locale === "en" ? "Your invitations" : "Undangan kalian"}</h2></div><span className="hidden shrink-0 text-xs text-muted-foreground sm:block">{loading ? copy.loading : copy.ready}</span></div><div className="grid min-w-0 gap-0 lg:grid-cols-2"><InvitationCard invitation={invitations.WEDDING} publicUrl={weddingUrl} paid={paid} loading={loading} special={false} copy={copy} onCopy={() => copyLink(weddingUrl)} onPublish={() => togglePublish("WEDDING")} busy={busy === "publish-WEDDING"} /><InvitationCard invitation={invitations.ADAT_AKAD} publicUrl={specialUrl} paid={paid} loading={loading} special copy={copy} onCopy={() => copyLink(specialUrl)} onPublish={() => togglePublish("ADAT_AKAD")} busy={busy === "publish-ADAT_AKAD"} /></div></section>
+    <section className="mt-14 grid min-w-0 gap-10 border-t border-border pt-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,.9fr)]"><div className="min-w-0"><div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center border border-border text-muted-foreground"><LockKeyhole className="h-4 w-4" /></div><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">02 / {copy.accessEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.accessTitle}</h2><p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">{copy.accessDesc}</p></div></div><div className="mt-7 grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center"><input value={password} onChange={(e) => setPassword(e.target.value)} type="password" placeholder={copy.passwordPlaceholder} disabled={!paid || loading} className="min-h-11 min-w-0 w-full border-b border-border bg-transparent px-1 text-sm outline-none transition focus:border-primary" /><Button disabled={!paid || loading || busy === "password" || password.trim().length < 6} onClick={savePassword}>{passwordProtected ? copy.change : copy.enable}</Button>{passwordProtected && <Button disabled={busy === "password-off"} onClick={disablePassword} variant="outline">{copy.disable}</Button>}</div><div className="mt-4 flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground"><ShieldCheck className="h-3.5 w-3.5" />{passwordProtected ? copy.protected : copy.publicAccess}</div></div><div className="min-w-0 border-t border-border pt-8 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0"><div className="flex items-start gap-4"><div className="mt-1 grid h-9 w-9 shrink-0 place-items-center border border-border text-muted-foreground"><KeyRound className="h-4 w-4" /></div><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">03 / {copy.studioEyebrow}</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold sm:text-2xl">{copy.studioTitle}</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">{copy.studioDesc}</p></div></div><div className="mt-6 flex flex-wrap gap-2"><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "default" }))}>{copy.openStudio}</Link><Link href="/dashboard/editor" className={cn(buttonVariants({ variant: "outline" }))}>{copy.manageAssets}</Link></div></div></section>
+  </div>;
 }
 
 function InvitationCard({ invitation, publicUrl, paid, loading, special, copy, onCopy, onPublish, busy }: { invitation: Invitation; publicUrl: string; paid: boolean; loading: boolean; special: boolean; copy: Record<string, string>; onCopy: () => void; onPublish: () => void; busy: boolean }) {
-  const title = special ? copy.special : copy.main;
-  const description = special ? copy.specialDesc : copy.mainDesc;
-  const emptyText = special ? copy.noSpecial : copy.noMain;
-
-  return (
-    <article className="group border-b border-border pb-7 transition-transform duration-300 hover:-translate-y-0.5">
-      <div className="flex items-start justify-between gap-4 pb-5">
-        <div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{special ? "EVENT / 02" : "WEDDING / 01"}</p><h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold">{title}</h3><p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p></div><span className={cn("shrink-0 border-b pb-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em]", invitation.isPublished ? "border-primary text-primary" : "border-border text-muted-foreground")}>{loading ? "..." : invitation.isPublished ? copy.published : copy.draft}</span>
-      </div>
-      <div className="border-y border-border py-4"><p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Public URL</p><p className="mt-2 break-all text-xs leading-5 text-foreground/75">{publicUrl || emptyText}</p></div>
-      <div className="mt-4 flex flex-wrap gap-2"><Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "rounded-full", !publicUrl && "pointer-events-none opacity-40")}><Eye className="h-3.5 w-3.5" />{copy.preview}</Link><Button variant="outline" size="sm" disabled={!publicUrl} onClick={onCopy} className="rounded-full"><Copy className="h-3.5 w-3.5" />{copy.copyLink}</Button><Link href={`/dashboard/editor${special ? "?type=ADAT_AKAD" : "?type=WEDDING"}`} className={cn(buttonVariants({ variant: "secondary", size: "sm" }), "rounded-full")}><PenLine className="h-3.5 w-3.5" />{copy.edit}</Link><Button disabled={!paid || busy} onClick={onPublish} size="sm" className="rounded-full">{busy ? copy.saving : invitation.isPublished ? copy.unpublish : copy.publish}</Button></div>
-      {!paid && <p className="mt-4 text-xs text-muted-foreground">{copy.packageRequired}</p>}
-    </article>
-  );
+  const title = special ? copy.special : copy.main; const description = special ? copy.specialDesc : copy.mainDesc; const emptyText = special ? copy.noSpecial : copy.noMain;
+  return <article className="group min-w-0 border-b border-border py-7 first:pt-0 lg:border-r lg:pr-8 lg:first:pt-0 lg:[&:nth-child(2)]:border-r-0 lg:[&:nth-child(2)]:pl-8 lg:[&:nth-child(2)]:pr-0"><div className="flex min-w-0 items-start justify-between gap-4 pb-5"><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{special ? "EVENT / 02" : "WEDDING / 01"}</p><h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold">{title}</h3><p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p></div><span className={cn("shrink-0 border-b pb-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em]", invitation.isPublished ? "border-primary/40 text-primary" : "border-border text-muted-foreground")}>{loading ? "..." : invitation.isPublished ? copy.published : copy.draft}</span></div><div className="min-w-0 border-y border-border py-4"><p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Public URL</p><p className="mt-2 min-w-0 break-all text-xs leading-5 text-foreground/75">{publicUrl || emptyText}</p></div><div className="mt-4 grid min-w-0 grid-cols-2 gap-2 sm:flex sm:flex-wrap"><Link href={publicUrl || "#"} target="_blank" aria-disabled={!publicUrl} className={cn(buttonVariants({ variant: "outline", size: "sm" }), "min-w-0", !publicUrl && "pointer-events-none opacity-40")}><Eye className="h-3.5 w-3.5" />{copy.preview}</Link><Button variant="outline" size="sm" disabled={!publicUrl} onClick={onCopy}><Copy className="h-3.5 w-3.5" />{copy.copyLink}</Button><Link href={`/dashboard/editor${special ? "?type=ADAT_AKAD" : "?type=WEDDING"}`} className={cn(buttonVariants({ variant: "ghost", size: "sm" }), "min-w-0")}><PenLine className="h-3.5 w-3.5" />{copy.edit}</Link><Button disabled={!paid || busy} onClick={onPublish} size="sm" className="col-span-2 sm:col-span-1">{busy ? copy.saving : invitation.isPublished ? copy.unpublish : copy.publish}</Button></div>{!paid && <p className="mt-4 text-xs leading-5 text-muted-foreground">{copy.packageRequired}</p>}</article>;
 }
