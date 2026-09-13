@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLogoutButton() {
   const router = useRouter();
@@ -11,12 +12,8 @@ export default function AdminLogoutButton() {
   }
 
   return (
-    <button
-      type="button"
-      onClick={logout}
-      className="rounded-xl bg-[#7A1C25] px-5 py-3 text-sm font-medium text-white"
-    >
+    <Button type="button" variant="outline" size="lg" onClick={logout}>
       Keluar
-    </button>
+    </Button>
   );
 }
