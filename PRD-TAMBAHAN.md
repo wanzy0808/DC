@@ -397,43 +397,45 @@ Tulisan `Wedding Planner` yang tampil hitam di bawah Pintu dianggap duplikat dan
 - Code-level review completed.
 - Build/CI: **Not verified**.
 
-# Current Source-of-Truth Order
+## 31. Pintu Circular Motion Loop — Hover Pause & Direct Link
+### User Requirement
+Pintu diminta mengikuti pola circular/looping motion seperti referensi `LoopingImages`, berhenti ketika di-hover, dan ketika diklik langsung membuka link workspace.
 
-1. `AGENTS.md` — coding/design-system constraints.
-2. `prd.md` — product requirements and product decisions.
-3. `PRD-TAMBAHAN.md` — implementation history and validation record.
-4. `README.md` — public technical overview and architecture.
-5. Database/schema/API implementation — runtime source of truth.
+### Implemented
+- `components/Pintu/PintuSection.tsx` mengganti loop berbasis perpindahan index menjadi shared `MotionValue` orbit menggunakan `useMotionValue`, `useTransform`, dan `animate(..., repeat: Infinity)`.
+- Tiga Pintu bergerak pada orbit horizontal dengan perubahan `x`, `y`, `z`, `scale`, `opacity`, dan `rotateY` sehingga fokus depan terasa seperti carousel 3D/circular.
+- Hover pada Pintu menghentikan autoplay dan menetapkan Pintu yang sedang di-hover sebagai active workspace; pointer keluar melanjutkan loop.
+- `PintuCard.tsx` tetap menggunakan `next/link` sehingga klik card langsung menuju route Pintu tanpa tombol navigasi perantara.
+- Tombol previous/next di bawah Pintu dihapus karena tidak lagi diperlukan untuk pola circular autoplay.
+- `useReducedMotion()` tetap dihormati; autoplay tidak dijalankan saat reduced motion aktif.
+- Rose petals, route Pintu, dan dependency tidak diubah.
 
-# Current Non-Negotiable Product Rules
+### Commit
+- `ae8949d9a65b56d89b5537a207da803a239a76ad` — refine Pintu cards and remove navigation buttons.
+- Circular-loop implementation sebelumnya tetap tercatat pada `6d825ea64a721ced97afea63257fb7efa58d37a3`.
 
-- Brand tetap **DC Organizer**; jangan mengembalikan legacy brand Citin atau DC Wedding pada UI baru.
-- `/dashboard` dan Beranda tidak boleh dihapus.
-- Database adalah single source of truth.
-- Tidak boleh ada fake/mock invitation data.
-- Jangan membuat duplicate form untuk data inti yang sudah ada di database.
-- Couple names harus konsisten antara WEDDING dan Event Khusus.
-- Couple names pada Rangkaian Acara read-only.
-- Authorization wajib server-side.
-- UI entitlement harus mencerminkan server entitlement.
-- Extend Over Replace.
-- Legacy route dipertahankan jika dibutuhkan untuk backward compatibility.
-- Event URL canonical menggunakan nama event sebagai path.
-- Password protection berlaku konsisten untuk root dan event path.
-- Asset custom mengikuti entitlement dan package limits.
-- Usher App/check-in onsite tetap Guest Book.
-- Pintu tetap menjadi navigation surface landing page dan tidak boleh dihapus tanpa instruksi eksplisit.
-- Rose petals pada `components/Layout/background.tsx` tidak boleh diubah tanpa instruksi eksplisit.
-- Motion wajib performance-first, memakai transform/opacity, menghormati reduced motion, dan tidak mengorbankan usability.
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `PintuSection.tsx`, dan `PintuCard.tsx` reviewed before implementation.
+- Code-level review completed.
+- Build/CI: **Not verified**.
 
-# Current Public URL Rules
+## 32. Pintu Card Text Fit & Image Framing Refinement
+### User Requirement
+Tulisan di dalam card banyak terpotong di kiri/kanan. Gambar juga diminta sedikit diperkecil setelah framing pintu agar lebih banyak area gambar terlihat.
 
-| Resource | Canonical URL |
-|---|---|
-| Main Wedding | `https://[nama-pasangan].dcwedding.com/` |
-| Event Khusus | `https://[nama-pasangan].dcwedding.com/[nama-event]` |
-| Dashboard | `/dashboard` |
-| Undangan Digital | `/dashboard/undangan-digital` |
-| Studio | `/dashboard/editor` |
-| Legacy Event Khusus | `/event-khusus` |
-| Legacy internal invitation | `/invite/[slug]` |
+### Implemented
+- `components/Pintu/PintuCard.tsx` diperlebar pada breakpoint mobile dari `170px` menjadi `190px` untuk memberi ruang copy tanpa mengubah layout orbit utama.
+- Tag menggunakan wrapping yang lebih aman (`flex-wrap`, `break-words`, ukuran font lebih kecil) sehingga label tidak terpotong pada sisi card.
+- Judul dan deskripsi diberi `break-words`, `max-w-full`, dan leading yang lebih rapat agar tetap berada di dalam bidang pintu.
+- Image rendering dipindahkan dari `background-image` ke `next/image` dengan `object-contain`, lalu image layer di-scale sekitar `0.90–0.92`. Ini membuat gambar diukur terhadap frame pintu terlebih dahulu lalu diperkecil sedikit sehingga lebih banyak bagian gambar terlihat dibanding pendekatan `background-size: cover` yang lebih agresif memotong tepi.
+- Gradient tetap menjadi overlay terpisah sehingga readability teks dipertahankan tanpa memperbesar crop gambar.
+- Link card tetap langsung menuju route Pintu; tidak ada tombol navigasi tambahan.
+- Tidak menambahkan dependency baru dan rose petals tetap untouched.
+
+### Commit
+- `527c68dcb37f640bfca393eff5f153d1b1864702` — improve Pintu card text layout and image framing.
+
+### Validation
+- `PintuSection.tsx` dan `PintuCard.tsx` reviewed against `AGENTS.md`, `prd.md`, `README.md`, dan `SKILL.md`.
+- Code-level review completed.
+- Build/CI: **Not verified**.
