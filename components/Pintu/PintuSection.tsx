@@ -32,6 +32,7 @@ const LOOP_RADIUS_X = 235;
 const LOOP_RADIUS_Y = 72;
 const LOOP_PHASES = 3;
 const FRONT_PHASE = 0.25;
+const CARD_SCALE = 0.92;
 
 const doors: Door[] = [
   {
@@ -102,14 +103,12 @@ function LoopingPintu({
   const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
   const y = useTransform(progress, (offset) => Math.sin(phase(offset)) * LOOP_RADIUS_Y);
   const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 90);
-  const scale = useTransform(progress, (offset) => 0.82 + (Math.sin(phase(offset)) + 1) * 0.12);
-  const opacity = useTransform(progress, (offset) => 0.62 + (Math.sin(phase(offset)) + 1) * 0.19);
   const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
 
   return (
     <motion.div
       onMouseEnter={() => onHover(door.id)}
-      style={{ x, y, z, scale, opacity, rotateY }}
+      style={{ x, y, z, scale: CARD_SCALE, rotateY }}
       className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
