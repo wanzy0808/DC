@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft, Sparkles } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
@@ -19,18 +19,26 @@ export default async function DigitalInvitationWorkspacePage() {
   const paid = hasPaidDigitalInvitation(invitation?.payment);
 
   return (
-    <main className="min-h-screen bg-[#FAF7F2] text-[#2D2222] font-[family-name:var(--font-fauna)] dark:bg-[#0B0A0E] dark:text-[#F8F1EB]">
-      <header className="sticky top-0 z-40 flex min-h-16 items-center gap-3 border-b border-[#ddd0c8] bg-[#FAF7F2]/95 px-4 backdrop-blur dark:border-white/10 dark:bg-[#0B0A0E]/95 sm:px-7">
-        <Link href="/dashboard" aria-label="Kembali ke dashboard" className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-xl text-[#7A1C25] hover:bg-[#7A1C25]/10 dark:text-[#E8A5AE] dark:hover:bg-white/5">
-          <ArrowLeft className="h-5 w-5" />
-        </Link>
-        <Mail className="h-5 w-5 text-[#7A1C25] dark:text-[#E8A5AE]" />
-        <div>
-          <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">Undangan Digital</p>
-          <p className="text-xs text-[#5A4545] dark:text-white/70">Main Wedding & Event Khusus</p>
+    <main className="min-h-screen bg-background text-foreground font-[family-name:var(--font-fauna)]">
+      <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur-xl">
+        <div className="mx-auto flex min-h-16 max-w-7xl items-center gap-3 px-5 sm:px-8">
+          <Link
+            href="/dashboard"
+            aria-label="Kembali ke dashboard"
+            className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Link>
+          <span className="h-5 w-px bg-border" />
+          <Sparkles className="h-4 w-4 text-primary" />
+          <div className="min-w-0">
+            <p className="font-[family-name:var(--font-cinzel)] text-xs font-semibold uppercase tracking-[0.16em]">DC Organizer</p>
+            <p className="truncate text-xs text-muted-foreground">Digital Invitation</p>
+          </div>
         </div>
       </header>
-      <InvitationManagementPanel accent="text-[#7A1C25] dark:text-[#E8A5AE]" button="bg-[#7A1C25] hover:bg-[#5E141C] dark:bg-[#C26B70] dark:hover:bg-[#A9565C]" paid={paid} />
+
+      <InvitationManagementPanel paid={paid} />
     </main>
   );
 }
