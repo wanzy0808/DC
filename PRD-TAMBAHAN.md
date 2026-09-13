@@ -378,3 +378,29 @@ The workspace still felt visually noisy: multiple pill-shaped actions competed w
 
 ## Validation
 Reviewed source against AGENTS, SKILL, PRD, README, canonical Button variants, responsive layout rules, and existing invitation API contracts. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Neutral-First Invitation Palette
+
+## Problem
+The invitation workspace still carried too much visual color. The desired direction is a calm editorial interface where the page background and most content remain neutral, while Rose is concentrated in actions, outlines, and small visual accents.
+
+## Implementation
+- Removed remaining page-level Rose treatment from backgrounds and kept the workspace on the neutral theme background.
+- Changed ordinary headings, body copy, URLs, metadata, and utility text to readable near-black/neutral text hierarchy rather than Rose text.
+- Kept Rose intentionally limited to primary shared buttons, meaningful outlines/status states, and small security/action icons.
+- Added a neutral-first 60 / 30 / 10 composition guideline to `AGENTS.md`: white/warm-white and whitespace dominate the canvas, Rose is concentrated in meaningful controls, and small accents complete the hierarchy.
+- Preserved the existing bilingual content, invitation APIs, publish/unpublish flow, password protection, preview/editor routes, responsive overflow protections, and shared Button system.
+- No dependency, schema, API, or route changes.
+
+## Affected Files
+- `components/Dashboard/InvitationManagementPanel.tsx`
+- `AGENTS.md`
+
+## Commits
+- `70b2672e92e4b0d9a8f08cc30316a8bc94a4d1c4` — refine invitation palette to neutral surfaces with restrained rose accents.
+- `3e2d87fb6ebebd8310c6e26e9a233028547e2f99` — document neutral-first 60 / 30 / 10 visual balance.
+
+## Validation
+Reviewed source against AGENTS, SKILL, PRD, README, canonical Button variants, and responsive layout rules. Build/CI not verified.
