@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Languages } from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import type { Locale } from "@/lib/i18n";
 
@@ -16,17 +15,20 @@ export default function LanguageToggle() {
   };
 
   return (
-    <div className="flex min-h-11 items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--background)]/70 p-1 backdrop-blur-md" aria-label="Language selector">
-      <Languages className="ml-2 h-4 w-4 text-[var(--muted-foreground)]" aria-hidden="true" />
+    <div
+      className="flex min-h-11 items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--background)]/70 p-1 backdrop-blur-md"
+      aria-label="Language selector"
+    >
       {(["id", "en"] as const).map((item) => (
         <button
           key={item}
           type="button"
           onClick={() => changeLocale(item)}
           aria-pressed={locale === item}
-          className={`min-h-9 min-w-9 rounded-full px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] transition duration-200 ${locale === item ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
+          aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
+          className={`min-h-9 min-w-10 rounded-full px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] transition duration-200 ${locale === item ? "bg-[var(--primary)] text-[var(--primary-foreground)]" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
         >
-          {item}
+          {item.toUpperCase()}
         </button>
       ))}
     </div>
