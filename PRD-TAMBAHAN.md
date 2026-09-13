@@ -147,7 +147,7 @@ The bilingual navbar migration unintentionally removed the existing light/dark t
 ## Commits
 - `9523a9b53a061f2a8ceb4e25d42063c3c54b7e85` — clean ID/EN language selector.
 - `c4a7706c66b3fa222959d7ab64a189825443c816` — restore accessible light/dark theme toggle.
-- `ef86e40020e95558c014850e8683311aa65ca5b5` — restore theme control in navbar.
+- `ef86cecd20e95558c014850e8683311aa65ca5b5` — restore theme control in navbar.
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, and the existing theme/i18n architecture. Build/CI not verified.
@@ -286,3 +286,31 @@ After fixing the localized package catalog access, the showcase CTA still used a
 
 ## Validation
 Reviewed against AGENTS button rules, SKILL, PRD, README, shared Button implementation, and the localized package catalog contract. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Digital Invitation Workspace Redesign
+
+## Direction
+Reading this as: a premium consumer wedding-product workspace for couples, with an editorial, calm, romantic language, leaning toward a high-end invitation atelier rather than a generic SaaS dashboard.
+
+## Implementation
+- Redesigned `/dashboard/undangan-digital` as a more editorial invitation workspace with stronger hierarchy, generous spacing, restrained Rose accents, and semantic theme tokens.
+- Reworked the hero into a clear product moment with professional bilingual copy focused on the emotional value of the invitation rather than technical settings.
+- Redesigned Main Wedding and Special Event cards with clearer publication states, public URL presentation, action hierarchy, and more deliberate information density.
+- Added dedicated Privacy & Access and Design Studio sections so security and creative controls feel like part of one coherent workspace.
+- Reused the shared Button / `buttonVariants` system for all primary and secondary actions; no page-specific CTA colors were introduced.
+- Added Indonesian / English copy through the existing `useLanguage` provider, with English written as product copy rather than literal translation.
+- Preserved all existing invitation APIs, database-backed invitation data, package entitlement checks, public URL generation, password protection, publish/unpublish behavior, preview, editor routes, and backward-compatible routing.
+- Replaced legacy page-level colors and the stale customer-facing `DC Wedding` label with the canonical DC Organizer visual language.
+
+## Affected Files
+- `app/dashboard/undangan-digital/page.tsx`
+- `components/Dashboard/InvitationManagementPanel.tsx`
+
+## Commits
+- `badec4a78c0a9b8ccfca917251454da9ac773e3c` — redesign Digital Invitation workspace shell.
+- `553464bb4699cba0f1e80e14f4985cd3049a4a41` — redesign Digital Invitation management experience.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, existing invitation APIs, entitlement checks, shared Button system, and bilingual locale architecture. Build/CI not verified.
