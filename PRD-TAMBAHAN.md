@@ -151,3 +151,29 @@ The bilingual navbar migration unintentionally removed the existing light/dark t
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, and the existing theme/i18n architecture. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Canonical Button Color Standardization
+
+## Problem
+Button colors were being defined inconsistently across reusable UI and page-level implementations, making primary actions look different between screens and between light/dark themes. The design system already defines Rose as the canonical action color, but the rule was not explicit enough at the shared button component level.
+
+## Implementation
+- Standardized `components/ui/button.tsx` as the canonical source for reusable application button variants.
+- `default` is now explicitly the primary CTA using the theme's `primary` token.
+- `secondary` remains the canonical soft-rose action.
+- `outline`, `ghost`, `link`, and `destructive` retain semantic roles rather than receiving page-specific colors.
+- Added an explicit agent rule requiring reusable buttons to use shared Button variants instead of arbitrary color classes.
+- Kept light/dark colors token-driven so the same button semantics remain visually consistent across themes.
+
+## Affected Files
+- `components/ui/button.tsx`
+- `AGENTS.md`
+
+## Commits
+- `8b8517bc0bbaea552e3d289fc9bae4fa05cb5309` — standardize shared button variants.
+- `0f2096d6f3a52853be86a70bf5c0c80cde6bb723` — document canonical button color rules in AGENTS.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, existing Tailwind/shadcn architecture, and canonical Rose theme tokens. Build/CI not verified.
