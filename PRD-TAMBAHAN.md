@@ -239,3 +239,26 @@ Manual registration asked for first name and last name even though the dashboard
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, existing dashboard onboarding behavior, Prisma schema, and current authentication flow. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Fix Package Showcase Locale Runtime Error
+
+## Problem
+The package catalog was migrated from plain strings/arrays to localized objects. `PackageShowcase` still treated `item.name`, `item.description`, and especially `item.features` as non-localized values, causing the runtime error `item.features.map is not a function`.
+
+## Implementation
+- Converted `PackageShowcase` into a client component so it can consume the shared `useLanguage` locale state.
+- Updated package rendering to read `item.name[locale]`, `item.description[locale]`, and `item.features[locale]` from the localized catalog.
+- Kept the package keys, prices, routes, and catalog API unchanged.
+- Localized the showcase CTA and featured-package label for both Indonesian and English.
+- Replaced the stale customer-facing `DC Wedding` label with the canonical **DC Organizer** brand in this component.
+
+## Affected Files
+- `components/Marketing/PackageShowcase.tsx`
+
+## Commit
+- `ca0cfd9c15a703b04b3dd08440b00f65ea62664c` — fix localized package catalog access in PackageShowcase.
+
+## Validation
+Reviewed the component against the current `lib/packages/catalog.ts` localized type contract, shared language provider, AGENTS, SKILL, PRD, README, and package localization changes. Build/CI not verified.
