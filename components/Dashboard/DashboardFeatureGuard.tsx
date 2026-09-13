@@ -3,6 +3,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { LockKeyhole, X } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Access = { digitalInvitation: boolean; guestbook: boolean; bundle: boolean };
 
@@ -47,9 +49,9 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
               <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <LockKeyhole className="h-5 w-5" />
               </div>
-              <button type="button" onClick={() => setUpgradeOpen(false)} className="rounded-full p-2 hover:bg-black/5 dark:hover:bg-white/10">
+              <Button type="button" variant="ghost" size="icon" onClick={() => setUpgradeOpen(false)} aria-label="Tutup">
                 <X className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
             <p className="mt-5 text-[10px] font-semibold uppercase tracking-[.2em] text-primary">Upgrade paket</p>
             <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
@@ -60,7 +62,7 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
                 ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
                 : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
             </p>
-            <Link href="/packages" onClick={() => setUpgradeOpen(false)} className="mt-6 inline-flex w-full items-center justify-center rounded-xl bg-primary px-5 py-3 text-xs font-medium text-primary-foreground">
+            <Link href="/packages" onClick={() => setUpgradeOpen(false)} className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full rounded-xl")}>
               Lihat paket
             </Link>
           </div>
