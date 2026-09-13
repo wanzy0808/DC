@@ -33,7 +33,7 @@ export default function LanguageToggle() {
             className={buttonVariants({
               variant: selected ? "ghost" : "ghost",
               size: "sm",
-              className: `h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] ${selected ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : "text-primary/65 hover:bg-primary/5 hover:text-primary"}`,
+              className: `h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] ${selected ? "bg-primary/40 text-primary hover:bg-primary/15 hover:text-primary" : "text-primary/65 hover:bg-primary/5 hover:text-primary"}`,
             })}
           >
             {item.toUpperCase()}
