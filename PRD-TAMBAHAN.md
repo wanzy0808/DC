@@ -177,3 +177,39 @@ Button colors were being defined inconsistently across reusable UI and page-leve
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, existing Tailwind/shadcn architecture, and canonical Rose theme tokens. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Button Consistency Audit: Auth & Dashboard Actions
+
+## Problem
+After establishing the canonical shared Button variants, several existing auth and dashboard actions still bypassed the standard and used page-specific background colors, including deprecated rose values. This caused visible CTA differences between login, registration, admin, and dashboard surfaces.
+
+## Implementation
+- Migrated the login primary submit action to the shared `Button` default variant.
+- Migrated the login Google action to `buttonVariants({ variant: "outline" })` so the anchor keeps its navigation semantics while sharing the Button visual system.
+- Replaced the admin logout custom rose button with the shared `outline` variant.
+- Replaced the dashboard feature-upgrade close control with a shared `ghost` icon button.
+- Replaced the dashboard upgrade CTA with the shared `default` button styling while keeping the existing `Link` navigation behavior through `buttonVariants`.
+- Migrated registration actions to shared `Button` / `buttonVariants`: Google registration, submit CTA, login switches, and password visibility controls.
+- Updated the Event Panel save action to use the shared `default` Button variant instead of an injected page-specific color class.
+- Converted Event Panel event-type tabs from raw colored `<button>` elements to semantic `secondary` / `ghost` Button variants.
+- Preserved existing routes, API behavior, entitlement logic, form behavior, and theme architecture.
+
+## Affected Files
+- `app/login/page.tsx`
+- `components/Admin/AdminLogoutButton.tsx`
+- `components/Dashboard/DashboardFeatureGuard.tsx`
+- `components/Layout/Navbar/RegisterDialog.tsx`
+- `components/Dashboard/EventPanel.tsx`
+
+## Commits
+- `4dfc735be924342639ff7981943600c1ef611232` — standardize login actions.
+- `eb9e1eb9859e0d7cb0de763bb3df5d647b8ad3af` — standardize admin logout action.
+- `08400776f3e340275c6ca2c93f0ca59a23cddd81` — standardize dashboard upgrade actions.
+- `e1c32a1efc08239530c60806fae5f587e703f571` — standardize registration actions.
+- `541824d7e8ed46d17890559a0566b6737ab2c2e8` — standardize Event Panel save action.
+- `bf060b6c46c622cb7b4eab744b4c0f45c83a40bb` — standardize Event Panel tabs.
+
+## Validation
+Reviewed the changed source against AGENTS, SKILL, PRD, README, and the canonical Button implementation. GitHub combined status for the latest commit returned no status checks; build/CI therefore remains unverified.
