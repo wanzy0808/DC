@@ -16,7 +16,7 @@ export default function Home() {
   const reduced = useReducedMotion();
 
   return (
-    <div className="public-page relative h-[calc(100dvh-88px)] overflow-hidden bg-[var(--background)] text-[var(--foreground)]">
+    <div className="public-page relative h-[calc(100dvh-88px)] overflow-hidden text-[var(--foreground)]">
       <RomanticBackground />
 
       <main className="relative z-10 mx-auto h-full w-[92vw] max-w-[1400px]">
