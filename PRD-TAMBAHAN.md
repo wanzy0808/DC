@@ -60,3 +60,42 @@ The PRD requires the Interactive Seating Builder roster to contain only MANUAL g
 
 ## Validation
 Reviewed against the PRD seating-roster requirement and server-authoritative authorization principle. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Bilingual UI Foundation (Bahasa Indonesia / English)
+
+## Problem
+The application currently presents customer-facing copy primarily in Indonesian, with no shared locale model or persistent language preference. Adding translation page-by-page without a central source would create duplicated strings and inconsistent terminology.
+
+## Implementation
+- Added a lightweight, dependency-free locale layer with `id` and `en` as the only supported locales.
+- Language preference is persisted in the `dc_locale` cookie and initialized server-side in the root layout.
+- Added a reusable `LanguageProvider` and `LanguageToggle` so the language switch does not require introducing a third-party i18n dependency.
+- Updated `<html lang>` from the persisted locale.
+- Localized the primary landing-page copy, global navigation/burger menu, and footer using centralized copy written for natural product-language rather than literal word-for-word translation.
+- Preserved existing routes, Pintu navigation, protected rose-petal background, theme provider, and current application architecture.
+- This foundation is intended for incremental migration of the remaining dashboard, studio, package, help, login, invitation, and guestbook pages using the same message source.
+
+## Affected Files
+- `lib/i18n.ts`
+- `components/I18n/LanguageProvider.tsx`
+- `components/I18n/LanguageToggle.tsx`
+- `app/layout.tsx`
+- `app/page.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `components/Layout/Footer.tsx`
+
+## Commits
+- `6a126dc5f5af283cb9de78f9e109b94a75454b22` — bilingual message foundation.
+- `fd5880c5132908af486d98a304175f4e9272dc84` — language provider.
+- `4dc71862bc70f18667f86e0da19ed9c0a307520d` — language switcher.
+- `b876ce5cd3a735fff167c77cd94bf9b179f3b9ee` — server-side locale initialization.
+- `e318c07e35c0813e4381e2b71a50c49181aeb799` — navbar language switcher.
+- `504a8f1aee3b0e212df9a4feaf2cb5aa467c5458` — landing-page localization.
+- `7a1e7dc2eef3a62d0db0dae7742794e67544e385` — navigation localization.
+- `cd3fb82656e49618278cbbd1351228184314f8fc` — footer localization.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, existing Next.js architecture, and dependency constraints. No new dependency was introduced. Build/CI not verified.
