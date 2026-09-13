@@ -72,3 +72,28 @@ Dokumen ini adalah implementation log / PRD tambahan untuk repository `wanzy0808
 ## 5. Validation
 - Source reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, dan existing guest/seating APIs.
 - Build/CI: **Not verified**; workflow run belum tersedia untuk commit ini.
+
+---
+
+# 2026-09-13 — Seating Builder Limits Enforcement
+
+## 1. Problem / Gap
+- PRD menetapkan generator denah maksimal **100 meja** dan **50 kursi per meja**, tetapi `POST /api/tables` sebelumnya hanya memvalidasi kapasitas minimum.
+- Endpoint juga menerima nilai `shape` arbitrary yang tidak digunakan oleh UI saat ini.
+
+## 2. Implementation
+- Kapasitas meja sekarang dibatasi server-side pada `1–50` kursi.
+- Jumlah meja per invitation dibatasi server-side pada maksimal `100` meja.
+- Shape dibatasi ke nilai yang sudah digunakan UI: `ROUND`, `RECTANGLE`, dan `SQUARE`.
+- Batas dilakukan di API sehingga tidak bergantung pada validasi client-side.
+- Tidak ada perubahan schema atau dependency.
+
+## 3. Affected Files
+- `app/api/tables/route.ts`
+
+## 4. Commit
+- `ae73a728be0610e8e1c6437a33bb7924d1588eed` — enforce seating builder limits.
+
+## 5. Validation
+- Source reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, dan existing seating implementation.
+- Build/CI: **Not verified**; workflow run belum tersedia untuk commit ini.
