@@ -1,7 +1,14 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  animate,
+  motion,
+  type MotionValue,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from "motion/react";
 import PintuCard from "@/components/Pintu/PintuCard";
 import { Button } from "@/components/ui/button";
 
@@ -12,8 +19,6 @@ type PintuSectionProps = {
   setActiveDoor: React.Dispatch<React.SetStateAction<DoorValue>>;
 };
 
-const LOOP_INTERVAL = 4200;
-
 type Door = {
   id: 1 | 2 | 3;
   title: string;
@@ -23,179 +28,186 @@ type Door = {
   desc: string;
 };
 
+const LOOP_DURATION = 7;
+const LOOP_RADIUS_X = 235;
+const LOOP_RADIUS_Y = 72;
+const LOOP_PHASES = 3;
+const FRONT_PHASE = 0.25;
+
+const doors: Door[] = [
+  {
+    id: 1,
+    title: "Wedding Planner",
+    href: "/wedding-planner",
+    bgImage: "wo.png",
+    tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
+    desc: "Perencanaan dan koordinasi pernikahan.",
+  },
+  {
+    id: 2,
+    title: "Digital Invitation",
+    href: "/d-invitation",
+    bgImage: "hp-digital.png",
+    tags: ["UNDANGAN", "RSVP"],
+    desc: "Undangan digital untuk acara pernikahan.",
+  },
+  {
+    id: 3,
+    title: "Guestbook",
+    href: "/guestbook",
+    bgImage: "bukutamu.png",
+    tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
+    desc: "Automasi kehadiran tamu dengan QR code.",
+  },
+];
+
+function circularDistance(a: number, b: number) {
+  const difference = Math.abs(a - b);
+  return Math.min(difference, 1 - difference);
+}
+
+function getFrontDoor(progress: number) {
+  let closestIndex = 0;
+  let closestDistance = Number.POSITIVE_INFINITY;
+
+  for (let index = 0; index < LOOP_PHASES; index += 1) {
+    const phase = (index / LOOP_PHASES + progress) % 1;
+    const distance = circularDistance(phase, FRONT_PHASE);
+
+    if (distance < closestDistance) {
+      closestDistance = distance;
+      closestIndex = index;
+    }
+  }
+
+  return closestIndex + 1;
+}
+
+function LoopingPintu({
+  door,
+  index,
+  progress,
+  reducedMotion,
+  onHover,
+}: {
+  door: Door;
+  index: number;
+  progress: MotionValue<number>;
+  reducedMotion: boolean | null;
+  onHover: (door: DoorValue) => void;
+}) {
+  const phase = (offset: number) => ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
+
+  const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
+  const y = useTransform(progress, (offset) => Math.sin(phase(offset)) * LOOP_RADIUS_Y);
+  const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 90);
+  const scale = useTransform(progress, (offset) => 0.82 + (Math.sin(phase(offset)) + 1) * 0.12);
+  const opacity = useTransform(progress, (offset) => 0.62 + (Math.sin(phase(offset)) + 1) * 0.19);
+  const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
+
+  return (
+    <motion.div
+      onMouseEnter={() => onHover(door.id)}
+      style={{ x, y, z, scale, opacity, rotateY }}
+      initial={reducedMotion ? false : { opacity: 0, scale: 0.72 }}
+      animate={reducedMotion ? undefined : { opacity: 1 }}
+      transition={{
+        opacity: { duration: 0.7, delay: index * 0.1, ease: [0.22, 1, 0.36, 1] },
+      }}
+      className="absolute left-1/2 top-1/2 z-20 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
+    >
+      <PintuCard
+        number=""
+        title={door.title}
+        href={door.href}
+        bgImage={door.bgImage}
+        innerDetails={{ tags: door.tags, desc: door.desc }}
+        isActive={true}
+        reducedMotion={reducedMotion}
+      />
+    </motion.div>
+  );
+}
+
 export default function PintuSection({ activeDoor, setActiveDoor }: PintuSectionProps) {
-  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const loopTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const reduced = useReducedMotion();
-  const currentSelected = activeDoor === null ? 1 : activeDoor;
+  const [isPaused, setIsPaused] = useState(false);
+  const progress = useMotionValue(2 / 3);
+  const animationRef = useRef<ReturnType<typeof animate> | null>(null);
+  const lastFrontRef = useRef<DoorValue>(2);
 
-  const doors: Door[] = [
-    {
-      id: 1,
-      title: "Wedding Planner",
-      href: "/wedding-planner",
-      bgImage: "wo.png",
-      tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
-      desc: "Perencanaan dan koordinasi pernikahan.",
-    },
-    {
-      id: 2,
-      title: "Digital Invitation",
-      href: "/d-invitation",
-      bgImage: "hp-digital.png",
-      tags: ["UNDANGAN", "RSVP"],
-      desc: "Undangan digital untuk acara pernikahan.",
-    },
-    {
-      id: 3,
-      title: "Guestbook",
-      href: "/guestbook",
-      bgImage: "bukutamu.png",
-      tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
-      desc: "Automasi kehadiran tamu dengan QR code.",
-    },
-  ];
+  useEffect(() => {
+    if (reduced || isPaused) {
+      animationRef.current?.stop();
+      animationRef.current = null;
+      return;
+    }
 
-  const advanceLoop = () => {
-    setActiveDoor((prev) => {
-      const current = prev ?? 1;
-      return current === 3 ? 1 : ((current + 1) as DoorValue);
+    animationRef.current?.stop();
+    animationRef.current = animate(progress, progress.get() + 1, {
+      repeat: Infinity,
+      repeatType: "loop",
+      repeatDelay: 0.8,
+      ease: [0.42, 0, 0.58, 1],
+      duration: LOOP_DURATION,
     });
-  };
+
+    return () => {
+      animationRef.current?.stop();
+      animationRef.current = null;
+    };
+  }, [isPaused, progress, reduced]);
 
   useEffect(() => {
     if (reduced) return;
 
-    loopTimerRef.current = setInterval(advanceLoop, LOOP_INTERVAL);
-    return () => {
-      if (loopTimerRef.current) clearInterval(loopTimerRef.current);
-    };
-  }, [reduced]);
+    const unsubscribe = progress.on("change", (value) => {
+      const nextDoor = getFrontDoor(((value % 1) + 1) % 1) as DoorValue;
 
-  const pauseLoop = () => {
-    if (loopTimerRef.current) {
-      clearInterval(loopTimerRef.current);
-      loopTimerRef.current = null;
-    }
+      if (nextDoor !== lastFrontRef.current) {
+        lastFrontRef.current = nextDoor;
+        setActiveDoor(nextDoor);
+      }
+    });
+
+    return unsubscribe;
+  }, [progress, reduced, setActiveDoor]);
+
+  const pauseLoop = (door: DoorValue) => {
+    setIsPaused(true);
+    setActiveDoor(door);
   };
 
   const resumeLoop = () => {
-    if (reduced || loopTimerRef.current) return;
-    loopTimerRef.current = setInterval(advanceLoop, LOOP_INTERVAL);
-  };
-
-  const handleDoorHover = (doorNumber: DoorValue) => {
-    pauseLoop();
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    hoverTimerRef.current = setTimeout(() => setActiveDoor(doorNumber), 180);
-  };
-
-  const handleMouseLeaveSection = () => {
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    setActiveDoor(null);
-    resumeLoop();
+    setIsPaused(false);
   };
 
   const toggleNext = () => {
-    pauseLoop();
-    advanceLoop();
-    resumeLoop();
+    setIsPaused(true);
+    setActiveDoor((prev) => (prev === null ? 2 : prev === 3 ? 1 : ((prev + 1) as DoorValue)));
   };
 
   const togglePrev = () => {
-    pauseLoop();
-    setActiveDoor((prev) => {
-      const current = prev ?? 1;
-      return current === 1 ? 3 : ((current - 1) as DoorValue);
-    });
-    resumeLoop();
-  };
-
-  const getDoorTransform = (doorId: number) => {
-    if (currentSelected === doorId) {
-      return {
-        x: 0,
-        z: 140,
-        rotateY: 0,
-        scale: 1.08,
-        zIndex: 30,
-        opacity: 1,
-        filter: "blur(0px)",
-      };
-    }
-
-    const isLeft =
-      (currentSelected === 1 && doorId === 3) ||
-      (currentSelected === 2 && doorId === 1) ||
-      (currentSelected === 3 && doorId === 2);
-
-    return isLeft
-      ? {
-          x: -175,
-          z: -80,
-          rotateY: 32,
-          scale: 0.82,
-          zIndex: 10,
-          opacity: 0.62,
-          filter: "blur(0.5px)",
-        }
-      : {
-          x: 175,
-          z: -80,
-          rotateY: -32,
-          scale: 0.82,
-          zIndex: 10,
-          opacity: 0.62,
-          filter: "blur(0.5px)",
-        };
+    setIsPaused(true);
+    setActiveDoor((prev) => (prev === null ? 3 : prev === 1 ? 3 : ((prev - 1) as DoorValue)));
   };
 
   return (
     <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
       <div
-        onMouseEnter={pauseLoop}
-        onMouseLeave={handleMouseLeaveSection}
-        className="relative flex h-[310px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[410px] md:h-[500px]"
+        onMouseLeave={resumeLoop}
+        className="relative flex h-[360px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[440px] md:h-[500px]"
       >
-        {doors.map((door, index) => {
-          const transform = getDoorTransform(door.id);
-          return (
-            <motion.div
-              key={door.id}
-              onClick={() => {
-                pauseLoop();
-                setActiveDoor(door.id);
-              }}
-              onMouseEnter={() => handleDoorHover(door.id)}
-              initial={reduced ? false : { opacity: 0, y: 24, scale: 0.94 }}
-              animate={transform}
-              transition={
-                reduced
-                  ? { duration: 0.1 }
-                  : {
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 25,
-                      mass: 0.75,
-                      delay: index * 0.04,
-                    }
-              }
-              whileHover={reduced ? undefined : { y: -6 }}
-              className="absolute cursor-pointer"
-              style={{ zIndex: transform.zIndex }}
-            >
-              <PintuCard
-                number=""
-                title={door.title}
-                href={door.href}
-                bgImage={door.bgImage}
-                innerDetails={{ tags: door.tags, desc: door.desc }}
-                isActive={activeDoor === door.id}
-                reducedMotion={reduced}
-              />
-            </motion.div>
-          );
-        })}
+        {doors.map((door, index) => (
+          <LoopingPintu
+            key={door.id}
+            door={door}
+            index={index}
+            progress={progress}
+            reducedMotion={reduced}
+            onHover={pauseLoop}
+          />
+        ))}
       </div>
 
       <div className="z-30 -mt-8 flex w-full max-w-[750px] items-center justify-center gap-24 sm:-mt-10 sm:gap-30">
