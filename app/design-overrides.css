@@ -1,0 +1,107 @@
+/* DC Organizer visual refresh — application-wide component layer. */
+
+@layer components {
+  .dc-dashboard {
+    background:
+      radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--secondary) 28%, transparent), transparent 28rem),
+      var(--background) !important;
+  }
+
+  .dc-dashboard aside {
+    background: color-mix(in srgb, var(--background) 94%, var(--primary)) !important;
+    border-right: 1px solid color-mix(in srgb, var(--primary) 15%, var(--border)) !important;
+    color: var(--foreground) !important;
+    box-shadow: 14px 0 40px rgb(31 20 23 / 4%);
+  }
+
+  .dc-dashboard aside nav { padding: 1rem !important; }
+  .dc-dashboard aside nav > p {
+    color: var(--muted-foreground) !important;
+    letter-spacing: .18em;
+    margin-bottom: .4rem;
+  }
+  .dc-dashboard aside nav button {
+    min-height: 44px;
+    border: 1px solid transparent;
+    color: var(--foreground) !important;
+    border-radius: 14px !important;
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+  .dc-dashboard aside nav button:hover {
+    background: var(--muted) !important;
+    border-color: color-mix(in srgb, var(--primary) 14%, transparent) !important;
+    transform: translateX(2px);
+  }
+  .dc-dashboard aside nav button.bg-\[\#7A1C25\]\/10,
+  .dc-dashboard aside nav button[class*="bg-[#7A1C25]/10"] {
+    background: color-mix(in srgb, var(--primary) 10%, transparent) !important;
+    color: var(--primary) !important;
+    border-color: color-mix(in srgb, var(--primary) 20%, transparent) !important;
+    box-shadow: 0 8px 24px color-mix(in srgb, var(--primary) 10%, transparent);
+  }
+
+  .dc-dashboard header {
+    height: 72px !important;
+    background: color-mix(in srgb, var(--background) 88%, transparent) !important;
+    border-bottom: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border)) !important;
+    color: var(--foreground) !important;
+    box-shadow: 0 10px 30px rgb(31 20 23 / 3%);
+  }
+  .dc-dashboard header a, .dc-dashboard header button { color: var(--foreground) !important; }
+  .dc-dashboard header a:first-of-type { color: var(--primary) !important; letter-spacing: .12em; }
+  .dc-dashboard header button:hover { color: var(--primary) !important; }
+
+  .dc-dashboard main { min-height: calc(100vh - 72px); }
+  .dc-dashboard main > * { animation: dcPageIn 420ms cubic-bezier(.22,1,.36,1) both; }
+  .dc-dashboard section {
+    border-color: color-mix(in srgb, var(--primary) 12%, var(--border)) !important;
+    background: color-mix(in srgb, var(--card) 88%, var(--background)) !important;
+    box-shadow: 0 16px 45px rgb(31 20 23 / 4%);
+  }
+  .dc-dashboard button,
+  .dc-dashboard a,
+  .dc-dashboard input,
+  .dc-dashboard textarea,
+  .dc-dashboard select {
+    transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease;
+  }
+  .dc-dashboard main button:not(:disabled):hover { transform: translateY(-1px); }
+  .dc-dashboard main button:not(:disabled):active { transform: translateY(0) scale(.985); }
+  .dc-dashboard input:focus, .dc-dashboard textarea:focus, .dc-dashboard select:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent) !important;
+  }
+  .dc-dashboard [role="dialog"],
+  .dc-dashboard > div > div[class*="fixed"] > div {
+    border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important;
+    box-shadow: 0 30px 80px rgb(31 20 23 / 16%);
+  }
+
+  .dc-dashboard a[aria-label="Bantuan WhatsApp"] {
+    width: 52px !important;
+    height: 52px !important;
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+    box-shadow: 0 14px 35px color-mix(in srgb, var(--primary) 22%, transparent) !important;
+  }
+
+  /* Common dashboard child components: unify cards, pills, tabs and tables without rewriting feature logic. */
+  .dc-dashboard [class*="rounded-2xl"],
+  .dc-dashboard [class*="rounded-3xl"] { border-radius: 18px; }
+  .dc-dashboard table { border-radius: 16px; overflow: hidden; }
+  .dc-dashboard table thead { background: color-mix(in srgb, var(--primary) 7%, var(--card)) !important; }
+  .dc-dashboard table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: .08em; font-size: .68rem; }
+
+  .dc-navbar { background: color-mix(in srgb, var(--background) 82%, transparent) !important; backdrop-filter: blur(18px); }
+  .dc-navbar > div { width: min(90vw, 1320px) !important; padding-top: 1rem !important; padding-bottom: 1rem !important; }
+  .dc-navbar a > div { color: var(--primary) !important; }
+
+  .dc-footer-refresh { border-color: color-mix(in srgb, var(--primary) 12%, var(--border)); }
+}
+
+@keyframes dcPageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-dashboard main > * { animation: none; }
+  .dc-dashboard button, .dc-dashboard a { transition: none; }
+}
