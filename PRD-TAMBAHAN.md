@@ -375,6 +375,28 @@ Copy di sisi kiri landing harus kembali mengikuti Pintu yang sedang dipilih. Saa
 - `app/page.tsx`, `components/Pintu/PintuSection.tsx`, dan `components/Pintu/PintuCard.tsx` reviewed against `AGENTS.md`, `prd.md`, `README.md`, dan `SKILL.md`.
 - Build/CI: **Not verified**.
 
+## 30. Pintu Continuous Loop & Duplicate Label Cleanup
+### User Requirement
+Tulisan `Wedding Planner` yang tampil hitam di bawah Pintu dianggap duplikat dan diminta dihilangkan. Pintu juga diminta bergerak looping terus seperti carousel/circular image loop.
+
+### Implemented
+- Label judul hitam di bawah Pintu dihapus; judul tetap tersedia pada card Pintu sebagai label visual utama.
+- `PintuSection.tsx` sekarang memiliki autoplay loop setiap `4.2s` yang memindahkan fokus Pintu secara berurutan `1 → 2 → 3 → 1`.
+- Transisi loop tetap memakai Motion spring dan transform 3D sehingga Pintu bergerak antar posisi kiri/tengah/kanan secara kontinu.
+- Hover pada area Pintu menghentikan autoplay agar user dapat memilih Pintu tanpa layout bergerak di bawah pointer.
+- Saat pointer keluar, autoplay dilanjutkan kembali.
+- Tombol previous/next tetap tersedia dan sekarang memenuhi target interaktif minimum `44x44px`.
+- `useReducedMotion()` menonaktifkan autoplay dan memakai transisi minimal untuk pengguna yang meminta reduced motion.
+- Tidak mengubah rose petals, route Pintu, atau dependency.
+
+### Commit
+- `7255daa9e0de2f44be9143979a8b08ac7667fc31` — make Pintu navigation continuously loop and remove duplicate bottom title.
+
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, `PRD-TAMBAHAN.md`, dan implementation Pintu direview sebelum perubahan.
+- Code-level review completed.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
