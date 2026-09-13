@@ -17,7 +17,7 @@ export default function LanguageToggle() {
 
   return (
     <div
-      className="flex min-h-11 items-center gap-1 border border-primary/25 bg-background p-1"
+      className="flex h-11 items-center gap-1 border border-primary/35 bg-transparent p-1"
       aria-label="Language selector"
     >
       {(["id", "en"] as const).map((item) => {
@@ -31,9 +31,9 @@ export default function LanguageToggle() {
             aria-pressed={selected}
             aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
             className={buttonVariants({
-              variant: selected ? "default" : "ghost",
+              variant: selected ? "ghost" : "ghost",
               size: "sm",
-              className: "min-h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em]",
+              className: `h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] ${selected ? "bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary" : "text-primary/65 hover:bg-primary/5 hover:text-primary"}`,
             })}
           >
             {item.toUpperCase()}
