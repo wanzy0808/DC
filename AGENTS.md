@@ -72,6 +72,11 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Do not use Rose as a large decorative glow, repeated card fill, or default body-text color.
 - Text hierarchy should come primarily from typography, spacing, layout, and opacity.
 
+### Navbar Control Standard
+- Public-navbar controls use the same restrained opacity treatment established in the current implementation; do not increase their fill opacity or redesign them into solid/pill-heavy controls without explicit user instruction.
+- Theme toggle, language selector, and burger trigger should read as one control family through consistent dimensions, borders, spacing, and subtle Rose hover treatment.
+- The public navbar itself stays visually continuous with the page canvas; do not add a contrasting navbar block merely to mask background effects.
+
 ### Button Color Standard
 - All reusable application buttons MUST use the shared `components/ui/button.tsx` variants instead of arbitrary background/text color classes.
 - `default` is the canonical primary CTA: `var(--primary)` with `var(--primary-foreground)`.
