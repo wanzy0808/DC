@@ -309,6 +309,28 @@ Landing page terasa terlalu blurry karena ambient pink berbentuk lingkaran. User
 - Background source reviewed after change; rose-petal block intentionally preserved.
 - Build/CI: **Not verified**.
 
+## 27. Landing Single-Viewport Simplification & Workspace Copy Removal
+### User Requirement
+Landing diminta menjadi **satu halaman/viewport** tanpa scroll section lanjutan. Copy `Choose your workspace` dan `Buka pintu yang kamu butuhkan.` dihilangkan agar Pintu langsung menjadi visual navigation utama.
+
+### Implemented
+- `app/page.tsx` disederhanakan menjadi satu hero viewport dengan tinggi `calc(100dvh - 88px)` dan `overflow-hidden`.
+- Section lanjutan product story dan CTA dihapus dari landing agar tidak ada vertical page scrolling.
+- Copy `Choose your workspace` dan `Buka pintu yang kamu butuhkan.` dihapus dari landing.
+- Hero tetap mempertahankan tagline canonical, CTA, product capability metadata, dan Pintu.
+- `components/Pintu/PintuSection.tsx` disesuaikan tingginya agar Pintu tetap muat di viewport desktop/mobile tanpa mengubah route atau interaction model.
+- Pintu tetap menyediakan tiga tujuan: Wedding Planner, Digital Invitation, dan Guestbook.
+- Rose petals tetap untouched.
+- Tidak menambahkan dependency baru.
+
+### Commits
+- `ff6e56a2d807b7002726e2b061b3033e1ac5a922` — simplify landing into single viewport experience.
+- `1181f3ed13adf807b44bee97cfcdf0ce86e2a765` — fit Pintu navigation to single viewport landing.
+
+### Validation
+- `app/page.tsx` dan `components/Pintu/PintuSection.tsx` reviewed after implementation.
+- Build/CI: **Not verified**.
+
 # Current Source-of-Truth Order
 
 1. `AGENTS.md` — coding/design-system constraints.
