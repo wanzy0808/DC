@@ -10,7 +10,6 @@ import {
   useTransform,
 } from "motion/react";
 import PintuCard from "@/components/Pintu/PintuCard";
-import { Button } from "@/components/ui/button";
 
 type DoorValue = 1 | 2 | 3 | null;
 
@@ -179,16 +178,6 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
     setIsPaused(false);
   };
 
-  const toggleNext = () => {
-    setIsPaused(true);
-    setActiveDoor((prev) => (prev === null ? 2 : prev === 3 ? 1 : ((prev + 1) as DoorValue)));
-  };
-
-  const togglePrev = () => {
-    setIsPaused(true);
-    setActiveDoor((prev) => (prev === null ? 3 : prev === 1 ? 3 : ((prev - 1) as DoorValue)));
-  };
-
   return (
     <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
       <div
@@ -206,25 +195,6 @@ export default function PintuSection({ activeDoor, setActiveDoor }: PintuSection
             onHover={pauseLoop}
           />
         ))}
-      </div>
-
-      <div className="z-30 -mt-8 flex w-full max-w-[750px] items-center justify-center gap-24 sm:-mt-10 sm:gap-30">
-        <Button
-          size="icon"
-          onClick={togglePrev}
-          aria-label="Pintu sebelumnya"
-          className="h-11 w-11 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
-        >
-          ←
-        </Button>
-        <Button
-          size="icon"
-          onClick={toggleNext}
-          aria-label="Pintu berikutnya"
-          className="h-11 w-11 shrink-0 cursor-pointer rounded-full border border-primary bg-primary text-primary-foreground shadow-lg transition-transform duration-300 hover:scale-[1.02] active:scale-[0.98]"
-        >
-          →
-        </Button>
       </div>
     </div>
   );
