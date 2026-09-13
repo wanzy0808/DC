@@ -124,3 +124,30 @@ The `/packages` route was still Indonesian-only even after the shared locale fou
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, existing package API contract, and canonical DC Organizer branding. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Restore Theme Toggle & Clean Language Selector
+
+## Problem
+The bilingual navbar migration unintentionally removed the existing light/dark theme control. The language control also used the generic `Languages` icon, which visually introduced an Asian-language glyph and could be mistaken for a Mandarin/Chinese language option even though the supported locales are only Indonesian and English.
+
+## Implementation
+- Restored the existing theme control to the public navbar beside the language selector.
+- Reworked `ThemeToggle` to use `Sun` / `Moon` Lucide icons with accessible labels and no emoji glyphs.
+- Preserved the existing `localStorage` theme persistence and `dark` document class behavior.
+- Simplified the language selector to explicit `ID` and `EN` buttons only; removed the ambiguous `Languages` icon.
+- No new locale was added: supported locales remain exactly `id` and `en`.
+
+## Affected Files
+- `components/Theme/ThemeContext.tsx`
+- `components/I18n/LanguageToggle.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+
+## Commits
+- `9523a9b53a061f2a8ceb4e25d42063c3c54b7e85` — clean ID/EN language selector.
+- `c4a7706c66b3fa222959d7ab64a189825443c816` — restore accessible light/dark theme toggle.
+- `ef86e40020e95558c014850e8683311aa65ca5b5` — restore theme control in navbar.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, and the existing theme/i18n architecture. Build/CI not verified.
