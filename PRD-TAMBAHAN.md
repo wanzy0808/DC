@@ -356,3 +356,24 @@ Menu burger di kanan perlu dibenahi agar panel navigasi terasa lebih rapi, propo
 - `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, `Navbar.tsx`, `BurgerMenuContent.tsx`, dan `sheet.tsx` reviewed.
 - Code-level review completed.
 - Build/CI/browser runtime verification: **Not verified**.
+
+## 37. Brand Palette Realignment — Logo Rose `#C07A84`
+### User Requirement
+Seluruh warna aplikasi dikembalikan mengikuti warna logo utama `#C07A84`, dengan light dan dark theme yang tetap nyaman dibaca.
+### Implemented
+- `app/globals.css` menjadikan `#C07A84` sebagai brand/primary anchor untuk light theme dan sumber utama seluruh family rose.
+- Light theme diselaraskan menjadi `#C07A84` primary, `#D9A3AA` supporting rose, `#A65E69` hover/deep rose, `#FAF8F8` background, `#F7ECEE` surface, dan `#241D1F` text.
+- Dark theme diselaraskan menjadi `#100D0F` background, `#21181A` surface, `#D9A3AA` primary accent, `#C07A84` secondary brand rose, `#F1C9CE` highlight, dan `#F8F3F4` text.
+- Border, input, chart, sidebar, table, focus ring, dashboard shell, Invitation Studio, public page, dan navbar sekarang mengambil warna dari semantic theme tokens/family `#C07A84` baru.
+- `prd.md` dan `README.md` diperbarui agar tidak lagi mendefinisikan palette lama sebagai canonical theme.
+- Palette lama `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, dan `#1A181E` dinyatakan deprecated.
+- Pintu, route, motion, dan rose petals tidak diubah.
+- Tidak menambah dependency.
+### Commit
+- `bfeb821b5cdd392dfa8bedd1fc8cf75dcfbe5d3c` — `style(theme): align palette with C07A84 logo`.
+- `2d756f1c7f9b6de190d6d86c2bc5bc62b90ec1ea` — `docs(prd): align theme with C07A84 brand`.
+- `d9303fe69b50a45192eff04975c1001c777dbbb9` — `docs(readme): align theme palette with C07A84`.
+### Validation
+- `AGENTS.md`, `SKILL.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, dan `app/globals.css` reviewed.
+- Code-level theme consistency reviewed.
+- Build/CI/browser runtime verification: **Not verified**.
