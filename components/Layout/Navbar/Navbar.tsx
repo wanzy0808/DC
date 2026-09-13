@@ -15,7 +15,7 @@ export default function Navbar() {
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
-    <header className="dc-navbar sticky top-0 z-50 w-full bg-[color-mix(in_srgb,var(--background)_82%,transparent)] text-[var(--foreground)] backdrop-blur-xl transition-colors duration-500">
+    <header className="dc-navbar relative z-50 w-full bg-transparent text-[var(--foreground)] transition-colors duration-500">
       <div className="mx-auto flex w-[92vw] max-w-[1400px] items-center justify-between py-5">
         <Link href="/" className="group block">
           <div className="font-[family-name:var(--font-dc-heading)] text-2xl font-bold leading-none tracking-[0.12em] text-[var(--primary)] transition-transform group-hover:scale-[1.01] sm:text-3xl">DC Organizer</div>
