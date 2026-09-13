@@ -29,10 +29,10 @@ const products = [
 ];
 
 const menuItems = [
-  { href: "/login", label: "Masuk ke workspace", icon: LogIn, trailing: "arrow" },
-  { href: "/packages", label: "Paket & harga", icon: Package, trailing: "arrow" },
-  { href: "/template-design", label: "Template", icon: LayoutTemplate, trailing: "arrow" },
-  { href: "/help", label: "Bantuan", icon: CircleHelp, trailing: "arrow" },
+  { href: "/login", label: "Masuk ke workspace", icon: LogIn },
+  { href: "/packages", label: "Paket & harga", icon: Package },
+  { href: "/template-design", label: "Template", icon: LayoutTemplate },
+  { href: "/help", label: "Bantuan", icon: CircleHelp },
 ] as const;
 
 export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps) {
@@ -43,10 +43,6 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
   const itemClass =
     "group flex min-h-14 w-full items-center justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)]/55 px-4 py-3 text-left text-[var(--foreground)] transition duration-300 hover:-translate-y-0.5 hover:border-[var(--primary)]/40 hover:bg-[var(--secondary)] hover:text-[var(--secondary-foreground)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)]";
 
-  const entrance = shouldReduceMotion
-    ? undefined
-    : { opacity: 1, y: 0 };
-
   return (
     <SheetContent
       side="right"
@@ -54,8 +50,8 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
     >
       <motion.div
         initial={shouldReduceMotion ? false : { opacity: 0, x: 18 }}
-        animate={entrance}
-        transition={shouldReduceMotion ? undefined : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         className="flex min-h-0 flex-1 flex-col overflow-y-auto px-5 pb-5 pt-7 sm:px-6"
       >
         <SheetHeader className="mb-6 shrink-0 p-0 pr-10 text-left">
@@ -72,11 +68,7 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
 
         <nav className="space-y-3 font-[family-name:var(--font-dc-body)] text-sm" aria-label="Navigasi utama">
           {menuItems.slice(0, 1).map(({ href, label, icon: Icon }) => (
-            <SheetClose
-              key={href}
-              nativeButton={false}
-              render={<Link href={href} className={itemClass} />}
-            >
+            <SheetClose key={href} nativeButton={false} render={<Link href={href} className={itemClass} />}>
               <span className="flex items-center gap-3">
                 <Icon className="h-5 w-5 text-[var(--primary)] transition-colors group-hover:text-[var(--secondary-foreground)]" />
                 {label}
@@ -120,7 +112,7 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
                   className="border-t border-[var(--border)]"
                 >
                   <div className="space-y-1 p-2">
-                    {products.map(({ href, label, icon: Icon, description }, index) => (
+                    {products.map(({ href, label, icon: Icon, description }) => (
                       <SheetClose
                         key={href}
                         nativeButton={false}
