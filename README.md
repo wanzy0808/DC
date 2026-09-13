@@ -39,20 +39,18 @@ A modern, high-performance wedding organizer, digital wedding invitation, and gu
 - Typography: Fauna One — Primary Body Text & Interface UI
 - Typography: DM Mono — Technical Labels, Codes, & Metadata
 - Light Theme:
-  - Primary/action: `#C07A84`
-  - Supporting accent: `#D9A3AA`
-  - Hover/pressed: `#A65E69`
-  - Background: `#FAF8F8`
-  - Surface: `#F7ECEE`
-  - Primary text: `#241D1F`
-  - Muted text: `#7F4B55`
+  - Background: `#FFFFFF`
+  - Headings, icons, buttons, links, help chat, menu, and accents: `#C07A84`
+  - Primary text: `#111111`
+  - Secondary text: black with opacity
+  - Surfaces remain white; do not use pink as a page background or repeated card fill
 - Dark Theme:
-  - Background: `#100D0F`
-  - Surface: `#21181A`
-  - Primary accent: `#D9A3AA`
-  - Secondary brand accent: `#C07A84`
-  - Highlight: `#F1C9CE`
-  - Primary text: `#F8F3F4`
+  - Background: `#0B0B0C`
+  - Headings, icons, buttons, links, help chat, menu, and accents: `#C07A84`
+  - Primary text: `#FFFFFF`
+  - Secondary text: white with opacity
+  - Surfaces remain near-black/dark neutral; do not use pink as a page background or repeated card fill
+- Visual balance follows 60/30/10 as a guideline: keep the canvas dominant and concentrate Rose on meaningful brand elements.
 - Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, `#1A181E`
 
 ## Public Invitation Architecture
