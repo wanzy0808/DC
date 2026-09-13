@@ -516,3 +516,31 @@ The public navbar controls still looked like separate visual systems: the menu t
 
 ## Validation
 Reviewed the changed source against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing Button/theme/i18n architecture, and the navbar Sheet implementation. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Navbar Background Glow Continuity Fix
+
+## Problem
+After making the navbar transparent, the public header could still look visually separated on the right side because the page-level ambient pink glow continued underneath the navbar. The navbar itself was correct; the decorative layer behind it was creating the visible color break.
+
+## Implementation
+- Kept the navbar fully transparent and preserved the user's current restrained opacity treatment for the Theme, Language, and Burger controls.
+- Constrained the non-protected ambient glow layer in `components/Layout/background.tsx` to begin below the navbar zone (`top-24`), so the transparent header inherits a clean canvas without a pink strip.
+- Moved the secondary right-side blur glow to the same content zone using `top-[calc(6rem+8%)]`.
+- Left the protected rose-petal layer completely unchanged: same count, animation, timing, shapes, gradients, and shadows.
+- Added the navbar opacity/control-family rule to `AGENTS.md` and the navbar canvas-continuity rule to `prd.md` so future changes do not reintroduce a different control treatment or solid navbar workaround.
+- No dependency, schema, API, route, Pintu, or invitation behavior changes.
+
+## Affected Files
+- `components/Layout/background.tsx`
+- `AGENTS.md`
+- `prd.md`
+
+## Commits
+- `7ea3d10eb11ace6b0e12d781539619774afcfb3a` — constrain ambient background glow below navbar.
+- `ee3198ea98269b815e29a6b67eab6088f30afe62` — document navbar control opacity rule.
+- `b87491362e61e4e148727aeba29e53a66c9b9da2` — document navbar canvas continuity.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, shared Button/theme/i18n architecture, and the protected rose-petal implementation. Build/CI not verified.
