@@ -99,3 +99,28 @@ The application currently presents customer-facing copy primarily in Indonesian,
 
 ## Validation
 Reviewed against AGENTS, SKILL, PRD, README, existing Next.js architecture, and dependency constraints. No new dependency was introduced. Build/CI not verified.
+
+---
+
+# 2026-09-13 — Package Selection Localization
+
+## Problem
+The `/packages` route was still Indonesian-only even after the shared locale foundation was introduced. Package names, descriptions, feature lists, form labels, status messages, and calls to action therefore remained inconsistent with the selected language.
+
+## Implementation
+- Converted the service-package catalog to structured `id` / `en` content while keeping package keys, prices, and API payloads unchanged.
+- Localized `/packages` customer-facing copy and all package catalog content through the shared locale state.
+- Improved English copy for sales clarity rather than literal translation, especially the Wedding-Day Coordination and Full-Service Planning descriptions.
+- Replaced the legacy customer-facing `DC Wedding` label with the canonical **DC Organizer** brand.
+- No dependency, database, route, or entitlement changes.
+
+## Affected Files
+- `lib/packages/catalog.ts`
+- `components/Layout/PackageSelector.tsx`
+
+## Commits
+- `5f63df706578830fb098208d5ea26240c4e36065` — bilingual package catalog.
+- `f06669425ee5c0c3cfd96585da78c91fb5344521` — bilingual package selector.
+
+## Validation
+Reviewed against AGENTS, SKILL, PRD, README, existing package API contract, and canonical DC Organizer branding. Build/CI not verified.
