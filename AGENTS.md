@@ -71,6 +71,14 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 
 Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, and `#1A181E`. Do not reintroduce the deprecated palette. Readability always outranks color matching.
 
+### Button Color Standard
+- All reusable application buttons MUST use the shared `components/ui/button.tsx` variants instead of arbitrary background/text color classes.
+- `default` is the canonical primary CTA: `var(--primary)` with `var(--primary-foreground)`.
+- `secondary` is the canonical soft-rose secondary action.
+- `outline`, `ghost`, `link`, and `destructive` retain semantic meaning and must not be recolored per page without a documented product reason.
+- Do not introduce one-off button colors such as `bg-blue-*`, `bg-green-*`, arbitrary rose hex values, gradients, or legacy palette values for ordinary actions.
+- Primary button hover/pressed states must resolve through the shared theme tokens so light and dark mode remain visually consistent.
+
 ## 5. Anti AI-Slop Text Hierarchy
 
 - Do not color every piece of text differently.
