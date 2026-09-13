@@ -48,9 +48,9 @@ export default function PintuCard({
         <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
 
         <motion.div
-          animate={reducedMotion ? { scale: 0.92 } : { scale: isActive ? 0.92 : 0.9 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 overflow-hidden"
+          animate={reducedMotion ? { scale: 1 } : { scale: isActive ? 1 : 0.82 }}
+          transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex items-center justify-center overflow-hidden"
         >
           <Image
             src={`/${bgImage}`}
