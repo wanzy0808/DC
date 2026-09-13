@@ -26,8 +26,6 @@ function GoogleIcon() {
 
 export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: RegisterDialogProps) {
   const router = useRouter();
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -64,7 +62,7 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
       const response = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ firstName, lastName, email, password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -103,24 +101,6 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
           <div className={`h-px flex-1 border-t ${borderColor}`} />
           <span className="text-xs opacity-50">atau lanjutkan dengan</span>
           <div className={`h-px flex-1 border-t ${borderColor}`} />
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
-          <input
-            required
-            type="text"
-            placeholder="Nama Depan"
-            value={firstName}
-            onChange={(event) => setFirstName(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
-          />
-          <input
-            type="text"
-            placeholder="Nama Belakang"
-            value={lastName}
-            onChange={(event) => setLastName(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
-          />
         </div>
 
         <input
