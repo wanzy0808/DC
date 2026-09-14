@@ -613,3 +613,33 @@ The landing CTA inherited an oversized treatment from an earlier reference: `h-1
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shared Button conventions, landing layout, and protected Pintu/rose-petal behavior. Build/CI not verified.
+
+---
+
+# 2026-09-14 — Gradient Button Component Integration
+
+## Goal
+Integrate the supplied `GradientButton` component into the shared shadcn/Tailwind component structure as an opt-in reusable primitive without replacing the canonical DC Organizer `Button` system.
+
+## Implementation
+- Added `components/ui/gradient-button.tsx` using the supplied Radix Slot + CVA pattern with `asChild` support and typed `GradientButtonProps`.
+- Added `components/ui/gradient-button-demo.tsx` as an isolated usage example rather than mounting demo content into a production page.
+- Added the component-specific gradient custom properties and CSS layers to `app/globals.css`, adapted to the repository's Tailwind v4 import structure instead of reintroducing the legacy Tailwind v3 directives.
+- Added `@radix-ui/react-slot` as the missing runtime dependency; `class-variance-authority` was already installed and reused.
+- Kept the existing `components/ui/button.tsx` canonical variants and the current landing `brand-gradient` CTA unchanged; the new component is opt-in.
+- No new image assets or third-party visual assets were required.
+
+## Affected Files
+- `components/ui/gradient-button.tsx`
+- `components/ui/gradient-button-demo.tsx`
+- `app/globals.css`
+- `package.json`
+
+## Commits
+- `1f7093eba42dcea4afe8c7bc097950579a627db8` — add GradientButton component.
+- `deb7eb2962132ec2c3d68cd6a1cb87e0a5c93d5b` — add @radix-ui/react-slot dependency.
+- `318b3f3f0886dc0e2e99fbafb14af98b318b8509` — add GradientButton global styling.
+- `9a53e42877af56ea44f61c683240614ae7746815` — add isolated GradientButton demo.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shadcn/Tailwind v4 architecture, shared Button conventions, and the protected Pintu/rose-petal behavior. Current GitHub workflow runs for the demo commit: none; build/CI not verified. The project lockfile still requires a `pnpm install` regeneration to include the newly added Radix dependency.
