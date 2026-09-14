@@ -31,17 +31,17 @@ export default function RomanticBackground() {
         }
       `}</style>
 
-      {/* Ambient glow stays below the navbar zone so transparent navigation remains visually seamless. */}
+      {/* Keep ambient decoration subtle so the page canvas stays white/dark-neutral and continuous with the navbar. */}
       <div
         className={`absolute inset-x-0 bottom-0 top-24 transition-all duration-1000 ${
           isDarkMode
-            ? "bg-[radial-gradient(ellipse_at_72%_18%,rgba(226,133,138,0.08),transparent_34%),linear-gradient(125deg,transparent_0%,rgba(226,133,138,0.025)_48%,transparent_78%)]"
-            : "bg-[radial-gradient(ellipse_at_74%_14%,rgba(140,74,86,0.07),transparent_32%),linear-gradient(125deg,rgba(255,255,255,0.35)_0%,transparent_42%,rgba(232,180,184,0.08)_76%,transparent_100%)]"
+            ? "bg-[radial-gradient(ellipse_at_72%_18%,rgba(192,122,132,0.045),transparent_34%)]"
+            : "bg-[radial-gradient(ellipse_at_74%_14%,rgba(192,122,132,0.025),transparent_32%)]"
         }`}
       />
       <div
         className={`absolute -right-[18%] top-[calc(6rem+8%)] h-[52vh] w-[48vw] rotate-[-14deg] blur-3xl transition-all duration-1000 ${
-          isDarkMode ? "bg-[#C26B70]/[0.045]" : "bg-[#8C4A56]/[0.035]"
+          isDarkMode ? "bg-[#C07A84]/[0.025]" : "bg-[#C07A84]/[0.015]"
         }`}
       />
 
