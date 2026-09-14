@@ -227,7 +227,7 @@ Manual registration asked for first name and last name even though the dashboard
 - Updated the registration request payload to send only `email` and `password`.
 - Updated `POST /api/auth/register` so manual accounts can be created with an empty `firstName`; the existing dashboard onboarding flow can collect the name later.
 - Kept Google registration unchanged; Google-provided profile names are still available when supplied by Google.
-- Preserved email verification, duplicate-email protection, password validation, routes, and existing database schema.
+- Preserved email verification, duplicate-email protection, password validation, routes, database schema, and existing authentication flow.
 
 ## Affected Files
 - `components/Layout/Navbar/RegisterDialog.tsx`
@@ -694,3 +694,31 @@ The public navbar could still read as a white strip against the landing canvas, 
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the public navbar implementation, landing background, shared Button/theme architecture, and protected rose-petal behavior. Build/CI not verified.
+
+---
+
+# 2026-09-14 — Digital Invitation Visual Refinement
+
+## Goal
+Menyelaraskan `/dashboard/undangan-digital` dengan bahasa visual landing page: canvas tetap netral, content width konsisten, heading editorial tetap kuat, dan tombol mengikuti bahasa primary CTA DC Organizer tetapi dalam ukuran workspace yang lebih compact.
+
+## Implementation
+- Menyamakan batas konten workspace dan header dengan landing/navbar menggunakan `w-[min(92vw,1400px)]`.
+- Mengubah header workspace menjadi neutral/translucent `background` dengan border tipis agar menyatu dengan canvas tanpa menjadi blok putih terpisah.
+- Mengurangi skala hero workspace dari treatment yang terlalu besar menjadi hierarchy yang lebih ringkas (`sm:text-5xl`, spacing lebih pendek) agar terasa premium tetapi tetap dashboard-oriented.
+- Menjaga Cinzel untuk display/headings dan Fauna One untuk UI/body sesuai design system.
+- Menyeragamkan tombol workspace ke ukuran compact sekitar 40px tinggi, rounded-xl, dan menggunakan shared `Button` / `buttonVariants` variants; primary action mendapat shadow/glow Rose yang sangat ringan sebagai interpretasi dari kedalaman CTA landing, bukan gradient baru.
+- Tombol tidak menggunakan ukuran landing CTA penuh; visual language dipertahankan melalui Rose primary, rounded geometry, dan restrained glow.
+- Tombol preview/copy/edit/publish, password action, dan studio action tetap mempertahankan semantic `outline`, `ghost`, dan `default` variants.
+- Tidak mengubah API invitation, entitlement, publish/unpublish, password protection, URL publik, routing, bilingual state, database, atau schema.
+
+## Affected Files
+- `app/dashboard/undangan-digital/page.tsx`
+
+## Commits
+- `7661e4fb83c596689f727ad101a12de5154d6f73` — refine Digital Invitation workspace shell.
+- `0e9d627d6ebd89718ae257790583b0e6b5e06c62` — compact invitation workspace actions.
+- `bb84b3970710caa4f6b03f08468ed49df77dabcd` — add subtle landing-inspired invitation button depth.
+
+## Validation
+Reviewed against `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing invitation management architecture, shared Button variants, theme tokens, and landing/navbar width conventions. No GitHub CI status was available for the latest commits; build/CI remains unverified.
