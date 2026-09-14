@@ -643,3 +643,27 @@ Integrate the supplied `GradientButton` component into the shared shadcn/Tailwin
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shadcn/Tailwind v4 architecture, shared Button conventions, and the protected Pintu/rose-petal behavior. Current GitHub workflow runs for the demo commit: none; build/CI not verified. The project lockfile still requires a `pnpm install` regeneration to include the newly added Radix dependency.
+
+---
+
+# 2026-09-14 — Landing CTA Migration to GradientButton
+
+## Goal
+Use the newly added `GradientButton` primitive for the landing-page CTA so the production landing action uses the supplied gradient component instead of the older `buttonVariants({ variant: "brand-gradient" })` path.
+
+## Implementation
+- Replaced the landing CTA's shared `buttonVariants` usage with `GradientButton` using `asChild`, preserving the existing `Link` navigation behavior.
+- Kept the CTA compact at `h-11`, `min-w-[12rem]`, `px-7`, and `text-base` so the supplied component does not make the landing hero visually oversized.
+- Applied the repository's canonical Fauna One UI font variable to the CTA instead of inheriting the component's generic `font-sans` default.
+- Preserved the existing rounded geometry, uppercase tracking, arrow icon, responsive width, bilingual CTA copy, Pintu navigation, navbar control opacity, and protected rose-petal background.
+- Did not convert Pintu cards into buttons because those surfaces are semantic navigation links rather than button actions.
+
+## Affected Files
+- `app/page.tsx`
+- `PRD-TAMBAHAN.md`
+
+## Commit
+- `3649099a9f47b232c7880abe672a5e2defad8b9a` — use GradientButton for landing CTA.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the new `GradientButton` implementation, existing landing/Pintu architecture, and the protected background behavior. Build/CI not verified; the known lockfile synchronization issue remains separate from this UI change.
