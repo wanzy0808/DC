@@ -54,7 +54,7 @@ export const messages = {
           capabilities: ["Buku tamu", "QR check-in", "Kehadiran"],
         },
       },
-      openWorkspace: "Mulai merangkai",
+      openWorkspace: "Lihat Detail",
     },
     footer: {
       description: "DC Organizer adalah platform digitalisasi pernikahan terpadu yang membuat persiapan acara lebih efisien, terarah, dan berkesan.",
