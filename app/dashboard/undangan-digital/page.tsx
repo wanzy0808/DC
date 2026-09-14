@@ -20,7 +20,7 @@ export default async function DigitalInvitationWorkspacePage() {
   const paid = hasPaidDigitalInvitation(invitation?.payment);
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-background font-[family-name:var(--font-fauna)] text-foreground">
+    <main className="min-h-screen overflow-x-clip bg-background font-[family-name:var(--font-fauna)] text-foreground [&_a.inline-flex]:h-10 [&_a.inline-flex]:rounded-xl [&_a.inline-flex]:px-5 [&_a.inline-flex]:text-sm [&_button]:h-10 [&_button]:rounded-xl [&_button]:px-5 [&_button]:text-sm">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3">
           <Link
