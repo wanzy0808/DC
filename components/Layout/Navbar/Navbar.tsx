@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <header className="dc-navbar relative z-50 w-full bg-transparent text-foreground transition-colors duration-500">
-      <div className="mx-auto flex w-[92vw] max-w-[1400px] items-center justify-between py-5">
+      <div className="mx-auto flex w-[min(92vw,1400px)] items-center justify-between py-5">
         <Link href="/" className="group block min-w-0">
           <div className="font-[family-name:var(--font-dc-heading)] text-2xl font-bold leading-none tracking-[0.12em] text-primary transition-transform group-hover:scale-[1.01] sm:text-3xl">DC Organizer</div>
           <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.22em] text-foreground/60">Your best consultant for wedding & event</div>
