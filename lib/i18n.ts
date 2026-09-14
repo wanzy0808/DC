@@ -36,19 +36,19 @@ export const messages = {
     home: {
       doors: {
         planner: {
-          eyebrow: "01 / Wedding Planner",
+          eyebrow: "Perencanaan Event",
           title: "Rangkai hari istimewamu, dengan tenang dan penuh cerita.",
           description: "Dari rundown pertama hingga detail terakhir, satukan rencana, vendor, dan tim agar kamu bisa lebih banyak menikmati perjalanan menuju hari besar.",
           capabilities: ["Tim terkoordinasi", "Rundown acara", "Vendor"],
         },
         invitation: {
-          eyebrow: "02 / Digital Invitation",
+          eyebrow: "Undangan Digital",
           title: "Biarkan undangan menjadi awal dari kisah yang ingin dikenang.",
           description: "Ciptakan undangan digital yang terasa personal, bagikan kabar bahagia, dan sambut RSVP dari orang-orang yang ingin hadir di momen terpentingmu.",
           capabilities: ["Undangan personal", "RSVP", "Guest management"],
         },
         guestbook: {
-          eyebrow: "03 / Guestbook",
+          eyebrow: "Buku Tamu Digital",
           title: "Karena setiap nama yang hadir adalah bagian dari cerita.",
           description: "Sambut tamu dengan lebih hangat melalui QR check-in dan guestbook digital yang membuat setiap kehadiran tercatat dengan rapi.",
           capabilities: ["Buku tamu", "QR check-in", "Kehadiran"],
@@ -104,19 +104,19 @@ export const messages = {
     home: {
       doors: {
         planner: {
-          eyebrow: "01 / Wedding Planner",
+          eyebrow: "Event Planner",
           title: "Shape your special day with intention, ease, and heart.",
           description: "From the first rundown to the final detail, bring your plans, vendors, and team into one calm workspace—so you can spend more time enjoying the journey.",
           capabilities: ["Coordinated team", "Event rundown", "Vendors"],
         },
         invitation: {
-          eyebrow: "02 / Digital Invitation",
+          eyebrow: "Digital Invitation",
           title: "Let your invitation be the first chapter of a story worth remembering.",
           description: "Create a digital invitation that feels personal, share the joy, and welcome RSVPs from the people who matter most on your special day.",
           capabilities: ["Personal invitation", "RSVP", "Guest management"],
         },
         guestbook: {
-          eyebrow: "03 / Guestbook",
+          eyebrow: "Digital Guestbook",
           title: "Because every name who arrives becomes part of the story.",
           description: "Welcome your guests with ease through QR check-in and a digital guestbook that keeps every meaningful arrival beautifully organized.",
           capabilities: ["Guestbook", "QR check-in", "Attendance"],
