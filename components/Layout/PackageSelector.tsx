@@ -45,18 +45,18 @@ export default function PackageSelector() {
   }
 
   return (
-    <main className="relative z-10 min-h-screen w-full px-0 py-12 text-[var(--foreground)]">
-      <div className="mx-auto w-full space-y-10">
-        <div>
+    <main className="relative z-10 min-h-screen w-full px-5 py-12 text-[var(--foreground)] sm:px-8">
+      <div className="mx-auto w-[min(92vw,1400px)] space-y-10">
+        <div className="mx-auto max-w-4xl text-center">
           <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.25em] text-[var(--primary)]">{copy.eyebrow}</p>
           <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-4xl">{copy.title}</h1>
-          <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--muted-foreground)]">{copy.description}</p>
+          <p className="mx-auto mt-2 max-w-2xl text-sm leading-7 text-[var(--muted-foreground)]">{copy.description}</p>
         </div>
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="mx-auto grid w-full max-w-[1200px] justify-center gap-5 md:grid-cols-2 xl:grid-cols-3">
           {servicePackages.map((item) => {
             const active = selected === item.key;
             return (
-              <button type="button" key={item.key} onClick={() => setSelected(item.key)} className={`rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}>
+              <button type="button" key={item.key} onClick={() => setSelected(item.key)} className={`w-full rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}>
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</p>
                 <h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</h2>
                 <p className="mt-2 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
@@ -66,7 +66,7 @@ export default function PackageSelector() {
             );
           })}
         </div>
-        <div className="max-w-xl space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6">
+        <div className="mx-auto max-w-xl space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6">
           <label className="block text-sm">{copy.proof} <span className="opacity-50">({copy.optional})</span><input type="url" value={proofUrl} onChange={(event) => setProofUrl(event.target.value)} placeholder="https://..." className="mt-2 w-full rounded-xl border border-[var(--border)] bg-transparent px-3 py-2.5" /></label>
           <Button type="button" onClick={choosePackage} size="lg" className="min-h-11 rounded-full">{copy.choose}</Button>
           {message && <p className="text-sm text-[var(--muted-foreground)]">{message}</p>}
