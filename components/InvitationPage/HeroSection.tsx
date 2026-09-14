@@ -1,34 +1,75 @@
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 
 const templates = [
-  { name: "Eternal Blossom", image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800" },
+  {
+    name: "Eternal Blossom",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800",
+  },
 ];
 
 export default function HeroSection() {
   return (
-    <section className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="space-y-6">
-        <p className="text-xs font-semibold uppercase tracking-[0.25em] text-dc-maroon dark:text-dc-pink-light">[Undangan Digital]</p>
-        <h1 className="max-w-xl font-serif text-5xl leading-[1.08] md:text-7xl">Undanganmu tak hanya cantik tetapi, <em className="text-dc-maroon dark:text-dc-pink-light">cepat dan mudah.</em></h1>
-        <p className="max-w-lg text-sm leading-7 opacity-70 md:text-base">Percantik undanganmu dengan desain kustom dan fitur lengkap, serta mempermudah proses RSVP dan komunikasi dengan tamu.</p>
-        <div className="flex flex-wrap gap-3">
-          <Link href="/template-design" className="rounded-full bg-primary px-6 py-3 text-xs font-medium uppercase tracking-[0.16em] text-primary-foreground transition hover:bg-primary/85">Jelajahi undangan <ArrowRight className="ml-2 inline h-3.5 w-3.5" /></Link>
+    <section className="grid items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-24">
+      <div className="max-w-2xl">
+        <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
+          Digital Invitation / 01
+        </p>
+        <h1 className="mt-6 max-w-xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
+          Bukan sekadar undangan.
+          <span className="mt-2 block text-foreground">Awali ceritamu dengan indah.</span>
+        </h1>
+        <p className="mt-7 max-w-xl text-base leading-8 text-foreground/70 md:text-lg">
+          Hadirkan kabar bahagia dengan undangan digital yang terasa personal—indah saat dibuka, mudah dibagikan, dan dirancang untuk membuat perjalanan menuju hari besar terasa lebih ringan.
+        </p>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <Link
+            href="/template-design"
+            className={buttonVariants({ variant: "default", size: "lg", className: "gap-2" })}
+          >
+            Jelajahi koleksi
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="#fitur"
+            className={buttonVariants({ variant: "outline", size: "lg" })}
+          >
+            Lihat fiturnya
+          </Link>
+        </div>
+        <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
+          <span>Personal</span>
+          <span>Easy RSVP</span>
+          <span>Ready for the big day</span>
         </div>
       </div>
-      <div className="relative mx-auto w-full max-w-xl">
-        <div className="absolute -left-6 top-10 h-32 w-32 rounded-full bg-dc-pink/20 blur-3xl" />
-        <div className="relative mx-auto w-[min(100%,420px)]">
-          <div className="relative aspect-[0.68] overflow-hidden rounded-[38px] border-8 border-[#33252a] bg-black p-2 shadow-2xl">
-            <div className="relative h-full overflow-hidden rounded-[28px]">
-              <Image src={templates[0].image} alt={`Preview undangan ${templates[0].name}`} fill priority className="object-cover" sizes="(max-width: 768px) 100vw, 40vw" />
+
+      <div className="relative mx-auto w-full max-w-xl lg:pr-4">
+        <div className="absolute -right-8 top-12 h-48 w-48 rounded-full bg-primary/6 blur-3xl" aria-hidden="true" />
+        <div className="relative mx-auto w-[min(100%,430px)]">
+          <div className="relative aspect-[0.68] overflow-hidden rounded-[34px] border border-border bg-card p-2 shadow-2xl shadow-black/10 dark:shadow-black/30">
+            <div className="relative h-full overflow-hidden rounded-[27px] bg-black">
+              <Image
+                src={templates[0].image}
+                alt={`Preview template ${templates[0].name}`}
+                fill
+                priority
+                className="object-cover"
+                sizes="(max-width: 768px) 90vw, 42vw"
+              />
             </div>
-            <div className="absolute bottom-10 left-1/2 z-10 w-4/5 -translate-x-1/2 rounded-lg bg-white/85 p-4 text-center backdrop-blur">
-              <p className="font-serif text-lg text-dc-maroon">Vidi &amp; Hening</p>
-              <p className="mt-1 text-[8px] uppercase tracking-widest text-dc-maroon/70">The wedding invitation</p>
+            <div className="absolute inset-x-7 bottom-7 rounded-2xl border border-white/25 bg-black/35 p-5 text-left text-white backdrop-blur-md">
+              <p className="font-[family-name:var(--font-dc-heading)] text-2xl">Vidi &amp; Hening</p>
+              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.22em] text-white/70">
+                A beginning worth remembering
+              </p>
             </div>
           </div>
+          <p className="mt-4 text-center font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.18em] text-foreground/45">
+            A glimpse of your invitation
+          </p>
         </div>
       </div>
     </section>
