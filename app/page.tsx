@@ -10,7 +10,6 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { GradientButton } from "@/components/ui/gradient-button";
 
 type DoorValue = 1 | 2 | 3 | null;
-
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export default function Home() {
@@ -24,8 +23,7 @@ export default function Home() {
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
       <RomanticBackground />
-
-      <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[92vw] max-w-[1400px]">
+      <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[min(92vw,1400px)]">
         <section className="grid min-h-[calc(100dvh-88px)] items-center gap-2 py-5 sm:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-0 lg:py-6">
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, ease } })}
@@ -44,27 +42,21 @@ export default function Home() {
                 <p className="mt-5 max-w-xl text-sm leading-7 text-foreground/75 sm:text-base sm:leading-8">{content.description}</p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <GradientButton asChild>
-                    <Link
-                      href={href}
-                      className="h-11 min-w-[12rem] rounded-xl px-7 py-0 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em] sm:w-auto"
-                    >
+                    <Link href={href} className="h-11 min-w-[12rem] rounded-xl px-7 py-0 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em] sm:w-auto">
                       {messages.home.openWorkspace}
                       <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </GradientButton>
                 </div>
                 <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/60">
-                  {content.capabilities.map((item) => (
-                    <span key={item} className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>
-                  ))}
+                  {content.capabilities.map((item) => <span key={item} className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>)}
                 </div>
               </motion.div>
             </AnimatePresence>
           </motion.div>
-
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, x: 30 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.85, delay: 0.12, ease } })}
-            className="relative min-w-0 lg:-mr-20"
+            className="relative min-w-0"
           >
             <PintuSection activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
           </motion.div>
