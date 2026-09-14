@@ -25,14 +25,15 @@ export function PublicContent({ children }: { children: ReactNode }) {
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
   const isLanding = pathname === "/";
+  const isDigitalInvitation = pathname === "/d-invitation";
 
   return (
     <main
       className={
         isPrivateArea
           ? "w-full min-h-screen"
-          : isLanding
-            ? "public-content landing-page w-full mx-auto flex-1 flex flex-col justify-center items-center relative z-10"
+          : isLanding || isDigitalInvitation
+            ? "public-content landing-page w-full mx-auto flex-1 flex flex-col relative z-10"
             : "public-content public-page w-[75vw] max-w-[75vw] mx-auto flex-1 flex flex-col relative z-10"
       }
     >
