@@ -1,10 +1,13 @@
 "use client";
 
 import React from "react";
+import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/Theme/ThemeContext";
 
 export default function RomanticBackground() {
   const { isDarkMode } = useTheme();
+  const pathname = usePathname();
+  const isDigitalInvitationPage = pathname === "/d-invitation";
   const petals = Array.from({ length: 20 });
 
   return (
@@ -32,18 +35,22 @@ export default function RomanticBackground() {
       `}</style>
 
       {/* Keep ambient decoration subtle so the page canvas stays white/dark-neutral and continuous with the navbar. */}
-      <div
-        className={`absolute inset-x-0 bottom-0 top-24 transition-all duration-1000 ${
-          isDarkMode
-            ? "bg-[radial-gradient(ellipse_at_72%_18%,rgba(192,122,132,0.045),transparent_34%)]"
-            : "bg-[radial-gradient(ellipse_at_74%_14%,rgba(192,122,132,0.025),transparent_32%)]"
-        }`}
-      />
-      <div
-        className={`absolute -right-[18%] top-[calc(6rem+8%)] h-[52vh] w-[48vw] rotate-[-14deg] blur-3xl transition-all duration-1000 ${
-          isDarkMode ? "bg-[#C07A84]/[0.025]" : "bg-[#C07A84]/[0.015]"
-        }`}
-      />
+      {!isDigitalInvitationPage ? (
+        <>
+          <div
+            className={`absolute inset-x-0 bottom-0 top-24 transition-all duration-1000 ${
+              isDarkMode
+                ? "bg-[radial-gradient(ellipse_at_72%_18%,rgba(192,122,132,0.045),transparent_34%)]"
+                : "bg-[radial-gradient(ellipse_at_74%_14%,rgba(192,122,132,0.025),transparent_32%)]"
+            }`}
+          />
+          <div
+            className={`absolute -right-[18%] top-[calc(6rem+8%)] h-[52vh] w-[48vw] rotate-[-14deg] blur-3xl transition-all duration-1000 ${
+              isDarkMode ? "bg-[#C07A84]/[0.025]" : "bg-[#C07A84]/[0.015]"
+            }`}
+          />
+        </>
+      ) : null}
 
       {/* ROSE PETALS — intentionally unchanged. */}
       {petals.map((_, i) => {
