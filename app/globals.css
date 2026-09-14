@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alice&family=Alegreya&family=Arima+Madurai&family=Arvo&family=Archivo+Narrow&family=Average+Sans&family=Bubblegum+Sans&family=Cardo&family=Cantarell&family=Chonburi&family=Cinzel&family=Crimson+Pro&family=Crimson+Text&family=DM+Sans&family=Domine&family=DotGothic16&family=Fauna+One&family=Fjalla+One&family=Fugaz+One&family=Grand+Hotel&family=Hind&family=Cinzel&family=Instrument+Sans&family=Inter&family=Josefin+Sans&family=Karla&family=Lato&family=Lora&family=Merriweather&family=Montserrat&family=Mulish&family=Nunito&family=Open+Sans&family=Oswald&family=Playfair+Display&family=Poiret+One&family=Pontano+Sans&family=Poppins&family=Quicksand:wght@400;700&family=Raleway&family=Rethink+Sans&family=Roboto&family=Rokkitt&family=Rufina&family=Sacramento&family=Slabo+27px&family=Source+Sans+3&family=Space+Mono&family=Spectral&family=Stint+Ultra+Expanded&family=Syne&family=Tenor+Sans&family=Ultra&family=Unica+One&family=Work+Sans&family=Yellowtail&family=Yeseva+One&family=Young+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alice&family=Alegreya&family=Arima+Madurai&family=Arvo&family=Archivo+Narrow&family=Average+Sans&family=Bubblegum+Sans&family=Cardo&family=Cantarell&family=Chonburi&family=Cinzel&family=Crimson+Pro&family=Crimson+Text&family=DM+Sans&family=Domine&family=DotGothic16&family=Fjalla+One&family=Fugaz+One&family=Grand+Hotel&family=Hind&family=Cinzel&family=Instrument+Sans&family=Inter&family=Josefin+Sans&family=Karla&family=Lato&family=Lora&family=Merriweather&family=Montserrat&family=Mulish&family=Nunito&family=Open+Sans&family=Oswald&family=Playfair+Display&family=Poiret+One&family=Pontano+Sans&family=Poppins&family=Quicksand:wght@400;700&family=Raleway&family=Rethink+Sans&family=Roboto&family=Rokkitt&family=Rufina&family=Sacramento&family=Slabo+27px&family=Source+Sans+3&family=Spectral&family=Stint+Ultra+Expanded&family=Syne&family=Tenor+Sans&family=Ultra&family=Unica+One&family=Work+Sans&family=Yellowtail&family=Yeseva+One&display=swap');
 
 @import "tailwindcss";
 
@@ -123,7 +123,7 @@
 }
 
 .text-dc-maroon { color: var(--primary); }
-.dc-navbar { background: var(--background); }
+.dc-navbar { background: transparent; }
 @keyframes publicTextReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dcSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
 .dc-snappy-word { animation: dcSnappyTextStretch 560ms cubic-bezier(0.22, 1.4, 0.36, 1) both; }
