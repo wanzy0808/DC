@@ -587,7 +587,7 @@ Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, current Button 
 - `550b192dc20b48c255a8753a07d4046a8966b7ea` — refine brand gradient button shape to rounded-3xl.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, and the shared Button conventions. Build/CI not verified.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, and the shared Button conventions. Build/CI not verified.
 
 ---
 
@@ -667,3 +667,30 @@ Use the newly added `GradientButton` primitive for the landing-page CTA so the p
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the new `GradientButton` implementation, existing landing/Pintu architecture, and the protected background behavior. Build/CI not verified; the known lockfile synchronization issue remains separate from this UI change.
+
+---
+
+# 2026-09-14 — Navbar Width & Canvas Continuity Refinement
+
+## Problem
+The public navbar could still read as a white strip against the landing canvas, and its inner width definition was separate from the landing content width. The page-level ambient glow also made the body look pink enough to create a visible break below the header.
+
+## Implementation
+- Removed the remaining `.dc-navbar { background: var(--background); }` paint from `app/globals.css`; the public navbar now stays genuinely transparent instead of being recolored by a later global selector.
+- Kept the navbar inner container aligned to the landing layout with `w-[min(92vw,1400px)]`, matching the same 92vw / 1400px content boundary used by the landing page.
+- Reduced the non-protected ambient landing glow to very low-opacity canonical Rose radial accents and removed the broad light-mode linear pink wash.
+- Kept the protected rose-petal layer unchanged, including its count, animation, timing, gradients, and shadows.
+- No dependency, schema, API, route, Pintu, invitation, or navigation behavior changes.
+
+## Affected Files
+- `app/globals.css`
+- `components/Layout/Navbar/Navbar.tsx`
+- `components/Layout/background.tsx`
+
+## Commits
+- `858d38d5438695105f9111f1a740b80ee01db91e` — align navbar content width and keep component shell transparent.
+- `20eedeeeaa969f1f5640a4d2be564142b8e3979d` — soften landing ambient glow.
+- `7412ac4760c37a414764e4f7ffa421b34a54ce46` — remove global navbar background paint.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the public navbar implementation, landing background, shared Button/theme architecture, and protected rose-petal behavior. Build/CI not verified.
