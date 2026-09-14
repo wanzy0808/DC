@@ -588,3 +588,28 @@ Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, current Button 
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, and the shared Button conventions. Build/CI not verified.
+
+---
+
+# 2026-09-14 — Landing CTA Size & Depth Refinement
+
+## Problem
+The landing CTA inherited an oversized treatment from an earlier reference: `h-14`, `px-12`, and `text-xl` made the button visually too large for the hero. The previous gradient treatment also lacked a subtle inset/depth detail, so the CTA could read as flat despite the shadow.
+
+## Implementation
+- Reduced the landing CTA to `h-11`, `min-w-[12rem]`, `px-7`, `text-base`, and `font-bold` while retaining readable uppercase tracking.
+- Kept the CTA clearly rounded with `rounded-xl`.
+- Added restrained layered depth to the shared `brand-gradient` variant: a soft inset highlight, a small lower Rose step/shadow, and a light outer Rose glow.
+- Added a subtle pressed state with `active:translate-y-px` and preserved the existing hover lift/focus treatment.
+- Kept the canonical DC Organizer Rose brand as the gradient origin; no navbar opacity changes and no other semantic variants were changed.
+
+## Affected Files
+- `components/ui/button.tsx`
+- `app/page.tsx`
+
+## Commits
+- `037cc8f9bdb537b214031a6c854ad091c0b8575c` — refine brand-gradient depth and glow.
+- `7315d0c94874638bc175a77e0f75b944ad021def` — compact landing primary CTA.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shared Button conventions, landing layout, and protected Pintu/rose-petal behavior. Build/CI not verified.
