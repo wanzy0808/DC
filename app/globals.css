@@ -13,11 +13,211 @@
 @theme inline {
   --font-sans: var(--font-dc-sans); --font-serif: var(--font-dc-serif); --font-heading: var(--font-dc-heading); --font-mono: var(--font-dc-mono);
   --color-background: var(--background); --color-foreground: var(--foreground); --color-dc-pink: #C07A84; --color-dc-pink-light: #D9A3AA; --color-dc-maroon: #C07A84; --color-dc-rose-wood: #C07A84; --color-dc-rose-wood-dark: #A65E69; --color-dc-gold: #D9A3AA; --color-dc-gold-bright: #F1C9CE; --color-dc-dark: #0B0B0C; --color-dc-card: #111113; --color-dc-cream: #FFFFFF;
-  --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sidebar-ring: var(--sidebar-ring); --color-sidebar-border: var(--sidebar-border); --color-sidebar-accent-foreground: var(--sidebar-accent-foreground); --color-sidebar-accent: var(--sidebar-accent); --color-sidebar-primary-foreground: var(--sidebar-primary-foreground); --color-sidebar-primary: var(--sidebar-primary); --color-sidebar-foreground: var(--sidebar-foreground); --color-sidebar: var(--sidebar); --color-chart-5: var(--chart-5); --color-chart-4: var(--chart-4); --color-chart-3: var(--chart-3); --color-chart-2: var(--chart-2); --color-chart-1: var(--chart-1); --color-ring: var(--ring); --color-input: var(--input); --color-border: var(--border); --color-destructive: var(--destructive); --color-accent-foreground: var(--accent-foreground); --color-accent: var(--accent); --color-muted-foreground: var(--muted-foreground); --color-muted: var(--muted); --color-secondary-foreground: var(--secondary-foreground); --color-secondary: var(--secondary); --color-primary-foreground: var(--primary-foreground); --color-primary: var(--primary); --color-popover-foreground: var(--popover-foreground); --color-popover: var(--popover); --color-card-foreground: var(--card-foreground); --color-card: var(--card); --radius-sm: calc(var(--radius) * 0.6); --radius-md: calc(var(--radius) * 0.8); --radius-lg: var(--radius); --radius-xl: calc(var(--radius) * 1.4); --radius-2xl: calc(var(--radius) * 1.8); --radius-3xl: calc(var(--radius) * 2.2); --radius-4xl: calc(var(--radius) * 2.6);
 }
 :root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: #FFFFFF; --foreground: #111111; --card: #FFFFFF; --card-foreground: #111111; --popover: #FFFFFF; --popover-foreground: #111111; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #FFFFFF; --secondary-foreground: #111111; --muted: #FFFFFF; --muted-foreground: rgb(17 17 17 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --destructive: #B42318; --border: rgb(17 17 17 / 12%); --input: rgb(17 17 17 / 16%); --ring: #C07A84; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #111111; --chart-5: #FFFFFF; --sidebar: #FFFFFF; --sidebar-foreground: #111111; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #FFFFFF; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(17 17 17 / 12%); --sidebar-ring: #C07A84; }
 .dark { --background: #0B0B0C; --foreground: #FFFFFF; --card: #111113; --card-foreground: #FFFFFF; --popover: #111113; --popover-foreground: #FFFFFF; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #111113; --secondary-foreground: #FFFFFF; --muted: #111113; --muted-foreground: rgb(255 255 255 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --destructive: #F87171; --border: rgb(255 255 255 / 12%); --input: rgb(255 255 255 / 16%); --ring: #D9A3AA; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #FFFFFF; --chart-5: #111113; --sidebar: #0B0B0C; --sidebar-foreground: #FFFFFF; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #111113; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(255 255 255 / 12%); --sidebar-ring: #D9A3AA; }
 @layer base { * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); } html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; } h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); color: var(--primary); } a { color: var(--primary); } }
+
+@property --gradient-pos-x {
+  syntax: '<percentage>';
+  initial-value: 11.14%;
+  inherits: false;
+}
+
+@property --gradient-pos-y {
+  syntax: '<percentage>';
+  initial-value: 140%;
+  inherits: false;
+}
+
+@property --gradient-spread-x {
+  syntax: '<percentage>';
+  initial-value: 150%;
+  inherits: false;
+}
+
+@property --gradient-spread-y {
+  syntax: '<percentage>';
+  initial-value: 180.06%;
+  inherits: false;
+}
+
+@property --gradient-color-1 {
+  syntax: '<color>';
+  initial-value: #000;
+  inherits: false;
+}
+
+@property --gradient-color-2 {
+  syntax: '<color>';
+  initial-value: #08012c;
+  inherits: false;
+}
+
+@property --gradient-color-3 {
+  syntax: '<color>';
+  initial-value: #4e1e40;
+  inherits: false;
+}
+
+@property --gradient-color-4 {
+  syntax: '<color>';
+  initial-value: #70464e;
+  inherits: false;
+}
+
+@property --gradient-color-5 {
+  syntax: '<color>';
+  initial-value: #88394c;
+  inherits: false;
+}
+
+@property --gradient-border-angle {
+  syntax: '<angle>';
+  initial-value: 20deg;
+  inherits: true;
+}
+
+@property --gradient-border-color-1 {
+  syntax: '<color>';
+  initial-value: hsla(340, 75%, 60%, 0.2);
+  inherits: true;
+}
+
+@property --gradient-border-color-2 {
+  syntax: '<color>';
+  initial-value: hsla(340, 75%, 40%, 0.75);
+  inherits: true;
+}
+
+@property --gradient-stop-1 {
+  syntax: '<percentage>';
+  initial-value: 37.35%;
+  inherits: false;
+}
+
+@property --gradient-stop-2 {
+  syntax: '<percentage>';
+  initial-value: 61.36%;
+  inherits: false;
+}
+
+@property --gradient-stop-3 {
+  syntax: '<percentage>';
+  initial-value: 78.42%;
+  inherits: false;
+}
+
+@property --gradient-stop-4 {
+  syntax: '<percentage>';
+  initial-value: 89.52%;
+  inherits: false;
+}
+
+@property --gradient-stop-5 {
+  syntax: '<percentage>';
+  initial-value: 100%;
+  inherits: false;
+}
+
+@layer components {
+  .gradient-button {
+    @apply relative appearance-none cursor-pointer;
+    background: radial-gradient(
+      var(--gradient-spread-x) var(--gradient-spread-y) at var(--gradient-pos-x) var(--gradient-pos-y),
+      var(--gradient-color-1) var(--gradient-stop-1),
+      var(--gradient-color-2) var(--gradient-stop-2),
+      var(--gradient-color-3) var(--gradient-stop-3),
+      var(--gradient-color-4) var(--gradient-stop-4),
+      var(--gradient-color-5) var(--gradient-stop-5)
+    );
+    transition:
+      --gradient-pos-x 0.5s,
+      --gradient-pos-y 0.5s,
+      --gradient-spread-x 0.5s,
+      --gradient-spread-y 0.5s,
+      --gradient-color-1 0.5s,
+      --gradient-color-2 0.5s,
+      --gradient-color-3 0.5s,
+      --gradient-color-4 0.5s,
+      --gradient-color-5 0.5s,
+      --gradient-border-angle 0.5s,
+      --gradient-border-color-1 0.5s,
+      --gradient-border-color-2 0.5s,
+      --gradient-stop-1 0.5s,
+      --gradient-stop-2 0.5s,
+      --gradient-stop-3 0.5s,
+      --gradient-stop-4 0.5s,
+      --gradient-stop-5 0.5s;
+  }
+
+  .gradient-button::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      var(--gradient-border-angle),
+      var(--gradient-border-color-1),
+      var(--gradient-border-color-2)
+    );
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .gradient-button:hover {
+    --gradient-pos-x: 0%;
+    --gradient-pos-y: 91.51%;
+    --gradient-spread-x: 120.24%;
+    --gradient-spread-y: 103.18%;
+    --gradient-color-1: #c96287;
+    --gradient-color-2: #c66c64;
+    --gradient-color-3: #cc7d23;
+    --gradient-color-4: #37140a;
+    --gradient-color-5: #000;
+    --gradient-border-angle: 190deg;
+    --gradient-border-color-1: hsla(340, 78%, 90%, 0.1);
+    --gradient-border-color-2: hsla(340, 75%, 90%, 0.6);
+    --gradient-stop-1: 0%;
+    --gradient-stop-2: 8.8%;
+    --gradient-stop-3: 21.44%;
+    --gradient-stop-4: 71.34%;
+    --gradient-stop-5: 85.76%;
+  }
+
+  .gradient-button-variant {
+    --gradient-color-1: #000022;
+    --gradient-color-2: #1f3f6d;
+    --gradient-color-3: #469396;
+    --gradient-color-4: #f1ffa5;
+    --gradient-border-angle: 200deg;
+    --gradient-border-color-1: hsla(320, 75%, 90%, 0.6);
+    --gradient-border-color-2: hsla(320, 50%, 90%, 0.15);
+  }
+
+  .gradient-button-variant:hover {
+    --gradient-pos-x: 0%;
+    --gradient-pos-y: 95.51%;
+    --gradient-spread-x: 110.24%;
+    --gradient-spread-y: 110.2%;
+    --gradient-color-1: #000020;
+    --gradient-color-2: #f1ffa5;
+    --gradient-color-3: #469396;
+    --gradient-color-4: #1f3f6d;
+    --gradient-color-5: #000;
+    --gradient-stop-1: 0%;
+    --gradient-stop-2: 10%;
+    --gradient-stop-3: 35.44%;
+    --gradient-stop-4: 71.34%;
+    --gradient-stop-5: 90.76%;
+    --gradient-border-angle: 210deg;
+    --gradient-border-color-1: hsla(320, 75%, 90%, 0.2);
+    --gradient-border-color-2: hsla(320, 50%, 90%, 0.75);
+  }
+}
 
 @layer utilities {
   .font-dc-heading { font-family: var(--font-dc-heading); }
