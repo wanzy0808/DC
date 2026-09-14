@@ -20,7 +20,7 @@ export default async function DigitalInvitationWorkspacePage() {
   const paid = hasPaidDigitalInvitation(invitation?.payment);
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-background font-[family-name:var(--font-fauna)] text-foreground [&_a.inline-flex]:h-10 [&_a.inline-flex]:rounded-xl [&_a.inline-flex]:px-5 [&_a.inline-flex]:text-sm [&_button]:h-10 [&_button]:rounded-xl [&_button]:px-5 [&_button]:text-sm">
+    <main className="min-h-screen overflow-x-clip bg-background font-[family-name:var(--font-fauna)] text-foreground [&_a.inline-flex]:h-10 [&_a.inline-flex]:rounded-xl [&_a.inline-flex]:px-5 [&_a.inline-flex]:text-sm [&_a.inline-flex.bg-primary]:shadow-[0_0_16px_rgba(192,122,132,0.18)] [&_a.inline-flex.bg-primary]:transition-shadow [&_a.inline-flex.bg-primary:hover]:shadow-[0_0_22px_rgba(192,122,132,0.28)] [&_button]:h-10 [&_button]:rounded-xl [&_button]:px-5 [&_button]:text-sm [&_button.bg-primary]:shadow-[0_0_16px_rgba(192,122,132,0.18)] [&_button.bg-primary]:transition-shadow [&_button.bg-primary:hover]:shadow-[0_0_22px_rgba(192,122,132,0.28)]">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-background/85 backdrop-blur-xl">
         <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3">
           <Link
