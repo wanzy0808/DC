@@ -43,7 +43,7 @@ export default function Home() {
                 <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-primary sm:text-5xl lg:text-[4.05rem]">{content.title}</h1>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-foreground/75 sm:text-base sm:leading-8">{content.description}</p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <Link href={href} className={buttonVariants({ variant: "brand-gradient", size: "lg", className: "px-6 sm:px-7" })}>
+                  <Link href={href} className={buttonVariants({ variant: "brand-gradient", size: "lg", className: "h-14 w-full rounded-2xl px-12 text-xl font-extrabold uppercase tracking-widest sm:w-auto" })}>
                     {messages.home.openWorkspace}
                     <ArrowUpRight className="h-4 w-4" />
                   </Link>
