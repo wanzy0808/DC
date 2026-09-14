@@ -547,34 +547,25 @@ Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, shared Button/t
 
 ---
 
-# 2026-09-14 — Digital Invitation Marketing Page Refinement
+# 2026-09-14 — Landing Brand Gradient Button Trial
 
-## Problem
-The public `/d-invitation` page still used an older visual language: large Rose-filled sections, custom rounded CTA buttons, `font-serif` utility styling, and generic product copy. This made the page feel more templated than the newer DC Organizer editorial direction.
+## Goal
+Test a new premium button treatment on the landing page before applying it across the entire application.
 
 ## Implementation
-- Refined the page shell into a spacious editorial composition with a neutral theme canvas, stronger section rhythm, and consistent max-width/content gutters.
-- Rewrote the hero copy to emphasize emotional storytelling, personalization, easy sharing, RSVP, and readiness for the wedding day.
-- Replaced custom CTA styling with the shared shadcn Button variants via `buttonVariants`.
-- Reworked the feature section into three editorial columns with numbered hierarchy, Lucide icons, semantic borders, and more persuasive copy.
-- Refined the template collection with calmer card framing, `next/image`, semantic links, subtle motion-ready hover treatment, and improved merchandising copy.
-- Replaced the large Rose-filled Studio section with a neutral editorial CTA so Rose remains a brand accent rather than a page background.
-- Updated package/review/FAQ section copy on the page wrapper to sound more premium and emotionally relevant while preserving existing package keys, review data, FAQ data, and routes.
-- No dependency, database, API, schema, entitlement, or route changes.
+- Added a reusable `brand-gradient` Button variant in `components/ui/button.tsx` instead of introducing page-specific button CSS.
+- Gradient runs from the canonical Rose brand color toward white, with a restrained Rose glow, subtle hover lift, and accessible focus treatment.
+- The trial CTA uses a fully rounded shape and keeps the existing Lucide arrow icon and landing navigation behavior.
+- Applied only to the primary landing CTA for review; existing navbar control opacity and other button variants were left unchanged.
+- No dependency, schema, API, route, Pintu, or content behavior changes.
 
 ## Affected Files
-- `app/d-invitation/page.tsx`
-- `components/InvitationPage/HeroSection.tsx`
-- `components/InvitationPage/FeatureSection.tsx`
-- `components/InvitationPage/TemplateSection.tsx`
-- `components/InvitationPage/StudioSection.tsx`
+- `components/ui/button.tsx`
+- `app/page.tsx`
 
 ## Commits
-- `d4b985dc04fc4567557902c41ab4c5a61e673dca` — refine Digital Invitation page composition and copy.
-- `46d64f51fd0b3845e96578ae99366dcf5269f3d9` — refine Digital Invitation hero.
-- `cb81ffa74365b1d42596929247894f86561e5a3b` — refine feature hierarchy and copy.
-- `5311a392d0cdd742a2e24a32d019a9a77af4a65` — refine template collection.
-- `be4c5853c85d4343bac7c376d0bc8a0447b87ef5` — refine Studio CTA section.
+- `2f8c80e59d5401d818f630b63250205e43c1b746` — add reusable brand gradient button variant.
+- `8c70c46ff2b12348828e22643c90ed26134197fb` — apply gradient round treatment to landing CTA.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, canonical Light/Dark theme rules, shared Button variants, existing invitation/package/review/FAQ data, and the current Next.js component architecture. Build/CI not verified.
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, current Button conventions, landing-page structure, and the protected Pintu/rose-petal implementation. Build/CI not verified.
