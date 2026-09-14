@@ -612,7 +612,7 @@ The landing CTA inherited an oversized treatment from an earlier reference: `h-1
 - `7315d0c94874638bc175a77e0f75b944ad021def` — compact landing primary CTA.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shared Button conventions, landing layout, and protected Pintu/rose-petal behavior. Build/CI not verified.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, existing shared Button conventions, landing layout, and protected Pintu/rose-petal behavior. Build/CI not verified.
 
 ---
 
@@ -642,7 +642,7 @@ Integrate the supplied `GradientButton` component into the shared shadcn/Tailwin
 - `9a53e42877af56ea44f61c683240614ae7746815` — add isolated GradientButton demo.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing shadcn/Tailwind v4 architecture, shared Button conventions, and the protected Pintu/rose-petal behavior. Current GitHub workflow runs for the demo commit: none; build/CI not verified. The project lockfile still requires a `pnpm install` regeneration to include the newly added Radix dependency.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, existing shadcn/Tailwind v4 architecture, shared Button conventions, and the protected Pintu/rose-petal behavior. Current GitHub workflow runs for the demo commit: none; build/CI not verified. The project lockfile still requires a `pnpm install` regeneration to include the newly added Radix dependency.
 
 ---
 
@@ -666,7 +666,7 @@ Use the newly added `GradientButton` primitive for the landing-page CTA so the p
 - `3649099a9f47b232c7880abe672a5e2defad8b9a` — use GradientButton for landing CTA.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the new `GradientButton` implementation, existing landing/Pintu architecture, and the protected background behavior. Build/CI not verified; the known lockfile synchronization issue remains separate from this UI change.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, the new `GradientButton` implementation, existing landing/Pintu architecture, and the protected background behavior. Build/CI not verified; the known lockfile synchronization issue remains separate from this UI change.
 
 ---
 
@@ -688,12 +688,12 @@ The public navbar could still read as a white strip against the landing canvas, 
 - `components/Layout/background.tsx`
 
 ## Commits
-- `858d38d5438695105f9111f1a740b80ee01db91e` — align navbar content width and keep component shell transparent.
+- `858d38d5438695105f9111f740b80ee01db91e` — align navbar content width and keep component shell transparent.
 - `20eedeeeaa969f1f5640a4d2be564142b8e3979d` — soften landing ambient glow.
 - `7412ac4760c37a414764e4f7ffa421b34a54ce46` — remove global navbar background paint.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, the public navbar implementation, landing background, shared Button/theme architecture, and protected rose-petal behavior. Build/CI not verified.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, the public navbar implementation, landing background, shared Button/theme architecture, and protected rose-petal behavior. Build/CI not verified.
 
 ---
 
@@ -722,3 +722,37 @@ Menyelaraskan `/dashboard/undangan-digital` dengan bahasa visual landing page: c
 
 ## Validation
 Reviewed against `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing invitation management architecture, shared Button variants, theme tokens, and landing/navbar width conventions. No GitHub CI status was available for the latest commits; build/CI remains unverified.
+
+---
+
+# 2026-09-14 — Digital Invitation Landing Refinement
+
+## Goal
+Merapikan `/d-invitation` sebagai halaman publik Digital Invitation agar mengikuti batas layout navbar/landing, menampilkan paket dengan benar, memakai bahasa tombol yang konsisten dengan CTA landing, menghilangkan ambient block yang terlihat seperti kotak di sisi kanan pada dark mode, dan memperlihatkan preview hasil jadi undangan.
+
+## Implementation
+- Memperbaiki package key dari `INVITATION_GUESTBOOK` menjadi key katalog yang benar, `GUESTBOOK_DIGITAL`. Sebelumnya paket Rp 300.000 tampil sendirian sehingga grid dua kolom membuat card terlihat tidak center.
+- Membatasi showcase paket ke `max-w-4xl`, memberi `justify-items-center`, dan memberi lebar card yang konsisten agar dua paket tampil simetris.
+- CTA package menggunakan `GradientButton` yang sama dengan CTA utama landing melalui `asChild`, sehingga visual primary action mengikuti bahasa landing tanpa membuat variant/button CSS baru.
+- `/d-invitation` tetap memakai `w-[min(92vw,1400px)]`, dan `PublicContent` sekarang memberi route tersebut full-width shell agar batas content benar-benar dapat mengikuti navbar/landing, bukan terjebak pada wrapper publik lama `75vw`.
+- Menelusuri kotak/shape di sisi kanan dark mode ke ambient decorative blur pada `components/Layout/background.tsx` (`-right-[18%]`, `48vw`, `52vh`, `rotate`, `blur-3xl`). Untuk `/d-invitation`, dua ambient block non-protected tersebut tidak dirender; protected rose-petal layer tetap sama.
+- Koleksi template sekarang menggunakan aset lokal yang sudah ada di `public/` (`hp-digital.png`, `bca.webp`, `wo.png`) sebagai preview hasil jadi undangan, bukan hanya foto wedding dari Unsplash.
+- Menambahkan link bilingual `Lihat template lainnya` / `See more templates` menuju `/template-design` pada header koleksi, sambil mempertahankan link detail per template.
+- Tidak mengubah database, schema, entitlement, invitation API, route kontrak, atau rose-petal count/animation.
+
+## Affected Files
+- `app/d-invitation/page.tsx`
+- `components/Marketing/PackageShowcase.tsx`
+- `components/InvitationPage/TemplateSection.tsx`
+- `components/Layout/PublicAtmosphere.tsx`
+- `components/Layout/background.tsx`
+
+## Commits
+- `ea190cb15a7c020fe06e4c407a16aa05fa835b62` — fix Digital Invitation package selection key.
+- `e6e727c8ded51d471655e0b757dcffb474f353df` — center package cards and align CTA with landing GradientButton.
+- `1f98cf700fd8db38c24b616120592a2dea9a8172` — use local invitation preview assets and add See More template link.
+- `3aa9d05f726471d6fc9843bec83bd6c979bd13fb` — align `/d-invitation` public shell with navbar width.
+- `92cf3c897fbac11c51cd28f492670c778d14b63b` — remove the route-specific ambient block while preserving protected petals.
+
+## Validation
+Reviewed against `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing locale/i18n architecture, shared Button/GradientButton components, package catalog, public template assets, and protected rose-petal behavior. Build/CI not verified.
