@@ -40,6 +40,7 @@
 @layer components {
   .gradient-button {
     @apply relative appearance-none cursor-pointer overflow-hidden;
+    border-radius: 14px;
     background: radial-gradient(
       var(--gradient-spread-x) var(--gradient-spread-y) at var(--gradient-pos-x) var(--gradient-pos-y),
       var(--gradient-color-1) var(--gradient-stop-1),
@@ -55,7 +56,7 @@
     content: '';
     position: absolute;
     inset: 0;
-    border-radius: inherit;
+    border-radius: 14px;
     padding: 1px;
     background: linear-gradient(var(--gradient-border-angle), var(--gradient-border-color-1), var(--gradient-border-color-2));
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -132,7 +133,7 @@ aside nav > p { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] h1, [data-slot="dialog-content"] h2, [data-slot="dialog-content"] h3 { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] form { font-family: var(--font-dc-sans); }
 [data-slot="dialog-content"] form button[type="submit"] { background-color: var(--primary); color: var(--primary-foreground); }
-[data-slot="dialog-content"] form button[type="submit"]:hover { background-color: color-mix(in oklab, var(--primary), black 12%); }
+[data-slot="dialog-content"] form button[type="submit"]:hover { background-color: color-mix(in oklab, var(--primary), black 12%) !important; }
 
 /* Neutral shell: Rose is reserved for navigation, actions, links and accents. */
 .dc-dashboard aside { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
