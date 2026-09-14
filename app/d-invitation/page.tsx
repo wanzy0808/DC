@@ -45,7 +45,7 @@ export default function DigitalInvitationPage() {
           eyebrow={copy.packageEyebrow}
           title={copy.packageTitle}
           description={copy.packageDescription}
-          packageKeys={["INVITATION_BASIC", "INVITATION_GUESTBOOK"]}
+          packageKeys={["INVITATION_BASIC", "GUESTBOOK_DIGITAL"]}
           note={copy.packageNote}
         />
         <ReviewsGrid
