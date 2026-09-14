@@ -569,3 +569,22 @@ Test a new premium button treatment on the landing page before applying it acros
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, current Button conventions, landing-page structure, and the protected Pintu/rose-petal implementation. Build/CI not verified.
+
+---
+
+# 2026-09-14 — Landing Brand Gradient Button Shape Refinement
+
+## Implementation
+- Refined the reusable `brand-gradient` Button variant to use `rounded-3xl`, taking the requested shape language from the existing compact multi-line button element while keeping the Button system's existing size tokens unchanged.
+- Kept the canonical DC Organizer Rose/Pink brand gradient toward white and retained the restrained Rose glow, hover lift, and focus treatment.
+- Did not change navbar control opacity or other semantic Button variants.
+- No dependency, schema, API, route, Pintu, or content behavior changes.
+
+## Affected Files
+- `components/ui/button.tsx`
+
+## Commit
+- `550b192dc20b48c255a8753a07d4046a8966b7ea` — refine brand gradient button shape to rounded-3xl.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, and the shared Button conventions. Build/CI not verified.
