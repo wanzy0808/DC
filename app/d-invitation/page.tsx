@@ -9,22 +9,30 @@ import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
 
 export default function DigitalInvitationPage() {
   return (
-    <main className="relative z-10 min-h-screen w-full overflow-hidden text-foreground">
-      <div className="pointer-events-none fixed left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-dc-gold/10 blur-[150px]" />
-      <div className="mx-auto w-full space-y-28 px-0 py-12 md:py-20">
+    <main className="relative z-10 min-h-screen w-full overflow-hidden bg-background text-foreground">
+      <div className="mx-auto w-full max-w-[1400px] space-y-28 px-[4vw] py-14 md:space-y-36 md:py-20">
         <HeroSection />
         <FeatureSection />
         <TemplateCollection />
         <CtaStudioSection />
         <PackageShowcase
           eyebrow="Invitation Packages"
-          title="Undangan Digital untuk setiap tahap persiapan"
-          description="Pilih Undangan Digital untuk fokus pada desain dan publikasi, atau gunakan Bundle jika Anda ingin sekaligus mengelola tamu dan check-in hari-H."
+          title="Undangan Digital yang tumbuh bersama persiapanmu"
+          description="Mulai dari undangan yang terasa personal, lalu lanjutkan ke pengelolaan tamu dan check-in ketika hari istimewamu semakin dekat."
           packageKeys={["INVITATION_BASIC", "INVITATION_GUESTBOOK"]}
-          note="Workspace template dapat digunakan sebelum paket aktif. Publikasi dan upload aset pribadi mengikuti paket Digital Invitation yang sudah aktif."
+          note="Template bisa dipersiapkan lebih dulu. Publikasi dan upload aset pribadi mengikuti paket Digital Invitation yang aktif."
         />
-        <ReviewsGrid eyebrow="Client Stories" title="Bukan cuma cantik, tapi membantu persiapan" description="Cerita singkat pasangan yang memakai undangan digital DC untuk mengurangi pekerjaan manual sebelum hari-H." reviews={digitalInvitationReviews} />
-        <FaqSection title="Pertanyaan tentang Undangan Digital" description="Jawaban singkat tentang template, RSVP, asset, publikasi, dan perbedaan paket." items={digitalInvitationFaq} />
+        <ReviewsGrid
+          eyebrow="Client Stories"
+          title="Karena undangan yang baik bukan hanya indah dilihat"
+          description="Ia membuat kabar bahagia lebih mudah dibagikan, RSVP lebih rapi, dan persiapan terasa sedikit lebih ringan."
+          reviews={digitalInvitationReviews}
+        />
+        <FaqSection
+          title="Yang sering ditanyakan"
+          description="Tentang template, RSVP, aset pribadi, publikasi, dan pilihan paket Digital Invitation."
+          items={digitalInvitationFaq}
+        />
       </div>
     </main>
   );
