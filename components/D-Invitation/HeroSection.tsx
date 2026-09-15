@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, Clock3, Heart, MapPin } from "lucide-react";
-import { GradientButton } from "@/components/ui/gradient-button";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function HeroSection() {
@@ -46,9 +46,9 @@ export default function HeroSection() {
         </h1>
         <p className="mt-7 max-w-xl text-base leading-8 text-foreground/70 md:text-lg">{copy.description}</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <GradientButton asChild>
+          <Button asChild variant="brand-gradient" size="lg">
             <Link href="/template-design" className="gap-2">{copy.explore}<ArrowUpRight className="h-4 w-4" /></Link>
-          </GradientButton>
+          </Button>
         </div>
         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
           {copy.tags.map((tag) => <span key={tag}>{tag}</span>)}
@@ -58,55 +58,66 @@ export default function HeroSection() {
       <div className="relative mx-auto w-full max-w-xl lg:pr-4">
         <div className="absolute -right-8 top-12 h-48 w-48 rounded-full bg-primary/6 blur-3xl" aria-hidden="true" />
         <div className="relative mx-auto w-[min(100%,430px)]">
-          <div className="relative aspect-[0.68] overflow-hidden rounded-[34px] border-2 border-[#111111] bg-[#111111] p-2 shadow-2xl shadow-black/10 dark:border-white dark:bg-black dark:shadow-black/30">
-            <div className="relative h-full overflow-hidden rounded-[27px] bg-[#f8f4f1] dark:bg-[#111111]">
-              <div className="invitation-phone-scroll absolute inset-x-0 top-0 w-full">
-                <article className="min-h-full bg-[#f8f4f1] px-7 pb-16 pt-12 text-[#2a2220] dark:bg-[#111111] dark:text-white">
-                  <div className="mx-auto max-w-[250px] text-center">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.28em] text-[#8b5d62] dark:text-primary">{copy.greeting}</p>
-                    <div className="mx-auto mt-8 flex h-14 w-14 items-center justify-center rounded-full border border-[#b78b8f]/50">
-                      <Heart className="h-5 w-5 text-[#a55d66] dark:text-primary" strokeWidth={1.5} />
-                    </div>
-                    <p className="mt-8 font-[family-name:var(--font-dc-heading)] text-[12px] leading-5 text-[#72555a] dark:text-white/70">{copy.invitation}</p>
-                    <h2 className="mt-5 font-[family-name:var(--font-dc-heading)] text-[38px] font-normal leading-[0.95] tracking-[-0.05em] text-[#3b2a2c] dark:text-white">{copy.couple}</h2>
-                    <div className="mx-auto my-8 h-px w-12 bg-[#a55d66]/40 dark:bg-primary/50" />
-                    <p className="font-[family-name:var(--font-dc-heading)] text-[20px] italic text-[#76565b] dark:text-white/80">The beginning of forever</p>
-                  </div>
+          <div className="relative aspect-[0.68] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
+            <div className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]" aria-hidden="true" />
+            <div className="absolute -left-[4px] top-[21%] h-9 w-[4px] rounded-l-full bg-[#4a4a4c] shadow-[inset_-1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]" aria-hidden="true" />
+            <div className="absolute -left-[4px] top-[31%] h-14 w-[4px] rounded-l-full bg-[#4a4a4c] shadow-[inset_-1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]" aria-hidden="true" />
+            <div className="absolute -left-[4px] top-[43%] h-14 w-[4px] rounded-l-full bg-[#4a4a4c] shadow-[inset_-1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]" aria-hidden="true" />
 
-                  <div className="mx-auto mt-12 aspect-[4/3] max-w-[290px] overflow-hidden rounded-[24px] bg-gradient-to-br from-[#d7c0b9] via-[#eee2dc] to-[#b58c8c] p-4 shadow-sm">
-                    <div className="flex h-full items-end rounded-[18px] border border-white/40 bg-white/15 p-5 backdrop-blur-sm">
-                      <p className="font-[family-name:var(--font-dc-heading)] text-2xl italic text-white">Our day</p>
+            <div className="relative h-full overflow-hidden rounded-[39px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
+              <div className="absolute inset-[7px] z-20 rounded-[33px] border border-white/10 pointer-events-none" aria-hidden="true" />
+              <div className="relative h-full overflow-hidden rounded-[32px] bg-[#f8f4f1] dark:bg-[#111111] shadow-[inset_0_0_18px_rgba(0,0,0,0.18)]">
+                <div className="absolute left-1/2 top-2.5 z-30 h-7 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]" aria-hidden="true">
+                  <div className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#151515] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
+                </div>
+                <div className="invitation-phone-scroll absolute inset-x-0 top-0 w-full">
+                  <article className="min-h-full bg-[#f8f4f1] px-7 pb-16 pt-12 text-[#2a2220] dark:bg-[#111111] dark:text-white">
+                    <div className="mx-auto max-w-[250px] text-center">
+                      <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.28em] text-[#8b5d62] dark:text-primary">{copy.greeting}</p>
+                      <div className="mx-auto mt-8 flex h-14 w-14 items-center justify-center rounded-full border border-[#b78b8f]/50">
+                        <Heart className="h-5 w-5 text-[#a55d66] dark:text-primary" strokeWidth={1.5} />
+                      </div>
+                      <p className="mt-8 font-[family-name:var(--font-dc-heading)] text-[12px] leading-5 text-[#72555a] dark:text-white/70">{copy.invitation}</p>
+                      <h2 className="mt-5 font-[family-name:var(--font-dc-heading)] text-[38px] font-normal leading-[0.95] tracking-[-0.05em] text-[#3b2a2c] dark:text-white">{copy.couple}</h2>
+                      <div className="mx-auto my-8 h-px w-12 bg-[#a55d66]/40 dark:bg-primary/50" />
+                      <p className="font-[family-name:var(--font-dc-heading)] text-[20px] italic text-[#76565b] dark:text-white/80">The beginning of forever</p>
                     </div>
-                  </div>
 
-                  <div className="mx-auto mt-12 max-w-[290px] space-y-5 border-y border-[#b78b8f]/30 py-8">
-                    <div className="flex items-start gap-3">
-                      <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
-                      <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Date</p><p className="mt-1 text-[12px]">{copy.date}</p></div>
+                    <div className="mx-auto mt-12 aspect-[4/3] max-w-[290px] overflow-hidden rounded-[24px] bg-gradient-to-br from-[#d7c0b9] via-[#eee2dc] to-[#b58c8c] p-4 shadow-sm">
+                      <div className="flex h-full items-end rounded-[18px] border border-white/40 bg-white/15 p-5 backdrop-blur-sm">
+                        <p className="font-[family-name:var(--font-dc-heading)] text-2xl italic text-white">Our day</p>
+                      </div>
                     </div>
-                    <div className="flex items-start gap-3">
-                      <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
-                      <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Time</p><p className="mt-1 text-[12px]">16:00 WIB — selesai</p></div>
-                    </div>
-                    <div className="flex items-start gap-3">
-                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
-                      <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Venue</p><p className="mt-1 text-[12px]">{copy.venue}</p></div>
-                    </div>
-                  </div>
 
-                  <div className="mx-auto mt-12 max-w-[290px] rounded-[22px] bg-[#eee3df] px-6 py-8 text-center dark:bg-white/6">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.22em] text-[#8b5d62] dark:text-primary">{copy.countdown}</p>
-                    <div className="mt-5 grid grid-cols-3 gap-2">
-                      {[["120", "days"], ["08", "hours"], ["42", "mins"]].map(([value, label]) => <div key={label} className="rounded-xl border border-[#b78b8f]/25 px-2 py-3"><p className="font-[family-name:var(--font-dc-heading)] text-xl">{value}</p><p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[6px] uppercase tracking-widest opacity-50">{label}</p></div>)}
+                    <div className="mx-auto mt-12 max-w-[290px] space-y-5 border-y border-[#b78b8f]/30 py-8">
+                      <div className="flex items-start gap-3">
+                        <CalendarDays className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
+                        <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Date</p><p className="mt-1 text-[12px]">{copy.date}</p></div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <Clock3 className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
+                        <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Time</p><p className="mt-1 text-[12px]">16:00 WIB — selesai</p></div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#a55d66] dark:text-primary" />
+                        <div><p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.2em] opacity-55">Venue</p><p className="mt-1 text-[12px]">{copy.venue}</p></div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="mx-auto mt-12 max-w-[290px] text-center">
-                    <p className="font-[family-name:var(--font-dc-heading)] text-xl">We would love to see you</p>
-                    <div className="mt-5 inline-flex rounded-full bg-[#a55d66] px-6 py-3 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.2em] text-white dark:bg-primary dark:text-primary-foreground">{copy.rsvp}</div>
-                    <p className="mt-8 font-[family-name:var(--font-dc-heading)] text-lg italic opacity-70">With love, Vidi & Hening</p>
-                  </div>
-                </article>
+                    <div className="mx-auto mt-12 max-w-[290px] rounded-[22px] bg-[#eee3df] px-6 py-8 text-center dark:bg-white/6">
+                      <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.22em] text-[#8b5d62] dark:text-primary">{copy.countdown}</p>
+                      <div className="mt-5 grid grid-cols-3 gap-2">
+                        {[["120", "days"], ["08", "hours"], ["42", "mins"]].map(([value, label]) => <div key={label} className="rounded-xl border border-[#b78b8f]/25 px-2 py-3"><p className="font-[family-name:var(--font-dc-heading)] text-xl">{value}</p><p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[6px] uppercase tracking-widest opacity-50">{label}</p></div>)}
+                      </div>
+                    </div>
+
+                    <div className="mx-auto mt-12 max-w-[290px] text-center">
+                      <p className="font-[family-name:var(--font-dc-heading)] text-xl">We would love to see you</p>
+                      <div className="mt-5 inline-flex rounded-full bg-[#a55d66] px-6 py-3 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.2em] text-white dark:bg-primary dark:text-primary-foreground">{copy.rsvp}</div>
+                      <p className="mt-8 font-[family-name:var(--font-dc-heading)] text-lg italic opacity-70">With love, Vidi & Hening</p>
+                    </div>
+                  </article>
+                </div>
               </div>
             </div>
           </div>
