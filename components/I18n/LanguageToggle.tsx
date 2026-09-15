@@ -28,11 +28,11 @@ export default function LanguageToggle() {
             onClick={() => changeLocale(item)}
             aria-pressed={selected}
             aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
-            className={`h-9 min-w-10 rounded-none border-0 bg-transparent px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] shadow-none ${
+            className={`h-9 min-w-10 rounded-none border-0 px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] shadow-none ${
               selected
-                ? "text-primary underline decoration-1 underline-offset-4"
-                : "text-primary/65 hover:bg-primary/5 hover:text-primary"
-            } dark:${selected ? "text-primary" : "text-primary/65"}`}
+                ? "bg-primary/40 text-primary hover:bg-primary/15 hover:text-primary dark:bg-primary/40 dark:text-primary dark:hover:bg-primary/15 dark:hover:text-primary"
+                : "bg-transparent text-primary/65 hover:bg-primary/5 hover:text-primary dark:bg-transparent dark:text-primary/65 dark:hover:bg-primary/5 dark:hover:text-primary"
+            }`}
           >
             {item.toUpperCase()}
           </Button>
