@@ -26,14 +26,12 @@ export default function LoginPage() {
     const params = new URLSearchParams(window.location.search);
     const requestedNext = params.get("next");
     if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//")) setNext(requestedNext);
-
     const googleError = params.get("error");
     if (googleError?.startsWith("google_")) {
       setError(googleError === "google_config" ? "Google Sign-In belum dikonfigurasi di server." : "Google Sign-In gagal. Silakan coba lagi.");
       window.history.replaceState({}, "", `/login${requestedNext ? `?next=${encodeURIComponent(requestedNext)}` : ""}`);
       return;
     }
-
     fetch("/api/auth/session", { cache: "no-store" }).then((response) => response.ok ? response.json() as Promise<{ authenticated?: boolean }> : null).then((data) => {
       if (data?.authenticated) window.location.replace(requestedNext?.startsWith("/") && !requestedNext.startsWith("//") ? requestedNext : "/dashboard");
     }).catch(() => undefined);
