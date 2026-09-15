@@ -33,3 +33,18 @@ Commit:
 - `7ec6a082f527eab6f74008cdabfd15b776db2d13`
 
 Validation: belum diverifikasi dengan build/CI.
+
+## 2026-09-15 — D-Invitation Single Package
+
+- Bagian paket pada halaman D-Invitation sekarang hanya menampilkan **1 paket Undangan Digital**.
+- Paket yang ditampilkan adalah `INVITATION_BASIC` dengan harga **Rp 300.000**.
+- Kartu paket otomatis berada di tengah karena hanya ada satu pilihan.
+- Copy section disesuaikan agar menegaskan satu paket lengkap, dalam Bahasa Indonesia dan English.
+
+Affected files:
+- app/d-invitation/page.tsx
+
+Commit:
+- `4471ce72b1493090c49f52d30faa1e0b1d2f7512`
+
+Validation: belum diverifikasi dengan build/CI.
