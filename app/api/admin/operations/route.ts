@@ -13,12 +13,18 @@ function invoiceNumber(){const stamp=new Date().toISOString().slice(0,10).replac
 export async function GET() {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "Akses Admin diperlukan." }, { status: 403 });
-  const [users, invitations, orders] = await Promise.all([
+  const [users, invitations, orders, templates] = await Promise.all([
     prisma.user.findMany({ select: { id:true,email:true,firstName:true,lastName:true,role:true,createdAt:true }, orderBy:{createdAt:"desc"} }),
     prisma.invitation.findMany({ select:{ id:true,slug:true,title:true,groomName:true,brideName:true,templateKey:true,isPublished:true,owner:{select:{id:true,email:true,firstName:true}},payment:{select:{packageKey:true,status:true,amount:true}} }, orderBy:{updatedAt:"desc"} }),
     prisma.paymentOrder.findMany({ where:{ status:"PENDING" }, include:{ user:{select:{email:true,firstName:true}}, invitation:{select:{groomName:true,brideName:true,templateKey:true}} }, orderBy:{createdAt:"desc"} }),
+    prisma.designerTemplate.findMany({ where:{status:"PUBLISHED"}, select:{templateNo:true,name:true,previewUrl:true,templateFile:true,tags:true,designer:{select:{firstName:true,email:true}}}, orderBy:{templateNo:"asc"} }),
   ]);
-  return NextResponse.json({ users, invitations, orders });
+  const templateMap = new Map(templates.map((template) => [template.templateNo, template]));
+  return NextResponse.json({
+    users,
+    invitations: invitations.map((invitation) => ({ ...invitation, selectedTemplate: templateMap.get(invitation.templateKey) ?? null })),
+    orders,
+  });
 }
 
 export async function POST(request:Request){
