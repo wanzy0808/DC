@@ -4,8 +4,7 @@ import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface RegisterDialogProps {
@@ -43,19 +42,9 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
-
-    if (!agreedTerms) {
-      setError("Kamu perlu menyetujui Syarat & Ketentuan dan Kebijakan Privasi.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password minimal 8 karakter.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Konfirmasi password tidak cocok.");
-      return;
-    }
+    if (!agreedTerms) return setError("Kamu perlu menyetujui Syarat & Ketentuan dan Kebijakan Privasi.");
+    if (password.length < 8) return setError("Password minimal 8 karakter.");
+    if (password !== confirmPassword) return setError("Konfirmasi password tidak cocok.");
 
     setLoading(true);
     try {
@@ -65,11 +54,8 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
         body: JSON.stringify({ email, password }),
       });
       const data = await response.json();
-      if (!response.ok) {
-        setError(data.error ?? "Pendaftaran gagal.");
-      } else {
-        router.push("/login");
-      }
+      if (!response.ok) setError(data.error ?? "Pendaftaran gagal.");
+      else router.push("/login");
     } catch {
       setError("Tidak dapat terhubung ke server.");
     } finally {
@@ -78,24 +64,19 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
   }
 
   return (
-    <DialogContent className={`max-h-[90vh] overflow-y-auto sm:max-w-md ${
-      isDarkMode ? "border-white/10 bg-[#121116] text-white" : "bg-white text-foreground"
-    }`}>
+    <DialogContent className={`max-h-[90vh] overflow-y-auto sm:max-w-md ${isDarkMode ? "border-white/10 bg-[#121116] text-white" : "bg-white text-foreground"}`}>
       <DialogHeader className="flex flex-row items-center justify-between border-b border-border pb-4 dark:border-neutral-800">
         <DialogTitle className="font-serif text-2xl font-normal">Daftar</DialogTitle>
-        <Button type="button" variant="link" size="sm" onClick={onSwitchToLogin} className={accentColor}>
-          Masuk
-        </Button>
+        <Button type="button" variant="link" size="sm" onClick={onSwitchToLogin} className={accentColor}>Masuk</Button>
       </DialogHeader>
 
       <form onSubmit={submit} className="space-y-5 py-4">
-        <a
-          href="/api/auth/google"
-          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full gap-3 rounded-xl")}
-        >
-          <GoogleIcon />
-          <span>Daftar dengan Google</span>
-        </a>
+        <Button asChild size="lg" className="w-full gap-3 rounded-xl">
+          <a href="/api/auth/google">
+            <GoogleIcon />
+            <span>Daftar dengan Google</span>
+          </a>
+        </Button>
 
         <div className="flex items-center gap-3">
           <div className={`h-px flex-1 border-t ${borderColor}`} />
@@ -103,84 +84,43 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
           <div className={`h-px flex-1 border-t ${borderColor}`} />
         </div>
 
-        <input
-          required
-          type="email"
-          autoComplete="email"
-          placeholder="Alamat Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
-        />
+        <input required type="email" autoComplete="email" placeholder="Alamat Email" value={email} onChange={(event) => setEmail(event.target.value)} className={`w-full rounded-lg border px-3 py-2.5 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`} />
 
         <div className="relative">
-          <input
-            required
-            minLength={8}
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Kata Sandi"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
-          />
-          <Button type="button" variant="ghost" size="icon-xs" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan password">
+          <input required minLength={8} type={showPassword ? "text" : "password"} autoComplete="new-password" placeholder="Kata Sandi" value={password} onChange={(event) => setPassword(event.target.value)} className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`} />
+          <Button type="button" size="icon-xs" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan password">
             {showPassword ? <EyeOff /> : <Eye />}
           </Button>
         </div>
 
         <div className="relative">
-          <input
-            required
-            minLength={8}
-            type={showConfirmPassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Konfirmasi Kata Sandi"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`}
-          />
-          <Button type="button" variant="ghost" size="icon-xs" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan konfirmasi password">
+          <input required minLength={8} type={showConfirmPassword ? "text" : "password"} autoComplete="new-password" placeholder="Konfirmasi Kata Sandi" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} className={`w-full rounded-lg border px-3 py-2.5 pr-10 text-sm ${borderColor} ${inputBg} focus:outline-none focus:ring-1 focus:ring-primary`} />
+          <Button type="button" size="icon-xs" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-2 top-2.5 opacity-50 hover:opacity-100" aria-label="Tampilkan konfirmasi password">
             {showConfirmPassword ? <EyeOff /> : <Eye />}
           </Button>
         </div>
 
         <div className="space-y-3 pt-1 text-xs">
           <label className="flex cursor-pointer items-start gap-3">
-            <input
-              required
-              type="checkbox"
-              checked={agreedTerms}
-              onChange={(event) => setAgreedTerms(event.target.checked)}
-              className="mt-0.5 rounded accent-[var(--primary)]"
-            />
-            <span className="leading-relaxed opacity-80">
-              Saya menyetujui <span className={`${accentColor} underline`}>Syarat & Ketentuan</span> beserta <span className={`${accentColor} underline`}>Kebijakan Privasi</span>.
-            </span>
+            <input required type="checkbox" checked={agreedTerms} onChange={(event) => setAgreedTerms(event.target.checked)} className="mt-0.5 rounded accent-[var(--primary)]" />
+            <span className="leading-relaxed opacity-80">Saya menyetujui <span className={`${accentColor} underline`}>Syarat & Ketentuan</span> beserta <span className={`${accentColor} underline`}>Kebijakan Privasi</span>.</span>
           </label>
           <label className="flex cursor-pointer items-start gap-3">
-            <input
-              type="checkbox"
-              checked={agreedPromo}
-              onChange={(event) => setAgreedPromo(event.target.checked)}
-              className="mt-0.5 rounded accent-[var(--primary)]"
-            />
+            <input type="checkbox" checked={agreedPromo} onChange={(event) => setAgreedPromo(event.target.checked)} className="mt-0.5 rounded accent-[var(--primary)]" />
             <span className="leading-relaxed opacity-80">Saya ingin menerima email promo dan newsletter dari rekanannya.</span>
           </label>
         </div>
 
         {error && <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
 
-        <Button type="submit" disabled={loading} className="w-full rounded-xl py-6 font-medium tracking-wide">
+        <Button type="submit" disabled={loading} size="lg" className="w-full rounded-xl font-medium tracking-wide">
           {loading ? "Memproses..." : "Lanjutkan"}
         </Button>
 
         <div className="space-y-3 pt-1 text-center text-xs">
           <p className="opacity-70">
             Sudah punya akun?{" "}
-            <Button type="button" variant="link" size="xs" onClick={onSwitchToLogin} className={`${accentColor} p-0`}>
-              Masuk
-            </Button>
+            <Button type="button" variant="link" size="xs" onClick={onSwitchToLogin} className={`${accentColor} p-0`}>Masuk</Button>
           </p>
           <div className={`-mx-6 -mb-4 mt-6 rounded-b-lg border-t p-3 ${borderColor} ${isDarkMode ? "bg-black/30" : "bg-neutral-50"}`}>
             <span className="opacity-70">Punya bisnis terkait pernikahan? </span>
