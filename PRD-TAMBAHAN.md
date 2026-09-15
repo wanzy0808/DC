@@ -119,6 +119,7 @@ Validation: belum diverifikasi dengan build/CI.
 - Login manual dan Google OAuth sekarang mengarahkan role ke dashboard yang sesuai.
 - Role `DESIGNER` ditambahkan tanpa menghapus role `EDITOR` lama untuk menjaga kompatibilitas.
 - Ditambahkan audit log untuk pembuatan/perubahan akun Owner dan bantuan perubahan data/publikasi Admin.
+- Admin sekarang dapat membuat invoice **CUSTOM_DESIGN** secara manual untuk user/invitation tertentu dengan nominal yang ditentukan Admin, mengirim invoice melalui email user, dan memasukkannya ke antrean verifikasi pembayaran yang sama.
 
 Affected files:
 - prisma/schema.prisma
@@ -163,5 +164,7 @@ Commits:
 - `cd2d0b91977b41840eb023333c474c90013d7455`
 - `58e5b12d48f0f2b81d552bf004f8c99e29a04d85`
 - `a2a8b42dcc983e6823838cb6c806f7f5d7f1305a`
+- `00fbaefd0d7a387b087e564ab666d3e2d53443c8`
+- `3e248fa880731b757af9eaabb4dba6eb330430d3`
 
 Validation: belum diverifikasi dengan build/CI. Prisma migration dan konfigurasi `OWNER_CONFIRMATION_EMAIL`/Resend perlu diterapkan pada environment deployment. Upload file template menggunakan filesystem server, sehingga deployment production perlu memastikan `public/uploads` writable dan persistent.
