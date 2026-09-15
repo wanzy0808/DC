@@ -20,7 +20,11 @@ export default async function PublicInvitationPage({ params }: { params: Promise
   }
 
   const eventKind = invitation.type === "ADAT_AKAD" ? "special" : "wedding";
-  if (invitation.templateKey.split("::")[0] === "figma-classic") {
+  const templateKey = invitation.templateKey.split("::")[0];
+
+  // The existing Eternal Blossom slot is used for the supplied invitation design.
+  // No new customer-facing template name/key is introduced.
+  if (templateKey === "eternal-blossom") {
     return <FigmaClassicTemplate invitation={invitation} eventKind={eventKind} />;
   }
 
