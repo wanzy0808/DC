@@ -34,7 +34,7 @@ export const buttonVariants = ({
   className?: string
   variant?: string
   size?: ButtonSize
-} = {}) => cn(className, buttonBase, sizeClasses[size])
+} = {}) => cn(buttonBase, sizeClasses[size], className)
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ asChild = false, className, size = "default", type, ...props }, ref) => {
