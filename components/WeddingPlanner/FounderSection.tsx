@@ -25,7 +25,7 @@ export default function FounderSection() {
         <div className="grid grid-cols-3 gap-4 border-t border-[var(--border)] pt-5">
           {[['150+', 'Pernikahan'], ['99%', 'Kepuasan'], ['8+', 'Tahun']].map(([value, label]) => <div key={label}><p className="font-[family-name:var(--font-dc-heading)] text-2xl text-[var(--primary)]">{value}</p><p className="mt-1 text-xs text-[var(--muted-foreground)]">{label}</p></div>)}
         </div>
-        <Link href="https://wa.me/6281234567890?text=Halo%20DC%20Wedding,%20saya%20ingin%20konsultasi%20wedding%20planner" target="_blank"><Button className="rounded-full bg-[var(--primary)] px-7 py-6 text-xs font-semibold uppercase tracking-wider text-white hover:brightness-110">Konsultasi dengan Christine →</Button></Link>
+        <Link href="https://wa.me/6281234567890?text=Halo%20DC%20Wedding,%20saya%20ingin%20konsultasi%20wedding%20planner" target="_blank"><Button>Konsultasi dengan Christine →</Button></Link>
       </div>
     </section>
   );
