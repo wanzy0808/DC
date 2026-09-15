@@ -568,7 +568,7 @@ Test a new premium button treatment on the landing page before applying it acros
 - `8c70c46ff2b12348828e22643c90ed26134197fb` — apply gradient round treatment to landing CTA.
 
 ## Validation
-Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, current Button conventions, landing-page structure, and the protected Pintu/rose-petal implementation. Build/CI not verified.
+Reviewed against `AGENTS.md`, `SKILL`, `prd.md`, `README.md`, current Button conventions, landing-page structure, and the protected Pintu/rose-petal implementation. Build/CI not verified.
 
 ---
 
@@ -817,3 +817,29 @@ Menjadikan `GradientButton` sebagai satu-satunya bahasa visual button di seluruh
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing button usages, CVA/Slot architecture, and current landing/D-Invitation CTA behavior. Build/CI not verified.
+
+---
+
+# 2026-09-15 — D-Invitation Button Consolidation
+
+## Goal
+Menyelesaikan migrasi seluruh interactive button pada `/d-invitation` ke canonical `GradientButton`, sesuai keputusan design system bahwa hanya ada satu visual button primitive dan hierarchy dibedakan melalui `size`.
+
+## Implementation
+- `components/D-Invitation/TemplateSection.tsx` tidak lagi mengimpor `buttonVariants` dari `components/ui/button.tsx`.
+- Tombol `Lihat template lainnya / See more templates` menggunakan `GradientButton` dengan `size="sm"`.
+- Link `Lihat detail / View details` pada setiap template menggunakan `GradientButton` dengan `size="xs"`, sehingga tidak lagi memakai legacy `link` variant.
+- `components/Marketing/FaqSection.tsx` pada halaman `/d-invitation` sekarang menggunakan `GradientButton` untuk trigger accordion FAQ, tetap mempertahankan toggle state, `aria-expanded`, dan keyboard-native button behavior.
+- Hero, Studio, dan Package Showcase yang sudah menggunakan `GradientButton` tetap dipertahankan; tidak dilakukan penggantian visual yang tidak diminta.
+- Tidak mengubah route, API, database, schema, i18n, protected rose-petal background, atau data invitation.
+
+## Affected Files
+- `components/D-Invitation/TemplateSection.tsx`
+- `components/Marketing/FaqSection.tsx`
+
+## Commits
+- `6c2473a8a4888524a5e2e029ad49798875465210` — standardize D-Invitation template actions with GradientButton.
+- `8fe73cef65686ef9f038d02301c35e95f31f7418` — standardize D-Invitation FAQ controls with GradientButton.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, canonical `GradientButton` API, D-Invitation component structure, and existing bilingual behavior. GitHub combined status/build checks were not run after these commits; build/CI remains unverified.
