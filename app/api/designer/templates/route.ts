@@ -23,35 +23,37 @@ export async function GET(){
 export async function POST(request:Request){
  const designer=await requireDesigner(); if(!designer)return NextResponse.json({error:"Akses Designer diperlukan."},{status:403});
  let lastError="Template belum dapat diupload.";
- for(let attempt=0;attempt<3;attempt++){
-  let folder="";
-  try{
-   const form=await request.formData();
-   const name=String(form.get("name")??"").trim(); const tags=String(form.get("tags")??"").split(",").map(v=>v.trim()).filter(Boolean).slice(0,12);
-   const preview=form.get("preview"); const template=form.get("template");
-   if(!name || !(preview instanceof File) || !(template instanceof File))return NextResponse.json({error:"Nama, preview gambar, dan file template wajib diisi."},{status:400});
-   const previewExt=previewTypes.get(preview.type); const templateExt=templateTypes.get(template.type);
-   if(!previewExt)return NextResponse.json({error:"Preview harus JPG, PNG, atau WEBP."},{status:400});
-   if(!templateExt)return NextResponse.json({error:"File template harus ZIP, HTML, atau JSON."},{status:400});
-   if(preview.size>5*1024*1024 || template.size>25*1024*1024)return NextResponse.json({error:"Ukuran preview maksimal 5 MB dan template maksimal 25 MB."},{status:400});
-   const latest=await prisma.designerTemplate.findFirst({orderBy:{templateNo:"desc"},select:{templateNo:true}});
-   const nextNumber=Math.max(0,Number(latest?.templateNo??"0"))+1; const templateNo=String(nextNumber).padStart(3,"0");
-   folder=path.join(process.cwd(),"public","uploads","templates",templateNo);
-   await mkdir(folder,{recursive:true});
-   const base=safeName(name)||"template";
-   const previewName=`${base}-${randomUUID()}.${previewExt}`; const templateName=`${base}-${randomUUID()}.${templateExt}`;
-   await writeFile(path.join(folder,previewName),Buffer.from(await preview.arrayBuffer()));
-   await writeFile(path.join(folder,templateName),Buffer.from(await template.arrayBuffer()));
+ try{
+  const form=await request.formData();
+  const name=String(form.get("name")??"").trim(); const tags=String(form.get("tags")??"").split(",").map(v=>v.trim()).filter(Boolean).slice(0,12);
+  const preview=form.get("preview"); const template=form.get("template");
+  if(!name || !(preview instanceof File) || !(template instanceof File))return NextResponse.json({error:"Nama, preview gambar, dan file template wajib diisi."},{status:400});
+  const previewExt=previewTypes.get(preview.type); const templateExt=templateTypes.get(template.type);
+  if(!previewExt)return NextResponse.json({error:"Preview harus JPG, PNG, atau WEBP."},{status:400});
+  if(!templateExt)return NextResponse.json({error:"File template harus ZIP, HTML, atau JSON."},{status:400});
+  if(preview.size>5*1024*1024 || template.size>25*1024*1024)return NextResponse.json({error:"Ukuran preview maksimal 5 MB dan template maksimal 25 MB."},{status:400});
+  const base=safeName(name)||"template";
+  for(let attempt=0;attempt<3;attempt++){
+   let folder="";
    try{
-    const created=await prisma.designerTemplate.create({data:{templateNo,name,tags,previewUrl:`/uploads/templates/${templateNo}/${previewName}`,templateFile:`/uploads/templates/${templateNo}/${templateName}`,designerId:designer.id}});
-    return NextResponse.json({template:created},{status:201});
-   }catch(error){
-    await rm(folder,{recursive:true,force:true});
-    const code=typeof error==="object"&&error!==null&&"code" in error?(error as {code?:string}).code:undefined;
-    if(code==="P2002"){lastError="Nomor template sedang dipakai, mencoba nomor berikutnya...";continue}
-    throw error;
-   }
-  }catch(error){lastError=error instanceof Error?error.message:lastError;if(folder)await rm(folder,{recursive:true,force:true}).catch(()=>undefined);if(attempt===2)break}
- }
+    const latest=await prisma.designerTemplate.findFirst({orderBy:{templateNo:"desc"},select:{templateNo:true}});
+    const nextNumber=Math.max(0,Number(latest?.templateNo??"0"))+1; const templateNo=String(nextNumber).padStart(3,"0");
+    folder=path.join(process.cwd(),"public","uploads","templates",templateNo);
+    await mkdir(folder,{recursive:true});
+    const previewName=`${base}-${randomUUID()}.${previewExt}`; const templateName=`${base}-${randomUUID()}.${templateExt}`;
+    await writeFile(path.join(folder,previewName),Buffer.from(await preview.arrayBuffer()));
+    await writeFile(path.join(folder,templateName),Buffer.from(await template.arrayBuffer()));
+    try{
+     const created=await prisma.designerTemplate.create({data:{templateNo,name,tags,previewUrl:`/uploads/templates/${templateNo}/${previewName}`,templateFile:`/uploads/templates/${templateNo}/${templateName}`,designerId:designer.id}});
+     return NextResponse.json({template:created},{status:201});
+    }catch(error){
+     await rm(folder,{recursive:true,force:true});
+     const code=typeof error==="object"&&error!==null&&"code" in error?(error as {code?:string}).code:undefined;
+     if(code==="P2002"){lastError="Nomor template sedang dipakai, mencoba nomor berikutnya...";continue}
+     throw error;
+    }
+   }catch(error){lastError=error instanceof Error?error.message:lastError;if(folder)await rm(folder,{recursive:true,force:true}).catch(()=>undefined);if(attempt===2)break}
+  }
+ }catch(error){lastError=error instanceof Error?error.message:lastError}
  return NextResponse.json({error:lastError},{status:500});
 }
