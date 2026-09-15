@@ -2,14 +2,15 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+function validProof(value: string) {
+  return /^https?:\/\//i.test(value) || /^data:(image\/(png|jpeg|webp)|application\/pdf);base64,/i.test(value);
+}
+
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
   const { id } = await params;
-  const order = await prisma.paymentOrder.findFirst({
-    where: { id, userId: user.id },
-    include: { invitation: { select: { title: true, groomName: true, brideName: true } } },
-  });
+  const order = await prisma.paymentOrder.findFirst({ where: { id, userId: user.id }, include: { invitation: { select: { title: true, groomName: true, brideName: true } } } });
   if (!order) return NextResponse.json({ error: "Invoice tidak ditemukan." }, { status: 404 });
   return NextResponse.json({ order });
 }
@@ -24,13 +25,9 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
   const body = await request.json();
   const proofUrl = String(body.proofUrl ?? "").trim();
-  if (!proofUrl || !/^https?:\/\//i.test(proofUrl)) {
-    return NextResponse.json({ error: "Masukkan URL bukti transfer." }, { status: 400 });
-  }
+  if (!proofUrl || !validProof(proofUrl)) return NextResponse.json({ error: "Upload bukti transfer berupa JPG, PNG, WEBP, PDF, atau masukkan URL file." }, { status: 400 });
+  if (proofUrl.startsWith("data:") && proofUrl.length > 4_200_000) return NextResponse.json({ error: "File terlalu besar. Maksimal sekitar 3 MB." }, { status: 400 });
 
-  const updated = await prisma.paymentOrder.update({
-    where: { id },
-    data: { proofUrl, note: String(body.note ?? "").trim() || null },
-  });
+  const updated = await prisma.paymentOrder.update({ where: { id }, data: { proofUrl, note: String(body.note ?? "").trim() || null } });
   return NextResponse.json({ order: updated });
 }
