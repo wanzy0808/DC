@@ -17,8 +17,10 @@ export default async function DashboardLayout({
 
   if (!user) redirect("/login");
 
-  // Staff/admin accounts use the separate admin workspace.
-  if (user.role === "ADMIN" || user.role === "OWNER") redirect("/admin");
+  // Staff workspaces are intentionally separated from the customer workspace.
+  if (user.role === "OWNER") redirect("/owner");
+  if (user.role === "ADMIN" || user.role === "FINANCE") redirect("/admin");
+  if (user.role === "DESIGNER" || user.role === "EDITOR") redirect("/designer");
 
   return <DashboardGate>{children}</DashboardGate>;
 }
