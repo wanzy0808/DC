@@ -16,6 +16,11 @@ export type PublicInvitationData = {
   ceremonyTime: string | null;
   receptionTime: string | null;
   description: string | null;
+  templateKey: string;
+  giftBankName: string | null;
+  giftAccountName: string | null;
+  giftAccountNumber: string | null;
+  assets: { id: string; type: "IMAGE" | "AUDIO"; url: string; title: string | null }[];
 };
 
 function formatDate(date: Date, timezone: string) {
@@ -69,7 +74,7 @@ export default function PublicInvitation({
         </section>
 
         <footer className="mt-8 flex flex-wrap items-center justify-center gap-4 text-center font-mono text-[9px] uppercase tracking-[0.2em] opacity-55">
-          <span>DC Wedding</span>
+          <span>DC Organizer</span>
           <span>•</span>
           <Link href="/" className="hover:opacity-100">Digital Wedding Platform</Link>
         </footer>
