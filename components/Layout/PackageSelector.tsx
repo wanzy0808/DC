@@ -56,19 +56,26 @@ export default function PackageSelector() {
           {servicePackages.map((item) => {
             const active = selected === item.key;
             return (
-              <button type="button" key={item.key} onClick={() => setSelected(item.key)} className={`w-full rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}>
-                <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</p>
-                <h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</h2>
-                <p className="mt-2 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
-                <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>
-                <ul className="mt-5 space-y-2 text-xs text-[var(--muted-foreground)]">{item.features[locale].map((feature) => <li key={feature}>✓ {feature}</li>)}</ul>
-              </button>
+              <Button
+                type="button"
+                key={item.key}
+                onClick={() => setSelected(item.key)}
+                className={`h-auto w-full min-w-0 justify-start whitespace-normal rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}
+              >
+                <span>
+                  <span className="block font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</span>
+                  <span className="mt-3 block font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</span>
+                  <span className="mt-2 block text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</span>
+                  <span className="mt-3 block text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</span>
+                  <span className="mt-5 block space-y-2 text-xs text-[var(--muted-foreground)]">{item.features[locale].map((feature) => <span key={feature} className="block">✓ {feature}</span>)}</span>
+                </span>
+              </Button>
             );
           })}
         </div>
         <div className="mx-auto max-w-xl space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6">
           <label className="block text-sm">{copy.proof} <span className="opacity-50">({copy.optional})</span><input type="url" value={proofUrl} onChange={(event) => setProofUrl(event.target.value)} placeholder="https://..." className="mt-2 w-full rounded-xl border border-[var(--border)] bg-transparent px-3 py-2.5" /></label>
-          <Button type="button" onClick={choosePackage} size="lg" className="min-h-11 rounded-full">{copy.choose}</Button>
+          <Button type="button" onClick={choosePackage} size="lg" className="min-h-11 rounded-xl">{copy.choose}</Button>
           {message && <p className="text-sm text-[var(--muted-foreground)]">{message}</p>}
         </div>
       </div>
