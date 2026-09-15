@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { GradientButton } from "@/components/ui/gradient-button";
+import { GlowButton } from "@/components/ui/glow-button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const templates = [
@@ -50,7 +50,7 @@ export default function TemplateCollection() {
             {copy.description}
           </p>
         </div>
-        <GradientButton
+        <GlowButton
           asChild
           size="sm"
           className="shrink-0 min-w-0 rounded-xl px-6 text-xs uppercase tracking-[0.14em]"
@@ -59,7 +59,7 @@ export default function TemplateCollection() {
             {copy.all}
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
-        </GradientButton>
+        </GlowButton>
       </div>
       <div className="grid justify-items-center gap-8 md:grid-cols-3">
         {templates.map(([name, theme, image]) => (
@@ -88,7 +88,7 @@ export default function TemplateCollection() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-foreground/55">{theme}</p>
-              <GradientButton
+              <GlowButton
                 asChild
                 size="xs"
                 className="mt-3 min-w-0 rounded-lg px-2.5 text-xs"
@@ -97,7 +97,7 @@ export default function TemplateCollection() {
                   {copy.detail}
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
-              </GradientButton>
+              </GlowButton>
             </div>
           </article>
         ))}
