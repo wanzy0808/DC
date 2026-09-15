@@ -88,3 +88,20 @@ Affected files:
 - .env.example
 
 Validation: belum diverifikasi dengan build/CI. Migration Prisma dan konfigurasi email perlu dijalankan/dikonfigurasi pada environment deployment sebelum fitur digunakan secara produksi.
+
+## 2026-09-15 — Admin Finance Payment Panel
+
+- Panel pembayaran Admin sekarang memiliki ringkasan jumlah order berdasarkan `Pending`, `Paid`, `Rejected`, dan seluruh order.
+- Ditambahkan filter status agar Finance/Admin dapat fokus pada antrean verifikasi tanpa mengubah data transaksi.
+- Ditambahkan detail invoice dalam modal yang menampilkan paket, nominal, pemesan, status, timestamp, catatan, serta bukti transfer.
+- Bukti gambar dapat dipreview langsung; PDF/URL tetap dapat dibuka di tab baru.
+- Tombol aksi mengikuti primitive `Button` canonical tanpa styling warna custom per halaman.
+- Status order diselaraskan dengan enum `PaymentOrder` yang saat ini menggunakan `PENDING`, `PAID`, `FAILED`, dan `CANCELLED`.
+
+Affected files:
+- components/Admin/AdminPayments.tsx
+
+Commit:
+- `40d5467a3c905637bc10a3f8c7c4c938176e4fc9`
+
+Validation: belum diverifikasi dengan build/CI.
