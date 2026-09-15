@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { GradientButton } from "@/components/ui/gradient-button";
-import { buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const templates = [
@@ -53,7 +52,8 @@ export default function TemplateCollection() {
         </div>
         <GradientButton
           asChild
-          className="h-11 shrink-0 min-w-0 rounded-xl px-6 py-0 text-xs uppercase tracking-[0.14em]"
+          size="sm"
+          className="shrink-0 min-w-0 rounded-xl px-6 text-xs uppercase tracking-[0.14em]"
         >
           <Link href="/template-design">
             {copy.all}
@@ -88,16 +88,16 @@ export default function TemplateCollection() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-foreground/55">{theme}</p>
-              <Link
-                href="/template-design"
-                className={buttonVariants({
-                  variant: "link",
-                  size: "sm",
-                  className: "mt-3 h-auto px-0 text-xs",
-                })}
+              <GradientButton
+                asChild
+                size="xs"
+                className="mt-3 min-w-0 rounded-lg px-2.5 text-xs"
               >
-                {copy.detail} <ArrowUpRight className="h-3 w-3" />
-              </Link>
+                <Link href="/template-design">
+                  {copy.detail}
+                  <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              </GradientButton>
             </div>
           </article>
         ))}
