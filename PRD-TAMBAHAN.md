@@ -20,3 +20,16 @@ Affected files:
 - app/dashboard/editor/page.tsx
 
 Validation: belum diverifikasi dengan build/CI.
+
+## 2026-09-15 — Workspace Sidebar Typography
+
+- Font navigasi utama pada sidebar Workspace/Dashboard diperbesar dari `11px` menjadi `14px` agar label seperti Beranda, Rangkaian Acara, Undangan Digital, RSVP, dan Manajemen Tamu lebih mudah dibaca.
+- Struktur sidebar, spacing, warna, ikon, dan behavior navigasi tidak diubah.
+
+Affected files:
+- app/[dashboard]/page.tsx
+
+Commit:
+- `7ec6a082f527eab6f74008cdabfd15b776db2d13`
+
+Validation: belum diverifikasi dengan build/CI.
