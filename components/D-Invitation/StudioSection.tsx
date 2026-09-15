@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import { GradientButton } from "@/components/ui/gradient-button";
+import { GlowButton } from "@/components/ui/glow-button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function StudioSection() {
@@ -38,7 +38,7 @@ export default function StudioSection() {
             {copy.description}
           </p>
         </div>
-        <GradientButton
+        <GlowButton
           asChild
           className="h-11 min-w-[12rem] rounded-xl px-7 py-0 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em]"
         >
@@ -46,7 +46,7 @@ export default function StudioSection() {
             {copy.action}
             <ArrowUpRight className="h-4 w-4" />
           </Link>
-        </GradientButton>
+        </GlowButton>
       </div>
     </section>
   );
