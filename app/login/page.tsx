@@ -2,8 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 function GoogleIcon() {
   return (
@@ -95,13 +94,12 @@ export default function LoginPage() {
           <p className="mt-2 text-sm opacity-60">Kelola undangan dan wedding workspace kamu.</p>
         </div>
 
-        <a
-          href="/api/auth/google"
-          className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full gap-3 rounded-xl")}
-        >
-          <GoogleIcon />
-          <span>Masuk dengan Google</span>
-        </a>
+        <Button asChild size="lg" className="w-full gap-3 rounded-xl">
+          <a href="/api/auth/google">
+            <GoogleIcon />
+            <span>Masuk dengan Google</span>
+          </a>
+        </Button>
 
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-black/10" />
@@ -111,38 +109,22 @@ export default function LoginPage() {
 
         <label className="block text-sm">
           Email
-          <input
-            required
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-          />
+          <input required type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary" />
         </label>
         <label className="block text-sm">
           Password
-          <input
-            required
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-          />
+          <input required type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary" />
         </label>
 
         {error && <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
-        <Button type="submit" disabled={loading} className="w-full rounded-xl py-6">
+        <Button type="submit" disabled={loading} size="lg" className="w-full rounded-xl">
           {loading ? "Memproses..." : "Masuk"}
         </Button>
 
         <p className="text-center text-sm opacity-70">
           Belum punya akun?{" "}
-          <Link href="/?register=1" className="font-medium text-primary underline">
-            Daftar
-          </Link>
+          <Link href="/?register=1" className="font-medium text-primary underline">Daftar</Link>
         </p>
       </form>
     </main>
