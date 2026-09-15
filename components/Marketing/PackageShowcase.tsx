@@ -40,7 +40,7 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
               <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>
               <ul className="mt-6 flex-1 space-y-3">{item.features[locale].map((feature) => <li key={feature} className="flex gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--primary)]" /><span>{feature}</span></li>)}</ul>
               <Button asChild className="mt-7 w-full text-xs uppercase tracking-[0.16em]">
-                <Link href="/packages">{chooseLabel} <ArrowRight className="h-3.5 w-3.5" /></Link>
+                <Link href={`/packages?package=${encodeURIComponent(item.key)}`}>{chooseLabel} <ArrowRight className="h-3.5 w-3.5" /></Link>
               </Button>
             </article>
           );
