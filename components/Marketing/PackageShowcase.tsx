@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Check, ArrowRight } from "lucide-react";
-import { GlowButton } from "@/components/ui/glow-button";
+import { Button } from "@/components/ui/button";
 import { getServicePackage } from "@/lib/packages/catalog";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -39,9 +39,9 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
               <p className="mt-4 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
               <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>
               <ul className="mt-6 flex-1 space-y-3">{item.features[locale].map((feature) => <li key={feature} className="flex gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--primary)]" /><span>{feature}</span></li>)}</ul>
-              <GlowButton asChild className="mt-7 w-full text-xs uppercase tracking-[0.16em]">
+              <Button asChild className="mt-7 w-full text-xs uppercase tracking-[0.16em]">
                 <Link href="/packages">{chooseLabel} <ArrowRight className="h-3.5 w-3.5" /></Link>
-              </GlowButton>
+              </Button>
             </article>
           );
         })}
