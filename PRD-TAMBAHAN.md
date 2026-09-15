@@ -843,3 +843,37 @@ Menyelesaikan migrasi seluruh interactive button pada `/d-invitation` ke canonic
 
 ## Validation
 Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, canonical `GradientButton` API, D-Invitation component structure, and existing bilingual behavior. GitHub combined status/build checks were not run after these commits; build/CI remains unverified.
+
+---
+
+# 2026-09-15 — Global GlowButton Consolidation
+
+## Goal
+Mengintegrasikan komponen `GlowButton` ke struktur shadcn/Tailwind/TypeScript yang sudah ada dan menetapkannya sebagai satu-satunya bahasa visual button DC Organizer, menggantikan GradientButton tanpa mengubah copy CTA, routing, i18n, atau data flow.
+
+## Implementation
+- Memastikan `components/ui/glow-button.tsx` menjadi primitive canonical dengan export `GlowButton`, `GlowButtonProps`, `glowButtonVariants`, dan compatibility export `Component` untuk contoh/integrasi lama.
+- Mempertahankan API `size` terpusat (`xs`, `sm`, `default`, `lg`, `icon-xs`, `icon-sm`, `icon`, `icon-lg`) agar hierarchy hanya dibedakan melalui ukuran, bukan visual variant.
+- `components/ui/button.tsx` tetap sebagai compatibility wrapper dan sekarang mendelegasikan seluruh rendering ke `GlowButton`; legacy `variant` hanya dipertahankan untuk kompatibilitas dan tidak menghasilkan visual berbeda.
+- Menggunakan Lucide `Sparkles` yang sudah tersedia melalui `lucide-react`; tidak menambah dependency karena package tersebut sudah terpasang di repository.
+- Repository sudah menggunakan Next.js App Router + TypeScript + Tailwind CSS v4 + shadcn/ui dan memiliki default component path `components/ui`, sehingga tidak diperlukan setup CLI baru.
+- Menambahkan `tw-animate-css` import ke `app/globals.css` tanpa mengganti token theme DC Organizer yang sudah ada. Nilai background/foreground tetap mengikuti canonical light/dark theme, bukan contoh abu-abu generik.
+- Menghapus seluruh custom property dan CSS `.gradient-button*` yang sudah tidak diperlukan dari `app/globals.css`, sehingga tidak ada styling gradient lama yang tertinggal.
+- Tidak menambahkan `demo.tsx` produksi yang tidak dipakai; compatibility export `Component` tetap tersedia untuk penggunaan contoh tanpa menambah dead UI.
+- Tidak menggunakan Unsplash karena component tidak membutuhkan image asset; preview/template assets existing tetap dipertahankan.
+
+## Affected Files
+- `components/ui/glow-button.tsx`
+- `components/ui/button.tsx`
+- `app/globals.css`
+- `AGENTS.md`
+- `PRD-TAMBAHAN.md`
+
+## Commits
+- `cc8617be3b933c52b95d7e8b7db431aac70b26d0` — export `GlowButton` from the component.
+- `7bef19610f10bd02bd1246f91775905249543018` — add `glowButtonVariants` and canonical size support.
+- `fd11cfbbbd30f3b24d402f358bc2fae0856b8800` — make GlowButton canonical in AGENTS.
+- `77a0e50a125caed5892296beb64d701586fa4576` — remove legacy gradient CSS and retain Tailwind 4 theme.
+
+## Validation
+Reviewed the repository structure and implementation against `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, TypeScript, Tailwind CSS v4, shadcn/ui conventions, existing `button.tsx` compatibility, and installed dependencies. Build/CI has not yet been verified after the final integration commit.
