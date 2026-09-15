@@ -105,3 +105,63 @@ Commit:
 - `40d5467a3c905637bc10a3f8c7c4c938176e4fc9`
 
 Validation: belum diverifikasi dengan build/CI.
+
+## 2026-09-15 — Role-Based Owner, Admin & Designer Dashboards
+
+- Dashboard internal mulai dipisahkan berdasarkan role menjadi **Owner**, **Admin/Finance**, **Designer**, dan **User** tetap menggunakan Workspace `/dashboard`.
+- Owner mendapatkan `/owner` khusus untuk melihat jumlah akun, daftar nama/email/role, jumlah undangan/order, membuat akun `Admin`, `Designer`, atau `User`, serta mengubah data akun.
+- Perubahan password akun oleh Owner tidak langsung diterapkan: sistem membuat confirmation token sekali pakai dan mengirim link konfirmasi ke `OWNER_CONFIRMATION_EMAIL` atau email Owner saat ini.
+- Admin/Finance mendapatkan `/admin` untuk membaca database user/undangan, melihat template yang dipilih, membantu mengubah nama pengantin pria/wanita, preview undangan, dan membantu publish/draft. Data user lainnya tetap read-only dari panel operasional.
+- Panel pembayaran Admin tetap tersedia untuk verifikasi manual dan aktivasi paket.
+- Designer mendapatkan `/designer` untuk upload template ke server, membuat nama template, tag, dan nomor template otomatis 3 digit mulai dari `001` tanpa duplikasi.
+- Upload Designer mendukung preview JPG/PNG/WEBP maksimal 5 MB serta file template ZIP/HTML/JSON maksimal 25 MB; file disimpan pada `public/uploads/templates/<templateNo>/` dan metadata tersimpan di PostgreSQL.
+- Dashboard Designer menampilkan jumlah template milik designer dan jumlah penggunaan/penjualan berdasarkan undangan yang memakai `templateKey` template tersebut.
+- Login manual dan Google OAuth sekarang mengarahkan role ke dashboard yang sesuai.
+- Role `DESIGNER` ditambahkan tanpa menghapus role `EDITOR` lama untuk menjaga kompatibilitas.
+- Ditambahkan audit log untuk pembuatan/perubahan akun Owner dan bantuan perubahan data/publikasi Admin.
+
+Affected files:
+- prisma/schema.prisma
+- prisma/migrations/20260915190000_add_roles_templates/migration.sql
+- app/owner/layout.tsx
+- app/owner/page.tsx
+- components/Owner/OwnerDashboard.tsx
+- app/api/owner/users/route.ts
+- app/api/owner/account-confirmation/route.ts
+- app/owner/account-confirmation/page.tsx
+- app/admin/layout.tsx
+- app/admin/page.tsx
+- components/Admin/AdminOperations.tsx
+- app/api/admin/operations/route.ts
+- app/designer/layout.tsx
+- app/designer/page.tsx
+- components/Designer/DesignerDashboard.tsx
+- app/api/designer/templates/route.ts
+- app/login/page.tsx
+- app/api/auth/google/callback/route.ts
+- lib/email.ts
+- .env.example
+
+Commits:
+- `b2a0bc05effa6c2144e1a9187b4075ac8862c7ea`
+- `56d2ef27cac215675472b654c7e1cf1d88922772`
+- `9d54e646347c4cd73ef4537818b5ef8992db1774`
+- `35fbd1029eece6b549a540df69efd6def02b7076`
+- `d0808836c04f7601f30e4281ada74bfbc386ca7b`
+- `48b90fa23625096860d7fb4edececee16f56c2d5`
+- `f535889c340aacf66f7b9545cea85f83f6482a88`
+- `bc35606b05549c7ab9a8089c8909fead4a74a8ed`
+- `46f5eb8a86e05ddac537e0570e05b18e55fe882e`
+- `c52b30a900bcb37fb0b0caf158ea75ccb3925b30`
+- `9142901b9138f7101abc31a038dc145eac74c975`
+- `ab389e37747d14dd05a6d59ed0eb7cab75feba52`
+- `1a5fc05b3e12563ca0c764580a64ec1ea679f6c1`
+- `f746a56a3d52976d39a1a8a4ac025ea984e21192`
+- `526edf93b83dcde6fc1d6172f309f2d4dc129afd`
+- `0c0e72437b67b76a62fc01cee7a98c29423cc656`
+- `81fb60d1245087a9f1b8d8375efb00c10e1d25b9`
+- `cd2d0b91977b41840eb023333c474c90013d7455`
+- `58e5b12d48f0f2b81d552bf004f8c99e29a04d85`
+- `a2a8b42dcc983e6823838cb6c806f7f5d7f1305a`
+
+Validation: belum diverifikasi dengan build/CI. Prisma migration dan konfigurasi `OWNER_CONFIRMATION_EMAIL`/Resend perlu diterapkan pada environment deployment. Upload file template menggunakan filesystem server, sehingga deployment production perlu memastikan `public/uploads` writable dan persistent.
