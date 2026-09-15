@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
-import { GlowButton } from "@/components/ui/glow-button";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function StudioSection() {
@@ -38,15 +38,12 @@ export default function StudioSection() {
             {copy.description}
           </p>
         </div>
-        <GlowButton
-          asChild
-          className="h-11 min-w-[12rem] rounded-xl px-7 py-0 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em]"
-        >
+        <Button asChild size="lg" className="min-w-[12rem] text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em]">
           <Link href="/dashboard/editor">
             {copy.action}
             <ArrowUpRight className="h-4 w-4" />
           </Link>
-        </GlowButton>
+        </Button>
       </div>
     </section>
   );
