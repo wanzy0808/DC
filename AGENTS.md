@@ -78,12 +78,12 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - The public navbar itself stays visually continuous with the page canvas; do not add a contrasting navbar block merely to mask background effects.
 
 ### Button Color Standard
-- All reusable application buttons MUST use the shared `components/ui/button.tsx` variants instead of arbitrary background/text color classes.
-- `default` is the canonical primary CTA: `var(--primary)` with `var(--primary-foreground)`.
-- `secondary` is the canonical secondary action.
-- `outline`, `ghost`, `link`, and `destructive` retain semantic meaning and must not be recolored per page without a documented product reason.
-- Do not introduce one-off button colors such as `bg-blue-*`, `bg-green-*`, arbitrary rose hex values, gradients, or legacy palette values for ordinary actions.
-- Primary button hover/pressed states must resolve through the shared theme tokens so light and dark mode remain visually consistent.
+- **`components/ui/gradient-button.tsx` is the single canonical application button primitive. All reusable application buttons MUST render through `GradientButton`; do not introduce or maintain separate visual button variants.**
+- The button has **one visual variant only**. `size` is the only styling axis and may be used for hierarchy (`xs`, `sm`, `default`, `lg`, and icon sizes).
+- The existing `components/ui/button.tsx` is compatibility-only for legacy imports and delegates its rendering to `GradientButton`; new code MUST import `GradientButton` directly.
+- Legacy semantic variant names (`default`, `secondary`, `outline`, `ghost`, `link`, `destructive`, `brand-gradient`) must not create different visual treatments. They are compatibility inputs only and are ignored by the compatibility wrapper.
+- Do not introduce one-off button colors, gradients, borders, shadows, rounded treatments, or page-specific button variants outside the canonical `GradientButton` primitive.
+- Keep the canonical Rose-to-light gradient, restrained depth/glow, focus treatment, disabled state, and responsive size scale centralized in `components/ui/gradient-button.tsx`.
 
 ## 5. Anti AI-Slop Text Hierarchy
 
