@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import { GradientButton } from "@/components/ui/gradient-button";
+import { GlowButton } from "@/components/ui/glow-button";
 import SectionHeading from "@/components/Marketing/SectionHeading";
 
 type FaqItem = { question: string; answer: string };
@@ -30,7 +30,7 @@ export default function FaqSection({
           const isOpen = open === index;
           return (
             <div key={item.question} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]/75">
-              <GradientButton
+              <GlowButton
                 type="button"
                 onClick={() => setOpen(isOpen ? null : index)}
                 aria-expanded={isOpen}
@@ -41,7 +41,7 @@ export default function FaqSection({
                   {item.question}
                 </span>
                 <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
-              </GradientButton>
+              </GlowButton>
               {isOpen ? (
                 <div className="border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6">
                   {item.answer}
