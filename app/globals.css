@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Alice&family=Alegreya&family=Arima+Madurai&family=Arvo&family=Archivo+Narrow&family=Average+Sans&family=Bubblegum+Sans&family=Cardo&family=Cantarell&family=Chonburi&family=Cinzel&family=Crimson+Pro&family=Crimson+Text&family=DM+Sans&family=Domine&family=DotGothic16&family=Fjalla+One&family=Fugaz+One&family=Grand+Hotel&family=Hind&family=Cinzel&family=Instrument+Sans&family=Inter&family=Josefin+Sans&family=Karla&family=Lato&family=Lora&family=Merriweather&family=Montserrat&family=Mulish&family=Nunito&family=Open+Sans&family=Oswald&family=Playfair+Display&family=Poiret+One&family=Pontano+Sans&family=Poppins&family=Quicksand:wght@400;700&family=Raleway&family=Rethink+Sans&family=Roboto&family=Rokkitt&family=Rufina&family=Sacramento&family=Slabo+27px&family=Source+Sans+3&family=Spectral&family=Stint+Ultra+Expanded&family=Syne&family=Tenor+Sans&family=Ultra&family=Unica+One&family=Work+Sans&family=Yellowtail&family=Yeseva+One&display=swap');
 
 @import "tailwindcss";
+@import "tw-animate-css";
 
 .dark table { background-color: #111113; color: #FFFFFF; }
 .dark table thead { background-color: #111113; color: #D9A3AA; }
@@ -18,103 +19,6 @@
 :root { --font-dc-sans: var(--font-fauna), serif; --font-dc-serif: var(--font-cinzel), serif; --font-dc-heading: var(--font-cinzel), serif; --font-dc-mono: var(--font-mono), monospace; --background: #FFFFFF; --foreground: #111111; --card: #FFFFFF; --card-foreground: #111111; --popover: #FFFFFF; --popover-foreground: #111111; --primary: #C07A84; --primary-foreground: #FFFFFF; --secondary: #FFFFFF; --secondary-foreground: #111111; --muted: #FFFFFF; --muted-foreground: rgb(17 17 17 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --destructive: #B42318; --border: rgb(17 17 17 / 12%); --input: rgb(17 17 17 / 16%); --ring: #C07A84; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #111111; --chart-5: #FFFFFF; --sidebar: #FFFFFF; --sidebar-foreground: #111111; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #FFFFFF; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(17 17 17 / 12%); --sidebar-ring: #C07A84; }
 .dark { --background: #0B0B0C; --foreground: #FFFFFF; --card: #111113; --card-foreground: #FFFFFF; --secondary: #111113; --secondary-foreground: #FFFFFF; --muted: #111113; --muted-foreground: rgb(255 255 255 / 60%); --accent: #C07A84; --accent-foreground: #FFFFFF; --primary: #C07A84; --primary-foreground: #FFFFFF; --destructive: #F87171; --border: rgb(255 255 255 / 12%); --input: rgb(255 255 255 / 16%); --ring: #D9A3AA; --chart-1: #C07A84; --chart-2: #D9A3AA; --chart-3: #A65E69; --chart-4: #FFFFFF; --chart-5: #111113; --sidebar: #0B0B0C; --sidebar-foreground: #FFFFFF; --sidebar-primary: #C07A84; --sidebar-primary-foreground: #FFFFFF; --sidebar-accent: #111113; --sidebar-accent-foreground: #C07A84; --sidebar-border: rgb(255 255 255 / 12%); --sidebar-ring: #D9A3AA; }
 @layer base { * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); } html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; } h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); color: var(--primary); } a { color: var(--primary); } }
-
-@property --gradient-pos-x { syntax: '<percentage>'; initial-value: 11.14%; inherits: false; }
-@property --gradient-pos-y { syntax: '<percentage>'; initial-value: 140%; inherits: false; }
-@property --gradient-spread-x { syntax: '<percentage>'; initial-value: 150%; inherits: false; }
-@property --gradient-spread-y { syntax: '<percentage>'; initial-value: 180.06%; inherits: false; }
-@property --gradient-color-1 { syntax: '<color>'; initial-value: #C07A84; inherits: false; }
-@property --gradient-color-2 { syntax: '<color>'; initial-value: #D9A3AA; inherits: false; }
-@property --gradient-color-3 { syntax: '<color>'; initial-value: #F1C9CE; inherits: false; }
-@property --gradient-color-4 { syntax: '<color>'; initial-value: #F8EAEC; inherits: false; }
-@property --gradient-color-5 { syntax: '<color>'; initial-value: #F8EAEC; inherits: false; }
-@property --gradient-border-angle { syntax: '<angle>'; initial-value: 20deg; inherits: true; }
-@property --gradient-border-color-1 { syntax: '<color>'; initial-value: rgba(255, 255, 255, 0.8); inherits: true; }
-@property --gradient-border-color-2 { syntax: '<color>'; initial-value: rgba(192, 122, 132, 0.65); inherits: true; }
-@property --gradient-stop-1 { syntax: '<percentage>'; initial-value: 22%; inherits: false; }
-@property --gradient-stop-2 { syntax: '<percentage>'; initial-value: 47%; inherits: false; }
-@property --gradient-stop-3 { syntax: '<percentage>'; initial-value: 68%; inherits: false; }
-@property --gradient-stop-4 { syntax: '<percentage>'; initial-value: 84%; inherits: false; }
-@property --gradient-stop-5 { syntax: '<percentage>'; initial-value: 100%; inherits: false; }
-
-@layer components {
-  .gradient-button {
-    @apply relative appearance-none cursor-pointer overflow-hidden;
-    border-radius: 14px;
-    background: radial-gradient(
-      var(--gradient-spread-x) var(--gradient-spread-y) at var(--gradient-pos-x) var(--gradient-pos-y),
-      var(--gradient-color-1) var(--gradient-stop-1),
-      var(--gradient-color-2) var(--gradient-stop-2),
-      var(--gradient-color-3) var(--gradient-stop-3),
-      var(--gradient-color-4) var(--gradient-stop-4),
-      var(--gradient-color-5) var(--gradient-stop-5)
-    );
-    transition: --gradient-pos-x 0.5s, --gradient-pos-y 0.5s, --gradient-spread-x 0.5s, --gradient-spread-y 0.5s, --gradient-color-1 0.5s, --gradient-color-2 0.5s, --gradient-color-3 0.5s, --gradient-color-4 0.5s, --gradient-color-5 0.5s, --gradient-border-angle 0.5s, --gradient-border-color-1 0.5s, --gradient-border-color-2 0.5s, --gradient-stop-1 0.5s, --gradient-stop-2 0.5s, --gradient-stop-3 0.5s, --gradient-stop-4 0.5s, --gradient-stop-5 0.5s;
-  }
-
-  .gradient-button::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 14px;
-    padding: 1px;
-    background: linear-gradient(var(--gradient-border-angle), var(--gradient-border-color-1), var(--gradient-border-color-2));
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  .gradient-button:hover {
-    --gradient-pos-x: 6%;
-    --gradient-pos-y: 90%;
-    --gradient-spread-x: 125%;
-    --gradient-spread-y: 110%;
-    --gradient-color-1: #A65E69;
-    --gradient-color-2: #C07A84;
-    --gradient-color-3: #D9A3AA;
-    --gradient-color-4: #F1C9CE;
-    --gradient-color-5: #F8EAEC;
-    --gradient-border-angle: 190deg;
-    --gradient-border-color-1: rgba(255, 255, 255, 0.95);
-    --gradient-border-color-2: rgba(166, 94, 105, 0.7);
-    --gradient-stop-1: 14%;
-    --gradient-stop-2: 38%;
-    --gradient-stop-3: 60%;
-    --gradient-stop-4: 82%;
-    --gradient-stop-5: 100%;
-  }
-
-  .gradient-button-variant {
-    --gradient-color-1: #C07A84;
-    --gradient-color-2: #D9A3AA;
-    --gradient-color-3: #F1C9CE;
-    --gradient-color-4: #F8EAEC;
-    --gradient-color-5: #F8EAEC;
-    --gradient-border-angle: 200deg;
-    --gradient-border-color-1: rgba(255, 255, 255, 0.85);
-    --gradient-border-color-2: rgba(192, 122, 132, 0.55);
-  }
-
-  .gradient-button-variant:hover {
-    --gradient-pos-x: 4%;
-    --gradient-pos-y: 94%;
-    --gradient-spread-x: 118%;
-    --gradient-spread-y: 108%;
-    --gradient-color-1: #A65E69;
-    --gradient-color-2: #C07A84;
-    --gradient-color-3: #D9A3AA;
-    --gradient-color-4: #F1C9CE;
-    --gradient-color-5: #F8EAEC;
-    --gradient-stop-1: 12%;
-    --gradient-stop-2: 36%;
-    --gradient-stop-3: 60%;
-    --gradient-stop-4: 82%;
-    --gradient-stop-5: 100%;
-    --gradient-border-angle: 210deg;
-    --gradient-border-color-1: rgba(255, 255, 255, 0.9);
-    --gradient-border-color-2: rgba(166, 94, 105, 0.7);
-  }
-}
 
 @layer utilities {
   .font-dc-heading { font-family: var(--font-dc-heading); }
