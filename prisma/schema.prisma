@@ -28,6 +28,13 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum OrderStatus {
+  PENDING
+  PAID
+  FAILED
+  CANCELLED
+}
+
 enum InvitationAssetType {
   IMAGE
   AUDIO
@@ -60,6 +67,7 @@ model User {
   invitations        Invitation[]
   invitationAssets   InvitationAsset[]
   payments           Payment[]
+  orders             PaymentOrder[]
   auditLogs          AuditLog[]               @relation("ActorLogs")
   guestCheckIns      Guest[]                  @relation("GuestCheckInActor")
 }
@@ -119,6 +127,7 @@ model Invitation {
   updatedAt          DateTime          @updatedAt
   owner              User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   payment            Payment?
+  orders             PaymentOrder[]
   assets             InvitationAsset[]
   tables             WeddingTable[]
   guests             Guest[]
@@ -148,7 +157,7 @@ model Payment {
   packageKey    String        @default("INVITATION_BASIC")
   status        PaymentStatus @default(PENDING)
   amount        Int           @default(0)
-  provider      String        @default("mock")
+  provider      String        @default("manual")
   externalRef   String?
   paidAt        DateTime?
   createdAt     DateTime      @default(now())
@@ -159,6 +168,30 @@ model Payment {
   note          String?       @db.Text
   confirmedAt   DateTime?
   confirmedById String?
+}
+
+model PaymentOrder {
+  id            String      @id @default(cuid())
+  invoiceNumber String      @unique
+  userId        String
+  invitationId  String
+  packageKey    String
+  amount        Int
+  status        OrderStatus @default(PENDING)
+  provider      String      @default("manual")
+  proofUrl      String?
+  note          String?     @db.Text
+  paidAt        DateTime?
+  confirmedAt   DateTime?
+  confirmedById String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invitation    Invitation  @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([invitationId, createdAt])
+  @@index([status, createdAt])
 }
 
 model WeddingTable {
