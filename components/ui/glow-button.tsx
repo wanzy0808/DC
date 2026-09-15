@@ -30,11 +30,9 @@ export const glowButtonVariants = ({
   }[size ?? "default"]
 
   return cn(
-    "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border font-medium transition-all duration-200",
+    "glow-btn inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border font-medium transition-all duration-200",
     "bg-primary text-primary-foreground border-primary/35",
-    "shadow-[0_4px_14px_rgb(192_122_132_/_0.16)]",
     "hover:-translate-y-0.5 hover:bg-[#A65E69] hover:border-[#A65E69]",
-    "hover:shadow-[0_6px_18px_rgb(192_122_132_/_0.22)]",
     "focus-visible:outline-none focus-visible:border-[#A65E69] focus-visible:ring-2 focus-visible:ring-primary/25",
     "active:translate-y-px active:scale-[0.98]",
     "disabled:pointer-events-none disabled:opacity-50",
