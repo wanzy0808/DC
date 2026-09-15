@@ -1,20 +1,19 @@
 import * as React from "react"
 
 import {
-  GradientButton,
-  gradientButtonVariants,
-  type GradientButtonProps,
-} from "@/components/ui/gradient-button"
+  GlowButton,
+  glowButtonVariants,
+  type GlowButtonProps,
+} from "@/components/ui/glow-button"
 
 /**
- * Compatibility wrapper for existing imports.
+ * Compatibility wrapper for existing shadcn-style imports.
  *
- * New code should import GradientButton directly. All visual button rendering
- * now goes through the single GradientButton primitive; legacy variant names
- * are intentionally ignored so the application has one visual variant and
- * size remains the only styling axis.
+ * DC Organizer has one application button visual language: GlowButton.
+ * Legacy variant names remain accepted so existing callers keep compiling,
+ * but they no longer create separate visual treatments.
  */
-export type ButtonProps = GradientButtonProps & {
+export type ButtonProps = GlowButtonProps & {
   variant?:
     | "default"
     | "outline"
@@ -27,13 +26,13 @@ export type ButtonProps = GradientButtonProps & {
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant: _variant, ...props }, ref) => (
-    <GradientButton ref={ref} {...props} />
+    <GlowButton ref={ref} {...props} />
   ),
 )
 Button.displayName = "Button"
 
 type ButtonVariant = NonNullable<ButtonProps["variant"]>
-type ButtonSize = NonNullable<GradientButtonProps["size"]>
+type ButtonSize = NonNullable<GlowButtonProps["size"]>
 
 type ButtonVariantOptions = {
   className?: string
@@ -42,6 +41,6 @@ type ButtonVariantOptions = {
 }
 
 const buttonVariants = ({ className, size }: ButtonVariantOptions = {}) =>
-  gradientButtonVariants({ size, className })
+  glowButtonVariants({ size, className })
 
 export { Button, buttonVariants }
