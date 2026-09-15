@@ -1,13 +1,13 @@
 "use client";
 
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import HeroSection from "@/components/InvitationPage/HeroSection";
-import FeatureSection from "@/components/InvitationPage/FeatureSection";
-import TemplateCollection from "@/components/InvitationPage/TemplateSection";
-import CtaStudioSection from "@/components/InvitationPage/StudioSection";
+import HeroSection from "@/components/D-Invitation/HeroSection";
+import FeatureSection from "@/components/D-Invitation/FeatureSection";
+import TemplateCollection from "@/components/D-Invitation/TemplateSection";
+import CtaStudioSection from "@/components/D-Invitation/StudioSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
 import FaqSection from "@/components/Marketing/FaqSection";
-import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
+import ReviewsGrid from "@/components/D-Invitation/ReviewsSection";
 import { digitalInvitationReviews, digitalInvitationFaq } from "@/data/digital-invitation";
 
 export default function DigitalInvitationPage() {
