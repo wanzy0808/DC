@@ -756,3 +756,64 @@ Merapikan `/d-invitation` sebagai halaman publik Digital Invitation agar mengiku
 
 ## Validation
 Reviewed against `AGENTS.md`, `prd.md`, `PRD-TAMBAHAN.md`, `README.md`, existing locale/i18n architecture, shared Button/GradientButton components, package catalog, public template assets, and protected rose-petal behavior. Build/CI not verified.
+
+---
+
+# 2026-09-15 — D-Invitation Hero Realistic Phone & Canonical Gradient CTA
+
+## Implementation
+- Renamed the Digital Invitation component directory to `components/D-Invitation/` and updated `/d-invitation` imports to the new folder name.
+- Redesigned `HeroSection` so the invitation preview is presented inside a more realistic smartphone frame with metallic outer shell, side controls, inner bezel, screen rim, and Dynamic-Island-style top cutout.
+- Preserved the animated invitation auto-scroll inside the phone and added reduced-motion handling.
+- Removed the secondary `Lihat Detail` action and the caption below the phone as requested.
+- Kept the Hero CTA on the existing `GradientButton` primitive and did not replace it with `Button variant="brand-gradient"`.
+- Preserved the protected background/petal behavior and bilingual ID/EN copy.
+
+## Affected Files
+- `app/d-invitation/page.tsx`
+- `components/D-Invitation/HeroSection.tsx`
+- `components/D-Invitation/FeatureSection.tsx`
+- `components/D-Invitation/TemplateSection.tsx`
+- `components/D-Invitation/StudioSection.tsx`
+- `components/D-Invitation/ReviewsSection.tsx`
+
+## Commits
+- `aa27048d4af647a0d76d9179a60b60e3d9606ab2` — fix D-Invitation component imports after folder rename.
+- `d390c1bebe9c3b7db2084abf88121036d650062f` — restore D-Invitation Hero GradientButton while keeping realistic phone.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, D-Invitation structure, GradientButton usage, bilingual locale behavior, and protected background rules. Build/CI not verified.
+
+---
+
+# 2026-09-15 — Global GradientButton Consolidation
+
+## Goal
+Menjadikan `GradientButton` sebagai satu-satunya bahasa visual button di seluruh aplikasi agar tidak ada lagi perbedaan antara button global dan CTA landing. Hierarchy button dibedakan melalui `size`, bukan melalui variant visual.
+
+## Implementation
+- `components/ui/gradient-button.tsx` sekarang menjadi canonical button primitive dengan **satu visual variant**.
+- Menambahkan size language terpusat: `xs`, `sm`, `default`, `lg`, `icon-xs`, `icon-sm`, `icon`, dan `icon-lg`.
+- Memusatkan gradient Rose-to-light, depth, hover, focus, active, disabled, dan icon treatment di `GradientButton`.
+- `components/ui/button.tsx` sekarang menjadi compatibility wrapper yang mendelegasikan rendering ke `GradientButton`; legacy variant names tidak lagi menghasilkan style berbeda.
+- `buttonVariants` juga didelegasikan ke `gradientButtonVariants` agar existing `Link`/legacy imports tetap aman tanpa mempertahankan visual variants lama.
+- Demo `GradientButton` diubah dari variant demo menjadi size demo.
+- `AGENTS.md` dan `prd.md` diperbarui untuk menetapkan `GradientButton` sebagai canonical button primitive; kode baru wajib mengimpor `GradientButton` langsung.
+- Tidak mengubah route, API, database, schema, Pintu, rose petals, atau invitation data flow.
+
+## Affected Files
+- `components/ui/gradient-button.tsx`
+- `components/ui/button.tsx`
+- `components/ui/gradient-button-demo.tsx`
+- `AGENTS.md`
+- `prd.md`
+
+## Commits
+- `b5a09de5b5c053ea6813841e48949e0c7c8877af` — consolidate button styles into the canonical GradientButton primitive.
+- `12e1daf7576c9a20aeb62c6d3e1837cbf3add102` — make legacy Button imports delegate to GradientButton.
+- `545fcf8479e0a08a11ecfa381fb2644987250930` — update GradientButton demo to size-only API.
+- `5257159a9e1b59fcf1fb6fbcb5dc63e968e1e13b` — document canonical GradientButton rules in AGENTS.
+- `1c00865fd04cab9b1aa8d97a9713c2033fe1a5a0` — update master PRD button standard.
+
+## Validation
+Reviewed against `AGENTS.md`, `SKILL.md`, `prd.md`, `README.md`, existing button usages, CVA/Slot architecture, and current landing/D-Invitation CTA behavior. Build/CI not verified.
