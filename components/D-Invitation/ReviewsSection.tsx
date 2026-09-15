@@ -1,36 +1,63 @@
-// components/invitation/ReviewsSection.tsx
+"use client";
+
 import { Star } from "lucide-react";
 
-const reviews = [
-  ["Riko & Sarah", "Undangannya terasa seperti kami. RSVP masuk rapi dan tamu langsung tahu harus ke mana."],
-  ["Adit & Maya", "Tim DC membantu dari pemilihan template sampai musik. Kami tinggal membagikan link-nya."],
-  ["Dion & Nina", "QR check-in dan ucapan digital membuat hari-H terasa lebih tertata tanpa mengurangi hangatnya acara."],
-];
+type Review = {
+  name: string;
+  review: string;
+  date: string;
+};
 
-export default function ReviewsSection() {
+type ReviewsSectionProps = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  reviews: readonly Review[];
+};
+
+export default function ReviewsSection({
+  eyebrow,
+  title,
+  description,
+  reviews,
+}: ReviewsSectionProps) {
   return (
     <section className="space-y-10">
       <div className="mx-auto max-w-2xl space-y-3 text-center">
-        <p className="text-xs uppercase tracking-[0.25em] text-dc-maroon">
-          [ THEIR STORIES ]
+        <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
+          {eyebrow}
         </p>
-        <h2 className="font-serif text-4xl">Mereka memakai undangan ini</h2>
-        <p className="text-sm leading-7 opacity-65">
-          Bukan hanya cantik dilihat, tapi juga membantu hari-H terasa lebih teratur.
-        </p>
+        <h2 className="font-[family-name:var(--font-dc-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
+          {title}
+        </h2>
+        <p className="text-sm leading-7 text-foreground/65">{description}</p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
-        {reviews.map(([name, review]) => (
-          <article key={name} className="border border-dc-maroon/15 bg-white/70 p-6 shadow-sm">
-            <div className="flex gap-1 text-dc-gold">
-              {Array.from({ length: 5 }).map((_, index) => (
-                <Star key={index} className="h-3.5 w-3.5 fill-current" />
-              ))}
+      <div className="grid gap-0 border-y border-border/70 md:grid-cols-3">
+        {reviews.map((item, index) => (
+          <article
+            key={`${item.name}-${item.date}`}
+            className={`p-6 md:p-7 ${index > 0 ? "border-t border-border/70 md:border-l md:border-t-0" : ""}`}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex gap-1 text-primary" aria-label="5 out of 5 stars">
+                {Array.from({ length: 5 }).map((_, starIndex) => (
+                  <Star
+                    key={starIndex}
+                    className="h-3.5 w-3.5 fill-current"
+                    aria-hidden="true"
+                  />
+                ))}
+              </div>
+              <span className="font-[family-name:var(--font-dc-mono)] text-[9px] tracking-[0.16em] text-foreground/40">
+                {item.date}
+              </span>
             </div>
-            <p className="mt-5 font-serif text-lg italic leading-7">“{review}”</p>
-            <p className="mt-6 border-t border-dc-maroon/10 pt-4 text-xs font-medium uppercase tracking-[0.15em] text-dc-maroon">
-              {name}
+            <p className="mt-5 font-[family-name:var(--font-dc-heading)] text-lg italic leading-7 text-foreground/85">
+              “{item.review}”
+            </p>
+            <p className="mt-6 border-t border-border/70 pt-4 font-[family-name:var(--font-dc-mono)] text-[9px] font-medium uppercase tracking-[0.15em] text-primary">
+              {item.name}
             </p>
           </article>
         ))}
