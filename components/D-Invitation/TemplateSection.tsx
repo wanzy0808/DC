@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { GlowButton } from "@/components/ui/glow-button";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const templates = [
@@ -50,16 +50,12 @@ export default function TemplateCollection() {
             {copy.description}
           </p>
         </div>
-        <GlowButton
-          asChild
-          size="sm"
-          className="shrink-0 min-w-0 rounded-xl px-6 text-xs uppercase tracking-[0.14em]"
-        >
+        <Button asChild size="sm" className="shrink-0 min-w-0 text-xs uppercase tracking-[0.14em]">
           <Link href="/template-design">
             {copy.all}
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
-        </GlowButton>
+        </Button>
       </div>
       <div className="grid justify-items-center gap-8 md:grid-cols-3">
         {templates.map(([name, theme, image]) => (
@@ -88,16 +84,12 @@ export default function TemplateCollection() {
                 </span>
               </div>
               <p className="mt-1 text-xs text-foreground/55">{theme}</p>
-              <GlowButton
-                asChild
-                size="xs"
-                className="mt-3 min-w-0 rounded-lg px-2.5 text-xs"
-              >
+              <Button asChild size="xs" className="mt-3 min-w-0 text-xs">
                 <Link href="/template-design">
                   {copy.detail}
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
-              </GlowButton>
+              </Button>
             </div>
           </article>
         ))}
