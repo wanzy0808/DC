@@ -10,6 +10,7 @@ datasource db {
 enum UserRole {
   USER
   EDITOR
+  DESIGNER
   SUPPORT
   FINANCE
   OWNER
@@ -52,6 +53,12 @@ enum GuestSource {
   MANUAL
 }
 
+enum TemplateStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
 model User {
   id                 String                   @id @default(cuid())
   email              String                   @unique
@@ -70,6 +77,8 @@ model User {
   orders             PaymentOrder[]
   auditLogs          AuditLog[]               @relation("ActorLogs")
   guestCheckIns      Guest[]                  @relation("GuestCheckInActor")
+  designerTemplates  DesignerTemplate[]       @relation("TemplateDesigner")
+  actionTokens       AccountActionToken[]     @relation("ActionTokenUser")
 }
 
 model Session {
@@ -92,6 +101,19 @@ model EmailVerificationToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model AccountActionToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  action    String
+  payload   Json
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation("ActionTokenUser", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, action])
 }
 
 model Invitation {
@@ -194,6 +216,23 @@ model PaymentOrder {
   @@index([status, createdAt])
 }
 
+model DesignerTemplate {
+  id            String         @id @default(cuid())
+  templateNo    String         @unique
+  name          String
+  tags          String[]
+  previewUrl    String
+  templateFile  String
+  status        TemplateStatus @default(PUBLISHED)
+  designerId    String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  designer      User           @relation("TemplateDesigner", fields: [designerId], references: [id], onDelete: Cascade)
+
+  @@index([designerId, createdAt])
+  @@index([status, createdAt])
+}
+
 model WeddingTable {
   id           String     @id @default(cuid())
   invitationId String
@@ -228,21 +267,6 @@ model Guest {
   checkedInBy   User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
 
   @@index([invitationId, rsvpStatus])
-  @@index([invitationId, source])
-  @@index([tableId])
-  @@index([checkedInById])
+  @@index([invitationId, tableId])
   @@unique([tableId, seatNumber])
-}
-
-model AuditLog {
-  id        String   @id @default(cuid())
-  actorId   String?
-  action    String
-  entity    String
-  entityId  String?
-  metadata  Json?
-  createdAt DateTime @default(now())
-  actor     User?    @relation("ActorLogs", fields: [actorId], references: [id], onDelete: SetNull)
-
-  @@index([entity, entityId])
 }
