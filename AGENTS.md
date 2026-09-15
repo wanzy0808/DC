@@ -78,12 +78,14 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - The public navbar itself stays visually continuous with the page canvas; do not add a contrasting navbar block merely to mask background effects.
 
 ### Button Color Standard
-- **`components/ui/glow-button.tsx` is the single canonical application button primitive. All reusable application buttons MUST render through `GlowButton`; do not introduce or maintain separate visual button variants.**
-- The button has **one visual variant only**. `size` is the only styling axis and may be used for hierarchy (`xs`, `sm`, `default`, `lg`, and icon sizes).
-- The existing `components/ui/button.tsx` is compatibility-only for legacy imports and delegates its rendering to `GlowButton`; new code MUST import `GlowButton` directly.
-- Legacy semantic variant names (`default`, `secondary`, `outline`, `ghost`, `link`, `destructive`, `brand-gradient`) must not create different visual treatments. They are compatibility inputs only and are ignored by the compatibility wrapper.
-- Do not introduce one-off button colors, gradients, borders, shadows, rounded treatments, or page-specific button variants outside the canonical `GlowButton` primitive.
-- Keep the canonical Rose solid fill, restrained depth/glow, focus treatment, disabled state, click feedback, and responsive size scale centralized in `components/ui/glow-button.tsx`.
+- **`components/ui/button.tsx` is the single canonical application button primitive. All reusable application buttons MUST render through `Button`; do not introduce or maintain separate visual button primitives.**
+- The button has **one visual treatment only**. There are no visual variants. `size` is only a sizing axis and must not change color, border, shadow, gradient, or shape language.
+- Canonical shape: compact rectangular button with clearly rounded corners, never a pill. Canonical fill: solid Rose `#C07A84`; hover/pressed state may use Deep Rose `#A65E69` or Supporting Rose `#D9A3AA` within the same palette.
+- Canonical depth: subtle raised shadow only. **No gradients** and no page-specific glow/shine effects.
+- Light mode button text is **white**. Dark mode button text is **black**.
+- `components/ui/glow-button.tsx` is now only a deprecated compatibility re-export to `Button`; it contains no independent styling or behavior and must not become a second primitive.
+- Legacy `variant` values are accepted only for source compatibility and MUST resolve to the exact same visual treatment.
+- Do not introduce one-off button colors, gradients, borders, shadows, rounded treatments, or page-specific button variants outside `components/ui/button.tsx`.
 
 ## 5. Anti AI-Slop Text Hierarchy
 
