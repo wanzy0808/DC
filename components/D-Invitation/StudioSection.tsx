@@ -38,7 +38,7 @@ export default function StudioSection() {
             {copy.description}
           </p>
         </div>
-        <Button asChild size="lg" className="min-w-[12rem] text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em]">
+        <Button asChild size="lg" className="min-w-[9rem] text-base font-[family-name:var(--font-dc-body)]">
           <Link href="/dashboard/editor">
             {copy.action}
             <ArrowUpRight className="h-4 w-4" />

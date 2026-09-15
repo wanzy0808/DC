@@ -50,14 +50,14 @@ export default function FeatureSection() {
   const copy =
     locale === "en"
       ? [
-          "Why it feels different / 02",
+          "Why it should be us?",
           "Beautiful to look at. Even better when it truly helps.",
           "Made for the moments that matter",
         ]
       : [
-          "Why it feels different / 02",
-          "Indah untuk dilihat. Lebih indah saat benar-benar membantu.",
-          "Dibuat untuk momen yang berarti",
+          "Kenapa harus kami?",
+          "Indah untuk dilihat. Akan lebih indah saat benar-benar membantu.",
+          "Dibuat, untuk momen yang berarti",
         ];
   return (
     <section
