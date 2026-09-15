@@ -1,47 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { servicePackages } from "@/lib/packages/catalog";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
-export default function PackageSelector() {
+type Props = { initialPackage?: string };
+
+export default function PackageSelector({ initialPackage = "INVITATION_BASIC" }: Props) {
   const router = useRouter();
   const { locale } = useLanguage();
-  const [selected, setSelected] = useState(servicePackages[0].key);
+  const initial = servicePackages.some((item) => item.key === initialPackage) ? initialPackage : servicePackages[0].key;
+  const [selected, setSelected] = useState(initial);
   const [message, setMessage] = useState("");
-  const [proofUrl, setProofUrl] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const copy = locale === "en" ? {
-    eyebrow: "DC Services",
-    title: "Choose the right service",
-    description: "Select your package first. Once your transfer is confirmed by our team, the features included in your package will be activated.",
-    optional: "optional — you can submit this from the dashboard later",
-    proof: "Transfer proof URL",
-    choose: "Choose this package",
-    preparing: "Preparing your order…",
-    fallbackError: "This package could not be selected yet.",
-    success: "Order created. Submit your transfer proof from the dashboard.",
-  } : {
-    eyebrow: "DC Services",
-    title: "Pilih layanan yang tepat",
-    description: "Pilih paket terlebih dahulu. Setelah transfer dikonfirmasi oleh tim kami, fitur sesuai paket akan diaktifkan.",
-    optional: "opsional — bisa dikirim nanti dari dashboard",
-    proof: "URL bukti transfer",
-    choose: "Pilih paket ini",
-    preparing: "Menyiapkan order…",
-    fallbackError: "Paket belum dapat dipilih.",
-    success: "Order dibuat. Kirim bukti transfer dari dashboard.",
-  };
+  useEffect(() => setSelected(initial), [initial]);
+
+  const copy = locale === "en"
+    ? {
+        eyebrow: "DC Services",
+        title: "Choose the right service",
+        description: "Choose a package to create an invoice. Your package stays inactive until our team verifies your manual transfer.",
+        choose: "Continue to payment",
+        preparing: "Preparing invoice…",
+        fallbackError: "This package could not be selected yet.",
+      }
+    : {
+        eyebrow: "DC Services",
+        title: "Pilih layanan yang tepat",
+        description: "Pilih paket untuk membuat invoice. Paket belum aktif sampai tim kami memverifikasi transfer manual kamu.",
+        choose: "Lanjut ke pembayaran",
+        preparing: "Menyiapkan invoice…",
+        fallbackError: "Paket belum dapat dipilih.",
+      };
 
   async function choosePackage() {
+    setLoading(true);
     setMessage(copy.preparing);
-    const response = await fetch("/api/packages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ packageKey: selected, proofUrl }) });
-    const data = await response.json();
-    if (!response.ok) return setMessage(data.error ?? copy.fallbackError);
-    setMessage(copy.success);
-    router.push("/dashboard");
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ packageKey: selected }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setMessage(data.error ?? copy.fallbackError);
+        return;
+      }
+      router.push(data.invoiceUrl ?? `/checkout/${data.order.id}`);
+    } catch {
+      setMessage(copy.fallbackError);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -55,27 +69,12 @@ export default function PackageSelector() {
         <div className="mx-auto grid w-full max-w-[1200px] justify-center gap-5 md:grid-cols-2 xl:grid-cols-3">
           {servicePackages.map((item) => {
             const active = selected === item.key;
-            return (
-              <Button
-                type="button"
-                key={item.key}
-                onClick={() => setSelected(item.key)}
-                className={`h-auto w-full min-w-0 justify-start whitespace-normal rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}
-              >
-                <span>
-                  <span className="block font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</span>
-                  <span className="mt-3 block font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</span>
-                  <span className="mt-2 block text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</span>
-                  <span className="mt-3 block text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</span>
-                  <span className="mt-5 block space-y-2 text-xs text-[var(--muted-foreground)]">{item.features[locale].map((feature) => <span key={feature} className="block">✓ {feature}</span>)}</span>
-                </span>
-              </Button>
-            );
+            return <Button type="button" key={item.key} onClick={() => setSelected(item.key)} className={`h-auto w-full min-w-0 justify-start whitespace-normal rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}><span><span className="block font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</span><span className="mt-3 block font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</span><span className="mt-2 block text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</span><span className="mt-3 block text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</span><span className="mt-5 block space-y-2 text-xs text-[var(--muted-foreground)]">{item.features[locale].map((feature) => <span key={feature} className="block">✓ {feature}</span>)}</span></span></Button>;
           })}
         </div>
         <div className="mx-auto max-w-xl space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6">
-          <label className="block text-sm">{copy.proof} <span className="opacity-50">({copy.optional})</span><input type="url" value={proofUrl} onChange={(event) => setProofUrl(event.target.value)} placeholder="https://..." className="mt-2 w-full rounded-xl border border-[var(--border)] bg-transparent px-3 py-2.5" /></label>
-          <Button type="button" onClick={choosePackage} size="lg" className="min-h-11 rounded-xl">{copy.choose}</Button>
+          {selected === "GUESTBOOK_DIGITAL" && <p className="rounded-xl bg-[var(--primary)]/8 px-4 py-3 text-xs leading-5 text-[var(--muted-foreground)]">Jika Digital Invitation sudah aktif, pembayaran Guestbook hanya menagihkan selisih harga paket.</p>}
+          <Button type="button" disabled={loading} onClick={choosePackage} size="lg" className="min-h-11 w-full rounded-xl">{loading ? copy.preparing : copy.choose}</Button>
           {message && <p className="text-sm text-[var(--muted-foreground)]">{message}</p>}
         </div>
       </div>
