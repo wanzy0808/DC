@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowUpRight, CalendarDays, Clock3, Heart, MapPin } from "lucide-react";
-import { GradientButton } from "@/components/ui/gradient-button";
+import { GlowButton } from "@/components/ui/glow-button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function HeroSection() {
@@ -46,9 +46,9 @@ export default function HeroSection() {
         </h1>
         <p className="mt-7 max-w-xl text-base leading-8 text-foreground/70 md:text-lg">{copy.description}</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <GradientButton asChild>
+          <GlowButton asChild>
             <Link href="/template-design" className="gap-2">{copy.explore}<ArrowUpRight className="h-4 w-4" /></Link>
-          </GradientButton>
+          </GlowButton>
         </div>
         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
           {copy.tags.map((tag) => <span key={tag}>{tag}</span>)}
