@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import type { Locale } from "@/lib/i18n";
 
 export default function LanguageToggle() {
@@ -24,20 +24,17 @@ export default function LanguageToggle() {
         const selected = locale === item;
 
         return (
-          <button
+          <Button
             key={item}
             type="button"
+            size="sm"
             onClick={() => changeLocale(item)}
             aria-pressed={selected}
             aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
-            className={buttonVariants({
-              variant: selected ? "ghost" : "ghost",
-              size: "sm",
-              className: `h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] ${selected ? "bg-primary/40 text-primary hover:bg-primary/15 hover:text-primary" : "text-primary/65 hover:bg-primary/5 hover:text-primary"}`,
-            })}
+            className={`h-9 min-w-10 rounded-none px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] shadow-none ${selected ? "bg-primary/40 text-primary hover:bg-primary/15 hover:text-primary" : "bg-transparent text-primary/65 hover:bg-primary/5 hover:text-primary"}`}
           >
             {item.toUpperCase()}
-          </button>
+          </Button>
         );
       })}
     </div>
