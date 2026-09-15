@@ -1,12 +1,14 @@
 "use client"
 
 import React, { forwardRef, useState } from "react"
+import { Slot } from "@radix-ui/react-slot"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 export interface GlowButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   label?: string
   size?: "xs" | "sm" | "default" | "lg" | "icon-xs" | "icon-sm" | "icon" | "icon-lg"
+  asChild?: boolean
 }
 
 export const glowButtonVariants = ({
@@ -42,8 +44,21 @@ export const glowButtonVariants = ({
 }
 
 export const GlowButton = forwardRef<HTMLButtonElement, GlowButtonProps>(
-  ({ label = "Generate", onClick, className, children, size = "default", ...props }, ref) => {
+  (
+    {
+      asChild = false,
+      label = "Generate",
+      onClick,
+      className,
+      children,
+      size = "default",
+      type,
+      ...props
+    },
+    ref,
+  ) => {
     const [isClicked, setIsClicked] = useState(false)
+    const Comp = asChild ? Slot : "button"
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
       setIsClicked(true)
@@ -52,10 +67,10 @@ export const GlowButton = forwardRef<HTMLButtonElement, GlowButtonProps>(
     }
 
     return (
-      <button
+      <Comp
         {...props}
         ref={ref}
-        type={props.type ?? "button"}
+        {...(!asChild ? { type: type ?? "button" } : {})}
         aria-label={props["aria-label"] ?? label}
         className={glowButtonVariants({ size, className })}
         onClick={handleClick}
@@ -67,7 +82,7 @@ export const GlowButton = forwardRef<HTMLButtonElement, GlowButtonProps>(
             <Sparkles size={16} className="ml-0.5" />
           </span>
         )}
-      </button>
+      </Comp>
     )
   },
 )
