@@ -27,7 +27,7 @@ export async function PATCH(request: Request) {
     const groomName = String(body.groomName ?? "").trim();
     const brideName = String(body.brideName ?? "").trim();
     if (!invitationId || !groomName || !brideName) return NextResponse.json({ error:"Nama pengantin pria dan wanita wajib diisi." }, { status:400 });
-    const invitation = await prisma.invitation.update({ where:{id:invitationId}, data:{groomName,brideName}, select:{id:groomName,brideName} });
+    const invitation = await prisma.invitation.update({ where:{id:invitationId}, data:{groomName,brideName}, select:{id:true,groomName:true,brideName:true} });
     await prisma.auditLog.create({ data:{ actorId:staff.id, action:"ADMIN_COUPLE_DATA_UPDATED", entity:"Invitation", entityId:invitationId, metadata:{groomName,brideName} } });
     return NextResponse.json({ invitation });
   } catch {
