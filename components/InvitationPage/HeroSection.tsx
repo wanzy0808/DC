@@ -11,9 +11,9 @@ const templateImage = "https://images.unsplash.com/photo-1519741497674-611481863
 export default function HeroSection() {
   const { locale } = useLanguage();
   const copy = locale === "en" ? {
-    eyebrow: "Digital Invitation / 01", title: "More than an invitation.", accent: "Begin your story beautifully.", description: "Share your good news with a digital invitation that feels personal—beautiful to open, easy to share, and designed to make the journey to your big day feel lighter.", explore: "Explore collection", features: "See the features", tags: ["Personal", "Easy RSVP", "Ready for the big day"], glimpse: "A glimpse of your invitation", couple: "Vidi & Hening", sub: "A beginning worth remembering",
+    eyebrow: "Digital Invitation", title: "More than an invitation.", accent: "Begin your story beautifully.", description: "Share your good news with a digital invitation that feels personal—beautiful to open, easy to share, and designed to make the journey to your big day feel lighter.", explore: "Explore collection", features: "See the features", tags: ["Personal", "Easy RSVP", "Ready for the big day"], glimpse: "A glimpse of your invitation", couple: "Vidi & Hening", sub: "A beginning worth remembering",
   } : {
-    eyebrow: "Undangan Digital / 01", title: "Bukan sekadar undangan.", accent: "Awali ceritamu dengan indah.", description: "Hadirkan kabar bahagia dengan undangan digital yang terasa personal—indah saat dibuka, mudah dibagikan, dan dirancang untuk membuat perjalanan menuju hari besar terasa lebih ringan.", explore: "Jelajahi koleksi", features: "Lihat fiturnya", tags: ["Personal", "Easy RSVP", "Ready for the big day"], glimpse: "Sekilas tentang undanganmu", couple: "Vidi & Hening", sub: "A beginning worth remembering",
+    eyebrow: "Undangan Digital", title: "Bukan hanya sekedar undangan.", accent: "Awali ceritamu dengan keindahan.", description: "Hadirkan kabar bahagia dengan undangan digital yang terasa personal—indah saat dibuka, mudah dibagikan, dan dirancang untuk membuat perjalanan menuju hari besar terasa lebih ringan.", explore: "Lihat Template", features: "Lihat Detail", tags: ["Personal", "Easy RSVP", "Ready for the big day"], glimpse: "Sekilas tentang undanganmu", couple: "Vidi & Hening", sub: "A beginning worth remembering",
   };
 
   return (
