@@ -195,3 +195,18 @@ Commits:
 - `940f57e44bb00ee4252513a0cc80c8e332daf343`
 
 Validation: belum diverifikasi dengan build/CI. Endpoint/template integration membutuhkan Prisma schema yang sudah memiliki `DesignerTemplate` dan environment deployment yang dapat membaca file upload pada `public/uploads`.
+
+## 2026-09-15 — Dark Mode Language Toggle Alignment
+
+- **Light mode tidak diubah.** Styling dasar ID/EN dipertahankan.
+- Hanya tombol bahasa `ID` / `EN` yang diperbaiki pada dark mode agar active state menggunakan treatment visual yang sama dengan light mode: background active rose transparan, teks rose, dan hover treatment yang sama.
+- State inactive dark mode juga disamakan dengan light mode: transparan dengan teks rose ber-opacity rendah dan hover tint ringan.
+- Tidak ada perubahan pada tombol theme, navbar lain, background, glow, atau komponen di luar tombol bahasa.
+
+Affected files:
+- components/I18n/LanguageToggle.tsx
+
+Commit:
+- `8e8042acf223e82edc4864115932e832caf35cfc`
+
+Validation: belum diverifikasi dengan build/CI.
