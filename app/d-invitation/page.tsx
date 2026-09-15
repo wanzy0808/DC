@@ -13,9 +13,9 @@ import { digitalInvitationReviews, digitalInvitationFaq } from "@/data/digital-i
 export default function DigitalInvitationPage() {
   const { locale } = useLanguage();
   const copy = locale === "en" ? {
-    packageEyebrow: "Invitation Packages",
-    packageTitle: "An invitation that grows with your plans",
-    packageDescription: "Start with a personal invitation, then move into guest management and check-in as your celebration gets closer.",
+    packageEyebrow: "Invitation Package",
+    packageTitle: "One complete Digital Invitation package",
+    packageDescription: "Everything you need to create, publish, and share a beautiful wedding invitation in one simple package.",
     packageNote: "Prepare your template first. Publishing and personal asset uploads follow the active Digital Invitation package.",
     reviewEyebrow: "Client Stories",
     reviewTitle: "Because a good invitation does more than look beautiful",
@@ -24,8 +24,8 @@ export default function DigitalInvitationPage() {
     faqDescription: "About templates, RSVP, personal assets, publishing, and Digital Invitation packages.",
   } : {
     packageEyebrow: "Paket Undangan",
-    packageTitle: "Undangan yang tumbuh bersama persiapanmu",
-    packageDescription: "Mulai dari undangan yang terasa personal, lalu lanjutkan ke pengelolaan tamu dan check-in ketika hari istimewamu semakin dekat.",
+    packageTitle: "Satu paket Undangan Digital yang lengkap",
+    packageDescription: "Semua yang kamu butuhkan untuk membuat, mempublikasikan, dan membagikan undangan pernikahan dalam satu paket sederhana.",
     packageNote: "Template bisa dipersiapkan lebih dulu. Publikasi dan upload aset pribadi mengikuti paket Digital Invitation yang aktif.",
     reviewEyebrow: "Cerita Klien",
     reviewTitle: "Karena undangan yang baik bukan hanya indah dilihat",
@@ -45,7 +45,7 @@ export default function DigitalInvitationPage() {
           eyebrow={copy.packageEyebrow}
           title={copy.packageTitle}
           description={copy.packageDescription}
-          packageKeys={["INVITATION_BASIC", "GUESTBOOK_DIGITAL"]}
+          packageKeys={["INVITATION_BASIC"]}
           note={copy.packageNote}
         />
         <ReviewsGrid
