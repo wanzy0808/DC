@@ -3,9 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 
 export default async function AdminLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const user = await getCurrentUser();
-
   if (!user) redirect("/login");
-  if (!["ADMIN", "OWNER", "FINANCE"].includes(user.role)) redirect("/dashboard");
-
+  if (!["ADMIN", "FINANCE"].includes(user.role)) redirect(user.role === "OWNER" ? "/owner" : "/dashboard");
   return children;
 }
