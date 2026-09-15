@@ -168,3 +168,30 @@ Commits:
 - `3e248fa880731b757af9eaabb4dba6eb330430d3`
 
 Validation: belum diverifikasi dengan build/CI. Prisma migration dan konfigurasi `OWNER_CONFIRMATION_EMAIL`/Resend perlu diterapkan pada environment deployment. Upload file template menggunakan filesystem server, sehingga deployment production perlu memastikan `public/uploads` writable dan persistent.
+
+## 2026-09-15 — Role Dashboard Routing & Designer Template Integration
+
+- Route `/dashboard` sekarang melakukan redirect server-side berdasarkan role: `OWNER` → `/owner`, `ADMIN`/`FINANCE` → `/admin`, dan `DESIGNER`/`EDITOR` → `/designer`. User biasa tetap berada di Workspace `/dashboard`.
+- Ditambahkan endpoint publik `GET /api/templates` yang hanya mengekspos `DesignerTemplate` berstatus `PUBLISHED`, termasuk nomor template, nama, tag, preview image, dan file template.
+- Koleksi template D-Invitation sekarang mengambil template Designer yang sudah published dari database sehingga template baru dapat muncul di koleksi tanpa mengubah kode katalog setiap kali ada upload.
+- Panel Admin sekarang menerima metadata template yang sedang dipilih user, termasuk nomor template, preview image, designer, tag, dan file template, sehingga Admin dapat memeriksa template yang digunakan sebelum membantu user.
+- Perhitungan `salesCount` Designer sekarang hanya menghitung invitation yang memiliki entitlement/payment `PAID`, bukan seluruh invitation draft yang kebetulan menyimpan `templateKey`.
+- Penomoran template Designer tetap 3 digit dan diperkuat dengan retry ketika terjadi collision pada unique constraint `templateNo`; folder file yang gagal dibuat dibersihkan agar tidak meninggalkan asset yatim.
+
+Affected files:
+- app/dashboard/layout.tsx
+- app/api/templates/route.ts
+- app/api/designer/templates/route.ts
+- app/api/admin/operations/route.ts
+- components/Admin/AdminOperations.tsx
+- components/D-Invitation/TemplateSection.tsx
+
+Commits:
+- `506f6c07e9f3d176db787d6de39da55a8cdbca1f`
+- `db8304561d95debf041e475617acf343e9ada494`
+- `d4e84508f24af6afcfa498299b87f068ecf439f1`
+- `fa58f531e5c9a8b909b59da3afb02b590b6278dd`
+- `24b711b3f392c5dc0d085d7f6f310a232a207939`
+- `940f57e44bb00ee4252513a0cc80c8e332daf343`
+
+Validation: belum diverifikasi dengan build/CI. Endpoint/template integration membutuhkan Prisma schema yang sudah memiliki `DesignerTemplate` dan environment deployment yang dapat membaca file upload pada `public/uploads`.
