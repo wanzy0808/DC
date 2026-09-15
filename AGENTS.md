@@ -83,7 +83,6 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Canonical shape: compact rectangular button with clearly rounded corners, never a pill. Canonical fill: solid Rose `#C07A84`; hover/pressed state may use Deep Rose `#A65E69` or Supporting Rose `#D9A3AA` within the same palette.
 - Canonical depth: subtle raised shadow only. **No gradients** and no page-specific glow/shine effects.
 - Light mode button text is **white**. Dark mode button text is **black**.
-- `components/ui/glow-button.tsx` is now only a deprecated compatibility re-export to `Button`; it contains no independent styling or behavior and must not become a second primitive.
 - Legacy `variant` values are accepted only for source compatibility and MUST resolve to the exact same visual treatment.
 - Do not introduce one-off button colors, gradients, borders, shadows, rounded treatments, or page-specific button variants outside `components/ui/button.tsx`.
 
@@ -103,7 +102,6 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Natural entrance easing: `[0.22, 1, 0.36, 1]`, normally `0.4s–0.6s`.
 - Interactive spring: `stiffness: 400`, `damping: 25`.
 - Scroll reveal uses `whileInView` with `viewport.once`.
-- Lists may use `staggerChildren: 0.08` when it improves hierarchy.
 - Use `AnimatePresence mode="wait"` for tab/modal/page transitions where applicable.
 - Always respect `useReducedMotion()` and remove heavy motion when requested.
 - Motion must never reduce usability or obscure important content.
