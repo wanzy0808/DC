@@ -7,7 +7,7 @@ import { ArrowUpRight, Check } from "lucide-react";
 import PintuSection from "@/components/Pintu/PintuSection";
 import RomanticBackground from "@/components/Layout/background";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { GlowButton } from "@/components/ui/glow-button";
+import { Button } from "@/components/ui/button";
 
 type DoorValue = 1 | 2 | 3 | null;
 const ease = [0.22, 1, 0.36, 1] as const;
@@ -41,12 +41,12 @@ export default function Home() {
                 <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-primary sm:text-5xl lg:text-[4.05rem]">{content.title}</h1>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-foreground/75 sm:text-base sm:leading-8">{content.description}</p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
-                  <GlowButton asChild>
-                    <Link href={href} className="h-11 min-w-[12rem] rounded-xl px-7 py-0 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em] sm:w-auto">
+                  <Button asChild size="lg" className="h-11 min-w-[12rem] rounded-xl px-7 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em] sm:w-auto">
+                    <Link href={href}>
                       {messages.home.openWorkspace}
                       <ArrowUpRight className="h-4 w-4" />
                     </Link>
-                  </GlowButton>
+                  </Button>
                 </div>
                 <div className="mt-6 flex flex-wrap gap-x-5 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/60">
                   {content.capabilities.map((item) => <span key={item} className="flex items-center gap-2"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>)}
