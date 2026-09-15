@@ -24,13 +24,21 @@ export async function PATCH(request: Request) {
   try {
     const body = await request.json();
     const invitationId = String(body.invitationId ?? "");
+    const action = String(body.action ?? "NAMES");
+    const existing = await prisma.invitation.findUnique({ where:{id:invitationId}, select:{id:true,groomName:true,brideName:true,isPublished:true} });
+    if (!existing) return NextResponse.json({ error:"Undangan tidak ditemukan." }, { status:404 });
+    if(action === "PUBLISH"){
+      const invitation = await prisma.invitation.update({where:{id:invitationId},data:{isPublished:Boolean(body.isPublished)}});
+      await prisma.auditLog.create({data:{actorId:staff.id,action:"ADMIN_INVITATION_PUBLICATION_UPDATED",entity:"Invitation",entityId:invitationId,metadata:{isPublished:invitation.isPublished}}});
+      return NextResponse.json({invitation});
+    }
     const groomName = String(body.groomName ?? "").trim();
     const brideName = String(body.brideName ?? "").trim();
-    if (!invitationId || !groomName || !brideName) return NextResponse.json({ error:"Nama pengantin pria dan wanita wajib diisi." }, { status:400 });
+    if (!groomName || !brideName) return NextResponse.json({ error:"Nama pengantin pria dan wanita wajib diisi." }, { status:400 });
     const invitation = await prisma.invitation.update({ where:{id:invitationId}, data:{groomName,brideName}, select:{id:true,groomName:true,brideName:true} });
     await prisma.auditLog.create({ data:{ actorId:staff.id, action:"ADMIN_COUPLE_DATA_UPDATED", entity:"Invitation", entityId:invitationId, metadata:{groomName,brideName} } });
     return NextResponse.json({ invitation });
   } catch {
-    return NextResponse.json({ error:"Data pengantin belum dapat diperbarui." }, { status:500 });
+    return NextResponse.json({ error:"Perubahan belum dapat diproses." }, { status:500 });
   }
 }
