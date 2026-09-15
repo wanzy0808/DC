@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { GradientButton } from "@/components/ui/gradient-button";
 import SectionHeading from "@/components/Marketing/SectionHeading";
 
 type FaqItem = { question: string; answer: string };
@@ -29,17 +30,18 @@ export default function FaqSection({
           const isOpen = open === index;
           return (
             <div key={item.question} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]/75">
-              <button
+              <GradientButton
                 type="button"
                 onClick={() => setOpen(isOpen ? null : index)}
                 aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-5 px-5 py-5 text-left md:px-6"
+                size="sm"
+                className="h-auto min-h-11 w-full min-w-0 justify-between rounded-none border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base"
               >
-                <span className="font-[family-name:var(--font-dc-heading)] text-base font-semibold md:text-lg">
+                <span className="font-[family-name:var(--font-dc-heading)] font-semibold">
                   {item.question}
                 </span>
-                <ChevronDown className={`h-5 w-5 shrink-0 text-[var(--primary)] transition-transform ${isOpen ? "rotate-180" : ""}`} />
-              </button>
+                <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+              </GradientButton>
               {isOpen ? (
                 <div className="border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6">
                   {item.answer}
