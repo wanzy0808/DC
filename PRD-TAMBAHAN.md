@@ -152,7 +152,7 @@ Commits:
 - `48b90fa23625096860d7fb4edececee16f56c2d5`
 - `f535889c340aacf66f7b9545cea85f83f6482a88`
 - `bc35606b05549c7ab9a8089c8909fead4a74a8ed`
-- `46f5eb8a86e05ddac537e0570e05b18e55fe882e`
+- `46f5eb8a86e05b18e55fe882e`
 - `c52b30a900bcb37fb0b0caf158ea75ccb3925b30`
 - `9142901b9138f7101abc31a038dc145eac74c975`
 - `ab389e37747d14dd05a6d59ed0eb7cab75feba52`
@@ -210,3 +210,26 @@ Commit:
 - `8e8042acf223e82edc4864115932e832caf35cfc`
 
 Validation: belum diverifikasi dengan build/CI.
+
+## 2026-09-15 — Figma Classic Invitation Template
+
+- Desain Figma yang diberikan diimplementasikan sebagai template undangan baru bernama **Figma Classic** dengan layout satu kolom, bingkai tipis stone, tipografi editorial klasik, hero foto berbentuk arch, divider, event cards, RSVP, Gift, dan closing.
+- Konten hardcoded dari contoh Figma tidak dipakai sebagai data undangan. Nama pasangan, tanggal, lokasi, waktu, deskripsi, foto, Maps, RSVP, dan informasi rekening dibaca dari data Invitation/asset yang sudah ada.
+- Template diregistrasikan ke katalog Studio dengan key `figma-classic` sehingga dapat dipilih sebagai desain undangan.
+- Public invitation route memilih renderer Figma Classic ketika `templateKey` menggunakan `figma-classic`, sementara renderer existing tetap dipertahankan untuk template lain.
+- Public invitation sekarang memuat `assets` dan field gift bank yang diperlukan oleh renderer template.
+- Brand footer existing yang masih bertuliskan legacy `DC Wedding` pada renderer lama diperbaiki menjadi `DC Organizer`.
+
+Affected files:
+- components/PublicInvitation/FigmaClassicTemplate.tsx
+- lib/templates/catalog.ts
+- app/invite/[slug]/page.tsx
+- components/PublicInvitation/PublicInvitation.tsx
+
+Commits:
+- `a61c878578241ad9ab7191ae940693e559fb5e27`
+- `5f963c9c0d1b396a33e7aa523859b537f8fb8fff`
+- `00c77ed7c91b2eed4eb121c2b2ac613b1df2ac57`
+- `daf97ecbc9776075b4d40ed96c489ad65c615b98`
+
+Validation: belum diverifikasi dengan build/CI. Template sudah terhubung ke database invitation dan payment/password gate existing; visual/build verification masih perlu dilakukan pada environment aplikasi.
