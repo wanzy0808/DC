@@ -12,7 +12,6 @@ export const invitationTemplates: InvitationTemplate[] = [
   { key: "garden-light", name: "Garden Light", description: "Botanical terang dengan nuansa garden wedding.", previewImage: "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&q=80&w=900", assetPath: "/templates/garden-light" },
   { key: "midnight-romance", name: "Midnight Romance", description: "Dramatis, intimate, dan elegan untuk malam hari.", previewImage: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=80&w=900", assetPath: "/templates/midnight-romance" },
   { key: "classic-pearl", name: "Classic Pearl", description: "Clean classic dengan kesan timeless.", previewImage: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=900", assetPath: "/templates/classic-pearl" },
-  { key: "figma-classic", name: "Figma Classic", description: "Editorial minimal dari desain Figma: bingkai stone, tipografi klasik, dan layout satu kolom.", previewImage: "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=900", assetPath: "/templates/figma-classic" },
 ];
 
 export function getInvitationTemplate(key: string) {
