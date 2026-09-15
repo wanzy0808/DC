@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { GradientButton } from "@/components/ui/gradient-button";
 import { buttonVariants } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -23,7 +24,9 @@ export default function HeroSection() {
         <h1 className="mt-6 max-w-xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">{copy.title}<span className="mt-2 block text-foreground">{copy.accent}</span></h1>
         <p className="mt-7 max-w-xl text-base leading-8 text-foreground/70 md:text-lg">{copy.description}</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link href="/template-design" className={buttonVariants({ variant: "default", size: "lg", className: "gap-2" })}>{copy.explore}<ArrowUpRight className="h-4 w-4" /></Link>
+          <GradientButton asChild>
+            <Link href="/template-design" className="gap-2">{copy.explore}<ArrowUpRight className="h-4 w-4" /></Link>
+          </GradientButton>
           <Link href="#fitur" className={buttonVariants({ variant: "outline", size: "lg" })}>{copy.features}</Link>
         </div>
         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">{copy.tags.map((tag) => <span key={tag}>{tag}</span>)}</div>
