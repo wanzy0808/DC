@@ -3,8 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { LockKeyhole, X } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 type Access = { digitalInvitation: boolean; guestbook: boolean; bundle: boolean };
 
@@ -15,8 +14,8 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
 
   useEffect(() => {
     fetch("/api/dashboard/access", { cache: "no-store" })
-      .then(r => (r.ok ? r.json() : null))
-      .then(data => data && setAccess(data))
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => data && setAccess(data))
       .catch(() => undefined);
   }, []);
 
@@ -44,12 +43,12 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
       {children}
       {upgradeOpen && (
         <div className="fixed inset-0 z-[110] grid place-items-center bg-black/40 p-4 backdrop-blur-sm" onMouseDown={() => setUpgradeOpen(false)}>
-          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-7 shadow-2xl" onMouseDown={e => e.stopPropagation()}>
+          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-7 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
             <div className="flex items-start justify-between">
               <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
                 <LockKeyhole className="h-5 w-5" />
               </div>
-              <Button type="button" variant="ghost" size="icon" onClick={() => setUpgradeOpen(false)} aria-label="Tutup">
+              <Button type="button" size="icon" onClick={() => setUpgradeOpen(false)} aria-label="Tutup">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -62,9 +61,9 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
                 ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
                 : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
             </p>
-            <Link href="/packages" onClick={() => setUpgradeOpen(false)} className={cn(buttonVariants({ size: "lg" }), "mt-6 w-full rounded-xl")}>
-              Lihat paket
-            </Link>
+            <Button asChild size="lg" className="mt-6 w-full rounded-xl">
+              <Link href="/packages" onClick={() => setUpgradeOpen(false)}>Lihat paket</Link>
+            </Button>
           </div>
         </div>
       )}
