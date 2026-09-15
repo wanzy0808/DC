@@ -48,3 +48,43 @@ Commit:
 - `4471ce72b1493090c49f52d30faa1e0b1d2f7512`
 
 Validation: belum diverifikasi dengan build/CI.
+
+## 2026-09-15 — Manual Payment, Invoice & Admin Activation
+
+- CTA **Pilih paket** sekarang mempertahankan paket yang dipilih dan mengarahkan user ke alur checkout.
+- User yang belum login diarahkan ke login dengan `next` destination; setelah autentikasi tujuan checkout tetap dipertahankan. Alur registrasi juga mempertahankan destination.
+- Ditambahkan `PaymentOrder` sebagai record transaksi/invoice terpisah dari entitlement paket aktif pada `Payment`, sehingga riwayat pembelian dan upgrade dapat disimpan tanpa menimpa transaksi sebelumnya.
+- Checkout manual menampilkan nomor invoice, paket, nominal, rekening pembayaran dari environment, dan status verifikasi.
+- Bukti transfer dapat di-upload langsung sebagai JPG/PNG/WEBP/PDF maksimal sekitar 3 MB atau diberikan sebagai URL. Untuk MVP upload disimpan sebagai data URL pada record order; storage object/private storage dapat diganti kemudian tanpa mengubah alur checkout.
+- Ditambahkan pengiriman invoice email opsional melalui Resend apabila `RESEND_API_KEY` dan `RESEND_FROM_EMAIL` tersedia.
+- Paket **tidak otomatis aktif** setelah order dibuat atau bukti dikirim. Admin/Owner/Finance harus menekan **Aktifkan paket** setelah verifikasi manual.
+- Panel Admin pembayaran diperluas untuk melihat invoice, user, paket, nominal, bukti transfer, lalu menolak atau mengaktifkan paket.
+- Role `FINANCE` sekarang dapat masuk ke area admin dan memproses verifikasi pembayaran.
+- Menu **Transaksi** diperbarui agar membaca `PaymentOrder`, menampilkan nomor invoice, status, nominal, bukti, dan tombol membuka invoice.
+- Upgrade dari `INVITATION_BASIC` ke `GUESTBOOK_DIGITAL` menghitung **selisih harga paket**, bukan menagihkan Rp 2.000.000 penuh.
+- Struktur payment tetap manual dan belum bergantung pada payment gateway; provider nantinya dapat ditambahkan di level order tanpa mengubah alur entitlement.
+
+Affected files:
+- prisma/schema.prisma
+- prisma/migrations/20260915170000_add_payment_orders/migration.sql
+- app/api/orders/route.ts
+- app/api/orders/[id]/route.ts
+- app/checkout/[id]/page.tsx
+- components/Payments/CheckoutClient.tsx
+- app/api/admin/payments/route.ts
+- components/Admin/AdminPayments.tsx
+- app/admin/layout.tsx
+- app/api/transactions/route.ts
+- app/transactions/page.tsx
+- app/packages/page.tsx
+- components/Layout/PackageSelector.tsx
+- components/Marketing/PackageShowcase.tsx
+- app/login/page.tsx
+- components/Layout/Navbar/RegisterDialog.tsx
+- components/Layout/Navbar/BurgerMenuContent.tsx
+- app/api/auth/google/route.ts
+- app/api/auth/google/callback/route.ts
+- lib/email.ts
+- .env.example
+
+Validation: belum diverifikasi dengan build/CI. Migration Prisma dan konfigurasi email perlu dijalankan/dikonfigurasi pada environment deployment sebelum fitur digunakan secara produksi.
