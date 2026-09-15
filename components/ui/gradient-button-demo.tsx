@@ -2,9 +2,10 @@ import { GradientButton } from "@/components/ui/gradient-button"
 
 function Demo() {
   return (
-    <div className="flex gap-8">
+    <div className="flex items-center gap-4">
+      <GradientButton size="sm">Small</GradientButton>
       <GradientButton>Get Started</GradientButton>
-      <GradientButton variant="variant">Get Started</GradientButton>
+      <GradientButton size="lg">Large</GradientButton>
     </div>
   )
 }
