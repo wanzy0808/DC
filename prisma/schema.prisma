@@ -122,6 +122,7 @@ model Invitation {
   slug               String            @unique
   type               InvitationType
   title              String
+  eventCategory      String            @default("OTHER")
   templateKey        String            @default("")
   groomName          String            @default("")
   brideName          String            @default("")

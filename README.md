@@ -1,68 +1,92 @@
-# DC Organizer 💒
+# DC Organizer
 
-A modern, high-performance wedding organizer, digital wedding invitation, and guest-management platform built with Next.js, Prisma, and Tailwind CSS v4.
+DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest management, optional WA Blast distribution, and event-day guestbook/check-in operations. The product is not limited to weddings: each user can create as many event workspaces as needed and activate invitations per event.
 
-## 🛠 Tech Stack
+## Product Model
+
+### Digital Invitation
+- Price: **Rp150.000 per event / invitation**.
+- One activated event includes:
+  - 1 Digital Invitation.
+  - 1 invitation template.
+  - Publication.
+  - RSVP.
+  - Guest management, including table/seating workflow where supported by the workspace.
+- Event creation is not capped at three. Additional events are created and activated independently.
+- Payment/entitlement is event-scoped; buying one invitation must not unlock every event on the account.
+
+### WA Blast Add-on
+- WA Blast is **not included** in Digital Invitation.
+- **50 WA Blast credits = Rp75.000**.
+- Credits are attached to the selected active event.
+- The add-on may be purchased repeatedly when more quota is needed.
+
+### Event Planner
+- Public service page: `/event-planner`.
+- Legacy `/wedding-planner` remains a compatibility route and redirects to Event Planner.
+- Consultation service types:
+  - Wedding Organizer.
+  - Wedding Planner.
+  - Silver / Golden Wedding.
+  - Baby Shower.
+- Planner packages intentionally do not show fixed pricing; consultation is directed to WhatsApp `+62 821-2478-6516`.
+
+### Guestbook Digital
+Guestbook Digital remains the onsite operational service for QR check-in, Usher App, devices, and event-day support.
+
+## Tech Stack
 
 ### Core & Framework
-- Framework: Next.js (App Router, Turbopack)
-- Runtime: Node.js (v22 LTS)
-- Package Manager: pnpm (v11)
-- Language: TypeScript
+- Framework: Next.js App Router / Turbopack.
+- Runtime: Node.js >= 22 LTS.
+- Package Manager: pnpm >= 11.
+- Language: TypeScript.
 
 ### Database & Infrastructure
-- Database: PostgreSQL
-- ORM: Prisma ORM
-- Deployment: Hostinger VPS (Linux Server)
-- CI/CD: GitHub Actions (Build Validation)
+- Database: PostgreSQL.
+- ORM: Prisma ORM.
+- Deployment: Hostinger VPS (Linux Server).
+- CI/CD: GitHub Actions build validation.
 
 ### UI & Styling
-- CSS Engine: Tailwind CSS v4
-- Component Library: shadcn/ui
-- Iconography: Lucide React (lucide-react)
-- Canvas Engine: Konva (react-konva)
-- Animation Engine: Motion / Framer Motion (motion.dev)
+- CSS Engine: Tailwind CSS v4.
+- Component Library: shadcn/ui.
+- Iconography: Lucide React.
+- Canvas Engine: Konva / react-konva.
+- Animation Engine: Motion via `motion/react`.
+- Image processing: Sharp.
 
-### Image Processing & Upload
-- Image Engine: Sharp (sharp) untuk optimasi, kompresi, dan cropping media/gambar
+## Design System
 
-### Code Quality & Formatting
-- Code Formatter: Prettier (dengan Tailwind CSS plugin)
-- Linter: ESLint
-
-### Design System & Themes
-- Brand: **DC Organizer**
-- Logo / primary brand: Rose `#C07A84`
-- Supporting rose: `#D9A3AA`
-- Deep hover / pressed rose: `#A65E69`
-- Typography: Cinzel — Display, Headings, Titles, & Branding
-- Typography: Fauna One — Primary Body Text & Interface UI
-- Typography: DM Mono — Technical Labels, Codes, & Metadata
-- Light Theme:
-  - Background: `#FFFFFF`
-  - Headings, icons, buttons, links, help chat, menu, and accents: `#C07A84`
-  - Primary text: `#111111`
-  - Secondary text: black with opacity
-  - Surfaces remain white; do not use pink as a page background or repeated card fill
-- Dark Theme:
-  - Background: `#0B0B0C`
-  - Headings, icons, buttons, links, help chat, menu, and accents: `#C07A84`
-  - Primary text: `#FFFFFF`
-  - Secondary text: white with opacity
-  - Surfaces remain near-black/dark neutral; do not use pink as a page background or repeated card fill
-- Visual balance follows 60/30/10 as a guideline: keep the canvas dominant and concentrate Rose on meaningful brand elements.
-- Deprecated palette: `#8C4A56`, `#E8B4B8`, `#6E3843`, `#0F0E11`, `#1A181E`
+- Brand: **DC Organizer**.
+- Logo / primary brand: Rose `#C07A84`.
+- Supporting Rose: `#D9A3AA`.
+- Deep hover / pressed Rose: `#A65E69`.
+- Cinzel: display, headings, titles, branding.
+- Fauna One: body copy and application UI.
+- DM Mono: metadata, status, technical labels.
+- Light background: `#FFFFFF`; primary text: `#111111`.
+- Dark background: `#0B0B0C`; primary text: `#FFFFFF`.
+- Rose is concentrated on meaningful accents, controls, selected states, links, and headings; page surfaces stay neutral.
+- Canonical application button primitive: `components/ui/button.tsx`.
 
 ## Public Invitation Architecture
-- Main invitation: `https://[nama-pasangan].dcwedding.com`
-- Event invitation: `https://[nama-pasangan].dcwedding.com/[nama-event]`
-- The event path is generated from the Event Khusus name stored in the database (currently the ADAT_AKAD invitation title).
-- Example: `Akad & Sangjit` → `https://rio-lyvia.dcwedding.com/akad-sangjit`
-- The old `/event-khusus` path remains only as a backward-compatible alias and redirects to the event-name path.
-- Legacy `/invite/[slug]` routes remain only for internal routing and backward-compatible redirects.
-- Invitation identity and event names remain database-first; browser cookies/localStorage are not used as a source of truth.
 
-## 🚀 Getting Started
+Invitation identity remains database-first through PostgreSQL/Prisma. Browser cookies/localStorage are not used as the source of truth for event identity.
+
+The invitation root domain is configurable through `NEXT_PUBLIC_INVITATION_ROOT_DOMAIN`. The existing `dcwedding.com` fallback remains for backward compatibility until a separate domain migration is defined; new customer-facing product copy uses the DC Organizer brand and event terminology.
+
+Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible behavior where required by the application architecture.
+
+## Engineering Principles
+
+- **Extend Over Replace:** preserve existing routes, APIs, components, and data flows unless a deliberate migration requires otherwise.
+- PostgreSQL/Prisma is the product source of truth; do not introduce mock invitation records.
+- Authorization and entitlement checks are server-authoritative.
+- Event-scoped guest/RSVP data must not leak or mix across invitations.
+- `/dashboard`, Beranda, Pintu navigation, and protected Rose petals remain part of the product foundation.
+
+## Getting Started
 
 ### Prerequisites
 - Node.js >= 22.0.0
