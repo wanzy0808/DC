@@ -160,7 +160,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setActiveId(invitation.id);
     setForm(toForm(invitation));
     setEditorMode(invitation.eventConfigured ? "edit" : "new");
-    setNotice(invitation.eventConfigured ? "Siap diedit" : "Draft tersimpan. Lengkapi acara ini.");
+    setNotice(invitation.eventConfigured ? "Siap diedit" : "Lengkapi acara ini.");
   }
 
   function closeEditor() {
@@ -205,12 +205,12 @@ export default function EventPanel({ accent, onSaved }: Props) {
   async function startNewEvent() {
     if (creating || saving) return;
     setCreating(true);
-    setNotice("Membuat draft acara di database...");
+    setNotice("Menyiapkan acara...");
     try {
       const response = await fetch("/api/invitations", { method: "POST" });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.invitation?.id) {
-        throw new Error(data?.error || "Draft acara belum dapat dibuat.");
+        throw new Error(data?.error || "Acara belum dapat dibuat.");
       }
 
       const draft = data.invitation as Invitation;
@@ -218,10 +218,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
       setActiveId(draft.id);
       setForm(emptyForm);
       setEditorMode("new");
-      setNotice("Draft acara tersimpan. Pilih jenis acara untuk melanjutkan.");
+      setNotice("Acara baru siap dilengkapi.");
       onSaved();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Draft acara belum dapat dibuat.");
+      setNotice(error instanceof Error ? error.message : "Acara belum dapat dibuat.");
     } finally {
       setCreating(false);
     }
@@ -241,7 +241,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
 
   async function save() {
     if (!activeId) {
-      setNotice("Draft acara belum tersedia. Klik Tambah acara lagi.");
+      setNotice("Acara belum tersedia. Coba tambah acara lagi.");
       return;
     }
     if (!form.eventCategory) {
@@ -322,7 +322,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const timezone = getIndonesiaTimezone(form.timezone);
   const previewTitle = form.eventCategory
     ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
-    : "Draft acara";
+    : "Acara baru";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
@@ -338,7 +338,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
           </div>
           <Button type="button" size="sm" onClick={startNewEvent} disabled={loading || creating || saving}>
             <Plus className="h-4 w-4" />
-            {creating ? "Membuat draft..." : "Tambah acara"}
+            {creating ? "Menyiapkan..." : "Tambah acara"}
           </Button>
         </div>
 
@@ -356,14 +356,14 @@ export default function EventPanel({ accent, onSaved }: Props) {
                         Acara {String(index + 1).padStart(2, "0")}
                       </p>
                       <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
-                        {draft ? "Draft acara" : event.title || `Acara ${index + 1}`}
+                        {draft ? "Acara baru" : event.title || `Acara ${index + 1}`}
                       </h3>
                       <p className="mt-1 truncate text-[11px] text-muted-foreground">
                         {draft ? "Belum dilengkapi" : event.venue || "Tempat belum diisi"}
                       </p>
                     </div>
                     <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
-                      {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Draft"}
+                      {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : draft ? "Belum lengkap" : "Draft"}
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -394,7 +394,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
           </div>
         ) : (
           <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
-            Klik <strong className="text-foreground">Tambah acara</strong>. Draft acara langsung dibuat di database lalu form akan terbuka.
+            Belum ada acara.
           </div>
         )}
       </section>
@@ -404,14 +404,11 @@ export default function EventPanel({ accent, onSaved }: Props) {
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                {editorMode === "new" ? "Draft tersimpan" : "Edit acara"}
+                {editorMode === "new" ? "Acara baru" : "Edit acara"}
               </p>
               <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
                 {previewTitle || "Pilih jenis acara"}
               </h2>
-              <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[8px] tracking-[0.08em] text-muted-foreground">
-                ID {active.id}
-              </p>
             </div>
             <Button type="button" size="sm" onClick={closeEditor} disabled={saving}>
               <X className="h-4 w-4" />
