@@ -14,23 +14,33 @@ export default async function EventInvitationPage({
   const { slug, eventSlug } = await params;
   const mainInvitation = await prisma.invitation.findUnique({
     where: { slug },
-    select: { ownerId: true, passwordProtected: true },
+    include: { payment: true },
   });
   if (!mainInvitation) notFound();
 
-  const invitation = await prisma.invitation.findFirst({
+  const eventInvitations = await prisma.invitation.findMany({
     where: { ownerId: mainInvitation.ownerId, type: "ADAT_AKAD" },
-    include: { payment: true },
+    include: { payment: true, assets: true },
     orderBy: { createdAt: "asc" },
+    take: 2,
   });
 
-  if (!invitation || slugifyEvent(invitation.title || "event") !== eventSlug) notFound();
-  if (!invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+  const invitation = eventInvitations.find(
+    (item) => slugifyEvent(item.title || "event") === eventSlug,
+  );
+
+  if (!invitation) notFound();
+  if (!invitation.isPublished || !hasPaidDigitalInvitation(mainInvitation.payment)) {
     return <InvitationLockedState />;
   }
   if (mainInvitation.passwordProtected && !(await hasInvitationAccess(slug))) {
     return <InvitationPasswordGate slug={slug} />;
   }
+
+  await prisma.invitation.update({
+    where: { id: invitation.id },
+    data: { viewCount: { increment: 1 } },
+  });
 
   return <PublicInvitation invitation={invitation} eventKind="special" />;
 }
