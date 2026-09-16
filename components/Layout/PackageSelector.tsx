@@ -1,40 +1,63 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { CheckCircle2 } from "lucide-react";
 import { servicePackages } from "@/lib/packages/catalog";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
-type Props = { initialPackage?: string };
+type Props = {
+  initialPackage?: string;
+  invitationId?: string;
+};
 
-export default function PackageSelector({ initialPackage = "INVITATION_BASIC" }: Props) {
+export default function PackageSelector({
+  initialPackage = "INVITATION_BASIC",
+  invitationId,
+}: Props) {
   const router = useRouter();
   const { locale } = useLanguage();
-  const initial = servicePackages.some((item) => item.key === initialPackage) ? initialPackage : servicePackages[0].key;
+  const visiblePackages = useMemo(
+    () =>
+      invitationId
+        ? servicePackages
+        : servicePackages.filter((item) => item.key !== "WA_BLAST_50"),
+    [invitationId],
+  );
+  const initial = visiblePackages.some((item) => item.key === initialPackage)
+    ? initialPackage
+    : visiblePackages[0]?.key || "INVITATION_BASIC";
   const [selected, setSelected] = useState(initial);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => setSelected(initial), [initial]);
 
-  const copy = locale === "en"
-    ? {
-        eyebrow: "DC Services",
-        title: "Choose the right service",
-        description: "Choose a package to create an invoice. Your package stays inactive until our team verifies your manual transfer.",
-        choose: "Continue to payment",
-        preparing: "Preparing invoice…",
-        fallbackError: "This package could not be selected yet.",
-      }
-    : {
-        eyebrow: "DC Services",
-        title: "Pilih layanan yang tepat",
-        description: "Pilih paket untuk membuat invoice. Paket belum aktif sampai tim kami memverifikasi transfer manual kamu.",
-        choose: "Lanjut ke pembayaran",
-        preparing: "Menyiapkan invoice…",
-        fallbackError: "Paket belum dapat dipilih.",
-      };
+  const copy =
+    locale === "en"
+      ? {
+          eyebrow: "DC Services",
+          title: invitationId ? "Activate this event" : "Choose a service",
+          description: invitationId
+            ? "Your purchase is attached to this event only. Additional events can be created and activated separately."
+            : "Digital Invitation is purchased per event. Payment is activated after our team verifies your manual transfer.",
+          choose: "Continue to payment",
+          preparing: "Preparing invoice…",
+          fallbackError: "This product could not be selected yet.",
+          eventContext: "Event-specific purchase",
+        }
+      : {
+          eyebrow: "DC Services",
+          title: invitationId ? "Aktifkan acara ini" : "Pilih layanan",
+          description: invitationId
+            ? "Pembelian hanya berlaku untuk acara ini. Acara lain dapat dibuat dan diaktifkan secara terpisah."
+            : "Undangan Digital dibeli per acara. Produk aktif setelah transfer manual diverifikasi oleh tim kami.",
+          choose: "Lanjut ke pembayaran",
+          preparing: "Menyiapkan invoice…",
+          fallbackError: "Produk belum dapat dipilih.",
+          eventContext: "Pembelian khusus acara",
+        };
 
   async function choosePackage() {
     setLoading(true);
@@ -43,7 +66,7 @@ export default function PackageSelector({ initialPackage = "INVITATION_BASIC" }:
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageKey: selected }),
+        body: JSON.stringify({ packageKey: selected, invitationId }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -59,23 +82,91 @@ export default function PackageSelector({ initialPackage = "INVITATION_BASIC" }:
   }
 
   return (
-    <main className="relative z-10 min-h-screen w-full px-5 py-12 text-[var(--foreground)] sm:px-8">
+    <main className="relative z-10 min-h-screen w-full px-5 py-12 text-foreground sm:px-8">
       <div className="mx-auto w-[min(92vw,1400px)] space-y-10">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.25em] text-[var(--primary)]">{copy.eyebrow}</p>
-          <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-4xl">{copy.title}</h1>
-          <p className="mx-auto mt-2 max-w-2xl text-sm leading-7 text-[var(--muted-foreground)]">{copy.description}</p>
+          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.25em] text-primary">
+            {copy.eyebrow}
+          </p>
+          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-4xl">
+            {copy.title}
+          </h1>
+          <p className="mx-auto mt-2 max-w-2xl font-[family-name:var(--font-fauna)] text-sm leading-7 text-muted-foreground">
+            {copy.description}
+          </p>
+          {invitationId && (
+            <p className="mt-3 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-primary">
+              {copy.eventContext}
+            </p>
+          )}
         </div>
+
         <div className="mx-auto grid w-full max-w-[1200px] justify-center gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {servicePackages.map((item) => {
+          {visiblePackages.map((item) => {
             const active = selected === item.key;
-            return <Button type="button" key={item.key} onClick={() => setSelected(item.key)} className={`h-auto w-full min-w-0 justify-start whitespace-normal rounded-2xl border p-6 text-left transition duration-300 hover:-translate-y-1 ${active ? "border-[var(--primary)] bg-[var(--primary)]/[0.08] ring-2 ring-[var(--primary)]/15" : "border-[var(--border)] bg-[var(--card)]/70 hover:border-[var(--primary)]/50"}`}><span><span className="block font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">DC Organizer</span><span className="mt-3 block font-[family-name:var(--font-dc-heading)] text-xl">{item.name[locale]}</span><span className="mt-2 block text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</span><span className="mt-3 block text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</span><span className="mt-5 block space-y-2 text-xs text-[var(--muted-foreground)]">{item.features[locale].map((feature) => <span key={feature} className="block">✓ {feature}</span>)}</span></span></Button>;
+            return (
+              <label
+                key={item.key}
+                className={`relative flex cursor-pointer rounded-2xl border p-6 transition duration-200 ${
+                  active
+                    ? "border-primary bg-primary/[0.045] ring-2 ring-primary/10"
+                    : "border-border bg-background hover:border-primary/40"
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="service-package"
+                  value={item.key}
+                  checked={active}
+                  onChange={() => setSelected(item.key)}
+                  className="sr-only"
+                />
+                <span className="min-w-0">
+                  <span className="flex items-center justify-between gap-3">
+                    <span className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
+                      DC Organizer
+                    </span>
+                    {active && <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />}
+                  </span>
+                  <span className="mt-3 block font-[family-name:var(--font-cinzel)] text-xl">
+                    {item.name[locale]}
+                  </span>
+                  <span className="mt-2 block text-2xl font-semibold">
+                    Rp {item.price.toLocaleString("id-ID")}
+                  </span>
+                  <span className="mt-3 block font-[family-name:var(--font-fauna)] text-sm leading-6 text-muted-foreground">
+                    {item.description[locale]}
+                  </span>
+                  <span className="mt-5 block space-y-2 font-[family-name:var(--font-fauna)] text-xs text-muted-foreground">
+                    {item.features[locale].map((feature) => (
+                      <span key={feature} className="flex gap-2">
+                        <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />
+                        <span>{feature}</span>
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              </label>
+            );
           })}
         </div>
-        <div className="mx-auto max-w-xl space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6">
-          {selected === "GUESTBOOK_DIGITAL" && <p className="rounded-xl bg-[var(--primary)]/8 px-4 py-3 text-xs leading-5 text-[var(--muted-foreground)]">Jika Digital Invitation sudah aktif, pembayaran Guestbook hanya menagihkan selisih harga paket.</p>}
-          <Button type="button" disabled={loading} onClick={choosePackage} size="lg" className="min-h-11 w-full rounded-xl">{loading ? copy.preparing : copy.choose}</Button>
-          {message && <p className="text-sm text-[var(--muted-foreground)]">{message}</p>}
+
+        <div className="mx-auto max-w-xl rounded-2xl border border-border bg-foreground/[0.018] p-6">
+          {selected === "WA_BLAST_50" && (
+            <p className="mb-4 rounded-xl border border-primary/10 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground">
+              Add-on ini menambah 50 quota pada acara yang dipilih dan dapat dibeli kembali kapan pun dibutuhkan.
+            </p>
+          )}
+          <Button
+            type="button"
+            disabled={loading}
+            onClick={choosePackage}
+            size="lg"
+            className="min-h-11 w-full"
+          >
+            {loading ? copy.preparing : copy.choose}
+          </Button>
+          {message && <p className="mt-3 text-sm text-muted-foreground">{message}</p>}
         </div>
       </div>
     </main>
