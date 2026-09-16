@@ -65,6 +65,15 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Typography button dipastikan memakai Fauna One agar label action konsisten dengan UI dashboard lainnya.
 - Perubahan ini berlaku global untuk seluruh komponen yang menggunakan canonical `Button`, termasuk aksi pada Undangan Digital, RSVP, Event Panel, Seating Chart, modal, dan workspace dashboard lain.
 
+### 2026-09-16 — Dashboard Shell Brand, Sidebar & Profile Menu Polish
+- Brand `DC Organizer` pada topbar dashboard sekarang menampilkan canonical Rose `#C07A84` secara eksplisit sehingga tidak lagi tertimpa rule header menjadi hitam.
+- Sidebar diberi rose-tinted neutral surface yang sangat ringan (`primary` sekitar 4–5% pada light mode, sedikit lebih kuat pada dark mode) agar workspace terasa terpisah dari canvas utama tanpa menjadi blok pink besar.
+- Jarak antar navigation item sidebar diperbesar sedikit dan active state memakai `aria-current="page"` agar treatment Rose active state konsisten serta accessible.
+- Tombol profil kanan atas tidak lagi memakai fallback label `Dashboard`. Label sekarang memprioritaskan `profile.displayName`; jika nama belum tersedia, fallback menggunakan bagian lokal email, kemudian `Akun`.
+- Dropdown akun dibuat sedikit lebih lebar dan memakai rounded outer container. Setiap action row memiliki jarak vertikal, border tipis, dan radius `10px` agar kotak tidak terlihat menempel satu sama lain.
+- Header profile trigger mendapat padding horizontal dan hover Rose tint ringan agar tetap terasa sebagai utility control, bukan primary CTA.
+- Tidak ada perubahan pada API profile, auth, routing, entitlement, atau data wedding.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
@@ -88,7 +97,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `c38d3f92439ba8844f63d7766f9135648c02022f`
 - `152dbbf99517a3ec449dfb116f6394792739bdb4`
 - `190de1798fc0abbef46b1d980cc1b051d9f2014d`
+- `b7eca517fa462f77f67ab649e8c12730e889e074`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel, RSVP, Digital Invitation, Seating Chart, dan button consistency changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
+- Event Panel, RSVP, Digital Invitation, Seating Chart, button consistency, dan dashboard shell polish mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
