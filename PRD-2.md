@@ -74,6 +74,21 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Header profile trigger mendapat padding horizontal dan hover Rose tint ringan agar tetap terasa sebagai utility control, bukan primary CTA.
 - Tidak ada perubahan pada API profile, auth, routing, entitlement, atau data wedding.
 
+### 2026-09-16 — Dashboard Functional Density Pass
+- Sidebar tidak lagi menampilkan ikon gembok maupun teks `Upgrade`. Entitlement tetap diproses pada konten/FeatureGate; sidebar hanya berfungsi sebagai navigasi.
+- Slot icon sidebar dibuat fixed-width dan `shrink-0`, termasuk untuk `Manajemen Tamu`, agar semua menu selalu memiliki icon alignment yang sama.
+- Typography menu sidebar dipindahkan ke Fauna One dengan ukuran/weight yang lebih utilitarian; Cinzel tetap dipakai untuk brand dan heading.
+- Header setiap tab dashboard dipadatkan: copy deskriptif panjang dihapus, menyisakan nomor workspace, judul tab, dan metadata wedding singkat.
+- Beranda tidak lagi memakai hero copy dan paragraf `next step`. Isi dipadatkan menjadi identitas wedding, empat statistik operasional, dan akses cepat.
+- Onboarding copy dipersingkat menjadi field yang diperlukan saja.
+- `EventPanel` menghapus heading/penjelasan editorial berulang. Tab jenis acara, form, sync status, dan tombol `Simpan` menjadi fokus utama.
+- `InvitationManagementPanel` menghapus deskripsi panjang per section/card serta panel Design Studio berulang. Workspace sekarang fokus pada status terbit, akses, paket, URL publik, Edit/Publish, dan password.
+- `RsvpAnalyticsPanel` menghapus hero/penjelasan dan metrik hadiah placeholder. Ringkasan sekarang hanya RSVP, Hadir, Total Pax, dan Check-in.
+- Tabel RSVP menghapus kolom placeholder `QR status`, `Acara`, dan `Hadiah`; kolom fungsional sekarang `Nama`, `RSVP`, `Pax`, `Check-in`, `Meja`, dan `Aksi`.
+- Export CSV RSVP ikut diselaraskan ke data yang benar-benar tersedia: nama, telepon, RSVP, pax, check-in, dan meja.
+- Manajemen Tamu dan Usher di shell dipadatkan menjadi statistik + kontrol utama tanpa paragraf penjelasan berulang.
+- API, database flow, publish/password flow, QR generation, manual check-in, seating assignment, dan entitlement server tidak diubah.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
@@ -98,7 +113,11 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `152dbbf99517a3ec449dfb116f6394792739bdb4`
 - `190de1798fc0abbef46b1d980cc1b051d9f2014d`
 - `b7eca517fa462f77f67ab649e8c12730e889e074`
+- `30d6ef3b1f6ecfabde9a9597d43405cae42eaa70`
+- `c8a97a5399ef8f385eb84c30ef281f644295dfda`
+- `2e57cc663085d00a9fb179777a35cb1027cb6c5e`
+- `27ca59b789573e0d291c19a1fb8a9b507ed3a6e9`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel, RSVP, Digital Invitation, Seating Chart, button consistency, dan dashboard shell polish mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
+- Dashboard functional-density pass mempertahankan API/data flow existing dan berfokus pada pengurangan typography non-fungsional, penguatan hierarchy kontrol, serta konsistensi navigasi/tabel.
