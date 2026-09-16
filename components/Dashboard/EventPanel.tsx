@@ -209,7 +209,13 @@ export default function EventPanel({ accent, onSaved }: Props) {
               {loading ? "Loading" : notice}
             </span>
             {!hasAdditional && type === "WEDDING" && (
-              <Button type="button" size="sm" onClick={addSequence} disabled={loading}>
+              <Button
+                type="button"
+                size="sm"
+                onClick={addSequence}
+                disabled={loading}
+                title="Tambahkan rangkaian acara kedua"
+              >
                 <Plus className="h-4 w-4" />
                 Tambah rangkaian acara
               </Button>
@@ -342,9 +348,14 @@ export default function EventPanel({ accent, onSaved }: Props) {
             </span>
             <span className="truncate">{notice}</span>
           </div>
-          <Button disabled={loading || saving} onClick={save} size="sm">
+          <Button
+            disabled={loading || saving}
+            onClick={save}
+            size="sm"
+            title="Simpan data rangkaian acara"
+          >
             <Save className="h-4 w-4" />
-            {saving ? "Menyimpan..." : "Simpan"}
+            {saving ? "Menyimpan rangkaian..." : "Simpan rangkaian"}
           </Button>
         </div>
       </section>
