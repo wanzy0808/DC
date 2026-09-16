@@ -3,23 +3,16 @@ import { hasPaidDigitalInvitation, hasPaidGuestbook } from "@/lib/packages/acces
 
 type PaymentLike = { packageKey: string; status: string } | null | undefined;
 
+/**
+ * Digital Invitation entitlement is invitation-scoped.
+ * Buying one event must never unlock another event owned by the same account.
+ * Keep this helper name for compatibility with existing API callers.
+ */
 export async function hasAccountDigitalInvitation(
-  userId: string,
+  _userId: string,
   directPayment?: PaymentLike,
 ) {
-  if (hasPaidDigitalInvitation(directPayment)) return true;
-
-  const payment = await prisma.payment.findFirst({
-    where: {
-      userId,
-      status: "PAID",
-      packageKey: { in: ["INVITATION_BASIC", "INVITATION_GUESTBOOK"] },
-    },
-    select: { packageKey: true, status: true },
-    orderBy: { paidAt: "desc" },
-  });
-
-  return hasPaidDigitalInvitation(payment);
+  return hasPaidDigitalInvitation(directPayment);
 }
 
 export async function hasAccountGuestbook(
