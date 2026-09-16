@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
-async function getInvitation(userId: string) {
+async function getInvitation(userId: string, invitationId?: string) {
+  if (invitationId) {
+    return prisma.invitation.findFirst({
+      where: { id: invitationId, ownerId: userId },
+      include: { payment: true },
+    });
+  }
+
   return prisma.invitation.findFirst({
     where: { ownerId: userId, type: "WEDDING" },
     include: { payment: true },
@@ -35,28 +42,47 @@ const guestSelect = {
   table: true,
 } as const;
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getInvitation(user.id);
-    if (!invitation) return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
 
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    const invitationId = new URL(request.url).searchParams.get("invitationId")?.trim() || "";
+    const invitation = await getInvitation(user.id, invitationId || undefined);
+    if (!invitation) {
       return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
     }
 
-    const guests = await prisma.guest.findMany({
-      where: { invitationId: invitation.id },
-      select: guestSelect,
-      orderBy: { name: "asc" },
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
+      return NextResponse.json({
+        invitation: { id: invitation.id, title: invitation.title, slug: invitation.slug },
+        guests: [],
+        tables: [],
+        canManageGuests: false,
+        canUseRsvp: true,
+      });
+    }
+
+    const [guests, tables] = await Promise.all([
+      prisma.guest.findMany({
+        where: { invitationId: invitation.id },
+        select: guestSelect,
+        orderBy: { name: "asc" },
+      }),
+      prisma.weddingTable.findMany({
+        where: { invitationId: invitation.id },
+        include: { _count: { select: { guests: true } } },
+        orderBy: { name: "asc" },
+      }),
+    ]);
+
+    return NextResponse.json({
+      invitation: { id: invitation.id, title: invitation.title, slug: invitation.slug },
+      guests,
+      tables,
+      canManageGuests: true,
+      canUseRsvp: true,
     });
-    const tables = await prisma.weddingTable.findMany({
-      where: { invitationId: invitation.id },
-      include: { _count: { select: { guests: true } } },
-      orderBy: { name: "asc" },
-    });
-    return NextResponse.json({ guests, tables, canManageGuests: true, canUseRsvp: true });
   } catch (error) {
     console.error("GET /api/guests failed", error);
     return NextResponse.json({ error: "Data tamu gagal dimuat. Periksa koneksi database." }, { status: 500 });
@@ -67,10 +93,14 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getInvitation(user.id);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Digital Invitation." }, { status: 402 });
 
     const body = await request.json();
+    const invitationId = String(body.invitationId ?? "").trim();
+    const invitation = await getInvitation(user.id, invitationId || undefined);
+    if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
+      return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Digital Invitation." }, { status: 402 });
+    }
+
     const name = String(body.name ?? "").trim();
     const tableId = String(body.tableId ?? "").trim() || null;
     const plusOnes = Number(body.plusOnes ?? 0);
@@ -85,7 +115,7 @@ export async function POST(request: Request) {
         where: { id: tableId, invitationId: invitation.id },
         include: { _count: { select: { guests: true } } },
       });
-      if (!table) return NextResponse.json({ error: "Meja tidak ditemukan pada undangan ini." }, { status: 404 });
+      if (!table) return NextResponse.json({ error: "Meja tidak ditemukan pada acara ini." }, { status: 404 });
       if (table._count.guests >= table.capacity) {
         return NextResponse.json({ error: "Meja sudah penuh. Pilih meja lain atau simpan tamu tanpa meja." }, { status: 409 });
       }
