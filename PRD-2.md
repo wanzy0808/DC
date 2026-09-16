@@ -99,6 +99,16 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Perubahan diterapkan dari `app/globals.css` pada scope `.dc-dashboard`, sehingga Event, RSVP, password Undangan Digital, Seating Chart, onboarding, serta control dashboard lainnya mendapat treatment yang sama tanpa page-specific color baru.
 - Tidak ada perubahan data, API, validation, schema, atau entitlement.
 
+### 2026-09-16 — Dashboard Data Surface & Rounded Table Rows
+- Referensi visual dashboard yang diberikan dipakai pada level hierarchy, bukan disalin palet pink terangnya. Informasi padat dipisahkan menjadi surface/cell yang lebih tegas agar cepat dipindai.
+- Grid statistik dashboard (`3–4` kolom yang sebelumnya berupa divider datar) sekarang dirender sebagai individual neutral cards dengan border Rose sangat tipis, radius `12px`, dan surface foreground sekitar `2.5%`.
+- Hover statistik menaikkan Rose hanya sedikit agar tetap mengikuti prinsip neutral-first dan tidak berubah menjadi repeated pink cards.
+- Quick-access controls pada Beranda mendapat border, surface netral, spacing, dan radius `10px` sehingga setiap action terbaca sebagai kontrol terpisah, serupa struktur visual pada referensi.
+- Seluruh tabel dalam `.dc-dashboard` sekarang memakai `border-collapse: separate` dengan jarak antar row. Setiap row dibangun dari cell surface netral, border tipis, serta radius `10px` pada cell paling kiri/kanan sehingga row terasa seperti satu rounded information bar.
+- Hover table row menguatkan border Rose dan memberi tint Rose sangat ringan; typography, iconography, dan canonical button tetap mengikuti sistem DC Organizer.
+- Treatment ini otomatis berlaku ke RSVP dan tabel dashboard lain yang menggunakan native `<table>`, tanpa mengubah struktur data, sorting, export, check-in, atau API.
+- Light dan dark mode menggunakan semantic `background`, `foreground`, `border`, dan `primary` melalui `color-mix`, sehingga tidak menambah palette baru.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
@@ -112,6 +122,7 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `app/dashboard/undangan-digital/page.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
 - Dashboard workspace rules currently live in `app/globals.css`.
+- User-provided dashboard screenshot on 2026-09-16 used as hierarchy reference for rounded data cells and clearer table rows; its hot-pink palette was intentionally not copied.
 
 ### Commits
 - `a1726f883b79f596daf7751664617cb76c08a30b`
@@ -128,7 +139,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `2e57cc663085d00a9fb179777a35cb1027cb6c5e`
 - `27ca59b789573e0d291c19a1fb8a9b507ed3a6e9`
 - `ca0517cc433c638ed73bedaf4000fcccc88b9718`
+- `7afcecff5e7c1b250750681f6b9a55f390741467`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Dashboard form-readability pass hanya mengubah visual control surface di scope dashboard dan tidak mengubah behavior atau data flow existing.
+- Dashboard data-surface pass hanya mengubah visual grouping, border, radius, spacing, hover, dan table presentation pada scope `.dc-dashboard`; behavior serta data flow existing tidak diubah.
