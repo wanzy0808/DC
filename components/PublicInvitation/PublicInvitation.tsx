@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { CalendarDays, Clock3, LockKeyhole, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import {
+  buildEventTitle,
+  getEventCategory,
+  getIndonesiaTimezone,
+  normalizeEventCategory,
+} from "@/lib/events/catalog";
 
 export type PublicInvitationData = {
   id: string;
   slug: string;
   title: string;
+  eventCategory: string;
   groomName: string;
   brideName: string;
   venue: string;
@@ -16,6 +23,9 @@ export type PublicInvitationData = {
   ceremonyTime: string | null;
   receptionTime: string | null;
   description: string | null;
+  eventNotes?: string | null;
+  dressCode?: string | null;
+  weddingHashtag?: string | null;
   templateKey: string;
   giftBankName: string | null;
   giftAccountName: string | null;
@@ -35,35 +45,51 @@ function formatDate(date: Date, timezone: string) {
   }).format(date);
 }
 
+function formatTime(value: string) {
+  return value.replace(":", ".");
+}
+
 export default function PublicInvitation({
   invitation,
-  eventKind,
 }: {
   invitation: PublicInvitationData;
-  eventKind: "wedding" | "special";
 }) {
-  const time = invitation.ceremonyTime || invitation.receptionTime;
-  const coupleName = [invitation.groomName, invitation.brideName]
-    .filter(Boolean)
-    .join(" & ");
-  const title = invitation.title.trim() || coupleName || "Undangan Acara";
-  const showCoupleName = Boolean(coupleName && coupleName !== title);
-  const invitationLabel =
-    eventKind === "special" ? "Event Invitation" : "Digital Invitation";
+  const eventCategory = normalizeEventCategory(invitation.eventCategory);
+  const category = getEventCategory(eventCategory);
+  const timezone = getIndonesiaTimezone(invitation.timezone);
+  const generatedTitle = buildEventTitle(
+    eventCategory,
+    invitation.groomName,
+    invitation.brideName,
+    invitation.title,
+  );
+  const title = invitation.title.trim() || generatedTitle || "Undangan Acara";
+  const identity =
+    category.nameMode === "couple"
+      ? [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ")
+      : category.nameMode === "single"
+        ? invitation.groomName
+        : "";
+  const showIdentity = Boolean(identity && identity !== title);
+  const startTime = invitation.ceremonyTime;
+  const endTime = invitation.receptionTime;
+  const timeLabel = startTime
+    ? `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`
+    : "";
 
   return (
     <main className="min-h-screen bg-background px-5 py-12 text-foreground">
       <div className="mx-auto max-w-4xl">
         <header className="rounded-2xl border border-border bg-background px-6 py-12 text-center shadow-sm md:px-12 md:py-16">
           <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
-            {invitationLabel}
+            {category.label} · Digital Invitation
           </p>
           <h1 className="mt-5 font-[family-name:var(--font-cinzel)] text-4xl tracking-wide md:text-6xl">
             {title}
           </h1>
-          {showCoupleName && (
+          {showIdentity && (
             <p className="mt-3 font-[family-name:var(--font-cinzel)] text-lg text-primary md:text-xl">
-              {coupleName}
+              {identity}
             </p>
           )}
           <p className="mx-auto mt-5 max-w-2xl font-[family-name:var(--font-fauna)] text-sm leading-7 text-muted-foreground">
@@ -76,10 +102,10 @@ export default function PublicInvitation({
               <CalendarDays className="h-4 w-4 text-primary" />
               {formatDate(invitation.eventDate, invitation.timezone)}
             </div>
-            {time && (
+            {timeLabel && (
               <div className="flex items-center justify-center gap-2">
                 <Clock3 className="h-4 w-4 text-primary" />
-                {time} WIB
+                {timeLabel}
               </div>
             )}
             <div className="flex items-center justify-center gap-2">
@@ -108,7 +134,7 @@ export default function PublicInvitation({
             eventDate={invitation.eventDate}
             venue={invitation.venue}
             title={title}
-            start={time}
+            start={startTime}
             description={invitation.description}
           />
         </section>
