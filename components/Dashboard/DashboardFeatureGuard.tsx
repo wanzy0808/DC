@@ -2,8 +2,10 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { LockKeyhole, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
 
 type Access = { digitalInvitation: boolean; guestbook: boolean; bundle: boolean };
 
@@ -41,32 +43,28 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
   return (
     <>
       {children}
-      {upgradeOpen && (
-        <div className="fixed inset-0 z-[110] grid place-items-center bg-black/40 p-4 backdrop-blur-sm" onMouseDown={() => setUpgradeOpen(false)}>
-          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-7 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
-            <div className="flex items-start justify-between">
-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
-                <LockKeyhole className="h-5 w-5" />
-              </div>
-              <Button type="button" size="icon" onClick={() => setUpgradeOpen(false)} aria-label="Tutup">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-            <p className="mt-5 text-[10px] font-semibold uppercase tracking-[.2em] text-primary">Upgrade paket</p>
-            <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
-              {upgradeType === "guestbook" ? "Kelola tamu dengan lebih lengkap" : "Publikasikan undanganmu"}
-            </h2>
-            <p className="mt-2 text-sm leading-6 opacity-60">
-              {upgradeType === "guestbook"
-                ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
-                : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
-            </p>
-            <Button asChild size="lg" className="mt-6 w-full rounded-xl">
+      <Dialog open={upgradeOpen} onOpenChange={setUpgradeOpen}>
+        <DialogContent showCloseButton={false} className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-[10px] border border-border bg-background p-6 sm:p-8">
+          <DialogTitle className="sr-only">Upgrade paket</DialogTitle>
+          <DialogDescription className="sr-only">
+            Pilih paket untuk membuka fitur yang diperlukan.
+          </DialogDescription>
+          <DialogClose render={<Button size="icon-lg" className="absolute right-4 top-4" aria-label="Tutup pemberitahuan upgrade" />}>
+            <X className="size-4" aria-hidden="true" />
+          </DialogClose>
+          <DashboardAccessNotice
+            label="Upgrade paket"
+            title={upgradeType === "guestbook" ? "Kelola tamu dengan lebih lengkap" : "Publikasikan undanganmu"}
+            description={upgradeType === "guestbook"
+              ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
+              : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
+          >
+            <Button asChild size="lg">
               <Link href="/packages" onClick={() => setUpgradeOpen(false)}>Lihat paket</Link>
             </Button>
-          </div>
-        </div>
-      )}
+          </DashboardAccessNotice>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

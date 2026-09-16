@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { CheckCircle2, Gift, LockKeyhole, QrCode, ScanLine, Users } from "lucide-react";
+import { ArrowLeft, ArrowRight, CheckCircle2, Gift, QrCode, ScanLine, Users } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidGuestbook } from "@/lib/packages/access";
+import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
+import { Button } from "@/components/ui/button";
 import UsherApp from "@/components/UsherApp/UsherApp";
 
 type Feature = { icon: typeof ScanLine; label: string };
@@ -31,36 +33,67 @@ export default async function UsherPage() {
   if (usherActive) return <UsherApp />;
 
   return (
-    <main className="min-h-screen bg-[#faf8f5] px-5 py-10 text-[#211d1e] sm:px-8 sm:py-16">
-      <div className="mx-auto max-w-5xl">
-        <Link href="/dashboard" className="text-xs text-[#7A1C25] hover:underline">← Kembali ke Dashboard</Link>
-        <section className="mt-6 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
-          <div className="grid lg:grid-cols-[1.05fr_.95fr]">
-            <div className="p-7 sm:p-10">
-              <div className="inline-flex items-center gap-2 rounded-full bg-[#E60087]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#E60087]"><LockKeyhole className="h-3.5 w-3.5" /> Add-on belum aktif</div>
-              <h1 className="mt-5 font-serif text-4xl sm:text-5xl">Usher App</h1>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan.</p>
-              <div className="mt-7 grid gap-3 sm:grid-cols-2">
-                {features.map(({ icon: FeatureIcon, label }) => <div key={label} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>)}
-              </div>
-              <Link href="/packages" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white hover:bg-[#c90077]">Aktifkan Guestbook Digital →</Link>
+    <div className="dc-dashboard min-h-dvh bg-background text-foreground">
+      <main>
+        <div className="mx-auto w-[min(calc(100%-3rem),1400px)] pb-16 pt-8 sm:pt-10">
+          <Link
+            href="/dashboard"
+            className="inline-flex min-h-11 items-center gap-2 text-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            <ArrowLeft className="size-4" aria-hidden="true" />
+            Kembali ke Dashboard
+          </Link>
+          <section className="mt-6 grid border-y border-border lg:grid-cols-2">
+            <div className="min-w-0 py-8 lg:pr-10">
+              <DashboardAccessNotice
+                title="Usher App"
+                heading="h1"
+                label="Add-on belum aktif"
+                description="Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan."
+              >
+                <ul className="grid gap-x-6 sm:grid-cols-2">
+                  {features.map(({ icon: FeatureIcon, label }) => (
+                    <li key={label} className="flex items-center gap-3 border-b border-border py-4 text-sm">
+                      <FeatureIcon className="size-4 shrink-0 text-primary" aria-hidden="true" />
+                      {label}
+                    </li>
+                  ))}
+                </ul>
+                <Button asChild size="lg" className="mt-6">
+                  <Link href="/packages">
+                    Aktifkan Guestbook Digital
+                    <ArrowRight className="size-4" aria-hidden="true" />
+                  </Link>
+                </Button>
+              </DashboardAccessNotice>
             </div>
-            <div className="flex min-h-[430px] items-center justify-center bg-[#fff1fa] p-8">
-              <div className="w-full max-w-sm rounded-3xl border border-black/10 bg-white p-7 shadow-xl">
-                <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#E60087] text-white"><ScanLine className="h-8 w-8" /></div>
-                <p className="mt-6 text-center text-[10px] uppercase tracking-[0.2em] text-[#E60087]">Venue access</p>
-                <h2 className="mt-2 text-center font-serif text-2xl">QR adalah tiket masuk</h2>
-                <div className="mt-6 grid grid-cols-3 gap-2"><Mini label="Scan" icon={ScanLine} /><Mini label="Verify" icon={CheckCircle2} /><Mini label="Enter" icon={Users} /></div>
-                <p className="mt-6 text-center text-[10px] leading-5 text-black/40">Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.</p>
-              </div>
+            <div className="min-w-0 border-t border-border py-8 lg:border-l lg:border-t-0 lg:pl-10">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Venue access</p>
+              <h2 className="mt-3 font-heading text-2xl leading-tight text-primary">QR adalah tiket masuk</h2>
+              <ol className="mt-6 divide-y divide-border">
+                <Step label="Scan" icon={ScanLine} description="Pindai QR resmi yang ditunjukkan tamu." />
+                <Step label="Verify" icon={CheckCircle2} description="Periksa kecocokan QR dengan daftar undangan." />
+                <Step label="Enter" icon={Users} description="Kehadiran tercatat setelah check-in berhasil." />
+              </ol>
+              <p className="mt-6 text-sm leading-6 text-muted-foreground">
+                Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.
+              </p>
             </div>
-          </div>
-        </section>
-      </div>
-    </main>
+          </section>
+        </div>
+      </main>
+    </div>
   );
 }
 
-function Mini({ label, icon: Icon }: { label: string; icon: typeof ScanLine }) {
-  return <div className="rounded-xl bg-[#fafafa] p-3 text-center"><Icon className="mx-auto h-4 w-4 text-[#E60087]" /><p className="mt-2 text-[9px] text-black/50">{label}</p></div>;
+function Step({ label, icon: Icon, description }: { label: string; icon: typeof ScanLine; description: string }) {
+  return (
+    <li className="flex gap-4 py-4">
+      <Icon className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
+      <div className="min-w-0">
+        <h3 className="font-heading text-base text-primary">{label}</h3>
+        <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p>
+      </div>
+    </li>
+  );
 }

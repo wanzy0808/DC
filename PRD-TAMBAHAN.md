@@ -260,3 +260,31 @@ Commits:
 - `5a97657b7f089fc9777eb886bf77015a805313c5` — remove design overrides
 
 Validation: build/CI belum diverifikasi pada saat pencatatan ini. Langkah berikutnya adalah menjalankan build/CI dan audit halaman/component dashboard satu per satu untuk menemukan visual yang masih menyimpang dari canonical system.
+
+## 2026-09-16 - Dashboard access notice consistency
+
+- Kelanjutan standardisasi dashboard setelah `PRD-2.md`: halaman Usher terkunci, `FeatureGate`, dan dialog upgrade sekarang berbagi `DashboardAccessNotice` untuk heading, metadata, ikon, deskripsi, dan divider yang konsisten.
+- Surface menggunakan semantic background/foreground/border, heading Rose, font Cinzel/Fauna One/DM Mono, dan CTA melalui `components/ui/button.tsx`. Tidak ada primitive button baru atau override warna button per halaman.
+- `/dashboard/usher` saat paket belum aktif memakai layout responsif dua kolom dengan daftar fitur dan alur Scan/Verify/Enter. Palette magenta/beige dan nested cards lama dihapus.
+- `FeatureGate` memakai overlay grid yang dapat tumbuh mengikuti konten, serta `inert` pada preview terkunci agar aksi tersembunyi tidak bisa difokuskan lewat keyboard.
+- Dialog upgrade memakai primitive Dialog existing untuk fokus modal dan dismissal keyboard. `DashboardFeatureGuard` belum diimpor oleh route aktif pada snapshot ini; komponen diselaraskan tanpa memasangnya atau mengubah aturan entitlement berbasis event yang sudah ada.
+- Server authentication, paid Guestbook check, route tujuan, API/database, pengecualian Manajemen Tamu, sidebar, Pintu, dan rose petals dipertahankan. UsherApp aktif belum di-redesign pada tahap ini.
+
+Affected files:
+- `components/Dashboard/DashboardAccessNotice.tsx` (new, presentation only)
+- `components/Dashboard/FeatureGate.tsx`
+- `components/Dashboard/DashboardFeatureGuard.tsx`
+- `app/dashboard/usher/page.tsx`
+
+Implementation commit: `e096747` - Unify dashboard access notices and Usher upgrade layout.
+Branch: `codex/dashboard-access-consistency`. Push terminal awal tidak tersedia; perubahan kemudian dikirim melalui koneksi GitHub sebagai draft PR untuk review. Commit implementasi di atas merujuk commit lokal; commit GitHub dapat dilihat pada PR.
+
+Validation:
+- Targeted ESLint untuk keempat file selesai dengan exit code 0; `git diff --check` bersih.
+- Isolated React bundle dan stylesheet Tailwind berhasil dikompilasi untuk pemeriksaan komponen, tanpa perubahan dependency atau production data.
+- Build aplikasi belum lolos: `next/font` gagal mengunduh Cinzel, DM Mono, dan Fauna One dari Google Fonts di environment ini.
+- `prisma generate` gagal pada schema existing: `User.auditLogs` merujuk model `AuditLog` yang belum didefinisikan (`P1012`).
+- TypeScript project belum lolos; diagnostic muncul pada file existing di luar perubahan ini, termasuk prop `button` pada EventPanel, tipe FAQ readonly, FeatureSection icon tuple, dan callback API tanpa tipe setelah Prisma Client gagal digenerate. Tidak ada diagnostic pada empat file yang diubah.
+- Visual light/dark, responsive browser, fokus keyboard, dan Escape belum terverifikasi: executable Playwright tidak tersedia dan unduhan Chromium timeout. Tidak mengklaim browser, build, atau CI PASS.
+
+Tahap berikutnya: standardisasi UsherApp aktif, lalu audit form/table/dialog dashboard lain dan jalankan visual QA dengan font asli serta database pada environment aplikasi.
