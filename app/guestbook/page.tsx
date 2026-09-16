@@ -8,15 +8,30 @@ import { guestbookReviews, guestbookFaq } from "@/data/guestbook";
 
 export default function GuestbookPage() {
   return (
-    <main className="relative z-10 min-h-screen w-full overflow-hidden px-0 pb-20 pt-24 text-[var(--foreground)]">
-      <div className="pointer-events-none fixed left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-[var(--primary)]/10 blur-[150px]" />
-      <div className="relative mx-auto w-full space-y-28">
+    <main className="relative z-10 min-h-screen w-full overflow-hidden px-0 pb-20 pt-24 text-foreground">
+      <div className="pointer-events-none fixed left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-[150px]" />
+      <div className="relative mx-auto w-[min(92vw,1400px)] space-y-28">
         <HeroSection />
         <FeatureSection />
         <ProcessSection />
-        <PackageShowcase eyebrow="Guestbook Packages" title="Pilih cara yang paling pas untuk hari-H" description="Mulai dari Guestbook Digital untuk sistem check-in dan usher, atau ambil Bundle jika Anda juga membutuhkan Undangan Digital yang siap dipublikasikan." packageKeys={["GUESTBOOK_DIGITAL", "INVITATION_GUESTBOOK"]} note="Paket Guestbook dapat digunakan tanpa membeli Undangan Digital. Bundle menggabungkan keduanya dalam satu paket." />
-        <ReviewsGrid eyebrow="Client Stories" title="Yang paling terasa adalah hari-H yang lebih tenang" description="Pengalaman pasangan setelah memakai sistem guestbook dan alur penerimaan tamu DC Wedding." reviews={guestbookReviews} />
-        <FaqSection title="Pertanyaan tentang Guestbook Digital" description="Aturan check-in, usher, meja, dan penggunaan paket kami jelaskan sejak awal agar tidak ada kebingungan saat hari-H." items={guestbookFaq} />
+        <PackageShowcase
+          eyebrow="Guestbook Digital"
+          title="Operasional tamu yang lebih rapi saat acara berlangsung"
+          description="Guestbook Digital berdiri sebagai layanan operasional hari acara untuk QR check-in, Usher App, seating, perangkat, dan dukungan teknis di venue."
+          packageKeys={["GUESTBOOK_DIGITAL"]}
+          note="Guestbook Digital dapat digunakan untuk berbagai jenis acara. Undangan Digital Rp150.000 per event tetap diaktifkan terpisah ketika dibutuhkan."
+        />
+        <ReviewsGrid
+          eyebrow="Client Stories"
+          title="Yang paling terasa adalah hari acara yang lebih tenang"
+          description="Pengalaman pengguna setelah memakai sistem guestbook dan alur penerimaan tamu DC Organizer."
+          reviews={guestbookReviews}
+        />
+        <FaqSection
+          title="Pertanyaan tentang Guestbook Digital"
+          description="Aturan check-in, usher, meja, dan penggunaan layanan dijelaskan sejak awal agar tim venue bekerja dengan alur yang jelas."
+          items={guestbookFaq}
+        />
       </div>
     </main>
   );
