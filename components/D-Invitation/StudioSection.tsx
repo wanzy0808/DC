@@ -11,18 +11,19 @@ export default function StudioSection() {
     locale === "en"
       ? {
           eyebrow: "Design Studio",
-          title: "Start with a template. Make it completely yours.",
+          title: "Start with a template. Shape it around your event.",
           description:
-            "Add the photos you love, choose colors that feel right, tell your story, and let every detail lead your guests toward the day you have been waiting for.",
+            "Add photos, choose the right tone, write the invitation copy, and keep venue, time, RSVP, and guest-facing details together before publishing.",
           action: "Enter Design Studio",
         }
       : {
           eyebrow: "Design Studio",
-          title: "Mulai dari contoh. Jadikan sepenuhnya milik kalian.",
+          title: "Mulai dari template. Bentuk sesuai karakter acaramu.",
           description:
-            "Masukkan foto yang paling kamu suka, pilih warna yang terasa tepat, tuliskan kisah kalian, lalu biarkan setiap detail mengantarkan tamu pada hari yang sudah lama dinantikan.",
+            "Masukkan foto, pilih nuansa, tulis isi undangan, lalu rapikan venue, waktu, RSVP, dan informasi yang perlu dilihat tamu sebelum dipublikasikan.",
           action: "Masuk Studio",
         };
+
   return (
     <section className="border-y border-border/70 py-14 md:py-16">
       <div className="grid items-end gap-8 md:grid-cols-[1fr_auto] md:gap-12">
@@ -34,11 +35,15 @@ export default function StudioSection() {
           <h2 className="mt-4 font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary md:text-5xl">
             {copy.title}
           </h2>
-          <p className="mt-5 max-w-2xl text-sm leading-7 text-foreground/65 md:text-base md:leading-8">
+          <p className="mt-5 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65 md:text-base md:leading-8">
             {copy.description}
           </p>
         </div>
-        <Button asChild size="lg" className="min-w-[9rem] text-base font-[family-name:var(--font-dc-body)]">
+        <Button
+          asChild
+          size="lg"
+          className="min-w-[9rem] font-[family-name:var(--font-dc-body)] text-base"
+        >
           <Link href="/dashboard/editor">
             {copy.action}
             <ArrowUpRight className="h-4 w-4" />
