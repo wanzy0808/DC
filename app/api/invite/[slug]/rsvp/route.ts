@@ -1,13 +1,21 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher-qr";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const invitation = await prisma.invitation.findUnique({ where: { slug }, include: { payment: true } });
-    if (!invitation || !invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+    const invitation = await prisma.invitation.findUnique({
+      where: { slug },
+      include: { payment: true },
+    });
+    if (
+      !invitation ||
+      !invitation.eventConfigured ||
+      !invitation.isPublished ||
+      !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))
+    ) {
       return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
     }
 
@@ -28,10 +36,16 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
       guest = await prisma.guest.update({
         where: { id: guest.id },
-        data: { source: "RSVP", rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE", plusOnes },
+        data: {
+          source: "RSVP",
+          rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE",
+          plusOnes,
+        },
       });
     } else {
-      if (!name || !phone) return NextResponse.json({ error: "Nama dan nomor WhatsApp wajib diisi." }, { status: 400 });
+      if (!name || !phone) {
+        return NextResponse.json({ error: "Nama dan nomor WhatsApp wajib diisi." }, { status: 400 });
+      }
       guest = await prisma.guest.create({
         data: {
           invitationId: invitation.id,
