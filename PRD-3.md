@@ -56,10 +56,34 @@ Menyederhanakan tab `Rangkaian Acara` agar dashboard tidak langsung membagi user
 - Save tetap memakai `PUT /api/invitations`; tidak ada perubahan Prisma schema, entitlement, publish behavior, slug logic, atau event routing.
 - Form grouping `Detail acara` dan `Lokasi` tetap menggunakan neutral rounded surface dan separator policy terbaru.
 
+## 2026-09-16 — Seating, Roster, Usher & Beranda Final Surface Pass
+
+### Tujuan
+Menyelesaikan penyelarasan visual dashboard utama agar `Manajemen Tamu`, `Usher`, dan `Beranda` memakai bahasa surface yang sama dengan RSVP, Undangan Digital, dan Rangkaian Acara: panel fungsional yang cepat dipindai, border tipis, radius kecil, copy ringkas, dan divider horizontal minimum.
+
+### SeatingChart & Manajemen Tamu
+- `components/Dashboard/SeatingChart.tsx` tidak lagi memakai satu layout besar dengan `border-y`, sidebar divider, dan roster berbasis garis antar-item.
+- Setup meja, roster tamu, dan seating canvas sekarang menjadi tiga functional surfaces dengan neutral background, border semantic, dan radius sekitar `12px`.
+- Setup meja menampilkan jumlah meja, kursi total, serta kursi terisi dalam compact information cells; form dan endpoint pembuatan meja tetap sama.
+- Roster `Belum ditempatkan` menampilkan jumlah tamu eligible dan setiap tamu sebagai draggable rounded row dengan border ringan serta hover Rose tipis.
+- Empty state roster sekarang berada dalam neutral rounded surface, bukan sekadar teks di antara divider.
+- Seating canvas memakai rounded frame dan light neutral canvas `#FBFAFA` / dark neutral existing agar meja Rose tetap mudah terlihat tanpa menjadikan panel pink.
+- Status penyimpanan, swap confirmation, dan feedback hasil mutation menjadi compact rounded surfaces; garis bawah panjang di area canvas dihapus.
+- Drag/drop seat assignment, atomic swap, manual guest creation, seating eligibility, dan API/database flow existing tidak berubah.
+
+### Beranda & Usher
+- `app/globals.css` menambahkan final utility-card pass untuk wrapper workspace yang masih memakai primitive `Card`, termasuk `Manajemen Tamu` dan `Usher`.
+- Wrapper card sekarang memakai radius `12px`, neutral surface tipis, dan Rose-mixed border yang sama dengan panel lain.
+- Header internal `Card` yang sebelumnya memakai `border-b` panjang tidak lagi bergantung pada garis horizontal; spacing menjadi pemisah utama.
+- Greeting block pertama pada Beranda diperlakukan sebagai neutral rounded identity surface sehingga hierarchy Beranda konsisten dengan stats dan quick-action cards.
+- Grid statistik existing tetap memakai individual rounded information cells; quick access tetap menjadi rounded action controls.
+- Tidak ada perubahan API, entitlement, guest state, routing, atau dashboard data source pada pass Beranda/Usher ini.
+
 ### Affected files
 - `components/Dashboard/EventPanel.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
 - `components/Dashboard/FeatureGate.tsx`
+- `components/Dashboard/SeatingChart.tsx`
 - `app/globals.css`
 
 ### Commits
@@ -69,7 +93,9 @@ Menyederhanakan tab `Rangkaian Acara` agar dashboard tidak langsung membagi user
 - `9e7f5dc13698d93161d630055684445a54c656bd`
 - `b29e6376f623810556510c0cd32c9144b0f04cbb`
 - `7468628979c79559b42770aca67ae0a6613c9058`
+- `6eac637ad0aad2c6f53a02f26a037e89117acd60`
+- `8b1c099f9c38d04039e4fd2cc74bab18b8b41200`
 
 ### Validation
 - Build/lint/CI belum diverifikasi pada environment repository.
-- Perubahan tahap ini mempertahankan API/data flow existing. Flow Rangkaian Acara sekarang menyederhanakan presentation layer dengan satu editor aktif dan optional additional-event selector.
+- Perubahan tahap ini mempertahankan API/data flow existing dan berfokus pada visual hierarchy, compact functional surfaces, roster readability, serta konsistensi dashboard.
