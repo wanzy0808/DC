@@ -1,5 +1,17 @@
 ALTER TABLE "Invitation"
-ADD COLUMN "waBlastQuota" INTEGER NOT NULL DEFAULT 100;
+ADD COLUMN "waBlastQuota" INTEGER NOT NULL DEFAULT 100,
+ADD COLUMN "eventConfigured" BOOLEAN NOT NULL DEFAULT false;
+
+UPDATE "Invitation"
+SET "eventConfigured" = true
+WHERE "venue" <> ''
+   OR "address" IS NOT NULL
+   OR "ceremonyTime" IS NOT NULL
+   OR "receptionTime" IS NOT NULL
+   OR "description" IS NOT NULL
+   OR "eventNotes" IS NOT NULL
+   OR "templateKey" <> ''
+   OR "isPublished" = true;
 
 ALTER TABLE "Guest"
 ADD COLUMN "waBlastSelected" BOOLEAN NOT NULL DEFAULT false,
