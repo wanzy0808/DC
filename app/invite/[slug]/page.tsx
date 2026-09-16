@@ -1,12 +1,18 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitation-password";
-import PublicInvitation, { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import PublicInvitation, {
+  InvitationLockedState,
+} from "@/components/PublicInvitation/PublicInvitation";
 import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
-export default async function PublicInvitationPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function PublicInvitationPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const invitation = await prisma.invitation.findUnique({
     where: { slug },
@@ -17,7 +23,7 @@ export default async function PublicInvitationPage({ params }: { params: Promise
   if (
     !invitation.eventConfigured ||
     !invitation.isPublished ||
-    !(await hasAccountDigitalInvitation(invitation.ownerId, invitation.payment))
+    !hasPaidDigitalInvitation(invitation.payment)
   ) {
     return <InvitationLockedState />;
   }
@@ -30,14 +36,12 @@ export default async function PublicInvitationPage({ params }: { params: Promise
     data: { viewCount: { increment: 1 } },
   });
 
-  const eventKind = invitation.type === "ADAT_AKAD" ? "special" : "wedding";
   const templateKey = invitation.templateKey.split("::")[0];
 
-  // The existing Eternal Blossom slot is used for the supplied invitation design.
-  // No new customer-facing template name/key is introduced.
+  // The existing Eternal Blossom key remains the compatibility slot for this design.
   if (templateKey === "eternal-blossom") {
-    return <FigmaClassicTemplate invitation={invitation} eventKind={eventKind} />;
+    return <FigmaClassicTemplate invitation={invitation} />;
   }
 
-  return <PublicInvitation invitation={invitation} eventKind={eventKind} />;
+  return <PublicInvitation invitation={invitation} />;
 }
