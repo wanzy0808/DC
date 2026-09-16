@@ -37,6 +37,8 @@ export default function InvitationEditorPage() {
         .dc-invitation-editor section > div.border-b,
         .dc-invitation-editor section > div > aside:first-child,
         .dc-invitation-editor section > div > aside:nth-child(2) { background: var(--background) !important; border-color: var(--border) !important; color: var(--foreground) !important; }
+        .dc-invitation-editor section > div.border-b > div { width: fit-content; max-width: 100%; overflow-x: auto; }
+        .dc-invitation-editor section > div.border-b > div > button { flex: 0 0 auto; }
         .dc-invitation-editor section > div > main { background: color-mix(in oklab, var(--background) 92%, var(--primary) 8%) !important; }
         .dc-invitation-editor section > div > main > div:first-child { width: 360px; max-width: 100%; border: 2px solid #111111; border-radius: 28px; padding: 0; background: #ffffff; box-shadow: 0 18px 50px rgb(0 0 0 / 18%); overflow: hidden; }
         .dark .dc-invitation-editor section > div > main > div:first-child { border-color: #ffffff; background: #111113; box-shadow: 0 18px 50px rgb(0 0 0 / 45%); }
