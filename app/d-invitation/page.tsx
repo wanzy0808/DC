@@ -8,31 +8,45 @@ import CtaStudioSection from "@/components/D-Invitation/StudioSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
 import FaqSection from "@/components/Marketing/FaqSection";
 import ReviewsGrid from "@/components/D-Invitation/ReviewsSection";
-import { digitalInvitationReviews, digitalInvitationFaq } from "@/data/digital-invitation";
+import {
+  digitalInvitationFaq,
+  digitalInvitationReviews,
+} from "@/data/digital-invitation";
 
 export default function DigitalInvitationPage() {
   const { locale } = useLanguage();
-  const copy = locale === "en" ? {
-    packageEyebrow: "Invitation Package",
-    packageTitle: "One complete Digital Invitation package",
-    packageDescription: "Everything you need to create, publish, and share a beautiful wedding invitation in one simple package.",
-    packageNote: "Prepare your template first. Publishing and personal asset uploads follow the active Digital Invitation package.",
-    reviewEyebrow: "Client Stories",
-    reviewTitle: "Because a good invitation does more than look beautiful",
-    reviewDescription: "It makes sharing the good news easier, keeps RSVPs organized, and makes the journey feel a little lighter.",
-    faqTitle: "Frequently asked",
-    faqDescription: "About templates, RSVP, personal assets, publishing, and Digital Invitation packages.",
-  } : {
-    packageEyebrow: "Paket Undangan",
-    packageTitle: "Satu paket Undangan Digital yang lengkap",
-    packageDescription: "Semua yang kamu butuhkan untuk membuat, mempublikasikan, dan membagikan undangan pernikahan dalam satu paket sederhana.",
-    packageNote: "Template bisa dipersiapkan lebih dulu. Publikasi dan upload aset pribadi mengikuti paket Digital Invitation yang aktif.",
-    reviewEyebrow: "Cerita Klien",
-    reviewTitle: "Karena undangan yang baik bukan hanya indah dilihat",
-    reviewDescription: "Ia membuat kabar bahagia lebih mudah dibagikan, RSVP lebih rapi, dan persiapan terasa sedikit lebih ringan.",
-    faqTitle: "Yang sering ditanyakan",
-    faqDescription: "Tentang template, RSVP, aset pribadi, publikasi, dan pilihan paket Digital Invitation.",
-  };
+  const copy =
+    locale === "en"
+      ? {
+          packageEyebrow: "Per-event Invitation",
+          packageTitle: "One event. One invitation. One complete guest flow.",
+          packageDescription:
+            "Each purchase activates one event with one invitation template, publishing, RSVP, and guest management. Create as many events as you need and activate them separately.",
+          packageNote:
+            "WA Blast is not included. Add 50 WA Blast credits to a selected active event for Rp 75,000 whenever needed.",
+          reviewEyebrow: "Client Stories",
+          reviewTitle: "Built for more than weddings",
+          reviewDescription:
+            "From weddings and anniversaries to baby showers and other celebrations, each event keeps its own invitation, RSVP, and guest data.",
+          faqTitle: "Frequently asked",
+          faqDescription:
+            "About per-event pricing, templates, RSVP, guest management, publishing, and the WA Blast add-on.",
+        }
+      : {
+          packageEyebrow: "Undangan per Acara",
+          packageTitle: "Satu acara. Satu undangan. Satu alur tamu yang lengkap.",
+          packageDescription:
+            "Setiap pembelian mengaktifkan satu acara dengan satu template undangan, publikasi, RSVP, dan manajemen tamu. Buat acara sebanyak yang dibutuhkan lalu aktifkan satu per satu.",
+          packageNote:
+            "WA Blast tidak termasuk. Tambahkan 50 kuota WA Blast ke acara aktif yang dipilih seharga Rp75.000 kapan pun dibutuhkan.",
+          reviewEyebrow: "Cerita Klien",
+          reviewTitle: "Dibuat untuk lebih dari sekadar wedding",
+          reviewDescription:
+            "Wedding, anniversary, baby shower, sampai perayaan lainnya dapat memiliki undangan, RSVP, dan data tamu masing-masing.",
+          faqTitle: "Yang sering ditanyakan",
+          faqDescription:
+            "Tentang harga per acara, template, RSVP, manajemen tamu, publikasi, dan add-on WA Blast.",
+        };
 
   return (
     <main className="relative z-10 min-h-screen w-full overflow-x-clip bg-transparent text-foreground">
