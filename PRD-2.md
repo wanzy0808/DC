@@ -58,9 +58,17 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Empty state, saving state, swap confirmation, dan feedback message mengikuti typography dan border hierarchy dashboard.
 - Drag/drop, pembuatan meja, penambahan tamu manual, seat assignment, atomic swap endpoint, eligibility roster, dan database flow tidak diubah.
 
+### 2026-09-16 — Dashboard Button Color Consistency
+- `components/ui/button.tsx` tetap menjadi satu-satunya visual source of truth untuk application action button.
+- Seluruh canonical button memakai Rose `#C07A84` sebagai fill, Deep Rose `#A65E69` saat hover, dan treatment border/shadow yang sama tanpa visual variant warna per halaman.
+- Disabled state tidak lagi menurunkan opacity menjadi pink pucat. Warna fill dan text tetap sama dengan button aktif agar action row pada Undangan Digital tidak terlihat seperti memakai beberapa palette berbeda; disabled state dibedakan lewat cursor dan hilangnya raised shadow/hover movement.
+- Typography button dipastikan memakai Fauna One agar label action konsisten dengan UI dashboard lainnya.
+- Perubahan ini berlaku global untuk seluruh komponen yang menggunakan canonical `Button`, termasuk aksi pada Undangan Digital, RSVP, Event Panel, Seating Chart, modal, dan workspace dashboard lain.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
+- `components/ui/button.tsx`
 - `components/Dashboard/EventPanel.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
 - `components/Dashboard/RsvpAnalyticsPanel.tsx`
@@ -79,7 +87,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `b4b7d54a29abcbce3693d795e1adebd5dcf6ff60`
 - `c38d3f92439ba8844f63d7766f9135648c02022f`
 - `152dbbf99517a3ec449dfb116f6394792739bdb4`
+- `190de1798fc0abbef46b1d980cc1b051d9f2014d`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel, RSVP, Digital Invitation, dan Seating Chart changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
+- Event Panel, RSVP, Digital Invitation, Seating Chart, dan button consistency changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
