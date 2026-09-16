@@ -176,12 +176,12 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main { min-width: 0; min-height: calc(100vh - 72px); background: var(--background); color: var(--foreground); }
 .dc-dashboard main > * { min-width: 0; animation: dcPageIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-/* Workspace content intentionally uses the available right pane instead of an A4-like max-width. */
+/* Dashboard content shares one readable width across every workspace page. */
 .dc-dashboard header > div.mx-auto,
 .dc-dashboard main > section > div.mx-auto,
 .dc-dashboard main > div.mx-auto {
-  width: calc(100% - 3rem) !important;
-  max-width: none !important;
+  width: min(calc(100% - 3rem), 1400px) !important;
+  max-width: 1400px !important;
   margin-left: auto !important;
   margin-right: auto !important;
   padding-left: 0 !important;
