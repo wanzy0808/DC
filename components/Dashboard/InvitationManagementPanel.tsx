@@ -257,12 +257,12 @@ export default function InvitationManagementPanel({ paid }: Props) {
 
   return (
     <div className="mx-auto min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
             {locale === "en" ? "Invitation pages" : "Halaman undangan"}
           </h2>
-          <span className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+          <span className="rounded-lg bg-foreground/[0.035] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
             {loading ? copy.loading : copy.ready}
           </span>
         </div>
@@ -276,7 +276,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
 
       {message && (
         <div
-          className="flex min-w-0 items-center gap-2 border-b border-border px-1 py-3 text-xs text-muted-foreground"
+          className="mt-3 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
           role="status"
         >
           <Check className="h-4 w-4 shrink-0 text-primary" />
@@ -284,7 +284,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
         </div>
       )}
 
-      <section className="grid border-b border-border sm:grid-cols-3">
+      <section className="mt-4 grid gap-3 sm:grid-cols-3">
         <SummaryItem
           label={copy.pagesPublished}
           value={loading ? "—" : `${publishedCount} / 2`}
@@ -299,7 +299,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
         />
       </section>
 
-      <section className="mt-6 grid min-w-0 border-y border-border lg:grid-cols-2">
+      <section className="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
         <InvitationCard
           invitation={invitations.WEDDING}
           publicUrl={weddingUrl}
@@ -324,10 +324,10 @@ export default function InvitationManagementPanel({ paid }: Props) {
         />
       </section>
 
-      <section className="mt-8 border-t border-border pt-5">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+      <section className="mt-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center gap-3">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-border text-primary">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
               <LockKeyhole className="h-4 w-4" />
             </div>
             <div className="min-w-0">
@@ -380,7 +380,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
 
 function SummaryItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 sm:first:pl-0">
+    <div className="min-w-0 rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
       <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </p>
@@ -420,7 +420,7 @@ function InvitationCard({
   const editHref = `/dashboard/editor?type=${special ? "ADAT_AKAD" : "WEDDING"}`;
 
   return (
-    <article className="min-w-0 py-5 lg:px-6 lg:first:border-r lg:first:border-border lg:first:pl-0 lg:last:pr-0">
+    <article className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
       <div className="flex min-w-0 items-start justify-between gap-4">
         <div className="min-w-0">
           <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -430,12 +430,12 @@ function InvitationCard({
             {title}
           </h3>
         </div>
-        <span className="shrink-0 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-primary">
+        <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-primary">
           {invitation.isPublished ? copy.published : copy.draft}
         </span>
       </div>
 
-      <div className="mt-4 border-y border-border py-3">
+      <div className="mt-4 rounded-lg border border-border/70 bg-background/80 p-3">
         <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
           {copy.publicUrl}
         </p>
