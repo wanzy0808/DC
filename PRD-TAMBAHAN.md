@@ -233,3 +233,30 @@ Commits:
 - `daf97ecbc9776075b4d40ed96c489ad65c615b98`
 
 Validation: belum diverifikasi dengan build/CI. Template sudah terhubung ke database invitation dan payment/password gate existing; visual/build verification masih perlu dilakukan pada environment aplikasi.
+
+## 2026-09-16 — Dashboard Theme Consolidation & CSS Cleanup
+
+- `app/globals.css` sekarang menjadi single source of truth untuk theme dan dashboard styling.
+- Styling yang masih diperlukan dari `dashboard-theme.css` dan `design-overrides.css` dipindahkan/dirapikan ke `globals.css`; conflicting visual overrides tidak dipertahankan.
+- Brand theme legacy dipindahkan ke semantic theme tokens; dark-mode primary tetap canonical Rose `#C07A84` dan button foreground mengikuti aturan canonical button.
+- `app/layout.tsx` tidak lagi mengimpor stylesheet theme tambahan.
+- `app/dashboard-theme.css`, `app/brand-theme.css`, dan `app/design-overrides.css` dihapus karena styling-nya sudah dikonsolidasikan.
+- Gradient/radial dashboard background dan gradient button layer tidak diperkenalkan kembali. Dashboard memakai canvas netral dengan Rose hanya sebagai accent.
+- Dashboard shell, form, table, dialog, WhatsApp help button, dan Invitation Studio diarahkan ke token semantic yang sama agar visual antar halaman lebih konsisten.
+- Google Fonts CSS import lama di `globals.css` dihapus karena typography aplikasi sudah menggunakan `next/font/google` pada `app/layout.tsx` sesuai engineering rules.
+
+Affected files:
+- app/globals.css
+- app/layout.tsx
+- app/dashboard-theme.css (deleted)
+- app/brand-theme.css (deleted)
+- app/design-overrides.css (deleted)
+
+Commits:
+- `964934a9a3eb1dc23986e7f0479e6d8e088e078d` — globals/theme consolidation
+- `d0de6710783667aa9a42b3257433510e00c3fd06` — remove theme imports
+- `209b219997e8605f1cf781c7395249684887547e` — remove dashboard theme
+- `a84ebc87f3e7942f50494277baad01762f578663` — remove brand theme
+- `5a97657b7f089fc9777eb886bf77015a805313c5` — remove design overrides
+
+Validation: build/CI belum diverifikasi pada saat pencatatan ini. Langkah berikutnya adalah menjalankan build/CI dan audit halaman/component dashboard satu per satu untuk menemukan visual yang masih menyimpang dari canonical system.
