@@ -3,7 +3,23 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CalendarDays, ChevronDown, CircleHelp, Home, LockKeyhole, LogOut, Mail, Menu, MessageCircle, MessageSquareHeart, Plus, QrCode, Receipt, Users, UserRound, X } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  CircleHelp,
+  Home,
+  LogOut,
+  Mail,
+  Menu,
+  MessageCircle,
+  MessageSquareHeart,
+  Plus,
+  QrCode,
+  Receipt,
+  Users,
+  UserRound,
+  X,
+} from "lucide-react";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
 import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
@@ -13,59 +29,662 @@ import SeatingChart from "@/components/Dashboard/SeatingChart";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type Context = { profile:{displayName:string;email:string}; wedding:{invitationId:string|null;groomName:string;brideName:string;title:string;venue:string;address:string|null;mapUrl:string|null;timezone:string;eventDate:string;ceremonyTime:string|null;receptionTime:string|null;description:string|null}; package:{key:string;status:string}; overview:{invitationsCreated:number;invitationsLimit:number;totalRsvp:number;totalGuests:number;invitationsShared:number;invitationPublished:boolean}; entitlements:{hasDigitalInvitation:boolean;hasGuestbook:boolean;canPublishInvitation:boolean;canUploadInvitationAssets:boolean;canUseGuestPlacement:boolean;canUseUsherApp:boolean} };
-type Table = { id:string; name:string; shape:string; capacity:number; _count?:{guests:number} };
-type Guest = { id:string; name:string; phone:string|null; rsvpStatus:string; plusOnes:number; checkedIn?:boolean; table?:{id:string;name:string;shape:string;capacity:number}|null; tableId?:string|null; seatNumber?:number|null };
-type Tab = "overview"|"events"|"invitation"|"rsvp"|"placement"|"usher";
+type Context = {
+  profile: { displayName: string; email: string };
+  wedding: {
+    invitationId: string | null;
+    groomName: string;
+    brideName: string;
+    title: string;
+    venue: string;
+    address: string | null;
+    mapUrl: string | null;
+    timezone: string;
+    eventDate: string;
+    ceremonyTime: string | null;
+    receptionTime: string | null;
+    description: string | null;
+  };
+  package: { key: string; status: string };
+  overview: {
+    invitationsCreated: number;
+    invitationsLimit: number;
+    totalRsvp: number;
+    totalGuests: number;
+    invitationsShared: number;
+    invitationPublished: boolean;
+  };
+  entitlements: {
+    hasDigitalInvitation: boolean;
+    hasGuestbook: boolean;
+    canPublishInvitation: boolean;
+    canUploadInvitationAssets: boolean;
+    canUseGuestPlacement: boolean;
+    canUseUsherApp: boolean;
+  };
+};
+type Table = {
+  id: string;
+  name: string;
+  shape: string;
+  capacity: number;
+  _count?: { guests: number };
+};
+type Guest = {
+  id: string;
+  name: string;
+  phone: string | null;
+  rsvpStatus: string;
+  plusOnes: number;
+  checkedIn?: boolean;
+  table?: { id: string; name: string; shape: string; capacity: number } | null;
+  tableId?: string | null;
+  seatNumber?: number | null;
+};
+type Tab = "overview" | "events" | "invitation" | "rsvp" | "placement" | "usher";
 
-const nav=[
- {id:"overview" as Tab,label:"Beranda",icon:Home},
- {id:"events" as Tab,label:"Rangkaian Acara",icon:CalendarDays},
- {id:"invitation" as Tab,label:"Undangan Digital",icon:Mail},
- {id:"rsvp" as Tab,label:"RSVP",icon:MessageSquareHeart},
- {id:"placement" as Tab,label:"Manajemen Tamu",icon:Users,gate:"digital"},
- {id:"usher" as Tab,label:"Usher App",icon:QrCode,gate:"guestbook"},
+const nav = [
+  { id: "overview" as Tab, label: "Beranda", icon: Home },
+  { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
+  { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
+  { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
+  { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
+  { id: "usher" as Tab, label: "Usher App", icon: QrCode },
 ];
 
-function Card({children,className=""}:{children:React.ReactNode;className?:string}){return <section className={`border border-border bg-background ${className}`}>{children}</section>}
-function GateLabel(){return <span className="ml-auto flex items-center gap-1 font-[family-name:var(--font-dm-mono)] text-[9px] font-medium uppercase tracking-[0.12em] text-primary"><LockKeyhole className="h-3 w-3"/>Upgrade</span>}
-
-const tabMeta:Record<Tab,{eyebrow:string;title:string;description:string}>={
- overview:{eyebrow:"Workspace / 01",title:"Beranda",description:"Satu ruang untuk mengatur seluruh perjalanan pernikahan kalian."},
- events:{eyebrow:"Workspace / 02",title:"Rangkaian Acara",description:"Susun detail prosesi dan waktu acara dari data undangan yang sama."},
- invitation:{eyebrow:"Workspace / 03",title:"Undangan Digital",description:"Bangun pengalaman undangan, periksa detailnya, lalu publikasikan saat siap."},
- rsvp:{eyebrow:"Workspace / 04",title:"RSVP",description:"Pantau respons tamu dan kesiapan daftar hadir dari satu tempat."},
- placement:{eyebrow:"Workspace / 05",title:"Manajemen Tamu",description:"Kelola tamu, meja, dan penempatan kursi tanpa meninggalkan workspace."},
- usher:{eyebrow:"Workspace / 06",title:"Usher App",description:"Siapkan operasional check-in untuk hari acara."},
+const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
+  overview: { eyebrow: "Workspace / 01", title: "Beranda" },
+  events: { eyebrow: "Workspace / 02", title: "Rangkaian Acara" },
+  invitation: { eyebrow: "Workspace / 03", title: "Undangan Digital" },
+  rsvp: { eyebrow: "Workspace / 04", title: "RSVP" },
+  placement: { eyebrow: "Workspace / 05", title: "Manajemen Tamu" },
+  usher: { eyebrow: "Workspace / 06", title: "Usher App" },
 };
 
-export default function DashboardPage(){
- const router=useRouter(); const {isDarkMode}=useTheme(); const [tab,setTab]=useState<Tab>("overview"); const [ctx,setCtx]=useState<Context|null>(null); const [guests,setGuests]=useState<Guest[]>([]); const [tables,setTables]=useState<Table[]>([]); const [slug,setSlug]=useState(""); const [mobileOpen,setMobileOpen]=useState(false); const [profileMenu,setProfileMenu]=useState(false); const [onboarding,setOnboarding]=useState(false); const [saving,setSaving]=useState(false); const [onboardingError,setOnboardingError]=useState(""); const [groom,setGroom]=useState(""); const [bride,setBride]=useState(""); const [nickname,setNickname]=useState("");
- const load=async()=>{const ir=await fetch("/api/invitations?type=WEDDING",{cache:"no-store"}); const [cr,gr]=await Promise.all([fetch("/api/dashboard/context",{cache:"no-store"}),fetch("/api/guests",{cache:"no-store"})]); if(cr.ok){const next=await cr.json() as Context;setCtx(next);setGroom(next.wedding?.groomName||"");setBride(next.wedding?.brideName||"");setNickname(next.profile.displayName||"");if(!next.wedding?.groomName||!next.wedding?.brideName||!next.profile.displayName)setOnboarding(true);else setOnboarding(false)} if(gr.ok){const data=await gr.json();setGuests(data.guests??[]);setTables(data.tables??[])} if(ir.ok)setSlug((await ir.json()).invitation?.slug??"")};
- useEffect(()=>{load().catch(()=>undefined)},[]);
- const canDigital=ctx?.entitlements.hasDigitalInvitation??false; const canGuestbook=ctx?.entitlements.hasGuestbook??false; const accent="text-primary"; const button=""; const surface=isDarkMode?"bg-[#0B0B0C]":"bg-background"; const savedProfileName=ctx?.profile.displayName?.trim(); const profileLabel=savedProfileName&&savedProfileName.toLowerCase()!=="dashboard"?savedProfileName:ctx?.profile.email?.split("@")[0]||"Akun";
- async function saveOnboarding(){const groomName=groom.trim(),brideName=bride.trim(),displayName=nickname.trim();if(!groomName||!brideName||!displayName){setOnboardingError("Nama pasangan dan nama panggilan wajib diisi.");return}setSaving(true);setOnboardingError("");try{const invitationResponse=await fetch("/api/invitations",{method:"PUT",headers:{"Content-Type":"application/json"},cache:"no-store",body:JSON.stringify({type:"WEDDING",groomName,brideName})});if(!invitationResponse.ok){const data=await invitationResponse.json().catch(()=>null);throw new Error(data?.error||"Data pasangan belum tersimpan.")}const profileResponse=await fetch("/api/profile",{method:"PATCH",headers:{"Content-Type":"application/json"},cache:"no-store",body:JSON.stringify({firstName:displayName})});if(!profileResponse.ok){const data=await profileResponse.json().catch(()=>null);throw new Error(data?.error||"Nama panggilan belum tersimpan.")}setOnboarding(false);setCtx(current=>current?{...current,profile:{...current.profile,displayName},wedding:{...current.wedding,groomName,brideName,title:current.wedding.title||`${groomName} & ${brideName}`}}:current);setGroom(groomName);setBride(brideName);setNickname(displayName);await load()}catch(error){setOnboardingError(error instanceof Error?error.message:"Data belum tersimpan. Coba lagi.");setOnboarding(true)}finally{setSaving(false)}}
- async function logout(){await fetch("/api/auth/logout",{method:"POST"});router.push("/login")}; function go(id:Tab){setTab(id);setMobileOpen(false);setProfileMenu(false)}
- const meta=tabMeta[tab];
- return <div className={`dc-dashboard min-h-screen ${surface} text-foreground font-[family-name:var(--font-fauna)]`}>
-  <div className="flex min-h-screen">
-   <aside className={`${mobileOpen?"fixed inset-y-0 left-0 z-50 flex":"hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}>
-    <nav className="flex-1 space-y-2 bg-primary/[0.045] p-3 dark:bg-primary/[0.07]"><p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">Workspace</p>{nav.map(item=>{const Icon=item.icon;const locked=(item.gate==="digital"&&!canDigital)||(item.gate==="guestbook"&&!canGuestbook);return <Button key={item.id} type="button" aria-current={tab===item.id?"page":undefined} onClick={()=>go(item.id)} className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-cinzel)] text-[14px] font-semibold shadow-none ${tab===item.id?"border-primary/15 bg-primary/10 text-primary":"text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"}`}><Icon className="h-4 w-4"/><span>{item.label}</span>{locked&&<GateLabel/>}</Button>})}</nav>
-   </aside>
-   <div className="min-w-0 flex-1">
-    <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl"><div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3 px-1"><Button type="button" size="icon" className="lg:hidden" onClick={()=>setMobileOpen(v=>!v)} aria-label="Buka menu">{mobileOpen?<X className="h-5 w-5"/>:<Menu className="h-5 w-5"/>}</Button><Link href="/" className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"><span className="text-primary">DC Organizer</span></Link><span className="hidden h-5 w-px bg-border sm:block"/><span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">{meta.title}</span><div className="relative ml-auto"><Button type="button" onClick={()=>setProfileMenu(v=>!v)} className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary" aria-label={`Menu akun ${profileLabel}`}><UserRound className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.8}/><span className="max-w-36 truncate">{profileLabel}</span><ChevronDown className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu?"rotate-180":""}`}/></Button>{profileMenu&&<div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40"><div className="px-2 pb-3 pt-1"><p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">{profileLabel}</p><p className="mt-0.5 truncate font-[family-name:var(--font-fauna)] text-[10px] text-muted-foreground">{ctx?.profile.email||""}</p></div><div className="space-y-1.5"><MenuItem icon={Receipt} text="Transaksi" onClick={()=>router.push("/transactions")}/><MenuItem icon={Plus} text="Tambah paket" onClick={()=>router.push("/packages")}/><MenuItem icon={CircleHelp} text="FAQ" onClick={()=>router.push("/faq")}/><MenuItem icon={CircleHelp} text="Bantuan" onClick={()=>setProfileMenu(false)}/><div className="my-2 border-t border-border"/><MenuItem icon={LogOut} text="Keluar" danger onClick={logout}/></div></div>}</div></div></header>
-    <main className="min-w-0 overflow-x-clip">{tab!=="overview"&&<section className="border-b border-border bg-background"><div className="mx-auto grid w-[min(92vw,1400px)] gap-6 px-1 py-8 sm:py-10 lg:grid-cols-[1fr_auto] lg:items-end"><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{meta.eyebrow}</p><h1 className="mt-3 font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">{meta.title}</h1><p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{meta.description}</p></div><div className="hidden border-l border-border pl-7 lg:block"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Wedding</p><p className="mt-1 text-sm">{ctx?.wedding?.groomName&&ctx?.wedding?.brideName?`${ctx.wedding.groomName} & ${ctx.wedding.brideName}`:"Menyiapkan undangan"}</p></div></div></section>}{tab==="overview"&&<WorkspaceOverview ctx={ctx} onGo={go} onUpgrade={()=>router.push("/packages")} accent={accent} button={button}/>} {tab==="events"&&<EventPanelEditor onSaved={load} accent={accent} button={button}/>} {tab==="invitation"&&<InvitationManagementPanel accent={accent} button={button} paid={canDigital}/>} {tab==="rsvp"&&<RsvpAnalyticsPanel guests={guests} slug={slug} accent={accent}/>} {tab==="placement"&&<FeatureGate allowed={canDigital} title="Manajemen Tamu" description="Manajemen tamu, nomor meja, dan seat assignment tersedia pada paket Digital Invitation. Guest Book mewarisi akses ini." onUpgrade={()=>router.push("/packages")}><PlacementPanel guests={guests} tables={tables} accent={accent} button={button} onRefresh={load}/></FeatureGate>} {tab==="usher"&&<FeatureGate allowed={canGuestbook} title="Usher App" description="Scan Digital Ticket pada hari acara, verifikasi pax, meja, lalu check-in." onUpgrade={()=>router.push("/packages")}><UsherPanel guests={guests} accent={accent} button={button} onRefresh={load}/></FeatureGate>}</main>
-   </div>
-  </div>
-  <Button asChild size="icon-lg" className="fixed bottom-5 right-5 z-50 rounded-full"><a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" aria-label="Bantuan WhatsApp"><MessageCircle className="h-6 w-6" strokeWidth={2}/></a></Button>
-  {onboarding&&<div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4"><div className="w-full max-w-lg border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">Hi, sebelum masuk</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl">Mari kita berkenalan</h2><p className="mt-2 font-[family-name:var(--font-fauna)] text-sm text-muted-foreground">Data ini dipakai untuk judul undangan dan sapaan di dashboard.</p><div className="mt-6 space-y-4"><Field label="Nama pasangan pria" value={groom} onChange={setGroom} placeholder="Contoh: Rio"/><Field label="Nama pasangan wanita" value={bride} onChange={setBride} placeholder="Contoh: Lyvia"/><Field label="Nama panggilan pengisi dashboard" value={nickname} onChange={setNickname} placeholder="Contoh: Hendro"/></div>{onboardingError&&<p className="mt-4 border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">{onboardingError}</p>}<Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">{saving?"Menyimpan...":"Masuk ke Workspace"}</Button></div></div>}
- </div>
+function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  return <section className={`border border-border bg-background ${className}`}>{children}</section>;
 }
 
-function MenuItem({icon:Icon,text,onClick,danger=false}:{icon:any;text:string;onClick:()=>void;danger?:boolean}){return <Button type="button" onClick={onClick} className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left font-[family-name:var(--font-fauna)] text-xs shadow-none ${danger?"text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300":"text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"}`}><Icon className="h-4 w-4"/>{text}</Button>}
-function Field({label,value,onChange,placeholder}:{label:string;value:string;onChange:(v:string)=>void;placeholder:string}){return <label className="block"><span className="mb-1.5 block font-[family-name:var(--font-fauna)] text-xs font-medium">{label}</span><Input value={value} onChange={e=>onChange(e.target.value)} placeholder={placeholder} className="border-border bg-transparent font-[family-name:var(--font-fauna)]"/></label>}
-function WorkspaceOverview({ctx,onGo,onUpgrade,accent,button}:{ctx:Context|null;onGo:(id:Tab)=>void;onUpgrade:()=>void;accent:string;button:string}){const overview=ctx?.overview; const packageKey=ctx?.package.key; const packageStatus=ctx?.package.status; const packageLabel=packageStatus==="PAID"?(packageKey==="INVITATION_GUESTBOOK"?"Digital Invitation + Guestbook":packageKey==="GUESTBOOK_DIGITAL"?"Guestbook Digital":"Digital Invitation"):"Belum ada paket aktif";return <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-8 sm:pt-10"><section className="border-y border-border bg-background py-9 sm:py-12"><div className="grid gap-7 lg:grid-cols-[minmax(0,1.2fr)_minmax(18rem,.8fr)] lg:items-end"><div className="min-w-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Workspace / 01</p><h1 className="mt-3 max-w-4xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">Selamat datang, {ctx?.profile.displayName||"di workspace kamu"}.</h1><p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">Kelola rangkaian acara, undangan digital, RSVP, tamu, dan operasional hari acara dari satu workspace.</p></div><div className="border-t border-border pt-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Wedding</p><p className="mt-1 font-[family-name:var(--font-cinzel)] text-xl font-semibold">{ctx?.wedding?.groomName&&ctx?.wedding?.brideName?`${ctx.wedding.groomName} & ${ctx.wedding.brideName}`:"Belum diatur"}</p><p className="mt-1 text-xs text-muted-foreground">{ctx?.wedding?.venue||"Lokasi belum ditentukan"}</p></div></div></section><section className="grid border-b border-border sm:grid-cols-3"><Stat label="Paket" value={packageLabel}/><Stat label="RSVP" value={String(overview?.totalRsvp??0)}/><Stat label="Total Tamu" value={String(overview?.totalGuests??0)}/></section><section className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(18rem,.85fr)]"><div className="min-w-0"><div className="mb-5 border-b border-border pb-4"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Quick access</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Atur wedding dari satu tempat.</h2></div><div className="grid gap-0 sm:grid-cols-2">{[["Rangkaian Acara","events"],["Undangan Digital","invitation"],["RSVP","rsvp"],["Manajemen Tamu","placement"]].map(([label,id])=><QuickAction key={id} label={label} onClick={()=>onGo(id as Tab)}/>)}</div></div><div className="border-t border-border pt-7 lg:border-l lg:border-t-0 lg:pl-9 lg:pt-0"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">Next step</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold">Siapkan sebelum publish.</h2><p className="mt-2 text-sm leading-6 text-muted-foreground">Workspace tetap bisa disiapkan dari draft. Publishing dan asset custom mengikuti paket Digital Invitation.</p><Button onClick={onUpgrade} size="sm" className="mt-5">Lihat Paket</Button></div></section></div>}
-function Stat({label,value}:{label:string;value:string}){return <div className="min-w-0 border-r border-border px-4 py-5 first:pl-0 last:border-r-0 sm:px-6"><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p><p className="mt-2 truncate font-[family-name:var(--font-fauna)] text-lg font-semibold text-foreground">{value}</p></div>}
-function QuickAction({label,onClick}:{label:string;onClick:()=>void}){return <Button type="button" onClick={onClick} className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left font-[family-name:var(--font-fauna)] text-sm text-foreground shadow-none hover:bg-transparent hover:text-primary sm:px-3">{label}<span className="ml-auto text-primary">→</span></Button>}
-function PlacementPanel({guests,tables,accent,button,onRefresh}:{guests:Guest[];tables:Table[];accent:string;button:string;onRefresh:()=>void}){const assigned=guests.filter(g=>g.tableId).length;const assignGuest=async(guestId:string,tableId:string,seatNumber:number)=>{const response=await fetch(`/api/guests/${guestId}`,{method:"PATCH",headers:{"Content-Type":"application/json"},cache:"no-store",body:JSON.stringify({tableId,seatNumber})});const data=await response.json().catch(()=>null);if(!response.ok)throw new Error(data?.error||"Penempatan tamu gagal disimpan.");await onRefresh()};return <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-8 sm:pt-10"><Card><div className="p-5 sm:p-7"><div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5"><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Guest operations</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Tamu & seating</h2></div><span className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{assigned} / {guests.length} ditempatkan</span></div><div className="grid border-b border-border sm:grid-cols-3"><Stat label="Tamu" value={String(guests.length)}/><Stat label="Meja" value={String(tables.length)}/><Stat label="Sudah ditempatkan" value={String(assigned)}/></div><div className="pt-6"><SeatingChart guests={guests} tables={tables} accent={accent} onAssigned={assignGuest}/></div><Button onClick={onRefresh} size="sm" className="mt-5">Refresh Data</Button></div></Card></div>}
-function UsherPanel({guests,accent,button,onRefresh}:{guests:Guest[];accent:string;button:string;onRefresh:()=>void}){const checked=guests.filter(g=>g.checkedIn).length;return <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-8 sm:pt-10"><Card><div className="p-5 sm:p-7"><div className="flex flex-wrap items-end justify-between gap-4 border-b border-border pb-5"><div><p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Day-of operations</p><h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Check-in hari acara</h2></div><span className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Realtime roster</span></div><div className="grid border-b border-border sm:grid-cols-2"><Stat label="Total Tamu" value={String(guests.length)}/><Stat label="Sudah Check-in" value={String(checked)}/></div><div className="flex flex-wrap items-center justify-between gap-4 pt-6"><p className="max-w-xl text-sm leading-6 text-muted-foreground">Scan Digital Ticket dan lakukan check-in tamu pada hari acara.</p><Button onClick={onRefresh} size="sm">Refresh Data</Button></div></div></Card></div>}
+export default function DashboardPage() {
+  const router = useRouter();
+  const { isDarkMode } = useTheme();
+  const [tab, setTab] = useState<Tab>("overview");
+  const [ctx, setCtx] = useState<Context | null>(null);
+  const [guests, setGuests] = useState<Guest[]>([]);
+  const [tables, setTables] = useState<Table[]>([]);
+  const [slug, setSlug] = useState("");
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileMenu, setProfileMenu] = useState(false);
+  const [onboarding, setOnboarding] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [onboardingError, setOnboardingError] = useState("");
+  const [groom, setGroom] = useState("");
+  const [bride, setBride] = useState("");
+  const [nickname, setNickname] = useState("");
+
+  const load = async () => {
+    const ir = await fetch("/api/invitations?type=WEDDING", { cache: "no-store" });
+    const [cr, gr] = await Promise.all([
+      fetch("/api/dashboard/context", { cache: "no-store" }),
+      fetch("/api/guests", { cache: "no-store" }),
+    ]);
+
+    if (cr.ok) {
+      const next = (await cr.json()) as Context;
+      setCtx(next);
+      setGroom(next.wedding?.groomName || "");
+      setBride(next.wedding?.brideName || "");
+      setNickname(next.profile.displayName || "");
+      setOnboarding(
+        !next.wedding?.groomName || !next.wedding?.brideName || !next.profile.displayName,
+      );
+    }
+
+    if (gr.ok) {
+      const data = await gr.json();
+      setGuests(data.guests ?? []);
+      setTables(data.tables ?? []);
+    }
+
+    if (ir.ok) setSlug((await ir.json()).invitation?.slug ?? "");
+  };
+
+  useEffect(() => {
+    load().catch(() => undefined);
+  }, []);
+
+  const canDigital = ctx?.entitlements.hasDigitalInvitation ?? false;
+  const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
+  const accent = "text-primary";
+  const button = "";
+  const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
+  const savedProfileName = ctx?.profile.displayName?.trim();
+  const profileLabel =
+    savedProfileName && savedProfileName.toLowerCase() !== "dashboard"
+      ? savedProfileName
+      : ctx?.profile.email?.split("@")[0] || "Akun";
+
+  async function saveOnboarding() {
+    const groomName = groom.trim();
+    const brideName = bride.trim();
+    const displayName = nickname.trim();
+    if (!groomName || !brideName || !displayName) {
+      setOnboardingError("Nama pasangan dan nama panggilan wajib diisi.");
+      return;
+    }
+
+    setSaving(true);
+    setOnboardingError("");
+    try {
+      const invitationResponse = await fetch("/api/invitations", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ type: "WEDDING", groomName, brideName }),
+      });
+      if (!invitationResponse.ok) {
+        const data = await invitationResponse.json().catch(() => null);
+        throw new Error(data?.error || "Data pasangan belum tersimpan.");
+      }
+
+      const profileResponse = await fetch("/api/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        cache: "no-store",
+        body: JSON.stringify({ firstName: displayName }),
+      });
+      if (!profileResponse.ok) {
+        const data = await profileResponse.json().catch(() => null);
+        throw new Error(data?.error || "Nama panggilan belum tersimpan.");
+      }
+
+      setOnboarding(false);
+      setCtx((current) =>
+        current
+          ? {
+              ...current,
+              profile: { ...current.profile, displayName },
+              wedding: {
+                ...current.wedding,
+                groomName,
+                brideName,
+                title: current.wedding.title || `${groomName} & ${brideName}`,
+              },
+            }
+          : current,
+      );
+      setGroom(groomName);
+      setBride(brideName);
+      setNickname(displayName);
+      await load();
+    } catch (error) {
+      setOnboardingError(
+        error instanceof Error ? error.message : "Data belum tersimpan. Coba lagi.",
+      );
+      setOnboarding(true);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function logout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/login");
+  }
+
+  function go(id: Tab) {
+    setTab(id);
+    setMobileOpen(false);
+    setProfileMenu(false);
+  }
+
+  const meta = tabMeta[tab];
+
+  return (
+    <div
+      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}
+    >
+      <div className="flex min-h-screen">
+        <aside
+          className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
+        >
+          <nav className="flex-1 space-y-2 bg-primary/[0.045] p-3 dark:bg-primary/[0.07]">
+            <p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+              Workspace
+            </p>
+            {nav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Button
+                  key={item.id}
+                  type="button"
+                  aria-current={tab === item.id ? "page" : undefined}
+                  onClick={() => go(item.id)}
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
+                    tab === item.id
+                      ? "border-primary/15 bg-primary/10 text-primary"
+                      : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+                  }`}
+                >
+                  <span className="grid size-5 shrink-0 place-items-center text-current">
+                    <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 truncate">{item.label}</span>
+                </Button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        <div className="min-w-0 flex-1">
+          <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+            <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3 px-1">
+              <Button
+                type="button"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setMobileOpen((value) => !value)}
+                aria-label="Buka menu"
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+
+              <Link
+                href="/"
+                className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"
+              >
+                <span className="text-primary">DC Organizer</span>
+              </Link>
+
+              <span className="hidden h-5 w-px bg-border sm:block" />
+              <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">
+                {meta.title}
+              </span>
+
+              <div className="relative ml-auto">
+                <Button
+                  type="button"
+                  onClick={() => setProfileMenu((value) => !value)}
+                  className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary"
+                  aria-label={`Menu akun ${profileLabel}`}
+                >
+                  <UserRound className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.8} />
+                  <span className="max-w-36 truncate">{profileLabel}</span>
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu ? "rotate-180" : ""}`}
+                  />
+                </Button>
+
+                {profileMenu && (
+                  <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
+                    <div className="px-2 pb-3 pt-1">
+                      <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">
+                        {profileLabel}
+                      </p>
+                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                        {ctx?.profile.email || ""}
+                      </p>
+                    </div>
+                    <div className="space-y-1.5">
+                      <MenuItem
+                        icon={Receipt}
+                        text="Transaksi"
+                        onClick={() => router.push("/transactions")}
+                      />
+                      <MenuItem
+                        icon={Plus}
+                        text="Tambah paket"
+                        onClick={() => router.push("/packages")}
+                      />
+                      <MenuItem icon={CircleHelp} text="FAQ" onClick={() => router.push("/faq")} />
+                      <MenuItem
+                        icon={CircleHelp}
+                        text="Bantuan"
+                        onClick={() => setProfileMenu(false)}
+                      />
+                      <div className="my-2 border-t border-border" />
+                      <MenuItem icon={LogOut} text="Keluar" danger onClick={logout} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </header>
+
+          <main className="min-w-0 overflow-x-clip">
+            {tab !== "overview" && (
+              <section className="border-b border-border bg-background">
+                <div className="mx-auto flex w-[min(92vw,1400px)] min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
+                  <div className="min-w-0">
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                      {meta.eyebrow}
+                    </p>
+                    <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">
+                      {meta.title}
+                    </h1>
+                  </div>
+                  <div className="hidden min-w-0 text-right sm:block">
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                      Wedding
+                    </p>
+                    <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">
+                      {ctx?.wedding?.groomName && ctx?.wedding?.brideName
+                        ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}`
+                        : "Belum diatur"}
+                    </p>
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {tab === "overview" && (
+              <WorkspaceOverview
+                ctx={ctx}
+                onGo={go}
+                onUpgrade={() => router.push("/packages")}
+              />
+            )}
+            {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
+            {tab === "invitation" && (
+              <InvitationManagementPanel accent={accent} button={button} paid={canDigital} />
+            )}
+            {tab === "rsvp" && <RsvpAnalyticsPanel guests={guests} slug={slug} accent={accent} />}
+            {tab === "placement" && (
+              <FeatureGate
+                allowed={canDigital}
+                title="Manajemen Tamu"
+                description="Tersedia pada paket Digital Invitation."
+                onUpgrade={() => router.push("/packages")}
+              >
+                <PlacementPanel
+                  guests={guests}
+                  tables={tables}
+                  accent={accent}
+                  onRefresh={load}
+                />
+              </FeatureGate>
+            )}
+            {tab === "usher" && (
+              <FeatureGate
+                allowed={canGuestbook}
+                title="Usher App"
+                description="Tersedia pada paket Guestbook Digital."
+                onUpgrade={() => router.push("/packages")}
+              >
+                <UsherPanel guests={guests} onRefresh={load} />
+              </FeatureGate>
+            )}
+          </main>
+        </div>
+      </div>
+
+      <Button asChild size="icon-lg" className="fixed bottom-5 right-5 z-50 rounded-full">
+        <a
+          href="https://wa.me/6281234567890"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Bantuan WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" strokeWidth={2} />
+        </a>
+      </Button>
+
+      {onboarding && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-lg border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
+            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
+              Setup awal
+            </p>
+            <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Data pasangan</h2>
+            <div className="mt-6 space-y-4">
+              <Field
+                label="Nama pasangan pria"
+                value={groom}
+                onChange={setGroom}
+                placeholder="Contoh: Rio"
+              />
+              <Field
+                label="Nama pasangan wanita"
+                value={bride}
+                onChange={setBride}
+                placeholder="Contoh: Lyvia"
+              />
+              <Field
+                label="Nama panggilan"
+                value={nickname}
+                onChange={setNickname}
+                placeholder="Contoh: Hendro"
+              />
+            </div>
+            {onboardingError && (
+              <p className="mt-4 border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">
+                {onboardingError}
+              </p>
+            )}
+            <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
+              {saving ? "Menyimpan..." : "Simpan & masuk"}
+            </Button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MenuItem({
+  icon: Icon,
+  text,
+  onClick,
+  danger = false,
+}: {
+  icon: any;
+  text: string;
+  onClick: () => void;
+  danger?: boolean;
+}) {
+  return (
+    <Button
+      type="button"
+      onClick={onClick}
+      className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
+        danger
+          ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
+          : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
+      }`}
+    >
+      <Icon className="h-4 w-4" />
+      {text}
+    </Button>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-medium">{label}</span>
+      <Input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        className="border-border bg-transparent"
+      />
+    </label>
+  );
+}
+
+function WorkspaceOverview({
+  ctx,
+  onGo,
+  onUpgrade,
+}: {
+  ctx: Context | null;
+  onGo: (id: Tab) => void;
+  onUpgrade: () => void;
+}) {
+  const overview = ctx?.overview;
+  const packageKey = ctx?.package.key;
+  const packageStatus = ctx?.package.status;
+  const packageLabel =
+    packageStatus === "PAID"
+      ? packageKey === "INVITATION_GUESTBOOK"
+        ? "Digital Invitation + Guestbook"
+        : packageKey === "GUESTBOOK_DIGITAL"
+          ? "Guestbook Digital"
+          : "Digital Invitation"
+      : "Belum aktif";
+
+  return (
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+      <section className="flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+            Workspace / 01
+          </p>
+          <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">
+            Halo, {ctx?.profile.displayName || "Akun"}
+          </h1>
+        </div>
+        <div className="min-w-0 sm:text-right">
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+            Wedding
+          </p>
+          <p className="mt-1 truncate text-sm font-medium">
+            {ctx?.wedding?.groomName && ctx?.wedding?.brideName
+              ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}`
+              : "Belum diatur"}
+          </p>
+          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+            {ctx?.wedding?.venue || "Lokasi belum diatur"}
+          </p>
+        </div>
+      </section>
+
+      <section className="grid border-b border-border sm:grid-cols-4">
+        <Stat label="Paket" value={packageLabel} />
+        <Stat label="RSVP" value={String(overview?.totalRsvp ?? 0)} />
+        <Stat label="Tamu" value={String(overview?.totalGuests ?? 0)} />
+        <Stat label="Publish" value={overview?.invitationPublished ? "Aktif" : "Draft"} />
+      </section>
+
+      <section className="mt-8">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Akses cepat</h2>
+          <Button onClick={onUpgrade} size="xs">
+            Paket
+          </Button>
+        </div>
+        <div className="grid border-y border-border sm:grid-cols-2">
+          <QuickAction label="Rangkaian Acara" onClick={() => onGo("events")} />
+          <QuickAction label="Undangan Digital" onClick={() => onGo("invitation")} />
+          <QuickAction label="RSVP" onClick={() => onGo("rsvp")} />
+          <QuickAction label="Manajemen Tamu" onClick={() => onGo("placement")} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 sm:first:pl-0">
+      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1 truncate text-sm font-semibold text-foreground">{value}</p>
+    </div>
+  );
+}
+
+function QuickAction({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <Button
+      type="button"
+      onClick={onClick}
+      className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left text-sm text-foreground shadow-none hover:bg-primary/[0.04] hover:text-primary sm:px-3 sm:[&:nth-child(odd)]:border-r"
+    >
+      {label}
+      <span className="ml-auto text-primary">→</span>
+    </Button>
+  );
+}
+
+function PlacementPanel({
+  guests,
+  tables,
+  accent,
+  onRefresh,
+}: {
+  guests: Guest[];
+  tables: Table[];
+  accent: string;
+  onRefresh: () => void;
+}) {
+  const assigned = guests.filter((guest) => guest.tableId).length;
+  const assignGuest = async (guestId: string, tableId: string, seatNumber: number) => {
+    const response = await fetch(`/api/guests/${guestId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+      body: JSON.stringify({ tableId, seatNumber }),
+    });
+    const data = await response.json().catch(() => null);
+    if (!response.ok) throw new Error(data?.error || "Penempatan tamu gagal disimpan.");
+    await onRefresh();
+  };
+
+  return (
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+      <Card>
+        <div className="p-5 sm:p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
+            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
+            <Button onClick={onRefresh} size="xs">
+              Refresh
+            </Button>
+          </div>
+          <div className="grid border-b border-border sm:grid-cols-3">
+            <Stat label="Tamu" value={String(guests.length)} />
+            <Stat label="Meja" value={String(tables.length)} />
+            <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
+          </div>
+          <div className="pt-5">
+            <SeatingChart guests={guests} tables={tables} accent={accent} onAssigned={assignGuest} />
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+function UsherPanel({ guests, onRefresh }: { guests: Guest[]; onRefresh: () => void }) {
+  const checked = guests.filter((guest) => guest.checkedIn).length;
+
+  return (
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+      <Card>
+        <div className="p-5 sm:p-6">
+          <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Check-in</h2>
+            <Button onClick={onRefresh} size="xs">
+              Refresh
+            </Button>
+          </div>
+          <div className="grid sm:grid-cols-2">
+            <Stat label="Total tamu" value={String(guests.length)} />
+            <Stat label="Check-in" value={String(checked)} />
+          </div>
+        </div>
+      </Card>
+    </div>
+  );
+}
