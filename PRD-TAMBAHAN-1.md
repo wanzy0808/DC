@@ -105,3 +105,34 @@ Teruskan standardisasi dashboard bertahap pada:
 - table/status chip;
 - dialog/modal;
 - responsive overflow pada seluruh dashboard.
+
+## 2026-09-16 — Invitation Studio Action Hierarchy Normalization — Stage 2B
+
+### Tujuan
+Menyeragamkan kontrol aksi di header Invitation Studio agar tidak terlihat seperti tombol yang melebar/stretch, sekaligus mengikuti hierarchy dashboard: icon utility, secondary action, dan primary action memiliki ukuran dan treatment yang jelas.
+
+### Perubahan
+- Undo/Redo menggunakan target minimum 40px dengan padding ringkas sebagai utility controls.
+- Preview menjadi secondary action dengan border semantic dan surface netral.
+- Simpan menjadi primary action dengan canonical `--primary` / `--primary-foreground`, radius konsisten, dan raised shadow tipis.
+- Hover state memakai semantic theme token; tidak menambah warna brand baru atau gradient.
+- Standardisasi hanya berlaku pada action controls di header Invitation Studio sehingga card/template/tool buttons tidak ikut berubah secara massal.
+- Tidak mengubah API, database, authorization, upload flow, atau data flow.
+
+### Affected files
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+
+### Commits
+- `d99fdc0ed194346558dc8940635cb0228d1157c8`
+- `f2b5f8343f306068d4b38d1513acc86d7b527d91`
+
+### Validation
+Perubahan sudah ditulis ke `main`. Belum ada hasil build/CI aktual yang tersedia untuk diverifikasi, sehingga validation **belum diverifikasi dengan build/CI**.
+
+### Tahap berikutnya
+Lanjut bertahap ke:
+- sidebar/tool controls agar active/hover/disabled state konsisten;
+- surface/card dan form controls;
+- table/status chip;
+- dialog/modal;
+- responsive overflow dan mobile layout pada dashboard.
