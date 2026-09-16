@@ -55,20 +55,20 @@ For predefined categories the server/client build a readable event title automat
 
 `Event Lainnya` keeps the custom event name entered by the user.
 
-### Progressive Form Flow
-`components/Dashboard/EventPanel.tsx` now behaves as follows:
+### Progressive Form Flow — Historical First Pass
+The first implementation of `components/Dashboard/EventPanel.tsx` used this flow:
 
-1. Page initially displays the existing event list.
-2. `Tambah acara` opens a clean new-event form.
-3. No database draft record is created just by opening the form.
-4. User chooses event category.
-5. Relevant name field(s) appear.
-6. User completes date/time/location.
-7. `Buat acara` creates the Invitation record and saves it as configured.
-8. Existing event uses `Edit acara` and `Simpan perubahan`.
-9. `Tutup form` returns to the event list without adding another empty draft.
+1. Page initially displayed the existing event list.
+2. `Tambah acara` opened a clean new-event form.
+3. No database draft record was created just by opening the form.
+4. User chose event category.
+5. Relevant name field(s) appeared.
+6. User completed date/time/location.
+7. `Buat acara` created the Invitation record and saved it as configured.
+8. Existing event used `Edit acara` and `Simpan perubahan`.
+9. `Tutup form` returned to the event list without adding another empty draft.
 
-This avoids abandoned empty Invitation rows from repeated clicks on `Tambah acara`.
+**This specific no-draft-on-click behavior is superseded by the Database Draft Creation pass below.** It remains documented here as implementation history only.
 
 ### Indonesian Date & Time UX
 The event form uses Indonesian conventions:
@@ -114,7 +114,7 @@ The editor is grouped into compact functional surfaces:
 This keeps the most common flow visible without making the dashboard feel like a long landing-page form.
 
 ### Event List Actions
-Each saved event card supports:
+Each configured event card supports:
 - `Edit acara`;
 - `Buat undangan` when Digital Invitation has not been activated;
 - `Studio` when the event already has active Digital Invitation access.
@@ -164,10 +164,130 @@ PostgreSQL/Prisma remains the source of truth.
 
 ---
 
+## 2026-09-16 — Database Draft Creation on `Tambah acara`
+
+### Requirement correction
+The product requirement was clarified: clicking `Tambah acara` must create a real event record immediately. The prior behavior where the button only opened a local form is no longer current behavior.
+
+### Current behavior
+`components/Dashboard/EventPanel.tsx` now:
+
+1. User clicks `Tambah acara`.
+2. UI immediately sends `POST /api/invitations`.
+3. PostgreSQL/Prisma creates an `Invitation` draft row with:
+   - unique event slug;
+   - `eventConfigured = false`;
+   - `eventCategory = OTHER` as storage default;
+   - empty title/participant/location fields;
+   - WA quota default 0.
+4. Returned database `id` becomes the active editor record.
+5. Form opens only after the database draft exists.
+6. The editor displays the database event ID as technical metadata.
+7. User selects the event category and completes the event data.
+8. `Simpan acara` performs `PUT /api/invitations` against that existing draft ID and switches `eventConfigured` to true after validation succeeds.
+
+### Draft visibility
+Database drafts are no longer hidden from the Rangkaian Acara list.
+
+A draft card shows:
+- `Draft acara`;
+- `Belum dilengkapi`;
+- `Draft` status;
+- `Lengkapi acara` action.
+
+This makes it explicit that the event already exists in the database even before its required fields are completed.
+
+Draft events do **not** enter event-scoped RSVP / Manajemen Tamu selectors because those workspaces continue filtering on `eventConfigured`.
+
+### Rationale
+The database is the source of truth. Creating the draft on the click event gives every user-created event a persistent ID immediately, which is useful for later payment, Studio, upload, invitation, and event-scoped operations.
+
+---
+
+## 2026-09-16 — Event-Centric Invitation Studio
+
+### Goal
+Remove the assumption that every Studio session is a wedding or Akad/Sangjit workflow. Studio must edit the selected event record and render its category correctly.
+
+### Event-scoped loading
+`components/InvitationStudio/InvitationDesigner.tsx` now prioritizes `invitationId` from the Studio URL.
+
+Example:
+
+`/dashboard/editor?type=WEDDING&invitationId=<event-id>`
+
+The `type` query remains only as legacy fallback compatibility. When `invitationId` exists, the Studio loads the exact Invitation row rather than switching between global `WEDDING` and `ADAT_AKAD` tabs.
+
+### Removed wedding-only type tabs
+The old Studio tabs:
+- `Undangan Pernikahan`;
+- `Akad & Sangjit`;
+
+are removed from the active Studio UI.
+
+The Studio header instead shows:
+- event category;
+- event title;
+- selected template.
+
+### Preview identity by event category
+Studio preview now uses `Invitation.eventCategory`:
+
+- Pernikahan / Silver Wedding / Golden Wedding:
+  - renders two participant names and `&`.
+- Ulang Tahun:
+  - renders one primary name.
+- Baby Shower:
+  - renders one family/baby label.
+- Event Lainnya:
+  - renders the event title.
+
+Birthday, Baby Shower, and Event Lainnya no longer show `Nama Pria`, `Nama Wanita`, or `The Wedding`.
+
+### Generic event timing
+Preview timing now uses generic labels:
+- `Mulai`;
+- `Selesai`;
+- WIB/WITA/WIT from the event timezone.
+
+It no longer assumes `Akad` and `Resepsi` for every event category.
+
+### Synced event content
+Core event data is treated as read-only inside Studio and comes from Rangkaian Acara:
+- event title;
+- participant/name identity;
+- date;
+- time;
+- venue;
+- address;
+- maps;
+- description;
+- notes.
+
+Studio saves only invitation-design/content fields that belong in Studio, including:
+- template design key;
+- event tag/hashtag compatibility field;
+- dress code;
+- music.
+
+The legacy database field `weddingHashtag` is temporarily retained as storage for the generic `Tag / hashtag acara` input until schema cleanup is defined.
+
+### Studio visual/system cleanup
+- obvious Studio actions now use the canonical `Button` primitive;
+- event Studio shell uses semantic DC Organizer background/border/primary tokens instead of wedding-maroon shell colors;
+- font sample text changed from `The wedding invitation` to `Digital invitation`;
+- Studio top shell now says `Invitation Studio` and returns to `/dashboard`.
+
+Invitation-template palettes remain dynamic because those colors belong to invitation content itself, not the application shell.
+
+---
+
 ## Affected Files
 - `lib/events/catalog.ts`
 - `components/Dashboard/EventPanel.tsx`
 - `app/api/invitations/route.ts`
+- `components/InvitationStudio/InvitationDesigner.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
 - `prisma/schema.prisma`
 - `prisma/migrations/20260916190000_add_event_category/migration.sql`
 
@@ -179,7 +299,10 @@ PostgreSQL/Prisma remains the source of truth.
 - `ff272512707e83175db5c1db38d9b93e0ce1e5f7` — add event-category migration/backfill
 - `f03a397d799e5ea70103ba19bfe2b4ac12acf15b` — add WIB/WITA/WIT catalog
 - `52f1276a4f568dc4050d77472d345dc5ba60d0ff` — event-category API validation/title generation
-- `be515327a78964e05717b320ae9778e1ef7251ee` — progressive interactive Rangkaian Acara editor
+- `be515327a78964e05717b320ae9778e1ef7251ee` — progressive interactive Rangkaian Acara editor first pass
+- `83ef248c138c9a435982cd2a1e9ec5f9db0b356b` — persist event draft when `Tambah acara` is clicked
+- `63a73da49ac033cf42eeb648686aa7fc6f914ea9` — generalize Invitation Studio for event categories
+- `dfb2d54e42a617c222cf0d87bf7d53c5ead46fe9` — align Studio shell with event-based flow
 
 ---
 
@@ -194,5 +317,7 @@ Do not treat this stage as deployment-verified until the actual CI/build and dat
 
 ---
 
-## Next Compatibility Work
-The Invitation Studio still has wedding-specific content controls and preview assumptions. The new event taxonomy is now available as the source for the next Studio-generalization pass, but Studio was intentionally not rewritten in this change to keep this stage focused on Rangkaian Acara creation and data integrity.
+## Remaining Compatibility Work
+- Public renderer `FigmaClassicTemplate` and some legacy templates may still contain wedding-specific visual/content assumptions.
+- Legacy schema names `groomName`, `brideName`, and `weddingHashtag` remain for backward compatibility and should be migrated only after a dedicated data migration plan exists.
+- Invitation template catalog descriptions still contain some wedding-oriented copy even though Studio identity/preview behavior is now event-category aware.
