@@ -270,6 +270,26 @@ aside nav > p { font-family: var(--font-dc-heading); }
   background: color-mix(in srgb, var(--primary) 3.5%, var(--background)) !important;
 }
 
+/* Overview and utility workspaces use the same rounded neutral container language. */
+.dc-dashboard main > div.mx-auto > section:first-child[class*="flex"] {
+  border: 1px solid color-mix(in srgb, var(--primary) 14%, var(--border)) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--foreground) 1.8%, var(--background)) !important;
+  padding: 1rem !important;
+}
+.dc-dashboard main > div.mx-auto > section.border.border-border {
+  border-color: color-mix(in srgb, var(--primary) 14%, var(--border)) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--foreground) 1.8%, var(--background)) !important;
+  overflow: hidden;
+}
+.dc-dashboard main > div.mx-auto > section.border.border-border > div[class*="p-5"] > div:first-child[class*="border-b"],
+.dc-dashboard main > div.mx-auto > section.border.border-border > div[class*="p-6"] > div:first-child[class*="border-b"] {
+  border-bottom-width: 0 !important;
+  padding-bottom: 0 !important;
+  margin-bottom: 1rem;
+}
+
 /* Quick-access rows read as discrete controls instead of one flat spreadsheet block. */
 .dc-dashboard main div.grid[class*="sm:grid-cols-2"] > button[class*="justify-start"] {
   margin: 0.375rem;
