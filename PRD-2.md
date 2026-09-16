@@ -25,9 +25,22 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Footer save/status menggunakan border tipis dan spacing workspace yang sama.
 - API, schema, validation flow, dan data behavior tetap dipertahankan.
 
+### 2026-09-16 — RSVP & Analytics Alignment
+- `components/Dashboard/RsvpAnalyticsPanel.tsx` direstrukturisasi agar konsisten dengan `/dashboard/undangan-digital` dan Event Panel.
+- Surface beige, rounded-card berulang, dan warna hard-coded lama diganti dengan semantic `background`, `border`, `foreground`, `muted`, dan `primary`.
+- Header RSVP sekarang memakai pola editorial dua kolom dengan metadata DM Mono, heading Cinzel, dan body Fauna One.
+- Enam metrik RSVP diubah dari repeated filled cards menjadi grid statistik berbasis divider/border tipis agar lebih ringan dan konsisten dengan Beranda.
+- Guest directory memiliki search, sort selector, toggle arah sorting, dan Export CSV dalam satu toolbar responsif.
+- Tombol aksi QR, manual check-in, close modal, sort direction, dan Export CSV sekarang menggunakan primitive `components/ui/button.tsx` canonical.
+- Tabel tamu memakai semantic borders, hover sangat ringan, typography yang konsisten, dan tetap horizontal-scroll safe pada layar sempit.
+- Modal QR diselaraskan ke neutral canvas; alur pembuatan QR dan token tidak diubah.
+- Search, sorting, export, QR generation, manual check-in, serta API/data flow tetap dipertahankan.
+- Nama file CSV diperbarui dari legacy `dc-wedding-rsvp.csv` menjadi `dc-organizer-rsvp.csv` agar sesuai brand DC Organizer.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/RsvpAnalyticsPanel.tsx`
 
 ### Related design references
 - `app/dashboard/undangan-digital/page.tsx`
@@ -38,7 +51,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `a1726f883b79f596daf7751664617cb76c08a30b`
 - `96c2e06b364920a5d69fbb8e484416436ae677c9`
 - `df21a61304de81ff83960f0a5308a389a7fc8625`
+- `4c2986ad374b0d8115cfb25b4f2adac740881ea0`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel changes are presentational; API/data flow tetap dipertahankan.
+- Event Panel dan RSVP changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
