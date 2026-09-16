@@ -18,6 +18,7 @@ type Invitation = {
   mapUrl: string | null;
   timezone: string;
   eventDate: string;
+  eventConfigured: boolean;
   ceremonyTime: string | null;
   receptionTime: string | null;
   description: string | null;
@@ -142,7 +143,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
       const response = await fetch("/api/invitations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, id: activeId, isPublished }),
+        body: JSON.stringify({ ...form, id: activeId, isPublished, eventConfigured: true }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Data acara belum dapat disimpan.");
