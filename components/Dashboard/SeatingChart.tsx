@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { ArrowLeftRight, LayoutGrid, UserPlus, X } from "lucide-react";
 import { Circle, Group, Layer, Rect, Stage, Text } from "react-konva";
 import type { KonvaEventObject } from "konva/lib/Node";
 import { useTheme } from "@/components/Theme/ThemeContext";
@@ -428,12 +429,14 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
               size="sm"
               className="w-full"
               disabled={generating || visibleTables.length > 0}
+              title={visibleTables.length ? "Denah meja sudah tersimpan" : "Buat denah meja"}
             >
+              <LayoutGrid className="h-4 w-4" />
               {generating
-                ? "Membuat denah..."
+                ? "Membuat denah meja..."
                 : visibleTables.length
-                  ? `${totalSeats} kursi tersimpan`
-                  : "Buat denah"}
+                  ? "Denah meja tersimpan"
+                  : "Buat denah meja"}
             </Button>
           </form>
 
@@ -469,8 +472,10 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
               size="sm"
               className="w-full"
               disabled={manualSaving}
+              title="Tambahkan tamu manual ke roster"
             >
-              {manualSaving ? "Menambahkan..." : "Tambah tamu"}
+              <UserPlus className="h-4 w-4" />
+              {manualSaving ? "Menambahkan tamu..." : "Tambah tamu manual"}
             </Button>
           </form>
 
@@ -671,7 +676,9 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                 size="sm"
                 onClick={confirmSwap}
                 disabled={Boolean(savingGuestId)}
+                title="Konfirmasi tukar posisi tamu"
               >
+                <ArrowLeftRight className="h-4 w-4" />
                 Tukar posisi
               </Button>
               <Button
@@ -679,8 +686,10 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                 size="sm"
                 onClick={cancelSwap}
                 disabled={Boolean(savingGuestId)}
+                title="Batalkan tukar posisi"
               >
-                Batal
+                <X className="h-4 w-4" />
+                Batal tukar
               </Button>
             </div>
           </div>
