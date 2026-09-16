@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  ArrowRight,
   CalendarDays,
+  CheckCircle2,
   ChevronDown,
   CircleHelp,
   Home,
@@ -13,9 +15,10 @@ import {
   Menu,
   MessageCircle,
   MessageSquareHeart,
-  Plus,
   QrCode,
   Receipt,
+  RefreshCw,
+  Settings2,
   Users,
   UserRound,
   X,
@@ -284,7 +287,8 @@ export default function DashboardPage() {
                 size="icon"
                 className="lg:hidden"
                 onClick={() => setMobileOpen((value) => !value)}
-                aria-label="Buka menu"
+                aria-label="Buka menu dashboard"
+                title="Buka menu dashboard"
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
@@ -306,7 +310,8 @@ export default function DashboardPage() {
                   type="button"
                   onClick={() => setProfileMenu((value) => !value)}
                   className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary"
-                  aria-label={`Menu akun ${profileLabel}`}
+                  aria-label={`Buka menu akun ${profileLabel}`}
+                  title="Menu akun"
                 >
                   <UserRound className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.8} />
                   <span className="max-w-36 truncate">{profileLabel}</span>
@@ -328,22 +333,22 @@ export default function DashboardPage() {
                     <div className="space-y-1.5">
                       <MenuItem
                         icon={Receipt}
-                        text="Transaksi"
+                        text="Lihat transaksi"
                         onClick={() => router.push("/transactions")}
                       />
                       <MenuItem
-                        icon={Plus}
-                        text="Tambah paket"
+                        icon={Settings2}
+                        text="Kelola paket"
                         onClick={() => router.push("/packages")}
                       />
-                      <MenuItem icon={CircleHelp} text="FAQ" onClick={() => router.push("/faq")} />
+                      <MenuItem icon={CircleHelp} text="Buka FAQ" onClick={() => router.push("/faq")} />
                       <MenuItem
-                        icon={CircleHelp}
-                        text="Bantuan"
+                        icon={MessageCircle}
+                        text="Buka bantuan"
                         onClick={() => setProfileMenu(false)}
                       />
                       <div className="my-2 border-t border-border" />
-                      <MenuItem icon={LogOut} text="Keluar" danger onClick={logout} />
+                      <MenuItem icon={LogOut} text="Keluar akun" danger onClick={logout} />
                     </div>
                   </div>
                 )}
@@ -394,6 +399,7 @@ export default function DashboardPage() {
                 allowed={canDigital}
                 title="Manajemen Tamu"
                 description="Tersedia pada paket Digital Invitation."
+                upgradeLabel="Lihat paket Digital Invitation"
                 onUpgrade={() => router.push("/packages")}
               >
                 <PlacementPanel
@@ -409,6 +415,7 @@ export default function DashboardPage() {
                 allowed={canGuestbook}
                 title="Usher App"
                 description="Tersedia pada paket Guestbook Digital."
+                upgradeLabel="Lihat paket Guestbook Digital"
                 onUpgrade={() => router.push("/packages")}
               >
                 <UsherPanel guests={guests} onRefresh={load} />
@@ -423,7 +430,8 @@ export default function DashboardPage() {
           href="https://wa.me/6281234567890"
           target="_blank"
           rel="noreferrer"
-          aria-label="Bantuan WhatsApp"
+          aria-label="Buka bantuan WhatsApp"
+          title="Buka bantuan WhatsApp"
         >
           <MessageCircle className="h-6 w-6" strokeWidth={2} />
         </a>
@@ -462,7 +470,8 @@ export default function DashboardPage() {
               </p>
             )}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
-              {saving ? "Menyimpan..." : "Simpan & masuk"}
+              <CheckCircle2 className="h-4 w-4" />
+              {saving ? "Menyimpan data..." : "Simpan data & masuk"}
             </Button>
           </div>
         </div>
@@ -577,17 +586,18 @@ function WorkspaceOverview({
       </section>
 
       <section className="mt-8">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Akses cepat</h2>
-          <Button onClick={onUpgrade} size="xs">
-            Paket
+          <Button onClick={onUpgrade} size="sm" title="Kelola paket">
+            <Settings2 className="h-4 w-4" />
+            Kelola paket
           </Button>
         </div>
         <div className="grid border-y border-border sm:grid-cols-2">
-          <QuickAction label="Rangkaian Acara" onClick={() => onGo("events")} />
-          <QuickAction label="Undangan Digital" onClick={() => onGo("invitation")} />
-          <QuickAction label="RSVP" onClick={() => onGo("rsvp")} />
-          <QuickAction label="Manajemen Tamu" onClick={() => onGo("placement")} />
+          <QuickAction icon={CalendarDays} label="Rangkaian Acara" onClick={() => onGo("events")} />
+          <QuickAction icon={Mail} label="Undangan Digital" onClick={() => onGo("invitation")} />
+          <QuickAction icon={MessageSquareHeart} label="RSVP" onClick={() => onGo("rsvp")} />
+          <QuickAction icon={Users} label="Manajemen Tamu" onClick={() => onGo("placement")} />
         </div>
       </section>
     </div>
@@ -605,15 +615,24 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function QuickAction({ label, onClick }: { label: string; onClick: () => void }) {
+function QuickAction({
+  icon: Icon,
+  label,
+  onClick,
+}: {
+  icon: any;
+  label: string;
+  onClick: () => void;
+}) {
   return (
     <Button
       type="button"
       onClick={onClick}
       className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left text-sm text-foreground shadow-none hover:bg-primary/[0.04] hover:text-primary sm:px-3 sm:[&:nth-child(odd)]:border-r"
     >
-      {label}
-      <span className="ml-auto text-primary">→</span>
+      <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+      <span className="truncate">{label}</span>
+      <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
     </Button>
   );
 }
@@ -648,8 +667,9 @@ function PlacementPanel({
         <div className="p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
-            <Button onClick={onRefresh} size="xs">
-              Refresh
+            <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
+              <RefreshCw className="h-4 w-4" />
+              Muat ulang
             </Button>
           </div>
           <div className="grid border-b border-border sm:grid-cols-3">
@@ -675,8 +695,9 @@ function UsherPanel({ guests, onRefresh }: { guests: Guest[]; onRefresh: () => v
         <div className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Check-in</h2>
-            <Button onClick={onRefresh} size="xs">
-              Refresh
+            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">
+              <RefreshCw className="h-4 w-4" />
+              Muat ulang
             </Button>
           </div>
           <div className="grid sm:grid-cols-2">
