@@ -25,6 +25,7 @@ type Table = {
 };
 
 type Props = {
+  invitationId: string;
   guests: Guest[];
   tables: Table[];
   accent?: string;
@@ -102,7 +103,7 @@ function findSeatTarget(
   return nearest;
 }
 
-export default function SeatingChart({ guests, tables, onAssigned }: Props) {
+export default function SeatingChart({ invitationId, guests, tables, onAssigned }: Props) {
   const { isDarkMode } = useTheme();
   const [draggedGuestId, setDraggedGuestId] = useState<string | null>(null);
   const [savingGuestId, setSavingGuestId] = useState<string | null>(null);
@@ -186,10 +187,11 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
     try {
       const created: Table[] = [];
       for (let index = 1; index <= count; index += 1) {
-        const response = await fetch("/api/wedding-tables", {
+        const response = await fetch("/api/tables", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            invitationId,
             name: `Meja ${index}`,
             capacity,
             shape: "ROUND",
@@ -224,7 +226,7 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
       const response = await fetch("/api/guests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
+        body: JSON.stringify({ invitationId, name }),
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
