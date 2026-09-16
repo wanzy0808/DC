@@ -37,22 +37,38 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Search, sorting, export, QR generation, manual check-in, serta API/data flow tetap dipertahankan.
 - Nama file CSV diperbarui dari legacy `dc-wedding-rsvp.csv` menjadi `dc-organizer-rsvp.csv` agar sesuai brand DC Organizer.
 
+### 2026-09-16 — Digital Invitation Workspace Cleanup
+- Screenshot review menunjukkan tab `Undangan Digital` memiliki dua level hero besar sekaligus: heading workspace dari shell dashboard dan hero tambahan di `InvitationManagementPanel`. Kombinasi ini membuat hierarchy berulang, area kosong terlalu besar, dan halaman terasa seperti landing page di dalam dashboard.
+- `components/Dashboard/InvitationManagementPanel.tsx` direstrukturisasi menjadi control workspace yang lebih padat: heading internal dibuat sekunder, CTA Studio dipindahkan ke toolbar section, dan hero besar kedua dihapus.
+- Ringkasan `halaman terbit`, `akses tamu`, dan `paket` ditempatkan sebagai strip metadata berbasis divider agar status utama terbaca tanpa repeated cards.
+- Dua halaman undangan sekarang memakai satu grid border-based yang konsisten. URL publik menjadi elemen utama yang dapat dibuka langsung, sedangkan aksi copy dipadatkan menjadi icon button sehingga jumlah tombol visual berkurang.
+- Aksi utama per halaman disederhanakan menjadi `Edit desain` dan `Publish/Unpublish`. Preview tidak lagi membutuhkan tombol terpisah karena URL publik dapat dibuka langsung.
+- Bagian proteksi password dan Design Studio disusun sebagai dua kolom lanjutan dengan hierarchy yang sama, bukan dua blok hero terpisah.
+- Seluruh aksi button tetap menggunakan primitive canonical `components/ui/button.tsx`; form password memakai `components/ui/input.tsx`.
+- Props compatibility `accent` dan `button` tetap diterima secara optional agar integrasi existing pada shell dashboard tidak rusak, tetapi tidak lagi dipakai untuk styling.
+- `app/globals.css` diperbaiki agar seluruh konten dashboard memakai lebar baca konsisten `min(calc(100% - 3rem), 1400px)` dan tidak lagi dipaksa melebar tanpa `max-width`. Perubahan ini berlaku ke header dan workspace dashboard secara konsisten tanpa mengubah sidebar.
+- API invitation, publish state, password protection, URL generation, entitlement, dan database flow tetap dipertahankan.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
+- `app/globals.css`
 - `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/InvitationManagementPanel.tsx`
 - `components/Dashboard/RsvpAnalyticsPanel.tsx`
 
 ### Related design references
 - `app/dashboard/undangan-digital/page.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
-- `app/dashboard-theme.css`
+- Dashboard workspace rules currently live in `app/globals.css`.
 
 ### Commits
 - `a1726f883b79f596daf7751664617cb76c08a30b`
 - `96c2e06b364920a5d69fbb8e484416436ae677c9`
 - `df21a61304de81ff83960f0a5308a389a7fc8625`
 - `4c2986ad374b0d8115cfb25b4f2adac740881ea0`
+- `b4b7d54a29abcbce3693d795e1adebd5dcf6ff60`
+- `c38d3f92439ba8844f63d7766f9135648c02022f`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel dan RSVP changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
+- Event Panel, RSVP, dan Digital Invitation changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
