@@ -38,19 +38,19 @@ const BACK_SCALE = 0.68;
 const doors: Door[] = [
   {
     id: 1,
-    title: "Wedding Planner",
-    href: "/wedding-planner",
+    title: "Event Planner",
+    href: "/event-planner",
     bgImage: "wo.png",
     tags: ["STAFF", "EVENT RUNDOWN", "VENDOR"],
-    desc: "Perencanaan dan koordinasi pernikahan.",
+    desc: "Perencanaan dan koordinasi untuk wedding, anniversary, baby shower, dan celebration lainnya.",
   },
   {
     id: 2,
     title: "Digital Invitation",
     href: "/d-invitation",
     bgImage: "hp-digital.png",
-    tags: ["UNDANGAN", "RSVP"],
-    desc: "Undangan digital untuk acara pernikahan.",
+    tags: ["UNDANGAN", "RSVP", "GUEST MANAGEMENT"],
+    desc: "Undangan digital per acara dengan template, RSVP, dan manajemen tamu.",
   },
   {
     id: 3,
@@ -58,7 +58,7 @@ const doors: Door[] = [
     href: "/guestbook",
     bgImage: "bukutamu.png",
     tags: ["BUKU TAMU", "QR CHECK-IN", "KEHADIRAN"],
-    desc: "Automasi kehadiran tamu dengan QR code.",
+    desc: "Operasional kehadiran tamu dan QR check-in untuk hari acara.",
   },
 ];
 
@@ -100,21 +100,27 @@ function LoopingPintu({
   onHover: (door: DoorValue) => void;
 }) {
   const [mounted, setMounted] = useState(false);
-  const phase = (offset: number) => ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
+  const phase = (offset: number) =>
+    ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
 
-  const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
-  const y = useTransform(progress, (offset) => Math.sin(phase(offset)) * LOOP_RADIUS_Y);
+  const x = useTransform(progress, (offset) =>
+    Math.cos(phase(offset)) * LOOP_RADIUS_X,
+  );
+  const y = useTransform(progress, (offset) =>
+    Math.sin(phase(offset)) * LOOP_RADIUS_Y,
+  );
   const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 90);
   const scale = useTransform(progress, (offset) => {
     const depth = (Math.sin(phase(offset)) + 1) / 2;
     return BACK_SCALE + depth * (FRONT_SCALE - BACK_SCALE);
   });
-  const rotateY = useTransform(progress, (offset) => Math.cos(phase(offset)) * -8);
-  // Keep every door's stacking order tied to the same orbit depth. Without this,
-  // equal CSS z-index leaves DOM order in control, so some rear doors paint above
-  // a front/active door while Wedding Planner happens to look correct by ordering.
-  const stackOrder = useTransform(progress, (offset) =>
-    Math.round(Math.sin(phase(offset)) * 100) + 100,
+  const rotateY = useTransform(
+    progress,
+    (offset) => Math.cos(phase(offset)) * -8,
+  );
+  const stackOrder = useTransform(
+    progress,
+    (offset) => Math.round(Math.sin(phase(offset)) * 100) + 100,
   );
 
   useEffect(() => {
@@ -140,7 +146,10 @@ function LoopingPintu({
   );
 }
 
-export default function PintuSection({ activeDoor, setActiveDoor }: PintuSectionProps) {
+export default function PintuSection({
+  activeDoor,
+  setActiveDoor,
+}: PintuSectionProps) {
   const reduced = useReducedMotion();
   const [isPaused, setIsPaused] = useState(false);
   const progress = useMotionValue(2 / 3);
