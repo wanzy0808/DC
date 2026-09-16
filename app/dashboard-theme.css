@@ -5,19 +5,16 @@
   color: var(--foreground);
 }
 
-.dc-dashboard main > * {
-  min-width: 0;
-}
-
-.dc-dashboard main section {
-  border-color: var(--border) !important;
-}
-
+.dc-dashboard main > * { min-width: 0; }
+.dc-dashboard main section { border-color: var(--border) !important; }
 .dc-dashboard main section[class*="bg-[#f3ede6]"],
 .dc-dashboard main section[class*="bg-[#FAF7F2]"],
 .dc-dashboard main section[class*="bg-[#fffaf6]"],
-.dc-dashboard main section[class*="bg-[#121116]"] {
-  background: var(--card) !important;
+.dc-dashboard main section[class*="bg-[#121116]"] { background: var(--card) !important; }
+
+.dc-dashboard main [class*="rounded-2xl"][class*="border"] {
+  border-radius: 1rem !important;
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 3%, transparent);
 }
 
 .dc-dashboard main input,
@@ -28,7 +25,6 @@
   color: var(--foreground) !important;
   border-radius: 0.75rem;
 }
-
 .dc-dashboard main input:focus,
 .dc-dashboard main textarea:focus,
 .dc-dashboard main select:focus {
@@ -36,32 +32,26 @@
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
-.dc-dashboard main table thead {
-  background: color-mix(in srgb, var(--foreground) 4%, var(--background)) !important;
+.dc-dashboard main table thead { background: color-mix(in srgb, var(--foreground) 4%, var(--background)) !important; }
+.dc-dashboard main table tbody tr { transition: background-color 180ms ease; }
+.dc-dashboard main table tbody tr:hover { background: color-mix(in srgb, var(--primary) 5%, var(--background)); }
+
+/* Dashboard overview cards: quiet editorial hierarchy instead of stacked colored boxes. */
+.dc-dashboard main [class*="grid"] > section[class*="border"] h2,
+.dc-dashboard main [class*="grid"] > section[class*="border"] h3 { letter-spacing: -0.01em; }
+.dc-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
+
+/* Status chips remain compact; Rose is reserved for meaningful state/action. */
+.dc-dashboard main [class*="bg-[#7A1C25]/10"],
+.dc-dashboard main [class*="bg-[#E8A5AE]/10"] {
+  background: color-mix(in srgb, var(--primary) 9%, transparent) !important;
 }
 
-.dc-dashboard main table tbody tr {
-  transition: background-color 180ms ease;
-}
-
-.dc-dashboard main table tbody tr:hover {
-  background: color-mix(in srgb, var(--primary) 5%, var(--background));
-}
-
-/* Replace the older warm dashboard surfaces with a quieter editorial canvas. */
-.dc-dashboard main [class*="rounded-2xl"][class*="border"] {
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 3%, transparent);
-}
-
-.dc-dashboard main [class*="rounded-full"] {
-  border-radius: 9999px;
-}
-
-/* Keep content breathing room consistent across dashboard panels. */
-.dc-dashboard main > div:first-child,
-.dc-dashboard main > section:first-child {
-  min-width: 0;
-}
+/* Forms and data panels use consistent spacing without changing their behavior. */
+.dc-dashboard main button:not([aria-label="Buka menu"]),
+.dc-dashboard main a[class*="rounded-xl"] { transition: transform 180ms ease, opacity 180ms ease; }
+.dc-dashboard main button:not([aria-label="Buka menu"]):hover,
+.dc-dashboard main a[class*="rounded-xl"]:hover { transform: translateY(-1px); }
 
 @media (min-width: 1024px) {
   .dc-dashboard main {
@@ -72,7 +62,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dc-dashboard main table tbody tr {
-    transition: none;
-  }
+  .dc-dashboard main button,
+  .dc-dashboard main a[class*="rounded-xl"],
+  .dc-dashboard main table tbody tr { transition: none; }
 }
