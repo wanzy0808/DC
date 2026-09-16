@@ -1,0 +1,78 @@
+/* DC Organizer dashboard visual system. Sidebar is intentionally excluded. */
+.dc-dashboard main {
+  min-width: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.dc-dashboard main > * {
+  min-width: 0;
+}
+
+.dc-dashboard main section {
+  border-color: var(--border) !important;
+}
+
+.dc-dashboard main section[class*="bg-[#f3ede6]"],
+.dc-dashboard main section[class*="bg-[#FAF7F2]"],
+.dc-dashboard main section[class*="bg-[#fffaf6]"],
+.dc-dashboard main section[class*="bg-[#121116]"] {
+  background: var(--card) !important;
+}
+
+.dc-dashboard main input,
+.dc-dashboard main textarea,
+.dc-dashboard main select {
+  border-color: var(--input) !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border-radius: 0.75rem;
+}
+
+.dc-dashboard main input:focus,
+.dc-dashboard main textarea:focus,
+.dc-dashboard main select:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.dc-dashboard main table thead {
+  background: color-mix(in srgb, var(--foreground) 4%, var(--background)) !important;
+}
+
+.dc-dashboard main table tbody tr {
+  transition: background-color 180ms ease;
+}
+
+.dc-dashboard main table tbody tr:hover {
+  background: color-mix(in srgb, var(--primary) 5%, var(--background));
+}
+
+/* Replace the older warm dashboard surfaces with a quieter editorial canvas. */
+.dc-dashboard main [class*="rounded-2xl"][class*="border"] {
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 3%, transparent);
+}
+
+.dc-dashboard main [class*="rounded-full"] {
+  border-radius: 9999px;
+}
+
+/* Keep content breathing room consistent across dashboard panels. */
+.dc-dashboard main > div:first-child,
+.dc-dashboard main > section:first-child {
+  min-width: 0;
+}
+
+@media (min-width: 1024px) {
+  .dc-dashboard main {
+    background:
+      linear-gradient(to right, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px) 0 0 / 100% 100%,
+      var(--background);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dc-dashboard main table tbody tr {
+    transition: none;
+  }
+}
