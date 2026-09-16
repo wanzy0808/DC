@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  ArrowRight,
   CalendarDays,
   CheckCircle2,
   ChevronDown,
@@ -26,6 +25,9 @@ import {
   X,
 } from "lucide-react";
 import { useTheme } from "@/components/Theme/ThemeContext";
+import EventScopePicker, {
+  type EventScopeOption,
+} from "@/components/Dashboard/EventScopePicker";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
 import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
 import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
@@ -70,6 +72,14 @@ type Context = {
     canUseUsherApp: boolean;
   };
 };
+
+type DashboardEvent = EventScopeOption & {
+  type: "WEDDING" | "ADAT_AKAD";
+  slug: string;
+  eventConfigured: boolean;
+  createdAt: string;
+};
+
 type Table = {
   id: string;
   name: string;
@@ -77,10 +87,12 @@ type Table = {
   capacity: number;
   _count?: { guests: number };
 };
+
 type Guest = {
   id: string;
   name: string;
   phone: string | null;
+  source?: "RSVP" | "MANUAL";
   rsvpStatus: string;
   plusOnes: number;
   checkedIn?: boolean;
@@ -88,6 +100,7 @@ type Guest = {
   tableId?: string | null;
   seatNumber?: number | null;
 };
+
 type Tab =
   | "overview"
   | "events"
@@ -97,6 +110,8 @@ type Tab =
   | "rsvp"
   | "placement"
   | "usher";
+
+type EventGuestData = { guests: Guest[]; tables: Table[] };
 
 const invitationTabs = new Set<Tab>([
   "events",
@@ -129,8 +144,26 @@ const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
   usher: { eyebrow: "Workspace / 05", title: "Usher App" },
 };
 
+function sortEvents(items: DashboardEvent[]) {
+  return [...items].sort((a, b) => {
+    if (a.type === "WEDDING" && b.type !== "WEDDING") return -1;
+    if (a.type !== "WEDDING" && b.type === "WEDDING") return 1;
+    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+  });
+}
+
+async function fetchEventGuestData(invitationId: string): Promise<EventGuestData> {
+  if (!invitationId) return { guests: [], tables: [] };
+  const response = await fetch(`/api/guests?invitationId=${encodeURIComponent(invitationId)}`, {
+    cache: "no-store",
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
+  return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
+}
+
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <section className={`border border-border bg-background ${className}`}>{children}</section>;
+  return <section className={`rounded-xl border border-border/80 bg-foreground/[0.018] ${className}`}>{children}</section>;
 }
 
 export default function DashboardPage() {
@@ -139,9 +172,15 @@ export default function DashboardPage() {
   const [tab, setTab] = useState<Tab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
   const [ctx, setCtx] = useState<Context | null>(null);
-  const [guests, setGuests] = useState<Guest[]>([]);
-  const [tables, setTables] = useState<Table[]>([]);
-  const [slug, setSlug] = useState("");
+  const [events, setEvents] = useState<DashboardEvent[]>([]);
+  const [rsvpEventId, setRsvpEventId] = useState("");
+  const [rsvpGuests, setRsvpGuests] = useState<Guest[]>([]);
+  const [rsvpLoading, setRsvpLoading] = useState(false);
+  const [placementEventId, setPlacementEventId] = useState("");
+  const [placementGuests, setPlacementGuests] = useState<Guest[]>([]);
+  const [placementTables, setPlacementTables] = useState<Table[]>([]);
+  const [placementLoading, setPlacementLoading] = useState(false);
+  const [usherGuests, setUsherGuests] = useState<Guest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
@@ -152,14 +191,13 @@ export default function DashboardPage() {
   const [nickname, setNickname] = useState("");
 
   const load = async () => {
-    const ir = await fetch("/api/invitations?type=WEDDING", { cache: "no-store" });
-    const [cr, gr] = await Promise.all([
+    const [contextResponse, invitationResponse] = await Promise.all([
       fetch("/api/dashboard/context", { cache: "no-store" }),
-      fetch("/api/guests", { cache: "no-store" }),
+      fetch("/api/invitations?all=1", { cache: "no-store" }),
     ]);
 
-    if (cr.ok) {
-      const next = (await cr.json()) as Context;
+    if (contextResponse.ok) {
+      const next = (await contextResponse.json()) as Context;
       setCtx(next);
       setGroom(next.wedding?.groomName || "");
       setBride(next.wedding?.brideName || "");
@@ -169,18 +207,96 @@ export default function DashboardPage() {
       );
     }
 
-    if (gr.ok) {
-      const data = await gr.json();
-      setGuests(data.guests ?? []);
-      setTables(data.tables ?? []);
-    }
+    if (invitationResponse.ok) {
+      const data = await invitationResponse.json();
+      const configured = sortEvents(
+        ((data.invitations ?? []) as DashboardEvent[]).filter(
+          (invitation) => invitation.eventConfigured,
+        ),
+      );
+      setEvents(configured);
+      const firstId = configured[0]?.id ?? "";
+      setRsvpEventId((current) =>
+        configured.some((event) => event.id === current) ? current : firstId,
+      );
+      setPlacementEventId((current) =>
+        configured.some((event) => event.id === current) ? current : firstId,
+      );
 
-    if (ir.ok) setSlug((await ir.json()).invitation?.slug ?? "");
+      if (firstId) {
+        const dataForUsher = await fetchEventGuestData(firstId).catch(() => ({
+          guests: [],
+          tables: [],
+        }));
+        setUsherGuests(dataForUsher.guests);
+      } else {
+        setUsherGuests([]);
+      }
+    }
   };
 
   useEffect(() => {
     load().catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    let active = true;
+    if (!rsvpEventId) {
+      setRsvpGuests([]);
+      setRsvpLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setRsvpLoading(true);
+    fetchEventGuestData(rsvpEventId)
+      .then((data) => {
+        if (active) setRsvpGuests(data.guests);
+      })
+      .catch(() => {
+        if (active) setRsvpGuests([]);
+      })
+      .finally(() => {
+        if (active) setRsvpLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [rsvpEventId]);
+
+  useEffect(() => {
+    let active = true;
+    if (!placementEventId) {
+      setPlacementGuests([]);
+      setPlacementTables([]);
+      setPlacementLoading(false);
+      return () => {
+        active = false;
+      };
+    }
+
+    setPlacementLoading(true);
+    fetchEventGuestData(placementEventId)
+      .then((data) => {
+        if (!active) return;
+        setPlacementGuests(data.guests);
+        setPlacementTables(data.tables);
+      })
+      .catch(() => {
+        if (!active) return;
+        setPlacementGuests([]);
+        setPlacementTables([]);
+      })
+      .finally(() => {
+        if (active) setPlacementLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [placementEventId]);
 
   const canDigital = ctx?.entitlements.hasDigitalInvitation ?? false;
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
@@ -191,6 +307,21 @@ export default function DashboardPage() {
     savedProfileName && savedProfileName.toLowerCase() !== "dashboard"
       ? savedProfileName
       : ctx?.profile.email?.split("@")[0] || "Akun";
+  const rsvpEvent = events.find((event) => event.id === rsvpEventId) ?? null;
+  const placementEvent = events.find((event) => event.id === placementEventId) ?? null;
+
+  async function refreshRsvp() {
+    if (!rsvpEventId) return;
+    const data = await fetchEventGuestData(rsvpEventId);
+    setRsvpGuests(data.guests);
+  }
+
+  async function refreshPlacement() {
+    if (!placementEventId) return;
+    const data = await fetchEventGuestData(placementEventId);
+    setPlacementGuests(data.guests);
+    setPlacementTables(data.tables);
+  }
 
   async function saveOnboarding() {
     const groomName = groom.trim();
@@ -269,6 +400,7 @@ export default function DashboardPage() {
 
   const meta = tabMeta[tab];
   const invitationActive = invitationTabs.has(tab);
+  const scopedHeaderEvent = tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
 
   return (
     <div className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}>
@@ -379,21 +511,30 @@ export default function DashboardPage() {
 
           <main className="min-w-0 overflow-x-clip">
             {tab !== "overview" && (
-              <section className="border-b border-border bg-background">
+              <section className="bg-background">
                 <div className="mx-auto flex w-[min(92vw,1400px)] min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
                   <div className="min-w-0">
                     <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{meta.eyebrow}</p>
                     <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">{meta.title}</h1>
                   </div>
                   <div className="hidden min-w-0 text-right sm:block">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Wedding</p>
-                    <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">{ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur"}</p>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">{scopedHeaderEvent ? "Acara" : "Wedding"}</p>
+                    <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">
+                      {scopedHeaderEvent?.title || (ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur")}
+                    </p>
                   </div>
                 </div>
               </section>
             )}
 
-            {tab === "overview" && <WorkspaceOverview ctx={ctx} onGo={go} onUpgrade={() => router.push("/packages")} />}
+            {tab === "overview" && (
+              <WorkspaceOverview
+                ctx={ctx}
+                events={events}
+                onGo={go}
+                onUpgrade={() => router.push("/packages")}
+              />
+            )}
             {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
             {tab === "invitation" && <InvitationWorkspacePanel paid={canDigital} onCreateSequence={() => go("events")} />}
             {tab === "waBlast" && (
@@ -406,15 +547,35 @@ export default function DashboardPage() {
                 <PersonalInvitationPanel />
               </FeatureGate>
             )}
-            {tab === "rsvp" && <RsvpAnalyticsPanel guests={guests} slug={slug} accent={accent} />}
+            {tab === "rsvp" && (
+              <RsvpWorkspace
+                events={events}
+                selectedId={rsvpEventId}
+                onSelect={setRsvpEventId}
+                selectedEvent={rsvpEvent}
+                guests={rsvpGuests}
+                loading={rsvpLoading}
+                onRefresh={refreshRsvp}
+                accent={accent}
+              />
+            )}
             {tab === "placement" && (
               <FeatureGate allowed={canDigital} title="Manajemen Tamu" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
-                <PlacementPanel guests={guests} tables={tables} accent={accent} onRefresh={load} />
+                <PlacementWorkspace
+                  events={events}
+                  selectedId={placementEventId}
+                  onSelect={setPlacementEventId}
+                  guests={placementGuests}
+                  tables={placementTables}
+                  loading={placementLoading}
+                  accent={accent}
+                  onRefresh={refreshPlacement}
+                />
               </FeatureGate>
             )}
             {tab === "usher" && (
               <FeatureGate allowed={canGuestbook} title="Usher App" description="Tersedia pada paket Guestbook Digital." upgradeLabel="Lihat paket Guestbook Digital" onUpgrade={() => router.push("/packages")}>
-                <UsherPanel guests={guests} onRefresh={load} />
+                <UsherPanel guests={usherGuests} onRefresh={load} />
               </FeatureGate>
             )}
           </main>
@@ -427,7 +588,7 @@ export default function DashboardPage() {
 
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-lg border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
+          <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
             <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">Setup awal</p>
             <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Data pasangan</h2>
             <div className="mt-6 space-y-4">
@@ -435,7 +596,7 @@ export default function DashboardPage() {
               <Field label="Nama pasangan wanita" value={bride} onChange={setBride} placeholder="Contoh: Lyvia" />
               <Field label="Nama panggilan" value={nickname} onChange={setNickname} placeholder="Contoh: Hendro" />
             </div>
-            {onboardingError && <p className="mt-4 border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">{onboardingError}</p>}
+            {onboardingError && <p className="mt-4 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">{onboardingError}</p>}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
               <CheckCircle2 className="h-4 w-4" />
               {saving ? "Menyimpan data..." : "Simpan data & masuk"}
@@ -465,44 +626,86 @@ function Field({ label, value, onChange, placeholder }: { label: string; value: 
   );
 }
 
-function WorkspaceOverview({ ctx, onGo, onUpgrade }: { ctx: Context | null; onGo: (id: Tab) => void; onUpgrade: () => void }) {
+function WorkspaceOverview({
+  ctx,
+  events,
+  onGo,
+  onUpgrade,
+}: {
+  ctx: Context | null;
+  events: DashboardEvent[];
+  onGo: (id: Tab) => void;
+  onUpgrade: () => void;
+}) {
   const overview = ctx?.overview;
+  const published = events.filter((event) => event.isPublished).length;
   const packageKey = ctx?.package.key;
   const packageStatus = ctx?.package.status;
-  const packageLabel = packageStatus === "PAID" ? packageKey === "INVITATION_GUESTBOOK" ? "Digital Invitation + Guestbook" : packageKey === "GUESTBOOK_DIGITAL" ? "Guestbook Digital" : "Digital Invitation" : "Belum aktif";
+  const packageLabel = packageStatus === "PAID"
+    ? packageKey === "INVITATION_GUESTBOOK"
+      ? "Digital Invitation + Guestbook"
+      : packageKey === "GUESTBOOK_DIGITAL"
+        ? "Guestbook Digital"
+        : "Digital Invitation"
+    : "Belum aktif";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <section className="flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-5">
         <div className="min-w-0">
           <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Workspace / 01</p>
           <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">Halo, {ctx?.profile.displayName || "Akun"}</h1>
+          <p className="mt-1 text-xs text-muted-foreground">{packageLabel}</p>
         </div>
-        <div className="min-w-0 sm:text-right">
+        <div className="mt-4 min-w-0 sm:mt-0 sm:text-right">
           <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Wedding</p>
           <p className="mt-1 truncate text-sm font-medium">{ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur"}</p>
-          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{ctx?.wedding?.venue || "Lokasi belum diatur"}</p>
         </div>
       </section>
 
-      <section className="grid border-b border-border sm:grid-cols-4">
-        <Stat label="Paket" value={packageLabel} />
+      <section className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+        <Stat label="Acara" value={`${events.length} / 3`} />
+        <Stat label="Undangan terbit" value={`${published} / 3`} />
         <Stat label="RSVP" value={String(overview?.totalRsvp ?? 0)} />
         <Stat label="Tamu" value={String(overview?.totalGuests ?? 0)} />
-        <Stat label="Publish" value={overview?.invitationPublished ? "Aktif" : "Draft"} />
       </section>
 
-      <section className="mt-8">
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Akses cepat</h2>
-          <Button onClick={onUpgrade} size="sm" title="Kelola paket"><Settings2 className="h-4 w-4" />Kelola paket</Button>
+      <section className="mt-6 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Rangkaian acara</h2>
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => onGo("events")} size="sm"><CalendarDays className="h-4 w-4" />Kelola rangkaian</Button>
+            <Button onClick={onUpgrade} size="sm"><Settings2 className="h-4 w-4" />Kelola paket</Button>
+          </div>
         </div>
-        <div className="grid border-y border-border sm:grid-cols-2">
-          <QuickAction icon={CalendarDays} label="Rangkaian Acara" onClick={() => onGo("events")} />
-          <QuickAction icon={Mail} label="Undangan" onClick={() => onGo("invitation")} />
-          <QuickAction icon={Send} label="WA Blast" onClick={() => onGo("waBlast")} />
-          <QuickAction icon={ContactRound} label="Personal Invitation" onClick={() => onGo("personalInvitation")} />
-        </div>
+
+        {events.length ? (
+          <div className="mt-4 grid gap-2 lg:grid-cols-3">
+            {events.map((event, index) => (
+              <article key={event.id} className="rounded-xl border border-border/75 bg-background/75 p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">Acara {String(index + 1).padStart(2, "0")}</p>
+                    <p className="mt-1 truncate text-sm font-semibold text-foreground">{event.title || `Rangkaian ${index + 1}`}</p>
+                    <p className="mt-1 truncate text-[11px] text-muted-foreground">{event.venue || "Lokasi belum diisi"}</p>
+                  </div>
+                  <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">{event.isPublished ? "Terbit" : "Draft"}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
+            Belum ada rangkaian acara. Buat rangkaian pertama untuk mulai mengelola RSVP dan tamu.
+          </div>
+        )}
+      </section>
+
+      <section className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+        <Button onClick={() => onGo("invitation")} size="sm"><Mail className="h-4 w-4" />Kelola undangan</Button>
+        <Button onClick={() => onGo("rsvp")} size="sm"><MessageSquareHeart className="h-4 w-4" />Buka RSVP</Button>
+        <Button onClick={() => onGo("placement")} size="sm"><Users className="h-4 w-4" />Kelola tamu</Button>
+        <Button onClick={() => onGo("waBlast")} size="sm"><Send className="h-4 w-4" />Siapkan WA Blast</Button>
       </section>
     </div>
   );
@@ -510,24 +713,109 @@ function WorkspaceOverview({ ctx, onGo, onUpgrade }: { ctx: Context | null; onGo
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 sm:first:pl-0">
+    <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
       <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
-      <p className="mt-1 truncate text-sm font-semibold text-foreground">{value}</p>
+      <p className="mt-2 truncate text-base font-semibold text-foreground">{value}</p>
     </div>
   );
 }
 
-function QuickAction({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
+function RsvpWorkspace({
+  events,
+  selectedId,
+  onSelect,
+  selectedEvent,
+  guests,
+  loading,
+  onRefresh,
+  accent,
+}: {
+  events: DashboardEvent[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+  selectedEvent: DashboardEvent | null;
+  guests: Guest[];
+  loading: boolean;
+  onRefresh: () => Promise<void>;
+  accent: string;
+}) {
   return (
-    <Button type="button" onClick={onClick} className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left text-sm text-foreground shadow-none hover:bg-primary/[0.04] hover:text-primary sm:px-3 sm:[&:nth-child(odd)]:border-r">
-      <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-      <span className="truncate">{label}</span>
-      <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-    </Button>
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+      <EventScopePicker events={events} value={selectedId} onChange={onSelect} disabled={loading} />
+      {selectedEvent && (
+        <div className="mt-4">
+          {loading ? (
+            <LoadingSurface />
+          ) : (
+            <RsvpAnalyticsPanel
+              key={selectedEvent.id}
+              guests={guests}
+              slug={selectedEvent.slug}
+              accent={accent}
+              embedded
+              onRefresh={onRefresh}
+            />
+          )}
+        </div>
+      )}
+    </div>
   );
 }
 
-function PlacementPanel({ guests, tables, accent, onRefresh }: { guests: Guest[]; tables: Table[]; accent: string; onRefresh: () => void }) {
+function PlacementWorkspace({
+  events,
+  selectedId,
+  onSelect,
+  guests,
+  tables,
+  loading,
+  accent,
+  onRefresh,
+}: {
+  events: DashboardEvent[];
+  selectedId: string;
+  onSelect: (id: string) => void;
+  guests: Guest[];
+  tables: Table[];
+  loading: boolean;
+  accent: string;
+  onRefresh: () => Promise<void>;
+}) {
+  return (
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+      <EventScopePicker events={events} value={selectedId} onChange={onSelect} disabled={loading} />
+      {selectedId && (
+        <div className="mt-4">
+          {loading ? (
+            <LoadingSurface />
+          ) : (
+            <PlacementPanel
+              invitationId={selectedId}
+              guests={guests}
+              tables={tables}
+              accent={accent}
+              onRefresh={onRefresh}
+            />
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PlacementPanel({
+  invitationId,
+  guests,
+  tables,
+  accent,
+  onRefresh,
+}: {
+  invitationId: string;
+  guests: Guest[];
+  tables: Table[];
+  accent: string;
+  onRefresh: () => Promise<void>;
+}) {
   const assigned = guests.filter((guest) => guest.tableId).length;
   const assignGuest = async (guestId: string, tableId: string, seatNumber: number) => {
     const response = await fetch(`/api/guests/${guestId}`, {
@@ -542,21 +830,34 @@ function PlacementPanel({ guests, tables, accent, onRefresh }: { guests: Guest[]
   };
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <Card>
-        <div className="p-5 sm:p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
-          </div>
-          <div className="grid border-b border-border sm:grid-cols-3">
-            <Stat label="Tamu" value={String(guests.length)} />
-            <Stat label="Meja" value={String(tables.length)} />
-            <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
-          </div>
-          <div className="pt-5"><SeatingChart guests={guests} tables={tables} accent={accent} onAssigned={assignGuest} /></div>
+    <Card>
+      <div className="p-4 sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
+          <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
         </div>
-      </Card>
+        <div className="mt-3 grid gap-2 sm:grid-cols-3">
+          <Stat label="Tamu" value={String(guests.length)} />
+          <Stat label="Meja" value={String(tables.length)} />
+          <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
+        </div>
+        <SeatingChart
+          key={invitationId}
+          invitationId={invitationId}
+          guests={guests}
+          tables={tables}
+          accent={accent}
+          onAssigned={assignGuest}
+        />
+      </div>
+    </Card>
+  );
+}
+
+function LoadingSurface() {
+  return (
+    <div className="rounded-xl border border-border/80 bg-foreground/[0.018] p-5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+      Memuat data acara...
     </div>
   );
 }
@@ -567,11 +868,11 @@ function UsherPanel({ guests, onRefresh }: { guests: Guest[]; onRefresh: () => v
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <Card>
         <div className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+          <div className="flex items-center justify-between gap-4">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Check-in</h2>
             <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
           </div>
-          <div className="grid sm:grid-cols-2">
+          <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <Stat label="Total tamu" value={String(guests.length)} />
             <Stat label="Check-in" value={String(checked)} />
           </div>
