@@ -1,15 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { CalendarDays, CreditCard, PenLine, Plus, Save } from "lucide-react";
+import {
+  CalendarDays,
+  Clock3,
+  CreditCard,
+  MapPin,
+  PenLine,
+  Plus,
+  Save,
+  UserRound,
+  X,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  buildEventTitle,
+  eventCategoryOptions,
+  getEventCategory,
+  getIndonesiaTimezone,
+  indonesiaTimezones,
+  isEventCategory,
+  type EventCategory,
+} from "@/lib/events/catalog";
 
 type Invitation = {
   id: string;
   type: "WEDDING" | "ADAT_AKAD";
   title: string;
+  eventCategory: EventCategory;
+  groomName: string;
+  brideName: string;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -26,9 +48,29 @@ type Invitation = {
 };
 
 type Props = { accent: string; onSaved: () => void };
+type EditorMode = "closed" | "new" | "edit";
 
-const emptyForm = {
-  title: "",
+type EventForm = {
+  eventCategory: EventCategory | "";
+  customTitle: string;
+  groomName: string;
+  brideName: string;
+  venue: string;
+  address: string;
+  mapUrl: string;
+  timezone: string;
+  eventDate: string;
+  ceremonyTime: string;
+  receptionTime: string;
+  description: string;
+  eventNotes: string;
+};
+
+const emptyForm: EventForm = {
+  eventCategory: "",
+  customTitle: "",
+  groomName: "",
+  brideName: "",
   venue: "",
   address: "",
   mapUrl: "",
@@ -46,9 +88,15 @@ function sortInvitations(items: Invitation[]) {
   );
 }
 
-function toForm(invitation: Invitation) {
+function toForm(invitation: Invitation): EventForm {
+  const category = isEventCategory(invitation.eventCategory)
+    ? invitation.eventCategory
+    : "OTHER";
   return {
-    title: invitation.title || "",
+    eventCategory: category,
+    customTitle: category === "OTHER" ? invitation.title || "" : "",
+    groomName: invitation.groomName || "",
+    brideName: invitation.brideName || "",
     venue: invitation.venue || "",
     address: invitation.address || "",
     mapUrl: invitation.mapUrl || "",
@@ -64,18 +112,57 @@ function toForm(invitation: Invitation) {
   };
 }
 
+function formatDateId(value: string) {
+  if (!value) return "Tanggal belum dipilih";
+  const date = new Date(`${value}T12:00:00+07:00`);
+  if (Number.isNaN(date.getTime())) return "Tanggal belum dipilih";
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Asia/Jakarta",
+  }).format(date);
+}
+
+function formatTime(value: string) {
+  return value ? value.replace(":", ".") : "--.--";
+}
+
 export default function EventPanel({ accent, onSaved }: Props) {
   const [events, setEvents] = useState<Invitation[]>([]);
   const [activeId, setActiveId] = useState("");
-  const [form, setForm] = useState(emptyForm);
+  const [editorMode, setEditorMode] = useState<EditorMode>("closed");
+  const [form, setForm] = useState<EventForm>(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [creating, setCreating] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
+
+  const visibleEvents = useMemo(
+    () =>
+      events.filter(
+        (event) =>
+          event.eventConfigured ||
+          event.title.trim() ||
+          event.venue.trim() ||
+          event.groomName.trim() ||
+          event.brideName.trim(),
+      ),
+    [events],
+  );
 
   function activate(invitation: Invitation) {
     setActiveId(invitation.id);
     setForm(toForm(invitation));
+    setEditorMode("edit");
+    setNotice("Siap diedit");
+  }
+
+  function closeEditor() {
+    setActiveId("");
+    setForm(emptyForm);
+    setEditorMode("closed");
+    setNotice("Tersinkron");
   }
 
   async function load(preferredId?: string) {
@@ -87,12 +174,12 @@ export default function EventPanel({ accent, onSaved }: Props) {
       if (!response.ok) throw new Error(data.error || "Data acara belum dapat dimuat.");
       const next = sortInvitations((data.invitations ?? []) as Invitation[]);
       setEvents(next);
-      const active =
-        next.find((item) => item.id === (preferredId || activeId)) || next[0];
-      if (active) activate(active);
-      else {
-        setActiveId("");
-        setForm(emptyForm);
+      if (preferredId) {
+        const preferred = next.find((item) => item.id === preferredId);
+        if (preferred) activate(preferred);
+      } else if (editorMode === "edit" && activeId) {
+        const current = next.find((item) => item.id === activeId);
+        if (current) activate(current);
       }
       setNotice("Tersinkron");
     } catch (error) {
@@ -106,56 +193,106 @@ export default function EventPanel({ accent, onSaved }: Props) {
     load().catch(() => undefined);
   }, []);
 
-  function field(name: keyof typeof form, value: string) {
+  function field(name: keyof EventForm, value: string) {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
-  function selectEvent(id: string) {
-    const invitation = events.find((item) => item.id === id);
-    if (invitation) activate(invitation);
+  function startNewEvent() {
+    setActiveId("");
+    setForm(emptyForm);
+    setEditorMode("new");
+    setNotice("Pilih jenis acara untuk mulai mengisi.");
   }
 
-  async function addEvent() {
-    setCreating(true);
-    setNotice("Membuat acara...");
-    try {
-      const response = await fetch("/api/invitations", { method: "POST" });
-      const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Acara baru belum dapat dibuat.");
-      await load(data.invitation?.id);
-      setNotice("Acara baru siap diisi");
-      onSaved();
-    } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Acara baru belum dapat dibuat.");
-    } finally {
-      setCreating(false);
-    }
+  function selectCategory(value: string) {
+    if (!isEventCategory(value)) return;
+    const mode = getEventCategory(value).nameMode;
+    setForm((current) => ({
+      ...current,
+      eventCategory: value,
+      customTitle: value === "OTHER" ? current.customTitle : "",
+      brideName: mode === "couple" ? current.brideName : "",
+      groomName: mode === "optional" ? "" : current.groomName,
+    }));
   }
 
   async function save() {
-    if (!activeId) return;
-    if (!form.title.trim()) {
-      setNotice("Nama acara wajib diisi.");
+    if (!form.eventCategory) {
+      setNotice("Pilih nama acara terlebih dahulu.");
+      return;
+    }
+
+    const category = getEventCategory(form.eventCategory);
+    if (category.nameMode === "couple" && (!form.groomName.trim() || !form.brideName.trim())) {
+      setNotice("Lengkapi kedua nama untuk acara ini.");
+      return;
+    }
+    if (category.nameMode === "single" && !form.groomName.trim()) {
+      setNotice("Nama utama acara wajib diisi.");
+      return;
+    }
+    if (form.eventCategory === "OTHER" && !form.customTitle.trim()) {
+      setNotice("Nama event lainnya wajib diisi.");
+      return;
+    }
+    if (!form.eventDate) {
+      setNotice("Tanggal acara wajib diisi.");
+      return;
+    }
+    if (!form.ceremonyTime) {
+      setNotice("Waktu mulai wajib diisi.");
+      return;
+    }
+    if (!form.venue.trim()) {
+      setNotice("Nama tempat wajib diisi.");
       return;
     }
 
     setSaving(true);
     setNotice("Menyimpan...");
     try {
+      let targetId = activeId;
+      if (editorMode === "new") {
+        const createResponse = await fetch("/api/invitations", { method: "POST" });
+        const createData = await createResponse.json().catch(() => null);
+        if (!createResponse.ok || !createData?.invitation?.id) {
+          throw new Error(createData?.error || "Acara baru belum dapat dibuat.");
+        }
+        targetId = createData.invitation.id;
+      }
+
+      if (!targetId) throw new Error("Acara belum dapat disimpan.");
+
+      const title = buildEventTitle(
+        form.eventCategory,
+        form.groomName,
+        form.brideName,
+        form.customTitle,
+      );
       const response = await fetch("/api/invitations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, id: activeId, eventConfigured: true }),
+        body: JSON.stringify({
+          id: targetId,
+          eventCategory: form.eventCategory,
+          title,
+          groomName: form.groomName,
+          brideName: form.brideName,
+          venue: form.venue,
+          address: form.address,
+          mapUrl: form.mapUrl,
+          timezone: form.timezone,
+          eventDate: form.eventDate,
+          ceremonyTime: form.ceremonyTime,
+          receptionTime: form.receptionTime,
+          description: form.description,
+          eventNotes: form.eventNotes,
+          eventConfigured: true,
+        }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Data acara belum dapat disimpan.");
-      const updated = data.invitation as Invitation;
-      setEvents((current) =>
-        sortInvitations(
-          current.map((item) => (item.id === updated.id ? updated : item)),
-        ),
-      );
-      activate(updated);
+      await load(targetId);
       setNotice("Tersimpan");
       onSaved();
     } catch (error) {
@@ -165,189 +302,288 @@ export default function EventPanel({ accent, onSaved }: Props) {
     }
   }
 
+  const category = form.eventCategory ? getEventCategory(form.eventCategory) : null;
   const active = events.find((item) => item.id === activeId) || null;
-  const activeIndex = Math.max(0, events.findIndex((item) => item.id === activeId));
-  const studioHref = active
-    ? `/dashboard/editor?type=${active.type}&invitationId=${active.id}`
-    : "/dashboard/editor?type=WEDDING";
-  const purchaseHref = active
-    ? `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(active.id)}`
-    : "/packages?package=INVITATION_BASIC";
-  const activeTitle = form.title.trim() || `Acara ${activeIndex + 1}`;
+  const timezone = getIndonesiaTimezone(form.timezone);
+  const previewTitle = form.eventCategory
+    ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
+    : "Acara baru";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <section className="bg-background">
-        <div className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5">
+      <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-              {active ? `Acara ${String(activeIndex + 1).padStart(2, "0")}` : "Acara baru"}
+              Rangkaian acara
             </p>
-            <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-              {active ? activeTitle : "Belum ada acara"}
+            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              {visibleEvents.length ? `${visibleEvents.length} acara dibuat` : "Belum ada acara"}
             </h2>
           </div>
-
-          <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-0 sm:justify-end">
-            {active && (
-              <span
-                className={`rounded-lg border border-primary/15 bg-primary/[0.045] px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] ${accent}`}
-              >
-                {active.accessPaid ? "Undangan aktif" : "Belum dibeli"}
-              </span>
-            )}
-            {active && !active.accessPaid && (
-              <Button asChild size="sm">
-                <Link href={purchaseHref}>
-                  <CreditCard className="h-4 w-4" />
-                  Aktifkan Rp150.000
-                </Link>
-              </Button>
-            )}
-            {active && (
-              <Button asChild size="sm">
-                <Link href={studioHref}>
-                  <PenLine className="h-4 w-4" />
-                  Buka Studio
-                </Link>
-              </Button>
-            )}
-            <Button
-              type="button"
-              size="sm"
-              onClick={addEvent}
-              disabled={loading || creating}
-            >
-              <Plus className="h-4 w-4" />
-              {creating ? "Membuat..." : "Tambah acara"}
-            </Button>
-          </div>
+          <Button type="button" size="sm" onClick={startNewEvent} disabled={loading || saving}>
+            <Plus className="h-4 w-4" />
+            Tambah acara
+          </Button>
         </div>
 
-        {events.length > 0 && (
-          <label className="mt-3 block max-w-md rounded-xl border border-border/80 bg-foreground/[0.018] p-3">
-            <span className="mb-1.5 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-              Acara aktif
-            </span>
-            <select
-              value={activeId}
-              onChange={(event) => selectEvent(event.target.value)}
-              disabled={loading || saving}
-              aria-label="Pilih acara"
-              className="w-full px-3 text-sm outline-none"
-            >
-              {events.map((item, index) => (
-                <option key={item.id} value={item.id}>
-                  {item.title.trim() || `Acara ${index + 1}`}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-
-        {!active ? (
-          <div className="mt-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-6 text-sm text-muted-foreground">
-            Belum ada acara. Klik <strong className="text-foreground">Tambah acara</strong> untuk membuat rangkaian pertama.
+        {visibleEvents.length ? (
+          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {visibleEvents.map((event, index) => {
+              const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`;
+              const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
+              return (
+                <article key={event.id} className="rounded-xl border border-border/75 bg-background/80 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+                        Acara {String(index + 1).padStart(2, "0")}
+                      </p>
+                      <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
+                        {event.title || `Acara ${index + 1}`}
+                      </h3>
+                      <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                        {event.venue || "Tempat belum diisi"}
+                      </p>
+                    </div>
+                    <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
+                      {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Draft"}
+                    </span>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <Button type="button" size="sm" onClick={() => activate(event)}>
+                      <PenLine className="h-4 w-4" />
+                      Edit acara
+                    </Button>
+                    {!event.accessPaid ? (
+                      <Button asChild size="sm">
+                        <Link href={purchaseHref}>
+                          <CreditCard className="h-4 w-4" />
+                          Buat undangan
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button asChild size="sm">
+                        <Link href={studioHref}>
+                          <PenLine className="h-4 w-4" />
+                          Studio
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         ) : (
-          <>
-            <div className="mt-4 grid gap-4 lg:grid-cols-2">
-              <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
-                <SectionLabel>Detail acara</SectionLabel>
+          <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
+            Klik <strong className="text-foreground">Tambah acara</strong> untuk mulai membuat rangkaian pertama.
+          </div>
+        )}
+      </section>
+
+      {editorMode !== "closed" && (
+        <section className="mt-4 rounded-xl border border-border/80 bg-background p-4 sm:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div className="min-w-0">
+              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                {editorMode === "new" ? "Acara baru" : "Edit acara"}
+              </p>
+              <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+                {previewTitle || "Pilih jenis acara"}
+              </h2>
+            </div>
+            <Button type="button" size="sm" onClick={closeEditor} disabled={saving}>
+              <X className="h-4 w-4" />
+              Tutup form
+            </Button>
+          </div>
+
+          <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
+            <div className="rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
+              <SectionLabel>1 · Acara</SectionLabel>
+              <label className="mt-4 block">
+                <span className="mb-1.5 block text-xs font-semibold">Nama acara</span>
+                <select
+                  value={form.eventCategory}
+                  onChange={(event) => selectCategory(event.target.value)}
+                  className="w-full px-3 text-sm outline-none"
+                  aria-label="Pilih nama acara"
+                >
+                  <option value="">Pilih jenis acara</option>
+                  {eventCategoryOptions.map((item) => (
+                    <option key={item.key} value={item.key}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              {category && (
                 <div className="mt-4 space-y-4">
+                  {category.nameMode === "couple" && (
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <Field
+                        label={form.eventCategory === "WEDDING" ? "Nama pengantin pria" : "Nama pasangan 1"}
+                        value={form.groomName}
+                        onChange={(value) => field("groomName", value)}
+                        placeholder="Nama lengkap"
+                      />
+                      <Field
+                        label={form.eventCategory === "WEDDING" ? "Nama pengantin wanita" : "Nama pasangan 2"}
+                        value={form.brideName}
+                        onChange={(value) => field("brideName", value)}
+                        placeholder="Nama lengkap"
+                      />
+                    </div>
+                  )}
+
+                  {category.nameMode === "single" && (
+                    <Field
+                      label={form.eventCategory === "BIRTHDAY" ? "Nama yang berulang tahun" : "Nama keluarga / calon bayi"}
+                      value={form.groomName}
+                      onChange={(value) => field("groomName", value)}
+                      placeholder={form.eventCategory === "BIRTHDAY" ? "Contoh: Olivia" : "Contoh: Keluarga Wijaya"}
+                    />
+                  )}
+
+                  {form.eventCategory === "OTHER" && (
+                    <Field
+                      label="Nama event"
+                      value={form.customTitle}
+                      onChange={(value) => field("customTitle", value)}
+                      placeholder="Contoh: Company Gathering 2026"
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+
+            {category && (
+              <div className="rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
+                <SectionLabel>2 · Waktu & tempat</SectionLabel>
+                <div className="mt-4 grid gap-4 md:grid-cols-3">
                   <Field
-                    label="Nama acara"
-                    value={form.title}
-                    onChange={(value) => field("title", value)}
-                    placeholder="Contoh: Birthday Dinner, Baby Shower, Wedding Reception"
+                    label="Tanggal acara"
+                    type="date"
+                    value={form.eventDate}
+                    onChange={(value) => field("eventDate", value)}
                   />
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Field
-                      label="Tanggal"
-                      type="date"
-                      value={form.eventDate}
-                      onChange={(value) => field("eventDate", value)}
-                    />
-                    <Field
-                      label="Zona waktu"
-                      value={form.timezone}
-                      onChange={(value) => field("timezone", value)}
-                      placeholder="Asia/Jakarta"
-                    />
-                  </div>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <Field
-                      label="Waktu mulai"
-                      type="time"
-                      value={form.ceremonyTime}
-                      onChange={(value) => field("ceremonyTime", value)}
-                    />
-                    <Field
-                      label="Waktu selesai"
-                      type="time"
-                      value={form.receptionTime}
-                      onChange={(value) => field("receptionTime", value)}
-                    />
-                  </div>
-                  <TextArea
-                    label="Deskripsi"
-                    value={form.description}
-                    onChange={(value) => field("description", value)}
-                    placeholder="Informasi singkat acara"
-                    rows={4}
+                  <Field
+                    label={`Waktu mulai (${timezone.label})`}
+                    type="time"
+                    value={form.ceremonyTime}
+                    onChange={(value) => field("ceremonyTime", value)}
+                  />
+                  <Field
+                    label={`Waktu selesai (${timezone.label})`}
+                    type="time"
+                    value={form.receptionTime}
+                    onChange={(value) => field("receptionTime", value)}
                   />
                 </div>
-              </div>
 
-              <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
-                <SectionLabel>Lokasi & catatan</SectionLabel>
+                <label className="mt-4 block">
+                  <span className="mb-1.5 block text-xs font-semibold">Zona waktu Indonesia</span>
+                  <select
+                    value={form.timezone}
+                    onChange={(event) => field("timezone", event.target.value)}
+                    className="w-full px-3 text-sm outline-none"
+                  >
+                    {indonesiaTimezones.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label} · {item.description}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                {(form.eventDate || form.ceremonyTime) && (
+                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-primary/10 bg-primary/[0.035] px-3 py-3 text-xs text-foreground/75">
+                    <span className="inline-flex items-center gap-2">
+                      <CalendarDays className="h-4 w-4 text-primary" />
+                      {formatDateId(form.eventDate)}
+                    </span>
+                    <span className="inline-flex items-center gap-2">
+                      <Clock3 className="h-4 w-4 text-primary" />
+                      {formatTime(form.ceremonyTime)}{form.receptionTime ? `–${formatTime(form.receptionTime)}` : ""} {timezone.label}
+                    </span>
+                  </div>
+                )}
+
                 <div className="mt-4 space-y-4">
                   <Field
-                    label="Venue"
+                    label="Nama tempat"
                     value={form.venue}
                     onChange={(value) => field("venue", value)}
-                    placeholder="Nama venue"
+                    placeholder="Contoh: Grand Ballroom Hotel ABC"
                   />
                   <Field
                     label="Alamat"
                     value={form.address}
                     onChange={(value) => field("address", value)}
-                    placeholder="Alamat lengkap"
+                    placeholder="Alamat lengkap acara"
                   />
                   <Field
-                    label="Google Maps URL"
+                    label="Google Maps"
                     value={form.mapUrl}
                     onChange={(value) => field("mapUrl", value)}
-                    placeholder="https://maps.google.com/..."
-                  />
-                  <TextArea
-                    label="Catatan"
-                    value={form.eventNotes}
-                    onChange={(value) => field("eventNotes", value)}
-                    placeholder="Catatan tambahan"
-                    rows={4}
+                    placeholder="Tempel link Google Maps"
                   />
                 </div>
               </div>
-            </div>
+            )}
+          </div>
 
-            <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
-                <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-                  <CalendarDays className="h-4 w-4" />
-                </span>
-                <span className="truncate">
-                  {events.length} acara · {notice}
-                </span>
+          {category && (
+            <details className="mt-4 rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
+              <summary className="cursor-pointer text-xs font-semibold text-foreground">
+                Tambahan opsional
+              </summary>
+              <div className="mt-4 grid gap-4 lg:grid-cols-2">
+                <TextArea
+                  label="Deskripsi"
+                  value={form.description}
+                  onChange={(value) => field("description", value)}
+                  placeholder="Informasi singkat untuk tamu"
+                  rows={3}
+                />
+                <TextArea
+                  label="Catatan"
+                  value={form.eventNotes}
+                  onChange={(value) => field("eventNotes", value)}
+                  placeholder="Catatan internal atau informasi tambahan"
+                  rows={3}
+                />
               </div>
-              <Button disabled={loading || saving || !activeId} onClick={save} size="sm">
-                <Save className="h-4 w-4" />
-                {saving ? "Menyimpan acara..." : "Simpan acara"}
-              </Button>
+            </details>
+          )}
+
+          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex min-w-0 items-center gap-3 text-xs text-muted-foreground">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
+                {form.venue ? <MapPin className="h-4 w-4" /> : <UserRound className="h-4 w-4" />}
+              </span>
+              <span className="min-w-0 truncate">{notice}</span>
             </div>
-          </>
-        )}
-      </section>
+            <Button disabled={loading || saving || !category} onClick={save} size="sm">
+              <Save className="h-4 w-4" />
+              {saving ? "Menyimpan acara..." : editorMode === "new" ? "Buat acara" : "Simpan perubahan"}
+            </Button>
+          </div>
+        </section>
+      )}
+
+      {active && editorMode === "edit" && active.accessPaid && (
+        <div className="mt-3 flex justify-end">
+          <Button asChild size="sm">
+            <Link href={`/dashboard/editor?type=${active.type}&invitationId=${active.id}`}>
+              <PenLine className="h-4 w-4" />
+              Buka Studio
+            </Link>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
