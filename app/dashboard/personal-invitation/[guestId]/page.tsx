@@ -20,7 +20,7 @@ export default async function PersonalInvitationPreviewPage({
     where: {
       id: guestId,
       personalToken: { not: null },
-      invitation: { ownerId: user.id, type: "WEDDING" },
+      invitation: { ownerId: user.id },
     },
     include: {
       invitation: { include: { payment: true, assets: true } },
@@ -32,9 +32,9 @@ export default async function PersonalInvitationPreviewPage({
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <FigmaClassicTemplate invitation={invitation} eventKind="wedding" />
+      <FigmaClassicTemplate invitation={invitation} />
     ) : (
-      <PublicInvitation invitation={invitation} eventKind="wedding" />
+      <PublicInvitation invitation={invitation} />
     );
 
   return (
@@ -45,7 +45,9 @@ export default async function PersonalInvitationPreviewPage({
           Kembali
         </Link>
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">Pratinjau Personal Invitation</p>
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            Pratinjau Personal Invitation
+          </p>
           <p className="truncate text-sm font-medium">Untuk {guest.name}</p>
         </div>
       </div>
