@@ -120,10 +120,10 @@ const secondaryNav = [
 
 const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
   overview: { eyebrow: "Workspace / 01", title: "Beranda" },
-  events: { eyebrow: "Undangan / 01", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Undangan / 02", title: "Undangan" },
-  waBlast: { eyebrow: "Undangan / 03", title: "WA Blast" },
-  personalInvitation: { eyebrow: "Undangan / 04", title: "Personal Invitation" },
+  events: { eyebrow: "Acara / 01", title: "Rangkaian Acara" },
+  invitation: { eyebrow: "Acara / 02", title: "Undangan" },
+  waBlast: { eyebrow: "Acara / 03", title: "WA Blast" },
+  personalInvitation: { eyebrow: "Acara / 04", title: "Personal Invitation" },
   rsvp: { eyebrow: "Workspace / 03", title: "RSVP" },
   placement: { eyebrow: "Workspace / 04", title: "Manajemen Tamu" },
   usher: { eyebrow: "Workspace / 05", title: "Usher App" },
@@ -294,8 +294,8 @@ export default function DashboardPage() {
                 onClick={() => setInvitationMenuOpen((value) => !value)}
                 className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${invitationActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-primary/[0.06] hover:text-primary"}`}
               >
-                <span className="grid size-5 shrink-0 place-items-center"><Mail className="h-4 w-4" strokeWidth={1.8} /></span>
-                <span className="min-w-0 truncate">Undangan</span>
+                <span className="grid size-5 shrink-0 place-items-center"><CalendarDays className="h-4 w-4" strokeWidth={1.8} /></span>
+                <span className="min-w-0 truncate">Acara</span>
                 <ChevronDown className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`} />
               </Button>
 
