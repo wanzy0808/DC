@@ -1,11 +1,24 @@
 "use client";
 
-import { CalendarCheck2, Palette, Sparkles, Users } from "lucide-react";
+import {
+  CalendarCheck2,
+  Palette,
+  Sparkles,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+
+type FeatureItem = [
+  icon: LucideIcon,
+  label: string,
+  title: string,
+  description: string,
+];
 
 export default function FeatureSection() {
   const { locale } = useLanguage();
-  const features =
+  const features: FeatureItem[] =
     locale === "en"
       ? [
           [
@@ -27,7 +40,7 @@ export default function FeatureSection() {
             "Collect responses, plus-one information, and manage the guest list for the selected event without mixing data from your other events.",
           ],
         ]
-      : ([
+      : [
           [
             Palette,
             "01",
@@ -46,7 +59,7 @@ export default function FeatureSection() {
             "RSVP dan manajemen tamu termasuk",
             "Terima respons, data plus one, dan kelola daftar tamu untuk acara yang dipilih tanpa mencampur data dengan acara lain.",
           ],
-        ] as const);
+        ];
 
   const copy =
     locale === "en"
