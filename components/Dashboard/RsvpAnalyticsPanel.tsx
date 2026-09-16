@@ -24,7 +24,13 @@ export type RsvpGuest = {
   tableId?: string | null;
 };
 
-type Props = { guests: RsvpGuest[]; slug: string; accent: string };
+type Props = {
+  guests: RsvpGuest[];
+  slug: string;
+  accent: string;
+  embedded?: boolean;
+  onRefresh?: () => Promise<void> | void;
+};
 type SortKey = "name" | "status" | "pax" | "checkedIn";
 
 const statusLabel: Record<string, string> = {
@@ -40,7 +46,12 @@ const sortLabel: Record<SortKey, string> = {
   checkedIn: "Check-in",
 };
 
-export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
+export default function RsvpAnalyticsPanel({
+  guests,
+  slug,
+  embedded = false,
+  onRefresh,
+}: Props) {
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [ascending, setAscending] = useState(true);
@@ -158,7 +169,8 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Check-in gagal.");
       setNotice(`${guest.name} berhasil check-in.`);
-      window.location.reload();
+      if (onRefresh) await onRefresh();
+      else window.location.reload();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Check-in gagal.");
     } finally {
@@ -174,7 +186,13 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
   ];
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8">
+    <div
+      className={
+        embedded
+          ? "min-w-0 overflow-x-clip text-foreground"
+          : "mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
+      }
+    >
       {notice && (
         <div
           className="mb-4 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
@@ -185,11 +203,11 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
         </div>
       )}
 
-      <section className="grid min-w-0 border-y border-border sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(({ label, value, icon: Icon }) => (
           <article
             key={label}
-            className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 xl:border-b-0 xl:first:pl-0"
+            className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -197,22 +215,20 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
               </p>
               <Icon className="h-4 w-4 shrink-0 text-primary" />
             </div>
-            <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-2xl font-medium text-foreground">
+            <p className="mt-2 font-[family-name:var(--font-dm-mono)] text-2xl font-medium text-foreground">
               {value}
             </p>
           </article>
         ))}
       </section>
 
-      <section className="mt-8 min-w-0 border-t border-border">
-        <div className="flex flex-col gap-4 border-b border-border py-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="min-w-0">
-            <div className="flex items-baseline gap-3">
-              <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Daftar tamu</h2>
-              <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
-                {filtered.length}/{guests.length}
-              </span>
-            </div>
+      <section className="mt-4 min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:p-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div className="flex min-w-0 items-baseline gap-3">
+            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Daftar tamu</h2>
+            <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+              {filtered.length}/{guests.length}
+            </span>
           </div>
 
           <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
@@ -256,7 +272,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
           </div>
         </div>
 
-        <div className="min-w-0 overflow-x-auto">
+        <div className="mt-3 min-w-0 overflow-x-auto">
           <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
@@ -332,7 +348,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
               {!filtered.length && (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground/50">
-                    Tidak ada data.
+                    Belum ada data RSVP untuk acara ini.
                   </td>
                 </tr>
               )}
@@ -341,7 +357,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
         </div>
 
         {slug && (
-          <p className="border-b border-border px-1 py-3 font-[family-name:var(--font-dm-mono)] text-[9px] text-foreground/45">
+          <p className="mt-3 rounded-lg bg-background/70 px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] text-foreground/45">
             /invite/{slug}
           </p>
         )}
