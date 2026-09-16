@@ -3,6 +3,12 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitation-slug";
+import {
+  buildEventTitle,
+  getEventCategory,
+  normalizeEventCategory,
+  normalizeIndonesiaTimezone,
+} from "@/lib/events/catalog";
 
 type InvitationType = "WEDDING" | "ADAT_AKAD";
 
@@ -59,6 +65,7 @@ async function getOrCreateLegacyInvitation(
       type,
       templateKey: "",
       title: "",
+      eventCategory: "OTHER",
       groomName: "",
       brideName: "",
       venue: "",
@@ -189,6 +196,7 @@ export async function POST() {
         type: "WEDDING",
         templateKey: "",
         title: "",
+        eventCategory: "OTHER",
         groomName: "",
         brideName: "",
         venue: "",
@@ -224,21 +232,48 @@ export async function PUT(request: Request) {
 
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
 
+    const eventCategory = normalizeEventCategory(body.eventCategory ?? invitation.eventCategory);
+    const category = getEventCategory(eventCategory);
     const groomName = String(body.groomName ?? invitation.groomName).trim();
     const brideName = String(body.brideName ?? invitation.brideName).trim();
     const venue = String(body.venue ?? invitation.venue).trim();
     const address = String(body.address ?? invitation.address ?? "").trim() || null;
     const mapUrl = String(body.mapUrl ?? invitation.mapUrl ?? "").trim() || null;
-    const timezone = String(body.timezone ?? invitation.timezone ?? "Asia/Jakarta").trim() || "Asia/Jakarta";
-    const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
+    const timezone = normalizeIndonesiaTimezone(body.timezone ?? invitation.timezone);
+    const rawEventDate = String(body.eventDate ?? invitation.eventDate);
+    const eventDate = new Date(rawEventDate);
+    const ceremonyTime = String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null;
+    const receptionTime = String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null;
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
-    const title = String(body.title ?? invitation.title).trim();
+    const requestedTitle = String(body.title ?? invitation.title).trim();
+    const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
     const wantsPublish = body.isPublished === undefined ? invitation.isPublished : Boolean(body.isPublished);
     const canPublish = hasPaidDigitalInvitation(invitation.payment);
 
-    if (body.eventConfigured === true && !title) {
-      return NextResponse.json({ error: "Nama acara wajib diisi." }, { status: 400 });
+    if (body.eventConfigured === true) {
+      if (!title) {
+        return NextResponse.json({ error: "Nama acara wajib diisi." }, { status: 400 });
+      }
+      if (category.nameMode === "couple" && (!groomName || !brideName)) {
+        return NextResponse.json(
+          { error: "Nama pengantin pria dan wanita wajib diisi untuk acara ini." },
+          { status: 400 },
+        );
+      }
+      if (category.nameMode === "single" && !groomName) {
+        return NextResponse.json({ error: "Nama utama acara wajib diisi." }, { status: 400 });
+      }
+      if (Number.isNaN(eventDate.getTime())) {
+        return NextResponse.json({ error: "Tanggal acara wajib diisi." }, { status: 400 });
+      }
+      if (!ceremonyTime) {
+        return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
+      }
+      if (!venue) {
+        return NextResponse.json({ error: "Nama tempat wajib diisi." }, { status: 400 });
+      }
     }
+
     if (wantsPublish && (!title || !venue || Number.isNaN(eventDate.getTime()))) {
       return NextResponse.json({ error: "Nama acara, tempat, dan tanggal wajib diisi sebelum publish." }, { status: 400 });
     }
@@ -246,10 +281,7 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: "Aktifkan Undangan Digital Rp150.000 untuk acara ini sebelum publish." }, { status: 402 });
     }
 
-    const eventConfigured =
-      body.eventConfigured === true
-        ? Boolean(title)
-        : invitation.eventConfigured;
+    const eventConfigured = body.eventConfigured === true ? Boolean(title) : invitation.eventConfigured;
     const slug = await resolveLegacyCoupleSlug(
       invitation.id,
       groomName,
@@ -261,6 +293,7 @@ export async function PUT(request: Request) {
       where: { id: invitation.id },
       data: {
         slug,
+        eventCategory,
         groomName,
         brideName,
         venue,
@@ -269,8 +302,8 @@ export async function PUT(request: Request) {
         timezone,
         eventDate: Number.isNaN(eventDate.getTime()) ? invitation.eventDate : eventDate,
         eventConfigured,
-        ceremonyTime: String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null,
-        receptionTime: String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null,
+        ceremonyTime,
+        receptionTime,
         title,
         templateKey,
         description: String(body.description ?? invitation.description ?? "").trim() || null,
