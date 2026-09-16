@@ -2,9 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Eye, PenLine, Plus, RefreshCw, Send, Users } from "lucide-react";
+import {
+  ArrowUpRight,
+  CreditCard,
+  Eye,
+  PenLine,
+  Plus,
+  RefreshCw,
+  Send,
+  Users,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { slugifyEvent } from "@/lib/invitation-slug";
 
 type Invitation = {
   id: string;
@@ -12,24 +20,26 @@ type Invitation = {
   type: "WEDDING" | "ADAT_AKAD";
   title: string;
   venue: string;
+  eventConfigured: boolean;
   isPublished: boolean;
   viewCount: number;
+  accessPaid: boolean;
   createdAt: string;
 };
 
 type Guest = {
   id: string;
+  invitationId: string;
   name: string;
   rsvpStatus: string;
   plusOnes: number;
+  invitation?: { id: string; title: string; slug: string };
 };
 
 type Props = {
-  paid: boolean;
   onCreateSequence: () => void;
 };
 
-const MAX_INVITATIONS = 3;
 const ROOT_DOMAIN = process.env.NEXT_PUBLIC_INVITATION_ROOT_DOMAIN || "dcwedding.com";
 
 const responseLabel: Record<string, string> = {
@@ -39,22 +49,16 @@ const responseLabel: Record<string, string> = {
 };
 
 function sortInvitations(items: Invitation[]) {
-  return [...items].sort((a, b) => {
-    if (a.type === "WEDDING" && b.type !== "WEDDING") return -1;
-    if (a.type !== "WEDDING" && b.type === "WEDDING") return 1;
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+  return [...items].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
 }
 
-function publicUrl(invitation: Invitation, mainSlug: string) {
-  if (!mainSlug) return "";
-  const origin = `https://${mainSlug}.${ROOT_DOMAIN}`;
-  if (invitation.type === "WEDDING") return `${origin}/`;
-  if (!invitation.title.trim()) return "";
-  return `${origin}/${slugifyEvent(invitation.title)}`;
+function publicUrl(invitation: Invitation) {
+  return `https://${invitation.slug}.${ROOT_DOMAIN}/`;
 }
 
-export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Props) {
+export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,12 +70,16 @@ export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Pro
     try {
       const [invitationResponse, guestResponse] = await Promise.all([
         fetch("/api/invitations?all=1", { cache: "no-store" }),
-        fetch("/api/guests", { cache: "no-store" }),
+        fetch("/api/guests?all=1", { cache: "no-store" }),
       ]);
       const invitationData = await invitationResponse.json().catch(() => null);
       const guestData = await guestResponse.json().catch(() => null);
-      if (!invitationResponse.ok) throw new Error(invitationData?.error || "Undangan belum dapat dimuat.");
-      setInvitations(sortInvitations((invitationData?.invitations ?? []) as Invitation[]).slice(0, MAX_INVITATIONS));
+      if (!invitationResponse.ok) {
+        throw new Error(invitationData?.error || "Undangan belum dapat dimuat.");
+      }
+      setInvitations(
+        sortInvitations((invitationData?.invitations ?? []) as Invitation[]),
+      );
       setGuests((guestData?.guests ?? []) as Guest[]);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Undangan belum dapat dimuat.");
@@ -85,10 +93,15 @@ export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Pro
   }, [load]);
 
   async function togglePublish(invitation: Invitation) {
-    if (!paid) {
-      setNotice("Paket Digital Invitation harus aktif sebelum publish.");
+    if (!invitation.accessPaid) {
+      setNotice("Aktifkan Undangan Digital Rp150.000 untuk acara ini sebelum publish.");
       return;
     }
+    if (!invitation.eventConfigured) {
+      setNotice("Lengkapi dan simpan detail acara sebelum publish.");
+      return;
+    }
+
     setBusyId(invitation.id);
     setNotice("");
     try {
@@ -99,8 +112,16 @@ export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Pro
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error || "Status publish belum dapat diubah.");
-      setInvitations((current) => current.map((item) => (item.id === invitation.id ? data.invitation : item)));
-      setNotice(data.invitation?.isPublished ? "Undangan berhasil diterbitkan." : "Undangan ditarik dari publik.");
+      setInvitations((current) =>
+        current.map((item) =>
+          item.id === invitation.id ? data.invitation : item,
+        ),
+      );
+      setNotice(
+        data.invitation?.isPublished
+          ? "Undangan berhasil diterbitkan."
+          : "Undangan ditarik dari publik.",
+      );
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Status publish belum dapat diubah.");
     } finally {
@@ -108,114 +129,180 @@ export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Pro
     }
   }
 
-  const mainSlug = invitations.find((item) => item.type === "WEDDING")?.slug || "";
   const publishedCount = invitations.filter((item) => item.isPublished).length;
-  const openedCount = invitations.reduce((sum, item) => sum + (item.viewCount || 0), 0);
+  const activeCount = invitations.filter((item) => item.accessPaid).length;
+  const openedCount = invitations.reduce(
+    (sum, item) => sum + (item.viewCount || 0),
+    0,
+  );
   const responders = useMemo(
     () => guests.filter((guest) => guest.rsvpStatus && guest.rsvpStatus !== "PENDING"),
     [guests],
   );
-  const emptySlots = Math.max(0, MAX_INVITATIONS - invitations.length);
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 pb-16 pt-7 sm:pt-8">
       {notice && (
-        <div className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground" role="status">
+        <div
+          className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
+          role="status"
+        >
           {notice}
         </div>
       )}
 
-      <section className="grid gap-3 sm:grid-cols-3">
-        <Metric icon={Send} label="Dipublish" value={`${publishedCount} / ${MAX_INVITATIONS}`} />
-        <Metric icon={Eye} label="Sudah membuka" value={String(openedCount)} />
-        <Metric icon={Users} label="Merespon" value={String(responders.length)} />
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+        <Metric icon={Users} label="Undangan" value={String(invitations.length)} />
+        <Metric icon={CreditCard} label="Aktif" value={String(activeCount)} />
+        <Metric icon={Send} label="Dipublish" value={String(publishedCount)} />
+        <Metric icon={Eye} label="Total dibuka" value={String(openedCount)} />
       </section>
 
       <section className="mt-5 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">Undangan</p>
-            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">Status undangan</h2>
+            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              Undangan Digital
+            </p>
+            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              Semua acara
+            </h2>
           </div>
-          <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
-            <RefreshCw className="h-4 w-4" />
-            Muat ulang
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button type="button" size="sm" onClick={onCreateSequence}>
+              <Plus className="h-4 w-4" />
+              Tambah acara
+            </Button>
+            <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
+              <RefreshCw className="h-4 w-4" />
+              Muat ulang
+            </Button>
+          </div>
         </div>
 
-        <div className="mt-4 grid gap-3 lg:grid-cols-3">
-          {invitations.map((invitation, index) => {
-            const url = publicUrl(invitation, mainSlug);
-            const title = invitation.title.trim() || `Undangan ${index + 1}`;
-            return (
-              <article key={invitation.id} className="rounded-xl border border-border/80 bg-background/80 p-4">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">Undangan {String(index + 1).padStart(2, "0")}</p>
-                    <h3 className="mt-1 truncate text-sm font-semibold text-foreground">{title}</h3>
+        {invitations.length === 0 ? (
+          <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-5 text-sm text-muted-foreground">
+            Belum ada acara. Buat acara terlebih dahulu untuk mulai mendesain undangan.
+          </div>
+        ) : (
+          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            {invitations.map((invitation, index) => {
+              const url = publicUrl(invitation);
+              const title = invitation.title.trim() || `Acara ${index + 1}`;
+              const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
+              return (
+                <article
+                  key={invitation.id}
+                  className="rounded-xl border border-border/80 bg-background/80 p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+                        Undangan {String(index + 1).padStart(2, "0")}
+                      </p>
+                      <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
+                        {title}
+                      </h3>
+                    </div>
+                    <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
+                      {invitation.isPublished
+                        ? "Terbit"
+                        : invitation.accessPaid
+                          ? "Aktif"
+                          : "Belum aktif"}
+                    </span>
                   </div>
-                  <span className="rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
-                    {invitation.isPublished ? "Terbit" : "Draft"}
-                  </span>
-                </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                  <SmallMetric label="Dibuka" value={String(invitation.viewCount || 0)} />
-                  <SmallMetric label="Venue" value={invitation.venue || "Belum diatur"} />
-                </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <SmallMetric label="Dibuka" value={String(invitation.viewCount || 0)} />
+                    <SmallMetric label="Venue" value={invitation.venue || "Belum diatur"} />
+                  </div>
 
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <Button asChild size="sm">
-                    <Link href={`/dashboard/editor?type=${invitation.type}&invitationId=${invitation.id}`}>
-                      <PenLine className="h-4 w-4" />
-                      Masuk Studio
-                    </Link>
-                  </Button>
-                  <Button size="sm" disabled={loading || busyId === invitation.id || !paid} onClick={() => togglePublish(invitation)}>
-                    <Send className="h-4 w-4" />
-                    {busyId === invitation.id ? "Menyimpan..." : invitation.isPublished ? "Tarik publik" : "Publish"}
-                  </Button>
-                  {url && invitation.isPublished && (
-                    <Button asChild size="icon-sm">
-                      <a href={url} target="_blank" rel="noreferrer" title="Buka undangan publik" aria-label={`Buka ${title}`}>
-                        <ArrowUpRight className="h-4 w-4" />
-                      </a>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Button asChild size="sm">
+                      <Link href={`/dashboard/editor?type=${invitation.type}&invitationId=${invitation.id}`}>
+                        <PenLine className="h-4 w-4" />
+                        Studio
+                      </Link>
                     </Button>
-                  )}
-                </div>
-              </article>
-            );
-          })}
 
-          {Array.from({ length: emptySlots }).map((_, index) => (
-            <article key={`empty-${index}`} className="flex min-h-44 flex-col justify-between rounded-xl border border-dashed border-border bg-background/50 p-4">
-              <div>
-                <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">Slot tersedia</p>
-                <p className="mt-2 text-sm text-muted-foreground">Buat rangkaian acara lebih dulu, lalu lanjutkan desainnya di Studio.</p>
-              </div>
-              <Button type="button" size="sm" onClick={onCreateSequence}>
-                <Plus className="h-4 w-4" />
-                Buat rangkaian
-              </Button>
-            </article>
-          ))}
-        </div>
+                    {!invitation.accessPaid ? (
+                      <Button asChild size="sm">
+                        <Link href={purchaseHref}>
+                          <CreditCard className="h-4 w-4" />
+                          Aktifkan Rp150.000
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        disabled={loading || busyId === invitation.id}
+                        onClick={() => togglePublish(invitation)}
+                      >
+                        <Send className="h-4 w-4" />
+                        {busyId === invitation.id
+                          ? "Menyimpan..."
+                          : invitation.isPublished
+                            ? "Tarik publik"
+                            : "Publish"}
+                      </Button>
+                    )}
+
+                    {invitation.isPublished && (
+                      <Button asChild size="icon-sm">
+                        <a
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          title="Buka undangan publik"
+                          aria-label={`Buka ${title}`}
+                        >
+                          <ArrowUpRight className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <section className="mt-5 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">RSVP</p>
-            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">Nama yang merespon</h2>
+            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              RSVP
+            </p>
+            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              Respons terbaru
+            </h2>
           </div>
-          <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">{responders.length}</span>
+          <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">
+            {responders.length}
+          </span>
         </div>
 
         <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
-          {responders.length === 0 && <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-5 text-center text-xs text-muted-foreground">Belum ada tamu yang merespon.</div>}
+          {responders.length === 0 && (
+            <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-5 text-center text-xs text-muted-foreground">
+              Belum ada tamu yang merespon.
+            </div>
+          )}
           {responders.map((guest) => (
-            <div key={guest.id} className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-background/80 px-3 py-2.5">
-              <span className="truncate text-xs font-medium text-foreground">{guest.name}</span>
+            <div
+              key={guest.id}
+              className="flex items-center justify-between gap-3 rounded-lg border border-border/70 bg-background/80 px-3 py-2.5"
+            >
+              <div className="min-w-0">
+                <span className="block truncate text-xs font-medium text-foreground">
+                  {guest.name}
+                </span>
+                <span className="mt-0.5 block truncate text-[9px] text-muted-foreground">
+                  {guest.invitation?.title || "Acara"}
+                </span>
+              </div>
               <span className="shrink-0 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.08em] text-muted-foreground">
                 {responseLabel[guest.rsvpStatus] || guest.rsvpStatus} · {guest.plusOnes + 1} pax
               </span>
@@ -227,11 +314,21 @@ export default function InvitationWorkspacePanel({ paid, onCreateSequence }: Pro
   );
 }
 
-function Metric({ icon: Icon, label, value }: { icon: typeof Send; label: string; value: string }) {
+function Metric({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Send;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
       <div className="flex items-center justify-between gap-3">
-        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+          {label}
+        </p>
         <Icon className="h-4 w-4 text-primary" />
       </div>
       <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
@@ -242,7 +339,9 @@ function Metric({ icon: Icon, label, value }: { icon: typeof Send; label: string
 function SmallMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-lg border border-border/70 bg-foreground/[0.018] px-2.5 py-2">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">{label}</p>
+      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+        {label}
+      </p>
       <p className="mt-0.5 truncate text-[11px] font-medium text-foreground">{value}</p>
     </div>
   );
