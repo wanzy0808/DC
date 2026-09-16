@@ -176,15 +176,12 @@ export default function InvitationManagementPanel({ paid }: Props) {
   const [busy, setBusy] = useState<string | null>(null);
   const [message, setMessage] = useState("");
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [weddingRes, specialRes, passwordRes] = await Promise.all([
+  const load = useCallback(() => {
+      return Promise.all([
         fetch("/api/invitations?type=WEDDING", { cache: "no-store" }),
         fetch("/api/invitations?type=ADAT_AKAD", { cache: "no-store" }),
         fetch("/api/invitations/password", { cache: "no-store" }),
-      ]);
-
+      ]).then(async ([weddingRes, specialRes, passwordRes]) => {
       const weddingData = weddingRes.ok ? await weddingRes.json() : null;
       const specialData = specialRes.ok ? await specialRes.json() : null;
       const passwordData = passwordRes.ok ? await passwordRes.json() : null;
@@ -197,9 +194,9 @@ export default function InvitationManagementPanel({ paid }: Props) {
       if (passwordData) {
         setPasswordProtected(Boolean(passwordData.passwordProtected));
       }
-    } finally {
+    }).finally(() => {
       setLoading(false);
-    }
+    });
   }, []);
 
   useEffect(() => {

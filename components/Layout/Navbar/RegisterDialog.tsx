@@ -1,11 +1,13 @@
 "use client";
 
-import React, { FormEvent, useEffect, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+import { useBrowserSearch } from "@/lib/hooks/use-browser-search";
 
 interface RegisterDialogProps { isDarkMode: boolean; onSwitchToLogin?: () => void; }
 
@@ -13,7 +15,9 @@ function GoogleIcon() { return <svg className="h-5 w-5" viewBox="0 0 24 24" aria
 
 export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: RegisterDialogProps) {
   const router = useRouter();
-  const [next, setNext] = useState("/dashboard");
+  const search = useBrowserSearch();
+  const requestedNext = new URLSearchParams(search ?? "").get("next");
+  const next = requestedNext?.startsWith("/") && !requestedNext.startsWith("//") ? requestedNext : "/dashboard";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -23,11 +27,6 @@ export default function RegisterDialog({ isDarkMode, onSwitchToLogin }: Register
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedTerms, setAgreedTerms] = useState(false);
   const [agreedPromo, setAgreedPromo] = useState(false);
-
-  useEffect(() => {
-    const requestedNext = new URLSearchParams(window.location.search).get("next");
-    if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//")) setNext(requestedNext);
-  }, []);
 
   const accentColor = "text-primary";
   const borderColor = isDarkMode ? "border-white/10" : "border-border";

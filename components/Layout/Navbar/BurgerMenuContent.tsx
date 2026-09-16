@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, BookOpen, CalendarCheck, ChevronDown, CircleHelp, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
@@ -9,18 +9,18 @@ import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import RegisterDialog from "./RegisterDialog";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
+import { useBrowserSearch } from "@/lib/hooks/use-browser-search";
+
 interface BurgerMenuContentProps { isDarkMode: boolean; }
 
 export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps) {
   const [isProductOpen, setIsProductOpen] = useState(true);
-  const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const search = useBrowserSearch();
+  const [registerOverride, setIsRegisterOpen] = useState<boolean | null>(null);
+  const isRegisterOpen = registerOverride ?? new URLSearchParams(search ?? "").get("register") === "1";
   const shouldReduceMotion = useReducedMotion();
   const { messages } = useLanguage();
   const { nav } = messages;
-
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).get("register") === "1") setIsRegisterOpen(true);
-  }, []);
 
   const products = [
     { href: "/wedding-planner", label: nav.planner, icon: CalendarCheck, description: nav.plannerDescription },

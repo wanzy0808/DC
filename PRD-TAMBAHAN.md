@@ -313,3 +313,8 @@ Validation:
 - ESLint job failed on the existing lint violations described above; overall workflow is not green yet.
 - Evidence: https://github.com/wanzy0808/DC/actions/runs/35048849505
 - This distinguishes the local Google Fonts network failure from an actual successful production build on GitHub. Remaining lint cleanup is separate; no lint checks were bypassed.
+
+## 2026-09-16 - React lint continuation
+- Detailed implementation and validation continue in `PRD-3.md`.
+- This is validation cleanup, not another dashboard redesign pass. Resume active Usher design after this gate.
+- Local lint now exits successfully (0 errors, 10 existing warnings); TypeScript and six login server-render checks passed. GitHub validation for this revision is pending.
