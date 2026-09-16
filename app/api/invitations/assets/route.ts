@@ -14,9 +14,19 @@ export async function POST(request: Request) {
       include: { payment: true },
     });
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+
+    const userPayment = await prisma.payment.findFirst({
+      where: {
+        userId: user.id,
+        status: "PAID",
+        packageKey: { in: ["INVITATION_BASIC", "INVITATION_GUESTBOOK"] },
+      },
+      orderBy: { paidAt: "desc" },
+    });
+    if (!userPayment && !hasPaidDigitalInvitation(invitation.payment)) {
       return NextResponse.json({ error: "Upload asset membutuhkan paket Undangan Digital yang aktif." }, { status: 402 });
     }
+
     const assetCount = await prisma.invitationAsset.count({ where: { invitationId: invitation.id } });
     if (assetCount >= 30) return NextResponse.json({ error: "Maksimal 30 asset per undangan." }, { status: 400 });
     const type = body.type === "AUDIO" ? "AUDIO" : "IMAGE";
