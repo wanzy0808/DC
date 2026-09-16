@@ -89,6 +89,16 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - Manajemen Tamu dan Usher di shell dipadatkan menjadi statistik + kontrol utama tanpa paragraf penjelasan berulang.
 - API, database flow, publish/password flow, QR generation, manual check-in, seating assignment, dan entitlement server tidak diubah.
 
+### 2026-09-16 — Dashboard Form Readability Pass
+- Seluruh `input`, `textarea`, dan `select` di dalam `.dc-dashboard` sekarang memakai surface netral tipis berbasis `foreground` sekitar 3.5%, bukan putih polos yang menyatu dengan canvas.
+- Border control dinaikkan kontrasnya secara halus agar batas tiap field cepat terbaca tanpa membuat form terasa berat.
+- Rose tetap dipakai hanya sebagai interaction accent: hover menguatkan border sedikit dan focus memakai canonical Rose border + ring tipis.
+- Control height distandarkan minimal `44px`, radius `10px`, dan typography mengikuti Fauna One agar form konsisten dengan utility UI dashboard.
+- Placeholder dibuat lebih redup daripada value, sedangkan label field menggunakan foreground sekitar 72% untuk hierarchy yang lebih jelas.
+- State `readonly` dan `disabled` tidak lagi hanya mengandalkan opacity rendah. Keduanya memakai neutral surface yang lebih lembut, muted text, dan border lebih tipis sehingga data tetap mudah dibaca.
+- Perubahan diterapkan dari `app/globals.css` pada scope `.dc-dashboard`, sehingga Event, RSVP, password Undangan Digital, Seating Chart, onboarding, serta control dashboard lainnya mendapat treatment yang sama tanpa page-specific color baru.
+- Tidak ada perubahan data, API, validation, schema, atau entitlement.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
@@ -117,7 +127,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `c8a97a5399ef8f385eb84c30ef281f644295dfda`
 - `2e57cc663085d00a9fb179777a35cb1027cb6c5e`
 - `27ca59b789573e0d291c19a1fb8a9b507ed3a6e9`
+- `ca0517cc433c638ed73bedaf4000fcccc88b9718`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Dashboard functional-density pass mempertahankan API/data flow existing dan berfokus pada pengurangan typography non-fungsional, penguatan hierarchy kontrol, serta konsistensi navigasi/tabel.
+- Dashboard form-readability pass hanya mengubah visual control surface di scope dashboard dan tidak mengubah behavior atau data flow existing.
