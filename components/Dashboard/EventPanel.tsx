@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CalendarDays, MapPin, Save } from "lucide-react";
+import { CalendarDays, Plus, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -40,16 +40,35 @@ const emptyForm = {
   eventNotes: "",
 };
 
+function hasAdditionalEventData(invitation: Invitation) {
+  return Boolean(
+    invitation.title.trim() ||
+      invitation.venue.trim() ||
+      invitation.address?.trim() ||
+      invitation.mapUrl?.trim() ||
+      invitation.description?.trim() ||
+      invitation.eventNotes?.trim() ||
+      invitation.isPublished,
+  );
+}
+
 export default function EventPanel({ accent, onSaved }: Props) {
   const [type, setType] = useState<InvitationType>("WEDDING");
   const [form, setForm] = useState(emptyForm);
+  const [eventTitles, setEventTitles] = useState<Record<InvitationType, string>>({
+    WEDDING: "",
+    ADAT_AKAD: "",
+  });
+  const [hasAdditional, setHasAdditional] = useState(false);
   const [isPublished, setIsPublished] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
 
   async function getInvitation(nextType: InvitationType) {
-    const response = await fetch(`/api/invitations?type=${nextType}`, { cache: "no-store" });
+    const response = await fetch(`/api/invitations?type=${nextType}`, {
+      cache: "no-store",
+    });
     const data = await response.json();
     if (!response.ok || !data.invitation) {
       throw new Error(data.error || "Data acara belum dapat dimuat.");
@@ -69,6 +88,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
         const wedding = await getInvitation("WEDDING");
         groomName ||= wedding.groomName || "";
         brideName ||= wedding.brideName || "";
+        setEventTitles((current) => ({
+          ...current,
+          WEDDING: wedding.title || "",
+        }));
       }
 
       setForm({
@@ -85,10 +108,30 @@ export default function EventPanel({ accent, onSaved }: Props) {
         description: invitation.description || "",
         eventNotes: invitation.eventNotes || "",
       });
+      setEventTitles((current) => ({
+        ...current,
+        [nextType]: invitation.title || "",
+      }));
       setIsPublished(invitation.isPublished);
+
+      if (nextType === "WEDDING") {
+        try {
+          const additional = await getInvitation("ADAT_AKAD");
+          setEventTitles((current) => ({
+            ...current,
+            ADAT_AKAD: additional.title || "",
+          }));
+          if (hasAdditionalEventData(additional)) setHasAdditional(true);
+        } catch {
+          // Acara utama tetap dapat diedit walau pengecekan acara tambahan gagal.
+        }
+      }
+
       setNotice("Tersinkron");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Data acara belum dapat dimuat.");
+      setNotice(
+        error instanceof Error ? error.message : "Data acara belum dapat dimuat.",
+      );
     } finally {
       setLoading(false);
     }
@@ -102,6 +145,11 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
+  function addSequence() {
+    setHasAdditional(true);
+    setType("ADAT_AKAD");
+  }
+
   async function save() {
     setSaving(true);
     setNotice("Menyimpan...");
@@ -112,43 +160,88 @@ export default function EventPanel({ accent, onSaved }: Props) {
         body: JSON.stringify({ ...form, type, isPublished }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Data acara belum dapat disimpan.");
-      setIsPublished(Boolean(data.invitation?.isPublished));
+      if (!response.ok) {
+        throw new Error(data.error || "Data acara belum dapat disimpan.");
+      }
+
+      const updated = data.invitation as Invitation | undefined;
+      if (updated) {
+        setIsPublished(Boolean(updated.isPublished));
+        setEventTitles((current) => ({
+          ...current,
+          [type]: updated.title || "",
+        }));
+      }
+      if (type === "ADAT_AKAD") setHasAdditional(true);
+
       setNotice("Tersimpan");
       onSaved();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Data acara belum dapat disimpan.");
+      setNotice(
+        error instanceof Error ? error.message : "Data acara belum dapat disimpan.",
+      );
     } finally {
       setSaving(false);
     }
   }
 
+  const activeTitle =
+    form.title.trim() ||
+    (type === "WEDDING" ? "Rangkaian utama" : "Rangkaian tambahan");
+
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <section className="bg-background">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="grid min-w-0 flex-1 gap-2 rounded-xl border border-border/80 bg-foreground/[0.018] p-1.5 sm:grid-cols-2">
-            <TypeTab
-              active={type === "WEDDING"}
-              label="Pernikahan"
-              onClick={() => setType("WEDDING")}
-            />
-            <TypeTab
-              active={type === "ADAT_AKAD"}
-              label="Akad & Sangjit"
-              onClick={() => setType("ADAT_AKAD")}
-            />
+        <div className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:flex sm:items-center sm:justify-between sm:gap-5">
+          <div className="min-w-0">
+            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              {type === "WEDDING" ? "Rangkaian / 01" : "Rangkaian / 02"}
+            </p>
+            <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              {activeTitle}
+            </h2>
           </div>
-          <span
-            className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] ${accent}`}
-          >
-            {loading ? "Loading" : notice}
-          </span>
+
+          <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-0 sm:justify-end">
+            <span
+              className={`rounded-lg border border-primary/15 bg-primary/[0.045] px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] ${accent}`}
+            >
+              {loading ? "Loading" : notice}
+            </span>
+            {!hasAdditional && type === "WEDDING" && (
+              <Button type="button" size="sm" onClick={addSequence} disabled={loading}>
+                <Plus className="h-4 w-4" />
+                Tambah rangkaian acara
+              </Button>
+            )}
+          </div>
         </div>
+
+        {hasAdditional && (
+          <label className="mt-3 block max-w-md rounded-xl border border-border/80 bg-foreground/[0.018] p-3">
+            <span className="mb-1.5 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              Rangkaian aktif
+            </span>
+            <select
+              value={type}
+              onChange={(event) => setType(event.target.value as InvitationType)}
+              disabled={loading || saving}
+              aria-label="Pilih rangkaian acara"
+              className="w-full px-3 text-sm outline-none"
+            >
+              <option value="WEDDING">
+                {eventTitles.WEDDING.trim() || "Rangkaian utama"}
+              </option>
+              <option value="ADAT_AKAD">
+                {eventTitles.ADAT_AKAD.trim() || "Rangkaian tambahan"}
+              </option>
+            </select>
+          </label>
+        )}
 
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
-            <SectionLabel>Acara</SectionLabel>
+            <SectionLabel>Detail acara</SectionLabel>
             <div className="mt-4 space-y-4">
               <Field
                 label="Nama acara"
@@ -245,11 +338,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
         <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-              {type === "WEDDING" ? (
-                <CalendarDays className="h-4 w-4" />
-              ) : (
-                <MapPin className="h-4 w-4" />
-              )}
+              <CalendarDays className="h-4 w-4" />
             </span>
             <span className="truncate">{notice}</span>
           </div>
@@ -268,23 +357,6 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
       {children}
     </p>
-  );
-}
-
-function TypeTab({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean;
-  label: string;
-  onClick: () => void;
-}) {
-  return (
-    <Button type="button" onClick={onClick} size="sm" aria-pressed={active} className="w-full">
-      {active && <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />}
-      {label}
-    </Button>
   );
 }
 
