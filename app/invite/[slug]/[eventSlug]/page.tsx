@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitation-password";
 import { slugifyEvent } from "@/lib/invitation-slug";
-import PublicInvitation, { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import PublicInvitation, {
+  InvitationLockedState,
+} from "@/components/PublicInvitation/PublicInvitation";
+import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
 export default async function EventInvitationPage({
@@ -12,21 +15,20 @@ export default async function EventInvitationPage({
   params: Promise<{ slug: string; eventSlug: string }>;
 }) {
   const { slug, eventSlug } = await params;
-  const mainInvitation = await prisma.invitation.findUnique({
+  const baseInvitation = await prisma.invitation.findUnique({
     where: { slug },
-    include: { payment: true },
+    select: { id: true, ownerId: true },
   });
-  if (!mainInvitation) notFound();
+  if (!baseInvitation) notFound();
 
   const eventInvitations = await prisma.invitation.findMany({
     where: {
-      ownerId: mainInvitation.ownerId,
-      type: "ADAT_AKAD",
+      ownerId: baseInvitation.ownerId,
       eventConfigured: true,
+      id: { not: baseInvitation.id },
     },
     include: { payment: true, assets: true },
     orderBy: { createdAt: "asc" },
-    take: 2,
   });
 
   const invitation = eventInvitations.find(
@@ -34,14 +36,14 @@ export default async function EventInvitationPage({
   );
 
   if (!invitation) notFound();
-  if (
-    !invitation.isPublished ||
-    !(await hasAccountDigitalInvitation(mainInvitation.ownerId, mainInvitation.payment))
-  ) {
+  if (!invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) {
     return <InvitationLockedState />;
   }
-  if (mainInvitation.passwordProtected && !(await hasInvitationAccess(slug))) {
-    return <InvitationPasswordGate slug={slug} />;
+  if (
+    invitation.passwordProtected &&
+    !(await hasInvitationAccess(invitation.slug))
+  ) {
+    return <InvitationPasswordGate slug={invitation.slug} />;
   }
 
   await prisma.invitation.update({
@@ -49,5 +51,10 @@ export default async function EventInvitationPage({
     data: { viewCount: { increment: 1 } },
   });
 
-  return <PublicInvitation invitation={invitation} eventKind="special" />;
+  const templateKey = invitation.templateKey.split("::")[0];
+  if (templateKey === "eternal-blossom") {
+    return <FigmaClassicTemplate invitation={invitation} />;
+  }
+
+  return <PublicInvitation invitation={invitation} />;
 }
