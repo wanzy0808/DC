@@ -19,6 +19,11 @@ export default async function PublicInvitationPage({ params }: { params: Promise
     return <InvitationPasswordGate slug={slug} />;
   }
 
+  await prisma.invitation.update({
+    where: { id: invitation.id },
+    data: { viewCount: { increment: 1 } },
+  });
+
   const eventKind = invitation.type === "ADAT_AKAD" ? "special" : "wedding";
   const templateKey = invitation.templateKey.split("::")[0];
 
