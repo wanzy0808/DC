@@ -307,3 +307,9 @@ Validation:
 - Repository-wide lint reports 15 existing errors and 11 warnings, predominantly synchronous state updates in effects. The new lint job deliberately reports these; they are not suppressed to manufacture a green result.
 - Production build must be checked on GitHub because Google Fonts downloads failed in the local environment. CI run/result will be recorded after publishing this change to PR #2.
 - No browser or database integration verification is claimed.
+
+### Observed GitHub validation
+- Commit `10039adc12fb19741290374391d89385e0f8fc04`, Actions run `35048849505`: Prisma schema validation, client generation, TypeScript, and production build all succeeded on GitHub.
+- ESLint job failed on the existing lint violations described above; overall workflow is not green yet.
+- Evidence: https://github.com/wanzy0808/DC/actions/runs/35048849505
+- This distinguishes the local Google Fonts network failure from an actual successful production build on GitHub. Remaining lint cleanup is separate; no lint checks were bypassed.
