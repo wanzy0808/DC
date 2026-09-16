@@ -18,8 +18,8 @@ interface FeatureGateProps {
 export default function FeatureGate({
   allowed,
   title,
-  description = "Upgrade paket untuk membuka fitur ini.",
-  upgradeLabel = "Upgrade Paket",
+  description = "Paket aktif diperlukan untuk membuka fitur ini.",
+  upgradeLabel = "Lihat paket yang tersedia",
   onUpgrade,
   children,
 }: FeatureGateProps) {
@@ -44,6 +44,7 @@ export default function FeatureGate({
               onClick={onUpgrade}
               size="lg"
               className="h-auto min-h-11 max-w-full whitespace-normal py-3 text-left"
+              title={upgradeLabel}
             >
               <Sparkles className="size-4 shrink-0" aria-hidden="true" />
               {upgradeLabel}
