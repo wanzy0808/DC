@@ -32,13 +32,19 @@ export async function GET() {
   }
 
   const [invitations, guestCount, rsvpCount] = await Promise.all([
-    prisma.invitation.findMany({ where: { ownerId: user.id }, select: { templateKey: true } }),
+    prisma.invitation.findMany({
+      where: { ownerId: user.id },
+      select: { templateKey: true, isPublished: true, viewCount: true },
+      take: 3,
+    }),
     prisma.guest.count({ where: { invitation: { ownerId: user.id } } }),
     prisma.guest.count({ where: { invitation: { ownerId: user.id }, rsvpStatus: { not: "PENDING" } } }),
   ]);
 
   const entitlements = getPackageEntitlements(invitation.payment);
-  const invitationsCreated = invitations.filter(item => item.templateKey.trim().length > 0).length;
+  const invitationsCreated = invitations.filter((item) => item.templateKey.trim().length > 0).length;
+  const invitationsShared = invitations.reduce((sum, item) => sum + (item.viewCount ?? 0), 0);
+  const invitationPublished = invitations.some((item) => item.isPublished);
 
   return NextResponse.json({
     profile: { displayName: user.firstName, email: user.email },
@@ -60,11 +66,11 @@ export async function GET() {
     entitlements,
     overview: {
       invitationsCreated,
-      invitationsLimit: 2,
+      invitationsLimit: 3,
       totalRsvp: rsvpCount,
       totalGuests: guestCount,
-      invitationsShared: invitation.viewCount ?? 0,
-      invitationPublished: Boolean(invitation.isPublished),
+      invitationsShared,
+      invitationPublished,
     },
   });
 }
