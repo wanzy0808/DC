@@ -79,12 +79,46 @@ Menyelesaikan penyelarasan visual dashboard utama agar `Manajemen Tamu`, `Usher`
 - Grid statistik existing tetap memakai individual rounded information cells; quick access tetap menjadi rounded action controls.
 - Tidak ada perubahan API, entitlement, guest state, routing, atau dashboard data source pada pass Beranda/Usher ini.
 
+## 2026-09-16 — Dashboard Button Semantic Hierarchy Pass
+
+### Tujuan
+Membuat seluruh tombol dashboard mempunyai arti tindakan yang langsung terbaca tanpa melanggar aturan canonical button DC Organizer yang hanya memiliki satu treatment warna Rose.
+
+### Keputusan Button Semantics
+- Warna tidak dipakai sebagai pembeda arti aksi. Seluruh action button tetap menggunakan `components/ui/button.tsx` dan canonical Rose treatment; tidak ditambahkan variant hijau, merah, abu-abu, atau page-specific color baru.
+- Arti tombol sekarang ditentukan melalui kata kerja yang eksplisit, Lucide icon yang relevan, size hierarchy, placement, `title`, dan `aria-label` untuk utility/icon action.
+- Label noun-only/generic diperjelas: `Paket` menjadi `Kelola paket`, `Refresh` menjadi `Muat ulang`, `CSV` menjadi `Export CSV`, dan save event menjadi `Simpan rangkaian`.
+- Menu akun diperjelas menjadi `Lihat transaksi`, `Kelola paket`, `Buka FAQ`, `Buka bantuan`, dan `Keluar akun` agar setiap row terdengar sebagai tindakan.
+- Quick Access Beranda sekarang memakai icon domain + arrow sehingga `Rangkaian Acara`, `Undangan Digital`, `RSVP`, dan `Manajemen Tamu` terbaca sebagai navigational actions tanpa menambah paragraf penjelasan.
+- Onboarding action menjadi `Simpan data & masuk` dengan confirmation icon.
+- FeatureGate memakai label `Lihat paket ...` daripada generic `Upgrade Paket`, sehingga tombol menjelaskan destination/action, sementara entitlement tetap server-authoritative.
+
+### Undangan Digital
+- CTA `Studio` menjadi `Buka Studio`.
+- Publish action menjadi `Terbitkan`; published state action menjadi `Tarik dari publik`, dengan icon berbeda tetapi palette yang sama.
+- Password action menjadi `Aktifkan proteksi`, `Perbarui password`, dan `Matikan proteksi` dengan security icon yang sesuai.
+- Copy-link tetap icon-only karena konteksnya sangat lokal, tetapi mempertahankan `title` dan `aria-label` eksplisit.
+
+### RSVP
+- Sort direction tidak lagi icon-only; tombol menampilkan `Urutan naik` / `Urutan turun` bersama icon.
+- Export menjadi `Export CSV`.
+- Row action `QR` dan manual check-in tidak lagi hanya icon. Tombol sekarang menampilkan `Buat QR` dan `Check-in`; tamu yang sudah hadir menampilkan disabled label `Sudah check-in`.
+- Tombol close QR tetap icon-only sebagai convention standard, dengan `title` dan `aria-label`.
+
+### Manajemen Tamu / Seating
+- Generator menjadi `Buat denah meja`; state existing menjadi `Denah meja tersimpan`.
+- Manual guest action menjadi `Tambah tamu manual`.
+- Swap confirmation memakai `Tukar posisi`; cancel menjadi `Batal tukar`, masing-masing dengan icon yang relevan.
+- Tidak ada perubahan mutation/API pada create table, guest creation, seat assignment, swap, QR, check-in, invitation publish, password, atau package routing.
+
 ### Affected files
+- `app/[dashboard]/page.tsx`
+- `app/globals.css`
 - `components/Dashboard/EventPanel.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
-- `components/Dashboard/FeatureGate.tsx`
+- `components/Dashboard/RsvpAnalyticsPanel.tsx`
 - `components/Dashboard/SeatingChart.tsx`
-- `app/globals.css`
+- `components/Dashboard/FeatureGate.tsx`
 
 ### Commits
 - `ab35a93d776c710b00dd478fd192eba0043c0521`
@@ -95,7 +129,13 @@ Menyelesaikan penyelarasan visual dashboard utama agar `Manajemen Tamu`, `Usher`
 - `7468628979c79559b42770aca67ae0a6613c9058`
 - `6eac637ad0aad2c6f53a02f26a037e89117acd60`
 - `8b1c099f9c38d04039e4fd2cc74bab18b8b41200`
+- `cd607c46097d60100dfd0639c29919db51962fb1`
+- `87a796d1eb1311966160abca9b2e5b98a7e9f53e`
+- `76dd3f7be3f5330748632c1522acd0655135de2f`
+- `e69c1c2b8e719923d6693592df9bcb3b8b8f3329`
+- `a708a75ca80496e46dd9eaaecb20c956d9cabec5`
+- `1c0cb5c4d22ba2f03805778324afd81bb03b3a51`
 
 ### Validation
 - Build/lint/CI belum diverifikasi pada environment repository.
-- Perubahan tahap ini mempertahankan API/data flow existing dan berfokus pada visual hierarchy, compact functional surfaces, roster readability, serta konsistensi dashboard.
+- Perubahan tahap ini mempertahankan API/data flow existing dan berfokus pada visual hierarchy, compact functional surfaces, roster readability, serta semantic clarity seluruh dashboard action.
