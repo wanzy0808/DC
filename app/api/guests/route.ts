@@ -11,6 +11,30 @@ async function getInvitation(userId: string) {
   });
 }
 
+const guestSelect = {
+  id: true,
+  invitationId: true,
+  tableId: true,
+  seatNumber: true,
+  name: true,
+  phone: true,
+  source: true,
+  rsvpStatus: true,
+  plusOnes: true,
+  checkedIn: true,
+  checkedInAt: true,
+  checkedInById: true,
+  waBlastSelected: true,
+  waBlastSentAt: true,
+  personalToken: true,
+  personalPublished: true,
+  personalPasswordProtected: true,
+  personalViewCount: true,
+  createdAt: true,
+  updatedAt: true,
+  table: true,
+} as const;
+
 export async function GET() {
   try {
     const user = await getCurrentUser();
@@ -22,8 +46,16 @@ export async function GET() {
       return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
     }
 
-    const guests = await prisma.guest.findMany({ where: { invitationId: invitation.id }, include: { table: true }, orderBy: { name: "asc" } });
-    const tables = await prisma.weddingTable.findMany({ where: { invitationId: invitation.id }, include: { _count: { select: { guests: true } } }, orderBy: { name: "asc" } });
+    const guests = await prisma.guest.findMany({
+      where: { invitationId: invitation.id },
+      select: guestSelect,
+      orderBy: { name: "asc" },
+    });
+    const tables = await prisma.weddingTable.findMany({
+      where: { invitationId: invitation.id },
+      include: { _count: { select: { guests: true } } },
+      orderBy: { name: "asc" },
+    });
     return NextResponse.json({ guests, tables, canManageGuests: true, canUseRsvp: true });
   } catch (error) {
     console.error("GET /api/guests failed", error);
@@ -68,6 +100,7 @@ export async function POST(request: Request) {
         plusOnes,
         source: "MANUAL",
       },
+      select: guestSelect,
     });
     return NextResponse.json({ guest }, { status: 201 });
   } catch (error) {
