@@ -13,14 +13,51 @@ export const servicePackages: ServicePackage[] = [
   {
     key: "INVITATION_BASIC",
     name: { id: "Undangan Digital", en: "Digital Invitation" },
-    price: 300000,
+    price: 150000,
     description: {
-      id: "Undangan digital lengkap untuk membuat, mempublikasikan, dan menyebarkan undangan pernikahan.",
-      en: "A complete digital invitation service to create, publish, and share your wedding invitation.",
+      id: "Satu undangan digital untuk satu acara, lengkap dengan satu template, RSVP, dan manajemen tamu.",
+      en: "One digital invitation for one event, including one template, RSVP, and guest management.",
     },
     features: {
-      id: ["Pilih & edit seluruh template", "Publikasi undangan digital", "RSVP & wishes", "Galeri foto hingga 30 foto", "Custom music, maps, countdown & Google Calendar", "Manajemen tamu, meja & tempat duduk"],
-      en: ["Choose & edit any template", "Publish your digital invitation", "RSVP & wishes", "Photo gallery up to 30 photos", "Custom music, maps, countdown & Google Calendar", "Guest, table & seating management"],
+      id: [
+        "1 acara + 1 undangan digital",
+        "1 template undangan per acara",
+        "Publikasi undangan digital",
+        "RSVP & daftar kehadiran",
+        "Manajemen tamu, meja & tempat duduk",
+        "Galeri, musik, maps & detail acara",
+      ],
+      en: [
+        "1 event + 1 digital invitation",
+        "1 invitation template per event",
+        "Digital invitation publishing",
+        "RSVP & attendance list",
+        "Guest, table & seating management",
+        "Gallery, music, maps & event details",
+      ],
+    },
+  },
+  {
+    key: "WA_BLAST_50",
+    name: { id: "Add-on WA Blast 50", en: "WA Blast 50 Add-on" },
+    price: 75000,
+    description: {
+      id: "Tambahan 50 kuota WA Blast untuk satu acara yang sudah memiliki Undangan Digital aktif.",
+      en: "Adds 50 WA Blast credits to one event with an active Digital Invitation.",
+    },
+    features: {
+      id: [
+        "50 kuota WA Blast",
+        "Terikat ke satu acara",
+        "Dapat dibeli berulang sesuai kebutuhan",
+        "Daftar penerima menggunakan database tamu acara",
+      ],
+      en: [
+        "50 WA Blast credits",
+        "Attached to one event",
+        "Can be purchased repeatedly as needed",
+        "Recipients use the event guest database",
+      ],
     },
   },
   {
@@ -28,38 +65,24 @@ export const servicePackages: ServicePackage[] = [
     name: { id: "Guest Book Digital", en: "Digital Guest Book" },
     price: 2000000,
     description: {
-      id: "Layanan operasional buku tamu hari-H yang otomatis mencakup seluruh fitur Undangan Digital.",
-      en: "A wedding-day guest book service that includes everything in the Digital Invitation package.",
+      id: "Layanan operasional buku tamu dan check-in untuk kebutuhan hari acara.",
+      en: "Guestbook and onsite check-in operations for your event day.",
     },
     features: {
-      id: ["Semua fitur Undangan Digital", "2 unit perangkat tablet", "Internet modem di venue", "Technical support crew 4 jam", "Usher App & QR check-in", "Printable QR ticket & e-angpao QR"],
-      en: ["Everything in Digital Invitation", "2 tablet devices", "Internet modem at the venue", "4-hour technical support crew", "Usher App & QR check-in", "Printable QR ticket & e-angpao QR"],
-    },
-  },
-  {
-    key: "WO_DAY",
-    name: { id: "WO Hari-H", en: "Wedding-Day Coordination" },
-    price: 2500000,
-    description: {
-      id: "Koordinasi vendor, rundown, keluarga, dan eksekusi acara agar pasangan dapat fokus menikmati hari-H.",
-      en: "Coordinate vendors, the rundown, family, and event execution so you can stay present and enjoy your wedding day.",
-    },
-    features: {
-      id: ["Timeline & rundown hari-H", "Vendor coordination", "Koordinasi keluarga & venue", "Table arrangement support"],
-      en: ["Wedding-day timeline & rundown", "Vendor coordination", "Family & venue coordination", "Table arrangement support"],
-    },
-  },
-  {
-    key: "WO_FULL",
-    name: { id: "WO Full Service", en: "Full-Service Wedding Planning" },
-    price: 7500000,
-    description: {
-      id: "Pendampingan perencanaan dari konsep, budget, vendor, timeline persiapan, hingga eksekusi hari-H.",
-      en: "End-to-end support from concept and budget planning to vendor management, preparation, and wedding-day execution.",
-    },
-    features: {
-      id: ["Semua fitur WO Hari-H", "Concept & budget planning", "Vendor selection & management", "Checklist & timeline persiapan"],
-      en: ["Everything in Wedding-Day Coordination", "Concept & budget planning", "Vendor selection & management", "Preparation checklist & timeline"],
+      id: [
+        "2 unit perangkat tablet",
+        "Internet modem di venue",
+        "Technical support crew 4 jam",
+        "Usher App & QR check-in",
+        "Printable QR ticket",
+      ],
+      en: [
+        "2 tablet devices",
+        "Internet modem at the venue",
+        "4-hour technical support crew",
+        "Usher App & QR check-in",
+        "Printable QR ticket",
+      ],
     },
   },
 ];
