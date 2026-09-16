@@ -42,3 +42,37 @@ Audit dan standardisasi Workspace `/dashboard` serta seluruh component dashboard
 - dialog/modal;
 - mobile layout dan overflow;
 - konsistensi typography dan action hierarchy.
+
+## 2026-09-16 — Dashboard Workspace Width & Brand Foreground Correction — Stage 1.5
+
+### Tujuan
+Memperbaiki ruang kerja dashboard yang terasa seperti canvas sempit/A4 dan mengembalikan semantic brand behavior yang berubah saat konsolidasi CSS.
+
+### Perubahan
+- Container utama workspace dashboard tidak lagi dibatasi `max-width: 1400px`.
+- Header, page intro, dan panel workspace sekarang menggunakan hampir seluruh lebar pane kanan dengan margin internal 1.5rem per sisi.
+- Perubahan berlaku secara terpusat melalui `globals.css`, sehingga page/component dashboard yang sudah mengikuti container canonical otomatis mendapat lebar yang sama.
+- Dark theme `--primary-foreground` dikembalikan ke `#FFFFFF` agar canonical Rose `#C07A84` mempertahankan foreground brand yang sama seperti desain sebelumnya.
+- Tidak menambahkan gradient baru dan tidak mengubah behavior bisnis/API.
+
+### Design rule
+Dashboard memakai **wide workspace**, bukan layout seperti lembar A4. Konten harus memanfaatkan pane kanan secara proporsional; pembatas lebar hanya boleh dipakai jika memang diperlukan oleh komponen tertentu seperti teks panjang atau dialog.
+
+### Affected files
+- `app/globals.css`
+
+### Commit
+- `5f9f661c516a523e0cf08e404b7d17c6ba5123f6`
+
+### Validation
+Perubahan sudah ditulis ke `main`. GitHub combined status/check belum menyediakan hasil CI aktual untuk commit ini, sehingga build/CI **belum diverifikasi**.
+
+### Tahap berikutnya
+Lanjut standardisasi komponen dashboard satu per satu dengan prinsip yang sama:
+- workspace menggunakan lebar pane secara optimal;
+- surface/card/radius konsisten;
+- Rose hanya untuk brand/action/state bermakna;
+- form/input/select konsisten;
+- table/status chip konsisten;
+- dialog/modal dan mobile layout konsisten;
+- tidak mengubah behavior bisnis/API saat melakukan visual cleanup.
