@@ -2,7 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Check, Copy, ExternalLink, LockKeyhole, PenLine, ShieldCheck } from "lucide-react";
+import {
+  Check,
+  Copy,
+  ExternalLink,
+  EyeOff,
+  Globe2,
+  KeyRound,
+  LockKeyhole,
+  PenLine,
+  ShieldCheck,
+} from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,8 +71,8 @@ export default function InvitationManagementPanel({ paid }: Props) {
             copyLink: "Copy link",
             copied: "Link copied.",
             edit: "Edit design",
-            publish: "Publish",
-            unpublish: "Unpublish",
+            publish: "Publish page",
+            unpublish: "Remove from public",
             saving: "Saving...",
             noMain: "Public URL is not ready.",
             noSpecial: "Set the event name in Studio first.",
@@ -76,10 +86,10 @@ export default function InvitationManagementPanel({ paid }: Props) {
             publicAccess: "Public",
             password: "Password",
             passwordPlaceholder: "New password",
-            enable: "Enable",
-            change: "Change",
-            disable: "Disable",
-            studio: "Studio",
+            enable: "Enable protection",
+            change: "Update password",
+            disable: "Disable protection",
+            studio: "Open Studio",
             loading: "Loading...",
             ready: "Ready",
             error: "Something went wrong.",
@@ -95,8 +105,8 @@ export default function InvitationManagementPanel({ paid }: Props) {
             copyLink: "Salin link",
             copied: "Link disalin.",
             edit: "Edit desain",
-            publish: "Publish",
-            unpublish: "Unpublish",
+            publish: "Terbitkan",
+            unpublish: "Tarik dari publik",
             saving: "Menyimpan...",
             noMain: "URL publik belum tersedia.",
             noSpecial: "Atur nama event di Studio terlebih dahulu.",
@@ -110,10 +120,10 @@ export default function InvitationManagementPanel({ paid }: Props) {
             publicAccess: "Publik",
             password: "Password",
             passwordPlaceholder: "Password baru",
-            enable: "Aktifkan",
-            change: "Ganti",
-            disable: "Matikan",
-            studio: "Studio",
+            enable: "Aktifkan proteksi",
+            change: "Perbarui password",
+            disable: "Matikan proteksi",
+            studio: "Buka Studio",
             loading: "Memuat...",
             ready: "Siap",
             error: "Terjadi kesalahan.",
@@ -267,7 +277,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
           </span>
         </div>
         <Button asChild size="sm">
-          <Link href="/dashboard/editor?type=WEDDING">
+          <Link href="/dashboard/editor?type=WEDDING" title={copy.studio}>
             <PenLine className="h-4 w-4" />
             {copy.studio}
           </Link>
@@ -359,7 +369,9 @@ export default function InvitationManagementPanel({ paid }: Props) {
                 password.trim().length < 6
               }
               onClick={savePassword}
+              title={passwordProtected ? copy.change : copy.enable}
             >
+              <KeyRound className="h-4 w-4" />
               {passwordProtected ? copy.change : copy.enable}
             </Button>
             {passwordProtected && (
@@ -367,7 +379,9 @@ export default function InvitationManagementPanel({ paid }: Props) {
                 size="sm"
                 disabled={busy === "password-off"}
                 onClick={disablePassword}
+                title={copy.disable}
               >
+                <EyeOff className="h-4 w-4" />
                 {copy.disable}
               </Button>
             )}
@@ -468,7 +482,7 @@ function InvitationCard({
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button asChild size="sm">
-          <Link href={editHref}>
+          <Link href={editHref} title={copy.edit}>
             <PenLine className="h-4 w-4" />
             {copy.edit}
           </Link>
@@ -477,7 +491,13 @@ function InvitationCard({
           size="sm"
           disabled={!paid || loading || busy}
           onClick={onPublish}
+          title={invitation.isPublished ? copy.unpublish : copy.publish}
         >
+          {invitation.isPublished ? (
+            <EyeOff className="h-4 w-4" />
+          ) : (
+            <Globe2 className="h-4 w-4" />
+          )}
           {busy
             ? copy.saving
             : invitation.isPublished
