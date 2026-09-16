@@ -96,14 +96,23 @@ async function resolveWeddingSlug(invitationId: string, groomName: string, bride
   return candidate;
 }
 
-function studioInvitationId(request: Request, explicitId?: unknown) {
+function studioInvitationId(
+  request: Request,
+  explicitId?: unknown,
+  requestedType?: InvitationType,
+) {
   const direct = String(explicitId ?? "").trim();
   if (direct) return direct;
 
   const referer = request.headers.get("referer");
   if (!referer) return "";
   try {
-    return new URL(referer).searchParams.get("invitationId")?.trim() || "";
+    const refererUrl = new URL(referer);
+    const refererId = refererUrl.searchParams.get("invitationId")?.trim() || "";
+    if (!refererId) return "";
+    if (!requestedType) return refererId;
+    const refererType = normalizeType(refererUrl.searchParams.get("type"));
+    return refererType === requestedType ? refererId : "";
   } catch {
     return "";
   }
@@ -137,7 +146,12 @@ export async function GET(request: Request) {
     });
   }
 
-  const requestedId = studioInvitationId(request, url.searchParams.get("id"));
+  const requestedType = normalizeType(url.searchParams.get("type"));
+  const requestedId = studioInvitationId(
+    request,
+    url.searchParams.get("id"),
+    requestedType,
+  );
   if (requestedId) {
     const invitation = await findOwnedInvitation(user.id, requestedId);
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
@@ -145,8 +159,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ invitation: { ...sanitizeInvitation(invitation), accessPaid: paid } });
   }
 
-  const type = normalizeType(url.searchParams.get("type"));
-  const invitation = await getOrCreateInvitation(user, type);
+  const invitation = await getOrCreateInvitation(user, requestedType);
   const paid = Boolean(await getUserPayment(user.id));
 
   return NextResponse.json({
@@ -197,8 +210,8 @@ export async function PUT(request: Request) {
 
   try {
     const body = await request.json();
-    const requestedId = studioInvitationId(request, body.id);
     const fallbackType = normalizeType(body.type);
+    const requestedId = studioInvitationId(request, body.id, fallbackType);
     const invitation = requestedId
       ? await findOwnedInvitation(user.id, requestedId)
       : await getOrCreateInvitation(user, fallbackType);
