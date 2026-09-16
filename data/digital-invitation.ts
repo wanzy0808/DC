@@ -1,29 +1,99 @@
 export const digitalInvitationReviews = {
   id: [
-    { name: "Riko & Sarah", review: "Undangannya terasa seperti kami. RSVP masuk rapi dan tamu langsung tahu harus ke mana.", date: "2025" },
-    { name: "Adit & Maya", review: "Mulai dari pilih template sampai musik terasa simpel. Kami tinggal personalisasi lalu bagikan link.", date: "2026" },
-    { name: "Dion & Nina", review: "QR check-in dan informasi meja membuat hari-H lebih tertata tanpa mengurangi hangatnya acara.", date: "2026" },
+    {
+      name: "Riko & Sarah",
+      review:
+        "Kami pakai untuk wedding. RSVP masuk rapi, daftar tamu gampang dipantau, dan semua detail acara ada di satu link.",
+      date: "2025",
+    },
+    {
+      name: "Nadine",
+      review:
+        "Untuk baby shower saya tinggal pilih template, isi detail acara, lalu bagikan. Respons tamu juga langsung terkumpul di workspace.",
+      date: "2026",
+    },
+    {
+      name: "Aurelia Studio",
+      review:
+        "Kami butuh undangan untuk private celebration dan senang karena datanya tidak bercampur dengan event lain yang kami buat.",
+      date: "2026",
+    },
   ],
   en: [
-    { name: "Riko & Sarah", review: "The invitation feels completely like us. RSVPs arrive neatly, and guests instantly know where to go.", date: "2025" },
-    { name: "Adit & Maya", review: "From choosing a template to adding music, everything felt simple. We personalized it and shared the link.", date: "2026" },
-    { name: "Dion & Nina", review: "QR check-in and table information made the big day more organized without taking away from the warmth of the celebration.", date: "2026" },
+    {
+      name: "Riko & Sarah",
+      review:
+        "We used it for our wedding. RSVPs stayed organized, the guest list was easy to manage, and every event detail lived in one link.",
+      date: "2025",
+    },
+    {
+      name: "Nadine",
+      review:
+        "For my baby shower, I chose a template, added the event details, and shared it. Guest responses went straight into the workspace.",
+      date: "2026",
+    },
+    {
+      name: "Aurelia Studio",
+      review:
+        "We needed an invitation for a private celebration and liked that its guest data stayed separate from our other events.",
+      date: "2026",
+    },
   ],
 } as const;
 
 export const digitalInvitationFaq = {
   id: [
-    { question: "Apakah saya bisa memilih dan mengedit template sendiri?", answer: "Bisa. Anda dapat memilih template, mengisi data pasangan, acara, cerita, galeri, musik yang tersedia, dan detail lainnya dari workspace. Fitur upload aset pribadi dan publikasi mengikuti paket yang aktif." },
-    { question: "Apakah RSVP tersedia di undangan digital?", answer: "Ya. RSVP menjadi bagian dari pengalaman undangan sehingga Anda dapat memantau respons tamu dan informasi plus one. Untuk pengelolaan tamu yang lebih lengkap serta check-in hari-H, gunakan Guestbook Digital." },
-    { question: "Apa bedanya Undangan Digital dengan paket Bundle?", answer: "Undangan Digital berfokus pada pembuatan dan publikasi undangan. Bundle menambahkan seluruh fitur Guestbook Digital, termasuk pengelolaan tamu, meja, Usher App, dan attendance hari-H." },
-    { question: "Kapan undangan bisa dibagikan ke tamu?", answer: "Setelah paket Digital Invitation aktif dan proses publikasi selesai, link undangan dapat dibagikan kepada tamu. Sebelum paket aktif, workspace tetap dapat digunakan dalam mode template." },
-    { question: "Apakah bisa menggunakan foto dan musik sendiri?", answer: "Fitur custom asset mengikuti paket. Musik dan aset bawaan DC dapat digunakan sesuai template, sedangkan upload aset pribadi dibuka pada paket Digital Invitation yang aktif." },
+    {
+      question: "Undangan Digital DC hanya untuk wedding?",
+      answer:
+        "Tidak. Undangan Digital dirancang per acara, jadi bisa digunakan untuk wedding, anniversary, baby shower, ulang tahun, private event, atau acara lain yang membutuhkan undangan, RSVP, dan manajemen tamu.",
+    },
+    {
+      question: "Apa yang didapat dari pembelian Rp150.000?",
+      answer:
+        "Satu pembelian mengaktifkan satu acara: satu undangan digital, satu template, publikasi, RSVP, dan manajemen tamu untuk acara tersebut.",
+    },
+    {
+      question: "Berapa banyak undangan atau acara yang bisa saya buat?",
+      answer:
+        "Jumlah acara tidak dibatasi. Setiap acara dibuat sebagai workspace terpisah dan diaktifkan sendiri seharga Rp150.000 per undangan, sehingga data RSVP dan tamunya tidak tercampur.",
+    },
+    {
+      question: "Apakah WA Blast termasuk dalam harga Undangan Digital?",
+      answer:
+        "Tidak. WA Blast adalah add-on terpisah. Setiap pembelian Rp75.000 menambah 50 kuota WA Blast ke acara aktif yang dipilih dan dapat dibeli berulang sesuai kebutuhan.",
+    },
+    {
+      question: "Bagaimana jika saya membutuhkan QR check-in dan operasional hari acara?",
+      answer:
+        "Gunakan layanan Guestbook Digital untuk kebutuhan onsite seperti QR check-in, Usher App, perangkat, dan dukungan operasional. Undangan Digital tetap menjadi tempat publikasi, RSVP, dan manajemen tamu sebelum acara.",
+    },
   ],
   en: [
-    { question: "Can I choose and edit a template myself?", answer: "Yes. You can choose a template, add couple and event details, your story, gallery, available music, and more from the workspace. Personal asset uploads and publishing follow the active package." },
-    { question: "Is RSVP available in the digital invitation?", answer: "Yes. RSVP is part of the invitation experience, so you can monitor guest responses and plus-one information. For fuller guest management and event-day check-in, use Digital Guestbook." },
-    { question: "What is the difference between Digital Invitation and Bundle?", answer: "Digital Invitation focuses on creating and publishing your invitation. Bundle adds the full Digital Guestbook experience, including guest management, tables, Usher App, and event-day attendance." },
-    { question: "When can I share the invitation with guests?", answer: "Once your Digital Invitation package is active and publishing is complete, you can share the invitation link with guests. Before activation, the workspace remains available in template mode." },
-    { question: "Can I use my own photos and music?", answer: "Custom assets follow the active package. DC's built-in music and assets can be used according to the template, while personal uploads are available with an active Digital Invitation package." },
+    {
+      question: "Is DC Digital Invitation only for weddings?",
+      answer:
+        "No. Digital Invitation is event-based, so it can be used for weddings, anniversaries, baby showers, birthdays, private events, or other occasions that need invitations, RSVP, and guest management.",
+    },
+    {
+      question: "What is included in the Rp150,000 purchase?",
+      answer:
+        "One purchase activates one event: one digital invitation, one template, publishing, RSVP, and guest management for that event.",
+    },
+    {
+      question: "How many invitations or events can I create?",
+      answer:
+        "There is no event-count limit. Each event is a separate workspace and is activated individually for Rp150,000 per invitation, keeping RSVP and guest data isolated between events.",
+    },
+    {
+      question: "Is WA Blast included with Digital Invitation?",
+      answer:
+        "No. WA Blast is a separate add-on. Each Rp75,000 purchase adds 50 WA Blast credits to the selected active event and can be purchased again whenever needed.",
+    },
+    {
+      question: "What if I need QR check-in and onsite event operations?",
+      answer:
+        "Use Digital Guestbook for onsite needs such as QR check-in, Usher App, devices, and operational support. Digital Invitation remains the publishing, RSVP, and guest-management layer before the event.",
+    },
   ],
 } as const;
