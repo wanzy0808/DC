@@ -25,7 +25,7 @@ const sizeClasses: Record<ButtonSize, string> = {
 }
 
 const buttonBase =
-  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border border-[#A65E69]/45 bg-[#C07A84] font-medium text-white shadow-[0_3px_8px_rgb(17_17_17_/_0.16),0_1px_0_rgb(255_255_255_/_0.18)_inset] transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-px hover:bg-[#A65E69] hover:shadow-[0_5px_12px_rgb(17_17_17_/_0.2),0_1px_0_rgb(255_255_255_/_0.2)_inset] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C07A84]/35 active:translate-y-0 active:shadow-[0_2px_5px_rgb(17_17_17_/_0.18)] disabled:pointer-events-none disabled:opacity-50 dark:border-[#D9A3AA]/45 dark:bg-[#C07A84] dark:text-black dark:hover:bg-[#D9A3AA] dark:focus-visible:ring-[#D9A3AA]/35"
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap border border-[#A65E69]/45 bg-[#C07A84] font-[family-name:var(--font-fauna)] font-medium text-white shadow-[0_3px_8px_rgb(17_17_17_/_0.16),0_1px_0_rgb(255_255_255_/_0.18)_inset] transition-[transform,box-shadow,background-color] duration-200 hover:-translate-y-px hover:bg-[#A65E69] hover:shadow-[0_5px_12px_rgb(17_17_17_/_0.2),0_1px_0_rgb(255_255_255_/_0.2)_inset] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C07A84]/35 active:translate-y-0 active:shadow-[0_2px_5px_rgb(17_17_17_/_0.18)] disabled:cursor-not-allowed disabled:opacity-100 disabled:shadow-none disabled:hover:translate-y-0 disabled:hover:bg-[#C07A84] disabled:active:translate-y-0 dark:border-[#D9A3AA]/45 dark:bg-[#C07A84] dark:text-black dark:hover:bg-[#D9A3AA] dark:focus-visible:ring-[#D9A3AA]/35 dark:disabled:hover:bg-[#C07A84]"
 
 export const buttonVariants = ({
   className,
