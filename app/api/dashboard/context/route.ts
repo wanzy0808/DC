@@ -33,12 +33,19 @@ export async function GET() {
 
   const [invitations, guestCount, rsvpCount] = await Promise.all([
     prisma.invitation.findMany({
-      where: { ownerId: user.id },
+      where: { ownerId: user.id, eventConfigured: true },
       select: { templateKey: true, isPublished: true, viewCount: true },
       take: 3,
     }),
-    prisma.guest.count({ where: { invitation: { ownerId: user.id } } }),
-    prisma.guest.count({ where: { invitation: { ownerId: user.id }, rsvpStatus: { not: "PENDING" } } }),
+    prisma.guest.count({
+      where: { invitation: { ownerId: user.id, eventConfigured: true } },
+    }),
+    prisma.guest.count({
+      where: {
+        invitation: { ownerId: user.id, eventConfigured: true },
+        rsvpStatus: { not: "PENDING" },
+      },
+    }),
   ]);
 
   const entitlements = getPackageEntitlements(invitation.payment);
@@ -62,7 +69,9 @@ export async function GET() {
       receptionTime: invitation.receptionTime,
       description: invitation.description,
     },
-    package: invitation.payment ? { key: invitation.payment.packageKey, status: invitation.payment.status } : { key: null, status: "UNPAID" },
+    package: invitation.payment
+      ? { key: invitation.payment.packageKey, status: invitation.payment.status }
+      : { key: null, status: "UNPAID" },
     entitlements,
     overview: {
       invitationsCreated,
