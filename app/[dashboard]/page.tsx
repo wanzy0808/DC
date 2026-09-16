@@ -9,6 +9,7 @@ import {
   ChevronDown,
   CircleHelp,
   ContactRound,
+  CreditCard,
   Home,
   LogOut,
   Mail,
@@ -49,15 +50,17 @@ type Context = {
     address: string | null;
     mapUrl: string | null;
     timezone: string;
-    eventDate: string;
+    eventDate: string | null;
     ceremonyTime: string | null;
     receptionTime: string | null;
     description: string | null;
   };
-  package: { key: string; status: string };
+  package: { key: string | null; status: string };
   overview: {
     invitationsCreated: number;
-    invitationsLimit: number;
+    invitationsLimit: number | null;
+    unlimitedInvitations: boolean;
+    activeInvitations: number;
     totalRsvp: number;
     totalGuests: number;
     invitationsShared: number;
@@ -77,6 +80,7 @@ type DashboardEvent = EventScopeOption & {
   type: "WEDDING" | "ADAT_AKAD";
   slug: string;
   eventConfigured: boolean;
+  accessPaid: boolean;
   createdAt: string;
 };
 
@@ -113,21 +117,20 @@ type Tab =
 
 type EventGuestData = { guests: Guest[]; tables: Table[] };
 
-const invitationTabs = new Set<Tab>([
-  "events",
-  "invitation",
-  "waBlast",
-  "personalInvitation",
-]);
+const invitationTabs = new Set<Tab>(["events", "invitation", "personalInvitation"]);
 
 const invitationNav = [
   { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
   { id: "invitation" as Tab, label: "Undangan", icon: Mail },
-  { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
-  { id: "personalInvitation" as Tab, label: "Personal Invitation", icon: ContactRound },
+  {
+    id: "personalInvitation" as Tab,
+    label: "Personal Invitation",
+    icon: ContactRound,
+  },
 ];
 
 const secondaryNav = [
+  { id: "waBlast" as Tab, label: "WA Blast Add-on", icon: Send },
   { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
   { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
   { id: "usher" as Tab, label: "Usher App", icon: QrCode },
@@ -137,33 +140,44 @@ const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
   overview: { eyebrow: "Workspace / 01", title: "Beranda" },
   events: { eyebrow: "Acara / 01", title: "Rangkaian Acara" },
   invitation: { eyebrow: "Acara / 02", title: "Undangan" },
-  waBlast: { eyebrow: "Acara / 03", title: "WA Blast" },
-  personalInvitation: { eyebrow: "Acara / 04", title: "Personal Invitation" },
-  rsvp: { eyebrow: "Workspace / 03", title: "RSVP" },
-  placement: { eyebrow: "Workspace / 04", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Workspace / 05", title: "Usher App" },
+  personalInvitation: { eyebrow: "Acara / 03", title: "Personal Invitation" },
+  waBlast: { eyebrow: "Add-on / 01", title: "WA Blast" },
+  rsvp: { eyebrow: "Workspace / 02", title: "RSVP" },
+  placement: { eyebrow: "Workspace / 03", title: "Manajemen Tamu" },
+  usher: { eyebrow: "Workspace / 04", title: "Usher App" },
 };
 
 function sortEvents(items: DashboardEvent[]) {
-  return [...items].sort((a, b) => {
-    if (a.type === "WEDDING" && b.type !== "WEDDING") return -1;
-    if (a.type !== "WEDDING" && b.type === "WEDDING") return 1;
-    return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-  });
+  return [...items].sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
 }
 
 async function fetchEventGuestData(invitationId: string): Promise<EventGuestData> {
   if (!invitationId) return { guests: [], tables: [] };
-  const response = await fetch(`/api/guests?invitationId=${encodeURIComponent(invitationId)}`, {
-    cache: "no-store",
-  });
+  const response = await fetch(
+    `/api/guests?invitationId=${encodeURIComponent(invitationId)}`,
+    { cache: "no-store" },
+  );
   const data = await response.json().catch(() => null);
   if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
   return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
 }
 
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  return <section className={`rounded-xl border border-border/80 bg-foreground/[0.018] ${className}`}>{children}</section>;
+function Card({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section
+      className={`rounded-xl border border-border/80 bg-foreground/[0.018] ${className}`}
+    >
+      {children}
+    </section>
+  );
 }
 
 export default function DashboardPage() {
@@ -186,8 +200,6 @@ export default function DashboardPage() {
   const [onboarding, setOnboarding] = useState(false);
   const [saving, setSaving] = useState(false);
   const [onboardingError, setOnboardingError] = useState("");
-  const [groom, setGroom] = useState("");
-  const [bride, setBride] = useState("");
   const [nickname, setNickname] = useState("");
 
   const load = async () => {
@@ -199,12 +211,8 @@ export default function DashboardPage() {
     if (contextResponse.ok) {
       const next = (await contextResponse.json()) as Context;
       setCtx(next);
-      setGroom(next.wedding?.groomName || "");
-      setBride(next.wedding?.brideName || "");
       setNickname(next.profile.displayName || "");
-      setOnboarding(
-        !next.wedding?.groomName || !next.wedding?.brideName || !next.profile.displayName,
-      );
+      setOnboarding(!next.profile.displayName?.trim());
     }
 
     if (invitationResponse.ok) {
@@ -223,11 +231,11 @@ export default function DashboardPage() {
         configured.some((event) => event.id === current) ? current : firstId,
       );
 
-      if (firstId) {
-        const dataForUsher = await fetchEventGuestData(firstId).catch(() => ({
-          guests: [],
-          tables: [],
-        }));
+      const firstGuestbookEvent = configured.find((event) => event.accessPaid);
+      if (firstGuestbookEvent) {
+        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id).catch(
+          () => ({ guests: [], tables: [] }),
+        );
         setUsherGuests(dataForUsher.guests);
       } else {
         setUsherGuests([]);
@@ -298,8 +306,8 @@ export default function DashboardPage() {
     };
   }, [placementEventId]);
 
-  const canDigital = ctx?.entitlements.hasDigitalInvitation ?? false;
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
+  const hasAnyPaidInvitation = events.some((event) => event.accessPaid);
   const accent = "text-primary";
   const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
   const savedProfileName = ctx?.profile.displayName?.trim();
@@ -308,7 +316,8 @@ export default function DashboardPage() {
       ? savedProfileName
       : ctx?.profile.email?.split("@")[0] || "Akun";
   const rsvpEvent = events.find((event) => event.id === rsvpEventId) ?? null;
-  const placementEvent = events.find((event) => event.id === placementEventId) ?? null;
+  const placementEvent =
+    events.find((event) => event.id === placementEventId) ?? null;
 
   async function refreshRsvp() {
     if (!rsvpEventId) return;
@@ -324,28 +333,15 @@ export default function DashboardPage() {
   }
 
   async function saveOnboarding() {
-    const groomName = groom.trim();
-    const brideName = bride.trim();
     const displayName = nickname.trim();
-    if (!groomName || !brideName || !displayName) {
-      setOnboardingError("Nama pasangan dan nama panggilan wajib diisi.");
+    if (!displayName) {
+      setOnboardingError("Nama panggilan wajib diisi.");
       return;
     }
 
     setSaving(true);
     setOnboardingError("");
     try {
-      const invitationResponse = await fetch("/api/invitations", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        cache: "no-store",
-        body: JSON.stringify({ type: "WEDDING", groomName, brideName }),
-      });
-      if (!invitationResponse.ok) {
-        const data = await invitationResponse.json().catch(() => null);
-        throw new Error(data?.error || "Data pasangan belum tersimpan.");
-      }
-
       const profileResponse = await fetch("/api/profile", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -363,17 +359,9 @@ export default function DashboardPage() {
           ? {
               ...current,
               profile: { ...current.profile, displayName },
-              wedding: {
-                ...current.wedding,
-                groomName,
-                brideName,
-                title: current.wedding.title || `${groomName} & ${brideName}`,
-              },
             }
           : current,
       );
-      setGroom(groomName);
-      setBride(brideName);
       setNickname(displayName);
       await load();
     } catch (error) {
@@ -400,22 +388,35 @@ export default function DashboardPage() {
 
   const meta = tabMeta[tab];
   const invitationActive = invitationTabs.has(tab);
-  const scopedHeaderEvent = tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
+  const scopedHeaderEvent =
+    tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
 
   return (
-    <div className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}>
+    <div
+      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}
+    >
       <div className="flex min-h-screen">
-        <aside className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}>
+        <aside
+          className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
+        >
           <nav className="flex-1 space-y-2 bg-primary/[0.045] p-3 dark:bg-primary/[0.07]">
-            <p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">Workspace</p>
+            <p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
+              Workspace
+            </p>
 
             <Button
               type="button"
               aria-current={tab === "overview" ? "page" : undefined}
               onClick={() => go("overview")}
-              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${tab === "overview" ? "border-primary/15 bg-primary/10 text-primary" : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"}`}
+              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
+                tab === "overview"
+                  ? "border-primary/15 bg-primary/10 text-primary"
+                  : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+              }`}
             >
-              <span className="grid size-5 shrink-0 place-items-center text-current"><Home className="h-4 w-4" strokeWidth={1.8} /></span>
+              <span className="grid size-5 shrink-0 place-items-center text-current">
+                <Home className="h-4 w-4" strokeWidth={1.8} />
+              </span>
               <span className="min-w-0 truncate">Beranda</span>
             </Button>
 
@@ -424,11 +425,19 @@ export default function DashboardPage() {
                 type="button"
                 aria-expanded={invitationMenuOpen}
                 onClick={() => setInvitationMenuOpen((value) => !value)}
-                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${invitationActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-primary/[0.06] hover:text-primary"}`}
+                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${
+                  invitationActive
+                    ? "bg-primary/10 text-primary"
+                    : "text-foreground hover:bg-primary/[0.06] hover:text-primary"
+                }`}
               >
-                <span className="grid size-5 shrink-0 place-items-center"><CalendarDays className="h-4 w-4" strokeWidth={1.8} /></span>
+                <span className="grid size-5 shrink-0 place-items-center">
+                  <CalendarDays className="h-4 w-4" strokeWidth={1.8} />
+                </span>
                 <span className="min-w-0 truncate">Acara</span>
-                <ChevronDown className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`}
+                />
               </Button>
 
               {invitationMenuOpen && (
@@ -442,9 +451,15 @@ export default function DashboardPage() {
                         type="button"
                         aria-current={active ? "page" : undefined}
                         onClick={() => go(item.id)}
-                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[12px] shadow-none ${active ? "border-primary/15 bg-primary/[0.09] text-primary" : "text-foreground/75 hover:bg-primary/[0.06] hover:text-primary"}`}
+                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[12px] shadow-none ${
+                          active
+                            ? "border-primary/15 bg-primary/[0.09] text-primary"
+                            : "text-foreground/75 hover:bg-primary/[0.06] hover:text-primary"
+                        }`}
                       >
-                        <span className="grid size-4 shrink-0 place-items-center"><Icon className="h-3.5 w-3.5" strokeWidth={1.8} /></span>
+                        <span className="grid size-4 shrink-0 place-items-center">
+                          <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
+                        </span>
                         <span className="min-w-0 truncate">{item.label}</span>
                       </Button>
                     );
@@ -461,9 +476,15 @@ export default function DashboardPage() {
                   type="button"
                   aria-current={tab === item.id ? "page" : undefined}
                   onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${tab === item.id ? "border-primary/15 bg-primary/10 text-primary" : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"}`}
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
+                    tab === item.id
+                      ? "border-primary/15 bg-primary/10 text-primary"
+                      : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+                  }`}
                 >
-                  <span className="grid size-5 shrink-0 place-items-center text-current"><Icon className="h-4 w-4" strokeWidth={1.8} /></span>
+                  <span className="grid size-5 shrink-0 place-items-center text-current">
+                    <Icon className="h-4 w-4" strokeWidth={1.8} />
+                  </span>
                   <span className="min-w-0 truncate">{item.label}</span>
                 </Button>
               );
@@ -474,32 +495,74 @@ export default function DashboardPage() {
         <div className="min-w-0 flex-1">
           <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
             <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3 px-1">
-              <Button type="button" size="icon" className="lg:hidden" onClick={() => setMobileOpen((value) => !value)} aria-label="Buka menu dashboard" title="Buka menu dashboard">
+              <Button
+                type="button"
+                size="icon"
+                className="lg:hidden"
+                onClick={() => setMobileOpen((value) => !value)}
+                aria-label="Buka menu dashboard"
+                title="Buka menu dashboard"
+              >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
 
-              <Link href="/" className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"><span className="text-primary">DC Organizer</span></Link>
+              <Link
+                href="/"
+                className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"
+              >
+                <span className="text-primary">DC Organizer</span>
+              </Link>
               <span className="hidden h-5 w-px bg-border sm:block" />
-              <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">{meta.title}</span>
+              <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">
+                {meta.title}
+              </span>
 
               <div className="relative ml-auto">
-                <Button type="button" onClick={() => setProfileMenu((value) => !value)} className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary" aria-label={`Buka menu akun ${profileLabel}`} title="Menu akun">
+                <Button
+                  type="button"
+                  onClick={() => setProfileMenu((value) => !value)}
+                  className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary"
+                  aria-label={`Buka menu akun ${profileLabel}`}
+                  title="Menu akun"
+                >
                   <UserRound className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.8} />
                   <span className="max-w-36 truncate">{profileLabel}</span>
-                  <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu ? "rotate-180" : ""}`}
+                  />
                 </Button>
 
                 {profileMenu && (
                   <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                     <div className="px-2 pb-3 pt-1">
-                      <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">{profileLabel}</p>
-                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">{ctx?.profile.email || ""}</p>
+                      <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">
+                        {profileLabel}
+                      </p>
+                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                        {ctx?.profile.email || ""}
+                      </p>
                     </div>
                     <div className="space-y-1.5">
-                      <MenuItem icon={Receipt} text="Lihat transaksi" onClick={() => router.push("/transactions")} />
-                      <MenuItem icon={Settings2} text="Kelola paket" onClick={() => router.push("/packages")} />
-                      <MenuItem icon={CircleHelp} text="Buka FAQ" onClick={() => router.push("/faq")} />
-                      <MenuItem icon={MessageCircle} text="Buka bantuan" onClick={() => setProfileMenu(false)} />
+                      <MenuItem
+                        icon={Receipt}
+                        text="Lihat transaksi"
+                        onClick={() => router.push("/transactions")}
+                      />
+                      <MenuItem
+                        icon={Settings2}
+                        text="Beli layanan"
+                        onClick={() => router.push("/packages")}
+                      />
+                      <MenuItem
+                        icon={CircleHelp}
+                        text="Buka FAQ"
+                        onClick={() => router.push("/faq")}
+                      />
+                      <MenuItem
+                        icon={MessageCircle}
+                        text="Buka bantuan"
+                        onClick={() => setProfileMenu(false)}
+                      />
                       <div className="my-2 border-t border-border" />
                       <MenuItem icon={LogOut} text="Keluar akun" danger onClick={logout} />
                     </div>
@@ -514,13 +577,19 @@ export default function DashboardPage() {
               <section className="bg-background">
                 <div className="mx-auto flex w-[min(92vw,1400px)] min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{meta.eyebrow}</p>
-                    <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">{meta.title}</h1>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                      {meta.eyebrow}
+                    </p>
+                    <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">
+                      {meta.title}
+                    </h1>
                   </div>
                   <div className="hidden min-w-0 text-right sm:block">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">{scopedHeaderEvent ? "Acara" : "Wedding"}</p>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                      {scopedHeaderEvent ? "Acara aktif" : "Workspace"}
+                    </p>
                     <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">
-                      {scopedHeaderEvent?.title || (ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur")}
+                      {scopedHeaderEvent?.title || `${events.length} acara`}
                     </p>
                   </div>
                 </div>
@@ -528,22 +597,21 @@ export default function DashboardPage() {
             )}
 
             {tab === "overview" && (
-              <WorkspaceOverview
-                ctx={ctx}
-                events={events}
-                onGo={go}
-                onUpgrade={() => router.push("/packages")}
-              />
+              <WorkspaceOverview ctx={ctx} events={events} onGo={go} />
             )}
             {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
-            {tab === "invitation" && <InvitationWorkspacePanel paid={canDigital} onCreateSequence={() => go("events")} />}
-            {tab === "waBlast" && (
-              <FeatureGate allowed={canDigital} title="WA Blast" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
-                <WhatsAppBlastPanel />
-              </FeatureGate>
+            {tab === "invitation" && (
+              <InvitationWorkspacePanel onCreateSequence={() => go("events")} />
             )}
+            {tab === "waBlast" && <WhatsAppBlastPanel />}
             {tab === "personalInvitation" && (
-              <FeatureGate allowed={canDigital} title="Personal Invitation" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
+              <FeatureGate
+                allowed={hasAnyPaidInvitation}
+                title="Personal Invitation"
+                description="Aktifkan minimal satu Undangan Digital untuk menggunakan Personal Invitation."
+                upgradeLabel="Beli Undangan Digital"
+                onUpgrade={() => router.push("/packages?package=INVITATION_BASIC")}
+              >
                 <PersonalInvitationPanel />
               </FeatureGate>
             )}
@@ -560,21 +628,26 @@ export default function DashboardPage() {
               />
             )}
             {tab === "placement" && (
-              <FeatureGate allowed={canDigital} title="Manajemen Tamu" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
-                <PlacementWorkspace
-                  events={events}
-                  selectedId={placementEventId}
-                  onSelect={setPlacementEventId}
-                  guests={placementGuests}
-                  tables={placementTables}
-                  loading={placementLoading}
-                  accent={accent}
-                  onRefresh={refreshPlacement}
-                />
-              </FeatureGate>
+              <PlacementWorkspace
+                events={events}
+                selectedId={placementEventId}
+                onSelect={setPlacementEventId}
+                selectedEvent={placementEvent}
+                guests={placementGuests}
+                tables={placementTables}
+                loading={placementLoading}
+                accent={accent}
+                onRefresh={refreshPlacement}
+              />
             )}
             {tab === "usher" && (
-              <FeatureGate allowed={canGuestbook} title="Usher App" description="Tersedia pada paket Guestbook Digital." upgradeLabel="Lihat paket Guestbook Digital" onUpgrade={() => router.push("/packages")}>
+              <FeatureGate
+                allowed={canGuestbook}
+                title="Usher App"
+                description="Tersedia pada layanan Guest Book Digital."
+                upgradeLabel="Lihat Guest Book Digital"
+                onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
+              >
                 <UsherPanel guests={usherGuests} onRefresh={load} />
               </FeatureGate>
             )}
@@ -583,23 +656,42 @@ export default function DashboardPage() {
       </div>
 
       <Button asChild size="icon-lg" className="fixed bottom-5 right-5 z-50 rounded-full">
-        <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" aria-label="Buka bantuan WhatsApp" title="Buka bantuan WhatsApp"><MessageCircle className="h-6 w-6" strokeWidth={2} /></a>
+        <a
+          href="https://wa.me/6282124786516?text=Halo%2C%20aku%20ingin%20tanya2%20mengenai%20DC%20Organizer."
+          target="_blank"
+          rel="noreferrer"
+          aria-label="Buka bantuan WhatsApp"
+          title="Buka bantuan WhatsApp"
+        >
+          <MessageCircle className="h-6 w-6" strokeWidth={2} />
+        </a>
       </Button>
 
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">Setup awal</p>
-            <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Data pasangan</h2>
-            <div className="mt-6 space-y-4">
-              <Field label="Nama pasangan pria" value={groom} onChange={setGroom} placeholder="Contoh: Rio" />
-              <Field label="Nama pasangan wanita" value={bride} onChange={setBride} placeholder="Contoh: Lyvia" />
-              <Field label="Nama panggilan" value={nickname} onChange={setNickname} placeholder="Contoh: Hendro" />
+            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
+              Setup awal
+            </p>
+            <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">
+              Profil workspace
+            </h2>
+            <div className="mt-6">
+              <Field
+                label="Nama panggilan"
+                value={nickname}
+                onChange={setNickname}
+                placeholder="Contoh: Hendro"
+              />
             </div>
-            {onboardingError && <p className="mt-4 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">{onboardingError}</p>}
+            {onboardingError && (
+              <p className="mt-4 rounded-lg border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">
+                {onboardingError}
+              </p>
+            )}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
               <CheckCircle2 className="h-4 w-4" />
-              {saving ? "Menyimpan data..." : "Simpan data & masuk"}
+              {saving ? "Menyimpan data..." : "Simpan & masuk"}
             </Button>
           </div>
         </div>
@@ -608,20 +700,53 @@ export default function DashboardPage() {
   );
 }
 
-function MenuItem({ icon: Icon, text, onClick, danger = false }: { icon: any; text: string; onClick: () => void; danger?: boolean }) {
+function MenuItem({
+  icon: Icon,
+  text,
+  onClick,
+  danger = false,
+}: {
+  icon: any;
+  text: string;
+  onClick: () => void;
+  danger?: boolean;
+}) {
   return (
-    <Button type="button" onClick={onClick} className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${danger ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300" : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"}`}>
+    <Button
+      type="button"
+      onClick={onClick}
+      className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
+        danger
+          ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
+          : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
+      }`}
+    >
       <Icon className="h-4 w-4" />
       {text}
     </Button>
   );
 }
 
-function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder: string }) {
+function Field({
+  label,
+  value,
+  onChange,
+  placeholder,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+}) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-medium">{label}</span>
-      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="border-border bg-transparent" />
+      <Input
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        className="border-border bg-transparent"
+      />
     </label>
   );
 }
@@ -630,82 +755,113 @@ function WorkspaceOverview({
   ctx,
   events,
   onGo,
-  onUpgrade,
 }: {
   ctx: Context | null;
   events: DashboardEvent[];
   onGo: (id: Tab) => void;
-  onUpgrade: () => void;
 }) {
   const overview = ctx?.overview;
   const published = events.filter((event) => event.isPublished).length;
-  const packageKey = ctx?.package.key;
-  const packageStatus = ctx?.package.status;
-  const packageLabel = packageStatus === "PAID"
-    ? packageKey === "INVITATION_GUESTBOOK"
-      ? "Digital Invitation + Guestbook"
-      : packageKey === "GUESTBOOK_DIGITAL"
-        ? "Guestbook Digital"
-        : "Digital Invitation"
-    : "Belum aktif";
+  const active = events.filter((event) => event.accessPaid).length;
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-5">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Workspace / 01</p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">Halo, {ctx?.profile.displayName || "Akun"}</h1>
-          <p className="mt-1 text-xs text-muted-foreground">{packageLabel}</p>
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+            Workspace / 01
+          </p>
+          <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">
+            Halo, {ctx?.profile.displayName || "Akun"}
+          </h1>
         </div>
         <div className="mt-4 min-w-0 sm:mt-0 sm:text-right">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Wedding</p>
-          <p className="mt-1 truncate text-sm font-medium">{ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur"}</p>
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+            Event workspace
+          </p>
+          <p className="mt-1 text-sm font-medium">
+            {events.length ? `${events.length} acara` : "Belum ada acara"}
+          </p>
         </div>
       </section>
 
       <section className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
-        <Stat label="Acara" value={`${events.length} / 3`} />
-        <Stat label="Undangan terbit" value={`${published} / 3`} />
+        <Stat label="Acara" value={String(events.length)} />
+        <Stat label="Undangan aktif" value={String(active)} />
         <Stat label="RSVP" value={String(overview?.totalRsvp ?? 0)} />
         <Stat label="Tamu" value={String(overview?.totalGuests ?? 0)} />
       </section>
 
       <section className="mt-6 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Rangkaian acara</h2>
-          <div className="flex flex-wrap gap-2">
-            <Button onClick={() => onGo("events")} size="sm"><CalendarDays className="h-4 w-4" />Kelola rangkaian</Button>
-            <Button onClick={onUpgrade} size="sm"><Settings2 className="h-4 w-4" />Kelola paket</Button>
+          <div>
+            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+              Acara
+            </h2>
+            <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+              {active} aktif · {published} terbit
+            </p>
           </div>
+          <Button onClick={() => onGo("events")} size="sm">
+            <CalendarDays className="h-4 w-4" />
+            Kelola acara
+          </Button>
         </div>
 
         {events.length ? (
-          <div className="mt-4 grid gap-2 lg:grid-cols-3">
+          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event, index) => (
-              <article key={event.id} className="rounded-xl border border-border/75 bg-background/75 p-4">
+              <article
+                key={event.id}
+                className="rounded-xl border border-border/75 bg-background/75 p-4"
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">Acara {String(index + 1).padStart(2, "0")}</p>
-                    <p className="mt-1 truncate text-sm font-semibold text-foreground">{event.title || `Rangkaian ${index + 1}`}</p>
-                    <p className="mt-1 truncate text-[11px] text-muted-foreground">{event.venue || "Lokasi belum diisi"}</p>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+                      Acara {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <p className="mt-1 truncate text-sm font-semibold text-foreground">
+                      {event.title || `Acara ${index + 1}`}
+                    </p>
+                    <p className="mt-1 truncate text-[11px] text-muted-foreground">
+                      {event.venue || "Lokasi belum diisi"}
+                    </p>
                   </div>
-                  <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">{event.isPublished ? "Terbit" : "Draft"}</span>
+                  <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
+                    {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Belum aktif"}
+                  </span>
                 </div>
               </article>
             ))}
           </div>
         ) : (
           <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
-            Belum ada rangkaian acara. Buat rangkaian pertama untuk mulai mengelola RSVP dan tamu.
+            Belum ada acara. Buat acara pertama untuk mulai menyiapkan undangan digital.
           </div>
         )}
       </section>
 
-      <section className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-        <Button onClick={() => onGo("invitation")} size="sm"><Mail className="h-4 w-4" />Kelola undangan</Button>
-        <Button onClick={() => onGo("rsvp")} size="sm"><MessageSquareHeart className="h-4 w-4" />Buka RSVP</Button>
-        <Button onClick={() => onGo("placement")} size="sm"><Users className="h-4 w-4" />Kelola tamu</Button>
-        <Button onClick={() => onGo("waBlast")} size="sm"><Send className="h-4 w-4" />Siapkan WA Blast</Button>
+      <section className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-5">
+        <Button onClick={() => onGo("events")} size="sm">
+          <CalendarDays className="h-4 w-4" />
+          Tambah acara
+        </Button>
+        <Button onClick={() => onGo("invitation")} size="sm">
+          <Mail className="h-4 w-4" />
+          Undangan
+        </Button>
+        <Button onClick={() => onGo("rsvp")} size="sm">
+          <MessageSquareHeart className="h-4 w-4" />
+          RSVP
+        </Button>
+        <Button onClick={() => onGo("placement")} size="sm">
+          <Users className="h-4 w-4" />
+          Manajemen tamu
+        </Button>
+        <Button onClick={() => onGo("waBlast")} size="sm">
+          <Send className="h-4 w-4" />
+          WA Blast Add-on
+        </Button>
       </section>
     </div>
   );
@@ -714,8 +870,34 @@ function WorkspaceOverview({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
+      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </p>
       <p className="mt-2 truncate text-base font-semibold text-foreground">{value}</p>
+    </div>
+  );
+}
+
+function EventActivationNotice({ event }: { event: DashboardEvent }) {
+  return (
+    <div className="rounded-xl border border-border/80 bg-foreground/[0.018] p-5">
+      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+        Undangan belum aktif
+      </p>
+      <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+        {event.title || "Acara ini"}
+      </h3>
+      <p className="mt-2 text-xs leading-5 text-muted-foreground">
+        RSVP dan Manajemen Tamu aktif bersama Undangan Digital untuk acara ini.
+      </p>
+      <Button asChild size="sm" className="mt-4">
+        <Link
+          href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`}
+        >
+          <CreditCard className="h-4 w-4" />
+          Aktifkan Rp150.000
+        </Link>
+      </Button>
     </div>
   );
 }
@@ -741,10 +923,17 @@ function RsvpWorkspace({
 }) {
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <EventScopePicker events={events} value={selectedId} onChange={onSelect} disabled={loading} />
+      <EventScopePicker
+        events={events}
+        value={selectedId}
+        onChange={onSelect}
+        disabled={loading}
+      />
       {selectedEvent && (
         <div className="mt-4">
-          {loading ? (
+          {!selectedEvent.accessPaid ? (
+            <EventActivationNotice event={selectedEvent} />
+          ) : loading ? (
             <LoadingSurface />
           ) : (
             <RsvpAnalyticsPanel
@@ -766,6 +955,7 @@ function PlacementWorkspace({
   events,
   selectedId,
   onSelect,
+  selectedEvent,
   guests,
   tables,
   loading,
@@ -775,6 +965,7 @@ function PlacementWorkspace({
   events: DashboardEvent[];
   selectedId: string;
   onSelect: (id: string) => void;
+  selectedEvent: DashboardEvent | null;
   guests: Guest[];
   tables: Table[];
   loading: boolean;
@@ -783,10 +974,17 @@ function PlacementWorkspace({
 }) {
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <EventScopePicker events={events} value={selectedId} onChange={onSelect} disabled={loading} />
-      {selectedId && (
+      <EventScopePicker
+        events={events}
+        value={selectedId}
+        onChange={onSelect}
+        disabled={loading}
+      />
+      {selectedEvent && (
         <div className="mt-4">
-          {loading ? (
+          {!selectedEvent.accessPaid ? (
+            <EventActivationNotice event={selectedEvent} />
+          ) : loading ? (
             <LoadingSurface />
           ) : (
             <PlacementPanel
@@ -817,7 +1015,12 @@ function PlacementPanel({
   onRefresh: () => Promise<void>;
 }) {
   const assigned = guests.filter((guest) => guest.tableId).length;
-  const assignGuest = async (guestId: string, tableId: string, seatNumber: number) => {
+
+  const assignGuest = async (
+    guestId: string,
+    tableId: string,
+    seatNumber: number,
+  ) => {
     const response = await fetch(`/api/guests/${guestId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -825,7 +1028,9 @@ function PlacementPanel({
       body: JSON.stringify({ tableId, seatNumber }),
     });
     const data = await response.json().catch(() => null);
-    if (!response.ok) throw new Error(data?.error || "Penempatan tamu gagal disimpan.");
+    if (!response.ok) {
+      throw new Error(data?.error || "Penempatan tamu gagal disimpan.");
+    }
     await onRefresh();
   };
 
@@ -833,8 +1038,13 @@ function PlacementPanel({
     <Card>
       <div className="p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
-          <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
+          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+            Tamu & seating
+          </h2>
+          <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
+            <RefreshCw className="h-4 w-4" />
+            Muat ulang
+          </Button>
         </div>
         <div className="mt-3 grid gap-2 sm:grid-cols-3">
           <Stat label="Tamu" value={String(guests.length)} />
@@ -862,15 +1072,26 @@ function LoadingSurface() {
   );
 }
 
-function UsherPanel({ guests, onRefresh }: { guests: Guest[]; onRefresh: () => void }) {
+function UsherPanel({
+  guests,
+  onRefresh,
+}: {
+  guests: Guest[];
+  onRefresh: () => void;
+}) {
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <Card>
         <div className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Check-in</h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
+            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+              Check-in
+            </h2>
+            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">
+              <RefreshCw className="h-4 w-4" />
+              Muat ulang
+            </Button>
           </div>
           <div className="mt-3 grid gap-2 sm:grid-cols-2">
             <Stat label="Total tamu" value={String(guests.length)} />
