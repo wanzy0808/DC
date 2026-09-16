@@ -145,6 +145,7 @@ model Invitation {
   passwordProtected  Boolean           @default(false)
   passwordHash       String?
   viewCount          Int               @default(0)
+  waBlastQuota       Int               @default(100)
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
   owner              User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
@@ -248,25 +249,34 @@ model WeddingTable {
 }
 
 model Guest {
-  id            String        @id @default(cuid())
-  invitationId  String
-  tableId       String?
-  seatNumber    Int?
-  name          String
-  phone         String?
-  source        GuestSource   @default(MANUAL)
-  rsvpStatus    RsvpStatus    @default(PENDING)
-  plusOnes      Int           @default(0)
-  checkedIn     Boolean       @default(false)
-  checkedInAt   DateTime?
-  checkedInById String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  invitation    Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-  table         WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
-  checkedInBy   User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
+  id                        String        @id @default(cuid())
+  invitationId              String
+  tableId                   String?
+  seatNumber                Int?
+  name                      String
+  phone                     String?
+  source                    GuestSource   @default(MANUAL)
+  rsvpStatus                RsvpStatus    @default(PENDING)
+  plusOnes                  Int           @default(0)
+  checkedIn                 Boolean       @default(false)
+  checkedInAt               DateTime?
+  checkedInById             String?
+  waBlastSelected           Boolean       @default(false)
+  waBlastSentAt             DateTime?
+  personalToken             String?       @unique
+  personalPublished         Boolean       @default(false)
+  personalPasswordProtected Boolean       @default(false)
+  personalPasswordHash      String?
+  personalViewCount         Int           @default(0)
+  createdAt                 DateTime      @default(now())
+  updatedAt                 DateTime      @updatedAt
+  invitation                Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  table                     WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
+  checkedInBy               User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
 
   @@index([invitationId, rsvpStatus])
   @@index([invitationId, tableId])
+  @@index([invitationId, waBlastSelected])
+  @@index([invitationId, personalPublished])
   @@unique([tableId, seatNumber])
 }
