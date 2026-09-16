@@ -49,12 +49,22 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `app/globals.css` diperbaiki agar seluruh konten dashboard memakai lebar baca konsisten `min(calc(100% - 3rem), 1400px)` dan tidak lagi dipaksa melebar tanpa `max-width`. Perubahan ini berlaku ke header dan workspace dashboard secara konsisten tanpa mengubah sidebar.
 - API invitation, publish state, password protection, URL generation, entitlement, dan database flow tetap dipertahankan.
 
+### 2026-09-16 — Guest Placement & Seating Chart Alignment
+- `components/Dashboard/SeatingChart.tsx` diselaraskan dengan design system dashboard yang sama agar tab Manajemen Tamu tidak kembali ke visual beige/rounded-card lama.
+- Panel setup dan roster sekarang memakai struktur border-based dua kolom: control rail di kiri dan seating canvas di kanan. Filled beige surfaces dan repeated rounded cards dihapus.
+- Form jumlah meja, kapasitas kursi, dan input tamu manual sekarang menggunakan `components/ui/input.tsx`; seluruh action button menggunakan `components/ui/button.tsx` canonical.
+- Daftar tamu yang belum ditempatkan diubah menjadi roster berbasis divider, bukan chip/card beige berulang.
+- Seating canvas Konva menggunakan neutral light/dark canvas dengan canonical Rose `#C07A84`, Supporting Rose `#D9A3AA`, serta foreground neutral sesuai theme. Canvas tidak lagi memakai palette maroon/beige lama.
+- Empty state, saving state, swap confirmation, dan feedback message mengikuti typography dan border hierarchy dashboard.
+- Drag/drop, pembuatan meja, penambahan tamu manual, seat assignment, atomic swap endpoint, eligibility roster, dan database flow tidak diubah.
+
 ### Affected files
 - `app/[dashboard]/page.tsx`
 - `app/globals.css`
 - `components/Dashboard/EventPanel.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
 - `components/Dashboard/RsvpAnalyticsPanel.tsx`
+- `components/Dashboard/SeatingChart.tsx`
 
 ### Related design references
 - `app/dashboard/undangan-digital/page.tsx`
@@ -68,7 +78,8 @@ Menyelaraskan visual dashboard utama dengan bahasa visual yang sudah dipakai pad
 - `4c2986ad374b0d8115cfb25b4f2adac740881ea0`
 - `b4b7d54a29abcbce3693d795e1adebd5dcf6ff60`
 - `c38d3f92439ba8844f63d7766f9135648c02022f`
+- `152dbbf99517a3ec449dfb116f6394792739bdb4`
 
 ### Validation
 - Belum diverifikasi dengan build/CI pada environment repository.
-- Event Panel, RSVP, dan Digital Invitation changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
+- Event Panel, RSVP, Digital Invitation, dan Seating Chart changes mempertahankan API/data flow existing; perubahan tahap ini berfokus pada hierarchy, visual system, responsive layout, dan penggunaan canonical UI primitive.
