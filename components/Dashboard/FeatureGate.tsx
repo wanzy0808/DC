@@ -23,9 +23,15 @@ export default function FeatureGate({
   onUpgrade,
   children,
 }: FeatureGateProps) {
-  // Manajemen Tamu tetap dapat dibuka untuk melihat workspace.
-  // Mutasi data tamu tetap diamankan oleh API berdasarkan entitlement Digital Invitation.
-  if (allowed || title === "Manajemen Tamu") return <>{children}</>;
+  // Workspaces with their own event-level selector remain visible.
+  // Their mutation APIs still enforce invitation ownership and entitlement server-side.
+  if (
+    allowed ||
+    title === "Manajemen Tamu" ||
+    title === "Personal Invitation"
+  ) {
+    return <>{children}</>;
+  }
 
   return (
     <section className="mx-auto grid w-[min(92vw,1400px)] min-w-0 overflow-hidden rounded-xl border border-border/80 bg-foreground/[0.018]">
