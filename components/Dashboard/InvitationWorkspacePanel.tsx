@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
+  CalendarDays,
   CreditCard,
   Eye,
   PenLine,
@@ -190,6 +191,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
               const url = publicUrl(invitation);
               const title = invitation.title.trim() || `Acara ${index + 1}`;
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
+              const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
+
               return (
                 <article
                   key={invitation.id}
@@ -209,7 +212,9 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                         ? "Terbit"
                         : invitation.accessPaid
                           ? "Aktif"
-                          : "Belum aktif"}
+                          : invitation.eventConfigured
+                            ? "Belum aktif"
+                            : "Draft acara"}
                     </span>
                   </div>
 
@@ -218,16 +223,28 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     <SmallMetric label="Venue" value={invitation.venue || "Belum diatur"} />
                   </div>
 
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    <Button asChild size="sm">
-                      <Link href={`/dashboard/editor?type=${invitation.type}&invitationId=${invitation.id}`}>
-                        <PenLine className="h-4 w-4" />
-                        Studio
-                      </Link>
-                    </Button>
+                  <div className="mt-4 rounded-xl border border-primary/12 bg-primary/[0.025] p-3">
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+                      Desain undangan
+                    </p>
+                    {invitation.eventConfigured ? (
+                      <Button asChild size="lg" className="mt-2 w-full">
+                        <Link href={studioHref} aria-label={`Buka Studio untuk ${title}`}>
+                          <PenLine className="h-4 w-4" />
+                          Buka Studio
+                        </Link>
+                      </Button>
+                    ) : (
+                      <Button type="button" size="lg" className="mt-2 w-full" onClick={onCreateSequence}>
+                        <CalendarDays className="h-4 w-4" />
+                        Lengkapi acara
+                      </Button>
+                    )}
+                  </div>
 
+                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {!invitation.accessPaid ? (
-                      <Button asChild size="sm">
+                      <Button asChild size="sm" className="w-full">
                         <Link href={purchaseHref}>
                           <CreditCard className="h-4 w-4" />
                           Aktifkan Rp150.000
@@ -236,7 +253,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     ) : (
                       <Button
                         size="sm"
-                        disabled={loading || busyId === invitation.id}
+                        className="w-full"
+                        disabled={loading || busyId === invitation.id || !invitation.eventConfigured}
                         onClick={() => togglePublish(invitation)}
                       >
                         <Send className="h-4 w-4" />
@@ -248,18 +266,23 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       </Button>
                     )}
 
-                    {invitation.isPublished && (
-                      <Button asChild size="icon-sm">
+                    {invitation.isPublished ? (
+                      <Button asChild size="sm" className="w-full">
                         <a
                           href={url}
                           target="_blank"
                           rel="noreferrer"
                           title="Buka undangan publik"
-                          aria-label={`Buka ${title}`}
+                          aria-label={`Buka undangan publik ${title}`}
                         >
                           <ArrowUpRight className="h-4 w-4" />
+                          Buka publik
                         </a>
                       </Button>
+                    ) : (
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                        Belum dipublish
+                      </div>
                     )}
                   </div>
                 </article>
