@@ -130,6 +130,7 @@ model Invitation {
   mapUrl             String?
   timezone           String            @default("Asia/Jakarta")
   eventDate          DateTime          @default(now())
+  eventConfigured    Boolean           @default(false)
   ceremonyTime       String?
   receptionTime      String?
   description        String?           @db.Text
