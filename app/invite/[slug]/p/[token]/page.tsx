@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitation-password";
-import PublicInvitation, { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import PublicInvitation, {
+  InvitationLockedState,
+} from "@/components/PublicInvitation/PublicInvitation";
 import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
 import PersonalInvitationPasswordGate from "@/components/PublicInvitation/PersonalInvitationPasswordGate";
 
@@ -51,9 +53,9 @@ export default async function PersonalInvitationPage({
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <FigmaClassicTemplate invitation={invitation} eventKind="wedding" />
+      <FigmaClassicTemplate invitation={invitation} />
     ) : (
-      <PublicInvitation invitation={invitation} eventKind="wedding" />
+      <PublicInvitation invitation={invitation} />
     );
 
   return (
