@@ -30,6 +30,13 @@ export default function proxy(request: NextRequest) {
       return NextResponse.rewrite(url);
     }
 
+    const personalMatch = pathname.match(/^\/p\/([a-f0-9]+)\/?$/);
+    if (personalMatch) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/invite/${slug}/p/${personalMatch[1]}`;
+      return NextResponse.rewrite(url);
+    }
+
     // Backward-compatible alias. The target page redirects this to the event name slug.
     if (pathname === "/event-khusus" || pathname === "/event-khusus/") {
       const url = request.nextUrl.clone();
@@ -52,7 +59,11 @@ export default function proxy(request: NextRequest) {
     const parts = pathname.split("/").filter(Boolean);
     const legacySlug = parts[1];
     if (legacySlug) {
-      const suffix = parts[2] === "event-khusus" ? "/event-khusus" : parts[2] ? `/${parts[2]}` : "";
+      let suffix = "";
+      if (parts[2] === "p" && parts[3]) suffix = `/p/${parts[3]}`;
+      else if (parts[2] === "event-khusus") suffix = "/event-khusus";
+      else if (parts[2]) suffix = `/${parts[2]}`;
+
       const target = new URL(`https://${legacySlug}.${ROOT_DOMAIN}${suffix}`);
       target.search = request.nextUrl.search;
       return NextResponse.redirect(target, 308);
@@ -63,5 +74,5 @@ export default function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/:path", "/event-khusus", "/event-khusus/", "/invite/:path*"],
+  matcher: ["/", "/:path*"],
 };
