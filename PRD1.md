@@ -144,7 +144,7 @@ The migration:
 - backfills obvious existing Silver Wedding, Golden Wedding, Birthday, Baby Shower, and Wedding records based on current title/name data;
 - keeps uncertain legacy events as `OTHER` instead of guessing their category.
 
-Migration execution and Prisma Client regeneration are still required in deployment.
+Migration execution is still required in the deployment database.
 
 ---
 
@@ -282,12 +282,53 @@ Invitation-template palettes remain dynamic because those colors belong to invit
 
 ---
 
+## 2026-09-16 — Prisma Schema Repair & Build Validation
+
+### Prisma schema repair
+GitHub Actions exposed a pre-existing schema integrity issue: `User.auditLogs` referenced `AuditLog[]`, but the `AuditLog` model had disappeared from `prisma/schema.prisma` even though the table and relation already exist in the initial database migration.
+
+The Prisma model was restored to match the existing database table:
+- `id`;
+- nullable `actorId`;
+- `action`;
+- `entity`;
+- nullable `entityId`;
+- optional JSON `metadata`;
+- `createdAt`;
+- `ActorLogs` relation to User;
+- existing `(entity, entityId)` index.
+
+No new database migration is required for this repair because `AuditLog` was already created by `20260905081247_init`.
+
+### TypeScript cleanup observed from the failed CI run
+Two independent type issues were also fixed:
+- `FaqSection` now accepts readonly FAQ datasets;
+- Digital Invitation feature tuples now have an explicit `LucideIcon` tuple type so icon components are not inferred as strings/React nodes incorrectly.
+
+### Observed validation
+GitHub Actions **Build Validation run #783** for commit `72e20968f8f664bb24d4100045f563d8dbbb785d` completed successfully.
+
+Observed pipeline result:
+- dependency installation: success;
+- Prisma client generation: no longer blocks the build after restoring `AuditLog`;
+- Next.js production build: success;
+- TypeScript validation: success;
+- workflow conclusion: **success**.
+
+This validates the source tree through the repository build workflow, including the new event draft flow and event-centric Studio changes present in the commit history before that run.
+
+**Not validated by this build:** execution of the new `eventCategory` migration against the production/deployment PostgreSQL database. Deployment must still apply `prisma/migrations/20260916190000_add_event_category/migration.sql` before runtime APIs can rely on the new column there.
+
+---
+
 ## Affected Files
 - `lib/events/catalog.ts`
 - `components/Dashboard/EventPanel.tsx`
 - `app/api/invitations/route.ts`
 - `components/InvitationStudio/InvitationDesigner.tsx`
 - `components/InvitationStudio/InvitationEditorPage.tsx`
+- `components/Marketing/FaqSection.tsx`
+- `components/D-Invitation/FeatureSection.tsx`
 - `prisma/schema.prisma`
 - `prisma/migrations/20260916190000_add_event_category/migration.sql`
 
@@ -303,17 +344,19 @@ Invitation-template palettes remain dynamic because those colors belong to invit
 - `83ef248c138c9a435982cd2a1e9ec5f9db0b356b` — persist event draft when `Tambah acara` is clicked
 - `63a73da49ac033cf42eeb648686aa7fc6f914ea9` — generalize Invitation Studio for event categories
 - `dfb2d54e42a617c222cf0d87bf7d53c5ead46fe9` — align Studio shell with event-based flow
+- `8cc8b89fb2eaebad1dd7d26f1b32a64e9cf8c10a` — restore Prisma `AuditLog` model
+- `1f869d8943342501bb8084c42eac69aca177e744` — accept readonly FAQ datasets
+- `72e20968f8f664bb24d4100045f563d8dbbb785d` — type Digital Invitation feature tuples; Build Validation #783 succeeded on this source state
 
 ---
 
 ## Validation Status
-- Build: not yet observed.
-- Lint: not yet observed.
-- CI: not yet observed.
-- Prisma generate: not yet observed.
-- Migration execution: not yet observed.
-
-Do not treat this stage as deployment-verified until the actual CI/build and database migration have succeeded.
+- GitHub Actions Build Validation: **PASS**, run #783, commit `72e20968f8f664bb24d4100045f563d8dbbb785d`.
+- Next.js production build: **PASS** in the observed workflow.
+- TypeScript validation: **PASS** in the observed workflow.
+- Prisma Client generation blocking error: **resolved** in the successful workflow after restoring `AuditLog`.
+- Separate lint workflow: not present/observed.
+- `eventCategory` migration execution on deployment PostgreSQL: **not yet observed**.
 
 ---
 
