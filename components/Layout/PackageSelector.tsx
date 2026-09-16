@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { servicePackages } from "@/lib/packages/catalog";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,11 @@ export default function PackageSelector({ initialPackage = "INVITATION_BASIC" }:
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => setSelected(initial), [initial]);
+  const [previousInitial, setPreviousInitial] = useState(initial);
+  if (initial !== previousInitial) {
+    setPreviousInitial(initial);
+    setSelected(initial);
+  }
 
   const copy = locale === "en"
     ? {

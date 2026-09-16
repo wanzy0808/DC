@@ -72,9 +72,8 @@ export default function UsherApp() {
   const streamRef = useRef<MediaStream | null>(null);
   const scanTimerRef = useRef<number | null>(null);
 
-  const loadGuests = useCallback(async () => {
-    try {
-      const response = await fetch("/api/usher/guests", { cache: "no-store" });
+  const loadGuests = useCallback(() => {
+    return fetch("/api/usher/guests", { cache: "no-store" }).then(async (response) => {
       const data = await response.json();
       if (response.ok) {
         setGuests(data.guests ?? []);
@@ -82,11 +81,11 @@ export default function UsherApp() {
       } else {
         setMessage(data.error ?? "Data tamu belum dapat dimuat.");
       }
-    } catch {
+    }).catch(() => {
       setMessage("Koneksi ke data tamu gagal.");
-    } finally {
+    }).finally(() => {
       setLoading(false);
-    }
+    });
   }, []);
 
   useEffect(() => {

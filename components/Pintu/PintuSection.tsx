@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   animate,
   motion,
@@ -84,6 +84,10 @@ function getFrontDoor(progress: number) {
   return closestIndex + 1;
 }
 
+const subscribeToHydration = () => () => {};
+const clientMounted = () => true;
+const serverMounted = () => false;
+
 function LoopingPintu({
   door,
   index,
@@ -99,7 +103,7 @@ function LoopingPintu({
   active: boolean;
   onHover: (door: DoorValue) => void;
 }) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(subscribeToHydration, clientMounted, serverMounted);
   const phase = (offset: number) => ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
 
   const x = useTransform(progress, (offset) => Math.cos(phase(offset)) * LOOP_RADIUS_X);
@@ -116,10 +120,6 @@ function LoopingPintu({
   const stackOrder = useTransform(progress, (offset) =>
     Math.round(Math.sin(phase(offset)) * 100) + 100,
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   return (
     <motion.div

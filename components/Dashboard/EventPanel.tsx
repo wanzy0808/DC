@@ -65,81 +65,92 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
 
-  async function getInvitation(nextType: InvitationType) {
-    const response = await fetch(`/api/invitations?type=${nextType}`, {
-      cache: "no-store",
-    });
-    const data = await response.json();
-    if (!response.ok || !data.invitation) {
-      throw new Error(data.error || "Data acara belum dapat dimuat.");
-    }
-    return data.invitation as Invitation;
-  }
-
-  async function load(nextType: InvitationType) {
-    setLoading(true);
-    setNotice("Memuat...");
-    try {
-      const invitation = await getInvitation(nextType);
-      let groomName = invitation.groomName || "";
-      let brideName = invitation.brideName || "";
-
-      if (nextType === "ADAT_AKAD" && (!groomName || !brideName)) {
-        const wedding = await getInvitation("WEDDING");
-        groomName ||= wedding.groomName || "";
-        brideName ||= wedding.brideName || "";
-        setEventTitles((current) => ({
-          ...current,
-          WEDDING: wedding.title || "",
-        }));
-      }
-
-      setForm({
-        title: invitation.title || "",
-        groomName,
-        brideName,
-        venue: invitation.venue || "",
-        address: invitation.address || "",
-        mapUrl: invitation.mapUrl || "",
-        timezone: invitation.timezone || "Asia/Jakarta",
-        eventDate: invitation.eventDate ? invitation.eventDate.slice(0, 10) : "",
-        ceremonyTime: invitation.ceremonyTime || "",
-        receptionTime: invitation.receptionTime || "",
-        description: invitation.description || "",
-        eventNotes: invitation.eventNotes || "",
+  useEffect(() => {
+    const controller = new AbortController();
+    async function getInvitation(nextType: InvitationType) {
+      const response = await fetch(`/api/invitations?type=${nextType}`, {
+        cache: "no-store",
+        signal: controller.signal,
       });
-      setEventTitles((current) => ({
-        ...current,
-        [nextType]: invitation.title || "",
-      }));
-      setIsPublished(invitation.isPublished);
+      const data = await response.json();
+      if (!response.ok || !data.invitation) {
+        throw new Error(data.error || "Data acara belum dapat dimuat.");
+      }
+      return data.invitation as Invitation;
+    }
 
-      if (nextType === "WEDDING") {
-        try {
-          const additional = await getInvitation("ADAT_AKAD");
+    function load(nextType: InvitationType) {
+      return getInvitation(nextType).then(async (invitation) => {
+        if (controller.signal.aborted) return;
+        let groomName = invitation.groomName || "";
+        let brideName = invitation.brideName || "";
+
+        if (nextType === "ADAT_AKAD" && (!groomName || !brideName)) {
+          const wedding = await getInvitation("WEDDING");
+          if (controller.signal.aborted) return;
+          groomName ||= wedding.groomName || "";
+          brideName ||= wedding.brideName || "";
           setEventTitles((current) => ({
             ...current,
-            ADAT_AKAD: additional.title || "",
+            WEDDING: wedding.title || "",
           }));
-          if (hasAdditionalEventData(additional)) setHasAdditional(true);
-        } catch {
-          // Acara utama tetap dapat diedit walau pengecekan acara tambahan gagal.
         }
-      }
 
-      setNotice("Tersinkron");
-    } catch (error) {
-      setNotice(
-        error instanceof Error ? error.message : "Data acara belum dapat dimuat.",
-      );
-    } finally {
-      setLoading(false);
+        setForm({
+          title: invitation.title || "",
+          groomName,
+          brideName,
+          venue: invitation.venue || "",
+          address: invitation.address || "",
+          mapUrl: invitation.mapUrl || "",
+          timezone: invitation.timezone || "Asia/Jakarta",
+          eventDate: invitation.eventDate ? invitation.eventDate.slice(0, 10) : "",
+          ceremonyTime: invitation.ceremonyTime || "",
+          receptionTime: invitation.receptionTime || "",
+          description: invitation.description || "",
+          eventNotes: invitation.eventNotes || "",
+        });
+        setEventTitles((current) => ({
+          ...current,
+          [nextType]: invitation.title || "",
+        }));
+        setIsPublished(invitation.isPublished);
+
+        if (nextType === "WEDDING") {
+          try {
+            const additional = await getInvitation("ADAT_AKAD");
+            if (controller.signal.aborted) return;
+            setEventTitles((current) => ({
+              ...current,
+              ADAT_AKAD: additional.title || "",
+            }));
+            if (hasAdditionalEventData(additional)) setHasAdditional(true);
+          } catch {
+            // Acara utama tetap dapat diedit walau pengecekan acara tambahan gagal.
+          }
+        }
+
+        if (!controller.signal.aborted) setNotice("Tersinkron");
+      }).catch((error) => {
+        if (controller.signal.aborted) return;
+        setNotice(
+          error instanceof Error ? error.message : "Data acara belum dapat dimuat.",
+        );
+      }).finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
     }
-  }
 
-  useEffect(() => {
-    load(type);
+    void load(type);
+    return () => controller.abort();
   }, [type]);
+
+  function selectType(nextType: InvitationType) {
+    if (nextType === type) return;
+    setLoading(true);
+    setNotice("Memuat...");
+    setType(nextType);
+  }
 
   function field(name: keyof typeof form, value: string) {
     setForm((current) => ({ ...current, [name]: value }));
@@ -147,7 +158,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
 
   function addSequence() {
     setHasAdditional(true);
-    setType("ADAT_AKAD");
+    selectType("ADAT_AKAD");
   }
 
   async function save() {
@@ -230,7 +241,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
             </span>
             <select
               value={type}
-              onChange={(event) => setType(event.target.value as InvitationType)}
+              onChange={(event) => selectType(event.target.value as InvitationType)}
               disabled={loading || saving}
               aria-label="Pilih rangkaian acara"
               className="w-full px-3 text-sm outline-none"

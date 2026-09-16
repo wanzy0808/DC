@@ -125,8 +125,7 @@ export default function DashboardPage() {
   const [bride, setBride] = useState("");
   const [nickname, setNickname] = useState("");
 
-  const load = async () => {
-    const ir = await fetch("/api/invitations?type=WEDDING", { cache: "no-store" });
+  const load = () => fetch("/api/invitations?type=WEDDING", { cache: "no-store" }).then(async (ir) => {
     const [cr, gr] = await Promise.all([
       fetch("/api/dashboard/context", { cache: "no-store" }),
       fetch("/api/guests", { cache: "no-store" }),
@@ -150,7 +149,7 @@ export default function DashboardPage() {
     }
 
     if (ir.ok) setSlug((await ir.json()).invitation?.slug ?? "");
-  };
+  });
 
   useEffect(() => {
     load().catch(() => undefined);
@@ -486,7 +485,7 @@ function MenuItem({
   onClick,
   danger = false,
 }: {
-  icon: any;
+  icon: typeof Home;
   text: string;
   onClick: () => void;
   danger?: boolean;
@@ -620,7 +619,7 @@ function QuickAction({
   label,
   onClick,
 }: {
-  icon: any;
+  icon: typeof Home;
   label: string;
   onClick: () => void;
 }) {

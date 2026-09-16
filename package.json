@@ -10,7 +10,9 @@
     "db:up": "docker compose up -d postgres",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "typecheck": "next typegen && tsc --noEmit",
+    "db:validate": "prisma validate"
   },
   "dependencies": {
     "@base-ui/react": "^1.7.0",

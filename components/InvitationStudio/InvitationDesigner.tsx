@@ -25,6 +25,8 @@ import {
   type PaletteKey,
 } from "@/lib/templates/design";
 
+import { useBrowserSearch } from "@/lib/hooks/use-browser-search";
+
 type Invitation = {
   id: string;
   slug: string;
@@ -71,7 +73,14 @@ const fonts = (
 ).sort((a, b) => a[1].name.localeCompare(b[1].name));
 
 export default function InvitationDesigner() {
-  const [type, setType] = useState<"WEDDING" | "ADAT_AKAD">("WEDDING");
+  const search = useBrowserSearch();
+  if (search === null) return <p role="status">Memuat undangan...</p>;
+  const initialType = new URLSearchParams(search).get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+  return <InvitationDesignerWorkspace key={initialType} initialType={initialType} />;
+}
+
+function InvitationDesignerWorkspace({ initialType }: { initialType: "WEDDING" | "ADAT_AKAD" }) {
+  const [type, setType] = useState(initialType);
   const [invitation, setInvitation] = useState<Invitation | null>(null);
   const [panel, setPanel] = useState<Panel>("template");
   const [preview, setPreview] = useState(false);
@@ -100,12 +109,18 @@ export default function InvitationDesigner() {
     font: "cinzelFauna" as FontKey,
     decor: decor[0],
   });
-  const load = async (t: "WEDDING" | "ADAT_AKAD") => {
+  function selectType(nextType: "WEDDING" | "ADAT_AKAD") {
+    if (nextType === type) return;
     setNotice("Memuat undangan...");
-    const r = await fetch(`/api/invitations?type=${t}`, { cache: "no-store" });
+    setType(nextType);
+  }
+  useEffect(() => {
+    const controller = new AbortController();
+  const load = (t: "WEDDING" | "ADAT_AKAD") => fetch(`/api/invitations?type=${t}`, { cache: "no-store", signal: controller.signal }).then(async (r) => {
     const d = await r.json();
     if (!r.ok || !d.invitation)
       throw new Error(d.error || "Undangan belum dapat dimuat.");
+    if (controller.signal.aborted) return;
     const i = d.invitation as Invitation;
     setInvitation(i);
     setMusicUrl(i.musicUrl || "");
@@ -134,17 +149,11 @@ export default function InvitationDesigner() {
     setHistory([]);
     setFuture([]);
     setNotice("Siap diedit.");
-  };
-  useEffect(() => {
-    const queryType = new URLSearchParams(window.location.search).get("type");
-    if (queryType === "ADAT_AKAD") setType("ADAT_AKAD");
-  }, []);
-  useEffect(() => {
-    load(type).catch((e) =>
-      setNotice(
-        e instanceof Error ? e.message : "Undangan belum dapat dimuat.",
-      ),
-    );
+  });
+    void load(type).catch((error) => {
+      if (!controller.signal.aborted) setNotice(error instanceof Error ? error.message : "Undangan belum dapat dimuat.");
+    });
+    return () => controller.abort();
   }, [type]);
   const palette = invitationPalettes[design.palette],
     fontPair = invitationFonts[design.font],
@@ -302,12 +311,12 @@ export default function InvitationDesigner() {
           <TypeTab
             active={type === "WEDDING"}
             label="Undangan Pernikahan"
-            onClick={() => setType("WEDDING")}
+            onClick={() => selectType("WEDDING")}
           />
           <TypeTab
             active={type === "ADAT_AKAD"}
             label="Akad & Sangjit"
-            onClick={() => setType("ADAT_AKAD")}
+            onClick={() => selectType("ADAT_AKAD")}
           />
         </div>
       </div>
