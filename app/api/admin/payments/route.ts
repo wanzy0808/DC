@@ -42,11 +42,36 @@ export async function PATCH(request: Request) {
       return NextResponse.json({ order: updated });
     }
 
+    const now = new Date();
     const updated = await prisma.$transaction(async (tx) => {
       const paidOrder = await tx.paymentOrder.update({
         where: { id: order.id },
-        data: { status: "PAID", paidAt: new Date(), confirmedAt: new Date(), confirmedById: admin.id },
+        data: { status: "PAID", paidAt: now, confirmedAt: now, confirmedById: admin.id },
       });
+
+      if (order.packageKey === "WA_BLAST_50") {
+        await tx.invitation.update({
+          where: { id: order.invitationId },
+          data: { waBlastQuota: { increment: 50 } },
+        });
+        await tx.auditLog.create({
+          data: {
+            actorId: admin.id,
+            action: "WA_BLAST_QUOTA_ADDED",
+            entity: "PaymentOrder",
+            entityId: order.id,
+            metadata: {
+              packageKey: order.packageKey,
+              amount: order.amount,
+              invoiceNumber: order.invoiceNumber,
+              invitationId: order.invitationId,
+              quotaAdded: 50,
+            },
+          },
+        });
+        return paidOrder;
+      }
+
       await tx.payment.upsert({
         where: { invitationId: order.invitationId },
         update: {
@@ -57,8 +82,8 @@ export async function PATCH(request: Request) {
           provider: "manual",
           proofUrl: order.proofUrl,
           note: order.note,
-          paidAt: new Date(),
-          confirmedAt: new Date(),
+          paidAt: now,
+          confirmedAt: now,
           confirmedById: admin.id,
         },
         create: {
@@ -70,8 +95,8 @@ export async function PATCH(request: Request) {
           provider: "manual",
           proofUrl: order.proofUrl,
           note: order.note,
-          paidAt: new Date(),
-          confirmedAt: new Date(),
+          paidAt: now,
+          confirmedAt: now,
           confirmedById: admin.id,
         },
       });
@@ -81,14 +106,20 @@ export async function PATCH(request: Request) {
           action: "PACKAGE_ACTIVATED",
           entity: "PaymentOrder",
           entityId: order.id,
-          metadata: { packageKey: order.packageKey, amount: order.amount, invoiceNumber: order.invoiceNumber },
+          metadata: {
+            packageKey: order.packageKey,
+            amount: order.amount,
+            invoiceNumber: order.invoiceNumber,
+            invitationId: order.invitationId,
+          },
         },
       });
       return paidOrder;
     });
 
     return NextResponse.json({ order: updated });
-  } catch {
+  } catch (error) {
+    console.error("PATCH /api/admin/payments failed", error);
     return NextResponse.json({ error: "Status pembayaran belum dapat diubah." }, { status: 500 });
   }
 }
