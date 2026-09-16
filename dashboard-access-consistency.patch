@@ -1,0 +1,320 @@
+diff --git a/PRD-TAMBAHAN.md b/PRD-TAMBAHAN.md
+index 41e290c..ba424ea 100644
+--- a/PRD-TAMBAHAN.md
++++ b/PRD-TAMBAHAN.md
+@@ -260,3 +260,31 @@ Commits:
+ - `5a97657b7f089fc9777eb886bf77015a805313c5` — remove design overrides
+ 
+ Validation: build/CI belum diverifikasi pada saat pencatatan ini. Langkah berikutnya adalah menjalankan build/CI dan audit halaman/component dashboard satu per satu untuk menemukan visual yang masih menyimpang dari canonical system.
++
++## 2026-09-16 - Dashboard access notice consistency
++
++- Kelanjutan standardisasi dashboard setelah `PRD-2.md`: halaman Usher terkunci, `FeatureGate`, dan dialog upgrade sekarang berbagi `DashboardAccessNotice` untuk heading, metadata, ikon, deskripsi, dan divider yang konsisten.
++- Surface menggunakan semantic background/foreground/border, heading Rose, font Cinzel/Fauna One/DM Mono, dan CTA melalui `components/ui/button.tsx`. Tidak ada primitive button baru atau override warna button per halaman.
++- `/dashboard/usher` saat paket belum aktif memakai layout responsif dua kolom dengan daftar fitur dan alur Scan/Verify/Enter. Palette magenta/beige dan nested cards lama dihapus.
++- `FeatureGate` memakai overlay grid yang dapat tumbuh mengikuti konten, serta `inert` pada preview terkunci agar aksi tersembunyi tidak bisa difokuskan lewat keyboard.
++- Dialog upgrade memakai primitive Dialog existing untuk fokus modal dan dismissal keyboard. `DashboardFeatureGuard` belum diimpor oleh route aktif pada snapshot ini; komponen diselaraskan tanpa memasangnya atau mengubah aturan entitlement berbasis event yang sudah ada.
++- Server authentication, paid Guestbook check, route tujuan, API/database, pengecualian Manajemen Tamu, sidebar, Pintu, dan rose petals dipertahankan. UsherApp aktif belum di-redesign pada tahap ini.
++
++Affected files:
++- `components/Dashboard/DashboardAccessNotice.tsx` (new, presentation only)
++- `components/Dashboard/FeatureGate.tsx`
++- `components/Dashboard/DashboardFeatureGuard.tsx`
++- `app/dashboard/usher/page.tsx`
++
++Implementation commit: `e096747` - Unify dashboard access notices and Usher upgrade layout.
++Branch: `codex/dashboard-access-consistency` (local; GitHub push credentials unavailable).
++
++Validation:
++- Targeted ESLint untuk keempat file selesai dengan exit code 0; `git diff --check` bersih.
++- Isolated React bundle dan stylesheet Tailwind berhasil dikompilasi untuk pemeriksaan komponen, tanpa perubahan dependency atau production data.
++- Build aplikasi belum lolos: `next/font` gagal mengunduh Cinzel, DM Mono, dan Fauna One dari Google Fonts di environment ini.
++- `prisma generate` gagal pada schema existing: `User.auditLogs` merujuk model `AuditLog` yang belum didefinisikan (`P1012`).
++- TypeScript project belum lolos; diagnostic muncul pada file existing di luar perubahan ini, termasuk prop `button` pada EventPanel, tipe FAQ readonly, FeatureSection icon tuple, dan callback API tanpa tipe setelah Prisma Client gagal digenerate. Tidak ada diagnostic pada empat file yang diubah.
++- Visual light/dark, responsive browser, fokus keyboard, dan Escape belum terverifikasi: executable Playwright tidak tersedia dan unduhan Chromium timeout. Tidak mengklaim browser, build, atau CI PASS.
++
++Tahap berikutnya: standardisasi UsherApp aktif, lalu audit form/table/dialog dashboard lain dan jalankan visual QA dengan font asli serta database pada environment aplikasi.
+diff --git a/app/dashboard/usher/page.tsx b/app/dashboard/usher/page.tsx
+index beede9b..5130e63 100644
+--- a/app/dashboard/usher/page.tsx
++++ b/app/dashboard/usher/page.tsx
+@@ -1,9 +1,11 @@
+ import Link from "next/link";
+ import { redirect } from "next/navigation";
+-import { CheckCircle2, Gift, LockKeyhole, QrCode, ScanLine, Users } from "lucide-react";
++import { ArrowLeft, ArrowRight, CheckCircle2, Gift, QrCode, ScanLine, Users } from "lucide-react";
+ import { getCurrentUser } from "@/lib/auth";
+ import { prisma } from "@/lib/prisma";
+ import { hasPaidGuestbook } from "@/lib/packages/access";
++import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
++import { Button } from "@/components/ui/button";
+ import UsherApp from "@/components/UsherApp/UsherApp";
+ 
+ type Feature = { icon: typeof ScanLine; label: string };
+@@ -31,36 +33,67 @@ export default async function UsherPage() {
+   if (usherActive) return <UsherApp />;
+ 
+   return (
+-    <main className="min-h-screen bg-[#faf8f5] px-5 py-10 text-[#211d1e] sm:px-8 sm:py-16">
+-      <div className="mx-auto max-w-5xl">
+-        <Link href="/dashboard" className="text-xs text-[#7A1C25] hover:underline">← Kembali ke Dashboard</Link>
+-        <section className="mt-6 overflow-hidden rounded-3xl border border-black/10 bg-white shadow-sm">
+-          <div className="grid lg:grid-cols-[1.05fr_.95fr]">
+-            <div className="p-7 sm:p-10">
+-              <div className="inline-flex items-center gap-2 rounded-full bg-[#E60087]/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#E60087]"><LockKeyhole className="h-3.5 w-3.5" /> Add-on belum aktif</div>
+-              <h1 className="mt-5 font-serif text-4xl sm:text-5xl">Usher App</h1>
+-              <p className="mt-4 max-w-xl text-sm leading-6 text-black/55">Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan.</p>
+-              <div className="mt-7 grid gap-3 sm:grid-cols-2">
+-                {features.map(({ icon: FeatureIcon, label }) => <div key={label} className="flex items-center gap-3 rounded-xl bg-[#fafafa] p-3 text-xs"><FeatureIcon className="h-4 w-4 text-[#E60087]" />{label}</div>)}
+-              </div>
+-              <Link href="/packages" className="mt-8 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white hover:bg-[#c90077]">Aktifkan Guestbook Digital →</Link>
++    <div className="dc-dashboard min-h-dvh bg-background text-foreground">
++      <main>
++        <div className="mx-auto w-[min(calc(100%-3rem),1400px)] pb-16 pt-8 sm:pt-10">
++          <Link
++            href="/dashboard"
++            className="inline-flex min-h-11 items-center gap-2 text-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
++          >
++            <ArrowLeft className="size-4" aria-hidden="true" />
++            Kembali ke Dashboard
++          </Link>
++          <section className="mt-6 grid border-y border-border lg:grid-cols-2">
++            <div className="min-w-0 py-8 lg:pr-10">
++              <DashboardAccessNotice
++                title="Usher App"
++                heading="h1"
++                label="Add-on belum aktif"
++                description="Aplikasi khusus hari-H untuk memvalidasi tamu sebelum masuk venue. Tamu wajib menunjukkan QR check-in yang terhubung dengan daftar undangan."
++              >
++                <ul className="grid gap-x-6 sm:grid-cols-2">
++                  {features.map(({ icon: FeatureIcon, label }) => (
++                    <li key={label} className="flex items-center gap-3 border-b border-border py-4 text-sm">
++                      <FeatureIcon className="size-4 shrink-0 text-primary" aria-hidden="true" />
++                      {label}
++                    </li>
++                  ))}
++                </ul>
++                <Button asChild size="lg" className="mt-6">
++                  <Link href="/packages">
++                    Aktifkan Guestbook Digital
++                    <ArrowRight className="size-4" aria-hidden="true" />
++                  </Link>
++                </Button>
++              </DashboardAccessNotice>
+             </div>
+-            <div className="flex min-h-[430px] items-center justify-center bg-[#fff1fa] p-8">
+-              <div className="w-full max-w-sm rounded-3xl border border-black/10 bg-white p-7 shadow-xl">
+-                <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-[#E60087] text-white"><ScanLine className="h-8 w-8" /></div>
+-                <p className="mt-6 text-center text-[10px] uppercase tracking-[0.2em] text-[#E60087]">Venue access</p>
+-                <h2 className="mt-2 text-center font-serif text-2xl">QR adalah tiket masuk</h2>
+-                <div className="mt-6 grid grid-cols-3 gap-2"><Mini label="Scan" icon={ScanLine} /><Mini label="Verify" icon={CheckCircle2} /><Mini label="Enter" icon={Users} /></div>
+-                <p className="mt-6 text-center text-[10px] leading-5 text-black/40">Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.</p>
+-              </div>
++            <div className="min-w-0 border-t border-border py-8 lg:border-l lg:border-t-0 lg:pl-10">
++              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">Venue access</p>
++              <h2 className="mt-3 font-heading text-2xl leading-tight text-primary">QR adalah tiket masuk</h2>
++              <ol className="mt-6 divide-y divide-border">
++                <Step label="Scan" icon={ScanLine} description="Pindai QR resmi yang ditunjukkan tamu." />
++                <Step label="Verify" icon={CheckCircle2} description="Periksa kecocokan QR dengan daftar undangan." />
++                <Step label="Enter" icon={Users} description="Kehadiran tercatat setelah check-in berhasil." />
++              </ol>
++              <p className="mt-6 text-sm leading-6 text-muted-foreground">
++                Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.
++              </p>
+             </div>
+-          </div>
+-        </section>
+-      </div>
+-    </main>
++          </section>
++        </div>
++      </main>
++    </div>
+   );
+ }
+ 
+-function Mini({ label, icon: Icon }: { label: string; icon: typeof ScanLine }) {
+-  return <div className="rounded-xl bg-[#fafafa] p-3 text-center"><Icon className="mx-auto h-4 w-4 text-[#E60087]" /><p className="mt-2 text-[9px] text-black/50">{label}</p></div>;
++function Step({ label, icon: Icon, description }: { label: string; icon: typeof ScanLine; description: string }) {
++  return (
++    <li className="flex gap-4 py-4">
++      <Icon className="mt-1 size-5 shrink-0 text-primary" aria-hidden="true" />
++      <div className="min-w-0">
++        <h3 className="font-heading text-base text-primary">{label}</h3>
++        <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p>
++      </div>
++    </li>
++  );
+ }
+diff --git a/components/Dashboard/DashboardAccessNotice.tsx b/components/Dashboard/DashboardAccessNotice.tsx
+new file mode 100644
+index 0000000..864d419
+--- /dev/null
++++ b/components/Dashboard/DashboardAccessNotice.tsx
+@@ -0,0 +1,41 @@
++import type { ReactNode } from "react";
++import { LockKeyhole } from "lucide-react";
++
++type DashboardAccessNoticeProps = {
++  title: string;
++  description: string;
++  label?: string;
++  heading?: "h1" | "h2" | "h3";
++  children?: ReactNode;
++};
++
++/** Shared presentation only; access decisions remain with each caller and API. */
++export default function DashboardAccessNotice({
++  title,
++  description,
++  label = "Akses paket",
++  heading: Heading = "h2",
++  children,
++}: DashboardAccessNoticeProps) {
++  return (
++    <div className="min-w-0 space-y-5 text-foreground">
++      <div className="flex items-center gap-3">
++        <span className="grid size-11 shrink-0 place-items-center rounded-[10px] border border-border text-primary">
++          <LockKeyhole className="size-5" aria-hidden="true" />
++        </span>
++        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
++          {label}
++        </p>
++      </div>
++      <div className="space-y-3">
++        <Heading className="break-words font-heading text-2xl leading-tight text-primary sm:text-3xl">
++          {title}
++        </Heading>
++        <p className="max-w-xl text-sm leading-6 text-muted-foreground">
++          {description}
++        </p>
++      </div>
++      {children && <div className="border-t border-border pt-5">{children}</div>}
++    </div>
++  );
++}
+diff --git a/components/Dashboard/DashboardFeatureGuard.tsx b/components/Dashboard/DashboardFeatureGuard.tsx
+index 85278be..f51cba1 100644
+--- a/components/Dashboard/DashboardFeatureGuard.tsx
++++ b/components/Dashboard/DashboardFeatureGuard.tsx
+@@ -2,8 +2,10 @@
+ 
+ import { useEffect, useState, type ReactNode } from "react";
+ import Link from "next/link";
+-import { LockKeyhole, X } from "lucide-react";
++import { X } from "lucide-react";
+ import { Button } from "@/components/ui/button";
++import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
++import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
+ 
+ type Access = { digitalInvitation: boolean; guestbook: boolean; bundle: boolean };
+ 
+@@ -41,32 +43,28 @@ export default function DashboardFeatureGuard({ children }: { children: ReactNod
+   return (
+     <>
+       {children}
+-      {upgradeOpen && (
+-        <div className="fixed inset-0 z-[110] grid place-items-center bg-black/40 p-4 backdrop-blur-sm" onMouseDown={() => setUpgradeOpen(false)}>
+-          <div className="w-full max-w-md rounded-3xl border border-border bg-card p-7 shadow-2xl" onMouseDown={(event) => event.stopPropagation()}>
+-            <div className="flex items-start justify-between">
+-              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-primary/10 text-primary">
+-                <LockKeyhole className="h-5 w-5" />
+-              </div>
+-              <Button type="button" size="icon" onClick={() => setUpgradeOpen(false)} aria-label="Tutup">
+-                <X className="h-4 w-4" />
+-              </Button>
+-            </div>
+-            <p className="mt-5 text-[10px] font-semibold uppercase tracking-[.2em] text-primary">Upgrade paket</p>
+-            <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
+-              {upgradeType === "guestbook" ? "Kelola tamu dengan lebih lengkap" : "Publikasikan undanganmu"}
+-            </h2>
+-            <p className="mt-2 text-sm leading-6 opacity-60">
+-              {upgradeType === "guestbook"
+-                ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
+-                : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
+-            </p>
+-            <Button asChild size="lg" className="mt-6 w-full rounded-xl">
++      <Dialog open={upgradeOpen} onOpenChange={setUpgradeOpen}>
++        <DialogContent showCloseButton={false} className="max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-[10px] border border-border bg-background p-6 sm:p-8">
++          <DialogTitle className="sr-only">Upgrade paket</DialogTitle>
++          <DialogDescription className="sr-only">
++            Pilih paket untuk membuka fitur yang diperlukan.
++          </DialogDescription>
++          <DialogClose render={<Button size="icon-lg" className="absolute right-4 top-4" aria-label="Tutup pemberitahuan upgrade" />}>
++            <X className="size-4" aria-hidden="true" />
++          </DialogClose>
++          <DashboardAccessNotice
++            label="Upgrade paket"
++            title={upgradeType === "guestbook" ? "Kelola tamu dengan lebih lengkap" : "Publikasikan undanganmu"}
++            description={upgradeType === "guestbook"
++              ? "Daftar tamu, nomor meja, kursi, Usher App, QR check-in, dan realtime attendance termasuk dalam Guestbook Digital."
++              : "Paket Undangan Digital diperlukan untuk membagikan undanganmu ke tamu dan mengaktifkan halaman publik."}
++          >
++            <Button asChild size="lg">
+               <Link href="/packages" onClick={() => setUpgradeOpen(false)}>Lihat paket</Link>
+             </Button>
+-          </div>
+-        </div>
+-      )}
++          </DashboardAccessNotice>
++        </DialogContent>
++      </Dialog>
+     </>
+   );
+ }
+diff --git a/components/Dashboard/FeatureGate.tsx b/components/Dashboard/FeatureGate.tsx
+index a2f6040..ebdbe64 100644
+--- a/components/Dashboard/FeatureGate.tsx
++++ b/components/Dashboard/FeatureGate.tsx
+@@ -1,8 +1,9 @@
+ "use client";
+ 
+ import type { ReactNode } from "react";
+-import { LockKeyhole, Sparkles } from "lucide-react";
++import { Sparkles } from "lucide-react";
+ import { Button } from "@/components/ui/button";
++import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
+ 
+ interface FeatureGateProps {
+   allowed: boolean;
+@@ -27,25 +28,23 @@ export default function FeatureGate({
+   if (allowed || title === "Manajemen Tamu") return <>{children}</>;
+ 
+   return (
+-    <section className="relative overflow-hidden rounded-2xl border border-[#d9cbc2] bg-[#f3ede6] dark:border-white/10 dark:bg-[#121116]">
+-      <div className="pointer-events-none select-none blur-[2px] opacity-45" aria-hidden="true">
++    <section className="grid min-w-0 overflow-hidden border-y border-border bg-background">
++      <div className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-45 blur-[2px]" aria-hidden="true" inert>
+         {children}
+       </div>
+-      <div className="absolute inset-0 flex items-center justify-center bg-[#FAF7F2]/75 p-6 dark:bg-[#060508]/75">
+-        <div className="max-w-sm text-center">
+-          <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-[#7A1C25]/10 text-[#7A1C25] dark:bg-[#E8A5AE]/10 dark:text-[#E8A5AE]">
+-            <LockKeyhole className="h-5 w-5" />
+-          </div>
+-          <h3 className="mt-4 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-[#2D2222] dark:text-[#F8F1EB]">{title}</h3>
+-          <p className="mt-2 font-[family-name:var(--font-fauna)] text-xs text-[#5A4545] dark:text-white/75">{description}</p>
+-          <Button
+-            type="button"
+-            onClick={onUpgrade}
+-            className="mt-4 gap-2 rounded-xl bg-[#7A1C25] text-white hover:bg-[#5E141C] dark:bg-[#C26B70] dark:text-black dark:hover:bg-[#A9565C]"
+-          >
+-            <Sparkles className="h-4 w-4" />
+-            {upgradeLabel}
+-          </Button>
++      <div className="relative col-start-1 row-start-1 flex items-center justify-center bg-background/95 px-6 py-10 sm:p-10">
++        <div className="w-full max-w-lg">
++          <DashboardAccessNotice title={title} description={description} heading="h3">
++            <Button
++              type="button"
++              onClick={onUpgrade}
++              size="lg"
++              className="h-auto min-h-11 max-w-full whitespace-normal py-3 text-left"
++            >
++              <Sparkles className="size-4 shrink-0" aria-hidden="true" />
++              {upgradeLabel}
++            </Button>
++          </DashboardAccessNotice>
+         </div>
+       </div>
+     </section>
