@@ -255,6 +255,7 @@ export async function PUT(request: Request) {
         mapUrl,
         timezone,
         eventDate: Number.isNaN(eventDate.getTime()) ? invitation.eventDate : eventDate,
+        eventConfigured: body.eventConfigured === true ? true : invitation.eventConfigured,
         ceremonyTime: String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null,
         receptionTime: String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null,
         title,
