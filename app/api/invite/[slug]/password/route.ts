@@ -5,28 +5,52 @@ import {
   verifyInvitationPassword,
 } from "@/lib/invitation-password";
 
-export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ slug: string }> },
+) {
   try {
     const { slug } = await params;
     const invitation = await prisma.invitation.findUnique({
       where: { slug },
-      select: { id: true, passwordProtected: true, passwordHash: true, isPublished: true },
+      select: {
+        id: true,
+        passwordProtected: true,
+        passwordHash: true,
+        isPublished: true,
+      },
     });
 
-    if (!invitation || !invitation.isPublished || !invitation.passwordProtected || !invitation.passwordHash) {
-      return NextResponse.json({ error: "Perlindungan password tidak aktif." }, { status: 400 });
+    if (
+      !invitation ||
+      !invitation.isPublished ||
+      !invitation.passwordProtected ||
+      !invitation.passwordHash
+    ) {
+      return NextResponse.json(
+        { error: "Perlindungan password tidak aktif." },
+        { status: 400 },
+      );
     }
 
     const body = await request.json();
     const password = typeof body.password === "string" ? body.password : "";
-    if (!password || !(await verifyInvitationPassword(password, invitation.passwordHash))) {
+    if (
+      !password ||
+      !(await verifyInvitationPassword(password, invitation.passwordHash))
+    ) {
       return NextResponse.json({ error: "Password salah." }, { status: 401 });
     }
 
-    await setInvitationAccessCookie(slug);
+    // Public invitations are served from the tenant subdomain root after proxy rewrite,
+    // so the access cookie must be valid for visible paths such as `/` and `/p/...`.
+    await setInvitationAccessCookie(slug, "/");
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("POST /api/invite/[slug]/password failed", error);
-    return NextResponse.json({ error: "Password belum dapat diverifikasi." }, { status: 500 });
+    return NextResponse.json(
+      { error: "Password belum dapat diverifikasi." },
+      { status: 500 },
+    );
   }
 }
