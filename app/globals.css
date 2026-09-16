@@ -192,6 +192,12 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main section { border-color: var(--border) !important; }
 .dc-dashboard main section[class*="bg-[#f3ede6]"], .dc-dashboard main section[class*="bg-[#FAF7F2]"], .dc-dashboard main section[class*="bg-[#fffaf6]"], .dc-dashboard main section[class*="bg-[#121116]"] { background: var(--background) !important; }
 
+/* Prefer spacing and card surfaces over long horizontal dividers inside dashboard workspaces. */
+.dc-dashboard main > section { border-bottom-width: 0 !important; }
+.dc-dashboard main section.border-y { border-top-width: 0 !important; border-bottom-width: 0 !important; }
+.dc-dashboard main section.border-t { border-top-width: 0 !important; }
+.dc-dashboard main section.border-b { border-bottom-width: 0 !important; }
+
 /* Form controls use a restrained neutral fill so each editable field is easy to scan without turning the dashboard pink. */
 .dc-dashboard input,
 .dc-dashboard textarea,
