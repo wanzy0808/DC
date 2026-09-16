@@ -28,7 +28,7 @@ export default function FeatureGate({
   if (allowed || title === "Manajemen Tamu") return <>{children}</>;
 
   return (
-    <section className="mx-auto grid min-w-0 w-[min(calc(100%-3rem),1400px)] overflow-hidden rounded-xl border border-border/80 bg-foreground/[0.018]">
+    <section className="mx-auto grid w-[min(92vw,1400px)] min-w-0 overflow-hidden rounded-xl border border-border/80 bg-foreground/[0.018]">
       <div
         className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-35 blur-[2px]"
         aria-hidden="true"
