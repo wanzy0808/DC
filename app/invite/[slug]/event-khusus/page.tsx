@@ -8,14 +8,18 @@ export default async function LegacySpecialInvitationPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const mainInvitation = await prisma.invitation.findUnique({
+  const baseInvitation = await prisma.invitation.findUnique({
     where: { slug },
-    select: { ownerId: true },
+    select: { id: true, ownerId: true },
   });
-  if (!mainInvitation) notFound();
+  if (!baseInvitation) notFound();
 
   const invitation = await prisma.invitation.findFirst({
-    where: { ownerId: mainInvitation.ownerId, type: "ADAT_AKAD" },
+    where: {
+      ownerId: baseInvitation.ownerId,
+      eventConfigured: true,
+      id: { not: baseInvitation.id },
+    },
     select: { title: true },
     orderBy: { createdAt: "asc" },
   });
