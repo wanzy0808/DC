@@ -125,9 +125,9 @@ export default function EventPanel({ accent, onSaved }: Props) {
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <section className="border-y border-border bg-background">
-        <div className="flex flex-col gap-3 border-b border-border py-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="grid min-w-0 flex-1 border border-border sm:grid-cols-2">
+      <section className="bg-background">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="grid min-w-0 flex-1 gap-2 rounded-xl border border-border/80 bg-foreground/[0.018] p-1.5 sm:grid-cols-2">
             <TypeTab
               active={type === "WEDDING"}
               label="Pernikahan"
@@ -139,106 +139,112 @@ export default function EventPanel({ accent, onSaved }: Props) {
               onClick={() => setType("ADAT_AKAD")}
             />
           </div>
-          <span className={`shrink-0 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] ${accent}`}>
+          <span
+            className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] ${accent}`}
+          >
             {loading ? "Loading" : notice}
           </span>
         </div>
 
-        <div className="grid gap-8 py-6 lg:grid-cols-2 lg:gap-10">
-          <div className="min-w-0 space-y-5">
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
             <SectionLabel>Acara</SectionLabel>
-            <Field
-              label="Nama acara"
-              value={form.title}
-              onChange={(value) => field("title", value)}
-              placeholder="Nama acara"
-            />
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="mt-4 space-y-4">
               <Field
-                label="Pasangan pria"
-                value={form.groomName}
-                onChange={() => undefined}
-                placeholder="Data onboarding"
-                readOnly
+                label="Nama acara"
+                value={form.title}
+                onChange={(value) => field("title", value)}
+                placeholder="Nama acara"
               />
-              <Field
-                label="Pasangan wanita"
-                value={form.brideName}
-                onChange={() => undefined}
-                placeholder="Data onboarding"
-                readOnly
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                label="Tanggal"
-                type="date"
-                value={form.eventDate}
-                onChange={(value) => field("eventDate", value)}
-              />
-              <Field
-                label="Zona waktu"
-                value={form.timezone}
-                onChange={(value) => field("timezone", value)}
-                placeholder="Asia/Jakarta"
-              />
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                label="Akad / pemberkatan"
-                type="time"
-                value={form.ceremonyTime}
-                onChange={(value) => field("ceremonyTime", value)}
-              />
-              <Field
-                label="Resepsi"
-                type="time"
-                value={form.receptionTime}
-                onChange={(value) => field("receptionTime", value)}
-              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Pasangan pria"
+                  value={form.groomName}
+                  onChange={() => undefined}
+                  placeholder="Data onboarding"
+                  readOnly
+                />
+                <Field
+                  label="Pasangan wanita"
+                  value={form.brideName}
+                  onChange={() => undefined}
+                  placeholder="Data onboarding"
+                  readOnly
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Tanggal"
+                  type="date"
+                  value={form.eventDate}
+                  onChange={(value) => field("eventDate", value)}
+                />
+                <Field
+                  label="Zona waktu"
+                  value={form.timezone}
+                  onChange={(value) => field("timezone", value)}
+                  placeholder="Asia/Jakarta"
+                />
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Field
+                  label="Akad / pemberkatan"
+                  type="time"
+                  value={form.ceremonyTime}
+                  onChange={(value) => field("ceremonyTime", value)}
+                />
+                <Field
+                  label="Resepsi"
+                  type="time"
+                  value={form.receptionTime}
+                  onChange={(value) => field("receptionTime", value)}
+                />
+              </div>
             </div>
           </div>
 
-          <div className="min-w-0 space-y-5 lg:border-l lg:border-border lg:pl-10">
+          <div className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
             <SectionLabel>Lokasi</SectionLabel>
-            <Field
-              label="Venue"
-              value={form.venue}
-              onChange={(value) => field("venue", value)}
-              placeholder="Nama venue"
-            />
-            <Field
-              label="Alamat"
-              value={form.address}
-              onChange={(value) => field("address", value)}
-              placeholder="Alamat lengkap"
-            />
-            <Field
-              label="Google Maps URL"
-              value={form.mapUrl}
-              onChange={(value) => field("mapUrl", value)}
-              placeholder="https://maps.google.com/..."
-            />
-            <TextArea
-              label="Deskripsi"
-              value={form.description}
-              onChange={(value) => field("description", value)}
-              placeholder="Informasi acara"
-              rows={4}
-            />
-            <TextArea
-              label="Catatan"
-              value={form.eventNotes}
-              onChange={(value) => field("eventNotes", value)}
-              placeholder="Catatan tambahan"
-              rows={3}
-            />
+            <div className="mt-4 space-y-4">
+              <Field
+                label="Venue"
+                value={form.venue}
+                onChange={(value) => field("venue", value)}
+                placeholder="Nama venue"
+              />
+              <Field
+                label="Alamat"
+                value={form.address}
+                onChange={(value) => field("address", value)}
+                placeholder="Alamat lengkap"
+              />
+              <Field
+                label="Google Maps URL"
+                value={form.mapUrl}
+                onChange={(value) => field("mapUrl", value)}
+                placeholder="https://maps.google.com/..."
+              />
+              <TextArea
+                label="Deskripsi"
+                value={form.description}
+                onChange={(value) => field("description", value)}
+                placeholder="Informasi acara"
+                rows={4}
+              />
+              <TextArea
+                label="Catatan"
+                value={form.eventNotes}
+                onChange={(value) => field("eventNotes", value)}
+                placeholder="Catatan tambahan"
+                rows={3}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 border-t border-border py-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex min-w-0 items-center gap-2 text-xs text-muted-foreground">
-            <span className="grid h-8 w-8 shrink-0 place-items-center border border-border text-primary">
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
               {type === "WEDDING" ? (
                 <CalendarDays className="h-4 w-4" />
               ) : (
@@ -275,15 +281,8 @@ function TypeTab({
   onClick: () => void;
 }) {
   return (
-    <Button
-      type="button"
-      onClick={onClick}
-      className={`h-10 flex-1 rounded-none border-0 border-r border-border text-xs shadow-none last:border-r-0 ${
-        active
-          ? "bg-primary/10 text-primary hover:bg-primary/10"
-          : "bg-transparent text-foreground hover:bg-primary/5"
-      }`}
-    >
+    <Button type="button" onClick={onClick} size="sm" aria-pressed={active} className="w-full">
+      {active && <span className="size-1.5 rounded-full bg-current" aria-hidden="true" />}
       {label}
     </Button>
   );
@@ -313,7 +312,7 @@ function Field({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         readOnly={readOnly}
-        className={`bg-transparent ${readOnly ? "cursor-not-allowed opacity-60" : ""}`}
+        className={readOnly ? "cursor-not-allowed" : ""}
       />
     </label>
   );
@@ -340,7 +339,7 @@ function TextArea({
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="w-full resize-y rounded-xl border border-input bg-transparent px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+        className="w-full resize-y px-3 py-2.5 text-sm outline-none"
       />
     </label>
   );
