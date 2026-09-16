@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PublicInvitation from "@/components/PublicInvitation/PublicInvitation";
 import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
-import { buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 
 export default async function PersonalInvitationPreviewPage({
   params,
@@ -20,7 +20,7 @@ export default async function PersonalInvitationPreviewPage({
     where: {
       id: guestId,
       personalToken: { not: null },
-      invitation: { ownerId: user.id },
+      invitation: { ownerId: user.id, eventConfigured: true },
     },
     include: {
       invitation: { include: { payment: true, assets: true } },
@@ -40,15 +40,19 @@ export default async function PersonalInvitationPreviewPage({
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="sticky top-0 z-50 flex items-center gap-3 border-b border-border bg-background/95 px-4 py-3 backdrop-blur">
-        <Link href="/dashboard" className={buttonVariants({ size: "sm" })}>
-          <ArrowLeft className="h-4 w-4" />
-          Kembali
-        </Link>
+        <Button asChild size="sm">
+          <Link href="/dashboard">
+            <ArrowLeft className="h-4 w-4" />
+            Kembali
+          </Link>
+        </Button>
         <div className="min-w-0">
           <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
             Pratinjau Personal Invitation
           </p>
-          <p className="truncate text-sm font-medium">Untuk {guest.name}</p>
+          <p className="truncate text-sm font-medium">
+            {invitation.title || "Acara"} · {guest.name}
+          </p>
         </div>
       </div>
       <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-[family-name:var(--font-fauna)] text-sm">
