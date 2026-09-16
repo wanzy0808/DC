@@ -195,3 +195,21 @@ Migration harus dijalankan pada environment database sebelum feature baru diguna
 - Build, lint, CI, dan deployment **belum diverifikasi**.
 - WA Blast delivery provider dan quota top-up pricing/order flow belum ditentukan, sehingga tidak diklaim sebagai fitur pengiriman pesan aktif.
 - Implementasi tahap ini memprioritaskan database-backed workflow, backward compatibility, server entitlement, dan struktur dashboard baru tanpa mock data.
+
+## 2026-09-16 — Parent Navigation Rename: Acara
+
+### Perubahan terminology
+- Parent menu sidebar yang sebelumnya tampil sebagai `Undangan` sekarang tampil sebagai **`Acara`**.
+- Empat submenu tetap sama: `Rangkaian Acara`, `Undangan`, `WA Blast`, dan `Personal Invitation`.
+- Metadata/eyebrow untuk keempat workspace tersebut ikut memakai namespace `Acara / 01` sampai `Acara / 04` agar terminology sidebar dan content header konsisten.
+- Icon parent diganti dari icon surat menjadi `CalendarDays` agar makna menu induk sesuai domain acara.
+- Tidak ada perubahan route, API, schema, data flow, entitlement, atau behavior submenu.
+
+### Affected file
+- `app/[dashboard]/page.tsx`
+
+### Commit
+- `364d10418701d16302bd49ea02d6ab17d286891f`
+
+### Validation
+- Build/lint/CI belum diverifikasi untuk perubahan rename ini.
