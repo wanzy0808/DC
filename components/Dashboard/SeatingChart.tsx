@@ -154,9 +154,11 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
   const draggedGuest = draggedGuestId
     ? (visibleGuests.find((guest) => guest.id === draggedGuestId) ?? null)
     : null;
+  const totalSeats = visibleTables.reduce((sum, table) => sum + table.capacity, 0);
+  const assignedCount = visibleGuests.filter((guest) => guest.tableId).length;
 
   const canvas = {
-    background: isDarkMode ? "#111113" : "#FFFFFF",
+    background: isDarkMode ? "#111113" : "#FBFAFA",
     table: "#C07A84",
     tableText: isDarkMode ? "#111111" : "#FFFFFF",
     seatEmpty: isDarkMode ? "#0B0B0C" : "#FFFFFF",
@@ -383,80 +385,78 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
   }
 
   return (
-    <div className="mt-6 grid min-w-0 border-y border-border lg:grid-cols-[280px_minmax(0,1fr)]">
-      <aside className="min-w-0 border-b border-border p-5 lg:border-b-0 lg:border-r">
-        <div>
-          <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            Setup denah
-          </p>
-          <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-            Struktur meja
-          </h3>
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            Tentukan jumlah meja dan kapasitas kursi sebelum menempatkan tamu.
-          </p>
-        </div>
-
-        <form
-          onSubmit={generateTables}
-          className="mt-5 space-y-3 border-b border-border pb-5"
-        >
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-medium">Jumlah meja</span>
-            <Input
-              type="number"
-              min={1}
-              max={100}
-              value={tableCount}
-              onChange={(event) => setTableCount(Number(event.target.value))}
-            />
-          </label>
-          <label className="block">
-            <span className="mb-1.5 block text-xs font-medium">
-              Bangku per meja
+    <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
+      <aside className="min-w-0 space-y-4">
+        <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                Setup
+              </p>
+              <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
+                Struktur meja
+              </h3>
+            </div>
+            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">
+              {visibleTables.length} meja
             </span>
-            <Input
-              type="number"
-              min={1}
-              max={50}
-              value={seatsPerTable}
-              onChange={(event) => setSeatsPerTable(Number(event.target.value))}
-            />
-          </label>
-          <Button
-            type="submit"
-            size="sm"
-            className="w-full"
-            disabled={generating || visibleTables.length > 0}
-          >
-            {generating
-              ? "Membuat denah..."
-              : visibleTables.length
-                ? `${visibleTables.length} meja tersimpan`
-                : "Buat denah"}
-          </Button>
-        </form>
+          </div>
 
-        <div className="py-4">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-            Kapasitas tersimpan
-          </p>
-          <p className="mt-1 text-sm text-foreground">
-            {visibleTables.length} meja ·{" "}
-            {visibleTables.reduce((sum, table) => sum + table.capacity, 0)} kursi
-          </p>
-        </div>
+          <form onSubmit={generateTables} className="mt-4 space-y-3">
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-medium">Jumlah meja</span>
+              <Input
+                type="number"
+                min={1}
+                max={100}
+                value={tableCount}
+                onChange={(event) => setTableCount(Number(event.target.value))}
+              />
+            </label>
+            <label className="block">
+              <span className="mb-1.5 block text-xs font-medium">Bangku per meja</span>
+              <Input
+                type="number"
+                min={1}
+                max={50}
+                value={seatsPerTable}
+                onChange={(event) => setSeatsPerTable(Number(event.target.value))}
+              />
+            </label>
+            <Button
+              type="submit"
+              size="sm"
+              className="w-full"
+              disabled={generating || visibleTables.length > 0}
+            >
+              {generating
+                ? "Membuat denah..."
+                : visibleTables.length
+                  ? `${totalSeats} kursi tersimpan`
+                  : "Buat denah"}
+            </Button>
+          </form>
 
-        <div className="border-t border-border pt-5">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-            Roster penempatan
-          </p>
-          <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-            Tamu siap ditempatkan
-          </h3>
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            RSVP Hadir dan tamu manual dapat ditarik ke kursi yang tersedia.
-          </p>
+          <div className="mt-3 grid grid-cols-2 gap-2">
+            <InfoCell label="Kursi" value={String(totalSeats)} />
+            <InfoCell label="Terisi" value={String(assignedCount)} />
+          </div>
+        </section>
+
+        <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                Roster
+              </p>
+              <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
+                Belum ditempatkan
+              </h3>
+            </div>
+            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">
+              {unassigned.length}
+            </span>
+          </div>
 
           <form onSubmit={addManualGuest} className="mt-4 space-y-2">
             <Input
@@ -470,15 +470,15 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
               className="w-full"
               disabled={manualSaving}
             >
-              {manualSaving ? "Menambahkan..." : "Tambah tamu manual"}
+              {manualSaving ? "Menambahkan..." : "Tambah tamu"}
             </Button>
           </form>
 
-          <div className="mt-4 max-h-72 overflow-y-auto border-t border-border">
+          <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
             {unassigned.length === 0 && (
-              <p className="py-4 text-xs leading-5 text-muted-foreground">
-                Tidak ada tamu yang siap ditempatkan.
-              </p>
+              <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-4 text-center text-xs text-muted-foreground">
+                Semua tamu sudah ditempatkan.
+              </div>
             )}
             {unassigned.map((guest) => (
               <div
@@ -488,35 +488,36 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                   setDraggedGuestId(guest.id);
                   setSwapCandidate(null);
                 }}
-                className="cursor-grab border-b border-border py-3 text-xs active:cursor-grabbing"
+                className="cursor-grab rounded-lg border border-border/75 bg-background/80 px-3 py-2.5 text-xs transition hover:border-primary/30 hover:bg-primary/[0.035] active:cursor-grabbing"
               >
-                <div className="font-medium text-foreground">{guest.name}</div>
-                <div className="mt-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                <div className="truncate font-medium text-foreground">{guest.name}</div>
+                <div className="mt-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}
                 </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
       </aside>
 
-      <section className="min-w-0 p-4 sm:p-5">
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+      <section className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-              Seating canvas
+            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              Seating
             </p>
-            <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+            <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
               Denah tempat duduk
             </h3>
           </div>
-          <p className="max-w-lg text-xs leading-5 text-muted-foreground sm:text-right">
-            Tarik tamu ke kursi kosong. Tamu yang sudah duduk juga dapat dipindahkan atau ditukar.
-          </p>
+          <div className="flex gap-2">
+            <InfoCell label="Meja" value={String(visibleTables.length)} compact />
+            <InfoCell label="Tamu" value={`${assignedCount}/${visibleGuests.length}`} compact />
+          </div>
         </div>
 
         <div
-          className="min-w-0 overflow-hidden border border-border bg-background"
+          className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-background"
           onDragOver={(event) => {
             event.preventDefault();
             const rect = event.currentTarget.getBoundingClientRect();
@@ -575,20 +576,15 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                         const highlighted =
                           hoverTarget?.table.id === table.id &&
                           hoverTarget.seat === seat;
-                        const occupiedTarget =
-                          highlighted && Boolean(hoverTarget?.guest);
+                        const occupiedTarget = highlighted && Boolean(hoverTarget?.guest);
 
                         return (
                           <Group key={`${table.id}-${seat}`}>
                             <Circle
                               x={point.x}
                               y={point.y}
-                              radius={
-                                highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS
-                              }
-                              fill={
-                                guest ? canvas.seatOccupied : canvas.seatEmpty
-                              }
+                              radius={highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS}
+                              fill={guest ? canvas.seatOccupied : canvas.seatEmpty}
                               stroke={canvas.seatStroke}
                               strokeWidth={highlighted ? 5 : 2}
                               opacity={occupiedTarget ? 0.92 : 1}
@@ -606,8 +602,7 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                                 if (pointer) setHoverFromPoint(pointer);
                               }}
                               onDragEnd={(event) =>
-                                guest &&
-                                handleCanvasGuestDragEnd(guest.id, event)
+                                guest && handleCanvasGuestDragEnd(guest.id, event)
                               }
                             />
                             <Text
@@ -646,7 +641,7 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
                     y={285}
                     width={940}
                     align="center"
-                    text="Masukkan jumlah meja dan bangku di panel kiri untuk membuat denah."
+                    text="Atur jumlah meja dan kursi untuk membuat denah."
                     fontSize={15}
                     fill={canvas.mutedText}
                   />
@@ -656,21 +651,19 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
           </div>
         </div>
 
-        <div className="flex min-h-11 flex-wrap items-center justify-between gap-3 border-b border-border py-3">
-          <p className="text-xs leading-5 text-muted-foreground">
-            Perubahan posisi tersimpan ke database setelah kursi dipilih.
-          </p>
+        <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background/65 px-3 py-2 text-xs text-muted-foreground">
+          <span>Tarik tamu ke kursi untuk menyimpan posisi.</span>
           {savingGuestId && (
-            <span className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
               Menyimpan...
             </span>
           )}
         </div>
 
         {swapCandidate && (
-          <div className="border-b border-border py-4">
+          <div className="mt-3 rounded-xl border border-primary/20 bg-primary/[0.045] p-4">
             <p className="text-xs font-medium leading-5 text-foreground">
-              Kursi sudah ditempati {swapCandidate.target.guest?.name}. Tukar posisi dengan {draggedGuest?.name}?
+              Kursi ditempati {swapCandidate.target.guest?.name}. Tukar dengan {draggedGuest?.name}?
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button
@@ -695,13 +688,34 @@ export default function SeatingChart({ guests, tables, onAssigned }: Props) {
 
         {message && (
           <p
-            className="py-3 text-xs font-medium leading-5 text-primary"
+            className="mt-3 rounded-lg border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs font-medium leading-5 text-primary"
             role="status"
           >
             {message}
           </p>
         )}
       </section>
+    </div>
+  );
+}
+
+function InfoCell({
+  label,
+  value,
+  compact = false,
+}: {
+  label: string;
+  value: string;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={`rounded-lg border border-border/70 bg-background/75 ${compact ? "min-w-20 px-2.5 py-1.5" : "px-3 py-2.5"}`}
+    >
+      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>
     </div>
   );
 }
