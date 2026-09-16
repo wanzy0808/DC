@@ -1,0 +1,67 @@
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
+import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasInvitationAccess } from "@/lib/invitation-password";
+import PublicInvitation, { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
+import PersonalInvitationPasswordGate from "@/components/PublicInvitation/PersonalInvitationPasswordGate";
+
+export default async function PersonalInvitationPage({
+  params,
+}: {
+  params: Promise<{ slug: string; token: string }>;
+}) {
+  const { slug, token } = await params;
+  const invitation = await prisma.invitation.findUnique({
+    where: { slug },
+    include: { payment: true, assets: true },
+  });
+  if (!invitation) notFound();
+
+  const guest = await prisma.guest.findFirst({
+    where: {
+      invitationId: invitation.id,
+      personalToken: token,
+    },
+  });
+  if (!guest) notFound();
+
+  if (!guest.personalPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+    return <InvitationLockedState />;
+  }
+
+  if (
+    guest.personalPasswordProtected &&
+    !(await hasInvitationAccess(`personal-${token}`))
+  ) {
+    return (
+      <PersonalInvitationPasswordGate
+        slug={slug}
+        token={token}
+        guestName={guest.name}
+      />
+    );
+  }
+
+  await prisma.guest.update({
+    where: { id: guest.id },
+    data: { personalViewCount: { increment: 1 } },
+  });
+
+  const templateKey = invitation.templateKey.split("::")[0];
+  const content =
+    templateKey === "eternal-blossom" ? (
+      <FigmaClassicTemplate invitation={invitation} eventKind="wedding" />
+    ) : (
+      <PublicInvitation invitation={invitation} eventKind="wedding" />
+    );
+
+  return (
+    <>
+      <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-[family-name:var(--font-fauna)] text-sm text-foreground">
+        Undangan khusus untuk <strong>{guest.name}</strong>
+      </div>
+      {content}
+    </>
+  );
+}
