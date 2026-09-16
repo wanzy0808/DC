@@ -88,13 +88,25 @@ function sortInvitations(items: Invitation[]) {
   );
 }
 
+function isBlankDraft(invitation: Invitation) {
+  return (
+    !invitation.eventConfigured &&
+    !invitation.title.trim() &&
+    !invitation.venue.trim() &&
+    !invitation.groomName.trim() &&
+    !invitation.brideName.trim()
+  );
+}
+
 function toForm(invitation: Invitation): EventForm {
+  const blankDraft = isBlankDraft(invitation);
   const category = isEventCategory(invitation.eventCategory)
     ? invitation.eventCategory
     : "OTHER";
+
   return {
-    eventCategory: category,
-    customTitle: category === "OTHER" ? invitation.title || "" : "",
+    eventCategory: blankDraft ? "" : category,
+    customTitle: !blankDraft && category === "OTHER" ? invitation.title || "" : "",
     groomName: invitation.groomName || "",
     brideName: invitation.brideName || "",
     venue: invitation.venue || "",
@@ -135,27 +147,20 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const [editorMode, setEditorMode] = useState<EditorMode>("closed");
   const [form, setForm] = useState<EventForm>(emptyForm);
   const [loading, setLoading] = useState(true);
+  const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
 
-  const visibleEvents = useMemo(
-    () =>
-      events.filter(
-        (event) =>
-          event.eventConfigured ||
-          event.title.trim() ||
-          event.venue.trim() ||
-          event.groomName.trim() ||
-          event.brideName.trim(),
-      ),
+  const configuredCount = useMemo(
+    () => events.filter((event) => event.eventConfigured).length,
     [events],
   );
 
   function activate(invitation: Invitation) {
     setActiveId(invitation.id);
     setForm(toForm(invitation));
-    setEditorMode("edit");
-    setNotice("Siap diedit");
+    setEditorMode(invitation.eventConfigured ? "edit" : "new");
+    setNotice(invitation.eventConfigured ? "Siap diedit" : "Draft tersimpan. Lengkapi acara ini.");
   }
 
   function closeEditor() {
@@ -177,7 +182,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
       if (preferredId) {
         const preferred = next.find((item) => item.id === preferredId);
         if (preferred) activate(preferred);
-      } else if (editorMode === "edit" && activeId) {
+      } else if (activeId) {
         const current = next.find((item) => item.id === activeId);
         if (current) activate(current);
       }
@@ -197,11 +202,29 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
-  function startNewEvent() {
-    setActiveId("");
-    setForm(emptyForm);
-    setEditorMode("new");
-    setNotice("Pilih jenis acara untuk mulai mengisi.");
+  async function startNewEvent() {
+    if (creating || saving) return;
+    setCreating(true);
+    setNotice("Membuat draft acara di database...");
+    try {
+      const response = await fetch("/api/invitations", { method: "POST" });
+      const data = await response.json().catch(() => null);
+      if (!response.ok || !data?.invitation?.id) {
+        throw new Error(data?.error || "Draft acara belum dapat dibuat.");
+      }
+
+      const draft = data.invitation as Invitation;
+      setEvents((current) => sortInvitations([...current, draft]));
+      setActiveId(draft.id);
+      setForm(emptyForm);
+      setEditorMode("new");
+      setNotice("Draft acara tersimpan. Pilih jenis acara untuk melanjutkan.");
+      onSaved();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Draft acara belum dapat dibuat.");
+    } finally {
+      setCreating(false);
+    }
   }
 
   function selectCategory(value: string) {
@@ -217,6 +240,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
   }
 
   async function save() {
+    if (!activeId) {
+      setNotice("Draft acara belum tersedia. Klik Tambah acara lagi.");
+      return;
+    }
     if (!form.eventCategory) {
       setNotice("Pilih nama acara terlebih dahulu.");
       return;
@@ -251,18 +278,6 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setSaving(true);
     setNotice("Menyimpan...");
     try {
-      let targetId = activeId;
-      if (editorMode === "new") {
-        const createResponse = await fetch("/api/invitations", { method: "POST" });
-        const createData = await createResponse.json().catch(() => null);
-        if (!createResponse.ok || !createData?.invitation?.id) {
-          throw new Error(createData?.error || "Acara baru belum dapat dibuat.");
-        }
-        targetId = createData.invitation.id;
-      }
-
-      if (!targetId) throw new Error("Acara belum dapat disimpan.");
-
       const title = buildEventTitle(
         form.eventCategory,
         form.groomName,
@@ -273,7 +288,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: targetId,
+          id: activeId,
           eventCategory: form.eventCategory,
           title,
           groomName: form.groomName,
@@ -292,7 +307,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Data acara belum dapat disimpan.");
-      await load(targetId);
+      await load(activeId);
       setNotice("Tersimpan");
       onSaved();
     } catch (error) {
@@ -307,7 +322,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const timezone = getIndonesiaTimezone(form.timezone);
   const previewTitle = form.eventCategory
     ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
-    : "Acara baru";
+    : "Draft acara";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
@@ -318,20 +333,21 @@ export default function EventPanel({ accent, onSaved }: Props) {
               Rangkaian acara
             </p>
             <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-              {visibleEvents.length ? `${visibleEvents.length} acara dibuat` : "Belum ada acara"}
+              {events.length ? `${configuredCount} acara · ${events.length - configuredCount} draft` : "Belum ada acara"}
             </h2>
           </div>
-          <Button type="button" size="sm" onClick={startNewEvent} disabled={loading || saving}>
+          <Button type="button" size="sm" onClick={startNewEvent} disabled={loading || creating || saving}>
             <Plus className="h-4 w-4" />
-            Tambah acara
+            {creating ? "Membuat draft..." : "Tambah acara"}
           </Button>
         </div>
 
-        {visibleEvents.length ? (
+        {events.length ? (
           <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-            {visibleEvents.map((event, index) => {
+            {events.map((event, index) => {
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`;
               const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
+              const draft = !event.eventConfigured;
               return (
                 <article key={event.id} className="rounded-xl border border-border/75 bg-background/80 p-4">
                   <div className="flex items-start justify-between gap-3">
@@ -340,10 +356,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
                         Acara {String(index + 1).padStart(2, "0")}
                       </p>
                       <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
-                        {event.title || `Acara ${index + 1}`}
+                        {draft ? "Draft acara" : event.title || `Acara ${index + 1}`}
                       </h3>
                       <p className="mt-1 truncate text-[11px] text-muted-foreground">
-                        {event.venue || "Tempat belum diisi"}
+                        {draft ? "Belum dilengkapi" : event.venue || "Tempat belum diisi"}
                       </p>
                     </div>
                     <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
@@ -353,16 +369,17 @@ export default function EventPanel({ accent, onSaved }: Props) {
                   <div className="mt-3 flex flex-wrap gap-2">
                     <Button type="button" size="sm" onClick={() => activate(event)}>
                       <PenLine className="h-4 w-4" />
-                      Edit acara
+                      {draft ? "Lengkapi acara" : "Edit acara"}
                     </Button>
-                    {!event.accessPaid ? (
+                    {!draft && !event.accessPaid && (
                       <Button asChild size="sm">
                         <Link href={purchaseHref}>
                           <CreditCard className="h-4 w-4" />
                           Buat undangan
                         </Link>
                       </Button>
-                    ) : (
+                    )}
+                    {!draft && event.accessPaid && (
                       <Button asChild size="sm">
                         <Link href={studioHref}>
                           <PenLine className="h-4 w-4" />
@@ -377,21 +394,24 @@ export default function EventPanel({ accent, onSaved }: Props) {
           </div>
         ) : (
           <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
-            Klik <strong className="text-foreground">Tambah acara</strong> untuk mulai membuat rangkaian pertama.
+            Klik <strong className="text-foreground">Tambah acara</strong>. Draft acara langsung dibuat di database lalu form akan terbuka.
           </div>
         )}
       </section>
 
-      {editorMode !== "closed" && (
+      {editorMode !== "closed" && active && (
         <section className="mt-4 rounded-xl border border-border/80 bg-background p-4 sm:p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                {editorMode === "new" ? "Acara baru" : "Edit acara"}
+                {editorMode === "new" ? "Draft tersimpan" : "Edit acara"}
               </p>
               <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
                 {previewTitle || "Pilih jenis acara"}
               </h2>
+              <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[8px] tracking-[0.08em] text-muted-foreground">
+                ID {active.id}
+              </p>
             </div>
             <Button type="button" size="sm" onClick={closeEditor} disabled={saving}>
               <X className="h-4 w-4" />
@@ -568,7 +588,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
             </div>
             <Button disabled={loading || saving || !category} onClick={save} size="sm">
               <Save className="h-4 w-4" />
-              {saving ? "Menyimpan acara..." : editorMode === "new" ? "Buat acara" : "Simpan perubahan"}
+              {saving ? "Menyimpan acara..." : editorMode === "new" ? "Simpan acara" : "Simpan perubahan"}
             </Button>
           </div>
         </section>
