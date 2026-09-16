@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 const ALLOWED_SHAPES = new Set(["ROUND", "RECTANGLE", "SQUARE"]);
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-  const invitation = await prisma.invitation.findFirst({ where: { ownerId: user.id }, include: { payment: true } });
-  if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) return NextResponse.json({ error: "Table arrangement membutuhkan paket Digital Invitation." }, { status: 402 });
 
   const body = await request.json();
+  const invitationId = String(body.invitationId ?? "").trim();
+  const invitation = await prisma.invitation.findFirst({
+    where: invitationId
+      ? { id: invitationId, ownerId: user.id }
+      : { ownerId: user.id, type: "WEDDING" },
+    include: { payment: true },
+    orderBy: invitationId ? undefined : { createdAt: "asc" },
+  });
+  if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
+    return NextResponse.json({ error: "Table arrangement membutuhkan paket Digital Invitation." }, { status: 402 });
+  }
+
   const name = String(body.name ?? "").trim();
   const capacity = Number(body.capacity ?? 8);
   const shape = String(body.shape ?? "ROUND").trim().toUpperCase();
@@ -25,7 +35,7 @@ export async function POST(request: Request) {
 
   const tableCount = await prisma.weddingTable.count({ where: { invitationId: invitation.id } });
   if (tableCount >= 100) {
-    return NextResponse.json({ error: "Maksimal 100 meja per undangan." }, { status: 409 });
+    return NextResponse.json({ error: "Maksimal 100 meja per acara." }, { status: 409 });
   }
 
   const table = await prisma.weddingTable.create({
