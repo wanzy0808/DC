@@ -6,10 +6,30 @@ import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitation-slug";
 
 type InvitationType = "WEDDING" | "ADAT_AKAD";
 
+const MAX_INVITATIONS = 3;
+
+function normalizeType(value: unknown): InvitationType {
+  return value === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+}
+
 function makeSlug(firstName: string, userId: string, type: InvitationType) {
   const name = firstName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
   const suffix = type === "ADAT_AKAD" ? "-akad" : "-moment";
   return `${name || "wedding"}${suffix}-${userId.slice(-6)}`;
+}
+
+async function makeAdditionalSlug(firstName: string, userId: string, sequence: number) {
+  const name = firstName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  const base = `${name || "wedding"}-event-${sequence}-${userId.slice(-6)}`;
+  let candidate = base;
+  let suffix = 2;
+
+  while (await prisma.invitation.findUnique({ where: { slug: candidate }, select: { id: true } })) {
+    candidate = `${base}-${suffix}`;
+    suffix += 1;
+  }
+
+  return candidate;
 }
 
 function sanitizeInvitation<T extends object>(invitation: T) {
@@ -76,12 +96,56 @@ async function resolveWeddingSlug(invitationId: string, groomName: string, bride
   return candidate;
 }
 
+function studioInvitationId(request: Request, explicitId?: unknown) {
+  const direct = String(explicitId ?? "").trim();
+  if (direct) return direct;
+
+  const referer = request.headers.get("referer");
+  if (!referer) return "";
+  try {
+    return new URL(referer).searchParams.get("invitationId")?.trim() || "";
+  } catch {
+    return "";
+  }
+}
+
+async function findOwnedInvitation(userId: string, id: string) {
+  return prisma.invitation.findFirst({
+    where: { id, ownerId: userId },
+    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+  });
+}
+
 export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-  const type: InvitationType =
-    new URL(request.url).searchParams.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+  const url = new URL(request.url);
+  if (url.searchParams.get("all") === "1") {
+    await getOrCreateInvitation(user, "WEDDING");
+    const paid = Boolean(await getUserPayment(user.id));
+    const invitations = await prisma.invitation.findMany({
+      where: { ownerId: user.id },
+      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+      orderBy: [{ type: "desc" }, { createdAt: "asc" }],
+      take: MAX_INVITATIONS,
+    });
+
+    return NextResponse.json({
+      invitations: invitations.map((invitation) => ({ ...sanitizeInvitation(invitation), accessPaid: paid })),
+      limit: MAX_INVITATIONS,
+    });
+  }
+
+  const requestedId = studioInvitationId(request, url.searchParams.get("id"));
+  if (requestedId) {
+    const invitation = await findOwnedInvitation(user.id, requestedId);
+    if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+    const paid = Boolean(await getUserPayment(user.id));
+    return NextResponse.json({ invitation: { ...sanitizeInvitation(invitation), accessPaid: paid } });
+  }
+
+  const type = normalizeType(url.searchParams.get("type"));
   const invitation = await getOrCreateInvitation(user, type);
   const paid = Boolean(await getUserPayment(user.id));
 
@@ -90,14 +154,58 @@ export async function GET(request: Request) {
   });
 }
 
+export async function POST(request: Request) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+
+  try {
+    const main = await getOrCreateInvitation(user, "WEDDING");
+    const count = await prisma.invitation.count({ where: { ownerId: user.id } });
+    if (count >= MAX_INVITATIONS) {
+      return NextResponse.json({ error: `Maksimal ${MAX_INVITATIONS} rangkaian acara.` }, { status: 409 });
+    }
+
+    const sequence = count + 1;
+    const slug = await makeAdditionalSlug(user.firstName, user.id, sequence);
+    const invitation = await prisma.invitation.create({
+      data: {
+        ownerId: user.id,
+        slug,
+        type: "ADAT_AKAD",
+        templateKey: "",
+        title: "",
+        groomName: main.groomName,
+        brideName: main.brideName,
+        venue: "",
+        timezone: main.timezone || "Asia/Jakarta",
+        eventDate: main.eventDate,
+        description: null,
+      },
+      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+    });
+
+    return NextResponse.json({ invitation: sanitizeInvitation(invitation), limit: MAX_INVITATIONS }, { status: 201 });
+  } catch (error) {
+    console.error("POST /api/invitations failed", error);
+    return NextResponse.json({ error: "Rangkaian acara belum dapat dibuat." }, { status: 500 });
+  }
+}
+
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   try {
     const body = await request.json();
-    const type: InvitationType = body.type === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
-    const invitation = await getOrCreateInvitation(user, type);
+    const requestedId = studioInvitationId(request, body.id);
+    const fallbackType = normalizeType(body.type);
+    const invitation = requestedId
+      ? await findOwnedInvitation(user.id, requestedId)
+      : await getOrCreateInvitation(user, fallbackType);
+
+    if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+
+    const type = invitation.type as InvitationType;
     const groomName = String(body.groomName ?? invitation.groomName).trim();
     const brideName = String(body.brideName ?? invitation.brideName).trim();
     const venue = String(body.venue ?? invitation.venue).trim();
@@ -106,7 +214,8 @@ export async function PUT(request: Request) {
     const timezone = String(body.timezone ?? invitation.timezone ?? "Asia/Jakarta").trim() || "Asia/Jakarta";
     const eventDate = new Date(String(body.eventDate ?? invitation.eventDate));
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
-    const title = String(body.title ?? invitation.title).trim() || (groomName && brideName ? `${groomName} & ${brideName}` : "");
+    const requestedTitle = String(body.title ?? invitation.title).trim();
+    const title = requestedTitle || (type === "WEDDING" && groomName && brideName ? `${groomName} & ${brideName}` : invitation.title);
     const wantsPublish = Boolean(body.isPublished);
 
     if (!groomName || !brideName) {
@@ -155,7 +264,8 @@ export async function PUT(request: Request) {
       invitation: { ...sanitizeInvitation(updated), accessPaid: Boolean(userPayment) },
       accessPaid: Boolean(userPayment),
     });
-  } catch {
+  } catch (error) {
+    console.error("PUT /api/invitations failed", error);
     return NextResponse.json({ error: "Undangan belum dapat disimpan." }, { status: 500 });
   }
 }
