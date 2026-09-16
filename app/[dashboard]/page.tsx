@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ChevronDown,
   CircleHelp,
+  ContactRound,
   Home,
   LogOut,
   Mail,
@@ -18,6 +19,7 @@ import {
   QrCode,
   Receipt,
   RefreshCw,
+  Send,
   Settings2,
   Users,
   UserRound,
@@ -26,9 +28,11 @@ import {
 import { useTheme } from "@/components/Theme/ThemeContext";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
 import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
-import InvitationManagementPanel from "@/components/Dashboard/InvitationManagementPanel";
+import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
 import EventPanelEditor from "@/components/Dashboard/EventPanel";
 import SeatingChart from "@/components/Dashboard/SeatingChart";
+import WhatsAppBlastPanel from "@/components/Dashboard/WhatsAppBlastPanel";
+import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -84,12 +88,31 @@ type Guest = {
   tableId?: string | null;
   seatNumber?: number | null;
 };
-type Tab = "overview" | "events" | "invitation" | "rsvp" | "placement" | "usher";
+type Tab =
+  | "overview"
+  | "events"
+  | "invitation"
+  | "waBlast"
+  | "personalInvitation"
+  | "rsvp"
+  | "placement"
+  | "usher";
 
-const nav = [
-  { id: "overview" as Tab, label: "Beranda", icon: Home },
+const invitationTabs = new Set<Tab>([
+  "events",
+  "invitation",
+  "waBlast",
+  "personalInvitation",
+]);
+
+const invitationNav = [
   { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
-  { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
+  { id: "invitation" as Tab, label: "Undangan", icon: Mail },
+  { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
+  { id: "personalInvitation" as Tab, label: "Personal Invitation", icon: ContactRound },
+];
+
+const secondaryNav = [
   { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
   { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
   { id: "usher" as Tab, label: "Usher App", icon: QrCode },
@@ -97,11 +120,13 @@ const nav = [
 
 const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
   overview: { eyebrow: "Workspace / 01", title: "Beranda" },
-  events: { eyebrow: "Workspace / 02", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Workspace / 03", title: "Undangan Digital" },
-  rsvp: { eyebrow: "Workspace / 04", title: "RSVP" },
-  placement: { eyebrow: "Workspace / 05", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Workspace / 06", title: "Usher App" },
+  events: { eyebrow: "Undangan / 01", title: "Rangkaian Acara" },
+  invitation: { eyebrow: "Undangan / 02", title: "Undangan" },
+  waBlast: { eyebrow: "Undangan / 03", title: "WA Blast" },
+  personalInvitation: { eyebrow: "Undangan / 04", title: "Personal Invitation" },
+  rsvp: { eyebrow: "Workspace / 03", title: "RSVP" },
+  placement: { eyebrow: "Workspace / 04", title: "Manajemen Tamu" },
+  usher: { eyebrow: "Workspace / 05", title: "Usher App" },
 };
 
 function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
@@ -112,6 +137,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
   const [tab, setTab] = useState<Tab>("overview");
+  const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
   const [ctx, setCtx] = useState<Context | null>(null);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [tables, setTables] = useState<Table[]>([]);
@@ -159,7 +185,6 @@ export default function DashboardPage() {
   const canDigital = ctx?.entitlements.hasDigitalInvitation ?? false;
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
   const accent = "text-primary";
-  const button = "";
   const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
   const savedProfileName = ctx?.profile.displayName?.trim();
   const profileLabel =
@@ -237,25 +262,66 @@ export default function DashboardPage() {
 
   function go(id: Tab) {
     setTab(id);
+    if (invitationTabs.has(id)) setInvitationMenuOpen(true);
     setMobileOpen(false);
     setProfileMenu(false);
   }
 
   const meta = tabMeta[tab];
+  const invitationActive = invitationTabs.has(tab);
 
   return (
-    <div
-      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}
-    >
+    <div className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}>
       <div className="flex min-h-screen">
-        <aside
-          className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
-        >
+        <aside className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}>
           <nav className="flex-1 space-y-2 bg-primary/[0.045] p-3 dark:bg-primary/[0.07]">
-            <p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">
-              Workspace
-            </p>
-            {nav.map((item) => {
+            <p className="px-3 pb-3 pt-3 font-[family-name:var(--font-cinzel)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">Workspace</p>
+
+            <Button
+              type="button"
+              aria-current={tab === "overview" ? "page" : undefined}
+              onClick={() => go("overview")}
+              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${tab === "overview" ? "border-primary/15 bg-primary/10 text-primary" : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"}`}
+            >
+              <span className="grid size-5 shrink-0 place-items-center text-current"><Home className="h-4 w-4" strokeWidth={1.8} /></span>
+              <span className="min-w-0 truncate">Beranda</span>
+            </Button>
+
+            <div className="rounded-xl border border-primary/10 bg-background/35 p-1.5">
+              <Button
+                type="button"
+                aria-expanded={invitationMenuOpen}
+                onClick={() => setInvitationMenuOpen((value) => !value)}
+                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${invitationActive ? "bg-primary/10 text-primary" : "text-foreground hover:bg-primary/[0.06] hover:text-primary"}`}
+              >
+                <span className="grid size-5 shrink-0 place-items-center"><Mail className="h-4 w-4" strokeWidth={1.8} /></span>
+                <span className="min-w-0 truncate">Undangan</span>
+                <ChevronDown className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`} />
+              </Button>
+
+              {invitationMenuOpen && (
+                <div className="mt-1 space-y-1 pl-3">
+                  {invitationNav.map((item) => {
+                    const Icon = item.icon;
+                    const active = tab === item.id;
+                    return (
+                      <Button
+                        key={item.id}
+                        type="button"
+                        aria-current={active ? "page" : undefined}
+                        onClick={() => go(item.id)}
+                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[12px] shadow-none ${active ? "border-primary/15 bg-primary/[0.09] text-primary" : "text-foreground/75 hover:bg-primary/[0.06] hover:text-primary"}`}
+                      >
+                        <span className="grid size-4 shrink-0 place-items-center"><Icon className="h-3.5 w-3.5" strokeWidth={1.8} /></span>
+                        <span className="min-w-0 truncate">{item.label}</span>
+                      </Button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {secondaryNav.map((item) => {
               const Icon = item.icon;
               return (
                 <Button
@@ -263,15 +329,9 @@ export default function DashboardPage() {
                   type="button"
                   aria-current={tab === item.id ? "page" : undefined}
                   onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
-                    tab === item.id
-                      ? "border-primary/15 bg-primary/10 text-primary"
-                      : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
-                  }`}
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${tab === item.id ? "border-primary/15 bg-primary/10 text-primary" : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"}`}
                 >
-                  <span className="grid size-5 shrink-0 place-items-center text-current">
-                    <Icon className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
-                  </span>
+                  <span className="grid size-5 shrink-0 place-items-center text-current"><Icon className="h-4 w-4" strokeWidth={1.8} /></span>
                   <span className="min-w-0 truncate">{item.label}</span>
                 </Button>
               );
@@ -282,71 +342,32 @@ export default function DashboardPage() {
         <div className="min-w-0 flex-1">
           <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
             <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3 px-1">
-              <Button
-                type="button"
-                size="icon"
-                className="lg:hidden"
-                onClick={() => setMobileOpen((value) => !value)}
-                aria-label="Buka menu dashboard"
-                title="Buka menu dashboard"
-              >
+              <Button type="button" size="icon" className="lg:hidden" onClick={() => setMobileOpen((value) => !value)} aria-label="Buka menu dashboard" title="Buka menu dashboard">
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
               </Button>
 
-              <Link
-                href="/"
-                className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"
-              >
-                <span className="text-primary">DC Organizer</span>
-              </Link>
-
+              <Link href="/" className="font-[family-name:var(--font-cinzel)] text-base font-bold tracking-[0.16em]"><span className="text-primary">DC Organizer</span></Link>
               <span className="hidden h-5 w-px bg-border sm:block" />
-              <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">
-                {meta.title}
-              </span>
+              <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground sm:block">{meta.title}</span>
 
               <div className="relative ml-auto">
-                <Button
-                  type="button"
-                  onClick={() => setProfileMenu((value) => !value)}
-                  className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary"
-                  aria-label={`Buka menu akun ${profileLabel}`}
-                  title="Menu akun"
-                >
+                <Button type="button" onClick={() => setProfileMenu((value) => !value)} className="h-10 min-w-0 bg-transparent px-2.5 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-primary" aria-label={`Buka menu akun ${profileLabel}`} title="Menu akun">
                   <UserRound className="h-4 w-4 shrink-0 text-primary" strokeWidth={1.8} />
                   <span className="max-w-36 truncate">{profileLabel}</span>
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu ? "rotate-180" : ""}`}
-                  />
+                  <ChevronDown className={`h-3.5 w-3.5 shrink-0 text-primary transition ${profileMenu ? "rotate-180" : ""}`} />
                 </Button>
 
                 {profileMenu && (
                   <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                     <div className="px-2 pb-3 pt-1">
-                      <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">
-                        {profileLabel}
-                      </p>
-                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
-                        {ctx?.profile.email || ""}
-                      </p>
+                      <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">{profileLabel}</p>
+                      <p className="mt-0.5 truncate text-[10px] text-muted-foreground">{ctx?.profile.email || ""}</p>
                     </div>
                     <div className="space-y-1.5">
-                      <MenuItem
-                        icon={Receipt}
-                        text="Lihat transaksi"
-                        onClick={() => router.push("/transactions")}
-                      />
-                      <MenuItem
-                        icon={Settings2}
-                        text="Kelola paket"
-                        onClick={() => router.push("/packages")}
-                      />
+                      <MenuItem icon={Receipt} text="Lihat transaksi" onClick={() => router.push("/transactions")} />
+                      <MenuItem icon={Settings2} text="Kelola paket" onClick={() => router.push("/packages")} />
                       <MenuItem icon={CircleHelp} text="Buka FAQ" onClick={() => router.push("/faq")} />
-                      <MenuItem
-                        icon={MessageCircle}
-                        text="Buka bantuan"
-                        onClick={() => setProfileMenu(false)}
-                      />
+                      <MenuItem icon={MessageCircle} text="Buka bantuan" onClick={() => setProfileMenu(false)} />
                       <div className="my-2 border-t border-border" />
                       <MenuItem icon={LogOut} text="Keluar akun" danger onClick={logout} />
                     </div>
@@ -361,63 +382,38 @@ export default function DashboardPage() {
               <section className="border-b border-border bg-background">
                 <div className="mx-auto flex w-[min(92vw,1400px)] min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-                      {meta.eyebrow}
-                    </p>
-                    <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">
-                      {meta.title}
-                    </h1>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">{meta.eyebrow}</p>
+                    <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">{meta.title}</h1>
                   </div>
                   <div className="hidden min-w-0 text-right sm:block">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                      Wedding
-                    </p>
-                    <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">
-                      {ctx?.wedding?.groomName && ctx?.wedding?.brideName
-                        ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}`
-                        : "Belum diatur"}
-                    </p>
+                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Wedding</p>
+                    <p className="mt-1 max-w-64 truncate text-xs text-foreground/70">{ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur"}</p>
                   </div>
                 </div>
               </section>
             )}
 
-            {tab === "overview" && (
-              <WorkspaceOverview
-                ctx={ctx}
-                onGo={go}
-                onUpgrade={() => router.push("/packages")}
-              />
-            )}
+            {tab === "overview" && <WorkspaceOverview ctx={ctx} onGo={go} onUpgrade={() => router.push("/packages")} />}
             {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
-            {tab === "invitation" && (
-              <InvitationManagementPanel accent={accent} button={button} paid={canDigital} />
+            {tab === "invitation" && <InvitationWorkspacePanel paid={canDigital} onCreateSequence={() => go("events")} />}
+            {tab === "waBlast" && (
+              <FeatureGate allowed={canDigital} title="WA Blast" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
+                <WhatsAppBlastPanel />
+              </FeatureGate>
+            )}
+            {tab === "personalInvitation" && (
+              <FeatureGate allowed={canDigital} title="Personal Invitation" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
+                <PersonalInvitationPanel />
+              </FeatureGate>
             )}
             {tab === "rsvp" && <RsvpAnalyticsPanel guests={guests} slug={slug} accent={accent} />}
             {tab === "placement" && (
-              <FeatureGate
-                allowed={canDigital}
-                title="Manajemen Tamu"
-                description="Tersedia pada paket Digital Invitation."
-                upgradeLabel="Lihat paket Digital Invitation"
-                onUpgrade={() => router.push("/packages")}
-              >
-                <PlacementPanel
-                  guests={guests}
-                  tables={tables}
-                  accent={accent}
-                  onRefresh={load}
-                />
+              <FeatureGate allowed={canDigital} title="Manajemen Tamu" description="Tersedia pada paket Digital Invitation." upgradeLabel="Lihat paket Digital Invitation" onUpgrade={() => router.push("/packages")}>
+                <PlacementPanel guests={guests} tables={tables} accent={accent} onRefresh={load} />
               </FeatureGate>
             )}
             {tab === "usher" && (
-              <FeatureGate
-                allowed={canGuestbook}
-                title="Usher App"
-                description="Tersedia pada paket Guestbook Digital."
-                upgradeLabel="Lihat paket Guestbook Digital"
-                onUpgrade={() => router.push("/packages")}
-              >
+              <FeatureGate allowed={canGuestbook} title="Usher App" description="Tersedia pada paket Guestbook Digital." upgradeLabel="Lihat paket Guestbook Digital" onUpgrade={() => router.push("/packages")}>
                 <UsherPanel guests={guests} onRefresh={load} />
               </FeatureGate>
             )}
@@ -426,49 +422,20 @@ export default function DashboardPage() {
       </div>
 
       <Button asChild size="icon-lg" className="fixed bottom-5 right-5 z-50 rounded-full">
-        <a
-          href="https://wa.me/6281234567890"
-          target="_blank"
-          rel="noreferrer"
-          aria-label="Buka bantuan WhatsApp"
-          title="Buka bantuan WhatsApp"
-        >
-          <MessageCircle className="h-6 w-6" strokeWidth={2} />
-        </a>
+        <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" aria-label="Buka bantuan WhatsApp" title="Buka bantuan WhatsApp"><MessageCircle className="h-6 w-6" strokeWidth={2} /></a>
       </Button>
 
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
-              Setup awal
-            </p>
+            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">Setup awal</p>
             <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Data pasangan</h2>
             <div className="mt-6 space-y-4">
-              <Field
-                label="Nama pasangan pria"
-                value={groom}
-                onChange={setGroom}
-                placeholder="Contoh: Rio"
-              />
-              <Field
-                label="Nama pasangan wanita"
-                value={bride}
-                onChange={setBride}
-                placeholder="Contoh: Lyvia"
-              />
-              <Field
-                label="Nama panggilan"
-                value={nickname}
-                onChange={setNickname}
-                placeholder="Contoh: Hendro"
-              />
+              <Field label="Nama pasangan pria" value={groom} onChange={setGroom} placeholder="Contoh: Rio" />
+              <Field label="Nama pasangan wanita" value={bride} onChange={setBride} placeholder="Contoh: Lyvia" />
+              <Field label="Nama panggilan" value={nickname} onChange={setNickname} placeholder="Contoh: Hendro" />
             </div>
-            {onboardingError && (
-              <p className="mt-4 border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">
-                {onboardingError}
-              </p>
-            )}
+            {onboardingError && <p className="mt-4 border border-red-500/20 bg-red-500/5 px-4 py-3 text-xs text-red-700 dark:text-red-300">{onboardingError}</p>}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
               <CheckCircle2 className="h-4 w-4" />
               {saving ? "Menyimpan data..." : "Simpan data & masuk"}
@@ -480,101 +447,41 @@ export default function DashboardPage() {
   );
 }
 
-function MenuItem({
-  icon: Icon,
-  text,
-  onClick,
-  danger = false,
-}: {
-  icon: any;
-  text: string;
-  onClick: () => void;
-  danger?: boolean;
-}) {
+function MenuItem({ icon: Icon, text, onClick, danger = false }: { icon: any; text: string; onClick: () => void; danger?: boolean }) {
   return (
-    <Button
-      type="button"
-      onClick={onClick}
-      className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
-        danger
-          ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
-          : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
-      }`}
-    >
+    <Button type="button" onClick={onClick} className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${danger ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300" : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"}`}>
       <Icon className="h-4 w-4" />
       {text}
     </Button>
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-}) {
+function Field({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder: string }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-medium">{label}</span>
-      <Input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="border-border bg-transparent"
-      />
+      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} className="border-border bg-transparent" />
     </label>
   );
 }
 
-function WorkspaceOverview({
-  ctx,
-  onGo,
-  onUpgrade,
-}: {
-  ctx: Context | null;
-  onGo: (id: Tab) => void;
-  onUpgrade: () => void;
-}) {
+function WorkspaceOverview({ ctx, onGo, onUpgrade }: { ctx: Context | null; onGo: (id: Tab) => void; onUpgrade: () => void }) {
   const overview = ctx?.overview;
   const packageKey = ctx?.package.key;
   const packageStatus = ctx?.package.status;
-  const packageLabel =
-    packageStatus === "PAID"
-      ? packageKey === "INVITATION_GUESTBOOK"
-        ? "Digital Invitation + Guestbook"
-        : packageKey === "GUESTBOOK_DIGITAL"
-          ? "Guestbook Digital"
-          : "Digital Invitation"
-      : "Belum aktif";
+  const packageLabel = packageStatus === "PAID" ? packageKey === "INVITATION_GUESTBOOK" ? "Digital Invitation + Guestbook" : packageKey === "GUESTBOOK_DIGITAL" ? "Guestbook Digital" : "Digital Invitation" : "Belum aktif";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <section className="flex flex-col gap-5 border-b border-border pb-6 sm:flex-row sm:items-end sm:justify-between">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-            Workspace / 01
-          </p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">
-            Halo, {ctx?.profile.displayName || "Akun"}
-          </h1>
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">Workspace / 01</p>
+          <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">Halo, {ctx?.profile.displayName || "Akun"}</h1>
         </div>
         <div className="min-w-0 sm:text-right">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-            Wedding
-          </p>
-          <p className="mt-1 truncate text-sm font-medium">
-            {ctx?.wedding?.groomName && ctx?.wedding?.brideName
-              ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}`
-              : "Belum diatur"}
-          </p>
-          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-            {ctx?.wedding?.venue || "Lokasi belum diatur"}
-          </p>
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">Wedding</p>
+          <p className="mt-1 truncate text-sm font-medium">{ctx?.wedding?.groomName && ctx?.wedding?.brideName ? `${ctx.wedding.groomName} & ${ctx.wedding.brideName}` : "Belum diatur"}</p>
+          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{ctx?.wedding?.venue || "Lokasi belum diatur"}</p>
         </div>
       </section>
 
@@ -588,16 +495,13 @@ function WorkspaceOverview({
       <section className="mt-8">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Akses cepat</h2>
-          <Button onClick={onUpgrade} size="sm" title="Kelola paket">
-            <Settings2 className="h-4 w-4" />
-            Kelola paket
-          </Button>
+          <Button onClick={onUpgrade} size="sm" title="Kelola paket"><Settings2 className="h-4 w-4" />Kelola paket</Button>
         </div>
         <div className="grid border-y border-border sm:grid-cols-2">
           <QuickAction icon={CalendarDays} label="Rangkaian Acara" onClick={() => onGo("events")} />
-          <QuickAction icon={Mail} label="Undangan Digital" onClick={() => onGo("invitation")} />
-          <QuickAction icon={MessageSquareHeart} label="RSVP" onClick={() => onGo("rsvp")} />
-          <QuickAction icon={Users} label="Manajemen Tamu" onClick={() => onGo("placement")} />
+          <QuickAction icon={Mail} label="Undangan" onClick={() => onGo("invitation")} />
+          <QuickAction icon={Send} label="WA Blast" onClick={() => onGo("waBlast")} />
+          <QuickAction icon={ContactRound} label="Personal Invitation" onClick={() => onGo("personalInvitation")} />
         </div>
       </section>
     </div>
@@ -607,29 +511,15 @@ function WorkspaceOverview({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 sm:first:pl-0">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
+      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">{label}</p>
       <p className="mt-1 truncate text-sm font-semibold text-foreground">{value}</p>
     </div>
   );
 }
 
-function QuickAction({
-  icon: Icon,
-  label,
-  onClick,
-}: {
-  icon: any;
-  label: string;
-  onClick: () => void;
-}) {
+function QuickAction({ icon: Icon, label, onClick }: { icon: any; label: string; onClick: () => void }) {
   return (
-    <Button
-      type="button"
-      onClick={onClick}
-      className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left text-sm text-foreground shadow-none hover:bg-primary/[0.04] hover:text-primary sm:px-3 sm:[&:nth-child(odd)]:border-r"
-    >
+    <Button type="button" onClick={onClick} className="h-auto w-full min-w-0 justify-start rounded-none border-b border-border bg-transparent px-1 py-4 text-left text-sm text-foreground shadow-none hover:bg-primary/[0.04] hover:text-primary sm:px-3 sm:[&:nth-child(odd)]:border-r">
       <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
       <span className="truncate">{label}</span>
       <ArrowRight className="ml-auto h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -637,17 +527,7 @@ function QuickAction({
   );
 }
 
-function PlacementPanel({
-  guests,
-  tables,
-  accent,
-  onRefresh,
-}: {
-  guests: Guest[];
-  tables: Table[];
-  accent: string;
-  onRefresh: () => void;
-}) {
+function PlacementPanel({ guests, tables, accent, onRefresh }: { guests: Guest[]; tables: Table[]; accent: string; onRefresh: () => void }) {
   const assigned = guests.filter((guest) => guest.tableId).length;
   const assignGuest = async (guestId: string, tableId: string, seatNumber: number) => {
     const response = await fetch(`/api/guests/${guestId}`, {
@@ -667,19 +547,14 @@ function PlacementPanel({
         <div className="p-5 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-4">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Tamu & seating</h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
-              <RefreshCw className="h-4 w-4" />
-              Muat ulang
-            </Button>
+            <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
           </div>
           <div className="grid border-b border-border sm:grid-cols-3">
             <Stat label="Tamu" value={String(guests.length)} />
             <Stat label="Meja" value={String(tables.length)} />
             <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
           </div>
-          <div className="pt-5">
-            <SeatingChart guests={guests} tables={tables} accent={accent} onAssigned={assignGuest} />
-          </div>
+          <div className="pt-5"><SeatingChart guests={guests} tables={tables} accent={accent} onAssigned={assignGuest} /></div>
         </div>
       </Card>
     </div>
@@ -688,17 +563,13 @@ function PlacementPanel({
 
 function UsherPanel({ guests, onRefresh }: { guests: Guest[]; onRefresh: () => void }) {
   const checked = guests.filter((guest) => guest.checkedIn).length;
-
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <Card>
         <div className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Check-in</h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">
-              <RefreshCw className="h-4 w-4" />
-              Muat ulang
-            </Button>
+            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in"><RefreshCw className="h-4 w-4" />Muat ulang</Button>
           </div>
           <div className="grid sm:grid-cols-2">
             <Stat label="Total tamu" value={String(guests.length)} />
