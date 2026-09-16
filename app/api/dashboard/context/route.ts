@@ -7,75 +7,89 @@ export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-  let invitation = await prisma.invitation.findFirst({
-    where: { ownerId: user.id, type: "WEDDING" },
-    include: { payment: true },
-    orderBy: { createdAt: "asc" },
-  });
+  const [firstInvitation, latestPayment, invitations, guestCount, rsvpCount] =
+    await Promise.all([
+      prisma.invitation.findFirst({
+        where: { ownerId: user.id },
+        orderBy: { createdAt: "asc" },
+      }),
+      prisma.payment.findFirst({
+        where: { userId: user.id, status: "PAID" },
+        orderBy: { paidAt: "desc" },
+      }),
+      prisma.invitation.findMany({
+        where: { ownerId: user.id, eventConfigured: true },
+        select: {
+          id: true,
+          templateKey: true,
+          isPublished: true,
+          viewCount: true,
+          payment: { select: { packageKey: true, status: true } },
+        },
+        orderBy: { createdAt: "asc" },
+      }),
+      prisma.guest.count({
+        where: { invitation: { ownerId: user.id, eventConfigured: true } },
+      }),
+      prisma.guest.count({
+        where: {
+          invitation: { ownerId: user.id, eventConfigured: true },
+          rsvpStatus: { not: "PENDING" },
+        },
+      }),
+    ]);
 
-  if (!invitation) {
-    invitation = await prisma.invitation.create({
-      data: {
-        ownerId: user.id,
-        slug: `${user.firstName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "wedding"}-moment-${user.id.slice(-6)}`,
-        type: "WEDDING",
-        templateKey: "",
-        title: "",
-        groomName: "",
-        brideName: "",
-        venue: "",
-        timezone: "Asia/Jakarta",
-        description: null,
-      },
-      include: { payment: true },
-    });
-  }
-
-  const [invitations, guestCount, rsvpCount] = await Promise.all([
-    prisma.invitation.findMany({
-      where: { ownerId: user.id, eventConfigured: true },
-      select: { templateKey: true, isPublished: true, viewCount: true },
-      take: 3,
-    }),
-    prisma.guest.count({
-      where: { invitation: { ownerId: user.id, eventConfigured: true } },
-    }),
-    prisma.guest.count({
-      where: {
-        invitation: { ownerId: user.id, eventConfigured: true },
-        rsvpStatus: { not: "PENDING" },
-      },
-    }),
-  ]);
-
-  const entitlements = getPackageEntitlements(invitation.payment);
-  const invitationsCreated = invitations.filter((item) => item.templateKey.trim().length > 0).length;
-  const invitationsShared = invitations.reduce((sum, item) => sum + (item.viewCount ?? 0), 0);
+  const entitlements = getPackageEntitlements(latestPayment);
+  const invitationsCreated = invitations.length;
+  const activeInvitations = invitations.filter(
+    (item) => item.payment?.status === "PAID" && item.payment.packageKey === "INVITATION_BASIC",
+  ).length;
+  const invitationsShared = invitations.reduce(
+    (sum, item) => sum + (item.viewCount ?? 0),
+    0,
+  );
   const invitationPublished = invitations.some((item) => item.isPublished);
 
   return NextResponse.json({
     profile: { displayName: user.firstName, email: user.email },
-    wedding: {
-      invitationId: invitation.id,
-      groomName: invitation.groomName,
-      brideName: invitation.brideName,
-      title: invitation.title,
-      venue: invitation.venue,
-      address: invitation.address,
-      mapUrl: invitation.mapUrl,
-      timezone: invitation.timezone,
-      eventDate: invitation.eventDate,
-      ceremonyTime: invitation.ceremonyTime,
-      receptionTime: invitation.receptionTime,
-      description: invitation.description,
-    },
-    package: invitation.payment
-      ? { key: invitation.payment.packageKey, status: invitation.payment.status }
+    wedding: firstInvitation
+      ? {
+          invitationId: firstInvitation.id,
+          groomName: firstInvitation.groomName,
+          brideName: firstInvitation.brideName,
+          title: firstInvitation.title,
+          venue: firstInvitation.venue,
+          address: firstInvitation.address,
+          mapUrl: firstInvitation.mapUrl,
+          timezone: firstInvitation.timezone,
+          eventDate: firstInvitation.eventDate,
+          ceremonyTime: firstInvitation.ceremonyTime,
+          receptionTime: firstInvitation.receptionTime,
+          description: firstInvitation.description,
+        }
+      : {
+          invitationId: null,
+          groomName: "",
+          brideName: "",
+          title: "",
+          venue: "",
+          address: null,
+          mapUrl: null,
+          timezone: "Asia/Jakarta",
+          eventDate: null,
+          ceremonyTime: null,
+          receptionTime: null,
+          description: null,
+        },
+    package: latestPayment
+      ? { key: latestPayment.packageKey, status: latestPayment.status }
       : { key: null, status: "UNPAID" },
     entitlements,
     overview: {
       invitationsCreated,
-      invitationsLimit: 3,
+      invitationsLimit: null,
+      unlimitedInvitations: true,
+      activeInvitations,
       totalRsvp: rsvpCount,
       totalGuests: guestCount,
       invitationsShared,
