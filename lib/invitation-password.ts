@@ -50,7 +50,7 @@ export async function hasInvitationAccess(slug: string) {
   return Boolean(token && verifyInvitationAccessToken(token, slug));
 }
 
-export function setInvitationAccessCookie(slug: string) {
+export function setInvitationAccessCookie(slug: string, path = `/invite/${slug}`) {
   const expiresAt = Math.floor(Date.now() / 1000) + ACCESS_TTL_SECONDS;
   const token = createInvitationAccessToken(slug, expiresAt);
   return cookies().then((cookieStore) => {
@@ -58,7 +58,7 @@ export function setInvitationAccessCookie(slug: string) {
       httpOnly: true,
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
-      path: `/invite/${slug}`,
+      path,
       maxAge: ACCESS_TTL_SECONDS,
     });
   });
