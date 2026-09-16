@@ -177,7 +177,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8">
       {notice && (
         <div
-          className="mb-4 flex min-w-0 items-center gap-2 border border-border px-3 py-2.5 text-xs text-muted-foreground"
+          className="mb-4 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
           role="status"
         >
           <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
@@ -240,23 +240,24 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
             </select>
 
             <Button
-              size="icon"
+              size="sm"
               onClick={() => setAscending((value) => !value)}
-              title={ascending ? "Urutan naik" : "Urutan turun"}
+              title={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
               aria-label={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
             >
               <ArrowDownUp className="h-4 w-4" />
+              {ascending ? "Urutan naik" : "Urutan turun"}
             </Button>
 
-            <Button onClick={exportCsv} size="sm">
+            <Button onClick={exportCsv} size="sm" title="Export daftar RSVP sebagai CSV">
               <Download className="h-4 w-4" />
-              CSV
+              Export CSV
             </Button>
           </div>
         </div>
 
         <div className="min-w-0 overflow-x-auto">
-          <table className="w-full min-w-[820px] text-left">
+          <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
                 <th className="px-3 py-3 font-medium">#</th>
@@ -304,22 +305,24 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
                   <td className="px-3 py-3">
                     <div className="flex justify-end gap-2">
                       <Button
-                        size="icon-sm"
-                        title="Kode QR"
+                        size="xs"
+                        title={`Buat QR untuk ${guest.name}`}
                         aria-label={`Buat QR untuk ${guest.name}`}
                         disabled={busyId === guest.id}
                         onClick={() => showQr(guest)}
                       >
                         <QrCode className="h-3.5 w-3.5" />
+                        Buat QR
                       </Button>
                       <Button
-                        size="icon-sm"
-                        title="Check-in manual"
-                        aria-label={`Check-in manual ${guest.name}`}
+                        size="xs"
+                        title={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
+                        aria-label={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
                         disabled={busyId === guest.id || Boolean(guest.checkedIn)}
                         onClick={() => manualCheckIn(guest)}
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
+                        {guest.checkedIn ? "Sudah check-in" : "Check-in"}
                       </Button>
                     </div>
                   </td>
@@ -358,6 +361,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
               onClick={() => setQr(null)}
               className="absolute right-3 top-3"
               aria-label="Tutup QR ticket"
+              title="Tutup QR ticket"
             >
               <X className="h-4 w-4" />
             </Button>
