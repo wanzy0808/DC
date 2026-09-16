@@ -4,6 +4,7 @@ import { Cinzel, DM_Mono, Fauna_One } from "next/font/google";
 import "./globals.css";
 import "./design-overrides.css";
 import "./brand-theme.css";
+import "./dashboard-theme.css";
 import { ThemeProvider } from "@/components/Theme/ThemeContext";
 import { LanguageProvider } from "@/components/I18n/LanguageProvider";
 import { isLocale, LOCALE_COOKIE, type Locale } from "@/lib/i18n";
