@@ -3,22 +3,26 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 
-async function getMainInvitation(userId: string) {
+async function getOwnedInvitation(userId: string, invitationId: string) {
+  if (!invitationId) return null;
   return prisma.invitation.findFirst({
-    where: { ownerId: userId, type: "WEDDING" },
+    where: { id: invitationId, ownerId: userId },
     include: { payment: true },
-    orderBy: { createdAt: "asc" },
   });
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getMainInvitation(user.id);
-    if (!invitation) return NextResponse.json({ quota: 100, selected: [], selectedCount: 0 });
+
+    const invitationId = new URL(request.url).searchParams.get("invitationId")?.trim() || "";
+    const invitation = await getOwnedInvitation(user.id, invitationId);
+    if (!invitation) {
+      return NextResponse.json({ error: "Pilih acara untuk membuka WA Blast." }, { status: 400 });
+    }
     if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json({ error: "WA Blast membutuhkan paket Digital Invitation." }, { status: 402 });
+      return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
     }
 
     const selected = await prisma.guest.findMany({
@@ -34,10 +38,12 @@ export async function GET() {
     });
 
     return NextResponse.json({
+      invitation: { id: invitation.id, title: invitation.title },
       quota: invitation.waBlastQuota,
       selected,
       selectedCount: selected.length,
       remaining: Math.max(0, invitation.waBlastQuota - selected.length),
+      canSelectRecipients: invitation.waBlastQuota > 0,
     });
   } catch (error) {
     console.error("GET /api/wa-blast failed", error);
@@ -49,12 +55,17 @@ export async function POST(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getMainInvitation(user.id);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json({ error: "WA Blast membutuhkan paket Digital Invitation." }, { status: 402 });
-    }
 
     const body = await request.json();
+    const invitationId = String(body.invitationId ?? "").trim();
+    const invitation = await getOwnedInvitation(user.id, invitationId);
+    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
+      return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
+    }
+    if (invitation.waBlastQuota <= 0) {
+      return NextResponse.json({ error: "Beli add-on WA Blast 50 untuk mulai memilih penerima." }, { status: 402 });
+    }
+
     const selectedCount = await prisma.guest.count({
       where: { invitationId: invitation.id, waBlastSelected: true },
     });
@@ -104,13 +115,16 @@ export async function DELETE(request: Request) {
   try {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
-    const invitation = await getMainInvitation(user.id);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json({ error: "WA Blast membutuhkan paket Digital Invitation." }, { status: 402 });
-    }
 
-    const guestId = new URL(request.url).searchParams.get("guestId")?.trim();
+    const url = new URL(request.url);
+    const invitationId = url.searchParams.get("invitationId")?.trim() || "";
+    const guestId = url.searchParams.get("guestId")?.trim() || "";
+    const invitation = await getOwnedInvitation(user.id, invitationId);
+    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
+      return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
+    }
     if (!guestId) return NextResponse.json({ error: "Tamu wajib dipilih." }, { status: 400 });
+
     const guest = await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } });
     if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
 
