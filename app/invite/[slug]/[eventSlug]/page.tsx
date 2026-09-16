@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { hasInvitationAccess } from "@/lib/invitation-password";
 import { slugifyEvent } from "@/lib/invitation-slug";
 import PublicInvitation, { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
@@ -19,7 +19,11 @@ export default async function EventInvitationPage({
   if (!mainInvitation) notFound();
 
   const eventInvitations = await prisma.invitation.findMany({
-    where: { ownerId: mainInvitation.ownerId, type: "ADAT_AKAD" },
+    where: {
+      ownerId: mainInvitation.ownerId,
+      type: "ADAT_AKAD",
+      eventConfigured: true,
+    },
     include: { payment: true, assets: true },
     orderBy: { createdAt: "asc" },
     take: 2,
@@ -30,7 +34,10 @@ export default async function EventInvitationPage({
   );
 
   if (!invitation) notFound();
-  if (!invitation.isPublished || !hasPaidDigitalInvitation(mainInvitation.payment)) {
+  if (
+    !invitation.isPublished ||
+    !(await hasAccountDigitalInvitation(mainInvitation.ownerId, mainInvitation.payment))
+  ) {
     return <InvitationLockedState />;
   }
   if (mainInvitation.passwordProtected && !(await hasInvitationAccess(slug))) {
