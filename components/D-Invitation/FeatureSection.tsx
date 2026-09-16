@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, Palette, QrCode, Sparkles } from "lucide-react";
+import { CalendarCheck2, Palette, Sparkles, Users } from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function FeatureSection() {
@@ -11,54 +11,56 @@ export default function FeatureSection() {
           [
             Palette,
             "01",
-            "A design that feels like yours",
-            "Choose a template as your starting point, then add photos, colors, words, and details that make your story feel complete.",
+            "One template for one event",
+            "Choose the design that fits the occasion, then personalize the content, photos, colors, music, venue, and event details.",
           ],
           [
             Sparkles,
             "02",
-            "A studio that stays calm",
-            "Keep the important content in one simple workspace, so you can focus on the story instead of the complexity.",
+            "A studio that stays simple",
+            "Keep invitation content in one workspace so every event can be edited and published independently.",
           ],
           [
-            QrCode,
+            Users,
             "03",
-            "From RSVP to the big day",
-            "Receive guest confirmations, prepare personal QR tickets, and carry the data into check-in when the celebration arrives.",
+            "RSVP and guest management included",
+            "Collect responses, plus-one information, and manage the guest list for the selected event without mixing data from your other events.",
           ],
         ]
       : ([
           [
             Palette,
             "01",
-            "Desain yang terasa milikmu",
-            "Pilih template sebagai awal, lalu isi dengan foto, warna, kata-kata, dan detail yang membuat kisah kalian terasa utuh.",
+            "Satu template untuk satu acara",
+            "Pilih desain yang cocok untuk acaranya, lalu personalisasi konten, foto, warna, musik, venue, dan detail yang ingin dibagikan.",
           ],
           [
             Sparkles,
             "02",
-            "Studio yang tetap tenang",
-            "Susun konten penting dalam satu ruang kerja yang sederhana, sehingga kamu bisa fokus pada cerita, bukan pada kerumitannya.",
+            "Studio yang tetap sederhana",
+            "Kelola isi undangan dalam satu workspace agar setiap acara bisa diedit dan dipublikasikan secara independen.",
           ],
           [
-            QrCode,
+            Users,
             "03",
-            "Dari RSVP hingga hari-H",
-            "Terima konfirmasi tamu, siapkan tiket QR personal, dan bawa data ke tahap check-in ketika perayaan akhirnya tiba.",
+            "RSVP dan manajemen tamu termasuk",
+            "Terima respons, data plus one, dan kelola daftar tamu untuk acara yang dipilih tanpa mencampur data dengan acara lain.",
           ],
         ] as const);
+
   const copy =
     locale === "en"
       ? [
-          "Why it should be us?",
-          "Beautiful to look at. Even better when it truly helps.",
-          "Made for the moments that matter",
+          "What you get",
+          "The invitation is only the beginning of the event workflow.",
+          "One event, one organized flow",
         ]
       : [
-          "Kenapa harus kami?",
-          "Indah untuk dilihat. Akan lebih indah saat benar-benar membantu.",
-          "Dibuat, untuk momen yang berarti",
+          "Yang kamu dapatkan",
+          "Undangan adalah awal dari alur acara yang lebih rapi.",
+          "Satu acara, satu alur yang rapi",
         ];
+
   return (
     <section
       id="fitur"
@@ -72,11 +74,16 @@ export default function FeatureSection() {
           {copy[1]}
         </h2>
       </div>
+
       <div className="grid gap-0 md:grid-cols-3">
         {features.map(([Icon, label, title, description], index) => (
           <article
             key={label}
-            className={`py-6 md:px-7 ${index > 0 ? "border-t border-border/70 md:border-l md:border-t-0" : ""}`}
+            className={`py-6 md:px-7 ${
+              index > 0
+                ? "border-t border-border/70 md:border-l md:border-t-0"
+                : ""
+            }`}
           >
             <div className="flex items-center justify-between">
               <Icon
@@ -91,11 +98,14 @@ export default function FeatureSection() {
             <h3 className="mt-6 max-w-xs font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
               {title}
             </h3>
-            <p className="mt-3 max-w-sm text-sm leading-7 text-foreground/65">
+            <p className="mt-3 max-w-sm font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65">
               {description}
             </p>
             <div className="mt-6 flex items-center gap-2 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-foreground/40">
-              <Heart className="h-3 w-3 text-primary/75" aria-hidden="true" />
+              <CalendarCheck2
+                className="h-3 w-3 text-primary/75"
+                aria-hidden="true"
+              />
               {copy[2]}
             </div>
           </article>
