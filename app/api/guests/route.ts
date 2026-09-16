@@ -47,7 +47,20 @@ export async function GET(request: Request) {
     const user = await getCurrentUser();
     if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-    const invitationId = new URL(request.url).searchParams.get("invitationId")?.trim() || "";
+    const url = new URL(request.url);
+    if (url.searchParams.get("all") === "1") {
+      const guests = await prisma.guest.findMany({
+        where: { invitation: { ownerId: user.id } },
+        select: {
+          ...guestSelect,
+          invitation: { select: { id: true, title: true, slug: true } },
+        },
+        orderBy: [{ invitation: { createdAt: "asc" } }, { name: "asc" }],
+      });
+      return NextResponse.json({ guests, tables: [] });
+    }
+
+    const invitationId = url.searchParams.get("invitationId")?.trim() || "";
     const invitation = await getInvitation(user.id, invitationId || undefined);
     if (!invitation) {
       return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
@@ -98,7 +111,7 @@ export async function POST(request: Request) {
     const invitationId = String(body.invitationId ?? "").trim();
     const invitation = await getInvitation(user.id, invitationId || undefined);
     if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
-      return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan paket Digital Invitation." }, { status: 402 });
+      return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan Undangan Digital aktif untuk acara ini." }, { status: 402 });
     }
 
     const name = String(body.name ?? "").trim();
