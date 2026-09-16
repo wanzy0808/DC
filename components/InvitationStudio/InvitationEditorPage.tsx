@@ -39,28 +39,23 @@ export default function InvitationEditorPage() {
         .dc-invitation-editor section > div > aside:nth-child(2) { background: var(--background) !important; border-color: var(--border) !important; color: var(--foreground) !important; }
         .dc-invitation-editor section > div.border-b > div { width: fit-content; max-width: 100%; overflow-x: auto; }
         .dc-invitation-editor section > div.border-b > div > button { flex: 0 0 auto; }
-        .dc-invitation-editor section > div > main { background: color-mix(in oklab, var(--background) 92%, var(--primary) 8%) !important; }
-        .dc-invitation-editor section > div > main > div:first-child { width: 360px; max-width: 100%; border: 2px solid #111111; border-radius: 28px; padding: 0; background: #ffffff; box-shadow: 0 18px 50px rgb(0 0 0 / 18%); overflow: hidden; }
-        .dark .dc-invitation-editor section > div > main > div:first-child { border-color: #ffffff; background: #111113; box-shadow: 0 18px 50px rgb(0 0 0 / 45%); }
-        .dc-invitation-editor section > div > main > div:first-child > div { border-radius: 26px !important; box-shadow: none !important; }
-        .dc-invitation-editor button { font-family: var(--font-fauna); }
-        .dc-invitation-editor section > header button,
-        .dc-invitation-editor section > header a[class*="rounded"] {
-          border-radius: 0.65rem;
-        }
-        .dc-invitation-editor .dc-editor-action-icon {
+        .dc-invitation-editor section > header > div:last-child > button:nth-of-type(1),
+        .dc-invitation-editor section > header > div:last-child > button:nth-of-type(2) {
           min-width: 2.5rem;
           min-height: 2.5rem;
           padding: 0.5rem;
+          border-radius: 0.65rem;
+          color: var(--muted-foreground);
         }
-        .dc-invitation-editor .dc-editor-action-secondary {
+        .dc-invitation-editor section > header > div:last-child > button:nth-of-type(3) {
           min-height: 2.5rem;
           padding-inline: 0.75rem;
           border: 1px solid var(--border);
+          border-radius: 0.65rem;
           background: var(--background);
           color: var(--foreground);
         }
-        .dc-invitation-editor .dc-editor-action-primary {
+        .dc-invitation-editor section > header > div:last-child > button:nth-of-type(4) {
           min-height: 2.5rem;
           padding-inline: 1rem;
           border-radius: 0.65rem;
@@ -68,9 +63,19 @@ export default function InvitationEditorPage() {
           color: var(--primary-foreground);
           box-shadow: 0 2px 8px rgb(0 0 0 / 10%);
         }
-        .dc-invitation-editor .dc-editor-action-primary:hover { background: color-mix(in oklab, var(--primary) 86%, black); }
-        .dc-invitation-editor .dc-editor-action-secondary:hover { background: color-mix(in oklab, var(--background) 94%, var(--primary) 6%); }
-        .dc-invitation-editor .dc-editor-action-icon:hover { background: color-mix(in oklab, var(--background) 94%, var(--primary) 6%); }
+        .dc-invitation-editor section > header > div:last-child > button:hover {
+          background-color: color-mix(in oklab, var(--background) 94%, var(--primary) 6%);
+        }
+        .dc-invitation-editor section > header > div:last-child > button:nth-of-type(4):hover {
+          background: color-mix(in oklab, var(--primary) 86%, black);
+        }
+        .dc-invitation-editor section > div > main { background: color-mix(in oklab, var(--background) 92%, var(--primary) 8%) !important; }
+        .dc-invitation-editor section > div > main > div:first-child { width: 360px; max-width: 100%; border: 2px solid #111111; border-radius: 28px; padding: 0; background: #ffffff; box-shadow: 0 18px 50px rgb(0 0 0 / 18%); overflow: hidden; }
+        .dark .dc-invitation-editor section > div > main > div:first-child { border-color: #ffffff; background: #111113; box-shadow: 0 18px 50px rgb(0 0 0 / 45%); }
+        .dc-invitation-editor section > div > main > div:first-child > div { border-radius: 26px !important; box-shadow: none !important; }
+        .dc-invitation-editor button { font-family: var(--font-fauna); }
+        .dc-invitation-editor section > header button,
+        .dc-invitation-editor section > header a[class*="rounded"] { border-radius: 0.65rem; }
         .dark .dc-invitation-editor section button:not([class*="bg-[#7A1C25"]),
         .dark .dc-invitation-editor section input,
         .dark .dc-invitation-editor section label { color: var(--foreground); }
