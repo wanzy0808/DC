@@ -11,7 +11,7 @@ type FaqSectionProps = {
   eyebrow?: string;
   title: string;
   description: string;
-  items: FaqItem[];
+  items: readonly FaqItem[];
 };
 
 export default function FaqSection({

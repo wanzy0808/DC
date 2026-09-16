@@ -5,28 +5,65 @@ on:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Validation only: no production credentials, migrations, or deployment.
+env:
+  DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/dc_ci?schema=public
+  NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
   build:
+    name: Prisma, TypeScript & Build
     runs-on: ubuntu-latest
-
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           run_install: false
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Build
+      - name: Validate Prisma schema
+        run: pnpm db:validate
+      - name: Generate Prisma client
+        run: pnpm db:generate
+      - name: Check TypeScript
+        run: pnpm typecheck
+      - name: Build production application
         run: pnpm build
+
+  lint:
+    name: ESLint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint application
+        run: pnpm lint

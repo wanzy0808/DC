@@ -288,3 +288,22 @@ Validation:
 - Visual light/dark, responsive browser, fokus keyboard, dan Escape belum terverifikasi: executable Playwright tidak tersedia dan unduhan Chromium timeout. Tidak mengklaim browser, build, atau CI PASS.
 
 Tahap berikutnya: standardisasi UsherApp aktif, lalu audit form/table/dialog dashboard lain dan jalankan visual QA dengan font asli serta database pada environment aplikasi.
+
+## 2026-09-16 - Explicit automatic validation and build prerequisites
+
+### Problem and implementation
+- GitHub Actions was already triggered by push to main and PR updates. Run `35048595529` failed at TypeScript after successful bundling; Prisma Client generation during installation had silently failed on the missing AuditLog model.
+- Workflow now separates `Prisma, TypeScript & Build` and `ESLint`, adds explicit schema validation/client generation/type checking, manual dispatch, read-only repository permissions, timeouts, and cancellation of obsolete runs.
+- No continue-on-error, lint-rule suppression, production credentials, migration execution, or deployment is introduced. Existing lint violations remain failing signals.
+- Restored the Prisma AuditLog model to match the table, nullable actor relation, and index already declared in the initial SQL migration. No database migration or schema reset is needed for this restoration.
+- Fixed stale EventPanel button prop, readonly FAQ input typing, feature icon tuple typing, and missing assets include on the public event invitation query. Existing authorization and publication gates are preserved.
+- Added `db:validate` and `typecheck` scripts, plus README instructions for automated checks and local equivalents. Branch protection is documented but not modified.
+
+Affected files: `.github/workflows/build.yml`, `package.json`, `prisma/schema.prisma`, `app/[dashboard]/page.tsx`, `app/invite/[slug]/[eventSlug]/page.tsx`, `components/Marketing/FaqSection.tsx`, `components/D-Invitation/FeatureSection.tsx`, `README.md`.
+
+Validation:
+- Local Prisma validation and client generation completed successfully.
+- Local `pnpm typecheck` completed successfully after restoring the model and fixing all reported type errors.
+- Repository-wide lint reports 15 existing errors and 11 warnings, predominantly synchronous state updates in effects. The new lint job deliberately reports these; they are not suppressed to manufacture a green result.
+- Production build must be checked on GitHub because Google Fonts downloads failed in the local environment. CI run/result will be recorded after publishing this change to PR #2.
+- No browser or database integration verification is claimed.

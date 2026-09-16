@@ -68,3 +68,36 @@ A modern, high-performance wedding organizer, digital wedding invitation, and gu
 - Node.js >= 22.0.0
 - pnpm >= 11.0.0
 - PostgreSQL database
+
+## Automatic validation
+
+GitHub Actions (`.github/workflows/build.yml`) validates every push to `main`
+and every opened or updated pull request targeting `main`. Draft PRs also run.
+The workflow can be started manually from **Actions > Build Validation > Run workflow**
+after this workflow revision is merged into the default branch.
+
+Two independent checks appear on each PR:
+- **Prisma, TypeScript & Build**: frozen dependency install, schema validation,
+  explicit Prisma Client generation, route/type generation, TypeScript, and production build.
+- **ESLint**: repository-wide lint. A failed lint check remains visible even when build succeeds.
+
+Use the failed step's log to find the first error, fix it, and push another commit;
+the PR checks rerun automatically. Obsolete runs are cancelled. These checks do
+not deploy, apply migrations, or use production credentials. The CI database URL
+is a non-production placeholder for schema/client initialization; these checks
+are not database integration tests.
+
+Local equivalents (configure `DATABASE_URL` using `.env.example`):
+
+```bash
+pnpm install --frozen-lockfile
+pnpm db:validate
+pnpm db:generate
+pnpm typecheck
+pnpm lint
+pnpm build
+```
+
+Keep required checks green before merging. Automatic merge blocking additionally
+requires a GitHub branch ruleset requiring the two checks above; the workflow
+alone does not enable branch protection.

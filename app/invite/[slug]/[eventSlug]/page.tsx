@@ -20,7 +20,7 @@ export default async function EventInvitationPage({
 
   const invitation = await prisma.invitation.findFirst({
     where: { ownerId: mainInvitation.ownerId, type: "ADAT_AKAD" },
-    include: { payment: true },
+    include: { payment: true, assets: true },
     orderBy: { createdAt: "asc" },
   });
 

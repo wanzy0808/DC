@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function FeatureSection() {
   const { locale } = useLanguage();
-  const features =
+  const features: ReadonlyArray<readonly [typeof Palette, string, string, string]> =
     locale === "en"
       ? [
           [
