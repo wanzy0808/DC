@@ -40,6 +40,22 @@ Melanjutkan penyelarasan dashboard DC Organizer dengan referensi visual yang dib
 - Locked-state overlay dan access notice memakai surface/border/radius yang sama dengan dashboard panels sehingga tidak terlihat seperti halaman berbeda.
 - Server-authoritative entitlement dan behavior `Manajemen Tamu` yang tetap dapat melihat workspace tidak diubah.
 
+## 2026-09-16 — Single Rangkaian Acara Flow
+
+### Tujuan
+Menyederhanakan tab `Rangkaian Acara` agar dashboard tidak langsung membagi user ke dua jenis acara. Default workspace harus terasa seperti satu editor acara, dengan kemampuan menambah rangkaian berikutnya hanya ketika memang dibutuhkan.
+
+### Keputusan UX & Data
+- `components/Dashboard/EventPanel.tsx` tidak lagi menampilkan dua tab permanen `Pernikahan` dan `Akad & Sangjit`.
+- Saat pertama dibuka, hanya satu rangkaian utama (`WEDDING`) yang ditampilkan dan diedit.
+- Header editor menampilkan nomor rangkaian, nama acara aktif, status sinkronisasi, dan tombol canonical `Tambah rangkaian acara`.
+- Tombol `Tambah rangkaian acara` mengaktifkan slot acara tambahan existing (`ADAT_AKAD`) tanpa membuat schema/API baru, sehingga URL event khusus dan flow lama tetap kompatibel.
+- Setelah rangkaian tambahan aktif, pemilih `Rangkaian aktif` muncul sebagai compact select untuk berpindah antara rangkaian utama dan tambahan. User tidak melihat dua editor sekaligus.
+- Jika slot `ADAT_AKAD` sudah memiliki data bermakna dari penggunaan sebelumnya (judul, venue, alamat, Maps, deskripsi, catatan, atau status publish), editor mendeteksinya dan menampilkan pemilih rangkaian agar data lama tetap dapat diakses.
+- Couple name tetap read-only dan diwariskan dari `WEDDING` ketika rangkaian tambahan belum memiliki nama pasangan sendiri.
+- Save tetap memakai `PUT /api/invitations`; tidak ada perubahan Prisma schema, entitlement, publish behavior, slug logic, atau event routing.
+- Form grouping `Detail acara` dan `Lokasi` tetap menggunakan neutral rounded surface dan separator policy terbaru.
+
 ### Affected files
 - `components/Dashboard/EventPanel.tsx`
 - `components/Dashboard/InvitationManagementPanel.tsx`
@@ -52,7 +68,8 @@ Melanjutkan penyelarasan dashboard DC Organizer dengan referensi visual yang dib
 - `1e26183f5322ed7f9f87a8f721a6d6964c1102f9`
 - `9e7f5dc13698d93161d630055684445a54c656bd`
 - `b29e6376f623810556510c0cd32c9144b0f04cbb`
+- `7468628979c79559b42770aca67ae0a6613c9058`
 
 ### Validation
 - Build/lint/CI belum diverifikasi pada environment repository.
-- Perubahan tahap ini berfokus pada visual grouping, readability, radius, spacing, dan pengurangan divider; behavior serta data flow existing dipertahankan.
+- Perubahan tahap ini mempertahankan API/data flow existing. Flow Rangkaian Acara sekarang menyederhanakan presentation layer dengan satu editor aktif dan optional additional-event selector.
