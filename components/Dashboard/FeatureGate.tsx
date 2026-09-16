@@ -18,8 +18,8 @@ interface FeatureGateProps {
 export default function FeatureGate({
   allowed,
   title,
-  description = "Upgrade paket untuk membuka fitur ini.",
-  upgradeLabel = "Upgrade Paket",
+  description = "Paket aktif diperlukan untuk membuka fitur ini.",
+  upgradeLabel = "Lihat paket yang tersedia",
   onUpgrade,
   children,
 }: FeatureGateProps) {
@@ -28,18 +28,23 @@ export default function FeatureGate({
   if (allowed || title === "Manajemen Tamu") return <>{children}</>;
 
   return (
-    <section className="grid min-w-0 overflow-hidden border-y border-border bg-background">
-      <div className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-45 blur-[2px]" aria-hidden="true" inert>
+    <section className="mx-auto grid w-[min(92vw,1400px)] min-w-0 overflow-hidden rounded-xl border border-border/80 bg-foreground/[0.018]">
+      <div
+        className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-35 blur-[2px]"
+        aria-hidden="true"
+        inert
+      >
         {children}
       </div>
-      <div className="relative col-start-1 row-start-1 flex items-center justify-center bg-background/95 px-6 py-10 sm:p-10">
-        <div className="w-full max-w-lg">
+      <div className="relative col-start-1 row-start-1 flex items-center justify-center bg-background/88 px-6 py-10 backdrop-blur-[2px] sm:p-10">
+        <div className="w-full max-w-lg rounded-xl border border-primary/15 bg-background p-4 shadow-sm sm:p-5">
           <DashboardAccessNotice title={title} description={description} heading="h3">
             <Button
               type="button"
               onClick={onUpgrade}
               size="lg"
               className="h-auto min-h-11 max-w-full whitespace-normal py-3 text-left"
+              title={upgradeLabel}
             >
               <Sparkles className="size-4 shrink-0" aria-hidden="true" />
               {upgradeLabel}

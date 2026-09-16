@@ -6,6 +6,8 @@ import {
   Check,
   Copy,
   ExternalLink,
+  EyeOff,
+  Globe2,
   KeyRound,
   LockKeyhole,
   PenLine,
@@ -61,104 +63,71 @@ export default function InvitationManagementPanel({ paid }: Props) {
     () =>
       locale === "en"
         ? {
-            sectionEyebrow: "Invitation control",
-            sectionTitle: "Manage what guests will see.",
-            sectionDesc:
-              "Edit the design, review the public address, and control publishing from one compact workspace.",
             main: "Main wedding",
             special: "Special event",
-            mainDesc:
-              "The primary invitation for your ceremony, reception, and celebration.",
-            specialDesc:
-              "A focused invitation for akad, sangjit, family gatherings, or private moments.",
             published: "Published",
             draft: "Draft",
-            preview: "Open public page",
-            copyLink: "Copy public link",
+            open: "Open",
+            copyLink: "Copy link",
             copied: "Link copied.",
             edit: "Edit design",
-            publish: "Publish",
-            unpublish: "Unpublish",
+            publish: "Publish page",
+            unpublish: "Remove from public",
             saving: "Saving...",
-            noMain: "The public address will appear once the invitation is ready.",
-            noSpecial: "Add an event name in the studio to create its public address.",
+            noMain: "Public URL is not ready.",
+            noSpecial: "Set the event name in Studio first.",
             publicUrl: "Public URL",
-            overview: "Overview",
-            pagesPublished: "Pages published",
-            access: "Guest access",
+            pagesPublished: "Published",
+            access: "Access",
             package: "Package",
-            activePackage: "Digital Invitation active",
-            packageRequired: "Digital Invitation package required",
-            privacyEyebrow: "Privacy & access",
-            privacyTitle: "One password for every invitation page.",
-            privacyDesc:
-              "Enable shared password protection for the main invitation and special-event page.",
+            activePackage: "Active",
+            packageRequired: "Package required",
             protected: "Protected",
-            publicAccess: "Public access",
+            publicAccess: "Public",
+            password: "Password",
             passwordPlaceholder: "New password",
-            enable: "Protect invitation",
-            change: "Change password",
-            disable: "Remove protection",
-            studioEyebrow: "Design studio",
-            studioTitle: "Continue refining the invitation.",
-            studioDesc:
-              "Template, content, photos, music, and visual settings stay inside the invitation studio.",
-            openStudio: "Open invitation studio",
-            loading: "Loading invitation...",
-            ready: "Invitation data is ready.",
+            enable: "Enable protection",
+            change: "Update password",
+            disable: "Disable protection",
+            studio: "Open Studio",
+            loading: "Loading...",
+            ready: "Ready",
             error: "Something went wrong.",
-            passwordSaved: "Password protection updated.",
+            passwordSaved: "Password updated.",
             passwordMin: "Password must be at least 6 characters.",
           }
         : {
-            sectionEyebrow: "Kontrol undangan",
-            sectionTitle: "Kelola yang akan dilihat tamu.",
-            sectionDesc:
-              "Edit desain, periksa alamat publik, dan atur status publish dari satu workspace yang ringkas.",
             main: "Pernikahan utama",
             special: "Event khusus",
-            mainDesc:
-              "Undangan utama untuk prosesi, resepsi, dan seluruh perayaan kalian.",
-            specialDesc:
-              "Undangan khusus untuk akad, sangjit, kumpul keluarga, atau momen yang lebih intim.",
             published: "Terbit",
             draft: "Draft",
-            preview: "Buka halaman publik",
-            copyLink: "Salin link publik",
-            copied: "Link berhasil disalin.",
+            open: "Buka",
+            copyLink: "Salin link",
+            copied: "Link disalin.",
             edit: "Edit desain",
-            publish: "Publish",
-            unpublish: "Unpublish",
+            publish: "Terbitkan",
+            unpublish: "Tarik dari publik",
             saving: "Menyimpan...",
-            noMain: "Alamat publik akan muncul setelah undangan siap.",
-            noSpecial:
-              "Tambahkan nama event di studio untuk membuat alamat publiknya.",
+            noMain: "URL publik belum tersedia.",
+            noSpecial: "Atur nama event di Studio terlebih dahulu.",
             publicUrl: "URL publik",
-            overview: "Ringkasan",
-            pagesPublished: "Halaman terbit",
-            access: "Akses tamu",
+            pagesPublished: "Terbit",
+            access: "Akses",
             package: "Paket",
-            activePackage: "Digital Invitation aktif",
-            packageRequired: "Paket Digital Invitation diperlukan",
-            privacyEyebrow: "Privasi & akses",
-            privacyTitle: "Satu password untuk seluruh halaman undangan.",
-            privacyDesc:
-              "Aktifkan proteksi password bersama untuk undangan utama dan halaman event khusus.",
+            activePackage: "Aktif",
+            packageRequired: "Belum aktif",
             protected: "Terlindungi",
-            publicAccess: "Akses publik",
+            publicAccess: "Publik",
+            password: "Password",
             passwordPlaceholder: "Password baru",
-            enable: "Lindungi undangan",
-            change: "Ganti password",
+            enable: "Aktifkan proteksi",
+            change: "Perbarui password",
             disable: "Matikan proteksi",
-            studioEyebrow: "Design studio",
-            studioTitle: "Lanjutkan penyempurnaan undangan.",
-            studioDesc:
-              "Template, konten, foto, musik, dan pengaturan visual tetap dikelola di invitation studio.",
-            openStudio: "Buka invitation studio",
-            loading: "Memuat undangan...",
-            ready: "Data undangan siap dikelola.",
+            studio: "Buka Studio",
+            loading: "Memuat...",
+            ready: "Siap",
             error: "Terjadi kesalahan.",
-            passwordSaved: "Proteksi password berhasil diperbarui.",
+            passwordSaved: "Password diperbarui.",
             passwordMin: "Password minimal 6 karakter.",
           },
     [locale],
@@ -212,22 +181,15 @@ export default function InvitationManagementPanel({ paid }: Props) {
     const invitation = invitations[type];
     setBusy(`publish-${type}`);
     setMessage("");
-
     try {
       const response = await fetch("/api/invitations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type,
-          isPublished: !invitation.isPublished,
-        }),
+        body: JSON.stringify({ type, isPublished: !invitation.isPublished }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || copy.error);
-      setInvitations((current) => ({
-        ...current,
-        [type]: data.invitation,
-      }));
+      setInvitations((current) => ({ ...current, [type]: data.invitation }));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : copy.error);
     } finally {
@@ -301,30 +263,27 @@ export default function InvitationManagementPanel({ paid }: Props) {
   }
 
   return (
-    <div className="mx-auto min-w-0 overflow-x-clip pb-16 pt-8 text-foreground sm:pt-10">
-      <section className="grid gap-6 border-b border-border pb-7 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-        <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-            {copy.sectionEyebrow}
-          </p>
-          <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight text-foreground sm:text-3xl">
-            {copy.sectionTitle}
+    <div className="mx-auto min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+            {locale === "en" ? "Invitation pages" : "Halaman undangan"}
           </h2>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            {copy.sectionDesc}
-          </p>
+          <span className="rounded-lg bg-foreground/[0.035] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            {loading ? copy.loading : copy.ready}
+          </span>
         </div>
         <Button asChild size="sm">
-          <Link href="/dashboard/editor?type=WEDDING">
+          <Link href="/dashboard/editor?type=WEDDING" title={copy.studio}>
             <PenLine className="h-4 w-4" />
-            {copy.openStudio}
+            {copy.studio}
           </Link>
         </Button>
-      </section>
+      </div>
 
       {message && (
         <div
-          className="flex min-w-0 items-center gap-2 border-b border-border px-1 py-3 text-xs text-muted-foreground"
+          className="mt-3 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
           role="status"
         >
           <Check className="h-4 w-4 shrink-0 text-primary" />
@@ -332,7 +291,7 @@ export default function InvitationManagementPanel({ paid }: Props) {
         </div>
       )}
 
-      <section className="grid border-b border-border sm:grid-cols-3">
+      <section className="mt-4 grid gap-3 sm:grid-cols-3">
         <SummaryItem
           label={copy.pagesPublished}
           value={loading ? "—" : `${publishedCount} / 2`}
@@ -347,67 +306,49 @@ export default function InvitationManagementPanel({ paid }: Props) {
         />
       </section>
 
-      <section className="mt-9 min-w-0">
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-              01 / {copy.overview}
-            </p>
-            <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold text-foreground sm:text-2xl">
-              {locale === "en" ? "Invitation pages" : "Halaman undangan"}
-            </h3>
-          </div>
-          <span className="hidden font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:block">
-            {loading ? copy.loading : copy.ready}
-          </span>
-        </div>
-
-        <div className="grid min-w-0 border-y border-border lg:grid-cols-2">
-          <InvitationCard
-            invitation={invitations.WEDDING}
-            publicUrl={weddingUrl}
-            paid={paid}
-            loading={loading}
-            special={false}
-            copy={copy}
-            onCopy={() => copyLink(weddingUrl)}
-            onPublish={() => togglePublish("WEDDING")}
-            busy={busy === "publish-WEDDING"}
-          />
-          <InvitationCard
-            invitation={invitations.ADAT_AKAD}
-            publicUrl={specialUrl}
-            paid={paid}
-            loading={loading}
-            special
-            copy={copy}
-            onCopy={() => copyLink(specialUrl)}
-            onPublish={() => togglePublish("ADAT_AKAD")}
-            busy={busy === "publish-ADAT_AKAD"}
-          />
-        </div>
+      <section className="mt-4 grid min-w-0 gap-4 lg:grid-cols-2">
+        <InvitationCard
+          invitation={invitations.WEDDING}
+          publicUrl={weddingUrl}
+          paid={paid}
+          loading={loading}
+          special={false}
+          copy={copy}
+          onCopy={() => copyLink(weddingUrl)}
+          onPublish={() => togglePublish("WEDDING")}
+          busy={busy === "publish-WEDDING"}
+        />
+        <InvitationCard
+          invitation={invitations.ADAT_AKAD}
+          publicUrl={specialUrl}
+          paid={paid}
+          loading={loading}
+          special
+          copy={copy}
+          onCopy={() => copyLink(specialUrl)}
+          onPublish={() => togglePublish("ADAT_AKAD")}
+          busy={busy === "publish-ADAT_AKAD"}
+        />
       </section>
 
-      <section className="mt-10 grid min-w-0 gap-8 border-t border-border pt-8 lg:grid-cols-2">
-        <div className="min-w-0 lg:border-r lg:border-border lg:pr-8">
-          <div className="flex items-start gap-3">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-border text-primary">
+      <section className="mt-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
               <LockKeyhole className="h-4 w-4" />
             </div>
             <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                02 / {copy.privacyEyebrow}
-              </p>
-              <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold text-foreground">
-                {copy.privacyTitle}
+              <h3 className="font-[family-name:var(--font-cinzel)] text-base font-semibold">
+                {copy.password}
               </h3>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-                {copy.privacyDesc}
-              </p>
+              <div className="mt-0.5 flex items-center gap-1.5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                <ShieldCheck className="h-3.5 w-3.5 text-primary" />
+                {passwordProtected ? copy.protected : copy.publicAccess}
+              </div>
             </div>
           </div>
 
-          <div className="mt-6 grid min-w-0 gap-2 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-center">
+          <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(13rem,1fr)_auto_auto] sm:items-center">
             <Input
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -425,7 +366,9 @@ export default function InvitationManagementPanel({ paid }: Props) {
                 password.trim().length < 6
               }
               onClick={savePassword}
+              title={passwordProtected ? copy.change : copy.enable}
             >
+              <KeyRound className="h-4 w-4" />
               {passwordProtected ? copy.change : copy.enable}
             </Button>
             {passwordProtected && (
@@ -433,40 +376,12 @@ export default function InvitationManagementPanel({ paid }: Props) {
                 size="sm"
                 disabled={busy === "password-off"}
                 onClick={disablePassword}
+                title={copy.disable}
               >
+                <EyeOff className="h-4 w-4" />
                 {copy.disable}
               </Button>
             )}
-          </div>
-
-          <div className="mt-3 flex items-center gap-2 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
-            <ShieldCheck className="h-3.5 w-3.5 text-primary" />
-            {passwordProtected ? copy.protected : copy.publicAccess}
-          </div>
-        </div>
-
-        <div className="min-w-0 lg:pl-1">
-          <div className="flex items-start gap-3">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-[10px] border border-border text-primary">
-              <KeyRound className="h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                03 / {copy.studioEyebrow}
-              </p>
-              <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-xl font-semibold text-foreground">
-                {copy.studioTitle}
-              </h3>
-              <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-                {copy.studioDesc}
-              </p>
-              <Button asChild size="sm" className="mt-5">
-                <Link href="/dashboard/editor">
-                  <PenLine className="h-4 w-4" />
-                  {copy.openStudio}
-                </Link>
-              </Button>
-            </div>
           </div>
         </div>
       </section>
@@ -476,11 +391,11 @@ export default function InvitationManagementPanel({ paid }: Props) {
 
 function SummaryItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 sm:first:pl-0">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+    <div className="min-w-0 rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
+      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </p>
-      <p className="mt-1 truncate text-sm text-foreground">{value}</p>
+      <p className="mt-1 truncate text-sm font-medium text-foreground">{value}</p>
     </div>
   );
 }
@@ -507,43 +422,42 @@ function InvitationCard({
   busy: boolean;
 }) {
   const title =
-    special && invitation.title.trim() ? invitation.title : special ? copy.special : copy.main;
-  const description = special ? copy.specialDesc : copy.mainDesc;
+    special && invitation.title.trim()
+      ? invitation.title
+      : special
+        ? copy.special
+        : copy.main;
   const emptyText = special ? copy.noSpecial : copy.noMain;
   const editHref = `/dashboard/editor?type=${special ? "ADAT_AKAD" : "WEDDING"}`;
 
   return (
-    <article className="min-w-0 py-6 lg:min-h-[18rem] lg:px-7 lg:first:border-r lg:first:border-border lg:first:pl-0 lg:last:pr-0">
+    <article className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
       <div className="flex min-w-0 items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
             {special ? "EVENT / 02" : "WEDDING / 01"}
           </p>
-          <h4 className="mt-2 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+          <h3 className="mt-1.5 truncate font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
             {title}
-          </h4>
+          </h3>
         </div>
-        <span className="shrink-0 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-primary">
+        <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-primary">
           {invitation.isPublished ? copy.published : copy.draft}
         </span>
       </div>
 
-      <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
-        {description}
-      </p>
-
-      <div className="mt-6 border-y border-border py-4">
-        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+      <div className="mt-4 rounded-lg border border-border/70 bg-background/80 p-3">
+        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
           {copy.publicUrl}
         </p>
         {publicUrl ? (
-          <div className="mt-2 flex min-w-0 items-center gap-2">
+          <div className="mt-1.5 flex min-w-0 items-center gap-2">
             <a
               href={publicUrl}
               target="_blank"
               rel="noreferrer"
               className="min-w-0 flex-1 break-all text-xs leading-5 text-foreground underline decoration-border underline-offset-4 transition hover:text-primary"
-              title={copy.preview}
+              title={copy.open}
             >
               {publicUrl}
               <ExternalLink className="ml-1 inline h-3 w-3" />
@@ -559,15 +473,13 @@ function InvitationCard({
             </Button>
           </div>
         ) : (
-          <p className="mt-2 text-xs leading-5 text-muted-foreground">
-            {emptyText}
-          </p>
+          <p className="mt-1.5 text-xs text-muted-foreground">{emptyText}</p>
         )}
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center gap-2">
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <Button asChild size="sm">
-          <Link href={editHref}>
+          <Link href={editHref} title={copy.edit}>
             <PenLine className="h-4 w-4" />
             {copy.edit}
           </Link>
@@ -576,7 +488,13 @@ function InvitationCard({
           size="sm"
           disabled={!paid || loading || busy}
           onClick={onPublish}
+          title={invitation.isPublished ? copy.unpublish : copy.publish}
         >
+          {invitation.isPublished ? (
+            <EyeOff className="h-4 w-4" />
+          ) : (
+            <Globe2 className="h-4 w-4" />
+          )}
           {busy
             ? copy.saving
             : invitation.isPublished
@@ -584,12 +502,6 @@ function InvitationCard({
               : copy.publish}
         </Button>
       </div>
-
-      {!paid && (
-        <p className="mt-3 text-[11px] leading-5 text-muted-foreground">
-          {copy.packageRequired}
-        </p>
-      )}
     </article>
   );
 }

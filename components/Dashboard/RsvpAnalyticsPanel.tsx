@@ -5,8 +5,6 @@ import {
   ArrowDownUp,
   CheckCircle2,
   Download,
-  Gift,
-  Heart,
   QrCode,
   Search,
   Users,
@@ -36,10 +34,10 @@ const statusLabel: Record<string, string> = {
 };
 
 const sortLabel: Record<SortKey, string> = {
-  name: "Nama tamu",
-  status: "Status RSVP",
-  pax: "Jumlah pax",
-  checkedIn: "Status check-in",
+  name: "Nama",
+  status: "RSVP",
+  pax: "Pax",
+  checkedIn: "Check-in",
 };
 
 export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
@@ -98,27 +96,17 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
   }, [ascending, guests, query, sortKey]);
 
   function exportCsv() {
-    const header = [
-      "#",
-      "Nama Tamu",
-      "Status RSVP",
-      "QR",
-      "Check In",
-      "Acara",
-      "Hadiah",
-      "Pax",
-    ];
+    const header = ["#", "Nama Tamu", "Telepon", "Status RSVP", "Pax", "Check In", "Meja"];
     const lines = [
       header,
       ...filtered.map((guest, index) => [
         index + 1,
         guest.name,
+        guest.phone || "",
         statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus,
-        "Not tracked",
-        guest.checkedIn ? "Checked In" : "Belum Check In",
-        "Undangan",
-        "Belum tersedia",
         guest.plusOnes + 1,
+        guest.checkedIn ? "Checked In" : "Belum Check In",
+        guest.table?.name || "Belum ditempatkan",
       ]),
     ];
     const csv = lines
@@ -179,70 +167,17 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
   }
 
   const metrics = [
-    {
-      label: "Total Undangan RSVP",
-      value: stats.total,
-      icon: Users,
-      note: "Form RSVP masuk",
-    },
-    {
-      label: "Konfirmasi Hadir",
-      value: stats.attending,
-      icon: CheckCircle2,
-      note: "Status hadir",
-    },
-    {
-      label: "Total Keseluruhan Tamu",
-      value: stats.pax,
-      icon: Users,
-      note: "Pax termasuk pendamping",
-    },
-    {
-      label: "Tamu Sudah Check In",
-      value: stats.checkedIn,
-      icon: QrCode,
-      note: "Scan QR berhasil",
-    },
-    {
-      label: "Tamu Memberi Angpao",
-      value: "—",
-      icon: Heart,
-      note: "Tracking hadiah belum tersedia",
-    },
-    {
-      label: "Tamu Memberi Kado",
-      value: "—",
-      icon: Gift,
-      note: "Tracking hadiah belum tersedia",
-    },
+    { label: "RSVP", value: stats.total, icon: Users },
+    { label: "Hadir", value: stats.attending, icon: CheckCircle2 },
+    { label: "Total pax", value: stats.pax, icon: Users },
+    { label: "Check-in", value: stats.checkedIn, icon: QrCode },
   ];
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-8 text-foreground sm:pt-12">
-      <section className="border-y border-border py-9 sm:py-12">
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,.9fr)] lg:items-end">
-          <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-foreground/60">
-              RSVP / Analytics
-            </p>
-            <h2 className="mt-3 max-w-3xl font-[family-name:var(--font-cinzel)] text-3xl font-semibold leading-tight tracking-tight text-primary sm:text-4xl">
-              Rekap kehadiran tamu
-            </h2>
-          </div>
-          <div className="min-w-0 lg:border-l lg:border-border lg:pl-8">
-            <p className="max-w-xl font-[family-name:var(--font-fauna)] text-sm leading-7 text-foreground/70">
-              Ringkasan RSVP, check-in, dan daftar tamu yang tersinkron dari formulir undangan publik.
-            </p>
-            <p className="mt-4 font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.14em] text-foreground/50">
-              {guests.length} data tamu tersimpan
-            </p>
-          </div>
-        </div>
-      </section>
-
+    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8">
       {notice && (
         <div
-          className="flex min-w-0 items-center gap-2 border-b border-border px-1 py-3 font-[family-name:var(--font-dm-mono)] text-[10px] text-foreground/70"
+          className="mb-4 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
           role="status"
         >
           <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
@@ -250,100 +185,71 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
         </div>
       )}
 
-      <section className="mt-12 min-w-0">
-        <div className="mb-5 flex items-end justify-between gap-4 border-b border-border pb-4">
-          <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-foreground/60">
-              01 / Ringkasan
+      <section className="grid min-w-0 border-y border-border sm:grid-cols-2 xl:grid-cols-4">
+        {metrics.map(({ label, value, icon: Icon }) => (
+          <article
+            key={label}
+            className="min-w-0 border-b border-border px-0 py-4 last:border-b-0 sm:border-r sm:px-5 sm:last:border-r-0 xl:border-b-0 xl:first:pl-0"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                {label}
+              </p>
+              <Icon className="h-4 w-4 shrink-0 text-primary" />
+            </div>
+            <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-2xl font-medium text-foreground">
+              {value}
             </p>
-            <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold text-primary">
-              Kehadiran dalam angka
-            </h3>
-          </div>
-        </div>
-
-        <div className="grid min-w-0 border-b border-border sm:grid-cols-2 xl:grid-cols-3">
-          {metrics.map(({ label, value, icon: Icon, note }, index) => (
-            <article
-              key={label}
-              className={`min-w-0 border-t border-border py-6 sm:px-5 xl:px-6 ${
-                index % 2 === 0 ? "sm:border-r" : ""
-              } ${index % 3 !== 2 ? "xl:border-r" : "xl:border-r-0"}`}
-            >
-              <div className="flex items-start justify-between gap-4">
-                <p className="max-w-[15rem] font-[family-name:var(--font-fauna)] text-xs leading-5 text-foreground/65">
-                  {label}
-                </p>
-                <Icon className="h-4 w-4 shrink-0 text-primary" />
-              </div>
-              <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-3xl font-medium tracking-tight text-foreground">
-                {value}
-              </p>
-              <p className="mt-2 font-[family-name:var(--font-fauna)] text-[11px] leading-5 text-foreground/50">
-                {note}
-              </p>
-            </article>
-          ))}
-        </div>
+          </article>
+        ))}
       </section>
 
-      <section className="mt-14 min-w-0 border-t border-border pt-8">
-        <div className="flex flex-col gap-6 border-b border-border pb-6 lg:flex-row lg:items-end lg:justify-between">
+      <section className="mt-8 min-w-0 border-t border-border">
+        <div className="flex flex-col gap-4 border-b border-border py-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.18em] text-foreground/60">
-              02 / Guest directory
-            </p>
-            <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold text-primary">
-              Daftar tamu RSVP
-            </h3>
-            <p className="mt-2 font-[family-name:var(--font-fauna)] text-xs text-foreground/55">
-              Menampilkan {filtered.length} dari {guests.length} data.
-            </p>
+            <div className="flex items-baseline gap-3">
+              <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Daftar tamu</h2>
+              <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+                {filtered.length}/{guests.length}
+              </span>
+            </div>
           </div>
 
-          <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(14rem,1fr)_minmax(12rem,auto)_auto_auto] sm:items-end">
-            <label className="min-w-0">
-              <span className="mb-2 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/50">
-                Cari tamu
-              </span>
-              <div className="relative min-w-0">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45" />
-                <Input
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Nama atau nomor telepon"
-                  className="min-w-0 pl-9"
-                />
-              </div>
-            </label>
+          <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
+            <div className="relative min-w-0">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45" />
+              <Input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Cari nama / telepon"
+                className="min-w-0 pl-9"
+              />
+            </div>
 
-            <label className="min-w-0">
-              <span className="mb-2 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/50">
-                Urutkan
-              </span>
-              <select
-                value={sortKey}
-                onChange={(event) => setSortKey(event.target.value as SortKey)}
-                className="h-10 w-full min-w-0 rounded-[10px] border border-border bg-background px-3 font-[family-name:var(--font-fauna)] text-xs text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
-              >
-                {(Object.keys(sortLabel) as SortKey[]).map((key) => (
-                  <option key={key} value={key}>
-                    {sortLabel[key]}
-                  </option>
-                ))}
-              </select>
-            </label>
+            <select
+              value={sortKey}
+              onChange={(event) => setSortKey(event.target.value as SortKey)}
+              className="h-10 w-full min-w-0 rounded-[10px] border border-border bg-background px-3 text-xs text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+              aria-label="Urutkan tamu"
+            >
+              {(Object.keys(sortLabel) as SortKey[]).map((key) => (
+                <option key={key} value={key}>
+                  {sortLabel[key]}
+                </option>
+              ))}
+            </select>
 
             <Button
-              size="icon"
+              size="sm"
               onClick={() => setAscending((value) => !value)}
-              title={ascending ? "Urutan naik" : "Urutan turun"}
+              title={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
               aria-label={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
             >
               <ArrowDownUp className="h-4 w-4" />
+              {ascending ? "Urutan naik" : "Urutan turun"}
             </Button>
 
-            <Button onClick={exportCsv}>
+            <Button onClick={exportCsv} size="sm" title="Export daftar RSVP sebagai CSV">
               <Download className="h-4 w-4" />
               Export CSV
             </Button>
@@ -351,70 +257,72 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
         </div>
 
         <div className="min-w-0 overflow-x-auto">
-          <table className="w-full min-w-[920px] text-left">
+          <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
-                <th className="px-3 py-4 font-medium">#</th>
-                <th className="px-3 py-4 font-medium">Nama Tamu</th>
-                <th className="px-3 py-4 font-medium">Status RSVP</th>
-                <th className="px-3 py-4 font-medium">QR</th>
-                <th className="px-3 py-4 font-medium">Check In</th>
-                <th className="px-3 py-4 font-medium">Acara</th>
-                <th className="px-3 py-4 font-medium">Hadiah</th>
-                <th className="px-3 py-4 text-right font-medium">Aksi</th>
+                <th className="px-3 py-3 font-medium">#</th>
+                <th className="px-3 py-3 font-medium">Nama</th>
+                <th className="px-3 py-3 font-medium">RSVP</th>
+                <th className="px-3 py-3 font-medium">Pax</th>
+                <th className="px-3 py-3 font-medium">Check-in</th>
+                <th className="px-3 py-3 font-medium">Meja</th>
+                <th className="px-3 py-3 text-right font-medium">Aksi</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((guest, index) => (
                 <tr
                   key={guest.id}
-                  className="border-b border-border/80 font-[family-name:var(--font-fauna)] text-xs transition-colors hover:bg-foreground/[0.025]"
+                  className="border-b border-border/80 text-xs transition-colors hover:bg-foreground/[0.025]"
                 >
-                  <td className="px-3 py-4 font-[family-name:var(--font-dm-mono)] text-foreground/45">
+                  <td className="px-3 py-3 font-[family-name:var(--font-dm-mono)] text-foreground/45">
                     {String(index + 1).padStart(2, "0")}
                   </td>
-                  <td className="px-3 py-4">
+                  <td className="px-3 py-3">
                     <p className="font-semibold text-foreground">{guest.name}</p>
-                    <p className="mt-1 text-[10px] text-foreground/50">
+                    <p className="mt-0.5 text-[10px] text-foreground/50">
                       {guest.phone || "Tanpa nomor"}
                     </p>
                   </td>
-                  <td className="px-3 py-4">
-                    <span className="inline-flex border-b border-primary/40 pb-0.5 font-[family-name:var(--font-dm-mono)] text-[10px] text-foreground/70">
+                  <td className="px-3 py-3">
+                    <span className="font-[family-name:var(--font-dm-mono)] text-[10px] text-foreground/70">
                       {statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus}
                     </span>
                   </td>
-                  <td className="px-3 py-4 text-foreground/55">Not tracked</td>
-                  <td className="px-3 py-4">
+                  <td className="px-3 py-3 font-[family-name:var(--font-dm-mono)] text-foreground/70">
+                    {guest.plusOnes + 1}
+                  </td>
+                  <td className="px-3 py-3">
                     {guest.checkedIn ? (
-                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">
-                        Checked In
-                      </span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">Sudah</span>
                     ) : (
-                      <span className="text-foreground/60">Belum Check In</span>
+                      <span className="text-foreground/55">Belum</span>
                     )}
                   </td>
-                  <td className="px-3 py-4 text-foreground/70">Undangan</td>
-                  <td className="px-3 py-4 text-foreground/50">Belum tersedia</td>
-                  <td className="px-3 py-4">
+                  <td className="px-3 py-3 text-foreground/65">
+                    {guest.table?.name || "—"}
+                  </td>
+                  <td className="px-3 py-3">
                     <div className="flex justify-end gap-2">
                       <Button
-                        size="icon-sm"
-                        title="Kode QR"
+                        size="xs"
+                        title={`Buat QR untuk ${guest.name}`}
                         aria-label={`Buat QR untuk ${guest.name}`}
                         disabled={busyId === guest.id}
                         onClick={() => showQr(guest)}
                       >
                         <QrCode className="h-3.5 w-3.5" />
+                        Buat QR
                       </Button>
                       <Button
-                        size="icon-sm"
-                        title="Check In Manual"
-                        aria-label={`Check-in manual ${guest.name}`}
+                        size="xs"
+                        title={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
+                        aria-label={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
                         disabled={busyId === guest.id || Boolean(guest.checkedIn)}
                         onClick={() => manualCheckIn(guest)}
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
+                        {guest.checkedIn ? "Sudah check-in" : "Check-in"}
                       </Button>
                     </div>
                   </td>
@@ -423,11 +331,8 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
 
               {!filtered.length && (
                 <tr>
-                  <td
-                    colSpan={8}
-                    className="px-4 py-16 text-center font-[family-name:var(--font-fauna)] text-sm text-foreground/50"
-                  >
-                    Belum ada data RSVP yang cocok.
+                  <td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground/50">
+                    Tidak ada data.
                   </td>
                 </tr>
               )}
@@ -436,8 +341,8 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
         </div>
 
         {slug && (
-          <p className="border-b border-border px-1 py-4 font-[family-name:var(--font-dm-mono)] text-[9px] text-foreground/45">
-            Sumber: /invite/{slug}
+          <p className="border-b border-border px-1 py-3 font-[family-name:var(--font-dm-mono)] text-[9px] text-foreground/45">
+            /invite/{slug}
           </p>
         )}
       </section>
@@ -448,7 +353,7 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
           onClick={() => setQr(null)}
         >
           <div
-            className="relative w-full max-w-sm border border-border bg-background p-6 text-center text-foreground shadow-2xl"
+            className="relative w-full max-w-sm rounded-xl border border-border bg-background p-6 text-center text-foreground shadow-2xl"
             onClick={(event) => event.stopPropagation()}
           >
             <Button
@@ -456,16 +361,14 @@ export default function RsvpAnalyticsPanel({ guests, slug }: Props) {
               onClick={() => setQr(null)}
               className="absolute right-3 top-3"
               aria-label="Tutup QR ticket"
+              title="Tutup QR ticket"
             >
               <X className="h-4 w-4" />
             </Button>
             <p className="pr-10 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-primary">
               {qr.name}
             </p>
-            <p className="mt-1 font-[family-name:var(--font-fauna)] text-xs text-foreground/55">
-              Guest QR Ticket
-            </p>
-            <div className="mx-auto mt-6 w-fit border border-border bg-white p-3">
+            <div className="mx-auto mt-5 w-fit border border-border bg-white p-3">
               <img
                 className="h-56 w-56"
                 alt="QR guest ticket"
