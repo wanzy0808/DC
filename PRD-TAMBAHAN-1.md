@@ -76,3 +76,32 @@ Lanjut standardisasi komponen dashboard satu per satu dengan prinsip yang sama:
 - table/status chip konsisten;
 - dialog/modal dan mobile layout konsisten;
 - tidak mengubah behavior bisnis/API saat melakukan visual cleanup.
+
+## 2026-09-16 — Invitation Studio Type Tabs: Remove Stretching — Stage 2A
+
+### Tujuan
+Menghilangkan tampilan tab pilihan jenis undangan yang melebar/stretch memenuhi seluruh bar, agar tab terlihat sebagai kontrol pilihan yang ukurannya mengikuti konten dan tetap rapi pada layar sempit.
+
+### Perubahan
+- Container tab pada Invitation Studio sekarang menggunakan lebar mengikuti konten (`fit-content`) dengan batas `max-width: 100%` dan horizontal overflow yang aman.
+- Tombol tab dipaksa mempertahankan ukuran berdasarkan label, bukan `flex: 1`, sehingga tidak lagi membagi seluruh lebar bar secara paksa.
+- Perubahan diterapkan sebagai styling terisolasi pada shell `dc-invitation-editor`; tidak mengubah primitive button global atau behavior tab.
+- Tidak mengubah API, database, authorization, data flow, atau logic pemilihan `WEDDING` / `ADAT_AKAD`.
+
+### Affected files
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+
+### Commit
+- `76cc69fd22eb4c5f433547d4b5f10cf07e18bafa`
+
+### Validation
+Perubahan sudah ditulis ke `main`. Belum ada hasil build/CI aktual yang dapat diverifikasi untuk commit ini, sehingga validation **belum diverifikasi dengan build/CI**.
+
+### Tahap berikutnya
+Teruskan standardisasi dashboard bertahap pada:
+- action/button sizing agar tidak stretch tanpa kebutuhan;
+- sidebar/tool controls;
+- surface/card dan form controls;
+- table/status chip;
+- dialog/modal;
+- responsive overflow pada seluruh dashboard.
