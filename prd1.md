@@ -220,6 +220,43 @@ Observed validation:
 
 ---
 
+## 2026-09-17 — Interactive Schedule Controls & Full-Width Dashboard Shell
+
+### Requirement / Intent
+Dashboard desktop harus memanfaatkan lebar aplikasi secara penuh, header berada selebar viewport dengan sidebar dimulai di bawah anchor logo DC Organizer, tabel tidak terlihat dipaksa stretch, dan field jadwal harus tetap nyaman dipilih secara interaktif tanpa kehilangan format canonical.
+
+### Implementation
+- dashboard customer memakai full-width application shell alih-alih centered `92vw / 1400px` workspace;
+- header menjadi global full-width top bar;
+- sidebar desktop dimulai di bawah header/logo dan memakai sisa tinggi viewport;
+- main workspace memakai sisa lebar desktop dengan responsive gutter;
+- tabel dashboard memakai content-driven width + horizontal overflow pada viewport kecil agar kolom tidak terdistorsi;
+- `Tanggal acara` tetap menampilkan `dd/mm/yyyy` tetapi icon kalender kembali tersedia dan membuka picker interaktif;
+- `Waktu mulai` dan `Waktu selesai` sekarang memakai komponen 24-hour interaktif dengan icon jam;
+- user dapat mengetik `HH:mm` manual atau memilih jam `00–23` dan menit `00–59` dari picker;
+- tidak ada opsi AM/PM pada picker aplikasi;
+- validasi frontend menolak waktu di luar `00:00–23:59`;
+- tidak ada perubahan schema/database.
+
+### Affected Files
+- `app/dashboard/layout.tsx`
+- `components/Dashboard/EventPanel.tsx`
+- `prd.md`
+- `prd1.md`
+
+### Commits
+- `bbd6effabb8fda94d0eff25449428e04e1e13d3a` — full-width dashboard shell styling;
+- `aa32a6aedcb1683732518352c4d0675f9f1b945c` — restore calendar picker while retaining `dd/mm/yyyy`;
+- `325a9fc0ac2fb7024eef4b0dd82dc1c2d8731dac` — document interactive date + full-width dashboard requirements;
+- `5d6f1f4051961bdf476801a0910ead3e4ece3118` — add interactive 24-hour time pickers.
+
+### Validation
+- Build Validation #839 for dashboard/calendar requirement state: **PASS**.
+- Build Validation #840 for 24-hour time-picker source state: pending at time this changelog entry was written; do not claim PASS until observed.
+- Database migration: N/A.
+
+---
+
 ## Future Entry Format
 
 Tambahkan perubahan baru di bagian paling bawah dengan format:
