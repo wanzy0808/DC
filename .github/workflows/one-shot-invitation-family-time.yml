@@ -1,0 +1,269 @@
+name: One-shot Invitation Family & Time Update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/one-shot-invitation-family-time.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Apply source and canonical requirement changes
+        shell: bash
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import re
+
+          def replace_once(path: str, old: str, new: str):
+              p = Path(path)
+              text = p.read_text()
+              if old not in text:
+                  raise SystemExit(f"Expected block not found in {path}: {old[:120]!r}")
+              p.write_text(text.replace(old, new, 1))
+
+          # Canonical wedding family-line formatter.
+          Path("lib/events/parents.ts").write_text('''export type WeddingChildKind = "anak" | "putra" | "putri";\n\nconst childOrderWords: Record<number, string> = {\n  1: "pertama",\n  2: "kedua",\n  3: "ketiga",\n  4: "keempat",\n  5: "kelima",\n  6: "keenam",\n  7: "ketujuh",\n  8: "kedelapan",\n  9: "kesembilan",\n  10: "kesepuluh",\n};\n\nfunction childOrderLabel(childOrder?: number | null) {\n  if (!childOrder || childOrder <= 0) return "";\n  return childOrderWords[childOrder] || `ke-${childOrder}`;\n}\n\nexport function weddingParentLine(\n  fatherName?: string | null,\n  motherName?: string | null,\n  childOrder?: number | null,\n  childKind: WeddingChildKind = "anak",\n) {\n  const parents = [\n    fatherName?.trim() ? `Bapak ${fatherName.trim()}` : "",\n    motherName?.trim() ? `Ibu ${motherName.trim()}` : "",\n  ].filter(Boolean);\n\n  if (!parents.length) return "";\n\n  const subject =\n    childKind === "putra" ? "Putra" : childKind === "putri" ? "Putri" : "Anak";\n  const order = childOrderLabel(childOrder);\n  return `${subject}${order ? ` ${order}` : ""} dari ${parents.join(" & ")}`;\n}\n''')
+
+          # Rangkaian Acara: family-line preview + explicit END sentinel control.
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              'import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";\n',
+              'import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";\nimport { weddingParentLine, type WeddingChildKind } from "@/lib/events/parents";\n',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              'const timeHours = Array.from({ length: 24 }, (_, index) =>\n',
+              'const END_TIME_SENTINEL = "END";\n\nconst timeHours = Array.from({ length: 24 }, (_, index) =>\n',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '    if (form.receptionTime && !isValidTime24(form.receptionTime)) {\n      return setNotice("Waktu selesai harus menggunakan format HH:mm.");\n    }\n',
+              '    if (\n      form.receptionTime &&\n      form.receptionTime !== END_TIME_SENTINEL &&\n      !isValidTime24(form.receptionTime)\n    ) {\n      return setNotice("Waktu selesai harus menggunakan format HH:mm atau opsi - end.");\n    }\n',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''                      <WeddingFamilyFields\n                        title="Pengantin pria"\n                        father={form.groomFatherName}\n                        mother={form.groomMotherName}\n                        order={form.groomChildOrder}\n''',
+              '''                      <WeddingFamilyFields\n                        title="Pengantin pria"\n                        kind="putra"\n                        father={form.groomFatherName}\n                        mother={form.groomMotherName}\n                        order={form.groomChildOrder}\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''                      <WeddingFamilyFields\n                        title="Pengantin wanita"\n                        father={form.brideFatherName}\n                        mother={form.brideMotherName}\n                        order={form.brideChildOrder}\n''',
+              '''                      <WeddingFamilyFields\n                        title="Pengantin wanita"\n                        kind="putri"\n                        father={form.brideFatherName}\n                        mother={form.brideMotherName}\n                        order={form.brideChildOrder}\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''                  <TimeField label={`Mulai (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />\n                  <TimeField label={`Selesai (${timezone.label})`} value={form.receptionTime} onChange={(value) => field("receptionTime", value)} />\n''',
+              '''                  <TimeField label={`Mulai (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />\n                  <div>\n                    <TimeField\n                      label={`Selesai (${timezone.label})`}\n                      value={form.receptionTime === END_TIME_SENTINEL ? "" : form.receptionTime}\n                      onChange={(value) => field("receptionTime", value)}\n                      disabled={form.receptionTime === END_TIME_SENTINEL}\n                    />\n                    <label className="mt-2 flex min-h-8 cursor-pointer items-center gap-2 text-[11px] text-muted-foreground">\n                      <input\n                        type="checkbox"\n                        checked={form.receptionTime === END_TIME_SENTINEL}\n                        onChange={(event) =>\n                          field(\n                            "receptionTime",\n                            event.target.checked ? END_TIME_SENTINEL : "",\n                          )\n                        }\n                        className="h-4 w-4 accent-[var(--primary)]"\n                      />\n                      <span>Tampilkan “- end” di undangan</span>\n                    </label>\n                  </div>\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''                    <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>\n''',
+              '''                    <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''function WeddingFamilyFields({\n  title,\n  father,\n  mother,\n  order,\n  onFather,\n  onMother,\n  onOrder,\n}: {\n  title: string;\n  father: string;\n  mother: string;\n  order: string;\n  onFather: (value: string) => void;\n  onMother: (value: string) => void;\n  onOrder: (value: string) => void;\n}) {\n  return (\n    <div className="space-y-3">\n      <p className="text-xs font-semibold">{title}</p>\n      <ChildOrderField value={order} onChange={onOrder} />\n      <Field label="Nama bapak" value={father} onChange={onFather} />\n      <Field label="Nama ibu" value={mother} onChange={onMother} />\n    </div>\n  );\n}\n''',
+              '''function WeddingFamilyFields({\n  title,\n  kind,\n  father,\n  mother,\n  order,\n  onFather,\n  onMother,\n  onOrder,\n}: {\n  title: string;\n  kind: WeddingChildKind;\n  father: string;\n  mother: string;\n  order: string;\n  onFather: (value: string) => void;\n  onMother: (value: string) => void;\n  onOrder: (value: string) => void;\n}) {\n  const parsedOrder = order.trim() ? Number(order) : null;\n  const familyLine = weddingParentLine(\n    father,\n    mother,\n    Number.isInteger(parsedOrder) ? parsedOrder : null,\n    kind,\n  );\n\n  return (\n    <div className="space-y-3">\n      <p className="text-xs font-semibold">{title}</p>\n      <ChildOrderField value={order} onChange={onOrder} />\n      <Field label="Nama bapak" value={father} onChange={onFather} />\n      <Field label="Nama ibu" value={mother} onChange={onMother} />\n      {familyLine && (\n        <p className="rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] leading-5 text-muted-foreground">\n          {familyLine}\n        </p>\n      )}\n    </div>\n  );\n}\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              'function TimeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {\n',
+              '''function TimeField({\n  label,\n  value,\n  onChange,\n  disabled = false,\n}: {\n  label: string;\n  value: string;\n  onChange: (value: string) => void;\n  disabled?: boolean;\n}) {\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''        <Input\n          inputMode="numeric"\n''',
+              '''        <Input\n          disabled={disabled}\n          inputMode="numeric"\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '''        <Button type="button" size="icon" onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">\n''',
+              '''        <Button type="button" size="icon" disabled={disabled} onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">\n''',
+          )
+          replace_once(
+              "components/Dashboard/EventPanel.tsx",
+              '      {open && (\n',
+              '      {open && !disabled && (\n',
+          )
+
+          # API accepts a persisted END sentinel in the existing compatibility time field.
+          replace_once(
+              "app/api/invitations/route.ts",
+              'type InvitationType = "WEDDING" | "ADAT_AKAD";\n',
+              'type InvitationType = "WEDDING" | "ADAT_AKAD";\n\nconst END_TIME_SENTINEL = "END";\n',
+          )
+          replace_once(
+              "app/api/invitations/route.ts",
+              '''function isValidTime24(value: string | null) {\n  return !value || /^(?:[01]\\d|2[0-3]):[0-5]\\d$/.test(value);\n}\n''',
+              '''function isValidTime24(value: string | null) {\n  return (\n    !value ||\n    value === END_TIME_SENTINEL ||\n    /^(?:[01]\\d|2[0-3]):[0-5]\\d$/.test(value)\n  );\n}\n''',
+          )
+
+          # Studio V3 uses the child-order wording and previews the - end state.
+          replace_once(
+              "components/InvitationStudio/InvitationDesignerV3.tsx",
+              '''  groomFatherName?: string | null;\n  groomMotherName?: string | null;\n  brideFatherName?: string | null;\n  brideMotherName?: string | null;\n''',
+              '''  groomFatherName?: string | null;\n  groomMotherName?: string | null;\n  groomChildOrder?: number | null;\n  brideFatherName?: string | null;\n  brideMotherName?: string | null;\n  brideChildOrder?: number | null;\n''',
+          )
+          replace_once(
+              "components/InvitationStudio/InvitationDesignerV3.tsx",
+              '''  const groomParents = identity.category === "WEDDING" ? weddingParentLine(invitation?.groomFatherName, invitation?.groomMotherName) : "";\n  const brideParents = identity.category === "WEDDING" ? weddingParentLine(invitation?.brideFatherName, invitation?.brideMotherName) : "";\n''',
+              '''  const groomParents =\n    identity.category === "WEDDING"\n      ? weddingParentLine(\n          invitation?.groomFatherName,\n          invitation?.groomMotherName,\n          invitation?.groomChildOrder,\n          "putra",\n        )\n      : "";\n  const brideParents =\n    identity.category === "WEDDING"\n      ? weddingParentLine(\n          invitation?.brideFatherName,\n          invitation?.brideMotherName,\n          invitation?.brideChildOrder,\n          "putri",\n        )\n      : "";\n''',
+          )
+          replace_once(
+              "components/InvitationStudio/InvitationDesignerV3.tsx",
+              '''          {invitation?.receptionTime && <InfoCard title="Selesai" value={`${invitation.receptionTime} ${timezone.label}`} palette={palette} dark={layout === "maroon" || layout === "midnight"} />}\n''',
+              '''          {invitation?.receptionTime && (\n            <InfoCard\n              title="Selesai"\n              value={\n                invitation.receptionTime === "END"\n                  ? "- end"\n                  : `${invitation.receptionTime} ${timezone.label}`\n              }\n              palette={palette}\n              dark={layout === "maroon" || layout === "midnight"}\n            />\n          )}\n''',
+          )
+
+          # Generic public renderer: shared family formatter + END display.
+          replace_once(
+              "components/PublicInvitation/PublicInvitation.tsx",
+              'import { parseInvitationSections } from "@/lib/templates/sections";\n',
+              'import { parseInvitationSections } from "@/lib/templates/sections";\nimport { weddingParentLine } from "@/lib/events/parents";\n\nexport { weddingParentLine };\n',
+          )
+          replace_once(
+              "components/PublicInvitation/PublicInvitation.tsx",
+              '''  groomFatherName?: string | null;\n  groomMotherName?: string | null;\n  brideFatherName?: string | null;\n  brideMotherName?: string | null;\n''',
+              '''  groomFatherName?: string | null;\n  groomMotherName?: string | null;\n  groomChildOrder?: number | null;\n  brideFatherName?: string | null;\n  brideMotherName?: string | null;\n  brideChildOrder?: number | null;\n''',
+          )
+          public_path = Path("components/PublicInvitation/PublicInvitation.tsx")
+          public_text = public_path.read_text()
+          public_text, count = re.subn(
+              r'\nexport function weddingParentLine\([\s\S]*?\n}\n\nexport default function PublicInvitation',
+              '\nexport default function PublicInvitation',
+              public_text,
+              count=1,
+          )
+          if count != 1:
+              raise SystemExit("Could not remove legacy PublicInvitation weddingParentLine")
+          public_path.write_text(public_text)
+          replace_once(
+              "components/PublicInvitation/PublicInvitation.tsx",
+              '''      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)\n      : "";\n  const brideParents =\n    eventCategory === "WEDDING"\n      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)\n      : "";\n''',
+              '''      ? weddingParentLine(\n          invitation.groomFatherName,\n          invitation.groomMotherName,\n          invitation.groomChildOrder,\n          "putra",\n        )\n      : "";\n  const brideParents =\n    eventCategory === "WEDDING"\n      ? weddingParentLine(\n          invitation.brideFatherName,\n          invitation.brideMotherName,\n          invitation.brideChildOrder,\n          "putri",\n        )\n      : "";\n''',
+          )
+          replace_once(
+              "components/PublicInvitation/PublicInvitation.tsx",
+              '''  const timeLabel = startTime\n    ? `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`\n    : "";\n''',
+              '''  const timeLabel = startTime\n    ? endTime === "END"\n      ? `${formatTime(startTime)} - end ${timezone.label}`\n      : `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`\n    : "";\n''',
+          )
+
+          # Classic/public reference template keeps the same semantics.
+          replace_once(
+              "components/PublicInvitation/FigmaClassicTemplate.tsx",
+              '''function formatTime(value: string | null, timezoneLabel: string) {\n  return value ? `${value} ${timezoneLabel}` : "Waktu akan diumumkan";\n}\n''',
+              '''function formatTime(value: string | null, timezoneLabel: string) {\n  if (value === "END") return "- end";\n  return value ? `${value} ${timezoneLabel}` : "Waktu akan diumumkan";\n}\n''',
+          )
+          replace_once(
+              "components/PublicInvitation/FigmaClassicTemplate.tsx",
+              '''      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)\n      : "";\n  const brideParents =\n    eventCategory === "WEDDING"\n      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)\n      : "";\n''',
+              '''      ? weddingParentLine(\n          invitation.groomFatherName,\n          invitation.groomMotherName,\n          invitation.groomChildOrder,\n          "putra",\n        )\n      : "";\n  const brideParents =\n    eventCategory === "WEDDING"\n      ? weddingParentLine(\n          invitation.brideFatherName,\n          invitation.brideMotherName,\n          invitation.brideChildOrder,\n          "putri",\n        )\n      : "";\n''',
+          )
+
+          # Canonical PRD requirement updates.
+          replace_once(
+              "prd.md",
+              '- optional wedding identity `groomFatherName` / `groomMotherName` / `brideFatherName` / `brideMotherName`;\n',
+              '- optional wedding identity `groomFatherName` / `groomMotherName` / `groomChildOrder` / `brideFatherName` / `brideMotherName` / `brideChildOrder`;\n',
+          )
+          replace_once(
+              "prd.md",
+              '''- jika salah satu atau kedua nama orang tua tersedia, Studio preview dan public invitation otomatis menampilkan parent line di bawah nama pengantin;\n- format canonical ketika kedua orang tua tersedia: **`Anak dari Bapak <nama bapak> & Ibu <nama ibu>`**;\n- jika hanya satu parent yang diisi, renderer hanya menampilkan parent yang tersedia dan tidak membuat placeholder kosong;\n''',
+              '''- jika salah satu atau kedua nama orang tua tersedia, Studio preview dan public invitation otomatis menampilkan parent line di bawah nama pengantin;\n- user dapat mengisi `Anak keberapa` secara opsional untuk masing-masing pengantin;\n- format canonical pengantin pria ketika urutan anak tersedia: **`Putra pertama dari Bapak <nama bapak> & Ibu <nama ibu>`** (urutan mengikuti input: kedua, ketiga, dan seterusnya);\n- format canonical pengantin wanita menggunakan **`Putri`** dengan aturan urutan yang sama;\n- jika urutan anak kosong, renderer tetap menampilkan `Putra dari ...` / `Putri dari ...`;\n- jika hanya satu parent yang diisi, renderer hanya menampilkan parent yang tersedia dan tidak membuat placeholder kosong;\n''',
+          )
+          replace_once(
+              "prd.md",
+              '- untuk WEDDING: nama bapak/ibu masing-masing pengantin;\n- end time;\n',
+              '- untuk WEDDING: nama bapak/ibu dan urutan anak masing-masing pengantin;\n- end time;\n',
+          )
+          replace_once(
+              "prd.md",
+              '''- memvalidasi waktu 24 jam sebelum event disimpan;\n- mempertahankan value `HH:mm` saat dibaca ulang dari database/API.\n\nZona waktu yang didukung:\n''',
+              '''- memvalidasi waktu 24 jam sebelum event disimpan;\n- mempertahankan value `HH:mm` saat dibaca ulang dari database/API;\n- `Waktu selesai` tetap opsional; jika user memilih **`Tampilkan “- end” di undangan`**, UI menonaktifkan input waktu selesai dan menyimpan sentinel internal `END` pada compatibility field `receptionTime`;\n- renderer Studio dan public wajib menampilkan `- end` untuk sentinel tersebut, sedangkan `receptionTime` kosong tetap berarti tidak ada label waktu selesai.\n\nZona waktu yang didukung:\n''',
+          )
+
+          # README stays aligned with the active flow.
+          replace_once(
+              "README.md",
+              '- Wedding events may optionally store father/mother names for each partner. When present, invitation renderers automatically show a parent line such as `Anak dari Bapak Ahmad & Ibu Siti`; missing parent data is omitted instead of showing a placeholder.\n',
+              '- Wedding events may optionally store father/mother names plus each partner’s child order. Renderers use `Putra` / `Putri` wording such as `Putra pertama dari Bapak Ahmad & Ibu Siti`; missing parent data is omitted instead of showing a placeholder.\n- End time remains optional. Rangkaian Acara can explicitly choose `Tampilkan “- end” di undangan`; this persists through the existing `receptionTime` compatibility field as the internal `END` sentinel and renders as `- end` in Studio/public invitation output.\n',
+          )
+          PY
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
+
+      - name: Build patched source
+        run: pnpm build
+
+      - name: Commit source changes
+        id: source_commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            lib/events/parents.ts \
+            components/Dashboard/EventPanel.tsx \
+            app/api/invitations/route.ts \
+            components/InvitationStudio/InvitationDesignerV3.tsx \
+            components/PublicInvitation/PublicInvitation.tsx \
+            components/PublicInvitation/FigmaClassicTemplate.tsx \
+            prd.md README.md
+          git commit -m "add open-ended invitation time and family wording"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Record supplemental and implementation logs
+        shell: bash
+        env:
+          CODE_SHA: ${{ steps.source_commit.outputs.sha }}
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import os
+
+          sha = os.environ["CODE_SHA"]
+          supplemental = f'''\n\n---\n\n## Rangkaian Acara — Wedding Family Wording & Open-ended Time\n\n### Requirement delta\n\n- Input `Anak keberapa` pada event `WEDDING` menghasilkan wording natural di Studio/public invitation: `Putra pertama dari Bapak ... & Ibu ...` untuk pengantin pria dan `Putri pertama dari Bapak ... & Ibu ...` untuk pengantin wanita.\n- Urutan anak mengikuti angka yang diinput; 1–10 memakai kata Indonesia (`pertama`, `kedua`, dan seterusnya), sedangkan nilai di atasnya memakai bentuk `ke-N`.\n- Rangkaian Acara menyediakan opsi **`Tampilkan “- end” di undangan`** untuk acara yang tidak memakai jam selesai tertentu.\n- Opsi tersebut tidak membuat field database baru: compatibility field `receptionTime` menyimpan sentinel internal `END`.\n- Studio dan public renderer menampilkan `- end` ketika sentinel aktif; `receptionTime` kosong tetap berarti tidak menampilkan waktu selesai.\n\n### Implementation\n\n- family-line formatter dipusatkan di `lib/events/parents.ts`;\n- form Rangkaian Acara menampilkan preview wording keluarga secara langsung setelah parent/order diisi;\n- field Waktu selesai dapat dinonaktifkan melalui checkbox `Tampilkan “- end” di undangan`;\n- API menerima sentinel `END` selain `HH:mm` untuk waktu selesai;\n- Invitation Studio V3, generic public renderer, dan Figma Classic renderer membaca child order serta sentinel `END` yang sama.\n\n### Commit\n\n- `{sha}` — add open-ended invitation time and family wording.\n\n### Validation\n\n- `pnpm install --frozen-lockfile`: **PASS** pada one-shot implementation workflow.\n- `pnpm db:generate`: **PASS** pada one-shot implementation workflow.\n- `pnpm build`: **PASS** pada one-shot implementation workflow.\n- Database migration: **N/A**; `receptionTime` tetap field string existing.\n'''
+          Path("prd-tambahan.md").write_text(Path("prd-tambahan.md").read_text().rstrip() + supplemental + "\n")
+
+          changelog = f'''\n\n---\n\n## 2026-09-17 — Wedding Family Wording & Open-ended End Time\n\n### Requirement / Intent\nRangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasarkan urutan anak, serta menyediakan pilihan eksplisit untuk undangan yang tidak memiliki jam selesai tetap namun tetap ingin menampilkan `- end`.\n\n### Implementation\n- `groomChildOrder` / `brideChildOrder` sekarang dipakai oleh Studio/public renderer untuk membentuk `Putra pertama ...` / `Putri pertama ...`;\n- Rangkaian Acara menampilkan preview family line langsung di form wedding;\n- opsi `Tampilkan “- end” di undangan` menyimpan sentinel internal `END` di `receptionTime` dan menonaktifkan picker waktu selesai;\n- API menerima `END` sebagai nilai compatibility yang valid tanpa schema baru;\n- Invitation Studio V3, generic public invitation, dan Figma Classic menerapkan family wording dan `- end` secara konsisten;\n- active requirement disinkronkan ke `prd.md` dan overview disinkronkan ke `README.md`;\n- supplemental delta dicatat di `prd-tambahan.md`.\n\n### Affected Files\n- `lib/events/parents.ts`\n- `components/Dashboard/EventPanel.tsx`\n- `app/api/invitations/route.ts`\n- `components/InvitationStudio/InvitationDesignerV3.tsx`\n- `components/PublicInvitation/PublicInvitation.tsx`\n- `components/PublicInvitation/FigmaClassicTemplate.tsx`\n- `prd.md`\n- `README.md`\n- `prd-tambahan.md`\n- `prd1.md`\n\n### Commit\n- `{sha}` — add open-ended invitation time and family wording.\n\n### Validation\n- `pnpm install --frozen-lockfile`: **PASS**.\n- Prisma Client generation (`pnpm db:generate`): **PASS**.\n- TypeScript / Next production build (`pnpm build`): **PASS**.\n- Database migration: **N/A**.\n- Production deployment: not performed by this implementation workflow.\n'''
+          Path("prd1.md").write_text(Path("prd1.md").read_text().rstrip() + changelog + "\n")
+          PY
+
+      - name: Remove one-shot workflow and commit logs
+        shell: bash
+        run: |
+          rm .github/workflows/one-shot-invitation-family-time.yml
+          git add prd-tambahan.md prd1.md .github/workflows/one-shot-invitation-family-time.yml
+          git commit -m "record family wording and open-ended time update"
+
+      - name: Push implementation
+        run: git push origin HEAD:main
