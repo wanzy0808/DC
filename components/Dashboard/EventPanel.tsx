@@ -82,6 +82,13 @@ const emptyForm: EventForm = {
   eventNotes: "",
 };
 
+const timeHours = Array.from({ length: 24 }, (_, index) =>
+  String(index).padStart(2, "0"),
+);
+const timeMinutes = Array.from({ length: 60 }, (_, index) =>
+  String(index).padStart(2, "0"),
+);
+
 function sortInvitations(items: Invitation[]) {
   return [...items].sort(
     (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
@@ -129,6 +136,16 @@ function formatDateInput(value: string) {
   if (digits.length <= 2) return digits;
   if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
   return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
+function formatTimeInput(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 4);
+  if (digits.length <= 2) return digits;
+  return `${digits.slice(0, 2)}:${digits.slice(2)}`;
+}
+
+function isValidTime24(value: string) {
+  return /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value.trim());
 }
 
 function toForm(invitation: Invitation): EventForm {
@@ -295,6 +312,14 @@ export default function EventPanel({ accent, onSaved }: Props) {
     }
     if (!form.ceremonyTime) {
       setNotice("Waktu mulai wajib diisi.");
+      return;
+    }
+    if (!isValidTime24(form.ceremonyTime)) {
+      setNotice("Gunakan waktu mulai format 24 jam HH:mm (00:00–23:59).");
+      return;
+    }
+    if (form.receptionTime && !isValidTime24(form.receptionTime)) {
+      setNotice("Gunakan waktu selesai format 24 jam HH:mm (00:00–23:59).");
       return;
     }
     if (!form.venue.trim()) {
@@ -537,15 +562,13 @@ export default function EventPanel({ accent, onSaved }: Props) {
                     value={form.eventDate}
                     onChange={(value) => field("eventDate", value)}
                   />
-                  <Field
+                  <TimeField
                     label={`Waktu mulai (${timezone.label})`}
-                    type="time"
                     value={form.ceremonyTime}
                     onChange={(value) => field("ceremonyTime", value)}
                   />
-                  <Field
+                  <TimeField
                     label={`Waktu selesai (${timezone.label})`}
-                    type="time"
                     value={form.receptionTime}
                     onChange={(value) => field("receptionTime", value)}
                   />
@@ -724,6 +747,104 @@ function DateField({
       </div>
       <p className="mt-1.5 text-[10px] text-muted-foreground">
         Format dd/mm/yyyy · klik ikon kalender untuk memilih tanggal.
+      </p>
+    </div>
+  );
+}
+
+function TimeField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [hour, minute] = isValidTime24(value) ? value.split(":") : ["00", "00"];
+
+  return (
+    <div className="relative block">
+      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
+      <div className="flex items-center gap-2">
+        <Input
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          maxLength={5}
+          value={value}
+          onChange={(event) => onChange(formatTimeInput(event.target.value))}
+          placeholder="00:00"
+          aria-label={`${label} format 24 jam HH:mm`}
+          className="h-11 min-w-0 flex-1 font-[family-name:var(--font-dm-mono)]"
+        />
+        <Button
+          type="button"
+          size="icon"
+          className="h-11 w-11 shrink-0"
+          onClick={() => setOpen((current) => !current)}
+          aria-expanded={open}
+          aria-label={`Pilih ${label.toLowerCase()} dalam format 24 jam`}
+          title="Pilih waktu 24 jam"
+        >
+          <Clock3 className="h-4 w-4" />
+        </Button>
+      </div>
+
+      {open && (
+        <div className="absolute right-0 z-40 mt-2 w-full min-w-[220px] rounded-xl border border-border bg-background p-3 shadow-[0_16px_40px_rgba(0,0,0,0.14)] dark:shadow-black/40">
+          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            Format 24 jam
+          </p>
+          <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+            <label className="block">
+              <span className="sr-only">Jam</span>
+              <select
+                value={hour}
+                onChange={(event) => onChange(`${event.target.value}:${minute}`)}
+                className="h-11 w-full rounded-[10px] border border-border bg-background px-3 font-[family-name:var(--font-dm-mono)] text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                aria-label={`${label} jam`}
+              >
+                {timeHours.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <span className="font-[family-name:var(--font-dm-mono)] text-sm font-semibold text-muted-foreground">
+              :
+            </span>
+            <label className="block">
+              <span className="sr-only">Menit</span>
+              <select
+                value={minute}
+                onChange={(event) => onChange(`${hour}:${event.target.value}`)}
+                className="h-11 w-full rounded-[10px] border border-border bg-background px-3 font-[family-name:var(--font-dm-mono)] text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+                aria-label={`${label} menit`}
+              >
+                {timeMinutes.map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="mt-2 flex items-center justify-between gap-3">
+            <span className="font-[family-name:var(--font-dm-mono)] text-[10px] text-muted-foreground">
+              00:00–23:59 · tanpa AM/PM
+            </span>
+            <Button type="button" size="sm" onClick={() => setOpen(false)}>
+              Selesai
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <p className="mt-1.5 text-[10px] text-muted-foreground">
+        00:00–23:59 · klik ikon jam untuk memilih waktu.
       </p>
     </div>
   );
