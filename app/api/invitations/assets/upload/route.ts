@@ -71,6 +71,7 @@ export async function POST(request: Request) {
         .toBuffer();
       fileName = `${randomUUID()}.webp`;
       uploadDirectory = path.join(process.cwd(), "public", "uploads", "images");
+      savedPath = path.join(process.cwd(), "public", "uploads", "images", fileName);
       url = `/uploads/images/${fileName}`;
       title = path.basename(file.name, path.extname(file.name)) + ".webp";
     } else {
@@ -78,11 +79,11 @@ export async function POST(request: Request) {
       const extension = path.extname(file.name).toLowerCase() || ".mp3";
       fileName = `${randomUUID()}${extension}`;
       uploadDirectory = path.join(process.cwd(), "public", "uploads", "music");
+      savedPath = path.join(process.cwd(), "public", "uploads", "music", fileName);
       url = `/uploads/music/${fileName}`;
     }
 
     await mkdir(uploadDirectory, { recursive: true });
-    savedPath = path.join(uploadDirectory, fileName);
     await writeFile(savedPath, outputBuffer);
 
     try {

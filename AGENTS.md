@@ -15,17 +15,18 @@ These rules apply to the entire repository unless a more specific implementation
 Before any material change, inspect in this order:
 
 1. `AGENTS.md`
-2. `SKILL.md` and every applicable `skill.md`
-3. `prd.md`
-4. `README.md`
-5. `prd1.md` for recent implementation history
-6. Relevant implementation files, routes, components, schema, and APIs
+2. `prd.md`
+3. `README.md`
+4. `prd1.md` for recent implementation history
+5. Relevant implementation files, routes, components, schema, and APIs
 
 `prd.md` is the single source of truth for active product requirements. `prd1.md` is the chronological implementation changelog and must not become a parallel PRD.
 
 Every AI-made material change MUST be recorded in `prd1.md` with rationale, affected files, commit(s), and validation status. If a change alters product requirements, update `prd.md` first and then record the implementation/history in `prd1.md`.
 
 Do not create `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
+
+Do not add generic project-wide prompt/skill documents that duplicate or conflict with `AGENTS.md` and `prd.md`. If specialized instructions are genuinely needed, keep them narrowly scoped and explicitly referenced.
 
 Validation must never be described as PASS unless an actual build/CI result is available.
 
