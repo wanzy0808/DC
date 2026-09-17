@@ -13,7 +13,17 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DashboardMetricCard, DashboardNotice, DashboardStatusBadge } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardCompactStat,
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type Invitation = {
   id: string;
@@ -143,42 +153,48 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   );
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <DashboardPage className="pt-7 sm:pt-8">
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
-      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <DashboardMetricGrid>
         <Metric icon={Users} label="Undangan" value={String(invitations.length)} />
         <Metric icon={CalendarDays} label="Siap desain" value={String(readyCount)} />
         <Metric icon={Send} label="Dipublish" value={String(publishedCount)} />
         <Metric icon={Eye} label="Total dibuka" value={String(openedCount)} />
-      </section>
+      </DashboardMetricGrid>
 
-      <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-              Undangan Digital
-            </p>
-            <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-              Semua acara
-            </h2>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" size="sm" onClick={onCreateSequence}>
-              <Plus className="h-4 w-4" />
-              Tambah acara
-            </Button>
-            <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
-              <RefreshCw className="h-4 w-4" />
-              Muat ulang
-            </Button>
-          </div>
-        </div>
+      <DashboardSurface className="mt-5 p-4 sm:p-5">
+        <DashboardSectionHeader
+          eyebrow="Undangan Digital"
+          title="Semua acara"
+          description="Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan."
+          actions={
+            <>
+              <Button type="button" size="sm" onClick={onCreateSequence}>
+                <Plus className="h-4 w-4" />
+                Tambah acara
+              </Button>
+              <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
+                <RefreshCw className="h-4 w-4" />
+                Muat ulang
+              </Button>
+            </>
+          }
+        />
 
         {invitations.length === 0 ? (
-          <div className="mt-4 rounded-xl border border-border/70 bg-background p-5 text-sm text-muted-foreground">
-            Belum ada acara. Buat acara terlebih dahulu untuk mulai mendesain undangan.
-          </div>
+          <DashboardEmptyState
+            className="mt-4"
+            icon={CalendarDays}
+            title="Belum ada acara"
+            description="Buat rangkaian acara terlebih dahulu untuk mulai mendesain Undangan Digital."
+            action={
+              <Button type="button" size="sm" onClick={onCreateSequence}>
+                <Plus className="h-4 w-4" />
+                Tambah acara
+              </Button>
+            }
+          />
         ) : (
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {invitations.map((invitation) => {
@@ -293,28 +309,22 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
             })}
           </div>
         )}
-      </section>
+      </DashboardSurface>
 
-      <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-              RSVP
-            </p>
-            <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-              Respons terbaru
-            </h2>
-          </div>
-          <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] text-primary">
-            {responders.length}
-          </span>
-        </div>
+      <DashboardSurface className="mt-5 p-4 sm:p-5">
+        <DashboardSectionHeader
+          eyebrow="RSVP"
+          title="Respons terbaru"
+          description="Respons terbaru dari seluruh undangan yang berada di workspace ini."
+          actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
+        />
 
         <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
           {responders.length === 0 && (
-            <div className="rounded-xl border border-border/70 bg-background px-3 py-5 text-center text-xs text-muted-foreground">
-              Belum ada tamu yang merespon.
-            </div>
+            <DashboardEmptyState
+              title="Belum ada respons"
+              description="Respons RSVP tamu akan muncul di sini setelah undangan mulai dibagikan."
+            />
           )}
           {responders.map((guest) => (
             <div
@@ -335,8 +345,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </DashboardSurface>
+    </DashboardPage>
   );
 }
 
@@ -345,12 +355,5 @@ function Metric({ icon: Icon, label, value }: { icon: typeof Send; label: string
 }
 
 function SmallMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="min-w-0 rounded-xl border border-border/70 bg-background px-2.5 py-2">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-0.5 truncate text-[11px] font-medium text-foreground">{value}</p>
-    </div>
-  );
+  return <DashboardCompactStat label={label} value={value} />;
 }
