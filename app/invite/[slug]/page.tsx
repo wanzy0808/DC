@@ -22,6 +22,7 @@ export default async function PublicInvitationPage({
   if (!invitation) notFound();
   if (
     !invitation.eventConfigured ||
+    !invitation.templateKey.trim() ||
     !invitation.isPublished ||
     !hasPaidDigitalInvitation(invitation.payment)
   ) {
