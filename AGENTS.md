@@ -39,6 +39,7 @@ Validation must never be described as PASS unless an actual build/CI result is a
 - Follow **Extend Over Replace**: inspect and extend existing routes, APIs, components, schema, and data flows before replacing anything.
 - Database is the source of truth; do not introduce fake/mock invitation data.
 - Authorization is server-side; UI entitlement must reflect server entitlement.
+- Published Rangkaian Acara is customer-immutable: once `Invitation.isPublished = true`, server APIs must reject event-detail edits, unpublish attempts, and event deletion. UI must also stop exposing Edit/Hapus for that event. This lock applies to Rangkaian Acara metadata/lifecycle and must not silently disable unrelated Studio capabilities unless the PRD explicitly expands the lock.
 - Existing routes and compatibility aliases must remain when required by the PRD.
 - **Pintu is a core landing-page navigation surface. Do not remove or bypass it without explicit user instruction.**
 - **Rose petals in `components/Layout/background.tsx` are a protected visual element. Do not alter their behavior, appearance, count, timing, or styling unless explicitly instructed.**

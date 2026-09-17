@@ -54,6 +54,9 @@ Flow utama yang wajib dipertahankan:
 14. Jika event belum memiliki Digital Invitation entitlement, user diarahkan ke paket Rp150.000 untuk `invitationId` tersebut.
 15. Setelah entitlement aktif, server mengizinkan publish.
 16. Public invitation dapat dibuka dan didistribusikan.
+17. Selama `isPublished = false`, user boleh mengedit atau menghapus Rangkaian Acara miliknya.
+18. Setelah `isPublished = true`, data Rangkaian Acara menjadi terkunci: user tidak dapat mengedit detail event, menghapus event, atau mengembalikannya menjadi draft/unpublished melalui flow customer biasa.
+19. Lock setelah publish wajib ditegakkan server-side; menyembunyikan tombol Edit/Hapus di UI bukan security boundary.
 
 Legacy blank draft dari implementasi lama boleh direuse oleh backend saat menyimpan event agar tidak menghasilkan orphan/duplicate record, tetapi blank draft **bukan** flow produk baru.
 
@@ -68,6 +71,8 @@ Public invitation hanya boleh diterbitkan apabila seluruh kondisi berikut terpen
 - request publish lolos validasi server.
 
 UI bukan security boundary. Request API yang mencoba melewati urutan tersebut tetap harus ditolak server.
+
+Setelah publish berhasil, Rangkaian Acara bersifat immutable untuk customer: event-detail mutation, unpublish, dan delete harus ditolak backend. Invitation Studio tetap dapat dibuka sesuai capability yang tersedia; lock ini khusus pada identitas/detail Rangkaian Acara dan lifecycle record event.
 
 ---
 

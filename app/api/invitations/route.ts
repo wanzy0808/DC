@@ -80,6 +80,36 @@ function isValidTime24(value: string | null) {
   return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
 
+const EVENT_DETAIL_MUTATION_FIELDS = [
+  "type",
+  "eventCategory",
+  "title",
+  "groomName",
+  "brideName",
+  "groomFatherName",
+  "groomMotherName",
+  "groomChildOrder",
+  "brideFatherName",
+  "brideMotherName",
+  "brideChildOrder",
+  "venue",
+  "address",
+  "mapUrl",
+  "timezone",
+  "eventDate",
+  "ceremonyTime",
+  "receptionTime",
+  "description",
+  "eventNotes",
+  "eventConfigured",
+] as const;
+
+function hasEventDetailMutation(body: Record<string, unknown>) {
+  return EVENT_DETAIL_MUTATION_FIELDS.some((field) =>
+    Object.prototype.hasOwnProperty.call(body, field),
+  );
+}
+
 async function getOrCreateLegacyInvitation(
   user: { id: string; firstName: string },
   type: InvitationType,
@@ -415,6 +445,19 @@ export async function PUT(request: Request) {
 
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
 
+    if (
+      invitation.isPublished &&
+      (hasEventDetailMutation(body as Record<string, unknown>) || body.isPublished === false)
+    ) {
+      return NextResponse.json(
+        {
+          error:
+            "Acara yang sudah dipublish terkunci dan tidak dapat diedit atau dikembalikan menjadi draft.",
+        },
+        { status: 409 },
+      );
+    }
+
     const eventCategory = normalizeEventCategory(body.eventCategory ?? invitation.eventCategory);
     const category = getEventCategory(eventCategory);
     const groomName = String(body.groomName ?? invitation.groomName).trim();
@@ -556,5 +599,35 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error("PUT /api/invitations failed", error);
     return databaseFailure(error, "Undangan belum dapat disimpan.");
+  }
+}
+
+
+export async function DELETE(request: Request) {
+  const user = await getCurrentUser();
+  if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+
+  try {
+    const id = new URL(request.url).searchParams.get("id")?.trim() || "";
+    if (!id) {
+      return NextResponse.json({ error: "Acara belum dipilih." }, { status: 400 });
+    }
+
+    const invitation = await findOwnedInvitation(user.id, id);
+    if (!invitation) {
+      return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
+    }
+    if (invitation.isPublished) {
+      return NextResponse.json(
+        { error: "Acara yang sudah dipublish tidak dapat dihapus." },
+        { status: 409 },
+      );
+    }
+
+    await prisma.invitation.delete({ where: { id: invitation.id } });
+    return NextResponse.json({ deleted: true, id: invitation.id });
+  } catch (error) {
+    console.error("DELETE /api/invitations failed", error);
+    return databaseFailure(error, "Acara belum dapat dihapus.");
   }
 }

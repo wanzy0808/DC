@@ -783,3 +783,33 @@ Mulai mengimplementasikan backlog prioritas dari PRD: proteksi public RSVP dari 
 - Prisma Client generation: **PASS**.
 - Next.js production compile + TypeScript: **PASS**.
 - Migration `20260917081500_add_guest_category_tags` is committed but still requires `pnpm db:deploy` on the target VPS/production database before category/tag persistence is used there.
+
+
+---
+
+## 2026-09-17 — Rangkaian Acara Delete & Published Lock
+
+### Requirement / Intent
+Rangkaian Acara boleh diedit dan dihapus sebelum Publish. Karena Publish hanya dapat berhasil setelah entitlement Digital Invitation aktif, event yang sudah terbit harus menjadi record customer yang terkunci dan tidak boleh diedit, dihapus, atau di-unpublish melalui request manual.
+
+### Implementation
+- menambahkan `DELETE /api/invitations?id=<invitationId>` dengan ownership check server-side;
+- delete hanya diizinkan ketika `isPublished = false`;
+- `PUT /api/invitations` menolak event-detail mutation setelah publish;
+- published event juga tidak dapat di-unpublish (`isPublished=false`) untuk menghindari bypass lock;
+- dashboard Rangkaian Acara menampilkan `Hapus` hanya untuk event yang belum publish;
+- `Edit` dan `Hapus` tidak lagi tersedia pada event berstatus `Terbit`;
+- delete meminta konfirmasi karena record event beserta data relasi yang cascade akan ikut dihapus;
+- Invitation Studio tidak di-lock secara global oleh perubahan ini; requirement ini khusus detail/lifecycle Rangkaian Acara.
+
+### Affected Files
+- `app/api/invitations/route.ts`
+- `components/Dashboard/EventPanel.tsx`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd1.md`
+
+### Validation
+- Pending observed GitHub Build Validation for the implementation source state.
+- Database migration: N/A.

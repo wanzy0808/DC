@@ -22,6 +22,7 @@ DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest manage
   5. Select and edit a template in Invitation Studio.
   6. Save the template/design.
   7. Publish.
+- Before Publish, a user may edit or delete their Rangkaian Acara. After `isPublished = true`, event details are locked: customer APIs reject event-detail edits, unpublish attempts, and event deletion, while unrelated Studio capabilities remain governed separately.
 - The Digital Invitation package is required at the **Publish** step, not when creating the event or entering Studio.
 - Unpaid Studio sessions are preview-only and may be watermarked. Public rendering remains server-authoritative and requires a configured event, a saved template, a published state, and valid event-scoped Digital Invitation entitlement.
 - Wedding events may optionally store father/mother names for each partner. When present, invitation renderers automatically show a parent line such as `Anak dari Bapak Ahmad & Ibu Siti`; missing parent data is omitted instead of showing a placeholder.

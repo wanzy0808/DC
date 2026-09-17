@@ -9,6 +9,7 @@ import {
   PenLine,
   Plus,
   Save,
+  Trash2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -217,10 +218,15 @@ export default function EventPanel({ onSaved }: Props) {
   const [form, setForm] = useState<EventForm>(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState("");
   const [notice, setNotice] = useState("");
   const editorRef = useRef<HTMLElement | null>(null);
 
   function activate(invitation: Invitation) {
+    if (invitation.isPublished) {
+      setNotice("Acara yang sudah dipublish tidak dapat diedit.");
+      return;
+    }
     setActiveId(invitation.id);
     setForm(toForm(invitation));
     setEditorMode(invitation.eventConfigured ? "edit" : "new");
@@ -270,7 +276,7 @@ export default function EventPanel({ onSaved }: Props) {
   }
 
   function startNewEvent() {
-    if (saving) return;
+    if (saving || deletingId) return;
     setActiveId("");
     setForm(emptyForm);
     setEditorMode("new");
@@ -371,6 +377,41 @@ export default function EventPanel({ onSaved }: Props) {
     }
   }
 
+  async function removeEvent(invitation: Invitation) {
+    if (saving || deletingId) return;
+    if (invitation.isPublished) {
+      setNotice("Acara yang sudah dipublish tidak dapat dihapus.");
+      return;
+    }
+
+    const label = invitation.title?.trim() || "Acara baru";
+    const confirmed = window.confirm(
+      `Hapus “${label}”?\n\nAcara, desain undangan, daftar tamu, dan data terkait yang belum dipublish akan ikut dihapus.`,
+    );
+    if (!confirmed) return;
+
+    setDeletingId(invitation.id);
+    setNotice("Menghapus acara...");
+    try {
+      const response = await fetch(
+        `/api/invitations?id=${encodeURIComponent(invitation.id)}`,
+        { method: "DELETE" },
+      );
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(data?.error || "Acara belum dapat dihapus.");
+      }
+      if (activeId === invitation.id) closeEditor();
+      await load();
+      setNotice("Acara dihapus.");
+      onSaved();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Acara belum dapat dihapus.");
+    } finally {
+      setDeletingId("");
+    }
+  }
+
   const category = form.eventCategory ? getEventCategory(form.eventCategory) : null;
   const active = events.find((item) => item.id === activeId) || null;
   const timezone = getIndonesiaTimezone(form.timezone);
@@ -381,7 +422,12 @@ export default function EventPanel({ onSaved }: Props) {
         <p className="text-sm text-muted-foreground">
           {loading ? "Memuat..." : `${events.length} acara`}
         </p>
-        <Button type="button" size="sm" onClick={startNewEvent} disabled={saving}>
+        <Button
+          type="button"
+          size="sm"
+          onClick={startNewEvent}
+          disabled={saving || Boolean(deletingId)}
+        >
           <Plus className="h-4 w-4" />
           Tambah acara
         </Button>
@@ -413,10 +459,23 @@ export default function EventPanel({ onSaved }: Props) {
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
-                <Button type="button" size="sm" onClick={() => activate(event)}>
-                  <PenLine className="h-4 w-4" />
-                  Edit
-                </Button>
+                {!event.isPublished && (
+                  <>
+                    <Button type="button" size="sm" onClick={() => activate(event)}>
+                      <PenLine className="h-4 w-4" />
+                      Edit
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => removeEvent(event)}
+                      disabled={saving || Boolean(deletingId)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                      {deletingId === event.id ? "Menghapus..." : "Hapus"}
+                    </Button>
+                  </>
+                )}
                 {!draft && (
                   <Button asChild size="sm">
                     <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
