@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -9,7 +9,6 @@ import {
   PenLine,
   Plus,
   Save,
-  UserRound,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -33,8 +32,10 @@ type Invitation = {
   brideName: string;
   groomFatherName: string | null;
   groomMotherName: string | null;
+  groomChildOrder: number | null;
   brideFatherName: string | null;
   brideMotherName: string | null;
+  brideChildOrder: number | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -61,8 +62,10 @@ type EventForm = {
   brideName: string;
   groomFatherName: string;
   groomMotherName: string;
+  groomChildOrder: string;
   brideFatherName: string;
   brideMotherName: string;
+  brideChildOrder: string;
   venue: string;
   address: string;
   mapUrl: string;
@@ -81,8 +84,10 @@ const emptyForm: EventForm = {
   brideName: "",
   groomFatherName: "",
   groomMotherName: "",
+  groomChildOrder: "",
   brideFatherName: "",
   brideMotherName: "",
+  brideChildOrder: "",
   venue: "",
   address: "",
   mapUrl: "",
@@ -118,16 +123,13 @@ function isBlankDraft(invitation: Invitation) {
 }
 
 function isoDateToDisplay(value: string) {
-  const iso = value.slice(0, 10);
-  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  if (!match) return "";
-  return `${match[3]}/${match[2]}/${match[1]}`;
+  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
+  return match ? `${match[3]}/${match[2]}/${match[1]}` : "";
 }
 
 function displayDateToIso(value: string) {
   const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
   if (!match) return "";
-
   const day = Number(match[1]);
   const month = Number(match[2]);
   const year = Number(match[3]);
@@ -139,7 +141,6 @@ function displayDateToIso(value: string) {
   ) {
     return "";
   }
-
   return `${match[3]}-${match[2]}-${match[1]}`;
 }
 
@@ -160,6 +161,12 @@ function isValidTime24(value: string) {
   return /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value.trim());
 }
 
+function isValidChildOrder(value: string) {
+  if (!value.trim()) return true;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed > 0;
+}
+
 function toForm(invitation: Invitation): EventForm {
   const blankDraft = isBlankDraft(invitation);
   const category = isEventCategory(invitation.eventCategory)
@@ -173,8 +180,10 @@ function toForm(invitation: Invitation): EventForm {
     brideName: invitation.brideName || "",
     groomFatherName: invitation.groomFatherName || "",
     groomMotherName: invitation.groomMotherName || "",
+    groomChildOrder: invitation.groomChildOrder ? String(invitation.groomChildOrder) : "",
     brideFatherName: invitation.brideFatherName || "",
     brideMotherName: invitation.brideMotherName || "",
+    brideChildOrder: invitation.brideChildOrder ? String(invitation.brideChildOrder) : "",
     venue: invitation.venue || "",
     address: invitation.address || "",
     mapUrl: invitation.mapUrl || "",
@@ -191,70 +200,52 @@ function toForm(invitation: Invitation): EventForm {
 }
 
 function formatDateId(value: string) {
-  if (!value) return "Tanggal belum dipilih";
   const iso = displayDateToIso(value);
-  if (!iso) return "Format tanggal belum valid";
-  const date = new Date(`${iso}T12:00:00+07:00`);
-  if (Number.isNaN(date.getTime())) return "Tanggal belum dipilih";
+  if (!iso) return "Tanggal belum valid";
   return new Intl.DateTimeFormat("id-ID", {
-    weekday: "long",
     day: "numeric",
     month: "long",
     year: "numeric",
     timeZone: "Asia/Jakarta",
-  }).format(date);
+  }).format(new Date(`${iso}T12:00:00+07:00`));
 }
 
-function formatTime(value: string) {
-  return value || "--:--";
-}
-
-export default function EventPanel({ accent, onSaved }: Props) {
+export default function EventPanel({ onSaved }: Props) {
   const [events, setEvents] = useState<Invitation[]>([]);
   const [activeId, setActiveId] = useState("");
   const [editorMode, setEditorMode] = useState<EditorMode>("closed");
   const [form, setForm] = useState<EventForm>(emptyForm);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [notice, setNotice] = useState("Memuat...");
+  const [notice, setNotice] = useState("");
   const editorRef = useRef<HTMLElement | null>(null);
-
-  const configuredCount = useMemo(
-    () => events.filter((event) => event.eventConfigured).length,
-    [events],
-  );
 
   function activate(invitation: Invitation) {
     setActiveId(invitation.id);
     setForm(toForm(invitation));
     setEditorMode(invitation.eventConfigured ? "edit" : "new");
-    setNotice(invitation.eventConfigured ? "Siap diedit" : "Lengkapi acara ini.");
+    setNotice("");
   }
 
   function closeEditor() {
     setActiveId("");
     setForm(emptyForm);
     setEditorMode("closed");
-    setNotice("Tersinkron");
+    setNotice("");
   }
 
   async function load(preferredId?: string) {
     setLoading(true);
-    setNotice("Memuat...");
     try {
       const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
       const next = sortInvitations((data?.invitations ?? []) as Invitation[]);
       setEvents(next);
-      if (preferredId) {
-        const preferred = next.find((item) => item.id === preferredId);
-        if (preferred) activate(preferred);
-      } else if (activeId) {
-        const current = next.find((item) => item.id === activeId);
-        if (current) activate(current);
-      }
-      setNotice("Tersinkron");
+      const targetId = preferredId || activeId;
+      const target = targetId ? next.find((item) => item.id === targetId) : null;
+      if (target) activate(target);
+      setNotice("");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Data acara belum dapat dimuat.");
     } finally {
@@ -283,7 +274,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setActiveId("");
     setForm(emptyForm);
     setEditorMode("new");
-    setNotice("Isi data acara lalu simpan.");
+    setNotice("");
   }
 
   function selectCategory(value: string) {
@@ -297,55 +288,37 @@ export default function EventPanel({ accent, onSaved }: Props) {
       groomName: mode === "optional" ? "" : current.groomName,
       groomFatherName: value === "WEDDING" ? current.groomFatherName : "",
       groomMotherName: value === "WEDDING" ? current.groomMotherName : "",
+      groomChildOrder: value === "WEDDING" ? current.groomChildOrder : "",
       brideFatherName: value === "WEDDING" ? current.brideFatherName : "",
       brideMotherName: value === "WEDDING" ? current.brideMotherName : "",
+      brideChildOrder: value === "WEDDING" ? current.brideChildOrder : "",
     }));
   }
 
   async function save() {
-    if (!form.eventCategory) {
-      setNotice("Pilih nama acara terlebih dahulu.");
-      return;
-    }
-
+    if (!form.eventCategory) return setNotice("Pilih jenis acara.");
     const category = getEventCategory(form.eventCategory);
     if (category.nameMode === "couple" && (!form.groomName.trim() || !form.brideName.trim())) {
-      setNotice("Lengkapi kedua nama untuk acara ini.");
-      return;
+      return setNotice("Lengkapi kedua nama.");
     }
     if (category.nameMode === "single" && !form.groomName.trim()) {
-      setNotice("Nama utama acara wajib diisi.");
-      return;
+      return setNotice("Nama utama wajib diisi.");
     }
     if (form.eventCategory === "OTHER" && !form.customTitle.trim()) {
-      setNotice("Nama event lainnya wajib diisi.");
-      return;
+      return setNotice("Nama event wajib diisi.");
     }
-    if (!form.eventDate) {
-      setNotice("Tanggal acara wajib diisi.");
-      return;
+    if (!isValidChildOrder(form.groomChildOrder) || !isValidChildOrder(form.brideChildOrder)) {
+      return setNotice("Anak keberapa harus berupa angka lebih dari 0.");
     }
     const eventDateIso = displayDateToIso(form.eventDate);
-    if (!eventDateIso) {
-      setNotice("Gunakan format tanggal dd/mm/yyyy yang valid.");
-      return;
-    }
-    if (!form.ceremonyTime) {
-      setNotice("Waktu mulai wajib diisi.");
-      return;
-    }
+    if (!eventDateIso) return setNotice("Tanggal harus menggunakan format dd/mm/yyyy yang valid.");
     if (!isValidTime24(form.ceremonyTime)) {
-      setNotice("Gunakan waktu mulai format 24 jam HH:mm (00:00–23:59).");
-      return;
+      return setNotice("Waktu mulai harus menggunakan format HH:mm.");
     }
     if (form.receptionTime && !isValidTime24(form.receptionTime)) {
-      setNotice("Gunakan waktu selesai format 24 jam HH:mm (00:00–23:59).");
-      return;
+      return setNotice("Waktu selesai harus menggunakan format HH:mm.");
     }
-    if (!form.venue.trim()) {
-      setNotice("Nama tempat wajib diisi.");
-      return;
-    }
+    if (!form.venue.trim()) return setNotice("Nama tempat wajib diisi.");
 
     setSaving(true);
     setNotice("Menyimpan...");
@@ -368,8 +341,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
           brideName: form.brideName,
           groomFatherName: form.groomFatherName,
           groomMotherName: form.groomMotherName,
+          groomChildOrder: form.groomChildOrder,
           brideFatherName: form.brideFatherName,
           brideMotherName: form.brideMotherName,
+          brideChildOrder: form.brideChildOrder,
           venue: form.venue,
           address: form.address,
           mapUrl: form.mapUrl,
@@ -386,9 +361,8 @@ export default function EventPanel({ accent, onSaved }: Props) {
       if (!response.ok || !data?.invitation?.id) {
         throw new Error(data?.error || "Data acara belum dapat disimpan.");
       }
-      const savedId = String(data.invitation.id);
-      await load(savedId);
-      setNotice("Acara tersimpan. Sekarang buat undangan.");
+      await load(String(data.invitation.id));
+      setNotice("Tersimpan.");
       onSaved();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Data acara belum dapat disimpan.");
@@ -400,130 +374,95 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const category = form.eventCategory ? getEventCategory(form.eventCategory) : null;
   const active = events.find((item) => item.id === activeId) || null;
   const timezone = getIndonesiaTimezone(form.timezone);
-  const previewTitle = form.eventCategory
-    ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
-    : "Acara baru";
-  const showTopNotice =
-    editorMode === "closed" && notice !== "Tersinkron" && notice !== "Memuat...";
 
   return (
-    <div className="w-full min-w-0 px-4 pb-16 pt-7 sm:px-6 sm:pt-8 lg:px-7 2xl:px-8">
-      <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-              Rangkaian acara
-            </p>
-            <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-              {events.length ? `${configuredCount} acara · ${events.length - configuredCount} draft` : "Belum ada acara"}
-            </h2>
-          </div>
-          <Button type="button" size="sm" onClick={startNewEvent} disabled={saving}>
-            <Plus className="h-4 w-4" />
-            Tambah acara
-          </Button>
-        </div>
+    <div className="w-full min-w-0 px-4 pb-16 pt-5 sm:px-6 lg:px-8">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-4">
+        <p className="text-sm text-muted-foreground">
+          {loading ? "Memuat..." : `${events.length} acara`}
+        </p>
+        <Button type="button" size="sm" onClick={startNewEvent} disabled={saving}>
+          <Plus className="h-4 w-4" />
+          Tambah acara
+        </Button>
+      </div>
 
-        {showTopNotice && (
-          <div
-            className="mt-3 rounded-lg border border-primary/15 bg-primary/[0.035] px-3 py-2 text-xs text-muted-foreground"
-            role="status"
-          >
-            {notice}
-          </div>
-        )}
+      {editorMode === "closed" && notice && (
+        <p className="border-b border-border/70 py-3 text-xs text-muted-foreground" role="status">
+          {notice}
+        </p>
+      )}
 
-        {events.length ? (
-          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            {events.map((event, index) => {
-              const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
-              const draft = !event.eventConfigured;
-              const hasDesign = Boolean(event.templateKey?.trim());
-              return (
-                <article key={event.id} className="rounded-xl border border-border/75 bg-background/80 p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                        Acara {String(index + 1).padStart(2, "0")}
-                      </p>
-                      <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
-                        {draft ? "Acara baru" : event.title || `Acara ${index + 1}`}
-                      </h3>
-                      <p className="mt-1 truncate text-[11px] text-muted-foreground">
-                        {draft ? "Belum dilengkapi" : event.venue || "Tempat belum diisi"}
-                      </p>
-                    </div>
-                    <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
-                      {event.isPublished
-                        ? "Terbit"
-                        : draft
-                          ? "Belum lengkap"
-                          : hasDesign
-                            ? "Undangan siap"
-                            : "Siap desain"}
-                    </span>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    <Button type="button" size="sm" onClick={() => activate(event)}>
+      <div className="divide-y divide-border/70">
+        {events.map((event, index) => {
+          const draft = !event.eventConfigured;
+          const hasDesign = Boolean(event.templateKey?.trim());
+          return (
+            <div key={event.id} className="flex flex-col gap-3 py-4 md:flex-row md:items-center">
+              <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 items-center gap-2">
+                  <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <p className="truncate text-sm font-semibold">
+                    {draft ? "Acara baru" : event.title || `Acara ${index + 1}`}
+                  </p>
+                  <span className="shrink-0 text-[10px] text-primary">
+                    {event.isPublished ? "Terbit" : hasDesign ? "Siap" : draft ? "Draft" : "Desain"}
+                  </span>
+                </div>
+                <p className="mt-1 truncate text-xs text-muted-foreground">
+                  {draft ? "Belum dilengkapi" : event.venue || "Tempat belum diisi"}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" size="sm" onClick={() => activate(event)}>
+                  <PenLine className="h-4 w-4" />
+                  Edit
+                </Button>
+                {!draft && (
+                  <Button asChild size="sm">
+                    <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
                       <PenLine className="h-4 w-4" />
-                      {draft ? "Lengkapi acara" : "Edit acara"}
-                    </Button>
-                    {!draft && (
-                      <Button asChild size="sm">
-                        <Link href={studioHref}>
-                          <PenLine className="h-4 w-4" />
-                          {hasDesign ? "Edit undangan" : "Buat undangan"}
-                        </Link>
-                      </Button>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="mt-4 rounded-xl border border-border/70 bg-background/70 p-4 text-sm text-muted-foreground">
-            Belum ada acara.
-          </div>
-        )}
-      </section>
+                      {hasDesign ? "Undangan" : "Buat undangan"}
+                    </Link>
+                  </Button>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {!loading && !events.length && editorMode === "closed" && (
+        <p className="py-8 text-sm text-muted-foreground">Belum ada acara.</p>
+      )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
-        <section
-          ref={editorRef}
-          className="mt-4 scroll-mt-24 rounded-xl border border-border/80 bg-background p-4 sm:p-5"
-        >
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                {editorMode === "new" ? "Acara baru" : "Edit acara"}
-              </p>
-              <h2 className="mt-1 truncate font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
-                {previewTitle || "Pilih jenis acara"}
-              </h2>
-            </div>
+        <section ref={editorRef} className="scroll-mt-24 border-t border-border pt-6">
+          <div className="flex items-center justify-between gap-3">
+            <p className="text-sm font-semibold">
+              {editorMode === "new" ? "Acara baru" : "Edit acara"}
+            </p>
             <Button type="button" size="sm" onClick={closeEditor} disabled={saving}>
               <X className="h-4 w-4" />
-              Tutup form
+              Tutup
             </Button>
           </div>
 
-          <div className="mt-5 grid gap-4 xl:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-            <div className="rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
-              <SectionLabel>1 · Acara</SectionLabel>
+          <div className="mt-6 grid gap-x-10 gap-y-8 xl:grid-cols-2">
+            <div className="min-w-0">
+              <h3 className="text-sm font-semibold">Data acara</h3>
               <label className="mt-4 block">
-                <span className="mb-1.5 block text-xs font-semibold">Nama acara</span>
+                <span className="mb-1.5 block text-xs font-semibold">Jenis acara</span>
                 <select
                   value={form.eventCategory}
                   onChange={(event) => selectCategory(event.target.value)}
-                  className="w-full px-3 text-sm outline-none"
-                  aria-label="Pilih nama acara"
+                  className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                 >
                   <option value="">Pilih jenis acara</option>
                   {eventCategoryOptions.map((item) => (
-                    <option key={item.key} value={item.key}>
-                      {item.label}
-                    </option>
+                    <option key={item.key} value={item.key}>{item.label}</option>
                   ))}
                 </select>
               </label>
@@ -544,52 +483,29 @@ export default function EventPanel({ accent, onSaved }: Props) {
                         onChange={(value) => field("brideName", value)}
                         placeholder="Nama lengkap"
                       />
+                    </div>
+                  )}
 
-                      {form.eventCategory === "WEDDING" && (
-                        <>
-                          <div className="rounded-xl border border-border/70 bg-background/70 p-3.5">
-                            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-                              Orang tua pengantin pria · opsional
-                            </p>
-                            <div className="mt-3 space-y-3">
-                              <Field
-                                label="Nama bapak"
-                                value={form.groomFatherName}
-                                onChange={(value) => field("groomFatherName", value)}
-                                placeholder="Contoh: Ahmad"
-                              />
-                              <Field
-                                label="Nama ibu"
-                                value={form.groomMotherName}
-                                onChange={(value) => field("groomMotherName", value)}
-                                placeholder="Contoh: Siti"
-                              />
-                            </div>
-                          </div>
-                          <div className="rounded-xl border border-border/70 bg-background/70 p-3.5">
-                            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
-                              Orang tua pengantin wanita · opsional
-                            </p>
-                            <div className="mt-3 space-y-3">
-                              <Field
-                                label="Nama bapak"
-                                value={form.brideFatherName}
-                                onChange={(value) => field("brideFatherName", value)}
-                                placeholder="Contoh: Budi"
-                              />
-                              <Field
-                                label="Nama ibu"
-                                value={form.brideMotherName}
-                                onChange={(value) => field("brideMotherName", value)}
-                                placeholder="Contoh: Ani"
-                              />
-                            </div>
-                          </div>
-                          <p className="sm:col-span-2 text-[10px] leading-4 text-muted-foreground">
-                            Jika diisi, undangan otomatis menampilkan “Anak dari Bapak … & Ibu …” di bawah nama masing-masing pengantin.
-                          </p>
-                        </>
-                      )}
+                  {form.eventCategory === "WEDDING" && (
+                    <div className="grid gap-6 border-t border-border/70 pt-5 sm:grid-cols-2">
+                      <WeddingFamilyFields
+                        title="Pengantin pria"
+                        father={form.groomFatherName}
+                        mother={form.groomMotherName}
+                        order={form.groomChildOrder}
+                        onFather={(value) => field("groomFatherName", value)}
+                        onMother={(value) => field("groomMotherName", value)}
+                        onOrder={(value) => field("groomChildOrder", value)}
+                      />
+                      <WeddingFamilyFields
+                        title="Pengantin wanita"
+                        father={form.brideFatherName}
+                        mother={form.brideMotherName}
+                        order={form.brideChildOrder}
+                        onFather={(value) => field("brideFatherName", value)}
+                        onMother={(value) => field("brideMotherName", value)}
+                        onOrder={(value) => field("brideChildOrder", value)}
+                      />
                     </div>
                   )}
 
@@ -598,7 +514,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       label={form.eventCategory === "BIRTHDAY" ? "Nama yang berulang tahun" : "Nama keluarga / calon bayi"}
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
-                      placeholder={form.eventCategory === "BIRTHDAY" ? "Contoh: Olivia" : "Contoh: Keluarga Wijaya"}
+                      placeholder="Nama"
                     />
                   )}
 
@@ -607,7 +523,6 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       label="Nama utama (opsional)"
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
-                      placeholder="Contoh: PT DC Organizer"
                     />
                   )}
 
@@ -616,7 +531,6 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       label="Nama event"
                       value={form.customTitle}
                       onChange={(value) => field("customTitle", value)}
-                      placeholder="Contoh: Company Gathering 2026"
                     />
                   )}
                 </div>
@@ -624,185 +538,133 @@ export default function EventPanel({ accent, onSaved }: Props) {
             </div>
 
             {category && (
-              <div className="rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
-                <SectionLabel>2 · Waktu & tempat</SectionLabel>
-                <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <DateField
-                    label="Tanggal acara"
-                    value={form.eventDate}
-                    onChange={(value) => field("eventDate", value)}
-                  />
-                  <TimeField
-                    label={`Waktu mulai (${timezone.label})`}
-                    value={form.ceremonyTime}
-                    onChange={(value) => field("ceremonyTime", value)}
-                  />
-                  <TimeField
-                    label={`Waktu selesai (${timezone.label})`}
-                    value={form.receptionTime}
-                    onChange={(value) => field("receptionTime", value)}
-                  />
+              <div className="min-w-0">
+                <h3 className="text-sm font-semibold">Waktu & tempat</h3>
+                <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
+                  <DateField label="Tanggal" value={form.eventDate} onChange={(value) => field("eventDate", value)} />
+                  <TimeField label={`Mulai (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
+                  <TimeField label={`Selesai (${timezone.label})`} value={form.receptionTime} onChange={(value) => field("receptionTime", value)} />
                 </div>
 
                 <label className="mt-4 block">
-                  <span className="mb-1.5 block text-xs font-semibold">Zona waktu Indonesia</span>
+                  <span className="mb-1.5 block text-xs font-semibold">Zona waktu</span>
                   <select
                     value={form.timezone}
                     onChange={(event) => field("timezone", event.target.value)}
-                    className="w-full px-3 text-sm outline-none"
+                    className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                   >
                     {indonesiaTimezones.map((item) => (
-                      <option key={item.value} value={item.value}>
-                        {item.label} · {item.description}
-                      </option>
+                      <option key={item.value} value={item.value}>{item.label} · {item.description}</option>
                     ))}
                   </select>
                 </label>
 
                 {(form.eventDate || form.ceremonyTime) && (
-                  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border border-primary/10 bg-primary/[0.035] px-3 py-3 text-xs text-foreground/75">
-                    <span className="inline-flex items-center gap-2">
-                      <CalendarDays className="h-4 w-4 text-primary" />
-                      {formatDateId(form.eventDate)}
-                    </span>
-                    <span className="inline-flex items-center gap-2">
-                      <Clock3 className="h-4 w-4 text-primary" />
-                      {formatTime(form.ceremonyTime)}{form.receptionTime ? `–${formatTime(form.receptionTime)}` : ""} {timezone.label}
-                    </span>
+                  <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
+                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate) : "Tanggal"}</span>
+                    <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
 
                 <div className="mt-4 space-y-4">
-                  <Field
-                    label="Nama tempat"
-                    value={form.venue}
-                    onChange={(value) => field("venue", value)}
-                    placeholder="Contoh: Grand Ballroom Hotel ABC"
-                  />
-                  <Field
-                    label="Alamat"
-                    value={form.address}
-                    onChange={(value) => field("address", value)}
-                    placeholder="Alamat lengkap acara"
-                  />
-                  <Field
-                    label="Google Maps"
-                    value={form.mapUrl}
-                    onChange={(value) => field("mapUrl", value)}
-                    placeholder="Tempel link Google Maps"
-                  />
+                  <Field label="Nama tempat" value={form.venue} onChange={(value) => field("venue", value)} />
+                  <Field label="Alamat" value={form.address} onChange={(value) => field("address", value)} />
+                  <Field label="Google Maps" value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
                 </div>
               </div>
             )}
           </div>
 
           {category && (
-            <details className="mt-4 rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
-              <summary className="cursor-pointer text-xs font-semibold text-foreground">
-                Tambahan opsional
-              </summary>
+            <details className="mt-7 border-t border-border/70 pt-4">
+              <summary className="cursor-pointer text-xs font-semibold">Tambahan</summary>
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <TextArea
-                  label="Deskripsi"
-                  value={form.description}
-                  onChange={(value) => field("description", value)}
-                  placeholder="Informasi singkat untuk tamu"
-                  rows={3}
-                />
-                <TextArea
-                  label="Catatan"
-                  value={form.eventNotes}
-                  onChange={(value) => field("eventNotes", value)}
-                  placeholder="Catatan internal atau informasi tambahan"
-                  rows={3}
-                />
+                <TextArea label="Deskripsi" value={form.description} onChange={(value) => field("description", value)} />
+                <TextArea label="Catatan" value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
               </div>
             </details>
           )}
 
-          <div className="mt-4 flex flex-col gap-3 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex min-w-0 items-center gap-3 text-xs text-muted-foreground">
-              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-                {form.venue ? <MapPin className="h-4 w-4" /> : <UserRound className="h-4 w-4" />}
-              </span>
-              <span className="min-w-0 truncate">{notice}</span>
-            </div>
+          <div className="mt-6 flex flex-col gap-3 border-t border-border/70 pt-4 sm:flex-row sm:items-center sm:justify-between">
+            <p className="min-h-5 text-xs text-muted-foreground" role="status">{notice}</p>
             <Button disabled={saving || !category} onClick={save} size="sm">
               <Save className="h-4 w-4" />
-              {saving ? "Menyimpan acara..." : editorMode === "new" ? "Simpan acara" : "Simpan perubahan"}
+              {saving ? "Menyimpan..." : "Simpan"}
             </Button>
           </div>
         </section>
-      )}
-
-      {active && editorMode === "edit" && (
-        <div className="mt-3 flex justify-end">
-          <Button asChild size="sm">
-            <Link href={`/dashboard/editor?type=${active.type}&invitationId=${active.id}`}>
-              <PenLine className="h-4 w-4" />
-              {active.templateKey?.trim() ? "Edit undangan" : "Buat undangan"}
-            </Link>
-          </Button>
-        </div>
       )}
     </div>
   );
 }
 
-function SectionLabel({ children }: { children: React.ReactNode }) {
+function WeddingFamilyFields({
+  title,
+  father,
+  mother,
+  order,
+  onFather,
+  onMother,
+  onOrder,
+}: {
+  title: string;
+  father: string;
+  mother: string;
+  order: string;
+  onFather: (value: string) => void;
+  onMother: (value: string) => void;
+  onOrder: (value: string) => void;
+}) {
   return (
-    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-      {children}
-    </p>
+    <div className="space-y-3">
+      <p className="text-xs font-semibold">{title}</p>
+      <ChildOrderField value={order} onChange={onOrder} />
+      <Field label="Nama bapak" value={father} onChange={onFather} />
+      <Field label="Nama ibu" value={mother} onChange={onMother} />
+    </div>
   );
 }
 
-function DateField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function ChildOrderField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-semibold">Anak keberapa (opsional)</span>
+      <Input
+        type="number"
+        min={1}
+        step={1}
+        inputMode="numeric"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder="Contoh: 1"
+      />
+    </label>
+  );
+}
+
+function DateField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   const pickerRef = useRef<HTMLInputElement | null>(null);
   const isoValue = displayDateToIso(value);
 
   function openCalendar() {
     const picker = pickerRef.current;
     if (!picker) return;
-    if (typeof picker.showPicker === "function") {
-      picker.showPicker();
-      return;
-    }
-    picker.focus();
-    picker.click();
+    if (typeof picker.showPicker === "function") picker.showPicker();
+    else picker.click();
   }
 
   return (
-    <div className="block">
+    <div>
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <div className="relative flex items-center gap-2">
+      <div className="relative flex gap-2">
         <Input
-          type="text"
           inputMode="numeric"
-          autoComplete="off"
           maxLength={10}
           value={value}
           onChange={(event) => onChange(formatDateInput(event.target.value))}
           placeholder="dd/mm/yyyy"
-          aria-label={`${label} format dd/mm/yyyy`}
-          className="h-11 min-w-0 flex-1"
         />
-        <Button
-          type="button"
-          size="icon"
-          className="h-11 w-11 shrink-0"
-          onClick={openCalendar}
-          aria-label={`Pilih ${label.toLowerCase()} dari kalender`}
-          title="Pilih tanggal dari kalender"
-        >
+        <Button type="button" size="icon" onClick={openCalendar} aria-label="Pilih tanggal">
           <CalendarDays className="h-4 w-4" />
         </Button>
         <input
@@ -812,162 +674,66 @@ function DateField({
           onChange={(event) => onChange(isoDateToDisplay(event.target.value))}
           className="pointer-events-none absolute right-0 top-0 h-11 w-11 opacity-0"
           tabIndex={-1}
-          aria-hidden="true"
         />
       </div>
-      <p className="mt-1.5 text-[10px] text-muted-foreground">
-        Format dd/mm/yyyy · klik ikon kalender untuk memilih tanggal.
-      </p>
     </div>
   );
 }
 
-function TimeField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function TimeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   const [open, setOpen] = useState(false);
   const [hour, minute] = isValidTime24(value) ? value.split(":") : ["00", "00"];
 
   return (
-    <div className="relative block">
+    <div className="relative">
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <div className="flex items-center gap-2">
+      <div className="flex gap-2">
         <Input
-          type="text"
           inputMode="numeric"
-          autoComplete="off"
           maxLength={5}
           value={value}
           onChange={(event) => onChange(formatTimeInput(event.target.value))}
           placeholder="00:00"
-          aria-label={`${label} format 24 jam HH:mm`}
-          className="h-11 min-w-0 flex-1 font-[family-name:var(--font-dm-mono)]"
+          className="font-[family-name:var(--font-dm-mono)]"
         />
-        <Button
-          type="button"
-          size="icon"
-          className="h-11 w-11 shrink-0"
-          onClick={() => setOpen((current) => !current)}
-          aria-expanded={open}
-          aria-label={`Pilih ${label.toLowerCase()} dalam format 24 jam`}
-          title="Pilih waktu 24 jam"
-        >
+        <Button type="button" size="icon" onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">
           <Clock3 className="h-4 w-4" />
         </Button>
       </div>
-
       {open && (
-        <div className="absolute right-0 z-40 mt-2 w-full min-w-[220px] rounded-xl border border-border bg-background p-3 shadow-[0_16px_40px_rgba(0,0,0,0.14)] dark:shadow-black/40">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-            Format 24 jam
-          </p>
-          <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
-            <label className="block">
-              <span className="sr-only">Jam</span>
-              <select
-                value={hour}
-                onChange={(event) => onChange(`${event.target.value}:${minute}`)}
-                className="h-11 w-full rounded-[10px] border border-border bg-background px-3 font-[family-name:var(--font-dm-mono)] text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
-                aria-label={`${label} jam`}
-              >
-                {timeHours.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <span className="font-[family-name:var(--font-dm-mono)] text-sm font-semibold text-muted-foreground">
-              :
-            </span>
-            <label className="block">
-              <span className="sr-only">Menit</span>
-              <select
-                value={minute}
-                onChange={(event) => onChange(`${hour}:${event.target.value}`)}
-                className="h-11 w-full rounded-[10px] border border-border bg-background px-3 font-[family-name:var(--font-dm-mono)] text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
-                aria-label={`${label} menit`}
-              >
-                {timeMinutes.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div className="mt-2 flex items-center justify-between gap-3">
-            <span className="font-[family-name:var(--font-dm-mono)] text-[10px] text-muted-foreground">
-              00:00–23:59 · tanpa AM/PM
-            </span>
-            <Button type="button" size="sm" onClick={() => setOpen(false)}>
-              Selesai
-            </Button>
-          </div>
+        <div className="absolute right-0 z-40 mt-2 grid w-full min-w-52 grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-border bg-background p-3 shadow-xl">
+          <select value={hour} onChange={(event) => onChange(`${event.target.value}:${minute}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
+            {timeHours.map((item) => <option key={item}>{item}</option>)}
+          </select>
+          <span>:</span>
+          <select value={minute} onChange={(event) => onChange(`${hour}:${event.target.value}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
+            {timeMinutes.map((item) => <option key={item}>{item}</option>)}
+          </select>
+          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>Selesai</Button>
         </div>
       )}
-
-      <p className="mt-1.5 text-[10px] text-muted-foreground">
-        00:00–23:59 · klik ikon jam untuk memilih waktu.
-      </p>
     </div>
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  type = "text",
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  type?: string;
-}) {
+function Field({ label, value, onChange, placeholder = "" }: { label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <Input
-        type={type}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-      />
+      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} />
     </label>
   );
 }
 
-function TextArea({
-  label,
-  value,
-  onChange,
-  placeholder,
-  rows,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-  rows: number;
-}) {
+function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
   return (
     <label className="block">
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
       <textarea
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-        className="w-full resize-y px-3 py-2.5 text-sm outline-none"
+        rows={3}
+        className="w-full resize-y rounded-[10px] border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
       />
     </label>
   );
