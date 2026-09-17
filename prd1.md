@@ -995,3 +995,43 @@ Mempermudah update template undangan dengan komponen section reusable, memberi k
 - Previous Build Validation #969 for the main `InvitationDesignerV2` implementation: **PASS**.
 - Database migration: N/A.
 - Final public-template renderer parity for section visibility remains follow-up work; Studio/design persistence is implemented. Wishes persistence as guest data is not introduced in this change and no mock guest messages are used.
+
+---
+
+## 2026-09-17 — Invitation Studio Distinct Template Canvas Follow-up
+
+### Requirement / Intent
+Menjawab koreksi user bahwa pergantian template di Studio masih terasa tidak mengubah canvas. Template harus memiliki komposisi visual yang benar-benar berbeda, section reusable harus tetap dapat di-toggle, dan template test long-form mengikuti struktur referensi visual user tanpa menyalin aset pihak lain.
+
+### Implementation
+- menambahkan `InvitationDesignerV3` dan menjadikannya renderer aktif pada `InvitationEditorPage`;
+- membuat enam layout canvas yang berbeda secara struktur: Botanical, Editorial, Maroon, Garden, Midnight, dan Classic;
+- pemilihan template sekarang menerapkan starter palette serta font pairing template, namun user tetap dapat mengubah Warna/Font setelahnya;
+- `Botanical Ivory` tetap menjadi test template long-form dengan hero, identitas, parent line opsional, waktu/lokasi, RSVP, Wishes, Gift/E-Angpao, dan footer;
+- toggle RSVP, Wishes, dan Gift/E-Angpao tetap reusable, live di canvas, masuk undo/redo, dan tersimpan event-scoped pada `Invitation.templateKey`;
+- menambahkan palette/font preset yang diperlukan V3 pada `lib/templates/design.ts`;
+- generic public invitation sekarang membaca section visibility tersimpan dan hanya merender RSVP/Gift ketika section aktif; Gift juga mensyaratkan data rekening nyata;
+- Wishes tetap hanya layout preview di Studio karena persistence pesan tamu belum tersedia; tidak ada mock guest message production yang ditambahkan;
+- delta user-requested dicatat di `prd-tambahan.md`; requirement canonical di `prd.md` sudah mencakup behavior ini sehingga tidak perlu duplikasi requirement baru.
+
+### Affected Files
+- `components/InvitationStudio/InvitationDesignerV3.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+- `lib/templates/design.ts`
+- `components/PublicInvitation/PublicInvitation.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `c981c3f5d51765993bed6617b2e0a1a11883a15a` — improve invitation studio live template canvas;
+- `58232fd3891a471cabc309fb9290f10bded5a3c6` — activate improved invitation studio renderer;
+- `87df4ef49aa2cc9063905128cbdd3e633ce7d284` — add template-specific invitation presets;
+- `239135d46df57181b834f50a6631c72ed462d3af` — respect saved invitation section visibility;
+- `7301f5cf9bbb63cf79ef1c4f4e7b0f1f3c91f93d` — document invitation studio canvas follow-up.
+
+### Validation
+- Build Validation #975: **FAIL** pada TypeScript karena preset V3 awal merujuk palette/font key yang belum tersedia; failure ditelusuri dan bukan diabaikan.
+- Commit `87df4ef49aa2cc9063905128cbdd3e633ce7d284` menambahkan preset keys yang diperlukan.
+- Build Validation #976 pada head `87df4ef49aa2cc9063905128cbdd3e633ce7d284`: **PASS** untuk dependency install, Prisma Client generation, Next.js production compile, dan TypeScript.
+- Perubahan generic public renderer dan dokumentasi setelah #976 menunggu validation run terbaru; belum dinyatakan PASS pada entry ini.
+- Database migration: N/A.
