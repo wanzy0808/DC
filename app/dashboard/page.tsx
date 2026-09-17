@@ -780,6 +780,15 @@ function WorkspaceOverview({
   const overview = ctx?.overview;
   const active = events.filter((event) => event.accessPaid).length;
   const published = events.filter((event) => event.isPublished).length;
+  const totalGuests = overview?.totalGuests ?? 0;
+  const totalRsvp = overview?.totalRsvp ?? 0;
+  const pendingRsvp = Math.max(totalGuests - totalRsvp, 0);
+  const rsvpCoverage = totalGuests
+    ? Math.min(100, Math.round((totalRsvp / totalGuests) * 100))
+    : 0;
+  const publishRate = events.length
+    ? Math.min(100, Math.round((published / events.length) * 100))
+    : 0;
 
   const stats = [
     { label: "Total acara", value: events.length, icon: CalendarDays },
@@ -919,18 +928,94 @@ function WorkspaceOverview({
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.14em] text-primary">
-                Akses cepat
+                Ringkasan data
               </p>
               <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold">
-                Kelola workspace
+                Performa workspace
               </h2>
             </div>
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <Settings2 className="h-4 w-4" />
+              <MessageSquareHeart className="h-4 w-4" />
             </span>
           </div>
 
-          <div className="mt-5 divide-y divide-border/70 border-y border-border/70">
+          <div className="mt-5 rounded-xl border border-border/70 p-4">
+            <div className="flex flex-col items-center gap-5 sm:flex-row xl:flex-col 2xl:flex-row">
+              <figure
+                className="relative size-32 shrink-0"
+                aria-label={`Cakupan RSVP ${rsvpCoverage}%`}
+              >
+                <svg viewBox="0 0 42 42" className="size-32 -rotate-90" aria-hidden="true">
+                  <circle
+                    cx="21"
+                    cy="21"
+                    r="15.9155"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.4"
+                    className="text-foreground/[0.07]"
+                  />
+                  <circle
+                    cx="21"
+                    cy="21"
+                    r="15.9155"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.4"
+                    strokeLinecap="round"
+                    strokeDasharray={`${rsvpCoverage} ${100 - rsvpCoverage}`}
+                    className="text-primary"
+                  />
+                </svg>
+                <div className="absolute inset-0 grid place-items-center text-center">
+                  <div>
+                    <p className="text-2xl font-semibold leading-none">{rsvpCoverage}%</p>
+                    <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[7px] uppercase tracking-[0.08em] text-muted-foreground">
+                      RSVP
+                    </p>
+                  </div>
+                </div>
+              </figure>
+
+              <div className="w-full min-w-0 space-y-3">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-xs text-muted-foreground">Sudah merespons</span>
+                  <span className="text-sm font-semibold">{totalRsvp}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-xs text-muted-foreground">Belum merespons</span>
+                  <span className="text-sm font-semibold">{pendingRsvp}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-xs text-muted-foreground">Total tamu</span>
+                  <span className="text-sm font-semibold">{totalGuests}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-4 rounded-xl border border-border/70 p-4">
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold">Publikasi acara</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">{published} dari {events.length} acara sudah terbit</p>
+              </div>
+              <p className="font-[family-name:var(--font-dm-mono)] text-xs font-semibold text-primary">
+                {publishRate}%
+              </p>
+            </div>
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.07]">
+              <div
+                className="h-full rounded-full bg-primary transition-[width]"
+                style={{ width: `${publishRate}%` }}
+              />
+            </div>
+          </div>
+
+          <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+            Akses cepat
+          </p>
+          <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
             {[
               { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
               { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
@@ -955,22 +1040,9 @@ function WorkspaceOverview({
             })}
           </div>
 
-          <div className="mt-5 rounded-xl border border-border/70 bg-foreground/[0.018] p-4">
-            <p className="text-xs font-semibold">Status workspace</p>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div>
-                <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
-                  Terbit
-                </p>
-                <p className="mt-1 text-lg font-semibold">{published}</p>
-              </div>
-              <div>
-                <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
-                  Dibagikan
-                </p>
-                <p className="mt-1 text-lg font-semibold">{overview?.invitationsShared ?? 0}</p>
-              </div>
-            </div>
+          <div className="mt-4 flex items-center justify-between gap-4 rounded-xl bg-foreground/[0.018] px-4 py-3">
+            <span className="text-xs text-muted-foreground">Total kunjungan undangan</span>
+            <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
           </div>
         </Card>
       </section>

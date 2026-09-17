@@ -845,3 +845,13 @@ Dashboard customer workspace dirombak mengikuti arah visual yang disetujui user 
 - Commit `a88f1b474f3cf6e384d4cf315e1cceea00f4522b` memulihkan helper `Stat`.
 - Build Validation #949 pada state source setelah fix: **PASS**. Dependency install, Prisma Client generation, Next.js production compile, dan TypeScript semuanya berhasil.
 
+### Data-oriented dashboard follow-up
+Atas arahan user, Beranda dashboard diperkuat dengan visualisasi data nyata tanpa menambah library chart atau mock dataset:
+- donut chart cakupan RSVP = jumlah guest dengan status RSVP non-PENDING dibanding total guest;
+- breakdown sudah/belum merespons dan total tamu;
+- progress bar publikasi acara berdasarkan event `isPublished`;
+- total kunjungan undangan tetap diambil dari agregasi `viewCount`;
+- seluruh visual tetap neutral white/black + Rose brand dan tidak mengubah product flow.
+
+Validation status: pending build setelah implementation commit.
+
