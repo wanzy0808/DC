@@ -106,6 +106,27 @@ Renderer public hanya merender section yang aktif dan valid untuk invitation ter
 
 Menonaktifkan section presentation tidak boleh menghapus atau merusak shared core feature/data secara tidak sengaja.
 
+### 3.2 Section animation toggle
+
+Template boleh menentukan animation/motion default untuk section yang memang memiliki animasi.
+
+Animation default adalah bagian dari karakter desain template dan ditentukan oleh template designer/implementation, bukan dirakit bebas oleh customer di Studio.
+
+Untuk section yang memiliki animation capability, Studio boleh menyediakan kontrol sederhana untuk mematikan animasi pada section tersebut.
+
+Canonical behavior:
+- jika template tidak memiliki animasi pada suatu section, Studio tidak perlu menampilkan animation control untuk section tersebut;
+- jika template memiliki animasi, default mengikuti animation yang ditentukan template;
+- user dapat memilih **Animasi ON / OFF** untuk section tersebut;
+- `OFF` berarti section tetap tampil dan berfungsi normal tetapi tanpa decorative/template motion;
+- toggle animation tidak mengubah section ON/OFF;
+- Studio tidak menjadi general-purpose animation editor dan tidak perlu memberikan customer daftar bebas seperti bounce/rotate/slide untuk mengganti karakter template;
+- animation state harus tersimpan sebagai configuration milik invitation/event dan reusable template master tidak boleh dimodifikasi untuk user lain.
+
+Animasi yang bersifat functional/necessary untuk menjelaskan state aplikasi tidak boleh dihilangkan apabila penghapusannya membuat interaction menjadi tidak jelas. Toggle terutama ditujukan untuk decorative/template motion.
+
+Implementation juga harus menghormati accessibility preference seperti reduced motion ketika relevan.
+
 ---
 
 ## 4. Template Freedom
@@ -267,6 +288,7 @@ Secara konseptual template harus memiliki:
 - supported event/category compatibility bila diperlukan;
 - supported sections;
 - presentation implementation/theme definition;
+- default section animation capability/configuration bila tersedia;
 - version/migration strategy bila struktur template kemudian berubah secara material.
 
 Template renderer menerima normalized invitation/event data dari shared engine dan tidak mengambil ownership atas business rules yang seharusnya berada di backend/core application.
