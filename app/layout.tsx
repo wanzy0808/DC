@@ -24,7 +24,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const locale: Locale = isLocale(savedLocale) ? savedLocale : "id";
 
   return (
-    <html lang={locale} className="scroll-smooth">
+    <html lang={locale} className="scroll-smooth" data-scroll-behavior="smooth">
       <body className={`${cinzel.variable} ${faunaOne.variable} ${dmMono.variable} antialiased min-h-screen flex flex-col justify-between overflow-x-hidden`}>
         <LanguageProvider initialLocale={locale}>
           <ThemeProvider>

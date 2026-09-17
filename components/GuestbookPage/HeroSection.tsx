@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, QrCode, Radio, Users } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button-variants";
 
 export default function HeroSection() {
   return (
