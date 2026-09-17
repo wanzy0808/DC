@@ -1,1 +1,0 @@
-Temporary validation marker for final source state on 2026-09-17. Remove after Build Validation completes.

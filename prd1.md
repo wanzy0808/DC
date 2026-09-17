@@ -776,3 +776,10 @@ Mulai mengimplementasikan backlog prioritas dari PRD: proteksi public RSVP dari 
 ### Validation
 - Build/type validation pending final source HEAD.
 - Database migration created; production requires `pnpm db:deploy` before category/tag fields are used against production DB.
+
+### Validation follow-up — RSVP Protection & Guest Segmentation
+- GitHub Actions Build Validation #937 on source head `30ce990de258a4b5556efe90387be11c35106dca`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production compile + TypeScript: **PASS**.
+- Migration `20260917081500_add_guest_category_tags` is committed but still requires `pnpm db:deploy` on the target VPS/production database before category/tag persistence is used there.
