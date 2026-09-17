@@ -4,7 +4,6 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { prisma } from "@/lib/prisma";
 
 const maxAudioSize = 10 * 1024 * 1024;
@@ -42,20 +41,11 @@ export async function POST(request: Request) {
 
     const invitation = await prisma.invitation.findFirst({
       where: { id: invitationId, ownerId: user.id },
-      include: { payment: true },
+      select: { id: true, eventConfigured: true },
     });
     if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
-
-    const userPayment = await prisma.payment.findFirst({
-      where: {
-        userId: user.id,
-        status: "PAID",
-        packageKey: { in: ["INVITATION_BASIC", "INVITATION_GUESTBOOK"] },
-      },
-      orderBy: { paidAt: "desc" },
-    });
-    if (!userPayment && !hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json({ error: "Custom asset tersedia setelah paket Digital Invitation aktif." }, { status: 402 });
+    if (!invitation.eventConfigured) {
+      return NextResponse.json({ error: "Lengkapi acara sebelum mengunggah aset." }, { status: 400 });
     }
 
     const assetCount = await prisma.invitationAsset.count({ where: { invitationId, type } });
