@@ -120,3 +120,39 @@ Toggle dan persistence section sudah bekerja di Studio/design state. Wishes pada
 - Build Validation #979 pada documentation head setelah generic public visibility integration: **PASS**.
 - Build Validation #980 pada head `b38ccce8470c1f6f7aa7f5ffcf746ece4b2c38db` setelah Figma Classic public visibility integration: **PASS** untuk install, Prisma Client generation, Next.js production build, dan TypeScript.
 - Database migration: N/A.
+
+---
+
+## Invitation Studio — Live Template Remount & Reusable Optional Sections V4
+
+### Requirement delta
+
+- Pergantian template di Studio harus langsung mengganti komposisi canvas yang sedang terlihat, bukan hanya state pilihan di panel template.
+- RSVP, Wishes, dan Gift / E-Angpao tetap satu set komponen reusable yang dipakai ulang oleh seluruh template dan dapat dinyalakan/matikan per event.
+- Botanical Ivory tetap menjadi template test long-form yang mengikuti struktur referensi visual: hero, identitas pasangan/acara, waktu dan lokasi, RSVP, Wishes, Gift, lalu footer.
+
+### Implementation
+
+- menambahkan `InvitationDesignerV4` dengan registry renderer per template: Botanical, Editorial, Maroon, Garden, Midnight, dan Classic;
+- setiap template memakai komposisi hero/identity yang berbeda secara struktural, sementara section RSVP/Wishes/Gift tetap dirender dari komponen reusable yang sama;
+- canvas diberi `key` berdasarkan template aktif sehingga pergantian template memaksa remount visual dan tidak tertahan oleh state subtree lama;
+- pilihan template tetap menerapkan starter palette/font, namun panel warna dan font tetap dapat mengoverride setelah template dipilih;
+- toggle RSVP/Wishes/Gift langsung mengubah canvas dan tetap disimpan melalui `Invitation.templateKey`/`sections=...` tanpa migration database;
+- `InvitationEditorPage` sekarang memakai V4.
+
+### Affected files
+
+- `components/InvitationStudio/InvitationDesignerV4.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+
+- `f609719b925b02104b30685e760e8d3825455357` — make studio templates render distinct live canvases;
+- `24af251b443396f6050800f5e57ee19150e30e9d` — activate live template canvas v4 in studio.
+
+### Validation
+
+- GitHub Actions Build Validation #982: sedang berjalan pada saat catatan ini ditulis; belum dinyatakan PASS.
+- Database migration: N/A.
