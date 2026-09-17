@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -45,6 +46,31 @@ function sanitizeInvitation<T extends object>(invitation: T) {
     passwordHash?: string | null;
   };
   return safeInvitation;
+}
+
+function databaseFailure(error: unknown, fallback: string) {
+  if (
+    error instanceof Prisma.PrismaClientKnownRequestError &&
+    (error.code === "P2021" || error.code === "P2022")
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          "Database server belum sinkron dengan versi aplikasi terbaru. Jalankan pnpm db:deploy di server lalu coba simpan lagi.",
+      },
+      { status: 503 },
+    );
+  }
+
+  return NextResponse.json({ error: fallback }, { status: 500 });
+}
+
+function optionalName(value: unknown) {
+  return String(value ?? "").trim() || null;
+}
+
+function isValidTime24(value: string | null) {
+  return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
 
 async function getOrCreateLegacyInvitation(
@@ -156,47 +182,52 @@ export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
-  const url = new URL(request.url);
-  if (url.searchParams.get("all") === "1") {
-    const invitations = await prisma.invitation.findMany({
-      where: { ownerId: user.id },
-      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-      orderBy: { createdAt: "asc" },
-    });
+  try {
+    const url = new URL(request.url);
+    if (url.searchParams.get("all") === "1") {
+      const invitations = await prisma.invitation.findMany({
+        where: { ownerId: user.id },
+        include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+        orderBy: { createdAt: "asc" },
+      });
 
-    return NextResponse.json({
-      invitations: invitations.map((invitation) => ({
-        ...sanitizeInvitation(invitation),
-        accessPaid: hasPaidDigitalInvitation(invitation.payment),
-      })),
-      unlimited: true,
-    });
-  }
+      return NextResponse.json({
+        invitations: invitations.map((invitation) => ({
+          ...sanitizeInvitation(invitation),
+          accessPaid: hasPaidDigitalInvitation(invitation.payment),
+        })),
+        unlimited: true,
+      });
+    }
 
-  const requestedType = normalizeType(url.searchParams.get("type"));
-  const requestedId = studioInvitationId(
-    request,
-    url.searchParams.get("id"),
-    requestedType,
-  );
-  if (requestedId) {
-    const invitation = await findOwnedInvitation(user.id, requestedId);
-    if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+    const requestedType = normalizeType(url.searchParams.get("type"));
+    const requestedId = studioInvitationId(
+      request,
+      url.searchParams.get("id"),
+      requestedType,
+    );
+    if (requestedId) {
+      const invitation = await findOwnedInvitation(user.id, requestedId);
+      if (!invitation) return NextResponse.json({ error: "Undangan tidak ditemukan." }, { status: 404 });
+      return NextResponse.json({
+        invitation: {
+          ...sanitizeInvitation(invitation),
+          accessPaid: hasPaidDigitalInvitation(invitation.payment),
+        },
+      });
+    }
+
+    const invitation = await getOrCreateLegacyInvitation(user, requestedType);
     return NextResponse.json({
       invitation: {
         ...sanitizeInvitation(invitation),
         accessPaid: hasPaidDigitalInvitation(invitation.payment),
       },
     });
+  } catch (error) {
+    console.error("GET /api/invitations failed", error);
+    return databaseFailure(error, "Data acara belum dapat dimuat.");
   }
-
-  const invitation = await getOrCreateLegacyInvitation(user, requestedType);
-  return NextResponse.json({
-    invitation: {
-      ...sanitizeInvitation(invitation),
-      accessPaid: hasPaidDigitalInvitation(invitation.payment),
-    },
-  });
 }
 
 export async function POST(request: Request) {
@@ -213,6 +244,11 @@ export async function POST(request: Request) {
       const category = getEventCategory(eventCategory);
       const groomName = String(body.groomName ?? "").trim();
       const brideName = String(body.brideName ?? "").trim();
+      const wedding = eventCategory === "WEDDING";
+      const groomFatherName = wedding ? optionalName(body.groomFatherName) : null;
+      const groomMotherName = wedding ? optionalName(body.groomMotherName) : null;
+      const brideFatherName = wedding ? optionalName(body.brideFatherName) : null;
+      const brideMotherName = wedding ? optionalName(body.brideMotherName) : null;
       const venue = String(body.venue ?? "").trim();
       const address = String(body.address ?? "").trim() || null;
       const mapUrl = String(body.mapUrl ?? "").trim() || null;
@@ -241,6 +277,12 @@ export async function POST(request: Request) {
       if (!ceremonyTime) {
         return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
       }
+      if (!isValidTime24(ceremonyTime) || !isValidTime24(receptionTime)) {
+        return NextResponse.json(
+          { error: "Waktu acara harus menggunakan format 24 jam HH:mm (00:00–23:59)." },
+          { status: 400 },
+        );
+      }
       if (!venue) {
         return NextResponse.json({ error: "Nama tempat wajib diisi." }, { status: 400 });
       }
@@ -251,6 +293,10 @@ export async function POST(request: Request) {
         title,
         groomName,
         brideName,
+        groomFatherName,
+        groomMotherName,
+        brideFatherName,
+        brideMotherName,
         venue,
         address,
         mapUrl,
@@ -334,7 +380,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("POST /api/invitations failed", error);
-    return NextResponse.json({ error: "Acara baru belum dapat dibuat." }, { status: 500 });
+    return databaseFailure(error, "Acara baru belum dapat dibuat.");
   }
 }
 
@@ -356,6 +402,19 @@ export async function PUT(request: Request) {
     const category = getEventCategory(eventCategory);
     const groomName = String(body.groomName ?? invitation.groomName).trim();
     const brideName = String(body.brideName ?? invitation.brideName).trim();
+    const wedding = eventCategory === "WEDDING";
+    const groomFatherName = wedding
+      ? optionalName(body.groomFatherName ?? invitation.groomFatherName)
+      : null;
+    const groomMotherName = wedding
+      ? optionalName(body.groomMotherName ?? invitation.groomMotherName)
+      : null;
+    const brideFatherName = wedding
+      ? optionalName(body.brideFatherName ?? invitation.brideFatherName)
+      : null;
+    const brideMotherName = wedding
+      ? optionalName(body.brideMotherName ?? invitation.brideMotherName)
+      : null;
     const venue = String(body.venue ?? invitation.venue).trim();
     const address = String(body.address ?? invitation.address ?? "").trim() || null;
     const mapUrl = String(body.mapUrl ?? invitation.mapUrl ?? "").trim() || null;
@@ -390,6 +449,12 @@ export async function PUT(request: Request) {
       if (!ceremonyTime) {
         return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
       }
+      if (!isValidTime24(ceremonyTime) || !isValidTime24(receptionTime)) {
+        return NextResponse.json(
+          { error: "Waktu acara harus menggunakan format 24 jam HH:mm (00:00–23:59)." },
+          { status: 400 },
+        );
+      }
       if (!venue) {
         return NextResponse.json({ error: "Nama tempat wajib diisi." }, { status: 400 });
       }
@@ -422,6 +487,10 @@ export async function PUT(request: Request) {
         eventCategory,
         groomName,
         brideName,
+        groomFatherName,
+        groomMotherName,
+        brideFatherName,
+        brideMotherName,
         venue,
         address,
         mapUrl,
@@ -455,6 +524,6 @@ export async function PUT(request: Request) {
     });
   } catch (error) {
     console.error("PUT /api/invitations failed", error);
-    return NextResponse.json({ error: "Undangan belum dapat disimpan." }, { status: 500 });
+    return databaseFailure(error, "Undangan belum dapat disimpan.");
   }
 }
