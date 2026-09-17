@@ -24,6 +24,7 @@ DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest manage
   7. Publish.
 - The Digital Invitation package is required at the **Publish** step, not when creating the event or entering Studio.
 - Unpaid Studio sessions are preview-only and may be watermarked. Public rendering remains server-authoritative and requires a configured event, a saved template, a published state, and valid event-scoped Digital Invitation entitlement.
+- Wedding events may optionally store father/mother names for each partner. When present, invitation renderers automatically show a parent line such as `Anak dari Bapak Ahmad & Ibu Siti`; missing parent data is omitted instead of showing a placeholder.
 
 ### WA Blast Add-on
 - WA Blast is **not included** in Digital Invitation.
@@ -102,3 +103,19 @@ Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible b
 - Node.js >= 22.0.0
 - pnpm >= 11.0.0
 - PostgreSQL database
+
+### Database migrations
+
+Development migration:
+
+```bash
+pnpm db:migrate
+```
+
+Production/VPS migration after pulling a version that contains new Prisma migrations:
+
+```bash
+pnpm db:deploy
+```
+
+`pnpm build` / GitHub Build Validation does **not** apply PostgreSQL migrations. A deployment that updates Prisma schema-dependent application code must run `pnpm db:deploy` against the target production `DATABASE_URL` before the updated app is relied on. If the application returns a database-schema synchronization error while saving/loading events, apply the pending migrations on the server first.
