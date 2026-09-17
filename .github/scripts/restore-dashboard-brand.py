@@ -41,3 +41,29 @@ if old_mobile not in text:
 text = text.replace(old_desktop, new_desktop, 1)
 text = text.replace(old_mobile, new_mobile, 1)
 page_path.write_text(text)
+
+changelog_path = Path('prd1.md')
+changelog = changelog_path.read_text()
+entry = '''
+
+---
+
+## 2026-09-17 — Dashboard Brand Lockup Restore
+
+### Summary
+Dashboard redesign sempat menyederhanakan brand lockup menjadi teks `DC Organizer` saja. Perubahan itu dikoreksi agar header dashboard kembali mengikuti canonical public navbar brand treatment tanpa mengubah layout/data-oriented dashboard yang baru.
+
+### Implementation
+- desktop dashboard header menggunakan kembali font token brand `--font-dc-heading`;
+- tagline canonical `Your best consultant for wedding & event` dipulihkan;
+- mobile header memakai brand treatment yang sama dalam skala responsif;
+- tidak ada perubahan pada brand color, logo wording, public navbar, product flow, database, atau entitlement.
+
+### Affected file
+- `app/dashboard/page.tsx`
+
+### Validation
+Workflow **Restore Dashboard Brand** menjalankan dependency install, Prisma Client generation, dan Next.js production build + TypeScript sebelum commit final dibuat. Hasil workflow wajib PASS.
+'''
+if '## 2026-09-17 — Dashboard Brand Lockup Restore' not in changelog:
+    changelog_path.write_text(changelog + entry)
