@@ -136,6 +136,22 @@ async function findOwnedInvitation(userId: string, id: string) {
   });
 }
 
+async function findReusableDraft(userId: string) {
+  return prisma.invitation.findFirst({
+    where: {
+      ownerId: userId,
+      eventConfigured: false,
+      isPublished: false,
+      title: "",
+      venue: "",
+      groomName: "",
+      brideName: "",
+    },
+    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+    orderBy: { createdAt: "desc" },
+  });
+}
+
 export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
@@ -183,24 +199,103 @@ export async function GET(request: Request) {
   });
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   try {
-    const reusableDraft = await prisma.invitation.findFirst({
-      where: {
-        ownerId: user.id,
-        eventConfigured: false,
-        isPublished: false,
-        title: "",
-        venue: "",
-        groomName: "",
-        brideName: "",
-      },
-      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const body = await request.json().catch(() => null);
+    const reusableDraft = await findReusableDraft(user.id);
+
+    if (body?.eventConfigured === true) {
+      const type = normalizeType(body.type);
+      const eventCategory = normalizeEventCategory(body.eventCategory);
+      const category = getEventCategory(eventCategory);
+      const groomName = String(body.groomName ?? "").trim();
+      const brideName = String(body.brideName ?? "").trim();
+      const venue = String(body.venue ?? "").trim();
+      const address = String(body.address ?? "").trim() || null;
+      const mapUrl = String(body.mapUrl ?? "").trim() || null;
+      const timezone = normalizeIndonesiaTimezone(body.timezone);
+      const eventDate = new Date(String(body.eventDate ?? ""));
+      const ceremonyTime = String(body.ceremonyTime ?? "").trim() || null;
+      const receptionTime = String(body.receptionTime ?? "").trim() || null;
+      const requestedTitle = String(body.title ?? "").trim();
+      const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
+
+      if (!title) {
+        return NextResponse.json({ error: "Nama acara wajib diisi." }, { status: 400 });
+      }
+      if (category.nameMode === "couple" && (!groomName || !brideName)) {
+        return NextResponse.json(
+          { error: "Nama pengantin pria dan wanita wajib diisi untuk acara ini." },
+          { status: 400 },
+        );
+      }
+      if (category.nameMode === "single" && !groomName) {
+        return NextResponse.json({ error: "Nama utama acara wajib diisi." }, { status: 400 });
+      }
+      if (Number.isNaN(eventDate.getTime())) {
+        return NextResponse.json({ error: "Tanggal acara wajib diisi." }, { status: 400 });
+      }
+      if (!ceremonyTime) {
+        return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
+      }
+      if (!venue) {
+        return NextResponse.json({ error: "Nama tempat wajib diisi." }, { status: 400 });
+      }
+
+      const data = {
+        type,
+        eventCategory,
+        title,
+        groomName,
+        brideName,
+        venue,
+        address,
+        mapUrl,
+        timezone,
+        eventDate,
+        ceremonyTime,
+        receptionTime,
+        description: String(body.description ?? "").trim() || null,
+        eventNotes: String(body.eventNotes ?? "").trim() || null,
+        eventConfigured: true,
+      };
+
+      const invitation = reusableDraft
+        ? await prisma.invitation.update({
+            where: { id: reusableDraft.id },
+            data,
+            include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+          })
+        : await prisma.invitation.create({
+            data: {
+              ownerId: user.id,
+              slug: await makeEventSlug(
+                user.firstName,
+                user.id,
+                (await prisma.invitation.count({ where: { ownerId: user.id } })) + 1,
+              ),
+              templateKey: "",
+              waBlastQuota: 0,
+              ...data,
+            },
+            include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+          });
+
+      return NextResponse.json(
+        {
+          invitation: {
+            ...sanitizeInvitation(invitation),
+            accessPaid: hasPaidDigitalInvitation(invitation.payment),
+          },
+          unlimited: true,
+          reused: Boolean(reusableDraft),
+        },
+        { status: reusableDraft ? 200 : 201 },
+      );
+    }
 
     if (reusableDraft) {
       return NextResponse.json({
@@ -274,6 +369,7 @@ export async function PUT(request: Request) {
     const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
     const wantsPublish = body.isPublished === undefined ? invitation.isPublished : Boolean(body.isPublished);
     const canPublish = hasPaidDigitalInvitation(invitation.payment);
+    const eventConfigured = body.eventConfigured === true ? Boolean(title) : invitation.eventConfigured;
 
     if (body.eventConfigured === true) {
       if (!title) {
@@ -299,14 +395,19 @@ export async function PUT(request: Request) {
       }
     }
 
+    if (wantsPublish && !eventConfigured) {
+      return NextResponse.json({ error: "Lengkapi dan simpan acara sebelum publish." }, { status: 400 });
+    }
     if (wantsPublish && (!title || !venue || Number.isNaN(eventDate.getTime()))) {
       return NextResponse.json({ error: "Nama acara, tempat, dan tanggal wajib diisi sebelum publish." }, { status: 400 });
+    }
+    if (wantsPublish && !templateKey) {
+      return NextResponse.json({ error: "Pilih dan simpan template sebelum publish." }, { status: 400 });
     }
     if (wantsPublish && !canPublish) {
       return NextResponse.json({ error: "Aktifkan Undangan Digital Rp150.000 untuk acara ini sebelum publish." }, { status: 402 });
     }
 
-    const eventConfigured = body.eventConfigured === true ? Boolean(title) : invitation.eventConfigured;
     const slug = await resolveLegacyCoupleSlug(
       invitation.id,
       groomName,
