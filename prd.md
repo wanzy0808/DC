@@ -2278,3 +2278,29 @@ Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasar
 - TypeScript / Next production build (`pnpm build`): **PASS**.
 - Database migration: **N/A**.
 - Production deployment: not performed by this implementation workflow.
+
+---
+
+## 2026-09-18 — RSVP Submit Repair (Incremental Delivery)
+
+### Implementation / Rationale
+- Added explicit `type="submit"` to the public RSVP confirmation button. The shared Button defaults to `button`, so clicking the previous control did not submit the form.
+- Added an accessible attendance selector name and a status announcement for submission feedback.
+- Updated downloaded ticket branding/filename to DC Organizer and calendar/ticket fallback titles to general-event wording (`Acara`).
+- Scope is limited to the existing RSVP UI; event-scoped API authorization, persistence, and QR generation are unchanged.
+
+### Affected Files / Commit
+- `components/InvitationStudio/RsvpForm.tsx`
+- `prd.md` (this appendix, following the consolidated governance in section 21; `prd1.md` is absent)
+- Commit: `fix: restore public RSVP form submission` (same change set as this entry).
+
+### Validation
+- Prisma Client generation: PASS.
+- TypeScript (`tsc --noEmit`): PASS.
+- ESLint on the changed component: PASS.
+- React server-render regression check: PASS; rendered confirmation button is `type="submit"` and attendance selector has an accessible name.
+- `git diff --check`: PASS.
+- Production build, live database RSVP submission, and deployment: not run; no claim of end-to-end validation.
+
+### Remaining work
+- Continue the operational backlog in section 18 in separate small increments; no claim that offline Usher, WhatsApp provider integration, team permissions, or complete template parity is delivered here.
