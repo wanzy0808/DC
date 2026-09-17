@@ -84,13 +84,8 @@ export default function FeatureSection() {
                   : "border-border bg-card/60 hover:border-primary/50"
               }`}
             >
-              <span className="flex items-center gap-4">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border font-[family-name:var(--font-dm-mono)] text-xs">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span className="font-[family-name:var(--font-cinzel)] text-sm font-semibold md:text-base">
-                  {feature.title}
-                </span>
+              <span className="font-[family-name:var(--font-cinzel)] text-sm font-semibold md:text-base">
+                {feature.title}
               </span>
               <span className="text-primary">→</span>
             </button>

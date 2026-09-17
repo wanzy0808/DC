@@ -11,15 +11,12 @@ export default function ServicesSection() {
         description="Kami membantu memecah persiapan menjadi keputusan yang jelas, menyatukan vendor dan tim, lalu memastikan semuanya bertemu dengan baik saat acara berlangsung."
       />
       <div className="grid gap-5 md:grid-cols-2">
-        {plannerServices.map((service, index) => (
+        {plannerServices.map((service) => (
           <article
             key={service.title}
             className="rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6 md:p-7"
           >
-            <div className="flex items-center justify-between">
-              <span className="font-[family-name:var(--font-dc-mono)] text-xs text-[var(--primary)]">
-                0{index + 1}
-              </span>
+            <div className="flex justify-end">
               <Check className="h-5 w-5 text-[var(--primary)]" />
             </div>
             <h3 className="mt-7 font-[family-name:var(--font-dc-heading)] text-2xl">

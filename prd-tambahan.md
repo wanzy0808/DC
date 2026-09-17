@@ -26,3 +26,9 @@
 - Event scope fallback labels.
 - Public/application page-level containers: homepage, Event Planner, Digital Invitation, Guestbook, Packages, Transactions, Checkout, Navbar, and Invitation Studio header.
 - Backoffice page-level workspaces: Admin, Owner, and Designer; inner modal/text readability constraints remain intentionally compact.
+
+## Decorative numbering audit follow-up
+- Audit lint-like review after the width cleanup found remaining presentational sequence numbers in Event Planner package cards, planner service cards, Guestbook feature tabs, burger navigation, and RSVP list/export rows.
+- Those sequence numbers are removed; the labels/content now stand on their own without `01`, `02`, `#`, or index-based decoration.
+- Functional numeric data remains untouched, including seating numbers, time picker hours/minutes, prices, dates, quotas, counts, child order, phone numbers, and template identifiers.
+

@@ -107,11 +107,10 @@ export default function RsvpAnalyticsPanel({
   }, [ascending, guests, query, sortKey]);
 
   function exportCsv() {
-    const header = ["#", "Nama Tamu", "Telepon", "Status RSVP", "Pax", "Check In", "Meja"];
+    const header = ["Nama Tamu", "Telepon", "Status RSVP", "Pax", "Check In", "Meja"];
     const lines = [
       header,
-      ...filtered.map((guest, index) => [
-        index + 1,
+      ...filtered.map((guest) => [
         guest.name,
         guest.phone || "",
         statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus,
@@ -276,7 +275,6 @@ export default function RsvpAnalyticsPanel({
           <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
-                <th className="px-3 py-3 font-medium">#</th>
                 <th className="px-3 py-3 font-medium">Nama</th>
                 <th className="px-3 py-3 font-medium">RSVP</th>
                 <th className="px-3 py-3 font-medium">Pax</th>
@@ -286,14 +284,11 @@ export default function RsvpAnalyticsPanel({
               </tr>
             </thead>
             <tbody>
-              {filtered.map((guest, index) => (
+              {filtered.map((guest) => (
                 <tr
                   key={guest.id}
                   className="border-b border-border/80 text-xs transition-colors hover:bg-foreground/[0.025]"
                 >
-                  <td className="px-3 py-3 font-[family-name:var(--font-dm-mono)] text-foreground/45">
-                    {String(index + 1).padStart(2, "0")}
-                  </td>
                   <td className="px-3 py-3">
                     <p className="font-semibold text-foreground">{guest.name}</p>
                     <p className="mt-0.5 text-[10px] text-foreground/50">

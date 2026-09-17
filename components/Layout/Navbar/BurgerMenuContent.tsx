@@ -224,16 +224,13 @@ export default function BurgerMenuContent({
               </AnimatePresence>
             </div>
 
-            {menuItems.slice(1).map(({ href, label, icon: Icon }, index) => (
+            {menuItems.slice(1).map(({ href, label, icon: Icon }) => (
               <SheetClose
                 key={href}
                 nativeButton={false}
                 render={<Link href={href} className={itemClass} />}
               >
                 <span className="flex items-center gap-4">
-                  <span className="font-[family-name:var(--font-dc-mono)] text-[10px] tracking-[0.16em] text-[var(--muted-foreground)]">
-                    {String(index + 4).padStart(2, "0")}
-                  </span>
                   <Icon className="h-[18px] w-[18px] text-[var(--primary)]" />
                 </span>
                 <span>{label}</span>

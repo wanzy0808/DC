@@ -85,7 +85,7 @@ export default function EventPlannerPage() {
           </div>
 
           <div className="grid gap-5 md:grid-cols-2">
-            {plannerPackages.map((item, index) => (
+            {plannerPackages.map((item) => (
               <article
                 key={item.key}
                 className="flex h-full flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6 md:p-7"
@@ -93,7 +93,7 @@ export default function EventPlannerPage() {
                 <div className="flex items-start justify-between gap-4">
                   <div>
                     <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.18em] text-[var(--primary)]">
-                      Paket {String(index + 1).padStart(2, "0")}
+                      Paket
                     </p>
                     <h3 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
                       {item.name}
