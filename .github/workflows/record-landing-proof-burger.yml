@@ -1,0 +1,128 @@
+name: Record Landing Proof Burger Requirements
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-landing-proof-burger.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Sync product and implementation docs
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path: str, old: str, new: str) -> None:
+              file = Path(path)
+              text = file.read_text(encoding="utf-8")
+              if old not in text:
+                  raise SystemExit(f"Expected text not found in {path}: {old[:80]}")
+              file.write_text(text.replace(old, new, 1), encoding="utf-8")
+
+          replace_once(
+              "prd.md",
+              "- Public content standard sekitar `w-[min(92vw,1400px)]` saat sesuai.",
+              "- Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.",
+          )
+
+          replace_once(
+              "prd.md",
+              "- Public burger menu memakai navigation-button treatment, mempertahankan  dengan submenu Event Planner / Digital Invitation / Guestbook, serta selalu menyediakan  dan ; decorative numbering tidak digunakan.",
+              "- Public burger menu tidak menampilkan `Beranda`; home tetap dapat dicapai melalui brand/logo. Seluruh action utama memakai canonical Rose Button treatment seperti action `Daftar`. `Layanan` tetap menjadi parent dengan submenu Event Planner / Digital Invitation / Guestbook, `Masuk` dan `Daftar` wajib tersedia, dan icon `Layanan` harus berbeda dari icon `Paket`; decorative numbering tidak digunakan.",
+          )
+
+          landing_anchor = "- Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman."
+          landing_rules = landing_anchor + "\n- Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.\n- Area quote/proof ditempatkan setelah CTA dan sebelum separator tipis; capability checklist berada di bawah separator dengan jarak yang cukup agar hierarchy terasa ringan.\n- Quote pelanggan hanya boleh ditampilkan sebagai testimonial bila sumber/ucapan pelanggan benar-benar tersedia dan dapat dipertanggungjawabkan. Jangan mengarang nama, kutipan, rating, atau klaim pelanggan. Jika belum ada testimonial terverifikasi, gunakan brand/service statement tanpa customer attribution sampai data nyata tersedia."
+          replace_once("prd.md", landing_anchor, landing_rules)
+
+          agents_anchor = "- Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics."
+          agents_rules = agents_anchor + "\n- Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. Top-level burger actions use the canonical `Button` visual treatment consistently, `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.\n- Landing 80vw should read as one editorial composition: the copy column may widen/grow downward, a quote/proof block may sit above a subtle separator, and muted capability checks sit below it.\n- Never fabricate customer testimonials, customer names, ratings, or quotes. Only attribute a quote to a customer when a real source is available; otherwise use clearly non-customer brand/service copy."
+          replace_once("AGENTS.md", agents_anchor, agents_rules)
+
+          readme_anchor = "- Customer-facing UI copy avoids decorative sequence numbering; use descriptive labels instead. Real numeric product data (dates, time, price, counts, capacity, quota, child order, metrics) remains visible."
+          readme_rules = readme_anchor + "\n- Public burger navigation omits Beranda/Home because the brand logo already returns home; main actions share the canonical Rose Button treatment, `Layanan` retains its service submenu, `Masuk` and `Daftar` stay present, and `Layanan`/`Paket` use distinct icons.\n- Landing uses the 80vw width as one integrated copy + Pintu composition. The copy may widen and extend downward, with a quote/proof block above a subtle divider and capability checks below it.\n- Customer testimonials must be sourced from real customer feedback. Never publish invented names, quotes, ratings, or customer claims; use non-attributed brand/service statements until verified testimonials are available."
+          replace_once("README.md", readme_anchor, readme_rules)
+
+          supplemental = Path("prd-tambahan.md")
+          supplemental_text = supplemental.read_text(encoding="utf-8")
+          supplemental_heading = "## Burger button uniformity & landing proof hierarchy"
+          if supplemental_heading not in supplemental_text:
+              supplemental_text += """
+
+## Burger button uniformity & landing proof hierarchy
+- Burger menu tidak menampilkan Beranda/Home; brand/logo tetap menjadi jalur kembali ke landing.
+- Semua action utama burger menggunakan treatment canonical Rose Button seperti `Daftar`, termasuk `Masuk`, `Paket`, `Template`, dan `Bantuan`.
+- `Layanan` tetap menjadi parent button dengan submenu Event Planner, Digital Invitation, dan Guestbook Digital.
+- Icon `Layanan` dan `Paket` wajib berbeda agar scanning menu tidak membingungkan.
+- Landing copy kiri diperlebar dan sedikit dibesarkan ke bawah agar komposisi 80vw terasa penuh tanpa menjauh dari Pintu.
+- Quote/proof block berada setelah CTA dan sebelum garis separator; capability/checklist abu-abu berada lebih bawah setelah separator.
+- Testimonial customer hanya boleh memakai feedback nyata. Selama quote customer terverifikasi belum tersedia, landing memakai brand/service statement tanpa atribusi customer dan siap diganti setelah data nyata diberikan.
+"""
+              supplemental.write_text(supplemental_text, encoding="utf-8")
+
+          changelog = Path("prd1.md")
+          changelog_text = changelog.read_text(encoding="utf-8")
+          changelog_heading = "## 2026-09-17 — Uniform Burger Buttons & Landing Proof Hierarchy"
+          if changelog_heading not in changelog_text:
+              changelog_text += """
+
+---
+
+## 2026-09-17 — Uniform Burger Buttons & Landing Proof Hierarchy
+
+### Requirement / Intent
+Menyeragamkan burger menu ke treatment button `Daftar`, menghapus Beranda dari panel burger, menjaga submenu `Layanan`, membedakan icon `Layanan` dan `Paket`, serta membuat landing 80vw lebih berisi melalui hierarchy copy, quote/proof, separator, dan capability row yang lebih proporsional.
+
+### Implementation
+- menghapus item Beranda dari burger menu; logo/brand navbar tetap menjadi jalur kembali ke `/`;
+- seluruh main burger action memakai canonical Rose `Button` treatment seperti `Daftar`;
+- mempertahankan `Layanan` sebagai collapsible parent dengan submenu Event Planner, Digital Invitation, dan Guestbook Digital;
+- mengganti icon `Layanan` menjadi `Layers` sehingga tidak bentrok dengan icon `Package` pada Paket;
+- mempertahankan `Masuk` dan `Daftar` di burger menu;
+- memperlebar blok copy landing dan menaikkan sedikit display scale agar sisi kiri mengisi workspace 80vw secara lebih proporsional;
+- menambahkan quote-style proof block di bawah CTA, garis separator halus di bawah proof, dan menurunkan capability checklist ke bawah separator;
+- karena repository tidak menyediakan testimonial customer terverifikasi, proof copy saat ini adalah brand/service statement tanpa customer attribution; struktur siap diganti dengan testimonial nyata ketika sumber diberikan;
+- menyinkronkan rule terbaru ke `prd.md`, `AGENTS.md`, `README.md`, dan `prd-tambahan.md`.
+
+### Affected Files
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `app/page.tsx`
+- `lib/i18n.ts`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `5efd72a37fe8efe60c5b0e7eb251b202edc042ad` — refine burger menu button hierarchy;
+- `fb131c7c64ffed5b65c9c9960a20c861cb90cd8e` — add landing proof copy;
+- `38474f6ae2f89828a2ad72685b3d4406b169bd84` — refine landing editorial composition.
+
+### Validation
+- GitHub Actions Build Validation #917 on source head `38474f6ae2f89828a2ad72685b3d4406b169bd84`: **PASS**.
+- Dependency install: **PASS**.
+- TypeScript / Next production build: **PASS**.
+- Database migration: N/A.
+"""
+              changelog.write_text(changelog_text, encoding="utf-8")
+          PY
+
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/record-landing-proof-burger.yml
+          git add prd.md AGENTS.md README.md prd-tambahan.md prd1.md
+          git commit -m "docs: record burger and landing proof rules"
+          git push origin HEAD:main
