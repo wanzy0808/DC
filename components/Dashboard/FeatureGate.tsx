@@ -24,11 +24,7 @@ export default function FeatureGate({
   onUpgrade,
   children,
 }: FeatureGateProps) {
-  if (
-    allowed ||
-    title === "Manajemen Tamu" ||
-    title === "Personal Invitation"
-  ) {
+  if (allowed) {
     return <>{children}</>;
   }
 
