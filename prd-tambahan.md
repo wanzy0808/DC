@@ -44,3 +44,16 @@
 - Event Planner is a public consultation/service page and does not show a dedicated `Client Login` button in its page hero/header.
 - Removing that page-specific action does not remove the application login route or global authentication flow.
 
+## Landing hero copy balance
+- Teks di kiri Pintu harus mendukung visual Pintu, bukan mengalahkannya.
+- Headline dibuat lebih singkat, lebar teks dibatasi, dan skala desktop diturunkan sedikit.
+- Deskripsi dan capability label dibuat lebih ringkas agar mudah dipindai.
+- Tombol `Lihat Detail` / `View Details` memakai title case normal, bukan forced uppercase.
+- Jarak antar elemen hero dibuat lebih rapat agar tinggi blok teks seimbang dengan carousel Pintu.
+
+## Burger navigation simplification
+- Burger/sidebar navigation difokuskan untuk berpindah halaman.
+- Nomor dekoratif pada header dan item menu dihilangkan.
+- Deskripsi produk dan teks sekunder dihilangkan dari panel.
+- Menu memakai satu daftar datar: icon, nama halaman singkat, dan panah navigasi.
+- Link utama: Beranda/Home, Event Planner, Digital Invitation, Guestbook, Paket/Packages, Template, Bantuan/Help, dan Masuk/Sign in.
