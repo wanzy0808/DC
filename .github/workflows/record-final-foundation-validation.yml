@@ -21,15 +21,7 @@ jobs:
       - name: Record validation and clean marker
         shell: bash
         run: |
-          cat >> prd1.md <<'EOF'
-
-### Validation follow-up — RSVP Protection & Guest Segmentation
-- GitHub Actions Build Validation #937 on source head `30ce990de258a4b5556efe90387be11c35106dca`: **PASS**.
-- Dependency install: **PASS**.
-- Prisma Client generation: **PASS**.
-- Next.js production compile + TypeScript: **PASS**.
-- Migration `20260917081500_add_guest_category_tags` is committed but still requires `pnpm db:deploy` on the target VPS/production database before category/tag persistence is used there.
-EOF
+          echo 'CiMjIyBWYWxpZGF0aW9uIGZvbGxvdy11cCDigJQgUlNWUCBQcm90ZWN0aW9uICYgR3Vlc3QgU2VnbWVudGF0aW9uCi0gR2l0SHViIEFjdGlvbnMgQnVpbGQgVmFsaWRhdGlvbiAjOTM3IG9uIHNvdXJjZSBoZWFkIGAzMGNlOTkwZGUyNThhNGI1NTU2ZWZlOTAzODdiZTExYzM1MTA2ZGNhYDogKipQQVNTKiouCi0gRGVwZW5kZW5jeSBpbnN0YWxsOiAqKlBBU1MqKi4KLSBQcmlzbWEgQ2xpZW50IGdlbmVyYXRpb246ICoqUEFTUyoqLgotIE5leHQuanMgcHJvZHVjdGlvbiBjb21waWxlICsgVHlwZVNjcmlwdDogKipQQVNTKiouCi0gTWlncmF0aW9uIGAyMDI2MDkxNzA4MTUwMF9hZGRfZ3Vlc3RfY2F0ZWdvcnlfdGFnc2AgaXMgY29tbWl0dGVkIGJ1dCBzdGlsbCByZXF1aXJlcyBgcG5wbSBkYjpkZXBsb3lgIG9uIHRoZSB0YXJnZXQgVlBTL3Byb2R1Y3Rpb24gZGF0YWJhc2UgYmVmb3JlIGNhdGVnb3J5L3RhZyBwZXJzaXN0ZW5jZSBpcyB1c2VkIHRoZXJlLgo=' | base64 -d >> prd1.md
           git config user.name "dc-organizer-agent"
           git config user.email "actions@users.noreply.github.com"
           git rm .github/final-source-validation.txt
