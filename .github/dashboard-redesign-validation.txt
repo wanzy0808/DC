@@ -1,1 +1,1 @@
-Validate dashboard redesign source commit 89fa2cb5852e066be5a3b074a35aea41e785f25f
+Validate dashboard redesign source commit a88f1b474f3cf6e384d4cf315e1cceea00f4522b
