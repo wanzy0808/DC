@@ -304,7 +304,22 @@ WA Blast adalah add-on, bukan submenu inti Digital Invitation.
 
 Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
 
-### 6.1 Desktop dashboard shell
+### 6.1 Dashboard access before Publish
+
+Payment Digital Invitation **bukan gate untuk membuka isi dashboard**. Customer harus dapat masuk, melihat, dan menyiapkan workspace terkait invitation sebelum event dipublish atau sebelum Digital Invitation dibayar.
+
+Canonical behavior:
+- **Rangkaian Acara**, **Undangan/Studio**, **Personal Invitation**, **RSVP**, dan **Manajemen Tamu** tetap dapat dibuka sebelum Publish/payment;
+- RSVP dan Manajemen Tamu tidak menampilkan activation/paywall overlay hanya karena `accessPaid = false`;
+- Personal Invitation juga dapat dipersiapkan sebelum Publish; public delivery tetap bergantung pada lifecycle public invitation yang valid;
+- apabila belum ada data karena undangan belum dibagikan, gunakan empty state normal agar user tetap dapat memahami fungsi halaman;
+- payment gate Digital Invitation hanya ditegakkan ketika user menekan **Publish** di Undangan/Studio;
+- public RSVP/personal invitation tidak dianggap usable untuk tamu sampai parent invitation memenuhi configured + saved template + published + entitlement gates;
+- entitlement produk terpisah tetap berlaku: WA Blast tetap memakai quota/add-on sendiri dan Usher App tetap mengikuti Guestbook Digital bila diperlukan.
+
+Tujuan UX: user dapat mengeksplorasi isi Dashboard dan menyiapkan operasional acara tanpa dipaksa membayar sebelum mencapai Publish.
+
+### 6.2 Desktop dashboard shell
 
 Pada desktop dashboard menggunakan **application workspace yang memanfaatkan layar lebar**, bukan centered legacy container yang berhenti di `1400px`.
 
@@ -2336,3 +2351,21 @@ Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasar
 ### Remaining Scope
 - Category/tag editing and bulk assignment, Guest List and distribution filtering remain separate increments.
 - This does not claim completion of all section 9.4 acceptance criteria.
+---
+
+## 2026-09-18 — Dashboard Visual Consistency Phase 3 & Pre-Publish Workspace Access
+
+### Requirement / Intent
+Beranda tetap menjadi reference visual untuk seluruh customer Dashboard. Koreksi product access: RSVP, Manajemen Tamu, dan workspace persiapan invitation tidak boleh dipaywall hanya karena Undangan Digital belum dibayar/publish; payment Digital Invitation hanya menjadi gate pada Publish.
+
+### Implementation
+- Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, dan Usher sedang diselaraskan ke shared Dashboard primitives;
+- RSVP dan Manajemen Tamu tidak lagi menampilkan activation gate ketika event belum berbayar;
+- Personal Invitation tetap dapat dibuka/dipersiapkan sebelum Publish;
+- WA Blast dan Usher tetap mengikuti entitlement produk terpisah;
+- empty/loading states digunakan untuk menjelaskan workspace yang belum memiliki data.
+
+### Validation
+- Build: PENDING
+- TypeScript: PENDING
+- Database migration: N/A
