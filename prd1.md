@@ -484,3 +484,26 @@ Mengikuti koreksi terbaru user dan desktop agent rule: halaman desktop tidak bol
 - Targeted decorative numbering guard across `app/**/*.tsx` and `components/**/*.tsx`: **PASS** for the prohibited patterns covered by this change.
 - Database migration: N/A.
 
+---
+
+## 2026-09-17 — Global Desktop Width Follow-up
+
+### Requirement / Intent
+Audit setelah dashboard cleanup masih menemukan page-level wrapper lama di luar tab dashboard. Sesuai desktop agent rule, wrapper aplikasi yang menjadi primary page/header workspace tidak boleh berhenti pada fixed `1400px`/`max-w-7xl` ketika layar masih memiliki ruang besar. Compact text blocks, modal, phone mockup, dan invitation renderer tetap boleh memiliki max-width khusus karena bukan primary page container.
+
+### Implementation
+- menghapus sisa `w-[min(92vw,1400px)]` dari application/page chrome dan menggantinya dengan target `80vw` + `max-w-full`;
+- memperlebar homepage, Event Planner, Digital Invitation, Guestbook, Package selector, Navbar, Invitation Studio header, Transactions, Checkout, dan standalone Usher workspace;
+- memperlebar page-level Admin, Owner, dan Designer workspace ke target 80vw;
+- menghapus nested `max-w-6xl/7xl` yang masih membatasi Admin Operations, Usher App, dan Guest Management di dalam workspace lebar;
+- mempertahankan max-width yang memang berfungsi untuk readability/modal/device/template preview.
+
+### Commit
+- `3cea5baf0b33ddc9192fb4c010ed653d15532b01` — widen remaining desktop application workspaces.
+
+### Validation
+- `pnpm install --frozen-lockfile`: **PASS** in one-shot GitHub Actions follow-up job.
+- `pnpm build`: **PASS** in the same job against follow-up source.
+- Legacy fixed `w-[min(92vw,1400px)]` and dashboard `1400px` wrapper guard: **PASS**.
+- Database migration: N/A.
+
