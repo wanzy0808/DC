@@ -755,10 +755,10 @@ function Field({
   );
 }
 
-function formatEventDate(value: string) {
+function formatEventDate(value: string, locale: "id" | "en" = "id") {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -775,6 +775,7 @@ function WorkspaceOverview({
   events: DashboardEvent[];
   onGo: (id: Tab) => void;
 }) {
+  const { d, locale } = useDashboardI18n();
   const overview = ctx?.overview;
   const active = events.filter((event) => event.accessPaid).length;
   const published = events.filter((event) => event.isPublished).length;
@@ -789,15 +790,15 @@ function WorkspaceOverview({
     : 0;
 
   const stats = [
-    { label: "Total acara", value: events.length, icon: CalendarDays },
-    { label: "Undangan aktif", value: active, icon: Mail },
-    { label: "Total RSVP", value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
-    { label: "Total tamu", value: overview?.totalGuests ?? 0, icon: Users },
+    { label: d("Total acara"), value: events.length, icon: CalendarDays },
+    { label: d("Undangan aktif"), value: active, icon: Mail },
+    { label: d("Total RSVP"), value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
+    { label: d("Total tamu"), value: overview?.totalGuests ?? 0, icon: Users },
   ];
 
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7">
-      <section className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <DashboardPageShell>
+      <DashboardSurface className="overflow-hidden">
         <div className="flex flex-col gap-5 border-l-4 border-primary px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <div className="min-w-0">
             <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-primary">
@@ -825,27 +826,18 @@ function WorkspaceOverview({
             </Button>
           </div>
         </div>
-      </section>
+      </DashboardSurface>
 
-      <section className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <article
-              key={item.label}
-              className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                <Icon className="h-4 w-4" strokeWidth={1.8} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[11px] text-muted-foreground">{item.label}</p>
-                <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{item.value}</p>
-              </div>
-            </article>
-          );
-        })}
-      </section>
+      <DashboardMetricGrid className="mt-4">
+        {stats.map((item) => (
+          <DashboardMetricCard
+            key={item.label}
+            icon={item.icon}
+            label={item.label}
+            value={String(item.value)}
+          />
+        ))}
+      </DashboardMetricGrid>
 
       <section className="mt-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.75fr)]">
         <Card className="min-w-0 overflow-hidden">
@@ -866,11 +858,11 @@ function WorkspaceOverview({
               <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
                 <thead>
                   <tr className="text-[10px] text-muted-foreground">
-                    <th className="px-3 py-3 font-medium">Acara</th>
-                    <th className="px-3 py-3 font-medium">Tanggal</th>
-                    <th className="px-3 py-3 font-medium">Lokasi</th>
-                    <th className="px-3 py-3 font-medium">Status</th>
-                    <th className="px-3 py-3 text-right font-medium">Aksi</th>
+                    <th className="px-3 py-3 font-medium">{d("Acara")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Status")}</th>
+                    <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -878,18 +870,18 @@ function WorkspaceOverview({
                     <tr key={event.id} className="border-t border-border/60">
                       <td className="max-w-64 px-3 py-3.5">
                         <p className="truncate text-sm font-semibold text-foreground">
-                          {event.title || "Acara tanpa judul"}
+                          {event.title || d("Acara tanpa judul")}
                         </p>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3.5 text-xs text-muted-foreground">
-                        {formatEventDate(event.eventDate)}
+                        {formatEventDate(event.eventDate, locale)}
                       </td>
                       <td className="max-w-52 px-3 py-3.5 text-xs text-muted-foreground">
                         <p className="truncate">{event.venue || "—"}</p>
                       </td>
                       <td className="px-3 py-3.5">
                         <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
-                          {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Draft"}
+                          {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
                         </span>
                       </td>
                       <td className="px-3 py-3.5 text-right">
@@ -1044,7 +1036,7 @@ function WorkspaceOverview({
           </div>
         </Card>
       </section>
-    </div>
+    </DashboardPageShell>
   );
 }
 
