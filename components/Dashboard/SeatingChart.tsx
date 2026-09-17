@@ -7,6 +7,13 @@ import type { KonvaEventObject } from "konva/lib/Node";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DashboardCompactStat,
+  DashboardEmptyState,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 import { matchesGuestLabels, type GuestLabels } from "@/lib/guests/filters";
 
 type Guest = GuestLabels & {
@@ -403,20 +410,17 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   return (
     <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
       <aside className="min-w-0 space-y-4">
-        <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                Setup
-              </p>
-              <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
-                Struktur meja
-              </h3>
-            </div>
-            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] text-primary">
-              {visibleTables.length} meja
-            </span>
-          </div>
+        <DashboardSurface className="p-4">
+          <DashboardSectionHeader
+            eyebrow="Setup"
+            title="Struktur meja"
+            description="Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu."
+            actions={
+              <DashboardStatusBadge active={visibleTables.length > 0}>
+                {visibleTables.length} meja
+              </DashboardStatusBadge>
+            }
+          />
 
           <form onSubmit={generateTables} className="mt-4 space-y-3">
             <label className="block">
@@ -456,25 +460,22 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           </form>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <InfoCell label="Kursi" value={String(totalSeats)} />
-            <InfoCell label="Terisi" value={String(assignedCount)} />
+            <DashboardCompactStat label="Kursi" value={String(totalSeats)} />
+            <DashboardCompactStat label="Terisi" value={String(assignedCount)} />
           </div>
-        </section>
+        </DashboardSurface>
 
-        <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                Roster
-              </p>
-              <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
-                Belum ditempatkan
-              </h3>
-            </div>
-            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] text-primary">
-              {unassigned.length}
-            </span>
-          </div>
+        <DashboardSurface className="p-4">
+          <DashboardSectionHeader
+            eyebrow="Roster"
+            title="Belum ditempatkan"
+            description="Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah."
+            actions={
+              <DashboardStatusBadge active={unassigned.length > 0}>
+                {unassigned.length} tamu
+              </DashboardStatusBadge>
+            }
+          />
 
           <form onSubmit={addManualGuest} className="mt-4 space-y-2">
             <Input
@@ -543,11 +544,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
 
           <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
             {filteredUnassigned.length === 0 && (
-              <div className="rounded-xl border border-border/70 bg-background px-3 py-4 text-center text-xs text-muted-foreground">
-                {hasRosterFilter
-                  ? "Tidak ada tamu belum ditempatkan yang cocok dengan filter."
-                  : "Tidak ada tamu yang menunggu penempatan."}
-              </div>
+              <DashboardEmptyState
+                title={hasRosterFilter ? "Tidak ada hasil" : "Semua tamu sudah ditempatkan"}
+                description={
+                  hasRosterFilter
+                    ? "Tidak ada tamu belum ditempatkan yang cocok dengan filter aktif."
+                    : "Tamu yang belum memiliki meja akan muncul di sini."
+                }
+              />
             )}
             {filteredUnassigned.map((guest) => (
               <div
@@ -571,24 +575,21 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               </div>
             ))}
           </div>
-        </section>
+        </DashboardSurface>
       </aside>
 
-      <section className="min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-              Seating
-            </p>
-            <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
-              Denah tempat duduk
-            </h3>
-          </div>
-          <div className="flex gap-2">
-            <InfoCell label="Meja" value={String(visibleTables.length)} compact />
-            <InfoCell label="Tamu" value={`${assignedCount}/${visibleGuests.length}`} compact />
-          </div>
-        </div>
+      <DashboardSurface className="min-w-0 p-4 sm:p-5">
+        <DashboardSectionHeader
+          eyebrow="Seating"
+          title="Denah tempat duduk"
+          description="Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual."
+          actions={
+            <div className="flex gap-2">
+              <DashboardCompactStat label="Meja" value={String(visibleTables.length)} className="min-w-20" />
+              <DashboardCompactStat label="Tamu" value={`${assignedCount}/${visibleGuests.length}`} className="min-w-20" />
+            </div>
+          }
+        />
 
         <div
           className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-background"
@@ -772,7 +773,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             {message}
           </p>
         )}
-      </section>
+      </DashboardSurface>
     </div>
   );
 }
