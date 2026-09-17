@@ -1,4 +1,3 @@
-# one-shot documentation recorder
 name: Record Landing Navigation Polish
 
 on:
@@ -19,50 +18,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Record documentation and remove one-shot workflow
+      - name: Record changelog and remove one-shot workflow
         shell: bash
         run: |
-          cat >> prd1.md <<'EOF'
-
----
-
-## 2026-09-17 — Landing Hero Copy & Burger Navigation Simplification
-
-### Requirement / Intent
-Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, membuat CTA landing lebih natural, dan menyederhanakan burger navigation agar fokus untuk berpindah halaman tanpa nomor atau penjelasan panjang.
-
-### Implementation
-- memperpendek headline, description, dan capability copy landing untuk tiga Pintu;
-- mengecilkan sedikit desktop hero heading, membatasi lebar copy, dan merapikan spacing kiri Pintu;
-- mengubah tombol `Lihat Detail` / `View Details` dari forced uppercase menjadi title case normal;
-- menghapus sequence number, product description, helper copy, register promo, dan nested service accordion dari burger menu;
-- mengganti burger menu menjadi flat page-navigation list dengan icon, label singkat, dan arrow;
-- menambahkan direct Home/Beranda link;
-- menyederhanakan label navigasi seperti `Masuk`, `Paket`, `Template`, dan `Bantuan`;
-- tidak mengubah route login atau authentication backend.
-
-### Affected Files
-- `app/page.tsx`
-- `lib/i18n.ts`
-- `components/Layout/Navbar/BurgerMenuContent.tsx`
-- `components/Layout/Navbar/Navbar.tsx`
-- `prd-tambahan.md`
-- `prd1.md`
-
-### Commits
-- `9eabbf6c0eac7effbc6d7bff650787184e4b0fe2` — rebalance landing hero copy layout;
-- `9ff9ad399484a88f83b0d6173fee3e4866d5dce3` — simplify landing and navigation copy;
-- `e1d1c239df2d4473e398da8734e8515e86c10834` — simplify burger navigation;
-- `232b11fbc52c00ed76bd17f3a12f3844918f7943` — align navbar with simplified burger menu;
-- `e076cb490ae705348480cea8ad3fd14f55c4ddef` — record supplemental UI requirements.
-
-### Validation
-- GitHub Actions Build Validation #900: **PASS**.
-- Dependency install: **PASS** through Build Validation #900.
-- TypeScript / Next production build: **PASS** through Build Validation #900.
-- Database migration: N/A.
-EOF
-
+          echo 'Ci0tLQojIyAyMDI2LTA5LTE3IOKAlCBMYW5kaW5nIEhlcm8gQ29weSAmIEJ1cmdlciBOYXZpZ2F0aW9uIFNpbXBsaWZpY2F0aW9uCgojIyMgUmVxdWlyZW1lbnQgLyBJbnRlbnQKTWVueWVpbWJhbmdrYW4gdGVrcyBkaSBraXJpIFBpbnR1IGFnYXIgdGlkYWsgbGViaWggZG9taW5hbiBkYXJpIHZpc3VhbCBQaW50dSwgbWVtYnVhdCBDVEEgbGFuZGluZyBsZWJpaCBuYXR1cmFsLCBkYW4gbWVueWVkZXJoYW5ha2FuIGJ1cmdlciBuYXZpZ2F0aW9uIGFnYXIgZm9rdXMgdW50dWsgYmVycGluZGFoIGhhbGFtYW4gdGFucGEgbm9tb3IgYXRhdSBwZW5qZWxhc2FuIHBhbmphbmcuCgojIyMgSW1wbGVtZW50YXRpb24KLSBtZW1wZXJwZW5kZWsgaGVhZGxpbmUsIGRlc2NyaXB0aW9uLCBkYW4gY2FwYWJpbGl0eSBjb3B5IGxhbmRpbmcgdW50dWsgdGlnYSBQaW50dTsKLSBtZW5nZWNpbGthbiBzZWRpa2l0IGRlc2t0b3AgaGVybyBoZWFkaW5nLCBtZW1iYXRhc2kgbGViYXIgY29weSwgZGFuIG1lcmFwaWthbiBzcGFjaW5nIGtpcmkgUGludHU7Ci0gbWVuZ3ViYWggdG9tYm9sIGBMaWhhdCBEZXRhaWxgIC8gYFZpZXcgRGV0YWlsc2AgZGFyaSBmb3JjZWQgdXBwZXJjYXNlIG1lbmphZGkgdGl0bGUgY2FzZSBub3JtYWw7Ci0gbWVuZ2hhcHVzIHNlcXVlbmNlIG51bWJlciwgcHJvZHVjdCBkZXNjcmlwdGlvbiwgaGVscGVyIGNvcHksIHJlZ2lzdGVyIHByb21vLCBkYW4gbmVzdGVkIHNlcnZpY2UgYWNjb3JkaW9uIGRhcmkgYnVyZ2VyIG1lbnU7Ci0gbWVuZ2dhbnRpIGJ1cmdlciBtZW51IG1lbmphZGkgZmxhdCBwYWdlLW5hdmlnYXRpb24gbGlzdCBkZW5nYW4gaWNvbiwgbGFiZWwgc2luZ2thdCwgZGFuIGFycm93OwotIG1lbmFtYmFoa2FuIGRpcmVjdCBIb21lL0JlcmFuZGEgbGluazsKLSBtZW55ZWRlcmhhbmFrYW4gbGFiZWwgbmF2aWdhc2kgc2VwZXJ0aSBgTWFzdWtgLCBgUGFrZXRgLCBgVGVtcGxhdGVgLCBkYW4gYEJhbnR1YW5gOwotIHRpZGFrIG1lbmd1YmFoIHJvdXRlIGxvZ2luIGF0YXUgYXV0aGVudGljYXRpb24gYmFja2VuZC4KCiMjIyBBZmZlY3RlZCBGaWxlcwotIGBhcHAvcGFnZS50c3hgCi0gYGxpYi9pMThuLnRzYAotIGBjb21wb25lbnRzL0xheW91dC9OYXZiYXIvQnVyZ2VyTWVudUNvbnRlbnQudHN4YAotIGBjb21wb25lbnRzL0xheW91dC9OYXZiYXIvTmF2YmFyLnRzeGAKLSBgcHJkLXRhbWJhaGFuLm1kYAotIGBwcmQxLm1kYAoKIyMjIENvbW1pdHMKLSBgOWVhYmJmNmMwZWFjN2VmZmJjNmQ3YmZmNjUwNzg3MTg0ZTRiMGZlMmAg4oCUIHJlYmFsYW5jZSBsYW5kaW5nIGhlcm8gY29weSBsYXlvdXQ7Ci0gYDlmZjlhZDM5OTQ4NGE4OGY4M2IwZDYxNzNmZWUzZTQ4NjZkNWRjZTNgIOKAlCBzaW1wbGlmeSBsYW5kaW5nIGFuZCBuYXZpZ2F0aW9uIGNvcHk7Ci0gYGUxZDFjMjM5ZGYyZDQ0NzNlMzk4ZGE4NzM0ZTg1MTVlODZjMTA4MzRgIOKAlCBzaW1wbGlmeSBidXJnZXIgbmF2aWdhdGlvbjsKLSBgMjMyYjExZmJjNTJjMDBlZDc2YmQxN2YzYTEyZjM4NDQ5MThmNzk0M2Ag4oCUIGFsaWduIG5hdmJhciB3aXRoIHNpbXBsaWZpZWQgYnVyZ2VyIG1lbnU7Ci0gYGUwNzZjYjQ5MGFlNzA1MzQ4NDgwY2VhOGFkM2ZkMTRmNTVjNGRkZWZgIOKAlCByZWNvcmQgc3VwcGxlbWVudGFsIFVJIHJlcXVpcmVtZW50cy4KCiMjIyBWYWxpZGF0aW9uCi0gR2l0SHViIEFjdGlvbnMgQnVpbGQgVmFsaWRhdGlvbiAjOTAwOiAqKlBBU1MqKi4KLSBEZXBlbmRlbmN5IGluc3RhbGw6ICoqUEFTUyoqIHRocm91Z2ggQnVpbGQgVmFsaWRhdGlvbiAjOTAwLgotIFR5cGVTY3JpcHQgLyBOZXh0IHByb2R1Y3Rpb24gYnVpbGQ6ICoqUEFTUyoqIHRocm91Z2ggQnVpbGQgVmFsaWRhdGlvbiAjOTAwLgotIERhdGFiYXNlIG1pZ3JhdGlvbjogTi9BLgo=' | base64 -d >> prd1.md
           git config user.name "dc-organizer-agent"
           git config user.email "actions@users.noreply.github.com"
           git rm .github/workflows/record-landing-nav-polish.yml
