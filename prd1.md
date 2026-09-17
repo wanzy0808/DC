@@ -317,6 +317,51 @@ Ini adalah penyebab paling kuat yang dapat diverifikasi dari repository untuk la
 
 ---
 
+## 2026-09-17 — Repository Hygiene, Canonical Dashboard Route & Prisma 7 Cleanup
+
+### Requirement / Intent
+Audit repository dilakukan dengan `prd.md` sebagai source of truth untuk mengurangi sisa vibe-code, duplicate tooling, route legacy yang membingungkan, dan konfigurasi yang sudah tidak sesuai stack canonical tanpa menghapus fitur P1/P2 yang masih direncanakan.
+
+### Implementation
+- menghapus `package-lock.json` karena project secara resmi memakai pnpm dan `pnpm-lock.yaml` sebagai lockfile canonical;
+- menambahkan `package-lock.json` ke `.gitignore` agar lockfile npm tidak masuk kembali;
+- memindahkan implementasi dashboard aktual dari dynamic folder `app/[dashboard]/page.tsx` menjadi `app/dashboard/page.tsx` sehingga `/dashboard` tidak lagi mengimpor halaman dari catch-all legacy;
+- menghapus `app/[dashboard]/page.tsx` dan `app/[dashboard]/layout.tsx`, sehingga unknown one-segment routes tidak lagi diam-diam diarahkan ke `/` oleh dynamic catch-all;
+- mempertahankan `/dashboard/undangan-digital` sebagai compatibility route, tetapi sekarang redirect ke canonical `/dashboard` dan tidak lagi memilih `WEDDING` pertama secara global;
+- menyelaraskan `components.json` dari Hugeicons ke Lucide sesuai stack canonical di PRD/AGENTS;
+- mengganti close icon Hugeicons pada primitive Dialog dan Sheet menjadi Lucide `X`;
+- menyelesaikan sisa migrasi Prisma 7 pada `app/api/invitations/route.ts` dengan memakai namespace Prisma dari generated client;
+- memperbarui `prisma/seed.ts` agar memakai generated Prisma Client + PostgreSQL adapter, konsisten dengan runtime Prisma 7;
+- package Hugeicons belum dihapus dari `package.json`/`pnpm-lock.yaml` pada audit ini karena perubahan dependency harus menjaga lockfile tetap sinkron; source/config tidak lagi bergantung pada Hugeicons setelah perubahan ini.
+
+### Affected Files
+- `.gitignore`
+- `app/dashboard/page.tsx`
+- `app/[dashboard]/page.tsx` (removed)
+- `app/[dashboard]/layout.tsx` (removed)
+- `app/dashboard/undangan-digital/page.tsx`
+- `package-lock.json` (removed)
+- `components.json`
+- `components/ui/dialog.tsx`
+- `components/ui/sheet.tsx`
+- `app/api/invitations/route.ts`
+- `prisma/seed.ts`
+- `prd1.md`
+
+### Commits
+- `5805a6dd55fbce29fbc509002090de8c3a17fc55` — canonicalize dashboard routes and package manager;
+- `cd13c80223216c7cc5ad68a8019a6e292fbcede8` — standardize UI icons on Lucide;
+- `ce452bf9cbdc95b99d1684e5b08d1b7c7b0f0ea1` — finish Prisma 7 generated-client migration.
+
+### Validation
+- Build Validation #867 exposed pre-existing Prisma 7 import/type drift and therefore **FAILED**; failure was investigated rather than ignored.
+- Build Validation #869 on head `ce452bf9cbdc95b99d1684e5b08d1b7c7b0f0ea1`: **PASS**.
+- Dependency install with `pnpm install --frozen-lockfile`: **PASS** in Build Validation #869.
+- Database migration: N/A for this cleanup.
+- Production deployment: not performed by this audit.
+
+---
+
 ## Future Entry Format
 
 Tambahkan perubahan baru di bagian paling bawah dengan format:
