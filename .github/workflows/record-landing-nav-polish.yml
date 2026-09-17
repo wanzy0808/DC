@@ -1,3 +1,4 @@
+# one-shot documentation recorder
 name: Record Landing Navigation Polish
 
 on:
@@ -21,23 +22,6 @@ jobs:
       - name: Record documentation and remove one-shot workflow
         shell: bash
         run: |
-          cat >> prd-tambahan.md <<'EOF'
-
-## Landing hero copy balance
-- Teks di kiri Pintu harus mendukung visual Pintu, bukan mengalahkannya.
-- Headline dibuat lebih singkat, lebar teks dibatasi, dan skala desktop diturunkan sedikit agar jumlah baris lebih terkendali.
-- Deskripsi dan capability label dibuat lebih ringkas agar mudah dipindai.
-- Tombol `Lihat Detail` / `View Details` memakai title case normal tanpa forced uppercase atau letter spacing berlebihan.
-- Jarak antar elemen hero dibuat lebih rapat agar tinggi blok teks seimbang dengan carousel Pintu.
-
-## Burger navigation simplification
-- Burger/sidebar navigation difokuskan untuk berpindah halaman.
-- Nomor dekoratif pada header dan item menu dihilangkan.
-- Deskripsi produk, helper copy, join label, dan teks sekunder dihilangkan dari panel.
-- Menu memakai satu daftar datar: icon, nama halaman singkat, dan panah navigasi.
-- Link utama: Beranda/Home, Event Planner, Digital Invitation, Guestbook, Paket/Packages, Template, Bantuan/Help, dan Masuk/Sign in.
-EOF
-
           cat >> prd1.md <<'EOF'
 
 ---
@@ -69,7 +53,8 @@ Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, me
 - `9eabbf6c0eac7effbc6d7bff650787184e4b0fe2` — rebalance landing hero copy layout;
 - `9ff9ad399484a88f83b0d6173fee3e4866d5dce3` — simplify landing and navigation copy;
 - `e1d1c239df2d4473e398da8734e8515e86c10834` — simplify burger navigation;
-- `232b11fbc52c00ed76bd17f3a12f3844918f7943` — align navbar with simplified burger menu.
+- `232b11fbc52c00ed76bd17f3a12f3844918f7943` — align navbar with simplified burger menu;
+- `e076cb490ae705348480cea8ad3fd14f55c4ddef` — record supplemental UI requirements.
 
 ### Validation
 - GitHub Actions Build Validation #900: **PASS**.
@@ -81,6 +66,6 @@ EOF
           git config user.name "dc-organizer-agent"
           git config user.email "actions@users.noreply.github.com"
           git rm .github/workflows/record-landing-nav-polish.yml
-          git add prd-tambahan.md prd1.md
+          git add prd1.md
           git commit -m "docs: record landing and navigation polish"
           git push origin HEAD:main
