@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
 import {
   buildEventTitle,
   eventCategoryOptions,
@@ -434,61 +435,88 @@ export default function EventPanel({ onSaved }: Props) {
       </div>
 
       {editorMode === "closed" && notice && (
-        <p className="border-b border-border/70 py-3 text-xs text-muted-foreground" role="status">
-          {notice}
-        </p>
+        <DashboardNotice className="mt-4">{notice}</DashboardNotice>
       )}
 
-      <div className="mt-4 divide-y divide-border/70 overflow-hidden rounded-2xl border border-border/70 bg-background px-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:px-5">
-        {events.map((event) => {
-          const draft = !event.eventConfigured;
-          const hasDesign = Boolean(event.templateKey?.trim());
-          return (
-            <div key={event.id} className="flex flex-col gap-3 py-4 md:flex-row md:items-center">
-              <div className="min-w-0 flex-1">
-                <div className="flex min-w-0 items-center gap-2">
-                  <p className="truncate text-sm font-semibold">
-                    {draft ? "Acara baru" : event.title || "Acara tanpa judul"}
-                  </p>
-                  <span className="shrink-0 text-[10px] text-primary">
-                    {event.isPublished ? "Terbit" : hasDesign ? "Siap" : draft ? "Draft" : "Desain"}
-                  </span>
-                </div>
-                <p className="mt-1 truncate text-xs text-muted-foreground">
-                  {draft ? "Belum dilengkapi" : event.venue || "Tempat belum diisi"}
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {!event.isPublished && (
-                  <>
-                    <Button type="button" size="sm" onClick={() => activate(event)}>
-                      <PenLine className="h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => removeEvent(event)}
-                      disabled={saving || Boolean(deletingId)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                      {deletingId === event.id ? "Menghapus..." : "Hapus"}
-                    </Button>
-                  </>
-                )}
-                {!draft && (
-                  <Button asChild size="sm">
-                    <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
-                      <PenLine className="h-4 w-4" />
-                      {hasDesign ? "Undangan" : "Buat undangan"}
-                    </Link>
-                  </Button>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      {events.length > 0 && (
+        <DashboardSurface className="mt-4 overflow-hidden">
+          <div className="overflow-x-auto p-4 sm:p-5">
+            <table className="w-full min-w-[760px] text-left">
+              <thead>
+                <tr className="text-[10px] text-muted-foreground">
+                  <th className="px-3 py-3 font-medium">Acara</th>
+                  <th className="px-3 py-3 font-medium">Tanggal</th>
+                  <th className="px-3 py-3 font-medium">Lokasi</th>
+                  <th className="px-3 py-3 font-medium">Status</th>
+                  <th className="px-3 py-3 text-right font-medium">Aksi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {events.map((event) => {
+                  const draft = !event.eventConfigured;
+                  const hasDesign = Boolean(event.templateKey?.trim());
+                  const status = event.isPublished
+                    ? "Terbit"
+                    : hasDesign
+                      ? "Siap"
+                      : draft
+                        ? "Draft"
+                        : "Belum desain";
+                  return (
+                    <tr key={event.id} className="text-xs">
+                      <td className="max-w-72 px-3 py-3.5">
+                        <p className="truncate text-sm font-semibold text-foreground">
+                          {draft ? "Acara baru" : event.title || "Acara tanpa judul"}
+                        </p>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-3.5 text-muted-foreground">
+                        {event.eventDate ? isoDateToDisplay(event.eventDate) : "—"}
+                      </td>
+                      <td className="max-w-56 px-3 py-3.5 text-muted-foreground">
+                        <p className="truncate">{draft ? "Belum dilengkapi" : event.venue || "—"}</p>
+                      </td>
+                      <td className="px-3 py-3.5">
+                        <DashboardStatusBadge active={event.isPublished || hasDesign}>
+                          {status}
+                        </DashboardStatusBadge>
+                      </td>
+                      <td className="px-3 py-3.5">
+                        <div className="flex justify-end gap-2">
+                          {!event.isPublished && (
+                            <>
+                              <Button type="button" size="xs" onClick={() => activate(event)}>
+                                <PenLine className="h-3.5 w-3.5" />
+                                Edit
+                              </Button>
+                              <Button
+                                type="button"
+                                size="xs"
+                                onClick={() => removeEvent(event)}
+                                disabled={saving || Boolean(deletingId)}
+                              >
+                                <Trash2 className="h-3.5 w-3.5" />
+                                {deletingId === event.id ? "Menghapus..." : "Hapus"}
+                              </Button>
+                            </>
+                          )}
+                          {!draft && (
+                            <Button asChild size="xs">
+                              <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
+                                <PenLine className="h-3.5 w-3.5" />
+                                {hasDesign ? "Undangan" : "Buat undangan"}
+                              </Link>
+                            </Button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </DashboardSurface>
+      )}
 
       {!loading && !events.length && editorMode === "closed" && (
         <p className="py-8 text-sm text-muted-foreground">Belum ada acara.</p>
@@ -750,7 +778,7 @@ function TimeField({ label, value, onChange }: { label: string; value: string; o
           value={value}
           onChange={(event) => onChange(formatTimeInput(event.target.value))}
           placeholder="00:00"
-          className="font-[family-name:var(--font-dm-mono)]"
+          className="font-[family-name:var(--font-dc-mono)]"
         />
         <Button type="button" size="icon" onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">
           <Clock3 className="h-4 w-4" />

@@ -131,3 +131,11 @@ pnpm db:deploy
 ```
 
 `pnpm build` / GitHub Build Validation does **not** apply PostgreSQL migrations. A deployment that updates Prisma schema-dependent application code must run `pnpm db:deploy` against the target production `DATABASE_URL` before the updated app is relied on. If the application returns a database-schema synchronization error while saving/loading events, apply the pending migrations on the server first.
+
+
+## Documentation Governance
+
+- `prd.md` remains the active product-requirement source of truth.
+- `prd1.md` remains the chronological implementation changelog.
+- `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
+- When explicitly requested by the user, `prd-tambahan.md` may be maintained as a supplemental non-canonical delta log; it must not override `prd.md` or replace the required `prd1.md` implementation entry.

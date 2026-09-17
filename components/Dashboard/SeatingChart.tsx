@@ -393,14 +393,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
                 Setup
               </p>
-              <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
+              <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
                 Struktur meja
               </h3>
             </div>
-            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">
+            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] text-primary">
               {visibleTables.length} meja
             </span>
           </div>
@@ -451,14 +451,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
                 Roster
               </p>
-              <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
+              <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
                 Belum ditempatkan
               </h3>
             </div>
-            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[9px] text-primary">
+            <span className="rounded-lg bg-primary/[0.07] px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] text-primary">
               {unassigned.length}
             </span>
           </div>
@@ -495,10 +495,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   setDraggedGuestId(guest.id);
                   setSwapCandidate(null);
                 }}
-                className="cursor-grab rounded-lg border border-border/75 bg-background/80 px-3 py-2.5 text-xs transition hover:border-primary/30 hover:bg-primary/[0.035] active:cursor-grabbing"
+                className="cursor-grab rounded-lg border border-border/75 bg-background px-3 py-2.5 text-xs transition hover:border-primary/30 hover:bg-primary/[0.035] active:cursor-grabbing"
               >
                 <div className="truncate font-medium text-foreground">{guest.name}</div>
-                <div className="mt-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}
                 </div>
               </div>
@@ -510,10 +510,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       <section className="min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
               Seating
             </p>
-            <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-base font-semibold text-foreground">
+            <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-base font-semibold text-foreground">
               Denah tempat duduk
             </h3>
           </div>
@@ -658,10 +658,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           </div>
         </div>
 
-        <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background/65 px-3 py-2 text-xs text-muted-foreground">
+        <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background px-3 py-2 text-xs text-muted-foreground">
           <span>Tarik tamu ke kursi untuk menyimpan posisi.</span>
           {savingGuestId && (
-            <span className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
+            <span className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
               Menyimpan...
             </span>
           )}
@@ -723,7 +723,7 @@ function InfoCell({
     <div
       className={`rounded-lg border border-border/70 bg-background/75 ${compact ? "min-w-20 px-2.5 py-1.5" : "px-3 py-2.5"}`}
     >
-      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
       <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>

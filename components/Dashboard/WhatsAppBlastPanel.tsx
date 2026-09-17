@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CreditCard, MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
 
 type EventOption = {
   id: string;
@@ -195,19 +196,12 @@ export default function WhatsAppBlastPanel() {
 
   return (
     <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
-      {notice && (
-        <div
-          className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
-          role="status"
-        >
-          {notice}
-        </div>
-      )}
+      {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
-            <span className="mb-1.5 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
               Acara
             </span>
             <select
@@ -254,10 +248,10 @@ export default function WhatsAppBlastPanel() {
 
           {quota === 0 ? (
             <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                 Add-on
               </p>
-              <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                 WA Blast belum aktif
               </h2>
               <p className="mt-2 max-w-xl text-xs leading-5 text-muted-foreground">
@@ -272,10 +266,10 @@ export default function WhatsAppBlastPanel() {
             <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
               <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
                 <div>
-                  <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                     Penerima
                   </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                     Tambah penerima
                   </h2>
                 </div>
@@ -339,10 +333,10 @@ export default function WhatsAppBlastPanel() {
               <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                    <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                       Queue
                     </p>
-                    <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+                    <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                       Tamu yang akan diblast
                     </h2>
                   </div>
@@ -366,11 +360,11 @@ export default function WhatsAppBlastPanel() {
                   {selected.map((guest) => (
                     <div
                       key={guest.id}
-                      className="flex items-center gap-3 rounded-lg border border-border/70 bg-background/80 px-3 py-2.5"
+                      className="flex items-center gap-3 rounded-xl border border-border/70 bg-background px-3 py-2.5"
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-semibold text-foreground">{guest.name}</p>
-                        <p className="mt-0.5 truncate font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+                        <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
                           {guest.phone || "Nomor belum ada"}
                         </p>
                       </div>
@@ -396,24 +390,6 @@ export default function WhatsAppBlastPanel() {
   );
 }
 
-function Metric({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof MessageCircle;
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
-      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-        <Icon className="h-4 w-4" strokeWidth={1.8} />
-      </span>
-      <div className="min-w-0">
-        <p className="text-[11px] text-muted-foreground">{label}</p>
-        <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</p>
-      </div>
-    </div>
-  );
+function Metric({ icon: Icon, label, value }: { icon: typeof MessageCircle; label: string; value: string }) {
+  return <DashboardMetricCard icon={Icon} label={label} value={value} />;
 }

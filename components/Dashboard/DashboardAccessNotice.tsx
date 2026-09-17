@@ -23,19 +23,19 @@ export default function DashboardAccessNotice({
         <span className="grid size-11 shrink-0 place-items-center rounded-[10px] border border-border text-primary">
           <LockKeyhole className="size-5" aria-hidden="true" />
         </span>
-        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
           {label}
         </p>
       </div>
       <div className="space-y-3">
-        <Heading className="break-words font-heading text-2xl leading-tight text-primary sm:text-3xl">
+        <Heading className="break-words font-[family-name:var(--font-dc-heading)] text-2xl leading-tight text-primary sm:text-3xl">
           {title}
         </Heading>
         <p className="max-w-xl text-sm leading-6 text-muted-foreground">
           {description}
         </p>
       </div>
-      {children && <div className="border-t border-border pt-5">{children}</div>}
+      {children && <div className="pt-2">{children}</div>}
     </div>
   );
 }

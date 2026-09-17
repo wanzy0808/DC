@@ -26,6 +26,8 @@ Every AI-made material change MUST be recorded in `prd1.md` with rationale, affe
 
 Do not create `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
 
+When the user explicitly requests `prd-tambahan.md`, it may exist only as a **supplemental non-canonical delta log**. Mirror active requirements to `prd.md`, keep implementation history in `prd1.md`, and never let the supplemental file override either canonical document.
+
 Do not add generic project-wide prompt/skill documents that duplicate or conflict with `AGENTS.md` and `prd.md`. If specialized instructions are genuinely needed, keep them narrowly scoped and explicitly referenced.
 
 Validation must never be described as PASS unless an actual build/CI result is available.

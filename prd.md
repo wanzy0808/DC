@@ -1025,6 +1025,7 @@ Hanya dua dokumen PRD aktif yang digunakan:
 
 Aturan:
 - jangan membuat `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, dst. selama `prd1.md` masih dapat digunakan;
+- exception: jika user secara eksplisit meminta `prd-tambahan.md`, file tersebut boleh dipakai sebagai **supplemental non-canonical delta log**; requirement aktif tetap harus dicerminkan ke `prd.md` dan histori implementasi material tetap dicatat di `prd1.md`;
 - changelog tidak boleh menjadi requirement paralel;
 - jika requirement berubah, update `prd.md` terlebih dahulu lalu catat perubahan/rationale di `prd1.md`;
 - requirement superseded dihapus/diganti di `prd.md`, sedangkan histori perubahan tetap dicatat ringkas di `prd1.md`;

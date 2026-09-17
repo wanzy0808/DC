@@ -922,3 +922,44 @@ User menegaskan bahwa brand/font tidak boleh berubah antar iterasi, tagline mark
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
+
+
+---
+
+## 2026-09-17 — Dashboard Visual Consistency Phase 2
+
+### Requirement / Intent
+Melanjutkan redesign seluruh customer dashboard agar semua tab/component mengikuti visual language Beranda, mengunci typography/brand token agar tidak berubah antar-page, dan mencatat delta pekerjaan ke `prd-tambahan.md` atas permintaan eksplisit user.
+
+### Implementation
+- memperluas `DashboardPrimitives.tsx` menjadi shared page/surface/metric/notice/section-header/status/empty-state system;
+- menormalkan font dashboard ke canonical `--font-dc-heading`, `--font-dc-sans`, dan `--font-dc-mono`;
+- merapikan surface hierarchy di Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Event Scope, Feature Gate, Seating, dan reusable dashboard component;
+- mengubah daftar Rangkaian Acara menjadi data table agar lebih mudah dipindai;
+- menghapus action `Tarik publik` dari Undangan yang sudah published dan menggantinya dengan status locked, konsisten dengan immutable published-event rule;
+- membuat `prd-tambahan.md` kembali hanya karena user meminta secara eksplisit, dengan status supplemental non-canonical;
+- menyinkronkan governance exception ke `prd.md`, `AGENTS.md`, dan `README.md`.
+
+### Affected Files
+- `app/dashboard/page.tsx`
+- `components/Dashboard/DashboardPrimitives.tsx`
+- `components/Dashboard/DashboardAccessNotice.tsx`
+- `components/Dashboard/EventScopePicker.tsx`
+- `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/InvitationWorkspacePanel.tsx`
+- `components/Dashboard/PersonalInvitationPanel.tsx`
+- `components/Dashboard/WhatsAppBlastPanel.tsx`
+- `components/Dashboard/RsvpAnalyticsPanel.tsx`
+- `components/Dashboard/SeatingChart.tsx`
+- `components/Dashboard/FeatureGate.tsx`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Validation
+- Build workflow: Dashboard Consistency Phase 2 #2 (run 35213218973): PASS
+- Prisma Client generation: Dashboard Consistency Phase 2 #2 (run 35213218973): PASS
+- TypeScript / Next production build: Dashboard Consistency Phase 2 #2 (run 35213218973): PASS
+- Database migration: N/A.

@@ -1,5 +1,5 @@
+import type { HTMLAttributes, ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
 
 function classes(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
@@ -27,17 +27,30 @@ export function DashboardPage({
 export function DashboardSurface({
   children,
   className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+  ...props
+}: HTMLAttributes<HTMLElement> & { children: ReactNode }) {
   return (
     <section
+      {...props}
       className={classes(
         "dc-dashboard-surface rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
         className,
       )}
     >
+      {children}
+    </section>
+  );
+}
+
+export function DashboardMetricGrid({
+  children,
+  className = "",
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <section className={classes("grid gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>
       {children}
     </section>
   );
@@ -85,7 +98,7 @@ export function DashboardNotice({
     <div
       role="status"
       className={classes(
-        "rounded-xl border border-primary/15 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground",
+        "dc-dashboard-notice rounded-xl border border-primary/15 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground",
         className,
       )}
     >
@@ -123,6 +136,64 @@ export function DashboardSectionHeader({
         )}
       </div>
       {actions && <div className="flex shrink-0 flex-wrap gap-2">{actions}</div>}
+    </div>
+  );
+}
+
+export function DashboardStatusBadge({
+  children,
+  active = false,
+  className = "",
+}: {
+  children: ReactNode;
+  active?: boolean;
+  className?: string;
+}) {
+  return (
+    <span
+      className={classes(
+        "inline-flex min-h-7 items-center rounded-lg border px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em]",
+        active
+          ? "border-primary/15 bg-primary/[0.08] text-primary"
+          : "border-border/70 bg-background text-muted-foreground",
+        className,
+      )}
+    >
+      {children}
+    </span>
+  );
+}
+
+export function DashboardEmptyState({
+  icon: Icon,
+  title,
+  description,
+  action,
+  className = "",
+}: {
+  icon?: LucideIcon;
+  title: string;
+  description?: string;
+  action?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={classes(
+        "flex min-h-36 flex-col items-start justify-center rounded-xl border border-dashed border-border/80 bg-background px-5 py-6",
+        className,
+      )}
+    >
+      {Icon && (
+        <span className="mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-primary">
+          <Icon className="h-4 w-4" strokeWidth={1.8} />
+        </span>
+      )}
+      <p className="text-sm font-semibold text-foreground">{title}</p>
+      {description && (
+        <p className="mt-1 max-w-xl text-xs leading-5 text-muted-foreground">{description}</p>
+      )}
+      {action && <div className="mt-4">{action}</div>}
     </div>
   );
 }

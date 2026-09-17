@@ -17,6 +17,7 @@ import EventScopePicker, {
 } from "@/components/Dashboard/EventScopePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
 
 type Guest = {
   id: string;
@@ -330,23 +331,16 @@ export default function PersonalInvitationPanel() {
         disabled={eventsLoading || Boolean(busyId)}
       />
 
-      {notice && (
-        <div
-          className="mt-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
-          role="status"
-        >
-          {notice}
-        </div>
-      )}
+      {notice && <DashboardNotice className="mt-4">{notice}</DashboardNotice>}
 
       {!events.length ? null : selectedEvent && !selectedEvent.accessPaid ? (
         <section className="mt-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                 Belum aktif
               </p>
-              <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                 {selectedEvent.title || "Acara"}
               </h2>
               <p className="mt-1 text-xs text-muted-foreground">
@@ -374,10 +368,10 @@ export default function PersonalInvitationPanel() {
           <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
             <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
               <div>
-                <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                   Tamu · {selectedEvent.title || "Acara"}
                 </p>
-                <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+                <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                   Buat Personal Invitation
                 </h2>
               </div>
@@ -450,10 +444,10 @@ export default function PersonalInvitationPanel() {
             <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                     Daftar · {selectedEvent.title || "Acara"}
                   </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">
+                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
                     Personal Invitation
                   </h2>
                 </div>
@@ -484,7 +478,7 @@ export default function PersonalInvitationPanel() {
                   return (
                     <article
                       key={item.id}
-                      className="rounded-xl border border-border/75 bg-background/80 p-3.5"
+                      className="rounded-xl border border-border/70 bg-background p-3.5"
                     >
                       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                         <div className="min-w-0 flex-1">
@@ -506,7 +500,7 @@ export default function PersonalInvitationPanel() {
                               <p className="truncate text-sm font-semibold text-foreground">
                                 {item.name}
                               </p>
-                              <p className="mt-0.5 truncate font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+                              <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
                                 {item.phone || "Tanpa nomor"} · {item.personalViewCount || 0}{" "}
                                 dibuka
                               </p>
@@ -559,10 +553,10 @@ export default function PersonalInvitationPanel() {
                       </div>
 
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
+                        <span className="rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
                           {item.personalPublished ? "Terbit" : "Draft"}
                         </span>
-                        <span className="rounded-lg bg-foreground/[0.04] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                        <span className="rounded-lg bg-foreground/[0.04] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
                           {item.personalPasswordProtected ? "Password aktif" : "Tanpa password"}
                         </span>
                         <Button
@@ -630,20 +624,13 @@ export default function PersonalInvitationPanel() {
 }
 
 function Metric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] px-4 py-3.5">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
-    </div>
-  );
+  return <DashboardMetricCard label={label} value={value} />;
 }
 
 function SmallMetric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-lg border border-border/70 bg-background/75 px-3 py-2.5">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
         {label}
       </p>
       <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>

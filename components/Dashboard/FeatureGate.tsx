@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
+import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
 
 interface FeatureGateProps {
   allowed: boolean;
@@ -23,8 +24,6 @@ export default function FeatureGate({
   onUpgrade,
   children,
 }: FeatureGateProps) {
-  // Workspaces with their own event-level selector remain visible.
-  // Their mutation APIs still enforce invitation ownership and entitlement server-side.
   if (
     allowed ||
     title === "Manajemen Tamu" ||
@@ -34,7 +33,7 @@ export default function FeatureGate({
   }
 
   return (
-    <section className="mx-auto grid w-[80vw] max-w-full min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <DashboardSurface className="mx-auto grid w-[80vw] max-w-full min-w-0 overflow-hidden">
       <div
         className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-35 blur-[2px]"
         aria-hidden="true"
@@ -43,7 +42,7 @@ export default function FeatureGate({
         {children}
       </div>
       <div className="relative col-start-1 row-start-1 flex items-center justify-center bg-background/88 px-6 py-10 backdrop-blur-[2px] sm:p-10">
-        <div className="w-full max-w-lg rounded-xl border border-primary/15 bg-background p-4 shadow-sm sm:p-5">
+        <DashboardSurface className="w-full max-w-lg p-4 sm:p-5">
           <DashboardAccessNotice title={title} description={description} heading="h3">
             <Button
               type="button"
@@ -56,8 +55,8 @@ export default function FeatureGate({
               {upgradeLabel}
             </Button>
           </DashboardAccessNotice>
-        </div>
+        </DashboardSurface>
       </div>
-    </section>
+    </DashboardSurface>
   );
 }

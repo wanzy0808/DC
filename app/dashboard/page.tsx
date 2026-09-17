@@ -389,14 +389,14 @@ export default function DashboardPage() {
 
   return (
     <div
-      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-fauna)] text-foreground`}
+      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-dc-sans)] text-foreground`}
     >
       <div className="flex min-h-screen">
         <aside
           className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
         >
           <nav className="flex-1 space-y-1.5 bg-background p-3">
-            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dm-mono)] text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
               Workspace
             </p>
 
@@ -404,7 +404,7 @@ export default function DashboardPage() {
               type="button"
               aria-current={tab === "overview" ? "page" : undefined}
               onClick={() => go("overview")}
-              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
+              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[13px] font-medium shadow-none ${
                 tab === "overview"
                   ? "border-primary/15 bg-primary/10 text-primary"
                   : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
@@ -472,7 +472,7 @@ export default function DashboardPage() {
                   type="button"
                   aria-current={tab === item.id ? "page" : undefined}
                   onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-fauna)] text-[13px] font-medium shadow-none ${
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[13px] font-medium shadow-none ${
                     tab === item.id
                       ? "border-primary/15 bg-primary/10 text-primary"
                       : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
@@ -520,7 +520,7 @@ export default function DashboardPage() {
                   <div className="hidden h-8 w-px bg-border/70 sm:block lg:hidden" />
 
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
+                    <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
                       {meta.eyebrow}
                     </p>
                     <div className="flex min-w-0 items-center gap-2">
@@ -543,7 +543,7 @@ export default function DashboardPage() {
                       aria-label={`Buka menu akun ${profileLabel}`}
                       title="Menu akun"
                     >
-                      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dm-mono)] text-[11px] font-semibold uppercase text-primary">
+                      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase text-primary">
                         {profileLabel.slice(0, 2)}
                       </span>
                       <span className="hidden max-w-36 truncate text-xs sm:inline">{profileLabel}</span>
@@ -555,7 +555,7 @@ export default function DashboardPage() {
                     {profileMenu && (
                       <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                         <div className="px-2 pb-3 pt-1">
-                          <p className="font-[family-name:var(--font-cinzel)] text-sm font-semibold">
+                          <p className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold">
                             {profileLabel}
                           </p>
                           <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
@@ -669,10 +669,10 @@ export default function DashboardPage() {
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
               Setup awal
             </p>
-            <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">
+            <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
               Profil workspace
             </h2>
             <div className="mt-6">
@@ -795,10 +795,10 @@ function WorkspaceOverview({
       <section className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
         <div className="flex flex-col gap-5 border-l-4 border-primary px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-primary">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-primary">
               DC Organizer
             </p>
-            <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold leading-tight sm:text-3xl">
+            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight sm:text-3xl">
               Halo, {ctx?.profile.displayName || "Akun"}
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
@@ -807,7 +807,7 @@ function WorkspaceOverview({
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-3">
             <div className="min-w-28 rounded-xl border border-border/70 bg-foreground/[0.018] px-4 py-3">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
                 Workspace
               </p>
               <p className="mt-1 text-sm font-semibold">
@@ -846,8 +846,8 @@ function WorkspaceOverview({
         <Card className="min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
-              <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Acara terbaru</h2>
-              <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">Acara terbaru</h2>
+              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
                 {active} aktif · {published} terbit
               </p>
             </div>
@@ -883,7 +883,7 @@ function WorkspaceOverview({
                         <p className="truncate">{event.venue || "—"}</p>
                       </td>
                       <td className="px-3 py-3.5">
-                        <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
+                        <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
                           {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Draft"}
                         </span>
                       </td>
@@ -920,10 +920,10 @@ function WorkspaceOverview({
         <Card className="min-w-0 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.14em] text-primary">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-primary">
                 Ringkasan data
               </p>
-              <h2 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
                 Performa workspace
               </h2>
             </div>
@@ -963,7 +963,7 @@ function WorkspaceOverview({
                 <div className="absolute inset-0 grid place-items-center text-center">
                   <div>
                     <p className="text-2xl font-semibold leading-none">{rsvpCoverage}%</p>
-                    <p className="mt-1 font-[family-name:var(--font-dm-mono)] text-[7px] uppercase tracking-[0.08em] text-muted-foreground">
+                    <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.08em] text-muted-foreground">
                       RSVP
                     </p>
                   </div>
@@ -993,7 +993,7 @@ function WorkspaceOverview({
                 <p className="text-xs font-semibold">Publikasi acara</p>
                 <p className="mt-1 text-[10px] text-muted-foreground">{published} dari {events.length} acara sudah terbit</p>
               </div>
-              <p className="font-[family-name:var(--font-dm-mono)] text-xs font-semibold text-primary">
+              <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
                 {publishRate}%
               </p>
             </div>
@@ -1005,7 +1005,7 @@ function WorkspaceOverview({
             </div>
           </div>
 
-          <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mt-5 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
             Akses cepat
           </p>
           <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
@@ -1046,7 +1046,7 @@ function WorkspaceOverview({
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div className="min-w-0 rounded-xl border border-border/70 bg-background p-4">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </p>
       <p className="mt-1.5 truncate text-lg font-semibold text-foreground">{value}</p>
@@ -1057,10 +1057,10 @@ function Stat({ label, value }: { label: string; value: string }) {
 function EventActivationNotice({ event }: { event: DashboardEvent }) {
   return (
     <div className="rounded-2xl border border-border/70 bg-background p-5">
-      <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         Undangan belum aktif
       </p>
-      <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+      <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
         {event.title || "Acara ini"}
       </h3>
       <p className="mt-2 text-xs leading-5 text-muted-foreground">
@@ -1214,7 +1214,7 @@ function PlacementPanel({
     <Card>
       <div className="p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+          <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
             Tamu & seating
           </h2>
           <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
@@ -1242,7 +1242,7 @@ function PlacementPanel({
 
 function LoadingSurface() {
   return (
-    <div className="rounded-2xl border border-border/70 bg-background p-5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+    <div className="rounded-2xl border border-border/70 bg-background p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
       Memuat data acara...
     </div>
   );
@@ -1261,7 +1261,7 @@ function UsherPanel({
       <Card>
         <div className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
               Check-in
             </h2>
             <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">

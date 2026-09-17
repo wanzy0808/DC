@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
 
 export type RsvpGuest = {
   id: string;
@@ -193,37 +194,23 @@ export default function RsvpAnalyticsPanel({
       }
     >
       {notice && (
-        <div
-          className="mb-4 flex min-w-0 items-center gap-2 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
-          role="status"
-        >
+        <DashboardNotice className="mb-4 flex items-center gap-2">
           <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />
           <span>{notice}</span>
-        </div>
+        </DashboardNotice>
       )}
 
-      <section className="grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-4">
+      <section className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {metrics.map(({ label, value, icon: Icon }) => (
-          <article
-            key={label}
-            className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-          >
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <Icon className="h-4 w-4" strokeWidth={1.8} />
-            </span>
-            <div className="min-w-0">
-              <p className="text-[11px] text-muted-foreground">{label}</p>
-              <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</p>
-            </div>
-          </article>
+          <DashboardMetricCard key={label} icon={Icon} label={label} value={String(value)} />
         ))}
       </section>
 
       <section className="mt-4 min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-3 sm:p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex min-w-0 items-baseline gap-3">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Daftar tamu</h2>
-            <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">Daftar tamu</h2>
+            <span className="font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
               {filtered.length}/{guests.length}
             </span>
           </div>
@@ -272,7 +259,7 @@ export default function RsvpAnalyticsPanel({
         <div className="mt-3 min-w-0 overflow-x-auto">
           <table className="w-full min-w-[940px] text-left">
             <thead>
-              <tr className="border-b border-border font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
+              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
                 <th className="px-3 py-3 font-medium">Nama</th>
                 <th className="px-3 py-3 font-medium">RSVP</th>
                 <th className="px-3 py-3 font-medium">Pax</th>
@@ -294,11 +281,11 @@ export default function RsvpAnalyticsPanel({
                     </p>
                   </td>
                   <td className="px-3 py-3">
-                    <span className="font-[family-name:var(--font-dm-mono)] text-[10px] text-foreground/70">
+                    <span className="font-[family-name:var(--font-dc-mono)] text-[10px] text-foreground/70">
                       {statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus}
                     </span>
                   </td>
-                  <td className="px-3 py-3 font-[family-name:var(--font-dm-mono)] text-foreground/70">
+                  <td className="px-3 py-3 font-[family-name:var(--font-dc-mono)] text-foreground/70">
                     {guest.plusOnes + 1}
                   </td>
                   <td className="px-3 py-3">
@@ -350,7 +337,7 @@ export default function RsvpAnalyticsPanel({
         </div>
 
         {slug && (
-          <p className="mt-3 rounded-lg bg-background/70 px-3 py-2 font-[family-name:var(--font-dm-mono)] text-[9px] text-foreground/45">
+          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[9px] text-foreground/45">
             /invite/{slug}
           </p>
         )}
@@ -374,7 +361,7 @@ export default function RsvpAnalyticsPanel({
             >
               <X className="h-4 w-4" />
             </Button>
-            <p className="pr-10 font-[family-name:var(--font-cinzel)] text-lg font-semibold text-primary">
+            <p className="pr-10 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
               {qr.name}
             </p>
             <div className="mx-auto mt-5 w-fit border border-border bg-white p-3">
@@ -384,7 +371,7 @@ export default function RsvpAnalyticsPanel({
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${encodeURIComponent(qr.token)}`}
               />
             </div>
-            <p className="mt-4 break-all font-[family-name:var(--font-dm-mono)] text-[8px] leading-4 text-foreground/45">
+            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[8px] leading-4 text-foreground/45">
               {qr.token}
             </p>
           </div>
