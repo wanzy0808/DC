@@ -1,0 +1,31 @@
+name: Apply Dashboard Analytics
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-dashboard-analytics.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply analytics follow-up
+        run: python .github/scripts/add-dashboard-analytics.py
+
+      - name: Commit changes and clean temporary files
+        run: |
+          rm .github/scripts/add-dashboard-analytics.py
+          rm .github/workflows/apply-dashboard-analytics.yml
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: add dashboard data visualizations" || exit 0
+          git push
