@@ -127,6 +127,29 @@ Animasi yang bersifat functional/necessary untuk menjelaskan state aplikasi tida
 
 Implementation juga harus menghormati accessibility preference seperti reduced motion ketika relevan.
 
+### 3.3 Template-owned default section order
+
+Setiap template boleh memiliki **default section order** sendiri sebagai bagian dari composition/design template.
+
+Contoh:
+
+```text
+Romantic Sage
+Cover → Identity → Event → Gallery → RSVP → Wishes → Closing
+
+Template lain
+Cover → Event → Identity → Wishes → Gallery → Closing
+```
+
+Kedua template tetap mengonsumsi normalized data dan shared feature logic yang sama. Perbedaan urutan hanya merupakan presentation/composition concern.
+
+Canonical behavior:
+- default order ditentukan oleh template;
+- section yang OFF dilewati tanpa merusak urutan section lain;
+- template tidak wajib memiliki urutan yang sama dengan template lain;
+- perubahan urutan tidak boleh menduplikasi atau memindahkan business logic ke template layer;
+- bila Studio kelak mengizinkan user reorder section, kemampuan tersebut harus eksplisit dan dibatasi oleh rules/capabilities template. Sampai ada requirement khusus, template default order tetap authoritative untuk composition.
+
 ---
 
 ## 4. Template Freedom
@@ -149,6 +172,32 @@ Setiap template boleh memiliki:
 Yang distandardisasi adalah **data contract dan functional behavior**, bukan bentuk visual akhir.
 
 Template tetap harus mempertahankan function yang diperlukan. Perbedaan visual tidak boleh merusak submit RSVP, Wishes, Maps, Gift information, accessibility, event isolation, entitlement, atau server-side validation.
+
+### 4.1 Template-safe customization
+
+Studio harus menjaga karakter desain template dengan hanya mengekspos customization yang memang diizinkan oleh template tersebut.
+
+User **tidak otomatis memiliki kebebasan untuk mengubah seluruh aspek visual**.
+
+Template dapat mendeklarasikan customization capabilities seperti:
+- content/text yang memang editable;
+- customer photos/media;
+- music/audio bila didukung;
+- accent color atau limited color choices bila designer mengizinkan;
+- section ON/OFF;
+- animation ON/OFF pada section yang mendukung;
+- customization lain yang secara eksplisit dinyatakan aman oleh template.
+
+Template dapat mengunci aspek seperti:
+- typography/font pairing;
+- core layout;
+- spacing system;
+- ornament placement;
+- composition;
+- button/card treatment;
+- structural visual decisions lain yang bila diubah dapat merusak desain.
+
+Studio harus membaca capability template dan hanya menampilkan control yang valid. Tujuannya adalah memberi personalization yang berguna tanpa membuat customer secara tidak sengaja merusak visual quality template.
 
 ---
 
@@ -255,7 +304,7 @@ Developer/AI implements presentation mapping
         ↓
 Shared DC section logic/data is connected
         ↓
-Template QA
+Template QA with standard demo scenarios
         ↓
 Template available in Studio
 ```
@@ -273,6 +322,33 @@ Penambahan template baru idealnya **tidak menyentuh**:
 
 Perubahan pada area tersebut hanya dilakukan bila template memperkenalkan product capability baru yang benar-benar membutuhkan perubahan shared engine, bukan sekadar karena visual template berbeda.
 
+### 7.1 Standard template preview & dummy-data QA
+
+DC Organizer harus memiliki **standard demo/dummy invitation data** yang dapat digunakan secara konsisten untuk preview dan QA template baru.
+
+Tujuannya adalah memastikan template tidak hanya terlihat benar dengan content ideal dari Figma, tetapi juga tetap stabil dengan variasi data customer nyata.
+
+Template baru minimal harus dapat diuji dengan scenario seperti:
+- nama/identity pendek;
+- nama/identity panjang;
+- venue/address pendek dan panjang;
+- content text pendek dan panjang bila field mendukung;
+- tanpa customer photo/media pada section optional;
+- satu/sedikit photo;
+- banyak photo sampai batas yang didukung;
+- RSVP ON dan OFF;
+- Wishes ON dan OFF;
+- Gift ON dan OFF;
+- Location/Maps ON dan OFF bila applicable;
+- animation ON dan OFF bila applicable;
+- kombinasi beberapa optional section OFF untuk memastikan composition tetap rapi.
+
+Standard dummy data harus reusable antar-template sehingga QA tidak bergantung pada designer membuat test data baru setiap kali.
+
+Preview/demo data tidak boleh tercampur dengan production customer data.
+
+Template dianggap belum siap masuk katalog production apabila variasi content umum menyebabkan overflow, layout rusak, section kosong yang janggal, atau core interaction tidak dapat digunakan.
+
 ---
 
 ## 8. Template Contract
@@ -287,6 +363,8 @@ Secara konseptual template harus memiliki:
 - asset location;
 - supported event/category compatibility bila diperlukan;
 - supported sections;
+- default section order;
+- allowed customization capabilities;
 - presentation implementation/theme definition;
 - default section animation capability/configuration bila tersedia;
 - version/migration strategy bila struktur template kemudian berubah secara material.
@@ -320,7 +398,8 @@ TEMPLATE LAYER
 ├── Artwork
 ├── Ornament
 ├── Animation
-├── Section composition
+├── Section composition/order
+├── Allowed customization capabilities
 ├── RSVP presentation
 ├── Wishes presentation
 ├── Gift presentation
@@ -347,6 +426,22 @@ Setelah shared engine dan section contracts matang, pekerjaan utama template bar
 Bukan oleh duplikasi backend/business logic.
 
 Jika penambahan template baru secara rutin memerlukan copy-paste core RSVP/Wishes/Gift implementation atau perubahan database/API yang sama berulang kali, architecture dianggap perlu direview karena tidak memenuhi scalability goal ini.
+
+### 10.1 Lazy loading / template isolation
+
+Jumlah template dalam katalog tidak boleh membuat setiap public invitation mengirim seluruh code dan asset dari semua template ke browser visitor.
+
+Jika invitation menggunakan `romantic-sage`, browser sebisa mungkin hanya memuat code/presentation dependency dan assets yang diperlukan oleh `romantic-sage` beserta shared DC runtime yang memang dibutuhkan.
+
+Canonical performance goals:
+- template renderer harus dapat dipisahkan/load secara independen bila practical;
+- asset template lain tidak boleh dimuat hanya karena terdaftar di katalog;
+- katalog dengan puluhan/ratusan template tidak boleh secara linear memperbesar initial public invitation payload;
+- shared components/utilities tetap boleh berada dalam common bundle bila memang digunakan lintas-template dan bundling tersebut lebih efisien;
+- implementation harus menghindari eager importing seluruh template renderer ke public client bundle jika hal tersebut menyebabkan semua template ikut terkirim;
+- preview/Studio boleh memiliki loading strategy berbeda dari public invitation selama performance tetap terkontrol.
+
+Tujuan requirement ini adalah menjaga public invitation tetap ringan walaupun katalog DC Organizer terus bertambah.
 
 ---
 
