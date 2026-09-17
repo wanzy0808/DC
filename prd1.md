@@ -507,3 +507,27 @@ Audit setelah dashboard cleanup masih menemukan page-level wrapper lama di luar 
 - Legacy fixed `w-[min(92vw,1400px)]` and dashboard `1400px` wrapper guard: **PASS**.
 - Database migration: N/A.
 
+---
+
+## 2026-09-17 — Decorative Content Numbering Follow-up
+
+### Requirement / Intent
+Final audit menemukan beberapa sequence number presentasional yang masih tersisa di page/component non-dashboard. Sesuai arahan user, nomor urutan dekoratif tidak dipakai sebagai content UI. Nomor fungsional/data nyata tetap dipertahankan.
+
+### Implementation
+- menghapus `Paket 01/02/...` pada Event Planner;
+- menghapus nomor urut card pada planner services;
+- menghapus nomor urut tab fitur Guestbook;
+- menghapus nomor urut menu pada burger navigation;
+- menghapus kolom nomor urut `#` dari RSVP table dan CSV export;
+- tidak mengubah seat number, time picker, price, quota, metric, date/time, child order, phone, atau template identifier.
+
+### Commit
+- `20856c6606e31c743a1688e5374ed2c72852297e` — remove remaining decorative sequence numbering.
+
+### Validation
+- targeted decorative-number guard: **PASS**.
+- `pnpm install --frozen-lockfile`: **PASS**.
+- `pnpm build`: **PASS**.
+- Database migration: N/A.
+
