@@ -51,10 +51,10 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
   ] as const;
 
   const serviceActive = services.some(({ href }) => pathname === href);
-  const topButtonClass =
-    "h-auto min-h-11 w-full justify-start rounded-[10px] px-3 py-2.5 text-left text-[13px] shadow-none";
-  const subButtonClass =
-    "h-auto min-h-10 w-full justify-start rounded-[9px] px-3 py-2 text-left text-[12px] shadow-none";
+  const neutralButton =
+    "border border-black/10 bg-white text-black shadow-sm hover:bg-neutral-100 hover:text-black dark:border-white/15 dark:bg-white dark:text-black dark:hover:bg-neutral-100";
+  const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start rounded-[10px] px-3 py-2.5 text-left text-[13px]`;
+  const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start rounded-[9px] px-3 py-2 text-left text-[12px]`;
 
   return (
     <SheetContent
