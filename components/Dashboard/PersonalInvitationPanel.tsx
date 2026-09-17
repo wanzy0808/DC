@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
+  ContactRound,
   CreditCard,
   Eye,
   KeyRound,
@@ -17,7 +18,17 @@ import EventScopePicker, {
 } from "@/components/Dashboard/EventScopePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardCompactStat,
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type Guest = {
   id: string;
@@ -323,7 +334,7 @@ export default function PersonalInvitationPanel() {
   );
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <DashboardPage className="pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={eventId}
@@ -334,47 +345,38 @@ export default function PersonalInvitationPanel() {
       {notice && <DashboardNotice className="mt-4">{notice}</DashboardNotice>}
 
       {!events.length ? null : selectedEvent && !selectedEvent.accessPaid ? (
-        <section className="mt-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                Belum aktif
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                {selectedEvent.title || "Acara"}
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Aktifkan Undangan Digital untuk memakai Personal Invitation pada acara ini.
-              </p>
-            </div>
-            <Button asChild size="sm">
-              <Link
-                href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(selectedEvent.id)}`}
-              >
-                <CreditCard className="h-4 w-4" />
-                Aktifkan Rp150.000
-              </Link>
-            </Button>
-          </div>
-        </section>
+        <DashboardSurface className="mt-4 p-4 sm:p-5">
+          <DashboardSectionHeader
+            eyebrow="Belum aktif"
+            title={selectedEvent.title || "Acara"}
+            description="Aktifkan Undangan Digital untuk memakai Personal Invitation pada acara ini."
+            actions={
+              <Button asChild size="sm">
+                <Link
+                  href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(selectedEvent.id)}`}
+                >
+                  <CreditCard className="h-4 w-4" />
+                  Aktifkan Rp150.000
+                </Link>
+              </Button>
+            }
+          />
+        </DashboardSurface>
       ) : selectedEvent ? (
         <>
-          <section className="mt-4 grid gap-3 sm:grid-cols-3">
-            <Metric label="Personal Invitation" value={String(personal.length)} />
-            <Metric label="Publish" value={String(publishedCount)} />
-            <Metric label="Dibuka" value={String(totalViews)} />
-          </section>
+          <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
+            <Metric icon={ContactRound} label="Personal Invitation" value={String(personal.length)} />
+            <Metric icon={Send} label="Publish" value={String(publishedCount)} />
+            <Metric icon={Eye} label="Dibuka" value={String(totalViews)} />
+          </DashboardMetricGrid>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-            <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-              <div>
-                <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                  Tamu · {selectedEvent.title || "Acara"}
-                </p>
-                <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                  Buat Personal Invitation
-                </h2>
-              </div>
+            <DashboardSurface className="space-y-4 p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow={`Tamu · ${selectedEvent.title || "Acara"}`}
+                title="Buat Personal Invitation"
+                description="Gunakan tamu yang sudah ada atau tambahkan tamu baru untuk membuat tautan personal."
+              />
 
               <div className="rounded-xl border border-border/70 bg-background p-3">
                 <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
@@ -439,34 +441,33 @@ export default function PersonalInvitationPanel() {
                   value={String(personal.length - publishedCount)}
                 />
               </div>
-            </section>
+            </DashboardSurface>
 
-            <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Daftar · {selectedEvent.title || "Acara"}
-                  </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                    Personal Invitation
-                  </h2>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => loadCurrent()}
-                  disabled={loading}
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  Muat ulang
-                </Button>
-              </div>
+            <DashboardSurface className="p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow={`Daftar · ${selectedEvent.title || "Acara"}`}
+                title="Personal Invitation"
+                description="Kelola status publish, password, dan tautan personal setiap tamu."
+                actions={
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => loadCurrent()}
+                    disabled={loading}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    Muat ulang
+                  </Button>
+                }
+              />
 
               <div className="mt-4 space-y-3">
                 {personal.length === 0 && (
-                  <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
-                    Belum ada Personal Invitation untuk acara ini.
-                  </div>
+                  <DashboardEmptyState
+                    icon={ContactRound}
+                    title="Belum ada Personal Invitation"
+                    description="Buat undangan personal dari daftar tamu atau tambahkan tamu baru."
+                  />
                 )}
                 {personal.map((item) => {
                   const publicUrl =
@@ -553,12 +554,12 @@ export default function PersonalInvitationPanel() {
                       </div>
 
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
+                        <DashboardStatusBadge active={item.personalPublished}>
                           {item.personalPublished ? "Terbit" : "Draft"}
-                        </span>
-                        <span className="rounded-lg bg-foreground/[0.04] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                        </DashboardStatusBadge>
+                        <DashboardStatusBadge active={item.personalPasswordProtected}>
                           {item.personalPasswordProtected ? "Password aktif" : "Tanpa password"}
-                        </span>
+                        </DashboardStatusBadge>
                         <Button
                           type="button"
                           size="sm"
@@ -615,25 +616,26 @@ export default function PersonalInvitationPanel() {
                   );
                 })}
               </div>
-            </section>
+            </DashboardSurface>
           </div>
         </>
       ) : null}
-    </div>
+    </DashboardPage>
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
-  return <DashboardMetricCard label={label} value={value} />;
+function Metric({
+  icon,
+  label,
+  value,
+}: {
+  icon: typeof Send;
+  label: string;
+  value: string;
+}) {
+  return <DashboardMetricCard icon={icon} label={label} value={value} />;
 }
 
 function SmallMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border/70 bg-background/75 px-3 py-2.5">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>
-    </div>
-  );
+  return <DashboardCompactStat label={label} value={value} />;
 }
