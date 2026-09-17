@@ -41,6 +41,7 @@ type Invitation = {
   receptionTime: string | null;
   description: string | null;
   eventNotes: string | null;
+  templateKey: string;
   isPublished: boolean;
   accessPaid: boolean;
   createdAt: string;
@@ -146,7 +147,6 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const [editorMode, setEditorMode] = useState<EditorMode>("closed");
   const [form, setForm] = useState<EventForm>(emptyForm);
   const [loading, setLoading] = useState(true);
-  const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
   const editorRef = useRef<HTMLElement | null>(null);
@@ -199,7 +199,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
   }, []);
 
   useEffect(() => {
-    if (editorMode === "closed" || !activeId) return;
+    if (editorMode === "closed") return;
     const frame = window.requestAnimationFrame(() => {
       editorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -210,27 +210,12 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
-  async function startNewEvent() {
-    if (creating || saving) return;
-    setCreating(true);
-    setNotice("Menyiapkan acara...");
-    try {
-      const response = await fetch("/api/invitations", { method: "POST" });
-      const data = await response.json().catch(() => null);
-      if (!response.ok || !data?.invitation?.id) {
-        throw new Error(data?.error || "Acara belum dapat dibuat.");
-      }
-
-      const draft = data.invitation as Invitation;
-      onSaved();
-      window.location.assign(
-        `/dashboard/editor?type=${draft.type}&invitationId=${encodeURIComponent(draft.id)}`,
-      );
-    } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Acara belum dapat dibuat.");
-    } finally {
-      setCreating(false);
-    }
+  function startNewEvent() {
+    if (saving) return;
+    setActiveId("");
+    setForm(emptyForm);
+    setEditorMode("new");
+    setNotice("Isi data acara lalu simpan.");
   }
 
   function selectCategory(value: string) {
@@ -246,10 +231,6 @@ export default function EventPanel({ accent, onSaved }: Props) {
   }
 
   async function save() {
-    if (!activeId) {
-      setNotice("Acara belum tersedia. Coba tambah acara lagi.");
-      return;
-    }
     if (!form.eventCategory) {
       setNotice("Pilih nama acara terlebih dahulu.");
       return;
@@ -290,11 +271,12 @@ export default function EventPanel({ accent, onSaved }: Props) {
         form.brideName,
         form.customTitle,
       );
+      const creatingNew = editorMode === "new" && !activeId;
       const response = await fetch("/api/invitations", {
-        method: "PUT",
+        method: creatingNew ? "POST" : "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          id: activeId,
+          ...(activeId ? { id: activeId } : {}),
           eventCategory: form.eventCategory,
           title,
           groomName: form.groomName,
@@ -312,9 +294,12 @@ export default function EventPanel({ accent, onSaved }: Props) {
         }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Data acara belum dapat disimpan.");
-      await load(activeId);
-      setNotice("Tersimpan");
+      if (!response.ok || !data?.invitation?.id) {
+        throw new Error(data?.error || "Data acara belum dapat disimpan.");
+      }
+      const savedId = String(data.invitation.id);
+      await load(savedId);
+      setNotice("Acara tersimpan. Sekarang buat undangan.");
       onSaved();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Data acara belum dapat disimpan.");
@@ -330,8 +315,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
     ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
     : "Acara baru";
   const showTopNotice =
-    editorMode === "closed" &&
-    (creating || (notice !== "Tersinkron" && notice !== "Memuat..."));
+    editorMode === "closed" && notice !== "Tersinkron" && notice !== "Memuat...";
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
@@ -345,9 +329,9 @@ export default function EventPanel({ accent, onSaved }: Props) {
               {events.length ? `${configuredCount} acara · ${events.length - configuredCount} draft` : "Belum ada acara"}
             </h2>
           </div>
-          <Button type="button" size="sm" onClick={startNewEvent} disabled={creating || saving}>
+          <Button type="button" size="sm" onClick={startNewEvent} disabled={saving}>
             <Plus className="h-4 w-4" />
-            {creating ? "Menyiapkan..." : "Tambah acara"}
+            Tambah acara
           </Button>
         </div>
 
@@ -365,6 +349,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
             {events.map((event, index) => {
               const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
               const draft = !event.eventConfigured;
+              const hasDesign = Boolean(event.templateKey?.trim());
               return (
                 <article key={event.id} className="rounded-xl border border-border/75 bg-background/80 p-4">
                   <div className="flex items-start justify-between gap-3">
@@ -380,7 +365,13 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       </p>
                     </div>
                     <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
-                      {event.isPublished ? "Terbit" : draft ? "Belum lengkap" : "Siap desain"}
+                      {event.isPublished
+                        ? "Terbit"
+                        : draft
+                          ? "Belum lengkap"
+                          : hasDesign
+                            ? "Undangan siap"
+                            : "Siap desain"}
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -392,7 +383,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       <Button asChild size="sm">
                         <Link href={studioHref}>
                           <PenLine className="h-4 w-4" />
-                          Buka Studio
+                          {hasDesign ? "Edit undangan" : "Buat undangan"}
                         </Link>
                       </Button>
                     )}
@@ -408,7 +399,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
         )}
       </section>
 
-      {editorMode !== "closed" && active && (
+      {editorMode !== "closed" && (editorMode === "new" || active) && (
         <section
           ref={editorRef}
           className="mt-4 scroll-mt-24 rounded-xl border border-border/80 bg-background p-4 sm:p-5"
@@ -604,7 +595,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
               </span>
               <span className="min-w-0 truncate">{notice}</span>
             </div>
-            <Button disabled={loading || saving || !category} onClick={save} size="sm">
+            <Button disabled={saving || !category} onClick={save} size="sm">
               <Save className="h-4 w-4" />
               {saving ? "Menyimpan acara..." : editorMode === "new" ? "Simpan acara" : "Simpan perubahan"}
             </Button>
@@ -617,7 +608,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
           <Button asChild size="sm">
             <Link href={`/dashboard/editor?type=${active.type}&invitationId=${active.id}`}>
               <PenLine className="h-4 w-4" />
-              Buka Studio
+              {active.templateKey?.trim() ? "Edit undangan" : "Buat undangan"}
             </Link>
           </Button>
         </div>
