@@ -859,6 +859,8 @@ Bukan melalui banyak warna/variant berbeda.
 - Public content standard sekitar `w-[min(92vw,1400px)]` saat sesuai.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.1; jangan mengembalikan centered public-content cap ke workspace utama.
 - Pintu tetap core public navigation surface.
+- Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
+- Public burger menu memakai navigation-button treatment, mempertahankan  dengan submenu Event Planner / Digital Invitation / Guestbook, serta selalu menyediakan  dan ; decorative numbering tidak digunakan.
 - Rose petals di `components/Layout/background.tsx` adalah protected visual element.
 
 ### 15.5 User-facing copy

@@ -605,3 +605,50 @@ Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, me
 - Dependency install: **PASS** through Build Validation #900.
 - TypeScript / Next production build: **PASS** through Build Validation #900.
 - Database migration: N/A.
+
+
+---
+
+## 2026-09-17 — Integrated Landing Composition & Sidebar-Style Burger Navigation
+
+### Requirement / Intent
+Koreksi terbaru mengembalikan burger menu ke pola navigation button seperti sidebar Dashboard, mempertahankan parent menu `Layanan` dengan submenu, serta memastikan `Masuk` dan `Daftar` tetap tersedia. Landing 80vw juga perlu memakai ruang lebar sebagai satu komposisi hero, bukan dua blok yang terasa berjauhan.
+
+### Implementation
+- burger menu kembali memakai navigation button treatment yang konsisten dengan sidebar Dashboard;
+- `Layanan` kembali menjadi collapsible parent dengan submenu Event Planner, Digital Invitation, dan Guestbook Digital;
+- Beranda, Paket, Template, Bantuan, Masuk, dan Daftar tetap tersedia;
+- `Daftar` menggunakan registration dialog existing dan theme state existing;
+- nomor dekoratif dan description panjang per menu tetap tidak digunakan;
+- landing desktop memakai grid yang lebih seimbang dan blok copy kiri lebih lebar;
+- CTA `Lihat Detail` tetap normal case dan mendapat directional line halus menuju area Pintu;
+- Pintu carousel digeser ke arah copy pada desktop untuk menghilangkan dead space di tengah;
+- horizontal orbit diperlebar, depth ditambah, loop sedikit diperlambat, dan active Pintu diperbesar secara restrained;
+- standard desktop memakai scale sedikit lebih kecil sebelum wide desktop untuk mengurangi risiko clipping;
+- landing descriptions dibuat sedikit lebih lengkap tanpa kembali menjadi blok marketing panjang;
+- canonical PRD public desktop width diselaraskan ke 80vw agar tidak bertentangan dengan AGENTS/README.
+
+### Affected Files
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `app/page.tsx`
+- `components/Pintu/PintuSection.tsx`
+- `components/Pintu/PintuCard.tsx`
+- `lib/i18n.ts`
+- `prd.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `42b69f706a4cbaf6eb61d4adc378989b2f678242` — restore sidebar-style burger navigation;
+- `32cafd1553816d04cab619e3f0d72866f4268a14` — pass theme state to burger registration;
+- `bc4276227d81dfce6dd72ad617ea675a19433e83` — connect landing copy with Pintu carousel;
+- `b7ef63e32922da16a0d916549c5e6d3b821deafe` — widen Pintu orbit for wide landing;
+- `accabee5574cdf53f8705cdb69fb0688952b473f` — enlarge Pintu cards on wide desktop;
+- `20fbec55e90a8d93a84ec1dc0afc06bd676f66f5` — enrich landing hero descriptions;
+- `f856d59998d10d8727f97033d72728be11f4db3c` — refine supplemental landing and burger requirements.
+
+### Validation
+- Build: pending final GitHub Actions result at time of changelog preparation.
+- TypeScript: pending final GitHub Actions result at time of changelog preparation.
+- Database migration: N/A.
