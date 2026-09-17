@@ -11,6 +11,8 @@ export const invitationPalettes = {
   ocean: { name: "Ocean", bg: "#edf4f5", surface: "#f9fcfc", ink: "#1f2d30", accent: "#39737a", soft: "#a6cdd0" },
   plum: { name: "Plum", bg: "#f3edf4", surface: "#fbf7fc", ink: "#2e202f", accent: "#70456f", soft: "#b997b8" },
   monochrome: { name: "Monochrome", bg: "#f4f3f1", surface: "#ffffff", ink: "#202020", accent: "#3d3d3d", soft: "#bdbdbd" },
+  maroon: { name: "Maroon", bg: "#4a111b", surface: "#fff7f2", ink: "#3a1118", accent: "#7b1f2b", soft: "#d5a59b" },
+  midnight: { name: "Midnight", bg: "#11131a", surface: "#f9f4ee", ink: "#141720", accent: "#8f7b9d", soft: "#c5b9cb" },
 } as const;
 
 export const invitationFonts = {
@@ -35,6 +37,7 @@ export const invitationFonts = {
   oswaldSourceSerif: { name: "Oswald + Source Serif 4", heading: "Oswald", body: "Source Serif 4" },
   philosopherMulish: { name: "Philosopher + Mulish", heading: "Philosopher", body: "Mulish" },
   playfairLato: { name: "Playfair Display + Lato", heading: "Playfair Display", body: "Lato" },
+  playfairLora: { name: "Playfair Display + Lora", heading: "Playfair Display", body: "Lora" },
   poiretMontserrat: { name: "Poiret One + Montserrat", heading: "Poiret One", body: "Montserrat" },
   quicksand: { name: "Quicksand", heading: "Quicksand", body: "Quicksand" },
   ralewayMerriweather: { name: "Raleway + Merriweather", heading: "Raleway", body: "Merriweather" },
