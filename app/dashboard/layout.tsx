@@ -8,6 +8,100 @@ import DashboardGate from "@/components/Dashboard/DashboardGate";
 // unauthenticated visitor can never render a dashboard child directly.
 export const dynamic = "force-dynamic";
 
+const dashboardShellCss = `
+  .dc-dashboard {
+    min-height: 100dvh;
+  }
+
+  .dc-dashboard > .flex {
+    min-height: 100dvh;
+    padding-top: 4rem;
+  }
+
+  .dc-dashboard header {
+    position: fixed !important;
+    inset: 0 0 auto 0;
+    width: 100%;
+    z-index: 60;
+  }
+
+  .dc-dashboard header > div {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .dc-dashboard > .flex > aside {
+    height: calc(100dvh - 4rem);
+    min-height: calc(100dvh - 4rem) !important;
+    position: sticky;
+    top: 4rem;
+    overflow-y: auto;
+  }
+
+  .dc-dashboard main > div,
+  .dc-dashboard main > section:not(.bg-background) {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: clamp(1rem, 2vw, 2rem) !important;
+    padding-right: clamp(1rem, 2vw, 2rem) !important;
+  }
+
+  .dc-dashboard main > section.bg-background > div {
+    width: 100% !important;
+    max-width: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: clamp(1rem, 2vw, 2rem) !important;
+    padding-right: clamp(1rem, 2vw, 2rem) !important;
+  }
+
+  .dc-dashboard main table {
+    width: max-content !important;
+    min-width: 940px !important;
+    max-width: 1180px;
+    border-collapse: separate;
+    border-spacing: 0 0.4rem;
+  }
+
+  .dc-dashboard main table thead tr {
+    border-bottom: 0 !important;
+  }
+
+  .dc-dashboard main table tbody tr {
+    background: color-mix(in srgb, currentColor 2.5%, transparent);
+  }
+
+  .dc-dashboard main table tbody td:first-child {
+    border-radius: 10px 0 0 10px;
+  }
+
+  .dc-dashboard main table tbody td:last-child {
+    border-radius: 0 10px 10px 0;
+  }
+
+  @media (min-width: 1024px) {
+    .dc-dashboard header a[href="/"] {
+      width: 14.25rem;
+      flex: 0 0 14.25rem;
+    }
+  }
+
+  @media (max-width: 1023px) {
+    .dc-dashboard > .flex > aside {
+      top: 4rem !important;
+      bottom: 0 !important;
+      height: auto;
+      min-height: 0 !important;
+    }
+  }
+`;
+
 export default async function DashboardLayout({
   children,
 }: Readonly<{
@@ -22,5 +116,10 @@ export default async function DashboardLayout({
   if (user.role === "ADMIN" || user.role === "FINANCE") redirect("/admin");
   if (user.role === "DESIGNER" || user.role === "EDITOR") redirect("/designer");
 
-  return <DashboardGate>{children}</DashboardGate>;
+  return (
+    <DashboardGate>
+      <style>{dashboardShellCss}</style>
+      {children}
+    </DashboardGate>
+  );
 }
