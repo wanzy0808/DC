@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check, Quote } from "lucide-react";
 import PintuSection from "@/components/Pintu/PintuSection";
 import RomanticBackground from "@/components/Layout/background";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
@@ -24,10 +24,10 @@ export default function Home() {
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
       <RomanticBackground />
       <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[80vw] max-w-full">
-        <section className="grid min-h-[calc(100dvh-88px)] items-center gap-7 py-5 sm:py-8 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-0 lg:py-6">
+        <section className="grid min-h-[calc(100dvh-88px)] items-center gap-8 py-5 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-0 lg:py-6">
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, ease } })}
-            className="relative z-20 max-w-[42rem] lg:pl-[1vw] lg:pr-2 xl:pl-[1.5vw]"
+            className="relative z-20 max-w-[48rem] lg:pl-[0.5vw] lg:pr-0 xl:pl-[1vw]"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -38,20 +38,33 @@ export default function Home() {
                 transition={{ duration: reduced ? 0.15 : 0.42, ease }}
               >
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.22em] text-foreground/60 sm:text-[11px]">{content.eyebrow}</p>
-                <h1 className="mt-4 max-w-[40rem] font-[family-name:var(--font-dc-heading)] text-[2.65rem] leading-[1.05] tracking-[-0.035em] text-primary sm:text-5xl lg:text-[3.45rem] xl:text-[4rem]">{content.title}</h1>
-                <p className="mt-5 max-w-[36rem] text-sm leading-7 text-foreground/72 sm:text-base sm:leading-8">{content.description}</p>
+                <h1 className="mt-4 max-w-[46rem] font-[family-name:var(--font-dc-heading)] text-[2.7rem] leading-[1.045] tracking-[-0.035em] text-primary sm:text-[3.15rem] lg:text-[3.65rem] xl:text-[4.2rem] 2xl:text-[4.45rem]">{content.title}</h1>
+                <p className="mt-5 max-w-[43rem] text-sm leading-7 text-foreground/72 sm:text-base sm:leading-8 lg:text-[1.05rem]">{content.description}</p>
 
-                <div className="mt-7 flex max-w-[37rem] items-center gap-4">
+                <div className="mt-7 flex items-center">
                   <Button asChild size="lg" className="h-11 min-w-[10.5rem] rounded-xl px-6 text-sm font-[family-name:var(--font-dc-body)] font-semibold tracking-normal sm:text-base">
                     <Link href={href}>
                       {messages.home.openWorkspace}
                       <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </Button>
-                  <div className="hidden h-px flex-1 bg-primary/20 sm:block" aria-hidden="true" />
                 </div>
 
-                <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-foreground/55 sm:text-[10px]">
+                <figure className="mt-7 flex max-w-[42rem] items-start gap-3.5">
+                  <Quote className="mt-0.5 h-5 w-5 shrink-0 text-primary/70" strokeWidth={1.7} />
+                  <div className="min-w-0">
+                    <blockquote className="font-[family-name:var(--font-dc-body)] text-sm leading-6 text-foreground/70 sm:text-[15px]">
+                      “{content.proof.quote}”
+                    </blockquote>
+                    <figcaption className="mt-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/45 sm:text-[10px]">
+                      {content.proof.source}
+                    </figcaption>
+                  </div>
+                </figure>
+
+                <div className="mt-6 h-px w-full max-w-[42rem] bg-primary/20" aria-hidden="true" />
+
+                <div className="mt-7 flex flex-wrap gap-x-5 gap-y-2.5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-foreground/55 sm:text-[10px]">
                   {content.capabilities.map((item) => <span key={item} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>)}
                 </div>
               </motion.div>
