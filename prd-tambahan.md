@@ -79,3 +79,41 @@ Database migration: N/A.
 ### Current scope note
 
 Toggle dan persistence section sudah bekerja di Studio/design state. Penyelarasan seluruh final public-template renderer terhadap visibility section tetap perlu dilakukan agar setiap template publik membaca konfigurasi reusable yang sama. Wishes pada perubahan ini adalah section layout/preview; persistence pesan Wishes belum ditambahkan sebagai model data baru.
+
+---
+
+## Invitation Studio — Distinct Template Canvas Follow-up
+
+### Requirement delta
+
+- Mengganti template di Studio harus menghasilkan perubahan visual yang jelas pada **struktur canvas**, bukan sekadar mengganti thumbnail, nama, atau warna kecil.
+- Setiap template boleh memiliki starter palette dan font pairing sendiri, sementara user tetap dapat mengubah warna/font setelah template dipilih.
+- `Botanical Ivory` dipakai sebagai reference/test long-form mobile yang mendekati komposisi referensi user: hero, identitas, detail waktu/lokasi, RSVP, Wishes, Gift/E-Angpao, dan footer.
+- Toggle RSVP, Wishes, dan Gift/E-Angpao tetap reusable dan tidak boleh membuat copy data event baru.
+- Public renderer yang sudah memiliki RSVP/Gift harus menghormati visibility state yang sama. Wishes public tetap tidak boleh menampilkan pesan palsu selama persistence Wishes belum tersedia.
+
+### Implementation
+
+- mengaktifkan `InvitationDesignerV3` sebagai renderer Studio customer;
+- menambahkan layout canvas berbeda untuk Botanical, Editorial, Maroon, Garden, Midnight, dan Classic sehingga pergantian template terlihat langsung pada canvas;
+- pemilihan template menerapkan starter palette/font yang relevan, tetapi panel Warna dan Font tetap dapat mengoverride pilihan tersebut;
+- mempertahankan section visibility pada `Invitation.templateKey` sehingga save/load dan event scope tetap backward-compatible tanpa migration;
+- generic public invitation sekarang membaca `parseInvitationSections()` untuk menyembunyikan/menampilkan RSVP dan Gift sesuai desain tersimpan;
+- Gift public hanya dirender ketika section aktif dan data rekening nyata tersedia;
+- Wishes di Studio tetap berupa layout preview/input area saja; tidak ada fake guest message atau persistence production yang dibuat pada tahap ini.
+
+### Affected files
+
+- `components/InvitationStudio/InvitationDesignerV3.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+- `lib/templates/design.ts`
+- `components/PublicInvitation/PublicInvitation.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Validation
+
+- Build Validation #975 menemukan mismatch type pada preset palette/font V3 dan **FAILED**; error tersebut ditelusuri dan diperbaiki.
+- Build Validation #976 pada head `87df4ef49aa2cc9063905128cbdd3e633ce7d284` setelah penambahan preset palette/font: **PASS**.
+- Public renderer follow-up setelah #976 memerlukan validation run baru sebelum dinyatakan PASS.
+- Database migration: N/A.
