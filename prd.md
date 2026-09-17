@@ -225,12 +225,17 @@ Field **Tanggal acara** wajib menggunakan input user-facing eksplisit:
 Contoh: `17/09/2026`.
 
 Frontend harus:
+- mendukung manual input `dd/mm/yyyy`;
+- menyediakan icon/tombol kalender interaktif yang membuka date picker;
+- hasil pilihan dari kalender harus kembali tampil sebagai `dd/mm/yyyy`, bukan format locale/browser lain;
 - membatasi format menjadi 10 karakter;
 - menyisipkan `/` secara konsisten;
 - memvalidasi tanggal kalender nyata;
 - menolak tanggal invalid;
 - mengubah `dd/mm/yyyy` ke `yyyy-mm-dd` sebelum API/database;
 - mengubah value database kembali ke `dd/mm/yyyy` saat edit.
+
+Native/internal date input boleh menggunakan ISO `yyyy-mm-dd` sebagai bridge ke calendar picker selama format yang terlihat user tetap `dd/mm/yyyy`.
 
 Time menggunakan format 24 jam. Zona waktu yang didukung:
 - WIB — `Asia/Jakarta`;
@@ -264,6 +269,19 @@ Sidebar user:
 WA Blast adalah add-on, bukan submenu inti Digital Invitation.
 
 Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
+
+### 6.1 Desktop dashboard shell
+
+Pada desktop dashboard menggunakan **full-width application workspace**, bukan centered marketing container.
+
+Layout canonical:
+- header dashboard membentang selebar viewport;
+- logo **DC Organizer** menjadi anchor kiri header;
+- sidebar dimulai tepat di bawah header/logo dan mempertahankan lebar navigasi yang stabil;
+- main workspace memakai seluruh sisa lebar viewport di sebelah sidebar dengan responsive horizontal gutter;
+- jangan membatasi workspace dashboard dengan `max-width: 1400px`/`92vw` seperti public marketing pages;
+- selector/form yang memang tidak membutuhkan full width boleh tetap compact agar mudah dibaca;
+- tabel data tidak boleh dipaksa stretch memenuhi layar lebar: gunakan content-driven desktop width yang proporsional, row treatment yang jelas, dan horizontal overflow pada viewport yang lebih kecil.
 
 ---
 
@@ -812,7 +830,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Input target minimum sekitar 44px.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
 - Public content standard sekitar `w-[min(92vw,1400px)]` saat sesuai.
-- Dashboard workspace boleh menggunakan area pane secara fleksibel.
+- Dashboard workspace mengikuti full-width application shell pada Section 6.1; jangan mengembalikan centered public-content cap ke workspace utama.
 - Pintu tetap core public navigation surface.
 - Rose petals di `components/Layout/background.tsx` adalah protected visual element.
 
@@ -942,7 +960,7 @@ Sebuah feature dianggap selesai hanya jika, sesuai scope feature tersebut:
 
 Minimal canonical Digital Invitation journey harus bekerja:
 
-`Tambah acara → input acara → dd/mm/yyyy date → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
+`Tambah acara → input acara → dd/mm/yyyy date dengan calendar picker → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
 
 Public route harus tetap menolak event yang belum configured, belum menyimpan template, belum published, atau belum memiliki valid event-scoped entitlement.
 
