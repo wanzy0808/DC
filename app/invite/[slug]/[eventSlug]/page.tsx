@@ -36,7 +36,11 @@ export default async function EventInvitationPage({
   );
 
   if (!invitation) notFound();
-  if (!invitation.isPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+  if (
+    !invitation.templateKey.trim() ||
+    !invitation.isPublished ||
+    !hasPaidDigitalInvitation(invitation.payment)
+  ) {
     return <InvitationLockedState />;
   }
   if (
