@@ -33,6 +33,8 @@ Validation must never be described as PASS unless an actual build/CI result is a
 ## 2. Product Identity & Preservation
 
 - Official product brand: **DC Organizer**.
+- **Protected brand wordmark contract:** customer-facing `DC Organizer` wordmarks MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The wordmark font is `var(--font-dc-heading)` / Cinzel, its wording and Rose treatment are locked, and agents must not reinterpret, restyle, substitute, or resize it into a different logo system unless the user explicitly requests a brand change.
+- Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
 - Never introduce legacy customer-facing brands such as Citin or DC Wedding.
 - Never reintroduce wedding-only assumptions into general event workflows unless the selected event category specifically requires them.
 - Preserve `/dashboard` and Beranda.
@@ -47,7 +49,7 @@ Validation must never be described as PASS unless an actual build/CI result is a
 ## 3. Typography
 
 Use only these application UI fonts:
-- **Cinzel** — display, headings, titles, branding, editorial elements.
+- **Cinzel** — display, headings, titles, branding, editorial elements. **DC Organizer wordmark always uses the canonical `--font-dc-heading` token and must not be swapped to another font class.**
 - **Fauna One** — body/UI copy, navigation, forms, buttons, descriptions.
 - **DM Mono** — metadata, codes, timestamps, status values, technical labels, small utility text.
 
@@ -58,6 +60,9 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 
 - Always !! use 80% VW for primary desktop header/content/footer containers. Do not regress page-level content to a fixed `max-width: 1400px` (or similarly narrow legacy wrapper) that leaves excessive unused desktop space.
 - Dashboard chrome may span the viewport, but the customer-facing header/content workspace should target `80vw` and remain capped by the available pane width so the sidebar never causes horizontal overflow.
+- **Dashboard visual consistency is mandatory:** Beranda is the reference visual language for every customer dashboard page and nested dashboard component. Use neutral white/near-black surfaces, subtle borders/low shadow, Rose only as meaningful accent, consistent icon treatment, and the same table/card hierarchy. Do not invent a page-specific color/card system that makes tabs look like different products.
+- Reuse/extend `components/Dashboard/DashboardPrimitives.tsx` for new dashboard surfaces, metrics, notices, and section structure instead of creating another dashboard visual primitive.
+- Tables/graphs are encouraged when they expose real stored/derived product data; never manufacture dashboard metrics merely to fill space.
 - Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics.
 - Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. In Indonesian, service labels are `Perencana Acara`, `Undangan Digital`, and `Buku Tamu Digital`. `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.
 - Explicit UI exception: burger navigation buttons plus registration/login controls use a neutral white surface with black text and a subtle border in both themes. Keep using the shared `Button` primitive, but this surface-specific treatment supersedes the Rose fill rule for these auth/navigation surfaces. Rose remains the accent for focus, links, and selected emphasis.

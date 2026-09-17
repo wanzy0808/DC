@@ -34,7 +34,7 @@ export default function FeatureGate({
   }
 
   return (
-    <section className="mx-auto grid w-[80vw] max-w-full min-w-0 overflow-hidden rounded-xl border border-border/80 bg-foreground/[0.018]">
+    <section className="mx-auto grid w-[80vw] max-w-full min-w-0 overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
       <div
         className="pointer-events-none col-start-1 row-start-1 min-w-0 select-none opacity-35 blur-[2px]"
         aria-hidden="true"

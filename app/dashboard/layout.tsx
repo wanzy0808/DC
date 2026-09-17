@@ -15,7 +15,7 @@ const dashboardShellCss = `
 
   .dc-dashboard > .flex {
     min-height: 100dvh;
-    padding-top: 4rem;
+    padding-top: 72px;
   }
 
   .dc-dashboard header {
@@ -33,10 +33,10 @@ const dashboardShellCss = `
   }
 
   .dc-dashboard > .flex > aside {
-    height: calc(100dvh - 4rem);
-    min-height: calc(100dvh - 4rem) !important;
+    height: calc(100dvh - 72px);
+    min-height: calc(100dvh - 72px) !important;
     position: sticky;
-    top: 4rem;
+    top: 72px;
     overflow-y: auto;
   }
 
@@ -66,7 +66,7 @@ const dashboardShellCss = `
 
   @media (max-width: 1023px) {
     .dc-dashboard > .flex > aside {
-      top: 4rem !important;
+      top: 72px !important;
       bottom: 0 !important;
       height: auto;
       min-height: 0 !important;

@@ -390,7 +390,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   return (
     <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
       <aside className="min-w-0 space-y-4">
-        <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
+        <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -448,7 +448,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           </div>
         </section>
 
-        <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4">
+        <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -483,7 +483,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
 
           <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
             {unassigned.length === 0 && (
-              <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-4 text-center text-xs text-muted-foreground">
+              <div className="rounded-xl border border-border/70 bg-background px-3 py-4 text-center text-xs text-muted-foreground">
                 Semua tamu sudah ditempatkan.
               </div>
             )}
@@ -507,7 +507,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         </section>
       </aside>
 
-      <section className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+      <section className="min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">

@@ -20,7 +20,7 @@ type Props = {
 export default function EventScopePicker({ events, value, onChange, disabled = false }: Props) {
   if (!events.length) {
     return (
-      <div className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+      <div className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="flex items-center gap-3">
           <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
             <CalendarDays className="h-4 w-4" />
@@ -37,7 +37,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
   }
 
   return (
-    <label className="block rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:max-w-xl">
+    <label className="block rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-3 sm:max-w-xl">
       <span className="mb-1.5 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         Acara aktif
       </span>

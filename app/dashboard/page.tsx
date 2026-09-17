@@ -38,6 +38,8 @@ import WhatsAppBlastPanel from "@/components/Dashboard/WhatsAppBlastPanel";
 import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
+import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
 
 type Context = {
   profile: { displayName: string; email: string };
@@ -171,13 +173,7 @@ function Card({
   children: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <section
-      className={`rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] ${className}`}
-    >
-      {children}
-    </section>
-  );
+  return <DashboardSurface className={className}>{children}</DashboardSurface>;
 }
 
 export default function DashboardPage() {
@@ -497,12 +493,10 @@ export default function DashboardPage() {
             <div className="flex min-h-16 w-full min-w-0 items-stretch">
               <div className="hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
                 <Link href="/" className="group block min-w-0">
-                  <div className="font-[family-name:var(--font-dc-heading)] text-2xl font-bold leading-none tracking-[0.12em] text-primary transition-transform group-hover:scale-[1.01]">
-                    DC Organizer
-                  </div>
-                  <div className="mt-1 whitespace-nowrap font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.22em] text-foreground/60">
-                    Your best consultant for wedding & event
-                  </div>
+                  <BrandWordmark
+                    size="dashboard"
+                    className="transition-transform group-hover:scale-[1.01]"
+                  />
                 </Link>
               </div>
 
@@ -520,12 +514,7 @@ export default function DashboardPage() {
                   </Button>
 
                   <Link href="/" className="group min-w-0 shrink-0 lg:hidden">
-                    <div className="font-[family-name:var(--font-dc-heading)] text-base font-bold leading-none tracking-[0.12em] text-primary">
-                      DC Organizer
-                    </div>
-                    <div className="mt-0.5 hidden whitespace-nowrap font-[family-name:var(--font-dc-mono)] text-[6px] uppercase tracking-[0.16em] text-foreground/60 sm:block">
-                      Your best consultant for wedding & event
-                    </div>
+                    <BrandWordmark size="mobile" />
                   </Link>
 
                   <div className="hidden h-8 w-px bg-border/70 sm:block lg:hidden" />

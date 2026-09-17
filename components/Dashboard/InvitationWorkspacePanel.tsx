@@ -142,7 +142,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   );
 
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       {notice && (
         <div
           className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
@@ -159,7 +159,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
         <Metric icon={Eye} label="Total dibuka" value={String(openedCount)} />
       </section>
 
-      <section className="mt-5 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+      <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -307,7 +307,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
         )}
       </section>
 
-      <section className="mt-5 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+      <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -324,7 +324,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
         <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
           {responders.length === 0 && (
-            <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-5 text-center text-xs text-muted-foreground">
+            <div className="rounded-xl border border-border/70 bg-background px-3 py-5 text-center text-xs text-muted-foreground">
               Belum ada tamu yang merespon.
             </div>
           )}
@@ -362,21 +362,21 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-          {label}
-        </p>
-        <Icon className="h-4 w-4 text-primary" />
+    <div className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        <Icon className="h-4 w-4" strokeWidth={1.8} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[11px] text-muted-foreground">{label}</p>
+        <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</p>
       </div>
-      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
     </div>
   );
 }
 
 function SmallMetric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="min-w-0 rounded-lg border border-border/70 bg-foreground/[0.018] px-2.5 py-2">
+    <div className="min-w-0 rounded-xl border border-border/70 bg-background px-2.5 py-2">
       <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
         {label}
       </p>

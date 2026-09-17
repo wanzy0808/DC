@@ -821,6 +821,8 @@ Application UI hanya memakai:
 - **Fauna One** — body/UI/navigation/form/button;
 - **DM Mono** — metadata/status/code/timestamp/utility text.
 
+**Brand wordmark contract:** seluruh wordmark customer-facing `DC Organizer` menggunakan implementasi canonical `components/Brand/BrandWordmark.tsx` dan token `--font-dc-heading` (Cinzel). Wording, font, tracking, dan Rose treatment wordmark tidak boleh diinterpretasi ulang per halaman tanpa requirement eksplisit. Public navbar boleh menampilkan tagline marketing existing; **header Dashboard tidak menampilkan tagline dan hanya memakai wordmark `DC Organizer`**.
+
 Template typography boleh dinamis bila merupakan konten invitation, bukan shell aplikasi.
 
 ### 15.2 Color
@@ -863,6 +865,9 @@ Bukan melalui banyak warna/variant berbeda.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
 - Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.1; jangan mengembalikan centered public-content cap ke workspace utama.
+- **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
+- Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
+- Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
 - Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
 - Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.

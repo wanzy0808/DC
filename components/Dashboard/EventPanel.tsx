@@ -417,8 +417,8 @@ export default function EventPanel({ onSaved }: Props) {
   const timezone = getIndonesiaTimezone(form.timezone);
 
   return (
-    <div className="w-full min-w-0 px-4 pb-16 pt-5 sm:px-6 lg:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 pb-4">
+    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-5">
         <p className="text-sm text-muted-foreground">
           {loading ? "Memuat..." : `${events.length} acara`}
         </p>
@@ -439,7 +439,7 @@ export default function EventPanel({ onSaved }: Props) {
         </p>
       )}
 
-      <div className="divide-y divide-border/70">
+      <div className="mt-4 divide-y divide-border/70 overflow-hidden rounded-2xl border border-border/70 bg-background px-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:px-5">
         {events.map((event) => {
           const draft = !event.eventConfigured;
           const hasDesign = Boolean(event.templateKey?.trim());
@@ -495,7 +495,7 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
-        <section ref={editorRef} className="scroll-mt-24 border-t border-border pt-6">
+        <section ref={editorRef} className="mt-4 scroll-mt-24 rounded-2xl border border-border/70 bg-background p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">
               {editorMode === "new" ? "Acara baru" : "Edit acara"}

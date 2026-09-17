@@ -8,6 +8,7 @@ import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -17,8 +18,10 @@ export default function Navbar() {
     <header className="dc-navbar relative z-50 w-full bg-transparent text-foreground transition-colors duration-500">
       <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5">
         <Link href="/" className="group block min-w-0">
-          <div className="font-[family-name:var(--font-dc-heading)] text-2xl font-bold leading-none tracking-[0.12em] text-primary transition-transform group-hover:scale-[1.01] sm:text-3xl">DC Organizer</div>
-          <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.22em] text-foreground/60">Your best consultant for wedding & event</div>
+          <BrandWordmark
+            showTagline
+            className="transition-transform group-hover:scale-[1.01]"
+          />
         </Link>
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />

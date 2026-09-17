@@ -322,7 +322,7 @@ export default function PersonalInvitationPanel() {
   );
 
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={eventId}
@@ -340,7 +340,7 @@ export default function PersonalInvitationPanel() {
       )}
 
       {!events.length ? null : selectedEvent && !selectedEvent.accessPaid ? (
-        <section className="mt-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-5">
+        <section className="mt-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -372,7 +372,7 @@ export default function PersonalInvitationPanel() {
           </section>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-            <section className="space-y-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+            <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
               <div>
                 <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                   Tamu · {selectedEvent.title || "Acara"}
@@ -382,7 +382,7 @@ export default function PersonalInvitationPanel() {
                 </h2>
               </div>
 
-              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+              <div className="rounded-xl border border-border/70 bg-background p-3">
                 <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
                 <select
                   value={guestId}
@@ -410,7 +410,7 @@ export default function PersonalInvitationPanel() {
                 </Button>
               </div>
 
-              <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+              <div className="rounded-xl border border-border/70 bg-background p-3">
                 <p className="text-xs font-semibold text-foreground">Tamu belum ada</p>
                 <div className="mt-2 space-y-2">
                   <Input
@@ -447,7 +447,7 @@ export default function PersonalInvitationPanel() {
               </div>
             </section>
 
-            <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+            <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
               <div className="flex items-center justify-between gap-3">
                 <div>
                   <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -470,7 +470,7 @@ export default function PersonalInvitationPanel() {
 
               <div className="mt-4 space-y-3">
                 {personal.length === 0 && (
-                  <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-6 text-center text-xs text-muted-foreground">
+                  <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
                     Belum ada Personal Invitation untuk acara ini.
                   </div>
                 )}
@@ -631,7 +631,7 @@ export default function PersonalInvitationPanel() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
+    <div className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] px-4 py-3.5">
       <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
         {label}
       </p>

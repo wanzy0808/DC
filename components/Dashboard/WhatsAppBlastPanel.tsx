@@ -194,7 +194,7 @@ export default function WhatsAppBlastPanel() {
   }
 
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       {notice && (
         <div
           className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
@@ -204,7 +204,7 @@ export default function WhatsAppBlastPanel() {
         </div>
       )}
 
-      <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+      <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
             <span className="mb-1.5 block font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -253,7 +253,7 @@ export default function WhatsAppBlastPanel() {
           </section>
 
           {quota === 0 ? (
-            <section className="mt-5 rounded-xl border border-border/80 bg-foreground/[0.018] p-5">
+            <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                 Add-on
               </p>
@@ -270,7 +270,7 @@ export default function WhatsAppBlastPanel() {
             </section>
           ) : (
             <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-              <section className="space-y-4 rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+              <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
                 <div>
                   <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
                     Penerima
@@ -280,7 +280,7 @@ export default function WhatsAppBlastPanel() {
                   </h2>
                 </div>
 
-                <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <div className="rounded-xl border border-border/70 bg-background p-3">
                   <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
                   <select
                     value={existingGuestId}
@@ -307,7 +307,7 @@ export default function WhatsAppBlastPanel() {
                   </Button>
                 </div>
 
-                <div className="rounded-xl border border-border/70 bg-background/80 p-3">
+                <div className="rounded-xl border border-border/70 bg-background p-3">
                   <p className="text-xs font-semibold text-foreground">Tamu belum ada</p>
                   <div className="mt-2 space-y-2">
                     <Input
@@ -336,7 +336,7 @@ export default function WhatsAppBlastPanel() {
                 </div>
               </section>
 
-              <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
+              <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
@@ -359,7 +359,7 @@ export default function WhatsAppBlastPanel() {
 
                 <div className="mt-4 space-y-2">
                   {selected.length === 0 && (
-                    <div className="rounded-lg border border-border/70 bg-background/70 px-3 py-6 text-center text-xs text-muted-foreground">
+                    <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
                       Belum ada penerima WA Blast.
                     </div>
                   )}
@@ -406,14 +406,14 @@ function Metric({
   value: string;
 }) {
   return (
-    <div className="rounded-xl border border-primary/10 bg-foreground/[0.022] px-4 py-3.5">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-          {label}
-        </p>
-        <Icon className="h-4 w-4 text-primary" />
+    <div className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        <Icon className="h-4 w-4" strokeWidth={1.8} />
+      </span>
+      <div className="min-w-0">
+        <p className="text-[11px] text-muted-foreground">{label}</p>
+        <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</p>
       </div>
-      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
     </div>
   );
 }

@@ -875,3 +875,50 @@ Dashboard redesign sempat menyederhanakan brand lockup menjadi teks `DC Organize
 
 ### Validation
 Workflow **Restore Dashboard Brand** menjalankan dependency install, Prisma Client generation, dan Next.js production build + TypeScript sebelum commit final dibuat. Hasil workflow wajib PASS.
+
+
+---
+
+## 2026-09-17 — Protected Brand Contract & Unified Dashboard Visual System
+
+### Requirement / Intent
+User menegaskan bahwa brand/font tidak boleh berubah antar iterasi, tagline marketing tidak diperlukan di Dashboard, dan seluruh customer Dashboard beserta nested component harus memakai visual language yang sama seperti Beranda agar tidak terlihat belang.
+
+### Implementation
+- menambahkan `components/Brand/BrandWordmark.tsx` sebagai canonical DC Organizer wordmark; font dikunci ke `--font-dc-heading` / Cinzel;
+- public Navbar menggunakan shared wordmark dan tetap boleh menampilkan tagline existing;
+- Dashboard desktop/mobile menggunakan shared wordmark **tanpa tagline**;
+- menambahkan `components/Dashboard/DashboardPrimitives.tsx` sebagai reusable surface/metric/notice/section foundation;
+- local Dashboard card primitive sekarang mendelegasikan surface ke shared dashboard primitive;
+- Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Seating/Manajemen Tamu, Event Scope, dan Feature Gate diselaraskan ke neutral white/near-black surface + subtle border/shadow + Rose accent seperti Beranda;
+- Rangkaian Acara mendapat grouped toolbar, list surface, dan editor surface agar tidak lagi terasa seperti halaman berbeda;
+- stale global Dashboard width cap `1400px` dihapus dan canonical `80vw`/available-pane behavior dipulihkan;
+- fixed Dashboard header/sidebar geometry disamakan pada tinggi 72px;
+- `prd.md`, `AGENTS.md`, dan `README.md` sekarang memiliki protected brand contract, dashboard no-tagline rule, dan visual-consistency rule yang eksplisit.
+
+### Affected Files
+- `components/Brand/BrandWordmark.tsx`
+- `components/Dashboard/DashboardPrimitives.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `app/dashboard/page.tsx`
+- `app/dashboard/layout.tsx`
+- `app/globals.css`
+- `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/EventScopePicker.tsx`
+- `components/Dashboard/FeatureGate.tsx`
+- `components/Dashboard/InvitationWorkspacePanel.tsx`
+- `components/Dashboard/PersonalInvitationPanel.tsx`
+- `components/Dashboard/RsvpAnalyticsPanel.tsx`
+- `components/Dashboard/SeatingChart.tsx`
+- `components/Dashboard/WhatsAppBlastPanel.tsx`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd1.md`
+
+### Validation
+- One-shot workflow **Unify Dashboard Brand And UI**: **PASS**.
+- `pnpm install --frozen-lockfile`: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.

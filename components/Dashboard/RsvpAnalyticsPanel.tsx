@@ -189,7 +189,7 @@ export default function RsvpAnalyticsPanel({
       className={
         embedded
           ? "min-w-0 overflow-x-clip text-foreground"
-          : "mx-auto w-[80vw] max-w-full min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
+          : "dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
       }
     >
       {notice && (
@@ -206,22 +206,20 @@ export default function RsvpAnalyticsPanel({
         {metrics.map(({ label, value, icon: Icon }) => (
           <article
             key={label}
-            className="min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-4"
+            className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
           >
-            <div className="flex items-center justify-between gap-3">
-              <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                {label}
-              </p>
-              <Icon className="h-4 w-4 shrink-0 text-primary" />
+            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+              <Icon className="h-4 w-4" strokeWidth={1.8} />
+            </span>
+            <div className="min-w-0">
+              <p className="text-[11px] text-muted-foreground">{label}</p>
+              <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</p>
             </div>
-            <p className="mt-2 font-[family-name:var(--font-dm-mono)] text-2xl font-medium text-foreground">
-              {value}
-            </p>
           </article>
         ))}
       </section>
 
-      <section className="mt-4 min-w-0 rounded-xl border border-border/80 bg-foreground/[0.018] p-3 sm:p-4">
+      <section className="mt-4 min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-3 sm:p-4">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex min-w-0 items-baseline gap-3">
             <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold">Daftar tamu</h2>
