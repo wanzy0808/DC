@@ -659,3 +659,43 @@ Koreksi terbaru mengembalikan burger menu ke pola navigation button seperti side
 - Dependency install: **PASS**.
 - TypeScript / Next production build: **PASS**.
 - Final commit after the validated source only updates documentation/removes the one-shot recorder; application source is unchanged.
+
+
+---
+
+## 2026-09-17 — Uniform Burger Buttons & Landing Proof Hierarchy
+
+### Requirement / Intent
+Menyeragamkan burger menu ke treatment button `Daftar`, menghapus Beranda dari panel burger, menjaga submenu `Layanan`, membedakan icon `Layanan` dan `Paket`, serta membuat landing 80vw lebih berisi melalui hierarchy copy, quote/proof, separator, dan capability row yang lebih proporsional.
+
+### Implementation
+- menghapus item Beranda dari burger menu; logo/brand navbar tetap menjadi jalur kembali ke `/`;
+- seluruh main burger action memakai canonical Rose `Button` treatment seperti `Daftar`;
+- mempertahankan `Layanan` sebagai collapsible parent dengan submenu Event Planner, Digital Invitation, dan Guestbook Digital;
+- mengganti icon `Layanan` menjadi `Layers` sehingga tidak bentrok dengan icon `Package` pada Paket;
+- mempertahankan `Masuk` dan `Daftar` di burger menu;
+- memperlebar blok copy landing dan menaikkan sedikit display scale agar sisi kiri mengisi workspace 80vw secara lebih proporsional;
+- menambahkan quote-style proof block di bawah CTA, garis separator halus di bawah proof, dan menurunkan capability checklist ke bawah separator;
+- karena repository tidak menyediakan testimonial customer terverifikasi, proof copy saat ini adalah brand/service statement tanpa customer attribution; struktur siap diganti dengan testimonial nyata ketika sumber diberikan;
+- menyinkronkan rule terbaru ke `prd.md`, `AGENTS.md`, `README.md`, dan `prd-tambahan.md`.
+
+### Affected Files
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `app/page.tsx`
+- `lib/i18n.ts`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `5efd72a37fe8efe60c5b0e7eb251b202edc042ad` — refine burger menu button hierarchy;
+- `fb131c7c64ffed5b65c9c9960a20c861cb90cd8e` — add landing proof copy;
+- `38474f6ae2f89828a2ad72685b3d4406b169bd84` — refine landing editorial composition.
+
+### Validation
+- GitHub Actions Build Validation #917 on source head `38474f6ae2f89828a2ad72685b3d4406b169bd84`: **PASS**.
+- Dependency install: **PASS**.
+- TypeScript / Next production build: **PASS**.
+- Database migration: N/A.

@@ -58,6 +58,9 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Always !! use 80% VW for primary desktop header/content/footer containers. Do not regress page-level content to a fixed `max-width: 1400px` (or similarly narrow legacy wrapper) that leaves excessive unused desktop space.
 - Dashboard chrome may span the viewport, but the customer-facing header/content workspace should target `80vw` and remain capped by the available pane width so the sidebar never causes horizontal overflow.
 - Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics.
+- Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. Top-level burger actions use the canonical `Button` visual treatment consistently, `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.
+- Landing 80vw should read as one editorial composition: the copy column may widen/grow downward, a quote/proof block may sit above a subtle separator, and muted capability checks sit below it.
+- Never fabricate customer testimonials, customer names, ratings, or quotes. Only attribute a quote to a customer when a real source is available; otherwise use clearly non-customer brand/service copy.
 
 ### Brand Anchor
 - Logo / brand primary: `#C07A84` Rose.

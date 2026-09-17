@@ -856,11 +856,14 @@ Bukan melalui banyak warna/variant berbeda.
 - Nested utility surface sekitar 8–10px.
 - Input target minimum sekitar 44px.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
-- Public content standard sekitar `w-[min(92vw,1400px)]` saat sesuai.
+- Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.1; jangan mengembalikan centered public-content cap ke workspace utama.
 - Pintu tetap core public navigation surface.
 - Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
-- Public burger menu memakai navigation-button treatment, mempertahankan  dengan submenu Event Planner / Digital Invitation / Guestbook, serta selalu menyediakan  dan ; decorative numbering tidak digunakan.
+- Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.
+- Area quote/proof ditempatkan setelah CTA dan sebelum separator tipis; capability checklist berada di bawah separator dengan jarak yang cukup agar hierarchy terasa ringan.
+- Quote pelanggan hanya boleh ditampilkan sebagai testimonial bila sumber/ucapan pelanggan benar-benar tersedia dan dapat dipertanggungjawabkan. Jangan mengarang nama, kutipan, rating, atau klaim pelanggan. Jika belum ada testimonial terverifikasi, gunakan brand/service statement tanpa customer attribution sampai data nyata tersedia.
+- Public burger menu tidak menampilkan `Beranda`; home tetap dapat dicapai melalui brand/logo. Seluruh action utama memakai canonical Rose Button treatment seperti action `Daftar`. `Layanan` tetap menjadi parent dengan submenu Event Planner / Digital Invitation / Guestbook, `Masuk` dan `Daftar` wajib tersedia, dan icon `Layanan` harus berbeda dari icon `Paket`; decorative numbering tidak digunakan.
 - Rose petals di `components/Layout/background.tsx` adalah protected visual element.
 
 ### 15.5 User-facing copy

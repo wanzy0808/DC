@@ -73,3 +73,13 @@
 - Orbit horizontal Pintu diperlebar dan vertical depth sedikit ditambah agar animasi mengisi wide-screen workspace dengan lebih baik.
 - Active Pintu sedikit lebih besar pada desktop; back Pintu tetap lebih kecil untuk mempertahankan depth hierarchy.
 - Standard desktop breakpoint boleh memakai scale sedikit lebih kecil, sementara wide desktop menampilkan komposisi penuh untuk mencegah clipping.
+
+
+## Burger button uniformity & landing proof hierarchy
+- Burger menu tidak menampilkan Beranda/Home; brand/logo tetap menjadi jalur kembali ke landing.
+- Semua action utama burger menggunakan treatment canonical Rose Button seperti `Daftar`, termasuk `Masuk`, `Paket`, `Template`, dan `Bantuan`.
+- `Layanan` tetap menjadi parent button dengan submenu Event Planner, Digital Invitation, dan Guestbook Digital.
+- Icon `Layanan` dan `Paket` wajib berbeda agar scanning menu tidak membingungkan.
+- Landing copy kiri diperlebar dan sedikit dibesarkan ke bawah agar komposisi 80vw terasa penuh tanpa menjauh dari Pintu.
+- Quote/proof block berada setelah CTA dan sebelum garis separator; capability/checklist abu-abu berada lebih bawah setelah separator.
+- Testimonial customer hanya boleh memakai feedback nyata. Selama quote customer terverifikasi belum tersedia, landing memakai brand/service statement tanpa atribusi customer dan siap diganti setelah data nyata diberikan.
