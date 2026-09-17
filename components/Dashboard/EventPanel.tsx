@@ -358,7 +358,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
     editorMode === "closed" && notice !== "Tersinkron" && notice !== "Memuat...";
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <div className="w-full min-w-0 px-4 pb-16 pt-7 sm:px-6 sm:pt-8 lg:px-7 2xl:px-8">
       <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="min-w-0">
@@ -385,7 +385,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
         )}
 
         {events.length ? (
-          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {events.map((event, index) => {
               const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
               const draft = !event.eventConfigured;
@@ -673,20 +673,59 @@ function DateField({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const pickerRef = useRef<HTMLInputElement | null>(null);
+  const isoValue = displayDateToIso(value);
+
+  function openCalendar() {
+    const picker = pickerRef.current;
+    if (!picker) return;
+    if (typeof picker.showPicker === "function") {
+      picker.showPicker();
+      return;
+    }
+    picker.focus();
+    picker.click();
+  }
+
   return (
-    <label className="block">
+    <div className="block">
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <Input
-        type="text"
-        inputMode="numeric"
-        autoComplete="off"
-        maxLength={10}
-        value={value}
-        onChange={(event) => onChange(formatDateInput(event.target.value))}
-        placeholder="dd/mm/yyyy"
-        aria-label={`${label} format dd/mm/yyyy`}
-      />
-    </label>
+      <div className="relative flex items-center gap-2">
+        <Input
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          maxLength={10}
+          value={value}
+          onChange={(event) => onChange(formatDateInput(event.target.value))}
+          placeholder="dd/mm/yyyy"
+          aria-label={`${label} format dd/mm/yyyy`}
+          className="h-11 min-w-0 flex-1"
+        />
+        <Button
+          type="button"
+          size="icon"
+          className="h-11 w-11 shrink-0"
+          onClick={openCalendar}
+          aria-label={`Pilih ${label.toLowerCase()} dari kalender`}
+          title="Pilih tanggal dari kalender"
+        >
+          <CalendarDays className="h-4 w-4" />
+        </Button>
+        <input
+          ref={pickerRef}
+          type="date"
+          value={isoValue}
+          onChange={(event) => onChange(isoDateToDisplay(event.target.value))}
+          className="pointer-events-none absolute right-0 top-0 h-11 w-11 opacity-0"
+          tabIndex={-1}
+          aria-hidden="true"
+        />
+      </div>
+      <p className="mt-1.5 text-[10px] text-muted-foreground">
+        Format dd/mm/yyyy · klik ikon kalender untuk memilih tanggal.
+      </p>
+    </div>
   );
 }
 
