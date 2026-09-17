@@ -69,6 +69,13 @@ function optionalName(value: unknown) {
   return String(value ?? "").trim() || null;
 }
 
+function optionalPositiveInt(value: unknown) {
+  const raw = String(value ?? "").trim();
+  if (!raw) return null;
+  const parsed = Number(raw);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
+}
+
 function isValidTime24(value: string | null) {
   return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
 }
@@ -247,8 +254,10 @@ export async function POST(request: Request) {
       const wedding = eventCategory === "WEDDING";
       const groomFatherName = wedding ? optionalName(body.groomFatherName) : null;
       const groomMotherName = wedding ? optionalName(body.groomMotherName) : null;
+      const groomChildOrder = wedding ? optionalPositiveInt(body.groomChildOrder) : null;
       const brideFatherName = wedding ? optionalName(body.brideFatherName) : null;
       const brideMotherName = wedding ? optionalName(body.brideMotherName) : null;
+      const brideChildOrder = wedding ? optionalPositiveInt(body.brideChildOrder) : null;
       const venue = String(body.venue ?? "").trim();
       const address = String(body.address ?? "").trim() || null;
       const mapUrl = String(body.mapUrl ?? "").trim() || null;
@@ -270,6 +279,12 @@ export async function POST(request: Request) {
       }
       if (category.nameMode === "single" && !groomName) {
         return NextResponse.json({ error: "Nama utama acara wajib diisi." }, { status: 400 });
+      }
+      if (wedding && String(body.groomChildOrder ?? "").trim() && !groomChildOrder) {
+        return NextResponse.json({ error: "Anak keberapa pengantin pria harus berupa angka lebih dari 0." }, { status: 400 });
+      }
+      if (wedding && String(body.brideChildOrder ?? "").trim() && !brideChildOrder) {
+        return NextResponse.json({ error: "Anak keberapa pengantin wanita harus berupa angka lebih dari 0." }, { status: 400 });
       }
       if (Number.isNaN(eventDate.getTime())) {
         return NextResponse.json({ error: "Tanggal acara wajib diisi." }, { status: 400 });
@@ -295,8 +310,10 @@ export async function POST(request: Request) {
         brideName,
         groomFatherName,
         groomMotherName,
+        groomChildOrder,
         brideFatherName,
         brideMotherName,
+        brideChildOrder,
         venue,
         address,
         mapUrl,
@@ -409,11 +426,17 @@ export async function PUT(request: Request) {
     const groomMotherName = wedding
       ? optionalName(body.groomMotherName ?? invitation.groomMotherName)
       : null;
+    const groomChildOrder = wedding
+      ? optionalPositiveInt(body.groomChildOrder ?? invitation.groomChildOrder)
+      : null;
     const brideFatherName = wedding
       ? optionalName(body.brideFatherName ?? invitation.brideFatherName)
       : null;
     const brideMotherName = wedding
       ? optionalName(body.brideMotherName ?? invitation.brideMotherName)
+      : null;
+    const brideChildOrder = wedding
+      ? optionalPositiveInt(body.brideChildOrder ?? invitation.brideChildOrder)
       : null;
     const venue = String(body.venue ?? invitation.venue).trim();
     const address = String(body.address ?? invitation.address ?? "").trim() || null;
@@ -442,6 +465,12 @@ export async function PUT(request: Request) {
       }
       if (category.nameMode === "single" && !groomName) {
         return NextResponse.json({ error: "Nama utama acara wajib diisi." }, { status: 400 });
+      }
+      if (wedding && body.groomChildOrder !== undefined && String(body.groomChildOrder ?? "").trim() && !groomChildOrder) {
+        return NextResponse.json({ error: "Anak keberapa pengantin pria harus berupa angka lebih dari 0." }, { status: 400 });
+      }
+      if (wedding && body.brideChildOrder !== undefined && String(body.brideChildOrder ?? "").trim() && !brideChildOrder) {
+        return NextResponse.json({ error: "Anak keberapa pengantin wanita harus berupa angka lebih dari 0." }, { status: 400 });
       }
       if (Number.isNaN(eventDate.getTime())) {
         return NextResponse.json({ error: "Tanggal acara wajib diisi." }, { status: 400 });
@@ -489,8 +518,10 @@ export async function PUT(request: Request) {
         brideName,
         groomFatherName,
         groomMotherName,
+        groomChildOrder,
         brideFatherName,
         brideMotherName,
+        brideChildOrder,
         venue,
         address,
         mapUrl,
