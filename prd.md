@@ -1,557 +1,963 @@
-Master Product Requirements Document (PRD) — DC OrganizerDocument Status: Master Source of Truth (Fully Consolidated & Synchronized)  Brand: DC Organizer (sebelumnya DC Wedding)  Repository: wanzy0808/DC  Last Consolidated: September 2026  1. Vision & Operational LifecycleDC Organizer adalah platform SaaS pernikahan end-to-end yang berpusat pada Undangan Pernikahan Digital (Digital Wedding Invitation) dan alur kerja manajemen tamu secara real-time. Platform ini memfasilitasi operasional pernikahan secara menyeluruh, mulai dari tahap awal pembuatan hingga hari pelaksanaan di lokasi (onsite).  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│  Wedding Setup  │ ──►│ Invitation Creation │ ─►│   Publication   │ ──►│  Distribution   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
-                                                                              │
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐             ▼
-│ Onsite Check-in │ ◄──│    QR Ticket    │ ◄──│ Seating & Guest │ ◄──│ RSVP & Gift Track│
-└─────────────────┘    └─────────────────┘    └─────────────────┘    └─────────────────┘
-2. Technical Stack, Architecture & System Principles2.1 Core Technical StackFramework: Next.js App Router / Turbopack  Runtime & Package Manager: Node.js >= 22 LTS | pnpm >= 11  Language: TypeScript  UI & Styling: Tailwind CSS v4 + Shadcn UI + tw-animate-css  Animation Engine: Motion via motion/react  Database & ORM: PostgreSQL + Prisma  Media & Canvas: Sharp (image processing) | Konva / react-konva (interactive seating 2D)  Deployment & CI/CD: Hostinger VPS + GitHub Actions  2.2 Core Key Dependencies@radix-ui/react-slot & class-variance-authority (CVA)  lucide-react (System Iconography)  2.3 System Architecture PrinciplesExtend Over Replace: Pertahankan route, API, UI, dan data flow yang sudah berjalan. Halaman /dashboard dan Beranda (/) wajib dipertahankan.  Brand Realignment: Semua antarmuka publik dan internal wajib menggunakan label DC Organizer (menggantikan nama lama DC Wedding).  Single Source of Truth: Database PostgreSQL adalah single source of truth. Undangan baru harus dimulai dari kondisi kosong (clean slate, tanpa data sampel/palsu).  Server-Authoritative: Otorisasi, limitasi, serta validasi kuota/kapasitas dikontrol sepenuhnya di server-side. UI gate mencerminkan entitlement server secara akurat.  Single Source Theme System: app/globals.css adalah single source of truth untuk seluruh styling dan token tema aplikasi. Seluruh impor CSS tambahan (seperti dashboard-theme.css, brand-theme.css, design-overrides.css) telah dihapus dan dikonsolidasikan. ## Additional Product Requirements
+# DC Organizer — Master Product Requirements Document
 
-Fitur berikut merupakan pengembangan lanjutan untuk meningkatkan pengelolaan tamu, operasional acara di lokasi, monetisasi platform, serta keamanan dan skalabilitas sistem.
+**Document Status:** Single Source of Truth  
+**Brand:** DC Organizer  
+**Repository:** `wanzy0808/DC`  
+**Last Consolidated:** 17 September 2026  
+**Implementation Changelog:** `prd1.md`
 
----
-
-### 1. Guest Ecosystem & Invitation Distribution
-
-#### 1.1 Guest Category & Tags
-
-**Objective**
-
-Memungkinkan pengguna mengelompokkan tamu agar pengelolaan guest list, distribusi undangan, seating chart, dan operasional onsite lebih terstruktur.
-
-**Requirements**
-
-Model `Guest` harus mendukung:
-
-* `category`
-* `tags`
-* multiple tags per guest
-* filtering berdasarkan category/tag
-
-Contoh kategori:
-
-* VVIP
-* VIP
-* Family Groom
-* Family Bride
-* Friends
-* Office
-* Vendor
-* Other
-
-Pengguna harus dapat:
-
-* membuat custom category/tag;
-* mengedit category/tag tamu;
-* melakukan bulk assign category/tag;
-* melakukan filter Guest List berdasarkan category/tag;
-* menggunakan filter pada Seating Chart;
-* menggunakan filter saat melakukan distribusi undangan atau WA Blast.
-
-**Acceptance Criteria**
-
-* Guest dapat memiliki minimal satu category dan beberapa tags.
-* Filter Guest List bekerja berdasarkan category dan tags.
-* Bulk update dapat dilakukan terhadap beberapa guest.
-* Category/tag dapat digunakan pada modul Seating Chart dan Invitation Distribution.
-
-**Priority:** P1
+> Dokumen ini adalah requirement produk aktif dan menggantikan seluruh keputusan yang sebelumnya tersebar di `PRD-TAMBAHAN.md`, `PRD1.md`, `PRD2.md`, `PRD3.md`, `PRD4.md`, dan `PRD5.md`. Jika histori lama bertentangan dengan dokumen ini, **dokumen ini yang berlaku**. Histori implementasi baru tidak ditambahkan ke master PRD kecuali requirement produk berubah; catat perubahan implementasi di `prd1.md`.
 
 ---
 
-#### 1.2 Digital Gift / Cashless Angpao
+## 1. Product Vision & Scope
 
-**Objective**
+DC Organizer adalah **general-event digital invitation & event operations SaaS**, bukan wedding-only SaaS.
 
-Memberikan opsi kepada pasangan untuk menerima hadiah digital langsung melalui halaman undangan.
+Platform mendukung lifecycle acara dari pembuatan event sampai distribusi undangan dan operasional onsite:
 
-**Requirements**
+`Account → Event Setup → Invitation Design → Publish → Distribution → RSVP → Guest & Seating → QR / Onsite Check-in`
 
-Public Invitation dapat memiliki modul `Digital Gift`.
+Jenis event yang didukung minimal:
+- `WEDDING` — Pernikahan;
+- `SILVER_WEDDING` — Silver Wedding;
+- `GOLDEN_WEDDING` — Golden Wedding;
+- `BIRTHDAY` — Ulang Tahun;
+- `BABY_SHOWER` — Baby Shower;
+- `OTHER` — Event Lainnya.
 
-Metode yang dapat didukung:
+Platform harus dapat berkembang ke engagement, anniversary, corporate/private event, gathering, dan event lain tanpa memaksa data couple/wedding.
 
-* Bank Transfer
-* QRIS
-* Payment Gateway
-
-Potential provider:
-
-* Midtrans
-* Xendit
-
-Pemilik invitation dapat memilih apakah fitur ini aktif atau tidak.
-
-Informasi yang dapat ditampilkan:
-
-* nama bank;
-* nomor rekening;
-* nama pemilik rekening;
-* QRIS;
-* tombol copy nomor rekening;
-* payment status apabila menggunakan payment gateway.
-
-Untuk integrasi payment gateway, sistem harus menyimpan transaksi digital gift secara terpisah dari billing platform.
-
-Suggested model:
-
-`DigitalGiftTransaction`
-
-Fields:
-
-* `id`
-* `invitationId`
-* `guestId` nullable
-* `provider`
-* `paymentMethod`
-* `amount`
-* `status`
-* `externalTransactionId`
-* `createdAt`
-* `paidAt`
-
-**Acceptance Criteria**
-
-* Owner dapat enable/disable Digital Gift.
-* Guest dapat menggunakan QRIS atau metode pembayaran yang tersedia.
-* Payment callback/webhook dapat memperbarui status transaksi.
-* Informasi pembayaran tidak terekspos melalui API yang tidak terautentikasi.
-
-**Priority:** P2
+Customer-facing brand wajib **DC Organizer**. Nama lama seperti DC Wedding/Citin tidak boleh diperkenalkan kembali pada surface baru.
 
 ---
 
-#### 1.3 Live Guestbook Wall
+## 2. Canonical Product Lifecycle
 
-**Objective**
+### 2.1 Event → Invitation → Publish
 
-Menampilkan ucapan dan doa dari tamu secara real-time pada monitor atau projector di venue.
+Flow utama yang wajib dipertahankan:
 
-**Requirements**
+1. User klik **`Tambah acara`**.
+2. Form acara dibuka tanpa membuat blank database row baru hanya karena form dibuka.
+3. User mengisi data acara.
+4. User klik **`Simpan acara`**.
+5. Server memvalidasi data minimum dan menyimpan event ke PostgreSQL/Prisma.
+6. Event menjadi `eventConfigured = true`.
+7. User klik **`Buat undangan`**.
+8. Invitation Studio membuka event tersebut menggunakan `invitationId` yang tepat.
+9. User memilih template.
+10. User mengedit desain/konten Studio.
+11. User klik **`Simpan desain`**.
+12. `Invitation.templateKey` dan data desain tersimpan ke database.
+13. User klik **`Publish`**.
+14. Jika event belum memiliki Digital Invitation entitlement, user diarahkan ke paket Rp150.000 untuk `invitationId` tersebut.
+15. Setelah entitlement aktif, server mengizinkan publish.
+16. Public invitation dapat dibuka dan didistribusikan.
 
-Buat mode khusus:
+Legacy blank draft dari implementasi lama boleh direuse oleh backend saat menyimpan event agar tidak menghasilkan orphan/duplicate record, tetapi blank draft **bukan** flow produk baru.
+
+### 2.2 Server publish gate
+
+Public invitation hanya boleh diterbitkan apabila seluruh kondisi berikut terpenuhi:
+- event dimiliki user yang berhak;
+- `eventConfigured = true`;
+- data minimum event valid;
+- `templateKey` tidak kosong;
+- Digital Invitation entitlement untuk event tersebut aktif;
+- request publish lolos validasi server.
+
+UI bukan security boundary. Request API yang mencoba melewati urutan tersebut tetap harus ditolak server.
+
+---
+
+## 3. Technical Stack & Engineering Principles
+
+### 3.1 Core stack
+
+- Framework: Next.js App Router / Turbopack.
+- Runtime: Node.js >= 22 LTS.
+- Package manager: pnpm >= 11.
+- Language: TypeScript.
+- Database: PostgreSQL.
+- ORM: Prisma ORM.
+- CSS: Tailwind CSS v4.
+- Components: shadcn/ui patterns.
+- Icons: Lucide React.
+- Animation: Motion via `motion/react`.
+- Seating canvas: Konva / `react-konva`.
+- Image processing: Sharp.
+- Deployment target: Hostinger VPS / Linux.
+- CI/CD: GitHub Actions build validation.
+
+### 3.2 Architecture principles
+
+- **Extend Over Replace:** pertahankan route, API, schema, dan data flow existing bila masih kompatibel.
+- **PostgreSQL/Prisma is the source of truth:** jangan membuat mock/fake invitation sebagai data produk.
+- **Server-authoritative:** authorization, payment entitlement, quota, capacity, seating collision, publish, dan sensitive mutation harus divalidasi backend.
+- **Event-scoped isolation:** guest, RSVP, seating, Personal Invitation, WA Blast, check-in, dan entitlement tidak boleh bocor antar-event.
+- **Backward compatibility:** route/field legacy yang masih diperlukan boleh dipertahankan sampai ada migration plan eksplisit.
+- `/dashboard`, Beranda, Pintu, dan protected Rose petals adalah product foundation yang tidak boleh dihapus tanpa requirement eksplisit.
+- `app/globals.css` dan semantic theme token adalah basis styling aplikasi.
+
+---
+
+## 4. Account, Authentication & Roles
+
+### 4.1 Registration & onboarding
+
+Registration awal minimal meminta:
+- email;
+- password;
+- konfirmasi password;
+- Terms/Privacy consent.
+
+Dashboard onboarding untuk user umum hanya membutuhkan profil workspace seperti `firstName` / nama panggilan. Data couple tidak boleh menjadi requirement universal.
+
+Data event diisi ketika user membuat Rangkaian Acara.
+
+### 4.2 System roles
+
+Role aplikasi yang tetap dapat digunakan untuk backoffice:
+- `OWNER` → `/owner`;
+- `ADMIN` → `/admin`;
+- `FINANCE` → `/admin` untuk payment/financial operation;
+- `DESIGNER` → `/designer`;
+- `EDITOR` → legacy designer-compatible role;
+- `USER` → `/dashboard`.
+
+Authorization route dan mutation harus dilakukan server-side.
+
+### 4.3 Planned event-team access — P1
+
+Event harus mendukung multi-user/team access melalui model seperti `EventMember`:
+- `eventId`;
+- `userId`;
+- `role`;
+- `permissions`;
+- `invitedAt`;
+- `acceptedAt`.
+
+Default event roles:
+- **Owner:** full event access;
+- **Admin:** hampir seluruh operasional event;
+- **Wedding Organizer / Event Operator:** Guest List, RSVP, Seating, Usher, Guestbook; tanpa Billing, Subscription, Payment Account, atau Digital Gift configuration;
+- **Usher:** guest search, QR scan, check-in, table information.
+
+Permission harus diperiksa API/backend, bukan hanya hidden menu.
+
+---
+
+## 5. Event Data Model & Rangkaian Acara
+
+### 5.1 Event identity
+
+`Invitation` saat ini tetap menjadi aggregate utama untuk event + digital invitation demi backward compatibility.
+
+Field penting:
+- `id`;
+- `ownerId`;
+- `slug`;
+- legacy `type`;
+- `eventCategory`;
+- `title`;
+- legacy `groomName` / `brideName`;
+- `venue`;
+- `address`;
+- `mapUrl`;
+- `timezone`;
+- `eventDate`;
+- `eventConfigured`;
+- `ceremonyTime` / `receptionTime` sebagai compatibility timing fields;
+- `description`;
+- `eventNotes`;
+- `templateKey`;
+- `musicUrl`;
+- `isPublished`;
+- `viewCount`;
+- `waBlastQuota`.
+
+Legacy field names tidak boleh dianggap universal wedding semantics. `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, dan `ADAT_AKAD` dipertahankan sementara sebagai compatibility storage/routing sampai migration strategy ditentukan.
+
+### 5.2 Unlimited event creation
+
+Tidak ada business rule maksimal 3 event.
+
+User dapat membuat event sesuai kebutuhan. Setiap event diaktifkan/dibayar secara independen.
+
+### 5.3 Event category behavior
+
+Dynamic name fields:
+- Pernikahan → nama pengantin pria + wanita;
+- Silver/Golden Wedding → nama pasangan 1 + pasangan 2;
+- Birthday → satu nama utama;
+- Baby Shower → nama keluarga/calon bayi;
+- Event Lainnya → custom event title.
+
+Title predefined category dapat digenerate dari category + identity, misalnya:
+- `Pernikahan Rio & Lyvia`;
+- `Silver Wedding Budi & Ani`;
+- `Ulang Tahun Olivia`;
+- `Baby Shower Keluarga Wijaya`.
+
+### 5.4 Required fields before configured
+
+Server minimal memerlukan:
+- event category/title;
+- identity/name sesuai category;
+- event date;
+- start time;
+- venue.
+
+Optional:
+- end time;
+- address;
+- Maps URL;
+- description;
+- notes.
+
+### 5.5 Date/time UX
+
+Field **Tanggal acara** wajib menggunakan input user-facing eksplisit:
+
+`dd/mm/yyyy`
+
+Contoh: `17/09/2026`.
+
+Frontend harus:
+- membatasi format menjadi 10 karakter;
+- menyisipkan `/` secara konsisten;
+- memvalidasi tanggal kalender nyata;
+- menolak tanggal invalid;
+- mengubah `dd/mm/yyyy` ke `yyyy-mm-dd` sebelum API/database;
+- mengubah value database kembali ke `dd/mm/yyyy` saat edit.
+
+Time menggunakan format 24 jam. Zona waktu yang didukung:
+- WIB — `Asia/Jakarta`;
+- WITA — `Asia/Makassar`;
+- WIT — `Asia/Jayapura`.
+
+### 5.6 Event list actions
+
+State/action yang harus jelas:
+- event belum tersimpan → `Simpan acara`;
+- event tersimpan, belum punya desain → `Buat undangan`;
+- desain sudah tersimpan → `Edit undangan` / `Buka Studio`;
+- event dapat tetap diedit melalui `Edit acara`;
+- event terbit → status `Terbit` dan public action.
+
+---
+
+## 6. Dashboard Information Architecture
+
+Sidebar user:
+- **Beranda**
+- **Acara**
+  - Rangkaian Acara
+  - Undangan
+  - Personal Invitation
+- **WA Blast Add-on**
+- **RSVP**
+- **Manajemen Tamu**
+- **Usher App**
+
+WA Blast adalah add-on, bukan submenu inti Digital Invitation.
+
+Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
+
+---
+
+## 7. Digital Invitation & Invitation Studio
+
+### 7.1 Event-scoped Studio
+
+Studio dibuka menggunakan exact `invitationId`:
+
+`/dashboard/editor?type=<legacy-type>&invitationId=<event-id>`
+
+`invitationId` adalah source event utama. Parameter `type` hanya compatibility fallback.
+
+Studio tidak boleh kembali memakai global first-WEDDING assumption.
+
+### 7.2 Event data inside Studio
+
+Core event data berasal dari Rangkaian Acara dan dibaca sebagai synced event content:
+- title / identity;
+- date;
+- time;
+- timezone;
+- venue;
+- address;
+- Maps;
+- description;
+- notes.
+
+Studio fokus pada invitation-specific configuration:
+- template;
+- palette;
+- typography template;
+- decor/gallery;
+- event tag/hashtag compatibility field;
+- dress code;
+- music;
+- preview;
+- save design;
+- publish.
+
+### 7.3 Template save state
+
+`Invitation.templateKey` adalah indikator bahwa desain/template pernah disimpan.
+
+Configured event tanpa `templateKey` **tidak boleh publish**.
+
+### 7.4 Unpaid template preview & anti-copy strategy
+
+User **boleh** membuka Studio, memilih template, mengedit, preview, dan menyimpan desain sebelum membayar.
+
+Untuk event yang belum memiliki Digital Invitation entitlement:
+- preview Studio diberi watermark `PREVIEW • DC ORGANIZER`;
+- fullscreen preview juga diberi watermark;
+- image drag/select dan context-menu boleh dipersulit sebagai deterrent;
+- UI harus menjelaskan bahwa template masih preview dan lisensi diperlukan pada Publish.
+
+Client-side anti-copy bukan security boundary. HTML/CSS/JS yang sudah dikirim ke browser tidak dapat dijamin 100% anti-copy.
+
+Untuk template premium/proprietary, target architecture yang lebih kuat:
+- catalog hanya memakai thumbnail/low-resolution/watermarked asset;
+- master asset berada di private object storage;
+- server memverifikasi owner + entitlement event;
+- master asset diberikan melalui short-lived signed URL/path;
+- final asset tidak dimasukkan ke public frontend bundle sebelum entitlement valid.
+
+### 7.5 Publish behavior
+
+Saat user menekan Publish:
+1. Studio membaca state terbaru dari server.
+2. Jika event belum configured → publish ditolak.
+3. Jika `templateKey` kosong → minta user menyimpan desain.
+4. Jika entitlement belum aktif → redirect ke `/packages?package=INVITATION_BASIC&invitationId=<id>`.
+5. Jika entitlement aktif → request publish.
+6. API melakukan validasi ulang sebelum `isPublished = true`.
+
+### 7.6 Public renderer
+
+Public renderer wajib memeriksa:
+- `eventConfigured`;
+- saved `templateKey`;
+- `isPublished`;
+- valid event-scoped payment.
+
+Jika salah satu tidak terpenuhi, renderer mengembalikan locked state dan tidak mengirim final invitation experience.
+
+Renderer harus event-category aware:
+- wedding/anniversary dapat memakai dua nama;
+- birthday memakai satu nama;
+- baby shower memakai family/baby identity;
+- Other memakai event title.
+
+Timing public menggunakan generic `Mulai` / `Selesai`, bukan asumsi `Akad` / `Resepsi` untuk semua event.
+
+Mandatory footer: **DC Organizer**.
+
+### 7.7 Public routing & password
+
+Configured event routing tidak memiliki maximum-two business limit.
+
+Public access tetap mendukung legacy routing/alias selama dibutuhkan.
+
+Password protection:
+- hash menggunakan bcrypt;
+- password hash tidak dikirim ke client;
+- access cookie/server gate tetap server-authoritative.
+
+View counter bertambah setelah publish/payment/password gate berhasil dilewati.
+
+Root domain berasal dari `NEXT_PUBLIC_INVITATION_ROOT_DOMAIN`; fallback `dcwedding.com` hanya compatibility sementara sampai migration domain ditetapkan.
+
+---
+
+## 8. Monetization & Entitlement
+
+### 8.1 Digital Invitation
+
+Package key: `INVITATION_BASIC`.
+
+Harga aktif:
+
+**Rp150.000 per event / invitation.**
+
+Satu pembelian membuka **satu event** saja dan mencakup:
+- 1 Digital Invitation;
+- 1 saved template/design;
+- publication;
+- RSVP;
+- guest management;
+- seating/table workflow yang tersedia;
+- event invitation media/gallery sesuai kapabilitas Studio.
+
+Payment **tidak diperlukan** untuk:
+- membuat event;
+- menyimpan event;
+- membuka Studio;
+- memilih/edit template;
+- menyimpan desain;
+- internal preview.
+
+Payment diperlukan ketika user ingin **Publish**.
+
+Entitlement wajib event-scoped. Pembelian Event A tidak membuka Event B.
+
+### 8.2 Checkout
+
+`/packages` dan order flow Digital Invitation harus membawa `invitationId` agar payment menempel ke event yang benar.
+
+`PaymentOrder` digunakan untuk checkout/order. `Payment` merepresentasikan entitlement aktif untuk invitation/event.
+
+Manual payment verification/backoffice boleh tetap tersedia melalui role Admin/Finance sesuai implementation existing.
+
+### 8.3 WA Blast add-on
+
+WA Blast bukan bagian dari Rp150.000 Digital Invitation.
+
+Paket aktif:
+- `WA_BLAST_50`;
+- **50 credits = Rp75.000**;
+- dapat dibeli berulang;
+- credit menempel pada event yang dipilih;
+- `Invitation.waBlastQuota` default **0** untuk event baru.
+
+WA Blast add-on hanya boleh dibeli/digunakan pada event yang memenuhi rule entitlement yang ditentukan server.
+
+### 8.4 Guestbook Digital
+
+Guestbook Digital tetap produk/service onsite terpisah untuk QR check-in, Usher App, device, dan event-day support.
+
+Harga legacy yang pernah tertulis di PRD lama **bukan source of truth**. Jangan hardcode harga Guestbook hanya berdasarkan histori lama; package catalog/keputusan produk terbaru yang berlaku.
+
+### 8.5 Event Planner
+
+Event Planner adalah consultation service, bukan fixed-price SaaS package pada requirement saat ini.
+
+Canonical route: `/event-planner`.
+
+Legacy `/wedding-planner` tetap redirect compatibility.
+
+Layanan konsultasi:
+- Wedding Organizer;
+- Wedding Planner;
+- Silver / Golden Wedding;
+- Baby Shower.
+
+CTA: **Konsultasi** ke WhatsApp `+62 821-2478-6516`.
+
+---
+
+## 9. Guest Ecosystem, RSVP & Personal Invitation
+
+### 9.1 Event-scoped guest data
+
+Guest, RSVP, QR, check-in, table, seating, dan personal invitation harus terikat ke `Invitation.id` yang tepat.
+
+Public RSVP menulis guest ke event yang sedang dibuka, bukan global/default event.
+
+Jika belum ada configured event, workspace menampilkan pesan seperti:
+
+**“Silakan buat rangkaian acara dulu.”**
+
+### 9.2 RSVP
+
+Per event mendukung:
+- RSVP status;
+- attending/not attending/tentative;
+- pax / plus one;
+- check-in state;
+- QR;
+- table;
+- CSV export.
+
+CSV export dapat menggunakan nama `dc-organizer-rsvp.csv`.
+
+### 9.3 Personal Invitation
+
+Personal Invitation menggunakan `Guest` sebagai identity source.
+
+Per event mendukung:
+- pilih guest existing;
+- buat guest baru;
+- generate personal token;
+- preview;
+- edit name/phone;
+- publish/unpublish personal link;
+- enable/change/disable password;
+- personal view count.
+
+API Personal Invitation wajib menerima explicit `invitationId` dan memvalidasi:
+- authenticated user;
+- ownership/permission;
+- configured event;
+- entitlement yang diperlukan.
+
+Tidak ada fallback ke first WEDDING event.
+
+Personal public URL menggunakan event slug + personal token.
+
+### 9.4 Guest Category & Tags — P1
+
+Guest harus mendukung:
+- category;
+- multiple tags;
+- custom category/tag;
+- edit dan bulk assign;
+- filtering di Guest List;
+- filtering di Seating Chart;
+- filtering saat Invitation Distribution / WA Blast.
+
+Contoh category:
+- VVIP;
+- VIP;
+- Family Groom;
+- Family Bride;
+- Friends;
+- Office;
+- Vendor;
+- Other.
+
+Acceptance:
+- satu guest dapat memiliki category + beberapa tags;
+- filter dan bulk update bekerja;
+- category/tag tersedia lintas guest/seating/distribution workflow.
+
+### 9.5 Public RSVP Rate Limiting — P0
+
+`POST /api/invite/[slug]/rsvp` wajib memiliki server-side anti-spam/rate limiting.
+
+Target policy awal:
+- kombinasi IP + slug + guest/token bila tersedia;
+- contoh maksimum 5 attempt/minute/IP;
+- over-limit → HTTP `429`;
+- optional honeypot / Turnstile / CAPTCHA;
+- duplicate submission detection;
+- spam/failure dapat dicatat untuk monitoring.
+
+Redis/Upstash Redis/Vercel-KV-compatible storage dapat digunakan.
+
+---
+
+## 10. Seating & Guest Placement
+
+Seating adalah event-scoped dan server-authoritative.
+
+Requirements:
+- table milik event aktif harus divalidasi;
+- max 100 table per event;
+- capacity 1–50 seat per table;
+- shape minimal `ROUND`, `RECTANGLE`, `SQUARE`;
+- `Guest.seatNumber` nullable;
+- kombinasi table + seat harus collision-safe/unique;
+- seat assignment dan swap harus atomic;
+- target guest dan target table harus memiliki `invitationId` yang sama;
+- table full mengembalikan conflict response (HTTP `409`);
+- seating roster menerima guest manual atau RSVP eligible/attending sesuai rule produk.
+
+Saat user mengganti event, local seating state harus di-reset agar data event lama tidak tercampur.
+
+---
+
+## 11. WA Blast
+
+### 11.1 Existing product behavior
+
+WA Blast bersifat event-scoped.
+
+Workspace harus mendukung:
+- memilih event aktif;
+- memilih guest existing;
+- input guest baru + WhatsApp number;
+- recipient queue;
+- selected / remaining quota;
+- menghapus recipient dari queue;
+- persistent queue/database state.
+
+API key provider tidak boleh dikirim ke frontend.
+
+### 11.2 Provider integration — P1
+
+Delivery provider nyata masih menjadi integration requirement.
+
+Target provider options:
+- Fonnte;
+- Wablas;
+- Twilio / WhatsApp Business API sebagai alternatif.
+
+Gunakan abstraction seperti `WhatsAppProvider`:
+- `sendMessage()`;
+- `sendTemplate()`;
+- `checkStatus()`;
+- `getBalance()`.
+
+Delivery status minimal:
+- queued;
+- processing;
+- sent;
+- delivered;
+- read;
+- failed.
+
+Failed delivery harus dapat diretry dan status disimpan.
+
+### 11.3 WA Blast Top-Up — P2
+
+Tambahan quota dapat dicatat melalui entity seperti `WhatsAppCreditTransaction`:
+- `userId`;
+- event/invitation context bila diperlukan;
+- `quantity`;
+- `amount`;
+- `type`;
+- `paymentId`;
+- `status`.
+
+Successful payment menambah quota secara server-authoritative.
+
+---
+
+## 12. Guestbook & Onsite Operations
+
+### 12.1 Usher App
+
+Usher/check-in harus selalu explicit event-scoped. Jangan menggunakan implicit “first paid event” ketika account memiliki beberapa event.
+
+Current onsite capabilities dapat mencakup:
+- guest search;
+- QR scan;
+- manual check-in;
+- table information;
+- server-authoritative check-in state.
+
+### 12.2 Offline-First Usher — P1 / Critical Onsite
+
+Gunakan IndexedDB untuk critical offline cache; LocalStorage hanya untuk non-critical state.
+
+Local data minimal:
+- guest ID;
+- guest name;
+- QR identifier;
+- table assignment;
+- check-in status.
+
+Offline flow:
+1. QR tetap dapat discan.
+2. Guest dapat dicari dari local cache.
+3. Check-in masuk pending queue.
+4. UI menunjukkan `Offline`.
+5. Queue otomatis sync saat online.
+6. Conflict resolution mendeteksi duplicate check-in lintas device.
+
+Suggested pending fields:
+- `guestId`;
+- `deviceId`;
+- `checkedInAt`;
+- `syncStatus`;
+- `retryCount`.
+
+### 12.3 Live Guestbook Wall — P2
+
+Route target:
 
 `/event/[slug]/guestbook-wall`
 
-Wall menampilkan:
+Wall menampilkan realtime:
+- guest name;
+- message;
+- submitted time;
+- optional avatar/photo;
+- transition/animation.
 
-* nama tamu;
-* ucapan;
-* waktu pengiriman;
-* optional avatar/photo;
-* animation/transitions.
+Admin moderation:
+- approve;
+- hide;
+- delete;
+- optional `autoApproveGuestbook`.
 
-Data bersumber dari Guestbook/Public RSVP.
+Transport dapat menggunakan WebSocket, SSE, atau realtime provider.
 
-Update dilakukan secara real-time menggunakan:
+### 12.4 Thermal Label / Wristband Printing — P3
 
-* WebSocket;
-* Server Sent Events;
-* atau realtime provider.
+Setelah check-in sukses, Usher dapat memiliki action `Print Label`.
 
-Admin harus dapat melakukan moderation:
+Label dapat memuat:
+- guest name;
+- category;
+- table number;
+- QR/guest ID.
 
-* approve;
-* hide;
-* delete.
+Target: Bluetooth/browser-compatible thermal printer.
 
-Optional setting:
-
-`autoApproveGuestbook`
-
-**Acceptance Criteria**
-
-* Guestbook baru dapat muncul tanpa reload halaman.
-* Admin dapat menyembunyikan ucapan yang tidak sesuai.
-* Wall memiliki fullscreen/display mode.
-* Tampilan tetap berjalan stabil untuk penggunaan beberapa jam selama acara.
-
-**Priority:** P2
+Printer failure tidak boleh memblokir check-in berikutnya.
 
 ---
 
-### 2. Onsite Operations & Usher App
+## 13. Digital Gift / Cashless Angpao — P2
 
-#### 2.1 Offline-First Usher App
+Public Invitation dapat menyediakan optional `Digital Gift`.
 
-**Objective**
+Metode:
+- bank transfer;
+- QRIS;
+- payment gateway.
 
-Memastikan proses check-in tetap berjalan ketika koneksi internet venue lambat atau terputus.
+Potential provider:
+- Midtrans;
+- Xendit.
 
-**Requirements**
+Data transaksi gift harus terpisah dari billing DC Organizer.
 
-Usher App harus memiliki local offline storage menggunakan:
+Suggested `DigitalGiftTransaction`:
+- `id`;
+- `invitationId`;
+- nullable `guestId`;
+- `provider`;
+- `paymentMethod`;
+- `amount`;
+- `status`;
+- `externalTransactionId`;
+- `createdAt`;
+- `paidAt`.
 
-* IndexedDB preferred;
-* LocalStorage hanya untuk data non-critical.
-
-Data minimal yang disimpan secara lokal:
-
-* guest ID;
-* guest name;
-* QR identifier;
-* table assignment;
-* check-in status.
-
-Apabila perangkat offline:
-
-1. QR tetap dapat dipindai.
-2. Guest dapat dicari melalui local cache.
-3. Check-in disimpan sebagai pending transaction.
-4. UI menunjukkan status `Offline`.
-5. Data otomatis disinkronkan ketika koneksi kembali tersedia.
-
-Perlu tersedia mekanisme conflict resolution untuk mencegah double check-in dari dua perangkat.
-
-Suggested local queue:
-
-`PendingCheckIn`
-
-Fields:
-
-* `guestId`
-* `deviceId`
-* `checkedInAt`
-* `syncStatus`
-* `retryCount`
-
-**Acceptance Criteria**
-
-* Check-in tetap berfungsi tanpa internet setelah data event tersinkronisasi.
-* Pending check-in otomatis dikirim ketika perangkat online.
-* Sistem dapat mendeteksi guest yang telah check-in dari perangkat lain.
-* Tidak ada data check-in yang hilang ketika browser direfresh.
-
-**Priority:** P1 / Critical Onsite
+Owner dapat enable/disable gift. Webhook/callback memperbarui status. Payment secret/sensitive info tidak boleh terekspos melalui unauthenticated API.
 
 ---
 
-#### 2.2 Name Label / Wristband Printing
+## 14. Security & Data Compliance
 
-**Objective**
+### 14.1 Authorization
 
-Memungkinkan usher mencetak identitas tamu atau nomor meja langsung setelah check-in.
+Seluruh sensitive mutation memerlukan server-side authentication + ownership/permission checks.
 
-**Requirements**
+Entitlement, role, guest/event scope, payment, publish, seating, dan check-in tidak boleh hanya bergantung pada UI state.
 
-Setelah guest berhasil check-in, Usher App dapat menampilkan action:
+### 14.2 Sensitive data
 
-`Print Label`
+- Password disimpan sebagai hash, bukan plaintext.
+- Personal invitation password hash tidak boleh muncul dalam normal guest API response.
+- Provider secret/API keys hanya server-side.
+- Payment/gift callback harus divalidasi sesuai provider.
 
-Informasi label dapat mencakup:
+### 14.3 Data Retention — P2
 
-* Guest Name
-* Category
-* Table Number
-* QR/Guest ID
+Event menggunakan `eventDate` sebagai lifecycle anchor.
 
-Target device:
+Baseline target:
+- 0–12 bulan setelah event → event/asset tetap tersedia;
+- setelah periode retention → event dapat menjadi `ARCHIVED`;
+- cleanup dapat mencakup original unused media, temporary asset, dan generated cache.
 
-* Bluetooth thermal printer;
-* browser-compatible thermal printer.
-
-Admin dapat menentukan template label.
-
-**Acceptance Criteria**
-
-* Usher dapat mencetak label dari halaman check-in.
-* Label menampilkan informasi guest yang benar.
-* Print action tidak menghambat proses check-in berikutnya.
-* Sistem tetap memungkinkan check-in apabila printer tidak tersedia.
-
-**Priority:** P3
-
----
-
-### 3. Business Scalability & Monetization
-
-#### 3.1 WhatsApp Gateway Integration
-
-**Objective**
-
-Mengubah modul WA Blast dari internal queue menjadi layanan pengiriman WhatsApp yang dapat digunakan secara nyata.
-
-**Potential Providers**
-
-Primary options:
-
-* Fonnte
-* Wablas
-
-Alternative:
-
-* Twilio / WhatsApp Business API
-
-Provider integration harus menggunakan abstraction layer agar provider dapat diganti tanpa mengubah business logic utama.
-
-Example interface:
-
-`WhatsAppProvider`
-
-Functions:
-
-* `sendMessage()`
-* `sendTemplate()`
-* `checkStatus()`
-* `getBalance()`
-
-Existing `waBlastQuota` digunakan untuk membatasi penggunaan berdasarkan package atau saldo pengguna.
-
-Flow:
-
-User → Select Guests → Create Blast → Validate Quota → Queue → WhatsApp Provider → Delivery Status
-
-Status:
-
-* queued
-* processing
-* sent
-* delivered
-* read
-* failed
-
-**Acceptance Criteria**
-
-* WA Blast dapat dikirim ke filtered Guest List.
-* Penggunaan mengurangi quota.
-* Failed message dapat di-retry.
-* Delivery status tersimpan.
-* API key provider tidak pernah dikirim ke frontend.
-
-**Priority:** P1
-
----
-
-#### 3.2 WA Blast Top-Up
-
-Pengguna dapat membeli tambahan WA Blast quota di luar subscription package.
-
-Suggested entity:
-
-`WhatsAppCreditTransaction`
-
-Fields:
-
-* `userId`
-* `quantity`
-* `amount`
-* `type`
-* `paymentId`
-* `status`
-
-Setelah pembayaran berhasil, quota ditambahkan otomatis.
-
-**Priority:** P2
-
----
-
-#### 3.3 Multi-User / Wedding Organizer Access
-
-**Objective**
-
-Memungkinkan pemilik event memberikan akses kepada Wedding Organizer atau anggota tim tanpa memberikan akses penuh terhadap akun utama.
-
-Suggested entities:
-
-`EventMember`
-
-Fields:
-
-* `eventId`
-* `userId`
-* `role`
-* `permissions`
-* `invitedAt`
-* `acceptedAt`
-
-Default roles:
-
-**Owner**
-
-Full access.
-
-**Admin**
-
-Hampir seluruh operasional event.
-
-**Wedding Organizer**
-
-Access:
-
-* Guest List
-* RSVP
-* Seating Chart
-* Usher
-* Guestbook
-
-No access:
-
-* Billing
-* Subscription
-* Payment Account
-* Digital Gift Configuration
-
-**Usher**
-
-Access:
-
-* Guest Search
-* QR Scanner
-* Check-in
-* Table Information
-
-Permission checking wajib dilakukan pada backend/API dan bukan hanya menyembunyikan menu di frontend.
-
-**Acceptance Criteria**
-
-* Owner dapat invite team member.
-* Owner dapat menentukan role.
-* API melakukan authorization berdasarkan permission.
-* WO tidak dapat melihat atau mengubah billing/payment settings.
-* Owner dapat mencabut akses kapan saja.
-
-**Priority:** P1
-
----
-
-### 4. Security & Data Compliance
-
-#### 4.1 Public RSVP Rate Limiting
-
-**Objective**
-
-Mencegah spam, bot, brute-force, dan penyalahgunaan endpoint Public RSVP.
-
-Endpoint:
-
-`POST /api/invite/[slug]/rsvp`
-
-harus memiliki rate limiting.
-
-Suggested implementation:
-
-* Upstash Redis;
-* Redis;
-* Vercel KV-compatible rate limiter.
-
-Rate limit dapat menggunakan kombinasi:
-
-* IP address;
-* invitation slug;
-* guest/token identifier.
-
-Example policy:
-
-* maximum 5 RSVP attempts/minute/IP;
-* temporary block ketika threshold dilewati.
-
-Tambahkan proteksi tambahan jika dibutuhkan:
-
-* honeypot;
-* Turnstile/CAPTCHA;
-* duplicate submission detection.
-
-**Acceptance Criteria**
-
-* Request yang melebihi limit menerima HTTP `429`.
-* Rate limit tidak mengganggu penggunaan normal.
-* Failed/spam attempt dapat dicatat untuk monitoring.
-* Rate limit diterapkan pada server-side endpoint.
-
-**Priority:** P0 / Security
-
----
-
-#### 4.2 Data Retention Policy
-
-**Objective**
-
-Mengurangi penggunaan storage jangka panjang sekaligus memberikan lifecycle data yang jelas kepada pengguna.
-
-Setiap event memiliki:
-
-`eventDate`
-
-Setelah event selesai, data dapat masuk ke beberapa lifecycle stage.
-
-Example:
-
-**0–12 months after event**
-
-Event tetap aktif dan seluruh asset tersedia.
-
-**After 12 months**
-
-Event dapat masuk status:
-
-`ARCHIVED`
-
-Optional cleanup:
-
-* original uploaded photos;
-* unused media;
-* temporary assets;
-* generated cache files.
-
-Data penting seperti:
-
-* guest list;
-* RSVP;
-* guestbook;
-* transaction record;
-
-tidak boleh langsung dihapus tanpa retention policy yang jelas.
-
-User harus mendapatkan pemberitahuan sebelum permanent deletion.
+Data penting seperti guest list, RSVP, guestbook, dan financial transaction tidak boleh blindly deleted bersama media.
 
 Suggested fields:
+- `archivedAt`;
+- `scheduledDeletionAt`;
+- `retentionStatus`.
 
-* `archivedAt`
-* `scheduledDeletionAt`
-* `retentionStatus`
-
-Retention policy harus configurable agar package premium nantinya dapat menawarkan masa penyimpanan lebih panjang.
-
-**Acceptance Criteria**
-
-* Sistem dapat menentukan event yang telah melewati retention period.
-* Background cleanup dapat menghapus asset yang memenuhi kriteria.
-* User mendapat warning sebelum permanent deletion.
-* Billing/transaction records mengikuti retention policy terpisah dan tidak ikut terhapus bersama event asset.
-
-**Priority:** P2
+User harus menerima warning sebelum permanent deletion. Financial record mengikuti retention policy terpisah. Premium package dapat menawarkan retention lebih panjang.
 
 ---
 
-## Recommended Implementation Priority
+## 15. Design System & UX Rules
+
+### 15.1 Typography
+
+Application UI hanya memakai:
+- **Cinzel** — display/headings/branding;
+- **Fauna One** — body/UI/navigation/form/button;
+- **DM Mono** — metadata/status/code/timestamp/utility text.
+
+Template typography boleh dinamis bila merupakan konten invitation, bukan shell aplikasi.
+
+### 15.2 Color
+
+Brand palette:
+- Rose `#C07A84`;
+- Supporting Rose `#D9A3AA`;
+- Deep Rose `#A65E69`.
+
+Light:
+- background `#FFFFFF`;
+- primary text `#111111`.
+
+Dark:
+- background `#0B0B0C`;
+- primary text `#FFFFFF`.
+
+Rose digunakan sebagai meaningful accent, bukan large page fill.
+
+### 15.3 Buttons
+
+`components/ui/button.tsx` adalah canonical application button primitive.
+
+Tidak membuat visual button system baru per halaman.
+
+Action hierarchy dibedakan melalui:
+- verb/label;
+- icon Lucide;
+- size;
+- placement;
+- state.
+
+Bukan melalui banyak warna/variant berbeda.
+
+### 15.4 Surfaces/layout
+
+- Main panel radius sekitar 12px.
+- Nested utility surface sekitar 8–10px.
+- Input target minimum sekitar 44px.
+- Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
+- Public content standard sekitar `w-[min(92vw,1400px)]` saat sesuai.
+- Dashboard workspace boleh menggunakan area pane secara fleksibel.
+- Pintu tetap core public navigation surface.
+- Rose petals di `components/Layout/background.tsx` adalah protected visual element.
+
+### 15.5 User-facing copy
+
+Dashboard harus menjelaskan:
+- current state;
+- next action;
+- event context.
+
+Dashboard tidak boleh menampilkan internal implementation details seperti database row, raw DB ID, source-of-truth explanation, atau API mechanics kecuali diagnostic/support workflow memang membutuhkan.
+
+---
+
+## 16. Public Marketing & Product Terminology
+
+Digital Invitation marketing harus memakai general-event language, bukan wedding-only language.
+
+Marketing minimum menjelaskan:
+- Rp150.000 per event;
+- 1 event = 1 digital invitation = 1 saved template/design;
+- event dapat dibuat tanpa limit 3;
+- payment event-scoped;
+- payment diperlukan pada Publish;
+- RSVP + guest management termasuk Digital Invitation sesuai feature set;
+- WA Blast adalah add-on terpisah.
+
+Guestbook marketing juga harus event-oriented.
+
+---
+
+## 17. Key API / Server Contracts
+
+### Invitation/Event API
+
+`POST /api/invitations`
+- membuat configured event ketika form valid;
+- dapat reuse legacy blank draft yang aman;
+- tidak membuat event kosong hanya karena user membuka form.
+
+`PUT /api/invitations`
+- update event/design;
+- publish guard memeriksa configured state, template, data minimum, dan payment entitlement.
+
+### Guest/RSVP
+
+Guest read/write harus menerima event scope yang jelas dan memverifikasi ownership/permission.
+
+### Personal Invitation
+
+GET/POST/PATCH membutuhkan explicit `invitationId`.
+
+### Seating
+
+Table/seat mutation harus memverifikasi event ownership/scope dan collision.
+
+### Usher
+
+QR/manual check-in harus resolve guest + invitation secara konsisten dan tidak cross-event.
+
+### Public renderer
+
+Tidak merender final invitation tanpa configured + saved template + published + paid state.
+
+---
+
+## 18. Implementation Priority
 
 ### P0 — Security Foundation
+- Public RSVP rate limiting / anti-spam.
 
-* Public RSVP Rate Limiting
-
-### P1 — Core Operational Features
-
-* Guest Category & Tags
-* Offline-First Usher
-* WhatsApp Gateway
-* Multi-User / Wedding Organizer Access
+### P1 — Core Operational
+- Guest Category & Tags.
+- Offline-First Usher.
+- WhatsApp gateway/provider integration.
+- Multi-user / Event Organizer access.
+- Explicit event selector/context untuk seluruh Usher flow.
 
 ### P2 — Product Expansion
-
-* Digital Gift / QRIS
-* Live Guestbook Wall
-* WA Blast Top-Up
-* Data Retention Policy
+- Digital Gift / QRIS.
+- Live Guestbook Wall.
+- WA Blast top-up transaction layer.
+- Data Retention Policy.
+- private/signed premium template asset delivery.
 
 ### P3 — Advanced Onsite Hardware
+- Bluetooth thermal name label / wristband printing.
 
-* Bluetooth Name Label / Wristband Printing
+---
 
-Urutan tersebut memungkinkan fitur yang berkaitan langsung dengan operasional event dan keamanan diselesaikan terlebih dahulu sebelum integrasi payment, realtime display, dan hardware peripheral.
- 3. Design System, Visual Identity & Surface Refinement3.1 TypographyCinzel: Display headings, nama pasangan, dan elemen branding utama.  Fauna One: Body copy, navigasi, form, tombol, dan teks antarmuka utama.  DM Mono: Label teknis, kode, timestamp, nilai status, dan metadata.  Implementation: Penggunaan typography wajib memanggil next/font/google di app/layout.tsx. Import Google Fonts berbasis CSS link legacy di globals.css dilarang.  3.2 Palette & Theme RulesBrand Primary: Rose #C07A84 | Supporting Light Rose: #D9A3AA | Deep Rose: #A65E69.  Light Theme: Background #FFFFFF. Headings, icons, tombol, link, menu, dan aksen menggunakan Rose #C07A84. Teks utama #111111 (near-black), teks sekunder menggunakan opasitas hitam.  Dark Theme: Background #0B0B0C. Teks utama #FFFFFF, teks sekunder menggunakan opasitas putih, dan --primary-foreground ditetapkan ke #FFFFFF.  Neutral-First 60 / 30 / 10 Composition: Kanvas utama dan teks umum bersifat netral, sedangkan warna Rose #C07A84 dikonsentrasikan secara presisi pada CTA/aksi utama, outline terfokus, status, dan aksen.  Deprecated Palette: #8C4A56, #E8B4B8, #6E3843, #0F0E11, dan #1A181E.  3.3 Canonical Button Language & Action SemanticsCanonical Primitive: components/ui/button.tsx / components/ui/glow-button.tsx adalah satu-satunya primitive button visual untuk seluruh aplikasi.  Single Visual Variant: Seluruh tombol menggunakan visual glow terpusat dengan warna Rose #C07A84 sebagai fill, Deep Rose #A65E69 saat hover, serta treatment border/shadow yang seragam.  Disabled State: Disabled state mempertahankan fill dan warna teks aktif namun menonaktifkan pointer-events, hover movement, dan raised shadow.  Action Verb Semantics: Pemisahan makna tombol dilakukan melalui kata kerja eksplisit, ikon Lucide yang relevan, size hierarchy (xs, sm, default, lg, icon-xs, icon-sm, icon, icon-lg), serta title / aria-label. Warna tidak boleh dipakai sebagai pembeda arti aksi.  3.4 Motion, Layout & Separator PolicyCard Grouping & Surface Radius: Pengelompokan informasi mengandalkan background + border tipis + radius + spacing. Radius panel utama diset ke 12px, sedangkan nested utility surface menggunakan 8–10px.  Dashboard Separator Policy: Menurunkan prioritas garis pembatas horizontal panjang (border-y, border-t, border-b). Section tidak lagi menggunakan divider horizontal sebagai mekanisme pengelompokan utama.  Pintu Navigation: Halaman Landing menggunakan fitur Pintu sebagai permukaan navigasi interaktif 3D untuk 3 workspace: Wedding Planner, Digital Invitation, dan Guestbook.  Protected Background Elements: Efek Rose Petals pada components/Layout/background.tsx adalah elemen visual sakral yang dilindungi (jumlah, animasi, waktu, dan bayangan tidak boleh diubah).  Navbar Canvas Continuity: Header publik bersifat transparan (bg-transparent) dengan kontrol 44px (h-11). Decorative glow dibatasi mulai dari bawah zona navbar (top-24).  Content Width Standardization: Lebar konten publik disatukan pada w-[min(92vw,1400px)]. Area Workspace Dashboard menggunakan Wide Workspace (mengisi pane kanan secara fleksibel tanpa batasan 1400px).  4. Monetization Packages & Order Architecture4.1 Tier Packages & EntitlementsFitur / EntitlementNONE (Free/Draft)DIGITAL_INVITATION / INVITATION_BASIC (Rp 300.000)GUESTBOOK_DIGITAL (Rp 2.000.000)Publikasi UndanganDraft Only ❌100% Aktif & Publik ✅  100% Aktif & Publik ✅  Batas Aset CustomDibatasi  Max 30 Foto + 1 Musik  Max 30 Foto + 1 Musik  Analytics & Ekspor RSVP❌  Ekspor CSV & Realtime ✅  Ekspor CSV & Realtime ✅  Database Tamu & QRBasic  Lengkap dengan Tiket QR ✅  Lengkap dengan Tiket QR ✅  Interactive Seating Chart❌  Generator Denah 2D ✅  Generator Denah 2D ✅  Onsite Check-in & Usher App❌  ❌  Dukungan Onsite & Server Usher Check-in ✅  4.2 Account-Level Entitlement & Payment LogicAccount-Level Entitlement Helper (lib/packages/server-access.ts): Rangkaian acara tambahan (additional event) mewarisi entitlement paket user/account via hasAccountDigitalInvitation dan hasAccountGuestbook, meskipun relasi Payment secara historis melekat pada invitation utama.  Checkout & Payment Order: Pembelian paket diproses melalui PaymentOrder (terpisah dari record Payment entitlement aktif).  Manual Verification: Verifikasi dilakukan oleh Admin/Finance di /admin melalui pemeriksaan bukti transfer (JPG/PNG/WEBP/PDF maks ~3 MB).  Prorated Package Upgrade: Upgrade dari INVITATION_BASIC ke GUESTBOOK_DIGITAL menghitung selisih harga paket (misal: Rp 1.700.000).  Custom Design Invoice: Role Admin dapat menerbitkan invoice CUSTOM_DESIGN secara manual.  5. Data Architecture, Auth & Multi-Event Routing5.1 Onboarding & Registration FlowSimplified Registration: Form pendaftaran awal (RegisterDialog) hanya memerlukan email, password, konfirmasi password, dan persetujuan Terms/Privacy.  Dashboard Onboarding: Pengumpulan data groomName, brideName, dan firstName dilakukan pada alur onboarding.  Prisma User & Event Creation: firstName disimpan pada User.firstName, serta secara otomatis membuat record WEDDING utama dan slot EVENT_KHUSUS. Nama pasangan dikunci (read-only) pada editor sub-event.  5.2 Dynamic Information Architecture (Parent: Acara)Sidebar user menggunakan hirarki terstruktur dengan namespace Acara / 01 hingga Acara / 04:  Beranda  Acara (Parent navigation dengan ikon CalendarDays, expand/collapse):  Rangkaian Acara (Maksimal 3 rangkaian/undangan per owner)  Undangan (Status publish, open counter, & studio entry)  WA Blast (Manajemen kuota dan recipient queue)  Personal Invitation (Generator link & password khusus tamu)  RSVP (Event-scoped dataset)  Manajemen Tamu (Event-scoped seating & roster)  Usher App (Event-scoped check-in)                       ┌──► OWNER    ──► /owner    (User Management, Audit Logs, Multi-role)
-                     ├──► ADMIN    ──► /admin    (Operations, Custom Invoices, Manual Verification)
-┌─────────────────┐  ├──► FINANCE  ──► /admin    (Payment Verification & Financial Reports)
-│ Login / Session │ ─┼──► DESIGNER ──► /designer (Template Catalog Upload & Sales Tracker)
-└─────────────────┘  ├──► EDITOR   ──► /designer (Legacy Designer Routing)
-                     └──► USER     ──► /dashboard (Wedding Organizer Workspace)
-5.3 Routing, Event Scope & Public Routing LogicDefinition of Configured Event: Invitation.eventConfigured Boolean @default(false). Sebuah rangkaian hanya dianggap aktif dan muncul di selector jika user menekan Simpan rangkaian.  Main Wedding URL: https://[nama-pasangan][.dcwedding.com/](https://.dcwedding.com/)  Event Khusus Routing: https://[nama-pasangan][.dcwedding.com/](https://.dcwedding.com/)[nama-event]. Route publik mencari maksimal 2 event tambahan dan mencocokkan eventSlug terhadap slugifyEvent(title).  Proxy Routing (proxy.ts): Mengarahkan tenant/event routing secara otomatis ke /invite/[slug]/[eventSlug].  Universal Password Protection: Proteksi password undangan menggunakan bcrypt hash & cookie akses universal.  6. Detailed Feature Specifications & API Enforcements6.1 Event-Scoped Guest Management & RSVP (POST /api/guests)Event Selector Picker (EventScopePicker.tsx): Workspace RSVP dan Manajemen Tamu menyediakan selector untuk memilih acara yang sudah eventConfigured = true. Dataset isolasi berlaku penuh pada read/write operations.  Capacity & Conflicts: Validasi tableId milik acara aktif. Meja penuh mengembalikan HTTP 409 Conflict[cite: 10].  CSV Export: Ekspor CSV RSVP dinamai dc-organizer-rsvp.csv[cite: 10].6.2 Event-Scoped Interactive Seating Builder (Konva 2D Engine)Visual Engine: Berbasis 2D Konva (react-konva) menggunakan frame netral #FBFAFA dan aksen Rose.  Database Constraints: Guest.seatNumber Int? dengan aturan @@unique([tableId, seatNumber])[cite: 10].Server Limits (POST /api/tables): Maksimal 100 meja per acara (1–50 kursi per meja). Shape: ROUND, RECTANGLE, SQUARE[cite: 10].  Atomic Swap & Isolation: Swap dan penempatan kursi memvalidasi bahwa target guest dan meja berada pada invitationId acara yang sama.  Eligibility Enforcement: Seating roster hanya menerima tamu berkategori MANUAL atau RSVP berstatus ATTENDING[cite: 10].6.3 Distribution Engine: WA Blast & Personal InvitationWA Blast Engine:Base Quota: Invitation.waBlastQuota default 100.  Recipient Queue: Memilih tamu existing atau input manual yang otomatis tersimpan ke Guest.waBlastSelected. Delivery provider dan top-up pricing sengaja diabstraksi hingga keputusan pihak ketiga ditetapkan.  Personal Invitation Engine:Direct Link: https://[couple-slug].[root-domain]/p/[token] yang di-rewrite ke /invite/[slug]/p/[token].  Identity Binding: Menampilkan personalisasi "Undangan khusus untuk ".  Security & Privacy: Hash password disimpan via bcrypt. GET /api/guests menggunakan explicit safe select untuk mencegah kebocoran personalPasswordHash.  6.4 Onsite Usher Check-in & QR SystemEvent Isolation: POST /api/usher/qr dan POST /api/usher/manual-checkin mendeteksi invitationId dari guest terkait, memastikan aksi check-in pada Event 2 atau Event 3 berjalan akurat.  7. Workspace, Studio & Renderer Specifications7.1 Studio & Asset CompatibilityMulti-Event Studio Target: Direct CTA Buat undangan di Studio membawa parameter type dan invitationId yang sesuai. Studio resolver mencegah cross-saving antar-tipe.  Asset Upload Limit: Paket dasar mencakup maksimal 30 Foto + 1 Musik[cite: 10].7.2 Public Renderer StandardsFigma Classic & Dynamic Templates: Mengambil template terpublikasi via GET /api/templates.  Open Counter Tracking: Invitation.viewCount dan Guest.personalViewCount bertambah setelah melewati publish, payment, dan password gate.  Mandatory Footer: Seluruh renderer publik mewajibkan penggunaan footer bertuliskan DC Organizer.  8. Definition of Done (DoD)Multi-Event Workspace & Isolation: Pengguna dapat membuat hingga 3 Rangkaian Acara. Workspace RSVP, Manajemen Tamu, Seating Chart, dan Usher terisolasi berdasarkan acara aktif.  Distribution & Personalization: Personal Invitation dapat dipublikasikan dengan token unik dan proteksi password terenkripsi. WA Blast queue mengelola kuota server secara presisi.  Role & Navigation Isolation: Akses /owner, /admin, dan /designer terisolasi penuh dengan sidebar parent Acara yang fleksibel.  Visual & Design System Compliance: Menggunakan canonical Button, neutral-first surface dengan radius 12px / 8-10px, typography Cinzel/Fauna One/DM Mono, serta bebas dari divider horizontal berlebihan.  Database & Migration Integrity: Skema Prisma terkonfigurasi dengan migration 20260916173000_add_invitation_distribution_fields.  Brand Consistency: 100% menggunakan label DC Organizer pada seluruh permukaan sistem.  
+## 19. Compatibility & Known Technical Debt
+
+Current compatibility debt yang boleh dipertahankan sementara tetapi tidak boleh menjadi arah produk baru:
+- `InvitationType.WEDDING` / `ADAT_AKAD`;
+- `groomName` / `brideName`;
+- `weddingHashtag`;
+- `ceremonyTime` / `receptionTime` naming;
+- fallback root domain `dcwedding.com`;
+- historical blank invitation draft rows;
+- some legacy route aliases.
+
+Target migration harus dilakukan terencana agar existing invitation tidak rusak.
+
+Additional known work:
+- final domain migration belum ditetapkan;
+- WA provider nyata belum dianggap delivered sampai integration + delivery status benar-benar tervalidasi;
+- premium template master-asset privacy perlu private storage bila ingin proteksi lebih kuat;
+- production migration execution harus diverifikasi per deployment; source migration file saja tidak membuktikan DB production sudah migrated.
+
+---
+
+## 20. Definition of Done
+
+Sebuah feature dianggap selesai hanya jika, sesuai scope feature tersebut:
+- requirement product terpenuhi tanpa menghidupkan kembali rule yang sudah superseded;
+- data disimpan di PostgreSQL/Prisma bila persistent;
+- event isolation terjaga;
+- server-side authorization/entitlement diterapkan;
+- UI menggunakan design system/canonical Button;
+- empty/loading/error/success state tersedia;
+- tidak ada mock production data;
+- accessibility dasar dan responsive behavior tetap terjaga;
+- relevant build/type validation dijalankan/diamati sebelum diklaim PASS;
+- perubahan material dicatat di `prd1.md` dengan affected files, commit, dan validation status.
+
+### Critical end-to-end acceptance
+
+Minimal canonical Digital Invitation journey harus bekerja:
+
+`Tambah acara → input acara → dd/mm/yyyy date → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
+
+Public route harus tetap menolak event yang belum configured, belum menyimpan template, belum published, atau belum memiliki valid event-scoped entitlement.
+
+---
+
+## 21. Documentation Governance
+
+Hanya dua dokumen PRD aktif yang digunakan:
+
+- **`prd.md`** — current product requirements / single source of truth.
+- **`prd1.md`** — chronological implementation changelog dan keputusan perubahan setelah master consolidation.
+
+Aturan:
+- jangan membuat `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, dst. selama `prd1.md` masih dapat digunakan;
+- changelog tidak boleh menjadi requirement paralel;
+- jika requirement berubah, update `prd.md` terlebih dahulu lalu catat perubahan/rationale di `prd1.md`;
+- requirement superseded dihapus/diganti di `prd.md`, sedangkan histori perubahan tetap dicatat ringkas di `prd1.md`;
+- jangan mengklaim build, lint, CI, migration, atau deployment PASS tanpa hasil aktual yang diamati.
