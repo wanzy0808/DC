@@ -27,13 +27,13 @@ type Door = {
   desc: string;
 };
 
-const LOOP_DURATION = 9;
-const LOOP_RADIUS_X = 235;
-const LOOP_RADIUS_Y = 72;
+const LOOP_DURATION = 10;
+const LOOP_RADIUS_X = 275;
+const LOOP_RADIUS_Y = 82;
 const LOOP_PHASES = 3;
 const FRONT_PHASE = 0.25;
-const FRONT_SCALE = 0.92;
-const BACK_SCALE = 0.68;
+const FRONT_SCALE = 0.99;
+const BACK_SCALE = 0.7;
 
 const doors: Door[] = [
   {
@@ -109,14 +109,14 @@ function LoopingPintu({
   const y = useTransform(progress, (offset) =>
     Math.sin(phase(offset)) * LOOP_RADIUS_Y,
   );
-  const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 90);
+  const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 95);
   const scale = useTransform(progress, (offset) => {
     const depth = (Math.sin(phase(offset)) + 1) / 2;
     return BACK_SCALE + depth * (FRONT_SCALE - BACK_SCALE);
   });
   const rotateY = useTransform(
     progress,
-    (offset) => Math.cos(phase(offset)) * -8,
+    (offset) => Math.cos(phase(offset)) * -9,
   );
   const stackOrder = useTransform(
     progress,
@@ -205,7 +205,7 @@ export default function PintuSection({
     <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
       <div
         onMouseLeave={resumeLoop}
-        className="relative flex h-[370px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[450px] md:h-[520px]"
+        className="relative flex h-[390px] w-full items-center justify-center overflow-visible [perspective:1100px] sm:h-[470px] md:h-[560px] xl:h-[590px]"
       >
         {doors.map((door, index) => (
           <LoopingPintu
