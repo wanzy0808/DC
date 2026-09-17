@@ -7,8 +7,9 @@ import type { KonvaEventObject } from "konva/lib/Node";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { matchesGuestLabels, type GuestLabels } from "@/lib/guests/filters";
 
-type Guest = {
+type Guest = GuestLabels & {
   id: string;
   name: string;
   tableId?: string | null;
@@ -110,6 +111,8 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   const [message, setMessage] = useState("");
   const [manualName, setManualName] = useState("");
   const [manualSaving, setManualSaving] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
   const [localGuests, setLocalGuests] = useState<Guest[]>([]);
   const [localTables, setLocalTables] = useState<Table[]>([]);
   const [guestOverrides, setGuestOverrides] = useState<
@@ -156,6 +159,16 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   const draggedGuest = draggedGuestId
     ? (visibleGuests.find((guest) => guest.id === draggedGuestId) ?? null)
     : null;
+  const categories = Array.from(
+    new Set(visibleGuests.flatMap((guest) => guest.category ? [guest.category] : [])),
+  ).sort((a, b) => a.localeCompare(b, "id"));
+  const tags = Array.from(
+    new Set(visibleGuests.flatMap((guest) => guest.tags ?? [])),
+  ).sort((a, b) => a.localeCompare(b, "id"));
+  const filteredUnassigned = unassigned.filter((guest) =>
+    matchesGuestLabels(guest, categoryFilter, tagFilter),
+  );
+  const hasRosterFilter = Boolean(categoryFilter || tagFilter);
   const totalSeats = visibleTables.reduce((sum, table) => sum + table.capacity, 0);
   const assignedCount = visibleGuests.filter((guest) => guest.tableId).length;
 
@@ -481,13 +494,62 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             </Button>
           </form>
 
+          <div className="mt-4 space-y-3">
+            <label className="block text-xs text-muted-foreground">
+              Kategori tamu
+              <select
+                value={categoryFilter}
+                onChange={(event) => setCategoryFilter(event.target.value)}
+                className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
+              >
+                <option value="">Semua kategori</option>
+                {categoryFilter && !categories.includes(categoryFilter) && (
+                  <option value={categoryFilter}>{categoryFilter}</option>
+                )}
+                {categories.map((category) => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </label>
+            <label className="block text-xs text-muted-foreground">
+              Tag tamu
+              <select
+                value={tagFilter}
+                onChange={(event) => setTagFilter(event.target.value)}
+                className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
+              >
+                <option value="">Semua tag</option>
+                {tagFilter && !tags.includes(tagFilter) && (
+                  <option value={tagFilter}>{tagFilter}</option>
+                )}
+                {tags.map((tag) => (
+                  <option key={tag} value={tag}>{tag}</option>
+                ))}
+              </select>
+            </label>
+            <p role="status" className="text-xs text-muted-foreground">
+              Menampilkan {filteredUnassigned.length} dari {unassigned.length} tamu belum ditempatkan.
+            </p>
+            {hasRosterFilter && (
+              <Button
+                type="button"
+                className="min-h-11"
+                onClick={() => { setCategoryFilter(""); setTagFilter(""); }}
+              >
+                Reset filter
+              </Button>
+            )}
+          </div>
+
           <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
-            {unassigned.length === 0 && (
+            {filteredUnassigned.length === 0 && (
               <div className="rounded-xl border border-border/70 bg-background px-3 py-4 text-center text-xs text-muted-foreground">
-                Semua tamu sudah ditempatkan.
+                {hasRosterFilter
+                  ? "Tidak ada tamu belum ditempatkan yang cocok dengan filter."
+                  : "Tidak ada tamu yang menunggu penempatan."}
               </div>
             )}
-            {unassigned.map((guest) => (
+            {filteredUnassigned.map((guest) => (
               <div
                 key={guest.id}
                 draggable
@@ -498,6 +560,11 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 className="cursor-grab rounded-lg border border-border/75 bg-background px-3 py-2.5 text-xs transition hover:border-primary/30 hover:bg-primary/[0.035] active:cursor-grabbing"
               >
                 <div className="truncate font-medium text-foreground">{guest.name}</div>
+                {(guest.category || Boolean(guest.tags?.length)) && (
+                  <p className="mt-1 break-words text-xs text-muted-foreground">
+                    {[guest.category, ...(guest.tags ?? [])].filter(Boolean).join(" · ")}
+                  </p>
+                )}
                 <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}
                 </div>
