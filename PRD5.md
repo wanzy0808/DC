@@ -192,6 +192,34 @@ README juga mencatat:
 
 ---
 
+## 2026-09-17 — Event date input uses `dd/mm/yyyy`
+
+### Requirement
+Field `Tanggal acara` pada Rangkaian Acara harus menampilkan format tanggal eksplisit:
+
+`dd/mm/yyyy`
+
+Contoh:
+- `17/09/2026`
+- `01/01/2027`
+
+### Behavior
+`components/Dashboard/EventPanel.tsx` sekarang:
+- menggunakan text/numeric date input yang konsisten antar browser;
+- otomatis menyisipkan `/` ketika user mengetik angka;
+- membatasi input ke 10 karakter;
+- memvalidasi tanggal kalender nyata sebelum save;
+- menampilkan error jika format/tanggal tidak valid;
+- mengubah `dd/mm/yyyy` menjadi ISO `yyyy-mm-dd` sebelum dikirim ke API/database;
+- mengubah tanggal ISO dari database kembali menjadi `dd/mm/yyyy` saat edit acara.
+
+Database/API tetap memakai representasi tanggal ISO/DateTime. Perubahan ini hanya mengubah UX input agar format tanggal tidak bergantung pada locale browser.
+
+### Commit
+- `c44a8c19797d55e94b18c834ded33ac46a474eae` — use explicit `dd/mm/yyyy` format for event dates
+
+---
+
 ## Affected files
 
 - `app/api/invitations/route.ts`
@@ -214,6 +242,7 @@ README juga mencatat:
 - `01f2859668b308124bb59c35e6054fc045b2a67f` — require saved paid template on canonical public invitation route
 - `d730e00e4c55c621ec9b714f6bc3b75effa879ad` — require saved template on additional event public route
 - `56e00c714c76110208ef8ecd43c60dffc06bf396` — synchronize README lifecycle
+- `c44a8c19797d55e94b18c834ded33ac46a474eae` — use explicit `dd/mm/yyyy` format for event dates
 
 ---
 
