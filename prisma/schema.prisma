@@ -263,6 +263,8 @@ model Guest {
   seatNumber                Int?
   name                      String
   phone                     String?
+  category                  String?
+  tags                      String[]      @default([])
   source                    GuestSource   @default(MANUAL)
   rsvpStatus                RsvpStatus    @default(PENDING)
   plusOnes                  Int           @default(0)
@@ -283,6 +285,7 @@ model Guest {
   checkedInBy               User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
 
   @@index([invitationId, rsvpStatus])
+  @@index([invitationId, category])
   @@index([invitationId, tableId])
   @@index([invitationId, waBlastSelected])
   @@index([invitationId, personalPublished])

@@ -699,3 +699,80 @@ Menyeragamkan burger menu ke treatment button `Daftar`, menghapus Beranda dari p
 - Dependency install: **PASS**.
 - TypeScript / Next production build: **PASS**.
 - Database migration: N/A.
+
+
+---
+
+## 2026-09-17 — Indonesian Burger Labels & Neutral Auth Surfaces
+
+### Requirement / Intent
+Mengembalikan burger menu ke treatment putih dengan teks hitam, melokalkan submenu layanan ke Bahasa Indonesia, menghilangkan overlap action `Masuk` dengan tombol close pada dialog Daftar, dan menyamakan visual/copy halaman Masuk dengan aturan produk general-event.
+
+### Implementation
+- label locale Indonesia di burger diubah menjadi `Perencana Acara`, `Undangan Digital`, dan `Buku Tamu Digital`;
+- seluruh button burger memakai background putih, teks hitam, border tipis, dan Rose hanya sebagai accent/ring;
+- `Layanan` tetap memiliki submenu dan icon `Layers`, sementara Paket memakai `Package`;
+- dialog Daftar memakai surface putih/teks hitam, termasuk Google, password visibility, dan submit controls;
+- action `Masuk` pada header dialog Daftar dihapus agar tidak menutupi tombol close `X`; switch Masuk tetap tersedia di bawah form;
+- copy vendor pada Daftar digeneralisasi dari konteks wedding menjadi konteks acara;
+- halaman `/login` disederhanakan menjadi general-event workspace copy dan memakai visual putih/teks hitam yang konsisten dengan Daftar/burger;
+- theme prop lama pada burger/register dibuang karena auth surface sekarang sengaja netral di kedua theme;
+- requirement aktif disinkronkan ke `prd.md`, `AGENTS.md`, dan `README.md`.
+
+### Affected Files
+- `lib/i18n.ts`
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `components/Layout/Navbar/RegisterDialog.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `app/login/page.tsx`
+- `prd.md`
+- `AGENTS.md`
+- `README.md`
+- `prd1.md`
+
+### Commits
+- `cc0a8498c5b345a5b34773b56f57a2164ca463c8` — localize Indonesian burger service labels;
+- `704b9fe59825e87c5935e76d7267648940f7255a` — restore neutral burger button styling;
+- `0a5b7b1bffa8361b6f7019b546af052212d5d70e` — fix registration dialog actions and neutral styling;
+- `4598cc30a408153839ea8d7cddf3e6ef12c1063a` — remove obsolete burger theme prop;
+- `2d9c2711778be9fff1aab2fc6aff54f45035a599` — remove obsolete navbar theme plumbing;
+- `0f3a6476e46fdd00cec9746a7b7e8b91a4806e80` — align login page with neutral auth styling.
+
+### Validation
+- GitHub Actions Build Validation #927 on source head `0f3a6476e46fdd00cec9746a7b7e8b91a4806e80`: pending observation at changelog script creation time.
+- Database migration: N/A.
+
+
+---
+
+## 2026-09-17 — RSVP Protection & Guest Segmentation Foundation
+
+### Requirement / Intent
+Mulai mengimplementasikan backlog prioritas dari PRD: proteksi public RSVP dari spam dan fondasi kategori/label tamu yang dapat dipakai lintas Guest List, Seating, dan distribusi undangan.
+
+### Implementation
+- menambahkan rate limiter public RSVP dengan baseline 5 request/menit per kombinasi slug + client IP;
+- response over-limit memakai HTTP `429`, `Retry-After`, dan rate-limit headers;
+- limiter disimpan pada process-global memory sebagai baseline aman tanpa dependency baru; untuk horizontal/multi-instance deployment tetap diarahkan ke Redis-compatible store sesuai PRD;
+- menambahkan `Guest.category` nullable dan `Guest.tags` string array dengan index event + category;
+- menambahkan migration PostgreSQL untuk category/tags;
+- `/api/guests` sekarang mengembalikan category/tags dan menerima keduanya saat membuat guest manual;
+- menambahkan `PATCH /api/guests/[id]/labels` dengan auth + ownership check untuk mengubah category/tags tanpa mencampur logic seating;
+- tags dinormalisasi, deduplicated, dan dibatasi maksimal 20 label per guest.
+
+### Affected Files
+- `lib/public-rate-limit.ts`
+- `app/api/invite/[slug]/rsvp/route.ts`
+- `prisma/schema.prisma`
+- `prisma/migrations/20260917081500_add_guest_category_tags/migration.sql`
+- `app/api/guests/route.ts`
+- `app/api/guests/[id]/labels/route.ts`
+- `prd1.md`
+
+### Commits
+- `2e8ed2546667a50d41e3699a25a2f8d9a3806ec9` — add public RSVP rate limiter helper;
+- `3c1b962c7ad347472387cbe83821b461049d9384` — enforce rate limit on public RSVP.
+
+### Validation
+- Build/type validation pending final source HEAD.
+- Database migration created; production requires `pnpm db:deploy` before category/tag fields are used against production DB.

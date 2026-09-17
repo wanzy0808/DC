@@ -58,7 +58,9 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Always !! use 80% VW for primary desktop header/content/footer containers. Do not regress page-level content to a fixed `max-width: 1400px` (or similarly narrow legacy wrapper) that leaves excessive unused desktop space.
 - Dashboard chrome may span the viewport, but the customer-facing header/content workspace should target `80vw` and remain capped by the available pane width so the sidebar never causes horizontal overflow.
 - Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics.
-- Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. Top-level burger actions use the canonical `Button` visual treatment consistently, `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.
+- Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. In Indonesian, service labels are `Perencana Acara`, `Undangan Digital`, and `Buku Tamu Digital`. `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.
+- Explicit UI exception: burger navigation buttons plus registration/login controls use a neutral white surface with black text and a subtle border in both themes. Keep using the shared `Button` primitive, but this surface-specific treatment supersedes the Rose fill rule for these auth/navigation surfaces. Rose remains the accent for focus, links, and selected emphasis.
+- Registration dialog headers must reserve the top-right area for the close `X`; do not place a `Masuk` action there. Put the login switch below the registration form. Auth copy must remain general-event oriented.
 - Landing 80vw should read as one editorial composition: the copy column may widen/grow downward, a quote/proof block may sit above a subtle separator, and muted capability checks sit below it.
 - Never fabricate customer testimonials, customer names, ratings, or quotes. Only attribute a quote to a customer when a real source is available; otherwise use clearly non-customer brand/service copy.
 
@@ -101,6 +103,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Light mode button text is **white**. Dark mode button text is **black**.
 - Legacy `variant` values are accepted only for source compatibility and MUST resolve to the exact same visual treatment.
 - Do not introduce one-off button colors, gradients, borders, shadows, rounded treatments, or page-specific button variants outside `components/ui/button.tsx`.
+- Exception defined above: burger navigation and auth/login/register surfaces may override the canonical Rose fill with the documented neutral white/black treatment while still rendering through `Button`.
 
 ## 5. Anti AI-Slop Text Hierarchy
 

@@ -22,6 +22,8 @@ const guestSelect = {
   seatNumber: true,
   name: true,
   phone: true,
+  category: true,
+  tags: true,
   source: true,
   rsvpStatus: true,
   plusOnes: true,
@@ -104,6 +106,10 @@ export async function POST(request: Request) {
     const name = String(body.name ?? "").trim();
     const tableId = String(body.tableId ?? "").trim() || null;
     const plusOnes = Number(body.plusOnes ?? 0);
+    const category = String(body.category ?? "").trim() || null;
+    const tags = Array.isArray(body.tags)
+      ? [...new Set(body.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean))].slice(0, 20)
+      : [];
 
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
     if (!Number.isInteger(plusOnes) || plusOnes < 0) {
@@ -126,6 +132,8 @@ export async function POST(request: Request) {
         invitationId: invitation.id,
         name,
         phone: String(body.phone ?? "").trim() || null,
+        category,
+        tags,
         tableId,
         plusOnes,
         source: "MANUAL",

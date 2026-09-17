@@ -863,7 +863,9 @@ Bukan melalui banyak warna/variant berbeda.
 - Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.
 - Area quote/proof ditempatkan setelah CTA dan sebelum separator tipis; capability checklist berada di bawah separator dengan jarak yang cukup agar hierarchy terasa ringan.
 - Quote pelanggan hanya boleh ditampilkan sebagai testimonial bila sumber/ucapan pelanggan benar-benar tersedia dan dapat dipertanggungjawabkan. Jangan mengarang nama, kutipan, rating, atau klaim pelanggan. Jika belum ada testimonial terverifikasi, gunakan brand/service statement tanpa customer attribution sampai data nyata tersedia.
-- Public burger menu tidak menampilkan `Beranda`; home tetap dapat dicapai melalui brand/logo. Seluruh action utama memakai canonical Rose Button treatment seperti action `Daftar`. `Layanan` tetap menjadi parent dengan submenu Event Planner / Digital Invitation / Guestbook, `Masuk` dan `Daftar` wajib tersedia, dan icon `Layanan` harus berbeda dari icon `Paket`; decorative numbering tidak digunakan.
+- Public burger menu tidak menampilkan `Beranda`; home tetap dapat dicapai melalui brand/logo. Untuk locale Indonesia, submenu layanan memakai label `Perencana Acara`, `Undangan Digital`, dan `Buku Tamu Digital`. `Layanan` tetap menjadi parent dengan submenu tersebut, `Masuk` dan `Daftar` wajib tersedia, dan icon `Layanan` harus berbeda dari icon `Paket`; decorative numbering tidak digunakan.
+- Burger navigation dan authentication surfaces (`Daftar` dialog serta `/login`) memakai treatment netral **background putih + teks hitam + border tipis** sebagai exception eksplisit dari canonical Rose application button. Rose tetap dipakai untuk accent/focus/link, bukan fill utama pada surface ini.
+- Registration dialog tidak boleh menempatkan action `Masuk` di header kanan bila bertabrakan dengan tombol close `X`; switch ke `Masuk` ditempatkan di bawah form. Login/register copy harus general-event oriented, bukan wedding-only.
 - Rose petals di `components/Layout/background.tsx` adalah protected visual element.
 
 ### 15.5 User-facing copy
