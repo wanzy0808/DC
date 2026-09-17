@@ -305,7 +305,6 @@ export default function DashboardPage() {
   }, [placementEventId]);
 
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
-  const hasAnyPaidInvitation = events.some((event) => event.accessPaid);
   const accent = "text-primary";
   const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
   const savedProfileName = ctx?.profile.displayName?.trim();
@@ -605,17 +604,7 @@ export default function DashboardPage() {
               <InvitationWorkspacePanel onCreateSequence={() => go("events")} />
             )}
             {tab === "waBlast" && <WhatsAppBlastPanel />}
-            {tab === "personalInvitation" && (
-              <FeatureGate
-                allowed={hasAnyPaidInvitation}
-                title="Personal Invitation"
-                description="Aktifkan minimal satu Undangan Digital untuk menggunakan Personal Invitation."
-                upgradeLabel="Beli Undangan Digital"
-                onUpgrade={() => router.push("/packages?package=INVITATION_BASIC")}
-              >
-                <PersonalInvitationPanel />
-              </FeatureGate>
-            )}
+            {tab === "personalInvitation" && <PersonalInvitationPanel />}
             {tab === "rsvp" && (
               <RsvpWorkspace
                 events={events}
