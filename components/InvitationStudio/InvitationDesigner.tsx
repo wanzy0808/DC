@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { weddingParentLine } from "@/lib/events/parents";
 import { invitationTemplates } from "@/lib/templates/catalog";
 import {
   invitationFonts,
@@ -41,6 +42,10 @@ type Invitation = {
   eventCategory: EventCategory | string;
   groomName: string;
   brideName: string;
+  groomFatherName?: string | null;
+  groomMotherName?: string | null;
+  brideFatherName?: string | null;
+  brideMotherName?: string | null;
   venue: string;
   address?: string | null;
   mapUrl?: string | null;
@@ -143,7 +148,7 @@ function formatEventDate(invitation: Invitation | null) {
 }
 
 function formatTime(value: string | null) {
-  return value ? value.replace(":", ".") : "";
+  return value || "";
 }
 
 export default function InvitationDesigner() {
@@ -582,6 +587,14 @@ function ContentPanel({ invitation, eventTag, dressCode, setEventTag, setDressCo
   const time = invitation?.ceremonyTime
     ? `${formatTime(invitation.ceremonyTime)}${invitation.receptionTime ? `–${formatTime(invitation.receptionTime)}` : ""} ${timezone.label}`
     : "Waktu belum diatur";
+  const groomParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(invitation?.groomFatherName, invitation?.groomMotherName)
+      : "";
+  const brideParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(invitation?.brideFatherName, invitation?.brideMotherName)
+      : "";
 
   return (
     <div>
@@ -593,7 +606,13 @@ function ContentPanel({ invitation, eventTag, dressCode, setEventTag, setDressCo
           {identity.secondary ? `${identity.primary} & ${identity.secondary} · ` : `${identity.primary} · `}
           {formatEventDate(invitation)} · {time} · {invitation?.venue || "Tempat belum diatur"}
         </p>
-        <p className="mt-2 text-[10px] leading-4 text-muted-foreground">Ubah nama, tanggal, waktu, dan lokasi dari menu Rangkaian Acara.</p>
+        {(groomParents || brideParents) && (
+          <div className="mt-2 space-y-1 text-[10px] leading-4 text-muted-foreground">
+            {groomParents && <p>{identity.primary}: {groomParents}</p>}
+            {brideParents && <p>{identity.secondary}: {brideParents}</p>}
+          </div>
+        )}
+        <p className="mt-2 text-[10px] leading-4 text-muted-foreground">Ubah nama, orang tua, tanggal, waktu, dan lokasi dari menu Rangkaian Acara.</p>
       </div>
       <div className="mt-5 space-y-3">
         <label className="block text-[11px] font-semibold">
@@ -693,6 +712,14 @@ function InvitationPreview({ invitation, palette, fontPair, decorUrl, eventTag }
   const timezone = getIndonesiaTimezone(invitation?.timezone || "Asia/Jakarta");
   const startTime = formatTime(invitation?.ceremonyTime || null);
   const endTime = formatTime(invitation?.receptionTime || null);
+  const groomParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(invitation?.groomFatherName, invitation?.groomMotherName)
+      : "";
+  const brideParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(invitation?.brideFatherName, invitation?.brideMotherName)
+      : "";
 
   return (
     <div
@@ -709,8 +736,10 @@ function InvitationPreview({ invitation, palette, fontPair, decorUrl, eventTag }
           {identity.secondary ? (
             <>
               <h1 className="mt-10 text-5xl leading-[0.95]" style={{ fontFamily: fontPair.heading }}>{identity.primary}</h1>
-              <p className="my-2 text-sm opacity-60">&</p>
+              {groomParents && <p className="mx-auto mt-2 max-w-[270px] text-[10px] leading-4 opacity-65">{groomParents}</p>}
+              <p className="my-3 text-sm opacity-60">&</p>
               <h2 className="text-5xl leading-[0.95]" style={{ fontFamily: fontPair.heading }}>{identity.secondary}</h2>
+              {brideParents && <p className="mx-auto mt-2 max-w-[270px] text-[10px] leading-4 opacity-65">{brideParents}</p>}
             </>
           ) : (
             <h1 className="mx-auto mt-12 max-w-[300px] text-5xl leading-[1.02]" style={{ fontFamily: fontPair.heading }}>{identity.primary}</h1>
