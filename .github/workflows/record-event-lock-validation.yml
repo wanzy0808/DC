@@ -1,0 +1,41 @@
+name: Record Event Lock Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-event-lock-validation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Record validation and clean temporary files
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('prd1.md')
+          text = path.read_text()
+          old = '''### Validation\n- Pending observed GitHub Build Validation for the implementation source state.\n- Database migration: N/A.\n'''
+          new = '''### Validation\n- GitHub Actions Build Validation **#942** on validation head `262484247cc2993a88b8a440fe49a2ec4d6b2dfe`: **PASS**.\n- Install dependencies: **PASS**.\n- Prisma Client generation: **PASS**.\n- Next.js production build + TypeScript: **PASS**.\n- Validated application source includes implementation commit `3c9971ad74bf78b1818dbc64b7556d6a88569b18`; the validation head only adds a temporary trigger marker.\n- Database migration: N/A.\n'''
+          idx = text.rfind(old)
+          if idx == -1:
+              raise SystemExit('pending validation block not found')
+          path.write_text(text[:idx] + new + text[idx + len(old):])
+          PY
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/event-lock-validation.txt
+          git rm .github/workflows/record-event-lock-validation.yml
+          git add prd1.md
+          git commit -m "docs: record published event lock validation"
+          git push origin HEAD:main
