@@ -1040,17 +1040,6 @@ function WorkspaceOverview({
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="min-w-0 rounded-xl border border-border/70 bg-background p-4">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1.5 truncate text-lg font-semibold text-foreground">{value}</p>
-    </div>
-  );
-}
-
 function RsvpWorkspace({
   events,
   selectedId,
@@ -1159,6 +1148,7 @@ function PlacementPanel({
   accent: string;
   onRefresh: () => Promise<void>;
 }) {
+  const { d } = useDashboardI18n();
   const assigned = guests.filter((guest) => guest.tableId).length;
 
   const assignGuest = async (
@@ -1182,20 +1172,22 @@ function PlacementPanel({
   return (
     <Card>
       <div className="p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-            Tamu & seating
-          </h2>
-          <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
-            <RefreshCw className="h-4 w-4" />
-            Muat ulang
-          </Button>
-        </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-3">
-          <Stat label="Tamu" value={String(guests.length)} />
-          <Stat label="Meja" value={String(tables.length)} />
-          <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
-        </div>
+        <DashboardSectionHeader
+          eyebrow={d("Manajemen Tamu")}
+          title={d("Tamu & seating")}
+          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
+          actions={
+            <Button onClick={onRefresh} size="sm" title={d("Muat ulang data tamu dan meja")}>
+              <RefreshCw className="h-4 w-4" />
+              {d("Muat ulang")}
+            </Button>
+          }
+        />
+        <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
+          <DashboardMetricCard label={d("Tamu")} value={String(guests.length)} />
+          <DashboardMetricCard label={d("Meja")} value={String(tables.length)} />
+          <DashboardMetricCard label={d("Ditempatkan")} value={`${assigned} / ${guests.length}`} />
+        </DashboardMetricGrid>
         <SeatingChart
           key={invitationId}
           invitationId={invitationId}
@@ -1210,10 +1202,11 @@ function PlacementPanel({
 }
 
 function LoadingSurface() {
+  const { d } = useDashboardI18n();
   return (
-    <div className="rounded-2xl border border-border/70 bg-background p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-      Memuat data acara...
-    </div>
+    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+      {d("Memuat data acara...")}
+    </DashboardSurface>
   );
 }
 
@@ -1224,26 +1217,27 @@ function UsherPanel({
   guests: Guest[];
   onRefresh: () => void;
 }) {
+  const { d } = useDashboardI18n();
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <Card>
-        <div className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-              Check-in
-            </h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">
+    <DashboardPageShell className="px-1 pt-7 sm:pt-8">
+      <DashboardSurface className="p-5 sm:p-6">
+        <DashboardSectionHeader
+          eyebrow={d("Usher App")}
+          title={d("Check-in")}
+          description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
+          actions={
+            <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
               <RefreshCw className="h-4 w-4" />
-              Muat ulang
+              {d("Muat ulang")}
             </Button>
-          </div>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <Stat label="Total tamu" value={String(guests.length)} />
-            <Stat label="Check-in" value={String(checked)} />
-          </div>
-        </div>
-      </Card>
-    </div>
+          }
+        />
+        <DashboardMetricGrid className="mt-4 xl:grid-cols-2">
+          <DashboardMetricCard label={d("Total tamu")} value={String(guests.length)} />
+          <DashboardMetricCard label={d("Check-in")} value={String(checked)} />
+        </DashboardMetricGrid>
+      </DashboardSurface>
+    </DashboardPageShell>
   );
 }
