@@ -65,8 +65,16 @@ Final documentation model:
 
 Legacy PRD split files dihapus setelah isi relevan dipindahkan ke master.
 
-### Master PRD commit
-- `8b7356b748ff534ba4a945eb67b56e2c4809fef6` — consolidate DC Organizer product requirements into single master PRD.
+### Consolidation commits
+- `8b7356b748ff534ba4a945eb67b56e2c4809fef6` — consolidate DC Organizer product requirements into single master PRD;
+- `bf556d0941830baf008fed39118492ccbd0a070a` — remove superseded `PRD-TAMBAHAN.md`;
+- `d3bf85d3552394bd6d7494781e9761b73d4f54e4` — remove superseded `PRD2.md`;
+- `d0ba3d07de9938f4e31ea4e5431bfff4e130d0b4` — remove superseded `PRD3.md`;
+- `7022f3b7f0481045b774e58b3e7a5bc0e99224bc` — remove superseded `PRD4.md`;
+- `f0cdaea4313b44f7738055cc3c708d075f827d58` — remove superseded `PRD5.md`;
+- `5a462f6b2346ec9b7298ea52f009ea5f02b0527e` — remove legacy uppercase `PRD1.md`;
+- `27a65c2de4f0825d4f3429866a65ec578fc7e72a` — create lowercase `prd1.md` unified changelog;
+- `752d313935399107814257067f2db62f17a717a4` — align `AGENTS.md` with `prd.md` + `prd1.md` governance.
 
 ### Removed files
 - `PRD-TAMBAHAN.md`;
@@ -76,8 +84,19 @@ Legacy PRD split files dihapus setelah isi relevan dipindahkan ke master.
 - `PRD4.md`;
 - `PRD5.md`.
 
+### Agent rule synchronization
+`AGENTS.md` was updated so future coding sessions must read:
+1. `AGENTS.md`;
+2. `SKILL.md` / applicable skill;
+3. `prd.md`;
+4. `README.md`;
+5. `prd1.md`;
+6. relevant implementation files.
+
+Every material implementation change is now appended to `prd1.md`. A product requirement change must update `prd.md` first. Agent rules also no longer treat couple fields as universal semantics and no longer instruct creation of `PRD-TAMBAHAN.md`.
+
 ### Validation
-Perubahan consolidation ini adalah documentation/governance change. Tidak ada runtime logic yang diubah oleh commit master PRD itu sendiri.
+Perubahan consolidation ini adalah documentation/governance change. Tidak ada runtime application logic yang diubah oleh PRD cleanup atau AGENTS synchronization.
 
 Build validation terbaru sebelum consolidation yang telah diamati:
 - GitHub Actions **Build Validation #826**;
