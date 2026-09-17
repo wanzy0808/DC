@@ -531,7 +531,6 @@ Final audit menemukan beberapa sequence number presentasional yang masih tersisa
 - `pnpm build`: **PASS**.
 - Database migration: N/A.
 
-
 ---
 
 ## 2026-09-17 — Landing Pintu Proportion & Event Planner Header Polish
@@ -606,7 +605,6 @@ Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, me
 - TypeScript / Next production build: **PASS** through Build Validation #900.
 - Database migration: N/A.
 
-
 ---
 
 ## 2026-09-17 — Integrated Landing Composition & Sidebar-Style Burger Navigation
@@ -653,13 +651,11 @@ Koreksi terbaru mengembalikan burger menu ke pola navigation button seperti side
 - TypeScript: pending final GitHub Actions result at time of changelog preparation.
 - Database migration: N/A.
 
-
 ### Validation follow-up — Integrated Landing
 - GitHub Actions Build Validation #913 on source head `4200e2683b5c94ac0eefeac1c142688f5a1cd045`: **PASS**.
 - Dependency install: **PASS**.
 - TypeScript / Next production build: **PASS**.
 - Final commit after the validated source only updates documentation/removes the one-shot recorder; application source is unchanged.
-
 
 ---
 
@@ -699,7 +695,6 @@ Menyeragamkan burger menu ke treatment button `Daftar`, menghapus Beranda dari p
 - Dependency install: **PASS**.
 - TypeScript / Next production build: **PASS**.
 - Database migration: N/A.
-
 
 ---
 
@@ -742,7 +737,6 @@ Mengembalikan burger menu ke treatment putih dengan teks hitam, melokalkan subme
 - GitHub Actions Build Validation #927 on source head `0f3a6476e46fdd00cec9746a7b7e8b91a4806e80`: pending observation at changelog script creation time.
 - Database migration: N/A.
 
-
 ---
 
 ## 2026-09-17 — RSVP Protection & Guest Segmentation Foundation
@@ -783,7 +777,6 @@ Mulai mengimplementasikan backlog prioritas dari PRD: proteksi public RSVP dari 
 - Prisma Client generation: **PASS**.
 - Next.js production compile + TypeScript: **PASS**.
 - Migration `20260917081500_add_guest_category_tags` is committed but still requires `pnpm db:deploy` on the target VPS/production database before category/tag persistence is used there.
-
 
 ---
 
@@ -855,8 +848,6 @@ Atas arahan user, Beranda dashboard diperkuat dengan visualisasi data nyata tanp
 
 Validation: Build Validation #954 pada dashboard analytics state **PASS** — dependency install, Prisma Client generation, Next.js production compile, dan TypeScript berhasil.
 
-
-
 ---
 
 ## 2026-09-17 — Dashboard Brand Lockup Restore
@@ -875,7 +866,6 @@ Dashboard redesign sempat menyederhanakan brand lockup menjadi teks `DC Organize
 
 ### Validation
 Workflow **Restore Dashboard Brand** menjalankan dependency install, Prisma Client generation, dan Next.js production build + TypeScript sebelum commit final dibuat. Hasil workflow wajib PASS.
-
 
 ---
 
@@ -923,7 +913,6 @@ User menegaskan bahwa brand/font tidak boleh berubah antar iterasi, tagline mark
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 
-
 ---
 
 ## 2026-09-17 — Dashboard Visual Consistency Phase 2
@@ -963,3 +952,46 @@ Melanjutkan redesign seluruh customer dashboard agar semua tab/component mengiku
 - Prisma Client generation: Dashboard Consistency Phase 2 #2 (run 35213218973): PASS
 - TypeScript / Next production build: Dashboard Consistency Phase 2 #2 (run 35213218973): PASS
 - Database migration: N/A.
+
+---
+
+## 2026-09-17 — Invitation Studio Template Sections & Live Canvas
+
+### Requirement / Intent
+Mempermudah update template undangan dengan komponen section reusable, memberi kontrol on/off untuk RSVP, Wishes, dan Gift/E-Angpao, serta memperbaiki masalah pemilihan template yang sebelumnya tidak mengubah komposisi canvas Studio secara nyata. User juga meminta satu template test yang mendekati struktur long-form invitation pada referensi visual.
+
+### Implementation
+- menambahkan `lib/templates/sections.ts` untuk shared visibility state `rsvp`, `wishes`, dan `gift`;
+- visibility section disimpan backward-compatible pada `Invitation.templateKey` melalui segment `sections=...`, sehingga tidak memerlukan migration schema;
+- menambahkan template test `Botanical Ivory` pada catalog;
+- membuat `InvitationDesignerV2` dengan panel Template, Section, Warna, Font, Isi, Foto, dan Musik;
+- menambahkan toggle on/off RSVP, Wishes, dan Gift/E-Angpao yang langsung memengaruhi canvas;
+- undo/redo design ikut merekam perubahan section;
+- template selection sekarang memengaruhi renderer canvas, bukan hanya selected card/name;
+- `Botanical Ivory` memakai long-form mobile composition dengan hero/identity, waktu & lokasi, optional RSVP, optional Wishes, optional Gift, dan footer;
+- template lain memakai adaptive canvas sehingga variasi utama mulai terlihat ketika template diganti;
+- `InvitationEditorPage` sekarang memakai Studio renderer baru;
+- requirement canonical disinkronkan ke `prd.md` dan delta user-requested dicatat di `prd-tambahan.md`.
+
+### Affected Files
+- `lib/templates/sections.ts`
+- `lib/templates/catalog.ts`
+- `components/InvitationStudio/InvitationDesignerV2.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+- `prd.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `f78956b117a8654860ce91cdf1c5195160b22326` — add reusable invitation section settings;
+- `111a1364d78aa0f7ebadb52760de7119f9c5a501` — add Botanical Ivory invitation template;
+- `f6981ad7103f94a596ee2672d290d370d46507f3` — add reusable studio template system with section toggles;
+- `bc26914061be20c826fd0f8819d329cc6bf2e773` — use section-aware invitation studio canvas;
+- `f82798367d3c0f833179ee1ad44b27c3aa3ca374` — document supplemental Studio section delta;
+- `ef743e6dcca5d6fd5f52705f5875a23a89174e53` — define reusable Studio sections and live template canvas in master PRD.
+
+### Validation
+- GitHub Actions **Build Validation #970** on application source head `bc26914061be20c826fd0f8819d329cc6bf2e773`: **PASS**.
+- Previous Build Validation #969 for the main `InvitationDesignerV2` implementation: **PASS**.
+- Database migration: N/A.
+- Final public-template renderer parity for section visibility remains follow-up work; Studio/design persistence is implemented. Wishes persistence as guest data is not introduced in this change and no mock guest messages are used.
