@@ -2,10 +2,28 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher-qr";
+import { checkPublicRateLimit, getClientIp } from "@/lib/public-rate-limit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
+    const clientIp = getClientIp(request);
+    const rateLimit = checkPublicRateLimit(`rsvp:${slug}:${clientIp}`, 5, 60_000);
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { error: "Terlalu banyak percobaan RSVP. Silakan coba lagi sebentar lagi." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": String(rateLimit.retryAfterSeconds),
+            "X-RateLimit-Limit": "5",
+            "X-RateLimit-Remaining": "0",
+          },
+        },
+      );
+    }
+
     const invitation = await prisma.invitation.findUnique({
       where: { slug },
       include: { payment: true },
@@ -59,7 +77,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     }
 
     const qrToken = status === "ATTENDING" ? createGuestQrToken(guest.id) : null;
-    return NextResponse.json({ guest, qrToken });
+    return NextResponse.json(
+      { guest, qrToken },
+      {
+        headers: {
+          "X-RateLimit-Limit": "5",
+          "X-RateLimit-Remaining": String(rateLimit.remaining),
+        },
+      },
+    );
   } catch (error) {
     console.error("POST /api/invite/[slug]/rsvp failed", error);
     return NextResponse.json({ error: "RSVP belum dapat disimpan." }, { status: 500 });
