@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
+function normalizeTags(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const normalized = value
+    .map((tag: unknown) => String(tag).trim())
+    .filter((tag: string) => tag.length > 0);
+  return Array.from(new Set<string>(normalized)).slice(0, 20);
+}
+
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -30,9 +38,7 @@ export async function PATCH(
       body.category == null || String(body.category).trim() === ""
         ? null
         : String(body.category).trim().slice(0, 80);
-    const tags = Array.isArray(body.tags)
-      ? [...new Set(body.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean))].slice(0, 20)
-      : [];
+    const tags = normalizeTags(body.tags);
 
     const updated = await prisma.guest.update({
       where: { id },
