@@ -568,3 +568,40 @@ Landing page Pintu perlu diseimbangkan dengan hero typography agar visual utama 
 - GitHub Actions Build Validation #893: **PASS** (install dependency step and production Build step observed successful).
 - TypeScript/Next production build: **PASS** through Build Validation #893.
 - Database migration: N/A.
+
+---
+## 2026-09-17 — Landing Hero Copy & Burger Navigation Simplification
+
+### Requirement / Intent
+Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, membuat CTA landing lebih natural, dan menyederhanakan burger navigation agar fokus untuk berpindah halaman tanpa nomor atau penjelasan panjang.
+
+### Implementation
+- memperpendek headline, description, dan capability copy landing untuk tiga Pintu;
+- mengecilkan sedikit desktop hero heading, membatasi lebar copy, dan merapikan spacing kiri Pintu;
+- mengubah tombol `Lihat Detail` / `View Details` dari forced uppercase menjadi title case normal;
+- menghapus sequence number, product description, helper copy, register promo, dan nested service accordion dari burger menu;
+- mengganti burger menu menjadi flat page-navigation list dengan icon, label singkat, dan arrow;
+- menambahkan direct Home/Beranda link;
+- menyederhanakan label navigasi seperti `Masuk`, `Paket`, `Template`, dan `Bantuan`;
+- tidak mengubah route login atau authentication backend.
+
+### Affected Files
+- `app/page.tsx`
+- `lib/i18n.ts`
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `9eabbf6c0eac7effbc6d7bff650787184e4b0fe2` — rebalance landing hero copy layout;
+- `9ff9ad399484a88f83b0d6173fee3e4866d5dce3` — simplify landing and navigation copy;
+- `e1d1c239df2d4473e398da8734e8515e86c10834` — simplify burger navigation;
+- `232b11fbc52c00ed76bd17f3a12f3844918f7943` — align navbar with simplified burger menu;
+- `e076cb490ae705348480cea8ad3fd14f55c4ddef` — record supplemental UI requirements.
+
+### Validation
+- GitHub Actions Build Validation #900: **PASS**.
+- Dependency install: **PASS** through Build Validation #900.
+- TypeScript / Next production build: **PASS** through Build Validation #900.
+- Database migration: N/A.
