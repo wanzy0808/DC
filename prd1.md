@@ -1035,3 +1035,35 @@ Menjawab koreksi user bahwa pergantian template di Studio masih terasa tidak men
 - Build Validation #976 pada head `87df4ef49aa2cc9063905128cbdd3e633ce7d284`: **PASS** untuk dependency install, Prisma Client generation, Next.js production compile, dan TypeScript.
 - Perubahan generic public renderer dan dokumentasi setelah #976 menunggu validation run terbaru; belum dinyatakan PASS pada entry ini.
 - Database migration: N/A.
+
+---
+
+## 2026-09-17 — Invitation Studio Live Canvas V4
+
+### Requirement / Intent
+Menindaklanjuti laporan user bahwa mengganti template di Studio masih tidak terasa mengubah canvas. Template harus benar-benar mengganti komposisi visual live, sementara RSVP, Wishes, dan Gift / E-Angpao tetap reusable dan dapat di-toggle per event. Botanical Ivory dipertahankan sebagai template test long-form yang mengikuti struktur referensi visual user tanpa menyalin aset desain pihak lain.
+
+### Implementation
+- menambahkan `InvitationDesignerV4` dengan renderer registry per template agar Botanical, Editorial, Maroon, Garden, Midnight, dan Classic memakai struktur hero/identity yang berbeda;
+- mengganti template sekarang mengubah `template` design state, menerapkan starter palette/font, dan merender subtree canvas dengan `key` template aktif untuk memaksa live remount visual;
+- RSVP, Wishes, dan Gift / E-Angpao dirender melalui reusable optional-section composition yang sama pada semua template;
+- toggle section langsung mengubah canvas dan tetap disimpan event-scoped melalui format `Invitation.templateKey` / `sections=...` yang sudah ada;
+- nama, parent identity, tanggal, waktu, timezone, venue, address, dan data event inti tetap dibaca dari Rangkaian Acara;
+- Botanical Ivory menampilkan alur long-form hero → identity → waktu/lokasi → RSVP → Wishes → Gift → footer sebagai template pengujian;
+- `InvitationEditorPage` dialihkan dari V3 ke V4;
+- tidak ada migration database baru.
+
+### Affected Files
+- `components/InvitationStudio/InvitationDesignerV4.tsx`
+- `components/InvitationStudio/InvitationEditorPage.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `f609719b925b02104b30685e760e8d3825455357` — make studio templates render distinct live canvases;
+- `24af251b443396f6050800f5e57ee19150e30e9d` — activate live template canvas v4 in studio;
+- `a4b2a3652af2094ba20b920e8046df7857a30af8` — record live canvas template switch follow-up.
+
+### Validation
+- Build Validation #983: pending at entry creation time; do not treat as PASS until the workflow result is observed.
+- Database migration: N/A.
