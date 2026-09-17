@@ -652,3 +652,10 @@ Koreksi terbaru mengembalikan burger menu ke pola navigation button seperti side
 - Build: pending final GitHub Actions result at time of changelog preparation.
 - TypeScript: pending final GitHub Actions result at time of changelog preparation.
 - Database migration: N/A.
+
+
+### Validation follow-up — Integrated Landing
+- GitHub Actions Build Validation #913 on source head `4200e2683b5c94ac0eefeac1c142688f5a1cd045`: **PASS**.
+- Dependency install: **PASS**.
+- TypeScript / Next production build: **PASS**.
+- Final commit after the validated source only updates documentation/removes the one-shot recorder; application source is unchanged.
