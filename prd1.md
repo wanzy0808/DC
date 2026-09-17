@@ -248,11 +248,12 @@ Dashboard desktop harus memanfaatkan lebar aplikasi secara penuh, header berada 
 - `bbd6effabb8fda94d0eff25449428e04e1e13d3a` — full-width dashboard shell styling;
 - `aa32a6aedcb1683732518352c4d0675f9f1b945c` — restore calendar picker while retaining `dd/mm/yyyy`;
 - `325a9fc0ac2fb7024eef4b0dd82dc1c2d8731dac` — document interactive date + full-width dashboard requirements;
-- `5d6f1f4051961bdf476801a0910ead3e4ece3118` — add interactive 24-hour time pickers.
+- `5d6f1f4051961bdf476801a0910ead3e4ece3118` — add interactive 24-hour time pickers;
+- `3df42e612f8cb499157d841ab6f2c8784a3e8fce` — specify interactive 24-hour event time controls in master PRD.
 
 ### Validation
 - Build Validation #839 for dashboard/calendar requirement state: **PASS**.
-- Build Validation #840 for 24-hour time-picker source state: pending at time this changelog entry was written; do not claim PASS until observed.
+- Build Validation #840 for 24-hour time-picker source state: **PASS**.
 - Database migration: N/A.
 
 ---
