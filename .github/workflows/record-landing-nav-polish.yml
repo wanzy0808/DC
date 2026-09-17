@@ -1,0 +1,86 @@
+name: Record Landing Navigation Polish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-landing-nav-polish.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Record documentation and remove one-shot workflow
+        shell: bash
+        run: |
+          cat >> prd-tambahan.md <<'EOF'
+
+## Landing hero copy balance
+- Teks di kiri Pintu harus mendukung visual Pintu, bukan mengalahkannya.
+- Headline dibuat lebih singkat, lebar teks dibatasi, dan skala desktop diturunkan sedikit agar jumlah baris lebih terkendali.
+- Deskripsi dan capability label dibuat lebih ringkas agar mudah dipindai.
+- Tombol `Lihat Detail` / `View Details` memakai title case normal tanpa forced uppercase atau letter spacing berlebihan.
+- Jarak antar elemen hero dibuat lebih rapat agar tinggi blok teks seimbang dengan carousel Pintu.
+
+## Burger navigation simplification
+- Burger/sidebar navigation difokuskan untuk berpindah halaman.
+- Nomor dekoratif pada header dan item menu dihilangkan.
+- Deskripsi produk, helper copy, join label, dan teks sekunder dihilangkan dari panel.
+- Menu memakai satu daftar datar: icon, nama halaman singkat, dan panah navigasi.
+- Link utama: Beranda/Home, Event Planner, Digital Invitation, Guestbook, Paket/Packages, Template, Bantuan/Help, dan Masuk/Sign in.
+EOF
+
+          cat >> prd1.md <<'EOF'
+
+---
+
+## 2026-09-17 — Landing Hero Copy & Burger Navigation Simplification
+
+### Requirement / Intent
+Menyeimbangkan teks di kiri Pintu agar tidak lebih dominan dari visual Pintu, membuat CTA landing lebih natural, dan menyederhanakan burger navigation agar fokus untuk berpindah halaman tanpa nomor atau penjelasan panjang.
+
+### Implementation
+- memperpendek headline, description, dan capability copy landing untuk tiga Pintu;
+- mengecilkan sedikit desktop hero heading, membatasi lebar copy, dan merapikan spacing kiri Pintu;
+- mengubah tombol `Lihat Detail` / `View Details` dari forced uppercase menjadi title case normal;
+- menghapus sequence number, product description, helper copy, register promo, dan nested service accordion dari burger menu;
+- mengganti burger menu menjadi flat page-navigation list dengan icon, label singkat, dan arrow;
+- menambahkan direct Home/Beranda link;
+- menyederhanakan label navigasi seperti `Masuk`, `Paket`, `Template`, dan `Bantuan`;
+- tidak mengubah route login atau authentication backend.
+
+### Affected Files
+- `app/page.tsx`
+- `lib/i18n.ts`
+- `components/Layout/Navbar/BurgerMenuContent.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `9eabbf6c0eac7effbc6d7bff650787184e4b0fe2` — rebalance landing hero copy layout;
+- `9ff9ad399484a88f83b0d6173fee3e4866d5dce3` — simplify landing and navigation copy;
+- `e1d1c239df2d4473e398da8734e8515e86c10834` — simplify burger navigation;
+- `232b11fbc52c00ed76bd17f3a12f3844918f7943` — align navbar with simplified burger menu.
+
+### Validation
+- GitHub Actions Build Validation #900: **PASS**.
+- Dependency install: **PASS** through Build Validation #900.
+- TypeScript / Next production build: **PASS** through Build Validation #900.
+- Database migration: N/A.
+EOF
+
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/record-landing-nav-polish.yml
+          git add prd-tambahan.md prd1.md
+          git commit -m "docs: record landing and navigation polish"
+          git push origin HEAD:main
