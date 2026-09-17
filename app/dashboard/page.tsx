@@ -1056,30 +1056,6 @@ function Stat({ label, value }: { label: string; value: string }) {
   );
 }
 
-function EventActivationNotice({ event }: { event: DashboardEvent }) {
-  return (
-    <div className="rounded-2xl border border-border/70 bg-background p-5">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-        Undangan belum aktif
-      </p>
-      <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-        {event.title || "Acara ini"}
-      </h3>
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">
-        RSVP dan Manajemen Tamu aktif bersama Undangan Digital untuk acara ini.
-      </p>
-      <Button asChild size="sm" className="mt-4">
-        <Link
-          href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`}
-        >
-          <CreditCard className="h-4 w-4" />
-          Aktifkan Rp150.000
-        </Link>
-      </Button>
-    </div>
-  );
-}
-
 function RsvpWorkspace({
   events,
   selectedId,
@@ -1109,9 +1085,7 @@ function RsvpWorkspace({
       />
       {selectedEvent && (
         <div className="mt-4">
-          {!selectedEvent.accessPaid ? (
-            <EventActivationNotice event={selectedEvent} />
-          ) : loading ? (
+          {loading ? (
             <LoadingSurface />
           ) : (
             <RsvpAnalyticsPanel
@@ -1160,9 +1134,7 @@ function PlacementWorkspace({
       />
       {selectedEvent && (
         <div className="mt-4">
-          {!selectedEvent.accessPaid ? (
-            <EventActivationNotice event={selectedEvent} />
-          ) : loading ? (
+          {loading ? (
             <LoadingSurface />
           ) : (
             <PlacementPanel
