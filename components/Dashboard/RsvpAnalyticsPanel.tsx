@@ -12,7 +12,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardSectionHeader,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 export type RsvpGuest = {
   id: string;
@@ -200,22 +206,20 @@ export default function RsvpAnalyticsPanel({
         </DashboardNotice>
       )}
 
-      <section className="grid min-w-0 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <DashboardMetricGrid className="min-w-0">
         {metrics.map(({ label, value, icon: Icon }) => (
           <DashboardMetricCard key={label} icon={Icon} label={label} value={String(value)} />
         ))}
-      </section>
+      </DashboardMetricGrid>
 
-      <section className="mt-4 min-w-0 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-3 sm:p-4">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex min-w-0 items-baseline gap-3">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">Daftar tamu</h2>
-            <span className="font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
-              {filtered.length}/{guests.length}
-            </span>
-          </div>
+      <DashboardSurface className="mt-4 min-w-0 p-3 sm:p-4">
+        <DashboardSectionHeader
+          eyebrow="RSVP"
+          title="Daftar tamu"
+          description={`${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`}
+        />
 
-          <div className="grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
+        <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
             <div className="relative min-w-0">
               <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45" />
               <Input
@@ -253,10 +257,9 @@ export default function RsvpAnalyticsPanel({
               <Download className="h-4 w-4" />
               Export CSV
             </Button>
-          </div>
         </div>
 
-        <div className="mt-3 min-w-0 overflow-x-auto">
+        <div className="mt-4 min-w-0 overflow-x-auto">
           <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
@@ -341,7 +344,7 @@ export default function RsvpAnalyticsPanel({
             /invite/{slug}
           </p>
         )}
-      </section>
+      </DashboardSurface>
 
       {qr && (
         <div
