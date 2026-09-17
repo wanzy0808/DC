@@ -855,3 +855,23 @@ Atas arahan user, Beranda dashboard diperkuat dengan visualisasi data nyata tanp
 
 Validation: Build Validation #954 pada dashboard analytics state **PASS** — dependency install, Prisma Client generation, Next.js production compile, dan TypeScript berhasil.
 
+
+
+---
+
+## 2026-09-17 — Dashboard Brand Lockup Restore
+
+### Summary
+Dashboard redesign sempat menyederhanakan brand lockup menjadi teks `DC Organizer` saja. Perubahan itu dikoreksi agar header dashboard kembali mengikuti canonical public navbar brand treatment tanpa mengubah layout/data-oriented dashboard yang baru.
+
+### Implementation
+- desktop dashboard header menggunakan kembali font token brand `--font-dc-heading`;
+- tagline canonical `Your best consultant for wedding & event` dipulihkan;
+- mobile header memakai brand treatment yang sama dalam skala responsif;
+- tidak ada perubahan pada brand color, logo wording, public navbar, product flow, database, atau entitlement.
+
+### Affected file
+- `app/dashboard/page.tsx`
+
+### Validation
+Workflow **Restore Dashboard Brand** menjalankan dependency install, Prisma Client generation, dan Next.js production build + TypeScript sebelum commit final dibuat. Hasil workflow wajib PASS.

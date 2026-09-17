@@ -267,6 +267,8 @@ export const GuestScalarFieldEnum = {
   seatNumber: 'seatNumber',
   name: 'name',
   phone: 'phone',
+  category: 'category',
+  tags: 'tags',
   source: 'source',
   rsvpStatus: 'rsvpStatus',
   plusOnes: 'plusOnes',
