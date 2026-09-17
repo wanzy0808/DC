@@ -99,6 +99,7 @@ UI bukan security boundary. Request API yang mencoba melewati urutan tersebut te
 - **Backward compatibility:** route/field legacy yang masih diperlukan boleh dipertahankan sampai ada migration plan eksplisit.
 - `/dashboard`, Beranda, Pintu, dan protected Rose petals adalah product foundation yang tidak boleh dihapus tanpa requirement eksplisit.
 - `app/globals.css` dan semantic theme token adalah basis styling aplikasi.
+- **Production schema synchronization:** deployment yang membawa Prisma migration baru wajib menjalankan `prisma migrate deploy` / `pnpm db:deploy` terhadap `DATABASE_URL` production. GitHub Build Validation / `pnpm build` tidak dianggap bukti bahwa migration production sudah diterapkan.
 
 ---
 
@@ -162,6 +163,7 @@ Field penting:
 - `eventCategory`;
 - `title`;
 - legacy `groomName` / `brideName`;
+- optional wedding identity `groomFatherName` / `groomMotherName` / `brideFatherName` / `brideMotherName`;
 - `venue`;
 - `address`;
 - `mapUrl`;
@@ -177,7 +179,7 @@ Field penting:
 - `viewCount`;
 - `waBlastQuota`.
 
-Legacy field names tidak boleh dianggap universal wedding semantics. `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, dan `ADAT_AKAD` dipertahankan sementara sebagai compatibility storage/routing sampai migration strategy ditentukan.
+Legacy field names tidak boleh dianggap universal wedding semantics. `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, dan `ADAT_AKAD` dipertahankan sementara sebagai compatibility storage/routing sampai migration strategy ditentukan. Field nama orang tua hanya berlaku pada `WEDDING` dan tidak boleh dipaksakan ke category event lain.
 
 ### 5.2 Unlimited event creation
 
@@ -188,11 +190,19 @@ User dapat membuat event sesuai kebutuhan. Setiap event diaktifkan/dibayar secar
 ### 5.3 Event category behavior
 
 Dynamic name fields:
-- Pernikahan → nama pengantin pria + wanita;
+- Pernikahan → nama pengantin pria + wanita; secara opsional dapat menyimpan nama bapak dan ibu untuk masing-masing pengantin;
 - Silver/Golden Wedding → nama pasangan 1 + pasangan 2;
 - Birthday → satu nama utama;
 - Baby Shower → nama keluarga/calon bayi;
 - Event Lainnya → custom event title.
+
+Untuk `WEDDING`:
+- parent identity bersifat opsional;
+- masing-masing pengantin memiliki field nama bapak dan nama ibu sendiri;
+- jika salah satu atau kedua nama orang tua tersedia, Studio preview dan public invitation otomatis menampilkan parent line di bawah nama pengantin;
+- format canonical ketika kedua orang tua tersedia: **`Anak dari Bapak <nama bapak> & Ibu <nama ibu>`**;
+- jika hanya satu parent yang diisi, renderer hanya menampilkan parent yang tersedia dan tidak membuat placeholder kosong;
+- data parent tidak menjadi syarat `eventConfigured` maupun Publish.
 
 Title predefined category dapat digenerate dari category + identity, misalnya:
 - `Pernikahan Rio & Lyvia`;
@@ -210,6 +220,7 @@ Server minimal memerlukan:
 - venue.
 
 Optional:
+- untuk WEDDING: nama bapak/ibu masing-masing pengantin;
 - end time;
 - address;
 - Maps URL;
@@ -313,6 +324,7 @@ Studio tidak boleh kembali memakai global first-WEDDING assumption.
 
 Core event data berasal dari Rangkaian Acara dan dibaca sebagai synced event content:
 - title / identity;
+- optional wedding parent identity;
 - date;
 - time;
 - timezone;
@@ -381,6 +393,7 @@ Jika salah satu tidak terpenuhi, renderer mengembalikan locked state dan tidak m
 
 Renderer harus event-category aware:
 - wedding/anniversary dapat memakai dua nama;
+- WEDDING menampilkan parent line otomatis per pengantin bila parent identity tersedia;
 - birthday memakai satu nama;
 - baby shower memakai family/baby identity;
 - Other memakai event title.
@@ -881,11 +894,15 @@ Guestbook marketing juga harus event-oriented.
 `POST /api/invitations`
 - membuat configured event ketika form valid;
 - dapat reuse legacy blank draft yang aman;
-- tidak membuat event kosong hanya karena user membuka form.
+- tidak membuat event kosong hanya karena user membuka form;
+- untuk WEDDING dapat menerima empat optional parent identity fields dan menyimpannya event-scoped.
 
 `PUT /api/invitations`
 - update event/design;
+- mempertahankan/update optional wedding parent identity;
 - publish guard memeriksa configured state, template, data minimum, dan payment entitlement.
+
+Jika Prisma mendeteksi table/column production belum sinkron (`P2021`/`P2022`), API invitation harus mengembalikan error operasional yang dapat ditindaklanjuti, bukan hanya generic save error. Raw database detail tetap tidak boleh diekspos ke user.
 
 ### Guest/RSVP
 
@@ -950,7 +967,7 @@ Additional known work:
 - final domain migration belum ditetapkan;
 - WA provider nyata belum dianggap delivered sampai integration + delivery status benar-benar tervalidasi;
 - premium template master-asset privacy perlu private storage bila ingin proteksi lebih kuat;
-- production migration execution harus diverifikasi per deployment; source migration file saja tidak membuktikan DB production sudah migrated.
+- production migration execution harus diverifikasi per deployment; source migration file dan successful `pnpm build` saja tidak membuktikan DB production sudah migrated.
 
 ---
 
@@ -972,9 +989,11 @@ Sebuah feature dianggap selesai hanya jika, sesuai scope feature tersebut:
 
 Minimal canonical Digital Invitation journey harus bekerja:
 
-`Tambah acara → input acara → dd/mm/yyyy date dengan calendar picker + waktu 24 jam HH:mm → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
+`Tambah acara → input acara (WEDDING dapat mengisi parent identity opsional) → dd/mm/yyyy date dengan calendar picker + waktu 24 jam HH:mm → Simpan acara → database event configured → Buat undangan → parent line otomatis tersedia di preview/template jika diisi → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
 
 Public route harus tetap menolak event yang belum configured, belum menyimpan template, belum published, atau belum memiliki valid event-scoped entitlement.
+
+Untuk deployment yang membawa migration baru, end-to-end persistence baru dianggap siap di environment target setelah `prisma migrate deploy` / `pnpm db:deploy` berhasil diterapkan pada database target. Build CI tidak menggantikan langkah ini.
 
 ---
 
