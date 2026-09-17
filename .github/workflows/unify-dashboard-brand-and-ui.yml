@@ -1,0 +1,64 @@
+name: Unify Dashboard Brand And UI
+
+on:
+  push:
+    paths:
+      - '.github/workflows/unify-dashboard-brand-and-ui.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Apply dashboard brand and UI consistency migration
+        run: python .github/scripts/unify-dashboard-brand-and-ui.py
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
+
+      - name: Build
+        run: pnpm build
+
+      - name: Record observed validation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('prd1.md')
+          text = path.read_text(encoding='utf-8')
+          old = '### Validation\nValidation diisi oleh workflow one-shot setelah install, Prisma Client generation, dan production build benar-benar selesai. Tidak ada database migration pada perubahan ini.\n'
+          new = '### Validation\n- One-shot workflow **Unify Dashboard Brand And UI**: **PASS**.\n- `pnpm install --frozen-lockfile`: **PASS**.\n- Prisma Client generation: **PASS**.\n- Next.js production build + TypeScript: **PASS**.\n- Database migration: N/A.\n'
+          if old not in text:
+              raise SystemExit('validation placeholder not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
+      - name: Commit validated changes and clean temporary files
+        run: |
+          rm -f .github/scripts/unify-dashboard-brand-and-ui.py
+          rm -f .github/workflows/unify-dashboard-brand-and-ui.yml
+          git config user.name 'dc-organizer-agent'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: lock brand and unify dashboard visual system'
+          git push
