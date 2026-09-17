@@ -1,0 +1,2 @@
+Validation trigger for published Rangkaian Acara lock source.
+Source implementation commit: 3c9971ad74bf78b1818dbc64b7556d6a88569b18
