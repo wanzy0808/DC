@@ -1035,3 +1035,41 @@ Menjawab koreksi user bahwa pergantian template di Studio masih terasa tidak men
 - Build Validation #976 pada head `87df4ef49aa2cc9063905128cbdd3e633ce7d284`: **PASS** untuk dependency install, Prisma Client generation, Next.js production compile, dan TypeScript.
 - Perubahan generic public renderer dan dokumentasi setelah #976 menunggu validation run terbaru; belum dinyatakan PASS pada entry ini.
 - Database migration: N/A.
+
+---
+
+## 2026-09-17 — Wedding Family Wording & Open-ended End Time
+
+### Requirement / Intent
+Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasarkan urutan anak, serta menyediakan pilihan eksplisit untuk undangan yang tidak memiliki jam selesai tetap namun tetap ingin menampilkan `- end`.
+
+### Implementation
+- `groomChildOrder` / `brideChildOrder` dipakai oleh Studio/public renderer untuk membentuk `Putra pertama ...` / `Putri pertama ...`;
+- Rangkaian Acara menampilkan preview family line langsung di form wedding;
+- opsi `Tampilkan “- end” di undangan` menyimpan sentinel internal `END` di `receptionTime` dan menonaktifkan picker waktu selesai;
+- API membatasi `END` hanya untuk waktu selesai; waktu mulai tetap wajib format 24 jam `HH:mm`;
+- Invitation Studio V3, generic public invitation, dan Figma Classic menerapkan family wording dan `- end` secara konsisten;
+- requirement aktif disinkronkan ke `prd.md`, overview ke `README.md`, dan delta ke `prd-tambahan.md`.
+
+### Affected Files
+- `lib/events/parents.ts`
+- `components/Dashboard/EventPanel.tsx`
+- `app/api/invitations/route.ts`
+- `components/InvitationStudio/InvitationDesignerV3.tsx`
+- `components/PublicInvitation/PublicInvitation.tsx`
+- `components/PublicInvitation/FigmaClassicTemplate.tsx`
+- `prd.md`
+- `README.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commit
+- `0068cd7c40a8e06ac076bec20dff10026f1a5421` — add open-ended invitation time and family wording.
+
+### Validation
+- `pnpm install --frozen-lockfile`: **PASS**.
+- Prisma Client generation (`pnpm db:generate`): **PASS**.
+- TypeScript / Next production build (`pnpm build`): **PASS**.
+- Database migration: **N/A**.
+- Production deployment: not performed by this implementation workflow.
+

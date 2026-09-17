@@ -120,3 +120,35 @@ Toggle dan persistence section sudah bekerja di Studio/design state. Wishes pada
 - Build Validation #979 pada documentation head setelah generic public visibility integration: **PASS**.
 - Build Validation #980 pada head `b38ccce8470c1f6f7aa7f5ffcf746ece4b2c38db` setelah Figma Classic public visibility integration: **PASS** untuk install, Prisma Client generation, Next.js production build, dan TypeScript.
 - Database migration: N/A.
+
+---
+
+## Rangkaian Acara — Wedding Family Wording & Open-ended Time
+
+### Requirement delta
+
+- Input `Anak keberapa` pada event `WEDDING` menghasilkan wording natural di Studio/public invitation: `Putra pertama dari Bapak ... & Ibu ...` untuk pengantin pria dan `Putri pertama dari Bapak ... & Ibu ...` untuk pengantin wanita.
+- Urutan anak mengikuti angka yang diinput; 1–10 memakai kata Indonesia (`pertama`, `kedua`, dan seterusnya), sedangkan nilai di atasnya memakai bentuk `ke-N`.
+- Rangkaian Acara menyediakan opsi **`Tampilkan “- end” di undangan`** untuk acara yang tidak memakai jam selesai tertentu.
+- Opsi tersebut menggunakan compatibility field `receptionTime` dengan sentinel internal `END`; tidak ada schema/database field baru.
+- Studio dan public renderer menampilkan `- end` ketika sentinel aktif; `receptionTime` kosong tetap berarti tidak menampilkan waktu selesai.
+
+### Implementation
+
+- family-line formatter dipusatkan di `lib/events/parents.ts`;
+- form Rangkaian Acara menampilkan preview wording keluarga secara langsung setelah parent/order diisi;
+- field Waktu selesai dapat dinonaktifkan melalui checkbox `Tampilkan “- end” di undangan`;
+- API menerima sentinel `END` khusus untuk waktu selesai, sementara waktu mulai tetap wajib `HH:mm`;
+- Invitation Studio V3, generic public renderer, dan Figma Classic renderer membaca child order serta sentinel `END` yang sama.
+
+### Commit
+
+- `0068cd7c40a8e06ac076bec20dff10026f1a5421` — add open-ended invitation time and family wording.
+
+### Validation
+
+- `pnpm install --frozen-lockfile`: **PASS**.
+- `pnpm db:generate`: **PASS**.
+- `pnpm build`: **PASS**.
+- Database migration: **N/A**.
+
