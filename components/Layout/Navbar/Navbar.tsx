@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "@/components/Theme/ThemeContext";
+import { useTheme, ThemeToggle } from "@/components/Theme/ThemeContext";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { isDarkMode } = useTheme();
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
@@ -36,7 +37,7 @@ export default function Navbar() {
                 </Button>
               }
             />
-            <BurgerMenuContent />
+            <BurgerMenuContent isDarkMode={isDarkMode} />
           </Sheet>
         </div>
       </div>
