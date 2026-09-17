@@ -7,7 +7,6 @@ import { motion } from "motion/react";
 import { useTheme } from "@/components/Theme/ThemeContext";
 
 type PintuCardProps = {
-  number: string;
   title: string;
   bgImage: string;
   innerDetails?: {
@@ -21,7 +20,6 @@ type PintuCardProps = {
 };
 
 export default function PintuCard({
-  number,
   title,
   bgImage,
   innerDetails,
@@ -39,7 +37,7 @@ export default function PintuCard({
         whileHover={reducedMotion ? undefined : { y: -4, scale: isActive ? 1.02 : 1.01 }}
         whileTap={reducedMotion ? undefined : { scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
-        className={`group relative h-[330px] w-[190px] cursor-pointer overflow-hidden rounded-t-[90px] rounded-b-2xl border-2 border-white/80 md:h-[clamp(370px,52vh,500px)] md:w-[clamp(220px,17vw,280px)] md:rounded-t-[130px] ${
+        className={`group relative h-[340px] w-[196px] cursor-pointer overflow-hidden rounded-t-[94px] rounded-b-2xl border-2 border-white/80 md:h-[clamp(390px,50vh,490px)] md:w-[clamp(230px,16vw,290px)] md:rounded-t-[138px] ${
           isActive
             ? "shadow-[0_0_40px_rgba(255,255,255,0.6)]"
             : "shadow-2xl hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]"
@@ -52,7 +50,7 @@ export default function PintuCard({
             src={`/${bgImage}`}
             alt=""
             fill
-            sizes="(max-width: 767px) 380px, 560px"
+            sizes="(max-width: 767px) 392px, 580px"
             quality={100}
             className={`object-cover object-center ${isActive ? "grayscale-0" : "grayscale"}`}
             priority={isActive}
@@ -78,23 +76,23 @@ export default function PintuCard({
           transition={{ duration: reducedMotion ? 0.1 : 0.35, ease: [0.22, 1, 0.36, 1] }}
           className="absolute inset-x-0 bottom-0 z-20 min-w-0 p-4 text-white sm:p-5"
         >
-          <div className="mb-2 flex min-w-0 flex-wrap gap-1">
-            {innerDetails?.tags?.map((tag, idx) => (
+          <div className="mb-2 flex min-w-0 flex-wrap gap-1.5">
+            {innerDetails?.tags?.map((tag) => (
               <span
-                key={idx}
-                className="max-w-full break-words rounded border border-white/40 bg-white/20 px-1.5 py-0.5 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-tight text-white sm:text-[9px]"
+                key={tag}
+                className="max-w-full break-words rounded border border-white/40 bg-white/20 px-1.5 py-0.5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase leading-tight text-white sm:text-[10px]"
               >
                 {tag}
               </span>
             ))}
           </div>
-          <h4 className="mb-1 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-base font-bold leading-tight sm:text-lg sm:leading-snug">
+          <h4 className="mb-1.5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-lg font-bold leading-tight sm:text-xl sm:leading-snug">
             {title}
           </h4>
-          <p className="mb-2 max-w-full break-words text-[10px] leading-snug text-gray-200 sm:text-[11px] sm:leading-relaxed">
+          <p className="mb-2.5 max-w-full break-words text-[11px] leading-relaxed text-gray-200 sm:text-xs">
             {innerDetails?.desc}
           </p>
-          <div className="flex items-center gap-1 text-[9px] font-semibold uppercase tracking-[0.14em] text-white sm:text-[10px]">
+          <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white sm:text-[11px]">
             MASUK <span aria-hidden="true">→</span>
           </div>
         </motion.div>
@@ -129,10 +127,7 @@ export default function PintuCard({
           transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: [0.22, 1, 0.36, 1] }}
           className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 text-center sm:p-5"
         >
-          <span className="mb-1 font-[family-name:var(--font-dc-mono)] text-[10px] font-semibold uppercase tracking-widest text-white/80">
-            {number}
-          </span>
-          <h3 className="break-words font-[family-name:var(--font-dc-heading)] text-base font-bold leading-tight tracking-wide text-white">
+          <h3 className="break-words font-[family-name:var(--font-dc-heading)] text-lg font-bold leading-tight tracking-wide text-white sm:text-xl">
             {title}
           </h3>
         </motion.div>

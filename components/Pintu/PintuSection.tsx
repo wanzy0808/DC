@@ -134,7 +134,6 @@ function LoopingPintu({
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
       <PintuCard
-        number=""
         title={door.title}
         href={door.href}
         bgImage={door.bgImage}
@@ -206,7 +205,7 @@ export default function PintuSection({
     <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
       <div
         onMouseLeave={resumeLoop}
-        className="relative flex h-[360px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[440px] md:h-[500px]"
+        className="relative flex h-[370px] w-full items-center justify-center overflow-visible [perspective:1000px] sm:h-[450px] md:h-[520px]"
       >
         {doors.map((door, index) => (
           <LoopingPintu
