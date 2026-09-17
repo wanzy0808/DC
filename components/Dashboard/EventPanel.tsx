@@ -98,6 +98,39 @@ function isBlankDraft(invitation: Invitation) {
   );
 }
 
+function isoDateToDisplay(value: string) {
+  const iso = value.slice(0, 10);
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
+  if (!match) return "";
+  return `${match[3]}/${match[2]}/${match[1]}`;
+}
+
+function displayDateToIso(value: string) {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
+  if (!match) return "";
+
+  const day = Number(match[1]);
+  const month = Number(match[2]);
+  const year = Number(match[3]);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    return "";
+  }
+
+  return `${match[3]}-${match[2]}-${match[1]}`;
+}
+
+function formatDateInput(value: string) {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+  if (digits.length <= 2) return digits;
+  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
+}
+
 function toForm(invitation: Invitation): EventForm {
   const blankDraft = isBlankDraft(invitation);
   const category = isEventCategory(invitation.eventCategory)
@@ -115,7 +148,7 @@ function toForm(invitation: Invitation): EventForm {
     timezone: invitation.timezone || "Asia/Jakarta",
     eventDate:
       invitation.eventConfigured && invitation.eventDate
-        ? invitation.eventDate.slice(0, 10)
+        ? isoDateToDisplay(invitation.eventDate)
         : "",
     ceremonyTime: invitation.ceremonyTime || "",
     receptionTime: invitation.receptionTime || "",
@@ -126,7 +159,9 @@ function toForm(invitation: Invitation): EventForm {
 
 function formatDateId(value: string) {
   if (!value) return "Tanggal belum dipilih";
-  const date = new Date(`${value}T12:00:00+07:00`);
+  const iso = displayDateToIso(value);
+  if (!iso) return "Format tanggal belum valid";
+  const date = new Date(`${iso}T12:00:00+07:00`);
   if (Number.isNaN(date.getTime())) return "Tanggal belum dipilih";
   return new Intl.DateTimeFormat("id-ID", {
     weekday: "long",
@@ -253,6 +288,11 @@ export default function EventPanel({ accent, onSaved }: Props) {
       setNotice("Tanggal acara wajib diisi.");
       return;
     }
+    const eventDateIso = displayDateToIso(form.eventDate);
+    if (!eventDateIso) {
+      setNotice("Gunakan format tanggal dd/mm/yyyy yang valid.");
+      return;
+    }
     if (!form.ceremonyTime) {
       setNotice("Waktu mulai wajib diisi.");
       return;
@@ -285,7 +325,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
           address: form.address,
           mapUrl: form.mapUrl,
           timezone: form.timezone,
-          eventDate: form.eventDate,
+          eventDate: eventDateIso,
           ceremonyTime: form.ceremonyTime,
           receptionTime: form.receptionTime,
           description: form.description,
@@ -492,9 +532,8 @@ export default function EventPanel({ accent, onSaved }: Props) {
               <div className="rounded-xl border border-border/75 bg-foreground/[0.018] p-4">
                 <SectionLabel>2 · Waktu & tempat</SectionLabel>
                 <div className="mt-4 grid gap-4 md:grid-cols-3">
-                  <Field
+                  <DateField
                     label="Tanggal acara"
-                    type="date"
                     value={form.eventDate}
                     onChange={(value) => field("eventDate", value)}
                   />
@@ -622,6 +661,32 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
     <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
       {children}
     </p>
+  );
+}
+
+function DateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
+      <Input
+        type="text"
+        inputMode="numeric"
+        autoComplete="off"
+        maxLength={10}
+        value={value}
+        onChange={(event) => onChange(formatDateInput(event.target.value))}
+        placeholder="dd/mm/yyyy"
+        aria-label={`${label} format dd/mm/yyyy`}
+      />
+    </label>
   );
 }
 
