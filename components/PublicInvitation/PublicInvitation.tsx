@@ -15,6 +15,10 @@ export type PublicInvitationData = {
   eventCategory: string;
   groomName: string;
   brideName: string;
+  groomFatherName?: string | null;
+  groomMotherName?: string | null;
+  brideFatherName?: string | null;
+  brideMotherName?: string | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -46,7 +50,19 @@ function formatDate(date: Date, timezone: string) {
 }
 
 function formatTime(value: string) {
-  return value.replace(":", ".");
+  return value;
+}
+
+export function weddingParentLine(
+  fatherName?: string | null,
+  motherName?: string | null,
+) {
+  const parents = [
+    fatherName?.trim() ? `Bapak ${fatherName.trim()}` : "",
+    motherName?.trim() ? `Ibu ${motherName.trim()}` : "",
+  ].filter(Boolean);
+
+  return parents.length ? `Anak dari ${parents.join(" & ")}` : "";
 }
 
 export default function PublicInvitation({
@@ -71,6 +87,14 @@ export default function PublicInvitation({
         ? invitation.groomName
         : "";
   const showIdentity = Boolean(identity && identity !== title);
+  const groomParents =
+    eventCategory === "WEDDING"
+      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)
+      : "";
+  const brideParents =
+    eventCategory === "WEDDING"
+      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)
+      : "";
   const startTime = invitation.ceremonyTime;
   const endTime = invitation.receptionTime;
   const timeLabel = startTime
@@ -91,6 +115,24 @@ export default function PublicInvitation({
             <p className="mt-3 font-[family-name:var(--font-cinzel)] text-lg text-primary md:text-xl">
               {identity}
             </p>
+          )}
+          {eventCategory === "WEDDING" && (groomParents || brideParents) && (
+            <div className="mx-auto mt-4 grid max-w-2xl gap-2 text-xs leading-5 text-muted-foreground sm:grid-cols-2">
+              {groomParents && (
+                <p>
+                  <span className="font-semibold text-foreground">{invitation.groomName}</span>
+                  <br />
+                  {groomParents}
+                </p>
+              )}
+              {brideParents && (
+                <p>
+                  <span className="font-semibold text-foreground">{invitation.brideName}</span>
+                  <br />
+                  {brideParents}
+                </p>
+              )}
+            </div>
           )}
           <p className="mx-auto mt-5 max-w-2xl font-[family-name:var(--font-fauna)] text-sm leading-7 text-muted-foreground">
             {invitation.description ||
