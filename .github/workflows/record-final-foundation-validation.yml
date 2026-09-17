@@ -1,0 +1,39 @@
+name: Record Final Foundation Validation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-final-foundation-validation.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Record validation and clean marker
+        shell: bash
+        run: |
+          cat >> prd1.md <<'EOF'
+
+### Validation follow-up — RSVP Protection & Guest Segmentation
+- GitHub Actions Build Validation #937 on source head `30ce990de258a4b5556efe90387be11c35106dca`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production compile + TypeScript: **PASS**.
+- Migration `20260917081500_add_guest_category_tags` is committed but still requires `pnpm db:deploy` on the target VPS/production database before category/tag persistence is used there.
+EOF
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/final-source-validation.txt
+          git rm .github/workflows/record-final-foundation-validation.yml
+          git add prd1.md
+          git commit -m "docs: record guest foundation validation"
+          git push origin HEAD:main
