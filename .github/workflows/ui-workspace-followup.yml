@@ -1,0 +1,84 @@
+name: UI Workspace Follow-up
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-workspace-followup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  followup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Apply global width follow-up
+        run: python .github/scripts/ui_workspace_followup.py
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build corrected source
+        run: pnpm build
+
+      - name: Commit follow-up implementation
+        id: implementation
+        shell: bash
+        run: |
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git add app components prd-tambahan.md
+          if git diff --cached --quiet; then
+            echo "No follow-up implementation changes produced."
+            exit 1
+          fi
+          git commit -m "fix: widen remaining desktop workspaces"
+          git push origin HEAD:main
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Record follow-up changelog
+        env:
+          IMPLEMENTATION_SHA: ${{ steps.implementation.outputs.sha }}
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os
+
+          sha = os.environ["IMPLEMENTATION_SHA"]
+          path = Path("prd1.md")
+          text = path.read_text(encoding="utf-8").rstrip()
+          entry = f'''\n\n---\n\n## 2026-09-17 — Global Desktop Width Follow-up\n\n### Requirement / Intent\nAudit setelah dashboard cleanup masih menemukan page-level wrapper lama di luar tab dashboard. Sesuai desktop agent rule, wrapper aplikasi yang menjadi primary page/header workspace tidak boleh berhenti pada fixed `1400px`/`max-w-7xl` ketika layar masih memiliki ruang besar. Compact text blocks, modal, phone mockup, dan invitation renderer tetap boleh memiliki max-width khusus karena bukan primary page container.\n\n### Implementation\n- menghapus sisa `w-[min(92vw,1400px)]` dari application/page chrome dan menggantinya dengan target `80vw` + `max-w-full`;\n- memperlebar homepage, Event Planner, Digital Invitation, Guestbook, Package selector, Navbar, Invitation Studio header, Transactions, Checkout, dan standalone Usher workspace;\n- memperlebar page-level Admin, Owner, dan Designer workspace ke target 80vw;\n- menghapus nested `max-w-6xl/7xl` yang masih membatasi Admin Operations, Usher App, dan Guest Management di dalam workspace lebar;\n- mempertahankan max-width yang memang berfungsi untuk readability/modal/device/template preview.\n\n### Commit\n- `{sha}` — widen remaining desktop application workspaces.\n\n### Validation\n- `pnpm install --frozen-lockfile`: **PASS** in one-shot GitHub Actions follow-up job.\n- `pnpm build`: **PASS** in the same job against follow-up source.\n- Legacy fixed `w-[min(92vw,1400px)]` and dashboard `1400px` wrapper guard: **PASS**.\n- Database migration: N/A.\n'''
+          path.write_text(text + entry + "\n", encoding="utf-8")
+          PY
+          git add prd1.md
+          git commit -m "docs: record global desktop width follow-up"
+          git push origin HEAD:main
+
+      - name: Remove one-shot UI tooling
+        shell: bash
+        run: |
+          git rm -f .github/workflows/ui-workspace-audit.yml \
+            .github/scripts/ui_workspace_polish.py \
+            .github/workflows/ui-workspace-followup.yml \
+            .github/scripts/ui_workspace_followup.py
+          git commit -m "chore: remove one-shot UI workspace tools"
+          git push origin HEAD:main
