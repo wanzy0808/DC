@@ -258,6 +258,65 @@ Dashboard desktop harus memanfaatkan lebar aplikasi secara penuh, header berada 
 
 ---
 
+## 2026-09-17 — Optional Wedding Parent Identity & Save-Path Migration Diagnostics
+
+### Requirement / Intent
+Untuk event `WEDDING`, Rangkaian Acara perlu menyimpan data nama bapak dan ibu masing-masing pengantin secara opsional. Data tersebut otomatis dipakai oleh preview/undangan sebagai parent line `Anak dari Bapak … & Ibu …`. Pada saat yang sama, kegagalan `Simpan acara` perlu ditelusuri karena build sebelumnya sukses tetapi runtime save masih dilaporkan gagal.
+
+### Implementation
+- menambahkan field nullable `groomFatherName`, `groomMotherName`, `brideFatherName`, dan `brideMotherName` pada `Invitation`;
+- menambahkan migration PostgreSQL khusus empat kolom parent identity;
+- form `Rangkaian Acara` menampilkan dua panel orang tua opsional hanya ketika category `WEDDING` dipilih;
+- parent fields ikut POST/PUT event dan dibaca kembali saat Edit acara;
+- ketika category berubah dari `WEDDING`, parent identity tidak dipaksakan ke category lain;
+- helper parent-line menghasilkan `Anak dari Bapak <nama> & Ibu <nama>` dan aman untuk partial data;
+- Studio preview, synced content summary, generic public invitation, dan Figma Classic template membaca parent identity secara otomatis;
+- format waktu yang tampil pada event/preview dipertahankan sebagai `HH:mm` dengan tanda `:`;
+- API invitation menambah server-side validation format waktu 24 jam;
+- API GET/POST/PUT sekarang mengenali Prisma `P2021`/`P2022` dan mengembalikan status `503` dengan pesan bahwa database server belum sinkron, tanpa membocorkan raw database detail;
+- menambahkan script `pnpm db:deploy` (`prisma migrate deploy`);
+- README menjelaskan bahwa `pnpm build`/GitHub Actions tidak menjalankan migration production.
+
+### Save failure diagnosis
+Evidence repository menunjukkan migration `eventCategory` sudah ada di source, tetapi workflow `.github/workflows/build.yml` hanya menjalankan install + `pnpm build` dan tidak menjalankan `prisma migrate deploy`. Karena API runtime sudah membaca kolom Prisma baru, database production yang belum menjalankan migration dapat menghasilkan missing-table/missing-column Prisma error sementara CI Build tetap PASS.
+
+Ini adalah penyebab paling kuat yang dapat diverifikasi dari repository untuk laporan “masih belum bisa simpan”, tetapi production database/log tidak tersedia pada connector ini sehingga migration production **belum dapat diklaim sudah diterapkan**. Deployment target harus menjalankan `pnpm db:deploy` terhadap `DATABASE_URL` production sebelum persistence schema baru dapat dianggap aktif.
+
+### Affected Files
+- `prisma/schema.prisma`
+- `prisma/migrations/20260917094500_add_wedding_parent_names/migration.sql`
+- `app/api/invitations/route.ts`
+- `components/Dashboard/EventPanel.tsx`
+- `components/InvitationStudio/InvitationDesigner.tsx`
+- `components/PublicInvitation/PublicInvitation.tsx`
+- `components/PublicInvitation/FigmaClassicTemplate.tsx`
+- `lib/events/parents.ts`
+- `package.json`
+- `README.md`
+- `prd.md`
+- `prd1.md`
+
+### Commits
+- `f600e5ec8b6d717478a8cdd32554b2fa238fa447` — add optional wedding parent names to Prisma schema;
+- `09f646270278a08c242002105627949fabcc107a` — add wedding parent-name migration;
+- `5a1c3c05ea2f6d1bcf384435b390b8e8f8f474d8` — persist wedding parent names and expose migration errors;
+- `cd64f54e0840bda46192a088103815fcc0778c2d` — add optional wedding parent fields to event form;
+- `3039e559c237615d4f9b0bec3504268ee6aaf423` — render wedding parent identity in generic public invitation;
+- `c2db820d1bdd5febc838b3abbdeabc184e439c29` — show wedding parent lines in Figma Classic template;
+- `cacaa3043859d8e7bb58912bbfbfe4efb21f10b4` — add shared wedding parent-line formatter;
+- `6e504de829b7e4103e6f3a80ebd4bae8e461fbaf` — show wedding parent identity in Studio preview;
+- `a5d9454d85bb8ddfa235cf87af5c276198eb5c23` — add production Prisma migration command;
+- `ebeba17af3ab0e4bb4eae53fec94c9554a6e9e01` — document production database migration step;
+- `8c80742fff0337b1fc357035c799e0ebf7aa76c7` — define wedding parent identity and production migration requirements.
+
+### Validation
+- GitHub Actions **Build Validation #851** on source head `6e504de829b7e4103e6f3a80ebd4bae8e461fbaf`: **PASS**; Build step completed successfully.
+- Prisma migration source file: **CREATED**.
+- Production/VPS migration execution: **NOT APPLIED / NOT VERIFIED from this environment**.
+- No production save success is claimed until target database runs pending migrations.
+
+---
+
 ## Future Entry Format
 
 Tambahkan perubahan baru di bagian paling bawah dengan format:
