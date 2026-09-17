@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, LayoutTemplate, Send } from "lucide-react";
-import InvitationDesignerV2 from "@/components/InvitationStudio/InvitationDesignerV2";
+import InvitationDesignerV3 from "@/components/InvitationStudio/InvitationDesignerV3";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
@@ -161,7 +161,7 @@ export default function InvitationEditorPage() {
         </div>
       )}
 
-      <InvitationDesignerV2 />
+      <InvitationDesignerV3 />
       <style jsx global>{`
         .dc-invitation-editor .dc-invitation-studio-shell {
           background: var(--background);
