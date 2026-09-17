@@ -17,16 +17,23 @@ Before any material change, inspect in this order:
 1. `AGENTS.md`
 2. `SKILL.md` and every applicable `skill.md`
 3. `prd.md`
-4. `PRD-TAMBAHAN.md`
-5. `README.md`
+4. `README.md`
+5. `prd1.md` for recent implementation history
 6. Relevant implementation files, routes, components, schema, and APIs
 
-Every AI-made material change MUST be recorded in `PRD-TAMBAHAN.md` without deleting prior implementation history. Validation must never be described as PASS unless an actual build/CI result is available.
+`prd.md` is the single source of truth for active product requirements. `prd1.md` is the chronological implementation changelog and must not become a parallel PRD.
+
+Every AI-made material change MUST be recorded in `prd1.md` with rationale, affected files, commit(s), and validation status. If a change alters product requirements, update `prd.md` first and then record the implementation/history in `prd1.md`.
+
+Do not create `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
+
+Validation must never be described as PASS unless an actual build/CI result is available.
 
 ## 2. Product Identity & Preservation
 
 - Official product brand: **DC Organizer**.
 - Never introduce legacy customer-facing brands such as Citin or DC Wedding.
+- Never reintroduce wedding-only assumptions into general event workflows unless the selected event category specifically requires them.
 - Preserve `/dashboard` and Beranda.
 - Follow **Extend Over Replace**: inspect and extend existing routes, APIs, components, schema, and data flows before replacing anything.
 - Database is the source of truth; do not introduce fake/mock invitation data.
@@ -123,9 +130,13 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 ## 9. Data & Entitlement Rules
 
-- Shared wedding/event data must be persisted and read from PostgreSQL/Prisma.
-- Couple names are canonical onboarding data and remain consistent/read-only where required by the PRD.
+- Shared event data must be persisted and read from PostgreSQL/Prisma.
+- Event identity is event-scoped. Couple-specific fields are required only for event categories that use a couple identity.
+- Legacy fields such as `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, and `ADAT_AKAD` may remain for backward compatibility but MUST NOT be treated as universal product semantics.
 - No placeholder couple names or fake invitation records.
+- Digital Invitation entitlement is event-scoped; payment for one invitation/event must not unlock another event.
+- Creating/saving an event and editing/saving a template may happen before payment. Payment is enforced when publishing according to `prd.md`.
+- A public invitation requires a configured event, a saved template, published state, and valid event-scoped entitlement.
 - Server-side access checks are authoritative.
 - Guest management and seating mutations must remain server-authoritative and collision-safe.
 
@@ -133,6 +144,8 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 At the end of every material implementation change:
 
-- Update `PRD-TAMBAHAN.md` with the change, rationale, affected files, commit(s), and validation status.
-- Do not delete or rewrite prior history merely to add a new implementation note.
-- Never claim build, lint, CI, or deployment success without an actual observed result.
+- Update `prd.md` only when active product requirements changed.
+- Append `prd1.md` with the implementation change, rationale, affected files, commit(s), and validation status.
+- Do not create parallel/split PRD files for normal implementation history.
+- Do not rewrite old `prd1.md` history merely to add a new note; append chronologically.
+- Never claim build, lint, CI, migration, or deployment success without an actual observed result.
