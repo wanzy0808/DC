@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
       <RomanticBackground />
-      <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[min(92vw,1400px)]">
+      <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[80vw] max-w-full">
         <section className="grid min-h-[calc(100dvh-88px)] items-center gap-2 py-5 sm:py-8 lg:grid-cols-[0.78fr_1.22fr] lg:gap-0 lg:py-6">
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, ease } })}

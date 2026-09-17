@@ -50,7 +50,7 @@ export default function DigitalInvitationPage() {
 
   return (
     <main className="relative z-10 min-h-screen w-full overflow-x-clip bg-transparent text-foreground">
-      <div className="mx-auto w-[min(92vw,1400px)] space-y-28 py-14 md:space-y-36 md:py-20">
+      <div className="mx-auto w-[80vw] max-w-full space-y-28 py-14 md:space-y-36 md:py-20">
         <HeroSection />
         <FeatureSection />
         <TemplateCollection />

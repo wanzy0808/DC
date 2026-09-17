@@ -117,7 +117,7 @@ export default function InvitationEditorPage() {
       onContextMenu={previewOnly ? (event) => event.preventDefault() : undefined}
     >
       <header className="border-b border-border/70 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] items-center gap-3">
+        <div className="mx-auto flex min-h-16 w-[80vw] max-w-full items-center gap-3">
           <Button asChild size="icon">
             <Link href="/dashboard" aria-label={copy.back} title={copy.back}>
               <ArrowLeft className="h-4 w-4" />

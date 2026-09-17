@@ -61,7 +61,7 @@ export default function TransactionsPage() {
 
   return (
     <main className="min-h-screen bg-background px-5 py-8 text-foreground sm:px-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto w-[80vw] max-w-full">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><ArrowLeft className="h-4 w-4" /> Kembali ke Beranda</Link>
         <div className="mt-8">
           <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">DC Organizer</p>

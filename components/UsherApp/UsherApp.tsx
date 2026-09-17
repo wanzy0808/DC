@@ -228,7 +228,7 @@ export default function UsherApp() {
         </aside>
 
         <main className="min-w-0 flex-1 p-4 sm:p-7">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto w-full">
             <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
               {tabs.map((item) => <button key={item.id} onClick={() => setTab(item.id)} className={`whitespace-nowrap rounded-full px-3 py-2 text-[10px] ${tab === item.id ? "bg-[#E60087] text-white" : "bg-white text-black/55"}`}>{item.label}</button>)}
             </div>

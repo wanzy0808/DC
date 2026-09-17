@@ -24,3 +24,5 @@
 - WA Blast workspace.
 - RSVP, Manajemen Tamu, Usher, and feature-gate wrappers.
 - Event scope fallback labels.
+- Public/application page-level containers: homepage, Event Planner, Digital Invitation, Guestbook, Packages, Transactions, Checkout, Navbar, and Invitation Studio header.
+- Backoffice page-level workspaces: Admin, Owner, and Designer; inner modal/text readability constraints remain intentionally compact.

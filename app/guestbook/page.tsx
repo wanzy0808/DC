@@ -10,7 +10,7 @@ export default function GuestbookPage() {
   return (
     <main className="relative z-10 min-h-screen w-full overflow-hidden px-0 pb-20 pt-24 text-foreground">
       <div className="pointer-events-none fixed left-1/2 top-0 h-[420px] w-[900px] -translate-x-1/2 rounded-full bg-primary/10 blur-[150px]" />
-      <div className="relative mx-auto w-[min(92vw,1400px)] space-y-28">
+      <div className="relative mx-auto w-[80vw] max-w-full space-y-28">
         <HeroSection />
         <FeatureSection />
         <ProcessSection />

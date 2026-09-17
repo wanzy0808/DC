@@ -35,7 +35,7 @@ export default async function UsherPage() {
   return (
     <div className="dc-dashboard min-h-dvh bg-background text-foreground">
       <main>
-        <div className="mx-auto w-[min(calc(100%-3rem),1400px)] pb-16 pt-8 sm:pt-10">
+        <div className="mx-auto w-[80vw] max-w-full pb-16 pt-8 sm:pt-10">
           <Link
             href="/dashboard"
             className="inline-flex min-h-11 items-center gap-2 text-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

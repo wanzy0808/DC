@@ -83,7 +83,7 @@ export default function PackageSelector({
 
   return (
     <main className="relative z-10 min-h-screen w-full px-5 py-12 text-foreground sm:px-8">
-      <div className="mx-auto w-[min(92vw,1400px)] space-y-10">
+      <div className="mx-auto w-[80vw] max-w-full space-y-10">
         <div className="mx-auto max-w-4xl text-center">
           <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.25em] text-primary">
             {copy.eyebrow}

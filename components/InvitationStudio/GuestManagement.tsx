@@ -105,7 +105,7 @@ export default function GuestManagement() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6 p-5 sm:p-8">
+    <div className="mx-auto w-full space-y-6 p-5 sm:p-8">
       <section>
         <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#E60087]">Guestbook Digital</p>
         <h1 className="mt-2 font-serif text-3xl">Tamu &amp; Table Arrangement</h1>
