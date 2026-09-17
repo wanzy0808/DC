@@ -53,6 +53,9 @@ Use only these application UI fonts:
 Do not introduce additional fonts, random Google Fonts, template fonts, or intentional browser/system fallback styling. Invitation-template typography may remain dynamic when it belongs to invitation content itself.
 
 ## 4. Canonical Theme
+### Desktop View
+
+- Always !! use 80% VW for all, header/content/footer.
 
 ### Brand Anchor
 - Logo / brand primary: `#C07A84` Rose.
