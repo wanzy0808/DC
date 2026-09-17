@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   CalendarDays,
   Clock3,
-  CreditCard,
   MapPin,
   PenLine,
   Plus,
@@ -150,6 +149,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat...");
+  const editorRef = useRef<HTMLElement | null>(null);
 
   const configuredCount = useMemo(
     () => events.filter((event) => event.eventConfigured).length,
@@ -175,9 +175,9 @@ export default function EventPanel({ accent, onSaved }: Props) {
     setNotice("Memuat...");
     try {
       const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Data acara belum dapat dimuat.");
-      const next = sortInvitations((data.invitations ?? []) as Invitation[]);
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
+      const next = sortInvitations((data?.invitations ?? []) as Invitation[]);
       setEvents(next);
       if (preferredId) {
         const preferred = next.find((item) => item.id === preferredId);
@@ -198,6 +198,14 @@ export default function EventPanel({ accent, onSaved }: Props) {
     load().catch(() => undefined);
   }, []);
 
+  useEffect(() => {
+    if (editorMode === "closed" || !activeId) return;
+    const frame = window.requestAnimationFrame(() => {
+      editorRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeId, editorMode]);
+
   function field(name: keyof EventForm, value: string) {
     setForm((current) => ({ ...current, [name]: value }));
   }
@@ -214,11 +222,14 @@ export default function EventPanel({ accent, onSaved }: Props) {
       }
 
       const draft = data.invitation as Invitation;
-      setEvents((current) => sortInvitations([...current, draft]));
+      setEvents((current) => {
+        const withoutSame = current.filter((item) => item.id !== draft.id);
+        return sortInvitations([...withoutSame, draft]);
+      });
       setActiveId(draft.id);
-      setForm(emptyForm);
-      setEditorMode("new");
-      setNotice("Acara baru siap dilengkapi.");
+      setForm(toForm(draft));
+      setEditorMode(draft.eventConfigured ? "edit" : "new");
+      setNotice(draft.eventConfigured ? "Siap diedit" : "Acara baru siap dilengkapi.");
       onSaved();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Acara belum dapat dibuat.");
@@ -305,8 +316,8 @@ export default function EventPanel({ accent, onSaved }: Props) {
           eventConfigured: true,
         }),
       });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Data acara belum dapat disimpan.");
+      const data = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(data?.error || "Data acara belum dapat disimpan.");
       await load(activeId);
       setNotice("Tersimpan");
       onSaved();
@@ -323,6 +334,9 @@ export default function EventPanel({ accent, onSaved }: Props) {
   const previewTitle = form.eventCategory
     ? buildEventTitle(form.eventCategory, form.groomName, form.brideName, form.customTitle)
     : "Acara baru";
+  const showTopNotice =
+    editorMode === "closed" &&
+    (creating || (notice !== "Tersinkron" && notice !== "Memuat..."));
 
   return (
     <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
@@ -336,16 +350,24 @@ export default function EventPanel({ accent, onSaved }: Props) {
               {events.length ? `${configuredCount} acara · ${events.length - configuredCount} draft` : "Belum ada acara"}
             </h2>
           </div>
-          <Button type="button" size="sm" onClick={startNewEvent} disabled={loading || creating || saving}>
+          <Button type="button" size="sm" onClick={startNewEvent} disabled={creating || saving}>
             <Plus className="h-4 w-4" />
             {creating ? "Menyiapkan..." : "Tambah acara"}
           </Button>
         </div>
 
+        {showTopNotice && (
+          <div
+            className="mt-3 rounded-lg border border-primary/15 bg-primary/[0.035] px-3 py-2 text-xs text-muted-foreground"
+            role="status"
+          >
+            {notice}
+          </div>
+        )}
+
         {events.length ? (
           <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event, index) => {
-              const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`;
               const studioHref = `/dashboard/editor?type=${event.type}&invitationId=${event.id}`;
               const draft = !event.eventConfigured;
               return (
@@ -363,7 +385,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       </p>
                     </div>
                     <span className={`shrink-0 rounded-lg border border-primary/15 bg-primary/[0.045] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] ${accent}`}>
-                      {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : draft ? "Belum lengkap" : "Draft"}
+                      {event.isPublished ? "Terbit" : draft ? "Belum lengkap" : "Siap desain"}
                     </span>
                   </div>
                   <div className="mt-3 flex flex-wrap gap-2">
@@ -371,19 +393,11 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       <PenLine className="h-4 w-4" />
                       {draft ? "Lengkapi acara" : "Edit acara"}
                     </Button>
-                    {!draft && !event.accessPaid && (
-                      <Button asChild size="sm">
-                        <Link href={purchaseHref}>
-                          <CreditCard className="h-4 w-4" />
-                          Buat undangan
-                        </Link>
-                      </Button>
-                    )}
-                    {!draft && event.accessPaid && (
+                    {!draft && (
                       <Button asChild size="sm">
                         <Link href={studioHref}>
                           <PenLine className="h-4 w-4" />
-                          Studio
+                          Buka Studio
                         </Link>
                       </Button>
                     )}
@@ -400,7 +414,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
       </section>
 
       {editorMode !== "closed" && active && (
-        <section className="mt-4 rounded-xl border border-border/80 bg-background p-4 sm:p-5">
+        <section
+          ref={editorRef}
+          className="mt-4 scroll-mt-24 rounded-xl border border-border/80 bg-background p-4 sm:p-5"
+        >
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
@@ -591,7 +608,7 @@ export default function EventPanel({ accent, onSaved }: Props) {
         </section>
       )}
 
-      {active && editorMode === "edit" && active.accessPaid && (
+      {active && editorMode === "edit" && (
         <div className="mt-3 flex justify-end">
           <Button asChild size="sm">
             <Link href={`/dashboard/editor?type=${active.type}&invitationId=${active.id}`}>

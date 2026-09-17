@@ -188,6 +188,31 @@ export async function POST() {
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   try {
+    const reusableDraft = await prisma.invitation.findFirst({
+      where: {
+        ownerId: user.id,
+        eventConfigured: false,
+        isPublished: false,
+        title: "",
+        venue: "",
+        groomName: "",
+        brideName: "",
+      },
+      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+      orderBy: { createdAt: "desc" },
+    });
+
+    if (reusableDraft) {
+      return NextResponse.json({
+        invitation: {
+          ...sanitizeInvitation(reusableDraft),
+          accessPaid: hasPaidDigitalInvitation(reusableDraft.payment),
+        },
+        unlimited: true,
+        reused: true,
+      });
+    }
+
     const count = await prisma.invitation.count({ where: { ownerId: user.id } });
     const invitation = await prisma.invitation.create({
       data: {

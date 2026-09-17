@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ArrowUpRight,
   CalendarDays,
-  CreditCard,
   Eye,
   PenLine,
   Plus,
@@ -94,10 +93,6 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   }, [load]);
 
   async function togglePublish(invitation: Invitation) {
-    if (!invitation.accessPaid) {
-      setNotice("Aktifkan Undangan Digital Rp150.000 untuk acara ini sebelum publish.");
-      return;
-    }
     if (!invitation.eventConfigured) {
       setNotice("Lengkapi dan simpan detail acara sebelum publish.");
       return;
@@ -131,7 +126,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   }
 
   const publishedCount = invitations.filter((item) => item.isPublished).length;
-  const activeCount = invitations.filter((item) => item.accessPaid).length;
+  const readyCount = invitations.filter((item) => item.eventConfigured).length;
   const openedCount = invitations.reduce(
     (sum, item) => sum + (item.viewCount || 0),
     0,
@@ -154,7 +149,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Metric icon={Users} label="Undangan" value={String(invitations.length)} />
-        <Metric icon={CreditCard} label="Aktif" value={String(activeCount)} />
+        <Metric icon={CalendarDays} label="Siap desain" value={String(readyCount)} />
         <Metric icon={Send} label="Dipublish" value={String(publishedCount)} />
         <Metric icon={Eye} label="Total dibuka" value={String(openedCount)} />
       </section>
@@ -210,11 +205,9 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
                       {invitation.isPublished
                         ? "Terbit"
-                        : invitation.accessPaid
-                          ? "Aktif"
-                          : invitation.eventConfigured
-                            ? "Belum aktif"
-                            : "Draft acara"}
+                        : invitation.eventConfigured
+                          ? "Siap publish"
+                          : "Belum lengkap"}
                     </span>
                   </div>
 
@@ -243,26 +236,36 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   </div>
 
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {!invitation.accessPaid ? (
-                      <Button asChild size="sm" className="w-full">
-                        <Link href={purchaseHref}>
-                          <CreditCard className="h-4 w-4" />
-                          Aktifkan Rp150.000
-                        </Link>
-                      </Button>
-                    ) : (
+                    {!invitation.eventConfigured ? (
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                        Lengkapi acara dulu
+                      </div>
+                    ) : invitation.isPublished ? (
                       <Button
                         size="sm"
                         className="w-full"
-                        disabled={loading || busyId === invitation.id || !invitation.eventConfigured}
+                        disabled={loading || busyId === invitation.id}
                         onClick={() => togglePublish(invitation)}
                       >
                         <Send className="h-4 w-4" />
-                        {busyId === invitation.id
-                          ? "Menyimpan..."
-                          : invitation.isPublished
-                            ? "Tarik publik"
-                            : "Publish"}
+                        {busyId === invitation.id ? "Menyimpan..." : "Tarik publik"}
+                      </Button>
+                    ) : invitation.accessPaid ? (
+                      <Button
+                        size="sm"
+                        className="w-full"
+                        disabled={loading || busyId === invitation.id}
+                        onClick={() => togglePublish(invitation)}
+                      >
+                        <Send className="h-4 w-4" />
+                        {busyId === invitation.id ? "Menyimpan..." : "Publish"}
+                      </Button>
+                    ) : (
+                      <Button asChild size="sm" className="w-full">
+                        <Link href={purchaseHref}>
+                          <Send className="h-4 w-4" />
+                          Publish Rp150.000
+                        </Link>
                       </Button>
                     )}
 
