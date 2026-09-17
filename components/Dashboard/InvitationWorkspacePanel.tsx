@@ -20,6 +20,7 @@ type Invitation = {
   type: "WEDDING" | "ADAT_AKAD";
   title: string;
   venue: string;
+  templateKey: string;
   eventConfigured: boolean;
   isPublished: boolean;
   viewCount: number;
@@ -95,6 +96,10 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   async function togglePublish(invitation: Invitation) {
     if (!invitation.eventConfigured) {
       setNotice("Lengkapi dan simpan detail acara sebelum publish.");
+      return;
+    }
+    if (!invitation.templateKey?.trim()) {
+      setNotice("Pilih dan simpan template undangan sebelum publish.");
       return;
     }
 
@@ -187,6 +192,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
               const title = invitation.title.trim() || `Acara ${index + 1}`;
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
               const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
+              const hasDesign = Boolean(invitation.templateKey?.trim());
 
               return (
                 <article
@@ -205,9 +211,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
                       {invitation.isPublished
                         ? "Terbit"
-                        : invitation.eventConfigured
-                          ? "Siap publish"
-                          : "Belum lengkap"}
+                        : !invitation.eventConfigured
+                          ? "Belum lengkap"
+                          : hasDesign
+                            ? "Siap publish"
+                            : "Belum desain"}
                     </span>
                   </div>
 
@@ -222,9 +230,9 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     </p>
                     {invitation.eventConfigured ? (
                       <Button asChild size="lg" className="mt-2 w-full">
-                        <Link href={studioHref} aria-label={`Buka Studio untuk ${title}`}>
+                        <Link href={studioHref} aria-label={`${hasDesign ? "Edit" : "Buat"} undangan untuk ${title}`}>
                           <PenLine className="h-4 w-4" />
-                          Buka Studio
+                          {hasDesign ? "Edit undangan" : "Buat undangan"}
                         </Link>
                       </Button>
                     ) : (
@@ -239,6 +247,10 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     {!invitation.eventConfigured ? (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
                         Lengkapi acara dulu
+                      </div>
+                    ) : !hasDesign ? (
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                        Simpan template dulu
                       </div>
                     ) : invitation.isPublished ? (
                       <Button
@@ -264,7 +276,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       <Button asChild size="sm" className="w-full">
                         <Link href={purchaseHref}>
                           <Send className="h-4 w-4" />
-                          Publish Rp150.000
+                          Beli paket & publish
                         </Link>
                       </Button>
                     )}
