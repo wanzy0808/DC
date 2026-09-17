@@ -1,6 +1,9 @@
 import { MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
-import type { PublicInvitationData } from "@/components/PublicInvitation/PublicInvitation";
+import {
+  weddingParentLine,
+  type PublicInvitationData,
+} from "@/components/PublicInvitation/PublicInvitation";
 import {
   buildEventTitle,
   getEventCategory,
@@ -55,7 +58,7 @@ function initials(value: string) {
 }
 
 function formatTime(value: string | null, timezoneLabel: string) {
-  return value ? `${value.replace(":", ".")} ${timezoneLabel}` : "Waktu akan diumumkan";
+  return value ? `${value} ${timezoneLabel}` : "Waktu akan diumumkan";
 }
 
 export default function FigmaClassicTemplate({
@@ -97,6 +100,14 @@ export default function FigmaClassicTemplate({
           ? "Keluarga / calon bayi"
           : "Nama utama";
   const secondLabel = eventCategory === "WEDDING" ? "Pengantin wanita" : "Pasangan";
+  const groomParents =
+    eventCategory === "WEDDING"
+      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)
+      : "";
+  const brideParents =
+    eventCategory === "WEDDING"
+      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)
+      : "";
   const rsvpTitle = eventTitle || identityTitle || "Acara";
 
   return (
@@ -149,18 +160,28 @@ export default function FigmaClassicTemplate({
 
             {couple && (
               <>
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-2">
                   <h2 className="font-[Cormorant_Garamond,serif] text-3xl font-normal">
                     {invitation.groomName}
                   </h2>
                   <p className="font-sans text-xs text-stone-400">{firstLabel}</p>
+                  {groomParents && (
+                    <p className="max-w-xs font-sans text-[11px] leading-5 text-stone-500">
+                      {groomParents}
+                    </p>
+                  )}
                 </div>
                 <p className="font-[Cormorant_Garamond,serif] text-2xl text-stone-400">&amp;</p>
-                <div className="flex flex-col items-center gap-3">
+                <div className="flex flex-col items-center gap-2">
                   <h2 className="font-[Cormorant_Garamond,serif] text-3xl font-normal">
                     {invitation.brideName}
                   </h2>
                   <p className="font-sans text-xs text-stone-400">{secondLabel}</p>
+                  {brideParents && (
+                    <p className="max-w-xs font-sans text-[11px] leading-5 text-stone-500">
+                      {brideParents}
+                    </p>
+                  )}
                 </div>
               </>
             )}
