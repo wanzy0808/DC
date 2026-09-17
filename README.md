@@ -14,6 +14,16 @@ DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest manage
   - Guest management, including table/seating workflow where supported by the workspace.
 - Event creation is not capped at three. Additional events are created and activated independently.
 - Payment/entitlement is event-scoped; buying one invitation must not unlock every event on the account.
+- Event data and invitation design may be prepared before payment. The intended lifecycle is:
+  1. `Tambah acara`.
+  2. Complete event details.
+  3. Save the event to PostgreSQL.
+  4. `Buat undangan` for that saved event.
+  5. Select and edit a template in Invitation Studio.
+  6. Save the template/design.
+  7. Publish.
+- The Digital Invitation package is required at the **Publish** step, not when creating the event or entering Studio.
+- Unpaid Studio sessions are preview-only and may be watermarked. Public rendering remains server-authoritative and requires a configured event, a saved template, a published state, and valid event-scoped Digital Invitation entitlement.
 
 ### WA Blast Add-on
 - WA Blast is **not included** in Digital Invitation.
