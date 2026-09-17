@@ -126,6 +126,10 @@ model Invitation {
   templateKey        String            @default("")
   groomName          String            @default("")
   brideName          String            @default("")
+  groomFatherName    String?
+  groomMotherName    String?
+  brideFatherName    String?
+  brideMotherName    String?
   venue              String            @default("")
   address            String?
   mapUrl             String?
