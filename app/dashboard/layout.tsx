@@ -26,12 +26,10 @@ const dashboardShellCss = `
   }
 
   .dc-dashboard header > div {
-    width: min(80vw, calc(100% - 2rem)) !important;
+    width: 100% !important;
     max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .dc-dashboard > .flex > aside {
@@ -62,35 +60,9 @@ const dashboardShellCss = `
   }
 
   .dc-dashboard main table {
-    width: max-content !important;
-    min-width: 940px !important;
-    max-width: 1180px;
     border-collapse: separate;
-    border-spacing: 0 0.4rem;
   }
 
-  .dc-dashboard main table thead tr {
-    border-bottom: 0 !important;
-  }
-
-  .dc-dashboard main table tbody tr {
-    background: color-mix(in srgb, currentColor 2.5%, transparent);
-  }
-
-  .dc-dashboard main table tbody td:first-child {
-    border-radius: 10px 0 0 10px;
-  }
-
-  .dc-dashboard main table tbody td:last-child {
-    border-radius: 0 10px 10px 0;
-  }
-
-  @media (min-width: 1024px) {
-    .dc-dashboard header a[href="/"] {
-      width: 14.25rem;
-      flex: 0 0 14.25rem;
-    }
-  }
 
   @media (max-width: 1023px) {
     .dc-dashboard > .flex > aside {

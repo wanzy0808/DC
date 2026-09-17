@@ -817,3 +817,29 @@ Rangkaian Acara boleh diedit dan dihapus sebelum Publish. Karena Publish hanya d
 - Next.js production build + TypeScript: **PASS**.
 - Validated application source includes implementation commit `3c9971ad74bf78b1818dbc64b7556d6a88569b18`; the validation head only adds a temporary trigger marker.
 - Database migration: N/A.
+
+---
+
+## 2026-09-17 — Dashboard Visual Hierarchy & Header Realignment
+
+### Summary
+Dashboard customer workspace dirombak mengikuti arah visual yang disetujui user tanpa mengubah brand/product rules: neutral white/near-black surfaces, Rose `#C07A84` sebagai accent, Cinzel/Fauna One/DM Mono tetap dipakai, dan tidak ada decorative hero image atau fake activity/testimonial.
+
+### Implemented
+- header dashboard menjadi full-width chrome dengan kolom brand sejajar tepat di atas sidebar;
+- workspace header memakai sisa pane dan tetap mengikuti target 80vw tanpa overflow sidebar;
+- dynamic page title hanya tampil di header, sehingga title strip kedua di bawah header dihapus;
+- sidebar dikembalikan ke neutral surface dan Rose dipakai pada active/selected emphasis;
+- Beranda memakai hierarchy baru: welcome block, metric cards ber-icon, tabel acara terbaru, quick access, dan status workspace;
+- tabel Beranda memakai data acara asli dari PostgreSQL/API, bukan mock data;
+- tidak ada gambar dekoratif baru, perubahan logo/brand, atau perubahan product flow/entitlement;
+- global table CSS yang memaksa semua tabel menjadi `max-content`/minimum 940px dihapus agar overview table dan workspace tables dapat mengatur lebar sesuai konteks.
+
+### Affected files
+- `app/dashboard/page.tsx`;
+- `app/dashboard/layout.tsx`;
+- `prd1.md`.
+
+### Validation
+- GitHub Build Validation: pending setelah source commit.
+
