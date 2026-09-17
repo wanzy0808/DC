@@ -1,0 +1,58 @@
+name: UI Workspace Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ui-workspace-audit.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    if: github.event.head_commit.message == 'chore: audit dashboard width and numbered content'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Audit narrow wrappers and decorative numbering
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          roots = [Path('app'), Path('components')]
+          files = sorted(
+              p for root in roots for p in root.rglob('*.tsx')
+              if p.is_file()
+          )
+
+          width_patterns = [
+              re.compile(r'w-\[min\([^\]]+\)\]'),
+              re.compile(r'\bmax-w-(?:3xl|4xl|5xl|6xl|7xl)\b'),
+              re.compile(r'\bmax-w-\[(?:1[0-9]{3}|[7-9][0-9]{2})px\]'),
+          ]
+          number_patterns = [
+              re.compile(r'(?:Workspace|Acara|Undangan|Add-on|Rangkaian)\s*/\s*\d+', re.I),
+              re.compile(r'padStart\(2'),
+              re.compile(r'(?:Acara|Undangan|Rangkaian)\s*\$\{index\s*\+\s*1\}', re.I),
+              re.compile(r'\b(?:Step|Langkah)\s+\d+\b', re.I),
+          ]
+
+          print('=== WIDTH FINDINGS ===')
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              for lineno, line in enumerate(text.splitlines(), 1):
+                  if any(pattern.search(line) for pattern in width_patterns):
+                      print(f'{path}:{lineno}: {line.strip()}')
+
+          print('\n=== DECORATIVE NUMBER FINDINGS ===')
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              for lineno, line in enumerate(text.splitlines(), 1):
+                  if any(pattern.search(line) for pattern in number_patterns):
+                      print(f'{path}:{lineno}: {line.strip()}')
+          PY
