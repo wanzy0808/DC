@@ -31,6 +31,10 @@ type Invitation = {
   eventCategory: EventCategory;
   groomName: string;
   brideName: string;
+  groomFatherName: string | null;
+  groomMotherName: string | null;
+  brideFatherName: string | null;
+  brideMotherName: string | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -55,6 +59,10 @@ type EventForm = {
   customTitle: string;
   groomName: string;
   brideName: string;
+  groomFatherName: string;
+  groomMotherName: string;
+  brideFatherName: string;
+  brideMotherName: string;
   venue: string;
   address: string;
   mapUrl: string;
@@ -71,6 +79,10 @@ const emptyForm: EventForm = {
   customTitle: "",
   groomName: "",
   brideName: "",
+  groomFatherName: "",
+  groomMotherName: "",
+  brideFatherName: "",
+  brideMotherName: "",
   venue: "",
   address: "",
   mapUrl: "",
@@ -159,6 +171,10 @@ function toForm(invitation: Invitation): EventForm {
     customTitle: !blankDraft && category === "OTHER" ? invitation.title || "" : "",
     groomName: invitation.groomName || "",
     brideName: invitation.brideName || "",
+    groomFatherName: invitation.groomFatherName || "",
+    groomMotherName: invitation.groomMotherName || "",
+    brideFatherName: invitation.brideFatherName || "",
+    brideMotherName: invitation.brideMotherName || "",
     venue: invitation.venue || "",
     address: invitation.address || "",
     mapUrl: invitation.mapUrl || "",
@@ -190,7 +206,7 @@ function formatDateId(value: string) {
 }
 
 function formatTime(value: string) {
-  return value ? value.replace(":", ".") : "--.--";
+  return value || "--:--";
 }
 
 export default function EventPanel({ accent, onSaved }: Props) {
@@ -279,6 +295,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
       customTitle: value === "OTHER" ? current.customTitle : "",
       brideName: mode === "couple" ? current.brideName : "",
       groomName: mode === "optional" ? "" : current.groomName,
+      groomFatherName: value === "WEDDING" ? current.groomFatherName : "",
+      groomMotherName: value === "WEDDING" ? current.groomMotherName : "",
+      brideFatherName: value === "WEDDING" ? current.brideFatherName : "",
+      brideMotherName: value === "WEDDING" ? current.brideMotherName : "",
     }));
   }
 
@@ -346,6 +366,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
           title,
           groomName: form.groomName,
           brideName: form.brideName,
+          groomFatherName: form.groomFatherName,
+          groomMotherName: form.groomMotherName,
+          brideFatherName: form.brideFatherName,
+          brideMotherName: form.brideMotherName,
           venue: form.venue,
           address: form.address,
           mapUrl: form.mapUrl,
@@ -520,6 +544,52 @@ export default function EventPanel({ accent, onSaved }: Props) {
                         onChange={(value) => field("brideName", value)}
                         placeholder="Nama lengkap"
                       />
+
+                      {form.eventCategory === "WEDDING" && (
+                        <>
+                          <div className="rounded-xl border border-border/70 bg-background/70 p-3.5">
+                            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                              Orang tua pengantin pria · opsional
+                            </p>
+                            <div className="mt-3 space-y-3">
+                              <Field
+                                label="Nama bapak"
+                                value={form.groomFatherName}
+                                onChange={(value) => field("groomFatherName", value)}
+                                placeholder="Contoh: Ahmad"
+                              />
+                              <Field
+                                label="Nama ibu"
+                                value={form.groomMotherName}
+                                onChange={(value) => field("groomMotherName", value)}
+                                placeholder="Contoh: Siti"
+                              />
+                            </div>
+                          </div>
+                          <div className="rounded-xl border border-border/70 bg-background/70 p-3.5">
+                            <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
+                              Orang tua pengantin wanita · opsional
+                            </p>
+                            <div className="mt-3 space-y-3">
+                              <Field
+                                label="Nama bapak"
+                                value={form.brideFatherName}
+                                onChange={(value) => field("brideFatherName", value)}
+                                placeholder="Contoh: Budi"
+                              />
+                              <Field
+                                label="Nama ibu"
+                                value={form.brideMotherName}
+                                onChange={(value) => field("brideMotherName", value)}
+                                placeholder="Contoh: Ani"
+                              />
+                            </div>
+                          </div>
+                          <p className="sm:col-span-2 text-[10px] leading-4 text-muted-foreground">
+                            Jika diisi, undangan otomatis menampilkan “Anak dari Bapak … & Ibu …” di bawah nama masing-masing pengantin.
+                          </p>
+                        </>
+                      )}
                     </div>
                   )}
 
