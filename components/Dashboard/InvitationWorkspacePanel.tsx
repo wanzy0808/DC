@@ -142,7 +142,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   );
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       {notice && (
         <div
           className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
@@ -187,9 +187,9 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           </div>
         ) : (
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {invitations.map((invitation, index) => {
+            {invitations.map((invitation) => {
               const url = publicUrl(invitation);
-              const title = invitation.title.trim() || `Acara ${index + 1}`;
+              const title = invitation.title.trim() || "Acara tanpa judul";
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
               const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
               const hasDesign = Boolean(invitation.templateKey?.trim());
@@ -202,7 +202,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                        Undangan {String(index + 1).padStart(2, "0")}
+                        Undangan Digital
                       </p>
                       <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
                         {title}

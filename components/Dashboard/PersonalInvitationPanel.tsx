@@ -322,7 +322,7 @@ export default function PersonalInvitationPanel() {
   );
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={eventId}

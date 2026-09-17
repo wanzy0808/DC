@@ -80,6 +80,9 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Dark background: `#0B0B0C`; primary text: `#FFFFFF`.
 - Rose is concentrated on meaningful accents, controls, selected states, links, and headings; page surfaces stay neutral.
 - Canonical application button primitive: `components/ui/button.tsx`.
+- Primary desktop header/content/footer containers target **80vw**; do not reintroduce fixed `1400px` page wrappers that waste wide-screen space.
+- Dashboard chrome can span the viewport, while its customer workspace is capped by the available main pane to avoid sidebar-driven overflow.
+- Customer-facing UI copy avoids decorative sequence numbering; use descriptive labels instead. Real numeric product data (dates, time, price, counts, capacity, quota, child order, metrics) remains visible.
 
 ## Public Invitation Architecture
 

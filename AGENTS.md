@@ -55,7 +55,9 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 ## 4. Canonical Theme
 ### Desktop View
 
-- Always !! use 80% VW for all, header/content/footer.
+- Always !! use 80% VW for primary desktop header/content/footer containers. Do not regress page-level content to a fixed `max-width: 1400px` (or similarly narrow legacy wrapper) that leaves excessive unused desktop space.
+- Dashboard chrome may span the viewport, but the customer-facing header/content workspace should target `80vw` and remain capped by the available pane width so the sidebar never causes horizontal overflow.
+- Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics.
 
 ### Brand Anchor
 - Logo / brand primary: `#C07A84` Rose.

@@ -190,7 +190,7 @@ export default function RsvpAnalyticsPanel({
       className={
         embedded
           ? "min-w-0 overflow-x-clip text-foreground"
-          : "mx-auto w-[min(92vw,1400px)] min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
+          : "mx-auto w-[80vw] max-w-full min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
       }
     >
       {notice && (

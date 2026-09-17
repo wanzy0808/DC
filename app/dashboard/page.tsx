@@ -137,14 +137,14 @@ const secondaryNav = [
 ];
 
 const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
-  overview: { eyebrow: "Workspace / 01", title: "Beranda" },
-  events: { eyebrow: "Acara / 01", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Acara / 02", title: "Undangan" },
-  personalInvitation: { eyebrow: "Acara / 03", title: "Personal Invitation" },
-  waBlast: { eyebrow: "Add-on / 01", title: "WA Blast" },
-  rsvp: { eyebrow: "Workspace / 02", title: "RSVP" },
-  placement: { eyebrow: "Workspace / 03", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Workspace / 04", title: "Usher App" },
+  overview: { eyebrow: "Workspace", title: "Beranda" },
+  events: { eyebrow: "Acara", title: "Rangkaian Acara" },
+  invitation: { eyebrow: "Acara", title: "Undangan" },
+  personalInvitation: { eyebrow: "Acara", title: "Personal Invitation" },
+  waBlast: { eyebrow: "Add-on", title: "WA Blast" },
+  rsvp: { eyebrow: "Workspace", title: "RSVP" },
+  placement: { eyebrow: "Workspace", title: "Manajemen Tamu" },
+  usher: { eyebrow: "Workspace", title: "Usher App" },
 };
 
 function sortEvents(items: DashboardEvent[]) {
@@ -494,7 +494,7 @@ export default function DashboardPage() {
 
         <div className="min-w-0 flex-1">
           <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur-xl">
-            <div className="mx-auto flex min-h-16 w-[min(92vw,1400px)] min-w-0 items-center gap-3 px-1">
+            <div className="mx-auto flex min-h-16 w-[80vw] max-w-full min-w-0 items-center gap-3 px-1">
               <Button
                 type="button"
                 size="icon"
@@ -575,7 +575,7 @@ export default function DashboardPage() {
           <main className="min-w-0 overflow-x-clip">
             {tab !== "overview" && (
               <section className="bg-background">
-                <div className="mx-auto flex w-[min(92vw,1400px)] min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
+                <div className="mx-auto flex w-[80vw] max-w-full min-w-0 items-center justify-between gap-6 px-1 py-5 sm:py-6">
                   <div className="min-w-0">
                     <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
                       {meta.eyebrow}
@@ -765,11 +765,11 @@ function WorkspaceOverview({
   const active = events.filter((event) => event.accessPaid).length;
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <section className="rounded-xl border border-border/80 bg-foreground/[0.018] p-4 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-5">
         <div className="min-w-0">
           <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-            Workspace / 01
+            Workspace
           </p>
           <h1 className="mt-1.5 font-[family-name:var(--font-cinzel)] text-2xl font-semibold sm:text-3xl">
             Halo, {ctx?.profile.displayName || "Akun"}
@@ -810,7 +810,7 @@ function WorkspaceOverview({
 
         {events.length ? (
           <div className="mt-4 grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-            {events.map((event, index) => (
+            {events.map((event) => (
               <article
                 key={event.id}
                 className="rounded-xl border border-border/75 bg-background/75 p-4"
@@ -818,10 +818,10 @@ function WorkspaceOverview({
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                      Acara {String(index + 1).padStart(2, "0")}
+                      Acara
                     </p>
                     <p className="mt-1 truncate text-sm font-semibold text-foreground">
-                      {event.title || `Acara ${index + 1}`}
+                      {event.title || "Acara tanpa judul"}
                     </p>
                     <p className="mt-1 truncate text-[11px] text-muted-foreground">
                       {event.venue || "Lokasi belum diisi"}
@@ -922,7 +922,7 @@ function RsvpWorkspace({
   accent: string;
 }) {
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -973,7 +973,7 @@ function PlacementWorkspace({
   onRefresh: () => Promise<void>;
 }) {
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -1081,7 +1081,7 @@ function UsherPanel({
 }) {
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
       <Card>
         <div className="p-5 sm:p-6">
           <div className="flex items-center justify-between gap-4">

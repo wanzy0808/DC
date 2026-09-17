@@ -49,9 +49,9 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
           aria-label="Pilih acara"
           className="h-11 w-full appearance-none rounded-[10px] border border-border bg-background px-3 pr-10 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:cursor-not-allowed"
         >
-          {events.map((event, index) => (
+          {events.map((event) => (
             <option key={event.id} value={event.id}>
-              {event.title.trim() || `Rangkaian ${index + 1}`}
+              {event.title.trim() || "Acara tanpa judul"}
             </option>
           ))}
         </select>

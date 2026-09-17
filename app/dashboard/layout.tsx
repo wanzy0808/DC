@@ -26,12 +26,12 @@ const dashboardShellCss = `
   }
 
   .dc-dashboard header > div {
-    width: 100% !important;
+    width: min(80vw, calc(100% - 2rem)) !important;
     max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: 1rem !important;
-    padding-right: 1rem !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   .dc-dashboard > .flex > aside {
@@ -44,21 +44,21 @@ const dashboardShellCss = `
 
   .dc-dashboard main > div,
   .dc-dashboard main > section:not(.bg-background) {
-    width: 100% !important;
+    width: min(80vw, calc(100% - 2rem)) !important;
     max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: clamp(1rem, 2vw, 2rem) !important;
-    padding-right: clamp(1rem, 2vw, 2rem) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: clamp(0rem, 0.6vw, 0.75rem) !important;
+    padding-right: clamp(0rem, 0.6vw, 0.75rem) !important;
   }
 
   .dc-dashboard main > section.bg-background > div {
-    width: 100% !important;
+    width: min(80vw, calc(100% - 2rem)) !important;
     max-width: none !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
-    padding-left: clamp(1rem, 2vw, 2rem) !important;
-    padding-right: clamp(1rem, 2vw, 2rem) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: clamp(0rem, 0.6vw, 0.75rem) !important;
+    padding-right: clamp(0rem, 0.6vw, 0.75rem) !important;
   }
 
   .dc-dashboard main table {

@@ -295,16 +295,18 @@ Workspace yang menggunakan data event harus menyediakan explicit event scope. Ti
 
 ### 6.1 Desktop dashboard shell
 
-Pada desktop dashboard menggunakan **full-width application workspace**, bukan centered marketing container.
+Pada desktop dashboard menggunakan **application workspace yang memanfaatkan layar lebar**, bukan centered legacy container yang berhenti di `1400px`.
 
 Layout canonical:
-- header dashboard membentang selebar viewport;
+- background/chrome header dashboard tetap membentang selebar viewport;
+- primary header/content container menargetkan **80vw** sesuai desktop agent rule dan selalu dibatasi oleh lebar pane yang tersedia agar tidak overflow;
 - logo **DC Organizer** menjadi anchor kiri header;
 - sidebar dimulai tepat di bawah header/logo dan mempertahankan lebar navigasi yang stabil;
-- main workspace memakai seluruh sisa lebar viewport di sebelah sidebar dengan responsive horizontal gutter;
-- jangan membatasi workspace dashboard dengan `max-width: 1400px`/`92vw` seperti public marketing pages;
+- main pane memakai seluruh sisa lebar viewport di sebelah sidebar, sementara page-level workspace di dalamnya tidak boleh kembali ke `max-width: 1400px`/`92vw`;
+- pada viewport desktop yang sempit, available pane width mengalahkan target `80vw` sehingga sidebar tidak menyebabkan horizontal overflow;
 - selector/form yang memang tidak membutuhkan full width boleh tetap compact agar mudah dibaca;
-- tabel data tidak boleh dipaksa stretch memenuhi layar lebar: gunakan content-driven desktop width yang proporsional, row treatment yang jelas, dan horizontal overflow pada viewport yang lebih kecil.
+- tabel data tidak boleh dipaksa stretch memenuhi layar lebar: gunakan content-driven desktop width yang proporsional, row treatment yang jelas, dan horizontal overflow pada viewport yang lebih kecil;
+- customer-facing page/component copy **tidak menggunakan decorative sequence numbering** seperti `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature label, atau numbered card. Gunakan label deskriptif; angka yang merupakan data nyata (tanggal, waktu, harga, jumlah, kapasitas, kuota, urutan anak, nomor telepon, metric) tetap ditampilkan.
 
 ---
 

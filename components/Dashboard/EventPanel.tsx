@@ -394,18 +394,15 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       <div className="divide-y divide-border/70">
-        {events.map((event, index) => {
+        {events.map((event) => {
           const draft = !event.eventConfigured;
           const hasDesign = Boolean(event.templateKey?.trim());
           return (
             <div key={event.id} className="flex flex-col gap-3 py-4 md:flex-row md:items-center">
               <div className="min-w-0 flex-1">
                 <div className="flex min-w-0 items-center gap-2">
-                  <span className="font-[family-name:var(--font-dm-mono)] text-[9px] text-muted-foreground">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
                   <p className="truncate text-sm font-semibold">
-                    {draft ? "Acara baru" : event.title || `Acara ${index + 1}`}
+                    {draft ? "Acara baru" : event.title || "Acara tanpa judul"}
                   </p>
                   <span className="shrink-0 text-[10px] text-primary">
                     {event.isPublished ? "Terbit" : hasDesign ? "Siap" : draft ? "Draft" : "Desain"}

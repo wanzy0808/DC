@@ -194,7 +194,7 @@ export default function WhatsAppBlastPanel() {
   }
 
   return (
-    <div className="mx-auto w-[min(92vw,1400px)] min-w-0 pb-16 pt-7 sm:pt-8">
+    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
       {notice && (
         <div
           className="mb-4 rounded-xl border border-primary/15 bg-primary/[0.035] px-3 py-2.5 text-xs text-muted-foreground"
@@ -220,9 +220,9 @@ export default function WhatsAppBlastPanel() {
               {events.length === 0 ? (
                 <option value="">Belum ada undangan aktif</option>
               ) : (
-                events.map((event, index) => (
+                events.map((event) => (
                   <option key={event.id} value={event.id}>
-                    {event.title || `Acara ${index + 1}`}
+                    {event.title || "Acara tanpa judul"}
                   </option>
                 ))
               )}
