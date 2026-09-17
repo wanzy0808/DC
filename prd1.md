@@ -841,5 +841,7 @@ Dashboard customer workspace dirombak mengikuti arah visual yang disetujui user 
 - `prd1.md`.
 
 ### Validation
-- Build Validation #946: **FAILED** pada TypeScript karena helper `Stat` ikut terhapus saat overview diganti; compile aplikasi sudah lolos sebelum type-check. Helper dipulihkan dan validation ulang diperlukan.
+- Build Validation #946: **FAILED** pada TypeScript karena helper `Stat` ikut terhapus saat overview diganti; compile aplikasi sudah lolos sebelum type-check.
+- Commit `a88f1b474f3cf6e384d4cf315e1cceea00f4522b` memulihkan helper `Stat`.
+- Build Validation #949 pada state source setelah fix: **PASS**. Dependency install, Prisma Client generation, Next.js production compile, dan TypeScript semuanya berhasil.
 
