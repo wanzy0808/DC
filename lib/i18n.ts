@@ -41,18 +41,30 @@ export const messages = {
           title: "Rangkai acara pentingmu dengan lebih tenang.",
           description: "Satukan konsep, rundown, vendor, dan tim dalam satu alur agar hari acara terasa lebih terarah tanpa kehilangan momennya.",
           capabilities: ["Tim", "Rundown", "Vendor"],
+          proof: {
+            quote: "Acara terasa lebih ringan ketika setiap detail punya tempat.",
+            source: "Prinsip layanan DC Organizer",
+          },
         },
         invitation: {
           eyebrow: "Undangan Digital",
           title: "Undangan personal, alur acara lebih rapi.",
           description: "Bagikan detail acara, terima RSVP, dan kelola daftar tamu dalam satu alur yang mudah dibuka dan dibagikan.",
           capabilities: ["Undangan", "RSVP", "Tamu"],
+          proof: {
+            quote: "Undangan yang rapi membuat tamu lebih mudah mengikuti alur acara.",
+            source: "Prinsip layanan DC Organizer",
+          },
         },
         guestbook: {
           eyebrow: "Buku Tamu Digital",
           title: "Sambut setiap tamu dengan lebih rapi.",
           description: "Gunakan QR check-in dan guestbook digital agar penyambutan lebih cepat dan setiap kehadiran tercatat dengan rapi.",
           capabilities: ["Guestbook", "QR check-in", "Kehadiran"],
+          proof: {
+            quote: "Penyambutan yang cepat membuat kesan pertama terasa lebih hangat.",
+            source: "Prinsip layanan DC Organizer",
+          },
         },
       },
       openWorkspace: "Lihat Detail",
@@ -110,18 +122,30 @@ export const messages = {
           title: "Plan the moments that matter with more ease.",
           description: "Bring concepts, rundowns, vendors, and crew into one flow so the event stays organized without taking you out of the moment.",
           capabilities: ["Crew", "Rundown", "Vendors"],
+          proof: {
+            quote: "An event feels lighter when every detail has its place.",
+            source: "DC Organizer service principle",
+          },
         },
         invitation: {
           eyebrow: "Digital Invitation",
           title: "A personal invitation, with a cleaner event flow.",
           description: "Share event details, collect RSVPs, and manage your guest list in one flow that is simple to open and share.",
           capabilities: ["Invitation", "RSVP", "Guests"],
+          proof: {
+            quote: "A clear invitation makes the event flow easier for every guest to follow.",
+            source: "DC Organizer service principle",
+          },
         },
         guestbook: {
           eyebrow: "Digital Guestbook",
           title: "Welcome every guest with a smoother flow.",
           description: "Use QR check-in and a digital guestbook to welcome guests faster while keeping every arrival organized.",
           capabilities: ["Guestbook", "QR check-in", "Attendance"],
+          proof: {
+            quote: "A smoother welcome makes the first impression feel warmer.",
+            source: "DC Organizer service principle",
+          },
         },
       },
       openWorkspace: "View Details",
