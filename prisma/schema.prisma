@@ -9,12 +9,11 @@ datasource db {
 
 enum UserRole {
   USER
-  EDITOR
-  DESIGNER
-  SUPPORT
-  FINANCE
-  OWNER
   ADMIN
+  OWNER
+  FINANCE
+  DESIGNER
+  EDITOR
 }
 
 enum InvitationType {
@@ -22,11 +21,17 @@ enum InvitationType {
   ADAT_AKAD
 }
 
+enum InvitationAssetType {
+  IMAGE
+  AUDIO
+}
+
 enum PaymentStatus {
   PENDING
   PAID
   FAILED
   REFUNDED
+  CANCELLED
 }
 
 enum OrderStatus {
@@ -36,52 +41,34 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum InvitationAssetType {
-  IMAGE
-  AUDIO
-}
-
-enum RsvpStatus {
-  PENDING
-  ATTENDING
-  NOT_ATTENDING
-  TENTATIVE
-}
-
-enum GuestSource {
-  RSVP
-  MANUAL
-}
-
-enum TemplateStatus {
-  DRAFT
-  PUBLISHED
-  ARCHIVED
-}
-
 model User {
-  id                 String                   @id @default(cuid())
-  email              String                   @unique
+  id                 String                 @id @default(cuid())
+  email              String                 @unique
   passwordHash       String
   firstName          String
   lastName           String?
-  role               UserRole                 @default(USER)
+  phone              String?
+  role               UserRole               @default(USER)
+  emailVerified      Boolean                @default(false)
   emailVerifiedAt    DateTime?
-  createdAt          DateTime                 @default(now())
-  updatedAt          DateTime                 @updatedAt
-  sessions           Session[]
-  verificationTokens EmailVerificationToken[]
+  termsAcceptedAt    DateTime?
+  privacyAcceptedAt  DateTime?
+  marketingConsent   Boolean                @default(false)
+  accountStatus      String                 @default("ACTIVE")
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+  sessions           UserSession[]
+  verificationTokens VerificationToken[]
+  resetTokens        PasswordResetToken[]
+  actionTokens       AccountActionToken[]   @relation("ActionTokenUser")
   invitations        Invitation[]
-  invitationAssets   InvitationAsset[]
   payments           Payment[]
   orders             PaymentOrder[]
-  auditLogs          AuditLog[]               @relation("ActorLogs")
-  guestCheckIns      Guest[]                  @relation("GuestCheckInActor")
-  designerTemplates  DesignerTemplate[]       @relation("TemplateDesigner")
-  actionTokens       AccountActionToken[]     @relation("ActionTokenUser")
+  invitationAssets   InvitationAsset[]
+  auditLogs          AuditLog[]             @relation("AuditLogActor")
 }
 
-model Session {
+model UserSession {
   id        String   @id @default(cuid())
   tokenHash String   @unique
   userId    String
@@ -92,11 +79,24 @@ model Session {
   @@index([userId])
 }
 
-model EmailVerificationToken {
+model VerificationToken {
   id        String   @id @default(cuid())
   tokenHash String   @unique
   userId    String
   expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -128,8 +128,10 @@ model Invitation {
   brideName          String            @default("")
   groomFatherName    String?
   groomMotherName    String?
+  groomChildOrder    Int?
   brideFatherName    String?
   brideMotherName    String?
+  brideChildOrder    Int?
   venue              String            @default("")
   address            String?
   mapUrl             String?
@@ -220,24 +222,6 @@ model PaymentOrder {
 
   @@index([userId, createdAt])
   @@index([invitationId, createdAt])
-  @@index([status, createdAt])
-}
-
-model DesignerTemplate {
-  id            String         @id @default(cuid())
-  templateNo    String         @unique
-  name          String
-  tags          String[]
-  previewUrl    String
-  templateFile  String
-  status        TemplateStatus @default(PUBLISHED)
-  designerId    String
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  designer      User           @relation("TemplateDesigner", fields: [designerId], references: [id], onDelete: Cascade)
-
-  @@index([designerId, createdAt])
-  @@index([status, createdAt])
 }
 
 model WeddingTable {
@@ -245,45 +229,44 @@ model WeddingTable {
   invitationId String
   name         String
   shape        String     @default("ROUND")
-  capacity     Int        @default(8)
+  capacity     Int        @default(10)
+  positionX    Float      @default(0)
+  positionY    Float      @default(0)
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
   invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
   guests       Guest[]
 
   @@index([invitationId])
+  @@unique([invitationId, name])
 }
 
 model Guest {
-  id                        String        @id @default(cuid())
-  invitationId              String
-  tableId                   String?
-  seatNumber                Int?
-  name                      String
-  phone                     String?
-  source                    GuestSource   @default(MANUAL)
-  rsvpStatus                RsvpStatus    @default(PENDING)
-  plusOnes                  Int           @default(0)
-  checkedIn                 Boolean       @default(false)
-  checkedInAt               DateTime?
-  checkedInById             String?
-  waBlastSelected           Boolean       @default(false)
-  waBlastSentAt             DateTime?
-  personalToken             String?       @unique
-  personalPublished         Boolean       @default(false)
-  personalPasswordProtected Boolean       @default(false)
-  personalPasswordHash      String?
-  personalViewCount         Int           @default(0)
-  createdAt                 DateTime      @default(now())
-  updatedAt                 DateTime      @updatedAt
-  invitation                Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
-  table                     WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
-  checkedInBy               User?         @relation("GuestCheckInActor", fields: [checkedInById], references: [id], onDelete: SetNull)
+  id                    String        @id @default(cuid())
+  invitationId          String
+  name                  String
+  phone                 String?
+  email                 String?
+  rsvpStatus            String        @default("PENDING")
+  plusOnes              Int           @default(0)
+  notes                 String?       @db.Text
+  qrCode                String?       @unique
+  checkedIn             Boolean       @default(false)
+  checkedInAt           DateTime?
+  tableId               String?
+  seatNumber            Int?
+  personalToken         String?       @unique
+  personalPublished     Boolean       @default(false)
+  personalPasswordHash  String?
+  personalViewCount     Int           @default(0)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+  invitation            Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+  table                 WeddingTable? @relation(fields: [tableId], references: [id], onDelete: SetNull)
 
+  @@index([invitationId])
   @@index([invitationId, rsvpStatus])
-  @@index([invitationId, tableId])
-  @@index([invitationId, waBlastSelected])
-  @@index([invitationId, personalPublished])
+  @@index([invitationId, checkedIn])
   @@unique([tableId, seatNumber])
 }
 
@@ -294,8 +277,11 @@ model AuditLog {
   entity    String
   entityId  String?
   metadata  Json?
+  ipAddress String?
   createdAt DateTime @default(now())
-  actor     User?    @relation("ActorLogs", fields: [actorId], references: [id], onDelete: SetNull)
+  actor     User?    @relation("AuditLogActor", fields: [actorId], references: [id], onDelete: SetNull)
 
+  @@index([actorId])
   @@index([entity, entityId])
+  @@index([createdAt])
 }
