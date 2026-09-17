@@ -445,3 +445,42 @@ Melanjutkan audit repository dengan `prd.md` sebagai acuan agar sisa scaffolding
 - GitHub Actions Node-20 deprecation warning seen on older action majors no longer appeared after workflow upgrade.
 - Database migration: N/A.
 - Production deployment: not performed by this audit.
+
+---
+
+## 2026-09-17 — Desktop Workspace Width & Decorative Number Cleanup
+
+### Requirement / Intent
+Mengikuti koreksi terbaru user dan desktop agent rule: halaman desktop tidak boleh kembali ke container lama yang hanya memakai sebagian kecil layar, primary desktop container menargetkan 80vw tanpa fixed `1400px` ceiling, dan customer-facing page/component copy tidak memakai nomor urutan dekoratif. Angka yang merupakan data nyata tetap dipertahankan.
+
+### Implementation
+- mengganti wrapper dashboard `92vw / 1400px` dengan workspace desktop 80vw yang tetap dibatasi available main-pane width;
+- menjaga dashboard chrome/background selebar viewport sambil mencegah sidebar menyebabkan horizontal overflow;
+- menyelaraskan Beranda, header tab, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu, Usher, dan feature gate ke aturan width yang sama;
+- menghapus label dekoratif seperti `Workspace / 01`, `Acara / 02`, nomor urutan card undangan/acara, serta fallback title berbasis index;
+- mempertahankan angka bermakna seperti tanggal, waktu, harga, jumlah tamu, quota, kapasitas, child order, nomor telepon, dan metrics;
+- menyinkronkan requirement ke `AGENTS.md`, `prd.md`, `README.md`, dan supplemental `prd-tambahan.md` sesuai permintaan user.
+
+### Affected Files
+- `app/dashboard/layout.tsx`
+- `app/dashboard/page.tsx`
+- dashboard components yang masih memakai legacy `92vw / 1400px` wrapper
+- `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/InvitationWorkspacePanel.tsx`
+- `components/Dashboard/WhatsAppBlastPanel.tsx`
+- `components/Dashboard/EventScopePicker.tsx`
+- `AGENTS.md`
+- `prd.md`
+- `README.md`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commit
+- `1bd605c96295a4ff788c55367a8384c9c1e7757f` — restore wide dashboard workspace and remove decorative sequence numbering.
+
+### Validation
+- `pnpm install --frozen-lockfile`: **PASS** in one-shot GitHub Actions workspace-polish job before implementation commit.
+- `pnpm build`: **PASS** in the same job against the corrected source before implementation commit.
+- Targeted decorative numbering guard across `app/**/*.tsx` and `components/**/*.tsx`: **PASS** for the prohibited patterns covered by this change.
+- Database migration: N/A.
+
