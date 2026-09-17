@@ -97,6 +97,8 @@ type Table = {
 type Guest = {
   id: string;
   name: string;
+  category?: string | null;
+  tags?: string[];
   phone: string | null;
   source?: "RSVP" | "MANUAL";
   rsvpStatus: string;

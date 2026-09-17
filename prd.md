@@ -2304,3 +2304,35 @@ Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasar
 
 ### Remaining work
 - Continue the operational backlog in section 18 in separate small increments; no claim that offline Usher, WhatsApp provider integration, team permissions, or complete template parity is delivered here.
+
+
+---
+
+## 2026-09-18 — Seating Roster Category / Tag Filters
+
+### Implementation / Rationale
+- Continued section 9.4 in a small scope: the unassigned Seating roster now supports combined category and tag filters using persisted guest labels from the existing API.
+- Options come from the selected event's actual guests, including custom labels. Added visible labels on roster cards, result counts, reset, and distinct filtered/empty states.
+- Kept the complete guest list for canvas occupancy, totals, drag targets, and swap/collision behavior; filtering the roster must never make an occupied seat appear available.
+- Existing event-keyed SeatingChart remount resets filter state when the selected event changes.
+- Legacy guests without category/tags remain visible when filters are cleared.
+
+### Affected Files / Commit
+- `components/Dashboard/SeatingChart.tsx`
+- `app/dashboard/page.tsx` (guest label typing)
+- `lib/guests/filters.ts`
+- `tests/guest-filters.test.mjs`
+- `prd.md` (this appendix)
+- Commit: `feat: filter seating roster by guest category and tag` (same change set).
+
+### Validation
+- TypeScript `tsc --noEmit`: PASS.
+- ESLint for SeatingChart, filter helper, and test: PASS.
+- `node --test tests/guest-filters.test.mjs`: PASS, 3 tests covering legacy data, combined/exact matching, custom labels, reset, and preservation of source seating records.
+- `git diff --check`: PASS.
+- Production build, browser visual/drag interaction, live database integration, and deployment: not run.
+- No schema change; existing category/tag migration must already be applied to the target database.
+
+### Remaining Scope
+- Category/tag editing and bulk assignment, Guest List and distribution filtering remain separate increments.
+- This does not claim completion of all section 9.4 acceptance criteria.
