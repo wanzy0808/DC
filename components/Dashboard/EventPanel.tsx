@@ -222,15 +222,10 @@ export default function EventPanel({ accent, onSaved }: Props) {
       }
 
       const draft = data.invitation as Invitation;
-      setEvents((current) => {
-        const withoutSame = current.filter((item) => item.id !== draft.id);
-        return sortInvitations([...withoutSame, draft]);
-      });
-      setActiveId(draft.id);
-      setForm(toForm(draft));
-      setEditorMode(draft.eventConfigured ? "edit" : "new");
-      setNotice(draft.eventConfigured ? "Siap diedit" : "Acara baru siap dilengkapi.");
       onSaved();
+      window.location.assign(
+        `/dashboard/editor?type=${draft.type}&invitationId=${encodeURIComponent(draft.id)}`,
+      );
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Acara belum dapat dibuat.");
     } finally {
@@ -478,6 +473,15 @@ export default function EventPanel({ accent, onSaved }: Props) {
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
                       placeholder={form.eventCategory === "BIRTHDAY" ? "Contoh: Olivia" : "Contoh: Keluarga Wijaya"}
+                    />
+                  )}
+
+                  {category.nameMode === "optional" && (
+                    <Field
+                      label="Nama utama (opsional)"
+                      value={form.groomName}
+                      onChange={(value) => field("groomName", value)}
+                      placeholder="Contoh: PT DC Organizer"
                     />
                   )}
 
