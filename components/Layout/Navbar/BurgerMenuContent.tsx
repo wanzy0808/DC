@@ -26,11 +26,7 @@ import { Button } from "@/components/ui/button";
 import RegisterDialog from "./RegisterDialog";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
-interface BurgerMenuContentProps {
-  isDarkMode: boolean;
-}
-
-export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps) {
+export default function BurgerMenuContent() {
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
   const [servicesOpen, setServicesOpen] = useState(true);
@@ -174,10 +170,7 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
               <UserPlus className="h-4 w-4 shrink-0" strokeWidth={1.8} />
               <span>{nav.register}</span>
             </DialogTrigger>
-            <RegisterDialog
-              isDarkMode={isDarkMode}
-              onSwitchToLogin={() => setRegisterOpen(false)}
-            />
+            <RegisterDialog onSwitchToLogin={() => setRegisterOpen(false)} />
           </Dialog>
         </nav>
       </motion.div>
