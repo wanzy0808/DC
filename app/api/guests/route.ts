@@ -1,19 +1,16 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 async function getInvitation(userId: string, invitationId?: string) {
   if (invitationId) {
     return prisma.invitation.findFirst({
       where: { id: invitationId, ownerId: userId },
-      include: { payment: true },
     });
   }
 
   return prisma.invitation.findFirst({
     where: { ownerId: userId, type: "WEDDING" },
-    include: { payment: true },
     orderBy: { createdAt: "asc" },
   });
 }
@@ -62,18 +59,8 @@ export async function GET(request: Request) {
 
     const invitationId = url.searchParams.get("invitationId")?.trim() || "";
     const invitation = await getInvitation(user.id, invitationId || undefined);
-    if (!invitation) {
+    if (!invitation || !invitation.eventConfigured) {
       return NextResponse.json({ guests: [], tables: [], canManageGuests: false, canUseRsvp: true });
-    }
-
-    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
-      return NextResponse.json({
-        invitation: { id: invitation.id, title: invitation.title, slug: invitation.slug },
-        guests: [],
-        tables: [],
-        canManageGuests: false,
-        canUseRsvp: true,
-      });
     }
 
     const [guests, tables] = await Promise.all([
@@ -98,7 +85,7 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("GET /api/guests failed", error);
-    return NextResponse.json({ error: "Data tamu gagal dimuat. Periksa koneksi database." }, { status: 500 });
+    return NextResponse.json({ error: "Data tamu gagal dimuat." }, { status: 500 });
   }
 }
 
@@ -110,8 +97,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const invitationId = String(body.invitationId ?? "").trim();
     const invitation = await getInvitation(user.id, invitationId || undefined);
-    if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
-      return NextResponse.json({ error: "Pengelolaan daftar tamu membutuhkan Undangan Digital aktif untuk acara ini." }, { status: 402 });
+    if (!invitation || !invitation.eventConfigured) {
+      return NextResponse.json({ error: "Lengkapi acara sebelum menambahkan tamu." }, { status: 400 });
     }
 
     const name = String(body.name ?? "").trim();
