@@ -237,7 +237,19 @@ Frontend harus:
 
 Native/internal date input boleh menggunakan ISO `yyyy-mm-dd` sebagai bridge ke calendar picker selama format yang terlihat user tetap `dd/mm/yyyy`.
 
-Time menggunakan format 24 jam. Zona waktu yang didukung:
+Field **Waktu mulai** dan **Waktu selesai** wajib memakai format 24 jam eksplisit:
+
+`HH:mm` dengan rentang `00:00` sampai `23:59`.
+
+Frontend harus:
+- mendukung input manual `HH:mm`;
+- menyediakan icon/tombol jam interaktif seperti pola calendar picker;
+- picker aplikasi memilih jam `00–23` dan menit `00–59`;
+- tidak menampilkan atau menyimpan format AM/PM;
+- memvalidasi waktu 24 jam sebelum event disimpan;
+- mempertahankan value `HH:mm` saat dibaca ulang dari database/API.
+
+Zona waktu yang didukung:
 - WIB — `Asia/Jakarta`;
 - WITA — `Asia/Makassar`;
 - WIT — `Asia/Jayapura`.
@@ -960,7 +972,7 @@ Sebuah feature dianggap selesai hanya jika, sesuai scope feature tersebut:
 
 Minimal canonical Digital Invitation journey harus bekerja:
 
-`Tambah acara → input acara → dd/mm/yyyy date dengan calendar picker → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
+`Tambah acara → input acara → dd/mm/yyyy date dengan calendar picker + waktu 24 jam HH:mm → Simpan acara → database event configured → Buat undangan → pilih template → edit → Simpan desain → Publish → unpaid diarahkan ke paket event → payment aktif → Publish sukses → public invitation dapat dibuka.`
 
 Public route harus tetap menolak event yang belum configured, belum menyimpan template, belum published, atau belum memiliki valid event-scoped entitlement.
 
