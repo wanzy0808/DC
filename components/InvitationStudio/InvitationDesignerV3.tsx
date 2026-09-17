@@ -53,8 +53,10 @@ type Invitation = {
   brideName: string;
   groomFatherName?: string | null;
   groomMotherName?: string | null;
+  groomChildOrder?: number | null;
   brideFatherName?: string | null;
   brideMotherName?: string | null;
+  brideChildOrder?: number | null;
   venue: string;
   address?: string | null;
   mapUrl?: string | null;
@@ -671,8 +673,24 @@ function TemplateCanvas({ invitation, templateKey, palette, fontPair, decorUrl, 
   const layout = (templatePresets[templateKey] || templatePresets["botanical-ivory"]).layout;
   const identity = eventIdentity(invitation);
   const timezone = getIndonesiaTimezone(invitation?.timezone || "Asia/Jakarta");
-  const groomParents = identity.category === "WEDDING" ? weddingParentLine(invitation?.groomFatherName, invitation?.groomMotherName) : "";
-  const brideParents = identity.category === "WEDDING" ? weddingParentLine(invitation?.brideFatherName, invitation?.brideMotherName) : "";
+  const groomParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(
+          invitation?.groomFatherName,
+          invitation?.groomMotherName,
+          invitation?.groomChildOrder,
+          "putra",
+        )
+      : "";
+  const brideParents =
+    identity.category === "WEDDING"
+      ? weddingParentLine(
+          invitation?.brideFatherName,
+          invitation?.brideMotherName,
+          invitation?.brideChildOrder,
+          "putri",
+        )
+      : "";
   const name = identity.secondary ? `${identity.primary} & ${identity.secondary}` : identity.primary;
 
   const hero = {
@@ -726,7 +744,18 @@ function TemplateCanvas({ invitation, templateKey, palette, fontPair, decorUrl, 
         <h2 className="mt-2 text-2xl" style={{ fontFamily: fontPair.heading }}>Waktu & Lokasi</h2>
         <div className={`mt-5 grid gap-3 ${layout === "editorial" ? "grid-cols-2" : ""}`}>
           <InfoCard title="Mulai" value={`${invitation?.ceremonyTime || "--:--"} ${timezone.label}`} palette={palette} dark={false} />
-          {invitation?.receptionTime && <InfoCard title="Selesai" value={`${invitation.receptionTime} ${timezone.label}`} palette={palette} dark={layout === "maroon" || layout === "midnight"} />}
+          {invitation?.receptionTime && (
+            <InfoCard
+              title="Selesai"
+              value={
+                invitation.receptionTime === "END"
+                  ? "- end"
+                  : `${invitation.receptionTime} ${timezone.label}`
+              }
+              palette={palette}
+              dark={layout === "maroon" || layout === "midnight"}
+            />
+          )}
         </div>
         <p className="mt-5 text-lg" style={{ fontFamily: fontPair.heading }}>{invitation?.venue || "Lokasi belum diatur"}</p>
         {invitation?.address && <p className="mt-1 text-[9px] leading-4 opacity-60">{invitation.address}</p>}

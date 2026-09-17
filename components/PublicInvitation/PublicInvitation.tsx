@@ -8,6 +8,9 @@ import {
   normalizeEventCategory,
 } from "@/lib/events/catalog";
 import { parseInvitationSections } from "@/lib/templates/sections";
+import { weddingParentLine } from "@/lib/events/parents";
+
+export { weddingParentLine };
 
 export type PublicInvitationData = {
   id: string;
@@ -18,8 +21,10 @@ export type PublicInvitationData = {
   brideName: string;
   groomFatherName?: string | null;
   groomMotherName?: string | null;
+  groomChildOrder?: number | null;
   brideFatherName?: string | null;
   brideMotherName?: string | null;
+  brideChildOrder?: number | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -54,18 +59,6 @@ function formatTime(value: string) {
   return value;
 }
 
-export function weddingParentLine(
-  fatherName?: string | null,
-  motherName?: string | null,
-) {
-  const parents = [
-    fatherName?.trim() ? `Bapak ${fatherName.trim()}` : "",
-    motherName?.trim() ? `Ibu ${motherName.trim()}` : "",
-  ].filter(Boolean);
-
-  return parents.length ? `Anak dari ${parents.join(" & ")}` : "";
-}
-
 export default function PublicInvitation({
   invitation,
 }: {
@@ -91,16 +84,28 @@ export default function PublicInvitation({
   const showIdentity = Boolean(identity && identity !== title);
   const groomParents =
     eventCategory === "WEDDING"
-      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)
+      ? weddingParentLine(
+          invitation.groomFatherName,
+          invitation.groomMotherName,
+          invitation.groomChildOrder,
+          "putra",
+        )
       : "";
   const brideParents =
     eventCategory === "WEDDING"
-      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)
+      ? weddingParentLine(
+          invitation.brideFatherName,
+          invitation.brideMotherName,
+          invitation.brideChildOrder,
+          "putri",
+        )
       : "";
   const startTime = invitation.ceremonyTime;
   const endTime = invitation.receptionTime;
   const timeLabel = startTime
-    ? `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`
+    ? endTime === "END"
+      ? `${formatTime(startTime)} - end ${timezone.label}`
+      : `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`
     : "";
   const hasGiftDetails = Boolean(
     invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim(),

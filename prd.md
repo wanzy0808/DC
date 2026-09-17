@@ -168,7 +168,7 @@ Field penting:
 - `eventCategory`;
 - `title`;
 - legacy `groomName` / `brideName`;
-- optional wedding identity `groomFatherName` / `groomMotherName` / `brideFatherName` / `brideMotherName`;
+- optional wedding identity `groomFatherName` / `groomMotherName` / `groomChildOrder` / `brideFatherName` / `brideMotherName` / `brideChildOrder`;
 - `venue`;
 - `address`;
 - `mapUrl`;
@@ -205,7 +205,10 @@ Untuk `WEDDING`:
 - parent identity bersifat opsional;
 - masing-masing pengantin memiliki field nama bapak dan nama ibu sendiri;
 - jika salah satu atau kedua nama orang tua tersedia, Studio preview dan public invitation otomatis menampilkan parent line di bawah nama pengantin;
-- format canonical ketika kedua orang tua tersedia: **`Anak dari Bapak <nama bapak> & Ibu <nama ibu>`**;
+- user dapat mengisi `Anak keberapa` secara opsional untuk masing-masing pengantin;
+- format canonical pengantin pria ketika urutan anak tersedia: **`Putra pertama dari Bapak <nama bapak> & Ibu <nama ibu>`** (urutan mengikuti input: kedua, ketiga, dan seterusnya);
+- format canonical pengantin wanita menggunakan **`Putri`** dengan aturan urutan yang sama;
+- jika urutan anak kosong, renderer tetap menampilkan `Putra dari ...` / `Putri dari ...`;
 - jika hanya satu parent yang diisi, renderer hanya menampilkan parent yang tersedia dan tidak membuat placeholder kosong;
 - data parent tidak menjadi syarat `eventConfigured` maupun Publish.
 
@@ -225,7 +228,7 @@ Server minimal memerlukan:
 - venue.
 
 Optional:
-- untuk WEDDING: nama bapak/ibu masing-masing pengantin;
+- untuk WEDDING: nama bapak/ibu dan urutan anak masing-masing pengantin;
 - end time;
 - address;
 - Maps URL;
@@ -263,7 +266,9 @@ Frontend harus:
 - picker aplikasi memilih jam `00–23` dan menit `00–59`;
 - tidak menampilkan atau menyimpan format AM/PM;
 - memvalidasi waktu 24 jam sebelum event disimpan;
-- mempertahankan value `HH:mm` saat dibaca ulang dari database/API.
+- mempertahankan value `HH:mm` saat dibaca ulang dari database/API;
+- `Waktu selesai` tetap opsional; jika user memilih **`Tampilkan “- end” di undangan`**, UI menonaktifkan input waktu selesai dan menyimpan sentinel internal `END` pada compatibility field `receptionTime`;
+- renderer Studio dan public wajib menampilkan `- end` untuk sentinel tersebut, sedangkan `receptionTime` kosong tetap berarti tidak ada label waktu selesai.
 
 Zona waktu yang didukung:
 - WIB — `Asia/Jakarta`;

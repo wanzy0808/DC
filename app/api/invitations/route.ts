@@ -13,6 +13,8 @@ import {
 
 type InvitationType = "WEDDING" | "ADAT_AKAD";
 
+const END_TIME_SENTINEL = "END";
+
 function normalizeType(value: unknown): InvitationType {
   return value === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
 }
@@ -78,6 +80,10 @@ function optionalPositiveInt(value: unknown) {
 
 function isValidTime24(value: string | null) {
   return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
+}
+
+function isValidReceptionTime(value: string | null) {
+  return value === END_TIME_SENTINEL || isValidTime24(value);
 }
 
 const EVENT_DETAIL_MUTATION_FIELDS = [
@@ -322,7 +328,7 @@ export async function POST(request: Request) {
       if (!ceremonyTime) {
         return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
       }
-      if (!isValidTime24(ceremonyTime) || !isValidTime24(receptionTime)) {
+      if (!isValidTime24(ceremonyTime) || !isValidReceptionTime(receptionTime)) {
         return NextResponse.json(
           { error: "Waktu acara harus menggunakan format 24 jam HH:mm (00:00–23:59)." },
           { status: 400 },
@@ -521,7 +527,7 @@ export async function PUT(request: Request) {
       if (!ceremonyTime) {
         return NextResponse.json({ error: "Waktu mulai wajib diisi." }, { status: 400 });
       }
-      if (!isValidTime24(ceremonyTime) || !isValidTime24(receptionTime)) {
+      if (!isValidTime24(ceremonyTime) || !isValidReceptionTime(receptionTime)) {
         return NextResponse.json(
           { error: "Waktu acara harus menggunakan format 24 jam HH:mm (00:00–23:59)." },
           { status: 400 },

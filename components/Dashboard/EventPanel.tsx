@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import { weddingParentLine, type WeddingChildKind } from "@/lib/events/parents";
 import {
   buildEventTitle,
   eventCategoryOptions,
@@ -100,6 +101,8 @@ const emptyForm: EventForm = {
   description: "",
   eventNotes: "",
 };
+
+const END_TIME_SENTINEL = "END";
 
 const timeHours = Array.from({ length: 24 }, (_, index) =>
   String(index).padStart(2, "0"),
@@ -322,8 +325,12 @@ export default function EventPanel({ onSaved }: Props) {
     if (!isValidTime24(form.ceremonyTime)) {
       return setNotice("Waktu mulai harus menggunakan format HH:mm.");
     }
-    if (form.receptionTime && !isValidTime24(form.receptionTime)) {
-      return setNotice("Waktu selesai harus menggunakan format HH:mm.");
+    if (
+      form.receptionTime &&
+      form.receptionTime !== END_TIME_SENTINEL &&
+      !isValidTime24(form.receptionTime)
+    ) {
+      return setNotice("Waktu selesai harus menggunakan format HH:mm atau opsi - end.");
     }
     if (!form.venue.trim()) return setNotice("Nama tempat wajib diisi.");
 
@@ -574,6 +581,7 @@ export default function EventPanel({ onSaved }: Props) {
                     <div className="grid gap-6 border-t border-border/70 pt-5 sm:grid-cols-2">
                       <WeddingFamilyFields
                         title="Pengantin pria"
+                        kind="putra"
                         father={form.groomFatherName}
                         mother={form.groomMotherName}
                         order={form.groomChildOrder}
@@ -583,6 +591,7 @@ export default function EventPanel({ onSaved }: Props) {
                       />
                       <WeddingFamilyFields
                         title="Pengantin wanita"
+                        kind="putri"
                         father={form.brideFatherName}
                         mother={form.brideMotherName}
                         order={form.brideChildOrder}
@@ -627,7 +636,28 @@ export default function EventPanel({ onSaved }: Props) {
                 <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
                   <DateField label="Tanggal" value={form.eventDate} onChange={(value) => field("eventDate", value)} />
                   <TimeField label={`Mulai (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
-                  <TimeField label={`Selesai (${timezone.label})`} value={form.receptionTime} onChange={(value) => field("receptionTime", value)} />
+                  <div>
+                    <TimeField
+                      label={`Selesai (${timezone.label})`}
+                      value={form.receptionTime === END_TIME_SENTINEL ? "" : form.receptionTime}
+                      onChange={(value) => field("receptionTime", value)}
+                      disabled={form.receptionTime === END_TIME_SENTINEL}
+                    />
+                    <label className="mt-2 flex min-h-8 cursor-pointer items-center gap-2 text-[11px] text-muted-foreground">
+                      <input
+                        type="checkbox"
+                        checked={form.receptionTime === END_TIME_SENTINEL}
+                        onChange={(event) =>
+                          field(
+                            "receptionTime",
+                            event.target.checked ? END_TIME_SENTINEL : "",
+                          )
+                        }
+                        className="h-4 w-4 accent-[var(--primary)]"
+                      />
+                      <span>Tampilkan “- end” di undangan</span>
+                    </label>
+                  </div>
                 </div>
 
                 <label className="mt-4 block">
@@ -646,7 +676,7 @@ export default function EventPanel({ onSaved }: Props) {
                 {(form.eventDate || form.ceremonyTime) && (
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate) : "Tanggal"}</span>
-                    <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
+                    <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
 
@@ -684,6 +714,7 @@ export default function EventPanel({ onSaved }: Props) {
 
 function WeddingFamilyFields({
   title,
+  kind,
   father,
   mother,
   order,
@@ -692,6 +723,7 @@ function WeddingFamilyFields({
   onOrder,
 }: {
   title: string;
+  kind: WeddingChildKind;
   father: string;
   mother: string;
   order: string;
@@ -699,12 +731,25 @@ function WeddingFamilyFields({
   onMother: (value: string) => void;
   onOrder: (value: string) => void;
 }) {
+  const parsedOrder = order.trim() ? Number(order) : null;
+  const familyLine = weddingParentLine(
+    father,
+    mother,
+    Number.isInteger(parsedOrder) ? parsedOrder : null,
+    kind,
+  );
+
   return (
     <div className="space-y-3">
       <p className="text-xs font-semibold">{title}</p>
       <ChildOrderField value={order} onChange={onOrder} />
       <Field label="Nama bapak" value={father} onChange={onFather} />
       <Field label="Nama ibu" value={mother} onChange={onMother} />
+      {familyLine && (
+        <p className="rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] leading-5 text-muted-foreground">
+          {familyLine}
+        </p>
+      )}
     </div>
   );
 }
@@ -764,7 +809,17 @@ function DateField({ label, value, onChange }: { label: string; value: string; o
   );
 }
 
-function TimeField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+function TimeField({
+  label,
+  value,
+  onChange,
+  disabled = false,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
   const [open, setOpen] = useState(false);
   const [hour, minute] = isValidTime24(value) ? value.split(":") : ["00", "00"];
 
@@ -773,6 +828,7 @@ function TimeField({ label, value, onChange }: { label: string; value: string; o
       <span className="mb-1.5 block text-xs font-semibold">{label}</span>
       <div className="flex gap-2">
         <Input
+          disabled={disabled}
           inputMode="numeric"
           maxLength={5}
           value={value}
@@ -780,11 +836,11 @@ function TimeField({ label, value, onChange }: { label: string; value: string; o
           placeholder="00:00"
           className="font-[family-name:var(--font-dc-mono)]"
         />
-        <Button type="button" size="icon" onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">
+        <Button type="button" size="icon" disabled={disabled} onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">
           <Clock3 className="h-4 w-4" />
         </Button>
       </div>
-      {open && (
+      {open && !disabled && (
         <div className="absolute right-0 z-40 mt-2 grid w-full min-w-52 grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-border bg-background p-3 shadow-xl">
           <select value={hour} onChange={(event) => onChange(`${event.target.value}:${minute}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
             {timeHours.map((item) => <option key={item}>{item}</option>)}

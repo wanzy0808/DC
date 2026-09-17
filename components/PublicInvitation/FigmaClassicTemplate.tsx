@@ -59,6 +59,7 @@ function initials(value: string) {
 }
 
 function formatTime(value: string | null, timezoneLabel: string) {
+  if (value === "END") return "- end";
   return value ? `${value} ${timezoneLabel}` : "Waktu akan diumumkan";
 }
 
@@ -104,11 +105,21 @@ export default function FigmaClassicTemplate({
   const secondLabel = eventCategory === "WEDDING" ? "Pengantin wanita" : "Pasangan";
   const groomParents =
     eventCategory === "WEDDING"
-      ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName)
+      ? weddingParentLine(
+          invitation.groomFatherName,
+          invitation.groomMotherName,
+          invitation.groomChildOrder,
+          "putra",
+        )
       : "";
   const brideParents =
     eventCategory === "WEDDING"
-      ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)
+      ? weddingParentLine(
+          invitation.brideFatherName,
+          invitation.brideMotherName,
+          invitation.brideChildOrder,
+          "putri",
+        )
       : "";
   const rsvpTitle = eventTitle || identityTitle || "Acara";
   const hasGiftDetails = Boolean(
