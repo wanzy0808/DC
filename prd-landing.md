@@ -315,3 +315,51 @@ Yang sudah boleh dilakukan pada tahap ini:
 - penyusunan requirement draft.
 
 Source landing page, background, Pintu, navbar, dan application behavior tetap tidak diubah sampai owner memberikan approval eksplisit untuk implementation.
+
+
+---
+
+## 13. Approved Visual Direction Notes — Pink-Led Dark Mode & Motion
+
+Owner menyukai arah visual mockup dark mode dengan architectural space, tetapi **Rose/pink DC harus lebih dominan daripada gold/champagne**.
+
+Dark-mode visual language:
+- base tetap near-black `#0B0B0C` / dark neutral;
+- light yang masuk dari jendela, arch, atau doorway menggunakan white-to-Rose / dusty-pink illumination;
+- highlight/reflection pada floor dan edge Pintu boleh terasa luminous, tetapi hue utama tetap Rose family;
+- hindari gold, amber, bronze, atau champagne sebagai secondary brand palette;
+- warm neutral hanya boleh muncul sebagai konsekuensi natural lighting yang sangat kecil, bukan warna identitas;
+- Pintu, architectural edge light, reflection, dan atmospheric accents harus terasa satu keluarga dengan `#C07A84`;
+- jangan mengubah page menjadi full pink background atau giant pink glow. Dark neutral tetap canvas utama.
+
+### Pintu animation is required
+
+Pintu bukan static decoration. Motion Pintu adalah bagian penting dari identity landing:
+- existing three-door motion/navigation concept harus dipertahankan dan boleh diperhalus;
+- movement harus terasa smooth, premium, dan intentional;
+- active/front door harus mempunyai hierarchy yang jelas;
+- interaction boleh memberi subtle depth, light response, opening/threshold cue, atau reflection response bila tidak mengganggu navigation;
+- motion tidak boleh berubah menjadi gimmick atau membuat user sulit memilih layanan;
+- reduced-motion mode wajib mempunyai versi yang tenang dan usable.
+
+### Text animation is required
+
+Landing harus memiliki restrained text entrance/reveal pada setiap major page section:
+- heading, supporting copy, CTA, dan supporting editorial content boleh masuk dengan fade/reveal/soft vertical movement;
+- gunakan timing dan easing yang konsisten dengan DC motion rules;
+- hindari word-by-word rainbow effects, kinetic typography berlebihan, bouncing text, random rotation, atau animation berbeda untuk setiap kalimat;
+- text animation harus mendukung reading order, bukan menjadi pusat perhatian;
+- scroll reveal hanya dijalankan ketika relevan dan mengikuti reduced-motion preference.
+
+### Anti AI-slop composition
+
+Visual/content treatment harus terasa editorial dan manusiawi:
+- jangan memberi nomor dekoratif pada section, feature, card, atau heading;
+- jangan membuat setiap heading memiliki satu kata italic/berwarna hanya demi variasi;
+- jangan mencampur terlalu banyak text styles dalam satu block;
+- Rose dipakai untuk meaningful emphasis, bukan mewarnai kata secara acak;
+- italic hanya digunakan bila memang mempunyai alasan editorial/content, bukan default visual trick;
+- hierarchy terutama dibangun dari Cinzel/Fauna/DM Mono, ukuran, spacing, opacity, alignment, dan composition;
+- jangan meniru copy, statistik, testimonial, atau event category palsu yang muncul pada generated visual reference.
+
+Generated images yang dipakai dalam diskusi adalah **visual-direction reference**, bukan pixel-perfect specification dan bukan source of truth untuk copy/product data.
