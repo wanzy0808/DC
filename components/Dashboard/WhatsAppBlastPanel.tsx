@@ -4,7 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { CreditCard, MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type EventOption = {
   id: string;
@@ -195,11 +203,25 @@ export default function WhatsAppBlastPanel() {
   }
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <DashboardPage className="pt-7 sm:pt-8">
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
-      <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+      <DashboardSurface className="p-4 sm:p-5">
+        <DashboardSectionHeader
+          eyebrow="WA Blast Add-on"
+          title="Distribusi WhatsApp"
+          description="Pilih acara aktif, cek quota, lalu siapkan daftar penerima yang akan dikirim."
+          actions={
+            eventId ? (
+              <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
+                <CreditCard className="h-4 w-4" />
+                Beli 50 quota · Rp75.000
+              </Button>
+            ) : null
+          }
+        />
+
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
             <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
               Acara
@@ -223,12 +245,6 @@ export default function WhatsAppBlastPanel() {
             </select>
           </label>
 
-          {eventId && (
-            <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
-              <CreditCard className="h-4 w-4" />
-              Beli 50 quota · Rp75.000
-            </Button>
-          )}
         </div>
 
         {events.length === 0 && (
@@ -236,43 +252,38 @@ export default function WhatsAppBlastPanel() {
             Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.
           </p>
         )}
-      </section>
+      </DashboardSurface>
 
       {eventId && (
         <>
-          <section className="mt-3 grid gap-3 sm:grid-cols-3">
+          <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
             <Metric icon={MessageCircle} label="Kuota" value={String(quota)} />
             <Metric icon={Users} label="Dipilih" value={String(selected.length)} />
             <Metric icon={Plus} label="Sisa" value={String(remaining)} />
-          </section>
+          </DashboardMetricGrid>
 
           {quota === 0 ? (
-            <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                Add-on
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                WA Blast belum aktif
-              </h2>
-              <p className="mt-2 max-w-xl text-xs leading-5 text-muted-foreground">
-                WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.
-              </p>
-              <Button type="button" size="sm" className="mt-4" onClick={purchaseAddon} disabled={busy}>
-                <CreditCard className="h-4 w-4" />
-                Beli 50 quota · Rp75.000
-              </Button>
-            </section>
+            <DashboardSurface className="mt-5 p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow="Add-on"
+                title="WA Blast belum aktif"
+                description="WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih."
+                actions={
+                  <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
+                    <CreditCard className="h-4 w-4" />
+                    Beli 50 quota · Rp75.000
+                  </Button>
+                }
+              />
+            </DashboardSurface>
           ) : (
             <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-              <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-                <div>
-                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Penerima
-                  </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                    Tambah penerima
-                  </h2>
-                </div>
+              <DashboardSurface className="space-y-4 p-4 sm:p-5">
+                <DashboardSectionHeader
+                  eyebrow="Penerima"
+                  title="Tambah penerima"
+                  description="Gunakan data tamu yang sudah ada atau tambahkan penerima baru."
+                />
 
                 <div className="rounded-xl border border-border/70 bg-background p-3">
                   <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
@@ -328,34 +339,33 @@ export default function WhatsAppBlastPanel() {
                     </Button>
                   </div>
                 </div>
-              </section>
+              </DashboardSurface>
 
-              <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                      Queue
-                    </p>
-                    <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                      Tamu yang akan diblast
-                    </h2>
-                  </div>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={() => loadEventData(eventId)}
-                    disabled={busy}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    Muat ulang
-                  </Button>
-                </div>
+              <DashboardSurface className="p-4 sm:p-5">
+                <DashboardSectionHeader
+                  eyebrow="Queue"
+                  title="Tamu yang akan diblast"
+                  description="Daftar ini memakai quota dari acara yang sedang aktif."
+                  actions={
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => loadEventData(eventId)}
+                      disabled={busy}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      Muat ulang
+                    </Button>
+                  }
+                />
 
                 <div className="mt-4 space-y-2">
                   {selected.length === 0 && (
-                    <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
-                      Belum ada penerima WA Blast.
-                    </div>
+                    <DashboardEmptyState
+                      icon={Users}
+                      title="Belum ada penerima"
+                      description="Tambahkan tamu dari daftar atau buat penerima baru untuk acara ini."
+                    />
                   )}
                   {selected.map((guest) => (
                     <div
@@ -381,12 +391,12 @@ export default function WhatsAppBlastPanel() {
                     </div>
                   ))}
                 </div>
-              </section>
+              </DashboardSurface>
             </div>
           )}
         </>
       )}
-    </div>
+    </DashboardPage>
   );
 }
 
