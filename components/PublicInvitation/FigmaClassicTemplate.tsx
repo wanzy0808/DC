@@ -10,6 +10,7 @@ import {
   getIndonesiaTimezone,
   normalizeEventCategory,
 } from "@/lib/events/catalog";
+import { parseInvitationSections } from "@/lib/templates/sections";
 
 function Divider() {
   return (
@@ -70,6 +71,7 @@ export default function FigmaClassicTemplate({
   const eventCategory = normalizeEventCategory(invitation.eventCategory);
   const category = getEventCategory(eventCategory);
   const timezone = getIndonesiaTimezone(invitation.timezone);
+  const sections = parseInvitationSections(invitation.templateKey);
   const date = new Intl.DateTimeFormat("id-ID", {
     dateStyle: "full",
     timeZone: invitation.timezone || "Asia/Jakarta",
@@ -109,6 +111,9 @@ export default function FigmaClassicTemplate({
       ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName)
       : "";
   const rsvpTitle = eventTitle || identityTitle || "Acara";
+  const hasGiftDetails = Boolean(
+    invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim(),
+  );
 
   return (
     <main className="min-h-screen bg-stone-50 px-6 py-10 text-zinc-800">
@@ -250,61 +255,61 @@ export default function FigmaClassicTemplate({
             </div>
           </section>
 
-          <Divider />
+          {sections.rsvp && (
+            <>
+              <Divider />
+              <section className="w-full px-2 pb-6">
+                <SectionHeading
+                  label="Kehadiran"
+                  title="Konfirmasi RSVP"
+                  description="Silakan isi konfirmasi kehadiran Anda untuk membantu persiapan acara."
+                />
+                <div className="mt-8">
+                  <RsvpForm
+                    slug={invitation.slug}
+                    eventDate={invitation.eventDate}
+                    venue={invitation.venue}
+                    title={rsvpTitle}
+                    start={invitation.ceremonyTime}
+                    description={invitation.description}
+                  />
+                </div>
+              </section>
+            </>
+          )}
 
-          <section className="w-full px-2 pb-6">
-            <SectionHeading
-              label="Kehadiran"
-              title="Konfirmasi RSVP"
-              description="Silakan isi konfirmasi kehadiran Anda untuk membantu persiapan acara."
-            />
-            <div className="mt-8">
-              <RsvpForm
-                slug={invitation.slug}
-                eventDate={invitation.eventDate}
-                venue={invitation.venue}
-                title={rsvpTitle}
-                start={invitation.ceremonyTime}
-                description={invitation.description}
-              />
-            </div>
-          </section>
-
-          <Divider />
-
-          <section className="w-full px-2 pb-6">
-            <SectionHeading
-              label="Tanda Kasih"
-              title="Gift"
-              description="Jika berkenan, informasi berikut dapat digunakan untuk mengirimkan tanda kasih."
-            />
-            {invitation.giftBankName && invitation.giftAccountNumber ? (
-              <div className="mt-8 w-full rounded-xl border border-stone-400 bg-stone-200 p-6">
-                <h3 className="text-center font-[Cormorant_Garamond,serif] text-xl">Transfer Bank</h3>
-                <div className="mx-auto my-4 h-px w-10 bg-stone-400" />
-                <div className="space-y-3 font-sans text-sm">
-                  <div>
-                    <p className="text-xs font-semibold uppercase text-stone-400">Bank</p>
-                    <p className="font-semibold">{invitation.giftBankName}</p>
-                  </div>
-                  {invitation.giftAccountName && (
+          {sections.gift && hasGiftDetails && (
+            <>
+              <Divider />
+              <section className="w-full px-2 pb-6">
+                <SectionHeading
+                  label="Tanda Kasih"
+                  title="Gift / E-Angpao"
+                  description="Jika berkenan, informasi berikut dapat digunakan untuk mengirimkan tanda kasih."
+                />
+                <div className="mt-8 w-full rounded-xl border border-stone-400 bg-stone-200 p-6">
+                  <h3 className="text-center font-[Cormorant_Garamond,serif] text-xl">Transfer Bank</h3>
+                  <div className="mx-auto my-4 h-px w-10 bg-stone-400" />
+                  <div className="space-y-3 font-sans text-sm">
                     <div>
-                      <p className="text-xs font-semibold uppercase text-stone-400">Nama Pemilik</p>
-                      <p className="font-semibold">{invitation.giftAccountName}</p>
+                      <p className="text-xs font-semibold uppercase text-stone-400">Bank</p>
+                      <p className="font-semibold">{invitation.giftBankName}</p>
                     </div>
-                  )}
-                  <div>
-                    <p className="text-xs font-semibold uppercase text-stone-400">Nomor Rekening</p>
-                    <p className="font-semibold">{invitation.giftAccountNumber}</p>
+                    {invitation.giftAccountName && (
+                      <div>
+                        <p className="text-xs font-semibold uppercase text-stone-400">Nama Pemilik</p>
+                        <p className="font-semibold">{invitation.giftAccountName}</p>
+                      </div>
+                    )}
+                    <div>
+                      <p className="text-xs font-semibold uppercase text-stone-400">Nomor Rekening</p>
+                      <p className="font-semibold">{invitation.giftAccountNumber}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <p className="mt-8 text-center font-sans text-xs text-stone-400">
-                Informasi hadiah akan ditampilkan jika penyelenggara mengaktifkannya.
-              </p>
-            )}
-          </section>
+              </section>
+            </>
+          )}
 
           <Divider />
 
