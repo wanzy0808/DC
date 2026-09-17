@@ -8,6 +8,15 @@ export type InvitationTemplate = {
 
 export const invitationTemplates: InvitationTemplate[] = [
   {
+    key: "botanical-ivory",
+    name: "Botanical Ivory",
+    description:
+      "Ivory botanical bergaya editorial dengan susunan RSVP, Wishes, dan Gift seperti undangan mobile klasik.",
+    previewImage:
+      "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&q=80&w=900",
+    assetPath: "/templates/botanical-ivory",
+  },
+  {
     key: "eternal-blossom",
     name: "Eternal Blossom",
     description: "Floral editorial yang lembut untuk perayaan personal dan intimate.",
