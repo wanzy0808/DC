@@ -8,7 +8,7 @@ import {
   CalendarCheck,
   ChevronDown,
   CircleHelp,
-  Home,
+  Layers,
   LayoutTemplate,
   LogIn,
   Package,
@@ -51,19 +51,10 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
   ] as const;
 
   const serviceActive = services.some(({ href }) => pathname === href);
-  const navButtonClass = (active = false) =>
-    `group flex min-h-11 w-full items-center gap-3 rounded-[10px] border px-3 py-2.5 text-left font-[family-name:var(--font-dc-body)] text-[13px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] ${
-      active
-        ? "border-primary/15 bg-primary/10 text-primary"
-        : "border-transparent bg-transparent text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
-    }`;
-
-  const subButtonClass = (active = false) =>
-    `group flex min-h-10 w-full items-center gap-2.5 rounded-[9px] border px-2.5 py-2 text-left font-[family-name:var(--font-dc-body)] text-[12px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ring)] ${
-      active
-        ? "border-primary/15 bg-primary/[0.09] text-primary"
-        : "border-transparent bg-transparent text-foreground/75 hover:bg-primary/[0.06] hover:text-primary"
-    }`;
+  const topButtonClass =
+    "h-auto min-h-11 w-full justify-start rounded-[10px] px-3 py-2.5 text-left text-[13px] shadow-none";
+  const subButtonClass =
+    "h-auto min-h-10 w-full justify-start rounded-[9px] px-3 py-2 text-left text-[12px] shadow-none";
 
   return (
     <SheetContent
@@ -87,32 +78,14 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
         </SheetHeader>
 
         <nav className="flex-1 space-y-2 bg-primary/[0.035] p-3 dark:bg-primary/[0.055]">
-          <SheetClose
-            nativeButton={false}
-            render={
-              <Link
-                href="/"
-                className={navButtonClass(pathname === "/")}
-                aria-current={pathname === "/" ? "page" : undefined}
-              />
-            }
-          >
-            <Home className="h-4 w-4 shrink-0" strokeWidth={1.8} />
-            <span>{nav.home}</span>
-          </SheetClose>
-
-          <div className="rounded-xl border border-primary/10 bg-background/45 p-1.5">
+          <div className="space-y-1.5 rounded-xl border border-primary/10 bg-background/45 p-1.5">
             <Button
               type="button"
               aria-expanded={servicesOpen}
               onClick={() => setServicesOpen((open) => !open)}
-              className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${
-                serviceActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-foreground hover:bg-primary/[0.06] hover:text-primary"
-              }`}
+              className={`${topButtonClass} ${serviceActive ? "ring-2 ring-primary/25" : ""}`}
             >
-              <Package className="h-4 w-4 shrink-0" strokeWidth={1.8} />
+              <Layers className="h-4 w-4 shrink-0" strokeWidth={1.8} />
               <span>{nav.services}</span>
               <ChevronDown
                 className={`ml-auto h-3.5 w-3.5 transition-transform ${servicesOpen ? "rotate-180" : ""}`}
@@ -126,7 +99,7 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
                   animate={{ opacity: 1, y: 0 }}
                   exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
                   transition={{ duration: shouldReduceMotion ? 0.1 : 0.22 }}
-                  className="mt-1 space-y-1 pl-3"
+                  className="space-y-1.5 pl-3"
                 >
                   {services.map(({ href, label, icon: Icon }) => {
                     const active = pathname === href;
@@ -135,16 +108,18 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
                         key={href}
                         nativeButton={false}
                         render={
-                          <Link
-                            href={href}
-                            className={subButtonClass(active)}
-                            aria-current={active ? "page" : undefined}
-                          />
+                          <Button
+                            asChild
+                            size="sm"
+                            className={`${subButtonClass} ${active ? "ring-2 ring-primary/25" : ""}`}
+                          >
+                            <Link href={href} aria-current={active ? "page" : undefined}>
+                              <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} />
+                              <span>{label}</span>
+                            </Link>
+                          </Button>
                         }
-                      >
-                        <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={1.8} />
-                        <span>{label}</span>
-                      </SheetClose>
+                      />
                     );
                   })}
                 </motion.div>
@@ -159,16 +134,18 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
                 key={href}
                 nativeButton={false}
                 render={
-                  <Link
-                    href={href}
-                    className={navButtonClass(active)}
-                    aria-current={active ? "page" : undefined}
-                  />
+                  <Button
+                    asChild
+                    size="lg"
+                    className={`${topButtonClass} ${active ? "ring-2 ring-primary/25" : ""}`}
+                  >
+                    <Link href={href} aria-current={active ? "page" : undefined}>
+                      <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
+                      <span>{label}</span>
+                    </Link>
+                  </Button>
                 }
-              >
-                <Icon className="h-4 w-4 shrink-0" strokeWidth={1.8} />
-                <span>{label}</span>
-              </SheetClose>
+              />
             );
           })}
 
@@ -176,17 +153,23 @@ export default function BurgerMenuContent({ isDarkMode }: BurgerMenuContentProps
 
           <SheetClose
             nativeButton={false}
-            render={<Link href="/login" className={navButtonClass(pathname === "/login")} />}
-          >
-            <LogIn className="h-4 w-4 shrink-0" strokeWidth={1.8} />
-            <span>{nav.login}</span>
-          </SheetClose>
+            render={
+              <Button
+                asChild
+                size="lg"
+                className={`${topButtonClass} ${pathname === "/login" ? "ring-2 ring-primary/25" : ""}`}
+              >
+                <Link href="/login" aria-current={pathname === "/login" ? "page" : undefined}>
+                  <LogIn className="h-4 w-4 shrink-0" strokeWidth={1.8} />
+                  <span>{nav.login}</span>
+                </Link>
+              </Button>
+            }
+          />
 
           <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
             <DialogTrigger
-              render={
-                <Button className="h-auto min-h-11 w-full justify-start rounded-[10px] px-3 py-2.5 text-[13px] shadow-none" />
-              }
+              render={<Button size="lg" className={topButtonClass} />}
             >
               <UserPlus className="h-4 w-4 shrink-0" strokeWidth={1.8} />
               <span>{nav.register}</span>
