@@ -41,6 +41,14 @@ const guestSelect = {
   table: true,
 } as const;
 
+function normalizeTags(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  const normalized = value
+    .map((tag: unknown) => String(tag).trim())
+    .filter((tag: string) => tag.length > 0);
+  return Array.from(new Set<string>(normalized)).slice(0, 20);
+}
+
 export async function GET(request: Request) {
   try {
     const user = await getCurrentUser();
@@ -107,9 +115,7 @@ export async function POST(request: Request) {
     const tableId = String(body.tableId ?? "").trim() || null;
     const plusOnes = Number(body.plusOnes ?? 0);
     const category = String(body.category ?? "").trim() || null;
-    const tags = Array.isArray(body.tags)
-      ? [...new Set(body.tags.map((tag: unknown) => String(tag).trim()).filter(Boolean))].slice(0, 20)
-      : [];
+    const tags = normalizeTags(body.tags);
 
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
     if (!Number.isInteger(plusOnes) || plusOnes < 0) {
