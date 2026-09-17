@@ -18,7 +18,7 @@ export default function Home() {
   const { messages } = useLanguage();
   const selectedDoor = activeDoor ?? 2;
   const content = messages.home.doors[selectedDoor === 1 ? "planner" : selectedDoor === 2 ? "invitation" : "guestbook"];
-  const href = selectedDoor === 1 ? "/wedding-planner" : selectedDoor === 2 ? "/d-invitation" : "/guestbook";
+  const href = selectedDoor === 1 ? "/event-planner" : selectedDoor === 2 ? "/d-invitation" : "/guestbook";
 
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
@@ -38,7 +38,7 @@ export default function Home() {
                 transition={{ duration: reduced ? 0.15 : 0.42, ease }}
               >
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.3em] text-foreground/60">{content.eyebrow}</p>
-                <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-primary sm:text-5xl lg:text-[4.05rem]">{content.title}</h1>
+                <h1 className="mt-5 max-w-2xl font-[family-name:var(--font-dc-heading)] text-4xl leading-[1.04] tracking-[-0.04em] text-primary sm:text-5xl lg:text-[3.55rem] xl:text-[4rem]">{content.title}</h1>
                 <p className="mt-5 max-w-xl text-sm leading-7 text-foreground/75 sm:text-base sm:leading-8">{content.description}</p>
                 <div className="mt-7 flex flex-wrap items-center gap-3">
                   <Button asChild size="lg" className="h-11 min-w-[12rem] rounded-xl px-7 text-base font-[family-name:var(--font-dc-body)] font-bold uppercase tracking-[0.16em] sm:w-auto">
