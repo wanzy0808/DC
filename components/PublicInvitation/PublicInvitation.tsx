@@ -7,6 +7,7 @@ import {
   getIndonesiaTimezone,
   normalizeEventCategory,
 } from "@/lib/events/catalog";
+import { parseInvitationSections } from "@/lib/templates/sections";
 
 export type PublicInvitationData = {
   id: string;
@@ -73,6 +74,7 @@ export default function PublicInvitation({
   const eventCategory = normalizeEventCategory(invitation.eventCategory);
   const category = getEventCategory(eventCategory);
   const timezone = getIndonesiaTimezone(invitation.timezone);
+  const sections = parseInvitationSections(invitation.templateKey);
   const generatedTitle = buildEventTitle(
     eventCategory,
     invitation.groomName,
@@ -100,6 +102,9 @@ export default function PublicInvitation({
   const timeLabel = startTime
     ? `${formatTime(startTime)}${endTime ? `–${formatTime(endTime)}` : ""} ${timezone.label}`
     : "";
+  const hasGiftDetails = Boolean(
+    invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim(),
+  );
 
   return (
     <main className="min-h-screen bg-background px-5 py-12 text-foreground">
@@ -170,16 +175,36 @@ export default function PublicInvitation({
           </div>
         </header>
 
-        <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
-          <RsvpForm
-            slug={invitation.slug}
-            eventDate={invitation.eventDate}
-            venue={invitation.venue}
-            title={title}
-            start={startTime}
-            description={invitation.description}
-          />
-        </section>
+        {sections.rsvp && (
+          <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
+            <RsvpForm
+              slug={invitation.slug}
+              eventDate={invitation.eventDate}
+              venue={invitation.venue}
+              title={title}
+              start={startTime}
+              description={invitation.description}
+            />
+          </section>
+        )}
+
+        {sections.gift && hasGiftDetails && (
+          <section className="mt-8 rounded-2xl border border-border bg-background p-6 text-center shadow-sm md:p-10">
+            <p className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
+              Tanda Kasih
+            </p>
+            <h2 className="mt-3 font-[family-name:var(--font-cinzel)] text-2xl">
+              Gift / E-Angpao
+            </h2>
+            <div className="mx-auto mt-6 max-w-sm rounded-xl border border-border p-5 text-left font-[family-name:var(--font-fauna)] text-sm">
+              <p className="text-xs text-muted-foreground">{invitation.giftBankName}</p>
+              {invitation.giftAccountName && (
+                <p className="mt-2 font-semibold">{invitation.giftAccountName}</p>
+              )}
+              <p className="mt-1 font-semibold">{invitation.giftAccountNumber}</p>
+            </div>
+          </section>
+        )}
 
         <footer className="mt-8 flex flex-wrap items-center justify-center gap-4 text-center font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
           <span>DC Organizer</span>
