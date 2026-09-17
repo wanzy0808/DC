@@ -1,0 +1,71 @@
+name: Dashboard Consistency Phase 2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/scripts/dashboard-consistency-phase2.py'
+      - '.github/workflows/dashboard-consistency-phase2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Apply dashboard consistency phase 2
+        run: python .github/scripts/dashboard-consistency-phase2.py
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
+
+      - name: Build
+        run: pnpm build
+
+      - name: Record observed validation
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          label = f"Dashboard Consistency Phase 2 #{os.environ['RUN_NUMBER']} (run {os.environ['RUN_ID']}): PASS"
+          for filename in ("prd1.md", "prd-tambahan.md"):
+              path = Path(filename)
+              text = path.read_text().replace("__VALIDATION__", label)
+              path.write_text(text)
+          PY
+
+      - name: Commit validated changes and clean temporary files
+        run: |
+          rm -f .github/scripts/dashboard-consistency-phase2.py
+          rm -f .github/workflows/dashboard-consistency-phase2.yml
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: continue unified dashboard redesign"
+          git push
