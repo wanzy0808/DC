@@ -1,0 +1,80 @@
+name: Restore Dashboard Brand
+
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-dashboard-brand.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Restore canonical dashboard brand lockup
+        run: python .github/scripts/restore-dashboard-brand.py
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
+
+      - name: Build
+        run: pnpm build
+
+      - name: Record validation
+        run: |
+          cat >> prd1.md <<'EOF'
+
+---
+
+## 2026-09-17 — Dashboard Brand Lockup Restore
+
+### Summary
+Dashboard redesign sempat menyederhanakan brand lockup menjadi teks `DC Organizer` saja. Perubahan itu dikoreksi agar header dashboard kembali mengikuti canonical public navbar brand treatment tanpa mengubah layout/data-oriented dashboard yang baru.
+
+### Implementation
+- desktop dashboard header menggunakan kembali font token brand `--font-dc-heading`;
+- tagline canonical `Your best consultant for wedding & event` dipulihkan;
+- mobile header memakai brand treatment yang sama dalam skala responsif;
+- tidak ada perubahan pada brand color, logo wording, public navbar, product flow, database, atau entitlement.
+
+### Affected file
+- `app/dashboard/page.tsx`
+
+### Validation
+Workflow **Restore Dashboard Brand** menjalankan:
+- dependency install;
+- Prisma Client generation;
+- Next.js production build + TypeScript.
+
+Seluruh step di atas harus PASS sebelum commit final dibuat.
+EOF
+
+      - name: Commit changes and clean temporary files
+        run: |
+          rm -f .github/scripts/restore-dashboard-brand.py
+          rm -f .github/workflows/restore-dashboard-brand.yml
+          git config user.name 'dc-organizer-agent'
+          git config user.email 'actions@users.noreply.github.com'
+          git add app/dashboard/page.tsx prd1.md .github/scripts/restore-dashboard-brand.py .github/workflows/restore-dashboard-brand.yml
+          git commit -m 'fix: restore canonical dashboard brand lockup'
+          git push
