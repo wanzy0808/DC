@@ -34,17 +34,23 @@ function destinationForRole(role: string, next: string) {
   return next;
 }
 
+const neutralButton =
+  "border border-black/10 bg-white text-black shadow-sm hover:bg-neutral-100 hover:text-black dark:border-black/10 dark:bg-white dark:text-black dark:hover:bg-neutral-100";
+
 export default function LoginPage() {
-  const [email, setEmail] = useState(""),
-    [password, setPassword] = useState(""),
-    [error, setError] = useState(""),
-    [loading, setLoading] = useState(false),
-    [next, setNext] = useState("/dashboard");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [next, setNext] = useState("/dashboard");
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedNext = params.get("next");
-    if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//"))
+    if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//")) {
       setNext(requestedNext);
+    }
+
     const googleError = params.get("error");
     if (googleError?.startsWith("google_")) {
       setError(
@@ -59,17 +65,18 @@ export default function LoginPage() {
       );
       return;
     }
+
     fetch("/api/auth/session", { cache: "no-store" })
-      .then((r) =>
-        r.ok
-          ? (r.json() as Promise<{
+      .then((response) =>
+        response.ok
+          ? (response.json() as Promise<{
               authenticated?: boolean;
               user?: { role: string };
             }>)
           : null,
       )
       .then((data) => {
-        if (data?.authenticated)
+        if (data?.authenticated) {
           window.location.replace(
             destinationForRole(
               data.user?.role ?? "USER",
@@ -78,13 +85,16 @@ export default function LoginPage() {
                 : "/dashboard",
             ),
           );
+        }
       })
       .catch(() => undefined);
   }, []);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError("");
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -100,83 +110,95 @@ export default function LoginPage() {
           data = { error: "Response server tidak valid." };
         }
       }
-      if (!response.ok || !data.user) setError(data.error ?? "Login gagal.");
-      else window.location.replace(destinationForRole(data.user.role, next));
+
+      if (!response.ok || !data.user) {
+        setError(data.error ?? "Login gagal.");
+      } else {
+        window.location.replace(destinationForRole(data.user.role, next));
+      }
     } catch {
       setError("Tidak dapat terhubung ke server.");
     } finally {
       setLoading(false);
     }
   }
-  const registerHref = `/?register=1&next=${encodeURIComponent(next)}`,
-    googleHref = `/api/auth/google?next=${encodeURIComponent(next)}`;
+
+  const registerHref = `/?register=1&next=${encodeURIComponent(next)}`;
+  const googleHref = `/api/auth/google?next=${encodeURIComponent(next)}`;
+
   return (
-    <main className="relative z-10 min-h-screen grid place-items-center px-6 text-[var(--foreground)]">
+    <main className="relative z-10 grid min-h-screen place-items-center px-6 py-10 text-[var(--foreground)]">
       <form
         onSubmit={submit}
-        className="w-full max-w-md space-y-5 rounded-3xl border border-black/10 bg-white p-8 shadow-xl"
+        className="w-full max-w-md space-y-5 rounded-3xl border border-black/10 bg-white p-8 text-black shadow-xl"
       >
         <div>
-          <p className="text-xs uppercase tracking-[0.25em] text-primary">
-            DC Workspace
+          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
+            DC Organizer
           </p>
-          <h1 className="mt-2 font-serif text-3xl">Masuk ke dashboard</h1>
-          <p className="mt-2 text-sm opacity-60">
-            Kelola undangan dan wedding workspace kamu.
+          <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl font-normal">
+            Masuk
+          </h1>
+          <p className="mt-2 text-sm leading-6 text-black/55">
+            Akses acara, undangan digital, dan operasional tamu dalam satu workspace.
           </p>
         </div>
-        <Button asChild size="lg" className="w-full gap-3 rounded-xl">
+
+        <Button asChild size="lg" className={`w-full gap-3 rounded-xl ${neutralButton}`}>
           <a href={googleHref}>
             <GoogleIcon />
             <span>Masuk dengan Google</span>
           </a>
         </Button>
+
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-black/10" />
-          <span className="text-xs opacity-40">atau</span>
+          <span className="text-xs text-black/40">atau</span>
           <div className="h-px flex-1 bg-black/10" />
         </div>
-        <label className="block text-sm">
+
+        <label className="block text-sm text-black/75">
           Email
           <input
             required
             type="email"
             autoComplete="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+            onChange={(event) => setEmail(event.target.value)}
+            className="mt-2 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-black outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </label>
-        <label className="block text-sm">
+
+        <label className="block text-sm text-black/75">
           Password
           <input
             required
             type="password"
             autoComplete="current-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mt-2 w-full rounded-xl border border-border bg-white px-4 py-3 outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+            onChange={(event) => setPassword(event.target.value)}
+            className="mt-2 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-black outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
           />
         </label>
+
         {error && (
           <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
           </p>
         )}
+
         <Button
           type="submit"
           disabled={loading}
           size="lg"
-          className="w-full rounded-xl"
+          className={`w-full rounded-xl ${neutralButton}`}
         >
           {loading ? "Memproses..." : "Masuk"}
         </Button>
-        <p className="text-center text-sm opacity-70">
+
+        <p className="text-center text-sm text-black/60">
           Belum punya akun?{" "}
-          <Link
-            href={registerHref}
-            className="font-medium text-primary underline"
-          >
+          <Link href={registerHref} className="font-medium text-primary underline underline-offset-2">
             Daftar
           </Link>
         </p>
