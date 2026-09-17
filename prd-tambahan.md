@@ -55,5 +55,21 @@
 - Burger/sidebar navigation difokuskan untuk berpindah halaman.
 - Nomor dekoratif pada header dan item menu dihilangkan.
 - Deskripsi produk dan teks sekunder dihilangkan dari panel.
-- Menu memakai satu daftar datar: icon, nama halaman singkat, dan panah navigasi.
-- Link utama: Beranda/Home, Event Planner, Digital Invitation, Guestbook, Paket/Packages, Template, Bantuan/Help, dan Masuk/Sign in.
+- Menu memakai label singkat dan icon yang konsisten dengan navigation system aplikasi.
+
+## Burger navigation correction — supersedes flat-list behavior
+- Burger menu memakai treatment navigation button seperti sidebar Dashboard, bukan daftar garis datar.
+- `Layanan` kembali menjadi parent menu dengan submenu yang dapat dibuka/tutup.
+- Submenu `Layanan` berisi Event Planner, Digital Invitation, dan Guestbook Digital.
+- Beranda, Paket, Template, dan Bantuan tetap tersedia sebagai navigation button utama.
+- `Masuk` dan `Daftar` wajib tersedia di burger menu; `Daftar` tetap membuka registration dialog existing.
+- Tidak memakai nomor urutan dekoratif dan tidak mengembalikan description panjang di setiap item.
+
+## Landing integrated 80vw composition
+- Landing tetap menggunakan primary desktop width **80vw**, tetapi ruang tambahan harus dipakai untuk menyatukan copy dan Pintu, bukan menciptakan dead space di tengah.
+- Blok copy kiri boleh sedikit lebih lebar dan description boleh sedikit lebih lengkap selama hierarchy tetap ringkas.
+- CTA memakai garis aksen horizontal halus sebagai directional bridge menuju Pintu.
+- Pintu carousel digeser masuk ke arah copy pada desktop sehingga dua sisi terasa sebagai satu hero composition.
+- Orbit horizontal Pintu diperlebar dan vertical depth sedikit ditambah agar animasi mengisi wide-screen workspace dengan lebih baik.
+- Active Pintu sedikit lebih besar pada desktop; back Pintu tetap lebih kecil untuk mempertahankan depth hierarchy.
+- Standard desktop breakpoint boleh memakai scale sedikit lebih kecil, sementara wide desktop menampilkan komposisi penuh untuk mencegah clipping.
