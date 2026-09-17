@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ContactRound,
-  CreditCard,
   Eye,
   KeyRound,
   PenLine,
@@ -344,25 +343,7 @@ export default function PersonalInvitationPanel() {
 
       {notice && <DashboardNotice className="mt-4">{notice}</DashboardNotice>}
 
-      {!events.length ? null : selectedEvent && !selectedEvent.accessPaid ? (
-        <DashboardSurface className="mt-4 p-4 sm:p-5">
-          <DashboardSectionHeader
-            eyebrow="Belum aktif"
-            title={selectedEvent.title || "Acara"}
-            description="Aktifkan Undangan Digital untuk memakai Personal Invitation pada acara ini."
-            actions={
-              <Button asChild size="sm">
-                <Link
-                  href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(selectedEvent.id)}`}
-                >
-                  <CreditCard className="h-4 w-4" />
-                  Aktifkan Rp150.000
-                </Link>
-              </Button>
-            }
-          />
-        </DashboardSurface>
-      ) : selectedEvent ? (
+      {!events.length ? null : selectedEvent ? (
         <>
           <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
             <Metric icon={ContactRound} label="Personal Invitation" value={String(personal.length)} />
