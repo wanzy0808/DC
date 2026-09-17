@@ -30,7 +30,7 @@ function googleCalendarUrl({
   const dates = `${ymd}T${time(start)}/${ymd}T${time(end || start)}`;
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: title || "Wedding",
+    text: title || "Acara",
     dates,
     location: venue || "",
     details: description || "",
@@ -85,7 +85,7 @@ export default function RsvpForm({
   const calendarUrl = useMemo(
     () =>
       googleCalendarUrl({
-        title: title || "The Wedding",
+        title: title || "Acara",
         eventDate: String(eventDate || ""),
         start,
         end,
@@ -103,12 +103,12 @@ export default function RsvpForm({
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;");
-    const html = `<!doctype html><html><head><meta charset="utf-8"><title>DC Wedding Ticket - ${escapeHtml(ticketGuest.name)}</title><style>body{font-family:Georgia,serif;background:#f7f0ea;padding:40px;color:#2c2020}.ticket{max-width:420px;margin:auto;background:#fffaf6;padding:32px;border:1px solid #dec9c1;text-align:center}.qr{width:260px;height:260px;margin:24px auto}.meta{font:14px Arial,sans-serif;line-height:1.6;color:#604b4b}</style></head><body><div class="ticket"><div style="font:11px Arial,sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#7A1C25">Digital Ticket</div><h1>${escapeHtml(ticketGuest.name)}</h1><div class="meta">${1 + ticketGuest.plusOnes} pax<br>${escapeHtml(title || "The Wedding")}<br>${escapeHtml(venue || "")}</div><img class="qr" src="${ticketUrl}" alt="QR Check-in"><div class="meta">Tunjukkan QR ini kepada usher pada hari acara.</div></div></body></html>`;
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>DC Organizer Ticket - ${escapeHtml(ticketGuest.name)}</title><style>body{font-family:Georgia,serif;background:#f7f0ea;padding:40px;color:#2c2020}.ticket{max-width:420px;margin:auto;background:#fffaf6;padding:32px;border:1px solid #dec9c1;text-align:center}.qr{width:260px;height:260px;margin:24px auto}.meta{font:14px Arial,sans-serif;line-height:1.6;color:#604b4b}</style></head><body><div class="ticket"><div style="font:11px Arial,sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#7A1C25">Digital Ticket</div><h1>${escapeHtml(ticketGuest.name)}</h1><div class="meta">${1 + ticketGuest.plusOnes} pax<br>${escapeHtml(title || "Acara")}<br>${escapeHtml(venue || "")}</div><img class="qr" src="${ticketUrl}" alt="QR Check-in"><div class="meta">Tunjukkan QR ini kepada usher pada hari acara.</div></div></body></html>`;
     const blob = new Blob([html], { type: "text/html;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `dc-wedding-ticket-${ticketGuest.id}.html`;
+    anchor.download = `dc-organizer-ticket-${ticketGuest.id}.html`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -240,6 +240,7 @@ export default function RsvpForm({
             </div>
           )}
           <select
+            aria-label="Status kehadiran"
             value={form.status}
             onChange={(e) => setForm({ ...form, status: e.target.value })}
             className="w-full rounded-md border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10"
@@ -278,13 +279,14 @@ export default function RsvpForm({
             </div>
           </fieldset>
           <Button
+            type="submit"
             disabled={submitting}
             className="rounded-xl bg-[#7A1C25] px-5 py-3 font-[var(--font-fauna)] text-xs text-white hover:bg-[#5E141C]"
           >
             {submitting ? "Menyimpan..." : "Konfirmasi Kehadiran"}
           </Button>
           {message && (
-            <p className="text-sm text-[#5f4a4a] dark:text-white/65">
+            <p role="status" className="text-sm text-[#5f4a4a] dark:text-white/65">
               {message}
             </p>
           )}
