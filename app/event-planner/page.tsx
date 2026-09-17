@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Check, MessageCircle, User } from "lucide-react";
+import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FounderSection from "@/components/WeddingPlanner/FounderSection";
 import ServicesSection from "@/components/WeddingPlanner/ServicesSection";
@@ -22,7 +22,7 @@ export default function EventPlannerPage() {
   return (
     <main className="relative z-10 min-h-screen w-full overflow-x-clip pb-20 pt-24 text-[var(--foreground)]">
       <div className="mx-auto w-[80vw] max-w-full space-y-28">
-        <header className="flex flex-col gap-6 border-b border-[var(--border)] pb-9 md:flex-row md:items-end md:justify-between">
+        <header className="border-b border-[var(--border)] pb-9">
           <div className="max-w-3xl">
             <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
               [ DC ORGANIZER / EVENT PLANNER ]
@@ -34,12 +34,6 @@ export default function EventPlannerPage() {
               Dari wedding sampai anniversary dan baby shower, kami membantu merapikan konsep, vendor, rundown, tim, dan detail operasional supaya acara tetap terasa personal tanpa membuatmu tenggelam di koordinasi.
             </p>
           </div>
-          <Button asChild size="lg" className="w-fit">
-            <Link href="/login">
-              <User className="h-4 w-4" />
-              Client Login
-            </Link>
-          </Button>
         </header>
 
         <FounderSection />
