@@ -78,7 +78,7 @@ Database migration: N/A.
 
 ### Current scope note
 
-Toggle dan persistence section sudah bekerja di Studio/design state. Penyelarasan seluruh final public-template renderer terhadap visibility section tetap perlu dilakukan agar setiap template publik membaca konfigurasi reusable yang sama. Wishes pada perubahan ini adalah section layout/preview; persistence pesan Wishes belum ditambahkan sebagai model data baru.
+Toggle dan persistence section sudah bekerja di Studio/design state. Wishes pada perubahan ini adalah section layout/preview; persistence pesan Wishes belum ditambahkan sebagai model data baru.
 
 ---
 
@@ -98,7 +98,8 @@ Toggle dan persistence section sudah bekerja di Studio/design state. Penyelarasa
 - menambahkan layout canvas berbeda untuk Botanical, Editorial, Maroon, Garden, Midnight, dan Classic sehingga pergantian template terlihat langsung pada canvas;
 - pemilihan template menerapkan starter palette/font yang relevan, tetapi panel Warna dan Font tetap dapat mengoverride pilihan tersebut;
 - mempertahankan section visibility pada `Invitation.templateKey` sehingga save/load dan event scope tetap backward-compatible tanpa migration;
-- generic public invitation sekarang membaca `parseInvitationSections()` untuk menyembunyikan/menampilkan RSVP dan Gift sesuai desain tersimpan;
+- generic public invitation membaca `parseInvitationSections()` untuk menyembunyikan/menampilkan RSVP dan Gift sesuai desain tersimpan;
+- renderer public Eternal Blossom/Figma Classic juga membaca section visibility yang sama untuk RSVP dan Gift/E-Angpao;
 - Gift public hanya dirender ketika section aktif dan data rekening nyata tersedia;
 - Wishes di Studio tetap berupa layout preview/input area saja; tidak ada fake guest message atau persistence production yang dibuat pada tahap ini.
 
@@ -108,6 +109,7 @@ Toggle dan persistence section sudah bekerja di Studio/design state. Penyelarasa
 - `components/InvitationStudio/InvitationEditorPage.tsx`
 - `lib/templates/design.ts`
 - `components/PublicInvitation/PublicInvitation.tsx`
+- `components/PublicInvitation/FigmaClassicTemplate.tsx`
 - `prd-tambahan.md`
 - `prd1.md`
 
@@ -115,5 +117,6 @@ Toggle dan persistence section sudah bekerja di Studio/design state. Penyelarasa
 
 - Build Validation #975 menemukan mismatch type pada preset palette/font V3 dan **FAILED**; error tersebut ditelusuri dan diperbaiki.
 - Build Validation #976 pada head `87df4ef49aa2cc9063905128cbdd3e633ce7d284` setelah penambahan preset palette/font: **PASS**.
-- Public renderer follow-up setelah #976 memerlukan validation run baru sebelum dinyatakan PASS.
+- Build Validation #979 pada documentation head setelah generic public visibility integration: **PASS**.
+- Build Validation #980 pada head `b38ccce8470c1f6f7aa7f5ffcf746ece4b2c38db` setelah Figma Classic public visibility integration: **PASS** untuk install, Prisma Client generation, Next.js production build, dan TypeScript.
 - Database migration: N/A.
