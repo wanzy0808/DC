@@ -25,7 +25,9 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { ThemeToggle, useTheme } from "@/components/Theme/ThemeContext";
+import LanguageToggle from "@/components/I18n/LanguageToggle";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import EventScopePicker, {
   type EventScopeOption,
 } from "@/components/Dashboard/EventScopePicker";
@@ -39,7 +41,13 @@ import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPa
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
-import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardPage as DashboardPageShell,
+  DashboardSectionHeader,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type Context = {
   profile: { displayName: string; email: string };
@@ -181,6 +189,7 @@ function Card({
 export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
+  const { d } = useDashboardI18n();
   const [tab, setTab] = useState<Tab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
   const [ctx, setCtx] = useState<Context | null>(null);
@@ -414,7 +423,7 @@ export default function DashboardPage() {
               <span className="grid size-5 shrink-0 place-items-center text-current">
                 <Home className="h-4 w-4" strokeWidth={1.8} />
               </span>
-              <span className="min-w-0 truncate">Beranda</span>
+              <span className="min-w-0 truncate">{d("Beranda")}</span>
             </Button>
 
             <div className="rounded-xl border border-border/70 bg-background p-1.5">
@@ -431,7 +440,7 @@ export default function DashboardPage() {
                 <span className="grid size-5 shrink-0 place-items-center">
                   <CalendarDays className="h-4 w-4" strokeWidth={1.8} />
                 </span>
-                <span className="min-w-0 truncate">Acara</span>
+                <span className="min-w-0 truncate">{d("Acara")}</span>
                 <ChevronDown
                   className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`}
                 />
@@ -457,7 +466,7 @@ export default function DashboardPage() {
                         <span className="grid size-4 shrink-0 place-items-center">
                           <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
                         </span>
-                        <span className="min-w-0 truncate">{item.label}</span>
+                        <span className="min-w-0 truncate">{d(item.label)}</span>
                       </Button>
                     );
                   })}
@@ -482,7 +491,7 @@ export default function DashboardPage() {
                   <span className="grid size-5 shrink-0 place-items-center text-current">
                     <Icon className="h-4 w-4" strokeWidth={1.8} />
                   </span>
-                  <span className="min-w-0 truncate">{item.label}</span>
+                  <span className="min-w-0 truncate">{d(item.label)}</span>
                 </Button>
               );
             })}
@@ -508,8 +517,8 @@ export default function DashboardPage() {
                     size="icon"
                     className="lg:hidden"
                     onClick={() => setMobileOpen((value) => !value)}
-                    aria-label="Buka menu dashboard"
-                    title="Buka menu dashboard"
+                    aria-label={d("Buka menu dashboard")}
+                    title={d("Buka menu dashboard")}
                   >
                     {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                   </Button>
@@ -522,11 +531,11 @@ export default function DashboardPage() {
 
                   <div className="min-w-0">
                     <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
-                      {meta.eyebrow}
+                      {d(meta.eyebrow)}
                     </p>
                     <div className="flex min-w-0 items-center gap-2">
                       <p className="truncate text-sm font-semibold text-foreground sm:text-base">
-                        {meta.title}
+                        {d(meta.title)}
                       </p>
                       {scopedHeaderEvent && (
                         <span className="hidden max-w-56 truncate border-l border-border pl-2 text-[11px] text-muted-foreground xl:inline">
@@ -536,13 +545,18 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="relative ml-auto">
+                  <div className="ml-auto hidden items-center gap-1 sm:flex">
+                    <ThemeToggle />
+                    <LanguageToggle />
+                  </div>
+
+                  <div className="relative">
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
                       className="h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-foreground"
                       aria-label={`Buka menu akun ${profileLabel}`}
-                      title="Menu akun"
+                      title={d("Menu akun")}
                     >
                       <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase text-primary">
                         {profileLabel.slice(0, 2)}
@@ -566,26 +580,26 @@ export default function DashboardPage() {
                         <div className="space-y-1.5">
                           <MenuItem
                             icon={Receipt}
-                            text="Lihat transaksi"
+                            text={d("Lihat transaksi")}
                             onClick={() => router.push("/transactions")}
                           />
                           <MenuItem
                             icon={Settings2}
-                            text="Beli layanan"
+                            text={d("Beli layanan")}
                             onClick={() => router.push("/packages")}
                           />
                           <MenuItem
                             icon={CircleHelp}
-                            text="Buka FAQ"
+                            text={d("Buka FAQ")}
                             onClick={() => router.push("/faq")}
                           />
                           <MenuItem
                             icon={MessageCircle}
-                            text="Buka bantuan"
+                            text={d("Buka bantuan")}
                             onClick={() => setProfileMenu(false)}
                           />
                           <div className="my-2 border-t border-border" />
-                          <MenuItem icon={LogOut} text="Keluar akun" danger onClick={logout} />
+                          <MenuItem icon={LogOut} text={d("Keluar akun")} danger onClick={logout} />
                         </div>
                       </div>
                     )}
@@ -634,8 +648,8 @@ export default function DashboardPage() {
               <FeatureGate
                 allowed={canGuestbook}
                 title="Usher App"
-                description="Tersedia pada layanan Guest Book Digital."
-                upgradeLabel="Lihat Guest Book Digital"
+                description={d("Tersedia pada layanan Guest Book Digital.")}
+                upgradeLabel={d("Lihat Guest Book Digital")}
                 onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
               >
                 <UsherPanel guests={usherGuests} onRefresh={load} />
@@ -650,8 +664,8 @@ export default function DashboardPage() {
           href="https://wa.me/6282124786516?text=Halo%2C%20aku%20ingin%20tanya2%20mengenai%20DC%20Organizer."
           target="_blank"
           rel="noreferrer"
-          aria-label="Buka bantuan WhatsApp"
-          title="Buka bantuan WhatsApp"
+          aria-label={d("Buka bantuan WhatsApp")}
+          title={d("Buka bantuan WhatsApp")}
         >
           <MessageCircle className="h-6 w-6" strokeWidth={2} />
         </a>
@@ -668,10 +682,10 @@ export default function DashboardPage() {
             </h2>
             <div className="mt-6">
               <Field
-                label="Nama panggilan"
+                label={d("Nama panggilan")}
                 value={nickname}
                 onChange={setNickname}
-                placeholder="Contoh: Hendro"
+                placeholder={d("Contoh: Hendro")}
               />
             </div>
             {onboardingError && (
