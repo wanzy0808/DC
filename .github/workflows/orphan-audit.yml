@@ -1,0 +1,94 @@
+name: Orphan Audit
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/orphan-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Audit source and public asset references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          source_exts = {'.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.css'}
+          source_files = [p for p in root.rglob('*') if p.is_file() and p.suffix in source_exts and 'node_modules' not in p.parts and '.next' not in p.parts and 'generated' not in p.parts]
+          text_cache = {}
+          for p in source_files:
+              try:
+                  text_cache[p] = p.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  pass
+
+          import_re = re.compile(r'(?:from\s+|import\s*\(|require\s*\()\s*["\']([^"\']+)["\']')
+          css_import_re = re.compile(r'@import\s+["\']([^"\']+)["\']')
+          candidates = []
+          for base in ('components', 'data', 'lib'):
+              d = root / base
+              if d.exists():
+                  candidates += [p for p in d.rglob('*') if p.is_file() and p.suffix in {'.ts', '.tsx', '.js', '.jsx'}]
+
+          referenced = set()
+
+          def resolve(spec, owner):
+              if spec.startswith('@/'):
+                  raw = root / spec[2:]
+              elif spec.startswith('.'):
+                  raw = owner.parent / spec
+              else:
+                  return None
+              probes = [raw]
+              for ext in ('.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs'):
+                  probes.append(Path(str(raw) + ext))
+              for ext in ('.ts', '.tsx', '.js', '.jsx'):
+                  probes.append(raw / ('index' + ext))
+              for probe in probes:
+                  try:
+                      normalized = probe.resolve().relative_to(root.resolve())
+                  except Exception:
+                      continue
+                  p = root / normalized
+                  if p.exists() and p.is_file():
+                      return p
+              return None
+
+          for owner, text in text_cache.items():
+              specs = import_re.findall(text) + css_import_re.findall(text)
+              for spec in specs:
+                  target = resolve(spec, owner)
+                  if target:
+                      referenced.add(target)
+
+          print('=== ZERO-INBOUND SOURCE CANDIDATES ===')
+          for p in sorted(candidates):
+              if p not in referenced:
+                  print(p.as_posix())
+
+          searchable = '\n'.join(text_cache.values())
+          print('=== PUBLIC FILES WITH NO TEXTUAL REFERENCE ===')
+          public = root / 'public'
+          if public.exists():
+              for p in sorted(x for x in public.rglob('*') if x.is_file()):
+                  rel = p.relative_to(public).as_posix()
+                  refs = {rel, '/' + rel, p.name}
+                  if not any(ref in searchable for ref in refs):
+                      print(f'{p.as_posix()}\t{p.stat().st_size}')
+
+          print('=== LARGE SOURCE FILES >= 20KB ===')
+          for p in sorted(source_files, key=lambda x: x.stat().st_size, reverse=True):
+              if p.stat().st_size >= 20_000:
+                  print(f'{p.as_posix()}\t{p.stat().st_size}')
+          PY
