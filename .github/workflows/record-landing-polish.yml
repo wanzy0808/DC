@@ -1,0 +1,70 @@
+name: Record Landing Polish
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/record-landing-polish.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  record:
+    if: github.event.head_commit.message == 'chore: append landing polish changelog'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Append implementation changelog and remove one-shot workflow
+        shell: bash
+        run: |
+          cat >> prd1.md <<'EOF'
+
+---
+
+## 2026-09-17 — Landing Pintu Proportion & Event Planner Header Polish
+
+### Requirement / Intent
+Landing page Pintu perlu diseimbangkan dengan hero typography agar visual utama tetap dominan tetapi isi pintu terbaca jelas. Event Planner tidak memerlukan CTA `Client Login` khusus di hero karena halaman tersebut berfungsi sebagai public consultation/service page.
+
+### Implementation
+- sedikit memperbesar proporsi Pintu tanpa membuat carousel terlalu besar untuk right-side landing workspace;
+- menaikkan ukuran title, tag, description, dan action text di Pintu aktif;
+- menaikkan title pada Pintu tertutup dan menghapus slot decorative number yang sudah tidak dipakai;
+- menambah vertical room Pintu carousel agar card yang lebih besar tidak terasa sempit;
+- membuat heading landing lebih gradual antara desktop breakpoint agar tidak mengalahkan Pintu;
+- mengarahkan CTA Event Planner landing langsung ke canonical `/event-planner`;
+- menghapus button `Client Login` dari hero Event Planner beserta icon/import yang tidak lagi dipakai;
+- mencatat requirement delta pada `prd-tambahan.md`.
+
+### Affected Files
+- `components/Pintu/PintuCard.tsx`
+- `components/Pintu/PintuSection.tsx`
+- `app/page.tsx`
+- `app/event-planner/page.tsx`
+- `prd-tambahan.md`
+- `prd1.md`
+
+### Commits
+- `aeb9ffe3246f9b526c700769d77a175e777f8159` — polish landing page Pintu proportions;
+- `eaca8da1138348bc9cd7b518aa8f021c7ac2a184` — align Pintu carousel with updated card;
+- `3b09f21e04edf4f4cfd7bab0e1ab1400ac7e421e` — balance landing hero typography and canonical planner link;
+- `03af4bd39599fff096e386a57f9669cb9984d0ae` — remove Event Planner client login action;
+- `6c7751e5e2c236696e37c8411f248c44a4bca9ca` — record supplemental requirement in `prd-tambahan.md`.
+
+### Validation
+- GitHub Actions Build Validation #893: **PASS** (install dependency step and production Build step observed successful).
+- TypeScript/Next production build: **PASS** through Build Validation #893.
+- Database migration: N/A.
+EOF
+
+          git config user.name "dc-organizer-agent"
+          git config user.email "actions@users.noreply.github.com"
+          git rm .github/workflows/record-landing-polish.yml
+          git add prd1.md
+          git commit -m "docs: record landing Pintu polish"
+          git push origin HEAD:main
