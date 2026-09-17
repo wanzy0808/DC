@@ -9,12 +9,22 @@ import {
   PenLine,
   Plus,
   Save,
+  Send,
   Trash2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 import { weddingParentLine, type WeddingChildKind } from "@/lib/events/parents";
 import {
   buildEventTitle,
@@ -423,23 +433,39 @@ export default function EventPanel({ onSaved }: Props) {
   const category = form.eventCategory ? getEventCategory(form.eventCategory) : null;
   const active = events.find((item) => item.id === activeId) || null;
   const timezone = getIndonesiaTimezone(form.timezone);
+  const draftCount = events.filter((event) => !event.eventConfigured).length;
+  const designedCount = events.filter((event) => Boolean(event.templateKey?.trim())).length;
+  const publishedCount = events.filter((event) => event.isPublished).length;
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-5">
-        <p className="text-sm text-muted-foreground">
-          {loading ? "Memuat..." : `${events.length} acara`}
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          onClick={startNewEvent}
-          disabled={saving || Boolean(deletingId)}
-        >
-          <Plus className="h-4 w-4" />
-          Tambah acara
-        </Button>
-      </div>
+    <DashboardPage>
+      <DashboardSurface className="overflow-hidden">
+        <div className="border-l-4 border-primary p-4 sm:p-5">
+          <DashboardSectionHeader
+            eyebrow="Rangkaian acara"
+            title={loading ? "Memuat acara..." : events.length ? "Kelola acara di workspace" : "Buat acara pertama"}
+            description="Atur identitas, waktu, lokasi, dan status acara sebelum melanjutkan ke Undangan Digital."
+            actions={
+              <Button
+                type="button"
+                size="sm"
+                onClick={startNewEvent}
+                disabled={saving || Boolean(deletingId)}
+              >
+                <Plus className="h-4 w-4" />
+                Tambah acara
+              </Button>
+            }
+          />
+        </div>
+      </DashboardSurface>
+
+      <DashboardMetricGrid className="mt-4">
+        <DashboardMetricCard icon={CalendarDays} label="Total acara" value={String(events.length)} />
+        <DashboardMetricCard icon={PenLine} label="Draft" value={String(draftCount)} />
+        <DashboardMetricCard icon={Save} label="Sudah desain" value={String(designedCount)} />
+        <DashboardMetricCard icon={Send} label="Terbit" value={String(publishedCount)} />
+      </DashboardMetricGrid>
 
       {editorMode === "closed" && notice && (
         <DashboardNotice className="mt-4">{notice}</DashboardNotice>
@@ -526,7 +552,19 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       {!loading && !events.length && editorMode === "closed" && (
-        <p className="py-8 text-sm text-muted-foreground">Belum ada acara.</p>
+        <DashboardSurface className="mt-4 p-4 sm:p-5">
+          <DashboardEmptyState
+            icon={CalendarDays}
+            title="Belum ada acara"
+            description="Tambahkan acara untuk mulai menyiapkan detail, desain undangan, RSVP, dan operasional tamu."
+            action={
+              <Button type="button" size="sm" onClick={startNewEvent}>
+                <Plus className="h-4 w-4" />
+                Tambah acara
+              </Button>
+            }
+          />
+        </DashboardSurface>
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
@@ -708,7 +746,7 @@ export default function EventPanel({ onSaved }: Props) {
           </div>
         </section>
       )}
-    </div>
+    </DashboardPage>
   );
 }
 
