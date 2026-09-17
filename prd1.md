@@ -841,5 +841,5 @@ Dashboard customer workspace dirombak mengikuti arah visual yang disetujui user 
 - `prd1.md`.
 
 ### Validation
-- GitHub Build Validation: pending setelah source commit.
+- Build Validation #946: **FAILED** pada TypeScript karena helper `Stat` ikut terhapus saat overview diganti; compile aplikasi sudah lolos sebelum type-check. Helper dipulihkan dan validation ulang diperlukan.
 

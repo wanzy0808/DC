@@ -978,6 +978,17 @@ function WorkspaceOverview({
   );
 }
 
+function Stat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="min-w-0 rounded-xl border border-border/70 bg-background p-4">
+      <p className="font-[family-name:var(--font-dm-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-1.5 truncate text-lg font-semibold text-foreground">{value}</p>
+    </div>
+  );
+}
+
 function EventActivationNotice({ event }: { event: DashboardEvent }) {
   return (
     <div className="rounded-2xl border border-border/70 bg-background p-5">
