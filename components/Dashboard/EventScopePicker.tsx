@@ -2,6 +2,7 @@
 
 import { CalendarDays, ChevronDown } from "lucide-react";
 import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 
 export type EventScopeOption = {
   id: string;
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export default function EventScopePicker({ events, value, onChange, disabled = false }: Props) {
+  const { d } = useDashboardI18n();
+
   if (!events.length) {
     return (
       <DashboardSurface className="p-4 sm:p-5">
@@ -28,9 +31,9 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
           </span>
           <div className="min-w-0">
             <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-primary">
-              Acara aktif
+              {d("Acara aktif")}
             </p>
-            <p className="mt-1 text-sm text-foreground">Silakan buat rangkaian acara dulu.</p>
+            <p className="mt-1 text-sm text-foreground">{d("Silakan buat rangkaian acara dulu.")}</p>
           </div>
         </div>
       </DashboardSurface>
@@ -41,19 +44,19 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
     <DashboardSurface className="p-3 sm:max-w-xl">
       <label className="block">
         <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-          Acara aktif
+          {d("Acara aktif")}
         </span>
         <span className="relative block">
           <select
             value={value}
             onChange={(event) => onChange(event.target.value)}
             disabled={disabled}
-            aria-label="Pilih acara"
+            aria-label={d("Pilih acara")}
             className="h-11 w-full appearance-none rounded-[10px] border border-border bg-background px-3 pr-10 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:cursor-not-allowed"
           >
             {events.map((event) => (
               <option key={event.id} value={event.id}>
-                {event.title.trim() || "Acara tanpa judul"}
+                {event.title.trim() || d("Acara tanpa judul")}
               </option>
             ))}
           </select>
