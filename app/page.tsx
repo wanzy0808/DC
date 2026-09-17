@@ -24,10 +24,10 @@ export default function Home() {
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
       <RomanticBackground />
       <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[80vw] max-w-full">
-        <section className="grid min-h-[calc(100dvh-88px)] items-center gap-6 py-5 sm:py-8 lg:grid-cols-[0.72fr_1.28fr] lg:gap-2 lg:py-6">
+        <section className="grid min-h-[calc(100dvh-88px)] items-center gap-7 py-5 sm:py-8 lg:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)] lg:gap-0 lg:py-6">
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, y: 20 }, animate: { opacity: 1, y: 0 }, transition: { duration: 0.7, ease } })}
-            className="relative z-20 max-w-xl lg:pr-6"
+            className="relative z-20 max-w-[42rem] lg:pl-[1vw] lg:pr-2 xl:pl-[1.5vw]"
           >
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
@@ -38,27 +38,33 @@ export default function Home() {
                 transition={{ duration: reduced ? 0.15 : 0.42, ease }}
               >
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.22em] text-foreground/60 sm:text-[11px]">{content.eyebrow}</p>
-                <h1 className="mt-4 max-w-xl font-[family-name:var(--font-dc-heading)] text-[2.6rem] leading-[1.06] tracking-[-0.035em] text-primary sm:text-5xl lg:text-[3.2rem] xl:text-[3.6rem]">{content.title}</h1>
-                <p className="mt-4 max-w-lg text-sm leading-7 text-foreground/72 sm:text-base sm:leading-7">{content.description}</p>
-                <div className="mt-6 flex flex-wrap items-center gap-3">
-                  <Button asChild size="lg" className="h-11 min-w-[10.5rem] rounded-xl px-6 text-sm font-[family-name:var(--font-dc-body)] font-semibold tracking-normal sm:w-auto sm:text-base">
+                <h1 className="mt-4 max-w-[40rem] font-[family-name:var(--font-dc-heading)] text-[2.65rem] leading-[1.05] tracking-[-0.035em] text-primary sm:text-5xl lg:text-[3.45rem] xl:text-[4rem]">{content.title}</h1>
+                <p className="mt-5 max-w-[36rem] text-sm leading-7 text-foreground/72 sm:text-base sm:leading-8">{content.description}</p>
+
+                <div className="mt-7 flex max-w-[37rem] items-center gap-4">
+                  <Button asChild size="lg" className="h-11 min-w-[10.5rem] rounded-xl px-6 text-sm font-[family-name:var(--font-dc-body)] font-semibold tracking-normal sm:text-base">
                     <Link href={href}>
                       {messages.home.openWorkspace}
                       <ArrowUpRight className="h-4 w-4" />
                     </Link>
                   </Button>
+                  <div className="hidden h-px flex-1 bg-primary/20 sm:block" aria-hidden="true" />
                 </div>
+
                 <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-foreground/55 sm:text-[10px]">
                   {content.capabilities.map((item) => <span key={item} className="flex items-center gap-1.5"><Check className="h-3.5 w-3.5 text-primary" />{item}</span>)}
                 </div>
               </motion.div>
             </AnimatePresence>
           </motion.div>
+
           <motion.div
             {...(reduced ? {} : { initial: { opacity: 0, x: 30 }, animate: { opacity: 1, x: 0 }, transition: { duration: 0.85, delay: 0.12, ease } })}
-            className="relative min-w-0"
+            className="relative z-10 min-w-0 lg:-ml-[5vw] xl:-ml-[6vw]"
           >
-            <PintuSection activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
+            <div className="origin-center lg:scale-[0.92] xl:scale-100">
+              <PintuSection activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
+            </div>
           </motion.div>
         </section>
       </main>
