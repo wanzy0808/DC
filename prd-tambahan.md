@@ -32,3 +32,15 @@
 - Those sequence numbers are removed; the labels/content now stand on their own without `01`, `02`, `#`, or index-based decoration.
 - Functional numeric data remains untouched, including seating numbers, time picker hours/minutes, prices, dates, quotas, counts, child order, phone numbers, and template identifiers.
 
+## Landing page Pintu proportion correction
+- Pintu remains the primary visual navigation surface on the landing page and must not be reduced into a small secondary card treatment.
+- Desktop Pintu cards receive only a restrained size increase so the three-door carousel remains balanced inside the right-side landing workspace.
+- Typography inside an active Pintu is increased for title, tags, description, and action so it remains legible relative to the card size.
+- Closed-door title typography is increased and the unused decorative number slot is removed entirely.
+- Landing hero heading uses a smoother responsive scale so it does not overpower the Pintu carousel around standard desktop widths.
+- The Event Planner landing CTA uses the canonical `/event-planner` route instead of the legacy `/wedding-planner` compatibility path.
+
+## Event Planner header correction
+- Event Planner is a public consultation/service page and does not show a dedicated `Client Login` button in its page hero/header.
+- Removing that page-specific action does not remove the application login route or global authentication flow.
+
