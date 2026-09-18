@@ -3050,3 +3050,23 @@ Owner meminta workspace sementara untuk eksperimen landing tanpa mengubah landin
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Isolated 3D Pintu + Sweet Background Experiment on `/jiplak`
+
+### Requirement / Intent
+Owner ingin mencoba Pintu yang terasa lebih 3D dan background yang lebih manis daripada rose-petal drop, tetapi landing canonical di `/` tidak boleh berubah selama eksperimen.
+
+### Implementation
+- menambahkan `components/Landing/Pintu/PintuSecBaru.tsx` sebagai eksperimen Pintu terpisah;
+- Pintu baru memakai CSS 3D + Motion: perspective, depth/translateZ, frame extrusion, ground shadow, light spill, dan dua daun pintu yang benar-benar berputar dengan `rotateY` dari sisi engsel;
+- ornamen closed-door tetap mengikuti open state dan menghilang saat daun pintu terbuka;
+- menambahkan `components/Layout/JiplakSweetBackground.tsx` dengan ambient Rose light, soft bokeh/motes, light beam, dan botanical line-art; tidak memakai falling petals;
+- hanya `app/jiplak/jiplak.tsx` yang diarahkan ke dua komponen eksperimen tersebut;
+- `app/page.tsx`, `PintuSection.tsx`, `PintuCard.tsx`, dan `RosePetalBackground.tsx` tidak diubah;
+- Three.js belum ditambahkan pada pass ini; eksperimen memakai stack existing agar ringan dan mudah dibandingkan sebelum menambah WebGL dependency.
+
+### Validation
+- GitHub Actions observation: pending.
