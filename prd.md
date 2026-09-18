@@ -2661,9 +2661,13 @@ Owner meminta susunan item, folder, components, dan data dirapikan serta diberi 
 - route `app/*` tidak diubah sehingga URL behavior tidak berubah.
 
 ### Validation
-- Source/reference review: completed.
-- Build/TypeScript/CI: pending.
+- Build Validation #1067: **FAIL** karena dua internal Event Planner components masih mengimpor path data lama `@/data/wedding-planner`; import diperbaiki ke `@/data/services/event-planner`.
+- Build Validation #1068 pada application source head `ef5a1ba30de5b21eb5e0095ee45fac776ce4ef3c`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
 
 ### Next
-Pass 2 dapat merapikan helper `lib/` menjadi domain/server folders setelah seluruh API import dipetakan, agar perubahan backend tidak dicampur dengan component/data cleanup ini.
+Pass 2 merapikan helper `lib/` menjadi domain/server folders setelah seluruh API import dipetakan, agar perubahan backend tidak dicampur dengan component/data cleanup ini.
