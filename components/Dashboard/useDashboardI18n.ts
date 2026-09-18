@@ -247,6 +247,7 @@ const english: Record<string, string> = {
   "Dipilih": "Selected",
   "Sisa": "Remaining",
   "WA Blast belum aktif": "WA Blast is not active",
+  "Beli 50 quota · Rp75.000": "Buy 50 credits · Rp75,000",
   "WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.": "WA Blast is not included with Digital Invitation. Each purchase adds 50 credits to the selected event.",
   "Penerima": "Recipients",
   "Tambah penerima": "Add recipient",
