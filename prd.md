@@ -2458,4 +2458,6 @@ Owner menolak full-Rose sidebar dan meminta sidebar kembali menyatu dengan canva
 ### Dark header utility follow-up
 - ID/EN Dark Mode tidak memakai opacity/fill Rose saat idle; selected locale memakai neutral white emphasis dan Rose hanya saat hover.
 - Account trigger, avatar, serta dropdown items Dark Mode memakai near-black background dengan white copy saat idle dan Rose + white copy saat hover.
-- Validation untuk follow-up ini dicatat setelah workflow terbaru selesai.
+- GitHub Actions Build Validation #1030 pada application source head `0af685723e2178d52c735a8890026d5ce87d90ff`: **PASS** untuk dependency install, Prisma Client generation, Next.js production build, dan TypeScript.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
