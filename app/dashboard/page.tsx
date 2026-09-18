@@ -509,7 +509,7 @@ export default function DashboardPage() {
                   <Button
                     type="button"
                     size="icon"
-                    className="lg:hidden"
+                    className="dc-dashboard-header-control lg:hidden"
                     onClick={() => setMobileOpen((value) => !value)}
                     aria-label={d("Buka menu dashboard")}
                     title={d("Buka menu dashboard")}
@@ -548,7 +548,7 @@ export default function DashboardPage() {
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
-                      className="dc-dashboard-account-button h-11 min-w-0 px-2 shadow-none"
+                      className="dc-dashboard-header-control dc-dashboard-account-button h-11 min-w-0 px-2 shadow-none"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >

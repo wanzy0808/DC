@@ -72,3 +72,20 @@ Perbaikan sebelumnya tetap berlaku:
 Owner meminta menghapus sisa Rose opacity/fill pada ID/EN dan account menu saat idle di Dark Mode. Implementasi mengikuti neutral-first rule: black/near-black + white copy saat idle, Rose + white copy hanya saat hover.
 
 Validation: GitHub Actions Build Validation #1030 **PASS** pada application source head `0af685723e2178d52c735a8890026d5ce87d90ff` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A. Follow-up commit ini hanya memperbarui dokumentasi validation.
+
+
+---
+
+## Follow-up — Unified Header Control Family
+
+Owner meminta Light/Dark Dashboard tidak lagi memiliki style terpisah untuk burger, theme toggle, ID/EN, dan account trigger.
+
+Canonical delta:
+- keempat control memakai satu shape/radius/height/border family;
+- Light idle: white/neutral + Rose foreground/border;
+- Dark idle: near-black + white foreground;
+- hover kedua theme: Rose + white;
+- active locale: border/underline emphasis, bukan filled style sendiri;
+- perubahan hanya untuk Dashboard header; public navbar behavior existing dipertahankan.
+
+Validation: GitHub Actions Build Validation #1033 **PASS** pada application source head `872b7a4d4e493ab279ae05bfea129bc1ef5d51dd` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.
