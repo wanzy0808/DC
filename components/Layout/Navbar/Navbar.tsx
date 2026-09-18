@@ -15,7 +15,7 @@ export default function Navbar() {
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
-    <header className="dc-navbar relative z-50 w-full bg-transparent text-foreground transition-colors duration-500">
+    <header className={`dc-navbar z-50 w-full bg-transparent text-foreground transition-colors duration-500 ${pathname === "/" ? "absolute left-0 top-0" : "relative"}`}>
       <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5">
         <Link href="/" className="group block min-w-0">
           <BrandWordmark
