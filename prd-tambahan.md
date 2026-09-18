@@ -104,4 +104,4 @@ Delta:
 - tombol user mengikuti visual language navbar landing (transparent, restrained border/accent, subtle hover);
 - navbar landing tidak diubah.
 
-Validation: PENDING workflow terbaru.
+Validation: GitHub Actions Build Validation #1036 **PASS** pada application source head `ade7de7accb38ae4ab55d83df7662109bafca6ff` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.
