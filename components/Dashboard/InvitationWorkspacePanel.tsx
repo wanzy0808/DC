@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
   DashboardCompactStat,
   DashboardEmptyState,
@@ -71,6 +72,7 @@ function publicUrl(invitation: Invitation) {
 }
 
 export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
+  const { d } = useDashboardI18n();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -87,14 +89,14 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       const invitationData = await invitationResponse.json().catch(() => null);
       const guestData = await guestResponse.json().catch(() => null);
       if (!invitationResponse.ok) {
-        throw new Error(invitationData?.error || "Undangan belum dapat dimuat.");
+        throw new Error(invitationData?.error || d("Undangan belum dapat dimuat."));
       }
       setInvitations(
         sortInvitations((invitationData?.invitations ?? []) as Invitation[]),
       );
       setGuests((guestData?.guests ?? []) as Guest[]);
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Undangan belum dapat dimuat.");
+      setNotice(error instanceof Error ? error.message : d("Undangan belum dapat dimuat."));
     } finally {
       setLoading(false);
     }
@@ -106,15 +108,15 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
   async function publishInvitation(invitation: Invitation) {
     if (invitation.isPublished) {
-      setNotice("Undangan yang sudah terbit dikunci dan tidak dapat dikembalikan menjadi draft.");
+      setNotice(d("Undangan yang sudah terbit dikunci dan tidak dapat dikembalikan menjadi draft."));
       return;
     }
     if (!invitation.eventConfigured) {
-      setNotice("Lengkapi dan simpan detail acara sebelum publish.");
+      setNotice(d("Lengkapi dan simpan detail acara sebelum publish."));
       return;
     }
     if (!invitation.templateKey?.trim()) {
-      setNotice("Pilih dan simpan template undangan sebelum publish.");
+      setNotice(d("Pilih dan simpan template undangan sebelum publish."));
       return;
     }
 
@@ -127,15 +129,15 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
         body: JSON.stringify({ id: invitation.id, isPublished: true }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Undangan belum dapat dipublish.");
+      if (!response.ok) throw new Error(data?.error || d("Undangan belum dapat dipublish."));
       setInvitations((current) =>
         current.map((item) =>
           item.id === invitation.id ? data.invitation : item,
         ),
       );
-      setNotice("Undangan berhasil diterbitkan.");
+      setNotice(d("Undangan berhasil diterbitkan."));
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Undangan belum dapat dipublish.");
+      setNotice(error instanceof Error ? error.message : d("Undangan belum dapat dipublish."));
     } finally {
       setBusyId(null);
     }
@@ -157,26 +159,26 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardMetricGrid>
-        <Metric icon={Users} label="Undangan" value={String(invitations.length)} />
-        <Metric icon={CalendarDays} label="Siap desain" value={String(readyCount)} />
-        <Metric icon={Send} label="Dipublish" value={String(publishedCount)} />
-        <Metric icon={Eye} label="Total dibuka" value={String(openedCount)} />
+        <Metric icon={Users} label={d("Undangan")} value={String(invitations.length)} />
+        <Metric icon={CalendarDays} label={d("Siap desain")} value={String(readyCount)} />
+        <Metric icon={Send} label={d("Dipublish")} value={String(publishedCount)} />
+        <Metric icon={Eye} label={d("Total dibuka")} value={String(openedCount)} />
       </DashboardMetricGrid>
 
       <DashboardSurface className="mt-5 p-4 sm:p-5">
         <DashboardSectionHeader
-          eyebrow="Undangan Digital"
-          title="Semua acara"
-          description="Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan."
+          eyebrow={d("Undangan Digital")}
+          title={d("Semua acara")}
+          description={d("Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan.")}
           actions={
             <>
               <Button type="button" size="sm" onClick={onCreateSequence}>
                 <Plus className="h-4 w-4" />
-                Tambah acara
+                {d("Tambah acara")}
               </Button>
               <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
                 <RefreshCw className="h-4 w-4" />
-                Muat ulang
+                {d("Muat ulang")}
               </Button>
             </>
           }
@@ -186,12 +188,12 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           <DashboardEmptyState
             className="mt-4"
             icon={CalendarDays}
-            title="Belum ada acara"
-            description="Buat rangkaian acara terlebih dahulu untuk mulai mendesain Undangan Digital."
+            title={d("Belum ada acara")}
+            description={d("Buat rangkaian acara terlebih dahulu untuk mulai mendesain Undangan Digital.")}
             action={
               <Button type="button" size="sm" onClick={onCreateSequence}>
                 <Plus className="h-4 w-4" />
-                Tambah acara
+                {d("Tambah acara")}
               </Button>
             }
           />
@@ -199,7 +201,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {invitations.map((invitation) => {
               const url = publicUrl(invitation);
-              const title = invitation.title.trim() || "Acara tanpa judul";
+              const title = invitation.title.trim() || d("Acara tanpa judul");
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
               const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
               const hasDesign = Boolean(invitation.templateKey?.trim());
@@ -220,18 +222,18 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     </div>
                     <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
                       {invitation.isPublished
-                        ? "Terbit"
+                        ? d("Terbit")
                         : !invitation.eventConfigured
-                          ? "Belum lengkap"
+                          ? d("Belum lengkap")
                           : hasDesign
-                            ? "Siap publish"
-                            : "Belum desain"}
+                            ? d("Siap publish")
+                            : d("Belum desain")}
                     </span>
                   </div>
 
                   <div className="mt-3 grid grid-cols-2 gap-2">
-                    <SmallMetric label="Dibuka" value={String(invitation.viewCount || 0)} />
-                    <SmallMetric label="Venue" value={invitation.venue || "Belum diatur"} />
+                    <SmallMetric label={d("Dibuka")} value={String(invitation.viewCount || 0)} />
+                    <SmallMetric label={d("Venue")} value={invitation.venue || d("Belum diatur")} />
                   </div>
 
                   <div className="mt-4 rounded-xl border border-primary/12 bg-primary/[0.025] p-3">
@@ -242,13 +244,13 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       <Button asChild size="lg" className="mt-2 w-full">
                         <Link href={studioHref} aria-label={`${hasDesign ? "Edit" : "Buat"} undangan untuk ${title}`}>
                           <PenLine className="h-4 w-4" />
-                          {hasDesign ? "Edit undangan" : "Buat undangan"}
+                          {hasDesign ? d("Edit undangan") : d("Buat undangan")}
                         </Link>
                       </Button>
                     ) : (
                       <Button type="button" size="lg" className="mt-2 w-full" onClick={onCreateSequence}>
                         <CalendarDays className="h-4 w-4" />
-                        Lengkapi acara
+                        {d("Lengkapi acara")}
                       </Button>
                     )}
                   </div>
@@ -256,15 +258,15 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {!invitation.eventConfigured ? (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-                        Lengkapi acara dulu
+                        {d("Lengkapi acara")} dulu
                       </div>
                     ) : !hasDesign ? (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-                        Simpan template dulu
+                        {d("Simpan template dulu")}
                       </div>
                     ) : invitation.isPublished ? (
                       <DashboardStatusBadge active className="h-9 w-full justify-center">
-                        Terbit · terkunci
+                        {d("Terbit · terkunci")}
                       </DashboardStatusBadge>
                     ) : invitation.accessPaid ? (
                       <Button
@@ -274,13 +276,13 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                         onClick={() => publishInvitation(invitation)}
                       >
                         <Send className="h-4 w-4" />
-                        {busyId === invitation.id ? "Menyimpan..." : "Publish"}
+                        {busyId === invitation.id ? d("Menyimpan...") : d("Publish")}
                       </Button>
                     ) : (
                       <Button asChild size="sm" className="w-full">
                         <Link href={purchaseHref}>
                           <Send className="h-4 w-4" />
-                          Beli paket & publish
+                          {d("Beli paket & publish")}
                         </Link>
                       </Button>
                     )}
@@ -313,17 +315,17 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
       <DashboardSurface className="mt-5 p-4 sm:p-5">
         <DashboardSectionHeader
-          eyebrow="RSVP"
-          title="Respons terbaru"
-          description="Respons terbaru dari seluruh undangan yang berada di workspace ini."
+          eyebrow={d("RSVP")}
+          title={d("Respons terbaru")}
+          description={d("Respons terbaru dari seluruh undangan yang berada di workspace ini.")}
           actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
         />
 
         <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
           {responders.length === 0 && (
             <DashboardEmptyState
-              title="Belum ada respons"
-              description="Respons RSVP tamu akan muncul di sini setelah undangan mulai dibagikan."
+              title={d("Belum ada respons")}
+              description={d("Respons RSVP tamu akan muncul di sini setelah undangan mulai dibagikan.")}
             />
           )}
           {responders.map((guest) => (
@@ -336,11 +338,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   {guest.name}
                 </span>
                 <span className="mt-0.5 block truncate text-[9px] text-muted-foreground">
-                  {guest.invitation?.title || "Acara"}
+                  {guest.invitation?.title || d("Acara")}
                 </span>
               </div>
               <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.08em] text-muted-foreground">
-                {responseLabel[guest.rsvpStatus] || guest.rsvpStatus} · {guest.plusOnes + 1} pax
+                {d(responseLabel[guest.rsvpStatus] || guest.rsvpStatus)} · {guest.plusOnes + 1} pax
               </span>
             </div>
           ))}
