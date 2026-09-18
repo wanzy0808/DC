@@ -14,104 +14,24 @@ import {
   DashboardStatusBadge,
   DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
-import { matchesGuestLabels, type GuestLabels } from "@/lib/guests/filters";
+import { matchesGuestLabels } from "@/lib/guests/filters";
+import {
+  findSeatingSeatTarget,
+  seatingSeatPoint,
+  seatingTablePoint,
+  SEATING_SEATING_SEAT_RADIUS,
+  SEATING_SEATING_STAGE_HEIGHT,
+  SEATING_SEATING_STAGE_WIDTH,
+} from "@/components/Dashboard/seating-chart-geometry";
+import type {
+  SeatingChartProps,
+  SeatingGuest,
+  SeatingPoint,
+  SeatingSeatTarget,
+  SeatingTable,
+} from "@/components/Dashboard/seating-chart-types";
 
-type Guest = GuestLabels & {
-  id: string;
-  name: string;
-  tableId?: string | null;
-  seatNumber?: number | null;
-  rsvpStatus?: string;
-  source?: "RSVP" | "MANUAL";
-};
-
-type Table = {
-  id: string;
-  name: string;
-  shape: string;
-  capacity: number;
-};
-
-type Props = {
-  invitationId: string;
-  guests: Guest[];
-  tables: Table[];
-  accent?: string;
-  onAssigned: (
-    guestId: string,
-    tableId: string,
-    seatNumber: number,
-  ) => Promise<void>;
-};
-
-type Point = { x: number; y: number };
-type SeatTarget = { table: Table; seat: number; guest: Guest | null };
-
-const STAGE_WIDTH = 1100;
-const STAGE_HEIGHT = 620;
-const TABLE_RADIUS = 72;
-const SEAT_RADIUS = 16;
-const TABLE_GAP_X = 250;
-const TABLE_GAP_Y = 205;
-
-function tablePoint(index: number, total: number): Point {
-  const columns = Math.min(4, Math.max(1, Math.ceil(Math.sqrt(total))));
-  const rows = Math.max(1, Math.ceil(total / columns));
-  const row = Math.floor(index / columns);
-  const column = index % columns;
-  const width = (columns - 1) * TABLE_GAP_X;
-  const rowGap =
-    rows > 1 ? Math.min(TABLE_GAP_Y, (STAGE_HEIGHT - 190) / (rows - 1)) : 0;
-
-  return {
-    x: STAGE_WIDTH / 2 - width / 2 + column * TABLE_GAP_X,
-    y: 95 + row * rowGap,
-  };
-}
-
-function seatPoint(center: Point, index: number, capacity: number): Point {
-  const angle = (Math.PI * 2 * index) / Math.max(capacity, 1) - Math.PI / 2;
-  return {
-    x: center.x + Math.cos(angle) * TABLE_RADIUS,
-    y: center.y + Math.sin(angle) * TABLE_RADIUS,
-  };
-}
-
-function findSeatTarget(
-  point: Point,
-  tables: Table[],
-  guests: Guest[],
-  draggedGuestId: string | null,
-): SeatTarget | null {
-  let nearest: SeatTarget | null = null;
-  let distance = Number.POSITIVE_INFINITY;
-
-  tables.forEach((table, tableIndex) => {
-    const center = tablePoint(tableIndex, tables.length);
-    for (let index = 0; index < table.capacity; index += 1) {
-      const seat = seatPoint(center, index, table.capacity);
-      const currentDistance = Math.hypot(point.x - seat.x, point.y - seat.y);
-      if (currentDistance >= distance || currentDistance > 38) continue;
-
-      nearest = {
-        table,
-        seat: index + 1,
-        guest:
-          guests.find(
-            (item) =>
-              item.tableId === table.id &&
-              item.seatNumber === index + 1 &&
-              item.id !== draggedGuestId,
-          ) ?? null,
-      };
-      distance = currentDistance;
-    }
-  });
-
-  return nearest;
-}
-
-export default function SeatingChart({ invitationId, guests, tables, onAssigned }: Props) {
+export default function SeatingChart({ invitationId, guests, tables, onAssigned }: SeatingChartProps) {
   const { d, locale } = useDashboardI18n();
   const { isDarkMode } = useTheme();
   const [draggedGuestId, setDraggedGuestId] = useState<string | null>(null);
@@ -121,15 +41,15 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   const [manualSaving, setManualSaving] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState("");
   const [tagFilter, setTagFilter] = useState("");
-  const [localGuests, setLocalGuests] = useState<Guest[]>([]);
-  const [localTables, setLocalTables] = useState<Table[]>([]);
+  const [localGuests, setLocalGuests] = useState<SeatingGuest[]>([]);
+  const [localTables, setLocalTables] = useState<SeatingTable[]>([]);
   const [guestOverrides, setGuestOverrides] = useState<
-    Record<string, Partial<Guest>>
+    Record<string, Partial<SeatingGuest>>
   >({});
-  const [hoverTarget, setHoverTarget] = useState<SeatTarget | null>(null);
+  const [hoverTarget, setHoverTarget] = useState<SeatingSeatTarget | null>(null);
   const [swapCandidate, setSwapCandidate] = useState<{
     guestId: string;
-    target: SeatTarget;
+    target: SeatingSeatTarget;
   } | null>(null);
   const [tableCount, setTableCount] = useState(tables.length || 1);
   const [seatsPerTable, setSeatsPerTable] = useState(
@@ -206,7 +126,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     setGenerating(true);
     setMessage("");
     try {
-      const created: Table[] = [];
+      const created: SeatingTable[] = [];
       for (let index = 1; index <= count; index += 1) {
         const response = await fetch("/api/tables", {
           method: "POST",
@@ -227,7 +147,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               : `Meja ${index} gagal dibuat.`),
         );
         }
-        created.push(data.table as Table);
+        created.push(data.table as SeatingTable);
       }
       setLocalTables(created);
       setMessage(locale === "en" ? `Seating plan created: ${count} tables × ${capacity} seats.` : `Denah dibuat: ${count} meja × ${capacity} bangku.`);
@@ -264,7 +184,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       if (!response.ok) {
         throw new Error(data?.error || d("Tamu manual gagal ditambahkan."));
       }
-      setLocalGuests((current) => [...current, data.guest as Guest]);
+      setLocalGuests((current) => [...current, data.guest as SeatingGuest]);
       setManualName("");
       setMessage(d("Tamu manual ditambahkan ke roster."));
     } catch (error) {
@@ -276,16 +196,16 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     }
   }
 
-  function targetAtPoint(point: Point) {
-    return findSeatTarget(point, visibleTables, visibleGuests, draggedGuestId);
+  function targetAtPoint(point: SeatingPoint) {
+    return findSeatingSeatTarget(point, visibleTables, visibleGuests, draggedGuestId);
   }
 
-  function setHoverFromPoint(point: Point) {
+  function setHoverFromPoint(point: SeatingPoint) {
     if (!draggedGuestId) return;
     setHoverTarget(targetAtPoint(point));
   }
 
-  async function assignGuestAtPoint(guestId: string, point: Point) {
+  async function assignGuestAtPoint(guestId: string, point: SeatingPoint) {
     const target = targetAtPoint(point);
     setHoverTarget(null);
 
@@ -342,7 +262,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         throw new Error(data?.error || d("Tukar posisi gagal disimpan."));
       }
 
-      const swapped = data.guests as Guest[];
+      const swapped = data.guests as SeatingGuest[];
       const sourceResult = swapped.find((guest) => guest.id === guestId);
       const targetResult = swapped.find(
         (guest) => guest.id === target.guest?.id,
@@ -393,8 +313,8 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     if (!draggedGuestId) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
-    const scaleX = STAGE_WIDTH / rect.width;
-    const scaleY = STAGE_HEIGHT / rect.height;
+    const scaleX = SEATING_STAGE_WIDTH / rect.width;
+    const scaleY = SEATING_STAGE_HEIGHT / rect.height;
 
     await assignGuestAtPoint(draggedGuestId, {
       x: (event.clientX - rect.left) * scaleX,
@@ -607,8 +527,8 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           onDragOver={(event) => {
             event.preventDefault();
             const rect = event.currentTarget.getBoundingClientRect();
-            const scaleX = STAGE_WIDTH / rect.width;
-            const scaleY = STAGE_HEIGHT / rect.height;
+            const scaleX = SEATING_STAGE_WIDTH / rect.width;
+            const scaleY = SEATING_STAGE_HEIGHT / rect.height;
             setHoverFromPoint({
               x: (event.clientX - rect.left) * scaleX,
               y: (event.clientY - rect.top) * scaleY,
@@ -617,19 +537,19 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           onDrop={assignFromDrop}
         >
           <div className="overflow-auto">
-            <Stage width={STAGE_WIDTH} height={STAGE_HEIGHT}>
+            <Stage width={SEATING_STAGE_WIDTH} height={SEATING_STAGE_HEIGHT}>
               <Layer>
                 <Rect
                   x={0}
                   y={0}
-                  width={STAGE_WIDTH}
-                  height={STAGE_HEIGHT}
+                  width={SEATING_STAGE_WIDTH}
+                  height={SEATING_STAGE_HEIGHT}
                   fill={canvas.background}
                   listening={false}
                 />
 
                 {visibleTables.map((table, tableIndex) => {
-                  const center = tablePoint(tableIndex, visibleTables.length);
+                  const center = seatingTablePoint(tableIndex, visibleTables.length);
                   return (
                     <Group key={table.id}>
                       <Rect
@@ -653,7 +573,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
 
                       {Array.from({ length: table.capacity }).map((_, index) => {
                         const seat = index + 1;
-                        const point = seatPoint(center, index, table.capacity);
+                        const point = seatingSeatPoint(center, index, table.capacity);
                         const guest = visibleGuests.find(
                           (item) =>
                             item.tableId === table.id &&
@@ -669,7 +589,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                             <Circle
                               x={point.x}
                               y={point.y}
-                              radius={highlighted ? SEAT_RADIUS + 5 : SEAT_RADIUS}
+                              radius={highlighted ? SEATING_SEAT_RADIUS + 5 : SEATING_SEAT_RADIUS}
                               fill={guest ? canvas.seatOccupied : canvas.seatEmpty}
                               stroke={canvas.seatStroke}
                               strokeWidth={highlighted ? 5 : 2}
