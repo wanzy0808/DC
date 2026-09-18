@@ -72,7 +72,7 @@ function publicUrl(invitation: Invitation) {
 }
 
 export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
-  const { d } = useDashboardI18n();
+  const { d, locale } = useDashboardI18n();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -238,11 +238,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
                   <div className="mt-4 rounded-xl border border-primary/12 bg-primary/[0.025] p-3">
                     <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
-                      Desain undangan
+                      {d("Desain undangan")}
                     </p>
                     {invitation.eventConfigured ? (
                       <Button asChild size="lg" className="mt-2 w-full">
-                        <Link href={studioHref} aria-label={`${hasDesign ? "Edit" : "Buat"} undangan untuk ${title}`}>
+                        <Link href={studioHref} aria-label={locale === "en" ? `${hasDesign ? "Edit" : "Create"} invitation for ${title}` : `${hasDesign ? "Edit" : "Buat"} undangan untuk ${title}`}>
                           <PenLine className="h-4 w-4" />
                           {hasDesign ? d("Edit undangan") : d("Buat undangan")}
                         </Link>
@@ -293,8 +293,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                           href={url}
                           target="_blank"
                           rel="noreferrer"
-                          title="Buka undangan publik"
-                          aria-label={`Buka undangan publik ${title}`}
+                          title={d("Buka publik")}
+                          aria-label={locale === "en" ? `Open public invitation ${title}` : `Buka undangan publik ${title}`}
                         >
                           <ArrowUpRight className="h-4 w-4" />
                           Buka publik
