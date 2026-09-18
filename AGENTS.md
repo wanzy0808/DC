@@ -121,6 +121,16 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Rose is an accent for the specified brand elements, not a replacement for body text.
 - Establish secondary hierarchy through opacity, typography, weight, size, spacing, layout, and contrast first.
 
+
+### Dashboard microcopy
+
+- Customer-facing Dashboard copy must be concise, natural, and context-aware. Do not repeat a page/category noun merely to fill an eyebrow, title, description, selector label, metric, card, or action.
+- Avoid stacked repetition such as `Workspace → Acara → pilih acara → acara aktif` when the current screen already supplies that context. Keep a term only when it disambiguates scope, state, or the next action.
+- Prefer removing redundant copy over replacing it with a synonym. A shorter label such as `Total`, `Terbaru`, `Lihat semua`, `Detail`, or a context-specific eyebrow is better when the surrounding UI already names the object.
+- Generic decorative labels such as `Workspace` must not be used as filler. Use a meaningful context label such as `Persiapan`, `Publikasi`, `Distribusi`, `Kehadiran`, or omit the label when it adds no information.
+- Do not duplicate the same metric/context in adjacent header cards and metric grids. If the information is already clearly visible nearby, remove the duplicate.
+- Small owner corrections to recurring UI/copy style are repository conventions, not throwaway tweaks: capture them in this file and mirror active requirements/history to `prd.md`; when the owner explicitly asks for the supplemental log, also update `prd-tambahan.md`.
+
 ## 6. Motion & Accessibility
 
 - Animated files must use `"use client"` when required by the framework.
