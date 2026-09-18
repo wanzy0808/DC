@@ -161,6 +161,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Keep domain logic/helpers in `lib/`; do not move executable business logic into `data/`. Group focused helpers by domain (for example `lib/invitations`, `lib/security`, `lib/usher`, `lib/notifications`) instead of adding more unrelated files at the `lib/` root.
 - Route folders under `app/` follow URL requirements and should not be renamed merely for code-style consistency.
 - When moving a component/data file, update all imports in the same change and validate with the production build before merge.
+- Split large feature components by responsibility when they mix orchestration/state, static configuration, domain types/helpers, and reusable presentation. Keep orchestration in the workspace/page component; move reusable panels, config, types, and pure helpers into adjacent feature files. Do not split purely to reduce line count.
 
 ## 9. Code Quality
 
