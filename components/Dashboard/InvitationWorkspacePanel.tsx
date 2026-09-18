@@ -214,7 +214,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                        Undangan Digital
+                        {d("Undangan Digital")}
                       </p>
                       <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
                         {title}
@@ -258,7 +258,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {!invitation.eventConfigured ? (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-                        {d("Lengkapi acara")} dulu
+                        {d("Lengkapi acara dulu")}
                       </div>
                     ) : !hasDesign ? (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
@@ -297,12 +297,12 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                           aria-label={locale === "en" ? `Open public invitation ${title}` : `Buka undangan publik ${title}`}
                         >
                           <ArrowUpRight className="h-4 w-4" />
-                          Buka publik
+                          {d("Buka publik")}
                         </a>
                       </Button>
                     ) : (
                       <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-                        Belum dipublish
+                        {d("Belum dipublish")}
                       </div>
                     )}
                   </div>
