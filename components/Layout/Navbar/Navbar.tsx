@@ -12,10 +12,11 @@ import BrandWordmark from "@/components/Brand/BrandWordmark";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const isLanding = pathname === "/" || pathname === "/jiplak";
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
-    <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${pathname === "/" ? "dc-navbar--landing bg-background" : "bg-transparent"}`}>
+    <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${isLanding ? "dc-navbar--landing bg-background" : "bg-transparent"}`}>
       <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5">
         <Link href="/" className="group block min-w-0">
           <BrandWordmark

@@ -187,3 +187,19 @@ Affected files:
 - `prd.md`.
 
 Validation: pending GitHub Actions observation.
+
+
+---
+
+## 19 September 2026 — Temporary Landing Clone `/jiplak`
+
+Owner meminta salinan landing yang bisa diubah tanpa menyentuh landing utama.
+
+Delta:
+- `app/jiplak/jiplak.tsx` berisi copy landing saat ini;
+- `app/jiplak/page.tsx` membuka clone pada `http://localhost:3000/jiplak`;
+- header/footer/background/layout shared memperlakukan `/jiplak` sama seperti landing utama;
+- `app/page.tsx` tetap tidak berubah;
+- route ini bersifat sementara dan boleh dihapus setelah eksperimen selesai.
+
+Validation: pending GitHub Actions observation.

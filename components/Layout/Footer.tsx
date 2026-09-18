@@ -42,6 +42,7 @@ function YoutubeIcon({ className }: { className?: string }) {
 export default function Footer() {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
+  const isLanding = pathname === "/" || pathname === "/jiplak";
   const { messages } = useLanguage();
   const { footer } = messages;
 
@@ -49,7 +50,7 @@ export default function Footer() {
     return null;
   }
 
-  if (pathname === "/") {
+  if (isLanding) {
     return (
       <footer className="absolute bottom-0 left-0 z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs">
         © {new Date().getFullYear()} DC Organizer. {footer.rights}
