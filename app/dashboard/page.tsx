@@ -681,10 +681,10 @@ export default function DashboardPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
             <p className="font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
-              Setup awal
+              {d("Setup awal")}
             </p>
             <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
-              Profil workspace
+              {d("Profil workspace")}
             </h2>
             <div className="mt-6">
               <Field
@@ -701,7 +701,7 @@ export default function DashboardPage() {
             )}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
               <CheckCircle2 className="h-4 w-4" />
-              {saving ? "Menyimpan data..." : "Simpan & masuk"}
+              {saving ? d("Menyimpan data...") : d("Simpan & masuk")}
             </Button>
           </div>
         </div>
@@ -811,24 +811,24 @@ function WorkspaceOverview({
               DC Organizer
             </p>
             <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight sm:text-3xl">
-              Halo, {ctx?.profile.displayName || "Akun"}
+              {d("Halo")}, {ctx?.profile.displayName || d("Akun")}
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Kelola acara, undangan, RSVP, dan tamu dari satu workspace.
+              {d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-3">
             <div className="min-w-28 rounded-xl border border-border/70 bg-foreground/[0.018] px-4 py-3">
               <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                Workspace
+                {d("Workspace")}
               </p>
               <p className="mt-1 text-sm font-semibold">
-                {events.length ? `${events.length} acara` : "Belum ada acara"}
+                {events.length ? (locale === "en" ? `${events.length} events` : `${events.length} acara`) : d("Belum ada acara")}
               </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
               <CalendarDays className="h-4 w-4" />
-              Tambah acara
+              {d("Tambah acara")}
             </Button>
           </div>
         </div>
@@ -851,11 +851,11 @@ function WorkspaceOverview({
             <div>
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Acara terbaru")}</h2>
               <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                {active} aktif · {published} terbit
+                {active} {d("aktif")} · {published} {d("terbit")}
               </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
-              Kelola acara
+              {d("Kelola acara")}
             </Button>
           </div>
 
@@ -895,7 +895,7 @@ function WorkspaceOverview({
                           href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
                           className="text-xs font-semibold text-primary hover:underline"
                         >
-                          Undangan
+                          {d("Undangan")}
                         </Link>
                       </td>
                     </tr>
@@ -912,7 +912,7 @@ function WorkspaceOverview({
                 <div>
                   <p className="text-sm font-semibold">{d("Belum ada acara")}</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Buat acara pertama untuk mulai menyiapkan undangan digital.
+                    {d("Buat acara pertama untuk mulai menyiapkan undangan digital.")}
                   </p>
                 </div>
               </div>
