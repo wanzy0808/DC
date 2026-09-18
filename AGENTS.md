@@ -144,6 +144,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Use `AnimatePresence mode="wait"` for tab/modal/page transitions where applicable.
 - Always respect `useReducedMotion()` and remove heavy motion when requested.
 - Motion must never reduce usability or obscure important content.
+- Landing Pintu decorative ornament at the top belongs to the closed-door surface: it fades/moves out when that door is active/open and returns when the door closes. Keep this synchronized with the same `isActive` state as the door panels and respect reduced motion.
 
 ## 7. UI Components
 
