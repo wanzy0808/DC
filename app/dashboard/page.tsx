@@ -548,11 +548,11 @@ export default function DashboardPage() {
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
-                      className="dc-dashboard-account-button h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-foreground/[0.05] hover:text-foreground"
+                      className="dc-dashboard-account-button h-11 min-w-0 px-2 shadow-none"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >
-                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full bg-primary font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-white dark:text-black">
+                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase">
                         {profileLabel.slice(0, 2)}
                       </span>
                       <span className="hidden max-w-36 truncate text-sm font-medium sm:inline">{profileLabel}</span>
@@ -717,7 +717,7 @@ function MenuItem({
     <Button
       type="button"
       onClick={onClick}
-      className={`h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
+      className={`dc-dashboard-account-menu-item h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
         danger
           ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
           : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
