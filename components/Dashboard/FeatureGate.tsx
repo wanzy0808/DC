@@ -36,7 +36,7 @@ export default function FeatureGate({
 
   return (
     <DashboardPage>
-      <DashboardPageHeader eyebrow={d("Workspace")} title={title} description={resolvedDescription} />
+      <DashboardPageHeader eyebrow={d("Akses")} title={title} description={resolvedDescription} />
       <DashboardSurface className="p-5 sm:p-6">
         <span className="mb-4 grid size-11 place-items-center rounded-full bg-primary/10 text-primary"><Sparkles className="size-5" /></span>
         <p className="mb-4 text-sm leading-6 text-muted-foreground">{d("Paket aktif diperlukan untuk membuka fitur ini.")}</p>
