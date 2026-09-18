@@ -29,7 +29,7 @@ export default function LanguageToggle() {
             onClick={() => changeLocale(item)}
             aria-pressed={selected}
             aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
-            className={`dc-dashboard-language-option h-9 min-w-10 rounded-none border-0 px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] shadow-none ${selected ? "is-selected" : ""}`}
+            className={`dc-dashboard-header-control dc-dashboard-language-option h-11 min-w-11 px-3 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em] shadow-none ${selected ? "is-selected" : ""}`}
           >
             {item.toUpperCase()}
           </Button>
