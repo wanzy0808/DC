@@ -142,3 +142,26 @@ Validation:
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## Landing — Single-Screen Architectural Threshold
+
+Owner mengaktifkan implementasi arah `prd-landing.md` dengan satu override utama: **landing hanya satu page/satu viewport utuh, tanpa content section yang harus discroll ke bawah.**
+
+Delta:
+- hero tetap 80vw dan menggabungkan copy + tiga Pintu;
+- long-scroll Memory/Journey/Capabilities/Event Types/Final CTA tidak digunakan;
+- landing memakai architectural threshold atmosphere yang category-neutral;
+- Light Mode white-led, Dark Mode near-black, keduanya memakai Rose sebagai illumination/accent utama;
+- Pintu tetap motion focus dan active door tetap membuka;
+- orbit/card Pintu dipadatkan pada mobile agar komposisi tetap satu layar;
+- protected `components/Layout/background.tsx` tidak diubah; petal background halaman publik lain tetap existing;
+- text motion tetap restrained dan menghormati reduced motion.
+
+Validation saat delta ini ditulis:
+- Source implementation: complete on feature branch.
+- Build/TypeScript/CI: pending.
+- Browser visual verification: pending.
+- Database migration: N/A.
