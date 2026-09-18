@@ -435,13 +435,13 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                 <div className="mt-4 space-y-4">
                   {category.nameMode === "couple" && (
                     <div className="grid gap-4 sm:grid-cols-2">
-                      <Field
+                      <EventField
                         label={form.eventCategory === "WEDDING" ? d("Nama pengantin pria") : d("Nama pasangan 1")}
                         value={form.groomName}
                         onChange={(value) => field("groomName", value)}
                         placeholder={d("Nama lengkap")}
                       />
-                      <Field
+                      <EventField
                         label={form.eventCategory === "WEDDING" ? d("Nama pengantin wanita") : d("Nama pasangan 2")}
                         value={form.brideName}
                         onChange={(value) => field("brideName", value)}
@@ -476,7 +476,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   )}
 
                   {category.nameMode === "single" && (
-                    <Field
+                    <EventField
                       label={form.eventCategory === "BIRTHDAY" ? d("Nama yang berulang tahun") : d("Nama keluarga / calon bayi")}
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
@@ -485,7 +485,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   )}
 
                   {category.nameMode === "optional" && (
-                    <Field
+                    <EventField
                       label={d("Nama utama (opsional)")}
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
@@ -493,7 +493,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   )}
 
                   {form.eventCategory === "OTHER" && (
-                    <Field
+                    <EventField
                       label={d("Nama event")}
                       value={form.customTitle}
                       onChange={(value) => field("customTitle", value)}
@@ -510,7 +510,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   <EventDateField label={d("Tanggal")} value={form.eventDate} onChange={(value) => field("eventDate", value)} />
                   <EventTimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
                   <div>
-                    <TimeField
+                    <EventTimeField
                       label={`${d("Selesai")} (${timezone.label})`}
                       value={form.receptionTime === END_TIME_SENTINEL ? "" : form.receptionTime}
                       onChange={(value) => field("receptionTime", value)}
