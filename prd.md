@@ -1137,6 +1137,14 @@ Dashboard harus menjelaskan:
 - event context;
 - seluruh copy navigasi/operasional mengikuti locale aktif `id` / `en`, dengan `id` sebagai default.
 
+Microcopy Dashboard wajib singkat, natural, dan context-aware:
+- jangan mengulang noun/konteks yang sudah jelas hanya untuk mengisi eyebrow, title, description, selector, metric, card, atau action;
+- hindari pola repetitif seperti `Workspace → Acara → pilih acara → acara aktif` dalam satu view;
+- bila konteks sudah terbentuk oleh page/title, label boleh dipersingkat menjadi `Total`, `Terbaru`, `Lihat semua`, `Detail`, atau label fungsi lain yang lebih informatif;
+- generic filler seperti `Workspace` tidak digunakan sebagai decorative label; gunakan konteks nyata seperti `Persiapan`, `Publikasi`, `Distribusi`, `Kehadiran`, atau hilangkan label bila tidak menambah informasi;
+- utamakan menghapus copy redundan daripada menggantinya dengan sinonim;
+- jangan mengulang metric/context yang sama pada header card dan metric grid yang berdekatan.
+
 Dashboard tidak boleh menampilkan internal implementation details seperti database row, raw DB ID, source-of-truth explanation, atau API mechanics kecuali diagnostic/support workflow memang membutuhkan.
 
 ---
@@ -2581,3 +2589,44 @@ Owner meminta header Dashboard berhenti memiliki style control sendiri dan langs
 - Next.js production build (`next build --webpack`): PASS.
 - Lint comparison of dashboard files: same 10 pre-existing errors as the base (9 set-state-in-effect and one no-explicit-any). Full lint is not clean.
 - `git diff --check`: PASS. Browser verification unavailable (Chromium download timed out in this environment). No database migration or production deployment performed.
+
+
+---
+
+## 2026-09-18 — Dashboard Microcopy Cleanup & Anti-Repetition Rule
+
+### Requirement / Intent
+Owner meminta Dashboard berhenti mengulang istilah seperti `workspace`, `acara`, dan `undangan` pada eyebrow, title, description, selector, metric, card, dan action ketika konteks halaman sudah jelas. Tujuannya menghilangkan kesan AI-generated/AI-slop tanpa mengurangi kejelasan fungsi.
+
+### Canonical behavior
+- microcopy Dashboard singkat, natural, dan context-aware;
+- generic `Workspace` tidak digunakan sebagai filler label;
+- context eyebrow memakai fungsi nyata seperti Persiapan, Publikasi, Distribusi, Kehadiran, Tamu, atau Hari-H;
+- copy redundan dihapus, bukan sekadar diganti sinonim;
+- adjacent duplicate context/metric dihindari;
+- istilah produk tetap digunakan bila diperlukan untuk scope, state, atau next action;
+- aturan ini berlaku sebagai convention untuk perubahan kecil berikutnya dan dicatat di `AGENTS.md`.
+
+### Implementation
+- membersihkan header/sidebar Beranda dan menghapus header card jumlah acara yang menduplikasi metric grid;
+- mengganti label umum/repetitif pada Rangkaian Acara, Undangan Digital, Personal Invitation, WA Blast, RSVP, Manajemen Tamu, Feature Gate, dan Usher;
+- memperpendek deskripsi operasional yang sebelumnya mengulang `acara`/`workspace`;
+- memperbaiki beberapa label menjadi lebih context-aware seperti `Total`, `Terbaru`, `Lihat semua`, `Detail`, `Daftar`, dan `Undangan aktif`;
+- menambah terjemahan ID/EN untuk microcopy baru.
+
+### Affected Files
+- `app/dashboard/page.tsx`
+- `components/Dashboard/EventPanel.tsx`
+- `components/Dashboard/InvitationWorkspacePanel.tsx`
+- `components/Dashboard/PersonalInvitationPanel.tsx`
+- `components/Dashboard/WhatsAppBlastPanel.tsx`
+- `components/Dashboard/FeatureGate.tsx`
+- `components/Dashboard/useDashboardI18n.ts`
+- `components/UsherApp/UsherApp.tsx`
+- `AGENTS.md`
+- `prd.md`
+- `prd-tambahan.md`
+
+### Validation
+- CI/build validation: pending.
+- Database migration: N/A.
