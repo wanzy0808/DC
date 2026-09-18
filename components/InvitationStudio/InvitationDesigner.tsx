@@ -59,7 +59,7 @@ export default function InvitationDesigner() {
   const [musicUrl, setMusicUrl] = useState("");
   const [eventTag, setEventTag] = useState("");
   const [dressCode, setDressCode] = useState("");
-  const [design, setDesign] = useState<DesignState>({
+  const [design, setDesign] = useState<InvitationDesignState>({
     template: "botanical-ivory",
     palette: "pearl",
     font: "cinzelFauna",
@@ -83,7 +83,7 @@ export default function InvitationDesigner() {
       throw new Error(data.error || "Undangan belum dapat dimuat.");
     }
 
-    const next = data.invitation as Invitation;
+    const next = data.invitation as InvitationDesignerInvitation;
     const fallbackDecor =
       next.assets.find((asset) => asset.type === "IMAGE")?.url || invitationDecorOptions[0];
     setInvitation(next);
