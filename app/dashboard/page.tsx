@@ -28,9 +28,7 @@ import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import EventScopePicker, {
-  type EventScopeOption,
-} from "@/components/Dashboard/EventScopePicker";
+import EventScopePicker from "@/components/Dashboard/EventScopePicker";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
 import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
 import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
@@ -52,163 +50,40 @@ import {
   DashboardSectionHeader,
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
-
-type Context = {
-  profile: { displayName: string; email: string };
-  wedding: {
-    invitationId: string | null;
-    groomName: string;
-    brideName: string;
-    title: string;
-    venue: string;
-    address: string | null;
-    mapUrl: string | null;
-    timezone: string;
-    eventDate: string | null;
-    ceremonyTime: string | null;
-    receptionTime: string | null;
-    description: string | null;
-  };
-  package: { key: string | null; status: string };
-  overview: {
-    invitationsCreated: number;
-    invitationsLimit: number | null;
-    unlimitedInvitations: boolean;
-    activeInvitations: number;
-    totalRsvp: number;
-    totalGuests: number;
-    invitationsShared: number;
-    invitationPublished: boolean;
-  };
-  entitlements: {
-    hasDigitalInvitation: boolean;
-    hasGuestbook: boolean;
-    canPublishInvitation: boolean;
-    canUploadInvitationAssets: boolean;
-    canUseGuestPlacement: boolean;
-    canUseUsherApp: boolean;
-  };
-};
-
-type DashboardEvent = EventScopeOption & {
-  type: "WEDDING" | "ADAT_AKAD";
-  slug: string;
-  eventConfigured: boolean;
-  accessPaid: boolean;
-  createdAt: string;
-};
-
-type Table = {
-  id: string;
-  name: string;
-  shape: string;
-  capacity: number;
-  _count?: { guests: number };
-};
-
-type Guest = {
-  id: string;
-  name: string;
-  category?: string | null;
-  tags?: string[];
-  phone: string | null;
-  source?: "RSVP" | "MANUAL";
-  rsvpStatus: string;
-  plusOnes: number;
-  checkedIn?: boolean;
-  table?: { id: string; name: string; shape: string; capacity: number } | null;
-  tableId?: string | null;
-  seatNumber?: number | null;
-};
-
-type Tab =
-  | "overview"
-  | "events"
-  | "invitation"
-  | "waBlast"
-  | "personalInvitation"
-  | "rsvp"
-  | "placement"
-  | "usher";
-
-type EventGuestData = { guests: Guest[]; tables: Table[] };
-
-const invitationTabs = new Set<Tab>(["events", "invitation", "personalInvitation", "waBlast"]);
-
-const invitationNav = [
-  { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
-  { id: "invitation" as Tab, label: "Undangan", icon: Mail },
-  {
-    id: "personalInvitation" as Tab,
-    label: "Personal Invitation",
-    icon: ContactRound,
-  },
-  { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
-];
-
-const secondaryNav = [
-  { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
-  { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
-  { id: "usher" as Tab, label: "Usher App", icon: QrCode },
-];
-
-const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
-  overview: { eyebrow: "Dashboard", title: "Beranda" },
-  events: { eyebrow: "Persiapan", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Publikasi", title: "Undangan" },
-  personalInvitation: { eyebrow: "Distribusi", title: "Personal Invitation" },
-  waBlast: { eyebrow: "Distribusi", title: "WA Blast" },
-  rsvp: { eyebrow: "Kehadiran", title: "RSVP" },
-  placement: { eyebrow: "Tamu", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Hari-H", title: "Usher App" },
-};
-
-function sortEvents(items: DashboardEvent[]) {
-  return [...items].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-  );
-}
-
-async function fetchEventGuestData(
-  invitationId: string,
-  fallbackError = "Data acara belum dapat dimuat.",
-): Promise<EventGuestData> {
-  if (!invitationId) return { guests: [], tables: [] };
-  const response = await fetch(
-    `/api/guests?invitationId=${encodeURIComponent(invitationId)}`,
-    { cache: "no-store" },
-  );
-  const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || fallbackError);
-  return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
-}
-
-function Card({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <DashboardSurface className={className}>{children}</DashboardSurface>;
-}
+import {
+  dashboardTabMeta,
+  invitationNav,
+  invitationTabs,
+  secondaryNav,
+} from "@/components/Dashboard/dashboard-navigation";
+import {
+  fetchEventGuestData,
+  sortDashboardEvents,
+} from "@/components/Dashboard/dashboard-client";
+import type {
+  DashboardContext,
+  DashboardEvent,
+  DashboardGuest,
+  DashboardTable,
+  DashboardTab,
+} from "@/components/Dashboard/dashboard-types";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
   const { d } = useDashboardI18n();
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<DashboardTab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
-  const [ctx, setCtx] = useState<Context | null>(null);
+  const [ctx, setCtx] = useState<DashboardContext | null>(null);
   const [events, setEvents] = useState<DashboardEvent[]>([]);
   const [rsvpEventId, setRsvpEventId] = useState("");
-  const [rsvpGuests, setRsvpGuests] = useState<Guest[]>([]);
+  const [rsvpGuests, setRsvpGuests] = useState<DashboardGuest[]>([]);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [placementEventId, setPlacementEventId] = useState("");
-  const [placementGuests, setPlacementGuests] = useState<Guest[]>([]);
-  const [placementTables, setPlacementTables] = useState<Table[]>([]);
+  const [placementGuests, setPlacementGuests] = useState<DashboardGuest[]>([]);
+  const [placementTables, setPlacementTables] = useState<DashboardTable[]>([]);
   const [placementLoading, setPlacementLoading] = useState(false);
-  const [usherGuests, setUsherGuests] = useState<Guest[]>([]);
+  const [usherGuests, setUsherGuests] = useState<DashboardGuest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
@@ -223,7 +98,7 @@ export default function DashboardPage() {
     ]);
 
     if (contextResponse.ok) {
-      const next = (await contextResponse.json()) as Context;
+      const next = (await contextResponse.json()) as DashboardContext;
       setCtx(next);
       setNickname(next.profile.displayName || "");
       setOnboarding(!next.profile.displayName?.trim());
@@ -231,7 +106,7 @@ export default function DashboardPage() {
 
     if (invitationResponse.ok) {
       const data = await invitationResponse.json();
-      const configured = sortEvents(
+      const configured = sortDashboardEvents(
         ((data.invitations ?? []) as DashboardEvent[]).filter(
           (invitation) => invitation.eventConfigured,
         ),
@@ -392,14 +267,14 @@ export default function DashboardPage() {
     router.push("/login");
   }
 
-  function go(id: Tab) {
+  function go(id: DashboardTab) {
     setTab(id);
     if (invitationTabs.has(id)) setInvitationMenuOpen(true);
     setMobileOpen(false);
     setProfileMenu(false);
   }
 
-  const meta = tabMeta[tab];
+  const meta = dashboardTabMeta[tab];
   const invitationActive = invitationTabs.has(tab);
   const scopedHeaderEvent =
     tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
@@ -651,8 +526,8 @@ export default function DashboardPage() {
               <FeatureGate
                 allowed={canGuestbook}
                 title="Usher App"
-                description={d("Tersedia pada layanan Guest Book Digital.")}
-                upgradeLabel={d("Lihat Guest Book Digital")}
+                description={d("Tersedia pada layanan DashboardGuest Book Digital.")}
+                upgradeLabel={d("Lihat DashboardGuest Book Digital")}
                 onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
               >
                 <UsherPanel guests={usherGuests} onRefresh={load} />
@@ -774,9 +649,9 @@ function WorkspaceOverview({
   events,
   onGo,
 }: {
-  ctx: Context | null;
+  ctx: DashboardContext | null;
   events: DashboardEvent[];
-  onGo: (id: Tab) => void;
+  onGo: (id: DashboardTab) => void;
 }) {
   const { d, locale } = useDashboardI18n();
   const overview = ctx?.overview;
@@ -825,7 +700,7 @@ function WorkspaceOverview({
       </DashboardMetricGrid>
 
       <section className="mt-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.75fr)]">
-        <Card className="min-w-0 overflow-hidden">
+        <DashboardSurface className="min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Terbaru")}</h2>
@@ -897,9 +772,9 @@ function WorkspaceOverview({
               </div>
             </div>
           )}
-        </Card>
+        </DashboardSurface>
 
-        <Card className="min-w-0 p-5 sm:p-6">
+        <DashboardSurface className="min-w-0 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
@@ -992,10 +867,10 @@ function WorkspaceOverview({
           </p>
           <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
             {[
-              { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
-              { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
-              { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
-              { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
+              { id: "invitation" as DashboardTab, label: "Undangan Digital", icon: Mail },
+              { id: "rsvp" as DashboardTab, label: "RSVP", icon: MessageSquareHeart },
+              { id: "placement" as DashboardTab, label: "Manajemen Tamu", icon: Users },
+              { id: "waBlast" as DashboardTab, label: "WA Blast", icon: Send },
             ].map((item) => {
               const Icon = item.icon;
               return (
@@ -1019,7 +894,7 @@ function WorkspaceOverview({
             <span className="text-xs text-muted-foreground">{locale === "en" ? "Total invitation visits" : "Total kunjungan undangan"}</span>
             <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
           </div>
-        </Card>
+        </DashboardSurface>
       </section>
     </DashboardPageShell>
   );
@@ -1039,7 +914,7 @@ function RsvpWorkspace({
   selectedId: string;
   onSelect: (id: string) => void;
   selectedEvent: DashboardEvent | null;
-  guests: Guest[];
+  guests: DashboardGuest[];
   loading: boolean;
   onRefresh: () => Promise<void>;
   accent: string;
@@ -1090,8 +965,8 @@ function PlacementWorkspace({
   selectedId: string;
   onSelect: (id: string) => void;
   selectedEvent: DashboardEvent | null;
-  guests: Guest[];
-  tables: Table[];
+  guests: DashboardGuest[];
+  tables: DashboardTable[];
   loading: boolean;
   accent: string;
   onRefresh: () => Promise<void>;
@@ -1134,8 +1009,8 @@ function PlacementPanel({
   onRefresh,
 }: {
   invitationId: string;
-  guests: Guest[];
-  tables: Table[];
+  guests: DashboardGuest[];
+  tables: DashboardTable[];
   accent: string;
   onRefresh: () => Promise<void>;
 }) {
@@ -1203,7 +1078,7 @@ function UsherPanel({
   guests,
   onRefresh,
 }: {
-  guests: Guest[];
+  guests: DashboardGuest[];
   onRefresh: () => void;
 }) {
   const { d } = useDashboardI18n();
