@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import type { Dispatch, SetStateAction } from "react";\nimport { motion, useReducedMotion } from "motion/react";
 import PintuCard from "@/components/Pintu/PintuCard";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -8,7 +8,7 @@ type DoorValue = 1 | 2 | 3 | null;
 
 type PintuSectionProps = {
   activeDoor: DoorValue;
-  setActiveDoor: React.Dispatch<React.SetStateAction<DoorValue>>;
+  setActiveDoor: Dispatch<SetStateAction<DoorValue>>;
 };
 
 const doors = [
