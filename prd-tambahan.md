@@ -203,3 +203,19 @@ Delta:
 - route ini bersifat sementara dan boleh dihapus setelah eksperimen selesai.
 
 Validation: pending GitHub Actions observation.
+
+
+---
+
+## 19 September 2026 — Eksperimen Pintu 3D & Background Baru di `/jiplak`
+
+Eksperimen ini sengaja terisolasi agar landing utama tidak terganggu.
+
+Delta:
+- `PintuSecBaru.tsx` dibuat sebagai komponen Pintu alternatif dengan perspective/depth/frame tebal, shadow, light spill, dan daun pintu `rotateY` seperti engsel;
+- `JiplakSweetBackground.tsx` mengganti rose-petal drop khusus `/jiplak` dengan soft Rose ambience, bokeh, light beam, dan botanical line-art;
+- `jiplak.tsx` memakai komponen baru tersebut;
+- `app/page.tsx`, Pintu canonical, dan `RosePetalBackground.tsx` tidak disentuh;
+- Three.js belum dipasang; visual 3D pertama diuji memakai CSS 3D + Motion existing.
+
+Validation: pending GitHub Actions observation.
