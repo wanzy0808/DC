@@ -900,7 +900,7 @@ function TimeField({
           <select value={minute} onChange={(event) => onChange(`${hour}:${event.target.value}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
             {timeMinutes.map((item) => <option key={item}>{item}</option>)}
           </select>
-          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>{d("Selesai")}</Button>
+          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>{d("Selesai memilih")}</Button>
         </div>
       )}
     </div>
