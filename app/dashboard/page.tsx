@@ -9,7 +9,6 @@ import {
   ChevronDown,
   CircleHelp,
   ContactRound,
-  CreditCard,
   Home,
   LogOut,
   Mail,
@@ -165,14 +164,17 @@ function sortEvents(items: DashboardEvent[]) {
   );
 }
 
-async function fetchEventGuestData(invitationId: string): Promise<EventGuestData> {
+async function fetchEventGuestData(
+  invitationId: string,
+  fallbackError = "Data acara belum dapat dimuat.",
+): Promise<EventGuestData> {
   if (!invitationId) return { guests: [], tables: [] };
   const response = await fetch(
     `/api/guests?invitationId=${encodeURIComponent(invitationId)}`,
     { cache: "no-store" },
   );
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || d("Data acara belum dapat dimuat."));
+  if (!response.ok) throw new Error(data?.error || fallbackError);
   return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
 }
 
@@ -240,7 +242,7 @@ export default function DashboardPage() {
 
       const firstGuestbookEvent = configured.find((event) => event.accessPaid);
       if (firstGuestbookEvent) {
-        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id).catch(
+        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id, d("Data acara belum dapat dimuat.")).catch(
           () => ({ guests: [], tables: [] }),
         );
         setUsherGuests(dataForUsher.guests);
@@ -265,7 +267,7 @@ export default function DashboardPage() {
     }
 
     setRsvpLoading(true);
-    fetchEventGuestData(rsvpEventId)
+    fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."))
       .then((data) => {
         if (active) setRsvpGuests(data.guests);
       })
@@ -293,7 +295,7 @@ export default function DashboardPage() {
     }
 
     setPlacementLoading(true);
-    fetchEventGuestData(placementEventId)
+    fetchEventGuestData(placementEventId, d("Data acara belum dapat dimuat."))
       .then((data) => {
         if (!active) return;
         setPlacementGuests(data.guests);
@@ -327,13 +329,13 @@ export default function DashboardPage() {
 
   async function refreshRsvp() {
     if (!rsvpEventId) return;
-    const data = await fetchEventGuestData(rsvpEventId);
+    const data = await fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."));
     setRsvpGuests(data.guests);
   }
 
   async function refreshPlacement() {
     if (!placementEventId) return;
-    const data = await fetchEventGuestData(placementEventId);
+    const data = await fetchEventGuestData(placementEventId, d("Data acara belum dapat dimuat."));
     setPlacementGuests(data.guests);
     setPlacementTables(data.tables);
   }
