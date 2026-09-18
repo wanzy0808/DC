@@ -8,207 +8,69 @@ import {
   CheckCircle2,
   ChevronDown,
   CircleHelp,
-  ContactRound,
   Home,
   LogOut,
-  Mail,
   Menu,
   MessageCircle,
-  MessageSquareHeart,
-  QrCode,
   Receipt,
-  RefreshCw,
-  Send,
   Settings2,
-  Users,
-  LayoutGrid,
   X,
 } from "lucide-react";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import EventScopePicker, {
-  type EventScopeOption,
-} from "@/components/Dashboard/EventScopePicker";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
-import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
 import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
 import EventPanelEditor from "@/components/Dashboard/EventPanel";
-import SeatingChart from "@/components/Dashboard/SeatingChart";
 import WhatsAppBlastPanel from "@/components/Dashboard/WhatsAppBlastPanel";
 import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPanel";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
 import {
-  DashboardPageHeader,
-  DashboardPanel,
-  DashboardEmptyState,
-  DashboardStatusBadge,
-  DashboardMetricCard,
-  DashboardMetricGrid,
-  DashboardPage as DashboardPageShell,
-  DashboardSectionHeader,
-  DashboardSurface,
-} from "@/components/Dashboard/DashboardPrimitives";
-
-type Context = {
-  profile: { displayName: string; email: string };
-  wedding: {
-    invitationId: string | null;
-    groomName: string;
-    brideName: string;
-    title: string;
-    venue: string;
-    address: string | null;
-    mapUrl: string | null;
-    timezone: string;
-    eventDate: string | null;
-    ceremonyTime: string | null;
-    receptionTime: string | null;
-    description: string | null;
-  };
-  package: { key: string | null; status: string };
-  overview: {
-    invitationsCreated: number;
-    invitationsLimit: number | null;
-    unlimitedInvitations: boolean;
-    activeInvitations: number;
-    totalRsvp: number;
-    totalGuests: number;
-    invitationsShared: number;
-    invitationPublished: boolean;
-  };
-  entitlements: {
-    hasDigitalInvitation: boolean;
-    hasGuestbook: boolean;
-    canPublishInvitation: boolean;
-    canUploadInvitationAssets: boolean;
-    canUseGuestPlacement: boolean;
-    canUseUsherApp: boolean;
-  };
-};
-
-type DashboardEvent = EventScopeOption & {
-  type: "WEDDING" | "ADAT_AKAD";
-  slug: string;
-  eventConfigured: boolean;
-  accessPaid: boolean;
-  createdAt: string;
-};
-
-type Table = {
-  id: string;
-  name: string;
-  shape: string;
-  capacity: number;
-  _count?: { guests: number };
-};
-
-type Guest = {
-  id: string;
-  name: string;
-  category?: string | null;
-  tags?: string[];
-  phone: string | null;
-  source?: "RSVP" | "MANUAL";
-  rsvpStatus: string;
-  plusOnes: number;
-  checkedIn?: boolean;
-  table?: { id: string; name: string; shape: string; capacity: number } | null;
-  tableId?: string | null;
-  seatNumber?: number | null;
-};
-
-type Tab =
-  | "overview"
-  | "events"
-  | "invitation"
-  | "waBlast"
-  | "personalInvitation"
-  | "rsvp"
-  | "placement"
-  | "usher";
-
-type EventGuestData = { guests: Guest[]; tables: Table[] };
-
-const invitationTabs = new Set<Tab>(["events", "invitation", "personalInvitation", "waBlast"]);
-
-const invitationNav = [
-  { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
-  { id: "invitation" as Tab, label: "Undangan", icon: Mail },
-  {
-    id: "personalInvitation" as Tab,
-    label: "Personal Invitation",
-    icon: ContactRound,
-  },
-  { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
-];
-
-const secondaryNav = [
-  { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
-  { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
-  { id: "usher" as Tab, label: "Usher App", icon: QrCode },
-];
-
-const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
-  overview: { eyebrow: "Dashboard", title: "Beranda" },
-  events: { eyebrow: "Persiapan", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Publikasi", title: "Undangan" },
-  personalInvitation: { eyebrow: "Distribusi", title: "Personal Invitation" },
-  waBlast: { eyebrow: "Distribusi", title: "WA Blast" },
-  rsvp: { eyebrow: "Kehadiran", title: "RSVP" },
-  placement: { eyebrow: "Tamu", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Hari-H", title: "Usher App" },
-};
-
-function sortEvents(items: DashboardEvent[]) {
-  return [...items].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-  );
-}
-
-async function fetchEventGuestData(
-  invitationId: string,
-  fallbackError = "Data acara belum dapat dimuat.",
-): Promise<EventGuestData> {
-  if (!invitationId) return { guests: [], tables: [] };
-  const response = await fetch(
-    `/api/guests?invitationId=${encodeURIComponent(invitationId)}`,
-    { cache: "no-store" },
-  );
-  const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || fallbackError);
-  return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
-}
-
-function Card({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return <DashboardSurface className={className}>{children}</DashboardSurface>;
-}
+  DashboardField,
+  DashboardMenuItem,
+} from "@/components/Dashboard/DashboardControls";
+import {
+  PlacementWorkspace,
+  RsvpWorkspace,
+  UsherPanel,
+  WorkspaceOverview,
+} from "@/components/Dashboard/DashboardWorkspaces";
+import {
+  dashboardTabMeta,
+  invitationNav,
+  invitationTabs,
+  secondaryNav,
+} from "@/components/Dashboard/dashboard-navigation";
+import {
+  fetchEventGuestData,
+  sortDashboardEvents,
+} from "@/components/Dashboard/dashboard-client";
+import type {
+  DashboardContext,
+  DashboardEvent,
+  DashboardGuest,
+  DashboardTable,
+  DashboardTab,
+} from "@/components/Dashboard/dashboard-types";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
   const { d } = useDashboardI18n();
-  const [tab, setTab] = useState<Tab>("overview");
+  const [tab, setTab] = useState<DashboardTab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
-  const [ctx, setCtx] = useState<Context | null>(null);
+  const [ctx, setCtx] = useState<DashboardContext | null>(null);
   const [events, setEvents] = useState<DashboardEvent[]>([]);
   const [rsvpEventId, setRsvpEventId] = useState("");
-  const [rsvpGuests, setRsvpGuests] = useState<Guest[]>([]);
+  const [rsvpGuests, setRsvpGuests] = useState<DashboardGuest[]>([]);
   const [rsvpLoading, setRsvpLoading] = useState(false);
   const [placementEventId, setPlacementEventId] = useState("");
-  const [placementGuests, setPlacementGuests] = useState<Guest[]>([]);
-  const [placementTables, setPlacementTables] = useState<Table[]>([]);
+  const [placementGuests, setPlacementGuests] = useState<DashboardGuest[]>([]);
+  const [placementTables, setPlacementTables] = useState<DashboardTable[]>([]);
   const [placementLoading, setPlacementLoading] = useState(false);
-  const [usherGuests, setUsherGuests] = useState<Guest[]>([]);
+  const [usherGuests, setUsherGuests] = useState<DashboardGuest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
@@ -223,7 +85,7 @@ export default function DashboardPage() {
     ]);
 
     if (contextResponse.ok) {
-      const next = (await contextResponse.json()) as Context;
+      const next = (await contextResponse.json()) as DashboardContext;
       setCtx(next);
       setNickname(next.profile.displayName || "");
       setOnboarding(!next.profile.displayName?.trim());
@@ -231,7 +93,7 @@ export default function DashboardPage() {
 
     if (invitationResponse.ok) {
       const data = await invitationResponse.json();
-      const configured = sortEvents(
+      const configured = sortDashboardEvents(
         ((data.invitations ?? []) as DashboardEvent[]).filter(
           (invitation) => invitation.eventConfigured,
         ),
@@ -392,14 +254,14 @@ export default function DashboardPage() {
     router.push("/login");
   }
 
-  function go(id: Tab) {
+  function go(id: DashboardTab) {
     setTab(id);
     if (invitationTabs.has(id)) setInvitationMenuOpen(true);
     setMobileOpen(false);
     setProfileMenu(false);
   }
 
-  const meta = tabMeta[tab];
+  const meta = dashboardTabMeta[tab];
   const invitationActive = invitationTabs.has(tab);
   const scopedHeaderEvent =
     tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
@@ -581,28 +443,28 @@ export default function DashboardPage() {
                           <LanguageToggle />
                         </div>
                         <div className="space-y-1.5">
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={Receipt}
                             text={d("Lihat transaksi")}
                             onClick={() => router.push("/transactions")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={Settings2}
                             text={d("Beli layanan")}
                             onClick={() => router.push("/packages")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={CircleHelp}
                             text={d("Buka FAQ")}
                             onClick={() => router.push("/faq")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={MessageCircle}
                             text={d("Buka bantuan")}
                             onClick={() => setProfileMenu(false)}
                           />
                           <div className="my-2 border-t border-border" />
-                          <MenuItem icon={LogOut} text={d("Keluar akun")} danger onClick={logout} />
+                          <DashboardMenuItem icon={LogOut} text={d("Keluar akun")} danger onClick={logout} />
                         </div>
                       </div>
                     )}
@@ -651,8 +513,8 @@ export default function DashboardPage() {
               <FeatureGate
                 allowed={canGuestbook}
                 title="Usher App"
-                description={d("Tersedia pada layanan Guest Book Digital.")}
-                upgradeLabel={d("Lihat Guest Book Digital")}
+                description={d("Tersedia pada layanan DashboardGuest Book Digital.")}
+                upgradeLabel={d("Lihat DashboardGuest Book Digital")}
                 onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
               >
                 <UsherPanel guests={usherGuests} onRefresh={load} />
@@ -684,7 +546,7 @@ export default function DashboardPage() {
               {d("Profil akun")}
             </h2>
             <div className="mt-6">
-              <Field
+              <DashboardField
                 label={d("Nama panggilan")}
                 value={nickname}
                 onChange={setNickname}
@@ -704,545 +566,5 @@ export default function DashboardPage() {
         </div>
       )}
     </div>
-  );
-}
-
-function MenuItem({
-  icon: Icon,
-  text,
-  onClick,
-  danger = false,
-}: {
-  icon: any;
-  text: string;
-  onClick: () => void;
-  danger?: boolean;
-}) {
-  return (
-    <Button
-      type="button"
-      onClick={onClick}
-      className={`dc-dashboard-account-menu-item h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
-        danger
-          ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
-          : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
-      }`}
-    >
-      <Icon className="h-4 w-4" />
-      {text}
-    </Button>
-  );
-}
-
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder: string;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-medium">{label}</span>
-      <Input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={placeholder}
-        className="border-border bg-transparent"
-      />
-    </label>
-  );
-}
-
-function formatEventDate(value: string, locale: "id" | "en" = "id") {
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    timeZone: "Asia/Jakarta",
-  }).format(date);
-}
-
-function WorkspaceOverview({
-  ctx,
-  events,
-  onGo,
-}: {
-  ctx: Context | null;
-  events: DashboardEvent[];
-  onGo: (id: Tab) => void;
-}) {
-  const { d, locale } = useDashboardI18n();
-  const overview = ctx?.overview;
-  const active = events.filter((event) => event.accessPaid).length;
-  const published = events.filter((event) => event.isPublished).length;
-  const totalGuests = overview?.totalGuests ?? 0;
-  const totalRsvp = overview?.totalRsvp ?? 0;
-  const pendingRsvp = Math.max(totalGuests - totalRsvp, 0);
-  const rsvpCoverage = totalGuests
-    ? Math.min(100, Math.round((totalRsvp / totalGuests) * 100))
-    : 0;
-  const publishRate = events.length
-    ? Math.min(100, Math.round((published / events.length) * 100))
-    : 0;
-
-  const stats = [
-    { label: d("Total acara"), value: events.length, icon: CalendarDays },
-    { label: d("Undangan aktif"), value: active, icon: Mail },
-    { label: d("Total RSVP"), value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
-    { label: d("Total tamu"), value: overview?.totalGuests ?? 0, icon: Users },
-  ];
-
-  return (
-    <DashboardPageShell>
-      <DashboardPageHeader
-        eyebrow={d("Beranda")}
-        title={<>{d("Halo")}, {ctx?.profile.displayName || d("Akun")}</>}
-        description={d("Pantau semua persiapan dan aktivitas terbaru dari sini.")}
-        actions={<>
-            <Button onClick={() => onGo("events")} size="sm">
-              <CalendarDays className="h-4 w-4" />
-              {d("Tambah acara")}
-            </Button>
-        </>}
-      />
-
-      <DashboardMetricGrid className="mt-4">
-        {stats.map((item) => (
-          <DashboardMetricCard
-            key={item.label}
-            icon={item.icon}
-            label={item.label}
-            value={String(item.value)}
-          />
-        ))}
-      </DashboardMetricGrid>
-
-      <section className="mt-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.75fr)]">
-        <Card className="min-w-0 overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
-            <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Terbaru")}</h2>
-              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                {active} {d("aktif")} · {published} {d("terbit")}
-              </p>
-            </div>
-            <Button onClick={() => onGo("events")} size="sm">
-              {d("Lihat semua")}
-            </Button>
-          </div>
-
-          {events.length ? (
-            <div className="overflow-x-auto px-4 pb-4 sm:px-5">
-              <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
-                <thead>
-                  <tr className="text-[11px] text-muted-foreground">
-                    <th className="px-3 py-3 font-medium">{d("Acara")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Status")}</th>
-                    <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.slice(0, 6).map((event) => (
-                    <tr key={event.id} className="border-t border-border/60">
-                      <td className="max-w-64 px-3 py-3.5">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {event.title || d("Acara tanpa judul")}
-                        </p>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3.5 text-xs text-muted-foreground">
-                        {formatEventDate(event.eventDate, locale)}
-                      </td>
-                      <td className="max-w-52 px-3 py-3.5 text-xs text-muted-foreground">
-                        <p className="truncate">{event.venue || "—"}</p>
-                      </td>
-                      <td className="px-3 py-3.5">
-                        <DashboardStatusBadge active={event.isPublished}>
-                          {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
-                        </DashboardStatusBadge>
-                      </td>
-                      <td className="px-3 py-3.5 text-right">
-                        <Link
-                          href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
-                          className="text-xs font-semibold text-primary hover:underline"
-                        >
-                          {d("Undangan")}
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="px-5 py-8 sm:px-6">
-              <div className="flex max-w-xl items-start gap-3">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                  <CalendarDays className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold">{d("Belum ada acara")}</p>
-                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    {d("Buat acara pertama untuk mulai menyiapkan undangan digital.")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </Card>
-
-        <Card className="min-w-0 p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
-                {d("Ringkasan data")}
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-                {d("Ringkasan performa")}
-              </h2>
-            </div>
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <MessageSquareHeart className="h-4 w-4" />
-            </span>
-          </div>
-
-          <div className="mt-5 rounded-xl border border-border/70 p-4">
-            <div className="flex flex-col items-center gap-5 sm:flex-row xl:flex-col 2xl:flex-row">
-              <figure
-                className="relative size-32 shrink-0"
-                aria-label={`Cakupan RSVP ${rsvpCoverage}%`}
-              >
-                <svg viewBox="0 0 42 42" className="size-32 -rotate-90" aria-hidden="true">
-                  <circle
-                    cx="21"
-                    cy="21"
-                    r="15.9155"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3.4"
-                    className="text-foreground/[0.07]"
-                  />
-                  <circle
-                    cx="21"
-                    cy="21"
-                    r="15.9155"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3.4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${rsvpCoverage} ${100 - rsvpCoverage}`}
-                    className="text-primary"
-                  />
-                </svg>
-                <div className="absolute inset-0 grid place-items-center text-center">
-                  <div>
-                    <p className="text-2xl font-semibold leading-none">{rsvpCoverage}%</p>
-                    <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                      RSVP
-                    </p>
-                  </div>
-                </div>
-              </figure>
-
-              <div className="w-full min-w-0 space-y-3">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Sudah merespons")}</span>
-                  <span className="text-sm font-semibold">{totalRsvp}</span>
-                </div>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Belum merespons")}</span>
-                  <span className="text-sm font-semibold">{pendingRsvp}</span>
-                </div>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Total tamu")}</span>
-                  <span className="text-sm font-semibold">{totalGuests}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4 rounded-xl border border-border/70 p-4">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold">{d("Publikasi")}</p>
-                <p className="mt-1 text-[11px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
-              </div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
-                {publishRate}%
-              </p>
-            </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.07]">
-              <div
-                className="h-full rounded-full bg-primary transition-[width]"
-                style={{ width: `${publishRate}%` }}
-              />
-            </div>
-          </div>
-
-          <p className="mt-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-            Akses cepat
-          </p>
-          <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
-            {[
-              { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
-              { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
-              { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
-              { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => onGo(item.id)}
-                  className="flex min-h-12 w-full items-center gap-3 py-3 text-left text-sm transition hover:text-primary"
-                >
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                  <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground" />
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 flex items-center justify-between gap-4 rounded-xl bg-foreground/[0.018] px-4 py-3">
-            <span className="text-xs text-muted-foreground">{locale === "en" ? "Total invitation visits" : "Total kunjungan undangan"}</span>
-            <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
-          </div>
-        </Card>
-      </section>
-    </DashboardPageShell>
-  );
-}
-
-function RsvpWorkspace({
-  events,
-  selectedId,
-  onSelect,
-  selectedEvent,
-  guests,
-  loading,
-  onRefresh,
-  accent,
-}: {
-  events: DashboardEvent[];
-  selectedId: string;
-  onSelect: (id: string) => void;
-  selectedEvent: DashboardEvent | null;
-  guests: Guest[];
-  loading: boolean;
-  onRefresh: () => Promise<void>;
-  accent: string;
-}) {
-  const { d } = useDashboardI18n();
-  return (
-    <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Kehadiran")} title={d("RSVP")} description={d("Pantau respons dan konfirmasi tamu.")}>
-      <EventScopePicker
-        events={events}
-        value={selectedId}
-        onChange={onSelect}
-        disabled={loading}
-      />
-      </DashboardPageHeader>
-      {selectedEvent && (
-        <div className="mt-4">
-          {loading ? (
-            <LoadingSurface />
-          ) : (
-            <RsvpAnalyticsPanel
-              key={selectedEvent.id}
-              guests={guests}
-              slug={selectedEvent.slug}
-              accent={accent}
-              embedded
-              onRefresh={onRefresh}
-            />
-          )}
-        </div>
-      )}
-    </DashboardPageShell>
-  );
-}
-
-function PlacementWorkspace({
-  events,
-  selectedId,
-  onSelect,
-  selectedEvent,
-  guests,
-  tables,
-  loading,
-  accent,
-  onRefresh,
-}: {
-  events: DashboardEvent[];
-  selectedId: string;
-  onSelect: (id: string) => void;
-  selectedEvent: DashboardEvent | null;
-  guests: Guest[];
-  tables: Table[];
-  loading: boolean;
-  accent: string;
-  onRefresh: () => Promise<void>;
-}) {
-  const { d } = useDashboardI18n();
-  return (
-    <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Tamu")} title={d("Manajemen Tamu")} description={d("Atur daftar tamu, meja, dan posisi duduk.")}>
-      <EventScopePicker
-        events={events}
-        value={selectedId}
-        onChange={onSelect}
-        disabled={loading}
-      />
-      </DashboardPageHeader>
-      {selectedEvent && (
-        <div className="mt-4">
-          {loading ? (
-            <LoadingSurface />
-          ) : (
-            <PlacementPanel
-              invitationId={selectedId}
-              guests={guests}
-              tables={tables}
-              accent={accent}
-              onRefresh={onRefresh}
-            />
-          )}
-        </div>
-      )}
-    </DashboardPageShell>
-  );
-}
-
-function PlacementPanel({
-  invitationId,
-  guests,
-  tables,
-  accent,
-  onRefresh,
-}: {
-  invitationId: string;
-  guests: Guest[];
-  tables: Table[];
-  accent: string;
-  onRefresh: () => Promise<void>;
-}) {
-  const { d } = useDashboardI18n();
-  const assigned = guests.filter((guest) => guest.tableId).length;
-
-  const assignGuest = async (
-    guestId: string,
-    tableId: string,
-    seatNumber: number,
-  ) => {
-    const response = await fetch(`/api/guests/${guestId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      cache: "no-store",
-      body: JSON.stringify({ tableId, seatNumber }),
-    });
-    const data = await response.json().catch(() => null);
-    if (!response.ok) {
-      throw new Error(data?.error || d("Penempatan tamu gagal disimpan."));
-    }
-    await onRefresh();
-  };
-
-  return (
-    <div className="space-y-4">
-        <DashboardSectionHeader
-          eyebrow={d("Manajemen Tamu")}
-          title={d("Tamu & seating")}
-          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
-          actions={
-            <Button onClick={onRefresh} size="sm" title={d("Muat ulang data tamu dan meja")}>
-              <RefreshCw className="h-4 w-4" />
-              {d("Muat ulang")}
-            </Button>
-          }
-        />
-        <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
-          <DashboardMetricCard icon={Users} label={d("Tamu")} value={String(guests.length)} />
-          <DashboardMetricCard icon={LayoutGrid} label={d("Meja")} value={String(tables.length)} />
-          <DashboardMetricCard icon={CheckCircle2} label={d("Ditempatkan")} value={`${assigned} / ${guests.length}`} />
-        </DashboardMetricGrid>
-        <SeatingChart
-          key={invitationId}
-          invitationId={invitationId}
-          guests={guests}
-          tables={tables}
-          accent={accent}
-          onAssigned={assignGuest}
-        />
-    </div>
-  );
-}
-
-function LoadingSurface() {
-  const { d } = useDashboardI18n();
-  return (
-    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-      {d("Memuat data acara...")}
-    </DashboardSurface>
-  );
-}
-
-function UsherPanel({
-  guests,
-  onRefresh,
-}: {
-  guests: Guest[];
-  onRefresh: () => void;
-}) {
-  const { d } = useDashboardI18n();
-  const checked = guests.filter((guest) => guest.checkedIn).length;
-  return (
-    <DashboardPageShell>
-        <DashboardPageHeader
-          eyebrow={d("Usher App")}
-          title={d("Check-in")}
-          description={d("Pantau check-in dan lanjutkan ke scanner saat siap.")}
-          actions={
-            <>
-              <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
-                <RefreshCw className="h-4 w-4" />{d("Muat ulang")}
-              </Button>
-              <Button asChild size="sm"><Link href="/dashboard/usher"><QrCode className="size-4" />{d("Buka Usher App")}</Link></Button>
-            </>
-          }
-        />
-        <DashboardMetricGrid className="mt-4 xl:grid-cols-2">
-          <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
-          <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
-        </DashboardMetricGrid>
-        <DashboardPanel className="mt-4" title={d("Daftar tamu")} description={d("Pantau status check-in tamu sebelum membuka scanner.")}>
-          {guests.length === 0 ? <DashboardEmptyState icon={Users} title={d("Belum ada tamu")} /> : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[560px] text-left">
-                <thead><tr><th className="px-3 py-3">{d("Nama tamu")}</th><th className="px-3 py-3">WhatsApp</th><th className="px-3 py-3">{d("Status")}</th></tr></thead>
-                <tbody>{guests.map(guest => (
-                  <tr key={guest.id}>
-                    <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
-                    <td className="px-3 py-4 text-sm text-muted-foreground">{guest.phone || "—"}</td>
-                    <td className="px-3 py-4"><DashboardStatusBadge active={guest.checkedIn}>{guest.checkedIn ? d("Check-in") : d("Belum check-in")}</DashboardStatusBadge></td>
-                  </tr>
-                ))}</tbody>
-              </table>
-            </div>
-          )}
-        </DashboardPanel>
-    </DashboardPageShell>
   );
 }
