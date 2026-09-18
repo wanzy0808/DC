@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Quote } from "lucide-react";
-import PintuSection from "@/components/Pintu/PintuSection";
+import PintuSection from "@/components/Landing/Pintu/PintuSection";
 import RomanticBackground from "@/components/Layout/background";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
