@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-import { hasInvitationAccess } from "@/lib/invitation-password";
-import { slugifyEvent } from "@/lib/invitation-slug";
+import { hasInvitationAccess } from "@/lib/invitations/password";
+import { slugifyEvent } from "@/lib/invitations/slug";
 import PublicInvitation, {
   InvitationLockedState,
 } from "@/components/PublicInvitation/PublicInvitation";

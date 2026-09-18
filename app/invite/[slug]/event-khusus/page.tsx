@@ -1,6 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { slugifyEvent } from "@/lib/invitation-slug";
+import { slugifyEvent } from "@/lib/invitations/slug";
 
 export default async function LegacySpecialInvitationPage({
   params,

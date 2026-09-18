@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import {
   setInvitationAccessCookie,
   verifyInvitationPassword,
-} from "@/lib/invitation-password";
+} from "@/lib/invitations/password";
 
 export async function POST(
   request: Request,

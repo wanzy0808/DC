@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-import { hashInvitationPassword } from "@/lib/invitation-password";
+import { hashInvitationPassword } from "@/lib/invitations/password";
 
 async function getEventInvitation(userId: string, invitationId: string) {
   if (!invitationId) return null;
