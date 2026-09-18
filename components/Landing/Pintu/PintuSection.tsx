@@ -9,7 +9,7 @@ import {
   useReducedMotion,
   useTransform,
 } from "motion/react";
-import PintuCard from "@/components/Pintu/PintuCard";
+import PintuCard from "@/components/Landing/Pintu/PintuCard";
 
 type DoorValue = 1 | 2 | 3 | null;
 
