@@ -87,6 +87,8 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Primary desktop header/content/footer containers target **80vw**; do not reintroduce fixed `1400px` page wrappers that waste wide-screen space.
 - Dashboard chrome can span the viewport, while its customer workspace is capped by the available main pane to avoid sidebar-driven overflow.
 - Beranda defines the canonical customer-dashboard visual language. Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gates, and reusable dashboard components must use the same neutral surface/card/table hierarchy rather than page-specific styling.
+- Customer Dashboard supports Light + Dark mode through the shared theme provider and Indonesian + English through the shared language provider. Indonesian is the default when no locale preference exists; theme/language controls remain accessible in the Dashboard header.
+- Digital Invitation payment does not hide RSVP, Guest Management, or Personal Invitation preparation pages. Users can explore and prepare those workspaces before Publish; Digital Invitation payment is enforced on Publish. WA Blast quota and Guestbook/Usher retain their separate entitlements.
 - Shared dashboard presentation primitives live in `components/Dashboard/DashboardPrimitives.tsx`; extend them for new workspace UI. Real tables/graphs are welcome when backed by actual application data, never filler/mock metrics.
 - Customer-facing UI copy avoids decorative sequence numbering; use descriptive labels instead. Real numeric product data (dates, time, price, counts, capacity, quota, child order, metrics) remains visible.
 - Public burger navigation omits Beranda/Home because the brand logo already returns home. Indonesian service labels are `Perencana Acara`, `Undangan Digital`, and `Buku Tamu Digital`; `Layanan` retains its submenu, `Masuk` and `Daftar` stay present, and `Layanan`/`Paket` use distinct icons.
@@ -136,7 +138,6 @@ pnpm db:deploy
 
 ## Documentation Governance
 
-- `prd.md` remains the active product-requirement source of truth.
-- `prd1.md` remains the chronological implementation changelog.
+- `prd.md` is the single product-requirement source of truth and contains consolidated implementation history in Appendix A.
 - `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
-- When explicitly requested by the user, `prd-tambahan.md` may be maintained as a supplemental non-canonical delta log; it must not override `prd.md` or replace the required `prd1.md` implementation entry.
+- Do not create or revive split PRD/changelog files unless the owner explicitly changes the documentation model.
