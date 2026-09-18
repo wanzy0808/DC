@@ -172,7 +172,7 @@ async function fetchEventGuestData(invitationId: string): Promise<EventGuestData
     { cache: "no-store" },
   );
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
+  if (!response.ok) throw new Error(data?.error || d("Data acara belum dapat dimuat."));
   return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
 }
 
@@ -341,7 +341,7 @@ export default function DashboardPage() {
   async function saveOnboarding() {
     const displayName = nickname.trim();
     if (!displayName) {
-      setOnboardingError("Nama panggilan wajib diisi.");
+      setOnboardingError(d("Nama panggilan wajib diisi."));
       return;
     }
 
@@ -356,7 +356,7 @@ export default function DashboardPage() {
       });
       if (!profileResponse.ok) {
         const data = await profileResponse.json().catch(() => null);
-        throw new Error(data?.error || "Nama panggilan belum tersimpan.");
+        throw new Error(data?.error || d("Nama panggilan belum tersimpan."));
       }
 
       setOnboarding(false);
@@ -372,7 +372,7 @@ export default function DashboardPage() {
       await load();
     } catch (error) {
       setOnboardingError(
-        error instanceof Error ? error.message : "Data belum tersimpan. Coba lagi.",
+        error instanceof Error ? error.message : d("Data belum tersimpan. Coba lagi."),
       );
       setOnboarding(true);
     } finally {
@@ -555,7 +555,7 @@ export default function DashboardPage() {
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
                       className="h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-foreground"
-                      aria-label={`Buka menu akun ${profileLabel}`}
+                      aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >
                       <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase text-primary">
@@ -576,6 +576,10 @@ export default function DashboardPage() {
                           <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
                             {ctx?.profile.email || ""}
                           </p>
+                        </div>
+                        <div className="mb-2 flex items-center gap-2 px-2 sm:hidden">
+                          <ThemeToggle />
+                          <LanguageToggle />
                         </div>
                         <div className="space-y-1.5">
                           <MenuItem
@@ -843,7 +847,7 @@ function WorkspaceOverview({
         <Card className="min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">Acara terbaru</h2>
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Acara terbaru")}</h2>
               <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
                 {active} aktif · {published} terbit
               </p>
@@ -904,7 +908,7 @@ function WorkspaceOverview({
                   <CalendarDays className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">Belum ada acara</p>
+                  <p className="text-sm font-semibold">{d("Belum ada acara")}</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
                     Buat acara pertama untuk mulai menyiapkan undangan digital.
                   </p>
@@ -973,11 +977,11 @@ function WorkspaceOverview({
                   <span className="text-sm font-semibold">{totalRsvp}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">Belum merespons</span>
+                  <span className="text-xs text-muted-foreground">{d("Belum merespons")}</span>
                   <span className="text-sm font-semibold">{pendingRsvp}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">Total tamu</span>
+                  <span className="text-xs text-muted-foreground">{d("Total tamu")}</span>
                   <span className="text-sm font-semibold">{totalGuests}</span>
                 </div>
               </div>
@@ -987,8 +991,8 @@ function WorkspaceOverview({
           <div className="mt-4 rounded-xl border border-border/70 p-4">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold">Publikasi acara</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">{published} dari {events.length} acara sudah terbit</p>
+                <p className="text-xs font-semibold">{d("Publikasi acara")}</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
               </div>
               <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
                 {publishRate}%
@@ -1031,7 +1035,7 @@ function WorkspaceOverview({
           </div>
 
           <div className="mt-4 flex items-center justify-between gap-4 rounded-xl bg-foreground/[0.018] px-4 py-3">
-            <span className="text-xs text-muted-foreground">Total kunjungan undangan</span>
+            <span className="text-xs text-muted-foreground">{locale === "en" ? "Total invitation visits" : "Total kunjungan undangan"}</span>
             <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
           </div>
         </Card>
@@ -1164,7 +1168,7 @@ function PlacementPanel({
     });
     const data = await response.json().catch(() => null);
     if (!response.ok) {
-      throw new Error(data?.error || "Penempatan tamu gagal disimpan.");
+      throw new Error(data?.error || d("Penempatan tamu gagal disimpan."));
     }
     await onRefresh();
   };
