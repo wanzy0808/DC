@@ -51,7 +51,7 @@ export default function Footer() {
 
   if (pathname === "/") {
     return (
-      <footer className="absolute bottom-0 left-0 z-20 w-full border-none bg-transparent py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs">
+      <footer className="absolute bottom-0 left-0 z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs">
         © {new Date().getFullYear()} DC Organizer. {footer.rights}
       </footer>
     );
