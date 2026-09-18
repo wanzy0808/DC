@@ -19,7 +19,7 @@ import {
 
 import BrandWordmark from "@/components/Brand/BrandWordmark";
 import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "@/components/Theme/ThemeContext";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { DashboardMetricCard, DashboardPageHeader, DashboardStatusBadge } from "@/components/Dashboard/DashboardPrimitives";
 
 type Guest = {
