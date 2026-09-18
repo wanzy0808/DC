@@ -130,6 +130,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Generic decorative labels such as `Workspace` must not be used as filler. Use a meaningful context label such as `Persiapan`, `Publikasi`, `Distribusi`, `Kehadiran`, or omit the label when it adds no information.
 - Do not duplicate the same metric/context in adjacent header cards and metric grids. If the information is already clearly visible nearby, remove the duplicate.
 - Small owner corrections to recurring UI/copy style are repository conventions, not throwaway tweaks: capture them in this file and mirror active requirements/history to `prd.md`; when the owner explicitly asks for the supplemental log, also update `prd-tambahan.md`.
+- Landing root chrome must visually merge with the landing canvas: header and compact landing footer use `var(--background)` rather than a visibly separate surface. In landing Dark Mode, the selected ID/EN option uses opaque Rose with near-black text, and the theme toggle uses opaque Rose with a near-black icon/text. Scope these landing-only overrides through the landing navbar class so Dashboard/shared controls are not accidentally restyled.
 
 ## 6. Motion & Accessibility
 
