@@ -155,20 +155,20 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
   return (
     <DashboardPage>
-      <DashboardPageHeader eyebrow={d("Acara")} title={d("Undangan Digital")} description={d("Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan.")} />
+      <DashboardPageHeader eyebrow={d("Publikasi")} title={d("Undangan Digital")} description={d("Pilih yang ingin kamu desain atau terbitkan.")} />
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardMetricGrid>
-        <Metric icon={Users} label={d("Undangan")} value={String(invitations.length)} />
+        <Metric icon={Users} label={d("Total")} value={String(invitations.length)} />
         <Metric icon={CalendarDays} label={d("Siap desain")} value={String(readyCount)} />
         <Metric icon={Send} label={d("Dipublish")} value={String(publishedCount)} />
         <Metric icon={Eye} label={d("Total dibuka")} value={String(openedCount)} />
       </DashboardMetricGrid>
 
       <DashboardPanel className="mt-5"
-          eyebrow={d("Undangan Digital")}
-          title={d("Semua acara")}
-          description={d("Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan.")}
+          eyebrow={d("Daftar")}
+          title={d("Undangan")}
+          description={d("Buka Studio, lanjutkan desain, atau publish dari daftar ini.")}
           actions={
             <>
               <Button type="button" size="sm" onClick={onCreateSequence}>
@@ -199,7 +199,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[780px] text-left">
-              <thead><tr>{["Acara", "Venue", "Status", "Dibuka", "Aksi"].map(label => <th key={label} className="px-3 py-3">{d(label)}</th>)}</tr></thead>
+              <thead><tr>{["Nama", "Venue", "Status", "Dibuka", "Aksi"].map(label => <th key={label} className="px-3 py-3">{d(label)}</th>)}</tr></thead>
               <tbody>{invitations.map((invitation) => {
                 const title = invitation.title.trim() || d("Acara tanpa judul");
                 const hasDesign = Boolean(invitation.templateKey?.trim());
@@ -228,7 +228,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       <DashboardPanel className="mt-5"
           eyebrow={d("RSVP")}
           title={d("Respons terbaru")}
-          description={d("Respons terbaru dari seluruh undangan yang berada di workspace ini.")}
+          description={d("Respons terbaru dari undangan yang sudah dibagikan.")}
           actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
       >
 
@@ -249,7 +249,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   {guest.name}
                 </span>
                 <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
-                  {guest.invitation?.title || d("Acara")}
+                  {guest.invitation?.title || d("Acara tanpa judul")}
                 </span>
               </div>
               <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
