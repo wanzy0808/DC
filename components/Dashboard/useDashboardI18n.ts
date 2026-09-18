@@ -4,6 +4,19 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Daftar": "List",
+  "Pax": "Pax",
+  "opsional": "optional",
+  "Undangan belum dapat dimuat.": "Invitations could not be loaded.",
+  "Undangan yang sudah terbit dikunci dan tidak dapat dikembalikan menjadi draft.": "A published invitation is locked and cannot be returned to draft.",
+  "Lengkapi dan simpan detail acara sebelum publish.": "Complete and save the event details before publishing.",
+  "Pilih dan simpan template undangan sebelum publish.": "Choose and save an invitation template before publishing.",
+  "Undangan belum dapat dipublish.": "The invitation could not be published.",
+  "Undangan berhasil diterbitkan.": "Invitation published successfully.",
+  "Denah sudah memiliki meja. Gunakan data meja yang sudah tersimpan.": "The seating plan already has tables. Use the saved table data.",
+  "Nama tamu manual wajib diisi.": "Manual guest name is required.",
+  "Tamu manual gagal ditambahkan.": "Manual guest could not be added.",
+  "Tamu manual ditambahkan ke roster.": "Manual guest added to the roster.",
   "Workspace": "Workspace",
   "Beranda": "Home",
   "Acara": "Events",
