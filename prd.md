@@ -2764,3 +2764,33 @@ Lanjutan cleanup repository untuk menormalkan feature naming yang masih legacy d
 
 ### Next
 Cleanup berikutnya fokus pada kualitas internal file besar, terutama memecah `UsherWorkspace` yang masih monolitik, daripada terus memindahkan folder yang sudah semantik.
+
+
+---
+
+## 2026-09-18 — Usher Workspace Internal Cleanup (Pass 5)
+
+### Requirement / Intent
+Setelah folder/domain structure stabil, cleanup berlanjut pada kualitas internal komponen besar agar state/orchestration tidak bercampur dengan static config, domain types, helper murni, dan reusable presentation.
+
+### Implementation
+- `components/Usher/UsherWorkspace.tsx` tetap menjadi orchestration layer untuk:
+  - loading/polling guest data;
+  - scanner lifecycle;
+  - check-in mutation;
+  - issuing guest QR;
+  - active tab state dan derived attendance data;
+- domain types dipindahkan ke `components/Usher/types.ts`;
+- tab/navigation config dipindahkan ke `components/Usher/config.ts`;
+- QR parsing/image URL helpers dipindahkan ke `components/Usher/utils.ts`;
+- check-in panel, metric wrapper, RSVP badge, guest table, dan generic feature panel dipindahkan ke `components/Usher/UsherPanels.tsx`;
+- import dan naming diperbarui ke `UsherGuest`, `UsherTab`, `IssuedGuestQr`, `usherTabs`, `parseUsherQrToken`, dan `usherQrImageUrl`;
+- behavior/API endpoints tidak diubah.
+
+### Validation
+- Source/reference update: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Setelah Pass 5 tervalidasi, audit komponen monolitik berikutnya dapat dilakukan berdasarkan tanggung jawab nyata, dengan prioritas pada file yang mencampur data fetching/orchestration dan banyak presentation sections.
