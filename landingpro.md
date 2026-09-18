@@ -73,7 +73,7 @@ Yang masih membedakan web dari visual reference:
 
 ## Stage 2 — Room & Portal Realism
 
-**Status: implemented on feature branch; validation pending**
+**Status: implemented + Build Validation PASS**
 
 Implemented:
 
@@ -158,6 +158,6 @@ Jangan diubah tanpa instruksi owner:
 - unified the three existing portal images with one shared Rose-lit treatment;
 - active portal now drives subtle floor light position inside the room;
 - no new dependency added; implementation remains Tailwind + SVG/CSS + Motion + existing theme stack;
-- Build/TypeScript/CI: pending;
+- Build Validation #1058: **PASS** for dependency install, Prisma Client generation, and Next.js production build + TypeScript;
 - browser visual verification: pending;
-- next focus after validation: Stage 3 motion synchronization and interaction polish.
+- next focus: Stage 3 motion synchronization and interaction polish.
