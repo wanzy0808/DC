@@ -25,6 +25,12 @@ export default function FeatureGate({
   onUpgrade,
   children,
 }: FeatureGateProps) {
+  const { d } = useDashboardI18n();
+  const resolvedDescription =
+    description ?? d("Paket aktif diperlukan untuk membuka fitur ini.");
+  const resolvedUpgradeLabel =
+    upgradeLabel ?? d("Lihat paket yang tersedia");
+
   if (allowed) {
     return <>{children}</>;
   }
