@@ -2926,3 +2926,38 @@ Melanjutkan cleanup Invitation Studio pada komponen RSVP yang masih mencampur su
 
 ### Next
 Audit berikutnya diarahkan ke file besar di luar Invitation Studio hanya bila boundary tanggung jawabnya masih bercampur; hindari refactor tambahan pada file yang sudah cohesive.
+
+
+---
+
+## 2026-09-19 — Event Panel Internal Cleanup (Pass 10)
+
+### Requirement / Intent
+Melanjutkan repository cleanup pada Dashboard Event Panel yang masih mencampur event model, form/date helpers, validation, reusable field controls, API mutation, dan presentation dalam satu file.
+
+### Implementation
+- `EventPanel.tsx` tetap menjadi orchestration layer untuk:
+  - event loading;
+  - active/new/edit mode;
+  - category selection;
+  - save/delete mutations;
+  - list/editor flow yang saling terkait;
+- event/invitation/form contracts dipindahkan ke `event-panel-types.ts`;
+- empty form, draft/sort helpers, date conversion/formatting, time validation, child-order validation, dan invitation→form conversion dipindahkan ke `event-panel-helpers.ts`;
+- wedding family fields, date picker field, time picker field, generic input, dan textarea dipindahkan ke `EventFields.tsx`;
+- `EventPanel.tsx` turun kira-kira dari 35.9k karakter menjadi 25.2k karakter;
+- list/editor presentation sengaja tidak dipecah lagi pada pass ini karena flow, notice state, callbacks, dan editor mode masih sangat tightly coupled;
+- API endpoint, request payload, URL behavior, event category behavior, dan UI intent tidak diubah.
+
+### Validation
+- Build Validation #1103: **FAIL** karena beberapa JSX multiline masih memakai nama lokal lama `Field` / `TimeField` setelah extraction.
+- Sisa JSX diperbarui ke `EventField` / `EventTimeField`.
+- Build Validation #1104 pada application source head `a66dd6c79bc8a9105b046621cdb2a15e94083d84`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Audit berikutnya mengevaluasi `SeatingChart.tsx`: pecah hanya bila file benar-benar mencampur canvas/layout orchestration, domain helpers, dan reusable presentation; jika cohesive sebagai satu seating editor, pertahankan.
