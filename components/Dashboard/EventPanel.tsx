@@ -404,7 +404,7 @@ export default function EventPanel({ onSaved }: Props) {
       return;
     }
 
-    const label = invitation.title?.trim() || "Acara baru";
+    const label = invitation.title?.trim() || d("Acara baru");
     const confirmed = window.confirm(
       locale === "en"
         ? `Delete “${label}”?\n\nThe event, invitation design, guest list, and related unpublished data will also be deleted.`
