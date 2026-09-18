@@ -5,7 +5,7 @@ import { hasInvitationAccess } from "@/lib/invitations/password";
 import PublicInvitation, {
   InvitationLockedState,
 } from "@/components/PublicInvitation/PublicInvitation";
-import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
+import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
 import PersonalInvitationPasswordGate from "@/components/PublicInvitation/PersonalInvitationPasswordGate";
 
 export default async function PersonalInvitationPage({
@@ -53,7 +53,7 @@ export default async function PersonalInvitationPage({
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <FigmaClassicTemplate invitation={invitation} />
+      <ClassicInvitationTemplate invitation={invitation} />
     ) : (
       <PublicInvitation invitation={invitation} />
     );
