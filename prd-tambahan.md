@@ -167,3 +167,23 @@ Affected files:
 - `prd.md`.
 
 Validation: pending GitHub Actions observation.
+
+
+---
+
+## 19 September 2026 — Pintu Ornament Open-State Repair
+
+Owner meminta ornamen/bunga di bagian atas Pintu tidak tetap terlihat ketika Pintu sedang terbuka.
+
+Delta:
+- ornamen atas mengikuti state `isActive` yang sama dengan panel Pintu;
+- ketika Pintu terbuka, ornamen fade out sambil bergerak sedikit ke atas;
+- ketika Pintu kembali tertutup, ornamen muncul kembali;
+- reduced-motion tetap memakai transisi singkat tanpa movement tambahan.
+
+Affected files:
+- `components/Landing/Pintu/PintuCard.tsx`;
+- `AGENTS.md`;
+- `prd.md`.
+
+Validation: pending GitHub Actions observation.

@@ -113,14 +113,28 @@ export default function PintuCard({
           <div className="h-10 w-[3px] rounded-r-sm bg-white shadow-[0_0_8px_#ffffff]" />
         </motion.div>
 
-        <div className="pointer-events-none absolute left-0 right-0 top-2 z-20 flex justify-center opacity-80">
+        <motion.div
+          initial={false}
+          animate={
+            reducedMotion
+              ? { opacity: isActive ? 0 : 0.8 }
+              : {
+                  opacity: isActive ? 0 : 0.8,
+                  y: isActive ? -6 : 0,
+                  scale: isActive ? 0.96 : 1,
+                }
+          }
+          transition={{ duration: reducedMotion ? 0.1 : 0.28, ease: [0.22, 1, 0.36, 1] }}
+          className="pointer-events-none absolute left-0 right-0 top-2 z-20 flex justify-center"
+          aria-hidden="true"
+        >
           <svg width="70" height="28" viewBox="0 0 100 40" fill="none" stroke="white" strokeWidth="1.5">
             <path d="M50 35 C 30 35, 20 15, 5 20 C 20 20, 30 10, 50 25 C 70 10, 80 20, 95 20 C 80 15, 70 35, 50 35 Z" fill="rgba(255,255,255,0.15)" />
             <circle cx="50" cy="22" r="3" fill="white" />
             <circle cx="35" cy="20" r="2" fill="white" />
             <circle cx="65" cy="20" r="2" fill="white" />
           </svg>
-        </div>
+        </motion.div>
 
         <motion.div
           animate={{ opacity: isActive ? 0 : 1, y: isActive ? 8 : 0 }}
