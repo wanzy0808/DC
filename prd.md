@@ -2753,3 +2753,41 @@ Lanjutan staged rebuild landing untuk mendekatkan hasil website nyata ke approve
 
 ### Next
 Stage 3 di `landingpro.md`: sinkronisasi motion copy/portal/light, interaction timing, restrained room drift/parallax, lalu Stage 4 browser screenshot/responsive pass.
+
+
+---
+
+## 2026-09-18 — Landing Reference Rebuild Stage 3
+
+### Requirement / Intent
+Lanjutan staged landing rebuild untuk menyatukan interaction rhythm setelah structure dan realism stabil. Motion harus mendukung visual reference tanpa berubah menjadi gimmick atau mengganggu single-screen navigation.
+
+### Implementation
+- service selector menggunakan Motion shared-layout active surface agar Rose state berpindah kontinu;
+- active content reveal disinkronkan dalam satu timing family untuk eyebrow, heading, body, supporting statement, dan separator;
+- portal door opening dipadatkan dan diberi small delay pada active transition agar selection → copy → opening terasa berurutan;
+- portal content dan luminous threshold mengikuti opening dengan restrained delay;
+- room scene menambahkan active vertical Rose light dan floor glow yang berpindah mengikuti active portal;
+- ambient room light drift diperlambat sehingga background lebih tenang daripada Pintu;
+- hover/focus hanya mengubah active service/portal; navigation tetap click/link normal;
+- reduced-motion tetap memotong delay dan heavy movement;
+- tidak menambah dependency baru.
+
+### Affected Files
+- `app/page.tsx`
+- `components/Pintu/PintuCard.tsx`
+- `components/Layout/LandingRoomScene.tsx`
+- `landingpro.md`
+- `prd.md`
+
+### Validation
+- Build Validation #1061 pada application source head `3eca25b29aea2b93e7e900b7d145ab8dd21dcb8a`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Browser visual verification: pending.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Stage 4 di `landingpro.md`: browser visual comparison + responsive pass untuk 1440p, 1366×768, tablet, mobile, Light/Dark, dan ID/EN.

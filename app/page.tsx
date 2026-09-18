@@ -62,12 +62,19 @@ export default function Home() {
                     onClick={() => setActiveDoor(door.id)}
                     onFocus={() => setActiveDoor(door.id)}
                     aria-pressed={active}
-                    className={`group inline-flex min-h-10 items-center gap-2 rounded-full border px-3.5 py-2 font-[family-name:var(--font-dc-body)] text-[11px] transition-all duration-300 sm:text-xs ${
+                    className={`group relative isolate inline-flex min-h-10 items-center gap-2 overflow-hidden rounded-full border px-3.5 py-2 font-[family-name:var(--font-dc-body)] text-[11px] transition-[border-color,color,box-shadow] duration-300 sm:text-xs ${
                       active
-                        ? "border-primary bg-primary text-white shadow-[0_8px_22px_rgba(192,122,132,.22)] dark:text-black"
+                        ? "border-primary text-white shadow-[0_8px_22px_rgba(192,122,132,.22)] dark:text-black"
                         : "border-primary/28 bg-background/45 text-foreground/68 backdrop-blur-md hover:border-primary/55 hover:text-primary dark:bg-black/10"
                     }`}
                   >
+                    {active && (
+                      <motion.span
+                        layoutId="landing-service-active"
+                        transition={reduced ? { duration: 0.08 } : { type: "spring", stiffness: 420, damping: 34 }}
+                        className="absolute inset-0 -z-10 bg-primary"
+                      />
+                    )}
                     <Icon className="h-3.5 w-3.5" strokeWidth={1.6} />
                     {item.eyebrow}
                   </button>
@@ -78,29 +85,54 @@ export default function Home() {
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={selectedKey}
-                initial={reduced ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10 }}
-                transition={{ duration: reduced ? 0.1 : 0.4, ease }}
+                initial={reduced ? false : { opacity: 0, x: 12, y: 7 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={reduced ? { opacity: 0 } : { opacity: 0, x: -10, y: -5 }}
+                transition={{ duration: reduced ? 0.1 : 0.48, ease }}
               >
-                <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.2em] text-primary/82 sm:text-[10px]">
+                <motion.p
+                  initial={reduced ? false : { opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reduced ? 0.1 : 0.38, delay: reduced ? 0 : 0.04, ease }}
+                  className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.2em] text-primary/82 sm:text-[10px]"
+                >
                   DC Organizer · {content.eyebrow}
-                </p>
+                </motion.p>
 
-                <h1 className="mt-3 max-w-[36rem] text-balance font-[family-name:var(--font-dc-heading)] text-[2.3rem] font-medium leading-[1.02] tracking-[-0.035em] text-primary sm:text-[3rem] lg:text-[clamp(2.9rem,4.1vw,4.7rem)]">
+                <motion.h1
+                  initial={reduced ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reduced ? 0.1 : 0.46, delay: reduced ? 0 : 0.07, ease }}
+                  className="mt-3 max-w-[36rem] text-balance font-[family-name:var(--font-dc-heading)] text-[2.3rem] font-medium leading-[1.02] tracking-[-0.035em] text-primary sm:text-[3rem] lg:text-[clamp(2.9rem,4.1vw,4.7rem)]"
+                >
                   {content.title}
-                </h1>
+                </motion.h1>
 
-                <p className="mt-4 max-w-[32rem] text-sm leading-6 text-foreground/67 sm:text-[15px] sm:leading-7 lg:mt-5 lg:text-base lg:leading-8">
+                <motion.p
+                  initial={reduced ? false : { opacity: 0, y: 7 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reduced ? 0.1 : 0.44, delay: reduced ? 0 : 0.11, ease }}
+                  className="mt-4 max-w-[32rem] text-sm leading-6 text-foreground/67 sm:text-[15px] sm:leading-7 lg:mt-5 lg:text-base lg:leading-8"
+                >
                   {content.description}
-                </p>
+                </motion.p>
 
-                <div className="mt-4 flex max-w-[31rem] items-center gap-3 text-primary lg:mt-5">
-                  <span className="h-px w-10 bg-primary/70" />
+                <motion.div
+                  initial={reduced ? false : { opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: reduced ? 0.1 : 0.42, delay: reduced ? 0 : 0.15, ease }}
+                  className="mt-4 flex max-w-[31rem] items-center gap-3 text-primary lg:mt-5"
+                >
+                  <motion.span
+                    initial={reduced ? false : { scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ duration: reduced ? 0.1 : 0.45, delay: reduced ? 0 : 0.12, ease }}
+                    className="h-px w-10 origin-left bg-primary/70"
+                  />
                   <p className="font-[family-name:var(--font-dc-body)] text-xs leading-5 text-primary/88 sm:text-[13px]">
                     {content.proof.quote}
                   </p>
-                </div>
+                </motion.div>
 
                 <div className="mt-5 flex flex-wrap items-center gap-4 lg:mt-7">
                   <Button

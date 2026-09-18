@@ -185,15 +185,26 @@ export default function LandingRoomScene({ activeDoor }: { activeDoor: DoorValue
         <rect width="1600" height="900" fill="url(#stage2-roseGlow)" />
       </svg>
 
-      {/* active-door floor light reacts immediately but remains intentionally subtle */}
+      {/* active portal light follows the same rhythm as the opening doors */}
       <motion.div
         initial={false}
         animate={{
           left: `calc(${(activeX / 1600) * 100}% - 9%)`,
           opacity: isDarkMode ? 0.34 : 0.24,
+          scaleX: 1,
         }}
-        transition={{ duration: reduced ? 0.08 : 0.55, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: reduced ? 0.08 : 0.62, delay: reduced ? 0 : 0.05, ease: [0.22, 1, 0.36, 1] }}
         className="absolute bottom-[5%] h-[12%] w-[18%] rounded-[50%] bg-primary blur-3xl"
+      />
+
+      <motion.div
+        initial={false}
+        animate={{
+          left: `calc(${(activeX / 1600) * 100}% - 7%)`,
+          opacity: isDarkMode ? 0.16 : 0.11,
+        }}
+        transition={{ duration: reduced ? 0.08 : 0.68, delay: reduced ? 0 : 0.08, ease: [0.22, 1, 0.36, 1] }}
+        className="absolute top-[16%] h-[48%] w-[14%] rounded-[50%] bg-[linear-gradient(to_bottom,rgba(217,163,170,.52),rgba(192,122,132,.08),transparent)] blur-3xl"
       />
 
       <motion.div
@@ -202,7 +213,7 @@ export default function LandingRoomScene({ activeDoor }: { activeDoor: DoorValue
             ? undefined
             : { opacity: [0.44, 0.68, 0.44], x: [0, -9, 0] }
         }
-        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
         className="absolute right-[1%] top-[7%] h-[64%] w-[50%] bg-[radial-gradient(ellipse_at_center,rgba(192,122,132,.13),transparent_66%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(192,122,132,.18),transparent_67%)]"
       />
 
