@@ -14,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   DashboardEmptyState,
   DashboardMetricCard,
@@ -26,7 +25,30 @@ import {
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import { weddingParentLine, type WeddingChildKind } from "@/lib/events/parents";
+import {
+  EventDateField,
+  EventField,
+  EventTextArea,
+  EventTimeField,
+  WeddingFamilyFields,
+} from "@/components/Dashboard/EventFields";
+import {
+  displayDateToIso,
+  END_TIME_SENTINEL,
+  eventInvitationToForm,
+  formatEventDateLabel,
+  isValidChildOrder,
+  isValidTime24,
+  isoDateToDisplay,
+  EMPTY_EVENT_FORM,
+  sortEventInvitations,
+} from "@/components/Dashboard/event-panel-helpers";
+import type {
+  EventEditorMode,
+  EventForm,
+  EventPanelInvitation,
+  EventPanelProps,
+} from "@/components/Dashboard/event-panel-types";
 import {
   buildEventTitle,
   eventCategoryOptions,
@@ -34,224 +56,34 @@ import {
   getIndonesiaTimezone,
   indonesiaTimezones,
   isEventCategory,
-  type EventCategory,
 } from "@/lib/events/catalog";
 
-type Invitation = {
-  id: string;
-  type: "WEDDING" | "ADAT_AKAD";
-  title: string;
-  eventCategory: EventCategory;
-  groomName: string;
-  brideName: string;
-  groomFatherName: string | null;
-  groomMotherName: string | null;
-  groomChildOrder: number | null;
-  brideFatherName: string | null;
-  brideMotherName: string | null;
-  brideChildOrder: number | null;
-  venue: string;
-  address: string | null;
-  mapUrl: string | null;
-  timezone: string;
-  eventDate: string;
-  eventConfigured: boolean;
-  ceremonyTime: string | null;
-  receptionTime: string | null;
-  description: string | null;
-  eventNotes: string | null;
-  templateKey: string;
-  isPublished: boolean;
-  accessPaid: boolean;
-  createdAt: string;
-};
-
-type Props = { accent: string; onSaved: () => void };
-type EditorMode = "closed" | "new" | "edit";
-
-type EventForm = {
-  eventCategory: EventCategory | "";
-  customTitle: string;
-  groomName: string;
-  brideName: string;
-  groomFatherName: string;
-  groomMotherName: string;
-  groomChildOrder: string;
-  brideFatherName: string;
-  brideMotherName: string;
-  brideChildOrder: string;
-  venue: string;
-  address: string;
-  mapUrl: string;
-  timezone: string;
-  eventDate: string;
-  ceremonyTime: string;
-  receptionTime: string;
-  description: string;
-  eventNotes: string;
-};
-
-const emptyForm: EventForm = {
-  eventCategory: "",
-  customTitle: "",
-  groomName: "",
-  brideName: "",
-  groomFatherName: "",
-  groomMotherName: "",
-  groomChildOrder: "",
-  brideFatherName: "",
-  brideMotherName: "",
-  brideChildOrder: "",
-  venue: "",
-  address: "",
-  mapUrl: "",
-  timezone: "Asia/Jakarta",
-  eventDate: "",
-  ceremonyTime: "",
-  receptionTime: "",
-  description: "",
-  eventNotes: "",
-};
-
-const END_TIME_SENTINEL = "END";
-
-const timeHours = Array.from({ length: 24 }, (_, index) =>
-  String(index).padStart(2, "0"),
-);
-const timeMinutes = Array.from({ length: 60 }, (_, index) =>
-  String(index).padStart(2, "0"),
-);
-
-function sortInvitations(items: Invitation[]) {
-  return [...items].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
-  );
-}
-
-function isBlankDraft(invitation: Invitation) {
-  return (
-    !invitation.eventConfigured &&
-    !invitation.title.trim() &&
-    !invitation.venue.trim() &&
-    !invitation.groomName.trim() &&
-    !invitation.brideName.trim()
-  );
-}
-
-function isoDateToDisplay(value: string) {
-  const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value);
-  return match ? `${match[3]}/${match[2]}/${match[1]}` : "";
-}
-
-function displayDateToIso(value: string) {
-  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
-  if (!match) return "";
-  const day = Number(match[1]);
-  const month = Number(match[2]);
-  const year = Number(match[3]);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  if (
-    date.getUTCFullYear() !== year ||
-    date.getUTCMonth() !== month - 1 ||
-    date.getUTCDate() !== day
-  ) {
-    return "";
-  }
-  return `${match[3]}-${match[2]}-${match[1]}`;
-}
-
-function formatDateInput(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 8);
-  if (digits.length <= 2) return digits;
-  if (digits.length <= 4) return `${digits.slice(0, 2)}/${digits.slice(2)}`;
-  return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4)}`;
-}
-
-function formatTimeInput(value: string) {
-  const digits = value.replace(/\D/g, "").slice(0, 4);
-  if (digits.length <= 2) return digits;
-  return `${digits.slice(0, 2)}:${digits.slice(2)}`;
-}
-
-function isValidTime24(value: string) {
-  return /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value.trim());
-}
-
-function isValidChildOrder(value: string) {
-  if (!value.trim()) return true;
-  const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed > 0;
-}
-
-function toForm(invitation: Invitation): EventForm {
-  const blankDraft = isBlankDraft(invitation);
-  const category = isEventCategory(invitation.eventCategory)
-    ? invitation.eventCategory
-    : "OTHER";
-
-  return {
-    eventCategory: blankDraft ? "" : category,
-    customTitle: !blankDraft && category === "OTHER" ? invitation.title || "" : "",
-    groomName: invitation.groomName || "",
-    brideName: invitation.brideName || "",
-    groomFatherName: invitation.groomFatherName || "",
-    groomMotherName: invitation.groomMotherName || "",
-    groomChildOrder: invitation.groomChildOrder ? String(invitation.groomChildOrder) : "",
-    brideFatherName: invitation.brideFatherName || "",
-    brideMotherName: invitation.brideMotherName || "",
-    brideChildOrder: invitation.brideChildOrder ? String(invitation.brideChildOrder) : "",
-    venue: invitation.venue || "",
-    address: invitation.address || "",
-    mapUrl: invitation.mapUrl || "",
-    timezone: invitation.timezone || "Asia/Jakarta",
-    eventDate:
-      invitation.eventConfigured && invitation.eventDate
-        ? isoDateToDisplay(invitation.eventDate)
-        : "",
-    ceremonyTime: invitation.ceremonyTime || "",
-    receptionTime: invitation.receptionTime || "",
-    description: invitation.description || "",
-    eventNotes: invitation.eventNotes || "",
-  };
-}
-
-function formatDateId(value: string, locale: "id" | "en") {
-  const iso = displayDateToIso(value);
-  if (!iso) return locale === "en" ? "Invalid date" : "Tanggal belum valid";
-  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "Asia/Jakarta",
-  }).format(new Date(`${iso}T12:00:00+07:00`));
-}
-
-export default function EventPanel({ onSaved }: Props) {
+export default function EventPanel({ onSaved }: EventPanelProps) {
   const { d, locale } = useDashboardI18n();
-  const [events, setEvents] = useState<Invitation[]>([]);
+  const [events, setEvents] = useState<EventPanelInvitation[]>([]);
   const [activeId, setActiveId] = useState("");
-  const [editorMode, setEditorMode] = useState<EditorMode>("closed");
-  const [form, setForm] = useState<EventForm>(emptyForm);
+  const [editorMode, setEditorMode] = useState<EventEditorMode>("closed");
+  const [form, setForm] = useState<EventForm>(EMPTY_EVENT_FORM);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState("");
   const [notice, setNotice] = useState("");
   const editorRef = useRef<HTMLElement | null>(null);
 
-  function activate(invitation: Invitation) {
+  function activate(invitation: EventPanelInvitation) {
     if (invitation.isPublished) {
       setNotice(d("Acara yang sudah dipublish tidak dapat diedit."));
       return;
     }
     setActiveId(invitation.id);
-    setForm(toForm(invitation));
+    setForm(eventInvitationToForm(invitation));
     setEditorMode(invitation.eventConfigured ? "edit" : "new");
     setNotice("");
   }
 
   function closeEditor() {
     setActiveId("");
-    setForm(emptyForm);
+    setForm(EMPTY_EVENT_FORM);
     setEditorMode("closed");
     setNotice("");
   }
@@ -262,7 +94,7 @@ export default function EventPanel({ onSaved }: Props) {
       const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
       const data = await response.json().catch(() => null);
       if (!response.ok) throw new Error(data?.error || d("Data acara belum dapat dimuat."));
-      const next = sortInvitations((data?.invitations ?? []) as Invitation[]);
+      const next = sortEventInvitations((data?.invitations ?? []) as EventPanelInvitation[]);
       setEvents(next);
       const targetId = preferredId || activeId;
       const target = targetId ? next.find((item) => item.id === targetId) : null;
@@ -294,7 +126,7 @@ export default function EventPanel({ onSaved }: Props) {
   function startNewEvent() {
     if (saving || deletingId) return;
     setActiveId("");
-    setForm(emptyForm);
+    setForm(EMPTY_EVENT_FORM);
     setEditorMode("new");
     setNotice("");
   }
@@ -397,7 +229,7 @@ export default function EventPanel({ onSaved }: Props) {
     }
   }
 
-  async function removeEvent(invitation: Invitation) {
+  async function removeEvent(invitation: EventPanelInvitation) {
     if (saving || deletingId) return;
     if (invitation.isPublished) {
       setNotice(d("Acara yang sudah dipublish tidak dapat dihapus."));
@@ -675,8 +507,8 @@ export default function EventPanel({ onSaved }: Props) {
               <div className="min-w-0">
                 <h3 className="text-sm font-semibold">{d("Waktu & tempat")}</h3>
                 <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-                  <DateField label={d("Tanggal")} value={form.eventDate} onChange={(value) => field("eventDate", value)} />
-                  <TimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
+                  <EventDateField label={d("Tanggal")} value={form.eventDate} onChange={(value) => field("eventDate", value)} />
+                  <EventTimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
                   <div>
                     <TimeField
                       label={`${d("Selesai")} (${timezone.label})`}
@@ -718,15 +550,15 @@ export default function EventPanel({ onSaved }: Props) {
 
                 {(form.eventDate || form.ceremonyTime) && (
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate, locale) : d("Tanggal")}</span>
+                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatEventDateLabel(form.eventDate, locale) : d("Tanggal")}</span>
                     <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
 
                 <div className="mt-4 space-y-4">
-                  <Field label={d("Nama tempat")} value={form.venue} onChange={(value) => field("venue", value)} />
-                  <Field label={d("Alamat")} value={form.address} onChange={(value) => field("address", value)} />
-                  <Field label={d("Google Maps")} value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
+                  <EventField label={d("Nama tempat")} value={form.venue} onChange={(value) => field("venue", value)} />
+                  <EventField label={d("Alamat")} value={form.address} onChange={(value) => field("address", value)} />
+                  <EventField label={d("Google Maps")} value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
                 </div>
               </div>
             )}
@@ -736,8 +568,8 @@ export default function EventPanel({ onSaved }: Props) {
             <details className="mt-7 border-t border-border/70 pt-4">
               <summary className="cursor-pointer text-xs font-semibold">{locale === "en" ? "Additional details" : "Tambahan"}</summary>
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <TextArea label={d("Deskripsi")} value={form.description} onChange={(value) => field("description", value)} />
-                <TextArea label={d("Catatan")} value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
+                <EventTextArea label={d("Deskripsi")} value={form.description} onChange={(value) => field("description", value)} />
+                <EventTextArea label={d("Catatan")} value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
               </div>
             </details>
           )}
@@ -752,176 +584,5 @@ export default function EventPanel({ onSaved }: Props) {
         </section>
       )}
     </DashboardPage>
-  );
-}
-
-function WeddingFamilyFields({
-  title,
-  kind,
-  father,
-  mother,
-  order,
-  onFather,
-  onMother,
-  onOrder,
-}: {
-  title: string;
-  kind: WeddingChildKind;
-  father: string;
-  mother: string;
-  order: string;
-  onFather: (value: string) => void;
-  onMother: (value: string) => void;
-  onOrder: (value: string) => void;
-}) {
-  const { d } = useDashboardI18n();
-  const parsedOrder = order.trim() ? Number(order) : null;
-  const familyLine = weddingParentLine(
-    father,
-    mother,
-    Number.isInteger(parsedOrder) ? parsedOrder : null,
-    kind,
-  );
-
-  return (
-    <div className="space-y-3">
-      <p className="text-xs font-semibold">{title}</p>
-      <ChildOrderField value={order} onChange={onOrder} />
-      <Field label={d("Nama bapak")} value={father} onChange={onFather} />
-      <Field label={d("Nama ibu")} value={mother} onChange={onMother} />
-      {familyLine && (
-        <p className="rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] leading-5 text-muted-foreground">
-          {familyLine}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function ChildOrderField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
-  const { d } = useDashboardI18n();
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold">{d("Anak keberapa")} ({d("opsional")})</span>
-      <Input
-        type="number"
-        min={1}
-        step={1}
-        inputMode="numeric"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={d("Contoh: 1")}
-      />
-    </label>
-  );
-}
-
-function DateField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  const { d } = useDashboardI18n();
-  const pickerRef = useRef<HTMLInputElement | null>(null);
-  const isoValue = displayDateToIso(value);
-
-  function openCalendar() {
-    const picker = pickerRef.current;
-    if (!picker) return;
-    if (typeof picker.showPicker === "function") picker.showPicker();
-    else picker.click();
-  }
-
-  return (
-    <div>
-      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <div className="relative flex gap-2">
-        <Input
-          inputMode="numeric"
-          maxLength={10}
-          value={value}
-          onChange={(event) => onChange(formatDateInput(event.target.value))}
-          placeholder="dd/mm/yyyy"
-        />
-        <Button type="button" size="icon" onClick={openCalendar} aria-label={d("Pilih tanggal")}>
-          <CalendarDays className="h-4 w-4" />
-        </Button>
-        <input
-          ref={pickerRef}
-          type="date"
-          value={isoValue}
-          onChange={(event) => onChange(isoDateToDisplay(event.target.value))}
-          className="pointer-events-none absolute right-0 top-0 h-11 w-11 opacity-0"
-          tabIndex={-1}
-        />
-      </div>
-    </div>
-  );
-}
-
-function TimeField({
-  label,
-  value,
-  onChange,
-  disabled = false,
-}: {
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  disabled?: boolean;
-}) {
-  const { d } = useDashboardI18n();
-  const [open, setOpen] = useState(false);
-  const [hour, minute] = isValidTime24(value) ? value.split(":") : ["00", "00"];
-
-  return (
-    <div className="relative">
-      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <div className="flex gap-2">
-        <Input
-          disabled={disabled}
-          inputMode="numeric"
-          maxLength={5}
-          value={value}
-          onChange={(event) => onChange(formatTimeInput(event.target.value))}
-          placeholder="00:00"
-          className="font-[family-name:var(--font-dc-mono)]"
-        />
-        <Button type="button" size="icon" disabled={disabled} onClick={() => setOpen((current) => !current)} aria-label={d("Pilih waktu")}>
-          <Clock3 className="h-4 w-4" />
-        </Button>
-      </div>
-      {open && !disabled && (
-        <div className="absolute right-0 z-40 mt-2 grid w-full min-w-52 grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-border bg-background p-3 shadow-xl">
-          <select value={hour} onChange={(event) => onChange(`${event.target.value}:${minute}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
-            {timeHours.map((item) => <option key={item}>{item}</option>)}
-          </select>
-          <span>:</span>
-          <select value={minute} onChange={(event) => onChange(`${hour}:${event.target.value}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
-            {timeMinutes.map((item) => <option key={item}>{item}</option>)}
-          </select>
-          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>{d("Selesai memilih")}</Button>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Field({ label, value, onChange, placeholder = "" }: { label: string; value: string; onChange: (value: string) => void; placeholder?: string }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <Input value={value} onChange={(event) => onChange(event.target.value)} placeholder={placeholder} />
-    </label>
-  );
-}
-
-function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold">{label}</span>
-      <textarea
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        rows={3}
-        className="w-full resize-y rounded-[10px] border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
-      />
-    </label>
   );
 }
