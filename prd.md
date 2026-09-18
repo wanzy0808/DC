@@ -2671,3 +2671,29 @@ Owner meminta susunan item, folder, components, dan data dirapikan serta diberi 
 
 ### Next
 Pass 2 merapikan helper `lib/` menjadi domain/server folders setelah seluruh API import dipetakan, agar perubahan backend tidak dicampur dengan component/data cleanup ini.
+
+
+---
+
+## 2026-09-18 — Repository Library Structure Cleanup (Pass 2)
+
+### Requirement / Intent
+Lanjutan cleanup repository untuk mengurangi file helper campur-aduk di root `lib/` dan membuat lokasi utilitas backend lebih mudah ditemukan tanpa mengubah API behavior.
+
+### Implementation
+- `lib/invitation-password.ts` → `lib/invitations/password.ts`;
+- `lib/invitation-slug.ts` → `lib/invitations/slug.ts`;
+- `lib/public-rate-limit.ts` → `lib/security/public-rate-limit.ts`;
+- `lib/usher-qr.ts` → `lib/usher/qr.ts`;
+- `lib/email.ts` → `lib/notifications/email.ts`;
+- import path pada public invitation routes, invitation API, RSVP, Usher QR/check-in, Orders, dan Owner Users diperbarui;
+- tidak memakai compatibility shim untuk path lama agar struktur baru benar-benar canonical;
+- `auth.ts` dan `prisma.ts` sengaja belum dipindah pada pass ini karena fan-out sangat tinggi dan akan dipetakan terpisah sebelum refactor berikutnya.
+
+### Validation
+- Source/reference update: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Pass berikutnya dapat memetakan dan merapikan high-fanout infrastructure modules seperti `auth.ts`, `google-auth.ts`, dan `prisma.ts` setelah seluruh import API/page tercatat.
