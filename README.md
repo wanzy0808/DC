@@ -128,7 +128,7 @@ The repository uses a feature-first component structure so files remain easy to 
 - `components/Landing/Pintu/` — landing Pintu navigation components.
 - `components/Dashboard/` — customer dashboard workspaces and shared dashboard primitives.
 - `components/Usher/` — day-of-event guest check-in feature. `UsherWorkspace.tsx` owns orchestration; `UsherPanels.tsx`, `config.ts`, `types.ts`, and `utils.ts` hold presentation, navigation config, domain types, and QR helpers.
-- `components/InvitationStudio/` — active invitation editor/studio components.
+- `components/InvitationStudio/` — active invitation editor/studio components. `InvitationDesigner.tsx` owns orchestration; `DesignerPanels.tsx` contains controls; `InvitationPreview.tsx` renders the canvas; adjacent `designer-*` modules hold types/config/state helpers.
 - `components/Payments/` — checkout/package-selection UI.
 - `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns. Theme state lives in `ThemeProvider.tsx`, while `ThemeToggle.tsx` is the canonical control.
 - `data/services/` — static service-facing content/catalog copy only.
