@@ -114,11 +114,11 @@ function DoorLeaf({
         transformStyle: "preserve-3d",
         backfaceVisibility: "hidden",
       }}
-      className={`absolute bottom-[9px] top-[9px] z-30 w-[calc(50%-9px)] overflow-hidden border-white/20 bg-[linear-gradient(135deg,#cf919a_0%,#b86572_52%,#95505c_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),0_16px_28px_rgba(30,8,15,0.18)] ${isLeft ? "left-[9px] rounded-tl-[132px] border-r" : "right-[9px] rounded-tr-[132px] border-l"}`}
+      className={`absolute bottom-[9px] top-[9px] z-30 w-[calc(50%_-_9px)] overflow-hidden border-white/20 bg-[linear-gradient(135deg,#cf919a_0%,#b86572_52%,#95505c_100%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.14),0_16px_28px_rgba(30,8,15,0.18)] ${isLeft ? "left-[9px] rounded-tl-[132px] border-r" : "right-[9px] rounded-tr-[132px] border-l"}`}
     >
       <div className="absolute inset-[9px] rounded-t-[118px] border border-white/20" />
-      <div className="absolute inset-x-4 top-[36%] h-px bg-white/14" />
-      <div className="absolute inset-x-4 top-[64%] h-px bg-black/12" />
+      <div className="absolute inset-x-4 top-[36%] h-px bg-white/15" />
+      <div className="absolute inset-x-4 top-[64%] h-px bg-black/10" />
       <div
         className={`absolute top-1/2 h-9 w-[3px] -translate-y-1/2 rounded-full bg-white/80 shadow-[0_0_10px_rgba(255,255,255,0.55)] ${isLeft ? "right-2.5" : "left-2.5"}`}
       />
@@ -229,7 +229,7 @@ function PintuCardBaru({
                 {door.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded border border-white/35 bg-black/18 px-1.5 py-0.5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase leading-tight text-white backdrop-blur-sm sm:text-[10px]"
+                    className="rounded border border-white/35 bg-black/20 px-1.5 py-0.5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase leading-tight text-white backdrop-blur-sm sm:text-[10px]"
                   >
                     {tag}
                   </span>
@@ -238,7 +238,7 @@ function PintuCardBaru({
               <h4 className="font-[family-name:var(--font-dc-heading)] text-lg font-bold leading-tight text-white sm:text-xl md:text-[1.35rem]">
                 {door.title}
               </h4>
-              <p className="mt-1.5 text-[11px] leading-relaxed text-white/78 sm:text-xs md:text-[13px]">
+              <p className="mt-1.5 text-[11px] leading-relaxed text-white/80 sm:text-xs md:text-[13px]">
                 {door.desc}
               </p>
               <div className="mt-3 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-white sm:text-[11px]">
