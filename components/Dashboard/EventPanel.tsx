@@ -215,10 +215,10 @@ function toForm(invitation: Invitation): EventForm {
   };
 }
 
-function formatDateId(value: string) {
+function formatDateId(value: string, locale: "id" | "en") {
   const iso = displayDateToIso(value);
-  if (!iso) return "Tanggal belum valid";
-  return new Intl.DateTimeFormat("id-ID", {
+  if (!iso) return locale === "en" ? "Invalid date" : "Tanggal belum valid";
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -572,7 +572,7 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
-        <section ref={editorRef} className="mt-4 scroll-mt-24 rounded-2xl border border-border/70 bg-background p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6">
+        <DashboardSurface ref={editorRef} className="mt-4 scroll-mt-24 p-5 sm:p-6">
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">
               {editorMode === "new" ? d("Acara baru") : d("Edit acara")}
@@ -710,14 +710,16 @@ export default function EventPanel({ onSaved }: Props) {
                     className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                   >
                     {indonesiaTimezones.map((item) => (
-                      <option key={item.value} value={item.value}>{locale === "en" ? ({ WEDDING: "Wedding", SILVER_WEDDING: "Silver Wedding", GOLDEN_WEDDING: "Golden Wedding", BIRTHDAY: "Birthday", BABY_SHOWER: "Baby Shower", OTHER: "Other Event" } as Record<string, string>)[item.key] || item.label : item.label} · {item.description}</option>
+                      <option key={item.value} value={item.value}>
+                        {item.label} · {item.description}
+                      </option>
                     ))}
                   </select>
                 </label>
 
                 {(form.eventDate || form.ceremonyTime) && (
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate) : "Tanggal"}</span>
+                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate, locale) : d("Tanggal")}</span>
                     <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
@@ -733,7 +735,7 @@ export default function EventPanel({ onSaved }: Props) {
 
           {category && (
             <details className="mt-7 border-t border-border/70 pt-4">
-              <summary className="cursor-pointer text-xs font-semibold">Tambahan</summary>
+              <summary className="cursor-pointer text-xs font-semibold">{locale === "en" ? "Additional details" : "Tambahan"}</summary>
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
                 <TextArea label={d("Deskripsi")} value={form.description} onChange={(value) => field("description", value)} />
                 <TextArea label={d("Catatan")} value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
@@ -748,7 +750,7 @@ export default function EventPanel({ onSaved }: Props) {
               {saving ? d("Menyimpan...") : d("Simpan")}
             </Button>
           </div>
-        </section>
+        </DashboardSurface>
       )}
     </DashboardPage>
   );
