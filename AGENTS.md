@@ -164,6 +164,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Split large feature components by responsibility when they mix orchestration/state, static configuration, domain types/helpers, and reusable presentation. Keep orchestration in the workspace/page component; move reusable panels, config, types, and pure helpers into adjacent feature files. Do not split purely to reduce line count.
 - Do not split a component that already has a clear responsibility and manageable size. Prefer a stable cohesive file over artificial fragmentation.
 - Invitation Studio editor structure is canonical: `InvitationDesigner.tsx` owns orchestration/history/upload/save; `DesignerPanels.tsx` owns editor controls; `InvitationPreview.tsx` owns preview rendering; `designer-types.ts`, `designer-config.ts`, and `designer-state.ts` own model/config/state helpers.
+- RSVP form structure is canonical: `RsvpForm.tsx` owns submit orchestration/state; `RsvpPanels.tsx` owns input/success presentation; `rsvp-helpers.ts` owns pure calendar/QR/ticket helpers; `rsvp-types.ts` owns the form/ticket contracts.
 
 ## 9. Code Quality
 
