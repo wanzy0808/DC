@@ -1275,7 +1275,8 @@ Mulai dari hasil merge ini, **hanya satu dokumen PRD aktif yang digunakan: `prd.
 
 Aturan:
 - `prd.md` adalah single source of truth untuk requirement aktif sekaligus menyimpan implementation history ringkas pada appendix;
-- jangan membuat `prd1.md`, `prdnew.md`, `prd-tambahan.md`, `PRD2.md`, dan file PRD paralel lain untuk requirement baru;
+- jangan membuat `prd1.md`, `prdnew.md`, `PRD2.md`, dan file PRD paralel lain untuk requirement baru;
+- apabila owner **secara eksplisit meminta `prd-tambahan.md`**, file tersebut boleh dipakai hanya sebagai supplemental delta log non-canonical; requirement aktif tetap wajib disinkronkan ke body `prd.md` dan histori material tetap masuk Appendix A;
 - jika requirement berubah, edit section canonical di badan utama terlebih dahulu;
 - catat implementasi material pada **Appendix A — Implementation History** di dokumen yang sama;
 - requirement superseded diganti/dihapus dari body canonical, sementara histori perubahan tetap dipertahankan secara ringkas di appendix;
