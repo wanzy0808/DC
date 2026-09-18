@@ -59,15 +59,15 @@ Perbedaan terbesar antara landing lama dan visual reference bukan warna atau glo
 
 Belum dianggap final.
 
-Yang masih membedakan web dari visual reference:
+Setelah Stage 2, gap utama yang tersisa:
 
-- room masih berupa vector architectural scene, belum mempunyai organic decorative depth seperti bunga/plant/soft furnishing pada reference;
-- interior masing-masing portal masih menggunakan existing product images dan belum diarahkan khusus agar menyatu tone-nya dengan ruang;
-- floor reflection masih atmospheric, belum benar-benar merefleksikan portal;
-- window/city depth belum sekompleks reference;
-- framing portal masih perlu polish pada material/glass/metal edge;
-- mobile belum menjalani visual pass berdasarkan browser screenshot nyata;
-- final spacing/scale perlu diperiksa pada viewport desktop nyata setelah CI/build.
+- scene web sudah memiliki room/depth/material treatment, tetapi belum divalidasi berdampingan dengan screenshot browser nyata terhadap visual reference;
+- realism tetap sengaja berbasis web/SVG/CSS sehingga tidak meniru detail photoreal random dari generated image secara pixel-perfect;
+- organic decoration dibuat restrained dan category-neutral, sehingga kepadatan visual memang lebih rendah daripada reference image;
+- mobile/tablet belum memiliki dedicated visual composition pass;
+- laptop 1366×768 belum dicek untuk clipping dan hierarchy;
+- final portal/copy scale, footer clearance, dan navbar alignment masih perlu browser screenshot verification;
+- setelah responsive pass baru bisa dinilai apakah secondary decorative asset benar-benar diperlukan.
 
 ---
 
@@ -92,21 +92,25 @@ Implemented:
 
 ## Stage 3 — Motion & Interaction Polish
 
-**NEXT**
+**Status: implemented on feature branch; validation pending**
 
-Setelah Stage 2 tervalidasi:
+Implemented:
 
-- subtle light response ketika active service berubah;
-- portal opening timing refinement;
-- very restrained room parallax/light drift;
-- text transition disinkronkan dengan portal;
-- floor glow/reflection merespons portal aktif;
-- memastikan hover tidak menyebabkan accidental navigation atau layout jump;
-- reduced-motion tetap memiliki versi tenang.
+- service selector memakai shared moving Rose active surface agar perpindahan state terasa kontinu;
+- active copy memakai satu timing family: eyebrow → heading → body → supporting statement;
+- text transition tetap restrained, tanpa word-by-word effect, bounce, random rotation, atau kinetic typography;
+- portal panel opening timing dipadatkan dan diberi small active delay agar mengikuti perubahan selection, bukan mendahuluinya;
+- portal content/luminous sill menyusul opening dengan delay kecil;
+- environmental floor glow dan vertical Rose light bergerak ke portal aktif dengan easing yang sama;
+- ambient room drift diperlambat agar background tetap lebih tenang daripada Pintu;
+- hover/focus hanya mengubah active portal; navigation tetap terjadi melalui click/link normal;
+- reduced-motion memotong hampir seluruh delay dan memakai transition sangat pendek.
 
 ---
 
 ## Stage 4 — Responsive & Browser Visual Pass
+
+**NEXT**
 
 - desktop: 1440p dan wide desktop;
 - laptop: sekitar 1366×768;
@@ -161,3 +165,13 @@ Jangan diubah tanpa instruksi owner:
 - Build Validation #1058: **PASS** for dependency install, Prisma Client generation, and Next.js production build + TypeScript;
 - browser visual verification: pending;
 - next focus: Stage 3 motion synchronization and interaction polish.
+
+
+### 18 September 2026 — Stage 3
+- synchronized selector, content reveal, portal opening, and environmental light timing;
+- added shared-layout active service indicator;
+- kept motion transform/opacity based and reduced-motion safe;
+- ambient room drift remains slower than portal interaction;
+- Build/TypeScript/CI: pending;
+- browser visual verification: pending;
+- next focus after validation: Stage 4 responsive/browser visual pass.
