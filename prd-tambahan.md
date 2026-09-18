@@ -44,7 +44,10 @@ Targetnya adalah readability yang lebih nyaman pada desktop tanpa membuat sideba
 
 Perbaikan sebelumnya tetap berlaku:
 - theme/language/account controls yang transparan harus tetap terbaca pada Dark Mode;
-- control transparan tidak boleh mewarisi black text dari canonical filled Rose button bila background header near-black.
+- ID/EN idle menggunakan near-black/transparent background + white copy; selected locale memakai neutral white emphasis, bukan pink opacity/fill;
+- account trigger, avatar, dan dropdown item idle menggunakan near-black background + white copy;
+- ID/EN dan account controls baru memakai Rose saat hover/interaction;
+- control transparan tidak boleh mewarisi black text atau idle Rose fill dari canonical filled Rose button bila background header near-black.
 
 ### Affected files
 
@@ -62,3 +65,10 @@ Perbaikan sebelumnya tetap berlaku:
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
+
+
+### Follow-up — Dark Header Utilities
+
+Owner meminta menghapus sisa Rose opacity/fill pada ID/EN dan account menu saat idle di Dark Mode. Implementasi mengikuti neutral-first rule: black/near-black + white copy saat idle, Rose + white copy hanya saat hover.
+
+Validation: PENDING workflow terbaru.
