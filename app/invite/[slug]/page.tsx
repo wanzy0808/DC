@@ -5,7 +5,7 @@ import { hasInvitationAccess } from "@/lib/invitations/password";
 import PublicInvitation, {
   InvitationLockedState,
 } from "@/components/PublicInvitation/PublicInvitation";
-import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
+import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
 export default async function PublicInvitationPage({
@@ -41,7 +41,7 @@ export default async function PublicInvitationPage({
 
   // The existing Eternal Blossom key remains the compatibility slot for this design.
   if (templateKey === "eternal-blossom") {
-    return <FigmaClassicTemplate invitation={invitation} />;
+    return <ClassicInvitationTemplate invitation={invitation} />;
   }
 
   return <PublicInvitation invitation={invitation} />;
