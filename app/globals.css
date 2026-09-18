@@ -162,19 +162,95 @@ aside nav > p { font-family: var(--font-dc-heading); }
    Single source of truth for dashboard shell, surfaces, forms and tables.
    -------------------------------------------------------------------------- */
 .dc-dashboard { background: var(--background); color: var(--foreground); }
-.dc-dashboard aside { background: var(--background) !important; color: var(--foreground) !important; border-color: var(--border) !important; box-shadow: none !important; }
-.dc-dashboard aside nav { padding: 1rem !important; }
-.dc-dashboard aside nav > p { color: var(--primary) !important; letter-spacing: 0.12em; margin-bottom: 0.4rem; }
-.dc-dashboard aside nav button, .dc-dashboard aside nav a { min-height: 44px; border-radius: 10px; color: var(--foreground) !important; transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease; }
-.dc-dashboard aside nav button:hover, .dc-dashboard aside nav a:hover { background: color-mix(in srgb, var(--primary) 8%, transparent) !important; color: var(--primary) !important; }
-.dc-dashboard aside nav button[aria-current="page"], .dc-dashboard aside nav a[aria-current="page"] { background: color-mix(in srgb, var(--primary) 10%, transparent) !important; color: var(--primary) !important; }
-.dc-dashboard aside > div { border-color: var(--border) !important; color: var(--muted-foreground) !important; }
-.dc-dashboard aside > div p.font-semibold { color: var(--foreground) !important; }
+
+/* Sidebar is one intentional Rose field. Individual items stay neutral so the rail does not look patchy. */
+.dc-dashboard aside {
+  background: #C07A84 !important;
+  color: #ffffff !important;
+  border-color: color-mix(in srgb, #A65E69 45%, transparent) !important;
+  box-shadow: none !important;
+}
+.dark .dc-dashboard aside {
+  color: #111111 !important;
+  border-color: color-mix(in srgb, #111111 18%, transparent) !important;
+}
+.dc-dashboard aside nav {
+  padding: 0.875rem !important;
+  background: #C07A84 !important;
+}
+.dc-dashboard aside nav > p {
+  color: rgba(255, 255, 255, 0.72) !important;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.5rem;
+}
+.dark .dc-dashboard aside nav > p { color: rgba(17, 17, 17, 0.62) !important; }
+
+.dc-dashboard aside nav button,
+.dc-dashboard aside nav a {
+  min-height: 46px;
+  border-radius: 10px;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  box-shadow: none !important;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+.dark .dc-dashboard aside nav button,
+.dark .dc-dashboard aside nav a {
+  color: rgba(17, 17, 17, 0.84) !important;
+}
+.dc-dashboard aside nav button:hover,
+.dc-dashboard aside nav a:hover {
+  background: rgba(255, 255, 255, 0.11) !important;
+  color: #ffffff !important;
+}
+.dark .dc-dashboard aside nav button:hover,
+.dark .dc-dashboard aside nav a:hover {
+  background: rgba(17, 17, 17, 0.09) !important;
+  color: #111111 !important;
+}
+.dc-dashboard aside nav button[aria-current="page"],
+.dc-dashboard aside nav a[aria-current="page"] {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.17) !important;
+  color: #ffffff !important;
+}
+.dark .dc-dashboard aside nav button[aria-current="page"],
+.dark .dc-dashboard aside nav a[aria-current="page"] {
+  border-color: rgba(17, 17, 17, 0.14) !important;
+  background: rgba(17, 17, 17, 0.14) !important;
+  color: #111111 !important;
+}
+.dc-dashboard aside > div { border-color: rgba(255, 255, 255, 0.18) !important; color: rgba(255, 255, 255, 0.76) !important; }
+.dark .dc-dashboard aside > div { border-color: rgba(17, 17, 17, 0.14) !important; color: rgba(17, 17, 17, 0.68) !important; }
+.dc-dashboard aside > div p.font-semibold { color: inherit !important; }
 .dc-dashboard header { height: 72px !important; background: var(--background) !important; color: var(--foreground) !important; border-color: var(--border) !important; box-shadow: none !important; }
 .dc-dashboard header a, .dc-dashboard header button { color: var(--foreground) !important; }
 .dc-dashboard header a:hover, .dc-dashboard header button:hover { color: var(--primary) !important; }
-.dc-dashboard main { min-width: 0; min-height: calc(100vh - 72px); background: var(--background); color: var(--foreground); }
+.dc-dashboard header .dc-dashboard-account-button { color: var(--foreground) !important; }
+.dc-dashboard header .dc-dashboard-account-button:hover { color: var(--foreground) !important; background: color-mix(in srgb, var(--foreground) 6%, transparent) !important; }
+.dc-dashboard header .dc-dashboard-account-avatar { background: var(--primary) !important; color: #ffffff !important; }
+.dark .dc-dashboard header .dc-dashboard-account-avatar { color: #111111 !important; }
+.dc-dashboard main {
+  min-width: 0;
+  min-height: calc(100vh - 72px);
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
 .dc-dashboard main > * { min-width: 0; animation: dcPageIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* Dashboard has generous workspace; avoid tiny 8–12px UI copy except where data density truly requires it. */
+.dc-dashboard main .text-xs { font-size: 0.875rem !important; line-height: 1.35rem !important; }
+.dc-dashboard main .text-sm { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
+.dc-dashboard main [class*="text-[8px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.dc-dashboard main [class*="text-[9px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.dc-dashboard main [class*="text-[10px]"] { font-size: 0.75rem !important; line-height: 1.1rem !important; }
+.dc-dashboard main [class*="text-[11px]"] { font-size: 0.8125rem !important; line-height: 1.2rem !important; }
+.dc-dashboard main input,
+.dc-dashboard main textarea,
+.dc-dashboard main select { font-size: 0.9rem !important; }
 
 /* Dashboard content uses the product-wide 80vw application workspace. */
 .dc-dashboard-page,
@@ -348,7 +424,8 @@ aside nav > p { font-family: var(--font-dc-heading); }
   background: color-mix(in srgb, var(--primary) 4%, var(--background));
 }
 .dc-dashboard main table tbody tr:hover { background: transparent !important; }
-.dc-dashboard main table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.68rem; }
+.dc-dashboard main table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
+.dc-dashboard main table tbody td { font-size: 0.875rem; line-height: 1.35rem; }
 .dc-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
 .dc-dashboard main [class*="bg-[#7A1C25]/10"], .dc-dashboard main [class*="bg-[#E8A5AE]/10"] { background: color-mix(in srgb, var(--primary) 9%, transparent) !important; }
 .dc-dashboard [role="dialog"], .dc-dashboard > div > div[class*="fixed"] > div { border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important; }

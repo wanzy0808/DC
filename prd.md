@@ -1113,6 +1113,9 @@ Bukan melalui banyak warna/variant berbeda.
 - Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.2; jangan mengembalikan centered public-content cap ke workspace utama.
 - **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
+- Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
+- Sidebar customer Dashboard adalah satu **Rose navigation rail**, bukan kumpulan card/accent Rose yang saling bertumpuk. Light Mode: Rose background dengan teks/icon putih. Dark Mode: Rose background dengan teks/icon near-black. Active/hover state memakai overlay netral tipis, bukan menambah warna Rose lain.
+- Header utility controls yang transparan (theme/language/account) wajib mempertahankan kontras terhadap header: khusus Dark Mode icon/control transparan memakai foreground putih/netral yang terbaca, bukan mewarisi black text dari canonical Rose button.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
@@ -2393,6 +2396,28 @@ Beranda tetap menjadi reference visual untuk seluruh customer Dashboard. Koreksi
 
 ### Validation
 - GitHub Actions Build Validation #1014 pada application source head `20e1d677044d32c7e7cc70cc57934cc37a5e4a46`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.
+---
+
+## 2026-09-18 — Dashboard Typography & Rose Sidebar Contrast
+
+### Requirement / Intent
+Owner meminta Dashboard memanfaatkan ruang yang tersedia dengan typography lebih besar, memperbaiki icon/control kanan atas yang tidak terbaca pada Dark Mode, dan mengubah sidebar menjadi satu bidang Rose yang lebih rapi.
+
+### Implementation
+- shared Dashboard metric, section header, notice, compact stat, status, dan empty-state typography diperbesar;
+- global Dashboard copy floor dinaikkan untuk body, table, form, dan legacy 8–11px utility copy;
+- sidebar Light Mode memakai Rose background + white text/icon;
+- sidebar Dark Mode memakai Rose background + near-black text/icon;
+- active/hover sidebar memakai neutral translucent overlay agar tidak terlihat terlalu banyak variasi pink;
+- profile avatar Dark Mode memakai Rose + near-black initials dan header theme/language controls memakai high-contrast neutral foreground.
+
+### Validation
+- GitHub Actions Build Validation #1018 pada application source head `84e3ff5fa482feaab2f88c974c2692d8a56887f6`: **PASS**.
 - Dependency install: **PASS**.
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.

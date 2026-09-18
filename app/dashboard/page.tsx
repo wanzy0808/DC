@@ -407,8 +407,8 @@ export default function DashboardPage() {
         <aside
           className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
         >
-          <nav className="flex-1 space-y-1.5 bg-background p-3">
-            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[9px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+          <nav className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
+            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[10px] font-semibold uppercase tracking-[0.16em]">
               Workspace
             </p>
 
@@ -416,31 +416,31 @@ export default function DashboardPage() {
               type="button"
               aria-current={tab === "overview" ? "page" : undefined}
               onClick={() => go("overview")}
-              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[13px] font-medium shadow-none ${
+              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
                 tab === "overview"
-                  ? "border-primary/15 bg-primary/10 text-primary"
-                  : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+                  ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
+                  : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
               }`}
             >
-              <span className="grid size-5 shrink-0 place-items-center text-current">
-                <Home className="h-4 w-4" strokeWidth={1.8} />
+              <span className="grid size-6 shrink-0 place-items-center text-current">
+                <Home className="h-[18px] w-[18px]" strokeWidth={1.9} />
               </span>
               <span className="min-w-0 truncate">{d("Beranda")}</span>
             </Button>
 
-            <div className="rounded-xl border border-border/70 bg-background p-1.5">
+            <div className="rounded-xl border border-white/15 bg-white/[0.05] p-1.5 dark:border-black/10 dark:bg-black/[0.05]">
               <Button
                 type="button"
                 aria-expanded={invitationMenuOpen}
                 onClick={() => setInvitationMenuOpen((value) => !value)}
-                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[13px] font-medium shadow-none ${
+                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[15px] font-medium shadow-none ${
                   invitationActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-foreground hover:bg-primary/[0.06] hover:text-primary"
+                    ? "bg-white/[0.16] text-white dark:bg-black/[0.15] dark:text-black"
+                    : "text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
                 }`}
               >
-                <span className="grid size-5 shrink-0 place-items-center">
-                  <CalendarDays className="h-4 w-4" strokeWidth={1.8} />
+                <span className="grid size-6 shrink-0 place-items-center">
+                  <CalendarDays className="h-[18px] w-[18px]" strokeWidth={1.9} />
                 </span>
                 <span className="min-w-0 truncate">{d("Acara")}</span>
                 <ChevronDown
@@ -459,14 +459,14 @@ export default function DashboardPage() {
                         type="button"
                         aria-current={active ? "page" : undefined}
                         onClick={() => go(item.id)}
-                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[12px] shadow-none ${
+                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[14px] font-medium shadow-none ${
                           active
-                            ? "border-primary/15 bg-primary/[0.09] text-primary"
-                            : "text-foreground/75 hover:bg-primary/[0.06] hover:text-primary"
+                            ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
+                            : "text-white/80 hover:bg-white/10 hover:text-white dark:text-black/70 dark:hover:bg-black/10 dark:hover:text-black"
                         }`}
                       >
-                        <span className="grid size-4 shrink-0 place-items-center">
-                          <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
+                        <span className="grid size-5 shrink-0 place-items-center">
+                          <Icon className="h-4 w-4" strokeWidth={1.9} />
                         </span>
                         <span className="min-w-0 truncate">{d(item.label)}</span>
                       </Button>
@@ -484,14 +484,14 @@ export default function DashboardPage() {
                   type="button"
                   aria-current={tab === item.id ? "page" : undefined}
                   onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[13px] font-medium shadow-none ${
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
                     tab === item.id
-                      ? "border-primary/15 bg-primary/10 text-primary"
-                      : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+                      ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
+                      : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
                   }`}
                 >
-                  <span className="grid size-5 shrink-0 place-items-center text-current">
-                    <Icon className="h-4 w-4" strokeWidth={1.8} />
+                  <span className="grid size-6 shrink-0 place-items-center text-current">
+                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
                   </span>
                   <span className="min-w-0 truncate">{d(item.label)}</span>
                 </Button>
@@ -532,15 +532,15 @@ export default function DashboardPage() {
                   <div className="hidden h-8 w-px bg-border/70 sm:block lg:hidden" />
 
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
+                    <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                       {d(meta.eyebrow)}
                     </p>
                     <div className="flex min-w-0 items-center gap-2">
-                      <p className="truncate text-sm font-semibold text-foreground sm:text-base">
+                      <p className="truncate text-base font-semibold text-foreground sm:text-lg">
                         {d(meta.title)}
                       </p>
                       {scopedHeaderEvent && (
-                        <span className="hidden max-w-56 truncate border-l border-border pl-2 text-[11px] text-muted-foreground xl:inline">
+                        <span className="hidden max-w-56 truncate border-l border-border pl-2 text-[13px] text-muted-foreground xl:inline">
                           {scopedHeaderEvent.title}
                         </span>
                       )}
@@ -556,26 +556,26 @@ export default function DashboardPage() {
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
-                      className="h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-foreground"
+                      className="dc-dashboard-account-button h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-foreground/[0.05] hover:text-foreground"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >
-                      <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase text-primary">
+                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full bg-primary font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-white dark:text-black">
                         {profileLabel.slice(0, 2)}
                       </span>
-                      <span className="hidden max-w-36 truncate text-xs sm:inline">{profileLabel}</span>
+                      <span className="hidden max-w-36 truncate text-sm font-medium sm:inline">{profileLabel}</span>
                       <ChevronDown
-                        className={`h-3.5 w-3.5 shrink-0 text-muted-foreground transition ${profileMenu ? "rotate-180" : ""}`}
+                        className={`h-4 w-4 shrink-0 text-foreground/75 transition ${profileMenu ? "rotate-180" : ""}`}
                       />
                     </Button>
 
                     {profileMenu && (
                       <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                         <div className="px-2 pb-3 pt-1">
-                          <p className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold">
+                          <p className="font-[family-name:var(--font-dc-heading)] text-base font-semibold">
                             {profileLabel}
                           </p>
-                          <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
+                          <p className="mt-1 truncate text-xs text-muted-foreground">
                             {ctx?.profile.email || ""}
                           </p>
                         </div>
@@ -1027,7 +1027,7 @@ function WorkspaceOverview({
                   className="flex min-h-12 w-full items-center gap-3 py-3 text-left text-sm transition hover:text-primary"
                 >
                   <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-                    <Icon className="h-4 w-4" strokeWidth={1.8} />
+                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
                   </span>
                   <span className="min-w-0 flex-1 truncate">{item.label}</span>
                   <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground" />
