@@ -145,6 +145,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Always respect `useReducedMotion()` and remove heavy motion when requested.
 - Motion must never reduce usability or obscure important content.
 - Landing Pintu decorative ornament at the top belongs to the closed-door surface: it fades/moves out when that door is active/open and returns when the door closes. Keep this synchronized with the same `isActive` state as the door panels and respect reduced motion.
+- While the temporary `/jiplak` experiment exists, visual experiments must stay isolated there. Do not wire experimental Pintu/background components into `app/page.tsx`, `PintuSection.tsx`, `PintuCard.tsx`, or `RosePetalBackground.tsx` unless the owner explicitly approves promotion to the canonical landing.
 
 ## 7. UI Components
 
