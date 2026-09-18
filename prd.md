@@ -2673,3 +2673,41 @@ Owner menyetujui implementasi awal arah visual `prd-landing.md` dengan koreksi p
 - Browser visual verification: belum dijalankan.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## 2026-09-18 — Landing Reference Rebuild Stage 1
+
+### Requirement / Intent
+Owner meminta implementasi landing tidak berhenti pada visual reference image, tetapi diwujudkan sebagai website nyata menggunakan stack existing (Tailwind, Shadcn patterns, Motion, Lucide, shared theme/language system) dan dibangun bertahap sampai bentuknya sedekat mungkin dengan reference yang telah dibahas. Owner juga meminta progress + next step dicatat di `landingpro.md`.
+
+### Implementation
+- menambahkan `landingpro.md` sebagai non-canonical staged implementation tracker;
+- menambahkan `components/Layout/LandingRoomScene.tsx` untuk architectural room berbasis SVG/CSS;
+- navbar landing diintegrasikan secara visual ke scene dengan positioning overlay hanya pada root `/`;
+- root landing tetap single-screen `100dvh`;
+- desktop composition diubah menjadi editorial copy panel kiri + architectural portal room kanan;
+- Pintu orbit/carousel diganti menjadi tiga portal statis yang selalu terlihat;
+- portal tengah lebih dominan sesuai visual reference;
+- active portal tetap membuka menggunakan Motion panel animation;
+- existing service imagery digunakan sebagai portal interior;
+- selector service, active copy, theme, language, routes, and reduced-motion behavior tetap bekerja melalui architecture existing.
+
+### Affected Files
+- `app/page.tsx`
+- `components/Layout/Navbar/Navbar.tsx`
+- `components/Layout/LandingRoomScene.tsx`
+- `components/Pintu/PintuSection.tsx`
+- `components/Pintu/PintuCard.tsx`
+- `landingpro.md`
+- `prd.md`
+
+### Validation
+- Source implementation review: completed.
+- Build/TypeScript/CI: pending.
+- Browser visual verification: pending.
+- Database migration: N/A.
+
+### Next
+Lanjutkan Stage 2 sesuai `landingpro.md`: room/portal realism, lighting/reflection/material polish, lalu browser screenshot comparison sebelum finalizing responsive behavior.
