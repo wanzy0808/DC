@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type ThemeContextType = {
   isDarkMode: boolean;
@@ -53,6 +54,14 @@ export function useTheme() {
 
 export function ThemeToggle() {
   const { isDarkMode, toggleTheme } = useTheme();
+  const { locale } = useLanguage();
+  const label = isDarkMode
+    ? locale === "en"
+      ? "Switch to light mode"
+      : "Ganti ke mode terang"
+    : locale === "en"
+      ? "Switch to dark mode"
+      : "Ganti ke mode gelap";
 
   return (
     <Button
@@ -60,8 +69,8 @@ export function ThemeToggle() {
       variant="outline"
       size="icon"
       onClick={toggleTheme}
-      aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-      title={isDarkMode ? "Light mode" : "Dark mode"}
+      aria-label={label}
+      title={label}
       className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
     >
       {isDarkMode ? <Sun className="h-4 w-4" aria-hidden="true" /> : <Moon className="h-4 w-4" aria-hidden="true" />}
