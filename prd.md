@@ -3031,3 +3031,22 @@ Menyatukan ornamen atas Pintu dengan state buka/tutup supaya ornamen tidak menga
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Temporary `/jiplak` Landing Clone
+
+### Requirement / Intent
+Owner meminta workspace sementara untuk eksperimen landing tanpa mengubah landing production di `/`.
+
+### Implementation
+- menambahkan `app/jiplak/jiplak.tsx` sebagai copy independen dari landing saat ini;
+- menambahkan `app/jiplak/page.tsx` sebagai route adapter sehingga clone dapat dibuka di `/jiplak`;
+- navbar, compact footer, PublicContent, dan PublicAtmosphere memperlakukan `/jiplak` sebagai landing-like route agar visual/header/footer/background sama seperti `/`;
+- `app/page.tsx` tidak diubah;
+- clone sengaja independen agar perubahan berikutnya pada `jiplak.tsx` tidak memengaruhi landing utama;
+- seluruh folder `app/jiplak/` serta conditional `/jiplak` pada shared layout dapat dihapus ketika eksperimen selesai.
+
+### Validation
+- GitHub Actions observation: pending.
