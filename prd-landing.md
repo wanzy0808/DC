@@ -1,6 +1,6 @@
 # DC Organizer — Landing Page Redesign Draft
 
-**Status:** Draft / Pending Owner Approval  
+**Status:** Approved Visual Direction / Implementation Active  
 **Purpose:** Design direction untuk landing page DC Organizer sebelum implementation.  
 **Canonical PRD:** `prd.md` tetap menjadi Single Source of Truth. Dokumen ini tidak aktif/canonical sampai owner menyetujui dan requirement relevan dipindahkan ke dokumen canonical sesuai governance repository.
 
@@ -96,130 +96,63 @@ Semua motion menghormati `prefers-reduced-motion` / `useReducedMotion()`.
 
 ---
 
-## 4. Scroll Narrative
+## 4. Single-Screen Composition — Owner Override
 
-Landing tidak berhenti pada hero. Scroll ke bawah harus terasa seperti kamera mundur dan membuka ruang yang lebih luas, bukan kumpulan section card yang tidak berhubungan.
+Landing root `/` **tidak menggunakan long-scroll narrative**. Owner meminta satu page utuh; semua content utama selesai dalam viewport yang sama setelah navbar.
 
-Target narrative:
+Target composition:
 
 ```text
-THRESHOLD
-3 Pintu / choose the experience
-        ↓
-MEMORY
-why the event matters
-        ↓
-JOURNEY
-before → invitation → guest → event day
-        ↓
-CAPABILITIES
-what DC actually handles
-        ↓
-EVENT TYPES
-general-event proof
-        ↓
-FINAL THRESHOLD
-create an event / enter DC
+COPY / ACTIVE PRODUCT                 THREE PINTU
+service switch                        architectural threshold
+headline + short body                 Event Planner
+CTA + restrained support              Digital Invitation
+                                      Guestbook
 ```
 
-Setiap section dapat memiliki atmospheric background sendiri, tetapi semuanya harus terasa sebagai satu continuous environment.
+Canonical behavior:
+- tidak ada section Memory, Journey, Capabilities, Event Types, atau Final CTA di bawah hero;
+- tidak membuat stacked marketing cards yang memaksa user scroll;
+- Pintu tetap focal object utama;
+- active product copy berubah mengikuti Pintu;
+- supporting capability/proof boleh tetap muncul secara ringkas hanya bila viewport cukup;
+- mobile boleh menyederhanakan copy/details agar satu-screen tetap usable.
 
 ---
 
-## 5. Section Background Concepts
+## 5. Landing Background — Architectural Threshold
 
-### 5.1 Hero — Threshold Room
-
-Visual:
-- bright white architectural space;
-- soft large-window shadows;
-- restrained Rose accents;
-- three existing Pintu as foreground objects;
-- subtle horizon/floor depth.
-
-Makna: user berada di depan pilihan layanan DC.
-
-### 5.2 Memory Section — Trace of a Moment
-
-Saat scroll, camera terasa sedikit lebih jauh.
-
-Background:
-- open white space;
-- large soft light patch;
-- faint abstract frame outlines seperti jejak album/memory, bukan literal wedding polaroid;
-- extremely subtle blurred shapes at edges;
-- thin Rose timeline/path crossing the composition.
-
-Section ini membawa emotional message bahwa acara berlangsung sesaat tetapi detail dan memorinya bertahan.
-
-Tidak boleh bergantung pada foto couple/wedding agar tetap general-event.
-
-### 5.3 Journey Section — One Continuous Path
-
-Background berubah menjadi abstract spatial corridor/path.
-
-Gunakan satu thin Rose line sebagai visual connector perjalanan:
-
-```text
-Plan ───── Invite ───── RSVP ───── Welcome ───── Remember
-```
-
-Line boleh bergerak secara sangat subtle mengikuti scroll. Content menjelaskan hubungan Event Planner, Digital Invitation, guest management, dan onsite Guestbook sebagai satu lifecycle.
-
-Tidak membuat product cards berwarna-warni.
-
-### 5.4 Capabilities Section — Quiet Gallery
-
-Camera terasa lebih wide.
-
-Background:
-- mostly neutral;
-- architectural panels/frames;
-- light and shadow rhythm;
-- capability content berada seperti editorial exhibits dalam space;
-- Rose hanya pada icon/key emphasis.
-
-Tujuannya menunjukkan feature depth tanpa berubah menjadi dashboard screenshot wall.
-
-### 5.5 Event Types — Many Stories, One Platform
-
-Background menjadi paling luas dan category-neutral.
-
-Boleh menggunakan abstract image windows atau curated event imagery jika kemudian tersedia, tetapi:
-- tidak ada satu category yang mendominasi;
-- wedding tidak boleh menjadi universal visual;
-- imagery harus mencakup variasi event;
-- tanpa imagery pun layout harus tetap kuat.
-
-### 5.6 Final CTA — Open Space / Horizon
-
-Background kembali sederhana.
+Landing memakai satu continuous background karena hanya terdiri dari satu viewport.
 
 Visual:
-- large negative space;
-- soft horizon/light opening;
-- satu restrained Rose arc/path yang selesai menuju CTA;
-- optional distant abstract doorway/light threshold, tetapi bukan duplicate dari tiga product Pintu.
+- white / warm-white neutral canvas pada Light Mode;
+- near-black neutral canvas pada Dark Mode;
+- soft large-window / arch shadow;
+- restrained Rose edge light / thin path;
+- subtle horizon dan floor/reflection depth di area Pintu;
+- tidak ada hard section block karena tidak ada below-the-fold sections;
+- tidak memakai wedding venue photo, literal flower scene, atau giant pink glow.
 
-Ending harus terasa seperti invitation untuk memulai event, bukan hard-sell SaaS banner.
+Implementation boundary:
+- gunakan landing-specific atmosphere layer;
+- protected `components/Layout/background.tsx` tidak perlu diubah untuk implementasi awal ini;
+- Rose petals pada public pages lain tetap mengikuti existing protected implementation.
 
 ---
 
-## 6. Continuous Background Principle
+## 6. Responsive Single-Screen Principle
 
-Desktop landing sebaiknya terasa sebagai **satu long visual canvas**.
+Desktop:
+- primary composition tetap 80vw;
+- copy + Pintu berbagi satu viewport;
+- Pintu boleh sedikit overlap ke area copy secara intentional;
+- footer landing tetap ringan dan tidak menciptakan section baru.
 
-Background antar-section tidak menggunakan hard rectangular color blocks kecuali diperlukan untuk contrast. Transisi dilakukan dengan:
-- light intensity;
-- shadow direction;
-- spatial scale;
-- subtle texture;
-- Rose line/path;
-- depth/haze.
-
-Saat user scroll ke bawah, environment dapat terasa semakin zoomed-out/open. Ini memberi ruang untuk content lebih banyak tanpa membuat page sesak.
-
-Mobile boleh menyederhanakan atmospheric layers secara agresif untuk readability dan performance.
+Mobile:
+- orbit Pintu dipadatkan;
+- detail card dapat disederhanakan;
+- copy diturunkan skalanya dan supporting content yang tidak essential boleh disembunyikan;
+- jangan mengubah mobile menjadi long-scroll substitute.
 
 ---
 
@@ -294,11 +227,11 @@ Karena `AGENTS.md` saat ini secara eksplisit melindungi rose-petal implementatio
 Sebelum coding redesign dimulai, owner akan menentukan bagian mana dari draft ini yang disetujui.
 
 Setelah approval:
-1. requirement aktif yang relevan harus diselaraskan ke `prd.md` sebagai canonical product requirement;
-2. `AGENTS.md` harus diperbarui bila protected petal/background rule berubah;
+1. requirement aktif yang relevan diselaraskan ke `prd.md` sebagai canonical product requirement;
+2. `AGENTS.md` diperbarui untuk convention yang harus dipertahankan agent;
 3. `README.md` diperbarui hanya untuk architecture/setup/behavior yang memang perlu diketahui developer/operator;
-4. implementation dilakukan;
-5. setiap material implementation change dicatat secara kronologis di `prd1.md` beserta rationale, affected files, commit, dan validation status.
+4. implementation dilakukan dengan Extend Over Replace;
+5. setiap material implementation change dicatat di Appendix A `prd.md`; `prd-tambahan.md` hanya supplemental log saat owner meminta.
 
 Dokumen draft ini tidak boleh diam-diam menjadi PRD kedua yang mengalahkan `prd.md`.
 
@@ -306,16 +239,16 @@ Dokumen draft ini tidak boleh diam-diam menjadi PRD kedua yang mengalahkan `prd.
 
 ## 12. Approval Boundary
 
-Belum di-approve untuk coding.
+Owner telah memberikan approval eksplisit untuk mulai coding arah visual ini pada 18 September 2026.
 
-Yang sudah boleh dilakukan pada tahap ini:
-- eksplorasi visual;
-- mockup/image generation;
-- refinement design direction;
-- penyusunan requirement draft.
+Approved untuk implementation:
+- architectural landing atmosphere;
+- Rose-led Light/Dark treatment;
+- Pintu animation refinement;
+- restrained text motion;
+- single-screen landing composition.
 
-Source landing page, background, Pintu, navbar, dan application behavior tetap tidak diubah sampai owner memberikan approval eksplisit untuk implementation.
-
+Owner override terbaru menghapus rencana long-scroll sections. Root landing harus tetap satu viewport.
 
 ---
 

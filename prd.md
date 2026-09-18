@@ -1120,9 +1120,11 @@ Bukan melalui banyak warna/variant berbeda.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
-- Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
-- Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.
-- Area quote/proof ditempatkan setelah CTA dan sebelum separator tipis; capability checklist berada di bawah separator dengan jarak yang cukup agar hierarchy terasa ringan.
+- Landing root `/` adalah **single-screen threshold**, bukan long-scroll marketing page. Seluruh komposisi utama harus selesai di viewport yang sama setelah navbar; jangan menambahkan section konten baru di bawah hero tanpa instruksi owner.
+- Landing 80vw memperlakukan copy + tiga Pintu sebagai satu komposisi editorial. Pintu tetap focal object utama dan orbit boleh masuk ke area copy selama responsive clipping aman.
+- Background landing memakai architectural threshold atmosphere yang category-neutral: soft arch/window light, restrained Rose path/edge light, dan subtle floor depth. Jangan memakai foto venue/wedding sebagai global hero background atau giant Rose glow.
+- Light tetap white-led dan Dark tetap near-black; Rose `#C07A84` menjadi illumination/accent utama. Landing-specific atmosphere tidak mengubah protected petal implementation pada halaman publik lain.
+- Copy kiri dibuat ringkas agar muat satu layar. Supporting proof/capability hanya boleh tampil secara restrained bila ruang tersedia dan tidak boleh memaksa page menjadi scroll.
 - Quote pelanggan hanya boleh ditampilkan sebagai testimonial bila sumber/ucapan pelanggan benar-benar tersedia dan dapat dipertanggungjawabkan. Jangan mengarang nama, kutipan, rating, atau klaim pelanggan. Jika belum ada testimonial terverifikasi, gunakan brand/service statement tanpa customer attribution sampai data nyata tersedia.
 - Public burger menu tidak menampilkan `Beranda`; home tetap dapat dicapai melalui brand/logo. Untuk locale Indonesia, submenu layanan memakai label `Perencana Acara`, `Undangan Digital`, dan `Buku Tamu Digital`. `Layanan` tetap menjadi parent dengan submenu tersebut, `Masuk` dan `Daftar` wajib tersedia, dan icon `Layanan` harus berbeda dari icon `Paket`; decorative numbering tidak digunakan.
 - Burger navigation dan authentication surfaces (`Daftar` dialog serta `/login`) memakai treatment netral **background putih + teks hitam + border tipis** sebagai exception eksplisit dari canonical Rose application button. Rose tetap dipakai untuk accent/focus/link, bukan fill utama pada surface ini.
@@ -2632,5 +2634,42 @@ Owner meminta Dashboard berhenti mengulang istilah seperti `workspace`, `acara`,
 - Dependency install: **PASS**.
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## 2026-09-18 — Single-Screen Architectural Landing Threshold
+
+### Requirement / Intent
+Owner menyetujui implementasi awal arah visual `prd-landing.md` dengan koreksi penting: landing root harus tetap satu page/satu viewport utuh dan tidak menjadi long-scroll narrative. Pintu tetap menjadi fokus utama, dengan visual architectural threshold yang lebih premium serta Rose-led di Light dan Dark Mode.
+
+### Implementation
+- root landing `/` diubah menjadi single-screen 80vw composition setelah navbar;
+- menambahkan `LandingThresholdAtmosphere` khusus landing: abstract arch/window structure, soft Rose illumination, horizon/floor depth, dan restrained Rose path;
+- existing `components/Layout/background.tsx` tidak diubah sehingga protected Rose petals untuk public pages lain tetap utuh;
+- copy, CTA, service selector, dan Pintu berada dalam viewport yang sama; tidak ada section Memory/Journey/Capabilities/Event Types di bawah hero;
+- Pintu orbit dipadatkan pada mobile agar tetap usable tanpa mengubah tiga-service navigation concept;
+- Pintu frame/depth/reflection diperhalus dengan palette DC; active door tetap memakai opening animation;
+- reduced-motion behavior tetap dihormati.
+
+### Affected Files
+- `app/page.tsx`
+- `components/Layout/LandingThresholdAtmosphere.tsx`
+- `components/Pintu/PintuSection.tsx`
+- `components/Pintu/PintuCard.tsx`
+- `AGENTS.md`
+- `README.md`
+- `prd-landing.md`
+- `prd.md`
+- `prd-tambahan.md`
+
+### Validation
+- GitHub Actions Build Validation #1048 pada application source head `6caa703ef2dbbea952d35c1e43a2422a93441ef7`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Browser visual verification: belum dijalankan.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.

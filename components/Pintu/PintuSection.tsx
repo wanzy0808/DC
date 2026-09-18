@@ -28,12 +28,8 @@ type Door = {
 };
 
 const LOOP_DURATION = 10;
-const LOOP_RADIUS_X = 275;
-const LOOP_RADIUS_Y = 82;
 const LOOP_PHASES = 3;
 const FRONT_PHASE = 0.25;
-const FRONT_SCALE = 0.99;
-const BACK_SCALE = 0.7;
 
 const doors: Door[] = [
   {
@@ -89,6 +85,7 @@ function LoopingPintu({
   index,
   progress,
   reducedMotion,
+  compact,
   active,
   onHover,
 }: {
@@ -96,6 +93,7 @@ function LoopingPintu({
   index: number;
   progress: MotionValue<number>;
   reducedMotion: boolean | null;
+  compact: boolean;
   active: boolean;
   onHover: (door: DoorValue) => void;
 }) {
@@ -103,20 +101,27 @@ function LoopingPintu({
   const phase = (offset: number) =>
     ((index / LOOP_PHASES + offset) % 1) * Math.PI * 2;
 
+  const radiusX = compact ? 122 : 275;
+  const radiusY = compact ? 38 : 82;
+  const frontScale = compact ? 0.88 : 0.99;
+  const backScale = compact ? 0.68 : 0.7;
+
   const x = useTransform(progress, (offset) =>
-    Math.cos(phase(offset)) * LOOP_RADIUS_X,
+    Math.cos(phase(offset)) * radiusX,
   );
   const y = useTransform(progress, (offset) =>
-    Math.sin(phase(offset)) * LOOP_RADIUS_Y,
+    Math.sin(phase(offset)) * radiusY,
   );
-  const z = useTransform(progress, (offset) => Math.sin(phase(offset)) * 95);
+  const z = useTransform(progress, (offset) =>
+    Math.sin(phase(offset)) * (compact ? 50 : 95),
+  );
   const scale = useTransform(progress, (offset) => {
     const depth = (Math.sin(phase(offset)) + 1) / 2;
-    return BACK_SCALE + depth * (FRONT_SCALE - BACK_SCALE);
+    return backScale + depth * (frontScale - backScale);
   });
   const rotateY = useTransform(
     progress,
-    (offset) => Math.cos(phase(offset)) * -9,
+    (offset) => Math.cos(phase(offset)) * (compact ? -5 : -9),
   );
   const stackOrder = useTransform(
     progress,
@@ -130,6 +135,7 @@ function LoopingPintu({
   return (
     <motion.div
       onMouseEnter={() => onHover(door.id)}
+      onFocus={() => onHover(door.id)}
       style={mounted ? { x, y, z, scale, rotateY, zIndex: stackOrder } : undefined}
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 cursor-pointer [transform-style:preserve-3d]"
     >
@@ -140,6 +146,7 @@ function LoopingPintu({
         innerDetails={{ tags: door.tags, desc: door.desc }}
         isActive={active}
         reducedMotion={reducedMotion}
+        compact={compact}
       />
     </motion.div>
   );
@@ -151,9 +158,17 @@ export default function PintuSection({
 }: PintuSectionProps) {
   const reduced = useReducedMotion();
   const [isPaused, setIsPaused] = useState(false);
+  const [compact, setCompact] = useState(false);
   const progress = useMotionValue(2 / 3);
   const animationRef = useRef<ReturnType<typeof animate> | null>(null);
   const lastFrontRef = useRef<DoorValue>(2);
+
+  useEffect(() => {
+    const sync = () => setCompact(window.innerWidth < 768);
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
 
   useEffect(() => {
     if (reduced || isPaused) {
@@ -202,10 +217,10 @@ export default function PintuSection({
   };
 
   return (
-    <div className="relative -my-1 flex w-full flex-col items-center justify-center overflow-visible">
+    <div className="relative flex h-full min-h-0 w-full flex-col items-center justify-center overflow-visible">
       <div
         onMouseLeave={resumeLoop}
-        className="relative flex h-[390px] w-full items-center justify-center overflow-visible [perspective:1100px] sm:h-[470px] md:h-[560px] xl:h-[590px]"
+        className="relative flex h-[clamp(300px,46dvh,540px)] w-full items-center justify-center overflow-visible [perspective:1100px] md:h-[clamp(430px,58dvh,570px)]"
       >
         {doors.map((door, index) => (
           <LoopingPintu
@@ -214,6 +229,7 @@ export default function PintuSection({
             index={index}
             progress={progress}
             reducedMotion={reduced}
+            compact={compact}
             active={activeDoor === door.id}
             onHover={pauseLoop}
           />
