@@ -23,7 +23,7 @@ Before any material change, inspect in this order:
 
 Every AI-made material change MUST update Appendix A in `prd.md` with rationale, affected files/area, commit(s), and validation status. If a change alters product requirements, update the canonical body section first and then append its implementation/history entry in the same `prd.md`.
 
-Do not create or revive `prd1.md`, `prdnew.md`, `prd-tambahan.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
+Do not create or revive `prd1.md`, `prdnew.md`, `PRD2.md`, `PRD3.md`, or other split PRD files. When the owner **explicitly requests `prd-tambahan.md`**, it may exist only as a supplemental non-canonical delta log; active requirements must still be mirrored to `prd.md`, and `prd-tambahan.md` must never override the canonical body or Appendix A.
 
 Do not add generic project-wide prompt/skill documents that duplicate or conflict with `AGENTS.md` and `prd.md`. If specialized instructions are genuinely needed, keep them narrowly scoped and explicitly referenced.
 
