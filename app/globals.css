@@ -236,66 +236,6 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard header a, .dc-dashboard header button { color: var(--foreground) !important; }
 .dc-dashboard header a:hover, .dc-dashboard header button:hover { color: var(--primary) !important; }
 
-/* Dashboard header controls share one visual family: burger, theme, language and account. */
-.dc-dashboard header .dc-dashboard-header-control {
-  min-height: 44px;
-  border: 1px solid color-mix(in srgb, var(--primary) 34%, var(--border)) !important;
-  border-radius: 10px !important;
-  background: var(--background) !important;
-  color: var(--primary) !important;
-  box-shadow: none !important;
-}
-.dc-dashboard header .dc-dashboard-header-control:hover {
-  border-color: var(--primary) !important;
-  background: var(--primary) !important;
-  color: #ffffff !important;
-}
-.dc-dashboard header .dc-dashboard-header-control.is-selected {
-  border-color: var(--primary) !important;
-  background: var(--background) !important;
-  color: var(--primary) !important;
-  box-shadow: inset 0 -2px 0 var(--primary) !important;
-}
-.dc-dashboard header .dc-dashboard-header-control.is-selected:hover {
-  background: var(--primary) !important;
-  color: #ffffff !important;
-  box-shadow: none !important;
-}
-
-.dark .dc-dashboard header .dc-dashboard-header-control {
-  border-color: color-mix(in srgb, var(--primary) 34%, rgba(255, 255, 255, 0.16)) !important;
-  background: #0B0B0C !important;
-  color: #ffffff !important;
-}
-.dark .dc-dashboard header .dc-dashboard-header-control:hover {
-  border-color: var(--primary) !important;
-  background: var(--primary) !important;
-  color: #ffffff !important;
-}
-.dark .dc-dashboard header .dc-dashboard-header-control.is-selected {
-  border-color: var(--primary) !important;
-  background: #0B0B0C !important;
-  color: #ffffff !important;
-  box-shadow: inset 0 -2px 0 var(--primary) !important;
-}
-.dark .dc-dashboard header .dc-dashboard-header-control.is-selected:hover {
-  background: var(--primary) !important;
-  color: #ffffff !important;
-  box-shadow: none !important;
-}
-
-/* Account avatar inherits the same control palette instead of introducing a second button style. */
-.dc-dashboard header .dc-dashboard-account-avatar {
-  border: 1px solid currentColor !important;
-  background: transparent !important;
-  color: inherit !important;
-  opacity: 0.92;
-}
-.dc-dashboard header .dc-dashboard-account-button:hover .dc-dashboard-account-avatar {
-  border-color: rgba(255, 255, 255, 0.5) !important;
-  background: transparent !important;
-  color: #ffffff !important;
-}
 /* Account dropdown items mirror the same Dark Mode rule. */
 .dark .dc-dashboard .dc-dashboard-account-menu-item {
   border-color: var(--border) !important;
