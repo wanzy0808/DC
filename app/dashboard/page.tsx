@@ -509,7 +509,7 @@ export default function DashboardPage() {
                   <Button
                     type="button"
                     size="icon"
-                    className="dc-dashboard-header-control lg:hidden"
+                    className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary lg:hidden"
                     onClick={() => setMobileOpen((value) => !value)}
                     aria-label={d("Buka menu dashboard")}
                     title={d("Buka menu dashboard")}
@@ -548,11 +548,11 @@ export default function DashboardPage() {
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
-                      className="dc-dashboard-header-control dc-dashboard-account-button h-11 min-w-0 px-2 shadow-none"
+                      className="dc-dashboard-account-button h-11 min-w-0 border-primary/35 bg-transparent px-2 text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-white/20 dark:text-white dark:hover:border-white/35 dark:hover:bg-white/[0.07] dark:hover:text-white"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >
-                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase">
+                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-current">
                         {profileLabel.slice(0, 2)}
                       </span>
                       <span className="hidden max-w-36 truncate text-sm font-medium sm:inline">{profileLabel}</span>

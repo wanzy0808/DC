@@ -89,3 +89,19 @@ Canonical delta:
 - perubahan hanya untuk Dashboard header; public navbar behavior existing dipertahankan.
 
 Validation: GitHub Actions Build Validation #1033 **PASS** pada application source head `872b7a4d4e493ab279ae05bfea129bc1ef5d51dd` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.
+
+
+---
+
+## Follow-up — Dashboard Header Uses Landing Navbar Style
+
+Owner meminta Dashboard header mengikuti navbar landing secara langsung.
+
+Delta:
+- tidak ada lagi Dashboard-only header-control visual override;
+- ThemeToggle dan ID/EN menggunakan behavior/style shared yang sama seperti navbar landing;
+- burger Dashboard mengikuti class/treatment burger landing;
+- tombol user mengikuti visual language navbar landing (transparent, restrained border/accent, subtle hover);
+- navbar landing tidak diubah.
+
+Validation: GitHub Actions Build Validation #1036 **PASS** pada application source head `ade7de7accb38ae4ab55d83df7662109bafca6ff` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.

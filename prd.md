@@ -1116,7 +1116,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
 - Sidebar customer Dashboard mengikuti **canvas/background Dashboard**, bukan full Rose rail. Light Mode memakai sidebar putih dengan default teks/icon near-black. Dark Mode memakai background near-black yang sama dengan body Dashboard dengan default teks/icon putih. Pada kedua theme, navigation button tetap netral/transparan saat idle lalu memakai Rose dengan teks/icon putih saat hover/active; Deep Rose dapat dipakai untuk active state.
 - Ukuran copy sidebar utama sekitar 15–16px agar nyaman dipindai; nested item tetap sedikit lebih kecil tetapi tidak terasa mikro.
-- Header control Dashboard — burger, theme toggle, ID/EN, dan account trigger — wajib memakai satu visual family yang konsisten. Light Mode: idle white/neutral dengan border Rose tipis dan foreground Rose. Dark Mode: idle near-black mengikuti body dengan foreground putih. Shape/radius/tinggi/border harus konsisten; hover memakai Rose + foreground putih pada kedua theme. Locale aktif dibedakan melalui border/underline emphasis, bukan fill khusus yang membuat ID/EN terlihat sebagai sistem control terpisah. Account dropdown Dark Mode tetap neutral-first dan baru memakai Rose saat hover.
+- Header control Dashboard — burger, theme toggle, ID/EN, dan account trigger — wajib mengikuti **visual language navbar landing yang sudah established**, bukan memiliki Dashboard-only control system. ThemeToggle dan LanguageToggle memakai shared component/style yang sama seperti landing. Burger Dashboard meniru treatment burger landing (transparent surface, restrained Rose border/foreground, subtle Rose hover), sedangkan account trigger mengikuti treatment navbar yang sama. Jangan menambahkan CSS override khusus Dashboard yang mengubah shared navbar controls menjadi visual system berbeda.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
@@ -2490,6 +2490,40 @@ Owner meminta ID/EN, burger, theme toggle, dan tombol user berhenti memakai visu
 
 ### Validation
 - GitHub Actions Build Validation #1033 pada application source head `872b7a4d4e493ab279ae05bfea129bc1ef5d51dd`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.
+
+
+---
+
+## 2026-09-18 — Dashboard Header Follows Landing Navbar
+
+### Requirement / Intent
+Owner meminta header Dashboard berhenti memiliki style control sendiri dan langsung mengikuti style navbar landing yang sudah disetujui.
+
+### Implementation
+- menghapus Dashboard-only override `dc-dashboard-header-control` dari global CSS;
+- `ThemeToggle` kembali memakai treatment shared/public navbar tanpa Dashboard hook;
+- `LanguageToggle` kembali ke styling navbar landing existing, termasuk behavior Light/Dark yang sudah berjalan di landing;
+- burger Dashboard memakai class/treatment yang sama dengan burger landing;
+- account trigger memakai restrained transparent + Rose-border navbar treatment, dengan avatar tetap subtle dan tidak menjadi visual button system kedua;
+- navbar landing sendiri tidak diubah.
+
+### Affected Files
+- `app/dashboard/page.tsx`
+- `app/globals.css`
+- `components/Theme/ThemeContext.tsx`
+- `components/I18n/LanguageToggle.tsx`
+- `AGENTS.md`
+- `README.md`
+- `prd.md`
+- `prd-tambahan.md`
+
+### Validation
+- GitHub Actions Build Validation #1036 pada application source head `ade7de7accb38ae4ab55d83df7662109bafca6ff`: **PASS**.
 - Dependency install: **PASS**.
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.
