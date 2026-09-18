@@ -162,6 +162,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Route folders under `app/` follow URL requirements and should not be renamed merely for code-style consistency.
 - When moving a component/data file, update all imports in the same change and validate with the production build before merge.
 - Split large feature components by responsibility when they mix orchestration/state, static configuration, domain types/helpers, and reusable presentation. Keep orchestration in the workspace/page component; move reusable panels, config, types, and pure helpers into adjacent feature files. Do not split purely to reduce line count.
+- Invitation Studio editor structure is canonical: `InvitationDesigner.tsx` owns orchestration/history/upload/save; `DesignerPanels.tsx` owns editor controls; `InvitationPreview.tsx` owns preview rendering; `designer-types.ts`, `designer-config.ts`, and `designer-state.ts` own model/config/state helpers.
 
 ## 9. Code Quality
 
