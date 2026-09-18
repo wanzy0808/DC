@@ -2861,3 +2861,34 @@ Melanjutkan cleanup internal pada Invitation Studio dengan memisahkan editor orc
 
 ### Next
 Audit berikutnya fokus pada `InvitationEditorPage.tsx` dan komponen studio lain hanya jika masih mencampur orchestration, data fetching, dan presentation secara berlebihan.
+
+
+---
+
+## 2026-09-18 — Invitation Studio Guest Management Cleanup (Pass 8)
+
+### Requirement / Intent
+Melanjutkan cleanup Invitation Studio hanya pada file yang benar-benar mencampur banyak tanggung jawab, sambil menghindari over-refactor pada file yang sudah cohesive.
+
+### Implementation
+- `InvitationEditorPage.tsx` diaudit dan dipertahankan sebagai satu file karena sudah memiliki boundary yang jelas sebagai editor shell + publish gate;
+- import/runtime naming lama `InvitationDesignerV3` pada editor shell dibersihkan menjadi canonical `InvitationDesigner`;
+- `GuestManagement.tsx` tetap menjadi orchestration layer untuk:
+  - load guest/table data;
+  - locked entitlement state;
+  - add table mutation;
+  - add guest mutation;
+  - composition;
+- guest/table/form model dipindahkan ke `guest-management-types.ts`;
+- response parsing helper dipindahkan ke `guest-management-client.ts`;
+- locked state, table form, guest form, dan guest list table dipindahkan ke `GuestManagementPanels.tsx`;
+- `GuestManagement.tsx` turun kira-kira dari 11k karakter menjadi 4.6k karakter;
+- API endpoints, request payload, entitlement behavior, dan UI intent tidak diubah.
+
+### Validation
+- Source/reference update: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Setelah Pass 8 tervalidasi, audit berikutnya hanya menargetkan file yang benar-benar monolitik; `InvitationEditorPage.tsx` tidak perlu dipecah lagi kecuali tanggung jawabnya bertambah.
