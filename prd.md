@@ -1121,6 +1121,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
+- Ornamen/bunga dekoratif di bagian atas setiap Pintu merupakan bagian dari closed-door surface: saat Pintu aktif/terbuka ornamen harus ikut fade/keluar, lalu kembali saat Pintu tertutup. Behavior mengikuti state Pintu yang sama dan tetap menghormati reduced motion.
 - Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
 - Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.
 - Area quote/proof ditempatkan setelah CTA dan sebelum separator tipis; capability checklist berada di bawah separator dengan jarak yang cukup agar hierarchy terasa ringan.
@@ -3009,6 +3010,24 @@ Repair visual kecil pada landing: header/footer harus menyatu dengan body, semen
 - selected ID/EN pada landing Dark Mode memakai opaque `var(--primary)` + near-black text;
 - landing theme toggle pada Dark Mode memakai opaque `var(--primary)` + near-black icon/text;
 - shared ThemeToggle/LanguageToggle hanya mendapat semantic hook; override warna dibatasi pada `.dc-navbar--landing` agar Dashboard tidak ikut berubah.
+
+### Validation
+- GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Pintu Ornament Open-State Repair
+
+### Requirement / Intent
+Menyatukan ornamen atas Pintu dengan state buka/tutup supaya ornamen tidak mengambang di atas opening ketika panel Pintu sudah terbuka.
+
+### Implementation
+- wrapper ornamen SVG diubah menjadi `motion.div`;
+- state `isActive` yang sudah mengontrol panel kiri/kanan juga mengontrol opacity, y, dan scale ornamen;
+- saat aktif/open: ornament opacity menjadi 0 dan sedikit bergeser ke atas;
+- saat inactive/closed: ornament kembali ke opacity existing 0.8;
+- reduced-motion memakai opacity-only transition yang sangat singkat.
 
 ### Validation
 - GitHub Actions observation: pending.
