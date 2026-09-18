@@ -24,7 +24,8 @@ import {
   LayoutGrid,
   X,
 } from "lucide-react";
-import ThemeToggle from "@/components/Theme/ThemeToggle";\nimport { useTheme } from "@/components/Theme/ThemeProvider";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import EventScopePicker, {
