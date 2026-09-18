@@ -2735,3 +2735,32 @@ Lanjutan cleanup repository untuk menghilangkan nama file implementasi sementara
 
 ### Next
 Cleanup berikutnya fokus pada route-local static data dan folder/component yang masih implementation-specific atau terlalu generik, tanpa memindahkan high-fanout entry points hanya demi estetika struktur.
+
+
+---
+
+## 2026-09-18 — Repository Feature/Data Cleanup (Pass 4)
+
+### Requirement / Intent
+Lanjutan cleanup repository untuk menormalkan feature naming yang masih legacy dan memisahkan large static catalog dari route component, tanpa mengubah URL atau behavior.
+
+### Implementation
+- `components/UsherApp/UsherApp.tsx` → `components/Usher/UsherWorkspace.tsx`;
+- Dashboard Usher route sekarang memakai canonical `UsherWorkspace`;
+- static template showcase catalog dipindahkan dari `app/template-design/page.tsx` ke `data/templates/showcase.ts`;
+- template showcase data diubah dari positional tuples menjadi typed objects (`id`, `name`, `category`, `status`, `image`) sehingga tidak lagi bergantung pada index `[0]...[4]`;
+- categories showcase diturunkan dari data source canonical;
+- `app/template-design/page.tsx` sekarang fokus pada state/filter/rendering;
+- repository structure docs diperbarui untuk `components/Usher/` dan `data/templates/`;
+- audit tree dilakukan dan folder `Admin`, `Owner`, `Designer`, `PublicInvitation`, serta `InvitationStudio` dipertahankan karena sudah memiliki boundary/tanggung jawab yang jelas.
+
+### Validation
+- Build Validation #1085 pada application source head `a2abca888e2804bc47c21a9996e976404ff0c85c`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Cleanup berikutnya fokus pada kualitas internal file besar, terutama memecah `UsherWorkspace` yang masih monolitik, daripada terus memindahkan folder yang sudah semantik.

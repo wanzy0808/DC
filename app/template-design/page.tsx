@@ -4,19 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Eye, Filter, Search, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const templates = [
-  ["167", "Tema 167", "Floral", "Baru", "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=88&w=900"],
-  ["194", "Palembang Classic Artistry", "Adat", "Studio", "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&q=88&w=900"],
-  ["166", "Tema 166", "Classic", "Baru", "https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=88&w=900"],
-  ["193", "Chinese Royal Radiance", "Adat", "Studio", "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&q=88&w=900"],
-  ["181", "Garden Bloom", "Floral", "Premium", "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&q=88&w=900"],
-  ["172", "Javanese Garden", "Adat", "Studio", "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&q=88&w=900"],
-  ["155", "Blue Serenity", "Minimal", "Premium", "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=88&w=900"],
-  ["148", "Line Art Love", "Minimal", "Baru", "https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?auto=format&fit=crop&q=88&w=900"],
-] as const;
-
-const categories = ["Semua", "Floral", "Adat", "Classic", "Minimal"];
+import { templateShowcaseCategories, templateShowcaseItems } from "@/data/templates/showcase";
 
 export default function TemplateDesignPage() {
   const [query, setQuery] = useState("");
@@ -25,14 +13,14 @@ export default function TemplateDesignPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filteredTemplates = useMemo(() => {
-    const result = templates.filter(([id, name, itemCategory]) =>
+    const result = templateShowcaseItems.filter(({ id, name, category: itemCategory }) =>
       `${id} ${name} ${itemCategory}`.toLowerCase().includes(query.toLowerCase()) &&
       (category === "Semua" || itemCategory === category),
     );
-    return sort === "Nama" ? [...result].sort((a, b) => a[1].localeCompare(b[1])) : result;
+    return sort === "Nama" ? [...result].sort((a, b) => a.name.localeCompare(b.name)) : result;
   }, [category, query, sort]);
 
-  const selected = templates.find(([id]) => id === selectedId);
+  const selected = templateShowcaseItems.find(({ id }) => id === selectedId);
 
   return (
     <main className="min-h-screen bg-white text-[#191317] [font-family:var(--font-dc-sans)]">
@@ -68,7 +56,7 @@ export default function TemplateDesignPage() {
 
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-2">
-            {categories.map((item) => (
+            {templateShowcaseCategories.map((item) => (
               <Button key={item} type="button" size="sm" onClick={() => setCategory(item)} className={`rounded-xl px-4 text-[10px] ${category === item ? "" : "bg-transparent text-[#71676e] shadow-none hover:bg-primary/5 hover:text-primary"}`}>{item}</Button>
             ))}
           </div>
@@ -79,7 +67,7 @@ export default function TemplateDesignPage() {
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredTemplates.map(([id, name, itemCategory, status, image]) => (
+          {filteredTemplates.map(({ id, name, category: itemCategory, status, image }) => (
             <article key={id} className="group overflow-hidden rounded-xl border border-[#eee3e8] bg-white shadow-[0_5px_18px_rgba(90,34,55,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_15px_30px_rgba(90,34,55,0.12)]">
               <div className="relative aspect-[0.7] overflow-hidden bg-[#f8eef2]">
                 <img src={image} alt={name} className="absolute inset-0 h-full w-full object-cover opacity-75 mix-blend-multiply transition duration-500 group-hover:scale-105" />
@@ -101,9 +89,9 @@ export default function TemplateDesignPage() {
       {selected && (
         <div className="fixed inset-0 z-50 grid place-items-center bg-[#24131d]/55 p-5" role="dialog" aria-modal="true" onClick={() => setSelectedId(null)}>
           <div className="grid max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl md:grid-cols-2" onClick={(event) => event.stopPropagation()}>
-            <div className="relative min-h-[420px] bg-[#f8eef2]"><img src={selected[4]} alt={selected[1]} className="h-full w-full object-cover opacity-75 mix-blend-multiply" /><div className="absolute inset-x-12 bottom-10 rounded-xl bg-white/85 p-7 text-center backdrop-blur"><p className="font-[family-name:var(--font-dc-heading)] text-3xl text-primary">Vidi &amp; Hening</p><p className="mt-2 text-[10px] uppercase tracking-widest text-primary/70">The wedding invitation</p></div></div>
+            <div className="relative min-h-[420px] bg-[#f8eef2]"><img src={selected.image} alt={selected.name} className="h-full w-full object-cover opacity-75 mix-blend-multiply" /><div className="absolute inset-x-12 bottom-10 rounded-xl bg-white/85 p-7 text-center backdrop-blur"><p className="font-[family-name:var(--font-dc-heading)] text-3xl text-primary">Vidi &amp; Hening</p><p className="mt-2 text-[10px] uppercase tracking-widest text-primary/70">The wedding invitation</p></div></div>
             <div className="flex flex-col justify-between p-7">
-              <div><Button type="button" size="xs" onClick={() => setSelectedId(null)} className="float-right rounded-xl bg-transparent text-xs text-[#8a7d85] shadow-none hover:bg-primary/5 hover:text-primary">Tutup</Button><p className="text-[10px] uppercase tracking-[0.25em] text-primary">Template {selected[0]}</p><h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl">{selected[1]}</h2><p className="mt-2 text-sm text-[#83777e]">{selected[2]} · {selected[3]}</p><p className="mt-7 text-sm leading-7 text-[#625861]">Desain undangan dengan layout responsif, RSVP realtime, galeri, musik, dan QR check-in yang bisa disesuaikan di editor.</p></div>
+              <div><Button type="button" size="xs" onClick={() => setSelectedId(null)} className="float-right rounded-xl bg-transparent text-xs text-[#8a7d85] shadow-none hover:bg-primary/5 hover:text-primary">Tutup</Button><p className="text-[10px] uppercase tracking-[0.25em] text-primary">Template {selected.id}</p><h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl">{selected.name}</h2><p className="mt-2 text-sm text-[#83777e]">{selected.category} · {selected.status}</p><p className="mt-7 text-sm leading-7 text-[#625861]">Desain undangan dengan layout responsif, RSVP realtime, galeri, musik, dan QR check-in yang bisa disesuaikan di editor.</p></div>
               <Button asChild size="lg" className="mt-8 rounded-xl"><Link href="/dashboard/editor">Pilih template ini</Link></Button>
             </div>
           </div>

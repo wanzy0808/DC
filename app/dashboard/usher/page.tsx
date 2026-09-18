@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidGuestbook } from "@/lib/packages/access";
 import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
 import { Button } from "@/components/ui/button";
-import UsherApp from "@/components/UsherApp/UsherApp";
+import UsherWorkspace from "@/components/Usher/UsherWorkspace";
 
 import { DashboardPage, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
 
@@ -32,7 +32,7 @@ export default async function UsherPage() {
 
   const usherActive = hasPaidGuestbook(invitation?.payment);
 
-  if (usherActive) return <UsherApp />;
+  if (usherActive) return <UsherWorkspace />;
 
   return (
     <div className="dc-dashboard min-h-dvh bg-background text-foreground">

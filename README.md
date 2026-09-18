@@ -127,10 +127,12 @@ The repository uses a feature-first component structure so files remain easy to 
 - `components/Guestbook/` — Guestbook public UI.
 - `components/Landing/Pintu/` — landing Pintu navigation components.
 - `components/Dashboard/` — customer dashboard workspaces and shared dashboard primitives.
+- `components/Usher/` — day-of-event guest check-in workspace and Usher-specific UI.
 - `components/InvitationStudio/` — active invitation editor/studio components.
 - `components/Payments/` — checkout/package-selection UI.
 - `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns. Theme state lives in `ThemeProvider.tsx`, while `ThemeToggle.tsx` is the canonical control.
 - `data/services/` — static service-facing content/catalog copy only.
+- `data/templates/` — static template showcase/presentation data used by template browsing UI.
 - `lib/` — domain logic, server helpers, access rules, parsers, and infrastructure utilities. Focused helpers are grouped by domain, including `lib/auth/`, `lib/invitations/`, `lib/security/`, `lib/usher/`, and `lib/notifications/`. Conventional high-fanout entry points `lib/auth.ts` and `lib/prisma.ts` remain at the root.
 - `prisma/` — schema and migrations.
 

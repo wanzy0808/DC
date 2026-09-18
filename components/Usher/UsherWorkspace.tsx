@@ -60,7 +60,7 @@ function qrImageUrl(token: string) {
   return `https://quickchart.io/qr?text=${encodeURIComponent(token)}&size=320&margin=2`;
 }
 
-export default function UsherApp() {
+export default function UsherWorkspace() {
   const [tab, setTab] = useState<Tab>("checkin");
   const [guests, setGuests] = useState<Guest[]>([]);
   const [search, setSearch] = useState("");

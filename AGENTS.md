@@ -157,7 +157,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Reserve `components/Layout`, `components/Brand`, `components/Theme`, `components/I18n`, `components/Marketing`, and `components/ui` for shared/global concerns. Do not place feature-specific purchase, editor, or service components in `Layout`.
 - Avoid ambiguous abbreviations or route-shaped names in component folders such as `D-Invitation` or suffixes such as `Page` when the folder already represents the feature.
 - Active components must use stable semantic names. Do not keep `V2`, `V3`, `New`, `Old`, or similar version suffixes after a replacement becomes canonical; remove obsolete versions once repository references are verified absent.
-- Static customer-facing service content belongs under `data/services/` using kebab-case file names, for example `event-planner.ts`, `digital-invitation.ts`, and `guestbook.ts`.
+- Static customer-facing content belongs under `data/<domain>/`: service content in `data/services/`, template showcase/catalog presentation data in `data/templates/`, and similar future domains in their own explicit folders. Route/page files should not own large static catalogs.
 - Keep domain logic/helpers in `lib/`; do not move executable business logic into `data/`. Group focused helpers by domain (for example `lib/invitations`, `lib/security`, `lib/usher`, `lib/notifications`) instead of adding more unrelated files at the `lib/` root.
 - Route folders under `app/` follow URL requirements and should not be renamed merely for code-style consistency.
 - When moving a component/data file, update all imports in the same change and validate with the production build before merge.
