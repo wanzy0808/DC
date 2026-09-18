@@ -2961,3 +2961,35 @@ Melanjutkan repository cleanup pada Dashboard Event Panel yang masih mencampur e
 
 ### Next
 Audit berikutnya mengevaluasi `SeatingChart.tsx`: pecah hanya bila file benar-benar mencampur canvas/layout orchestration, domain helpers, dan reusable presentation; jika cohesive sebagai satu seating editor, pertahankan.
+
+
+---
+
+## 2026-09-19 — Seating Chart Internal Cleanup (Pass 11)
+
+### Requirement / Intent
+Merapikan Seating Chart tanpa memecah canvas editor secara berlebihan. Fokus hanya pada domain contracts dan pure geometry yang tidak perlu tinggal di komponen UI.
+
+### Implementation
+- `SeatingChart.tsx` tetap menjadi cohesive seating editor untuk:
+  - local/remote guest & table orchestration;
+  - drag/drop;
+  - seat assignment & swap;
+  - table generation;
+  - manual guest input;
+  - Konva canvas interaction;
+- guest/table/point/seat-target contracts dipindahkan ke `seating-chart-types.ts`;
+- stage constants, table positioning, seat positioning, dan nearest seat target calculation dipindahkan ke `seating-chart-geometry.ts`;
+- canvas/editor presentation sengaja tidak dipecah menjadi banyak komponen karena akan menambah prop-drilling tanpa boundary domain yang lebih jelas;
+- API endpoint, seat numbering, drag/drop behavior, swap behavior, geometry result, dan UI intent tidak diubah.
+
+### Validation
+- Build Validation #1109 pada application source head `93165a31a5434ecaa193ab72a7621a9f7e4c6084`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Audit berikutnya fokus pada Dashboard feature panel besar yang benar-benar mencampur fetching, domain state, mutation, filtering, dan presentation—prioritas kandidat: `PersonalInvitationPanel.tsx`.
