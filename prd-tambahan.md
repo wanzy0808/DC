@@ -88,4 +88,4 @@ Canonical delta:
 - active locale: border/underline emphasis, bukan filled style sendiri;
 - perubahan hanya untuk Dashboard header; public navbar behavior existing dipertahankan.
 
-Validation: PENDING workflow terbaru.
+Validation: GitHub Actions Build Validation #1033 **PASS** pada application source head `872b7a4d4e493ab279ae05bfea129bc1ef5d51dd` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.
