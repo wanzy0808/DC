@@ -418,7 +418,7 @@ export default function DashboardPage() {
               onClick={() => go("overview")}
               className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
                 tab === "overview"
-                  ? "border-white/20 bg-white/16 text-white dark:border-black/15 dark:bg-black/15 dark:text-black"
+                  ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
                   : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
               }`}
             >
@@ -435,7 +435,7 @@ export default function DashboardPage() {
                 onClick={() => setInvitationMenuOpen((value) => !value)}
                 className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[15px] font-medium shadow-none ${
                   invitationActive
-                    ? "bg-white/16 text-white dark:bg-black/15 dark:text-black"
+                    ? "bg-white/[0.16] text-white dark:bg-black/[0.15] dark:text-black"
                     : "text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
                 }`}
               >
@@ -461,7 +461,7 @@ export default function DashboardPage() {
                         onClick={() => go(item.id)}
                         className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[14px] font-medium shadow-none ${
                           active
-                            ? "border-white/20 bg-white/16 text-white dark:border-black/15 dark:bg-black/15 dark:text-black"
+                            ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
                             : "text-white/80 hover:bg-white/10 hover:text-white dark:text-black/70 dark:hover:bg-black/10 dark:hover:text-black"
                         }`}
                       >
@@ -486,7 +486,7 @@ export default function DashboardPage() {
                   onClick={() => go(item.id)}
                   className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
                     tab === item.id
-                      ? "border-white/20 bg-white/16 text-white dark:border-black/15 dark:bg-black/15 dark:text-black"
+                      ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
                       : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
                   }`}
                 >
