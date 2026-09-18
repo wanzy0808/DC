@@ -221,14 +221,25 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         });
         const data = await response.json().catch(() => null);
         if (!response.ok) {
-          throw new Error(data?.error || locale === "en" ? `Table ${index} could not be created.` : `Meja ${index} gagal dibuat.`);
+          throw new Error(
+          data?.error ||
+            (locale === "en"
+              ? `Table ${index} could not be created.`
+              : `Meja ${index} gagal dibuat.`),
+        );
         }
         created.push(data.table as Table);
       }
       setLocalTables(created);
       setMessage(locale === "en" ? `Seating plan created: ${count} tables × ${capacity} seats.` : `Denah dibuat: ${count} meja × ${capacity} bangku.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : locale === "en" ? "Seating plan could not be created." : "Denah gagal dibuat.");
+      setMessage(
+        error instanceof Error
+          ? error.message
+          : locale === "en"
+            ? "Seating plan could not be created."
+            : "Denah gagal dibuat.",
+      );
     } finally {
       setGenerating(false);
     }
