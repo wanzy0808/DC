@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendInvoiceEmail } from "@/lib/email";
+import { sendInvoiceEmail } from "@/lib/notifications/email";
 
 async function requireStaff() {
   const user = await getCurrentUser();
