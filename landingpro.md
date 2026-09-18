@@ -92,7 +92,7 @@ Implemented:
 
 ## Stage 3 — Motion & Interaction Polish
 
-**Status: implemented on feature branch; validation pending**
+**Status: implemented + Build Validation PASS**
 
 Implemented:
 
@@ -172,6 +172,6 @@ Jangan diubah tanpa instruksi owner:
 - added shared-layout active service indicator;
 - kept motion transform/opacity based and reduced-motion safe;
 - ambient room drift remains slower than portal interaction;
-- Build/TypeScript/CI: pending;
+- Build Validation #1061: **PASS** for dependency install, Prisma Client generation, and Next.js production build + TypeScript;
 - browser visual verification: pending;
-- next focus after validation: Stage 4 responsive/browser visual pass.
+- next focus: Stage 4 responsive/browser visual pass.
