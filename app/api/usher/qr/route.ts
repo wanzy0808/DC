@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
-import { createGuestQrToken } from "@/lib/usher-qr";
+import { createGuestQrToken } from "@/lib/usher/qr";
 
 export async function POST(request: Request) {
   try {
