@@ -30,7 +30,7 @@ Landing diarahkan sedekat mungkin dengan visual reference yang sudah dibuat/dise
 
 ## Stage 1 — Structural Rebuild
 
-**Status: implemented on feature branch**
+**Status: implemented + Build Validation PASS**
 
 Perubahan:
 
@@ -142,4 +142,8 @@ Jangan diubah tanpa instruksi owner:
 - added architectural room scene;
 - integrated navbar visually into scene;
 - retained real web controls, routes, language/theme behavior, and Motion portal opening;
-- next focus: Stage 2 room/portal realism after build validation.
+- Build Validation #1053 failed because a literal `\\n` escape was accidentally committed in `PintuSection.tsx`;
+- source was corrected and verified;
+- Build Validation #1054: **PASS** for dependency install, Prisma Client generation, and Next.js production build + TypeScript;
+- browser visual verification is still pending;
+- next focus: Stage 2 room/portal realism.
