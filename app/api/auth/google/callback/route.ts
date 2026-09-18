@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { completeGoogleSignIn } from "@/lib/google-auth";
+import { completeGoogleSignIn } from "@/lib/auth/google";
 
 const stateCookie = "google_oauth_state";
 const nextCookie = "google_auth_next";
