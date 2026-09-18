@@ -2723,9 +2723,15 @@ Lanjutan cleanup repository untuk menghilangkan nama file implementasi sementara
 - repository conventions diperbarui agar provider state dan UI controls tidak digabung kembali.
 
 ### Validation
-- Source/reference update: completed.
-- Build/TypeScript/CI: pending.
+- Build Validation #1077: **FAIL** karena masih ada import `ThemeContext`, `FigmaClassicTemplate`, dan satu literal newline pada import Dashboard setelah split provider.
+- Build Validation #1081: **FAIL** karena `SeatingChart.tsx` masih memakai import `ThemeContext` lama.
+- Seluruh sisa import diperbarui ke `ThemeProvider`, `ThemeToggle`, dan `ClassicInvitationTemplate`.
+- Build Validation #1082 pada application source head `3aa154e22c9893b8c85fe711df35208254d512d9`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
 
 ### Next
-Setelah Pass 3 tervalidasi, cleanup berikutnya dapat fokus pada route-local static data dan folder/component yang masih implementation-specific atau terlalu generik, tanpa memindahkan high-fanout entry points hanya demi estetika struktur.
+Cleanup berikutnya fokus pada route-local static data dan folder/component yang masih implementation-specific atau terlalu generik, tanpa memindahkan high-fanout entry points hanya demi estetika struktur.
