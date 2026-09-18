@@ -25,9 +25,10 @@ Full-Rose sidebar tidak digunakan lagi. Sidebar harus terasa lebih menyatu denga
 ### Dark Mode
 
 - sidebar background mengikuti body near-black `#0B0B0C`;
-- navigation button memakai Rose `#C07A84` dengan teks/icon near-black;
-- hover dapat memakai Supporting Rose `#D9A3AA` dengan teks/icon near-black;
-- active dapat memakai Deep Rose `#A65E69` dengan teks/icon near-black;
+- default navigation button tetap transparent/netral dengan teks/icon putih;
+- hover navigation memakai Rose `#C07A84` dengan teks/icon putih;
+- active navigation memakai Deep Rose `#A65E69` dengan teks/icon putih;
+- behavior ini menjadi kebalikan visual Light Mode: canvas gelap + copy putih, sedangkan Rose hanya muncul saat hover/active;
 - sidebar tidak memakai full Rose background.
 
 ### Typography
@@ -56,7 +57,7 @@ Perbaikan sebelumnya tetap berlaku:
 
 ### Validation
 
-- GitHub Actions Build Validation #1021: **PASS**.
+- GitHub Actions Build Validation #1025: **PASS** on application source head `bc26869ebfa8454d294f412479445f25d949224b`.
 - Dependency install: **PASS**.
 - Prisma Client generation: **PASS**.
 - Next.js production build + TypeScript: **PASS**.

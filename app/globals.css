@@ -206,18 +206,18 @@ aside nav > p { font-family: var(--font-dc-heading); }
   color: #ffffff !important;
 }
 
-/* Dark mode: sidebar merges into the body; navigation buttons become Rose with black copy. */
+/* Dark mode mirrors Light Mode: neutral near-black rail, white copy, Rose only for hover/active. */
 .dark .dc-dashboard aside nav button,
 .dark .dc-dashboard aside nav a {
-  border-color: color-mix(in srgb, #D9A3AA 26%, transparent) !important;
-  background: #C07A84 !important;
-  color: #111111 !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #ffffff !important;
 }
 .dark .dc-dashboard aside nav button:hover,
 .dark .dc-dashboard aside nav a:hover {
-  border-color: #D9A3AA !important;
-  background: #D9A3AA !important;
-  color: #111111 !important;
+  border-color: color-mix(in srgb, var(--primary) 24%, transparent) !important;
+  background: var(--primary) !important;
+  color: #ffffff !important;
 }
 .dark .dc-dashboard aside nav button[aria-current="page"],
 .dark .dc-dashboard aside nav a[aria-current="page"],
@@ -225,7 +225,7 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dark .dc-dashboard aside nav a.is-active {
   border-color: #A65E69 !important;
   background: #A65E69 !important;
-  color: #111111 !important;
+  color: #ffffff !important;
 }
 .dc-dashboard aside > div {
   border-color: var(--border) !important;
