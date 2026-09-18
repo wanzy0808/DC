@@ -105,3 +105,36 @@ Delta:
 - navbar landing tidak diubah.
 
 Validation: GitHub Actions Build Validation #1036 **PASS** pada application source head `ade7de7accb38ae4ab55d83df7662109bafca6ff` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A.
+
+
+---
+
+## Dashboard Microcopy — Anti-Repetition Cleanup
+
+Owner meminta copy Dashboard dibersihkan dari pengulangan istilah yang terasa seperti AI-slop, terutama `workspace`, `acara`, dan `undangan` ketika konteks halaman sebenarnya sudah jelas.
+
+Delta:
+- `Workspace` tidak lagi dipakai sebagai generic decorative eyebrow/filler;
+- eyebrow menggunakan konteks fungsi seperti **Persiapan**, **Publikasi**, **Distribusi**, **Kehadiran**, **Tamu**, dan **Hari-H**;
+- Beranda tidak lagi menampilkan card jumlah acara di header karena informasinya sudah ada pada metric grid;
+- label yang konteksnya sudah jelas dipendekkan, misalnya **Total**, **Terbaru**, **Lihat semua**, **Detail**, dan **Daftar**;
+- deskripsi tidak mengulang kata `acara`/`workspace` bila page, selector, atau title sudah memberi konteks;
+- aturan utama: **hapus copy redundan lebih dulu; jangan sekadar mengganti dengan sinonim**;
+- istilah produk tetap dipertahankan bila dibutuhkan untuk menjelaskan scope, status, atau next action;
+- pola ini dicatat ke `AGENTS.md` agar koreksi kecil owner menjadi convention untuk perubahan berikutnya, bukan instruksi sekali pakai.
+
+Affected area:
+- Beranda;
+- Rangkaian Acara;
+- Undangan Digital;
+- Personal Invitation;
+- WA Blast;
+- RSVP;
+- Manajemen Tamu;
+- Feature Gate;
+- Usher;
+- shared dashboard i18n.
+
+Validation:
+- CI/build validation: pending.
+- Database migration: N/A.
