@@ -150,7 +150,18 @@ Use existing Shadcn UI and Lucide React patterns. Customize Shadcn components us
 
 Use Lucide icons consistently and keep interactive targets at least `44x44px`. Use `asChild` on `SheetTrigger`/`DialogTrigger` when wrapping custom trigger elements to avoid nested-button DOM issues.
 
-## 8. Code Quality
+## 8. Repository Structure & Naming
+
+- Organize reusable business UI by feature with descriptive PascalCase folders under `components/`, for example `DigitalInvitation`, `EventPlanner`, `Guestbook`, `Dashboard`, `Payments`, and `Landing/Pintu`.
+- Reserve `components/Layout`, `components/Brand`, `components/Theme`, `components/I18n`, `components/Marketing`, and `components/ui` for shared/global concerns. Do not place feature-specific purchase, editor, or service components in `Layout`.
+- Avoid ambiguous abbreviations or route-shaped names in component folders such as `D-Invitation` or suffixes such as `Page` when the folder already represents the feature.
+- Active components must use stable semantic names. Do not keep `V2`, `V3`, `New`, `Old`, or similar version suffixes after a replacement becomes canonical; remove obsolete versions once repository references are verified absent.
+- Static customer-facing service content belongs under `data/services/` using kebab-case file names, for example `event-planner.ts`, `digital-invitation.ts`, and `guestbook.ts`.
+- Keep domain logic/helpers in `lib/`; do not move executable business logic into `data/`.
+- Route folders under `app/` follow URL requirements and should not be renamed merely for code-style consistency.
+- When moving a component/data file, update all imports in the same change and validate with the production build before merge.
+
+## 9. Code Quality
 
 - TypeScript must remain type-safe.
 - Prefer existing architecture and dependencies.
@@ -159,7 +170,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Follow existing Prettier/ESLint conventions and Tailwind class ordering.
 - Avoid unused variables, invalid DOM nesting, stale hook dependencies, and client-only APIs in server components.
 
-## 9. Data & Entitlement Rules
+## 10. Data & Entitlement Rules
 
 - Shared event data must be persisted and read from PostgreSQL/Prisma.
 - Event identity is event-scoped. Couple-specific fields are required only for event categories that use a couple identity.
@@ -171,7 +182,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Server-side access checks are authoritative.
 - Guest management and seating mutations must remain server-authoritative and collision-safe.
 
-## 10. Documentation Rule
+## 11. Documentation Rule
 
 At the end of every material implementation change:
 

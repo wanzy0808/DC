@@ -1,10 +1,10 @@
-import HeroSection from "@/components/GuestbookPage/HeroSection";
-import FeatureSection from "@/components/GuestbookPage/FeatureSection";
-import ProcessSection from "@/components/GuestbookPage/ProcessSection";
+import HeroSection from "@/components/Guestbook/HeroSection";
+import FeatureSection from "@/components/Guestbook/FeatureSection";
+import ProcessSection from "@/components/Guestbook/ProcessSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
 import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
 import FaqSection from "@/components/Marketing/FaqSection";
-import { guestbookReviews, guestbookFaq } from "@/data/guestbook";
+import { guestbookReviews, guestbookFaq } from "@/data/services/guestbook";
 
 export default function GuestbookPage() {
   return (

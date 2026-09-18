@@ -1,6 +1,6 @@
 import { Check } from "lucide-react";
 import SectionHeading from "@/components/Marketing/SectionHeading";
-import { plannerServices } from "@/data/wedding-planner";
+import { plannerServices } from "@/data/services/event-planner";
 
 export default function ServicesSection() {
   return (

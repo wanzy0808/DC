@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
-import PackageSelector from "@/components/Layout/PackageSelector";
+import PackageSelector from "@/components/Payments/PackageSelector";
 
 export default async function PackagesPage({
   searchParams,

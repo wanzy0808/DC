@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Play } from "lucide-react";
 import SectionHeading from "@/components/Marketing/SectionHeading";
 import VideoModal from "@/components/Marketing/VideoModal";
-import { plannerPortfolio } from "@/data/wedding-planner";
+import { plannerPortfolio } from "@/data/services/event-planner";
 
 export default function PortfolioSection() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
