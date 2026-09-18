@@ -792,24 +792,3 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     </div>
   );
 }
-
-function InfoCell({
-  label,
-  value,
-  compact = false,
-}: {
-  label: string;
-  value: string;
-  compact?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-lg border border-border/70 bg-background/75 ${compact ? "min-w-20 px-2.5 py-1.5" : "px-3 py-2.5"}`}
-    >
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>
-    </div>
-  );
-}
