@@ -11,10 +11,11 @@ export default function PublicAtmosphere() {
   const isPrivateArea = privatePrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
+  const isLanding = pathname === "/" || pathname === "/jiplak";
 
-  // The landing page already owns its interactive background. Keeping a
-  // second global background here causes duplicated visual layers there.
-  if (isPrivateArea || pathname === "/") return null;
+  // The landing page and its temporary clone already own their interactive
+  // background. Keeping a second global background causes duplicate layers.
+  if (isPrivateArea || isLanding) return null;
 
   return <RosePetalBackground />;
 }
@@ -24,7 +25,7 @@ export function PublicContent({ children }: { children: ReactNode }) {
   const isPrivateArea = privatePrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-  const isLanding = pathname === "/";
+  const isLanding = pathname === "/" || pathname === "/jiplak";
   const isDigitalInvitation = pathname === "/d-invitation";
 
   return (
