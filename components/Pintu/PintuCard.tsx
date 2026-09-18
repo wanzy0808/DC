@@ -39,6 +39,13 @@ export default function PintuCard({
 }: PintuCardProps) {
   const Icon = icons[kind];
   const { isDarkMode } = useTheme();
+  const panelTransition = reducedMotion
+    ? { duration: 0.08 }
+    : {
+        duration: isActive ? 0.66 : 0.5,
+        delay: isActive ? 0.035 : 0,
+        ease: [0.22, 1, 0.36, 1] as const,
+      };
 
   return (
     <motion.div
@@ -141,7 +148,7 @@ export default function PintuCard({
         <motion.div
           initial={false}
           animate={{ x: isActive ? "-103%" : "0%" }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.74, ease: [0.22, 1, 0.36, 1] }}
+          transition={panelTransition}
           className={`absolute inset-y-0 left-0 z-10 w-1/2 border-r border-white/22 backdrop-blur-md ${
             isDarkMode
               ? "bg-[linear-gradient(104deg,rgba(62,30,41,.96),rgba(192,122,132,.68))]"
@@ -154,7 +161,7 @@ export default function PintuCard({
         <motion.div
           initial={false}
           animate={{ x: isActive ? "103%" : "0%" }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.74, ease: [0.22, 1, 0.36, 1] }}
+          transition={panelTransition}
           className={`absolute inset-y-0 right-0 z-10 w-1/2 border-l border-white/22 backdrop-blur-md ${
             isDarkMode
               ? "bg-[linear-gradient(256deg,rgba(62,30,41,.96),rgba(192,122,132,.68))]"
@@ -172,7 +179,7 @@ export default function PintuCard({
             opacity: isActive ? 1 : 0.92,
             y: isActive ? -3 : 0,
           }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.35 }}
+          transition={{ duration: reducedMotion ? 0.08 : 0.4, delay: reducedMotion ? 0 : isActive ? 0.07 : 0 }}
           className="absolute inset-0 z-20 flex flex-col items-center justify-center px-4 text-center text-white"
         >
           <div
@@ -211,7 +218,7 @@ export default function PintuCard({
         <motion.div
           initial={false}
           animate={{ opacity: isActive ? 0.92 : 0.34, scaleX: isActive ? 1 : 0.78 }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.45 }}
+          transition={{ duration: reducedMotion ? 0.08 : 0.52, delay: reducedMotion ? 0 : isActive ? 0.08 : 0 }}
           className="absolute inset-x-[14%] bottom-[2.2%] z-40 h-px origin-center bg-white shadow-[0_0_12px_rgba(217,163,170,.85)]"
         />
       </Link>
