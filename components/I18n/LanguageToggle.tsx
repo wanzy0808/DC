@@ -17,7 +17,7 @@ export default function LanguageToggle() {
   };
 
   return (
-    <div className="flex h-11 items-center gap-1 bg-transparent p-0" aria-label={selectorLabel}>
+    <div className="dc-language-toggle flex h-11 items-center gap-1 bg-transparent p-0" aria-label={selectorLabel}>
       {(["id", "en"] as const).map((item) => {
         const selected = locale === item;
 
