@@ -1114,7 +1114,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.2; jangan mengembalikan centered public-content cap ke workspace utama.
 - **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
-- Sidebar customer Dashboard mengikuti **canvas/background Dashboard**, bukan full Rose rail. Light Mode memakai sidebar putih dengan default teks/icon near-black; hover/active navigation memakai Rose dengan teks/icon putih. Dark Mode memakai background near-black yang sama dengan body Dashboard; tombol navigasi sidebar memakai Rose dengan teks/icon near-black, sedangkan Supporting/Deep Rose dapat dipakai untuk hover/active selama kontras tetap jelas.
+- Sidebar customer Dashboard mengikuti **canvas/background Dashboard**, bukan full Rose rail. Light Mode memakai sidebar putih dengan default teks/icon near-black. Dark Mode memakai background near-black yang sama dengan body Dashboard dengan default teks/icon putih. Pada kedua theme, navigation button tetap netral/transparan saat idle lalu memakai Rose dengan teks/icon putih saat hover/active; Deep Rose dapat dipakai untuk active state.
 - Ukuran copy sidebar utama sekitar 15–16px agar nyaman dipindai; nested item tetap sedikit lebih kecil tetapi tidak terasa mikro.
 - Header utility controls yang transparan (theme/language/account) wajib mempertahankan kontras terhadap header: khusus Dark Mode icon/control transparan memakai foreground putih/netral yang terbaca, bukan mewarisi black text dari canonical Rose button.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
@@ -2434,7 +2434,7 @@ Owner menolak full-Rose sidebar dan meminta sidebar kembali menyatu dengan canva
 
 ### Canonical visual behavior
 - Light Mode sidebar: background putih; default label/icon near-black; hover/active memakai Rose dengan teks/icon putih;
-- Dark Mode sidebar: background sama dengan body near-black; navigation button memakai Rose dengan teks/icon near-black; Supporting/Deep Rose dipakai untuk hover/active;
+- Dark Mode sidebar: background sama dengan body near-black; default navigation transparent dengan teks/icon putih; hover/active memakai Rose dengan teks/icon putih;
 - container grup Acara tetap transparan/netral sehingga tidak terlihat sebagai card tambahan;
 - font sidebar dinaikkan lagi: main navigation sekitar 16px, nested navigation sekitar 15px, section metadata sekitar 11px;
 - aturan sebelumnya yang menjadikan seluruh sidebar sebagai Rose rail dinyatakan superseded.
