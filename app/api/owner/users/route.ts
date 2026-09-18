@@ -3,7 +3,7 @@ import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { sendOwnerAccountActionEmail } from "@/lib/email";
+import { sendOwnerAccountActionEmail } from "@/lib/notifications/email";
 
 const roles = ["USER", "DESIGNER", "ADMIN"] as const;
 
