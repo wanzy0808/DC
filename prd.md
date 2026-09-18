@@ -2825,3 +2825,36 @@ Melanjutkan cleanup internal dengan memecah `app/dashboard/page.tsx` yang terlal
 
 ### Next
 Setelah Pass 6 merge, audit berikutnya fokus pada internal Invitation Studio/editor, terutama file `InvitationDesigner.tsx` bila masih mencampur editor state, catalog/config, controls, dan preview presentation.
+
+
+---
+
+## 2026-09-18 — Invitation Designer Internal Cleanup (Pass 7)
+
+### Requirement / Intent
+Melanjutkan cleanup internal pada Invitation Studio dengan memisahkan editor orchestration dari configuration, state serialization, tool panels, dan preview canvas tanpa mengubah editor behavior.
+
+### Implementation
+- `InvitationDesigner.tsx` tetap menjadi orchestration layer untuk:
+  - loading invitation;
+  - active tool panel;
+  - undo/redo history;
+  - asset upload;
+  - save/publish-related design persistence;
+  - composing controls + canvas;
+- legacy runtime component name `InvitationDesignerV3` dibersihkan menjadi canonical `InvitationDesigner`;
+- domain/editor types dipindahkan ke `designer-types.ts`;
+- template preset, decor options, palette/font option lists dipindahkan ke `designer-config.ts`;
+- event identity/date formatting serta design-state serialize/parse helper dipindahkan ke `designer-state.ts`;
+- editor sidebar/tool panels dipindahkan ke `DesignerPanels.tsx`;
+- full invitation preview canvas dipindahkan ke `InvitationPreview.tsx`;
+- `InvitationDesigner.tsx` turun kira-kira dari 36k karakter menjadi 12k karakter;
+- API endpoints, route, persistence format, template key format, dan UI intent tidak diubah.
+
+### Validation
+- Source/reference update: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Setelah Pass 7 tervalidasi, audit berikutnya fokus pada `InvitationEditorPage.tsx` dan komponen studio lain hanya jika masih mencampur orchestration, data fetching, dan presentation secara berlebihan.
