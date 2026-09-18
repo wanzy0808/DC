@@ -1116,7 +1116,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
 - Sidebar customer Dashboard mengikuti **canvas/background Dashboard**, bukan full Rose rail. Light Mode memakai sidebar putih dengan default teks/icon near-black. Dark Mode memakai background near-black yang sama dengan body Dashboard dengan default teks/icon putih. Pada kedua theme, navigation button tetap netral/transparan saat idle lalu memakai Rose dengan teks/icon putih saat hover/active; Deep Rose dapat dipakai untuk active state.
 - Ukuran copy sidebar utama sekitar 15–16px agar nyaman dipindai; nested item tetap sedikit lebih kecil tetapi tidak terasa mikro.
-- Header utility controls yang transparan (theme/language/account) wajib mempertahankan kontras terhadap header: khusus Dark Mode icon/control transparan memakai foreground putih/netral yang terbaca, bukan mewarisi black text dari canonical Rose button.
+- Header utility controls yang transparan (theme/language/account) wajib mempertahankan kontras terhadap header. Khusus Dark Mode, language toggle ID/EN dan account trigger/dropdown memakai background near-black/transparent dengan teks/icon putih saat idle; selected language memakai emphasis putih/netral, bukan idle Rose fill; Rose baru muncul pada hover/interaction. Control ini tidak boleh mewarisi black text atau Rose fill default dari canonical application button.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
@@ -2454,3 +2454,8 @@ Owner menolak full-Rose sidebar dan meminta sidebar kembali menyatu dengan canva
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 - Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.
+
+### Dark header utility follow-up
+- ID/EN Dark Mode tidak memakai opacity/fill Rose saat idle; selected locale memakai neutral white emphasis dan Rose hanya saat hover.
+- Account trigger, avatar, serta dropdown items Dark Mode memakai near-black background dengan white copy saat idle dan Rose + white copy saat hover.
+- Validation untuk follow-up ini dicatat setelah workflow terbaru selesai.
