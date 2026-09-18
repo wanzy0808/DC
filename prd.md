@@ -2529,3 +2529,30 @@ Owner meminta header Dashboard berhenti memiliki style control sendiri dan langs
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 - Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.
+
+
+---
+
+## 2026-09-18 — Beranda Visual Language Across Dashboard Workspaces
+
+### Implementation / Rationale
+- Extracted Beranda's neutral introduction card with its Rose left accent into `DashboardPageHeader`; applied it to Beranda, Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu, and Usher workspace headings.
+- Unified status badges, metric presentation, access notices, and operational metadata sizes. Shared primitives merge Tailwind classes correctly so caller grid sizing overrides take effect.
+- Standardized page gutters: 80vw capped by the available desktop pane, with 16px mobile gutters. Personal Invitation/WA and Seating columns stack before they compress the main content.
+- Removed obsolete structural CSS overrides that changed card borders/fills based on incidental class names. Removed header color overrides that competed with shared landing controls.
+- Excluded checkbox/radio/range/color/hidden inputs from text-field styling; native selection controls keep their geometry and Rose focus state.
+- Updated Usher's old hot-pink/light-only workspace to semantic neutral/Rose tokens, canonical wordmark, Button, dashboard headings/metrics/status badges, theme control, and readable dark semantic feedback. QR quiet zones and camera preview remain purpose-specific.
+- Raised Studio control typography and made its toolbar wrap on small screens; invitation artwork remains template-driven. Personal preview chrome uses canonical typography tokens.
+- No API, entitlement, database, event data, or protected background changes.
+
+### Affected Areas / Commit
+- `app/dashboard/`, `app/globals.css`, `components/Dashboard/`, `components/UsherApp/UsherApp.tsx`, active Invitation Studio controls, `README.md`, `prd.md`.
+- Commit: `style: align dashboard workspaces with Beranda` (same change set).
+
+### Validation
+- Prisma generation: PASS using a local placeholder connection string; no database mutation.
+- TypeScript: PASS.
+- Next.js production build (`next build --webpack`): PASS.
+- Lint comparison against original HEAD: same 11 pre-existing errors (10 set-state-in-effect, one no-explicit-any); full lint is not clean.
+- Shared-component server rendering and Tailwind CSS compilation: PASS. Browser visual checks could not run: Chromium is absent and its download timed out. Production deployment and database/QR scanner end-to-end testing were not performed.
+- GitHub push was blocked by automatic approval review; changes are committed locally.

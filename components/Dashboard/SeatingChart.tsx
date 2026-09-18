@@ -421,7 +421,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   }
 
   return (
-    <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
+    <div className="mt-5 grid min-w-0 gap-4 xl:grid-cols-[minmax(260px,0.7fr)_minmax(0,1.7fr)]">
       <aside className="min-w-0 space-y-4">
         <DashboardSurface className="p-4">
           <DashboardSectionHeader
@@ -584,7 +584,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                     {[guest.category, ...(guest.tags ?? [])].filter(Boolean).join(" · ")}
                   </p>
                 )}
-                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.source === "RSVP" ? `RSVP · ${d("Hadir")}` : d("Manual")}
                 </div>
               </div>
@@ -744,7 +744,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background px-3 py-2 text-xs text-muted-foreground">
           <span>{d("Tarik tamu ke kursi untuk menyimpan posisi.")}</span>
           {savingGuestId && (
-            <span className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
+            <span className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
               {d("Menyimpan...")}
             </span>
           )}

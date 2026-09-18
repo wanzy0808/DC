@@ -4,6 +4,9 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Siapkan undangan personal untuk setiap tamu.": "Prepare a personal invitation for each guest.",
+  "Pantau respons dan kehadiran tamu pada acara yang dipilih.": "Track guest responses and attendance for the selected event.",
+  "Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.": "Organize guests, tables, and seating for the selected event.",
   "Daftar": "List",
   "Pax": "Pax",
   "opsional": "optional",

@@ -21,6 +21,7 @@ import {
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
+  DashboardPageHeader,
   DashboardSectionHeader,
   DashboardStatusBadge,
   DashboardSurface,
@@ -155,7 +156,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   );
 
   return (
-    <DashboardPage className="pt-7 sm:pt-8">
+    <DashboardPage>
+      <DashboardPageHeader eyebrow={d("Acara")} title={d("Undangan Digital")} description={d("Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan.")} />
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardMetricGrid>
@@ -213,14 +215,14 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+                      <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                         {d("Undangan Digital")}
                       </p>
                       <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
                         {title}
                       </h3>
                     </div>
-                    <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-primary">
+                    <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
                       {invitation.isPublished
                         ? d("Terbit")
                         : !invitation.eventConfigured
@@ -237,7 +239,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   </div>
 
                   <div className="mt-4 rounded-xl border border-primary/12 bg-primary/[0.025] p-3">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+                    <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
                       {d("Desain undangan")}
                     </p>
                     {invitation.eventConfigured ? (
@@ -257,11 +259,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
                   <div className="mt-3 grid gap-2 sm:grid-cols-2">
                     {!invitation.eventConfigured ? (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                         {d("Lengkapi acara dulu")}
                       </div>
                     ) : !hasDesign ? (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                         {d("Simpan template dulu")}
                       </div>
                     ) : invitation.isPublished ? (
@@ -301,7 +303,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                         </a>
                       </Button>
                     ) : (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
+                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                         {d("Belum dipublish")}
                       </div>
                     )}
@@ -337,11 +339,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                 <span className="block truncate text-xs font-medium text-foreground">
                   {guest.name}
                 </span>
-                <span className="mt-0.5 block truncate text-[9px] text-muted-foreground">
+                <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
                   {guest.invitation?.title || d("Acara")}
                 </span>
               </div>
-              <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.08em] text-muted-foreground">
+              <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                 {d(responseLabel[guest.rsvpStatus] || guest.rsvpStatus)} · {guest.plusOnes + 1} pax
               </span>
             </div>

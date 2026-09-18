@@ -113,11 +113,11 @@ export default function InvitationEditorPage() {
 
   return (
     <main
-      className={`dc-invitation-editor min-h-screen bg-background font-[family-name:var(--font-fauna)] text-foreground ${previewOnly ? "dc-unlicensed-studio" : ""}`}
+      className={`dc-invitation-editor min-h-screen bg-background font-[family-name:var(--font-dc-sans)] text-foreground ${previewOnly ? "dc-unlicensed-studio" : ""}`}
       onContextMenu={previewOnly ? (event) => event.preventDefault() : undefined}
     >
       <header className="border-b border-border/70 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex min-h-16 w-[80vw] max-w-full items-center gap-3">
+        <div className="mx-auto flex min-h-16 w-[calc(100%-2rem)] flex-wrap items-center gap-3 py-3 lg:w-[80vw]">
           <Button asChild size="icon">
             <Link href="/dashboard" aria-label={copy.back} title={copy.back}>
               <ArrowLeft className="h-4 w-4" />
@@ -125,7 +125,7 @@ export default function InvitationEditorPage() {
           </Button>
           <Link
             href="/"
-            className="font-[family-name:var(--font-cinzel)] text-sm font-semibold tracking-[0.16em] text-primary hover:text-primary/80"
+            className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold tracking-[0.16em] text-primary hover:text-primary/80"
           >
             DC Organizer
           </Link>
@@ -187,7 +187,7 @@ export default function InvitationEditorPage() {
         .dc-invitation-editor button,
         .dc-invitation-editor input,
         .dc-invitation-editor label {
-          font-family: var(--font-fauna);
+          font-family: var(--font-dc-sans);
         }
         .dc-unlicensed-studio .dc-invitation-studio-shell img {
           -webkit-user-drag: none;

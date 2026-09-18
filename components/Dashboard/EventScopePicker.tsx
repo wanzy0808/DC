@@ -30,7 +30,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
             <CalendarDays className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-primary">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-primary">
               {d("Acara aktif")}
             </p>
             <p className="mt-1 text-sm text-foreground">{d("Silakan buat rangkaian acara dulu.")}</p>
@@ -43,7 +43,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
   return (
     <DashboardSurface className="p-3 sm:max-w-xl">
       <label className="block">
-        <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+        <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
           {d("Acara aktif")}
         </span>
         <span className="relative block">

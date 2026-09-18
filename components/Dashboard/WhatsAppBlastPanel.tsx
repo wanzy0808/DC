@@ -11,6 +11,7 @@ import {
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
+  DashboardPageHeader,
   DashboardSectionHeader,
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
@@ -205,11 +206,10 @@ export default function WhatsAppBlastPanel() {
   }
 
   return (
-    <DashboardPage className="pt-7 sm:pt-8">
+    <DashboardPage>
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
-      <DashboardSurface className="p-4 sm:p-5">
-        <DashboardSectionHeader
+      <DashboardPageHeader
           eyebrow={d("WA Blast Add-on")}
           title={d("Distribusi WhatsApp")}
           description={d("Pilih acara aktif, cek quota, lalu siapkan daftar penerima yang akan dikirim.")}
@@ -221,11 +221,11 @@ export default function WhatsAppBlastPanel() {
               </Button>
             ) : null
           }
-        />
+        >
 
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
-            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {d("Acara")}
             </span>
             <select
@@ -254,7 +254,7 @@ export default function WhatsAppBlastPanel() {
             {d("Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.")}
           </p>
         )}
-      </DashboardSurface>
+      </DashboardPageHeader>
 
       {eventId && (
         <>
@@ -279,7 +279,7 @@ export default function WhatsAppBlastPanel() {
               />
             </DashboardSurface>
           ) : (
-            <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
+            <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.7fr)]">
               <DashboardSurface className="space-y-4 p-4 sm:p-5">
                 <DashboardSectionHeader
                   eyebrow={d("Penerima")}
@@ -376,7 +376,7 @@ export default function WhatsAppBlastPanel() {
                     >
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-semibold text-foreground">{guest.name}</p>
-                        <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
+                        <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">
                           {guest.phone || d("Nomor belum ada")}
                         </p>
                       </div>

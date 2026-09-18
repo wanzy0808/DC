@@ -8,6 +8,8 @@ import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice"
 import { Button } from "@/components/ui/button";
 import UsherApp from "@/components/UsherApp/UsherApp";
 
+import { DashboardPage, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+
 type Feature = { icon: typeof ScanLine; label: string };
 const features: Feature[] = [
   { icon: ScanLine, label: "QR Check-in" },
@@ -35,7 +37,7 @@ export default async function UsherPage() {
   return (
     <div className="dc-dashboard min-h-dvh bg-background text-foreground">
       <main>
-        <div className="mx-auto w-[80vw] max-w-full pb-16 pt-8 sm:pt-10">
+        <DashboardPage>
           <Link
             href="/dashboard"
             className="inline-flex min-h-11 items-center gap-2 text-sm text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -43,7 +45,7 @@ export default async function UsherPage() {
             <ArrowLeft className="size-4" aria-hidden="true" />
             Kembali ke Dashboard
           </Link>
-          <section className="mt-6 grid border-y border-border lg:grid-cols-2">
+          <DashboardSurface className="mt-6 grid gap-6 p-5 sm:p-6 lg:grid-cols-2">
             <div className="min-w-0 py-8 lg:pr-10">
               <DashboardAccessNotice
                 title="Usher App"
@@ -79,8 +81,8 @@ export default async function UsherPage() {
                 Jika tamu datang tanpa RSVP, usher memeriksa namanya di daftar undangan lalu membuat QR resmi. QR tersebut tetap harus di-scan sebelum tamu masuk.
               </p>
             </div>
-          </section>
-        </div>
+          </DashboardSurface>
+        </DashboardPage>
       </main>
     </div>
   );

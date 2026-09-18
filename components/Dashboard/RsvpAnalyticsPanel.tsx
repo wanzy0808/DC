@@ -279,7 +279,7 @@ export default function RsvpAnalyticsPanel({
         <div className="mt-4 min-w-0 overflow-x-auto">
           <table className="w-full min-w-[940px] text-left">
             <thead>
-              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
+              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-foreground/50">
                 <th className="px-3 py-3 font-medium">{d("Nama")}</th>
                 <th className="px-3 py-3 font-medium">RSVP</th>
                 <th className="px-3 py-3 font-medium">{d("Pax")}</th>
@@ -296,12 +296,12 @@ export default function RsvpAnalyticsPanel({
                 >
                   <td className="px-3 py-3">
                     <p className="font-semibold text-foreground">{guest.name}</p>
-                    <p className="mt-0.5 text-[10px] text-foreground/50">
+                    <p className="mt-0.5 text-[11px] text-foreground/50">
                       {guest.phone || d("Tanpa nomor")}
                     </p>
                   </td>
                   <td className="px-3 py-3">
-                    <span className="font-[family-name:var(--font-dc-mono)] text-[10px] text-foreground/70">
+                    <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/70">
                       {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
                     </span>
                   </td>
@@ -357,7 +357,7 @@ export default function RsvpAnalyticsPanel({
         </div>
 
         {slug && (
-          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[9px] text-foreground/45">
+          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/45">
             /invite/{slug}
           </p>
         )}
@@ -391,7 +391,7 @@ export default function RsvpAnalyticsPanel({
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${encodeURIComponent(qr.token)}`}
               />
             </div>
-            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[8px] leading-4 text-foreground/45">
+            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[11px] leading-4 text-foreground/45">
               {qr.token}
             </p>
           </div>

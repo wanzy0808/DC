@@ -41,6 +41,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
 import {
+  DashboardPageHeader,
+  DashboardStatusBadge,
   DashboardMetricCard,
   DashboardMetricGrid,
   DashboardPage as DashboardPageShell,
@@ -524,7 +526,7 @@ export default function DashboardPage() {
                   <div className="hidden h-8 w-px bg-border/70 sm:block lg:hidden" />
 
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
+                    <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                       {d(meta.eyebrow)}
                     </p>
                     <div className="flex min-w-0 items-center gap-2">
@@ -672,7 +674,7 @@ export default function DashboardPage() {
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
               {d("Setup awal")}
             </p>
             <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
@@ -796,22 +798,13 @@ function WorkspaceOverview({
 
   return (
     <DashboardPageShell>
-      <DashboardSurface className="overflow-hidden">
-        <div className="flex flex-col gap-5 border-l-4 border-primary px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-primary">
-              DC Organizer
-            </p>
-            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight sm:text-3xl">
-              {d("Halo")}, {ctx?.profile.displayName || d("Akun")}
-            </h1>
-            <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              {d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-wrap items-center gap-3">
+      <DashboardPageHeader
+        eyebrow={d("Beranda")}
+        title={<>{d("Halo")}, {ctx?.profile.displayName || d("Akun")}</>}
+        description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
+        actions={<>
             <div className="min-w-28 rounded-xl border border-border/70 bg-foreground/[0.018] px-4 py-3">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
                 {d("Workspace")}
               </p>
               <p className="mt-1 text-sm font-semibold">
@@ -822,9 +815,8 @@ function WorkspaceOverview({
               <CalendarDays className="h-4 w-4" />
               {d("Tambah acara")}
             </Button>
-          </div>
-        </div>
-      </DashboardSurface>
+        </>}
+      />
 
       <DashboardMetricGrid className="mt-4">
         {stats.map((item) => (
@@ -842,7 +834,7 @@ function WorkspaceOverview({
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Acara terbaru")}</h2>
-              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
+              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                 {active} {d("aktif")} · {published} {d("terbit")}
               </p>
             </div>
@@ -855,7 +847,7 @@ function WorkspaceOverview({
             <div className="overflow-x-auto px-4 pb-4 sm:px-5">
               <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
                 <thead>
-                  <tr className="text-[10px] text-muted-foreground">
+                  <tr className="text-[11px] text-muted-foreground">
                     <th className="px-3 py-3 font-medium">{d("Acara")}</th>
                     <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
                     <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
@@ -878,9 +870,9 @@ function WorkspaceOverview({
                         <p className="truncate">{event.venue || "—"}</p>
                       </td>
                       <td className="px-3 py-3.5">
-                        <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
+                        <DashboardStatusBadge active={event.isPublished}>
                           {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
-                        </span>
+                        </DashboardStatusBadge>
                       </td>
                       <td className="px-3 py-3.5 text-right">
                         <Link
@@ -915,7 +907,7 @@ function WorkspaceOverview({
         <Card className="min-w-0 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-primary">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
                 Ringkasan data
               </p>
               <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
@@ -958,7 +950,7 @@ function WorkspaceOverview({
                 <div className="absolute inset-0 grid place-items-center text-center">
                   <div>
                     <p className="text-2xl font-semibold leading-none">{rsvpCoverage}%</p>
-                    <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.08em] text-muted-foreground">
+                    <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                       RSVP
                     </p>
                   </div>
@@ -967,7 +959,7 @@ function WorkspaceOverview({
 
               <div className="w-full min-w-0 space-y-3">
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">Sudah merespons</span>
+                  <span className="text-xs text-muted-foreground">{d("Sudah merespons")}</span>
                   <span className="text-sm font-semibold">{totalRsvp}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
@@ -986,7 +978,7 @@ function WorkspaceOverview({
             <div className="flex items-end justify-between gap-4">
               <div>
                 <p className="text-xs font-semibold">{d("Publikasi acara")}</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
+                <p className="mt-1 text-[11px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
               </div>
               <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
                 {publishRate}%
@@ -1000,7 +992,7 @@ function WorkspaceOverview({
             </div>
           </div>
 
-          <p className="mt-5 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
+          <p className="mt-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
             Akses cepat
           </p>
           <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
@@ -1057,8 +1049,10 @@ function RsvpWorkspace({
   onRefresh: () => Promise<void>;
   accent: string;
 }) {
+  const { d } = useDashboardI18n();
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <DashboardPageShell>
+      <DashboardPageHeader eyebrow={d("Workspace")} title={d("RSVP")} description={d("Pantau respons dan kehadiran tamu pada acara yang dipilih.")} />
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -1081,7 +1075,7 @@ function RsvpWorkspace({
           )}
         </div>
       )}
-    </div>
+    </DashboardPageShell>
   );
 }
 
@@ -1106,8 +1100,10 @@ function PlacementWorkspace({
   accent: string;
   onRefresh: () => Promise<void>;
 }) {
+  const { d } = useDashboardI18n();
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
+    <DashboardPageShell>
+      <DashboardPageHeader eyebrow={d("Workspace")} title={d("Manajemen Tamu")} description={d("Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.")} />
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -1129,7 +1125,7 @@ function PlacementWorkspace({
           )}
         </div>
       )}
-    </div>
+    </DashboardPageShell>
   );
 }
 
@@ -1202,7 +1198,7 @@ function PlacementPanel({
 function LoadingSurface() {
   const { d } = useDashboardI18n();
   return (
-    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
       {d("Memuat data acara...")}
     </DashboardSurface>
   );
@@ -1218,9 +1214,8 @@ function UsherPanel({
   const { d } = useDashboardI18n();
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
-    <DashboardPageShell className="px-1 pt-7 sm:pt-8">
-      <DashboardSurface className="p-5 sm:p-6">
-        <DashboardSectionHeader
+    <DashboardPageShell>
+        <DashboardPageHeader
           eyebrow={d("Usher App")}
           title={d("Check-in")}
           description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
@@ -1235,7 +1230,6 @@ function UsherPanel({
           <DashboardMetricCard label={d("Total tamu")} value={String(guests.length)} />
           <DashboardMetricCard label={d("Check-in")} value={String(checked)} />
         </DashboardMetricGrid>
-      </DashboardSurface>
     </DashboardPageShell>
   );
 }
