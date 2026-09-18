@@ -163,67 +163,75 @@ aside nav > p { font-family: var(--font-dc-heading); }
    -------------------------------------------------------------------------- */
 .dc-dashboard { background: var(--background); color: var(--foreground); }
 
-/* Sidebar is one intentional Rose field. Individual items stay neutral so the rail does not look patchy. */
+/* Dashboard sidebar follows the page canvas. Light mode stays white; Dark mode follows the near-black body. */
 .dc-dashboard aside {
-  background: #C07A84 !important;
-  color: #ffffff !important;
-  border-color: color-mix(in srgb, #A65E69 45%, transparent) !important;
+  background: var(--background) !important;
+  color: var(--foreground) !important;
+  border-color: var(--border) !important;
   box-shadow: none !important;
-}
-.dark .dc-dashboard aside {
-  color: #111111 !important;
-  border-color: color-mix(in srgb, #111111 18%, transparent) !important;
 }
 .dc-dashboard aside nav {
   padding: 0.875rem !important;
-  background: #C07A84 !important;
+  background: var(--background) !important;
 }
 .dc-dashboard aside nav > p {
-  color: rgba(255, 255, 255, 0.72) !important;
+  color: var(--muted-foreground) !important;
   letter-spacing: 0.12em;
   margin-bottom: 0.5rem;
 }
-.dark .dc-dashboard aside nav > p { color: rgba(17, 17, 17, 0.62) !important; }
 
+/* Light mode: neutral rail, readable dark copy, Rose only when an item is hovered/active. */
 .dc-dashboard aside nav button,
 .dc-dashboard aside nav a {
-  min-height: 46px;
+  min-height: 48px;
   border-radius: 10px;
   border-color: transparent !important;
   background: transparent !important;
-  color: rgba(255, 255, 255, 0.92) !important;
+  color: var(--foreground) !important;
   box-shadow: none !important;
   transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
-.dark .dc-dashboard aside nav button,
-.dark .dc-dashboard aside nav a {
-  color: rgba(17, 17, 17, 0.84) !important;
-}
 .dc-dashboard aside nav button:hover,
 .dc-dashboard aside nav a:hover {
-  background: rgba(255, 255, 255, 0.11) !important;
+  border-color: color-mix(in srgb, var(--primary) 22%, transparent) !important;
+  background: var(--primary) !important;
   color: #ffffff !important;
+}
+.dc-dashboard aside nav button[aria-current="page"],
+.dc-dashboard aside nav a[aria-current="page"],
+.dc-dashboard aside nav button.is-active,
+.dc-dashboard aside nav a.is-active {
+  border-color: #A65E69 !important;
+  background: #A65E69 !important;
+  color: #ffffff !important;
+}
+
+/* Dark mode: sidebar merges into the body; navigation buttons become Rose with black copy. */
+.dark .dc-dashboard aside nav button,
+.dark .dc-dashboard aside nav a {
+  border-color: color-mix(in srgb, #D9A3AA 26%, transparent) !important;
+  background: #C07A84 !important;
+  color: #111111 !important;
 }
 .dark .dc-dashboard aside nav button:hover,
 .dark .dc-dashboard aside nav a:hover {
-  background: rgba(17, 17, 17, 0.09) !important;
+  border-color: #D9A3AA !important;
+  background: #D9A3AA !important;
   color: #111111 !important;
-}
-.dc-dashboard aside nav button[aria-current="page"],
-.dc-dashboard aside nav a[aria-current="page"] {
-  border-color: rgba(255, 255, 255, 0.18) !important;
-  background: rgba(255, 255, 255, 0.17) !important;
-  color: #ffffff !important;
 }
 .dark .dc-dashboard aside nav button[aria-current="page"],
-.dark .dc-dashboard aside nav a[aria-current="page"] {
-  border-color: rgba(17, 17, 17, 0.14) !important;
-  background: rgba(17, 17, 17, 0.14) !important;
+.dark .dc-dashboard aside nav a[aria-current="page"],
+.dark .dc-dashboard aside nav button.is-active,
+.dark .dc-dashboard aside nav a.is-active {
+  border-color: #A65E69 !important;
+  background: #A65E69 !important;
   color: #111111 !important;
 }
-.dc-dashboard aside > div { border-color: rgba(255, 255, 255, 0.18) !important; color: rgba(255, 255, 255, 0.76) !important; }
-.dark .dc-dashboard aside > div { border-color: rgba(17, 17, 17, 0.14) !important; color: rgba(17, 17, 17, 0.68) !important; }
-.dc-dashboard aside > div p.font-semibold { color: inherit !important; }
+.dc-dashboard aside > div {
+  border-color: var(--border) !important;
+  color: var(--muted-foreground) !important;
+}
+.dc-dashboard aside > div p.font-semibold { color: var(--foreground) !important; }
 .dc-dashboard header { height: 72px !important; background: var(--background) !important; color: var(--foreground) !important; border-color: var(--border) !important; box-shadow: none !important; }
 .dc-dashboard header a, .dc-dashboard header button { color: var(--foreground) !important; }
 .dc-dashboard header a:hover, .dc-dashboard header button:hover { color: var(--primary) !important; }

@@ -408,7 +408,7 @@ export default function DashboardPage() {
           className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
         >
           <nav className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
-            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[10px] font-semibold uppercase tracking-[0.16em]">
+            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase tracking-[0.14em]">
               Workspace
             </p>
 
@@ -416,10 +416,8 @@ export default function DashboardPage() {
               type="button"
               aria-current={tab === "overview" ? "page" : undefined}
               onClick={() => go("overview")}
-              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
-                tab === "overview"
-                  ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
-                  : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
+              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[16px] font-medium shadow-none ${
+                tab === "overview" ? "is-active" : ""
               }`}
             >
               <span className="grid size-6 shrink-0 place-items-center text-current">
@@ -428,15 +426,13 @@ export default function DashboardPage() {
               <span className="min-w-0 truncate">{d("Beranda")}</span>
             </Button>
 
-            <div className="rounded-xl border border-white/15 bg-white/[0.05] p-1.5 dark:border-black/10 dark:bg-black/[0.05]">
+            <div className="rounded-xl border border-transparent bg-transparent p-1.5">
               <Button
                 type="button"
                 aria-expanded={invitationMenuOpen}
                 onClick={() => setInvitationMenuOpen((value) => !value)}
-                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[15px] font-medium shadow-none ${
-                  invitationActive
-                    ? "bg-white/[0.16] text-white dark:bg-black/[0.15] dark:text-black"
-                    : "text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
+                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[16px] font-medium shadow-none ${
+                  invitationActive ? "is-active" : ""
                 }`}
               >
                 <span className="grid size-6 shrink-0 place-items-center">
@@ -459,10 +455,8 @@ export default function DashboardPage() {
                         type="button"
                         aria-current={active ? "page" : undefined}
                         onClick={() => go(item.id)}
-                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[14px] font-medium shadow-none ${
-                          active
-                            ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
-                            : "text-white/80 hover:bg-white/10 hover:text-white dark:text-black/70 dark:hover:bg-black/10 dark:hover:text-black"
+                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[15px] font-medium shadow-none ${
+                          active ? "is-active" : ""
                         }`}
                       >
                         <span className="grid size-5 shrink-0 place-items-center">
@@ -484,10 +478,8 @@ export default function DashboardPage() {
                   type="button"
                   aria-current={tab === item.id ? "page" : undefined}
                   onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
-                    tab === item.id
-                      ? "border-white/20 bg-white/[0.16] text-white dark:border-black/15 dark:bg-black/[0.15] dark:text-black"
-                      : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
+                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[16px] font-medium shadow-none ${
+                    tab === item.id ? "is-active" : ""
                   }`}
                 >
                   <span className="grid size-6 shrink-0 place-items-center text-current">

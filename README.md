@@ -87,6 +87,7 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Primary desktop header/content/footer containers target **80vw**; do not reintroduce fixed `1400px` page wrappers that waste wide-screen space.
 - Dashboard chrome can span the viewport, while its customer workspace is capped by the available main pane to avoid sidebar-driven overflow.
 - Beranda defines the canonical customer-dashboard visual language. Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gates, and reusable dashboard components must use the same neutral surface/card/table hierarchy rather than page-specific styling.
+- Dashboard sidebar follows the Dashboard canvas: Light Mode uses a white rail with near-black default labels and Rose hover/active states with white copy; Dark Mode uses the same near-black body background with Rose navigation buttons and near-black copy. Main sidebar labels target roughly 15–16px for comfortable scanning.
 - Customer Dashboard supports Light + Dark mode through the shared theme provider and Indonesian + English through the shared language provider. Indonesian is the default when no locale preference exists; theme/language controls remain accessible in the Dashboard header.
 - Digital Invitation payment does not hide RSVP, Guest Management, or Personal Invitation preparation pages. Users can explore and prepare those workspaces before Publish; Digital Invitation payment is enforced on Publish. WA Blast quota and Guestbook/Usher retain their separate entitlements.
 - Shared dashboard presentation primitives live in `components/Dashboard/DashboardPrimitives.tsx`; extend them for new workspace UI. Real tables/graphs are welcome when backed by actual application data, never filler/mock metrics.
@@ -140,4 +141,4 @@ pnpm db:deploy
 
 - `prd.md` is the single product-requirement source of truth and contains consolidated implementation history in Appendix A.
 - `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
-- Do not create or revive split PRD/changelog files unless the owner explicitly changes the documentation model.
+- Do not create or revive split PRD/changelog files for normal work. If the owner explicitly requests `prd-tambahan.md`, it may be maintained only as a supplemental non-canonical delta log; `prd.md` remains authoritative.
