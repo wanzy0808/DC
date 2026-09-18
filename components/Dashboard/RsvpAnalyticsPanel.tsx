@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
   DashboardMetricCard,
   DashboardMetricGrid,
@@ -59,6 +60,7 @@ export default function RsvpAnalyticsPanel({
   embedded = false,
   onRefresh,
 }: Props) {
+  const { d, locale } = useDashboardI18n();
   const [query, setQuery] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("name");
   const [ascending, setAscending] = useState(true);
@@ -122,8 +124,8 @@ export default function RsvpAnalyticsPanel({
         guest.phone || "",
         statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus,
         guest.plusOnes + 1,
-        guest.checkedIn ? "Checked In" : "Belum Check In",
-        guest.table?.name || "Belum ditempatkan",
+        guest.checkedIn ? d("Checked In") : d("Belum Check In"),
+        guest.table?.name || d("Belum ditempatkan"),
       ]),
     ];
     const csv = lines
@@ -153,7 +155,7 @@ export default function RsvpAnalyticsPanel({
         body: JSON.stringify({ guestId: guest.id }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "QR gagal dibuat.");
+      if (!response.ok) throw new Error(data.error || d("QR gagal dibuat."));
       setQr({ name: guest.name, token: data.token });
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "QR gagal dibuat.");
@@ -173,22 +175,22 @@ export default function RsvpAnalyticsPanel({
         body: JSON.stringify({ guestId: guest.id }),
       });
       const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Check-in gagal.");
-      setNotice(`${guest.name} berhasil check-in.`);
+      if (!response.ok) throw new Error(data.error || d("Check-in gagal."));
+      setNotice(locale === "en" ? `${guest.name} checked in successfully.` : `${guest.name} berhasil check-in.`);
       if (onRefresh) await onRefresh();
       else window.location.reload();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Check-in gagal.");
+      setNotice(error instanceof Error ? error.message : d("Check-in gagal."));
     } finally {
       setBusyId(null);
     }
   }
 
   const metrics = [
-    { label: "RSVP", value: stats.total, icon: Users },
-    { label: "Hadir", value: stats.attending, icon: CheckCircle2 },
-    { label: "Total pax", value: stats.pax, icon: Users },
-    { label: "Check-in", value: stats.checkedIn, icon: QrCode },
+    { label: d("RSVP"), value: stats.total, icon: Users },
+    { label: d("Hadir"), value: stats.attending, icon: CheckCircle2 },
+    { label: d("Total pax"), value: stats.pax, icon: Users },
+    { label: d("Check-in"), value: stats.checkedIn, icon: QrCode },
   ];
 
   return (
@@ -214,8 +216,8 @@ export default function RsvpAnalyticsPanel({
 
       <DashboardSurface className="mt-4 min-w-0 p-3 sm:p-4">
         <DashboardSectionHeader
-          eyebrow="RSVP"
-          title="Daftar tamu"
+          eyebrow={d("RSVP")}
+          title={d("Daftar tamu")}
           description={`${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`}
         />
 
@@ -225,7 +227,7 @@ export default function RsvpAnalyticsPanel({
               <Input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Cari nama / telepon"
+                placeholder={d("Cari nama / telepon")}
                 className="min-w-0 pl-9"
               />
             </div>
@@ -234,7 +236,7 @@ export default function RsvpAnalyticsPanel({
               value={sortKey}
               onChange={(event) => setSortKey(event.target.value as SortKey)}
               className="h-10 w-full min-w-0 rounded-[10px] border border-border bg-background px-3 text-xs text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
-              aria-label="Urutkan tamu"
+              aria-label={d("Urutkan tamu")}
             >
               {(Object.keys(sortLabel) as SortKey[]).map((key) => (
                 <option key={key} value={key}>
@@ -246,16 +248,16 @@ export default function RsvpAnalyticsPanel({
             <Button
               size="sm"
               onClick={() => setAscending((value) => !value)}
-              title={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
-              aria-label={ascending ? "Ubah ke urutan turun" : "Ubah ke urutan naik"}
+              title={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
+              aria-label={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
             >
               <ArrowDownUp className="h-4 w-4" />
-              {ascending ? "Urutan naik" : "Urutan turun"}
+              {ascending ? d("Urutan naik") : d("Urutan turun")}
             </Button>
 
-            <Button onClick={exportCsv} size="sm" title="Export daftar RSVP sebagai CSV">
+            <Button onClick={exportCsv} size="sm" title={d("Export daftar RSVP sebagai CSV")}>
               <Download className="h-4 w-4" />
-              Export CSV
+              {d("Export CSV")}
             </Button>
         </div>
 
@@ -263,12 +265,12 @@ export default function RsvpAnalyticsPanel({
           <table className="w-full min-w-[940px] text-left">
             <thead>
               <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
-                <th className="px-3 py-3 font-medium">Nama</th>
+                <th className="px-3 py-3 font-medium">{d("Nama")}</th>
                 <th className="px-3 py-3 font-medium">RSVP</th>
-                <th className="px-3 py-3 font-medium">Pax</th>
-                <th className="px-3 py-3 font-medium">Check-in</th>
-                <th className="px-3 py-3 font-medium">Meja</th>
-                <th className="px-3 py-3 text-right font-medium">Aksi</th>
+                <th className="px-3 py-3 font-medium">{d("Pax")}</th>
+                <th className="px-3 py-3 font-medium">{d("Check-in")}</th>
+                <th className="px-3 py-3 font-medium">{d("Meja")}</th>
+                <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
               </tr>
             </thead>
             <tbody>
@@ -280,12 +282,12 @@ export default function RsvpAnalyticsPanel({
                   <td className="px-3 py-3">
                     <p className="font-semibold text-foreground">{guest.name}</p>
                     <p className="mt-0.5 text-[10px] text-foreground/50">
-                      {guest.phone || "Tanpa nomor"}
+                      {guest.phone || d("Tanpa nomor")}
                     </p>
                   </td>
                   <td className="px-3 py-3">
                     <span className="font-[family-name:var(--font-dc-mono)] text-[10px] text-foreground/70">
-                      {statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus}
+                      {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
                     </span>
                   </td>
                   <td className="px-3 py-3 font-[family-name:var(--font-dc-mono)] text-foreground/70">
@@ -293,9 +295,9 @@ export default function RsvpAnalyticsPanel({
                   </td>
                   <td className="px-3 py-3">
                     {guest.checkedIn ? (
-                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">Sudah</span>
+                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">{d("Sudah")}</span>
                     ) : (
-                      <span className="text-foreground/55">Belum</span>
+                      <span className="text-foreground/55">{d("Belum")}</span>
                     )}
                   </td>
                   <td className="px-3 py-3 text-foreground/65">
@@ -305,23 +307,23 @@ export default function RsvpAnalyticsPanel({
                     <div className="flex justify-end gap-2">
                       <Button
                         size="xs"
-                        title={`Buat QR untuk ${guest.name}`}
-                        aria-label={`Buat QR untuk ${guest.name}`}
+                        title={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
+                        aria-label={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
                         disabled={busyId === guest.id}
                         onClick={() => showQr(guest)}
                       >
                         <QrCode className="h-3.5 w-3.5" />
-                        Buat QR
+                        {d("Buat QR")}
                       </Button>
                       <Button
                         size="xs"
-                        title={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
-                        aria-label={guest.checkedIn ? `${guest.name} sudah check-in` : `Check-in manual ${guest.name}`}
+                        title={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
+                        aria-label={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
                         disabled={busyId === guest.id || Boolean(guest.checkedIn)}
                         onClick={() => manualCheckIn(guest)}
                       >
                         <CheckCircle2 className="h-3.5 w-3.5" />
-                        {guest.checkedIn ? "Sudah check-in" : "Check-in"}
+                        {guest.checkedIn ? d("Sudah check-in") : d("Check-in")}
                       </Button>
                     </div>
                   </td>
@@ -359,8 +361,8 @@ export default function RsvpAnalyticsPanel({
               size="icon-sm"
               onClick={() => setQr(null)}
               className="absolute right-3 top-3"
-              aria-label="Tutup QR ticket"
-              title="Tutup QR ticket"
+              aria-label={d("Tutup QR ticket")}
+              title={d("Tutup QR ticket")}
             >
               <X className="h-4 w-4" />
             </Button>
