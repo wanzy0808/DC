@@ -73,24 +73,28 @@ Yang masih membedakan web dari visual reference:
 
 ## Stage 2 — Room & Portal Realism
 
-**NEXT**
+**Status: implemented on feature branch; validation pending**
 
-Prioritas berikut:
+Implemented:
 
-- refine architectural room supaya tidak terasa seperti vector backdrop;
-- tambah restrained decorative depth yang category-neutral;
-- tambah side foliage / floral-like abstract branches secara sangat ringan tanpa menjadikan landing wedding-only;
-- refine arch material, glass, inner shadow, Rose edge light;
-- buat floor reflection portal lebih convincing;
-- samakan tone existing `wo.png`, `hp-digital.png`, `bukutamu.png` supaya tiga portal terlihat satu dunia;
-- perbaiki inactive portal supaya tetap mewah tetapi active portal jelas menjadi focal point;
-- cek apakah scene perlu dedicated generated decorative asset sebagai **secondary layer**, bukan sebagai flattened UI screenshot.
+- architectural room diperdalam dengan distant city silhouette, moulding berlapis, cast-window light, dan richer arch depth;
+- floor sekarang memiliki perspective grid yang lebih halus, marble-like vein, specular wash, dan portal reflection silhouettes;
+- ditambah restrained lounge silhouette, sculptural pedestal, serta abstract botanical branches di tepi scene supaya ruang tidak terasa vector kosong;
+- decorative depth tetap category-neutral dan tidak memakai wedding-specific props;
+- portal frame dibuat berlapis seperti Rose metal + glass: outer ring, inner bevel, specular vertical edge, glass veil, luminous sill, dan richer active shadow;
+- panel Pintu sekarang terasa seperti translucent Rose glass dan tetap membuka dengan Motion;
+- tone tiga existing product images disatukan menggunakan shared Rose light/wash, saturation/contrast treatment, dan glass overlay;
+- inactive portal tetap visible/elegan tetapi active portal memiliki edge light, floor glow, reflection, dan brighter interior focus;
+- active service sekarang memindahkan subtle floor light di room scene;
+- dedicated generated full-scene asset belum dipakai; implementation tetap real web layers agar interaction/theme lebih fleksibel.
 
 ---
 
 ## Stage 3 — Motion & Interaction Polish
 
-Setelah bentuk visual Stage 2 benar:
+**NEXT**
+
+Setelah Stage 2 tervalidasi:
 
 - subtle light response ketika active service berubah;
 - portal opening timing refinement;
@@ -147,3 +151,13 @@ Jangan diubah tanpa instruksi owner:
 - Build Validation #1054: **PASS** for dependency install, Prisma Client generation, and Next.js production build + TypeScript;
 - browser visual verification is still pending;
 - next focus: Stage 2 room/portal realism.
+
+### 18 September 2026 — Stage 2
+- deepened the room with city/window depth, moulding, marble treatment, foreground lounge/pedestal, and restrained botanical silhouettes;
+- rebuilt portal material treatment with layered Rose metal/glass framing, specular edges, richer glass doors, luminous threshold, and physical-looking floor reflection;
+- unified the three existing portal images with one shared Rose-lit treatment;
+- active portal now drives subtle floor light position inside the room;
+- no new dependency added; implementation remains Tailwind + SVG/CSS + Motion + existing theme stack;
+- Build/TypeScript/CI: pending;
+- browser visual verification: pending;
+- next focus after validation: Stage 3 motion synchronization and interaction polish.
