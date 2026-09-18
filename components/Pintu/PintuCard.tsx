@@ -33,7 +33,7 @@ export default function PintuCard({
   const { isDarkMode } = useTheme();
 
   return (
-    <Link href={href} className="block focus-visible:outline-none">
+    <Link href={href} className="block rounded-t-[94px] rounded-b-[18px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-4 focus-visible:ring-offset-background md:rounded-t-[150px]">
       <motion.div
         onMouseEnter={onHover}
         whileHover={reducedMotion ? undefined : { y: -4, scale: isActive ? 1.018 : 1.008 }}
