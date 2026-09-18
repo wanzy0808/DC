@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidGuestbook } from "@/lib/packages/access";
-import { verifyGuestQrToken } from "@/lib/usher-qr";
+import { verifyGuestQrToken } from "@/lib/usher/qr";
 
 async function getUsherInvitation(userId: string) {
   const invitation = await prisma.invitation.findFirst({
