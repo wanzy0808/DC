@@ -18,6 +18,7 @@ const english: Record<string, string> = {
   "Tamu manual gagal ditambahkan.": "Manual guest could not be added.",
   "Tamu manual ditambahkan ke roster.": "Manual guest added to the roster.",
   "Workspace": "Workspace",
+  "Akun": "Account",
   "Beranda": "Home",
   "Acara": "Events",
   "Rangkaian Acara": "Event Setup",
