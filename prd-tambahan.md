@@ -71,4 +71,4 @@ Perbaikan sebelumnya tetap berlaku:
 
 Owner meminta menghapus sisa Rose opacity/fill pada ID/EN dan account menu saat idle di Dark Mode. Implementasi mengikuti neutral-first rule: black/near-black + white copy saat idle, Rose + white copy hanya saat hover.
 
-Validation: PENDING workflow terbaru.
+Validation: GitHub Actions Build Validation #1030 **PASS** pada application source head `0af685723e2178d52c735a8890026d5ce87d90ff` (dependency install, Prisma Client generation, Next.js production build + TypeScript). Database migration: N/A. Follow-up commit ini hanya memperbarui dokumentasi validation.
