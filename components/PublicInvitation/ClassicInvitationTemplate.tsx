@@ -63,7 +63,7 @@ function formatTime(value: string | null, timezoneLabel: string) {
   return value ? `${value} ${timezoneLabel}` : "Waktu akan diumumkan";
 }
 
-export default function FigmaClassicTemplate({
+export default function ClassicInvitationTemplate({
   invitation,
 }: {
   invitation: PublicInvitationData;

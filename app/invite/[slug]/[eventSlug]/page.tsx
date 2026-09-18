@@ -6,7 +6,7 @@ import { slugifyEvent } from "@/lib/invitations/slug";
 import PublicInvitation, {
   InvitationLockedState,
 } from "@/components/PublicInvitation/PublicInvitation";
-import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
+import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
 export default async function EventInvitationPage({
@@ -57,7 +57,7 @@ export default async function EventInvitationPage({
 
   const templateKey = invitation.templateKey.split("::")[0];
   if (templateKey === "eternal-blossom") {
-    return <FigmaClassicTemplate invitation={invitation} />;
+    return <ClassicInvitationTemplate invitation={invitation} />;
   }
 
   return <PublicInvitation invitation={invitation} />;

@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import RomanticBackground from "@/components/Layout/background";
+import RosePetalBackground from "@/components/Layout/RosePetalBackground";
 
 const privatePrefixes = ["/dashboard", "/admin"];
 
@@ -16,7 +16,7 @@ export default function PublicAtmosphere() {
   // second global background here causes duplicated visual layers there.
   if (isPrivateArea || pathname === "/") return null;
 
-  return <RomanticBackground />;
+  return <RosePetalBackground />;
 }
 
 export function PublicContent({ children }: { children: ReactNode }) {

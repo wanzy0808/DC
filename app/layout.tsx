@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { Cinzel, DM_Mono, Fauna_One } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/Theme/ThemeContext";
+import { ThemeProvider } from "@/components/Theme/ThemeProvider";
 import { LanguageProvider } from "@/components/I18n/LanguageProvider";
 import { isLocale, LOCALE_COOKIE, type Locale } from "@/lib/i18n";
 import Navbar from "@/components/Layout/Navbar/Navbar";

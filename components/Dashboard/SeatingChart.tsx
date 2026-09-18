@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { ArrowLeftRight, LayoutGrid, UserPlus, X } from "lucide-react";
 import { Circle, Group, Layer, Rect, Stage, Text } from "react-konva";
 import type { KonvaEventObject } from "konva/lib/Node";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";

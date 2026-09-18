@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PublicInvitation from "@/components/PublicInvitation/PublicInvitation";
-import FigmaClassicTemplate from "@/components/PublicInvitation/FigmaClassicTemplate";
+import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
 import { Button } from "@/components/ui/button";
 
 export default async function PersonalInvitationPreviewPage({
@@ -32,7 +32,7 @@ export default async function PersonalInvitationPreviewPage({
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <FigmaClassicTemplate invitation={invitation} />
+      <ClassicInvitationTemplate invitation={invitation} />
     ) : (
       <PublicInvitation invitation={invitation} />
     );

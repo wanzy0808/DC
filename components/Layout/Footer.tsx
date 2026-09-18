@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 function InstagramIcon({ className }: { className?: string }) {

@@ -2,9 +2,9 @@
 
 import React from "react";
 import { usePathname } from "next/navigation";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 
-export default function RomanticBackground() {
+export default function RosePetalBackground() {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
   const isDigitalInvitationPage = pathname === "/d-invitation";

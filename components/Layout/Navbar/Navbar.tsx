@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ThemeToggle } from "@/components/Theme/ThemeContext";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";

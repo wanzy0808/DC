@@ -2702,3 +2702,36 @@ Lanjutan cleanup repository untuk mengurangi file helper campur-aduk di root `li
 
 ### Next
 Pass berikutnya memetakan dan merapikan high-fanout infrastructure modules seperti `auth.ts`, `google-auth.ts`, dan `prisma.ts`, serta shared provider naming yang masih bercampur.
+
+
+---
+
+## 2026-09-18 — Repository Infrastructure & Shared Provider Cleanup (Pass 3)
+
+### Requirement / Intent
+Lanjutan cleanup repository untuk menghilangkan nama file implementasi sementara/ambigu dan memisahkan shared provider state dari control UI, tanpa mengubah behavior produk.
+
+### Implementation
+- `lib/google-auth.ts` → `lib/auth/google.ts`;
+- `components/Theme/ThemeContext.tsx` dipecah menjadi:
+  - `components/Theme/ThemeProvider.tsx` untuk provider + `useTheme`;
+  - `components/Theme/ThemeToggle.tsx` untuk canonical UI control;
+- `components/Layout/background.tsx` → `components/Layout/RosePetalBackground.tsx`, dengan behavior protected Rose petals tetap sama;
+- `components/PublicInvitation/FigmaClassicTemplate.tsx` → `ClassicInvitationTemplate.tsx` agar nama file tidak bergantung pada tool desain;
+- Google OAuth route, root layout, Dashboard, Navbar, Pintu, public atmosphere, landing, dan public invitation imports diperbarui;
+- `lib/auth.ts` dan `lib/prisma.ts` sengaja tetap menjadi conventional high-fanout root entry points karena pemindahan tidak memberi manfaat maintainability yang sebanding dengan churn;
+- repository conventions diperbarui agar provider state dan UI controls tidak digabung kembali.
+
+### Validation
+- Build Validation #1077: **FAIL** karena masih ada import `ThemeContext`, `FigmaClassicTemplate`, dan satu literal newline pada import Dashboard setelah split provider.
+- Build Validation #1081: **FAIL** karena `SeatingChart.tsx` masih memakai import `ThemeContext` lama.
+- Seluruh sisa import diperbarui ke `ThemeProvider`, `ThemeToggle`, dan `ClassicInvitationTemplate`.
+- Build Validation #1082 pada application source head `3aa154e22c9893b8c85fe711df35208254d512d9`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Cleanup berikutnya fokus pada route-local static data dan folder/component yang masih implementation-specific atau terlalu generik, tanpa memindahkan high-fanout entry points hanya demi estetika struktur.
