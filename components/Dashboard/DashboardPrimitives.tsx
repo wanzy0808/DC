@@ -70,18 +70,18 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
+        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
         className,
       )}
     >
       {Icon && (
-        <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-          <Icon className="h-4 w-4" strokeWidth={1.8} />
+        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+          <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </span>
       )}
       <div className="min-w-0">
-        <p className="text-[11px] text-muted-foreground">{label}</p>
-        <div className="mt-0.5 truncate text-xl font-semibold text-foreground">{value}</div>
+        <p className="text-[13px] leading-5 text-muted-foreground">{label}</p>
+        <div className="mt-1 truncate text-2xl font-semibold leading-none text-foreground">{value}</div>
       </div>
     </article>
   );
@@ -99,14 +99,14 @@ export function DashboardCompactStat({
   return (
     <div
       className={classes(
-        "min-w-0 rounded-xl border border-border/70 bg-foreground/[0.018] px-3 py-2.5",
+        "min-w-0 rounded-xl border border-border/70 bg-foreground/[0.018] px-3.5 py-3",
         className,
       )}
     >
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
-      <div className="mt-1 truncate text-sm font-semibold text-foreground">{value}</div>
+      <div className="mt-1.5 truncate text-base font-semibold text-foreground">{value}</div>
     </div>
   );
 }
@@ -122,7 +122,7 @@ export function DashboardNotice({
     <div
       role="status"
       className={classes(
-        "dc-dashboard-notice rounded-xl border border-primary/15 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground",
+        "dc-dashboard-notice rounded-xl border border-primary/15 bg-primary/[0.035] px-4 py-3.5 text-sm leading-6 text-muted-foreground",
         className,
       )}
     >
@@ -146,15 +146,15 @@ export function DashboardSectionHeader({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         {eyebrow && (
-          <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-primary">
+          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.14em] text-primary">
             {eyebrow}
           </p>
         )}
-        <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
+        <h2 className="mt-1.5 font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-foreground sm:text-2xl">
           {title}
         </h2>
         {description && (
-          <p className="mt-1 max-w-2xl text-xs leading-5 text-muted-foreground">
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
             {description}
           </p>
         )}
@@ -176,7 +176,7 @@ export function DashboardStatusBadge({
   return (
     <span
       className={classes(
-        "inline-flex min-h-7 items-center rounded-lg border px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em]",
+        "inline-flex min-h-8 items-center rounded-lg border px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.08em]",
         active
           ? "border-primary/15 bg-primary/[0.08] text-primary"
           : "border-border/70 bg-background text-muted-foreground",
@@ -204,18 +204,18 @@ export function DashboardEmptyState({
   return (
     <div
       className={classes(
-        "flex min-h-36 flex-col items-start justify-center rounded-xl border border-dashed border-border/80 bg-background px-5 py-6",
+        "flex min-h-40 flex-col items-start justify-center rounded-xl border border-dashed border-border/80 bg-background px-5 py-7",
         className,
       )}
     >
       {Icon && (
-        <span className="mb-3 grid size-10 place-items-center rounded-full bg-primary/10 text-primary">
-          <Icon className="h-4 w-4" strokeWidth={1.8} />
+        <span className="mb-3 grid size-11 place-items-center rounded-full bg-primary/10 text-primary">
+          <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </span>
       )}
-      <p className="text-sm font-semibold text-foreground">{title}</p>
+      <p className="text-base font-semibold text-foreground">{title}</p>
       {description && (
-        <p className="mt-1 max-w-xl text-xs leading-5 text-muted-foreground">{description}</p>
+        <p className="mt-1.5 max-w-xl text-sm leading-6 text-muted-foreground">{description}</p>
       )}
       {action && <div className="mt-4">{action}</div>}
     </div>
