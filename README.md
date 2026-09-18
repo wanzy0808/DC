@@ -117,6 +117,25 @@ Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible b
 - Event-scoped guest/RSVP data must not leak or mix across invitations.
 - `/dashboard`, Beranda, Pintu navigation, and protected Rose petals remain part of the product foundation.
 
+## Repository Structure
+
+The repository uses a feature-first component structure so files remain easy to locate as the product grows.
+
+- `app/` — routes, layouts, and API endpoints; route names follow public/internal URL contracts.
+- `components/DigitalInvitation/` — Digital Invitation marketing/product UI.
+- `components/EventPlanner/` — Event Planner public UI.
+- `components/Guestbook/` — Guestbook public UI.
+- `components/Landing/Pintu/` — landing Pintu navigation components.
+- `components/Dashboard/` — customer dashboard workspaces and shared dashboard primitives.
+- `components/InvitationStudio/` — active invitation editor/studio components.
+- `components/Payments/` — checkout/package-selection UI.
+- `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns.
+- `data/services/` — static service-facing content/catalog copy only.
+- `lib/` — domain logic, server helpers, access rules, parsers, and infrastructure utilities.
+- `prisma/` — schema and migrations.
+
+Naming rule: use semantic names instead of temporary version suffixes. Once a replacement is canonical, keep one active component name such as `InvitationDesigner.tsx` rather than maintaining `V2`/`V3` files.
+
 ## Getting Started
 
 ### Prerequisites
