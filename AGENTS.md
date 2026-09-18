@@ -70,7 +70,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Public burger menu omits a dedicated Home/Beranda item; the logo remains the home path. In Indonesian, service labels are `Perencana Acara`, `Undangan Digital`, and `Buku Tamu Digital`. `Layanan` remains a submenu parent, `Masuk` and `Daftar` remain visible, and service/package icons must be visually distinct.
 - Explicit UI exception: burger navigation buttons plus registration/login controls use a neutral white surface with black text and a subtle border in both themes. Keep using the shared `Button` primitive, but this surface-specific treatment supersedes the Rose fill rule for these auth/navigation surfaces. Rose remains the accent for focus, links, and selected emphasis.
 - Registration dialog headers must reserve the top-right area for the close `X`; do not place a `Masuk` action there. Put the login switch below the registration form. Auth copy must remain general-event oriented.
-- **Landing `/` is single-screen by owner decision.** Keep copy + Pintu inside one viewport after the navbar and do not add below-the-fold marketing sections without explicit instruction. The landing may use its own architectural threshold atmosphere, but do not modify the protected Rose-petal implementation used elsewhere unless explicitly instructed.
+- Landing 80vw should read as one editorial composition: the copy column may widen/grow downward, a quote/proof block may sit above a subtle separator, and muted capability checks sit below it.
 - Never fabricate customer testimonials, customer names, ratings, or quotes. Only attribute a quote to a customer when a real source is available; otherwise use clearly non-customer brand/service copy.
 
 ### Brand Anchor

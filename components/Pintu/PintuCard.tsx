@@ -1,236 +1,137 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { ArrowRight, BookOpen, CalendarDays, Mail } from "lucide-react";
 import { useTheme } from "@/components/Theme/ThemeContext";
-
-type PintuKind = "planner" | "invitation" | "guestbook";
 
 type PintuCardProps = {
   title: string;
-  href: string;
   bgImage: string;
-  kind: PintuKind;
-  caption: string;
+  innerDetails?: {
+    tags?: string[];
+    desc?: string;
+  };
   isActive: boolean;
-  featured?: boolean;
   reducedMotion?: boolean | null;
-  onActivate: () => void;
-};
-
-const icons = {
-  planner: CalendarDays,
-  invitation: Mail,
-  guestbook: BookOpen,
+  onHover?: () => void;
+  href?: string;
 };
 
 export default function PintuCard({
   title,
-  href,
   bgImage,
-  kind,
-  caption,
+  innerDetails,
   isActive,
-  featured = false,
   reducedMotion = false,
-  onActivate,
+  onHover,
+  href = "#",
 }: PintuCardProps) {
-  const Icon = icons[kind];
   const { isDarkMode } = useTheme();
-  const panelTransition = reducedMotion
-    ? { duration: 0.08 }
-    : {
-        duration: isActive ? 0.66 : 0.5,
-        delay: isActive ? 0.035 : 0,
-        ease: [0.22, 1, 0.36, 1] as const,
-      };
 
   return (
-    <motion.div
-      initial={false}
-      animate={
-        reducedMotion
-          ? undefined
-          : {
-              y: isActive ? -9 : 0,
-              scale: isActive ? 1.016 : 1,
-            }
-      }
-      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className="relative flex items-end justify-center"
-      onMouseEnter={onActivate}
-      onFocus={onActivate}
-    >
+    <Link href={href} className="block">
       <motion.div
-        initial={false}
-        animate={{
-          opacity: isActive ? (isDarkMode ? 0.42 : 0.3) : 0.1,
-          scaleX: isActive ? 1 : 0.84,
-        }}
-        transition={{ duration: reducedMotion ? 0.08 : 0.5, ease: [0.22, 1, 0.36, 1] }}
-        className={`pointer-events-none absolute bottom-[-4.5%] left-1/2 -translate-x-1/2 rounded-[50%] bg-primary blur-2xl ${
-          featured ? "h-[13%] w-[90%]" : "h-[11%] w-[84%]"
-        }`}
-        aria-hidden="true"
-      />
-
-      <div
-        className={`pointer-events-none absolute bottom-[-7%] left-1/2 -translate-x-1/2 rounded-[50%] border border-primary/12 bg-background/20 ${
-          featured ? "h-[12%] w-[88%]" : "h-[10%] w-[82%]"
-        }`}
-        aria-hidden="true"
-      />
-
-      <Link
-        href={href}
-        aria-label={title}
-        className={`group relative block overflow-hidden rounded-t-[999px] rounded-b-[24px] border border-primary/42 bg-background/25 outline-none transition-shadow duration-500 focus-visible:ring-2 focus-visible:ring-primary/80 focus-visible:ring-offset-4 focus-visible:ring-offset-background ${
-          featured
-            ? "h-[clamp(338px,58dvh,598px)] w-[clamp(184px,15.4vw,298px)]"
-            : "h-[clamp(292px,49.5dvh,514px)] w-[clamp(154px,12.8vw,246px)]"
-        } ${
+        onMouseEnter={onHover}
+        whileHover={reducedMotion ? undefined : { y: -4, scale: isActive ? 1.02 : 1.01 }}
+        whileTap={reducedMotion ? undefined : { scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 25 }}
+        className={`group relative h-[340px] w-[196px] cursor-pointer overflow-hidden rounded-t-[94px] rounded-b-2xl border-2 border-white/80 md:h-[clamp(410px,52vh,520px)] md:w-[clamp(240px,17vw,315px)] md:rounded-t-[150px] ${
           isActive
-            ? "shadow-[0_34px_90px_rgba(66,28,39,.24),0_0_40px_rgba(192,122,132,.16)] dark:shadow-[0_34px_100px_rgba(0,0,0,.55),0_0_42px_rgba(192,122,132,.2)]"
-            : "shadow-[0_24px_65px_rgba(38,24,28,.13)] dark:shadow-[0_26px_72px_rgba(0,0,0,.42)]"
+            ? "shadow-[0_0_44px_rgba(255,255,255,0.55)]"
+            : "shadow-2xl hover:shadow-[0_0_22px_rgba(255,255,255,0.2)]"
         }`}
       >
-        {/* layered Rose/white frame to read as architectural metal + glass */}
-        <div className="pointer-events-none absolute inset-0 z-40 rounded-t-[999px] rounded-b-[24px] ring-1 ring-inset ring-white/35 dark:ring-white/14" />
-        <div className="pointer-events-none absolute inset-[4px] z-40 rounded-t-[999px] rounded-b-[20px] border border-primary/48 shadow-[inset_0_0_0_1px_rgba(255,255,255,.2)] dark:border-primary/55" />
-        <div className="pointer-events-none absolute inset-[9px] z-40 rounded-t-[999px] rounded-b-[16px] border border-white/32 dark:border-white/14" />
+        <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
+
+        <div className="absolute inset-0 overflow-hidden">
+          <Image
+            src={`/${bgImage}`}
+            alt=""
+            fill
+            sizes="(max-width: 767px) 392px, 630px"
+            quality={100}
+            className={`object-cover object-center ${isActive ? "grayscale-0" : "grayscale"}`}
+            priority={isActive}
+          />
+        </div>
+
         <div
-          className={`pointer-events-none absolute inset-[2px] z-30 rounded-t-[999px] rounded-b-[22px] transition-opacity duration-500 ${
-            isActive
-              ? "opacity-100 shadow-[inset_0_0_28px_rgba(217,163,170,.25),0_0_24px_rgba(192,122,132,.22)]"
-              : "opacity-45 shadow-[inset_0_0_18px_rgba(217,163,170,.12)]"
-          }`}
-        />
-
-        {/* vertical specular highlights */}
-        <div className="pointer-events-none absolute bottom-[7%] left-[3.6%] top-[18%] z-40 w-px bg-gradient-to-b from-transparent via-white/75 to-transparent opacity-60" />
-        <div className="pointer-events-none absolute bottom-[7%] right-[3.6%] top-[18%] z-40 w-px bg-gradient-to-b from-transparent via-primary/75 to-transparent opacity-70" />
-
-        <Image
-          src={`/${bgImage}`}
-          alt=""
-          fill
-          priority={featured}
-          sizes={featured ? "(min-width: 1024px) 298px, 190px" : "(min-width: 1024px) 246px, 160px"}
-          className={`object-cover transition duration-700 ${
-            isActive
-              ? "scale-[1.04] saturate-[.9] contrast-[.96]"
-              : "scale-[1.015] saturate-[.62] contrast-[.92]"
-          }`}
-        />
-
-        {/* unifies the three unrelated source images into one Rose-lit world */}
-        <div
-          className={`absolute inset-0 transition duration-500 ${
+          className={`absolute inset-0 bg-gradient-to-t ${
             isDarkMode
-              ? "bg-[linear-gradient(to_top,rgba(12,8,11,.88),rgba(35,18,27,.25)_54%,rgba(192,122,132,.13))]"
-              : "bg-[linear-gradient(to_top,rgba(54,27,36,.62),rgba(255,239,241,.12)_58%,rgba(192,122,132,.09))]"
+              ? "from-[rgba(8,7,10,0.95)] via-[rgba(8,7,10,0.35)] to-transparent"
+              : "from-[rgba(26,26,26,0.92)] via-[rgba(26,26,26,0.22)] to-transparent"
           }`}
-        />
-        <div
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            isActive
-              ? "bg-[radial-gradient(circle_at_50%_38%,rgba(244,204,210,.34),transparent_46%)] opacity-100"
-              : "bg-[radial-gradient(circle_at_50%_32%,rgba(217,163,170,.16),transparent_52%)] opacity-70"
-          }`}
+          aria-hidden="true"
         />
 
-        {/* soft glass veil */}
-        <div className="absolute inset-0 bg-[linear-gradient(110deg,rgba(255,255,255,.14),transparent_24%,transparent_70%,rgba(217,163,170,.08))] mix-blend-screen opacity-75 dark:opacity-45" />
-
-        {/* opening panels */}
         <motion.div
           initial={false}
-          animate={{ x: isActive ? "-103%" : "0%" }}
-          transition={panelTransition}
-          className={`absolute inset-y-0 left-0 z-10 w-1/2 border-r border-white/22 backdrop-blur-md ${
-            isDarkMode
-              ? "bg-[linear-gradient(104deg,rgba(62,30,41,.96),rgba(192,122,132,.68))]"
-              : "bg-[linear-gradient(104deg,rgba(183,104,116,.94),rgba(218,166,174,.82))]"
-          }`}
+          animate={
+            reducedMotion
+              ? { y: 0, opacity: isActive ? 1 : 0 }
+              : { y: isActive ? 0 : 16, opacity: isActive ? 1 : 0 }
+          }
+          transition={{ duration: reducedMotion ? 0.1 : 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-x-0 bottom-0 z-20 min-w-0 p-4 text-white sm:p-5 md:p-6"
         >
-          <div className="absolute inset-y-0 right-0 w-[12%] bg-gradient-to-l from-black/12 to-transparent" />
-          <div className="absolute inset-y-[8%] right-[5px] w-px bg-white/55" />
-        </motion.div>
-        <motion.div
-          initial={false}
-          animate={{ x: isActive ? "103%" : "0%" }}
-          transition={panelTransition}
-          className={`absolute inset-y-0 right-0 z-10 w-1/2 border-l border-white/22 backdrop-blur-md ${
-            isDarkMode
-              ? "bg-[linear-gradient(256deg,rgba(62,30,41,.96),rgba(192,122,132,.68))]"
-              : "bg-[linear-gradient(256deg,rgba(183,104,116,.94),rgba(218,166,174,.82))]"
-          }`}
-        >
-          <div className="absolute inset-y-0 left-0 w-[12%] bg-gradient-to-r from-black/12 to-transparent" />
-          <div className="absolute inset-y-[8%] left-[5px] w-px bg-white/55" />
-        </motion.div>
-
-        {/* content remains readable in both themes */}
-        <motion.div
-          initial={false}
-          animate={{
-            opacity: isActive ? 1 : 0.92,
-            y: isActive ? -3 : 0,
-          }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.4, delay: reducedMotion ? 0 : isActive ? 0.07 : 0 }}
-          className="absolute inset-0 z-20 flex flex-col items-center justify-center px-4 text-center text-white"
-        >
-          <div
-            className={`mb-4 grid place-items-center rounded-full border border-white/38 bg-black/12 shadow-[inset_0_0_18px_rgba(255,255,255,.05)] backdrop-blur-md ${
-              featured ? "h-12 w-12" : "h-10 w-10"
-            }`}
-          >
-            <Icon className={featured ? "h-5 w-5" : "h-4 w-4"} strokeWidth={1.45} />
+          <div className="mb-2 flex min-w-0 flex-wrap gap-1.5">
+            {innerDetails?.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="max-w-full break-words rounded border border-white/40 bg-white/20 px-1.5 py-0.5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase leading-tight text-white sm:text-[10px]"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
+          <h4 className="mb-1.5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-lg font-bold leading-tight sm:text-xl md:text-[1.35rem] md:leading-snug">
+            {title}
+          </h4>
+          <p className="mb-2.5 max-w-full break-words text-[11px] leading-relaxed text-gray-200 sm:text-xs md:text-[13px]">
+            {innerDetails?.desc}
+          </p>
+          <div className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-white sm:text-[11px]">
+            MASUK <span aria-hidden="true">→</span>
+          </div>
+        </motion.div>
 
-          <h3
-            className={`max-w-[86%] text-balance font-[family-name:var(--font-dc-heading)] font-medium leading-tight tracking-[-0.02em] text-white ${
-              featured ? "text-xl lg:text-[1.7rem]" : "text-base lg:text-[1.28rem]"
-            }`}
-          >
+        <motion.div
+          animate={{ x: isActive ? "-100%" : "0%" }}
+          transition={{ duration: reducedMotion ? 0.1 : 0.62, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute bottom-0 left-0 top-0 z-10 flex w-1/2 items-center justify-end border-r border-white/40 bg-[var(--primary)] pr-[3px]"
+        >
+          <div className="h-10 w-[3px] rounded-l-sm bg-white shadow-[0_0_8px_#ffffff]" />
+        </motion.div>
+
+        <motion.div
+          animate={{ x: isActive ? "100%" : "0%" }}
+          transition={{ duration: reducedMotion ? 0.1 : 0.62, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute bottom-0 right-0 top-0 z-10 flex w-1/2 items-center justify-start border-l border-white/40 bg-[var(--primary)] pl-[3px]"
+        >
+          <div className="h-10 w-[3px] rounded-r-sm bg-white shadow-[0_0_8px_#ffffff]" />
+        </motion.div>
+
+        <div className="pointer-events-none absolute left-0 right-0 top-2 z-20 flex justify-center opacity-80">
+          <svg width="70" height="28" viewBox="0 0 100 40" fill="none" stroke="white" strokeWidth="1.5">
+            <path d="M50 35 C 30 35, 20 15, 5 20 C 20 20, 30 10, 50 25 C 70 10, 80 20, 95 20 C 80 15, 70 35, 50 35 Z" fill="rgba(255,255,255,0.15)" />
+            <circle cx="50" cy="22" r="3" fill="white" />
+            <circle cx="35" cy="20" r="2" fill="white" />
+            <circle cx="65" cy="20" r="2" fill="white" />
+          </svg>
+        </div>
+
+        <motion.div
+          animate={{ opacity: isActive ? 0 : 1, y: isActive ? 8 : 0 }}
+          transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="pointer-events-none absolute inset-0 z-20 flex flex-col justify-end bg-gradient-to-t from-black/80 via-black/20 to-transparent p-4 text-center sm:p-5 md:p-6"
+        >
+          <h3 className="break-words font-[family-name:var(--font-dc-heading)] text-lg font-bold leading-tight tracking-wide text-white sm:text-xl md:text-[1.35rem]">
             {title}
           </h3>
-
-          <span className="my-4 h-px w-9 bg-white/58" />
-
-          <p className="max-w-[80%] font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-[1.55] tracking-[0.12em] text-white/78 lg:text-[9px]">
-            {caption}
-          </p>
-
-          <motion.span
-            animate={reducedMotion ? undefined : { x: isActive ? [0, 3, 0] : 0 }}
-            transition={{ duration: 1.9, repeat: isActive ? Infinity : 0, ease: "easeInOut" }}
-            className="mt-5 grid h-9 w-9 place-items-center rounded-full border border-white/38 bg-black/12 shadow-[0_6px_18px_rgba(0,0,0,.14)] backdrop-blur-md"
-          >
-            <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
-          </motion.span>
         </motion.div>
-
-        {/* base threshold and luminous sill */}
-        <div className="absolute inset-x-[9%] bottom-[2.4%] z-40 h-[3px] rounded-full bg-black/12 blur-[1px] dark:bg-black/40" />
-        <motion.div
-          initial={false}
-          animate={{ opacity: isActive ? 0.92 : 0.34, scaleX: isActive ? 1 : 0.78 }}
-          transition={{ duration: reducedMotion ? 0.08 : 0.52, delay: reducedMotion ? 0 : isActive ? 0.08 : 0 }}
-          className="absolute inset-x-[14%] bottom-[2.2%] z-40 h-px origin-center bg-white shadow-[0_0_12px_rgba(217,163,170,.85)]"
-        />
-      </Link>
-
-      {/* physical-looking reflection immediately under each portal */}
-      <div
-        className={`pointer-events-none absolute left-1/2 top-[99%] -translate-x-1/2 origin-top rounded-b-[48%] bg-gradient-to-b from-primary/22 via-primary/[0.055] to-transparent blur-[2px] ${
-          featured ? "h-[76px] w-[78%]" : "h-[62px] w-[72%]"
-        } ${isActive ? "opacity-80" : "opacity-35"}`}
-        style={{ transform: "translateX(-50%) perspective(320px) rotateX(68deg)" }}
-        aria-hidden="true"
-      />
-    </motion.div>
+      </motion.div>
+    </Link>
   );
 }

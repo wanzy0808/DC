@@ -98,7 +98,7 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Customer-facing UI copy avoids decorative sequence numbering; use descriptive labels instead. Real numeric product data (dates, time, price, counts, capacity, quota, child order, metrics) remains visible.
 - Public burger navigation omits Beranda/Home because the brand logo already returns home. Indonesian service labels are `Perencana Acara`, `Undangan Digital`, and `Buku Tamu Digital`; `Layanan` retains its submenu, `Masuk` and `Daftar` stay present, and `Layanan`/`Paket` use distinct icons.
 - Burger navigation and auth surfaces intentionally use white controls with black text and a subtle border in both themes; Rose remains the accent. Registration keeps the close `X` unobstructed, with the `Masuk` switch below the form. `/login` follows the same neutral visual language and general-event wording.
-- Landing root `/` is intentionally a single-screen 80vw copy + Pintu composition, not a long-scroll marketing page. It uses a landing-specific architectural threshold atmosphere while the protected Rose-petal background implementation remains unchanged for other public pages.
+- Landing uses the 80vw width as one integrated copy + Pintu composition. The copy may widen and extend downward, with a quote/proof block above a subtle divider and capability checks below it.
 - Customer testimonials must be sourced from real customer feedback. Never publish invented names, quotes, ratings, or customer claims; use non-attributed brand/service statements until verified testimonials are available.
 
 ## Public Invitation Architecture
