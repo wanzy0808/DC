@@ -1,17 +1,17 @@
 "use client";
 
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import HeroSection from "@/components/D-Invitation/HeroSection";
-import FeatureSection from "@/components/D-Invitation/FeatureSection";
-import TemplateCollection from "@/components/D-Invitation/TemplateSection";
-import CtaStudioSection from "@/components/D-Invitation/StudioSection";
+import HeroSection from "@/components/DigitalInvitation/HeroSection";
+import FeatureSection from "@/components/DigitalInvitation/FeatureSection";
+import TemplateCollection from "@/components/DigitalInvitation/TemplateSection";
+import CtaStudioSection from "@/components/DigitalInvitation/StudioSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
 import FaqSection from "@/components/Marketing/FaqSection";
-import ReviewsGrid from "@/components/D-Invitation/ReviewsSection";
+import ReviewsGrid from "@/components/DigitalInvitation/ReviewsSection";
 import {
   digitalInvitationFaq,
   digitalInvitationReviews,
-} from "@/data/digital-invitation";
+} from "@/data/services/digital-invitation";
 
 export default function DigitalInvitationPage() {
   const { locale } = useLanguage();
