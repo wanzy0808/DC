@@ -17,16 +17,13 @@ Before any material change, inspect in this order:
 1. `AGENTS.md`
 2. `prd.md`
 3. `README.md`
-4. `prd1.md` for recent implementation history
-5. Relevant implementation files, routes, components, schema, and APIs
+4. Relevant implementation files, routes, components, schema, and APIs
 
-`prd.md` is the single source of truth for active product requirements. `prd1.md` is the chronological implementation changelog and must not become a parallel PRD.
+`prd.md` is the single source of truth for active product requirements **and** the consolidated implementation history in Appendix A.
 
-Every AI-made material change MUST be recorded in `prd1.md` with rationale, affected files, commit(s), and validation status. If a change alters product requirements, update `prd.md` first and then record the implementation/history in `prd1.md`.
+Every AI-made material change MUST update Appendix A in `prd.md` with rationale, affected files/area, commit(s), and validation status. If a change alters product requirements, update the canonical body section first and then append its implementation/history entry in the same `prd.md`.
 
-Do not create `PRD-TAMBAHAN.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
-
-When the user explicitly requests `prd-tambahan.md`, it may exist only as a **supplemental non-canonical delta log**. Mirror active requirements to `prd.md`, keep implementation history in `prd1.md`, and never let the supplemental file override either canonical document.
+Do not create or revive `prd1.md`, `prdnew.md`, `prd-tambahan.md`, `PRD2.md`, `PRD3.md`, or other split PRD files unless the user explicitly changes the documentation governance defined in `prd.md`.
 
 Do not add generic project-wide prompt/skill documents that duplicate or conflict with `AGENTS.md` and `prd.md`. If specialized instructions are genuinely needed, keep them narrowly scoped and explicitly referenced.
 
@@ -63,6 +60,8 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Always !! use 80% VW for primary desktop header/content/footer containers. Do not regress page-level content to a fixed `max-width: 1400px` (or similarly narrow legacy wrapper) that leaves excessive unused desktop space.
 - Dashboard chrome may span the viewport, but the customer-facing header/content workspace should target `80vw` and remain capped by the available pane width so the sidebar never causes horizontal overflow.
 - **Dashboard visual consistency is mandatory:** Beranda is the reference visual language for every customer dashboard page and nested dashboard component. Use neutral white/near-black surfaces, subtle borders/low shadow, Rose only as meaningful accent, consistent icon treatment, and the same table/card hierarchy. Do not invent a page-specific color/card system that makes tabs look like different products.
+- **Dashboard access before Publish:** Digital Invitation payment must not hide RSVP, Guest Management, Personal Invitation, or other preparation workspaces. Users may explore and prepare them before Publish; the Digital Invitation payment gate belongs to the Publish action. Separate product entitlements such as WA Blast quota and Guestbook/Usher remain independent.
+- **Dashboard bilingual + theme contract:** all customer Dashboard tabs/components must work in Light and Dark mode and support Indonesian + English through the existing shared providers. Indonesian is the default locale. Translate application copy/state, never user-owned event/guest/content data. Theme and language controls must remain reachable from the Dashboard header, including mobile access.
 - Reuse/extend `components/Dashboard/DashboardPrimitives.tsx` for new dashboard surfaces, metrics, notices, and section structure instead of creating another dashboard visual primitive.
 - Tables/graphs are encouraged when they expose real stored/derived product data; never manufacture dashboard metrics merely to fill space.
 - Do not use decorative sequence numbering in customer-facing page/component copy (for example `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature labels, or numbered cards). Use descriptive labels instead. Numeric values that are actual product data remain allowed and required where meaningful, including dates, times, prices, counts, capacities, quotas, child order, phone numbers, and metrics.
@@ -164,8 +163,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 At the end of every material implementation change:
 
-- Update `prd.md` only when active product requirements changed.
-- Append `prd1.md` with the implementation change, rationale, affected files, commit(s), and validation status.
+- Update the canonical body of `prd.md` when active product requirements change.
+- Append the implementation change, rationale, affected files/area, commit(s), and validation status to Appendix A of the same `prd.md`.
 - Do not create parallel/split PRD files for normal implementation history.
-- Do not rewrite old `prd1.md` history merely to add a new note; append chronologically.
 - Never claim build, lint, CI, migration, or deployment success without an actual observed result.
