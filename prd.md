@@ -2895,3 +2895,34 @@ Melanjutkan cleanup Invitation Studio hanya pada file yang benar-benar mencampur
 
 ### Next
 Audit berikutnya hanya menargetkan file yang benar-benar monolitik; `InvitationEditorPage.tsx` tidak perlu dipecah lagi kecuali tanggung jawabnya bertambah. Kandidat berikutnya: `RsvpForm.tsx`.
+
+
+---
+
+## 2026-09-18 — RSVP Form Internal Cleanup (Pass 9)
+
+### Requirement / Intent
+Melanjutkan cleanup Invitation Studio pada komponen RSVP yang masih mencampur submit orchestration, calendar helper, QR ticket generation/download, dan presentation.
+
+### Implementation
+- `RsvpForm.tsx` tetap menjadi orchestration layer untuk:
+  - RSVP form state;
+  - submit mutation ke public RSVP endpoint;
+  - ticket/QR state;
+  - composition input/success state;
+- form/ticket contracts dipindahkan ke `rsvp-types.ts`;
+- Google Calendar URL, QR image URL, HTML ticket escape/download helper dipindahkan ke `rsvp-helpers.ts`;
+- RSVP input form dan success/digital-ticket presentation dipindahkan ke `RsvpPanels.tsx`;
+- `RsvpForm.tsx` turun kira-kira dari 10.7k karakter menjadi 3k karakter;
+- endpoint, request payload, ticket content, QR provider URL, calendar behavior, dan UI intent tidak diubah.
+
+### Validation
+- Build Validation #1100 pada application source head `95ea039e574c11dd808126c943afea056ed3dfb1`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Audit berikutnya diarahkan ke file besar di luar Invitation Studio hanya bila boundary tanggung jawabnya masih bercampur; hindari refactor tambahan pada file yang sudah cohesive.
