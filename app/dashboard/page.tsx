@@ -152,14 +152,14 @@ const secondaryNav = [
 ];
 
 const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
-  overview: { eyebrow: "Workspace", title: "Beranda" },
-  events: { eyebrow: "Acara", title: "Rangkaian Acara" },
-  invitation: { eyebrow: "Acara", title: "Undangan" },
-  personalInvitation: { eyebrow: "Acara", title: "Personal Invitation" },
-  waBlast: { eyebrow: "Acara", title: "WA Blast" },
-  rsvp: { eyebrow: "Workspace", title: "RSVP" },
-  placement: { eyebrow: "Workspace", title: "Manajemen Tamu" },
-  usher: { eyebrow: "Workspace", title: "Usher App" },
+  overview: { eyebrow: "Dashboard", title: "Beranda" },
+  events: { eyebrow: "Persiapan", title: "Rangkaian Acara" },
+  invitation: { eyebrow: "Publikasi", title: "Undangan" },
+  personalInvitation: { eyebrow: "Distribusi", title: "Personal Invitation" },
+  waBlast: { eyebrow: "Distribusi", title: "WA Blast" },
+  rsvp: { eyebrow: "Kehadiran", title: "RSVP" },
+  placement: { eyebrow: "Tamu", title: "Manajemen Tamu" },
+  usher: { eyebrow: "Hari-H", title: "Usher App" },
 };
 
 function sortEvents(items: DashboardEvent[]) {
@@ -413,7 +413,7 @@ export default function DashboardPage() {
         >
           <nav className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
             <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase tracking-[0.14em]">
-              Workspace
+              {d("Menu")}
             </p>
 
             <Button
@@ -680,7 +680,7 @@ export default function DashboardPage() {
               {d("Setup awal")}
             </p>
             <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
-              {d("Profil workspace")}
+              {d("Profil akun")}
             </h2>
             <div className="mt-6">
               <Field
@@ -803,16 +803,8 @@ function WorkspaceOverview({
       <DashboardPageHeader
         eyebrow={d("Beranda")}
         title={<>{d("Halo")}, {ctx?.profile.displayName || d("Akun")}</>}
-        description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
+        description={d("Pantau semua persiapan dan aktivitas terbaru dari sini.")}
         actions={<>
-            <div className="min-w-28 rounded-xl border border-border/70 bg-foreground/[0.018] px-4 py-3">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                {d("Workspace")}
-              </p>
-              <p className="mt-1 text-sm font-semibold">
-                {events.length ? (locale === "en" ? `${events.length} events` : `${events.length} acara`) : d("Belum ada acara")}
-              </p>
-            </div>
             <Button onClick={() => onGo("events")} size="sm">
               <CalendarDays className="h-4 w-4" />
               {d("Tambah acara")}
@@ -835,13 +827,13 @@ function WorkspaceOverview({
         <Card className="min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Acara terbaru")}</h2>
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Terbaru")}</h2>
               <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
                 {active} {d("aktif")} · {published} {d("terbit")}
               </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
-              {d("Kelola acara")}
+              {d("Lihat semua")}
             </Button>
           </div>
 
@@ -910,10 +902,10 @@ function WorkspaceOverview({
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
-                Ringkasan data
+                {d("Ringkasan data")}
               </p>
               <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-                Performa workspace
+                {d("Ringkasan performa")}
               </h2>
             </div>
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
@@ -979,7 +971,7 @@ function WorkspaceOverview({
           <div className="mt-4 rounded-xl border border-border/70 p-4">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold">{d("Publikasi acara")}</p>
+                <p className="text-xs font-semibold">{d("Publikasi")}</p>
                 <p className="mt-1 text-[11px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
               </div>
               <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
@@ -1054,7 +1046,7 @@ function RsvpWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Workspace")} title={d("RSVP")} description={d("Pantau respons dan kehadiran tamu pada acara yang dipilih.")}>
+      <DashboardPageHeader eyebrow={d("Kehadiran")} title={d("RSVP")} description={d("Pantau respons dan konfirmasi tamu.")}>
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -1106,7 +1098,7 @@ function PlacementWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Workspace")} title={d("Manajemen Tamu")} description={d("Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.")}>
+      <DashboardPageHeader eyebrow={d("Tamu")} title={d("Manajemen Tamu")} description={d("Atur daftar tamu, meja, dan posisi duduk.")}>
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -1220,7 +1212,7 @@ function UsherPanel({
         <DashboardPageHeader
           eyebrow={d("Usher App")}
           title={d("Check-in")}
-          description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
+          description={d("Pantau check-in dan lanjutkan ke scanner saat siap.")}
           actions={
             <>
               <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>

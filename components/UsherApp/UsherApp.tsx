@@ -220,7 +220,7 @@ export default function UsherApp() {
 
       <div className="flex min-h-[calc(100vh-64px)]">
         <aside className="hidden w-72 shrink-0 border-r border-border bg-background p-4 md:block">
-          <p className="px-3 pb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Usher Workspace</p>
+          <p className="px-3 pb-3 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Operasional Hari-H</p>
           <nav className="space-y-1">
             {tabs.map((item) => {
               const Icon = item.icon;
@@ -256,7 +256,7 @@ export default function UsherApp() {
 
             {tab === "greeting" && <FeaturePanel icon={Sparkles} title="Guest Greeting" description={selectedGuest ? `Tamu terakhir: ${selectedGuest.name}.` : "Tampilkan nama tamu setelah QR berhasil diverifikasi untuk sambutan personal."} />}
             {tab === "gift" && <FeaturePanel icon={Gift} title="Gift Corner" description="Catat pengambilan souvenir per tamu, jumlah yang diambil, dan sisa stok secara realtime." />}
-            {tab === "giving" && <FeaturePanel icon={QrCode} title="Giving Management" description="Kelola hadiah dan transaksi tamu dari workspace Guestbook Digital." />}
+            {tab === "giving" && <FeaturePanel icon={QrCode} title="Giving Management" description="Kelola hadiah dan transaksi tamu melalui Guestbook Digital." />}
 
             {message && <div className="mt-5 rounded-2xl border border-primary/20 bg-background px-4 py-3 text-xs text-foreground">{message}</div>}
             {loading && <p className="fixed bottom-5 right-5 rounded-full bg-black px-4 py-2 text-xs text-white">Memuat data tamu...</p>}
