@@ -444,9 +444,9 @@ export default function EventPanel({ onSaved }: Props) {
   return (
     <DashboardPage>
       <DashboardPageHeader
-            eyebrow={d("Rangkaian acara")}
-            title={loading ? d("Memuat acara...") : events.length ? d("Kelola acara di workspace") : d("Buat acara pertama")}
-            description={d("Atur identitas, waktu, lokasi, dan status acara sebelum melanjutkan ke Undangan Digital.")}
+            eyebrow={d("Persiapan")}
+            title={loading ? d("Memuat acara...") : events.length ? d("Daftar acara") : d("Buat acara pertama")}
+            description={d("Atur identitas, waktu, lokasi, dan status sebelum lanjut ke Undangan Digital.")}
             actions={
               <Button
                 type="button"
@@ -461,7 +461,7 @@ export default function EventPanel({ onSaved }: Props) {
           />
 
       <DashboardMetricGrid className="mt-4">
-        <DashboardMetricCard icon={CalendarDays} label={d("Total acara")} value={String(events.length)} />
+        <DashboardMetricCard icon={CalendarDays} label={d("Total")} value={String(events.length)} />
         <DashboardMetricCard icon={PenLine} label={d("Draft")} value={String(draftCount)} />
         <DashboardMetricCard icon={Save} label={d("Sudah desain")} value={String(designedCount)} />
         <DashboardMetricCard icon={Send} label={d("Terbit")} value={String(publishedCount)} />
@@ -556,7 +556,7 @@ export default function EventPanel({ onSaved }: Props) {
           <DashboardEmptyState
             icon={CalendarDays}
             title={d("Belum ada acara")}
-            description={d("Tambahkan acara untuk mulai menyiapkan detail, desain undangan, RSVP, dan operasional tamu.")}
+            description={d("Tambahkan yang pertama untuk mulai menyiapkan detail, desain undangan, RSVP, dan tamu.")}
             action={
               <Button type="button" size="sm" onClick={startNewEvent}>
                 <Plus className="h-4 w-4" />
@@ -584,7 +584,7 @@ export default function EventPanel({ onSaved }: Props) {
 
           <div className="mt-6 grid gap-x-10 gap-y-8 xl:grid-cols-2">
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold">{d("Data acara")}</h3>
+              <h3 className="text-sm font-semibold">{d("Detail")}</h3>
               <label className="mt-4 block">
                 <span className="mb-1.5 block text-xs font-semibold">{d("Jenis acara")}</span>
                 <select
