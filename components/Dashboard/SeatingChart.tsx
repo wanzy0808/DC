@@ -419,14 +419,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             description={d("Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu.")}
             actions={
               <DashboardStatusBadge active={visibleTables.length > 0}>
-                {visibleTables.length} meja
+                {visibleTables.length} {locale === "en" ? "tables" : "meja"}
               </DashboardStatusBadge>
             }
           />
 
           <form onSubmit={generateTables} className="mt-4 space-y-3">
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium">Jumlah meja</span>
+              <span className="mb-1.5 block text-xs font-medium">{d("Jumlah meja")}</span>
               <Input
                 type="number"
                 min={1}
@@ -436,7 +436,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               />
             </label>
             <label className="block">
-              <span className="mb-1.5 block text-xs font-medium">Bangku per meja</span>
+              <span className="mb-1.5 block text-xs font-medium">{d("Bangku per meja")}</span>
               <Input
                 type="number"
                 min={1}
@@ -474,7 +474,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             description={d("Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah.")}
             actions={
               <DashboardStatusBadge active={unassigned.length > 0}>
-                {unassigned.length} tamu
+                {unassigned.length} {locale === "en" ? "guests" : "tamu"}
               </DashboardStatusBadge>
             }
           />
@@ -531,7 +531,9 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               </select>
             </label>
             <p role="status" className="text-xs text-muted-foreground">
-              Menampilkan {filteredUnassigned.length} dari {unassigned.length} tamu belum ditempatkan.
+              {locale === "en"
+                ? `Showing ${filteredUnassigned.length} of ${unassigned.length} unassigned guests.`
+                : `Menampilkan ${filteredUnassigned.length} dari ${unassigned.length} tamu belum ditempatkan.`}
             </p>
             {hasRosterFilter && (
               <Button
