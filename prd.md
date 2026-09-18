@@ -2797,3 +2797,31 @@ Setelah folder/domain structure stabil, cleanup berlanjut pada kualitas internal
 
 ### Next
 Audit komponen monolitik berikutnya dilakukan berdasarkan tanggung jawab nyata, dengan prioritas pada file yang mencampur data fetching/orchestration, navigation config, dan banyak presentation sections seperti Dashboard root.
+
+
+---
+
+## 2026-09-18 — Dashboard Root Internal Cleanup (Pass 6)
+
+### Requirement / Intent
+Melanjutkan cleanup internal dengan memecah `app/dashboard/page.tsx` yang terlalu besar berdasarkan tanggung jawab nyata, tanpa mengubah UI, route, atau behavior.
+
+### Implementation
+- domain types dipindahkan ke `components/Dashboard/dashboard-types.ts`;
+- navigation/tab metadata dipindahkan ke `components/Dashboard/dashboard-navigation.ts`;
+- client-side data helpers dipindahkan ke `components/Dashboard/dashboard-client.ts`;
+- reusable account/onboarding controls dipindahkan ke `components/Dashboard/DashboardControls.tsx`;
+- workspace presentation untuk Overview, RSVP, Placement, dan Usher summary dipindahkan ke `components/Dashboard/DashboardWorkspaces.tsx`;
+- `app/dashboard/page.tsx` sekarang fokus pada state/orchestration, entitlements, profile/onboarding state, tab selection, serta composition;
+- ukuran route utama turun kira-kira dari 46k karakter menjadi 23k karakter;
+- behavior/API/URL tidak diubah.
+
+### Validation
+- Build Validation #1091 pada application source head `87e1998180af209a60487bf7890957a69705a0ea`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+
+### Next
+Setelah Pass 6 merge, audit berikutnya fokus pada internal Invitation Studio/editor, terutama file `InvitationDesigner.tsx` bila masih mencampur editor state, catalog/config, controls, dan preview presentation.
