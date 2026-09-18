@@ -2691,9 +2691,14 @@ Lanjutan cleanup repository untuk mengurangi file helper campur-aduk di root `li
 - `auth.ts` dan `prisma.ts` sengaja belum dipindah pada pass ini karena fan-out sangat tinggi dan akan dipetakan terpisah sebelum refactor berikutnya.
 
 ### Validation
-- Source/reference update: completed.
-- Build/TypeScript/CI: pending.
+- Build Validation #1071: **FAIL** karena beberapa route masih mengimpor path helper lama setelah folder domain dipindahkan.
+- Remaining imports pada Admin Operations, Personal Invitations, legacy event-khusus page, dan Usher route diperbaiki.
+- Build Validation #1074 pada application source head `91dc24fbf4f5a7dc549d5cea0e1a438e2539670d`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
 
 ### Next
-Pass berikutnya dapat memetakan dan merapikan high-fanout infrastructure modules seperti `auth.ts`, `google-auth.ts`, dan `prisma.ts` setelah seluruh import API/page tercatat.
+Pass berikutnya memetakan dan merapikan high-fanout infrastructure modules seperti `auth.ts`, `google-auth.ts`, dan `prisma.ts`, serta shared provider naming yang masih bercampur.
