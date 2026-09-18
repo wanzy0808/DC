@@ -19,9 +19,9 @@ import {
   findSeatingSeatTarget,
   seatingSeatPoint,
   seatingTablePoint,
-  SEATING_SEATING_SEAT_RADIUS,
-  SEATING_SEATING_STAGE_HEIGHT,
-  SEATING_SEATING_STAGE_WIDTH,
+  SEATING_SEAT_RADIUS,
+  SEATING_STAGE_HEIGHT,
+  SEATING_STAGE_WIDTH,
 } from "@/components/Dashboard/seating-chart-geometry";
 import type {
   SeatingChartProps,
