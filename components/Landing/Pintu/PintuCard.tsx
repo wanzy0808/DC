@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 
 type PintuCardProps = {
   title: string;
