@@ -41,7 +41,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
   }
 
   return (
-    <DashboardSurface className="p-3 sm:max-w-xl">
+    <div className="max-w-xl">
       <label className="block">
         <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
           {d("Acara aktif")}
@@ -63,6 +63,6 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
           <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary" />
         </span>
       </label>
-    </DashboardSurface>
+    </div>
   );
 }

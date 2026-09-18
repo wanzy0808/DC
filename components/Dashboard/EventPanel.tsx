@@ -22,7 +22,6 @@ import {
   DashboardNotice,
   DashboardPage,
   DashboardPageHeader,
-  DashboardSectionHeader,
   DashboardStatusBadge,
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";

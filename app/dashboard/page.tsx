@@ -21,7 +21,7 @@ import {
   Send,
   Settings2,
   Users,
-  UserRound,
+  LayoutGrid,
   X,
 } from "lucide-react";
 import { ThemeToggle, useTheme } from "@/components/Theme/ThemeContext";
@@ -42,6 +42,8 @@ import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
 import {
   DashboardPageHeader,
+  DashboardPanel,
+  DashboardEmptyState,
   DashboardStatusBadge,
   DashboardMetricCard,
   DashboardMetricGrid,
@@ -130,7 +132,7 @@ type Tab =
 
 type EventGuestData = { guests: Guest[]; tables: Table[] };
 
-const invitationTabs = new Set<Tab>(["events", "invitation", "personalInvitation"]);
+const invitationTabs = new Set<Tab>(["events", "invitation", "personalInvitation", "waBlast"]);
 
 const invitationNav = [
   { id: "events" as Tab, label: "Rangkaian Acara", icon: CalendarDays },
@@ -140,10 +142,10 @@ const invitationNav = [
     label: "Personal Invitation",
     icon: ContactRound,
   },
+  { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
 ];
 
 const secondaryNav = [
-  { id: "waBlast" as Tab, label: "WA Blast Add-on", icon: Send },
   { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
   { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
   { id: "usher" as Tab, label: "Usher App", icon: QrCode },
@@ -154,7 +156,7 @@ const tabMeta: Record<Tab, { eyebrow: string; title: string }> = {
   events: { eyebrow: "Acara", title: "Rangkaian Acara" },
   invitation: { eyebrow: "Acara", title: "Undangan" },
   personalInvitation: { eyebrow: "Acara", title: "Personal Invitation" },
-  waBlast: { eyebrow: "Add-on", title: "WA Blast" },
+  waBlast: { eyebrow: "Acara", title: "WA Blast" },
   rsvp: { eyebrow: "Workspace", title: "RSVP" },
   placement: { eyebrow: "Workspace", title: "Manajemen Tamu" },
   usher: { eyebrow: "Workspace", title: "Usher App" },
@@ -1000,7 +1002,7 @@ function WorkspaceOverview({
               { id: "invitation" as Tab, label: "Undangan Digital", icon: Mail },
               { id: "rsvp" as Tab, label: "RSVP", icon: MessageSquareHeart },
               { id: "placement" as Tab, label: "Manajemen Tamu", icon: Users },
-              { id: "waBlast" as Tab, label: "WA Blast Add-on", icon: Send },
+              { id: "waBlast" as Tab, label: "WA Blast", icon: Send },
             ].map((item) => {
               const Icon = item.icon;
               return (
@@ -1052,13 +1054,14 @@ function RsvpWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Workspace")} title={d("RSVP")} description={d("Pantau respons dan kehadiran tamu pada acara yang dipilih.")} />
+      <DashboardPageHeader eyebrow={d("Workspace")} title={d("RSVP")} description={d("Pantau respons dan kehadiran tamu pada acara yang dipilih.")}>
       <EventScopePicker
         events={events}
         value={selectedId}
         onChange={onSelect}
         disabled={loading}
       />
+      </DashboardPageHeader>
       {selectedEvent && (
         <div className="mt-4">
           {loading ? (
@@ -1103,13 +1106,14 @@ function PlacementWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Workspace")} title={d("Manajemen Tamu")} description={d("Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.")} />
+      <DashboardPageHeader eyebrow={d("Workspace")} title={d("Manajemen Tamu")} description={d("Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.")}>
       <EventScopePicker
         events={events}
         value={selectedId}
         onChange={onSelect}
         disabled={loading}
       />
+      </DashboardPageHeader>
       {selectedEvent && (
         <div className="mt-4">
           {loading ? (
@@ -1164,8 +1168,7 @@ function PlacementPanel({
   };
 
   return (
-    <Card>
-      <div className="p-4 sm:p-5">
+    <div className="space-y-4">
         <DashboardSectionHeader
           eyebrow={d("Manajemen Tamu")}
           title={d("Tamu & seating")}
@@ -1178,9 +1181,9 @@ function PlacementPanel({
           }
         />
         <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
-          <DashboardMetricCard label={d("Tamu")} value={String(guests.length)} />
-          <DashboardMetricCard label={d("Meja")} value={String(tables.length)} />
-          <DashboardMetricCard label={d("Ditempatkan")} value={`${assigned} / ${guests.length}`} />
+          <DashboardMetricCard icon={Users} label={d("Tamu")} value={String(guests.length)} />
+          <DashboardMetricCard icon={LayoutGrid} label={d("Meja")} value={String(tables.length)} />
+          <DashboardMetricCard icon={CheckCircle2} label={d("Ditempatkan")} value={`${assigned} / ${guests.length}`} />
         </DashboardMetricGrid>
         <SeatingChart
           key={invitationId}
@@ -1190,8 +1193,7 @@ function PlacementPanel({
           accent={accent}
           onAssigned={assignGuest}
         />
-      </div>
-    </Card>
+    </div>
   );
 }
 
@@ -1220,16 +1222,34 @@ function UsherPanel({
           title={d("Check-in")}
           description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
           actions={
-            <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
-              <RefreshCw className="h-4 w-4" />
-              {d("Muat ulang")}
-            </Button>
+            <>
+              <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
+                <RefreshCw className="h-4 w-4" />{d("Muat ulang")}
+              </Button>
+              <Button asChild size="sm"><Link href="/dashboard/usher"><QrCode className="size-4" />{d("Buka Usher App")}</Link></Button>
+            </>
           }
         />
         <DashboardMetricGrid className="mt-4 xl:grid-cols-2">
-          <DashboardMetricCard label={d("Total tamu")} value={String(guests.length)} />
-          <DashboardMetricCard label={d("Check-in")} value={String(checked)} />
+          <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
+          <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
         </DashboardMetricGrid>
+        <DashboardPanel className="mt-4" title={d("Daftar tamu")} description={d("Pantau status check-in tamu sebelum membuka scanner.")}>
+          {guests.length === 0 ? <DashboardEmptyState icon={Users} title={d("Belum ada tamu")} /> : (
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px] text-left">
+                <thead><tr><th className="px-3 py-3">{d("Nama tamu")}</th><th className="px-3 py-3">WhatsApp</th><th className="px-3 py-3">{d("Status")}</th></tr></thead>
+                <tbody>{guests.map(guest => (
+                  <tr key={guest.id}>
+                    <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
+                    <td className="px-3 py-4 text-sm text-muted-foreground">{guest.phone || "—"}</td>
+                    <td className="px-3 py-4"><DashboardStatusBadge active={guest.checkedIn}>{guest.checkedIn ? d("Check-in") : d("Belum check-in")}</DashboardStatusBadge></td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          )}
+        </DashboardPanel>
     </DashboardPageShell>
   );
 }

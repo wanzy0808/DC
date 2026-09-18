@@ -15,16 +15,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
-  DashboardCompactStat,
   DashboardEmptyState,
   DashboardMetricCard,
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
   DashboardPageHeader,
-  DashboardSectionHeader,
   DashboardStatusBadge,
-  DashboardSurface,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 
 type Invitation = {
@@ -73,7 +71,7 @@ function publicUrl(invitation: Invitation) {
 }
 
 export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
-  const { d, locale } = useDashboardI18n();
+  const { d } = useDashboardI18n();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -167,8 +165,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
         <Metric icon={Eye} label={d("Total dibuka")} value={String(openedCount)} />
       </DashboardMetricGrid>
 
-      <DashboardSurface className="mt-5 p-4 sm:p-5">
-        <DashboardSectionHeader
+      <DashboardPanel className="mt-5"
           eyebrow={d("Undangan Digital")}
           title={d("Semua acara")}
           description={d("Pilih acara untuk membuka Studio, menyelesaikan desain, dan menerbitkan undangan.")}
@@ -184,7 +181,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
               </Button>
             </>
           }
-        />
+      >
 
         {invitations.length === 0 ? (
           <DashboardEmptyState
@@ -200,128 +197,40 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
             }
           />
         ) : (
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {invitations.map((invitation) => {
-              const url = publicUrl(invitation);
-              const title = invitation.title.trim() || d("Acara tanpa judul");
-              const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
-              const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
-              const hasDesign = Boolean(invitation.templateKey?.trim());
-
-              return (
-                <article
-                  key={invitation.id}
-                  className="rounded-xl border border-border/70 bg-background p-4"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                        {d("Undangan Digital")}
-                      </p>
-                      <h3 className="mt-1 truncate text-sm font-semibold text-foreground">
-                        {title}
-                      </h3>
-                    </div>
-                    <span className="shrink-0 rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
-                      {invitation.isPublished
-                        ? d("Terbit")
-                        : !invitation.eventConfigured
-                          ? d("Belum lengkap")
-                          : hasDesign
-                            ? d("Siap publish")
-                            : d("Belum desain")}
-                    </span>
-                  </div>
-
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <SmallMetric label={d("Dibuka")} value={String(invitation.viewCount || 0)} />
-                    <SmallMetric label={d("Venue")} value={invitation.venue || d("Belum diatur")} />
-                  </div>
-
-                  <div className="mt-4 rounded-xl border border-primary/12 bg-primary/[0.025] p-3">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
-                      {d("Desain undangan")}
-                    </p>
-                    {invitation.eventConfigured ? (
-                      <Button asChild size="lg" className="mt-2 w-full">
-                        <Link href={studioHref} aria-label={locale === "en" ? `${hasDesign ? "Edit" : "Create"} invitation for ${title}` : `${hasDesign ? "Edit" : "Buat"} undangan untuk ${title}`}>
-                          <PenLine className="h-4 w-4" />
-                          {hasDesign ? d("Edit undangan") : d("Buat undangan")}
-                        </Link>
-                      </Button>
-                    ) : (
-                      <Button type="button" size="lg" className="mt-2 w-full" onClick={onCreateSequence}>
-                        <CalendarDays className="h-4 w-4" />
-                        {d("Lengkapi acara")}
-                      </Button>
-                    )}
-                  </div>
-
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {!invitation.eventConfigured ? (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                        {d("Lengkapi acara dulu")}
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[780px] text-left">
+              <thead><tr>{["Acara", "Venue", "Status", "Dibuka", "Aksi"].map(label => <th key={label} className="px-3 py-3">{d(label)}</th>)}</tr></thead>
+              <tbody>{invitations.map((invitation) => {
+                const title = invitation.title.trim() || d("Acara tanpa judul");
+                const hasDesign = Boolean(invitation.templateKey?.trim());
+                const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
+                const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
+                return (
+                  <tr key={invitation.id}>
+                    <td className="max-w-64 px-3 py-4"><p className="break-words text-sm font-semibold">{title}</p></td>
+                    <td className="max-w-48 px-3 py-4 text-sm text-muted-foreground">{invitation.venue || d("Belum diatur")}</td>
+                    <td className="px-3 py-4"><DashboardStatusBadge active={invitation.isPublished}>{invitation.isPublished ? d("Terbit · terkunci") : !invitation.eventConfigured ? d("Belum lengkap") : hasDesign ? d("Siap publish") : d("Belum desain")}</DashboardStatusBadge></td>
+                    <td className="px-3 py-4 font-[family-name:var(--font-dc-mono)] text-sm">{invitation.viewCount || 0}</td>
+                    <td className="px-3 py-4">
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {invitation.eventConfigured ? <Button asChild size="sm"><Link href={studioHref} aria-label={`${hasDesign ? d("Edit undangan") : d("Buat undangan")} · ${title}`}><PenLine className="size-4" />{hasDesign ? d("Edit undangan") : d("Buat undangan")}</Link></Button> : <Button size="sm" onClick={onCreateSequence}><CalendarDays className="size-4" />{d("Lengkapi acara")}</Button>}
+                        {invitation.isPublished ? <Button asChild size="sm"><a href={publicUrl(invitation)} target="_blank" rel="noreferrer" aria-label={`${d("Buka publik")} · ${title}`}><ArrowUpRight className="size-4" />{d("Buka publik")}</a></Button> : invitation.eventConfigured && hasDesign ? invitation.accessPaid ? <Button size="sm" disabled={loading || busyId === invitation.id} onClick={() => publishInvitation(invitation)}><Send className="size-4" />{busyId === invitation.id ? d("Menyimpan...") : d("Publish")}</Button> : <Button asChild size="sm"><Link href={purchaseHref}><Send className="size-4" />{d("Beli paket & publish")}</Link></Button> : <span className="self-center text-xs text-muted-foreground">{invitation.eventConfigured ? d("Simpan template dulu") : d("Lengkapi acara dulu")}</span>}
                       </div>
-                    ) : !hasDesign ? (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                        {d("Simpan template dulu")}
-                      </div>
-                    ) : invitation.isPublished ? (
-                      <DashboardStatusBadge active className="h-9 w-full justify-center">
-                        {d("Terbit · terkunci")}
-                      </DashboardStatusBadge>
-                    ) : invitation.accessPaid ? (
-                      <Button
-                        size="sm"
-                        className="w-full"
-                        disabled={loading || busyId === invitation.id}
-                        onClick={() => publishInvitation(invitation)}
-                      >
-                        <Send className="h-4 w-4" />
-                        {busyId === invitation.id ? d("Menyimpan...") : d("Publish")}
-                      </Button>
-                    ) : (
-                      <Button asChild size="sm" className="w-full">
-                        <Link href={purchaseHref}>
-                          <Send className="h-4 w-4" />
-                          {d("Beli paket & publish")}
-                        </Link>
-                      </Button>
-                    )}
-
-                    {invitation.isPublished ? (
-                      <Button asChild size="sm" className="w-full">
-                        <a
-                          href={url}
-                          target="_blank"
-                          rel="noreferrer"
-                          title={d("Buka publik")}
-                          aria-label={locale === "en" ? `Open public invitation ${title}` : `Buka undangan publik ${title}`}
-                        >
-                          <ArrowUpRight className="h-4 w-4" />
-                          {d("Buka publik")}
-                        </a>
-                      </Button>
-                    ) : (
-                      <div className="flex h-9 items-center justify-center rounded-[10px] border border-border/70 bg-foreground/[0.018] px-3 text-center font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                        {d("Belum dipublish")}
-                      </div>
-                    )}
-                  </div>
-                </article>
-              );
-            })}
+                    </td>
+                  </tr>
+                );
+              })}</tbody>
+            </table>
           </div>
         )}
-      </DashboardSurface>
+      </DashboardPanel>
 
-      <DashboardSurface className="mt-5 p-4 sm:p-5">
-        <DashboardSectionHeader
+      <DashboardPanel className="mt-5"
           eyebrow={d("RSVP")}
           title={d("Respons terbaru")}
           description={d("Respons terbaru dari seluruh undangan yang berada di workspace ini.")}
           actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
-        />
+      >
 
         <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
           {responders.length === 0 && (
@@ -349,15 +258,11 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
             </div>
           ))}
         </div>
-      </DashboardSurface>
+      </DashboardPanel>
     </DashboardPage>
   );
 }
 
 function Metric({ icon: Icon, label, value }: { icon: typeof Send; label: string; value: string }) {
   return <DashboardMetricCard icon={Icon} label={label} value={value} />;
-}
-
-function SmallMetric({ label, value }: { label: string; value: string }) {
-  return <DashboardCompactStat label={label} value={value} />;
 }

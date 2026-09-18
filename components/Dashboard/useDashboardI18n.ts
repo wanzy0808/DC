@@ -4,6 +4,10 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Buka Usher App": "Open Usher App",
+  "Pantau status check-in tamu sebelum membuka scanner.": "Review guest check-in status before opening the scanner.",
+  "Pesanan kuota belum dapat dibuat.": "The credit order could not be created.",
+  "Aktifkan minimal satu Undangan Digital untuk membeli kuota WA Blast.": "Activate at least one Digital Invitation to purchase WA Blast credits.",
   "Siapkan undangan personal untuk setiap tamu.": "Prepare a personal invitation for each guest.",
   "Pantau respons dan kehadiran tamu pada acara yang dipilih.": "Track guest responses and attendance for the selected event.",
   "Atur tamu, meja, dan posisi duduk untuk acara yang dipilih.": "Organize guests, tables, and seating for the selected event.",

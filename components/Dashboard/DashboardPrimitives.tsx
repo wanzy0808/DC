@@ -247,3 +247,18 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
     </DashboardSurface>
   );
 }
+
+/** Beranda's card hierarchy: separated heading, roomy body, neutral surface. */
+export function DashboardPanel({ children, className, ...header }: Parameters<typeof DashboardSectionHeader>[0] & {
+  children?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <DashboardSurface className={classes("dc-dashboard-panel min-w-0 overflow-hidden", className)}>
+      <div className="border-b border-border/70 px-5 py-4 sm:px-6">
+        <DashboardSectionHeader {...header} />
+      </div>
+      {children && <div className="min-w-0 space-y-4 p-5 sm:p-6">{children}</div>}
+    </DashboardSurface>
+  );
+}

@@ -295,12 +295,12 @@ Sidebar user:
   - Rangkaian Acara
   - Undangan
   - Personal Invitation
-- **WA Blast Add-on**
+  - WA Blast
 - **RSVP**
 - **Manajemen Tamu**
 - **Usher App**
 
-WA Blast adalah add-on, bukan submenu inti Digital Invitation.
+WA Blast ditampilkan sebagai submenu **Acara / Events**, sejajar dengan Rangkaian Acara, Undangan, dan Personal Invitation. Label navigasi dan heading cukup **WA Blast**, tanpa kata Add-on. Pembelian kuota tetap terpisah dari Undangan Digital; perubahan navigasi tidak mengubah entitlement atau harga.
 
 Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
 
@@ -2556,3 +2556,28 @@ Owner meminta header Dashboard berhenti memiliki style control sendiri dan langs
 - Lint comparison against original HEAD: same 11 pre-existing errors (10 set-state-in-effect, one no-explicit-any); full lint is not clean.
 - Shared-component server rendering and Tailwind CSS compilation: PASS. Browser visual checks could not run: Chromium is absent and its download timed out. Production deployment and database/QR scanner end-to-end testing were not performed.
 - GitHub push was blocked by automatic approval review; changes are committed locally.
+
+
+---
+
+## 2026-09-18 — Complete Beranda Panel Hierarchy & Event Navigation Follow-up
+
+### Requirement / Implementation
+- Owner requested the full dashboard content hierarchy to follow Beranda, beyond page introductions. WA Blast moves into Acara/Events without an Add-on navigation label; active requirement updated in section 6.
+- Added `DashboardPanel`: the same neutral rounded surface, separated header, roomy content, and restrained border used by Beranda. Adopted across invitation lists, Personal Invitation forms/list, WhatsApp forms/queue, RSVP controls/table, and all Seating panels.
+- Undangan now uses a scannable event table with venue, state, actual visits, Studio/Publish/public actions; keeps configured/design/payment/published behavior intact.
+- WhatsApp recipients use matching table rows; forms, quota feedback and empty states follow the common panel hierarchy.
+- Personal Invitation, RSVP and Guest Management selectors are inside their introductions; seating metrics are no longer nested inside an extra enclosing card.
+- Usher overview includes real guest check-in rows and a direct link to the existing scanner workspace.
+- Unavailable Usher capability is shown as a readable introduction and access card instead of blurred nested dashboard content. Access remains controlled by the existing entitlement and server APIs.
+- WA Blast navigation, active parent state, page heading, and quick access all use the short label. Price, separate quota purchase and API identifiers are unchanged.
+
+### Affected Files / Commit
+- `app/dashboard/page.tsx`, `components/Dashboard/{DashboardPrimitives,EventScopePicker,FeatureGate,InvitationWorkspacePanel,PersonalInvitationPanel,WhatsAppBlastPanel,RsvpAnalyticsPanel,SeatingChart,useDashboardI18n}.tsx`, `README.md`, `prd.md`.
+- Commit: `style: complete Beranda panel hierarchy and group WA Blast under events` (same change set).
+
+### Validation
+- TypeScript: PASS.
+- Next.js production build (`next build --webpack`): PASS.
+- Lint comparison of dashboard files: same 10 pre-existing errors as the base (9 set-state-in-effect and one no-explicit-any). Full lint is not clean.
+- `git diff --check`: PASS. Browser verification unavailable (Chromium download timed out in this environment). No database migration or production deployment performed.

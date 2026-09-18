@@ -17,8 +17,7 @@ import {
   DashboardMetricCard,
   DashboardMetricGrid,
   DashboardNotice,
-  DashboardSectionHeader,
-  DashboardSurface,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 
 export type RsvpGuest = {
@@ -225,8 +224,7 @@ export default function RsvpAnalyticsPanel({
         ))}
       </DashboardMetricGrid>
 
-      <DashboardSurface className="mt-4 min-w-0 p-3 sm:p-4">
-        <DashboardSectionHeader
+      <DashboardPanel className="mt-4 min-w-0"
           eyebrow={d("RSVP")}
           title={d("Daftar tamu")}
           description={
@@ -234,7 +232,7 @@ export default function RsvpAnalyticsPanel({
               ? `${filtered.length} of ${guests.length} guests shown. Search, sort, export, or check in from the same table.`
               : `${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`
           }
-        />
+      >
 
         <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
             <div className="relative min-w-0">
@@ -361,7 +359,7 @@ export default function RsvpAnalyticsPanel({
             /invite/{slug}
           </p>
         )}
-      </DashboardSurface>
+      </DashboardPanel>
 
       {qr && (
         <div
