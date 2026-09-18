@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
-import { createGuestQrToken } from "@/lib/usher-qr";
-import { checkPublicRateLimit, getClientIp } from "@/lib/public-rate-limit";
+import { createGuestQrToken } from "@/lib/usher/qr";
+import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
