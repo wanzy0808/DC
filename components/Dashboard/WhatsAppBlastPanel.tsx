@@ -217,7 +217,7 @@ export default function WhatsAppBlastPanel() {
             eventId ? (
               <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
                 <CreditCard className="h-4 w-4" />
-                Beli 50 quota · Rp75.000
+                {d("Beli 50 quota · Rp75.000")}
               </Button>
             ) : null
           }
@@ -251,7 +251,7 @@ export default function WhatsAppBlastPanel() {
 
         {events.length === 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.
+            {d("Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.")}
           </p>
         )}
       </DashboardSurface>
@@ -273,7 +273,7 @@ export default function WhatsAppBlastPanel() {
                 actions={
                   <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
                     <CreditCard className="h-4 w-4" />
-                    Beli 50 quota · Rp75.000
+                    {d("Beli 50 quota · Rp75.000")}
                   </Button>
                 }
               />
