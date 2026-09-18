@@ -116,13 +116,16 @@ export default function RsvpAnalyticsPanel({
   }, [ascending, guests, query, sortKey]);
 
   function exportCsv() {
-    const header = ["Nama Tamu", "Telepon", "Status RSVP", "Pax", "Check In", "Meja"];
+    const header =
+      locale === "en"
+        ? ["Guest Name", "Phone", "RSVP Status", "Pax", "Check In", "Table"]
+        : ["Nama Tamu", "Telepon", "Status RSVP", "Pax", "Check In", "Meja"];
     const lines = [
       header,
       ...filtered.map((guest) => [
         guest.name,
         guest.phone || "",
-        statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus,
+        d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus),
         guest.plusOnes + 1,
         guest.checkedIn ? d("Checked In") : d("Belum Check In"),
         guest.table?.name || d("Belum ditempatkan"),
@@ -158,14 +161,22 @@ export default function RsvpAnalyticsPanel({
       if (!response.ok) throw new Error(data.error || d("QR gagal dibuat."));
       setQr({ name: guest.name, token: data.token });
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "QR gagal dibuat.");
+      setNotice(error instanceof Error ? error.message : d("QR gagal dibuat."));
     } finally {
       setBusyId(null);
     }
   }
 
   async function manualCheckIn(guest: RsvpGuest) {
-    if (guest.checkedIn || !confirm(`Check-in manual ${guest.name}?`)) return;
+    if (
+      guest.checkedIn ||
+      !confirm(
+        locale === "en"
+          ? `Manually check in ${guest.name}?`
+          : `Check-in manual ${guest.name}?`,
+      )
+    )
+      return;
     setBusyId(guest.id);
     setNotice("");
     try {
