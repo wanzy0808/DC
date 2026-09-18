@@ -244,10 +244,10 @@ aside nav > p { font-family: var(--font-dc-heading); }
 /* Dashboard has generous workspace; avoid tiny 8–12px UI copy except where data density truly requires it. */
 .dc-dashboard main .text-xs { font-size: 0.875rem !important; line-height: 1.35rem !important; }
 .dc-dashboard main .text-sm { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
-.dc-dashboard main [class*="text-[8px]"] { font-size: 0.625rem !important; line-height: 0.95rem !important; }
-.dc-dashboard main [class*="text-[9px]"] { font-size: 0.65625rem !important; line-height: 1rem !important; }
-.dc-dashboard main [class*="text-[10px]"] { font-size: 0.71875rem !important; line-height: 1.05rem !important; }
-.dc-dashboard main [class*="text-[11px]"] { font-size: 0.78125rem !important; line-height: 1.15rem !important; }
+.dc-dashboard main [class*="text-[8px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.dc-dashboard main [class*="text-[9px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.dc-dashboard main [class*="text-[10px]"] { font-size: 0.75rem !important; line-height: 1.1rem !important; }
+.dc-dashboard main [class*="text-[11px]"] { font-size: 0.8125rem !important; line-height: 1.2rem !important; }
 .dc-dashboard main input,
 .dc-dashboard main textarea,
 .dc-dashboard main select { font-size: 0.9rem !important; }
