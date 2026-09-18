@@ -129,9 +129,9 @@ The repository uses a feature-first component structure so files remain easy to 
 - `components/Dashboard/` — customer dashboard workspaces and shared dashboard primitives.
 - `components/InvitationStudio/` — active invitation editor/studio components.
 - `components/Payments/` — checkout/package-selection UI.
-- `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns.
+- `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns. Theme state lives in `ThemeProvider.tsx`, while `ThemeToggle.tsx` is the canonical control.
 - `data/services/` — static service-facing content/catalog copy only.
-- `lib/` — domain logic, server helpers, access rules, parsers, and infrastructure utilities. Focused helpers are grouped by domain, including `lib/invitations/`, `lib/security/`, `lib/usher/`, and `lib/notifications/`.
+- `lib/` — domain logic, server helpers, access rules, parsers, and infrastructure utilities. Focused helpers are grouped by domain, including `lib/auth/`, `lib/invitations/`, `lib/security/`, `lib/usher/`, and `lib/notifications/`. Conventional high-fanout entry points `lib/auth.ts` and `lib/prisma.ts` remain at the root.
 - `prisma/` — schema and migrations.
 
 Naming rule: use semantic names instead of temporary version suffixes. Once a replacement is canonical, keep one active component name such as `InvitationDesigner.tsx` rather than maintaining `V2`/`V3` files.
