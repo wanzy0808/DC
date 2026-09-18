@@ -902,10 +902,10 @@ function WorkspaceOverview({
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
-                Ringkasan data
+                {d("Ringkasan data")}
               </p>
               <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-                Performa workspace
+                {d("Ringkasan performa")}
               </h2>
             </div>
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
