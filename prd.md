@@ -2634,3 +2634,36 @@ Owner meminta Dashboard berhenti mengulang istilah seperti `workspace`, `acara`,
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## 2026-09-18 — Repository Feature Structure Cleanup (Pass 1)
+
+### Requirement / Intent
+Owner meminta susunan item, folder, components, dan data dirapikan serta diberi nama yang mudah dipahami/dirawat ke depan, tanpa mengubah behavior produk atau URL route.
+
+### Implementation
+- component folder naming dinormalisasi:
+  - `components/D-Invitation` → `components/DigitalInvitation`;
+  - `components/GuestbookPage` → `components/Guestbook`;
+  - `components/WeddingPlanner` → `components/EventPlanner`;
+  - `components/Pintu` → `components/Landing/Pintu`;
+- `PackageSelector` dipindahkan dari generic `components/Layout` ke `components/Payments`;
+- service-facing static data dipusatkan di `data/services/`:
+  - `digital-invitation.ts`;
+  - `guestbook.ts`;
+  - `event-planner.ts` (menggantikan naming wedding-only `wedding-planner.ts`);
+- Invitation Studio dirapikan menjadi satu active `InvitationDesigner.tsx`; legacy `InvitationDesigner.tsx` lama dan `InvitationDesignerV2.tsx` dihapus setelah entrypoint aktif diverifikasi memakai V3;
+- duplicate standalone `components/Theme/ThemeToggle.tsx` dihapus; canonical toggle tetap named export dari `ThemeContext.tsx`;
+- import paths pada route/component aktif diperbarui;
+- `AGENTS.md` dan `README.md` diberi repository naming/structure convention agar perubahan berikutnya tetap konsisten;
+- route `app/*` tidak diubah sehingga URL behavior tidak berubah.
+
+### Validation
+- Source/reference review: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Pass 2 dapat merapikan helper `lib/` menjadi domain/server folders setelah seluruh API import dipetakan, agar perubahan backend tidak dicampur dengan component/data cleanup ini.
