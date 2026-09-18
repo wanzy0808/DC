@@ -34,7 +34,7 @@ export default function Home() {
         : "/guestbook";
 
   return (
-    <div className="public-page relative h-[calc(100dvh-84px)] min-h-[560px] overflow-hidden bg-background text-foreground">
+    <div className="public-page relative h-[calc(100dvh-84px)] min-h-0 overflow-hidden bg-background text-foreground">
       <LandingThresholdAtmosphere />
 
       <main className="relative z-10 mx-auto h-full w-[80vw] max-w-full">
