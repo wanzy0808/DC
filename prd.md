@@ -1111,6 +1111,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Input target minimum sekitar 44px.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
 - Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
+- Landing root header dan compact footer harus memakai canvas/background yang sama dengan body landing agar tidak terbaca sebagai kotak surface terpisah. Pada Landing Dark Mode, locale ID/EN yang aktif memakai Rose opaque dengan near-black copy, dan theme toggle memakai Rose opaque dengan near-black icon/text. Requirement ini landing-specific dan tidak boleh mengubah Dashboard/shared control behavior di luar landing.
 - Dashboard workspace mengikuti full-width application shell pada Section 6.2; jangan mengembalikan centered public-content cap ke workspace utama.
 - **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
@@ -2993,3 +2994,21 @@ Merapikan Seating Chart tanpa memecah canvas editor secara berlebihan. Fokus han
 
 ### Next
 Audit berikutnya fokus pada Dashboard feature panel besar yang benar-benar mencampur fetching, domain state, mutation, filtering, dan presentation—prioritas kandidat: `PersonalInvitationPanel.tsx`.
+
+
+---
+
+## 2026-09-19 — Landing Chrome & Dark Utility Repair
+
+### Requirement / Intent
+Repair visual kecil pada landing: header/footer harus menyatu dengan body, sementara utility control Dark Mode tetap memakai brand Rose dengan kontras near-black yang jelas.
+
+### Implementation
+- landing navbar diberi landing-only hook dan background `var(--background)`;
+- compact landing footer memakai `bg-background`;
+- selected ID/EN pada landing Dark Mode memakai opaque `var(--primary)` + near-black text;
+- landing theme toggle pada Dark Mode memakai opaque `var(--primary)` + near-black icon/text;
+- shared ThemeToggle/LanguageToggle hanya mendapat semantic hook; override warna dibatasi pada `.dc-navbar--landing` agar Dashboard tidak ikut berubah.
+
+### Validation
+- GitHub Actions observation: pending.

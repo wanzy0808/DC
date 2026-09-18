@@ -147,6 +147,23 @@
 .text-dc-maroon { color: var(--primary); }
 .dc-navbar { background: transparent; }
 
+/* Landing chrome should visually merge with the page canvas. Landing-only dark controls keep Dashboard behavior untouched. */
+.dc-navbar--landing { background: var(--background); }
+.dark .dc-navbar--landing .dc-language-toggle button[aria-pressed="true"] {
+  background: var(--primary) !important;
+  color: #0B0B0C !important;
+}
+.dark .dc-navbar--landing .dc-language-toggle button[aria-pressed="true"]:hover {
+  background: var(--primary) !important;
+  color: #0B0B0C !important;
+}
+.dark .dc-navbar--landing .dc-theme-toggle,
+.dark .dc-navbar--landing .dc-theme-toggle:hover {
+  border-color: var(--primary) !important;
+  background: var(--primary) !important;
+  color: #0B0B0C !important;
+}
+
 @keyframes publicTextReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dcSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
 @keyframes dcPageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }

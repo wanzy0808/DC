@@ -142,3 +142,28 @@ Validation:
 - Next.js production build + TypeScript: **PASS**.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## 19 September 2026 — Landing Chrome & Dark Utility Repair
+
+Owner meminta repair kecil agar chrome landing tidak terlihat sebagai kotak warna terpisah.
+
+Delta:
+- header landing mengikuti `var(--background)` yang sama dengan body/canvas landing;
+- compact footer landing mengikuti `var(--background)` yang sama dengan body/canvas landing;
+- Dark Mode landing: locale ID/EN yang aktif memakai Rose opaque, bukan white/translucent fill;
+- Dark Mode landing: theme toggle memakai Rose opaque dengan icon/text near-black;
+- override dibatasi pada navbar landing agar behavior Dashboard/shared control tidak ikut berubah.
+
+Affected files:
+- `components/Layout/Navbar/Navbar.tsx`;
+- `components/Layout/Footer.tsx`;
+- `components/I18n/LanguageToggle.tsx`;
+- `components/Theme/ThemeToggle.tsx`;
+- `app/globals.css`;
+- `AGENTS.md`;
+- `prd.md`.
+
+Validation: pending GitHub Actions observation.
