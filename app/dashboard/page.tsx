@@ -552,7 +552,7 @@ export default function DashboardPage() {
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       title={d("Menu akun")}
                     >
-                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase">
+                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-current">
                         {profileLabel.slice(0, 2)}
                       </span>
                       <span className="hidden max-w-36 truncate text-sm font-medium sm:inline">{profileLabel}</span>
