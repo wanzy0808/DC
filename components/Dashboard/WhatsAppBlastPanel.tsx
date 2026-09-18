@@ -209,9 +209,9 @@ export default function WhatsAppBlastPanel() {
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardPageHeader
-          eyebrow={d("Acara")}
+          eyebrow={d("Distribusi")}
           title={d("WA Blast")}
-          description={d("Pilih acara aktif, cek quota, lalu siapkan daftar penerima yang akan dikirim.")}
+          description={d("Pilih undangan aktif, cek kuota, lalu siapkan penerima.")}
           actions={
             eventId ? (
               <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
@@ -225,7 +225,7 @@ export default function WhatsAppBlastPanel() {
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
             <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-              {d("Acara")}
+              {d("Undangan aktif")}
             </span>
             <select
               value={eventId}
@@ -267,7 +267,7 @@ export default function WhatsAppBlastPanel() {
             <DashboardPanel className="mt-5"
                 eyebrow={d("Kuota")}
                 title={d("WA Blast belum aktif")}
-                description={d("WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.")}
+                description={d("WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 kuota ke pilihan saat ini.")}
                 actions={
                   <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
                     <CreditCard className="h-4 w-4" />
@@ -343,7 +343,7 @@ export default function WhatsAppBlastPanel() {
               <DashboardPanel
                   eyebrow={d("Queue")}
                   title={d("Tamu yang akan diblast")}
-                  description={d("Daftar ini memakai quota dari acara yang sedang aktif.")}
+                  description={d("Kuota mengikuti pilihan di atas.")}
                   actions={
                     <Button
                       type="button"
@@ -362,7 +362,7 @@ export default function WhatsAppBlastPanel() {
                     <DashboardEmptyState
                       icon={Users}
                       title={d("Belum ada penerima")}
-                      description={d("Tambahkan tamu dari daftar atau buat penerima baru untuk acara ini.")}
+                      description={d("Tambahkan dari daftar tamu atau buat penerima baru.")}
                     />
                   )}
                   {selected.length > 0 && <div className="overflow-x-auto"><table className="w-full min-w-[480px] text-left">
