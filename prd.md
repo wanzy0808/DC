@@ -2375,19 +2375,26 @@ Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasar
 - This does not claim completion of all section 9.4 acceptance criteria.
 ---
 
-## 2026-09-18 — Dashboard Visual Consistency Phase 3 & Pre-Publish Workspace Access
+## 2026-09-18 — Dashboard Visual Consistency Phase 3, Pre-Publish Access & Bilingual Theme
 
 ### Requirement / Intent
-Beranda tetap menjadi reference visual untuk seluruh customer Dashboard. Koreksi product access: RSVP, Manajemen Tamu, dan workspace persiapan invitation tidak boleh dipaywall hanya karena Undangan Digital belum dibayar/publish; payment Digital Invitation hanya menjadi gate pada Publish.
+Beranda tetap menjadi reference visual untuk seluruh customer Dashboard. Koreksi product access: RSVP, Manajemen Tamu, dan workspace persiapan invitation tidak boleh dipaywall hanya karena Undangan Digital belum dibayar/publish; payment Digital Invitation hanya menjadi gate pada Publish. Seluruh Dashboard juga harus mendukung Light/Dark serta Bahasa Indonesia/English, dengan Bahasa Indonesia sebagai default.
 
 ### Implementation
-- Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, dan Usher sedang diselaraskan ke shared Dashboard primitives;
+- Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, dan Usher diselaraskan ke shared Dashboard primitives;
 - RSVP dan Manajemen Tamu tidak lagi menampilkan activation gate ketika event belum berbayar;
 - Personal Invitation tetap dapat dibuka/dipersiapkan sebelum Publish;
+- payment Digital Invitation tetap ditegakkan pada aksi Publish;
 - WA Blast dan Usher tetap mengikuti entitlement produk terpisah;
-- empty/loading states digunakan untuk menjelaskan workspace yang belum memiliki data.
+- Dashboard header menyediakan shared theme toggle serta ID/EN language toggle, termasuk akses mobile;
+- copy operasional Dashboard, form, table, status, empty state, dan feedback mengikuti locale aktif tanpa menerjemahkan data milik user;
+- semantic theme tokens existing dipakai untuk Light/Dark agar tidak membuat page-specific dark palette;
+- `AGENTS.md` dan `README.md` disinkronkan dengan governance satu `prd.md`.
 
 ### Validation
-- Build: PENDING
-- TypeScript: PENDING
-- Database migration: N/A
+- GitHub Actions Build Validation #1014 pada application source head `20e1d677044d32c7e7cc70cc57934cc37a5e4a46`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.
