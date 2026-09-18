@@ -87,6 +87,30 @@ export function DashboardMetricCard({
   );
 }
 
+export function DashboardCompactStat({
+  label,
+  value,
+  className = "",
+}: {
+  label: string;
+  value: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={classes(
+        "min-w-0 rounded-xl border border-border/70 bg-foreground/[0.018] px-3 py-2.5",
+        className,
+      )}
+    >
+      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+        {label}
+      </p>
+      <div className="mt-1 truncate text-sm font-semibold text-foreground">{value}</div>
+    </div>
+  );
+}
+
 export function DashboardNotice({
   children,
   className = "",

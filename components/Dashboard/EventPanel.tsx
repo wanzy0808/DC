@@ -9,12 +9,23 @@ import {
   PenLine,
   Plus,
   Save,
+  Send,
   Trash2,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardNotice, DashboardStatusBadge, DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import { weddingParentLine, type WeddingChildKind } from "@/lib/events/parents";
 import {
   buildEventTitle,
@@ -204,10 +215,10 @@ function toForm(invitation: Invitation): EventForm {
   };
 }
 
-function formatDateId(value: string) {
+function formatDateId(value: string, locale: "id" | "en") {
   const iso = displayDateToIso(value);
-  if (!iso) return "Tanggal belum valid";
-  return new Intl.DateTimeFormat("id-ID", {
+  if (!iso) return locale === "en" ? "Invalid date" : "Tanggal belum valid";
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -216,6 +227,7 @@ function formatDateId(value: string) {
 }
 
 export default function EventPanel({ onSaved }: Props) {
+  const { d, locale } = useDashboardI18n();
   const [events, setEvents] = useState<Invitation[]>([]);
   const [activeId, setActiveId] = useState("");
   const [editorMode, setEditorMode] = useState<EditorMode>("closed");
@@ -228,7 +240,7 @@ export default function EventPanel({ onSaved }: Props) {
 
   function activate(invitation: Invitation) {
     if (invitation.isPublished) {
-      setNotice("Acara yang sudah dipublish tidak dapat diedit.");
+      setNotice(d("Acara yang sudah dipublish tidak dapat diedit."));
       return;
     }
     setActiveId(invitation.id);
@@ -249,7 +261,7 @@ export default function EventPanel({ onSaved }: Props) {
     try {
       const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
+      if (!response.ok) throw new Error(data?.error || d("Data acara belum dapat dimuat."));
       const next = sortInvitations((data?.invitations ?? []) as Invitation[]);
       setEvents(next);
       const targetId = preferredId || activeId;
@@ -257,7 +269,7 @@ export default function EventPanel({ onSaved }: Props) {
       if (target) activate(target);
       setNotice("");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Data acara belum dapat dimuat.");
+      setNotice(error instanceof Error ? error.message : d("Data acara belum dapat dimuat."));
     } finally {
       setLoading(false);
     }
@@ -306,36 +318,36 @@ export default function EventPanel({ onSaved }: Props) {
   }
 
   async function save() {
-    if (!form.eventCategory) return setNotice("Pilih jenis acara.");
+    if (!form.eventCategory) return setNotice(d("Pilih jenis acara."));
     const category = getEventCategory(form.eventCategory);
     if (category.nameMode === "couple" && (!form.groomName.trim() || !form.brideName.trim())) {
-      return setNotice("Lengkapi kedua nama.");
+      return setNotice(d("Lengkapi kedua nama."));
     }
     if (category.nameMode === "single" && !form.groomName.trim()) {
-      return setNotice("Nama utama wajib diisi.");
+      return setNotice(d("Nama utama wajib diisi."));
     }
     if (form.eventCategory === "OTHER" && !form.customTitle.trim()) {
-      return setNotice("Nama event wajib diisi.");
+      return setNotice(d("Nama event wajib diisi."));
     }
     if (!isValidChildOrder(form.groomChildOrder) || !isValidChildOrder(form.brideChildOrder)) {
-      return setNotice("Anak keberapa harus berupa angka lebih dari 0.");
+      return setNotice(d("Anak keberapa harus berupa angka lebih dari 0."));
     }
     const eventDateIso = displayDateToIso(form.eventDate);
-    if (!eventDateIso) return setNotice("Tanggal harus menggunakan format dd/mm/yyyy yang valid.");
+    if (!eventDateIso) return setNotice(d("Tanggal harus menggunakan format dd/mm/yyyy yang valid."));
     if (!isValidTime24(form.ceremonyTime)) {
-      return setNotice("Waktu mulai harus menggunakan format HH:mm.");
+      return setNotice(d("Waktu mulai harus menggunakan format HH:mm."));
     }
     if (
       form.receptionTime &&
       form.receptionTime !== END_TIME_SENTINEL &&
       !isValidTime24(form.receptionTime)
     ) {
-      return setNotice("Waktu selesai harus menggunakan format HH:mm atau opsi - end.");
+      return setNotice(d("Waktu selesai harus menggunakan format HH:mm atau opsi - end."));
     }
-    if (!form.venue.trim()) return setNotice("Nama tempat wajib diisi.");
+    if (!form.venue.trim()) return setNotice(d("Nama tempat wajib diisi."));
 
     setSaving(true);
-    setNotice("Menyimpan...");
+    setNotice(d("Menyimpan..."));
     try {
       const title = buildEventTitle(
         form.eventCategory,
@@ -373,13 +385,13 @@ export default function EventPanel({ onSaved }: Props) {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok || !data?.invitation?.id) {
-        throw new Error(data?.error || "Data acara belum dapat disimpan.");
+        throw new Error(data?.error || d("Data acara belum dapat disimpan."));
       }
       await load(String(data.invitation.id));
-      setNotice("Tersimpan.");
+      setNotice(d("Tersimpan."));
       onSaved();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Data acara belum dapat disimpan.");
+      setNotice(error instanceof Error ? error.message : d("Data acara belum dapat disimpan."));
     } finally {
       setSaving(false);
     }
@@ -388,18 +400,20 @@ export default function EventPanel({ onSaved }: Props) {
   async function removeEvent(invitation: Invitation) {
     if (saving || deletingId) return;
     if (invitation.isPublished) {
-      setNotice("Acara yang sudah dipublish tidak dapat dihapus.");
+      setNotice(d("Acara yang sudah dipublish tidak dapat dihapus."));
       return;
     }
 
-    const label = invitation.title?.trim() || "Acara baru";
+    const label = invitation.title?.trim() || d("Acara baru");
     const confirmed = window.confirm(
-      `Hapus “${label}”?\n\nAcara, desain undangan, daftar tamu, dan data terkait yang belum dipublish akan ikut dihapus.`,
+      locale === "en"
+        ? `Delete “${label}”?\n\nThe event, invitation design, guest list, and related unpublished data will also be deleted.`
+        : `Hapus “${label}”?\n\nAcara, desain undangan, daftar tamu, dan data terkait yang belum dipublish akan ikut dihapus.`,
     );
     if (!confirmed) return;
 
     setDeletingId(invitation.id);
-    setNotice("Menghapus acara...");
+    setNotice(d("Menghapus acara..."));
     try {
       const response = await fetch(
         `/api/invitations?id=${encodeURIComponent(invitation.id)}`,
@@ -407,14 +421,14 @@ export default function EventPanel({ onSaved }: Props) {
       );
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Acara belum dapat dihapus.");
+        throw new Error(data?.error || d("Acara belum dapat dihapus."));
       }
       if (activeId === invitation.id) closeEditor();
       await load();
-      setNotice("Acara dihapus.");
+      setNotice(d("Acara dihapus."));
       onSaved();
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Acara belum dapat dihapus.");
+      setNotice(error instanceof Error ? error.message : d("Acara belum dapat dihapus."));
     } finally {
       setDeletingId("");
     }
@@ -423,23 +437,39 @@ export default function EventPanel({ onSaved }: Props) {
   const category = form.eventCategory ? getEventCategory(form.eventCategory) : null;
   const active = events.find((item) => item.id === activeId) || null;
   const timezone = getIndonesiaTimezone(form.timezone);
+  const draftCount = events.filter((event) => !event.eventConfigured).length;
+  const designedCount = events.filter((event) => Boolean(event.templateKey?.trim())).length;
+  const publishedCount = events.filter((event) => event.isPublished).length;
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7">
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-5">
-        <p className="text-sm text-muted-foreground">
-          {loading ? "Memuat..." : `${events.length} acara`}
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          onClick={startNewEvent}
-          disabled={saving || Boolean(deletingId)}
-        >
-          <Plus className="h-4 w-4" />
-          Tambah acara
-        </Button>
-      </div>
+    <DashboardPage>
+      <DashboardSurface className="overflow-hidden">
+        <div className="border-l-4 border-primary p-4 sm:p-5">
+          <DashboardSectionHeader
+            eyebrow={d("Rangkaian acara")}
+            title={loading ? d("Memuat acara...") : events.length ? d("Kelola acara di workspace") : d("Buat acara pertama")}
+            description={d("Atur identitas, waktu, lokasi, dan status acara sebelum melanjutkan ke Undangan Digital.")}
+            actions={
+              <Button
+                type="button"
+                size="sm"
+                onClick={startNewEvent}
+                disabled={saving || Boolean(deletingId)}
+              >
+                <Plus className="h-4 w-4" />
+                {d("Tambah acara")}
+              </Button>
+            }
+          />
+        </div>
+      </DashboardSurface>
+
+      <DashboardMetricGrid className="mt-4">
+        <DashboardMetricCard icon={CalendarDays} label={d("Total acara")} value={String(events.length)} />
+        <DashboardMetricCard icon={PenLine} label={d("Draft")} value={String(draftCount)} />
+        <DashboardMetricCard icon={Save} label={d("Sudah desain")} value={String(designedCount)} />
+        <DashboardMetricCard icon={Send} label={d("Terbit")} value={String(publishedCount)} />
+      </DashboardMetricGrid>
 
       {editorMode === "closed" && notice && (
         <DashboardNotice className="mt-4">{notice}</DashboardNotice>
@@ -451,11 +481,11 @@ export default function EventPanel({ onSaved }: Props) {
             <table className="w-full min-w-[760px] text-left">
               <thead>
                 <tr className="text-[10px] text-muted-foreground">
-                  <th className="px-3 py-3 font-medium">Acara</th>
-                  <th className="px-3 py-3 font-medium">Tanggal</th>
-                  <th className="px-3 py-3 font-medium">Lokasi</th>
-                  <th className="px-3 py-3 font-medium">Status</th>
-                  <th className="px-3 py-3 text-right font-medium">Aksi</th>
+                  <th className="px-3 py-3 font-medium">{d("Acara")}</th>
+                  <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
+                  <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
+                  <th className="px-3 py-3 font-medium">{d("Status")}</th>
+                  <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -463,24 +493,24 @@ export default function EventPanel({ onSaved }: Props) {
                   const draft = !event.eventConfigured;
                   const hasDesign = Boolean(event.templateKey?.trim());
                   const status = event.isPublished
-                    ? "Terbit"
+                    ? d("Terbit")
                     : hasDesign
-                      ? "Siap"
+                      ? d("Siap")
                       : draft
-                        ? "Draft"
-                        : "Belum desain";
+                        ? d("Draft")
+                        : d("Belum desain");
                   return (
                     <tr key={event.id} className="text-xs">
                       <td className="max-w-72 px-3 py-3.5">
                         <p className="truncate text-sm font-semibold text-foreground">
-                          {draft ? "Acara baru" : event.title || "Acara tanpa judul"}
+                          {draft ? d("Acara baru") : event.title || d("Acara tanpa judul")}
                         </p>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3.5 text-muted-foreground">
                         {event.eventDate ? isoDateToDisplay(event.eventDate) : "—"}
                       </td>
                       <td className="max-w-56 px-3 py-3.5 text-muted-foreground">
-                        <p className="truncate">{draft ? "Belum dilengkapi" : event.venue || "—"}</p>
+                        <p className="truncate">{draft ? d("Belum dilengkapi") : event.venue || "—"}</p>
                       </td>
                       <td className="px-3 py-3.5">
                         <DashboardStatusBadge active={event.isPublished || hasDesign}>
@@ -493,7 +523,7 @@ export default function EventPanel({ onSaved }: Props) {
                             <>
                               <Button type="button" size="xs" onClick={() => activate(event)}>
                                 <PenLine className="h-3.5 w-3.5" />
-                                Edit
+                                {d("Edit")}
                               </Button>
                               <Button
                                 type="button"
@@ -502,7 +532,7 @@ export default function EventPanel({ onSaved }: Props) {
                                 disabled={saving || Boolean(deletingId)}
                               >
                                 <Trash2 className="h-3.5 w-3.5" />
-                                {deletingId === event.id ? "Menghapus..." : "Hapus"}
+                                {deletingId === event.id ? d("Menghapus...") : d("Hapus")}
                               </Button>
                             </>
                           )}
@@ -510,7 +540,7 @@ export default function EventPanel({ onSaved }: Props) {
                             <Button asChild size="xs">
                               <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
                                 <PenLine className="h-3.5 w-3.5" />
-                                {hasDesign ? "Undangan" : "Buat undangan"}
+                                {hasDesign ? d("Undangan") : d("Buat undangan")}
                               </Link>
                             </Button>
                           )}
@@ -526,34 +556,49 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       {!loading && !events.length && editorMode === "closed" && (
-        <p className="py-8 text-sm text-muted-foreground">Belum ada acara.</p>
+        <DashboardSurface className="mt-4 p-4 sm:p-5">
+          <DashboardEmptyState
+            icon={CalendarDays}
+            title={d("Belum ada acara")}
+            description={d("Tambahkan acara untuk mulai menyiapkan detail, desain undangan, RSVP, dan operasional tamu.")}
+            action={
+              <Button type="button" size="sm" onClick={startNewEvent}>
+                <Plus className="h-4 w-4" />
+                {d("Tambah acara")}
+              </Button>
+            }
+          />
+        </DashboardSurface>
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
-        <section ref={editorRef} className="mt-4 scroll-mt-24 rounded-2xl border border-border/70 bg-background p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6">
+        <section
+          ref={editorRef}
+          className="dc-dashboard-surface mt-4 scroll-mt-24 rounded-2xl border border-border/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6"
+        >
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">
-              {editorMode === "new" ? "Acara baru" : "Edit acara"}
+              {editorMode === "new" ? d("Acara baru") : d("Edit acara")}
             </p>
             <Button type="button" size="sm" onClick={closeEditor} disabled={saving}>
               <X className="h-4 w-4" />
-              Tutup
+              {d("Tutup")}
             </Button>
           </div>
 
           <div className="mt-6 grid gap-x-10 gap-y-8 xl:grid-cols-2">
             <div className="min-w-0">
-              <h3 className="text-sm font-semibold">Data acara</h3>
+              <h3 className="text-sm font-semibold">{d("Data acara")}</h3>
               <label className="mt-4 block">
-                <span className="mb-1.5 block text-xs font-semibold">Jenis acara</span>
+                <span className="mb-1.5 block text-xs font-semibold">{d("Jenis acara")}</span>
                 <select
                   value={form.eventCategory}
                   onChange={(event) => selectCategory(event.target.value)}
                   className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                 >
-                  <option value="">Pilih jenis acara</option>
+                  <option value="">{d("Pilih jenis acara")}</option>
                   {eventCategoryOptions.map((item) => (
-                    <option key={item.key} value={item.key}>{item.label}</option>
+                    <option key={item.key} value={item.key}>{locale === "en" ? ({ WEDDING: "Wedding", SILVER_WEDDING: "Silver Wedding", GOLDEN_WEDDING: "Golden Wedding", BIRTHDAY: "Birthday", BABY_SHOWER: "Baby Shower", OTHER: "Other Event" } as Record<string, string>)[item.key] || item.label : item.label}</option>
                   ))}
                 </select>
               </label>
@@ -563,16 +608,16 @@ export default function EventPanel({ onSaved }: Props) {
                   {category.nameMode === "couple" && (
                     <div className="grid gap-4 sm:grid-cols-2">
                       <Field
-                        label={form.eventCategory === "WEDDING" ? "Nama pengantin pria" : "Nama pasangan 1"}
+                        label={form.eventCategory === "WEDDING" ? d("Nama pengantin pria") : d("Nama pasangan 1")}
                         value={form.groomName}
                         onChange={(value) => field("groomName", value)}
-                        placeholder="Nama lengkap"
+                        placeholder={d("Nama lengkap")}
                       />
                       <Field
-                        label={form.eventCategory === "WEDDING" ? "Nama pengantin wanita" : "Nama pasangan 2"}
+                        label={form.eventCategory === "WEDDING" ? d("Nama pengantin wanita") : d("Nama pasangan 2")}
                         value={form.brideName}
                         onChange={(value) => field("brideName", value)}
-                        placeholder="Nama lengkap"
+                        placeholder={d("Nama lengkap")}
                       />
                     </div>
                   )}
@@ -580,7 +625,7 @@ export default function EventPanel({ onSaved }: Props) {
                   {form.eventCategory === "WEDDING" && (
                     <div className="grid gap-6 border-t border-border/70 pt-5 sm:grid-cols-2">
                       <WeddingFamilyFields
-                        title="Pengantin pria"
+                        title={d("Pengantin pria")}
                         kind="putra"
                         father={form.groomFatherName}
                         mother={form.groomMotherName}
@@ -590,7 +635,7 @@ export default function EventPanel({ onSaved }: Props) {
                         onOrder={(value) => field("groomChildOrder", value)}
                       />
                       <WeddingFamilyFields
-                        title="Pengantin wanita"
+                        title={d("Pengantin wanita")}
                         kind="putri"
                         father={form.brideFatherName}
                         mother={form.brideMotherName}
@@ -604,16 +649,16 @@ export default function EventPanel({ onSaved }: Props) {
 
                   {category.nameMode === "single" && (
                     <Field
-                      label={form.eventCategory === "BIRTHDAY" ? "Nama yang berulang tahun" : "Nama keluarga / calon bayi"}
+                      label={form.eventCategory === "BIRTHDAY" ? d("Nama yang berulang tahun") : d("Nama keluarga / calon bayi")}
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
-                      placeholder="Nama"
+                      placeholder={d("Nama")}
                     />
                   )}
 
                   {category.nameMode === "optional" && (
                     <Field
-                      label="Nama utama (opsional)"
+                      label={d("Nama utama (opsional)")}
                       value={form.groomName}
                       onChange={(value) => field("groomName", value)}
                     />
@@ -621,7 +666,7 @@ export default function EventPanel({ onSaved }: Props) {
 
                   {form.eventCategory === "OTHER" && (
                     <Field
-                      label="Nama event"
+                      label={d("Nama event")}
                       value={form.customTitle}
                       onChange={(value) => field("customTitle", value)}
                     />
@@ -632,13 +677,13 @@ export default function EventPanel({ onSaved }: Props) {
 
             {category && (
               <div className="min-w-0">
-                <h3 className="text-sm font-semibold">Waktu & tempat</h3>
+                <h3 className="text-sm font-semibold">{d("Waktu & tempat")}</h3>
                 <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
-                  <DateField label="Tanggal" value={form.eventDate} onChange={(value) => field("eventDate", value)} />
-                  <TimeField label={`Mulai (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
+                  <DateField label={d("Tanggal")} value={form.eventDate} onChange={(value) => field("eventDate", value)} />
+                  <TimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
                   <div>
                     <TimeField
-                      label={`Selesai (${timezone.label})`}
+                      label={`${d("Selesai")} (${timezone.label})`}
                       value={form.receptionTime === END_TIME_SENTINEL ? "" : form.receptionTime}
                       onChange={(value) => field("receptionTime", value)}
                       disabled={form.receptionTime === END_TIME_SENTINEL}
@@ -655,35 +700,37 @@ export default function EventPanel({ onSaved }: Props) {
                         }
                         className="h-4 w-4 accent-[var(--primary)]"
                       />
-                      <span>Tampilkan “- end” di undangan</span>
+                      <span>{d("Tampilkan “- end” di undangan")}</span>
                     </label>
                   </div>
                 </div>
 
                 <label className="mt-4 block">
-                  <span className="mb-1.5 block text-xs font-semibold">Zona waktu</span>
+                  <span className="mb-1.5 block text-xs font-semibold">{d("Zona waktu")}</span>
                   <select
                     value={form.timezone}
                     onChange={(event) => field("timezone", event.target.value)}
                     className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                   >
                     {indonesiaTimezones.map((item) => (
-                      <option key={item.value} value={item.value}>{item.label} · {item.description}</option>
+                      <option key={item.value} value={item.value}>
+                        {item.label} · {item.description}
+                      </option>
                     ))}
                   </select>
                 </label>
 
                 {(form.eventDate || form.ceremonyTime) && (
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
-                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate) : "Tanggal"}</span>
+                    <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatDateId(form.eventDate, locale) : d("Tanggal")}</span>
                     <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
 
                 <div className="mt-4 space-y-4">
-                  <Field label="Nama tempat" value={form.venue} onChange={(value) => field("venue", value)} />
-                  <Field label="Alamat" value={form.address} onChange={(value) => field("address", value)} />
-                  <Field label="Google Maps" value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
+                  <Field label={d("Nama tempat")} value={form.venue} onChange={(value) => field("venue", value)} />
+                  <Field label={d("Alamat")} value={form.address} onChange={(value) => field("address", value)} />
+                  <Field label={d("Google Maps")} value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
                 </div>
               </div>
             )}
@@ -691,10 +738,10 @@ export default function EventPanel({ onSaved }: Props) {
 
           {category && (
             <details className="mt-7 border-t border-border/70 pt-4">
-              <summary className="cursor-pointer text-xs font-semibold">Tambahan</summary>
+              <summary className="cursor-pointer text-xs font-semibold">{locale === "en" ? "Additional details" : "Tambahan"}</summary>
               <div className="mt-4 grid gap-4 lg:grid-cols-2">
-                <TextArea label="Deskripsi" value={form.description} onChange={(value) => field("description", value)} />
-                <TextArea label="Catatan" value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
+                <TextArea label={d("Deskripsi")} value={form.description} onChange={(value) => field("description", value)} />
+                <TextArea label={d("Catatan")} value={form.eventNotes} onChange={(value) => field("eventNotes", value)} />
               </div>
             </details>
           )}
@@ -703,12 +750,12 @@ export default function EventPanel({ onSaved }: Props) {
             <p className="min-h-5 text-xs text-muted-foreground" role="status">{notice}</p>
             <Button disabled={saving || !category} onClick={save} size="sm">
               <Save className="h-4 w-4" />
-              {saving ? "Menyimpan..." : "Simpan"}
+              {saving ? d("Menyimpan...") : d("Simpan")}
             </Button>
           </div>
         </section>
       )}
-    </div>
+    </DashboardPage>
   );
 }
 
@@ -731,6 +778,7 @@ function WeddingFamilyFields({
   onMother: (value: string) => void;
   onOrder: (value: string) => void;
 }) {
+  const { d } = useDashboardI18n();
   const parsedOrder = order.trim() ? Number(order) : null;
   const familyLine = weddingParentLine(
     father,
@@ -743,8 +791,8 @@ function WeddingFamilyFields({
     <div className="space-y-3">
       <p className="text-xs font-semibold">{title}</p>
       <ChildOrderField value={order} onChange={onOrder} />
-      <Field label="Nama bapak" value={father} onChange={onFather} />
-      <Field label="Nama ibu" value={mother} onChange={onMother} />
+      <Field label={d("Nama bapak")} value={father} onChange={onFather} />
+      <Field label={d("Nama ibu")} value={mother} onChange={onMother} />
       {familyLine && (
         <p className="rounded-lg border border-border/70 bg-background px-3 py-2 text-[11px] leading-5 text-muted-foreground">
           {familyLine}
@@ -755,9 +803,10 @@ function WeddingFamilyFields({
 }
 
 function ChildOrderField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { d } = useDashboardI18n();
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold">Anak keberapa (opsional)</span>
+      <span className="mb-1.5 block text-xs font-semibold">{d("Anak keberapa")} ({d("opsional")})</span>
       <Input
         type="number"
         min={1}
@@ -765,13 +814,14 @@ function ChildOrderField({ value, onChange }: { value: string; onChange: (value:
         inputMode="numeric"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Contoh: 1"
+        placeholder={d("Contoh: 1")}
       />
     </label>
   );
 }
 
 function DateField({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  const { d } = useDashboardI18n();
   const pickerRef = useRef<HTMLInputElement | null>(null);
   const isoValue = displayDateToIso(value);
 
@@ -793,7 +843,7 @@ function DateField({ label, value, onChange }: { label: string; value: string; o
           onChange={(event) => onChange(formatDateInput(event.target.value))}
           placeholder="dd/mm/yyyy"
         />
-        <Button type="button" size="icon" onClick={openCalendar} aria-label="Pilih tanggal">
+        <Button type="button" size="icon" onClick={openCalendar} aria-label={d("Pilih tanggal")}>
           <CalendarDays className="h-4 w-4" />
         </Button>
         <input
@@ -820,6 +870,7 @@ function TimeField({
   onChange: (value: string) => void;
   disabled?: boolean;
 }) {
+  const { d } = useDashboardI18n();
   const [open, setOpen] = useState(false);
   const [hour, minute] = isValidTime24(value) ? value.split(":") : ["00", "00"];
 
@@ -836,7 +887,7 @@ function TimeField({
           placeholder="00:00"
           className="font-[family-name:var(--font-dc-mono)]"
         />
-        <Button type="button" size="icon" disabled={disabled} onClick={() => setOpen((current) => !current)} aria-label="Pilih waktu">
+        <Button type="button" size="icon" disabled={disabled} onClick={() => setOpen((current) => !current)} aria-label={d("Pilih waktu")}>
           <Clock3 className="h-4 w-4" />
         </Button>
       </div>
@@ -849,7 +900,7 @@ function TimeField({
           <select value={minute} onChange={(event) => onChange(`${hour}:${event.target.value}`)} className="h-11 rounded-[10px] border border-border bg-background px-2 text-sm">
             {timeMinutes.map((item) => <option key={item}>{item}</option>)}
           </select>
-          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>Selesai</Button>
+          <Button type="button" size="sm" className="col-span-3" onClick={() => setOpen(false)}>{d("Selesai memilih")}</Button>
         </div>
       )}
     </div>

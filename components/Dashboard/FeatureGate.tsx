@@ -5,6 +5,7 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import DashboardAccessNotice from "@/components/Dashboard/DashboardAccessNotice";
 import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 
 interface FeatureGateProps {
   allowed: boolean;
@@ -19,16 +20,18 @@ interface FeatureGateProps {
 export default function FeatureGate({
   allowed,
   title,
-  description = "Paket aktif diperlukan untuk membuka fitur ini.",
-  upgradeLabel = "Lihat paket yang tersedia",
+  description,
+  upgradeLabel,
   onUpgrade,
   children,
 }: FeatureGateProps) {
-  if (
-    allowed ||
-    title === "Manajemen Tamu" ||
-    title === "Personal Invitation"
-  ) {
+  const { d } = useDashboardI18n();
+  const resolvedDescription =
+    description ?? d("Paket aktif diperlukan untuk membuka fitur ini.");
+  const resolvedUpgradeLabel =
+    upgradeLabel ?? d("Lihat paket yang tersedia");
+
+  if (allowed) {
     return <>{children}</>;
   }
 
@@ -43,16 +46,21 @@ export default function FeatureGate({
       </div>
       <div className="relative col-start-1 row-start-1 flex items-center justify-center bg-background/88 px-6 py-10 backdrop-blur-[2px] sm:p-10">
         <DashboardSurface className="w-full max-w-lg p-4 sm:p-5">
-          <DashboardAccessNotice title={title} description={description} heading="h3">
+          <DashboardAccessNotice
+            title={title}
+            description={resolvedDescription}
+            label={d("Akses paket")}
+            heading="h3"
+          >
             <Button
               type="button"
               onClick={onUpgrade}
               size="lg"
               className="h-auto min-h-11 max-w-full whitespace-normal py-3 text-left"
-              title={upgradeLabel}
+              title={resolvedUpgradeLabel}
             >
               <Sparkles className="size-4 shrink-0" aria-hidden="true" />
-              {upgradeLabel}
+              {resolvedUpgradeLabel}
             </Button>
           </DashboardAccessNotice>
         </DashboardSurface>

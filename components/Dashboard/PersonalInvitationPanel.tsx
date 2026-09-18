@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
-  CreditCard,
+  ContactRound,
   Eye,
   KeyRound,
   PenLine,
@@ -17,7 +17,18 @@ import EventScopePicker, {
 } from "@/components/Dashboard/EventScopePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import {
+  DashboardCompactStat,
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardStatusBadge,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type Guest = {
   id: string;
@@ -53,6 +64,7 @@ function sortEvents(items: PersonalEvent[]) {
 }
 
 export default function PersonalInvitationPanel() {
+  const { d } = useDashboardI18n();
   const [events, setEvents] = useState<PersonalEvent[]>([]);
   const [eventId, setEventId] = useState("");
   const [personal, setPersonal] = useState<PersonalGuest[]>([]);
@@ -82,7 +94,7 @@ export default function PersonalInvitationPanel() {
       const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Daftar acara belum dapat dimuat.");
+        throw new Error(data?.error || d("Daftar acara belum dapat dimuat."));
       }
 
       const configured = sortEvents(
@@ -98,7 +110,7 @@ export default function PersonalInvitationPanel() {
     } catch (error) {
       setEvents([]);
       setEventId("");
-      setNotice(error instanceof Error ? error.message : "Daftar acara belum dapat dimuat.");
+      setNotice(error instanceof Error ? error.message : d("Daftar acara belum dapat dimuat."));
     } finally {
       setEventsLoading(false);
     }
@@ -133,11 +145,11 @@ export default function PersonalInvitationPanel() {
       const guestData = await guestResponse.json().catch(() => null);
       if (!personalResponse.ok) {
         throw new Error(
-          personalData?.error || "Personal Invitation belum dapat dimuat.",
+          personalData?.error || d("Personal Invitation belum dapat dimuat."),
         );
       }
       if (!guestResponse.ok) {
-        throw new Error(guestData?.error || "Daftar tamu belum dapat dimuat.");
+        throw new Error(guestData?.error || d("Daftar tamu belum dapat dimuat."));
       }
       setPersonal((personalData?.invitations ?? []) as PersonalGuest[]);
       setGuests((guestData?.guests ?? []) as Guest[]);
@@ -145,7 +157,7 @@ export default function PersonalInvitationPanel() {
       setPersonal([]);
       setGuests([]);
       setNotice(
-        error instanceof Error ? error.message : "Personal Invitation belum dapat dimuat.",
+        error instanceof Error ? error.message : d("Personal Invitation belum dapat dimuat."),
       );
     } finally {
       setLoading(false);
@@ -187,14 +199,14 @@ export default function PersonalInvitationPanel() {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Personal Invitation belum dapat dibuat.");
+        throw new Error(data?.error || d("Personal Invitation belum dapat dibuat."));
       }
       setGuestId("");
       await loadCurrent();
-      setNotice("Personal Invitation dibuat untuk acara ini.");
+      setNotice(d("Personal Invitation dibuat untuk acara ini."));
     } catch (error) {
       setNotice(
-        error instanceof Error ? error.message : "Personal Invitation belum dapat dibuat.",
+        error instanceof Error ? error.message : d("Personal Invitation belum dapat dibuat."),
       );
     } finally {
       setBusyId(null);
@@ -217,15 +229,15 @@ export default function PersonalInvitationPanel() {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Personal Invitation belum dapat dibuat.");
+        throw new Error(data?.error || d("Personal Invitation belum dapat dibuat."));
       }
       setName("");
       setPhone("");
       await loadCurrent();
-      setNotice("Tamu dan Personal Invitation dibuat untuk acara ini.");
+      setNotice(d("Tamu dan Personal Invitation dibuat untuk acara ini."));
     } catch (error) {
       setNotice(
-        error instanceof Error ? error.message : "Personal Invitation belum dapat dibuat.",
+        error instanceof Error ? error.message : d("Personal Invitation belum dapat dibuat."),
       );
     } finally {
       setBusyId(null);
@@ -248,7 +260,7 @@ export default function PersonalInvitationPanel() {
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Personal Invitation belum dapat diperbarui.");
+        throw new Error(data?.error || d("Personal Invitation belum dapat diperbarui."));
       }
       setPersonal((current) =>
         current.map((item) =>
@@ -261,7 +273,7 @@ export default function PersonalInvitationPanel() {
       setNotice(
         error instanceof Error
           ? error.message
-          : "Personal Invitation belum dapat diperbarui.",
+          : d("Personal Invitation belum dapat diperbarui."),
       );
       return false;
     } finally {
@@ -280,20 +292,20 @@ export default function PersonalInvitationPanel() {
     const ok = await patch(
       item.id,
       { name: editName.trim(), phone: editPhone.trim() },
-      "Data tamu diperbarui.",
+      d("Data tamu diperbarui."),
     );
     if (ok) setEditingId(null);
   }
 
   async function savePassword(item: PersonalGuest) {
     if (password.trim().length < 6) {
-      setNotice("Password minimal 6 karakter.");
+      setNotice(d("Password minimal 6 karakter."));
       return;
     }
     const ok = await patch(
       item.id,
       { passwordProtected: true, password: password.trim() },
-      "Password Personal Invitation diperbarui.",
+      d("Password Personal Invitation diperbarui."),
     );
     if (ok) {
       setPasswordId(null);
@@ -305,7 +317,7 @@ export default function PersonalInvitationPanel() {
     const ok = await patch(
       item.id,
       { passwordProtected: false },
-      "Password Personal Invitation dimatikan.",
+      d("Password Personal Invitation dimatikan."),
     );
     if (ok) {
       setPasswordId(null);
@@ -323,7 +335,7 @@ export default function PersonalInvitationPanel() {
   );
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <DashboardPage className="pt-7 sm:pt-8">
       <EventScopePicker
         events={events}
         value={eventId}
@@ -333,58 +345,31 @@ export default function PersonalInvitationPanel() {
 
       {notice && <DashboardNotice className="mt-4">{notice}</DashboardNotice>}
 
-      {!events.length ? null : selectedEvent && !selectedEvent.accessPaid ? (
-        <section className="mt-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="min-w-0">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                Belum aktif
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                {selectedEvent.title || "Acara"}
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Aktifkan Undangan Digital untuk memakai Personal Invitation pada acara ini.
-              </p>
-            </div>
-            <Button asChild size="sm">
-              <Link
-                href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(selectedEvent.id)}`}
-              >
-                <CreditCard className="h-4 w-4" />
-                Aktifkan Rp150.000
-              </Link>
-            </Button>
-          </div>
-        </section>
-      ) : selectedEvent ? (
+      {!events.length ? null : selectedEvent ? (
         <>
-          <section className="mt-4 grid gap-3 sm:grid-cols-3">
-            <Metric label="Personal Invitation" value={String(personal.length)} />
-            <Metric label="Publish" value={String(publishedCount)} />
-            <Metric label="Dibuka" value={String(totalViews)} />
-          </section>
+          <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
+            <Metric icon={ContactRound} label={d("Personal Invitation")} value={String(personal.length)} />
+            <Metric icon={Send} label={d("Publish")} value={String(publishedCount)} />
+            <Metric icon={Eye} label={d("Dibuka")} value={String(totalViews)} />
+          </DashboardMetricGrid>
 
           <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-            <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-              <div>
-                <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                  Tamu · {selectedEvent.title || "Acara"}
-                </p>
-                <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                  Buat Personal Invitation
-                </h2>
-              </div>
+            <DashboardSurface className="space-y-4 p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow={`${d("Tamu")} · ${selectedEvent.title || d("Acara")}`}
+                title={d("Buat Personal Invitation")}
+                description={d("Gunakan tamu yang sudah ada atau tambahkan tamu baru untuk membuat tautan personal.")}
+              />
 
               <div className="rounded-xl border border-border/70 bg-background p-3">
-                <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
+                <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
                 <select
                   value={guestId}
                   onChange={(event) => setGuestId(event.target.value)}
                   disabled={loading || Boolean(busyId)}
                   className="mt-2 w-full px-3 text-sm"
                 >
-                  <option value="">Pilih tamu</option>
+                  <option value="">{d("Pilih tamu")}</option>
                   {availableGuests.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -400,23 +385,23 @@ export default function PersonalInvitationPanel() {
                   onClick={createFromExisting}
                 >
                   <Plus className="h-4 w-4" />
-                  Buat Personal Invitation
+                  {d("Buat Personal Invitation")}
                 </Button>
               </div>
 
               <div className="rounded-xl border border-border/70 bg-background p-3">
-                <p className="text-xs font-semibold text-foreground">Tamu belum ada</p>
+                <p className="text-xs font-semibold text-foreground">{d("Tamu belum ada")}</p>
                 <div className="mt-2 space-y-2">
                   <Input
                     value={name}
                     onChange={(event) => setName(event.target.value)}
-                    placeholder="Nama tamu"
+                    placeholder={d("Nama tamu")}
                     disabled={Boolean(busyId)}
                   />
                   <Input
                     value={phone}
                     onChange={(event) => setPhone(event.target.value)}
-                    placeholder="Nomor WhatsApp (opsional)"
+                    placeholder={d("Nomor WhatsApp (opsional)")}
                     disabled={Boolean(busyId)}
                   />
                   <Button
@@ -427,46 +412,45 @@ export default function PersonalInvitationPanel() {
                     onClick={createNew}
                   >
                     <Plus className="h-4 w-4" />
-                    Tambah & buat undangan
+                    {d("Tambah & buat undangan")}
                   </Button>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-2">
-                <SmallMetric label="Password" value={String(protectedCount)} />
+                <SmallMetric label={d("Password")} value={String(protectedCount)} />
                 <SmallMetric
-                  label="Draft"
+                  label={d("Draft")}
                   value={String(personal.length - publishedCount)}
                 />
               </div>
-            </section>
+            </DashboardSurface>
 
-            <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-              <div className="flex items-center justify-between gap-3">
-                <div>
-                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Daftar · {selectedEvent.title || "Acara"}
-                  </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                    Personal Invitation
-                  </h2>
-                </div>
-                <Button
-                  type="button"
-                  size="sm"
-                  onClick={() => loadCurrent()}
-                  disabled={loading}
-                >
-                  <RefreshCw className="h-4 w-4" />
-                  Muat ulang
-                </Button>
-              </div>
+            <DashboardSurface className="p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow={`${d("Daftar")} · ${selectedEvent.title || d("Acara")}`}
+                title={d("Personal Invitation")}
+                description={d("Kelola status publish, password, dan tautan personal setiap tamu.")}
+                actions={
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={() => loadCurrent()}
+                    disabled={loading}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    {d("Muat ulang")}
+                  </Button>
+                }
+              />
 
               <div className="mt-4 space-y-3">
                 {personal.length === 0 && (
-                  <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
-                    Belum ada Personal Invitation untuk acara ini.
-                  </div>
+                  <DashboardEmptyState
+                    icon={ContactRound}
+                    title={d("Belum ada Personal Invitation")}
+                    description={d("Buat undangan personal dari daftar tamu atau tambahkan tamu baru.")}
+                  />
                 )}
                 {personal.map((item) => {
                   const publicUrl =
@@ -487,12 +471,12 @@ export default function PersonalInvitationPanel() {
                               <Input
                                 value={editName}
                                 onChange={(event) => setEditName(event.target.value)}
-                                placeholder="Nama tamu"
+                                placeholder={d("Nama tamu")}
                               />
                               <Input
                                 value={editPhone}
                                 onChange={(event) => setEditPhone(event.target.value)}
-                                placeholder="Nomor WhatsApp"
+                                placeholder={d("Nomor WhatsApp")}
                               />
                             </div>
                           ) : (
@@ -501,7 +485,7 @@ export default function PersonalInvitationPanel() {
                                 {item.name}
                               </p>
                               <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
-                                {item.phone || "Tanpa nomor"} · {item.personalViewCount || 0}{" "}
+                                {item.phone || d("Tanpa nomor")} · {item.personalViewCount || 0}{" "}
                                 dibuka
                               </p>
                             </>
@@ -514,7 +498,7 @@ export default function PersonalInvitationPanel() {
                               target="_blank"
                             >
                               <Eye className="h-4 w-4" />
-                              Pratinjau
+                              {d("Pratinjau")}
                             </Link>
                           </Button>
                           {editing ? (
@@ -524,12 +508,12 @@ export default function PersonalInvitationPanel() {
                               disabled={busyId === item.id}
                               onClick={() => saveEdit(item)}
                             >
-                              Simpan edit
+                              {d("Simpan edit")}
                             </Button>
                           ) : (
                             <Button type="button" size="sm" onClick={() => startEdit(item)}>
                               <PenLine className="h-4 w-4" />
-                              Edit
+                              {d("Edit")}
                             </Button>
                           )}
                           <Button
@@ -541,24 +525,24 @@ export default function PersonalInvitationPanel() {
                                 item.id,
                                 { published: !item.personalPublished },
                                 item.personalPublished
-                                  ? "Personal Invitation ditarik dari publik."
-                                  : "Personal Invitation dipublish.",
+                                  ? d("Personal Invitation ditarik dari publik.")
+                                  : d("Personal Invitation dipublish."),
                               )
                             }
                           >
                             <Send className="h-4 w-4" />
-                            {item.personalPublished ? "Tarik publik" : "Publish"}
+                            {item.personalPublished ? d("Tarik publik") : d("Publish")}
                           </Button>
                         </div>
                       </div>
 
                       <div className="mt-3 flex flex-wrap items-center gap-2">
-                        <span className="rounded-lg bg-primary/[0.07] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
-                          {item.personalPublished ? "Terbit" : "Draft"}
-                        </span>
-                        <span className="rounded-lg bg-foreground/[0.04] px-2 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-                          {item.personalPasswordProtected ? "Password aktif" : "Tanpa password"}
-                        </span>
+                        <DashboardStatusBadge active={item.personalPublished}>
+                          {item.personalPublished ? d("Terbit") : d("Draft")}
+                        </DashboardStatusBadge>
+                        <DashboardStatusBadge active={item.personalPasswordProtected}>
+                          {item.personalPasswordProtected ? d("Password aktif") : d("Tanpa password")}
+                        </DashboardStatusBadge>
                         <Button
                           type="button"
                           size="sm"
@@ -569,8 +553,8 @@ export default function PersonalInvitationPanel() {
                         >
                           <KeyRound className="h-4 w-4" />
                           {item.personalPasswordProtected
-                            ? "Ganti password"
-                            : "Aktifkan password"}
+                            ? d("Ganti password")
+                            : d("Aktifkan password")}
                         </Button>
                         {item.personalPasswordProtected && (
                           <Button
@@ -580,13 +564,13 @@ export default function PersonalInvitationPanel() {
                             onClick={() => disablePassword(item)}
                           >
                             <ShieldOff className="h-4 w-4" />
-                            Matikan password
+                            {d("Matikan password")}
                           </Button>
                         )}
                         {item.personalPublished && publicUrl && (
                           <Button asChild size="sm">
                             <a href={publicUrl} target="_blank" rel="noreferrer">
-                              Buka publik
+                              {d("Buka publik")}
                             </a>
                           </Button>
                         )}
@@ -598,7 +582,7 @@ export default function PersonalInvitationPanel() {
                             type="password"
                             value={password}
                             onChange={(event) => setPassword(event.target.value)}
-                            placeholder="Password baru minimal 6 karakter"
+                            placeholder={d("Password baru minimal 6 karakter")}
                             className="min-w-0 flex-1"
                           />
                           <Button
@@ -607,7 +591,7 @@ export default function PersonalInvitationPanel() {
                             disabled={password.trim().length < 6 || busyId === item.id}
                             onClick={() => savePassword(item)}
                           >
-                            Simpan password
+                            {d("Simpan password")}
                           </Button>
                         </div>
                       )}
@@ -615,25 +599,26 @@ export default function PersonalInvitationPanel() {
                   );
                 })}
               </div>
-            </section>
+            </DashboardSurface>
           </div>
         </>
       ) : null}
-    </div>
+    </DashboardPage>
   );
 }
 
-function Metric({ label, value }: { label: string; value: string }) {
-  return <DashboardMetricCard label={label} value={value} />;
+function Metric({
+  icon,
+  label,
+  value,
+}: {
+  icon: typeof Send;
+  label: string;
+  value: string;
+}) {
+  return <DashboardMetricCard icon={icon} label={label} value={value} />;
 }
 
 function SmallMetric({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-lg border border-border/70 bg-background/75 px-3 py-2.5">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-0.5 text-xs font-semibold text-foreground">{value}</p>
-    </div>
-  );
+  return <DashboardCompactStat label={label} value={value} />;
 }

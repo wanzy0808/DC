@@ -4,7 +4,16 @@ import { useEffect, useMemo, useState } from "react";
 import { CreditCard, MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DashboardMetricCard, DashboardNotice } from "@/components/Dashboard/DashboardPrimitives";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import {
+  DashboardEmptyState,
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardNotice,
+  DashboardPage,
+  DashboardSectionHeader,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type EventOption = {
   id: string;
@@ -25,6 +34,7 @@ type SelectedGuest = Guest & {
 };
 
 export default function WhatsAppBlastPanel() {
+  const { d } = useDashboardI18n();
   const [events, setEvents] = useState<EventOption[]>([]);
   const [eventId, setEventId] = useState("");
   const [guests, setGuests] = useState<Guest[]>([]);
@@ -40,7 +50,7 @@ export default function WhatsAppBlastPanel() {
   async function loadEvents() {
     const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
     const data = await response.json().catch(() => null);
-    if (!response.ok) throw new Error(data?.error || "Daftar acara belum dapat dimuat.");
+    if (!response.ok) throw new Error(data?.error || d("Daftar acara belum dapat dimuat."));
     const available = ((data?.invitations ?? []) as EventOption[]).filter(
       (event) => event.eventConfigured && event.accessPaid,
     );
@@ -71,13 +81,13 @@ export default function WhatsAppBlastPanel() {
       ]);
       const queueData = await queueResponse.json().catch(() => null);
       const guestData = await guestResponse.json().catch(() => null);
-      if (!queueResponse.ok) throw new Error(queueData?.error || "WA Blast belum dapat dimuat.");
+      if (!queueResponse.ok) throw new Error(queueData?.error || d("WA Blast belum dapat dimuat."));
       setQuota(queueData?.quota ?? 0);
       setRemaining(queueData?.remaining ?? 0);
       setSelected((queueData?.selected ?? []) as SelectedGuest[]);
       setGuests((guestData?.guests ?? []) as Guest[]);
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "WA Blast belum dapat dimuat.");
+      setNotice(error instanceof Error ? error.message : d("WA Blast belum dapat dimuat."));
       setGuests([]);
       setSelected([]);
       setQuota(0);
@@ -91,7 +101,7 @@ export default function WhatsAppBlastPanel() {
     setBusy(true);
     loadEvents()
       .catch((error) => {
-        setNotice(error instanceof Error ? error.message : "Daftar acara belum dapat dimuat.");
+        setNotice(error instanceof Error ? error.message : d("Daftar acara belum dapat dimuat."));
       })
       .finally(() => setBusy(false));
   }, []);
@@ -120,10 +130,10 @@ export default function WhatsAppBlastPanel() {
         body: JSON.stringify({ packageKey: "WA_BLAST_50", invitationId: eventId }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Order add-on belum dapat dibuat.");
+      if (!response.ok) throw new Error(data?.error || d("Order add-on belum dapat dibuat."));
       if (data?.invoiceUrl) window.location.href = data.invoiceUrl;
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Order add-on belum dapat dibuat.");
+      setNotice(error instanceof Error ? error.message : d("Order add-on belum dapat dibuat."));
       setBusy(false);
     }
   }
@@ -139,12 +149,12 @@ export default function WhatsAppBlastPanel() {
         body: JSON.stringify({ invitationId: eventId, guestId: existingGuestId }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Tamu belum dapat ditambahkan.");
+      if (!response.ok) throw new Error(data?.error || d("Tamu belum dapat ditambahkan."));
       setExistingGuestId("");
       await loadEventData(eventId);
-      setNotice("Tamu ditambahkan ke daftar WA Blast.");
+      setNotice(d("Tamu ditambahkan ke daftar WA Blast."));
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Tamu belum dapat ditambahkan.");
+      setNotice(error instanceof Error ? error.message : d("Tamu belum dapat ditambahkan."));
       setBusy(false);
     }
   }
@@ -164,13 +174,13 @@ export default function WhatsAppBlastPanel() {
         }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Tamu belum dapat ditambahkan.");
+      if (!response.ok) throw new Error(data?.error || d("Tamu belum dapat ditambahkan."));
       setName("");
       setPhone("");
       await loadEventData(eventId);
-      setNotice("Tamu baru ditambahkan ke daftar WA Blast.");
+      setNotice(d("Tamu baru ditambahkan ke daftar WA Blast."));
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Tamu belum dapat ditambahkan.");
+      setNotice(error instanceof Error ? error.message : d("Tamu belum dapat ditambahkan."));
       setBusy(false);
     }
   }
@@ -185,104 +195,107 @@ export default function WhatsAppBlastPanel() {
         { method: "DELETE" },
       );
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || "Tamu belum dapat dihapus.");
+      if (!response.ok) throw new Error(data?.error || d("Tamu belum dapat dihapus."));
       await loadEventData(eventId);
-      setNotice("Tamu dihapus dari daftar WA Blast.");
+      setNotice(d("Tamu dihapus dari daftar WA Blast."));
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Tamu belum dapat dihapus.");
+      setNotice(error instanceof Error ? error.message : d("Tamu belum dapat dihapus."));
       setBusy(false);
     }
   }
 
   return (
-    <div className="dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-7 sm:pt-8">
+    <DashboardPage className="pt-7 sm:pt-8">
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
-      <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+      <DashboardSurface className="p-4 sm:p-5">
+        <DashboardSectionHeader
+          eyebrow={d("WA Blast Add-on")}
+          title={d("Distribusi WhatsApp")}
+          description={d("Pilih acara aktif, cek quota, lalu siapkan daftar penerima yang akan dikirim.")}
+          actions={
+            eventId ? (
+              <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
+                <CreditCard className="h-4 w-4" />
+                {d("Beli 50 quota · Rp75.000")}
+              </Button>
+            ) : null
+          }
+        />
+
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
             <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-              Acara
+              {d("Acara")}
             </span>
             <select
               value={eventId}
               onChange={(event) => setEventId(event.target.value)}
               disabled={busy || events.length === 0}
               className="w-full px-3 text-sm outline-none"
-              aria-label="Pilih acara untuk WA Blast"
+              aria-label={d("Pilih acara untuk WA Blast")}
             >
               {events.length === 0 ? (
-                <option value="">Belum ada undangan aktif</option>
+                <option value="">{d("Belum ada undangan aktif")}</option>
               ) : (
                 events.map((event) => (
                   <option key={event.id} value={event.id}>
-                    {event.title || "Acara tanpa judul"}
+                    {event.title || d("Acara tanpa judul")}
                   </option>
                 ))
               )}
             </select>
           </label>
 
-          {eventId && (
-            <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
-              <CreditCard className="h-4 w-4" />
-              Beli 50 quota · Rp75.000
-            </Button>
-          )}
         </div>
 
         {events.length === 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.
+            {d("Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.")}
           </p>
         )}
-      </section>
+      </DashboardSurface>
 
       {eventId && (
         <>
-          <section className="mt-3 grid gap-3 sm:grid-cols-3">
-            <Metric icon={MessageCircle} label="Kuota" value={String(quota)} />
-            <Metric icon={Users} label="Dipilih" value={String(selected.length)} />
-            <Metric icon={Plus} label="Sisa" value={String(remaining)} />
-          </section>
+          <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
+            <Metric icon={MessageCircle} label={d("Kuota")} value={String(quota)} />
+            <Metric icon={Users} label={d("Dipilih")} value={String(selected.length)} />
+            <Metric icon={Plus} label={d("Sisa")} value={String(remaining)} />
+          </DashboardMetricGrid>
 
           {quota === 0 ? (
-            <section className="mt-5 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-5">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                Add-on
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                WA Blast belum aktif
-              </h2>
-              <p className="mt-2 max-w-xl text-xs leading-5 text-muted-foreground">
-                WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.
-              </p>
-              <Button type="button" size="sm" className="mt-4" onClick={purchaseAddon} disabled={busy}>
-                <CreditCard className="h-4 w-4" />
-                Beli 50 quota · Rp75.000
-              </Button>
-            </section>
+            <DashboardSurface className="mt-5 p-4 sm:p-5">
+              <DashboardSectionHeader
+                eyebrow={d("Add-on")}
+                title={d("WA Blast belum aktif")}
+                description={d("WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.")}
+                actions={
+                  <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
+                    <CreditCard className="h-4 w-4" />
+                    {d("Beli 50 quota · Rp75.000")}
+                  </Button>
+                }
+              />
+            </DashboardSurface>
           ) : (
             <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-              <section className="space-y-4 rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-                <div>
-                  <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                    Penerima
-                  </p>
-                  <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                    Tambah penerima
-                  </h2>
-                </div>
+              <DashboardSurface className="space-y-4 p-4 sm:p-5">
+                <DashboardSectionHeader
+                  eyebrow={d("Penerima")}
+                  title={d("Tambah penerima")}
+                  description={d("Gunakan data tamu yang sudah ada atau tambahkan penerima baru.")}
+                />
 
                 <div className="rounded-xl border border-border/70 bg-background p-3">
-                  <p className="text-xs font-semibold text-foreground">Dari daftar tamu</p>
+                  <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
                   <select
                     value={existingGuestId}
                     onChange={(event) => setExistingGuestId(event.target.value)}
                     className="mt-2 w-full px-3 text-sm"
                     disabled={busy || !canAddRecipients}
                   >
-                    <option value="">Pilih tamu</option>
+                    <option value="">{d("Pilih tamu")}</option>
                     {availableGuests.map((guest) => (
                       <option key={guest.id} value={guest.id}>
                         {guest.name} · {guest.phone}
@@ -297,23 +310,23 @@ export default function WhatsAppBlastPanel() {
                     onClick={addExisting}
                   >
                     <Plus className="h-4 w-4" />
-                    Tambahkan penerima
+                    {d("Tambahkan penerima")}
                   </Button>
                 </div>
 
                 <div className="rounded-xl border border-border/70 bg-background p-3">
-                  <p className="text-xs font-semibold text-foreground">Tamu belum ada</p>
+                  <p className="text-xs font-semibold text-foreground">{d("Tamu belum ada")}</p>
                   <div className="mt-2 space-y-2">
                     <Input
                       value={name}
                       onChange={(event) => setName(event.target.value)}
-                      placeholder="Nama tamu"
+                      placeholder={d("Nama tamu")}
                       disabled={busy || !canAddRecipients}
                     />
                     <Input
                       value={phone}
                       onChange={(event) => setPhone(event.target.value)}
-                      placeholder="Nomor WhatsApp"
+                      placeholder={d("Nomor WhatsApp")}
                       disabled={busy || !canAddRecipients}
                     />
                     <Button
@@ -324,38 +337,37 @@ export default function WhatsAppBlastPanel() {
                       onClick={addNew}
                     >
                       <Plus className="h-4 w-4" />
-                      Tambah tamu & penerima
+                      {d("Tambah tamu & penerima")}
                     </Button>
                   </div>
                 </div>
-              </section>
+              </DashboardSurface>
 
-              <section className="rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)] p-4 sm:p-5">
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-                      Queue
-                    </p>
-                    <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
-                      Tamu yang akan diblast
-                    </h2>
-                  </div>
-                  <Button
-                    type="button"
-                    size="sm"
-                    onClick={() => loadEventData(eventId)}
-                    disabled={busy}
-                  >
-                    <RefreshCw className="h-4 w-4" />
-                    Muat ulang
-                  </Button>
-                </div>
+              <DashboardSurface className="p-4 sm:p-5">
+                <DashboardSectionHeader
+                  eyebrow={d("Queue")}
+                  title={d("Tamu yang akan diblast")}
+                  description={d("Daftar ini memakai quota dari acara yang sedang aktif.")}
+                  actions={
+                    <Button
+                      type="button"
+                      size="sm"
+                      onClick={() => loadEventData(eventId)}
+                      disabled={busy}
+                    >
+                      <RefreshCw className="h-4 w-4" />
+                      {d("Muat ulang")}
+                    </Button>
+                  }
+                />
 
                 <div className="mt-4 space-y-2">
                   {selected.length === 0 && (
-                    <div className="rounded-xl border border-border/70 bg-background px-3 py-6 text-center text-xs text-muted-foreground">
-                      Belum ada penerima WA Blast.
-                    </div>
+                    <DashboardEmptyState
+                      icon={Users}
+                      title={d("Belum ada penerima")}
+                      description={d("Tambahkan tamu dari daftar atau buat penerima baru untuk acara ini.")}
+                    />
                   )}
                   {selected.map((guest) => (
                     <div
@@ -365,7 +377,7 @@ export default function WhatsAppBlastPanel() {
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-xs font-semibold text-foreground">{guest.name}</p>
                         <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
-                          {guest.phone || "Nomor belum ada"}
+                          {guest.phone || d("Nomor belum ada")}
                         </p>
                       </div>
                       <Button
@@ -373,20 +385,20 @@ export default function WhatsAppBlastPanel() {
                         size="icon-sm"
                         onClick={() => removeGuest(guest.id)}
                         disabled={busy}
-                        title="Hapus dari daftar WA Blast"
-                        aria-label={`Hapus ${guest.name} dari daftar WA Blast`}
+                        title={d("Hapus dari daftar WA Blast")}
+                        aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
                 </div>
-              </section>
+              </DashboardSurface>
             </div>
           )}
         </>
       )}
-    </div>
+    </DashboardPage>
   );
 }
 

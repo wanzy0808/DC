@@ -304,7 +304,22 @@ WA Blast adalah add-on, bukan submenu inti Digital Invitation.
 
 Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
 
-### 6.1 Desktop dashboard shell
+### 6.1 Dashboard access before Publish
+
+Payment Digital Invitation **bukan gate untuk membuka isi dashboard**. Customer harus dapat masuk, melihat, dan menyiapkan workspace terkait invitation sebelum event dipublish atau sebelum Digital Invitation dibayar.
+
+Canonical behavior:
+- **Rangkaian Acara**, **Undangan/Studio**, **Personal Invitation**, **RSVP**, dan **Manajemen Tamu** tetap dapat dibuka sebelum Publish/payment;
+- RSVP dan Manajemen Tamu tidak menampilkan activation/paywall overlay hanya karena `accessPaid = false`;
+- Personal Invitation juga dapat dipersiapkan sebelum Publish; public delivery tetap bergantung pada lifecycle public invitation yang valid;
+- apabila belum ada data karena undangan belum dibagikan, gunakan empty state normal agar user tetap dapat memahami fungsi halaman;
+- payment gate Digital Invitation hanya ditegakkan ketika user menekan **Publish** di Undangan/Studio;
+- public RSVP/personal invitation tidak dianggap usable untuk tamu sampai parent invitation memenuhi configured + saved template + published + entitlement gates;
+- entitlement produk terpisah tetap berlaku: WA Blast tetap memakai quota/add-on sendiri dan Usher App tetap mengikuti Guestbook Digital bila diperlukan.
+
+Tujuan UX: user dapat mengeksplorasi isi Dashboard dan menyiapkan operasional acara tanpa dipaksa membayar sebelum mencapai Publish.
+
+### 6.2 Desktop dashboard shell
 
 Pada desktop dashboard menggunakan **application workspace yang memanfaatkan layar lebar**, bukan centered legacy container yang berhenti di `1400px`.
 
@@ -319,7 +334,28 @@ Layout canonical:
 - tabel data tidak boleh dipaksa stretch memenuhi layar lebar: gunakan content-driven desktop width yang proporsional, row treatment yang jelas, dan horizontal overflow pada viewport yang lebih kecil;
 - customer-facing page/component copy **tidak menggunakan decorative sequence numbering** seperti `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature label, atau numbered card. Gunakan label deskriptif; angka yang merupakan data nyata (tanggal, waktu, harga, jumlah, kapasitas, kuota, urutan anak, nomor telepon, metric) tetap ditampilkan.
 
+### 6.3 Dashboard theme & language
+
+Seluruh customer Dashboard dan nested workspace wajib mendukung **Light Mode + Dark Mode** melalui shared `ThemeProvider` dan semantic theme tokens. Tidak boleh membuat page-specific dark palette yang terpisah dari design system.
+
+Canonical behavior:
+- Light Mode tetap memakai canvas putih `#FFFFFF`, near-black text, dan Rose accent;
+- Dark Mode memakai near-black `#0B0B0C`, white text, neutral dark surfaces, dan Rose accent yang sama;
+- theme toggle harus tersedia dari Dashboard header pada desktop dan tetap dapat diakses pada mobile;
+- surface/card/table/input/empty/loading/error state seluruh tab harus terbaca baik pada kedua mode;
+- jangan memakai hardcoded light-only background/text bila semantic token tersedia.
+
+Dashboard juga wajib mendukung **Bahasa Indonesia + English** menggunakan shared language state aplikasi:
+- default locale adalah **Bahasa Indonesia (`id`)** ketika user belum memiliki preference tersimpan;
+- language toggle harus tersedia di Dashboard;
+- pilihan locale disimpan melalui mekanisme existing `dc_locale`;
+- sidebar, header, Beranda, Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, form labels, empty state, status, dan dashboard-generated feedback harus mengikuti locale aktif;
+- data milik user seperti nama acara, nama tamu, venue, notes, dan invitation content **tidak diterjemahkan otomatis**;
+- value teknis/API/database tetap stabil; localization hanya mengubah presentation/copy.
+
 ---
+
+
 
 ## 7. Digital Invitation & Invitation Studio
 
@@ -1075,7 +1111,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Input target minimum sekitar 44px.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
 - Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
-- Dashboard workspace mengikuti full-width application shell pada Section 6.1; jangan mengembalikan centered public-content cap ke workspace utama.
+- Dashboard workspace mengikuti full-width application shell pada Section 6.2; jangan mengembalikan centered public-content cap ke workspace utama.
 - **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
@@ -1094,7 +1130,8 @@ Bukan melalui banyak warna/variant berbeda.
 Dashboard harus menjelaskan:
 - current state;
 - next action;
-- event context.
+- event context;
+- seluruh copy navigasi/operasional mengikuti locale aktif `id` / `en`, dengan `id` sebagai default.
 
 Dashboard tidak boleh menampilkan internal implementation details seperti database row, raw DB ID, source-of-truth explanation, atau API mechanics kecuali diagnostic/support workflow memang membutuhkan.
 
@@ -2336,3 +2373,28 @@ Rangkaian Acara perlu menampilkan wording keluarga wedding yang natural berdasar
 ### Remaining Scope
 - Category/tag editing and bulk assignment, Guest List and distribution filtering remain separate increments.
 - This does not claim completion of all section 9.4 acceptance criteria.
+---
+
+## 2026-09-18 — Dashboard Visual Consistency Phase 3, Pre-Publish Access & Bilingual Theme
+
+### Requirement / Intent
+Beranda tetap menjadi reference visual untuk seluruh customer Dashboard. Koreksi product access: RSVP, Manajemen Tamu, dan workspace persiapan invitation tidak boleh dipaywall hanya karena Undangan Digital belum dibayar/publish; payment Digital Invitation hanya menjadi gate pada Publish. Seluruh Dashboard juga harus mendukung Light/Dark serta Bahasa Indonesia/English, dengan Bahasa Indonesia sebagai default.
+
+### Implementation
+- Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, dan Usher diselaraskan ke shared Dashboard primitives;
+- RSVP dan Manajemen Tamu tidak lagi menampilkan activation gate ketika event belum berbayar;
+- Personal Invitation tetap dapat dibuka/dipersiapkan sebelum Publish;
+- payment Digital Invitation tetap ditegakkan pada aksi Publish;
+- WA Blast dan Usher tetap mengikuti entitlement produk terpisah;
+- Dashboard header menyediakan shared theme toggle serta ID/EN language toggle, termasuk akses mobile;
+- copy operasional Dashboard, form, table, status, empty state, dan feedback mengikuti locale aktif tanpa menerjemahkan data milik user;
+- semantic theme tokens existing dipakai untuk Light/Dark agar tidak membuat page-specific dark palette;
+- `AGENTS.md` dan `README.md` disinkronkan dengan governance satu `prd.md`.
+
+### Validation
+- GitHub Actions Build Validation #1014 pada application source head `20e1d677044d32c7e7cc70cc57934cc37a5e4a46`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Database migration: N/A.
+- Commit setelah validation ini hanya memperbarui dokumentasi hasil validasi; application source yang divalidasi tidak berubah.

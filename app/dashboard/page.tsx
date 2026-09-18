@@ -9,7 +9,6 @@ import {
   ChevronDown,
   CircleHelp,
   ContactRound,
-  CreditCard,
   Home,
   LogOut,
   Mail,
@@ -25,7 +24,9 @@ import {
   UserRound,
   X,
 } from "lucide-react";
-import { useTheme } from "@/components/Theme/ThemeContext";
+import { ThemeToggle, useTheme } from "@/components/Theme/ThemeContext";
+import LanguageToggle from "@/components/I18n/LanguageToggle";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import EventScopePicker, {
   type EventScopeOption,
 } from "@/components/Dashboard/EventScopePicker";
@@ -39,7 +40,13 @@ import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPa
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
-import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  DashboardMetricCard,
+  DashboardMetricGrid,
+  DashboardPage as DashboardPageShell,
+  DashboardSectionHeader,
+  DashboardSurface,
+} from "@/components/Dashboard/DashboardPrimitives";
 
 type Context = {
   profile: { displayName: string; email: string };
@@ -157,14 +164,17 @@ function sortEvents(items: DashboardEvent[]) {
   );
 }
 
-async function fetchEventGuestData(invitationId: string): Promise<EventGuestData> {
+async function fetchEventGuestData(
+  invitationId: string,
+  fallbackError = "Data acara belum dapat dimuat.",
+): Promise<EventGuestData> {
   if (!invitationId) return { guests: [], tables: [] };
   const response = await fetch(
     `/api/guests?invitationId=${encodeURIComponent(invitationId)}`,
     { cache: "no-store" },
   );
   const data = await response.json().catch(() => null);
-  if (!response.ok) throw new Error(data?.error || "Data acara belum dapat dimuat.");
+  if (!response.ok) throw new Error(data?.error || fallbackError);
   return { guests: data?.guests ?? [], tables: data?.tables ?? [] };
 }
 
@@ -181,6 +191,7 @@ function Card({
 export default function DashboardPage() {
   const router = useRouter();
   const { isDarkMode } = useTheme();
+  const { d } = useDashboardI18n();
   const [tab, setTab] = useState<Tab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
   const [ctx, setCtx] = useState<Context | null>(null);
@@ -231,7 +242,7 @@ export default function DashboardPage() {
 
       const firstGuestbookEvent = configured.find((event) => event.accessPaid);
       if (firstGuestbookEvent) {
-        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id).catch(
+        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id, d("Data acara belum dapat dimuat.")).catch(
           () => ({ guests: [], tables: [] }),
         );
         setUsherGuests(dataForUsher.guests);
@@ -256,7 +267,7 @@ export default function DashboardPage() {
     }
 
     setRsvpLoading(true);
-    fetchEventGuestData(rsvpEventId)
+    fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."))
       .then((data) => {
         if (active) setRsvpGuests(data.guests);
       })
@@ -284,7 +295,7 @@ export default function DashboardPage() {
     }
 
     setPlacementLoading(true);
-    fetchEventGuestData(placementEventId)
+    fetchEventGuestData(placementEventId, d("Data acara belum dapat dimuat."))
       .then((data) => {
         if (!active) return;
         setPlacementGuests(data.guests);
@@ -305,7 +316,6 @@ export default function DashboardPage() {
   }, [placementEventId]);
 
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
-  const hasAnyPaidInvitation = events.some((event) => event.accessPaid);
   const accent = "text-primary";
   const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
   const savedProfileName = ctx?.profile.displayName?.trim();
@@ -319,13 +329,13 @@ export default function DashboardPage() {
 
   async function refreshRsvp() {
     if (!rsvpEventId) return;
-    const data = await fetchEventGuestData(rsvpEventId);
+    const data = await fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."));
     setRsvpGuests(data.guests);
   }
 
   async function refreshPlacement() {
     if (!placementEventId) return;
-    const data = await fetchEventGuestData(placementEventId);
+    const data = await fetchEventGuestData(placementEventId, d("Data acara belum dapat dimuat."));
     setPlacementGuests(data.guests);
     setPlacementTables(data.tables);
   }
@@ -333,7 +343,7 @@ export default function DashboardPage() {
   async function saveOnboarding() {
     const displayName = nickname.trim();
     if (!displayName) {
-      setOnboardingError("Nama panggilan wajib diisi.");
+      setOnboardingError(d("Nama panggilan wajib diisi."));
       return;
     }
 
@@ -348,7 +358,7 @@ export default function DashboardPage() {
       });
       if (!profileResponse.ok) {
         const data = await profileResponse.json().catch(() => null);
-        throw new Error(data?.error || "Nama panggilan belum tersimpan.");
+        throw new Error(data?.error || d("Nama panggilan belum tersimpan."));
       }
 
       setOnboarding(false);
@@ -364,7 +374,7 @@ export default function DashboardPage() {
       await load();
     } catch (error) {
       setOnboardingError(
-        error instanceof Error ? error.message : "Data belum tersimpan. Coba lagi.",
+        error instanceof Error ? error.message : d("Data belum tersimpan. Coba lagi."),
       );
       setOnboarding(true);
     } finally {
@@ -415,7 +425,7 @@ export default function DashboardPage() {
               <span className="grid size-5 shrink-0 place-items-center text-current">
                 <Home className="h-4 w-4" strokeWidth={1.8} />
               </span>
-              <span className="min-w-0 truncate">Beranda</span>
+              <span className="min-w-0 truncate">{d("Beranda")}</span>
             </Button>
 
             <div className="rounded-xl border border-border/70 bg-background p-1.5">
@@ -432,7 +442,7 @@ export default function DashboardPage() {
                 <span className="grid size-5 shrink-0 place-items-center">
                   <CalendarDays className="h-4 w-4" strokeWidth={1.8} />
                 </span>
-                <span className="min-w-0 truncate">Acara</span>
+                <span className="min-w-0 truncate">{d("Acara")}</span>
                 <ChevronDown
                   className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`}
                 />
@@ -458,7 +468,7 @@ export default function DashboardPage() {
                         <span className="grid size-4 shrink-0 place-items-center">
                           <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />
                         </span>
-                        <span className="min-w-0 truncate">{item.label}</span>
+                        <span className="min-w-0 truncate">{d(item.label)}</span>
                       </Button>
                     );
                   })}
@@ -483,7 +493,7 @@ export default function DashboardPage() {
                   <span className="grid size-5 shrink-0 place-items-center text-current">
                     <Icon className="h-4 w-4" strokeWidth={1.8} />
                   </span>
-                  <span className="min-w-0 truncate">{item.label}</span>
+                  <span className="min-w-0 truncate">{d(item.label)}</span>
                 </Button>
               );
             })}
@@ -509,8 +519,8 @@ export default function DashboardPage() {
                     size="icon"
                     className="lg:hidden"
                     onClick={() => setMobileOpen((value) => !value)}
-                    aria-label="Buka menu dashboard"
-                    title="Buka menu dashboard"
+                    aria-label={d("Buka menu dashboard")}
+                    title={d("Buka menu dashboard")}
                   >
                     {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                   </Button>
@@ -523,11 +533,11 @@ export default function DashboardPage() {
 
                   <div className="min-w-0">
                     <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-muted-foreground">
-                      {meta.eyebrow}
+                      {d(meta.eyebrow)}
                     </p>
                     <div className="flex min-w-0 items-center gap-2">
                       <p className="truncate text-sm font-semibold text-foreground sm:text-base">
-                        {meta.title}
+                        {d(meta.title)}
                       </p>
                       {scopedHeaderEvent && (
                         <span className="hidden max-w-56 truncate border-l border-border pl-2 text-[11px] text-muted-foreground xl:inline">
@@ -537,13 +547,18 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="relative ml-auto">
+                  <div className="ml-auto hidden items-center gap-1 sm:flex">
+                    <ThemeToggle />
+                    <LanguageToggle />
+                  </div>
+
+                  <div className="relative">
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
                       className="h-11 min-w-0 bg-transparent px-2 text-foreground shadow-none hover:bg-primary/[0.06] hover:text-foreground"
-                      aria-label={`Buka menu akun ${profileLabel}`}
-                      title="Menu akun"
+                      aria-label={`${d("Menu akun")}: ${profileLabel}`}
+                      title={d("Menu akun")}
                     >
                       <span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary/10 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase text-primary">
                         {profileLabel.slice(0, 2)}
@@ -564,29 +579,33 @@ export default function DashboardPage() {
                             {ctx?.profile.email || ""}
                           </p>
                         </div>
+                        <div className="mb-2 flex items-center gap-2 px-2 sm:hidden">
+                          <ThemeToggle />
+                          <LanguageToggle />
+                        </div>
                         <div className="space-y-1.5">
                           <MenuItem
                             icon={Receipt}
-                            text="Lihat transaksi"
+                            text={d("Lihat transaksi")}
                             onClick={() => router.push("/transactions")}
                           />
                           <MenuItem
                             icon={Settings2}
-                            text="Beli layanan"
+                            text={d("Beli layanan")}
                             onClick={() => router.push("/packages")}
                           />
                           <MenuItem
                             icon={CircleHelp}
-                            text="Buka FAQ"
+                            text={d("Buka FAQ")}
                             onClick={() => router.push("/faq")}
                           />
                           <MenuItem
                             icon={MessageCircle}
-                            text="Buka bantuan"
+                            text={d("Buka bantuan")}
                             onClick={() => setProfileMenu(false)}
                           />
                           <div className="my-2 border-t border-border" />
-                          <MenuItem icon={LogOut} text="Keluar akun" danger onClick={logout} />
+                          <MenuItem icon={LogOut} text={d("Keluar akun")} danger onClick={logout} />
                         </div>
                       </div>
                     )}
@@ -605,17 +624,7 @@ export default function DashboardPage() {
               <InvitationWorkspacePanel onCreateSequence={() => go("events")} />
             )}
             {tab === "waBlast" && <WhatsAppBlastPanel />}
-            {tab === "personalInvitation" && (
-              <FeatureGate
-                allowed={hasAnyPaidInvitation}
-                title="Personal Invitation"
-                description="Aktifkan minimal satu Undangan Digital untuk menggunakan Personal Invitation."
-                upgradeLabel="Beli Undangan Digital"
-                onUpgrade={() => router.push("/packages?package=INVITATION_BASIC")}
-              >
-                <PersonalInvitationPanel />
-              </FeatureGate>
-            )}
+            {tab === "personalInvitation" && <PersonalInvitationPanel />}
             {tab === "rsvp" && (
               <RsvpWorkspace
                 events={events}
@@ -645,8 +654,8 @@ export default function DashboardPage() {
               <FeatureGate
                 allowed={canGuestbook}
                 title="Usher App"
-                description="Tersedia pada layanan Guest Book Digital."
-                upgradeLabel="Lihat Guest Book Digital"
+                description={d("Tersedia pada layanan Guest Book Digital.")}
+                upgradeLabel={d("Lihat Guest Book Digital")}
                 onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
               >
                 <UsherPanel guests={usherGuests} onRefresh={load} />
@@ -661,8 +670,8 @@ export default function DashboardPage() {
           href="https://wa.me/6282124786516?text=Halo%2C%20aku%20ingin%20tanya2%20mengenai%20DC%20Organizer."
           target="_blank"
           rel="noreferrer"
-          aria-label="Buka bantuan WhatsApp"
-          title="Buka bantuan WhatsApp"
+          aria-label={d("Buka bantuan WhatsApp")}
+          title={d("Buka bantuan WhatsApp")}
         >
           <MessageCircle className="h-6 w-6" strokeWidth={2} />
         </a>
@@ -672,17 +681,17 @@ export default function DashboardPage() {
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
             <p className="font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.2em] text-primary">
-              Setup awal
+              {d("Setup awal")}
             </p>
             <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
-              Profil workspace
+              {d("Profil workspace")}
             </h2>
             <div className="mt-6">
               <Field
-                label="Nama panggilan"
+                label={d("Nama panggilan")}
                 value={nickname}
                 onChange={setNickname}
-                placeholder="Contoh: Hendro"
+                placeholder={d("Contoh: Hendro")}
               />
             </div>
             {onboardingError && (
@@ -692,7 +701,7 @@ export default function DashboardPage() {
             )}
             <Button disabled={saving} onClick={saveOnboarding} size="lg" className="mt-6 w-full">
               <CheckCircle2 className="h-4 w-4" />
-              {saving ? "Menyimpan data..." : "Simpan & masuk"}
+              {saving ? d("Menyimpan data...") : d("Simpan & masuk")}
             </Button>
           </div>
         </div>
@@ -752,10 +761,10 @@ function Field({
   );
 }
 
-function formatEventDate(value: string) {
+function formatEventDate(value: string, locale: "id" | "en" = "id") {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "—";
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "id-ID", {
     day: "2-digit",
     month: "short",
     year: "numeric",
@@ -772,6 +781,7 @@ function WorkspaceOverview({
   events: DashboardEvent[];
   onGo: (id: Tab) => void;
 }) {
+  const { d, locale } = useDashboardI18n();
   const overview = ctx?.overview;
   const active = events.filter((event) => event.accessPaid).length;
   const published = events.filter((event) => event.isPublished).length;
@@ -786,75 +796,66 @@ function WorkspaceOverview({
     : 0;
 
   const stats = [
-    { label: "Total acara", value: events.length, icon: CalendarDays },
-    { label: "Undangan aktif", value: active, icon: Mail },
-    { label: "Total RSVP", value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
-    { label: "Total tamu", value: overview?.totalGuests ?? 0, icon: Users },
+    { label: d("Total acara"), value: events.length, icon: CalendarDays },
+    { label: d("Undangan aktif"), value: active, icon: Mail },
+    { label: d("Total RSVP"), value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
+    { label: d("Total tamu"), value: overview?.totalGuests ?? 0, icon: Users },
   ];
 
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7">
-      <section className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+    <DashboardPageShell>
+      <DashboardSurface className="overflow-hidden">
         <div className="flex flex-col gap-5 border-l-4 border-primary px-5 py-6 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
           <div className="min-w-0">
             <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-primary">
               DC Organizer
             </p>
             <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight sm:text-3xl">
-              Halo, {ctx?.profile.displayName || "Akun"}
+              {d("Halo")}, {ctx?.profile.displayName || d("Akun")}
             </h1>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-              Kelola acara, undangan, RSVP, dan tamu dari satu workspace.
+              {d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
             </p>
           </div>
           <div className="flex shrink-0 flex-wrap items-center gap-3">
             <div className="min-w-28 rounded-xl border border-border/70 bg-foreground/[0.018] px-4 py-3">
               <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.14em] text-muted-foreground">
-                Workspace
+                {d("Workspace")}
               </p>
               <p className="mt-1 text-sm font-semibold">
-                {events.length ? `${events.length} acara` : "Belum ada acara"}
+                {events.length ? (locale === "en" ? `${events.length} events` : `${events.length} acara`) : d("Belum ada acara")}
               </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
               <CalendarDays className="h-4 w-4" />
-              Tambah acara
+              {d("Tambah acara")}
             </Button>
           </div>
         </div>
-      </section>
+      </DashboardSurface>
 
-      <section className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <article
-              key={item.label}
-              className="flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-4 shadow-[0_1px_2px_rgba(0,0,0,0.03)]"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                <Icon className="h-4 w-4" strokeWidth={1.8} />
-              </span>
-              <div className="min-w-0">
-                <p className="text-[11px] text-muted-foreground">{item.label}</p>
-                <p className="mt-0.5 truncate text-xl font-semibold text-foreground">{item.value}</p>
-              </div>
-            </article>
-          );
-        })}
-      </section>
+      <DashboardMetricGrid className="mt-4">
+        {stats.map((item) => (
+          <DashboardMetricCard
+            key={item.label}
+            icon={item.icon}
+            label={item.label}
+            value={String(item.value)}
+          />
+        ))}
+      </DashboardMetricGrid>
 
       <section className="mt-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.75fr)]">
         <Card className="min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">Acara terbaru</h2>
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Acara terbaru")}</h2>
               <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-                {active} aktif · {published} terbit
+                {active} {d("aktif")} · {published} {d("terbit")}
               </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
-              Kelola acara
+              {d("Kelola acara")}
             </Button>
           </div>
 
@@ -863,11 +864,11 @@ function WorkspaceOverview({
               <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
                 <thead>
                   <tr className="text-[10px] text-muted-foreground">
-                    <th className="px-3 py-3 font-medium">Acara</th>
-                    <th className="px-3 py-3 font-medium">Tanggal</th>
-                    <th className="px-3 py-3 font-medium">Lokasi</th>
-                    <th className="px-3 py-3 font-medium">Status</th>
-                    <th className="px-3 py-3 text-right font-medium">Aksi</th>
+                    <th className="px-3 py-3 font-medium">{d("Acara")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
+                    <th className="px-3 py-3 font-medium">{d("Status")}</th>
+                    <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -875,18 +876,18 @@ function WorkspaceOverview({
                     <tr key={event.id} className="border-t border-border/60">
                       <td className="max-w-64 px-3 py-3.5">
                         <p className="truncate text-sm font-semibold text-foreground">
-                          {event.title || "Acara tanpa judul"}
+                          {event.title || d("Acara tanpa judul")}
                         </p>
                       </td>
                       <td className="whitespace-nowrap px-3 py-3.5 text-xs text-muted-foreground">
-                        {formatEventDate(event.eventDate)}
+                        {formatEventDate(event.eventDate, locale)}
                       </td>
                       <td className="max-w-52 px-3 py-3.5 text-xs text-muted-foreground">
                         <p className="truncate">{event.venue || "—"}</p>
                       </td>
                       <td className="px-3 py-3.5">
                         <span className="inline-flex rounded-full bg-primary/10 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.08em] text-primary">
-                          {event.isPublished ? "Terbit" : event.accessPaid ? "Aktif" : "Draft"}
+                          {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
                         </span>
                       </td>
                       <td className="px-3 py-3.5 text-right">
@@ -894,7 +895,7 @@ function WorkspaceOverview({
                           href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
                           className="text-xs font-semibold text-primary hover:underline"
                         >
-                          Undangan
+                          {d("Undangan")}
                         </Link>
                       </td>
                     </tr>
@@ -909,9 +910,9 @@ function WorkspaceOverview({
                   <CalendarDays className="h-4 w-4" />
                 </span>
                 <div>
-                  <p className="text-sm font-semibold">Belum ada acara</p>
+                  <p className="text-sm font-semibold">{d("Belum ada acara")}</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Buat acara pertama untuk mulai menyiapkan undangan digital.
+                    {d("Buat acara pertama untuk mulai menyiapkan undangan digital.")}
                   </p>
                 </div>
               </div>
@@ -978,11 +979,11 @@ function WorkspaceOverview({
                   <span className="text-sm font-semibold">{totalRsvp}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">Belum merespons</span>
+                  <span className="text-xs text-muted-foreground">{d("Belum merespons")}</span>
                   <span className="text-sm font-semibold">{pendingRsvp}</span>
                 </div>
                 <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">Total tamu</span>
+                  <span className="text-xs text-muted-foreground">{d("Total tamu")}</span>
                   <span className="text-sm font-semibold">{totalGuests}</span>
                 </div>
               </div>
@@ -992,8 +993,8 @@ function WorkspaceOverview({
           <div className="mt-4 rounded-xl border border-border/70 p-4">
             <div className="flex items-end justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold">Publikasi acara</p>
-                <p className="mt-1 text-[10px] text-muted-foreground">{published} dari {events.length} acara sudah terbit</p>
+                <p className="text-xs font-semibold">{d("Publikasi acara")}</p>
+                <p className="mt-1 text-[10px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
               </div>
               <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
                 {publishRate}%
@@ -1036,47 +1037,12 @@ function WorkspaceOverview({
           </div>
 
           <div className="mt-4 flex items-center justify-between gap-4 rounded-xl bg-foreground/[0.018] px-4 py-3">
-            <span className="text-xs text-muted-foreground">Total kunjungan undangan</span>
+            <span className="text-xs text-muted-foreground">{locale === "en" ? "Total invitation visits" : "Total kunjungan undangan"}</span>
             <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
           </div>
         </Card>
       </section>
-    </div>
-  );
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="min-w-0 rounded-xl border border-border/70 bg-background p-4">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.12em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-1.5 truncate text-lg font-semibold text-foreground">{value}</p>
-    </div>
-  );
-}
-
-function EventActivationNotice({ event }: { event: DashboardEvent }) {
-  return (
-    <div className="rounded-2xl border border-border/70 bg-background p-5">
-      <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-        Undangan belum aktif
-      </p>
-      <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-        {event.title || "Acara ini"}
-      </h3>
-      <p className="mt-2 text-xs leading-5 text-muted-foreground">
-        RSVP dan Manajemen Tamu aktif bersama Undangan Digital untuk acara ini.
-      </p>
-      <Button asChild size="sm" className="mt-4">
-        <Link
-          href={`/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(event.id)}`}
-        >
-          <CreditCard className="h-4 w-4" />
-          Aktifkan Rp150.000
-        </Link>
-      </Button>
-    </div>
+    </DashboardPageShell>
   );
 }
 
@@ -1109,9 +1075,7 @@ function RsvpWorkspace({
       />
       {selectedEvent && (
         <div className="mt-4">
-          {!selectedEvent.accessPaid ? (
-            <EventActivationNotice event={selectedEvent} />
-          ) : loading ? (
+          {loading ? (
             <LoadingSurface />
           ) : (
             <RsvpAnalyticsPanel
@@ -1160,9 +1124,7 @@ function PlacementWorkspace({
       />
       {selectedEvent && (
         <div className="mt-4">
-          {!selectedEvent.accessPaid ? (
-            <EventActivationNotice event={selectedEvent} />
-          ) : loading ? (
+          {loading ? (
             <LoadingSurface />
           ) : (
             <PlacementPanel
@@ -1192,6 +1154,7 @@ function PlacementPanel({
   accent: string;
   onRefresh: () => Promise<void>;
 }) {
+  const { d } = useDashboardI18n();
   const assigned = guests.filter((guest) => guest.tableId).length;
 
   const assignGuest = async (
@@ -1207,7 +1170,7 @@ function PlacementPanel({
     });
     const data = await response.json().catch(() => null);
     if (!response.ok) {
-      throw new Error(data?.error || "Penempatan tamu gagal disimpan.");
+      throw new Error(data?.error || d("Penempatan tamu gagal disimpan."));
     }
     await onRefresh();
   };
@@ -1215,20 +1178,22 @@ function PlacementPanel({
   return (
     <Card>
       <div className="p-4 sm:p-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-            Tamu & seating
-          </h2>
-          <Button onClick={onRefresh} size="sm" title="Muat ulang data tamu dan meja">
-            <RefreshCw className="h-4 w-4" />
-            Muat ulang
-          </Button>
-        </div>
-        <div className="mt-3 grid gap-2 sm:grid-cols-3">
-          <Stat label="Tamu" value={String(guests.length)} />
-          <Stat label="Meja" value={String(tables.length)} />
-          <Stat label="Ditempatkan" value={`${assigned} / ${guests.length}`} />
-        </div>
+        <DashboardSectionHeader
+          eyebrow={d("Manajemen Tamu")}
+          title={d("Tamu & seating")}
+          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
+          actions={
+            <Button onClick={onRefresh} size="sm" title={d("Muat ulang data tamu dan meja")}>
+              <RefreshCw className="h-4 w-4" />
+              {d("Muat ulang")}
+            </Button>
+          }
+        />
+        <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
+          <DashboardMetricCard label={d("Tamu")} value={String(guests.length)} />
+          <DashboardMetricCard label={d("Meja")} value={String(tables.length)} />
+          <DashboardMetricCard label={d("Ditempatkan")} value={`${assigned} / ${guests.length}`} />
+        </DashboardMetricGrid>
         <SeatingChart
           key={invitationId}
           invitationId={invitationId}
@@ -1243,10 +1208,11 @@ function PlacementPanel({
 }
 
 function LoadingSurface() {
+  const { d } = useDashboardI18n();
   return (
-    <div className="rounded-2xl border border-border/70 bg-background p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
-      Memuat data acara...
-    </div>
+    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+      {d("Memuat data acara...")}
+    </DashboardSurface>
   );
 }
 
@@ -1257,26 +1223,27 @@ function UsherPanel({
   guests: Guest[];
   onRefresh: () => void;
 }) {
+  const { d } = useDashboardI18n();
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
-    <div className="mx-auto w-[80vw] max-w-full min-w-0 px-1 pb-16 pt-7 sm:pt-8">
-      <Card>
-        <div className="p-5 sm:p-6">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-              Check-in
-            </h2>
-            <Button onClick={onRefresh} size="sm" title="Muat ulang status check-in">
+    <DashboardPageShell className="px-1 pt-7 sm:pt-8">
+      <DashboardSurface className="p-5 sm:p-6">
+        <DashboardSectionHeader
+          eyebrow={d("Usher App")}
+          title={d("Check-in")}
+          description={d("Kelola acara, undangan, RSVP, dan tamu dari satu workspace.")}
+          actions={
+            <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
               <RefreshCw className="h-4 w-4" />
-              Muat ulang
+              {d("Muat ulang")}
             </Button>
-          </div>
-          <div className="mt-3 grid gap-2 sm:grid-cols-2">
-            <Stat label="Total tamu" value={String(guests.length)} />
-            <Stat label="Check-in" value={String(checked)} />
-          </div>
-        </div>
-      </Card>
-    </div>
+          }
+        />
+        <DashboardMetricGrid className="mt-4 xl:grid-cols-2">
+          <DashboardMetricCard label={d("Total tamu")} value={String(guests.length)} />
+          <DashboardMetricCard label={d("Check-in")} value={String(checked)} />
+        </DashboardMetricGrid>
+      </DashboardSurface>
+    </DashboardPageShell>
   );
 }
