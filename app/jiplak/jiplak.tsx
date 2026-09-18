@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Quote } from "lucide-react";
-import PintuSection from "@/components/Landing/Pintu/PintuSection";
-import RosePetalBackground from "@/components/Layout/RosePetalBackground";
+import PintuSecBaru from "@/components/Landing/Pintu/PintuSecBaru";
+import JiplakSweetBackground from "@/components/Layout/JiplakSweetBackground";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
@@ -22,7 +22,7 @@ export default function JiplakLanding() {
 
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
-      <RosePetalBackground />
+      <JiplakSweetBackground />
       <main className="relative z-10 mx-auto min-h-[calc(100dvh-88px)] w-[80vw] max-w-full">
         <section className="grid min-h-[calc(100dvh-88px)] items-center gap-8 py-5 sm:py-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-0 lg:py-6">
           <motion.div
@@ -76,7 +76,7 @@ export default function JiplakLanding() {
             className="relative z-10 min-w-0 lg:-ml-[5vw] xl:-ml-[6vw]"
           >
             <div className="origin-center lg:scale-[0.92] xl:scale-100">
-              <PintuSection activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
+              <PintuSecBaru activeDoor={activeDoor} setActiveDoor={setActiveDoor} />
             </div>
           </motion.div>
         </section>
