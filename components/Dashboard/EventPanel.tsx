@@ -572,7 +572,10 @@ export default function EventPanel({ onSaved }: Props) {
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
-        <DashboardSurface ref={editorRef} className="mt-4 scroll-mt-24 p-5 sm:p-6">
+        <section
+          ref={editorRef}
+          className="dc-dashboard-surface mt-4 scroll-mt-24 rounded-2xl border border-border/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6"
+        >
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">
               {editorMode === "new" ? d("Acara baru") : d("Edit acara")}
@@ -750,7 +753,7 @@ export default function EventPanel({ onSaved }: Props) {
               {saving ? d("Menyimpan...") : d("Simpan")}
             </Button>
           </div>
-        </DashboardSurface>
+        </section>
       )}
     </DashboardPage>
   );
