@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import FounderSection from "@/components/WeddingPlanner/FounderSection";
-import ServicesSection from "@/components/WeddingPlanner/ServicesSection";
-import PortfolioSection from "@/components/WeddingPlanner/PortfolioSection";
+import FounderSection from "@/components/EventPlanner/FounderSection";
+import ServicesSection from "@/components/EventPlanner/ServicesSection";
+import PortfolioSection from "@/components/EventPlanner/PortfolioSection";
 import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
 import FaqSection from "@/components/Marketing/FaqSection";
 import {
   plannerFaq,
   plannerPackages,
   plannerReviews,
-} from "@/data/wedding-planner";
+} from "@/data/services/event-planner";
 
 const WHATSAPP_NUMBER = "6282124786516";
 
