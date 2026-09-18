@@ -401,10 +401,10 @@ export default function InvitationDesignerV3() {
   }
 
   return (
-    <section className="dc-invitation-studio-shell min-h-[calc(100vh-64px)] bg-background font-[family-name:var(--font-fauna)] text-foreground">
+    <section className="dc-invitation-studio-shell min-h-[calc(100vh-64px)] bg-background font-[family-name:var(--font-dc-sans)] text-foreground">
       <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-border/70 bg-background px-5 py-3 sm:px-7">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-cinzel)] text-sm tracking-[0.14em] text-primary">
+          <p className="font-[family-name:var(--font-dc-heading)] text-sm tracking-[0.14em] text-primary">
             INVITATION STUDIO
           </p>
           <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
@@ -462,7 +462,7 @@ export default function InvitationDesignerV3() {
           {panel === "music" && <MusicPanel musicUrl={musicUrl} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
         </aside>
 
-        <main className="flex items-start justify-center overflow-auto bg-primary/[0.045] p-6 sm:p-10">
+        <main className="flex items-start justify-center overflow-auto bg-foreground/[0.025] p-6 sm:p-10">
           <div className="w-[390px] max-w-full origin-top">
             <TemplateCanvas
               invitation={invitation}
@@ -505,7 +505,7 @@ export default function InvitationDesignerV3() {
 
 function Tool({ active, label, icon, onClick }: { active: boolean; label: string; icon: React.ReactNode; onClick: () => void }) {
   return (
-    <Button onClick={onClick} className={`mb-1 grid h-auto min-h-[64px] w-full justify-items-center gap-1 px-2 py-2 text-[10px] ${active ? "ring-2 ring-primary/35" : ""}`} aria-pressed={active}>
+    <Button onClick={onClick} className={`mb-1 grid h-auto min-h-[64px] w-full justify-items-center gap-1 px-2 py-2 text-xs ${active ? "ring-2 ring-primary/35" : ""}`} aria-pressed={active}>
       {icon}
       <span>{label}</span>
     </Button>
@@ -515,7 +515,7 @@ function Tool({ active, label, icon, onClick }: { active: boolean; label: string
 function Heading({ title, description }: { title: string; description: string }) {
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-cinzel)] text-lg font-semibold text-foreground">{title}</h2>
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">{title}</h2>
       <p className="mt-1 text-xs leading-5 text-muted-foreground">{description}</p>
     </div>
   );
@@ -542,8 +542,8 @@ function TemplatePanel({ templates, selected, onSelect }: { templates: typeof in
               )}
             </span>
             <span className="block bg-background p-3.5">
-              <span className="block font-[family-name:var(--font-cinzel)] text-xs font-semibold text-foreground">{item.name}</span>
-              <span className="mt-1 block text-[10px] leading-4 text-muted-foreground">{item.description}</span>
+              <span className="block font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">{item.name}</span>
+              <span className="mt-1 block text-xs leading-4 text-muted-foreground">{item.description}</span>
             </span>
           </button>
         ))}
@@ -567,7 +567,7 @@ function SectionsPanel({ sections, onChange }: { sections: InvitationSections; o
             <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">{item.icon}</span>
             <span className="min-w-0 flex-1">
               <span className="block text-xs font-semibold text-foreground">{item.title}</span>
-              <span className="mt-0.5 block text-[10px] leading-4 text-muted-foreground">{item.description}</span>
+              <span className="mt-0.5 block text-xs leading-4 text-muted-foreground">{item.description}</span>
             </span>
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
               <input type="checkbox" className="peer sr-only" checked={sections[item.key]} onChange={(event) => onChange(item.key, event.target.checked)} />
@@ -608,7 +608,7 @@ function FontPanel({ selected, onSelect }: { selected: FontKey; onSelect: (key: 
       <div className="mt-5 space-y-2">
         {fonts.map(([key, item]) => (
           <button type="button" key={key} onClick={() => onSelect(key)} className={`w-full rounded-xl border px-3 py-3 text-left ${selected === key ? "border-primary ring-2 ring-primary/20" : "border-border"}`}>
-            <span className="block text-[10px] text-muted-foreground">{item.name}</span>
+            <span className="block text-xs text-muted-foreground">{item.name}</span>
             <span className="mt-1 block text-lg text-foreground" style={{ fontFamily: item.heading }}>Aa Bb</span>
           </button>
         ))}
@@ -623,7 +623,7 @@ function ContentPanel({ invitation, eventTag, dressCode, setEventTag, setDressCo
       <Heading title="Isi undangan" description="Nama, tanggal, waktu, lokasi, dan orang tua tetap mengikuti Rangkaian Acara." />
       <div className="mt-5 rounded-xl border border-border p-4">
         <p className="text-xs font-semibold text-foreground">{invitation?.title || "Acara"}</p>
-        <p className="mt-1 text-[10px] leading-4 text-muted-foreground">{formatEventDate(invitation)} · {invitation?.venue || "Lokasi belum diatur"}</p>
+        <p className="mt-1 text-xs leading-4 text-muted-foreground">{formatEventDate(invitation)} · {invitation?.venue || "Lokasi belum diatur"}</p>
       </div>
       <div className="mt-4 space-y-3">
         <label className="block text-[11px] font-semibold">Tag / hashtag acara

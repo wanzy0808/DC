@@ -21,7 +21,7 @@ import {
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
-  DashboardSectionHeader,
+  DashboardPageHeader,
   DashboardStatusBadge,
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
@@ -443,9 +443,7 @@ export default function EventPanel({ onSaved }: Props) {
 
   return (
     <DashboardPage>
-      <DashboardSurface className="overflow-hidden">
-        <div className="border-l-4 border-primary p-4 sm:p-5">
-          <DashboardSectionHeader
+      <DashboardPageHeader
             eyebrow={d("Rangkaian acara")}
             title={loading ? d("Memuat acara...") : events.length ? d("Kelola acara di workspace") : d("Buat acara pertama")}
             description={d("Atur identitas, waktu, lokasi, dan status acara sebelum melanjutkan ke Undangan Digital.")}
@@ -461,8 +459,6 @@ export default function EventPanel({ onSaved }: Props) {
               </Button>
             }
           />
-        </div>
-      </DashboardSurface>
 
       <DashboardMetricGrid className="mt-4">
         <DashboardMetricCard icon={CalendarDays} label={d("Total acara")} value={String(events.length)} />
@@ -480,7 +476,7 @@ export default function EventPanel({ onSaved }: Props) {
           <div className="overflow-x-auto p-4 sm:p-5">
             <table className="w-full min-w-[760px] text-left">
               <thead>
-                <tr className="text-[10px] text-muted-foreground">
+                <tr className="text-[11px] text-muted-foreground">
                   <th className="px-3 py-3 font-medium">{d("Acara")}</th>
                   <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
                   <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>

@@ -47,7 +47,7 @@ export default async function PersonalInvitationPreviewPage({
           </Link>
         </Button>
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+          <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.12em] text-muted-foreground">
             Pratinjau Personal Invitation
           </p>
           <p className="truncate text-sm font-medium">
@@ -55,7 +55,7 @@ export default async function PersonalInvitationPreviewPage({
           </p>
         </div>
       </div>
-      <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-[family-name:var(--font-fauna)] text-sm">
+      <div className="border-b border-border bg-background px-4 py-3 text-center font-[family-name:var(--font-dc-sans)] text-sm">
         Undangan khusus untuk <strong>{guest.name}</strong>
       </div>
       {content}

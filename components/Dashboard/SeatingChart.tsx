@@ -11,9 +11,8 @@ import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
   DashboardCompactStat,
   DashboardEmptyState,
-  DashboardSectionHeader,
   DashboardStatusBadge,
-  DashboardSurface,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { matchesGuestLabels, type GuestLabels } from "@/lib/guests/filters";
 
@@ -421,10 +420,9 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   }
 
   return (
-    <div className="mt-5 grid min-w-0 gap-4 lg:grid-cols-[300px_minmax(0,1fr)]">
+    <div className="mt-5 grid min-w-0 gap-4 xl:grid-cols-[minmax(260px,0.7fr)_minmax(0,1.7fr)]">
       <aside className="min-w-0 space-y-4">
-        <DashboardSurface className="p-4">
-          <DashboardSectionHeader
+        <DashboardPanel
             eyebrow={d("Setup")}
             title={d("Struktur meja")}
             description={d("Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu.")}
@@ -433,7 +431,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 {visibleTables.length} {locale === "en" ? "tables" : "meja"}
               </DashboardStatusBadge>
             }
-          />
+        >
 
           <form onSubmit={generateTables} className="mt-4 space-y-3">
             <label className="block">
@@ -476,10 +474,9 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             <DashboardCompactStat label={d("Kursi")} value={String(totalSeats)} />
             <DashboardCompactStat label={d("Terisi")} value={String(assignedCount)} />
           </div>
-        </DashboardSurface>
+        </DashboardPanel>
 
-        <DashboardSurface className="p-4">
-          <DashboardSectionHeader
+        <DashboardPanel
             eyebrow={d("Roster")}
             title={d("Belum ditempatkan")}
             description={d("Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah.")}
@@ -488,7 +485,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 {unassigned.length} {locale === "en" ? "guests" : "tamu"}
               </DashboardStatusBadge>
             }
-          />
+        >
 
           <form onSubmit={addManualGuest} className="mt-4 space-y-2">
             <Input
@@ -584,17 +581,16 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                     {[guest.category, ...(guest.tags ?? [])].filter(Boolean).join(" · ")}
                   </p>
                 )}
-                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.source === "RSVP" ? `RSVP · ${d("Hadir")}` : d("Manual")}
                 </div>
               </div>
             ))}
           </div>
-        </DashboardSurface>
+        </DashboardPanel>
       </aside>
 
-      <DashboardSurface className="min-w-0 p-4 sm:p-5">
-        <DashboardSectionHeader
+      <DashboardPanel className="min-w-0"
           eyebrow={d("Seating")}
           title={d("Denah tempat duduk")}
           description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
@@ -604,7 +600,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               <DashboardCompactStat label={d("Tamu")} value={`${assignedCount}/${visibleGuests.length}`} className="min-w-20" />
             </div>
           }
-        />
+      >
 
         <div
           className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-background"
@@ -744,7 +740,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background px-3 py-2 text-xs text-muted-foreground">
           <span>{d("Tarik tamu ke kursi untuk menyimpan posisi.")}</span>
           {savingGuestId && (
-            <span className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
+            <span className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
               {d("Menyimpan...")}
             </span>
           )}
@@ -788,7 +784,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             {message}
           </p>
         )}
-      </DashboardSurface>
+      </DashboardPanel>
     </div>
   );
 }

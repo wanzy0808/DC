@@ -233,8 +233,6 @@ aside nav > p { font-family: var(--font-dc-heading); }
 }
 .dc-dashboard aside > div p.font-semibold { color: var(--foreground) !important; }
 .dc-dashboard header { height: 72px !important; background: var(--background) !important; color: var(--foreground) !important; border-color: var(--border) !important; box-shadow: none !important; }
-.dc-dashboard header a, .dc-dashboard header button { color: var(--foreground) !important; }
-.dc-dashboard header a:hover, .dc-dashboard header button:hover { color: var(--primary) !important; }
 
 /* Account dropdown items mirror the same Dark Mode rule. */
 .dark .dc-dashboard .dc-dashboard-account-menu-item {
@@ -268,16 +266,14 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main textarea,
 .dc-dashboard main select { font-size: 0.9rem !important; }
 
-/* Dashboard content uses the product-wide 80vw application workspace. */
-.dc-dashboard-page,
-.dc-dashboard main > section > div.mx-auto,
-.dc-dashboard main > div.mx-auto {
-  width: min(80vw, calc(100% - 2rem)) !important;
-  max-width: none !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
+/* One workspace width: roomy mobile gutters, 80vw capped by the desktop pane. */
+.dc-dashboard-page {
+  width: calc(100% - 2rem);
+  max-width: 100%;
+  margin-inline: auto;
+}
+@media (min-width: 1024px) {
+  .dc-dashboard-page { width: min(80vw, calc(100% - 2rem)); }
 }
 
 .dc-dashboard-surface {
@@ -290,7 +286,7 @@ aside nav > p { font-family: var(--font-dc-heading); }
   background: var(--background) !important;
 }
 
-.dc-dashboard main > div.mx-auto { padding-top: 2rem !important; padding-bottom: 4rem !important; }
+
 .dc-dashboard main section { border-color: var(--border) !important; }
 .dc-dashboard main section[class*="bg-[#f3ede6]"], .dc-dashboard main section[class*="bg-[#FAF7F2]"], .dc-dashboard main section[class*="bg-[#fffaf6]"], .dc-dashboard main section[class*="bg-[#121116]"] { background: var(--background) !important; }
 
@@ -301,9 +297,9 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main section.border-b { border-bottom-width: 0 !important; }
 
 /* Form controls use a restrained neutral fill so each editable field is easy to scan without turning the dashboard pink. */
-.dc-dashboard input,
-.dc-dashboard textarea,
-.dc-dashboard select {
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]),
+:is(.dc-dashboard, .dc-usher) textarea,
+:is(.dc-dashboard, .dc-usher) select {
   min-height: 44px;
   border-color: color-mix(in srgb, var(--foreground) 16%, var(--background)) !important;
   background: color-mix(in srgb, var(--foreground) 3.5%, var(--background)) !important;
@@ -313,83 +309,39 @@ aside nav > p { font-family: var(--font-dc-heading); }
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent);
   transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
-.dc-dashboard textarea { padding-top: 0.7rem; padding-bottom: 0.7rem; }
-.dc-dashboard input::placeholder,
-.dc-dashboard textarea::placeholder { color: color-mix(in srgb, var(--foreground) 44%, transparent); }
-.dc-dashboard input:hover:not(:disabled):not([readonly]),
-.dc-dashboard textarea:hover:not(:disabled):not([readonly]),
-.dc-dashboard select:hover:not(:disabled) {
+:is(.dc-dashboard, .dc-usher) textarea { padding-top: 0.7rem; padding-bottom: 0.7rem; }
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])::placeholder,
+:is(.dc-dashboard, .dc-usher) textarea::placeholder { color: color-mix(in srgb, var(--foreground) 44%, transparent); }
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):hover:not(:disabled):not([readonly]),
+:is(.dc-dashboard, .dc-usher) textarea:hover:not(:disabled):not([readonly]),
+:is(.dc-dashboard, .dc-usher) select:hover:not(:disabled) {
   border-color: color-mix(in srgb, var(--primary) 34%, var(--border)) !important;
   background: color-mix(in srgb, var(--foreground) 4.5%, var(--background)) !important;
 }
-.dc-dashboard input:focus,
-.dc-dashboard input:focus-visible,
-.dc-dashboard textarea:focus,
-.dc-dashboard textarea:focus-visible,
-.dc-dashboard select:focus,
-.dc-dashboard select:focus-visible {
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus,
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
+:is(.dc-dashboard, .dc-usher) textarea:focus,
+:is(.dc-dashboard, .dc-usher) textarea:focus-visible,
+:is(.dc-dashboard, .dc-usher) select:focus,
+:is(.dc-dashboard, .dc-usher) select:focus-visible {
   border-color: var(--primary) !important;
   background: var(--background) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent) !important;
   outline: none !important;
 }
-.dc-dashboard input[readonly],
-.dc-dashboard textarea[readonly],
-.dc-dashboard input:disabled,
-.dc-dashboard textarea:disabled,
-.dc-dashboard select:disabled {
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])[readonly],
+:is(.dc-dashboard, .dc-usher) textarea[readonly],
+:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):disabled,
+:is(.dc-dashboard, .dc-usher) textarea:disabled,
+:is(.dc-dashboard, .dc-usher) select:disabled {
   opacity: 1 !important;
   border-color: color-mix(in srgb, var(--foreground) 10%, var(--background)) !important;
   background: color-mix(in srgb, var(--foreground) 2%, var(--background)) !important;
   color: var(--muted-foreground) !important;
   box-shadow: none;
 }
-.dc-dashboard main label > span:first-child {
+:is(.dc-dashboard, .dc-usher) main label > span:first-child {
   color: color-mix(in srgb, var(--foreground) 72%, transparent);
-}
-
-/* Dashboard information cells follow the reference image's clear card-like grouping, while staying neutral-first. */
-.dc-dashboard main section[class*="sm:grid-cols-3"]:not([class*="gap-"]),
-.dc-dashboard main section[class*="sm:grid-cols-4"]:not([class*="gap-"]),
-.dc-dashboard main section[class*="xl:grid-cols-4"]:not([class*="gap-"]) {
-  gap: 0.75rem;
-  border: 0 !important;
-  background: transparent !important;
-}
-.dc-dashboard main section[class*="sm:grid-cols-3"]:not([class*="gap-"]) > div,
-.dc-dashboard main section[class*="sm:grid-cols-4"]:not([class*="gap-"]) > div,
-.dc-dashboard main section[class*="xl:grid-cols-4"]:not([class*="gap-"]) > article {
-  border: 1px solid color-mix(in srgb, var(--primary) 14%, var(--border)) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--foreground) 2.5%, var(--background)) !important;
-  padding: 0.95rem 1rem !important;
-  box-shadow: 0 1px 0 color-mix(in srgb, var(--foreground) 3%, transparent);
-}
-.dc-dashboard main section[class*="sm:grid-cols-3"]:not([class*="gap-"]) > div:hover,
-.dc-dashboard main section[class*="sm:grid-cols-4"]:not([class*="gap-"]) > div:hover,
-.dc-dashboard main section[class*="xl:grid-cols-4"]:not([class*="gap-"]) > article:hover {
-  border-color: color-mix(in srgb, var(--primary) 28%, var(--border)) !important;
-  background: color-mix(in srgb, var(--primary) 3.5%, var(--background)) !important;
-}
-
-/* Overview and utility workspaces use the same rounded neutral container language. */
-.dc-dashboard main > div.mx-auto > section:first-child[class*="flex"] {
-  border: 1px solid color-mix(in srgb, var(--primary) 14%, var(--border)) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--foreground) 1.8%, var(--background)) !important;
-  padding: 1rem !important;
-}
-.dc-dashboard main > div.mx-auto > section.border.border-border {
-  border-color: color-mix(in srgb, var(--primary) 14%, var(--border)) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--foreground) 1.8%, var(--background)) !important;
-  overflow: hidden;
-}
-.dc-dashboard main > div.mx-auto > section.border.border-border > div[class*="p-5"] > div:first-child[class*="border-b"],
-.dc-dashboard main > div.mx-auto > section.border.border-border > div[class*="p-6"] > div:first-child[class*="border-b"] {
-  border-bottom-width: 0 !important;
-  padding-bottom: 0 !important;
-  margin-bottom: 1rem;
 }
 
 /* Quick-access rows read as discrete controls instead of one flat spreadsheet block. */
@@ -405,43 +357,43 @@ aside nav > p { font-family: var(--font-dc-heading); }
 }
 
 /* Data tables use separated rounded rows so dense information is easier to scan. */
-.dc-dashboard main table {
+:is(.dc-dashboard, .dc-usher) main table {
   width: 100%;
   border-collapse: separate !important;
   border-spacing: 0 0.5rem !important;
   overflow: visible;
   border-radius: 0;
 }
-.dc-dashboard main table thead { background: transparent !important; }
-.dc-dashboard main table thead th {
+:is(.dc-dashboard, .dc-usher) main table thead { background: transparent !important; }
+:is(.dc-dashboard, .dc-usher) main table thead th {
   padding-top: 0.55rem !important;
   padding-bottom: 0.55rem !important;
 }
-.dc-dashboard main table tbody tr {
+:is(.dc-dashboard, .dc-usher) main table tbody tr {
   border: 0 !important;
   transition: transform 160ms ease;
 }
-.dc-dashboard main table tbody td {
+:is(.dc-dashboard, .dc-usher) main table tbody td {
   border-top: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-bottom: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   background: color-mix(in srgb, var(--foreground) 2.5%, var(--background));
   transition: background-color 160ms ease, border-color 160ms ease;
 }
-.dc-dashboard main table tbody td:first-child {
+:is(.dc-dashboard, .dc-usher) main table tbody td:first-child {
   border-left: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-radius: 10px 0 0 10px;
 }
-.dc-dashboard main table tbody td:last-child {
+:is(.dc-dashboard, .dc-usher) main table tbody td:last-child {
   border-right: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-radius: 0 10px 10px 0;
 }
-.dc-dashboard main table tbody tr:hover td {
+:is(.dc-dashboard, .dc-usher) main table tbody tr:hover td {
   border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
   background: color-mix(in srgb, var(--primary) 4%, var(--background));
 }
-.dc-dashboard main table tbody tr:hover { background: transparent !important; }
-.dc-dashboard main table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
-.dc-dashboard main table tbody td { font-size: 0.875rem; line-height: 1.35rem; }
+:is(.dc-dashboard, .dc-usher) main table tbody tr:hover { background: transparent !important; }
+:is(.dc-dashboard, .dc-usher) main table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
+:is(.dc-dashboard, .dc-usher) main table tbody td { font-size: 0.875rem; line-height: 1.35rem; }
 .dc-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
 .dc-dashboard main [class*="bg-[#7A1C25]/10"], .dc-dashboard main [class*="bg-[#E8A5AE]/10"] { background: color-mix(in srgb, var(--primary) 9%, transparent) !important; }
 .dc-dashboard [role="dialog"], .dc-dashboard > div > div[class*="fixed"] > div { border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important; }
@@ -452,5 +404,8 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-invitation-studio .studio-tool-rail { background: var(--background); color: var(--foreground); border-color: var(--border); }
 .dc-invitation-studio .studio-control-panel { background: var(--card); }
 
-@media (min-width: 640px) { .dc-dashboard main > div.mx-auto { padding-top: 2.5rem !important; } }
+
 @media (prefers-reduced-motion: reduce) { .dc-dashboard main > * { animation: none; } .dc-dashboard button, .dc-dashboard a, .dc-dashboard main table tbody tr { transition: none; } }
+/* Native selection controls retain their compact geometry and Rose state. */
+.dc-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
+.dc-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }

@@ -25,9 +25,9 @@ import {
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
-  DashboardSectionHeader,
+  DashboardPageHeader,
   DashboardStatusBadge,
-  DashboardSurface,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 
 type Guest = {
@@ -335,13 +335,15 @@ export default function PersonalInvitationPanel() {
   );
 
   return (
-    <DashboardPage className="pt-7 sm:pt-8">
+    <DashboardPage>
+      <DashboardPageHeader eyebrow={d("Acara")} title={d("Personal Invitation")} description={d("Siapkan undangan personal untuk setiap tamu.")}>
       <EventScopePicker
         events={events}
         value={eventId}
         onChange={setEventId}
         disabled={eventsLoading || Boolean(busyId)}
       />
+      </DashboardPageHeader>
 
       {notice && <DashboardNotice className="mt-4">{notice}</DashboardNotice>}
 
@@ -353,13 +355,12 @@ export default function PersonalInvitationPanel() {
             <Metric icon={Eye} label={d("Dibuka")} value={String(totalViews)} />
           </DashboardMetricGrid>
 
-          <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-            <DashboardSurface className="space-y-4 p-4 sm:p-5">
-              <DashboardSectionHeader
+          <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.7fr)]">
+            <DashboardPanel
                 eyebrow={`${d("Tamu")} · ${selectedEvent.title || d("Acara")}`}
                 title={d("Buat Personal Invitation")}
                 description={d("Gunakan tamu yang sudah ada atau tambahkan tamu baru untuk membuat tautan personal.")}
-              />
+            >
 
               <div className="rounded-xl border border-border/70 bg-background p-3">
                 <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
@@ -424,10 +425,9 @@ export default function PersonalInvitationPanel() {
                   value={String(personal.length - publishedCount)}
                 />
               </div>
-            </DashboardSurface>
+            </DashboardPanel>
 
-            <DashboardSurface className="p-4 sm:p-5">
-              <DashboardSectionHeader
+            <DashboardPanel
                 eyebrow={`${d("Daftar")} · ${selectedEvent.title || d("Acara")}`}
                 title={d("Personal Invitation")}
                 description={d("Kelola status publish, password, dan tautan personal setiap tamu.")}
@@ -442,7 +442,7 @@ export default function PersonalInvitationPanel() {
                     {d("Muat ulang")}
                   </Button>
                 }
-              />
+            >
 
               <div className="mt-4 space-y-3">
                 {personal.length === 0 && (
@@ -484,7 +484,7 @@ export default function PersonalInvitationPanel() {
                               <p className="truncate text-sm font-semibold text-foreground">
                                 {item.name}
                               </p>
-                              <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
+                              <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">
                                 {item.phone || d("Tanpa nomor")} · {item.personalViewCount || 0}{" "}
                                 dibuka
                               </p>
@@ -599,7 +599,7 @@ export default function PersonalInvitationPanel() {
                   );
                 })}
               </div>
-            </DashboardSurface>
+            </DashboardPanel>
           </div>
         </>
       ) : null}

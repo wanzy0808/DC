@@ -11,8 +11,8 @@ import {
   DashboardMetricGrid,
   DashboardNotice,
   DashboardPage,
-  DashboardSectionHeader,
-  DashboardSurface,
+  DashboardPageHeader,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 
 type EventOption = {
@@ -130,10 +130,10 @@ export default function WhatsAppBlastPanel() {
         body: JSON.stringify({ packageKey: "WA_BLAST_50", invitationId: eventId }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok) throw new Error(data?.error || d("Order add-on belum dapat dibuat."));
+      if (!response.ok) throw new Error(data?.error || d("Pesanan kuota belum dapat dibuat."));
       if (data?.invoiceUrl) window.location.href = data.invoiceUrl;
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : d("Order add-on belum dapat dibuat."));
+      setNotice(error instanceof Error ? error.message : d("Pesanan kuota belum dapat dibuat."));
       setBusy(false);
     }
   }
@@ -205,13 +205,12 @@ export default function WhatsAppBlastPanel() {
   }
 
   return (
-    <DashboardPage className="pt-7 sm:pt-8">
+    <DashboardPage>
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
-      <DashboardSurface className="p-4 sm:p-5">
-        <DashboardSectionHeader
-          eyebrow={d("WA Blast Add-on")}
-          title={d("Distribusi WhatsApp")}
+      <DashboardPageHeader
+          eyebrow={d("Acara")}
+          title={d("WA Blast")}
           description={d("Pilih acara aktif, cek quota, lalu siapkan daftar penerima yang akan dikirim.")}
           actions={
             eventId ? (
@@ -221,11 +220,11 @@ export default function WhatsAppBlastPanel() {
               </Button>
             ) : null
           }
-        />
+        >
 
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
-            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {d("Acara")}
             </span>
             <select
@@ -251,10 +250,10 @@ export default function WhatsAppBlastPanel() {
 
         {events.length === 0 && (
           <p className="mt-3 text-xs text-muted-foreground">
-            {d("Aktifkan minimal satu Undangan Digital untuk membeli add-on WA Blast.")}
+            {d("Aktifkan minimal satu Undangan Digital untuk membeli kuota WA Blast.")}
           </p>
         )}
-      </DashboardSurface>
+      </DashboardPageHeader>
 
       {eventId && (
         <>
@@ -265,9 +264,8 @@ export default function WhatsAppBlastPanel() {
           </DashboardMetricGrid>
 
           {quota === 0 ? (
-            <DashboardSurface className="mt-5 p-4 sm:p-5">
-              <DashboardSectionHeader
-                eyebrow={d("Add-on")}
+            <DashboardPanel className="mt-5"
+                eyebrow={d("Kuota")}
                 title={d("WA Blast belum aktif")}
                 description={d("WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 quota untuk acara yang dipilih.")}
                 actions={
@@ -276,16 +274,15 @@ export default function WhatsAppBlastPanel() {
                     {d("Beli 50 quota · Rp75.000")}
                   </Button>
                 }
-              />
-            </DashboardSurface>
+            >
+            </DashboardPanel>
           ) : (
-            <div className="mt-5 grid gap-4 lg:grid-cols-[360px_minmax(0,1fr)]">
-              <DashboardSurface className="space-y-4 p-4 sm:p-5">
-                <DashboardSectionHeader
+            <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.7fr)]">
+              <DashboardPanel
                   eyebrow={d("Penerima")}
                   title={d("Tambah penerima")}
                   description={d("Gunakan data tamu yang sudah ada atau tambahkan penerima baru.")}
-                />
+              >
 
                 <div className="rounded-xl border border-border/70 bg-background p-3">
                   <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
@@ -341,10 +338,9 @@ export default function WhatsAppBlastPanel() {
                     </Button>
                   </div>
                 </div>
-              </DashboardSurface>
+              </DashboardPanel>
 
-              <DashboardSurface className="p-4 sm:p-5">
-                <DashboardSectionHeader
+              <DashboardPanel
                   eyebrow={d("Queue")}
                   title={d("Tamu yang akan diblast")}
                   description={d("Daftar ini memakai quota dari acara yang sedang aktif.")}
@@ -359,7 +355,7 @@ export default function WhatsAppBlastPanel() {
                       {d("Muat ulang")}
                     </Button>
                   }
-                />
+              >
 
                 <div className="mt-4 space-y-2">
                   {selected.length === 0 && (
@@ -369,31 +365,16 @@ export default function WhatsAppBlastPanel() {
                       description={d("Tambahkan tamu dari daftar atau buat penerima baru untuk acara ini.")}
                     />
                   )}
-                  {selected.map((guest) => (
-                    <div
-                      key={guest.id}
-                      className="flex items-center gap-3 rounded-xl border border-border/70 bg-background px-3 py-2.5"
-                    >
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-semibold text-foreground">{guest.name}</p>
-                        <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[9px] text-muted-foreground">
-                          {guest.phone || d("Nomor belum ada")}
-                        </p>
-                      </div>
-                      <Button
-                        type="button"
-                        size="icon-sm"
-                        onClick={() => removeGuest(guest.id)}
-                        disabled={busy}
-                        title={d("Hapus dari daftar WA Blast")}
-                        aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ))}
+                  {selected.length > 0 && <div className="overflow-x-auto"><table className="w-full min-w-[480px] text-left">
+                    <thead><tr><th className="px-3 py-3">{d("Nama tamu")}</th><th className="px-3 py-3">WhatsApp</th><th className="px-3 py-3 text-right">{d("Aksi")}</th></tr></thead>
+                    <tbody>{selected.map((guest) => <tr key={guest.id}>
+                      <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
+                      <td className="px-3 py-4 font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{guest.phone || d("Nomor belum ada")}</td>
+                      <td className="px-3 py-4 text-right"><Button type="button" size="icon-sm" onClick={() => removeGuest(guest.id)} disabled={busy} title={d("Hapus dari daftar WA Blast")} aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}><Trash2 className="size-4" /></Button></td>
+                    </tr>)}</tbody>
+                  </table></div>}
                 </div>
-              </DashboardSurface>
+              </DashboardPanel>
             </div>
           )}
         </>

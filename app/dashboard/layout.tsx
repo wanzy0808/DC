@@ -18,14 +18,14 @@ const dashboardShellCss = `
     padding-top: 72px;
   }
 
-  .dc-dashboard header {
+  .dc-dashboard > .flex > div > header {
     position: fixed !important;
     inset: 0 0 auto 0;
     width: 100%;
     z-index: 60;
   }
 
-  .dc-dashboard header > div {
+  .dc-dashboard > .flex > div > header > div {
     width: 100% !important;
     max-width: none !important;
     margin: 0 !important;
@@ -38,25 +38,6 @@ const dashboardShellCss = `
     position: sticky;
     top: 72px;
     overflow-y: auto;
-  }
-
-  .dc-dashboard main > div,
-  .dc-dashboard main > section:not(.bg-background) {
-    width: min(80vw, calc(100% - 2rem)) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: clamp(0rem, 0.6vw, 0.75rem) !important;
-    padding-right: clamp(0rem, 0.6vw, 0.75rem) !important;
-  }
-
-  .dc-dashboard main > section.bg-background > div {
-    width: min(80vw, calc(100% - 2rem)) !important;
-    max-width: none !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding-left: clamp(0rem, 0.6vw, 0.75rem) !important;
-    padding-right: clamp(0rem, 0.6vw, 0.75rem) !important;
   }
 
   .dc-dashboard main table {

@@ -17,8 +17,7 @@ import {
   DashboardMetricCard,
   DashboardMetricGrid,
   DashboardNotice,
-  DashboardSectionHeader,
-  DashboardSurface,
+  DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 
 export type RsvpGuest = {
@@ -225,8 +224,7 @@ export default function RsvpAnalyticsPanel({
         ))}
       </DashboardMetricGrid>
 
-      <DashboardSurface className="mt-4 min-w-0 p-3 sm:p-4">
-        <DashboardSectionHeader
+      <DashboardPanel className="mt-4 min-w-0"
           eyebrow={d("RSVP")}
           title={d("Daftar tamu")}
           description={
@@ -234,7 +232,7 @@ export default function RsvpAnalyticsPanel({
               ? `${filtered.length} of ${guests.length} guests shown. Search, sort, export, or check in from the same table.`
               : `${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`
           }
-        />
+      >
 
         <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
             <div className="relative min-w-0">
@@ -279,7 +277,7 @@ export default function RsvpAnalyticsPanel({
         <div className="mt-4 min-w-0 overflow-x-auto">
           <table className="w-full min-w-[940px] text-left">
             <thead>
-              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/50">
+              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-foreground/50">
                 <th className="px-3 py-3 font-medium">{d("Nama")}</th>
                 <th className="px-3 py-3 font-medium">RSVP</th>
                 <th className="px-3 py-3 font-medium">{d("Pax")}</th>
@@ -296,12 +294,12 @@ export default function RsvpAnalyticsPanel({
                 >
                   <td className="px-3 py-3">
                     <p className="font-semibold text-foreground">{guest.name}</p>
-                    <p className="mt-0.5 text-[10px] text-foreground/50">
+                    <p className="mt-0.5 text-[11px] text-foreground/50">
                       {guest.phone || d("Tanpa nomor")}
                     </p>
                   </td>
                   <td className="px-3 py-3">
-                    <span className="font-[family-name:var(--font-dc-mono)] text-[10px] text-foreground/70">
+                    <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/70">
                       {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
                     </span>
                   </td>
@@ -357,11 +355,11 @@ export default function RsvpAnalyticsPanel({
         </div>
 
         {slug && (
-          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[9px] text-foreground/45">
+          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/45">
             /invite/{slug}
           </p>
         )}
-      </DashboardSurface>
+      </DashboardPanel>
 
       {qr && (
         <div
@@ -391,7 +389,7 @@ export default function RsvpAnalyticsPanel({
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${encodeURIComponent(qr.token)}`}
               />
             </div>
-            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[8px] leading-4 text-foreground/45">
+            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[11px] leading-4 text-foreground/45">
               {qr.token}
             </p>
           </div>
