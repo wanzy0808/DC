@@ -35,7 +35,7 @@ export default function Home() {
 
   return (
     <div className="public-page relative h-[100dvh] min-h-0 overflow-hidden bg-background text-foreground">
-      <LandingRoomScene />
+      <LandingRoomScene activeDoor={activeDoor} />
 
       <main className="relative z-10 mx-auto h-full w-[80vw] max-w-full pb-10 pt-[88px] sm:pb-12 sm:pt-[96px]">
         <section className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] items-center gap-0 lg:grid-cols-[37%_63%] lg:grid-rows-1">

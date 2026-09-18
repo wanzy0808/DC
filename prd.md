@@ -2715,3 +2715,41 @@ Owner meminta implementasi landing tidak berhenti pada visual reference image, t
 
 ### Next
 Lanjutkan Stage 2 sesuai `landingpro.md`: room/portal realism, lighting/reflection/material polish, lalu browser screenshot comparison sebelum finalizing responsive behavior.
+
+
+---
+
+## 2026-09-18 — Landing Reference Rebuild Stage 2
+
+### Requirement / Intent
+Lanjutan staged rebuild landing untuk mendekatkan hasil website nyata ke approved visual reference. Stage 2 fokus pada realism ruang dan material portal tanpa mengganti landing menjadi flattened screenshot/image.
+
+### Implementation
+- `LandingRoomScene` diperdalam dengan abstract city silhouette, architectural moulding, richer window/cast light, marble-like floor vein, foreground lounge silhouette, sculptural pedestal, dan restrained botanical branches;
+- botanical/decorative depth tetap category-neutral dan tidak membuat landing kembali wedding-only;
+- floor sekarang memiliki portal reflection silhouettes dan active floor glow yang mengikuti service/Pintu aktif;
+- `PintuCard` memakai layered Rose metal/glass frame, inner bevel, vertical specular edge, glass veil, luminous threshold, dan richer shadow hierarchy;
+- opening door panels dipoles menjadi translucent Rose glass sambil mempertahankan Motion opening interaction;
+- source image `wo.png`, `hp-digital.png`, dan `bukutamu.png` diberi shared Rose lighting/saturation treatment agar terlihat berada dalam satu environment;
+- inactive portal tetap terbaca/elegan sedangkan active portal menjadi focal point melalui brighter interior, edge light, reflection, dan floor glow;
+- `app/page.tsx` meneruskan active door state ke room scene untuk environmental lighting response;
+- tidak menambah dependency baru.
+
+### Affected Files
+- `app/page.tsx`
+- `components/Layout/LandingRoomScene.tsx`
+- `components/Pintu/PintuCard.tsx`
+- `landingpro.md`
+- `prd.md`
+
+### Validation
+- Build Validation #1058 pada application source head `fb2999fb786314c5b4859ea7ad2df4a520d18d53`: **PASS**.
+- Dependency install: **PASS**.
+- Prisma Client generation: **PASS**.
+- Next.js production build + TypeScript: **PASS**.
+- Browser visual verification: pending.
+- Database migration: N/A.
+- Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+### Next
+Stage 3 di `landingpro.md`: sinkronisasi motion copy/portal/light, interaction timing, restrained room drift/parallax, lalu Stage 4 browser screenshot/responsive pass.
