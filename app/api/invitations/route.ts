@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitation-slug";
+import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitations/slug";
 import {
   buildEventTitle,
   getEventCategory,
