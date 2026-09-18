@@ -2735,3 +2735,29 @@ Lanjutan cleanup repository untuk menghilangkan nama file implementasi sementara
 
 ### Next
 Cleanup berikutnya fokus pada route-local static data dan folder/component yang masih implementation-specific atau terlalu generik, tanpa memindahkan high-fanout entry points hanya demi estetika struktur.
+
+
+---
+
+## 2026-09-18 — Repository Feature/Data Cleanup (Pass 4)
+
+### Requirement / Intent
+Lanjutan cleanup repository untuk menormalkan feature naming yang masih legacy dan memisahkan large static catalog dari route component, tanpa mengubah URL atau behavior.
+
+### Implementation
+- `components/UsherApp/UsherApp.tsx` → `components/Usher/UsherWorkspace.tsx`;
+- Dashboard Usher route sekarang memakai canonical `UsherWorkspace`;
+- static template showcase catalog dipindahkan dari `app/template-design/page.tsx` ke `data/templates/showcase.ts`;
+- template showcase data diubah dari positional tuples menjadi typed objects (`id`, `name`, `category`, `status`, `image`) sehingga tidak lagi bergantung pada index `[0]...[4]`;
+- categories showcase diturunkan dari data source canonical;
+- `app/template-design/page.tsx` sekarang fokus pada state/filter/rendering;
+- repository structure docs diperbarui untuk `components/Usher/` dan `data/templates/`;
+- audit tree dilakukan dan folder `Admin`, `Owner`, `Designer`, `PublicInvitation`, serta `InvitationStudio` dipertahankan karena sudah memiliki boundary/tanggung jawab yang jelas.
+
+### Validation
+- Source/reference update: completed.
+- Build/TypeScript/CI: pending.
+- Database migration: N/A.
+
+### Next
+Setelah Pass 4 tervalidasi, cleanup berikutnya sebaiknya fokus pada kualitas internal file besar (memecah komponen yang terlalu panjang/monolitik) daripada terus memindahkan folder yang sudah semantik.
