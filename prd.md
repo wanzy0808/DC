@@ -1116,7 +1116,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
 - Sidebar customer Dashboard mengikuti **canvas/background Dashboard**, bukan full Rose rail. Light Mode memakai sidebar putih dengan default teks/icon near-black. Dark Mode memakai background near-black yang sama dengan body Dashboard dengan default teks/icon putih. Pada kedua theme, navigation button tetap netral/transparan saat idle lalu memakai Rose dengan teks/icon putih saat hover/active; Deep Rose dapat dipakai untuk active state.
 - Ukuran copy sidebar utama sekitar 15–16px agar nyaman dipindai; nested item tetap sedikit lebih kecil tetapi tidak terasa mikro.
-- Header utility controls yang transparan (theme/language/account) wajib mempertahankan kontras terhadap header. Khusus Dark Mode, language toggle ID/EN dan account trigger/dropdown memakai background near-black/transparent dengan teks/icon putih saat idle; selected language memakai emphasis putih/netral, bukan idle Rose fill; Rose baru muncul pada hover/interaction. Control ini tidak boleh mewarisi black text atau Rose fill default dari canonical application button.
+- Header control Dashboard — burger, theme toggle, ID/EN, dan account trigger — wajib memakai satu visual family yang konsisten. Light Mode: idle white/neutral dengan border Rose tipis dan foreground Rose. Dark Mode: idle near-black mengikuti body dengan foreground putih. Shape/radius/tinggi/border harus konsisten; hover memakai Rose + foreground putih pada kedua theme. Locale aktif dibedakan melalui border/underline emphasis, bukan fill khusus yang membuat ID/EN terlihat sebagai sistem control terpisah. Account dropdown Dark Mode tetap neutral-first dan baru memakai Rose saat hover.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
@@ -2461,3 +2461,34 @@ Owner menolak full-Rose sidebar dan meminta sidebar kembali menyatu dengan canva
 - GitHub Actions Build Validation #1030 pada application source head `0af685723e2178d52c735a8890026d5ce87d90ff`: **PASS** untuk dependency install, Prisma Client generation, Next.js production build, dan TypeScript.
 - Database migration: N/A.
 - Commit dokumentasi setelah validation tidak mengubah application source yang divalidasi.
+
+
+---
+
+## 2026-09-18 — Unified Dashboard Header Controls
+
+### Requirement / Intent
+Owner meminta ID/EN, burger, theme toggle, dan tombol user berhenti memakai visual treatment yang berbeda-beda. Keempat control harus terlihat sebagai satu keluarga pada Light dan Dark Mode.
+
+### Implementation
+- menambahkan shared class `dc-dashboard-header-control` untuk burger, theme toggle, language option, dan account trigger;
+- Light Mode memakai white/neutral idle surface, restrained Rose border/foreground, lalu Rose + white saat hover;
+- Dark Mode memakai near-black idle surface, white foreground, lalu Rose + white saat hover;
+- locale aktif memakai border/underline emphasis tanpa filled state khusus;
+- avatar account mengikuti palette trigger agar tidak terlihat seperti button system kedua;
+- behavior ThemeToggle/LanguageToggle di luar Dashboard dipertahankan agar public navbar tidak ikut berubah.
+
+### Affected Files
+- `app/dashboard/page.tsx`
+- `app/globals.css`
+- `components/Theme/ThemeContext.tsx`
+- `components/I18n/LanguageToggle.tsx`
+- `AGENTS.md`
+- `README.md`
+- `prd.md`
+- `prd-tambahan.md`
+
+### Validation
+- Build: PENDING
+- TypeScript: PENDING
+- Database migration: N/A
