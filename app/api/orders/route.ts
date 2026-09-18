@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getServicePackage } from "@/lib/packages/catalog";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-import { sendInvoiceEmail } from "@/lib/email";
+import { sendInvoiceEmail } from "@/lib/notifications/email";
 
 const allowedPackages = ["INVITATION_BASIC", "GUESTBOOK_DIGITAL", "WA_BLAST_50"] as const;
 type AllowedPackage = (typeof allowedPackages)[number];
