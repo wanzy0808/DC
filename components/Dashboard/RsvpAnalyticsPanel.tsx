@@ -229,7 +229,11 @@ export default function RsvpAnalyticsPanel({
         <DashboardSectionHeader
           eyebrow={d("RSVP")}
           title={d("Daftar tamu")}
-          description={`${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`}
+          description={
+            locale === "en"
+              ? `${filtered.length} of ${guests.length} guests shown. Search, sort, export, or check in from the same table.`
+              : `${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`
+          }
         />
 
         <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
@@ -251,7 +255,7 @@ export default function RsvpAnalyticsPanel({
             >
               {(Object.keys(sortLabel) as SortKey[]).map((key) => (
                 <option key={key} value={key}>
-                  {sortLabel[key]}
+                  {d(sortLabel[key])}
                 </option>
               ))}
             </select>
@@ -344,7 +348,7 @@ export default function RsvpAnalyticsPanel({
               {!filtered.length && (
                 <tr>
                   <td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground/50">
-                    Belum ada data RSVP untuk acara ini.
+                    {locale === "en" ? "No RSVP data for this event yet." : "Belum ada data RSVP untuk acara ini."}
                   </td>
                 </tr>
               )}
