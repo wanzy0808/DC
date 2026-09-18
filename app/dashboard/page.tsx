@@ -8,36 +8,24 @@ import {
   CheckCircle2,
   ChevronDown,
   CircleHelp,
-  ContactRound,
   Home,
   LogOut,
-  Mail,
   Menu,
   MessageCircle,
-  MessageSquareHeart,
-  QrCode,
   Receipt,
-  RefreshCw,
-  Send,
   Settings2,
-  Users,
-  LayoutGrid,
   X,
 } from "lucide-react";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import EventScopePicker from "@/components/Dashboard/EventScopePicker";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
-import RsvpAnalyticsPanel from "@/components/Dashboard/RsvpAnalyticsPanel";
 import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
 import EventPanelEditor from "@/components/Dashboard/EventPanel";
-import SeatingChart from "@/components/Dashboard/SeatingChart";
 import WhatsAppBlastPanel from "@/components/Dashboard/WhatsAppBlastPanel";
 import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPanel";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
 import {
   DashboardField,
@@ -49,17 +37,6 @@ import {
   UsherPanel,
   WorkspaceOverview,
 } from "@/components/Dashboard/DashboardWorkspaces";
-import {
-  DashboardPageHeader,
-  DashboardPanel,
-  DashboardEmptyState,
-  DashboardStatusBadge,
-  DashboardMetricCard,
-  DashboardMetricGrid,
-  DashboardPage as DashboardPageShell,
-  DashboardSectionHeader,
-  DashboardSurface,
-} from "@/components/Dashboard/DashboardPrimitives";
 import {
   dashboardTabMeta,
   invitationNav,
@@ -466,22 +443,22 @@ export default function DashboardPage() {
                           <LanguageToggle />
                         </div>
                         <div className="space-y-1.5">
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={Receipt}
                             text={d("Lihat transaksi")}
                             onClick={() => router.push("/transactions")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={Settings2}
                             text={d("Beli layanan")}
                             onClick={() => router.push("/packages")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={CircleHelp}
                             text={d("Buka FAQ")}
                             onClick={() => router.push("/faq")}
                           />
-                          <MenuItem
+                          <DashboardMenuItem
                             icon={MessageCircle}
                             text={d("Buka bantuan")}
                             onClick={() => setProfileMenu(false)}
@@ -569,7 +546,7 @@ export default function DashboardPage() {
               {d("Profil akun")}
             </h2>
             <div className="mt-6">
-              <Field
+              <DashboardField
                 label={d("Nama panggilan")}
                 value={nickname}
                 onChange={setNickname}
