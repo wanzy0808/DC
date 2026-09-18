@@ -1,6 +1,7 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";\nimport { motion, useReducedMotion } from "motion/react";
+import type { Dispatch, SetStateAction } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import PintuCard from "@/components/Pintu/PintuCard";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
