@@ -486,8 +486,8 @@ export default function DashboardPage() {
                   onClick={() => go(item.id)}
                   className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[15px] font-medium shadow-none ${
                     tab === item.id
-                      ? "border-primary/15 bg-primary/10 text-primary"
-                      : "text-foreground hover:border-primary/10 hover:bg-primary/[0.07] hover:text-primary"
+                      ? "border-white/20 bg-white/16 text-white dark:border-black/15 dark:bg-black/15 dark:text-black"
+                      : "border-transparent text-white/90 hover:bg-white/10 hover:text-white dark:text-black/80 dark:hover:bg-black/10 dark:hover:text-black"
                   }`}
                 >
                   <span className="grid size-6 shrink-0 place-items-center text-current">
