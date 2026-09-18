@@ -7,6 +7,7 @@ import type { KonvaEventObject } from "konva/lib/Node";
 import { useTheme } from "@/components/Theme/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
   DashboardCompactStat,
   DashboardEmptyState,
@@ -112,6 +113,7 @@ function findSeatTarget(
 }
 
 export default function SeatingChart({ invitationId, guests, tables, onAssigned }: Props) {
+  const { d, locale } = useDashboardI18n();
   const { isDarkMode } = useTheme();
   const [draggedGuestId, setDraggedGuestId] = useState<string | null>(null);
   const [savingGuestId, setSavingGuestId] = useState<string | null>(null);
@@ -197,7 +199,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
 
     if (visibleTables.length > 0) {
       setMessage(
-        "Denah sudah memiliki meja. Gunakan data meja yang sudah tersimpan.",
+        d("Denah sudah memiliki meja. Gunakan data meja yang sudah tersimpan."),
       );
       return;
     }
@@ -212,21 +214,21 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             invitationId,
-            name: `Meja ${index}`,
+            name: locale === "en" ? `Table ${index}` : `Meja ${index}`,
             capacity,
             shape: "ROUND",
           }),
         });
         const data = await response.json().catch(() => null);
         if (!response.ok) {
-          throw new Error(data?.error || `Meja ${index} gagal dibuat.`);
+          throw new Error(data?.error || locale === "en" ? `Table ${index} could not be created.` : `Meja ${index} gagal dibuat.`);
         }
         created.push(data.table as Table);
       }
       setLocalTables(created);
-      setMessage(`Denah dibuat: ${count} meja × ${capacity} bangku.`);
+      setMessage(locale === "en" ? `Seating plan created: ${count} tables × ${capacity} seats.` : `Denah dibuat: ${count} meja × ${capacity} bangku.`);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : "Denah gagal dibuat.");
+      setMessage(error instanceof Error ? error.message : locale === "en" ? "Seating plan could not be created." : "Denah gagal dibuat.");
     } finally {
       setGenerating(false);
     }
@@ -236,7 +238,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     event.preventDefault();
     const name = manualName.trim();
     if (!name) {
-      setMessage("Nama tamu manual wajib diisi.");
+      setMessage(d("Nama tamu manual wajib diisi."));
       return;
     }
 
@@ -250,14 +252,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Tamu manual gagal ditambahkan.");
+        throw new Error(data?.error || d("Tamu manual gagal ditambahkan."));
       }
       setLocalGuests((current) => [...current, data.guest as Guest]);
       setManualName("");
-      setMessage("Tamu manual ditambahkan ke roster.");
+      setMessage(d("Tamu manual ditambahkan ke roster."));
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : "Tamu manual gagal ditambahkan.",
+        error instanceof Error ? error.message : d("Tamu manual gagal ditambahkan."),
       );
     } finally {
       setManualSaving(false);
@@ -278,7 +280,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     setHoverTarget(null);
 
     if (!target) {
-      setMessage("Jatuhkan tamu tepat di kursi.");
+      setMessage(d("Jatuhkan tamu tepat di kursi."));
       setDraggedGuestId(null);
       return;
     }
@@ -296,12 +298,12 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         ...current,
         [guestId]: { tableId: target.table.id, seatNumber: target.seat },
       }));
-      setMessage("Penempatan tamu tersimpan.");
+      setMessage(d("Penempatan tamu tersimpan."));
     } catch (error) {
       setMessage(
         error instanceof Error
           ? error.message
-          : "Penempatan tamu gagal disimpan.",
+          : d("Penempatan tamu gagal disimpan."),
       );
     } finally {
       setSavingGuestId(null);
@@ -327,7 +329,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       });
       const data = await response.json().catch(() => null);
       if (!response.ok) {
-        throw new Error(data?.error || "Tukar posisi gagal disimpan.");
+        throw new Error(data?.error || d("Tukar posisi gagal disimpan."));
       }
 
       const swapped = data.guests as Guest[];
@@ -356,11 +358,11 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           : {}),
       }));
 
-      setMessage(`Posisi ${source.name} dan ${target.guest.name} ditukar.`);
+      setMessage(locale === "en" ? `${source.name} and ${target.guest.name} swapped positions.` : `Posisi ${source.name} dan ${target.guest.name} ditukar.`);
       setSwapCandidate(null);
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : "Tukar posisi gagal disimpan.",
+        error instanceof Error ? error.message : d("Tukar posisi gagal disimpan."),
       );
     } finally {
       setSavingGuestId(null);
@@ -373,7 +375,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     setSwapCandidate(null);
     setDraggedGuestId(null);
     setHoverTarget(null);
-    setMessage("Tukar posisi dibatalkan.");
+    setMessage(d("Tukar posisi dibatalkan."));
   }
 
   async function assignFromDrop(event: React.DragEvent<HTMLDivElement>) {
@@ -412,9 +414,9 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       <aside className="min-w-0 space-y-4">
         <DashboardSurface className="p-4">
           <DashboardSectionHeader
-            eyebrow="Setup"
-            title="Struktur meja"
-            description="Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu."
+            eyebrow={d("Setup")}
+            title={d("Struktur meja")}
+            description={d("Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu.")}
             actions={
               <DashboardStatusBadge active={visibleTables.length > 0}>
                 {visibleTables.length} meja
@@ -448,28 +450,28 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               size="sm"
               className="w-full"
               disabled={generating || visibleTables.length > 0}
-              title={visibleTables.length ? "Denah meja sudah tersimpan" : "Buat denah meja"}
+              title={visibleTables.length ? d("Denah meja sudah tersimpan") : d("Buat denah meja")}
             >
               <LayoutGrid className="h-4 w-4" />
               {generating
-                ? "Membuat denah meja..."
+                ? d("Membuat denah meja...")
                 : visibleTables.length
-                  ? "Denah meja tersimpan"
-                  : "Buat denah meja"}
+                  ? d("Denah meja tersimpan")
+                  : d("Buat denah meja")}
             </Button>
           </form>
 
           <div className="mt-3 grid grid-cols-2 gap-2">
-            <DashboardCompactStat label="Kursi" value={String(totalSeats)} />
-            <DashboardCompactStat label="Terisi" value={String(assignedCount)} />
+            <DashboardCompactStat label={d("Kursi")} value={String(totalSeats)} />
+            <DashboardCompactStat label={d("Terisi")} value={String(assignedCount)} />
           </div>
         </DashboardSurface>
 
         <DashboardSurface className="p-4">
           <DashboardSectionHeader
-            eyebrow="Roster"
-            title="Belum ditempatkan"
-            description="Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah."
+            eyebrow={d("Roster")}
+            title={d("Belum ditempatkan")}
+            description={d("Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah.")}
             actions={
               <DashboardStatusBadge active={unassigned.length > 0}>
                 {unassigned.length} tamu
@@ -481,29 +483,29 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
             <Input
               value={manualName}
               onChange={(event) => setManualName(event.target.value)}
-              placeholder="Nama tamu manual"
+              placeholder={d("Nama tamu manual")}
             />
             <Button
               type="submit"
               size="sm"
               className="w-full"
               disabled={manualSaving}
-              title="Tambahkan tamu manual ke roster"
+              title={d("Tambahkan tamu manual ke roster")}
             >
               <UserPlus className="h-4 w-4" />
-              {manualSaving ? "Menambahkan tamu..." : "Tambah tamu manual"}
+              {manualSaving ? d("Menambahkan tamu...") : d("Tambah tamu manual")}
             </Button>
           </form>
 
           <div className="mt-4 space-y-3">
             <label className="block text-xs text-muted-foreground">
-              Kategori tamu
+              {d("Kategori tamu")}
               <select
                 value={categoryFilter}
                 onChange={(event) => setCategoryFilter(event.target.value)}
                 className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
               >
-                <option value="">Semua kategori</option>
+                <option value="">{d("Semua kategori")}</option>
                 {categoryFilter && !categories.includes(categoryFilter) && (
                   <option value={categoryFilter}>{categoryFilter}</option>
                 )}
@@ -513,13 +515,13 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               </select>
             </label>
             <label className="block text-xs text-muted-foreground">
-              Tag tamu
+              {d("Tag tamu")}
               <select
                 value={tagFilter}
                 onChange={(event) => setTagFilter(event.target.value)}
                 className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
               >
-                <option value="">Semua tag</option>
+                <option value="">{d("Semua tag")}</option>
                 {tagFilter && !tags.includes(tagFilter) && (
                   <option value={tagFilter}>{tagFilter}</option>
                 )}
@@ -537,7 +539,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 className="min-h-11"
                 onClick={() => { setCategoryFilter(""); setTagFilter(""); }}
               >
-                Reset filter
+                {d("Reset filter")}
               </Button>
             )}
           </div>
@@ -545,11 +547,11 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
           <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
             {filteredUnassigned.length === 0 && (
               <DashboardEmptyState
-                title={hasRosterFilter ? "Tidak ada hasil" : "Semua tamu sudah ditempatkan"}
+                title={hasRosterFilter ? d("Tidak ada hasil") : d("Semua tamu sudah ditempatkan")}
                 description={
                   hasRosterFilter
-                    ? "Tidak ada tamu belum ditempatkan yang cocok dengan filter aktif."
-                    : "Tamu yang belum memiliki meja akan muncul di sini."
+                    ? d("Tidak ada tamu belum ditempatkan yang cocok dengan filter aktif.")
+                    : d("Tamu yang belum memiliki meja akan muncul di sini.")
                 }
               />
             )}
@@ -570,7 +572,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   </p>
                 )}
                 <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.1em] text-muted-foreground">
-                  {guest.source === "RSVP" ? "RSVP · Hadir" : "Manual"}
+                  {guest.source === "RSVP" ? `RSVP · ${d("Hadir")}` : d("Manual")}
                 </div>
               </div>
             ))}
@@ -580,13 +582,13 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
 
       <DashboardSurface className="min-w-0 p-4 sm:p-5">
         <DashboardSectionHeader
-          eyebrow="Seating"
-          title="Denah tempat duduk"
-          description="Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual."
+          eyebrow={d("Seating")}
+          title={d("Denah tempat duduk")}
+          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
           actions={
             <div className="flex gap-2">
-              <DashboardCompactStat label="Meja" value={String(visibleTables.length)} className="min-w-20" />
-              <DashboardCompactStat label="Tamu" value={`${assignedCount}/${visibleGuests.length}`} className="min-w-20" />
+              <DashboardCompactStat label={d("Meja")} value={String(visibleTables.length)} className="min-w-20" />
+              <DashboardCompactStat label={d("Tamu")} value={`${assignedCount}/${visibleGuests.length}`} className="min-w-20" />
             </div>
           }
         />
@@ -716,7 +718,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                     y={285}
                     width={940}
                     align="center"
-                    text="Atur jumlah meja dan kursi untuk membuat denah."
+                    text={d("Atur jumlah meja dan kursi untuk membuat denah.")}
                     fontSize={15}
                     fill={canvas.mutedText}
                   />
@@ -727,10 +729,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         </div>
 
         <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background px-3 py-2 text-xs text-muted-foreground">
-          <span>Tarik tamu ke kursi untuk menyimpan posisi.</span>
+          <span>{d("Tarik tamu ke kursi untuk menyimpan posisi.")}</span>
           {savingGuestId && (
             <span className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-primary">
-              Menyimpan...
+              {d("Menyimpan...")}
             </span>
           )}
         </div>
@@ -738,7 +740,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         {swapCandidate && (
           <div className="mt-3 rounded-xl border border-primary/20 bg-primary/[0.045] p-4">
             <p className="text-xs font-medium leading-5 text-foreground">
-              Kursi ditempati {swapCandidate.target.guest?.name}. Tukar dengan {draggedGuest?.name}?
+              {locale === "en" ? `Seat occupied by ${swapCandidate.target.guest?.name}. Swap with ${draggedGuest?.name}?` : `Kursi ditempati ${swapCandidate.target.guest?.name}. Tukar dengan ${draggedGuest?.name}?`}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Button
@@ -746,20 +748,20 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 size="sm"
                 onClick={confirmSwap}
                 disabled={Boolean(savingGuestId)}
-                title="Konfirmasi tukar posisi tamu"
+                title={d("Konfirmasi tukar posisi tamu")}
               >
                 <ArrowLeftRight className="h-4 w-4" />
-                Tukar posisi
+                {d("Tukar posisi")}
               </Button>
               <Button
                 type="button"
                 size="sm"
                 onClick={cancelSwap}
                 disabled={Boolean(savingGuestId)}
-                title="Batalkan tukar posisi"
+                title={d("Batalkan tukar posisi")}
               >
                 <X className="h-4 w-4" />
-                Batal tukar
+                {d("Batal tukar")}
               </Button>
             </div>
           </div>
