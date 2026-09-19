@@ -2,7 +2,6 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
 import { hasWeddingSessions, validWeddingSessionAccess } from "@/lib/events/wedding-sessions";
 
@@ -53,13 +52,6 @@ export async function GET(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
-    }
-
     const guests = await prisma.guest.findMany({
       where: { invitationId: invitation.id, personalToken: { not: null } },
       orderBy: { createdAt: "desc" },
@@ -96,13 +88,6 @@ export async function POST(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
-    }
-
     const scopedWedding = invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation);
     const weddingSessionAccess = scopedWedding ? body.weddingSessionAccess : null;
     if (scopedWedding && !validWeddingSessionAccess(invitation, weddingSessionAccess)) {
@@ -176,13 +161,6 @@ export async function PATCH(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
-    }
-
     const id = String(body.id ?? "").trim();
     if (!id) {
       return NextResponse.json({ error: "Personal Invitation wajib dipilih." }, { status: 400 });
