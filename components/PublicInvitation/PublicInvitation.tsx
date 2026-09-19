@@ -17,6 +17,9 @@ export { weddingParentLine };
 export type PublicInvitationData = {
   id: string;
   slug: string;
+  personalGuestId?: string;
+  personalGuestToken?: string;
+  personalGuestName?: string;
   title: string;
   eventCategory: string;
   groomName: string;
@@ -204,6 +207,9 @@ export default function PublicInvitation({
           <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
             <RsvpForm
               slug={invitation.slug}
+              guestId={invitation.personalGuestId}
+              guestToken={invitation.personalGuestToken}
+              guestName={invitation.personalGuestName}
               eventDate={invitation.eventDate}
               venue={invitation.venue}
               title={title}
