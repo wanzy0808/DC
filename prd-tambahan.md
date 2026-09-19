@@ -219,3 +219,20 @@ Delta:
 - Three.js belum dipasang; visual 3D pertama diuji memakai CSS 3D + Motion existing.
 
 Validation: pending GitHub Actions observation.
+
+
+---
+
+## 19 September 2026 — Jiplak Dream Portals V2
+
+Pass pertama terlalu terasa seperti card UI. V2 mengubahnya menjadi cinematic dream-world composition khusus `/jiplak`.
+
+Delta:
+- portal aktif besar di tengah scene, dua portal alternatif berada lebih dalam di kiri/kanan;
+- frame, daun pintu, shadow, depth, halo, dan light path dibuat sebagai satu objek portal, bukan card terpisah;
+- background menjadi dreamy Rose world dengan veil, glow, ring, dust, horizon, dan botanical silhouette abstrak;
+- ambience berubah mengikuti dunia aktif;
+- copy kiri direcompose agar tidak hilang/kosong dan tetap menjadi bagian hero;
+- landing canonical tetap tidak disentuh.
+
+Validation: pending GitHub Actions observation.
