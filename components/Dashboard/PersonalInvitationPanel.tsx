@@ -16,6 +16,7 @@ import {
   PersonalInvitationListPanel,
 } from "@/components/Dashboard/PersonalInvitationPanels";
 import { sortPersonalInvitationEvents } from "@/components/Dashboard/personal-invitation-helpers";
+import { hasWeddingSessions } from "@/lib/events/wedding-sessions";
 import type {
   PersonalInvitationEvent,
   PersonalInvitationGuest,
@@ -29,6 +30,7 @@ export default function PersonalInvitationPanel() {
   const [personal, setPersonal] = useState<PersonalInvitationItem[]>([]);
   const [guests, setGuests] = useState<PersonalInvitationGuest[]>([]);
   const [guestId, setGuestId] = useState("");
+  const [weddingSessionAccess, setWeddingSessionAccess] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -156,6 +158,7 @@ export default function PersonalInvitationPanel() {
 
   useEffect(() => {
     setGuestId("");
+    setWeddingSessionAccess("");
     setName("");
     setPhone("");
     setEditingId(null);
@@ -175,7 +178,7 @@ export default function PersonalInvitationPanel() {
   );
 
   async function createFromExisting() {
-    if (!eventId || !guestId) return;
+    if (!eventId || !guestId || (selectedEvent?.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && !weddingSessionAccess)) return;
 
     setBusyId("create-existing");
     setNotice("");
@@ -184,7 +187,7 @@ export default function PersonalInvitationPanel() {
       const response = await fetch("/api/personal-invitations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invitationId: eventId, guestId }),
+        body: JSON.stringify({ invitationId: eventId, guestId, weddingSessionAccess }),
       });
       const data = await response.json().catch(() => null);
 
@@ -209,7 +212,7 @@ export default function PersonalInvitationPanel() {
   }
 
   async function createNew() {
-    if (!eventId || !name.trim()) return;
+    if (!eventId || !name.trim() || (selectedEvent?.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && !weddingSessionAccess)) return;
 
     setBusyId("create-new");
     setNotice("");
@@ -222,6 +225,7 @@ export default function PersonalInvitationPanel() {
           invitationId: eventId,
           name: name.trim(),
           phone: phone.trim(),
+          weddingSessionAccess,
         }),
       });
       const data = await response.json().catch(() => null);
@@ -395,6 +399,8 @@ export default function PersonalInvitationPanel() {
               availableGuests={availableGuests}
               guestId={guestId}
               setGuestId={setGuestId}
+              weddingSessionAccess={weddingSessionAccess}
+              setWeddingSessionAccess={setWeddingSessionAccess}
               name={name}
               setName={setName}
               phone={phone}
