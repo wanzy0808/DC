@@ -125,15 +125,16 @@ export default function AssetDreamBackdrop({
         }
         transition={{ duration: 14, repeat: Infinity, ease: "easeInOut", delay: 0.6 }}
         className="absolute -bottom-[7%] -right-[5%] h-[68vh] w-[23vw] min-w-[200px] opacity-[0.26] sm:opacity-[0.4]"
-        style={{ transform: "scaleX(-1)" }}
       >
-        <Image
-          src="/blush_rose_gold_floral_ornament.png"
-          alt=""
-          fill
-          sizes="28vw"
-          className="object-contain object-left-bottom"
-        />
+        <div className="relative h-full w-full -scale-x-100">
+          <Image
+            src="/blush_rose_gold_floral_ornament.png"
+            alt=""
+            fill
+            sizes="28vw"
+            className="object-contain object-left-bottom"
+          />
+        </div>
       </motion.div>
 
       <div
