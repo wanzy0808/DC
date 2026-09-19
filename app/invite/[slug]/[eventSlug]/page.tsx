@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { hasWeddingSessions } from "@/lib/events/wedding-sessions";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
 import { slugifyEvent } from "@/lib/invitations/slug";
@@ -43,6 +44,7 @@ export default async function EventInvitationPage({
   ) {
     return <InvitationLockedState />;
   }
+  if (invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation)) return <InvitationLockedState />;
   if (
     invitation.passwordProtected &&
     !(await hasInvitationAccess(invitation.slug))
