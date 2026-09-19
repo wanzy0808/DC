@@ -3150,3 +3150,24 @@ Owner approved exactly two visual elements from the `/jiplak` experiment for the
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Personal Invitation Internal Cleanup (Pass 12)
+
+### Requirement / Intent
+Melanjutkan cleanup repository pada Personal Invitation tanpa mengubah hak akses, status publish, password, request API, atau navigasi. Pisahkan presentation dari event-scoped orchestration/mutation.
+
+### Implementation
+- `PersonalInvitationPanel.tsx` tetap mengelola event selection, loading invitations/guests, create/patch, password, dan publish state.
+- `PersonalInvitationPanels.tsx` memisahkan create form serta list/item editor/password UI; `personal-invitation-types.ts` menyimpan kontrak event/guest; `personal-invitation-helpers.ts` menyimpan sorting events dan pembentukan public URL.
+- `PersonalInvitationPanel.tsx` turun kira-kira dari 22.4k menjadi 12.5k karakter; endpoint, payload, URL, dan UI intent dipertahankan.
+- Affected: `components/Dashboard/PersonalInvitationPanel.tsx`, `PersonalInvitationPanels.tsx`, `personal-invitation-types.ts`, `personal-invitation-helpers.ts`, `AGENTS.md`, `README.md`, `prd.md`. PR #34 baseline conflict with newer landing changes; re-applied on current `main` in branch `refactor/personal-invitation-main-sync` to preserve new landing work.
+
+### Validation
+- Original PR #34 source Build Validation #1116: **PASS** (dependency install, Prisma generation, Next production build dan TypeScript).
+- Updated current-main branch Build Validation: pending until observed. No production database migration.
+
+### Next
+Audit dan uji flow Personal Invitation secara browser/integrasi bila tersedia; build tidak membuktikan interaksi runtime. Hindari refactor folder tanpa manfaat maintainability nyata.
