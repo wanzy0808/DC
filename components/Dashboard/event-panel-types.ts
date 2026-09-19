@@ -21,6 +21,19 @@ export type EventPanelInvitation = {
   eventConfigured: boolean;
   ceremonyTime: string | null;
   receptionTime: string | null;
+  weddingCeremonyEnabled: boolean;
+  weddingReceptionEnabled: boolean;
+  weddingCeremonyStart: string | null;
+  weddingCeremonyEnd: string | null;
+  weddingCeremonyVenue: string | null;
+  weddingCeremonyAddress: string | null;
+  weddingCeremonyMapUrl: string | null;
+  weddingReceptionStart: string | null;
+  weddingReceptionEnd: string | null;
+  weddingReceptionVenue: string | null;
+  weddingReceptionAddress: string | null;
+  weddingReceptionMapUrl: string | null;
+
   description: string | null;
   eventNotes: string | null;
   templateKey: string;
@@ -54,6 +67,19 @@ export type EventForm = {
   eventDate: string;
   ceremonyTime: string;
   receptionTime: string;
+  weddingCeremonyEnabled: boolean;
+  weddingReceptionEnabled: boolean;
+  weddingCeremonyStart: string;
+  weddingCeremonyEnd: string;
+  weddingCeremonyVenue: string;
+  weddingCeremonyAddress: string;
+  weddingCeremonyMapUrl: string;
+  weddingReceptionStart: string;
+  weddingReceptionEnd: string;
+  weddingReceptionVenue: string;
+  weddingReceptionAddress: string;
+  weddingReceptionMapUrl: string;
+
   description: string;
   eventNotes: string;
 };
