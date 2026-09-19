@@ -3119,9 +3119,15 @@ Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geo
 
 ### Asset contract sementara
 `/jiplak` mengharapkan asset berikut berada di `public/`:
-- `romantic_rose_gold_floral_crest.png`;
-- `blush_rose_gold_floral_ornament.png`;
-- `dreamy_pink_and_gold_mist_overlay.png`.
+- `tiara.png`;
+- `flower.png`;
+- `cloud.png`.
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+### Follow-up — Jiplak Chrome Continuity & Actual Asset Names
+- Header dan compact footer `/jiplak` dibuat transparan agar ambience/asset backdrop menyatu sampai chrome atas-bawah; landing canonical `/` tetap memakai canvas background existing.
+- Asset remote yang sudah tersedia dipakai dengan nama aktual `/tiara.png` dan `/flower.png`.
+- `/cloud.png` saat ini memiliki blob SHA yang sama dengan `/tiara.png`, sehingga belum dipakai sebagai mist layer agar tidak menampilkan crest yang sama sebagai background. Mist sementara tetap dibangun dari soft animated Rose gradients + rose petals sampai asset cloud diperbaiki.
