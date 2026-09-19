@@ -26,6 +26,7 @@ DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest manage
 - The Digital Invitation package is required at the **Publish** step, not when creating the event or entering Studio.
 - Unpaid Studio sessions are preview-only and may be watermarked. Public rendering remains server-authoritative and requires a configured event, a saved template, a published state, and valid event-scoped Digital Invitation entitlement.
 - Wedding events may optionally store father/mother names plus each partner’s child order. Renderers use `Putra` / `Putri` wording such as `Putra pertama dari Bapak Ahmad & Ibu Siti`; missing parent data is omitted instead of showing a placeholder.
+- Planned (not yet implemented): same-day wedding sessions for Akad Nikah / Pemberkatan Pernikahan / Prosesi Pernikahan and Resepsi, with guest-specific session invitations through Personal Invitation. Different calendar days require independent events and independently paid invitation packages. Refer to `prd.md` §5.7; the existing timing fields are NOT two wedding sessions.
 - End time remains optional. Rangkaian Acara can explicitly choose `Tampilkan “- end” di undangan`; this persists through the existing `receptionTime` compatibility field as the internal `END` sentinel and renders as `- end` in Studio/public invitation output.
 
 ### WA Blast Add-on
