@@ -3070,3 +3070,31 @@ Owner ingin mencoba Pintu yang terasa lebih 3D dan background yang lebih manis d
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Jiplak Dream-World Portal Redesign (Pass 2)
+
+### Requirement / Intent
+Screenshot review menunjukkan eksperimen Pintu sebelumnya masih terasa seperti tiga card UI dengan shadow: hierarchy lemah, overlap kurang natural, area kiri terlalu kosong, dan background botanical terlihat sebagai dekorasi tempel. Owner meminta eksplorasi frontend yang lebih jauh dengan konsep tetap tiga Pintu + brand Rose, tetapi terasa seperti memasuki tiga dunia berbeda yang dreamy.
+
+### Implementation
+- `/jiplak` direcompose menjadi satu cinematic hero, bukan carousel card biasa;
+- menambahkan `DreamPortalScene.tsx`:
+  - satu portal aktif menjadi focal point besar;
+  - dua portal lain mundur simetris sebagai alternate worlds;
+  - perpindahan active portal memakai spring depth/scale/rotateY;
+  - daun pintu aktif berputar dari engsel menggunakan CSS 3D `rotateY`;
+  - frame memiliki extrusion/depth, inner image world, ground shadow, halo, dan light path/threshold ke arah viewer;
+  - hover/focus portal lain memindahkan focus world; click portal aktif membuka route produk;
+- menambahkan `DreamWorldBackground.tsx`:
+  - ambience Rose berubah halus sesuai portal aktif;
+  - layered radial light, soft veils, concentric dream rings, horizon glow, dust particles, dan abstract botanical horizon menggantikan falling petals khusus eksperimen;
+  - Light/Dark mode tetap tersedia dan semua warna tetap berada dalam Rose + neutral family;
+- `app/jiplak/jiplak.tsx` ditata ulang agar copy kembali terbaca jelas dan berfungsi sebagai editorial anchor di kiri, sementara portal scene menjadi visual anchor di kanan;
+- selector kecil tiga dunia ditambahkan untuk explicit switching tanpa mengandalkan hover;
+- tidak ada perubahan pada `app/page.tsx`, `PintuSection.tsx`, `PintuCard.tsx`, atau `RosePetalBackground.tsx` canonical.
+
+### Validation
+- GitHub Actions observation: pending.
