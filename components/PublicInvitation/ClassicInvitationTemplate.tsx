@@ -283,6 +283,9 @@ export default function ClassicInvitationTemplate({
                 <div className="mt-8">
                   <RsvpForm
                     slug={invitation.slug}
+                    guestId={invitation.personalGuestId}
+                    guestToken={invitation.personalGuestToken}
+                    guestName={invitation.personalGuestName}
                     eventDate={invitation.eventDate}
                     venue={invitation.venue}
                     title={rsvpTitle}
