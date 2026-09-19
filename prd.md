@@ -3098,3 +3098,30 @@ Screenshot review menunjukkan eksperimen Pintu sebelumnya masih terasa seperti t
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Jiplak Asset-Driven Dream World (Pass 3)
+
+### Requirement / Intent
+Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geometry generik dan memakai image assets supaya scene terasa lebih hidup. Rose-petal effect tetap dipertahankan sebagai secondary ambient layer.
+
+### Implementation
+- menambahkan `AssetDreamPortalScene.tsx` sebagai scene portal khusus eksperimen;
+- crest PNG ditempatkan di atas portal aktif sehingga topper generik/"tanduk" dihapus dari visual language baru;
+- portal memakai Motion untuk active-world spring transition, hinged `rotateY` door opening, hover/focus movement, pointer-driven scene parallax, halo, light path, dan content reveal;
+- menambahkan `AssetDreamBackdrop.tsx` untuk memakai mist overlay serta botanical ornament PNG sebagai ambience utama;
+- mist dan botanical assets dianimasikan dengan slow drift/float menggunakan `motion/react`;
+- `RosePetalBackground` existing tetap dirender pada `/jiplak` sebagai layer ambient tambahan tanpa mengubah implementasi protected rose petals;
+- abstract ring/line background dari eksperimen sebelumnya tidak lagi dipakai oleh `/jiplak`;
+- landing canonical di `/` tetap tidak disentuh.
+
+### Asset contract sementara
+`/jiplak` mengharapkan asset berikut berada di `public/`:
+- `romantic_rose_gold_floral_crest.png`;
+- `blush_rose_gold_floral_ornament.png`;
+- `dreamy_pink_and_gold_mist_overlay.png`.
+
+### Validation
+- GitHub Actions observation: pending.
