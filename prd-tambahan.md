@@ -251,3 +251,9 @@ Delta:
 - landing utama tetap tidak disentuh.
 
 Validation: pending GitHub Actions observation.
+
+
+Follow-up:
+- header/footer `/jiplak` transparan agar menyatu dengan dreamy scene;
+- asset aktual memakai `tiara.png` dan `flower.png`;
+- `cloud.png` terdeteksi identik dengan `tiara.png` pada remote, jadi belum dipakai sebagai mist background; rose-petal layer tetap aktif.
