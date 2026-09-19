@@ -187,6 +187,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 - Shared event data must be persisted and read from PostgreSQL/Prisma.
 - Event identity is event-scoped. Couple-specific fields are required only for event categories that use a couple identity.
+- Wedding same-day session invitation rule: for WEDDING only, allow optional Akad Nikah/Pemberkatan Pernikahan/Prosesi Pernikahan and Resepsi sessions on ONE eventDate with independent time/location. Different calendar days require separate event IDs and separate event-scoped Digital Invitation payments. A guest's session access must be saved per guest and enforced server-side/personal renderers; never interpret legacy `ceremonyTime`/`receptionTime` as two separate wedding sessions. Do not ship form-only fields without persistence, authorization, template/preview filtering, and migration validation. See `prd.md` §5.7.
 - Legacy fields such as `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, and `ADAT_AKAD` may remain for backward compatibility but MUST NOT be treated as universal product semantics.
 - No placeholder couple names or fake invitation records.
 - Digital Invitation entitlement is event-scoped; payment for one invitation/event must not unlock another event.
