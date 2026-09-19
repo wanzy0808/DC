@@ -3131,3 +3131,22 @@ Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geo
 - Header dan compact footer `/jiplak` dibuat transparan agar ambience/asset backdrop menyatu sampai chrome atas-bawah; landing canonical `/` tetap memakai canvas background existing.
 - Asset remote yang sudah tersedia dipakai dengan nama aktual `/tiara.png` dan `/flower.png`.
 - `/cloud.png` saat ini memiliki blob SHA yang sama dengan `/tiara.png`, sehingga belum dipakai sebagai mist layer agar tidak menampilkan crest yang sama sebagai background. Mist sementara tetap dibangun dari soft animated Rose gradients + rose petals sampai asset cloud diperbaiki.
+
+
+---
+
+## 2026-09-19 — Promote Floral + Rose Glow to Canonical Landing
+
+### Requirement / Intent
+Owner approved exactly two visual elements from the `/jiplak` experiment for the canonical landing: the botanical flower asset and soft pink/Rose glow. All other landing composition and behavior must remain unchanged.
+
+### Implementation
+- added `components/Landing/LandingFloralGlow.tsx` as an isolated decorative layer;
+- uses committed `/flower.png` on the lower left and a softer mirrored instance on the lower right;
+- adds a restrained animated Rose radial glow near the Pintu side;
+- respects `useReducedMotion()`;
+- `app/page.tsx` only adds this layer before the existing `RosePetalBackground`;
+- existing `PintuSection`, copy, spacing/layout, header/footer, and protected rose-petal implementation are unchanged.
+
+### Validation
+- GitHub Actions observation: pending.
