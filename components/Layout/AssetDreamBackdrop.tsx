@@ -75,23 +75,18 @@ export default function AssetDreamBackdrop({
           reduced
             ? undefined
             : {
-                x: [0, 14, 0],
-                y: [0, -8, 0],
-                scale: [1.02, 1.05, 1.02],
+                x: [0, 18, 0],
+                y: [0, -10, 0],
+                scale: [1, 1.04, 1],
               }
         }
         transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-x-[-8%] bottom-[-4%] top-[4%] opacity-[0.42] sm:opacity-[0.5]"
-      >
-        <Image
-          src="/dreamy_pink_and_gold_mist_overlay.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-      </motion.div>
+        className={`absolute inset-x-[-12%] bottom-[-8%] top-[10%] rounded-[46%] blur-3xl ${
+          isDarkMode
+            ? "bg-[radial-gradient(ellipse_at_70%_36%,rgba(217,163,170,0.12),transparent_42%),radial-gradient(ellipse_at_28%_70%,rgba(192,122,132,0.08),transparent_44%)]"
+            : "bg-[radial-gradient(ellipse_at_70%_36%,rgba(217,163,170,0.18),transparent_42%),radial-gradient(ellipse_at_28%_70%,rgba(192,122,132,0.10),transparent_44%)]"
+        }`}
+      />
 
       <motion.div
         animate={
@@ -106,7 +101,7 @@ export default function AssetDreamBackdrop({
         className="absolute -bottom-[5%] -left-[4%] h-[72vh] w-[24vw] min-w-[210px] opacity-[0.38] sm:opacity-[0.5]"
       >
         <Image
-          src="/blush_rose_gold_floral_ornament.png"
+          src="/flower.png"
           alt=""
           fill
           sizes="28vw"
@@ -128,7 +123,7 @@ export default function AssetDreamBackdrop({
       >
         <div className="relative h-full w-full -scale-x-100">
           <Image
-            src="/blush_rose_gold_floral_ornament.png"
+            src="/flower.png"
             alt=""
             fill
             sizes="28vw"
