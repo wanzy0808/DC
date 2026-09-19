@@ -3171,3 +3171,24 @@ Melanjutkan cleanup repository pada Personal Invitation tanpa mengubah hak akses
 
 ### Next
 Audit dan uji flow Personal Invitation secara browser/integrasi bila tersedia; build tidak membuktikan interaksi runtime. Hindari refactor folder tanpa manfaat maintainability nyata.
+
+
+---
+
+## 2026-09-19 — WA Blast Panel Internal Cleanup (Pass 13)
+
+### Requirement / Intent
+Merapikan panel WA Blast yang mencampur event/guest contracts, quota/event fetching, order/recipient mutations, dan recipient form/queue presentation. Jangan ubah akses event-scoped, kuota, harga, endpoint, atau tampilan dashboard.
+
+### Implementation
+- `WhatsAppBlastPanel.tsx` tetap menangani pemilihan acara, loading guest/queue/quota, pembuatan order add-on, create/delete penerima, state, dan composition.
+- `WaBlastPanels.tsx` menampung reusable `WaBlastAddRecipients` dan `WaBlastRecipientQueue` dengan UI/copy/class serta disabled behavior tetap.
+- `wa-blast-types.ts` menampung kontrak event/guest/selected recipient.
+- File utama turun kira-kira dari 14.9k menjadi 10.8k karakter. Affected: `components/Dashboard/WhatsAppBlastPanel.tsx`, `WaBlastPanels.tsx`, `wa-blast-types.ts`, dan dokumen governance.
+- No database migration; API routes dan payload tetap.
+
+### Validation
+- Build Validation: pending.
+
+### Next
+Jangan melanjutkan pemecahan komponen tanpa alasan jelas. Prioritaskan pengujian runtime event-scoped mutation, quota, serta Personal Invitation dan WA Blast, bukan sekadar mengurangi ukuran file.
