@@ -3098,3 +3098,36 @@ Screenshot review menunjukkan eksperimen Pintu sebelumnya masih terasa seperti t
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Jiplak Asset-Driven Dream World (Pass 3)
+
+### Requirement / Intent
+Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geometry generik dan memakai image assets supaya scene terasa lebih hidup. Rose-petal effect tetap dipertahankan sebagai secondary ambient layer.
+
+### Implementation
+- menambahkan `AssetDreamPortalScene.tsx` sebagai scene portal khusus eksperimen;
+- crest PNG ditempatkan di atas portal aktif sehingga topper generik/"tanduk" dihapus dari visual language baru;
+- portal memakai Motion untuk active-world spring transition, hinged `rotateY` door opening, hover/focus movement, pointer-driven scene parallax, halo, light path, dan content reveal;
+- menambahkan `AssetDreamBackdrop.tsx` untuk memakai mist overlay serta botanical ornament PNG sebagai ambience utama;
+- mist dan botanical assets dianimasikan dengan slow drift/float menggunakan `motion/react`;
+- `RosePetalBackground` existing tetap dirender pada `/jiplak` sebagai layer ambient tambahan tanpa mengubah implementasi protected rose petals;
+- abstract ring/line background dari eksperimen sebelumnya tidak lagi dipakai oleh `/jiplak`;
+- landing canonical di `/` tetap tidak disentuh.
+
+### Asset contract sementara
+`/jiplak` mengharapkan asset berikut berada di `public/`:
+- `tiara.png`;
+- `flower.png`;
+- `cloud.png`.
+
+### Validation
+- GitHub Actions observation: pending.
+
+
+### Follow-up — Jiplak Chrome Continuity & Actual Asset Names
+- Header dan compact footer `/jiplak` dibuat transparan agar ambience/asset backdrop menyatu sampai chrome atas-bawah; landing canonical `/` tetap memakai canvas background existing.
+- Asset remote yang sudah tersedia dipakai dengan nama aktual `/tiara.png` dan `/flower.png`.
+- `/cloud.png` saat ini memiliki blob SHA yang sama dengan `/tiara.png`, sehingga belum dipakai sebagai mist layer agar tidak menampilkan crest yang sama sebagai background. Mist sementara tetap dibangun dari soft animated Rose gradients + rose petals sampai asset cloud diperbaiki.

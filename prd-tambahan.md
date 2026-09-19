@@ -236,3 +236,24 @@ Delta:
 - landing canonical tetap tidak disentuh.
 
 Validation: pending GitHub Actions observation.
+
+
+---
+
+## 19 September 2026 — Jiplak Asset Dream World V3
+
+Delta:
+- scene `/jiplak` sekarang memakai generated image assets sebagai visual utama, bukan garis abstrak;
+- crest image menggantikan topper/tanduk generik di atas portal;
+- botanical ornament dan dreamy mist image dipakai sebagai ambience background;
+- Motion dipakai untuk portal transition, parallax, floating assets, door opening, glow, dan reveal;
+- rose petals existing tetap dipakai sebagai layer ambient tambahan;
+- landing utama tetap tidak disentuh.
+
+Validation: pending GitHub Actions observation.
+
+
+Follow-up:
+- header/footer `/jiplak` transparan agar menyatu dengan dreamy scene;
+- asset aktual memakai `tiara.png` dan `flower.png`;
+- `cloud.png` terdeteksi identik dengan `tiara.png` pada remote, jadi belum dipakai sebagai mist background; rose-petal layer tetap aktif.
