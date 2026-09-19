@@ -21,6 +21,8 @@ import {
   DashboardStatusBadge,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { buildPersonalInvitationPublicUrl } from "@/components/Dashboard/personal-invitation-helpers";
+import { availableWeddingSessionAccess, hasWeddingSessions, weddingSessionAccessLabel } from "@/lib/events/wedding-sessions";
+import type { WeddingSessionAccess } from "@/lib/events/wedding-sessions";
 import type {
   PersonalInvitationEvent,
   PersonalInvitationGuest,
@@ -32,6 +34,8 @@ export function PersonalInvitationCreatePanel({
   availableGuests,
   guestId,
   setGuestId,
+  weddingSessionAccess,
+  setWeddingSessionAccess,
   name,
   setName,
   phone,
@@ -47,6 +51,8 @@ export function PersonalInvitationCreatePanel({
   availableGuests: PersonalInvitationGuest[];
   guestId: string;
   setGuestId: (value: string) => void;
+  weddingSessionAccess: string;
+  setWeddingSessionAccess: (value: string) => void;
   name: string;
   setName: (value: string) => void;
   phone: string;
@@ -68,6 +74,14 @@ export function PersonalInvitationCreatePanel({
         "Gunakan tamu yang sudah ada atau tambahkan tamu baru untuk membuat tautan personal.",
       )}
     >
+      {selectedEvent.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && (
+        <label className="block text-xs font-semibold">{d("Diundang ke")}
+          <select value={weddingSessionAccess} onChange={(event) => setWeddingSessionAccess(event.target.value)} className="mt-2 h-11 w-full rounded-lg border border-border bg-background px-3 text-sm">
+            <option value="">{d("Pilih sesi")}</option>
+            {availableWeddingSessionAccess(selectedEvent).map((value) => <option key={value} value={value}>{weddingSessionAccessLabel(value)}</option>)}
+          </select>
+        </label>
+      )}
       <div className="rounded-xl border border-border/70 bg-background p-3">
         <p className="text-xs font-semibold text-foreground">
           {d("Dari daftar tamu")}
@@ -90,7 +104,7 @@ export function PersonalInvitationCreatePanel({
           type="button"
           size="sm"
           className="mt-2 w-full"
-          disabled={!guestId || Boolean(busyId)}
+          disabled={!guestId || Boolean(busyId) || (selectedEvent.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && !weddingSessionAccess)}
           onClick={onCreateExisting}
         >
           <Plus className="h-4 w-4" />
@@ -119,7 +133,7 @@ export function PersonalInvitationCreatePanel({
             type="button"
             size="sm"
             className="w-full"
-            disabled={!name.trim() || Boolean(busyId)}
+            disabled={!name.trim() || Boolean(busyId) || (selectedEvent.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && !weddingSessionAccess)}
             onClick={onCreateNew}
           >
             <Plus className="h-4 w-4" />
@@ -308,6 +322,23 @@ export function PersonalInvitationListPanel({
                 </div>
               </div>
 
+              {selectedEvent.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent) && (
+                <label className="mt-3 block text-xs font-semibold">{d("Diundang ke")}
+                  <select
+                    value={item.weddingSessionAccess || ""}
+                    onChange={(event) => {
+                      if (event.target.value) void onPatch(item.id, { weddingSessionAccess: event.target.value }, d("Sesi undangan tamu diperbarui."));
+                    }}
+                    disabled={busyId === item.id}
+                    className="mt-2 h-10 w-full rounded-lg border border-border bg-background px-3 text-sm"
+                  >
+                    <option value="">{d("Pilih sesi")}</option>
+                    {availableWeddingSessionAccess(selectedEvent).map((value) => (
+                      <option key={value} value={value}>{weddingSessionAccessLabel(value)}</option>
+                    ))}
+                  </select>
+                </label>
+              )}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <DashboardStatusBadge active={item.personalPublished}>
                   {item.personalPublished ? d("Terbit") : d("Draft")}
