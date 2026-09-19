@@ -118,3 +118,42 @@ export function parseWeddingSessions(body: Record<string, unknown>): { value?: W
   }
   return { value };
 }
+
+export function redactWeddingInvitationForGuest<
+  T extends WeddingSessionValues & {
+    eventCategory: string;
+    venue: string;
+    address: string | null;
+    mapUrl: string | null;
+    ceremonyTime: string | null;
+    receptionTime: string | null;
+  },
+>(invitation: T, rawAccess: unknown): T | null {
+  if (invitation.eventCategory !== "WEDDING" || !hasWeddingSessions(invitation)) return invitation;
+  if (!validWeddingSessionAccess(invitation, rawAccess)) return null;
+  const visible = visibleWeddingSessions(invitation, rawAccess);
+  if (visible.length === 0) return null;
+  const first = visible[0];
+  const ceremonyAllowed = visible.some((session) => session.key === "CEREMONY");
+  const receptionAllowed = visible.some((session) => session.key === "RECEPTION");
+  return {
+    ...invitation,
+    weddingCeremonyEnabled: ceremonyAllowed,
+    weddingReceptionEnabled: receptionAllowed,
+    weddingCeremonyStart: ceremonyAllowed ? invitation.weddingCeremonyStart : null,
+    weddingCeremonyEnd: ceremonyAllowed ? invitation.weddingCeremonyEnd : null,
+    weddingCeremonyVenue: ceremonyAllowed ? invitation.weddingCeremonyVenue : null,
+    weddingCeremonyAddress: ceremonyAllowed ? invitation.weddingCeremonyAddress : null,
+    weddingCeremonyMapUrl: ceremonyAllowed ? invitation.weddingCeremonyMapUrl : null,
+    weddingReceptionStart: receptionAllowed ? invitation.weddingReceptionStart : null,
+    weddingReceptionEnd: receptionAllowed ? invitation.weddingReceptionEnd : null,
+    weddingReceptionVenue: receptionAllowed ? invitation.weddingReceptionVenue : null,
+    weddingReceptionAddress: receptionAllowed ? invitation.weddingReceptionAddress : null,
+    weddingReceptionMapUrl: receptionAllowed ? invitation.weddingReceptionMapUrl : null,
+    venue: first.venue,
+    address: first.address,
+    mapUrl: first.mapUrl,
+    ceremonyTime: first.start,
+    receptionTime: first.end,
+  };
+}
