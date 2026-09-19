@@ -82,7 +82,7 @@ export function visibleWeddingSessions(source: WeddingSessionValues, access: Wed
   return readWeddingSessionValues(source).filter((session) => access === "BOTH" || session.key === access);
 }
 
-const hhmm = /^(?:[01]\\d|2[0-3]):[0-5]\\d$/;
+const hhmm = /^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/;
 
 export function parseWeddingSessions(body: Record<string, unknown>): { value?: WeddingSessionValues; error?: string } {
   if (["weddingCeremonyDate", "weddingReceptionDate", "ceremonyDate", "receptionDate"].some((key) => body[key] !== undefined)) {
@@ -114,7 +114,7 @@ export function parseWeddingSessions(body: Record<string, unknown>): { value?: W
     if (!hhmm.test(session.start)) return { error: `Waktu mulai ${session.label} wajib diisi dengan format HH:mm.` };
     if (session.end && !hhmm.test(session.end)) return { error: `Waktu selesai ${session.label} harus menggunakan format HH:mm.` };
     if (!session.venue) return { error: `Nama lokasi ${session.label} wajib diisi.` };
-    if (session.mapUrl && !/^https:\\/\\//i.test(session.mapUrl)) return { error: `Tautan peta ${session.label} harus diawali https://.` };
+    if (session.mapUrl && !session.mapUrl.startsWith("https://")) return { error: `Tautan peta ${session.label} harus diawali https://.` };
   }
   return { value };
 }
