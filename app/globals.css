@@ -149,6 +149,7 @@
 
 /* Landing chrome should visually merge with the page canvas. Landing-only dark controls keep Dashboard behavior untouched. */
 .dc-navbar--landing { background: var(--background); }
+.dc-navbar--landing.dc-navbar--jiplak { background: transparent; }
 .dark .dc-navbar--landing .dc-language-toggle button[aria-pressed="true"] {
   background: var(--primary) !important;
   color: #0B0B0C !important;
