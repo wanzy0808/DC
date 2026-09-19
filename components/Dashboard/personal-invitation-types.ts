@@ -5,6 +5,7 @@ export type PersonalInvitationGuest = {
   name: string;
   phone: string | null;
   personalToken?: string | null;
+  weddingSessionAccess?: string | null;
   personalPublished?: boolean;
   personalPasswordProtected?: boolean;
   personalViewCount?: number;
@@ -22,4 +23,7 @@ export type PersonalInvitationEvent = EventScopeOption & {
   eventConfigured: boolean;
   accessPaid: boolean;
   createdAt: string;
+  eventCategory: string;
+  weddingCeremonyEnabled: boolean;
+  weddingReceptionEnabled: boolean;
 };

@@ -23,6 +23,18 @@ export type InvitationDesignerInvitation = {
   eventDate: string;
   ceremonyTime: string | null;
   receptionTime: string | null;
+  weddingCeremonyEnabled: boolean;
+  weddingReceptionEnabled: boolean;
+  weddingCeremonyStart: string | null;
+  weddingCeremonyEnd: string | null;
+  weddingCeremonyVenue: string | null;
+  weddingCeremonyAddress: string | null;
+  weddingCeremonyMapUrl: string | null;
+  weddingReceptionStart: string | null;
+  weddingReceptionEnd: string | null;
+  weddingReceptionVenue: string | null;
+  weddingReceptionAddress: string | null;
+  weddingReceptionMapUrl: string | null;
   description: string | null;
   weddingHashtag: string | null;
   dressCode: string | null;

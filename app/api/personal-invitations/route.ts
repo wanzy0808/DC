@@ -2,8 +2,8 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
+import { hasWeddingSessions, validWeddingSessionAccess } from "@/lib/events/wedding-sessions";
 
 async function getEventInvitation(userId: string, invitationId: string) {
   if (!invitationId) return null;
@@ -52,13 +52,6 @@ export async function GET(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
-    }
-
     const guests = await prisma.guest.findMany({
       where: { invitationId: invitation.id, personalToken: { not: null } },
       orderBy: { createdAt: "desc" },
@@ -95,11 +88,10 @@ export async function POST(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
+    const scopedWedding = invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation);
+    const weddingSessionAccess = scopedWedding ? body.weddingSessionAccess : null;
+    if (scopedWedding && !validWeddingSessionAccess(invitation, weddingSessionAccess)) {
+      return NextResponse.json({ error: "Pilih cakupan Upacara Nikah, Resepsi, atau Keduanya untuk tamu ini." }, { status: 400 });
     }
 
     const guestId = String(body.guestId ?? "").trim();
@@ -114,7 +106,7 @@ export async function POST(request: Request) {
       }
       const updated = await prisma.guest.update({
         where: { id: guest.id },
-        data: { personalToken: guest.personalToken || token },
+        data: { personalToken: guest.personalToken || token, weddingSessionAccess },
       });
       return NextResponse.json({
         invitation: sanitizeGuest(updated),
@@ -135,6 +127,7 @@ export async function POST(request: Request) {
         phone,
         source: "MANUAL",
         personalToken: token,
+        weddingSessionAccess,
       },
     });
 
@@ -168,13 +161,6 @@ export async function PATCH(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
-      return NextResponse.json(
-        { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
-        { status: 402 },
-      );
-    }
-
     const id = String(body.id ?? "").trim();
     if (!id) {
       return NextResponse.json({ error: "Personal Invitation wajib dipilih." }, { status: 400 });
@@ -200,6 +186,7 @@ export async function PATCH(request: Request) {
       personalPublished?: boolean;
       personalPasswordProtected?: boolean;
       personalPasswordHash?: string | null;
+      weddingSessionAccess?: string | null;
     } = {};
 
     if (typeof body.name === "string") {
@@ -210,7 +197,23 @@ export async function PATCH(request: Request) {
       data.name = name;
     }
     if (typeof body.phone === "string") data.phone = body.phone.trim() || null;
-    if (typeof body.published === "boolean") data.personalPublished = body.published;
+    if (Object.prototype.hasOwnProperty.call(body, "weddingSessionAccess")) {
+      if (invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation)) {
+        if (!validWeddingSessionAccess(invitation, body.weddingSessionAccess)) {
+          return NextResponse.json({ error: "Pilihan sesi tamu tidak sesuai dengan sesi pernikahan yang aktif." }, { status: 400 });
+        }
+        data.weddingSessionAccess = body.weddingSessionAccess;
+      } else {
+        return NextResponse.json({ error: "Pilihan sesi hanya tersedia untuk pernikahan bersesi." }, { status: 400 });
+      }
+    }
+    if (typeof body.published === "boolean") {
+      if (body.published && invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation) &&
+          !validWeddingSessionAccess(invitation, data.weddingSessionAccess ?? guest.weddingSessionAccess)) {
+        return NextResponse.json({ error: "Tentukan sesi undangan tamu sebelum publish." }, { status: 400 });
+      }
+      data.personalPublished = body.published;
+    }
 
     if (typeof body.passwordProtected === "boolean") {
       if (!body.passwordProtected) {

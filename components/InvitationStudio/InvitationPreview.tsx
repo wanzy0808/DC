@@ -16,6 +16,7 @@ import {
   getInvitationEventIdentity,
 } from "@/components/InvitationStudio/designer-state";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
+import { hasWeddingSessions, readWeddingSessionValues } from "@/lib/events/wedding-sessions";
 
 export function InvitationPreview({
   invitation,
@@ -44,6 +45,7 @@ export function InvitationPreview({
     invitation?.timezone || "Asia/Jakarta",
   );
 
+  const weddingSchedule = invitation?.eventCategory === "WEDDING" && hasWeddingSessions(invitation) ? readWeddingSessionValues(invitation) : [];
   const groomParents =
     identity.category === "WEDDING"
       ? weddingParentLine(
@@ -238,6 +240,19 @@ export function InvitationPreview({
           Waktu & Lokasi
         </h2>
 
+        {weddingSchedule.length > 0 ? (
+          <div className="mt-5 space-y-3">
+            {weddingSchedule.map((session) => (
+              <div key={session.key} className="rounded-xl border p-3 text-center" style={{ borderColor: palette.soft, background: palette.bg }}>
+                <p className="text-[12px] font-semibold" style={{ fontFamily: fontPair.heading }}>{session.label}</p>
+                <p className="mt-2 text-[10px]">{session.start}{session.end ? `–${session.end}` : ""} {timezone.label}</p>
+                <p className="mt-2 text-[11px]">{session.venue}</p>
+                {session.address && <p className="mt-1 text-[9px] opacity-60">{session.address}</p>}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
         <div
           className={`mt-5 grid gap-3 ${
             layout === "editorial" ? "grid-cols-2" : ""
@@ -273,6 +288,9 @@ export function InvitationPreview({
           <p className="mt-1 text-[9px] leading-4 opacity-60">
             {invitation.address}
           </p>
+        )}
+
+          </>
         )}
         {dressCode && (
           <p className="mt-3 text-[9px] opacity-55">

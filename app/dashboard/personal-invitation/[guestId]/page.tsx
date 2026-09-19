@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { redactWeddingInvitationForGuest } from "@/lib/events/wedding-sessions";
 import PublicInvitation from "@/components/PublicInvitation/PublicInvitation";
 import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
 import { Button } from "@/components/ui/button";
@@ -29,12 +30,15 @@ export default async function PersonalInvitationPreviewPage({
   if (!guest) notFound();
 
   const invitation = guest.invitation;
+  const scopedInvitation = redactWeddingInvitationForGuest(invitation, guest.weddingSessionAccess);
+  const visibleInvitation = scopedInvitation ? { ...scopedInvitation, personalGuestId: guest.id, personalGuestToken: guest.personalToken || undefined, personalGuestName: guest.name } : null;
+  if (!visibleInvitation) notFound();
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <ClassicInvitationTemplate invitation={invitation} />
+      <ClassicInvitationTemplate invitation={visibleInvitation} />
     ) : (
-      <PublicInvitation invitation={invitation} />
+      <PublicInvitation invitation={visibleInvitation} />
     );
 
   return (

@@ -19,6 +19,7 @@ import type {
 export default function RsvpForm({
   slug,
   guestId,
+  guestToken,
   guestName,
   eventDate,
   venue,
@@ -65,6 +66,7 @@ export default function RsvpForm({
         body: JSON.stringify({
           ...form,
           guestId,
+          guestToken,
           plusOnes: Number(form.plusOnes),
         }),
       });

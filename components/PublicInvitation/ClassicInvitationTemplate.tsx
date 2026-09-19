@@ -1,5 +1,7 @@
 import { MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import WeddingSessionSchedule from "@/components/PublicInvitation/WeddingSessionSchedule";
+import { hasWeddingSessions, readWeddingSessionValues } from "@/lib/events/wedding-sessions";
 import {
   weddingParentLine,
   type PublicInvitationData,
@@ -70,6 +72,7 @@ export default function ClassicInvitationTemplate({
 }) {
   const image = invitation.assets?.find((asset) => asset.type === "IMAGE")?.url;
   const eventCategory = normalizeEventCategory(invitation.eventCategory);
+  const weddingSchedule = eventCategory === "WEDDING" && hasWeddingSessions(invitation) ? readWeddingSessionValues(invitation) : [];
   const category = getEventCategory(eventCategory);
   const timezone = getIndonesiaTimezone(invitation.timezone);
   const sections = parseInvitationSections(invitation.templateKey);
@@ -229,7 +232,9 @@ export default function ClassicInvitationTemplate({
               title="Waktu & Lokasi"
               description="Detail acara untuk membantu Anda mempersiapkan kehadiran."
             />
-            <div className="grid w-full gap-3 sm:grid-cols-2">
+            {weddingSchedule.length > 0 ? (
+              <WeddingSessionSchedule sessions={weddingSchedule} timezoneLabel={timezone.label} />
+            ) : (<><div className="grid w-full gap-3 sm:grid-cols-2">
               <div className="w-full rounded-xl border border-stone-400 bg-stone-200 p-6 text-center">
                 <h3 className="font-[Cormorant_Garamond,serif] text-xl">Mulai</h3>
                 <div className="mx-auto my-4 h-px w-10 bg-stone-400" />
@@ -263,7 +268,7 @@ export default function ClassicInvitationTemplate({
                   Lihat Lokasi
                 </a>
               )}
-            </div>
+            </div></>)}
           </section>
 
           {sections.rsvp && (
@@ -278,6 +283,9 @@ export default function ClassicInvitationTemplate({
                 <div className="mt-8">
                   <RsvpForm
                     slug={invitation.slug}
+                    guestId={invitation.personalGuestId}
+                    guestToken={invitation.personalGuestToken}
+                    guestName={invitation.personalGuestName}
                     eventDate={invitation.eventDate}
                     venue={invitation.venue}
                     title={rsvpTitle}

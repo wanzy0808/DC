@@ -25,6 +25,8 @@ import {
   DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { WeddingSessionsFields } from "@/components/Dashboard/WeddingSessionsFields";
+import { parseWeddingSessions } from "@/lib/events/wedding-sessions";
 import {
   EventDateField,
   EventField,
@@ -119,7 +121,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
     return () => window.cancelAnimationFrame(frame);
   }, [activeId, editorMode]);
 
-  function field(name: keyof EventForm, value: string) {
+  function field<K extends keyof EventForm>(name: K, value: EventForm[K]) {
     setForm((current) => ({ ...current, [name]: value }));
   }
 
@@ -166,17 +168,25 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
     }
     const eventDateIso = displayDateToIso(form.eventDate);
     if (!eventDateIso) return setNotice(d("Tanggal harus menggunakan format dd/mm/yyyy yang valid."));
-    if (!isValidTime24(form.ceremonyTime)) {
+    const wedding = form.eventCategory === "WEDDING";
+    const sessions = wedding ? parseWeddingSessions(form as unknown as Record<string, unknown>) : null;
+    if (wedding && (!sessions?.value || sessions.error)) return setNotice(sessions?.error || "Pilih sesi pernikahan.");
+    const primary = wedding
+      ? sessions!.value!.weddingCeremonyEnabled
+        ? { start: sessions!.value!.weddingCeremonyStart!, venue: sessions!.value!.weddingCeremonyVenue!, address: sessions!.value!.weddingCeremonyAddress, mapUrl: sessions!.value!.weddingCeremonyMapUrl }
+        : { start: sessions!.value!.weddingReceptionStart!, venue: sessions!.value!.weddingReceptionVenue!, address: sessions!.value!.weddingReceptionAddress, mapUrl: sessions!.value!.weddingReceptionMapUrl }
+      : null;
+    if (!wedding && !isValidTime24(form.ceremonyTime)) {
       return setNotice(d("Waktu mulai harus menggunakan format HH:mm."));
     }
     if (
-      form.receptionTime &&
+      !wedding && form.receptionTime &&
       form.receptionTime !== END_TIME_SENTINEL &&
       !isValidTime24(form.receptionTime)
     ) {
       return setNotice(d("Waktu selesai harus menggunakan format HH:mm atau opsi - end."));
     }
-    if (!form.venue.trim()) return setNotice(d("Nama tempat wajib diisi."));
+    if (!wedding && !form.venue.trim()) return setNotice(d("Nama tempat wajib diisi."));
 
     setSaving(true);
     setNotice(d("Menyimpan..."));
@@ -203,13 +213,14 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
           brideFatherName: form.brideFatherName,
           brideMotherName: form.brideMotherName,
           brideChildOrder: form.brideChildOrder,
-          venue: form.venue,
-          address: form.address,
-          mapUrl: form.mapUrl,
+          venue: primary?.venue ?? form.venue,
+          address: primary ? primary.address : form.address,
+          mapUrl: primary ? primary.mapUrl : form.mapUrl,
           timezone: form.timezone,
           eventDate: eventDateIso,
-          ceremonyTime: form.ceremonyTime,
-          receptionTime: form.receptionTime,
+          ceremonyTime: primary?.start ?? form.ceremonyTime,
+          receptionTime: wedding ? "" : form.receptionTime,
+          ...(wedding ? sessions!.value : { weddingCeremonyEnabled: false, weddingReceptionEnabled: false }),
           description: form.description,
           eventNotes: form.eventNotes,
           eventConfigured: true,
@@ -508,8 +519,8 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                 <h3 className="text-sm font-semibold">{d("Waktu & tempat")}</h3>
                 <div className="mt-4 grid gap-4 md:grid-cols-3 xl:grid-cols-1 2xl:grid-cols-3">
                   <EventDateField label={d("Tanggal")} value={form.eventDate} onChange={(value) => field("eventDate", value)} />
-                  <EventTimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />
-                  <div>
+                  {form.eventCategory !== "WEDDING" && <EventTimeField label={`${d("Mulai")} (${timezone.label})`} value={form.ceremonyTime} onChange={(value) => field("ceremonyTime", value)} />}
+                  {form.eventCategory !== "WEDDING" && <div>
                     <EventTimeField
                       label={`${d("Selesai")} (${timezone.label})`}
                       value={form.receptionTime === END_TIME_SENTINEL ? "" : form.receptionTime}
@@ -530,7 +541,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                       />
                       <span>{d("Tampilkan “- end” di undangan")}</span>
                     </label>
-                  </div>
+                  </div>}
                 </div>
 
                 <label className="mt-4 block">
@@ -548,18 +559,19 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   </select>
                 </label>
 
-                {(form.eventDate || form.ceremonyTime) && (
+                {form.eventCategory !== "WEDDING" && (form.eventDate || form.ceremonyTime) && (
                   <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-2"><CalendarDays className="h-4 w-4 text-primary" />{form.eventDate ? formatEventDateLabel(form.eventDate, locale) : d("Tanggal")}</span>
                     <span className="inline-flex items-center gap-2"><Clock3 className="h-4 w-4 text-primary" />{form.ceremonyTime || "--:--"}{form.receptionTime === END_TIME_SENTINEL ? " - end" : form.receptionTime ? `–${form.receptionTime}` : ""} {timezone.label}</span>
                   </div>
                 )}
 
-                <div className="mt-4 space-y-4">
+                {form.eventCategory === "WEDDING" && <WeddingSessionsFields form={form} timezoneLabel={timezone.label} update={field} />}
+                {form.eventCategory !== "WEDDING" && <div className="mt-4 space-y-4">
                   <EventField label={d("Nama tempat")} value={form.venue} onChange={(value) => field("venue", value)} />
                   <EventField label={d("Alamat")} value={form.address} onChange={(value) => field("address", value)} />
                   <EventField label={d("Google Maps")} value={form.mapUrl} onChange={(value) => field("mapUrl", value)} />
-                </div>
+                </div>}
               </div>
             )}
           </div>
