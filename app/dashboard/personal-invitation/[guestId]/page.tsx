@@ -30,7 +30,8 @@ export default async function PersonalInvitationPreviewPage({
   if (!guest) notFound();
 
   const invitation = guest.invitation;
-  const visibleInvitation = redactWeddingInvitationForGuest(invitation, guest.weddingSessionAccess);
+  const scopedInvitation = redactWeddingInvitationForGuest(invitation, guest.weddingSessionAccess);
+  const visibleInvitation = scopedInvitation ? { ...scopedInvitation, personalGuestId: guest.id, personalGuestToken: guest.personalToken || undefined, personalGuestName: guest.name } : null;
   if (!visibleInvitation) notFound();
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
