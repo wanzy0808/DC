@@ -16,7 +16,7 @@ import {
   PersonalInvitationListPanel,
 } from "@/components/Dashboard/PersonalInvitationPanels";
 import { sortPersonalInvitationEvents } from "@/components/Dashboard/personal-invitation-helpers";
-import { hasWeddingSessions } from "@/lib/events/wedding-sessions";
+import { availableWeddingSessionAccess, hasWeddingSessions } from "@/lib/events/wedding-sessions";
 import type {
   PersonalInvitationEvent,
   PersonalInvitationGuest,
@@ -158,7 +158,13 @@ export default function PersonalInvitationPanel() {
 
   useEffect(() => {
     setGuestId("");
-    setWeddingSessionAccess("");
+    setWeddingSessionAccess(
+      selectedEvent?.eventCategory === "WEDDING" && hasWeddingSessions(selectedEvent)
+        ? availableWeddingSessionAccess(selectedEvent).length === 1
+          ? availableWeddingSessionAccess(selectedEvent)[0]
+          : ""
+        : "",
+    );
     setName("");
     setPhone("");
     setEditingId(null);
