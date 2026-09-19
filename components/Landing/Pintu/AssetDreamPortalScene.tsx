@@ -183,7 +183,7 @@ function PortalCard({
         className="pointer-events-none absolute left-1/2 top-[-13%] z-50 h-[25%] w-[145%] -translate-x-1/2"
       >
         <Image
-          src="/romantic_rose_gold_floral_crest.png"
+          src="/tiara.png"
           alt=""
           fill
           sizes="480px"
