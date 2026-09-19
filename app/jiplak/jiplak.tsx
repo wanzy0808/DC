@@ -4,10 +4,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Sparkles } from "lucide-react";
-import DreamPortalScene, {
-  type DreamDoorValue,
-} from "@/components/Landing/Pintu/DreamPortalScene";
-import DreamWorldBackground from "@/components/Layout/DreamWorldBackground";
+import AssetDreamPortalScene, {
+  type AssetDoorValue,
+} from "@/components/Landing/Pintu/AssetDreamPortalScene";
+import AssetDreamBackdrop from "@/components/Layout/AssetDreamBackdrop";
+import RosePetalBackground from "@/components/Layout/RosePetalBackground";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
@@ -29,7 +30,7 @@ const doorMeta = {
 } as const;
 
 export default function JiplakLanding() {
-  const [activeDoor, setActiveDoor] = useState<DreamDoorValue>(2);
+  const [activeDoor, setActiveDoor] = useState<AssetDoorValue>(2);
   const reduced = useReducedMotion();
   const { messages } = useLanguage();
 
@@ -44,7 +45,8 @@ export default function JiplakLanding() {
 
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
-      <DreamWorldBackground activeDoor={activeDoor} />
+      <AssetDreamBackdrop activeDoor={activeDoor} />
+      <RosePetalBackground />
 
       <main className="relative z-10 mx-auto flex min-h-[calc(100dvh-88px)] w-[80vw] max-w-full items-center pb-14 pt-6 sm:pt-8 lg:pb-16 lg:pt-5">
         <section className="grid w-full items-center gap-8 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] lg:gap-10 xl:gap-16">
@@ -127,7 +129,7 @@ export default function JiplakLanding() {
             </AnimatePresence>
 
             <div className="mt-9 flex items-center gap-2">
-              {([1, 2, 3] as DreamDoorValue[]).map((door) => {
+              {([1, 2, 3] as AssetDoorValue[]).map((door) => {
                 const active = activeDoor === door;
                 return (
                   <button
@@ -164,7 +166,7 @@ export default function JiplakLanding() {
             className="relative z-20 min-w-0 lg:-mr-[3vw]"
           >
             <div className="relative mx-auto w-full max-w-[760px]">
-              <DreamPortalScene
+              <AssetDreamPortalScene
                 activeDoor={activeDoor}
                 setActiveDoor={setActiveDoor}
               />
