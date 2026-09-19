@@ -44,6 +44,7 @@ Validation must never be described as PASS unless an actual build/CI result is a
 - Existing routes and compatibility aliases must remain when required by the PRD.
 - **Pintu is a core landing-page navigation surface. Do not remove or bypass it without explicit user instruction.**
 - **Rose petals in `components/Layout/RosePetalBackground.tsx` are a protected visual element. Do not alter their behavior, appearance, count, timing, or styling unless explicitly instructed.**
+- **Canonical landing ambient accents:** owner explicitly approved promoting only the `flower.png` botanical layer and soft Rose glow from `/jiplak` into `/`. Keep them additive behind the existing landing composition. Do not use this approval to change Pintu, copy, layout, header/footer, rose-petal behavior, or other landing elements.
 
 ## 3. Typography
 
