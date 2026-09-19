@@ -1,6 +1,7 @@
 export type RsvpFormProps = {
   slug: string;
   guestId?: string;
+  guestToken?: string;
   guestName?: string;
   eventDate?: string | Date;
   venue?: string | null;
