@@ -2993,3 +2993,25 @@ Merapikan Seating Chart tanpa memecah canvas editor secara berlebihan. Fokus han
 
 ### Next
 Audit berikutnya fokus pada Dashboard feature panel besar yang benar-benar mencampur fetching, domain state, mutation, filtering, dan presentation—prioritas kandidat: `PersonalInvitationPanel.tsx`.
+
+
+---
+
+## 2026-09-19 — Personal Invitation Internal Cleanup (Pass 12)
+
+### Requirement / Intent
+Melanjutkan cleanup repository pada Personal Invitation tanpa mengubah hak akses, status publish, password, request API, atau navigasi. Pisahkan presentation dari event-scoped orchestration/mutation.
+
+### Implementation
+- `PersonalInvitationPanel.tsx` tetap mengelola event selection, loading invitations/guests, create/patch, password, dan publish state.
+- `PersonalInvitationPanels.tsx` memisahkan create form serta list/item editor/password UI; `personal-invitation-types.ts` menyimpan kontrak event/guest; `personal-invitation-helpers.ts` menyimpan sorting events dan pembentukan public URL.
+- `PersonalInvitationPanel.tsx` turun kira-kira dari 22.4k menjadi 12.5k karakter; endpoint, payload, URL, dan UI intent dipertahankan.
+- Affected: `components/Dashboard/PersonalInvitationPanel.tsx`, `PersonalInvitationPanels.tsx`, `personal-invitation-types.ts`, `personal-invitation-helpers.ts`, `AGENTS.md`, `README.md`, `prd.md`. PR #34; source head `ed7a845f88289de869cc2ca26513f037c7134f86`.
+
+### Validation
+- Build Validation #1116 pada source head `ed7a845f88289de869cc2ca26513f037c7134f86`: **PASS** (dependency install, Prisma generation, Next production build dan TypeScript).
+- Final docs-only validation: pending pada saat catatan ini dibuat; dokumentasi tidak mengubah application source.
+- Database migration: N/A.
+
+### Next
+Pilih perubahan berikutnya berdasarkan masalah maintainability nyata, bukan sekadar ukuran file. Audit dan uji flow Personal Invitation secara browser/integrasi bila tersedia, karena build type-check tidak membuktikan interaksi runtime.
