@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import DoorRelief from "@/components/Landing/Pintu/DoorRelief";
+import DoorMolding, { FrameMolding } from "@/components/Landing/Pintu/DoorMolding";
 
 type Side = "left" | "right";
 type DoorAngle = 0 | 45 | 90 | 110;
@@ -156,6 +157,7 @@ function HingedLeaf({
           className="absolute inset-x-[12%] bottom-[10%] h-[36%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_9px_rgba(65,21,34,0.28),inset_-2px_-2px_5px_rgba(247,204,212,0.14),0_1px_1px_rgba(239,193,201,0.22)]" />
         {/* Both relief panels belong to the moving FRONT leaf face, never to the stationary frame. */}
         <DoorRelief side={side} />
+        <DoorMolding side={side} />
         <div className={`absolute inset-y-[5%] w-[3px] bg-[#f2cbd0]/70 shadow-[1px_0_3px_rgba(72,26,36,0.45)] ${rail}`} />
         <div className={`absolute top-[47%] h-[7%] w-[7%] min-w-[7px] rounded-sm border border-[#f0d4d8]/80 bg-[linear-gradient(90deg,#73404a,#e0b2b9,#a0646e)] shadow-[0_1px_4px_rgba(55,23,30,0.5)] ${handle}`} />
       </div>
@@ -281,6 +283,7 @@ function DoorFrame({ angleDegrees }: { angleDegrees: DoorAngle }) {
       <div className="pointer-events-none absolute inset-y-0 right-0 w-[3.65%] bg-[linear-gradient(270deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[-5px_0_8px_rgba(39,15,23,0.3)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2.2%] bg-[linear-gradient(#a2636e,#d6a0a8_48%,#74444e)] shadow-[0_4px_7px_rgba(40,15,23,0.22)]" />
 
+      <FrameMolding />
       <DoorHingeBarrels side="left" moving={false} />
       <DoorHingeBarrels side="right" moving={false} />
     </>
@@ -392,8 +395,8 @@ export default function Pintu3DPreview() {
           </Button>
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Pilih bukaan 0°, 45°, 90° atau 110° untuk membandingkan gerakan dan bayangan setiap daun.
-          Lalu coba sudut kiri dan kanan: engsel dan kusen tetap diam, kedua daun tetap utuh saat membuka dan menutup.
+          Periksa list bertingkat di sekeliling ukiran dan garis pertemuan dua daun saat tertutup.
+          Buka hingga 110°, lalu pilih sudut kiri atau kanan: molding pada daun ikut berputar, list kusen tetap diam.
         </p>
       </div>
     </div>
