@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 3 bentuk/profil daun telah diimplementasikan; local lint/build lulus, CI remote dan review screenshot owner masih menunggu. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 3 bentuk/profil daun telah masuk `main`; local lint/build dan CI lulus, review screenshot owner masih menunggu. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -22,7 +22,7 @@
 | --- | --- | --- | --- |
 | 1 | Pindah ke mesh 3D nyata | Fixed jamb berdimensi, dua daun utuh tebal masing-masing satu pivot luar; bukaan 0°–110°, 3 sudut kamera; **foto asli di samping**. Ornamen rinci sengaja belum dibuat, jangan menganggap mock mesh sebagai desain akhir. | Kode masuk GitHub — CI & screenshot owner pending |
 | 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Merged `main` via PR #53 — CI PASS; review owner pending |
-| 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Implementasi source selesai — local lint/build PASS; CI + review owner pending |
+| 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Merged `main` via PR #54 — CI PASS; review owner pending |
 | 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Belum |
 | 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Belum |
 | 6 | Relief persis panel daun | Corner ornaments kecil, acanthus atas, strip tengah, center flourish bawah sebagai geometri relief sesungguhnya, mengikuti setiap daun. **Bukan rose flower crest atau simbol generik.** | Belum |
@@ -66,7 +66,7 @@
 
 **Batas tahap:** molding Tahap 3 hanya mengunci bentuk/profil; ukiran acanthus/corner ornaments belum ditambahkan. Barrel engsel dan handle masih baseline sampai Tahap 4. Warna/material masih material sementara sampai Tahap 5. Detail relief panel, interior, cahaya dan kamera masuk tetap di tahap masing-masing.
 
-**Validation yang benar-benar dijalankan:** syntax check engine **PASS**; targeted ESLint **PASS**; Next.js 16.3.3 production build **PASS** (54 halaman statis). Source commit GitHub `e6ab1491453b02f0e8703e114fb77a7df2358393`. GitHub Build Validation dan screenshot/review owner masih **pending**, sehingga Tahap 3 belum dianggap approved secara visual.
+**Validation yang benar-benar dijalankan:** syntax check engine **PASS**; targeted ESLint **PASS**; Next.js 16.3.3 production build **PASS** (54 halaman statis). Source commit GitHub `e6ab1491453b02f0e8703e114fb77a7df2358393`. GitHub Build Validation run `35511726454` pada branch head `c3d6a553ae7762a398cb40fec80ecdb8647cf12c` **PASS**; PR #54 merged ke `main` sebagai `905134d93ae1df4991001fd1a964e3a1fbfd135d`. Owner kemudian melaporkan warning browser bahwa `THREE.PCFSoftShadowMap` telah dihapus; engine diganti memakai `THREE.PCFShadowMap` yang didukung pada fix `626d71a7fb13c44dd3e80ecff52ce923daf90cd4`, lalu syntax check, ESLint dan production build 54 halaman kembali **PASS**. Screenshot/review owner masih **pending**, sehingga Tahap 3 belum dianggap approved secara visual.
 
 ---
 
