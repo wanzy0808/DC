@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Ornamen bunga &amp; crest
+          Ruang di balik pintu
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Crest bunga Rose kini menyatu dengan panel atas masing-masing daun, disertai ornamen kecil pada balok kusen. Periksa saat pintu tertutup dan terbuka 110°: bunga daun bergerak bersama engsel, bunga kusen tetap.
+          Di balik pintu kini ada ruang berperspektif: dinding samping, plafon, lantai, dan lengkungan jauh di dalam. Buka hingga 110°, lalu periksa dari depan, kiri, dan kanan. Cahaya dari celah akan disempurnakan pada tahap berikutnya.
         </p>
       </div>
       <Pintu3DPreview />
