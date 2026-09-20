@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 dan uji kamera lab merged `main` via PR #57–58 (CI PASS). Audit tahap 13 (pemulihan WebGL + ekspor gambar review) sedang dikerjakan di branch; screenshot/fidelity owner, audit browser nyata, replikasi tiga pintu dan navigasi portal belum final. Landing utama tetap tidak berubah sampai review Pintu 1.
+**STATUS AKTIF:** Pintu 1 V2 Tahap 5–10 dan uji kamera/screenshot merged ke `main` via PR #57–59 (CI PASS). Prototipe tiga pintu dalam satu scene WebGL + navigasi layanan sedang dibangun di `/pintu-lab/orbital` (branch `feat/pintu-v2-orbital-portal-navigation`); CI dan review visual owner masih pending. Landing utama `/` dan `/jiplak` tidak diubah.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -33,14 +33,24 @@
 | 11 | Fidelity visual & screenshot | Bandingkan 0°/45°/90°/110° depan/miring dan kamera melintasi kusen dengan `pintu1.png` dari browser owner. | Eksperimen kamera lab merged PR #58 — CI PASS; screenshot/fidelity owner pending |
 | 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Pemulihan WebGL + gambar audit di branch; CI/review perangkat pending |
-| 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Belum |
-| 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Belum |
+| 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Prototipe lab tiga mesh satu scene; CI/review pending; landing belum berubah |
+| 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Prototipe lab orbit → buka → kamera masuk → route → zoom-out; CI/review pending |
 
 ### Catatan audit V2 — Tahap 11 dan 13 (persiapan review)
 
 Di `/pintu-lab`, tombol `Simpan gambar sudut ini` menangkap frame WebGL yang sedang tampil sebagai PNG, dengan nama file memuat bukaan (0/45/90/110), sudut kamera depan/kiri/kanan, dan posisi uji kamera masuk. Ini mempermudah perbandingan visual dengan `public/pintu1.png` tanpa menganggap gambar otomatis setara. Kode renderer memakai capture sekali saat tombol ditekan, bukan `preserveDrawingBuffer` yang selalu aktif.
 
 Engine menangani `webglcontextlost` dengan `preventDefault`, berhenti menjadwalkan frame, lalu `webglcontextrestored` memicu resize dan render baru memakai sudut/kamera yang terakhir dipilih. UI memberi status pemulihan dan opsi screenshot perangkat jika ekspor PNG gagal. Listener dibersihkan saat unmount. **Belum diuji** dengan WebGL context loss aktual, mobile rendah daya, atau browser back/forward; screenshot owner/fidelity visual masih pending. Perubahan ini tidak mengaktifkan tiga Pintu di landing.
+
+### Prototipe akhir terisolasi — tiga pintu dan navigasi layanan (Tahap 14–15)
+
+Atas permintaan owner untuk meneruskan sampai alur lengkap bisa dicoba, implementasi dilakukan **hanya di `/pintu-lab/orbital`**, tanpa menyatakan Pintu 1 sudah disetujui secara visual atau mengganti landing utama. Tiga mesh pintu nyata berbagi **satu scene, satu WebGLRenderer dan satu kamera**. Model Pintu 1 direfaktor ke `reference-door-model.js`, dipakai bersama preview satu pintu dan orbital. Variasi Undangan serta Buku Tamu mengganti palet cat Rose, mempertahankan frame dan bentuk acuan Pintu 1. Replikasi/prototipe belum berarti fidelity ketiganya approved.
+
+Orbit perlahan dengan pause saat hover atau pilihan manual. Tombol pilihan dan tautan aksesibel via keyboard/touch; hover serta rotasi tidak pernah menavigasi. Tombol Masuk memusatkan pintu pilihan, membuka dua daun, kemudian kamera berjalan melewati kusen menuju foyer 3D. Setelah masuk, router berpindah ke route asli `/event-planner`, `/d-invitation` atau `/guestbook`. Penanda sessionStorage satu kali pakai memicu zoom-out lembut pada container konten tujuan ke skala normal; direct link, Back dan refresh tidak mengulangnya. Reduced motion memakai navigasi langsung. Semua service menyediakan tautan normal, termasuk ketika WebGL tidak tersedia. Renderer, geometry, material dan listener dibersihkan saat keluar.
+
+Files: `reference-door-model.js`, `reference-door-engine.js`, `reference-door-orbital-engine.js`, `reference-door-engine.d.ts`, `ReferenceDoorOrbitalPreview.tsx`, `app/pintu-lab/orbital/page.tsx`, `app/pintu-lab/page.tsx`, `components/Layout/PublicAtmosphere.tsx`, `app/globals.css`, `pintu3d.md`, `prd.md`. Tidak mengubah `/`, `/jiplak`, `/pintu-lab/css`, rose petals, backend, atau dashboard.
+
+**Verifikasi saat penulisan:** build/CI dan screenshot runtime belum diamati. Kelancaran WebGL perangkat nyata, clipping dan kesamaan relief dengan `public/pintu1.png` harus diuji; promosi ke landing belum dilakukan.
 
 ### Catatan eksekusi V2 — Tahap 1
 
