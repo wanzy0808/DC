@@ -30,7 +30,7 @@
 | Tahap | Fase | Perubahan yang harus tampak saat direview | Status |
 | --- | --- | --- | --- |
 | 1 | Dasar | Satu Pintu besar di preview khusus, **dua daun lengkap** yang bisa dibuka/ditutup pada pivot kusen luar. Tidak ada setengah facade yang tertinggal di tengah. | Implementasi pertama — menunggu review visual |
-| 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Belum |
+| 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Implementasi masuk GitHub; menunggu review visual |
 | 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Belum |
 | 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Belum |
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Belum |
@@ -46,6 +46,9 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 2 (implementasi):** Pintu 1 di `/pintu-lab` dibuat lebih tinggi (proporsi 0,65), ukuran viewport dikendalikan agar objek tetap besar tanpa perlu mengubah landing, trim top/bottom dan sisi kusen dipersempit, kedua daun disusun simetris dengan celah tengah 0,7% dari lebar kusen. Setiap daun mendapat muka dan belakang pada z ±10 px serta keempat rusuk prismanya (tebal 20 px) yang ikut satu pivot engsel. Ditambahkan pilihan tampak depan/miring (-17°) untuk mengevaluasi volume ketika terbuka dan perubahan instruksi pada route. Bukan tahap material/ukiran akhir. Berkas kode: `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`. Source commits: `6f9fb541`, `271b634e`. Build/CI: **pending observation**; penilaian bentuk dari browser/screenshot: **pending owner review**. `/` dan `/jiplak` tidak diubah.
+
 
 **20 September 2026 — Implementasi & pemeriksaan teknis awal:** GitHub Build Validation run `35497267847` pada commit `e67a7da17b9a14dc68ff563413600703d73dd3f5` (komponen + route) **PASS**. Ini verifikasi build, bukan bukti kualitas tampilan/engsel di browser; screenshot desktop/mobile dan feedback owner tetap **pending**. Tidak diperlukan asset baru pada baseline ini.
 
