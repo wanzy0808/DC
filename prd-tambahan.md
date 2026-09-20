@@ -281,4 +281,4 @@ Validation: pending GitHub Actions & local visual check.
 
 Eksperimen baru memakai Three.js langsung melalui lazy client import. Tiga pintu sekarang berupa mesh 3D dengan frame melengkung, ketebalan, engsel, material Rose, lantai, shadow, dunia foto di balik daun pintu, cahaya keluar dari portal, partikel, parallax dan transisi antar-dunia. Salinan `PintuSectionJiplak`/`PintuCardJiplak` tetap ada sebagai fallback WebGL2, bukan diganti dengan import komponen landing utama. Bunga, pink glow, rose petals, copy, navbar/footer `/jiplak`, dan navigasi layanan tetap. Landing utama `/` tidak disentuh.
 
-Validation: pending GitHub Actions dan visual runtime lokal.
+Validation: GitHub Actions Build Validation run `35480379163` **PASS** on application source head `341e25b0a88e08c85de8fe1ee7ef13e4c4b9b915` (dependencies, Prisma Client, production build). Visual/GPU testing at localhost: **pending**.
