@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Proporsi &amp; ketebalan
+          Material matte Rose
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Dua daun utuh yang membuka pada engsel kiri dan kanan. Periksa tinggi pintu, celah tengah, dan sisi daun lewat pilihan tampak depan atau miring.
+          Periksa tekstur halus, relief panel, dan warna berbeda pada muka, belakang, serta tepi daun pintu. Buka pintu dan pilih tampak miring untuk melihat seluruh permukaannya.
         </p>
       </div>
       <Pintu3DPreview />
