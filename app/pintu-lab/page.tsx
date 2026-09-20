@@ -1,25 +1,26 @@
-import Pintu3DPreview from "@/components/Landing/Pintu/Pintu3DPreview";
+import ReferenceDoorPreview from "@/components/Landing/Pintu/ReferenceDoorPreview";
 
 export const metadata = {
-  title: "Lab Pintu 3D | DC Organizer",
-  description: "Preview Pintu 1 untuk memeriksa daun pintu, kusen, dan mekanisme bukaan.",
+  title: "Pintu 1 · Rebuild 3D | DC Organizer",
+  description: "Perbandingan referensi Pintu 1 dan model geometri Three.js tahap pertama.",
 };
 
 export default function PintuLabPage() {
   return (
-    <main className="public-page relative mx-auto flex min-h-[calc(100dvh-88px)] w-[80vw] max-w-full flex-col items-center gap-2 overflow-visible py-10 text-foreground">
+    <main className="public-page relative mx-auto flex min-h-[calc(100dvh-88px)] w-[80vw] max-w-full flex-col items-center gap-5 overflow-visible py-8 text-foreground">
       <div className="max-w-2xl text-center">
         <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.12em] text-foreground/60">
-          Preview terpisah · Pintu 1
+          Rebuild Pintu 1 · Tahap awal
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Kusen klasik &amp; ukiran Pintu 1
+          Dari referensi menjadi pintu 3D
         </h1>
-        <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Arah visual dikembalikan ke referensi Pintu 1: kusen lebih megah dengan crown acanthus, panel klasik yang sederhana, dan ukiran rose-gold tipis. Rose crest besar di daun sudah dibuang; mekanisme buka, engsel, dan kusen 3D tetap.
+        <p className="mt-2 text-sm leading-6 text-foreground/70 sm:text-base">
+          Acuan visual tetap pintu1.png. Kita bangun volumenya dahulu, lalu menyempurnakan
+          kusen, mahkota, ukiran, dan material secara bertahap tanpa mengganti desain asli.
         </p>
       </div>
-      <Pintu3DPreview />
+      <ReferenceDoorPreview />
     </main>
   );
 }
