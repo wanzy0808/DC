@@ -63,9 +63,9 @@ export async function mountReferenceDoor(container, options = {}) {
   box(root, [5.67, 0.12, 0.65], [0, FLOOR_Y, 0], pearledFrame);
   box(root, [5.73, 0.045, 0.72], [0, FLOOR_Y - 0.08, 0], doorEdges);
 
-  // A real recess behind the leaves, but no flat black plane at the aperture.
-  // Later stages model the interior as actual geometry suitable for camera travel.
-  box(root, [4.55, 7.03, 0.07], [0, 0, -0.95], frameShadow, false);
+  // Stage 1 deliberately leaves the aperture EMPTY behind the leaves.
+  // Do not fake the future interior with a flat dark/grey backing rectangle.
+  // A real room will be built as depth geometry in V2 stage 9.
 
   // Each group pivot is at the OUTER jamb, z=0.34. The material/side/back/panels
   // all belong to the same group, including when the door swings beyond 90°.
