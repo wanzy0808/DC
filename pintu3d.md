@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner dari screenshot 20 September 2026; Tahap 3 sudah dikodekan, menunggu review visual.
+**Status:** Tahap 1–2 disetujui owner dari screenshot. Tahap 3 dan 4 sudah dikodekan; review visual lanjut dibutuhkan, khususnya ketebalan 3D saat tampak miring.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -32,7 +32,7 @@
 | 1 | Dasar | Satu Pintu besar di preview khusus, **dua daun lengkap** yang bisa dibuka/ditutup pada pivot kusen luar. Tidak ada setengah facade yang tertinggal di tengah. | Disetujui owner — screenshot tertutup/terbuka |
 | 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Disetujui owner — screenshot; kontrol sudut miring perlu diuji tersendiri bila belum tampil pada refresh |
 | 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Implementasi masuk GitHub — menunggu review visual |
-| 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Belum |
+| 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Implementasi di GitHub — menunggu review tampak miring dan buka-tutup |
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Belum |
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Belum |
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Belum |
@@ -46,6 +46,11 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Feedback Tahap 3 / permintaan lanjut Tahap 4:** owner menyampaikan tampak miring masih terlihat seperti lembaran dimiringkan. Ini **bukan** persetujuan visual terhadap material/volume Tahap 3. Akar teknis pada preview sebelumnya: daun telah mempunyai enam bidang, tetapi kusen hanya empat strip pada bidang datar, dan mode miring merotasi seluruh komposisi tanpa return/depth kusen. Validasi Tahap 3: GitHub Build Validation run `35498336075` pada commit `4c13211787c924fcd0185330d153cc9cd8695e20` **PASS**, bukan bukti visual kedalaman.
+
+**20 September 2026 — Tahap 4 (implementasi):** kusen tetap punya profil depan asli tetapi memperoleh return/jamb kiri dan kanan, permukaan lintel atas, ambang bawah, serta profil belakang pada z=-44 px yang **tidak bergerak saat daun dibuka**. Masing-masing daun memakai pivot pada sumbu engsel luar dengan transform-origin z=16 px (selaras dengan barrel engsel); tiga set knuckle per sisi dipisah menjadi bagian tetap pada jamb (atas/bawah) dan bagian tengah serta bracket pada daun yang ikut rotasi. Posisi vertikal barrel dihitung relatif terhadap posisi atas dan tinggi daun sehingga set engsel tetap segaris saat terbuka. Kamera inspeksi dibuat pilihan depan, kiri -30°, kanan +30° untuk mengecek volume dari kedua sisi; geometri/mat Rose muka daun dan bukaan dua daun tetap. Ini memperbaiki kesan lembaran tetapi **CSS 3D masih bukan mesh 3D penuh**: jangan klaim fisik/visual realism final sebelum screenshot dan review browser. Files `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`; source commits `51990eed`, `294b1b7e`, `4b14d753`. CI untuk source head **pending**; owner visual **pending**. Landing `/`, `/jiplak`, rose petals dan orbital tetap tidak berubah.
+
 
 **20 September 2026 — Review owner Tahap 1 dan 2:** owner mengirim screenshot Pintu tertutup dan terbuka pada `/pintu-lab` serta menyatakan keduanya sudah OK. Siluet dua daun, pertemuan tengah, bukaan utuh dan kusen tidak bergerak disetujui sebagai baseline. Screenshot menampilkan judul dan satu tombol preview lama, sehingga mode tampak miring dari Tahap 2 belum terlihat pada gambar; persetujuan proporsi/bukaan dicatat tanpa mengklaim kontrol sudut miring sudah diuji. Jangan mengubah bentuk dan mekanisme yang telah disetujui ketika menambah material.
 
