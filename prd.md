@@ -3517,3 +3517,14 @@ Tahap 3 menyempurnakan daun pintu tanpa mengubah kusen/crown Tahap 2. Slab tiap 
 Tahap ini belum menambahkan acanthus/corner carving, hardware presisi atau material final: engsel/handle diselesaikan pada Tahap 4, material pada Tahap 5 dan relief pada Tahap 6. Copy `ReferenceDoorPreview.tsx` serta `app/pintu-lab/page.tsx` diperbarui untuk meninjau celah, bevel, tiga panel, ketebalan dan sisi belakang.
 
 Affected source: `components/Landing/Pintu/reference-door-engine.js`, `components/Landing/Pintu/ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`; docs: `pintu3d.md`, `prd.md`. Source commit GitHub: `e6ab1491453b02f0e8703e114fb77a7df2358393`. Validation observed locally: engine syntax check **PASS**; targeted ESLint **PASS**; Next.js production build **PASS** (54 static pages generated). GitHub Build Validation run `35511726454` pada branch head `c3d6a553ae7762a398cb40fec80ecdb8647cf12c` **PASS**; PR #54 merged ke `main` sebagai `905134d93ae1df4991001fd1a964e3a1fbfd135d`. Setelah owner melaporkan deprecation warning browser `THREE.PCFSoftShadowMap`, renderer diubah ke `THREE.PCFShadowMap` yang masih didukung pada fix `626d71a7fb13c44dd3e80ecff52ce923daf90cd4`; syntax check, targeted ESLint dan production build 54 halaman kembali **PASS**. Owner visual review tetap **pending**; jangan menganggap build sebagai fidelity approval.
+
+
+---
+
+## 2026-09-20 — Rebuild V2 Pintu 1 Tahap 4: engsel terartikulasi dan pegangan panjang
+
+Tahap 4 dipecah menjadi sub-pekerjaan mekanik agar mudah diperiksa tanpa mengubah tahap desain: (a) pin, dua knuckle luar serta pelat jamb pada kusen diam, (b) knuckle tengah, bridge dan pelat daun yang bergerak utuh pada pivot, (c) sepasang backplate dan pegangan panjang ber-volume dari `LatheGeometry` lengkap dudukan/collar/finial, (d) uji build serta screenshot bukaan 0°/45°/90°/110° dari depan/kiri/kanan. Sumbu barrel berada pada sumbu pivot sesungguhnya `x=±2.30, z=0.34`, sehingga engsel daun tidak lagi ikut membawa seluruh barrel menjauh dari jamb seperti baseline Tahap 3. Perangkat keras dibuat dengan mesh Three.js, tidak memakai SVG/box placeholder sebagai pegangan final.
+
+Berkas: `components/Landing/Pintu/reference-door-hardware.js` (baru), `reference-door-engine.js`, `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits `de755ca3`, `bcc8e0cc`, `517dde85`, `48b7f59c`, `38690fb6`. Bentuk kusen/crown, panel daun, kamera, pencahayaan, logo/brand, landing utama `/`, CSS lab legacy, orbital, Rose petals, route produk dan backend tidak diubah. Warna metal masih material sementara sampai Tahap 5; motif ukiran rinci pada hardware di Tahap 8 dan bukan diklaim selesai pada Tahap 4.
+
+**Validation status saat penulisan:** GitHub Build Validation/CI belum diamati pada branch ini; fidelity visual dan gerakan nyata di browser menunggu screenshot serta review owner. Tidak menganggap lulus build sebagai persetujuan bentuk.
