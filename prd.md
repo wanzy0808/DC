@@ -3337,3 +3337,12 @@ Validation: GitHub Build Validation pending; visual WebGL lokal perlu diperiksa 
 Setelah cleanup bentuk Pintu tahap 1, tahap 2 hanya menambahkan projected floor light berwarna ivory hangat pada setiap Pintu ketika terbuka. Procedural alpha texture memudar ke depan dan ke samping, opacity dibatasi hingga 0.42 dan mengikuti openness daun pintu; lampu mati saat pintu tertutup. Shadow lantai, orbital Motion, material Rose matte, foto, bunga, rose petals, header/footer, dan seluruh landing utama `/` tetap. Scope kode: `app/jiplak/three-portal-engine.js`. Detail list/bunga pada Pintu belum ditambahkan—menunggu pemeriksaan visual owner sebelum tahap 3.
 
 Validation: GitHub Actions pending; visual WebGL lokal perlu diperiksa.
+
+
+---
+
+## 2026-09-20 — Jiplak Pintu stage 3: list dan bunga kecil pada frame
+
+Setelah tahap 1 menghapus backing kotak/tanduk/balok dan tahap 2 menambah sinar ivory saat pintu terbuka, tahap 3 menambahkan hanya list tipis matte Rose di jamb kiri/kanan serta relief roset empat kelopak ukuran kecil pada sisi frame, di bawah lengkungan. Ornamen benar-benar menempel pada frame (bukan dekorasi melayang di atas), tidak mengubah siluet arch, gambar, atau mekanisme engsel. Orbital Motion, shadow lantai, sinar ivory, material brand, bunga latar, rose petals dan landing utama `/` tidak diubah. Scope kode: hanya `app/jiplak/three-portal-engine.js`.
+
+Validation: GitHub Actions pending; pemeriksaan visual di localhost `/jiplak` diperlukan.
