@@ -1,6 +1,7 @@
 /* Pintu 1 V2 — actual WebGL meshes. Not the prior CSS 3D or a sliced facade.
- * Reference: /public/pintu1.png. This stage is STRUCTURAL ONLY: deliberately
- * do not fake the reference's acanthus crown and engravings with generic icons.
+ * Reference: /public/pintu1.png. Stage 2 establishes the fixed architectural
+ * silhouette: pilasters, layered cornice, a dimensional crown and oval.
+ * Fine acanthus carving is intentionally reserved for later sculpt milestones.
  * Each leaf's whole geometry is a child of one hinge pivot; the frame stays fixed.
  */
 const W = 2.30;
@@ -50,20 +51,134 @@ export async function mountReferenceDoor(container, options = {}) {
     return mesh;
   }
 
-  // Stationary frame: actual depth on all four sides, and inner rebates.
-  const postHeight = 7.65;
-  for (const side of [-1, 1]) {
-    box(root, [0.46, postHeight, 0.54], [side * 2.55, -0.01, -0.045], pearledFrame);
-    box(root, [0.085, 7.26, 0.08], [side * 2.322, -0.03, 0.27], frameShadow);
-    box(root, [0.082, postHeight - 0.18, 0.055], [side * 2.75, -0.01, 0.24], doorEdges);
+  function extrude(parent, shape, depth, position, material, bevel = 0.035) {
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      bevelSize: bevel,
+      bevelThickness: Math.min(bevel, depth * 0.28),
+      curveSegments: 20,
+      steps: 1,
+    });
+    geometry.translate(0, 0, -depth / 2);
+    geometries.add(geometry);
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(...position);
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
+    parent.add(mesh);
+    return mesh;
   }
-  box(root, [5.64, 0.43, 0.54], [0, FRAME_TOP, -0.045], pearledFrame);
-  box(root, [5.72, 0.10, 0.60], [0, FRAME_TOP + 0.26, -0.045], pearledFrame);
-  box(root, [5.60, 0.075, 0.07], [0, FRAME_TOP - 0.23, 0.27], frameShadow);
-  box(root, [5.67, 0.12, 0.65], [0, FLOOR_Y, 0], pearledFrame);
-  box(root, [5.73, 0.045, 0.72], [0, FLOOR_Y - 0.08, 0], doorEdges);
 
-  // Stage 1 deliberately leaves the aperture EMPTY behind the leaves.
+  function roundedRect(width, height, radius) {
+    const x = -width / 2;
+    const y = -height / 2;
+    const shape = new THREE.Shape();
+    shape.moveTo(x + radius, y);
+    shape.lineTo(x + width - radius, y);
+    shape.quadraticCurveTo(x + width, y, x + width, y + radius);
+    shape.lineTo(x + width, y + height - radius);
+    shape.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    shape.lineTo(x + radius, y + height);
+    shape.quadraticCurveTo(x, y + height, x, y + height - radius);
+    shape.lineTo(x, y + radius);
+    shape.quadraticCurveTo(x, y, x + radius, y);
+    shape.closePath();
+    return shape;
+  }
+
+  function beveledPanel(parent, dims, position, material, radius = 0.055, bevel = 0.028) {
+    return extrude(parent, roundedRect(dims[0], dims[1], radius), dims[2], position, material, bevel);
+  }
+
+  function crownSilhouette() {
+    const shape = new THREE.Shape();
+    shape.moveTo(-2.12, -0.40);
+    shape.lineTo(2.12, -0.40);
+    shape.bezierCurveTo(1.91, -0.08, 1.68, 0.04, 1.43, 0.15);
+    shape.bezierCurveTo(1.18, 0.26, 1.12, 0.58, 0.88, 0.57);
+    shape.bezierCurveTo(0.64, 0.56, 0.57, 0.93, 0.39, 1.05);
+    shape.bezierCurveTo(0.22, 1.18, 0.16, 1.57, 0, 1.83);
+    shape.bezierCurveTo(-0.16, 1.57, -0.22, 1.18, -0.39, 1.05);
+    shape.bezierCurveTo(-0.57, 0.93, -0.64, 0.56, -0.88, 0.57);
+    shape.bezierCurveTo(-1.12, 0.58, -1.18, 0.26, -1.43, 0.15);
+    shape.bezierCurveTo(-1.68, 0.04, -1.91, -0.08, -2.12, -0.40);
+    shape.closePath();
+    return shape;
+  }
+
+  // Stationary frame, Stage 2: match the reference hierarchy instead of using
+  // two plain posts and a flat top bar. Fine carved foliage comes in Stage 7.
+  const postHeight = 7.52;
+  for (const side of [-1, 1]) {
+    const x = side * 2.63;
+    beveledPanel(root, [0.62, postHeight, 0.52], [x, -0.02, -0.04], pearledFrame, 0.075, 0.035);
+
+    // Recessed pilaster shaft and a slender raised inner reed give the jamb a
+    // readable profile from oblique views without pretending to be final carving.
+    beveledPanel(root, [0.34, 5.28, 0.085], [x, -0.30, 0.265], frameShadow, 0.15, 0.018);
+    beveledPanel(root, [0.13, 4.98, 0.075], [x, -0.32, 0.325], doorEdges, 0.06, 0.014);
+    box(root, [0.075, 7.18, 0.075], [side * 2.318, -0.03, 0.27], frameShadow);
+
+    // Layered plinth and capital blocks reproduce the reference's changing
+    // silhouette; they remain fixed when the leaves open.
+    beveledPanel(root, [0.78, 0.52, 0.62], [x, -3.42, -0.015], pearledFrame, 0.055, 0.04);
+    beveledPanel(root, [0.70, 0.17, 0.66], [x, -3.08, -0.005], doorEdges, 0.04, 0.025);
+    beveledPanel(root, [0.77, 0.25, 0.64], [x, 2.77, -0.005], doorEdges, 0.055, 0.028);
+    beveledPanel(root, [0.84, 0.20, 0.67], [x, 3.01, 0], pearledFrame, 0.055, 0.03);
+    beveledPanel(root, [0.76, 0.88, 0.59], [x, 3.38, -0.02], pearledFrame, 0.07, 0.032);
+  }
+
+  // Five stepped cornice layers create real front/side depth and the slight
+  // outward projection seen in the uploaded reference.
+  beveledPanel(root, [5.62, 0.42, 0.54], [0, FRAME_TOP - 0.09, -0.045], pearledFrame, 0.05, 0.03);
+  beveledPanel(root, [5.84, 0.18, 0.61], [0, FRAME_TOP + 0.17, -0.025], frameShadow, 0.045, 0.026);
+  beveledPanel(root, [6.02, 0.22, 0.67], [0, FRAME_TOP + 0.34, 0], pearledFrame, 0.05, 0.03);
+  beveledPanel(root, [6.24, 0.14, 0.72], [0, FRAME_TOP + 0.51, 0.015], doorEdges, 0.045, 0.026);
+  beveledPanel(root, [6.38, 0.12, 0.76], [0, FRAME_TOP + 0.64, 0.025], pearledFrame, 0.04, 0.024);
+  box(root, [5.58, 0.075, 0.075], [0, FRAME_TOP - 0.34, 0.27], frameShadow);
+
+  // Crown is a beveled extruded silhouette, not a flat sprite. Its convex oval
+  // and ring establish the reference's visual center; detailed acanthus is later.
+  const crown = extrude(root, crownSilhouette(), 0.24, [0, FRAME_TOP + 0.65, 0.22], pearledFrame, 0.055);
+  crown.scale.y = 0.62;
+  const ovalGeometry = new THREE.SphereGeometry(0.50, 36, 24);
+  geometries.add(ovalGeometry);
+  const oval = new THREE.Mesh(ovalGeometry, pearledFrame);
+  oval.scale.set(0.72, 1.08, 0.34);
+  oval.position.set(0, FRAME_TOP + 1.10, 0.43);
+  oval.castShadow = true;
+  root.add(oval);
+  const ovalRingGeometry = new THREE.TorusGeometry(0.50, 0.075, 16, 48);
+  geometries.add(ovalRingGeometry);
+  const ovalRing = new THREE.Mesh(ovalRingGeometry, understatedMetal);
+  ovalRing.scale.set(0.74, 1.10, 0.82);
+  ovalRing.position.set(0, FRAME_TOP + 1.10, 0.47);
+  ovalRing.castShadow = true;
+  root.add(ovalRing);
+  for (const side of [-1, 1]) {
+    const scrollGeometry = new THREE.TorusGeometry(0.30, 0.065, 14, 36, Math.PI * 1.55);
+    geometries.add(scrollGeometry);
+    const scroll = new THREE.Mesh(scrollGeometry, understatedMetal);
+    scroll.scale.set(1.12, 0.78, 0.72);
+    scroll.rotation.z = side * 0.70;
+    scroll.position.set(side * 0.66, FRAME_TOP + 0.83, 0.47);
+    scroll.castShadow = true;
+    root.add(scroll);
+  }
+  const pendantGeometry = new THREE.ConeGeometry(0.16, 0.42, 24);
+  geometries.add(pendantGeometry);
+  const pendant = new THREE.Mesh(pendantGeometry, understatedMetal);
+  pendant.rotation.z = Math.PI;
+  pendant.position.set(0, FRAME_TOP + 0.49, 0.43);
+  pendant.castShadow = true;
+  root.add(pendant);
+
+  beveledPanel(root, [5.92, 0.14, 0.67], [0, FLOOR_Y, 0], pearledFrame, 0.045, 0.026);
+  beveledPanel(root, [6.02, 0.065, 0.74], [0, FLOOR_Y - 0.10, 0], doorEdges, 0.035, 0.018);
+
+  // Stages 1–2 deliberately leave the aperture EMPTY behind the leaves.
   // Do not fake the future interior with a flat dark/grey backing rectangle.
   // A real room will be built as depth geometry in V2 stage 9.
 
@@ -102,7 +217,7 @@ export async function mountReferenceDoor(container, options = {}) {
       pivot.add(barrel);
       box(pivot, [0.19, 0.23, 0.035], [-side * 0.10, y, 0.11], understatedMetal);
     }
-    // Stage-one handle is deliberately plain; precise ornate reference hardware
+    // Handle remains deliberately plain; precise ornate reference hardware
     // will be its own milestone, not a CSS glyph attached to a photo.
     const handleX = -side * (leafWidth - 0.16);
     box(pivot, [0.08, 0.64, 0.09], [handleX, -0.42, 0.20], understatedMetal);
@@ -164,11 +279,13 @@ export async function mountReferenceDoor(container, options = {}) {
     const height = Math.max(1, container.clientHeight);
     if (!width || !height) return;
     const aspect = width / height;
-    // Keep BOTH swung leaves in frame; mobile Stage 12 will refine framing.
+    // Keep the taller Stage 2 crown and BOTH swung leaves in frame. Mobile
+    // composition still receives its dedicated pass in Stage 12.
     const halfV = THREE.MathUtils.degToRad(35 / 2);
     const distForWidth = 8.5 / (2 * Math.tan(halfV) * aspect);
-    camera.position.set(0, 0.30, Math.max(13.5, distForWidth));
-    camera.lookAt(0, 0.02, 0);
+    const distForHeight = 10.2 / (2 * Math.tan(halfV));
+    camera.position.set(0, 0.72, Math.max(distForHeight, distForWidth));
+    camera.lookAt(0, 0.72, 0);
     camera.aspect = aspect;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
