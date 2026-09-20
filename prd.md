@@ -3328,3 +3328,12 @@ Three.js pass pertama terlihat seperti Pintu plastik dengan gambar yang melar; M
 Owner meminta revisi bertahap agar bisa memeriksa tiap tahap di `/jiplak` sebelum melanjutkan dekorasi. Tahap pertama hanya memperbaiki bentuk: mengganti backing kotak dengan geometri arch yang tetap di dalam frame, menghapus inner trim yang terlihat seperti tanduk, serta menghapus threshold/edge berbentuk balok abu-abu. Kontak shadow lembut di lantai tetap. Tidak menambahkan sinar atau dekorasi bunga/list pada tahap ini; tunggu pemeriksaan visual owner. Orbital Motion, crop gambar, material Rose dan konten tidak diubah. Scope: hanya `app/jiplak/three-portal-engine.js`; landing utama `/` dan shared components tetap.
 
 Validation: GitHub Build Validation pending; visual WebGL lokal perlu diperiksa sebelum tahap 2.
+
+
+---
+
+## 2026-09-20 — Jiplak Pintu stage 2: ivory light on open door
+
+Setelah cleanup bentuk Pintu tahap 1, tahap 2 hanya menambahkan projected floor light berwarna ivory hangat pada setiap Pintu ketika terbuka. Procedural alpha texture memudar ke depan dan ke samping, opacity dibatasi hingga 0.42 dan mengikuti openness daun pintu; lampu mati saat pintu tertutup. Shadow lantai, orbital Motion, material Rose matte, foto, bunga, rose petals, header/footer, dan seluruh landing utama `/` tetap. Scope kode: `app/jiplak/three-portal-engine.js`. Detail list/bunga pada Pintu belum ditambahkan—menunggu pemeriksaan visual owner sebelum tahap 3.
+
+Validation: GitHub Actions pending; visual WebGL lokal perlu diperiksa.
