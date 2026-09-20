@@ -7,6 +7,7 @@ import DoorRelief from "@/components/Landing/Pintu/DoorRelief";
 import DoorMolding, { FrameMolding } from "@/components/Landing/Pintu/DoorMolding";
 import DoorFlorals, { FrameFloralAccents } from "@/components/Landing/Pintu/DoorFlorals";
 import DoorInterior from "@/components/Landing/Pintu/DoorInterior";
+import DoorLighting from "@/components/Landing/Pintu/DoorLighting";
 
 type Side = "left" | "right";
 type DoorAngle = 0 | 45 | 90 | 110;
@@ -225,12 +226,19 @@ function HingedLeaf({
   );
 }
 
-function DoorFrame({ angleDegrees }: { angleDegrees: DoorAngle }) {
+function DoorFrame({
+  angleDegrees,
+  reducedMotion,
+}: {
+  angleDegrees: DoorAngle;
+  reducedMotion: boolean | null;
+}) {
   return (
     <>
       {/* The perspective foyer stays behind the stationary 44px frame and
           never becomes a child of either swinging door leaf. */}
       <DoorInterior />
+      <DoorLighting angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
 
       {/* A stationary 44 px-deep architectural jamb. Each return connects
           the front trim (z=0) to the rear opening (z=-44), rather than
@@ -349,7 +357,7 @@ export default function Pintu3DPreview() {
             className="absolute inset-0 [transform-style:preserve-3d]"
           >
             <DoorGroundShadows angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
-            <DoorFrame angleDegrees={angleDegrees} />
+            <DoorFrame angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
             <HingedLeaf side="left" angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
             <HingedLeaf side="right" angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
           </motion.div>
@@ -389,8 +397,8 @@ export default function Pintu3DPreview() {
           </Button>
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Periksa crest bunga Rose pada kedua panel atas dan ornamen kecil yang tertanam di kusen.
-          Buka 110° dari depan dan kedua sisi: bunga pada daun harus ikut berputar, sementara bunga kusen tetap.
+          Pilih bukaan 0°, 45°, 90°, dan 110° untuk melihat cahaya ivory–Rose muncul hanya melalui celah pintu.
+          Perhatikan cahaya tipis di lantai, bayangan kaki pintu, lalu lihat dari depan dan sudut miring.
         </p>
       </div>
     </div>
