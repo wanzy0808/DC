@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 dan audit awal Tahap 12–13 merged `main` via PR #57; GitHub Build Validation PASS. Uji screenshot owner dan fidelity ke foto masih pending; Tahap 11 review tidak boleh dianggap selesai. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 merged `main` via PR #57 (CI PASS). Branch `feat/pintu-v2-portal-lab-audit` menambah percobaan kamera masuk dan kembali di `/pintu-lab` untuk audit Tahap 11–13; CI dan visual review eksperimen pending. Navigasi route/landing dan tiga pintu belum diaktifkan sebelum approval visual Pintu 1.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -30,7 +30,7 @@
 | 8 | Finishing ukiran/hardware | Refinement micro-bevel, material cat metalik hanya pada relief, detail ukiran/corners dan handles sesuai foto; empat sudut diperiksa. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 9 | Interior sungguh ber-volume | Ruang 3D sederhana di balik ambang, lantai/dinding/atap bertemu dengan benar saat kamera nanti masuk, tanpa kotak hitam. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 10 | Cahaya natural | Area key/fill yang menonjolkan pahatan; cahaya ivory dari bukaan dan spill pendek mengikuti bukaan, tanpa pink fog/kotak glowing. | Merged `main` PR #57 — CI PASS; review visual pending |
-| 11 | Fidelity visual & screenshot | Bandingkan tertutup, 45°, 90°, 110° depan/miring terhadap `pintu1.png`, koreksi desain dan clipping berdasarkan owner. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 11 | Fidelity visual & screenshot | Bandingkan 0°/45°/90°/110° depan/miring dan kamera melintasi kusen dengan `pintu1.png` dari browser owner. | Kamera lab ditambahkan di branch; fidelity dan screenshot owner pending |
 | 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Belum |
 | 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Belum |
@@ -94,6 +94,12 @@
 
 **Berkas:** `reference-door-engine.js`, `reference-door-hardware.js`, `reference-door-ornaments.js` (baru), `reference-door-interior.js` (baru), `reference-door-lighting.js` (baru), `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Ruang lingkup **hanya** `/pintu-lab`; landing canonical `/`, `/jiplak`, rose petals dan orbital belum disentuh. **Validasi teramati:** GitHub Build Validation run `35513693995` pada head PR #57 `9aea4735d189e2c4dfd7bf99c773601324dafce8` **PASS** (termasuk production build); PR #57 merged ke `main` sebagai `5e7727ca0866922015ee28e5e789cc2e4928d9b9`. Fidelity visual dan responsif di browser tetap **pending**. Tahap 14–15 di landing utama tetap dilindungi oleh approval Pintu 1.
  
+### Catatan eksperimen V2 — kamera masuk/kembali (Tahap 11–13)
+
+**Tujuan:** inspeksi clipping dan perspektif saat kamera Three.js benar-benar maju melewati ambang. Tombol `Uji masuk ruang` di `/pintu-lab` memusatkan view, membuka dua daun ke 110°, lalu bergerak dari jarak kamera desktop/mobile adaptif menuju `z=-4.2` di dalam foyer volumetrik. `Kembali ke depan` mengembalikan kamera sebelum kontrol sudut daun aktif lagi. Perpindahan dibatasi sampai bukaan hampir penuh; reduced motion mengikuti pengaturan browser. Kontrol lab native mendukung keyboard dan memberi status perubahan gerakan.
+
+**Batas:** prototipe khusus lab; belum `router.push`, URL destinasi, zoom-out halaman tujuan, atau tiga pintu orbital. Review screenshot depan/ambang/dalam foyer di desktop-mobile dan kesesuaian relief ke `pintu1.png` masih diperlukan untuk approval visual. File: `reference-door-engine.js`, `reference-door-engine.d.ts`, `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Validasi CI saat catatan dibuat pending.
+
 ---
 
 ## Target hasil akhir yang dikunci
