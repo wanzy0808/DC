@@ -7,10 +7,28 @@ import { Button } from "@/components/ui/button";
 type Side = "left" | "right";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const ROSE_FACE =
-  "bg-[linear-gradient(130deg,#d9a3aa_0%,#c07a84_26%,#ac6974_65%,#8d4d59_100%)]";
-const ROSE_EDGE =
-  "bg-[linear-gradient(90deg,#67313d_0%,#9c5864_45%,#c98c95_100%)]";
+// Layered opaque gradients simulate satin-painted wood grain without image assets,
+// specular shine, expensive filters, or animation of material properties.
+const ROSE_FRONT_MATERIAL = [
+  "linear-gradient(90deg,rgba(59,23,33,.22) 0%,transparent 9%,transparent 78%,rgba(62,24,34,.19) 100%)",
+  "repeating-linear-gradient(89.2deg,transparent 0px,rgba(255,238,241,.13) 2px,transparent 3px,transparent 9px,rgba(79,29,40,.12) 10px,transparent 12px,transparent 21px)",
+  "repeating-linear-gradient(91.1deg,transparent 0px,rgba(94,40,49,.09) 1px,transparent 2px,transparent 32px)",
+  "linear-gradient(110deg,#d6a0a8 0%,#c3848e 25%,#bb7985 53%,#a96572 81%,#935361 100%)",
+].join(",");
+const ROSE_BACK_MATERIAL = [
+  "linear-gradient(90deg,rgba(42,16,25,.30),transparent 15%,transparent 85%,rgba(42,16,25,.27))",
+  "repeating-linear-gradient(89deg,transparent 0px,rgba(235,199,206,.10) 2px,transparent 4px,transparent 13px,rgba(56,20,31,.11) 14px,transparent 16px,transparent 26px)",
+  "linear-gradient(115deg,#a96c77 0%,#985b68 42%,#884c59 100%)",
+].join(",");
+const ROSE_EDGE_MATERIAL = [
+  "repeating-linear-gradient(0deg,transparent 0px,rgba(242,199,205,.14) 1px,transparent 2px,transparent 14px,rgba(59,20,30,.10) 16px,transparent 18px,transparent 27px)",
+  "linear-gradient(90deg,#623540 0%,#a96b77 32%,#c28a94 50%,#87505c 100%)",
+].join(",");
+const ROSE_PANEL_MATERIAL = [
+  "linear-gradient(130deg,rgba(56,19,30,.19),rgba(255,222,227,.04) 36%,rgba(49,17,27,.13) 100%)",
+  "repeating-linear-gradient(90deg,transparent 0px,rgba(244,212,217,.08) 2px,transparent 3px,transparent 17px,rgba(61,20,31,.08) 18px,transparent 20px,transparent 31px)",
+  "linear-gradient(105deg,#bb7d87,#b4727e 52%,#a86774)",
+].join(",");
 
 // 20 px is the whole thickness of each leaf, not an extra piece of trim.
 const HALF_THICKNESS = 10;
@@ -54,13 +72,16 @@ function HingedLeaf({
           transform: `translateZ(${HALF_THICKNESS}px)`,
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          backgroundImage: ROSE_FRONT_MATERIAL,
         }}
-        className={`absolute inset-0 overflow-hidden border border-[#f4dce0]/55 ${ROSE_FACE} shadow-[inset_0_0_0_3px_rgba(93,41,51,0.23),inset_0_0_26px_rgba(85,36,45,0.18),0_8px_18px_rgba(34,13,18,0.20)]`}
+        className="absolute inset-0 overflow-hidden border border-[#dfadb6]/65 shadow-[inset_0_0_0_3px_rgba(69,24,34,0.24),inset_0_0_23px_rgba(61,24,35,0.18),0_8px_18px_rgba(34,13,18,0.20)]"
       >
         {/* All raised rails and the handle are children of the hinged leaf. */}
-        <div className="absolute inset-[6%] border-[3px] border-[#edc7cd]/65 shadow-[inset_0_0_0_2px_rgba(101,43,54,0.3),0_0_0_1px_rgba(89,36,47,0.45)]" />
-        <div className="absolute inset-x-[12%] top-[12%] h-[32%] border-2 border-[#e5b1b9]/75 bg-[linear-gradient(145deg,rgba(255,255,255,0.16),rgba(80,28,39,0.10))] shadow-[inset_3px_4px_8px_rgba(76,27,38,0.20)]" />
-        <div className="absolute inset-x-[12%] bottom-[10%] h-[36%] border-2 border-[#e5b1b9]/75 bg-[linear-gradient(145deg,rgba(255,255,255,0.13),rgba(80,28,39,0.12))] shadow-[inset_3px_4px_9px_rgba(76,27,38,0.20)]" />
+        <div className="absolute inset-[6%] border-[3px] border-[#ca929c]/80 shadow-[inset_2px_2px_2px_rgba(255,225,230,0.15),inset_-2px_-2px_4px_rgba(58,20,30,0.28),0_0_0_1px_rgba(86,37,47,0.38)]" />
+        <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
+          className="absolute inset-x-[12%] top-[12%] h-[32%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_8px_rgba(65,21,34,0.27),inset_-2px_-2px_5px_rgba(247,204,212,0.15),0_1px_1px_rgba(239,193,201,0.24)]" />
+        <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
+          className="absolute inset-x-[12%] bottom-[10%] h-[36%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_9px_rgba(65,21,34,0.28),inset_-2px_-2px_5px_rgba(247,204,212,0.14),0_1px_1px_rgba(239,193,201,0.22)]" />
         <div className={`absolute inset-y-[5%] w-[3px] bg-[#f2cbd0]/70 shadow-[1px_0_3px_rgba(72,26,36,0.45)] ${rail}`} />
         <div className={`absolute top-[47%] h-[7%] w-[7%] min-w-[7px] rounded-sm border border-[#f0d4d8]/80 bg-[linear-gradient(90deg,#73404a,#e0b2b9,#a0646e)] shadow-[0_1px_4px_rgba(55,23,30,0.5)] ${handle}`} />
       </div>
@@ -70,8 +91,9 @@ function HingedLeaf({
           transform: `rotateY(180deg) translateZ(${HALF_THICKNESS}px)`,
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          backgroundImage: ROSE_BACK_MATERIAL,
         }}
-        className={`absolute inset-0 border border-[#e7bac1]/50 ${ROSE_FACE} shadow-[inset_0_0_0_5px_rgba(75,32,42,0.25)]`}
+        className="absolute inset-0 border border-[#bf8892]/65 shadow-[inset_0_0_0_5px_rgba(75,32,42,0.25)]"
       >
         <div className="absolute inset-[8%] border-[3px] border-[#dca7b0]/65" />
         <div className="absolute inset-x-[14%] top-[14%] h-[30%] border border-[#eac5ca]/45" />
@@ -86,8 +108,9 @@ function HingedLeaf({
           transform: "translateX(-50%) rotateY(90deg)",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          backgroundImage: ROSE_EDGE_MATERIAL,
         }}
-        className={`absolute inset-y-0 ${ROSE_EDGE} shadow-[inset_2px_0_4px_rgba(42,15,25,0.30)]`}
+        className="absolute inset-y-0 shadow-[inset_2px_0_4px_rgba(42,15,25,0.30)]"
       />
       <div
         style={{
@@ -96,24 +119,27 @@ function HingedLeaf({
           transform: "translateX(-50%) rotateY(-90deg)",
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
+          backgroundImage: ROSE_EDGE_MATERIAL,
         }}
-        className={`absolute inset-y-0 ${ROSE_EDGE} shadow-[inset_-2px_0_4px_rgba(42,15,25,0.30)]`}
+        className="absolute inset-y-0 shadow-[inset_-2px_0_4px_rgba(42,15,25,0.30)]"
       />
       <div
         style={{
           top: 0,
           height: HALF_THICKNESS * 2,
           transform: "translateY(-50%) rotateX(90deg)",
+          backgroundImage: ROSE_EDGE_MATERIAL,
         }}
-        className={`absolute inset-x-0 ${ROSE_EDGE}`}
+        className="absolute inset-x-0"
       />
       <div
         style={{
           bottom: 0,
           height: HALF_THICKNESS * 2,
           transform: "translateY(50%) rotateX(90deg)",
+          backgroundImage: ROSE_EDGE_MATERIAL,
         }}
-        className={`absolute inset-x-0 ${ROSE_EDGE}`}
+        className="absolute inset-x-0"
       />
     </motion.div>
   );
@@ -207,7 +233,7 @@ export default function Pintu3DPreview() {
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
           Buka pintu lalu pilih tampak miring untuk melihat ketebalan, sisi dan bagian belakang kedua daun.
-          Kusen tetap diam; ornamen dan ukiran detail belum ditambahkan.
+          Material matte Rose terlihat pada muka, belakang dan tepi kedua daun. Kusen tetap diam; ukiran dan ornamen menyusul.
         </p>
       </div>
     </div>
