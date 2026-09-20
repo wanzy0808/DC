@@ -147,6 +147,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Motion must never reduce usability or obscure important content.
 - Landing Pintu decorative ornament at the top belongs to the closed-door surface: it fades/moves out when that door is active/open and returns when the door closes. Keep this synchronized with the same `isActive` state as the door panels and respect reduced motion.
 - While the temporary `/jiplak` experiment exists, visual experiments must stay isolated there. Do not wire experimental Pintu/background components into `app/page.tsx`, `PintuSection.tsx`, `PintuCard.tsx`, or `RosePetalBackground.tsx` unless the owner explicitly approves promotion to the canonical landing.
+- The `/jiplak` WebGL/Three.js portal is an **independent, optional experiment**: load Three only after `/jiplak` mounts, retain its own copied DOM Pintu as a functional fallback when WebGL is unavailable, honor reduced motion and dispose GPU resources/listeners on unmount. Never import its engine into `/` or change the canonical landing's Pintu/flower/rose-petal behavior by implication.
 
 ## 7. UI Components
 
