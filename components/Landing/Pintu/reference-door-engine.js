@@ -15,10 +15,8 @@ const OPEN_MAX = 110;
 
 export async function mountReferenceDoor(container, options = {}) {
   const THREE = await import("three");
-  if (!document.createElement("canvas").getContext("webgl2")) {
-    throw new Error("Browser ini tidak mendukung WebGL2.");
-  }
-
+  // WebGLRenderer creates one context below; probing an extra canvas here
+  // can exhaust context limits on low-memory mobile browsers.
   let disposed = false;
   let frameId = 0;
   let renderer;
@@ -302,8 +300,11 @@ export async function mountReferenceDoor(container, options = {}) {
   let currentView = 0;
 
   function render() {
-    if (disposed || !renderer || !visible || document.hidden) return;
     frameId = 0;
+    if (disposed || !renderer || !visible || document.hidden) {
+      previousTime = 0;
+      return;
+    }
     const now = performance.now();
     const dt = previousTime ? Math.min((now - previousTime) / 1000, 0.06) : 0.016;
     previousTime = now;
@@ -355,7 +356,8 @@ export async function mountReferenceDoor(container, options = {}) {
     renderer.toneMappingExposure = 1.18;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    const mobileViewport = window.matchMedia("(max-width: 640px)").matches;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileViewport ? 1.25 : 1.5));
     renderer.setClearColor(0xffffff, 0);
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.style.width = "100%";
