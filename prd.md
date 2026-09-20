@@ -3296,5 +3296,6 @@ Owner installed Three.js and requested an ambitious, visibly three-dimensional/d
 - Only `app/jiplak/jiplak.tsx` switches to `ThreePortalScene`. `app/page.tsx`, canonical Pintu files, shared RosePetalBackground, existing floral/glow background and shared header/footer remain unchanged.
 
 ### Validation
-- GitHub Build Validation: pending.
-- Visual GPU/browser behavior: requires local `http://localhost:3000/jiplak` verification on target device; CI production build alone does not validate rendered WebGL.
+- GitHub Actions Build Validation run `35480379163` on source + documentation head `341e25b0a88e08c85de8fe1ee7ef13e4c4b9b915`: **PASS** (install dependencies, Prisma Client generation, Next.js production build + TypeScript).
+- Visual GPU/browser behavior: **pending local `http://localhost:3000/jiplak` verification on target device**. Production build does not prove WebGL appearance or GPU performance.
+- Subsequent documentation-only commit records the observed build result without changing application code.
