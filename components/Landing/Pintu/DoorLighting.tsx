@@ -57,17 +57,20 @@ export default function DoorLighting({
           It belongs to the fixed scene, never to either swinging leaf; its
           opacity falls to zero at 0 degrees so closed doors cannot leak light.
           Existing independent contact shadows stay visible underneath. */}
-      <motion.div
+      <div
         aria-hidden="true"
-        initial={false}
-        animate={{
-          opacity: openness === 0 ? 0 : 0.17 + openness * 0.37,
-          scaleX: 0.66 + openness * 0.34,
-        }}
-        transition={transition}
         className="pointer-events-none absolute left-[13%] top-[97.2%] h-[16%] w-[74%] origin-top [transform-style:preserve-3d]"
         style={{ transform: "translateZ(-2px) rotateX(73deg)" }}
       >
+        <motion.div
+          initial={false}
+          animate={{
+            opacity: openness === 0 ? 0 : 0.17 + openness * 0.37,
+            scaleX: 0.66 + openness * 0.34,
+          }}
+          transition={transition}
+          className="absolute inset-0 origin-top"
+        >
         <div
           className="absolute inset-0"
           style={{
@@ -83,7 +86,8 @@ export default function DoorLighting({
               "radial-gradient(ellipse at center, rgba(255,250,236,.34), transparent 77%)",
           }}
         />
-      </motion.div>
+        </motion.div>
+      </div>
     </>
   );
 }
