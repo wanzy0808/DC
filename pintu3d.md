@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner dari screenshot. Tahap 3–5 sudah dikodekan; review visual owner masih dibutuhkan, terutama pada tampak miring, engsel, dan bayangan daun.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–6 sudah dikodekan; Tahap 6 menunggu review visual, terutama relief yang harus tetap melekat pada daun saat membuka. Tahap 3–5 belum diberi persetujuan visual eksplisit.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -34,7 +34,7 @@
 | 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Implementasi masuk GitHub — menunggu review visual |
 | 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Implementasi di GitHub — menunggu review tampak miring dan buka-tutup |
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Implementasi GitHub: empat sudut, easing buka/tutup, dua bayangan bergerak; menunggu review browser |
-| 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Belum |
+| 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Implementasi GitHub: relief acanthus dan sulur pada panel atas/bawah tiap daun, menunggu screenshot/review owner |
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Belum |
 | 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Belum |
 | 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Belum |
@@ -46,6 +46,12 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Screenshot owner Tahap 5:** owner mengirim tampak miring ketika pintu tertutup dan terbuka; engsel luar, sisi daun dan jamb bisa terlihat. Pada screenshot keadaan terbuka, latar ruang di balik pintu masih berupa bidang gelap dan tetap dijadwalkan untuk Tahap 9. Bagian atas pintu tampak terpotong di atas viewport pada screenshot yang sedang terscroll; ini perlu diperiksa lagi saat responsive/komposisi di Tahap 11–12, bukan alasan memperbesar atau mengganti geometri pada Tahap 6. Owner meminta lanjut tanpa menyatakan Tahap 3–5 secara eksplisit telah disetujui final.
+
+**20 September 2026 — Tahap 6 (implementasi):** buat `components/Landing/Pintu/DoorRelief.tsx`, ornamen relief acanthus dan sulur yang reusable, berisi dua varian panel (atas/bawah) dengan lapisan goresan gelap di bawah, highlight tipis di punggung pahatan, pinggiran panel berkontur dan medali relief kecil. Komponen dipasang **di dalam muka depan masing-masing `HingedLeaf`** di `Pintu3DPreview.tsx`, tepat di atas panel dekoratif yang sudah bergerak bersama daun. Ornamen kiri dan kanan diberi opsi mirror agar komposisi kedua daun berpasangan saat tertutup. Tidak ada dekorasi baru yang diikat pada bidang portal diam, kusen, atau melayang di tengah; tidak memotong `pintu1.png` dan belum menambahkan crest/bunga besar (Tahap 8). Foto, material, dimensi, pivot dan sudut bukaan 0°/45°/90°/110° tidak diubah. Route `/pintu-lab` menampilkan instruksi baru untuk review ukiran; halaman canonical `/` dan eksperimen `/jiplak` tetap utuh. Source commits: `38e4c888` (relief), `6065d48c` (attach pada daun), `30f67cbc` (instruksi preview). GitHub CI **pending observation** dan **belum ada penilaian visual Tahap 6 dari owner**. Relief CSS/SVG ini simulasi visual pahatan, bukan geometri ukiran 3D penuh yang sudah lolos review.
+
+
 
 **20 September 2026 — Tahap 5 (implementasi):** atas permintaan owner untuk lanjut, preview `/pintu-lab` kini menyediakan tombol kondisi bukaan 0°, 45°, 90°, 110° selain tombol buka/tutup utama. Dua daun memakai satu target sudut dengan arah rotasi berlawanan dan easing terkontrol 1,1 detik (0,01 detik bila `prefers-reduced-motion`) tanpa overshoot/spring. Dua projected elliptical contact shadows diletakkan terpisah dari daun, berakar di kaki setiap jamb, diputar dan diubah opacity/scale-nya mengikuti target sudut dengan timing yang sama; bayangan dasar frame lama tetap. Eksposur lembut pada latar bukaan berubah secara gradual mengikuti sudut tetapi belum merupakan final light beam Tahap 10. User bisa membandingkan empat bukaan dari tampak depan/kiri/kanan; ini **visual CSS approximation** dan belum mengklaim collision solver/photometric shadows. Bentuk, material, enam bidang tiap daun, engsel serta fixed jamb tidak diubah. Source files `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`; source commits `93d5854a`, `41e81f8e`. Build/CI: GitHub Build Validation run `35499021097` on stage-five application source head `41e81f8e92f0f9ca561ef48b0302a116dda98d6b` **PASS**. Review browser/screenshot dan kepuasan visual owner tetap **pending**; CI tidak memverifikasi penampilan bayangan. Landing `/`, `/jiplak`, orbital dan protected Rose petals tidak berubah.
 
