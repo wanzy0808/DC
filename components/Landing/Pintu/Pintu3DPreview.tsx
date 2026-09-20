@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import DoorRelief from "@/components/Landing/Pintu/DoorRelief";
 import DoorMolding, { FrameMolding } from "@/components/Landing/Pintu/DoorMolding";
-import DoorFlorals, { FrameFloralAccents } from "@/components/Landing/Pintu/DoorFlorals";
+import { FrameClassicOrnament, LeafPanelOrnaments } from "@/components/Landing/Pintu/DoorClassicOrnament";
 import DoorInterior from "@/components/Landing/Pintu/DoorInterior";
 import DoorLighting from "@/components/Landing/Pintu/DoorLighting";
 
@@ -155,14 +154,13 @@ function HingedLeaf({
         {/* All raised rails and the handle are children of the hinged leaf. */}
         <div className="absolute inset-[6%] border-[3px] border-[#ca929c]/80 shadow-[inset_2px_2px_2px_rgba(255,225,230,0.15),inset_-2px_-2px_4px_rgba(58,20,30,0.28),0_0_0_1px_rgba(86,37,47,0.38)]" />
         <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
-          className="absolute inset-x-[12%] top-[12%] h-[32%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_8px_rgba(65,21,34,0.27),inset_-2px_-2px_5px_rgba(247,204,212,0.15),0_1px_1px_rgba(239,193,201,0.24)]" />
+          className="absolute inset-x-[12%] top-[10%] h-[46%] border border-[#b77770]/55 shadow-[inset_4px_4px_8px_rgba(65,21,34,0.20),inset_-2px_-2px_4px_rgba(247,204,212,0.10)]" />
         <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
-          className="absolute inset-x-[12%] bottom-[10%] h-[36%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_9px_rgba(65,21,34,0.28),inset_-2px_-2px_5px_rgba(247,204,212,0.14),0_1px_1px_rgba(239,193,201,0.22)]" />
-        {/* Both relief panels belong to the moving FRONT leaf face, never to the stationary frame. */}
-        <DoorRelief side={side} />
+          className="absolute inset-x-[12%] top-[60.5%] h-[9%] border border-[#b77770]/45 shadow-[inset_3px_3px_6px_rgba(65,21,34,0.17)]" />
+        <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
+          className="absolute inset-x-[12%] bottom-[9%] h-[17%] border border-[#b77770]/50 shadow-[inset_3px_3px_6px_rgba(65,21,34,0.18)]" />
         <DoorMolding side={side} />
-        {/* Low-profile rose crest is a child of this rotating leaf, not a floating portal ornament. */}
-        <DoorFlorals side={side} />
+        <LeafPanelOrnaments side={side} />
         <div className={`absolute inset-y-[5%] w-[3px] bg-[#f2cbd0]/70 shadow-[1px_0_3px_rgba(72,26,36,0.45)] ${rail}`} />
         <div className={`absolute top-[47%] h-[7%] w-[7%] min-w-[7px] rounded-sm border border-[#f0d4d8]/80 bg-[linear-gradient(90deg,#73404a,#e0b2b9,#a0646e)] shadow-[0_1px_4px_rgba(55,23,30,0.5)] ${handle}`} />
       </div>
@@ -285,7 +283,7 @@ function DoorFrame({
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2.2%] bg-[linear-gradient(#a2636e,#d6a0a8_48%,#74444e)] shadow-[0_4px_7px_rgba(40,15,23,0.22)]" />
 
       <FrameMolding />
-      <FrameFloralAccents />
+      <FrameClassicOrnament />
       <DoorHingeBarrels side="left" moving={false} />
       <DoorHingeBarrels side="right" moving={false} />
     </>
@@ -397,8 +395,7 @@ export default function Pintu3DPreview() {
           </Button>
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Pilih bukaan 0°, 45°, 90°, dan 110° untuk melihat cahaya ivory–Rose muncul hanya melalui celah pintu.
-          Perhatikan cahaya tipis di lantai, bayangan kaki pintu, lalu lihat dari depan dan sudut miring.
+          Fokus review sekarang pada kusen klasik dan ukiran acanthus yang lebih sederhana seperti referensi Pintu 1. Rose crest besar sudah dibuang; buka 110° untuk memastikan seluruh detail daun tetap ikut bergerak.
         </p>
       </div>
     </div>
