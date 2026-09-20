@@ -4,6 +4,7 @@
  * material remain separate milestones; the frame and leaf pivots stay unchanged.
  */
 import { addReferenceDoorHardware } from "./reference-door-hardware.js";
+import { addReferenceDoorLeafRelief, addReferenceDoorFrameRelief } from "./reference-door-ornaments.js";
 const W = 2.30;
 const H = 7.12;
 const FRAME_TOP = 3.77;
@@ -247,6 +248,8 @@ export async function mountReferenceDoor(container, options = {}) {
   pendant.castShadow = true;
   root.add(pendant);
 
+  addReferenceDoorFrameRelief({ THREE, root, geometries, material: frameRelief });
+
   beveledPanel(root, [5.92, 0.14, 0.67], [0, FLOOR_Y, 0], pearledFrame, 0.045, 0.026);
   beveledPanel(root, [6.02, 0.065, 0.74], [0, FLOOR_Y - 0.10, 0], doorEdges, 0.035, 0.018);
 
@@ -279,6 +282,7 @@ export async function mountReferenceDoor(container, options = {}) {
       addPanelProfile(pivot, localX, y, 1.64, panelH - 0.08, -1);
     }
 
+    addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometries, material: roseRelief });
     addReferenceDoorHardware({
       THREE, root, pivot, side, W, leafWidth, geometries,
       understatedMetal, frameShadow, beveledPanel, box,
