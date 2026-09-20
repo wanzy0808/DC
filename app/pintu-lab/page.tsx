@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Ruang di balik pintu
+          Cahaya dari bukaan pintu
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Di balik pintu kini ada ruang berperspektif: dinding samping, plafon, lantai, dan lengkungan jauh di dalam. Buka hingga 110°, lalu periksa dari depan, kiri, dan kanan. Cahaya dari celah akan disempurnakan pada tahap berikutnya.
+          Buka kedua daun bertahap: cahaya ivory–Rose muncul dari ruang di balik pintu dan menyentuh lantai dekat ambang. Saat tertutup cahaya harus menghilang; saat terbuka, detail ruangan dan bayangan tetap terlihat.
         </p>
       </div>
       <Pintu3DPreview />
