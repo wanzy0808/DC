@@ -3319,3 +3319,12 @@ Three.js pass pertama terlihat seperti Pintu plastik dengan gambar yang melar; M
 - GitHub Actions Build Validation run `35480935118` on application + documentation head `e6816880e20c3fbefdb9ab582838105b8ac803b8`: **PASS** (dependency installation, Prisma Client generation, Next.js production build and TypeScript).
 - Local WebGL appearance, orbital timing, hover, image crop and responsive composition: **pending owner browser review**. Production build does not verify visual rendering or actual GPU performance.
 - This documentation-only validation update does not alter the validated application source.
+
+
+---
+
+## 2026-09-20 — Jiplak Pintu silhouette cleanup, stage 1
+
+Owner meminta revisi bertahap agar bisa memeriksa tiap tahap di `/jiplak` sebelum melanjutkan dekorasi. Tahap pertama hanya memperbaiki bentuk: mengganti backing kotak dengan geometri arch yang tetap di dalam frame, menghapus inner trim yang terlihat seperti tanduk, serta menghapus threshold/edge berbentuk balok abu-abu. Kontak shadow lembut di lantai tetap. Tidak menambahkan sinar atau dekorasi bunga/list pada tahap ini; tunggu pemeriksaan visual owner. Orbital Motion, crop gambar, material Rose dan konten tidak diubah. Scope: hanya `app/jiplak/three-portal-engine.js`; landing utama `/` dan shared components tetap.
+
+Validation: GitHub Build Validation pending; visual WebGL lokal perlu diperiksa sebelum tahap 2.
