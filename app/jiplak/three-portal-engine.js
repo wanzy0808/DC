@@ -59,6 +59,28 @@ function makeGroundTexture(THREE) {
   return new THREE.CanvasTexture(canvas);
 }
 
+function makeDoorLightTexture(THREE) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 128;
+  canvas.height = 256;
+  const ctx = canvas.getContext("2d");
+  const width = ctx.createLinearGradient(0, 0, 128, 0);
+  width.addColorStop(0, "rgba(255,248,239,0)");
+  width.addColorStop(0.5, "rgba(255,248,239,0.75)");
+  width.addColorStop(1, "rgba(255,248,239,0)");
+  ctx.fillStyle = width;
+  ctx.fillRect(0, 0, 128, 256);
+  ctx.globalCompositeOperation = "destination-in";
+  const length = ctx.createLinearGradient(0, 0, 0, 256);
+  length.addColorStop(0, "rgba(255,255,255,0.72)");
+  length.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = length;
+  ctx.fillRect(0, 0, 128, 256);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
 function createLeaf(THREE, side) {
   // Each half is carved in the same arched silhouette as the inner opening.
   // Pivot coincides with the jamb, so neither leaf detaches on opening.
@@ -140,7 +162,7 @@ function createLeaf(THREE, side) {
   return hinge;
 }
 
-function createPortal(THREE, world, texture, groundTexture) {
+function createPortal(THREE, world, texture, groundTexture, doorLightTexture) {
   const root = new THREE.Group();
   // Keep the recessed backing entirely inside the arched aperture.
   // A rectangular box used to protrude above the crown and read as horns.
@@ -212,8 +234,7 @@ function createPortal(THREE, world, texture, groundTexture) {
 
   // The previous grey rectangular threshold floated in front of the arch.
   // The image and leaf now meet the existing ground/contact shadow directly.
-  // Retain the soft contact shadow the owner liked. No fake pink halo,
-  // spotlights, light spill or additive glow.
+  // Keep the existing soft contact shadow beneath each orbital door.
   const groundShadow = new THREE.Mesh(
     new THREE.PlaneGeometry(3.5, 2.1),
     new THREE.MeshBasicMaterial({
@@ -225,6 +246,20 @@ function createPortal(THREE, world, texture, groundTexture) {
   groundShadow.position.set(0, -2.418, 0.31);
   root.add(groundShadow);
 
+  // Ivory light lands on the floor only while this door is open.
+  // It stays narrow, transparent and behind the front of the portal:
+  // no persistent pink halo or rectangular stone block.
+  const doorLight = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.42, 3.1),
+    new THREE.MeshBasicMaterial({
+      map: doorLightTexture, color: 0xfff6ed, transparent: true,
+      opacity: 0, depthWrite: false, side: THREE.DoubleSide,
+    }),
+  );
+  doorLight.rotation.x = -Math.PI / 2;
+  doorLight.position.set(0, -2.414, 1.56);
+  root.add(doorLight);
+
   const hitbox = new THREE.Mesh(
     new THREE.BoxGeometry(2.36, 4.86, 0.65),
     new THREE.MeshBasicMaterial({
@@ -235,7 +270,7 @@ function createPortal(THREE, world, texture, groundTexture) {
   hitbox.position.z = 0.42;
   hitbox.userData.portalId = world.id;
   root.add(hitbox);
-  return { id: world.id, root, left, right, hitbox, openness: 0 };
+  return { id: world.id, root, left, right, hitbox, doorLight, openness: 0 };
 }
 
 function setWorldTexture(THREE, texture, renderer) {
@@ -353,7 +388,8 @@ export async function mountThreePortals(container, options) {
     scene.add(ground);
 
     const groundTexture = makeGroundTexture(THREE);
-    textures.push(groundTexture);
+    const doorLightTexture = makeDoorLightTexture(THREE);
+    textures.push(groundTexture, doorLightTexture);
 
     const loader = new THREE.TextureLoader();
     const loaded = await Promise.all(WORLDS.map(async (world) => {
@@ -379,7 +415,7 @@ export async function mountThreePortals(container, options) {
     }
 
     portals = WORLDS.map((world, index) => {
-      const portal = createPortal(THREE, world, loaded[index], groundTexture);
+      const portal = createPortal(THREE, world, loaded[index], groundTexture, doorLightTexture);
       scene.add(portal.root);
       return portal;
     });
@@ -523,6 +559,8 @@ export async function mountThreePortals(container, options) {
         );
         portal.left.rotation.y = -1.13 * portal.openness;
         portal.right.rotation.y = 1.13 * portal.openness;
+        portal.doorLight.material.opacity = Math.min(0.42, portal.openness * 0.42);
+        portal.doorLight.scale.x = 0.7 + portal.openness * 0.3;
       }
       for (let i = 0; i < moteCount; i += 1) {
         const data = motesData[i];
