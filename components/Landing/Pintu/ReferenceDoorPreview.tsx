@@ -69,7 +69,7 @@ export default function ReferenceDoorPreview() {
   return (
     <section className="w-full space-y-4">
       <div className="grid w-full items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-        <div className="rounded-xl border border-rose-200/60 bg-white/55 p-3 dark:border-white/10 dark:bg-black/20">
+        <div className="order-2 rounded-xl border border-rose-200/60 bg-white/55 p-3 dark:border-white/10 dark:bg-black/20 lg:order-1">
           <p className="mb-2 text-sm font-semibold text-foreground">Referensi bentuk — jangan diubah</p>
           <div className="relative mx-auto aspect-[.80] w-full max-w-[300px]">
             <Image
@@ -87,12 +87,12 @@ export default function ReferenceDoorPreview() {
           </p>
         </div>
 
-        <div className="min-w-0 rounded-xl border border-rose-200/60 bg-[linear-gradient(#fffaf8,#f8eeee)] p-2 dark:border-white/10 dark:bg-[linear-gradient(#282125,#171316)]">
+        <div className="order-1 min-w-0 rounded-xl border border-rose-200/60 bg-[linear-gradient(#fffaf8,#f8eeee)] p-2 dark:border-white/10 dark:bg-[linear-gradient(#282125,#171316)] lg:order-2">
           <div className="mb-1 flex items-center justify-between gap-3 px-2 text-xs text-foreground/65">
-            <span>Geometri Three.js · Tahap 4</span>
+            <span>Geometri Three.js · Tahap 5–10</span>
             <span>{status === "ready" ? "3D aktif" : status === "loading" ? "Memuat…" : "WebGL tidak tersedia"}</span>
           </div>
-          <div className="relative h-[min(76dvh,710px)] min-h-[410px] w-full overflow-hidden rounded-lg">
+          <div className="relative h-[min(73dvh,710px)] min-h-[370px] w-full overflow-hidden rounded-lg sm:min-h-[410px]">
             <div
               ref={mountRef}
               className="absolute inset-0"
@@ -147,9 +147,10 @@ export default function ReferenceDoorPreview() {
           ))}
         </div>
         <p className="max-w-xl text-sm leading-6 text-foreground/65">
-          Tahap 4 memasang engsel beruas pada kusen dan daun, serta pegangan panjang berpasangan.
-          Periksa apakah barrel tetap segaris, pelat engsel ikut daun, dan pegangan tidak bertabrakan saat 0°–110°.
-          Ukiran acanthus serta material akhir belum dibuat.
+          Permukaan satin Rose dan ivory, detail relief pada daun serta crown, dan foyer 3D di balik bukaan.
+          Uji 0°/45°/90°/110° dari depan dan kedua sudut miring: ukiran harus ikut daun,
+          frame tetap diam, ruang terlihat ber-volume, dan cahaya ambang muncul hanya ketika terbuka.
+          Kemiripan detail dengan referensi tetap memerlukan review visual.
         </p>
         <Link className="text-sm underline underline-offset-4" href="/pintu-lab/css">
           Bandingkan dengan eksperimen CSS lama

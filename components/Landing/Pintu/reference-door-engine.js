@@ -4,6 +4,9 @@
  * material remain separate milestones; the frame and leaf pivots stay unchanged.
  */
 import { addReferenceDoorHardware } from "./reference-door-hardware.js";
+import { addReferenceDoorLeafRelief, addReferenceDoorFrameRelief } from "./reference-door-ornaments.js";
+import { buildReferenceDoorInterior } from "./reference-door-interior.js";
+import { buildReferenceDoorLighting } from "./reference-door-lighting.js";
 const W = 2.30;
 const H = 7.12;
 const FRAME_TOP = 3.77;
@@ -12,10 +15,8 @@ const OPEN_MAX = 110;
 
 export async function mountReferenceDoor(container, options = {}) {
   const THREE = await import("three");
-  if (!document.createElement("canvas").getContext("webgl2")) {
-    throw new Error("Browser ini tidak mendukung WebGL2.");
-  }
-
+  // WebGLRenderer creates one context below; probing an extra canvas here
+  // can exhaust context limits on low-memory mobile browsers.
   let disposed = false;
   let frameId = 0;
   let renderer;
@@ -31,14 +32,36 @@ export async function mountReferenceDoor(container, options = {}) {
   const leaves = [];
   scene.add(root);
 
-  const paintedRose = new THREE.MeshStandardMaterial({ color: 0xb77f81, roughness: 0.76, metalness: 0.035 });
-  const insetRose = new THREE.MeshStandardMaterial({ color: 0xaa7778, roughness: 0.83, metalness: 0.012 });
-  const doorEdges = new THREE.MeshStandardMaterial({ color: 0xca9594, roughness: 0.7, metalness: 0.04 });
-  const pearledFrame = new THREE.MeshStandardMaterial({ color: 0xdac0b2, roughness: 0.68, metalness: 0.035 });
-  const frameShadow = new THREE.MeshStandardMaterial({ color: 0xa57c78, roughness: 0.82 });
-  const understatedMetal = new THREE.MeshStandardMaterial({ color: 0xc9977d, metalness: 0.65, roughness: 0.38 });
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0xf3eeeb, roughness: 0.9 });
-  [paintedRose, insetRose, doorEdges, pearledFrame, frameShadow, understatedMetal, floorMat].forEach(m => materials.add(m));
+  // Stage 5: restrained satin paint and warmer ivory-blush architecture.
+  // Roughness is deliberately high on paint; metal is confined to hardware
+  // and thin relief, not the whole slab or large frame surfaces.
+  const paintedRose = new THREE.MeshStandardMaterial({
+    color: 0xb67b85, roughness: 0.82, metalness: 0, flatShading: false,
+  });
+  const insetRose = new THREE.MeshStandardMaterial({
+    color: 0xa86d77, roughness: 0.88, metalness: 0,
+  });
+  const doorEdges = new THREE.MeshStandardMaterial({
+    color: 0xc48d98, roughness: 0.77, metalness: 0,
+  });
+  const pearledFrame = new THREE.MeshStandardMaterial({
+    color: 0xe6d5cc, roughness: 0.84, metalness: 0,
+  });
+  const frameShadow = new THREE.MeshStandardMaterial({
+    color: 0xa88887, roughness: 0.9, metalness: 0,
+  });
+  const understatedMetal = new THREE.MeshStandardMaterial({
+    color: 0xb99387, roughness: 0.48, metalness: 0.52,
+  });
+  const roseRelief = new THREE.MeshStandardMaterial({
+    color: 0xc99a99, roughness: 0.7, metalness: 0.12,
+  });
+  const frameRelief = new THREE.MeshStandardMaterial({
+    color: 0xd9b7a7, roughness: 0.72, metalness: 0.08,
+  });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0xf3eeeb, roughness: 0.94 });
+  [paintedRose, insetRose, doorEdges, pearledFrame, frameShadow, understatedMetal, roseRelief, frameRelief, floorMat]
+    .forEach(m => materials.add(m));
 
   function box(parent, dims, position, material, cast = true) {
     const geometry = new THREE.BoxGeometry(...dims);
@@ -225,12 +248,13 @@ export async function mountReferenceDoor(container, options = {}) {
   pendant.castShadow = true;
   root.add(pendant);
 
+  addReferenceDoorFrameRelief({ THREE, root, geometries, material: frameRelief });
+
   beveledPanel(root, [5.92, 0.14, 0.67], [0, FLOOR_Y, 0], pearledFrame, 0.045, 0.026);
   beveledPanel(root, [6.02, 0.065, 0.74], [0, FLOOR_Y - 0.10, 0], doorEdges, 0.035, 0.018);
 
-  // Stages 1–2 deliberately leave the aperture EMPTY behind the leaves.
-  // Do not fake the future interior with a flat dark/grey backing rectangle.
-  // A real room will be built as depth geometry in V2 stage 9.
+  // Fixed volume behind the threshold, not a dark photo/portal card.
+  buildReferenceDoorInterior({ THREE, root, box, materials, FLOOR_Y });
 
   // Each group pivot is at the OUTER jamb, z=0.34. The slab, side profiles,
   // front/back panels and hardware all remain children of this one hinge pivot.
@@ -257,6 +281,7 @@ export async function mountReferenceDoor(container, options = {}) {
       addPanelProfile(pivot, localX, y, 1.64, panelH - 0.08, -1);
     }
 
+    addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometries, material: roseRelief });
     addReferenceDoorHardware({
       THREE, root, pivot, side, W, leafWidth, geometries,
       understatedMetal, frameShadow, beveledPanel, box,
@@ -267,23 +292,7 @@ export async function mountReferenceDoor(container, options = {}) {
   const ground = box(scene, [80, 0.04, 80], [0, FLOOR_Y - 0.17, 0], floorMat, false);
   ground.castShadow = false;
 
-  const ambient = new THREE.HemisphereLight(0xfff9f3, 0x8e7373, 2.0);
-  scene.add(ambient);
-  const key = new THREE.DirectionalLight(0xffeee4, 2.6);
-  key.position.set(-5, 8, 9);
-  key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
-  key.shadow.camera.left = -8;
-  key.shadow.camera.right = 8;
-  key.shadow.camera.top = 9;
-  key.shadow.camera.bottom = -9;
-  key.shadow.camera.far = 40;
-  key.shadow.bias = -0.00025;
-  key.shadow.normalBias = 0.018;
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0xf4e1e1, 0.9);
-  fill.position.set(5, 4, -4);
-  scene.add(fill);
+  const lighting = buildReferenceDoorLighting({ THREE, scene, root });
 
   let targetAngle = 0;
   let currentAngle = 0;
@@ -291,8 +300,11 @@ export async function mountReferenceDoor(container, options = {}) {
   let currentView = 0;
 
   function render() {
-    if (disposed || !renderer || !visible || document.hidden) return;
     frameId = 0;
+    if (disposed || !renderer || !visible || document.hidden) {
+      previousTime = 0;
+      return;
+    }
     const now = performance.now();
     const dt = previousTime ? Math.min((now - previousTime) / 1000, 0.06) : 0.016;
     previousTime = now;
@@ -305,6 +317,7 @@ export async function mountReferenceDoor(container, options = {}) {
     leaves[0].pivot.rotation.y = -radians;
     leaves[1].pivot.rotation.y = radians;
     root.rotation.y = THREE.MathUtils.degToRad(currentView);
+    lighting.setOpening(currentAngle);
     renderer.render(scene, camera);
     if (currentAngle !== targetAngle || currentView !== targetView) invalidate();
   }
@@ -343,7 +356,8 @@ export async function mountReferenceDoor(container, options = {}) {
     renderer.toneMappingExposure = 1.18;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+    const mobileViewport = window.matchMedia("(max-width: 640px)").matches;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileViewport ? 1.25 : 1.5));
     renderer.setClearColor(0xffffff, 0);
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.style.width = "100%";
