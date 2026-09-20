@@ -47,6 +47,8 @@
 
 ## Catatan review dan sumber keputusan
 
+**20 September 2026 — Implementasi & pemeriksaan teknis awal:** GitHub Build Validation run `35497267847` pada commit `e67a7da17b9a14dc68ff563413600703d73dd3f5` (komponen + route) **PASS**. Ini verifikasi build, bukan bukti kualitas tampilan/engsel di browser; screenshot desktop/mobile dan feedback owner tetap **pending**. Tidak diperlukan asset baru pada baseline ini.
+
 **20 September 2026 — Tahap 1 mulai:** owner meminta satu file `pintu3d.md`, 15 tahap menjadi tiga fase, utuhnya gerakan daun hingga hanya kusen tersisa. Dipilih `/pintu-lab` agar satu pintu bisa diamati tanpa orbital dan landing canonical tidak terganggu. Baseline pertama memakai model CSS 3D + Motion tanpa meminta asset baru. **Jangan menganggap tampilan sudah disetujui sampai ada screenshot/feedback pemilik.**
 
 **Masalah yang harus selalu dicek:** facade ikut membuka bersama kusen; bagian atas/ornamen tetap mengambang; backing kotak abu-abu; ambang berupa balok; pintu terlalu kecil; foto melar; material plastik; cahaya besar berlebihan; daun menghilang saat sudut >90°; overflow memotong bukaan; orbital menggantikan review satu Pintu.
