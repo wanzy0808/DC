@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 4 mekanik engsel/pegangan di branch `feat/pintu-v2-tahap-4-hardware`, menunggu validasi CI dan merge ke `main`; screenshot/review visual owner tetap pending. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 4 engsel/pegangan merged ke `main` via PR #56; GitHub CI lulus. Screenshot/review visual owner tetap pending; Tahap 5 material belum dikerjakan. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -23,7 +23,7 @@
 | 1 | Pindah ke mesh 3D nyata | Fixed jamb berdimensi, dua daun utuh tebal masing-masing satu pivot luar; bukaan 0°–110°, 3 sudut kamera; **foto asli di samping**. Ornamen rinci sengaja belum dibuat, jangan menganggap mock mesh sebagai desain akhir. | Kode masuk GitHub — CI & screenshot owner pending |
 | 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Merged `main` via PR #53 — CI PASS; review owner pending |
 | 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Merged `main` via PR #54 — CI PASS; review owner pending |
-| 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Kode di branch — CI dan review visual pending |
+| 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Merged `main` PR #56 — CI PASS; review visual pending |
 | 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Belum |
 | 6 | Relief persis panel daun | Corner ornaments kecil, acanthus atas, strip tengah, center flourish bawah sebagai geometri relief sesungguhnya, mengikuti setiap daun. **Bukan rose flower crest atau simbol generik.** | Belum |
 | 7 | Crown & pilaster klasik detail | Medali oval dan scroll acanthus di lintel, ornaments di capital dan base, molding bertingkat; tidak melayang/terpotong. | Belum |
@@ -76,7 +76,7 @@
 
 **Batas tahap:** warna metal masih sementara, tidak mengklaim material final atau ukiran handle mini sudah meniru foto secara sempurna (penyempurnaan material Tahap 5, carving Tahap 6–8). Tanpa interior/cahaya final. `/pintu-lab/css`, `/jiplak`, landing `/`, orbital, Rose petals, route bisnis, dan backend tetap tidak diubah. Lab menandai Tahap 4 dan memberi instruksi pemeriksaan celah handle, sambungan ke jamb, dan gerak daun.
 
-**Berkas:** `components/Landing/Pintu/reference-door-hardware.js` (baru), `reference-door-engine.js`, `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits `de755ca3`, `bcc8e0cc`, `517dde85`, `48b7f59c`. **Validasi:** GitHub Build Validation belum diamati saat catatan ini dibuat; review geometri nyata di browser owner juga masih pending. Jangan klaim lulus visual hanya dari lint/build.
+**Berkas:** `components/Landing/Pintu/reference-door-hardware.js` (baru), `reference-door-engine.js`, `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits `de755ca3`, `bcc8e0cc`, `517dde85`, `48b7f59c`. **Validasi teramati:** GitHub Build Validation run `35513144853` pada PR source head `768a3ba1e37ac0cb26984afce707eb7890962ab6` **PASS** (termasuk Next.js build). PR #56 merged ke `main` sebagai squash commit `bc940b7557c00fe685cf84ed1de83a389c683383`. Review gerakan/geometri nyata di browser owner tetap **pending**; CI tidak membuktikan fidelity ke `pintu1.png`.
 
 ---
 
