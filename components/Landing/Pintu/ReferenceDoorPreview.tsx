@@ -22,6 +22,7 @@ export default function ReferenceDoorPreview() {
   const latestRef = useRef({ angle: 0, view: 0 });
   const [angle, setAngle] = useState<Angle>(0);
   const [view, setView] = useState<View>("front");
+  const [travel, setTravel] = useState<"outside" | "entering" | "inside" | "leaving">("outside");
   const [status, setStatus] = useState<"loading" | "ready" | "unsupported">("loading");
   const reducedMotion = useReducedMotion();
 
@@ -35,7 +36,12 @@ export default function ReferenceDoorPreview() {
         // Only the lab route downloads Three.js; the public landing stays as-is.
         const { mountReferenceDoor } = await import("./reference-door-engine");
         if (cancelled || !mount) return;
-        const controller = await mountReferenceDoor(mount, { reducedMotion: Boolean(reducedMotion) });
+        const controller = await mountReferenceDoor(mount, {
+          reducedMotion: Boolean(reducedMotion),
+          onApproachSettled: (inside) => {
+            if (!cancelled) setTravel(inside ? "inside" : "outside");
+          },
+        });
         if (cancelled) { controller.dispose(); return; }
         instance = controller;
         engineRef.current = controller;
@@ -53,6 +59,20 @@ export default function ReferenceDoorPreview() {
       instance?.dispose();
     };
   }, [reducedMotion]);
+
+  function enterFoyer() {
+    if (status !== "ready" || travel !== "outside") return;
+    chooseAngle(110);
+    chooseView("front");
+    setTravel("entering");
+    engineRef.current?.setApproach(1);
+  }
+
+  function leaveFoyer() {
+    if (status !== "ready" || travel !== "inside") return;
+    setTravel("leaving");
+    engineRef.current?.setApproach(0);
+  }
 
   function chooseAngle(next: Angle) {
     latestRef.current.angle = next;
@@ -117,7 +137,7 @@ export default function ReferenceDoorPreview() {
       <div className="flex flex-col items-center gap-3 text-center">
         <Button
           type="button"
-          disabled={status !== "ready"}
+          disabled={status !== "ready" || travel !== "outside"}
           onClick={() => chooseAngle(angle === 110 ? 0 : 110)}
         >
           {angle === 110 ? "Tutup kedua daun" : "Buka seluruh pintu"}
@@ -127,7 +147,7 @@ export default function ReferenceDoorPreview() {
             <Button
               key={next}
               type="button"
-              disabled={status !== "ready"}
+              disabled={status !== "ready" || travel !== "outside"}
               aria-pressed={angle === next}
               onClick={() => chooseAngle(next)}
             >{next}°</Button>
@@ -138,7 +158,7 @@ export default function ReferenceDoorPreview() {
             <Button
               key={next}
               type="button"
-              disabled={status !== "ready"}
+              disabled={status !== "ready" || travel !== "outside"}
               aria-pressed={view === next}
               onClick={() => chooseView(next)}
             >
@@ -146,11 +166,30 @@ export default function ReferenceDoorPreview() {
             </Button>
           ))}
         </div>
+        <div className="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Uji kamera masuk ke foyer">
+          <Button
+            type="button"
+            disabled={status !== "ready" || travel !== "outside"}
+            onClick={enterFoyer}
+          >Uji masuk ruang</Button>
+          <Button
+            type="button"
+            disabled={status !== "ready" || travel !== "inside"}
+            onClick={leaveFoyer}
+          >Kembali ke depan</Button>
+        </div>
+        <p role="status" aria-live="polite" className="text-sm text-foreground/70">
+          {travel === "entering" ? "Pintu membuka, kamera mendekati ruang…" :
+            travel === "inside" ? "Kamera berada di dalam foyer 3D." :
+            travel === "leaving" ? "Kamera kembali ke depan…" :
+            "Uji gerak masuk hanya di lab; belum berpindah halaman."}
+        </p>
         <p className="max-w-xl text-sm leading-6 text-foreground/65">
           Permukaan satin Rose dan ivory, detail relief pada daun serta crown, dan foyer 3D di balik bukaan.
           Uji 0°/45°/90°/110° dari depan dan kedua sudut miring: ukiran harus ikut daun,
           frame tetap diam, ruang terlihat ber-volume, dan cahaya ambang muncul hanya ketika terbuka.
-          Kemiripan detail dengan referensi tetap memerlukan review visual.
+          Kemiripan detail dengan referensi tetap memerlukan review visual. Tombol uji masuk
+          hanya memindahkan kamera dalam mesh foyer; tidak mengubah route atau landing utama.
         </p>
         <Link className="text-sm underline underline-offset-4" href="/pintu-lab/css">
           Bandingkan dengan eksperimen CSS lama
