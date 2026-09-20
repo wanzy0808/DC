@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import DoorRelief from "@/components/Landing/Pintu/DoorRelief";
 
 type Side = "left" | "right";
 type DoorAngle = 0 | 45 | 90 | 110;
@@ -153,6 +154,8 @@ function HingedLeaf({
           className="absolute inset-x-[12%] top-[12%] h-[32%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_8px_rgba(65,21,34,0.27),inset_-2px_-2px_5px_rgba(247,204,212,0.15),0_1px_1px_rgba(239,193,201,0.24)]" />
         <div style={{ backgroundImage: ROSE_PANEL_MATERIAL }}
           className="absolute inset-x-[12%] bottom-[10%] h-[36%] border-2 border-[#cc98a1]/75 shadow-[inset_5px_5px_9px_rgba(65,21,34,0.28),inset_-2px_-2px_5px_rgba(247,204,212,0.14),0_1px_1px_rgba(239,193,201,0.22)]" />
+        {/* Both relief panels belong to the moving FRONT leaf face, never to the stationary frame. */}
+        <DoorRelief side={side} />
         <div className={`absolute inset-y-[5%] w-[3px] bg-[#f2cbd0]/70 shadow-[1px_0_3px_rgba(72,26,36,0.45)] ${rail}`} />
         <div className={`absolute top-[47%] h-[7%] w-[7%] min-w-[7px] rounded-sm border border-[#f0d4d8]/80 bg-[linear-gradient(90deg,#73404a,#e0b2b9,#a0646e)] shadow-[0_1px_4px_rgba(55,23,30,0.5)] ${handle}`} />
       </div>
