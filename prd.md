@@ -1158,6 +1158,13 @@ Bukan melalui banyak warna/variant berbeda.
 - Registration dialog tidak boleh menempatkan action `Masuk` di header kanan bila bertabrakan dengan tombol close `X`; switch ke `Masuk` ditempatkan di bawah form. Login/register copy harus general-event oriented, bukan wedding-only.
 - Rose petals di `components/Layout/background.tsx` adalah protected visual element.
 
+### 15.4.1 Pintu 3D — visual review bertahap (approved 20 September 2026)
+
+- Pintu 1 harus disempurnakan sendirian sebelum geometri/visualnya direplikasi ke Pintu 2/3 dan sebelum seluruhnya diintegrasikan kembali dengan orbital Motion. Ada 15 tahap terukur pada `pintu3d.md` (tracker visual khusus, bukan PRD pengganti). Setiap tahap wajib menghasilkan perubahan visual yang dapat diperiksa pengguna.
+- Saat Pintu membuka, **seluruh daun kiri/kanan** beserta panel, ukiran, dan dekorasi yang menempel padanya berputar di pivot/engsel masing-masing; hanya kusen, ambang, dan ruang interior yang tetap diam. Beri ketebalan, muka/belakang, dan sudut bukaan lengkap (>90°), tanpa panel/facade tersisa di tengah atau gambar kusen yang ikut berputar.
+- Siluet monumental, material matte Rose canonical, engsel masuk akal, relief/list/bunga terintegrasi, interior bervolume, dan cahaya ivory–Rose keluar hanya saat buka. Hindari kotak/tanduk/balok abu-abu, panel datar, plastik mengilap, foto melar, atau giant pink glow.
+- Gunakan preview terisolasi `/pintu-lab` untuk Pintu 1 agar existing navigation/orbit pada landing utama `/` tidak berubah sebelum visual direview/di-approve owner. Eksperimen `/jiplak` tetap independen; tiga Pintu serta orbital baru disatukan kembali setelah persetujuan Pintu 1. Patuhi reduced motion dan evaluasi desktop/mobile.
+
 ### 15.5 User-facing copy
 
 Dashboard harus menjelaskan:
@@ -3355,3 +3362,11 @@ Validation: GitHub Actions pending; pemeriksaan visual di localhost `/jiplak` di
 Owner uploaded `public/pintu1.png` to `pintu4.png` and requested much larger, ornate, photographic doors rather than procedural blocks. `/jiplak` now loads `pintu1.png`, `pintu2.png`, `pintu3.png` independently for three service portals; each photographic facade is split into two UV-cropped halves attached to separate 3D hinge pivots, with the photographed ornamentation preserved instead of rebuilt as blocks. `pintu4.png` remains available for a later variation. Camera distance and front-door scale increase while the existing three-door Motion orbital timing and interactions remain; original floor shadow and opening-only ivory light remain. The old procedural arch/frame/mini-rosettes are removed from this experimental scene. Photo worlds behind the opening, flowers and petals remain. Canonical landing `/` is unchanged.
 
 Validation: GitHub Actions pending; owner visual review needed to check alpha edges, photo/hinge alignment and mobile composition.
+
+---
+
+## 2026-09-20 — Pintu 3D Pintu 1 visual tracker + isolated stage-one preview
+
+Owner meminta satu tracker `pintu3d.md` untuk tiga fase/15 tahap dan menegaskan seluruh daun pintu harus ikut membuka sampai kusen saja yang diam. Perubahan tahap satu menambahkan `/pintu-lab` dengan komponen `Pintu3DPreview`: dua daun bergerak pada pivot jamb masing-masing, muka/belakang/rusuk dan panel permulaan mengikuti transform daun, kusen/ruang belakang independen, serta kontrol buka/tutup. Versi ini adalah baseline bentuk/mekanisme, **bukan** hasil akhir ukiran atau validasi visual. `/`, `/jiplak`, rose petals, orbital tiga Pintu, brand dan backend tidak diubah. Material lanjutan, ukiran, bunga dan lighting final dilakukan setelah owner meninjau tahap satu.
+
+Affected files: `pintu3d.md`, `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`, `prd.md`, `AGENTS.md` (tautan tracker). Initial GitHub commits: `3a805b53`, `bdf9ed52`, `e67a7da1`. Validation: build/CI **pending**, screenshot dan interaksi pada browser target **pending owner review**. Tidak ada klaim WebGL / browser telah diuji.
