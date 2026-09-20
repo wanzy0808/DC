@@ -10,6 +10,8 @@ export function mountReferenceDoor(
   container: HTMLDivElement,
   options?: {
     reducedMotion?: boolean;
+    variant?: "planner" | "invitation" | "guestbook";
+    thumbnail?: boolean;
     onApproachSettled?: (inside: boolean) => void;
     onContextChange?: (status: "lost" | "restored") => void;
   },
