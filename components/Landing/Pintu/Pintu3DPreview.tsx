@@ -217,7 +217,10 @@ function DoorFrame({ open }: { open: boolean }) {
   return (
     <>
       {/* The opening and all jamb parts stay fixed while the leaves swing. */}
-      <div className="absolute inset-x-[3.6%] bottom-[2.2%] top-[3%] overflow-hidden bg-[#261b20] shadow-[inset_0_0_0_9px_rgba(9,7,9,0.45),inset_0_0_38px_13px_rgba(8,7,9,0.72)]">
+      <div
+        className="absolute inset-x-[3.6%] bottom-[2.2%] top-[3%] overflow-hidden bg-[#261b20] shadow-[inset_0_0_0_9px_rgba(9,7,9,0.45),inset_0_0_38px_13px_rgba(8,7,9,0.72)]"
+        style={{ transform: `translateZ(-${FRAME_DEPTH}px)` }}
+      >
         <div className="absolute inset-[5%] bg-[linear-gradient(135deg,#453139_0%,#211c22_48%,#16151a_100%)]" />
         <motion.div
           initial={false}
