@@ -5,6 +5,9 @@ import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/button";
 
 type Side = "left" | "right";
+type DoorAngle = 0 | 45 | 90 | 110;
+const DOOR_ANGLES: readonly DoorAngle[] = [0, 45, 90, 110];
+const FULLY_OPEN = 110;
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 // Layered opaque gradients simulate satin-painted wood grain without image assets,
@@ -106,15 +109,15 @@ function DoorHingeBarrels({
  */
 function HingedLeaf({
   side,
-  open,
+  angleDegrees,
   reducedMotion,
 }: {
   side: Side;
-  open: boolean;
+  angleDegrees: DoorAngle;
   reducedMotion: boolean | null;
 }) {
   const left = side === "left";
-  const angle = open ? (left ? -110 : 110) : 0;
+  const angle = left ? -angleDegrees : angleDegrees;
   const outer = left
     ? "left-[3.65%] origin-left"
     : "right-[3.65%] origin-right";
@@ -125,7 +128,7 @@ function HingedLeaf({
     <motion.div
       initial={false}
       animate={{ rotateY: angle }}
-      transition={{ duration: reducedMotion ? 0.01 : 1.05, ease: EASE }}
+      transition={{ duration: reducedMotion ? 0.01 : 1.1, ease: [0.42, 0, 0.18, 1] }}
       style={{
         transformOrigin: left ? "left center 16px" : "right center 16px",
         transformStyle: "preserve-3d",
@@ -213,7 +216,7 @@ function HingedLeaf({
   );
 }
 
-function DoorFrame({ open }: { open: boolean }) {
+function DoorFrame({ angleDegrees }: { angleDegrees: DoorAngle }) {
   return (
     <>
       {/* The opening and all jamb parts stay fixed while the leaves swing. */}
@@ -224,8 +227,8 @@ function DoorFrame({ open }: { open: boolean }) {
         <div className="absolute inset-[5%] bg-[linear-gradient(135deg,#453139_0%,#211c22_48%,#16151a_100%)]" />
         <motion.div
           initial={false}
-          animate={{ opacity: open ? 0.5 : 0.05 }}
-          transition={{ duration: 0.65 }}
+          animate={{ opacity: 0.05 + (angleDegrees / FULLY_OPEN) * 0.45 }}
+          transition={{ duration: 1.1, ease: EASE }}
           className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(255,239,241,0.8)_0%,rgba(192,122,132,0.17)_45%,transparent_78%)]"
         />
         <div className="absolute inset-x-[10%] bottom-0 h-[28%] bg-[linear-gradient(0deg,rgba(200,156,166,0.21),transparent)] [clip-path:polygon(0_100%,34%_0,66%_0,100%_100%)]" />
@@ -281,8 +284,49 @@ function DoorFrame({ open }: { open: boolean }) {
   );
 }
 
+/**
+ * Ground shadows live in the same scene but NOT inside the swinging leaves.
+ * Their soft ellipses start at the fixed hinge feet and pivot across the
+ * floor as the opening angle changes; frame grounding is handled separately.
+ * This is a visual approximation, not a claim of physically-correct lighting.
+ */
+function DoorGroundShadows({
+  angleDegrees,
+  reducedMotion,
+}: {
+  angleDegrees: DoorAngle;
+  reducedMotion: boolean | null;
+}) {
+  const openFraction = angleDegrees / FULLY_OPEN;
+  return (
+    <div
+      className="pointer-events-none absolute -bottom-[10%] left-[-3%] right-[-3%] h-[15%] origin-top [transform:rotateX(74deg)] [transform-style:preserve-3d]"
+      aria-hidden="true"
+    >
+      {(["left", "right"] as const).map((side) => {
+        const left = side === "left";
+        return (
+          <motion.div
+            key={side}
+            initial={false}
+            animate={{
+              rotateZ: (left ? -1 : 1) * angleDegrees * 0.72,
+              scaleX: 0.88 + openFraction * 0.18,
+              opacity: 0.12 + openFraction * 0.22,
+            }}
+            transition={{ duration: reducedMotion ? 0.01 : 1.1, ease: [0.42, 0, 0.18, 1] }}
+            className={`absolute top-[12%] h-[64%] w-[47%] rounded-[50%] bg-[radial-gradient(ellipse_at_35%_50%,rgba(34,13,23,0.75)_0%,rgba(58,25,36,0.38)_42%,transparent_75%)] blur-[8px] ${
+              left ? "left-[3%] origin-left" : "right-[3%] origin-right"
+            }`}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 export default function Pintu3DPreview() {
-  const [open, setOpen] = useState(false);
+  const [angleDegrees, setAngleDegrees] = useState<DoorAngle>(0);
   const [view, setView] = useState<"front" | "left" | "right">("front");
   const reducedMotion = useReducedMotion();
 
@@ -296,7 +340,7 @@ export default function Pintu3DPreview() {
         <div
           className="relative aspect-[0.65] w-[min(84vw,570px,calc(83dvh*0.65))] shrink-0 [perspective:1650px]"
           role="img"
-          aria-label={open ? "Pintu dua daun terbuka sepenuhnya; kusen diam." : "Pintu dua daun tertutup; kusen diam."}
+          aria-label={angleDegrees === 0 ? "Pintu dua daun tertutup; kusen diam." : `Pintu dua daun terbuka ${angleDegrees} derajat; kusen diam.`}
         >
           <motion.div
             initial={false}
@@ -304,9 +348,10 @@ export default function Pintu3DPreview() {
             transition={{ duration: reducedMotion ? 0.01 : 0.7, ease: EASE }}
             className="absolute inset-0 [transform-style:preserve-3d]"
           >
-            <DoorFrame open={open} />
-            <HingedLeaf side="left" open={open} reducedMotion={reducedMotion} />
-            <HingedLeaf side="right" open={open} reducedMotion={reducedMotion} />
+            <DoorGroundShadows angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
+            <DoorFrame angleDegrees={angleDegrees} />
+            <HingedLeaf side="left" angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
+            <HingedLeaf side="right" angleDegrees={angleDegrees} reducedMotion={reducedMotion} />
           </motion.div>
         </div>
       </div>
@@ -314,13 +359,25 @@ export default function Pintu3DPreview() {
       <div className="flex flex-col items-center gap-3 text-center">
         <Button
           type="button"
-          aria-pressed={open}
-          onClick={() => setOpen((value) => !value)}
+          aria-pressed={angleDegrees === FULLY_OPEN}
+          onClick={() => setAngleDegrees((value) => (value === FULLY_OPEN ? 0 : FULLY_OPEN))}
           className="min-w-44"
         >
-          {open ? "Tutup pintu" : "Buka seluruh pintu"}
+          {angleDegrees === FULLY_OPEN ? "Tutup pintu" : "Buka seluruh pintu"}
         </Button>
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-2" role="group" aria-label="Sudut bukaan pintu">
+          {DOOR_ANGLES.map((angle) => (
+            <Button
+              key={angle}
+              type="button"
+              aria-pressed={angleDegrees === angle}
+              onClick={() => setAngleDegrees(angle)}
+            >
+              {angle}°
+            </Button>
+          ))}
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-3" role="group" aria-label="Sudut pandang">
           <Button type="button" aria-pressed={view === "front"} onClick={() => setView("front")}>
             Tampak depan
           </Button>
@@ -332,8 +389,8 @@ export default function Pintu3DPreview() {
           </Button>
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Buka pintu lalu periksa dari sudut kiri atau kanan: daun berputar pada tiga engsel di setiap jamb,
-          sementara sisi dalam kusen tetap diam. Material Rose dan bentuk daun dari tahap sebelumnya dipertahankan.
+          Pilih bukaan 0°, 45°, 90° atau 110° untuk membandingkan gerakan dan bayangan setiap daun.
+          Lalu coba sudut kiri dan kanan: engsel dan kusen tetap diam, kedua daun tetap utuh saat membuka dan menutup.
         </p>
       </div>
     </div>
