@@ -1,0 +1,59 @@
+# Pintu 3D — Panduan Tahapan Visual DC Organizer
+
+**Status:** Pintu 1 dalam pengerjaan; validasi visual oleh owner masih diperlukan.
+**Dibuat:** 20 September 2026
+**Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
+
+## Target hasil akhir yang dikunci
+
+- Pintu 1 harus tampak sebagai **objek arsitektural megah**, bukan kartu UI, blok datar, atau gambar pintu yang sekadar disapu ke samping.
+- **Daun pintu kiri dan kanan utuh** (seluruh tinggi, ketebalan, ukiran, panel, ornamen yang menempel pada daun) masing-masing berputar bersama engsel pada jamb/kusen kiri dan kanan. Ketika terbuka, **hanya kusen/ambang dan ruang di belakangnya yang tetap pada tempatnya**. Tidak boleh ada potongan facade/panel pintu melayang di mulut bukaan.
+- Kusen, balok atas, dinding belakang, engsel pada jamb, dan ambang tidak bergerak. Hindari kotak abu-abu di belakang/bawah, siluet tanduk, sisi terpotong atau bingkai dobel yang merusak bentuk.
+- Pengamatan dilakukan dari kondisi **tertutup, setengah terbuka, terbuka penuh, dan ditutup kembali**. Pastikan pada sudut >90° daun masih terlihat sebagai bidang utuh berketebalan dari perspektif samping, bukan lenyap karena backface/culling.
+- Komposisi utama memberi skala pintu yang megah. Material matte/satin dengan detail serat/ukiran dan highlight tepi yang halus; dominan keluarga Rose DC (`#C07A84`, `#D9A3AA`, `#A65E69`), tanpa plastik glossy atau palet gold.
+- Ornamen/list/bunga adalah bagian dari geometri daun atau kusen yang benar. Ornamen tidak boleh tetap mengambang di pusat pintu ketika daun terbuka.
+- Cahaya putih gading dengan nuansa Rose keluar **hanya dari bukaan** mengikuti besar celah; bayangan kontak lantai tetap. Tidak ada halo pink besar atau balok abu-abu sebagai pengganti ruang di balik pintu.
+- Performa mobile, contrast, reduced motion, semantik interaksi, dan perilaku landing tetap terjaga.
+- Pintu 2/3 dan orbital Motion **tidak digandakan sebelum Pintu 1 disetujui**. Setelah disetujui, gunakan komponen inti yang sama dan aset/varian yang terpisah; jangan tiga salinan kode.
+- **Jangan mengganti landing utama (`/`) atau tiga pintu aktif di sana selama uji Pintu 1**. Preview mandiri: `/pintu-lab`. Eksperimen lama di `/jiplak` tetap tersedia; promosi ke landing dilakukan setelah approval visual.
+- Referensi `public/pintu1.png`—`pintu4.png` adalah gambar facade yang **belum boleh dipakai sebagai satu bidang bukaan bergerak**, karena gambar mungkin memuat kusen dan daun secara bersamaan. Ketika digunakan, pisahkan/mask kusen (diam) dan daun kiri/kanan (berputar) dengan tepi dan engsel yang sejajar. Jangan memotong seluruh foto termasuk kusennya lalu memutar semua bagian.
+
+## Struktur komponen dan pembagian tanggung jawab
+
+- `app/pintu-lab/page.tsx` — area preview satu Pintu, instruksi review dan kontrol buka/tutup.
+- `components/Landing/Pintu/Pintu3DPreview.tsx` — state interaksi preview; objek Pintu 1, jamb/kusen diam, ruang/bayangan, pivot daun dan muka/belakang daun. Ini **komponen percobaan awal**, belum API publik tiga Pintu.
+- Tahap berikut: ekstrak `DoorFrame`, `DoorLeaf`, `DoorHinges`, `DoorOrnaments`, `DoorInterior`, `DoorLighting`, `DoorMotion` jika kompleksitasnya memang sudah memerlukan pemisahan. Hindari membuat file kosong yang belum bermanfaat. Asset hanya dibutuhkan saat tahap detail/foto; **belum perlu mengunggah apa pun untuk tahap pertama**.
+- Gunakan stack existing: Next.js + Tailwind + Motion. Eksperimen Three.js `/jiplak` tetap independen. Pilih apakah geometry final akan dipindahkan ke Three.js atau tetap CSS 3D setelah review kualitas/performanya; mekanisme fisik engsel harus benar untuk keduanya.
+
+## 15 tahap dengan perubahan yang terlihat
+
+| Tahap | Fase | Perubahan yang harus tampak saat direview | Status |
+| --- | --- | --- | --- |
+| 1 | Dasar | Satu Pintu besar di preview khusus, **dua daun lengkap** yang bisa dibuka/ditutup pada pivot kusen luar. Tidak ada setengah facade yang tertinggal di tengah. | Implementasi pertama — menunggu review visual |
+| 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Belum |
+| 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Belum |
+| 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Belum |
+| 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Belum |
+| 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Belum |
+| 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Belum |
+| 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Belum |
+| 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Belum |
+| 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Belum |
+| 11 | Finishing | Review screenshot empat kondisi dari desktop dan mobile; perbaiki bentuk, clipping, pixel gaps, dan sudut tak wajar. | Belum |
+| 12 | Finishing | Responsive size dan komposisi hero: pintu megah desktop tanpa memotong daun saat terbuka, ringkas di mobile. | Belum |
+| 13 | Finishing | Performa: asset optimization, reduced motion, pointer/touch/keyboard, fallback tanpa WebGL bila digunakan. | Belum |
+| 14 | Finishing | Komponen reusable dan varian visual Pintu 2/3 yang masih mempertahankan geometri engsel dan konsistensi visual Pintu 1. **Hanya setelah owner puas.** | Belum |
+| 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
+
+## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 1 mulai:** owner meminta satu file `pintu3d.md`, 15 tahap menjadi tiga fase, utuhnya gerakan daun hingga hanya kusen tersisa. Dipilih `/pintu-lab` agar satu pintu bisa diamati tanpa orbital dan landing canonical tidak terganggu. Baseline pertama memakai model CSS 3D + Motion tanpa meminta asset baru. **Jangan menganggap tampilan sudah disetujui sampai ada screenshot/feedback pemilik.**
+
+**Masalah yang harus selalu dicek:** facade ikut membuka bersama kusen; bagian atas/ornamen tetap mengambang; backing kotak abu-abu; ambang berupa balok; pintu terlalu kecil; foto melar; material plastik; cahaya besar berlebihan; daun menghilang saat sudut >90°; overflow memotong bukaan; orbital menggantikan review satu Pintu.
+
+## Protokol tiap tahap
+
+1. Ubah kode sehingga ada perbedaan visual yang dapat diperiksa langsung di `/pintu-lab`.
+2. Catat apa yang berubah, file terdampak, hasil lint/build/CI yang **benar-benar teramati**, dan apakah owner sudah menyetujui.
+3. Setelah screenshot/feedback, perbaiki tahap terkait sebelum lanjut; tidak menganggap nomor tahap sebagai bukti kualitas.
+4. Jangan mengubah Rose petals, brand font/button, landing utama, product routing, atau backend sebagai efek samping.
