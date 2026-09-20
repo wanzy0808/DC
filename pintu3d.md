@@ -1,8 +1,52 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–10 sudah dikodekan, tetapi desain ornamen Tahap 6–8 sedang direvisi ulang agar lebih dekat ke referensi `pintu1.png`; rose crest besar dibatalkan.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 1 geometri asli telah masuk GitHub; menunggu CI final dan review screenshot. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
+
+## Rebuild V2 — acuan dan kontrak (mulai 20 September 2026)
+
+**Kenapa diulang:** eksperimen V1 `/pintu-lab` dibangun dari CSS 3D, SVG dan gradien. Owner menilai ukiran dan kusen masih seperti mainan, jauh dari referensi. Mulai sekarang gunakan **Three.js dengan mesh nyata**, bukan menambah lagi elemen CSS/SVG untuk menyamarkan gambar 2D. `/pintu-lab/css` menyimpan V1 untuk pembanding; `/pintu-lab` khusus V2. Eksperimen `/jiplak` dan landing canonical `/` jangan diubah sebelum approval.
+
+**Satu-satunya acuan visual Pintu 1:** gambar asli yang diunggah ulang owner dan tersedia di repo pada `public/pintu1.png`. Fidelity bentuk, proporsi, relief, warna, urutan panel dan hardware lebih penting daripada improvisasi desain. Gambar ini berisi **dua daun dengan panel tinggi atas, panel horizontal kecil, panel bawah; pegangan panjang ornamental di tengah; kusen klasik berpilaster kiri/kanan, capital dan base; cornice berlapis; crown acanthus simetris dengan medali oval pada lintel**. Seluruh detail tersebut perlu diterjemahkan menjadi geometri/mesh dan material nyata. Rose crest bunga besar di daun **tidak boleh ditambahkan**; medali oval klasik di mahkota kusen adalah detail referensi yang berbeda dan harus dipertahankan.
+
+**Metode implementasi:** pakai Three.js `three` yang sudah terpasang di proyek; tidak perlu menambahkan R3F kalau tidak membantu. Satu pivot `THREE.Group` di jamb luar untuk tiap daun; setiap bidang depan/belakang/sisi dan detail ukiran yang menempel menjadi anak grup daun. Kusen, cornice/crown dan ruang belakang adalah mesh tetap. Gambar referensi dipajang **terpisah untuk pembanding**, tidak dijadikan satu bidang datar bergerak atau "texture 3D" yang sekadar dipotong dua. Ukiran halus yang mustahil dibuat meyakinkan dengan primitif jangan diganti ikon abstrak: rencanakan geometri hasil modeling/asset 3D teroptimasi (glTF/GLB) yang mengikuti referensi secara rinci; konsultasikan kebutuhan file ke owner saat tahap detail memang memerlukannya.
+
+**Kriteria persetujuan:** setiap tahap harus membawa perubahan nyata yang bisa dilihat dalam preview, diuji buka 0°/45°/90°/110° serta depan/kiri/kanan, dicatat hasil CI *yang sudah diamati* dan feedback owner. **CI sukses bukan persetujuan visual**. Jangan klaim sama persis dengan gambar sampai sudut depan dan miring betul-betul dinilai owner. Jangan melanjutkan penggandaan pintu bila owner belum puas.
+
+### Checklist V2 — target, output visual, dan status
+
+| Tahap | Tujuan utama | Perubahan terlihat / kriteria review | Status |
+| --- | --- | --- | --- |
+| 1 | Pindah ke mesh 3D nyata | Fixed jamb berdimensi, dua daun utuh tebal masing-masing satu pivot luar; bukaan 0°–110°, 3 sudut kamera; **foto asli di samping**. Ornamen rinci sengaja belum dibuat, jangan menganggap mock mesh sebagai desain akhir. | Kode masuk GitHub — CI & screenshot owner pending |
+| 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Belum |
+| 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Belum |
+| 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Belum |
+| 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Belum |
+| 6 | Relief persis panel daun | Corner ornaments kecil, acanthus atas, strip tengah, center flourish bawah sebagai geometri relief sesungguhnya, mengikuti setiap daun. **Bukan rose flower crest atau simbol generik.** | Belum |
+| 7 | Crown & pilaster klasik detail | Medali oval dan scroll acanthus di lintel, ornaments di capital dan base, molding bertingkat; tidak melayang/terpotong. | Belum |
+| 8 | Finishing ukiran/hardware | Refinement micro-bevel, material cat metalik hanya pada relief, detail ukiran/corners dan handles sesuai foto; empat sudut diperiksa. | Belum |
+| 9 | Interior sungguh ber-volume | Ruang 3D sederhana di balik ambang, lantai/dinding/atap bertemu dengan benar saat kamera nanti masuk, tanpa kotak hitam. | Belum |
+| 10 | Cahaya natural | Area key/fill yang menonjolkan pahatan; cahaya ivory dari bukaan dan spill pendek mengikuti bukaan, tanpa pink fog/kotak glowing. | Belum |
+| 11 | Fidelity visual & screenshot | Bandingkan tertutup, 45°, 90°, 110° depan/miring terhadap `pintu1.png`, koreksi desain dan clipping berdasarkan owner. | Belum |
+| 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Belum |
+| 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Belum |
+| 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Belum |
+| 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Belum |
+
+### Catatan eksekusi V2 — Tahap 1
+
+**Tujuan:** membuktikan bahwa model di `/pintu-lab` sekarang benar-benar dirender oleh Three.js/WebGL sebagai volume dan dua daun engsel, bukan CSS transform terhadap gambar. **Belum mencoba meniru relief rumit**: tahap ini hanya baseline struktur agar tidak mengulangi kegagalan mengklaim icon/flat drawing sudah sama dengan referensi.
+
+**Yang diubah:** `components/Landing/Pintu/reference-door-engine.js` berisi mesh kusen/daun/floor/lighting awal; `reference-door-engine.d.ts` untuk kontrak engine; `ReferenceDoorPreview.tsx` kontrol 0°/45°/90°/110°, depan/kiri/kanan dan pembanding `/pintu1.png`; `app/pintu-lab/page.tsx` mengaktifkan V2; `app/pintu-lab/css/page.tsx` mempertahankan eksperimen lama. `three` memakai dependency existing dan di-import hanya saat lab aktif. **Tidak mengubah** `/`, `/jiplak`, navbar, protected rose petals, route layanan atau data aplikasi.
+
+**Dapat diperiksa:** daun kiri dan kanan berputar utuh, belakangnya tertutup oleh geometri, tepian mempunyai ketebalan sungguhan; frame stasioner ketika pintu dibuka. Gambar referensi asli tampil di samping agar ukuran dan perbedaan tahap berikutnya dapat dilihat tanpa berpindah tab.
+
+**Belum termasuk:** mahkota/crown, sculpt acanthus, pegangan ornate presisi, materi PBR final, interior dan lighting natural, kamera fly-through, orbital tiga pintu. Semua memiliki tahap tersendiri di tabel V2. **Status persetujuan visual: menunggu screenshot + feedback owner**; jangan menandai Tahap 1 selesai secara visual hanya dari build.
+
+**Riwayat sumber:** V1 (CSS 3D, bukan Three.js) ada di bagian bawah dokumen ini. Nomor Tahap 1–10 di bagian V1 hanya menggambarkan eksperimen lama; tidak diwariskan sebagai approval untuk V2.
+
+---
 
 ## Target hasil akhir yang dikunci
 
