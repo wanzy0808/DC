@@ -18,6 +18,7 @@ export async function mountReferenceDoor(container, options = {}) {
   // WebGLRenderer creates one context below; probing an extra canvas here
   // can exhaust context limits on low-memory mobile browsers.
   let disposed = false;
+  let contextLost = false;
   let frameId = 0;
   let renderer;
   let resizeObserver;
@@ -313,7 +314,7 @@ export async function mountReferenceDoor(container, options = {}) {
 
   function render() {
     frameId = 0;
-    if (disposed || !renderer || !visible || document.hidden) {
+    if (disposed || contextLost || !renderer || !visible || document.hidden) {
       previousTime = 0;
       return;
     }
@@ -343,7 +344,7 @@ export async function mountReferenceDoor(container, options = {}) {
     if (currentAngle !== targetAngle || currentView !== targetView || currentApproach !== targetApproach) invalidate();
   }
   function invalidate() {
-    if (!disposed && visible && !document.hidden && !frameId) {
+    if (!disposed && !contextLost && visible && !document.hidden && !frameId) {
       frameId = window.requestAnimationFrame(render);
     }
   }
@@ -369,6 +370,24 @@ export async function mountReferenceDoor(container, options = {}) {
     previousTime = 0;
     invalidate();
   }
+  function onContextLost(event) {
+    // The renderer also listens for restoration. Prevent the browser from
+    // treating the loss as permanent, then pause animation without losing
+    // the current angle, camera position or pending travel intent.
+    event.preventDefault();
+    contextLost = true;
+    if (frameId) window.cancelAnimationFrame(frameId);
+    frameId = 0;
+    previousTime = 0;
+    options.onContextChange?.("lost");
+  }
+  function onContextRestored() {
+    // Three.js recreates internal GPU state in its own restore listener.
+    contextLost = false;
+    previousTime = 0;
+    options.onContextChange?.("restored");
+    resize();
+  }
 
   try {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "default" });
@@ -385,6 +404,8 @@ export async function mountReferenceDoor(container, options = {}) {
     renderer.domElement.style.height = "100%";
     renderer.domElement.style.display = "block";
     container.appendChild(renderer.domElement);
+    renderer.domElement.addEventListener("webglcontextlost", onContextLost, false);
+    renderer.domElement.addEventListener("webglcontextrestored", onContextRestored, false);
     resizeObserver = new ResizeObserver(resize);
     resizeObserver.observe(container);
     intersectionObserver = new IntersectionObserver(entries => {
@@ -406,6 +427,8 @@ export async function mountReferenceDoor(container, options = {}) {
     resizeObserver?.disconnect();
     intersectionObserver?.disconnect();
     document.removeEventListener("visibilitychange", onVisibility);
+    renderer?.domElement.removeEventListener("webglcontextlost", onContextLost);
+    renderer?.domElement.removeEventListener("webglcontextrestored", onContextRestored);
     renderer?.domElement.remove();
     renderer?.dispose();
     for (const geometry of geometries) geometry.dispose();
@@ -428,6 +451,13 @@ export async function mountReferenceDoor(container, options = {}) {
       if (targetApproach > 0) { targetAngle = OPEN_MAX; targetView = 0; }
       approachPending = true;
       invalidate();
+    },
+    capturePng() {
+      if (disposed || contextLost || !renderer || !visible || document.hidden) return null;
+      // Capture synchronously after rendering while the WebGL drawing buffer
+      // still contains the latest frame (no always-on preserveDrawingBuffer).
+      renderer.render(scene, camera);
+      return renderer.domElement.toDataURL("image/png");
     },
     dispose,
   };
