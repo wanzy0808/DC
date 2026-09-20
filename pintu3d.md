@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–10 sudah dikodekan; Tahap 9–10 menunggu review visual ruang dan cahaya saat pintu dibuka. Tahap 3–8 belum seluruhnya disetujui secara eksplisit.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–10 sudah dikodekan, tetapi desain ornamen Tahap 6–8 sedang direvisi ulang agar lebih dekat ke referensi `pintu1.png`; rose crest besar dibatalkan.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -11,7 +11,7 @@
 - Kusen, balok atas, dinding belakang, engsel pada jamb, dan ambang tidak bergerak. Hindari kotak abu-abu di belakang/bawah, siluet tanduk, sisi terpotong atau bingkai dobel yang merusak bentuk.
 - Pengamatan dilakukan dari kondisi **tertutup, setengah terbuka, terbuka penuh, dan ditutup kembali**. Pastikan pada sudut >90° daun masih terlihat sebagai bidang utuh berketebalan dari perspektif samping, bukan lenyap karena backface/culling.
 - Komposisi utama memberi skala pintu yang megah. Material matte/satin dengan detail serat/ukiran dan highlight tepi yang halus; dominan keluarga Rose DC (`#C07A84`, `#D9A3AA`, `#A65E69`), tanpa plastik glossy atau palet gold.
-- Ornamen/list/bunga adalah bagian dari geometri daun atau kusen yang benar. Ornamen tidak boleh tetap mengambang di pusat pintu ketika daun terbuka.
+- Ornamen/list harus menjadi bagian dari geometri daun atau kusen yang benar. Arah terbaru mengikuti `pintu1.png`: ukiran acanthus klasik yang tipis, panel sederhana, rose-gold/champagne accent seperlunya, dan crown ornament pada kusen. **Rose crest besar pada daun dibatalkan** karena terlalu jauh dari referensi dan membuat Pintu terasa kaku/robotic.
 - Cahaya putih gading dengan nuansa Rose keluar **hanya dari bukaan** mengikuti besar celah; bayangan kontak lantai tetap. Tidak ada halo pink besar atau balok abu-abu sebagai pengganti ruang di balik pintu.
 - Performa mobile, contrast, reduced motion, semantik interaksi, dan perilaku landing tetap terjaga.
 - Pintu 2/3 dan orbital Motion **tidak digandakan sebelum Pintu 1 disetujui**. Setelah disetujui, gunakan komponen inti yang sama dan aset/varian yang terpisah; jangan tiga salinan kode.
@@ -57,6 +57,12 @@ Contoh jalur Pintu Undangan Digital: landing dengan tiga Pintu orbital → user 
 **Penjadwalan:** Tahap 10 siapkan pencahayaan bukaan yang mendukung zoom; Tahap 11–13 audit clipping, perspektif dekat, viewport, performa dan reduced motion. Tahap 14 setelah approval owner baru buat model Pintu reusable, Tahap 15 implementasikan/poles dan uji transisi navigasi lintas route bersama tiga Pintu orbital. Boleh membuat eksperimen transisi Pintu 1 di `/pintu-lab` lebih dulu bila perlu, tetapi **jangan ganti** perilaku landing utama sampai Pintu 1 disetujui. Aset interior/lampu yang sudah dibuat tidak otomatis dianggap final untuk close-up.
 
 **Status:** keputusan UX dan rencana **sudah dicatat**, belum ada kode animasi zoom-in/route transition/zoom-out halaman. Persetujuan visual Tahap 9 juga masih pending; tidak mengubah status review tahap lain.
+
+## Catatan review dan sumber keputusan
+
+**20 September 2026 — Koreksi besar arah ukiran/kusen berdasarkan screenshot `pintu1.png`:** owner menegaskan kusen dan ukiran versi saat ini masih terlalu jauh dari referensi. Bagian yang dianggap lebih bagus dari referensi: kusen lebih megah tetapi tetap sederhana, crown klasik di lintel, ornamen acanthus kecil di sisi frame, panel daun yang rapi, dan trim metalik rose-gold/champagne yang tipis. Owner secara eksplisit meminta **rose crest besar dibuang**. Keputusan: pertahankan geometri, engsel, ketebalan, mekanisme bukaan dan frame 3D yang sudah dianggap OK; hanya arah ornamental/surface yang direvisi.
+
+**Implementasi revisi ornamen:** tambah `DoorClassicOrnament.tsx` berisi crown acanthus stasioner di atas kusen, accent block kecil di jamb, serta ukiran daun/acanthus sederhana pada panel daun. `DoorMolding.tsx` dirombak dari dua panel besar menjadi hirarki lebih dekat referensi: satu panel tinggi, satu panel horizontal kecil, satu panel bawah; list memakai rose-gold/champagne tipis dengan shading matte. `Pintu3DPreview.tsx` menghentikan render `DoorRelief` lama dan `DoorFlorals`/rose crest, mengganti keduanya dengan `LeafPanelOrnaments` + `FrameClassicOrnament`; tiga bidang panel daun juga disusun ulang tanpa mengubah pivot/bukaan. `app/pintu-lab/page.tsx` diperbarui untuk review visual baru. Source commits: `0ba25895`, `97dcf48b`, `9103e5c8`, `1533fddd`. Status visual: **pending owner screenshot/review**. File lama `DoorFlorals.tsx` dan `DoorRelief.tsx` masih ada di repository sebagai history/unused source tetapi tidak lagi dirender oleh preview; cleanup final dilakukan setelah arah baru disetujui agar mudah rollback bila perlu.
 
 ## Catatan review dan sumber keputusan
 
