@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Pintu 1 dalam pengerjaan; validasi visual oleh owner masih diperlukan.
+**Status:** Tahap 1–2 disetujui owner dari screenshot 20 September 2026; Tahap 3 sudah dikodekan, menunggu review visual.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -29,9 +29,9 @@
 
 | Tahap | Fase | Perubahan yang harus tampak saat direview | Status |
 | --- | --- | --- | --- |
-| 1 | Dasar | Satu Pintu besar di preview khusus, **dua daun lengkap** yang bisa dibuka/ditutup pada pivot kusen luar. Tidak ada setengah facade yang tertinggal di tengah. | Implementasi pertama — menunggu review visual |
-| 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Implementasi masuk GitHub; menunggu review visual |
-| 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Belum |
+| 1 | Dasar | Satu Pintu besar di preview khusus, **dua daun lengkap** yang bisa dibuka/ditutup pada pivot kusen luar. Tidak ada setengah facade yang tertinggal di tengah. | Disetujui owner — screenshot tertutup/terbuka |
+| 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Disetujui owner — screenshot; kontrol sudut miring perlu diuji tersendiri bila belum tampil pada refresh |
+| 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Implementasi masuk GitHub — menunggu review visual |
 | 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Belum |
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Belum |
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Belum |
@@ -46,6 +46,11 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Review owner Tahap 1 dan 2:** owner mengirim screenshot Pintu tertutup dan terbuka pada `/pintu-lab` serta menyatakan keduanya sudah OK. Siluet dua daun, pertemuan tengah, bukaan utuh dan kusen tidak bergerak disetujui sebagai baseline. Screenshot menampilkan judul dan satu tombol preview lama, sehingga mode tampak miring dari Tahap 2 belum terlihat pada gambar; persetujuan proporsi/bukaan dicatat tanpa mengklaim kontrol sudut miring sudah diuji. Jangan mengubah bentuk dan mekanisme yang telah disetujui ketika menambah material.
+
+**20 September 2026 — Tahap 3 (implementasi):** muka, belakang, dan keempat rusuk setiap daun mendapat warna tonal berbeda, lapisan garis serat halus serta bayangan matte tanpa gambar/asset tambahan; kedua panel muka memiliki shading cekung dan tekstur tersendiri. Material ini melekat pada node daun/pivot existing, tidak mengubah ukuran, posisi daun, kecepatan bukaan, kusen, atau latar interior. Heading/instruksi preview disesuaikan untuk peninjauan material. Files: `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`. Source commits `48c31bac`, `4c132117`. Build/CI dan tampilan aktual: **pending**. Review dan persetujuan owner untuk Tahap 3: **belum**.
+
 
 **20 September 2026 — Tahap 2 (implementasi):** Pintu 1 di `/pintu-lab` dibuat lebih tinggi (proporsi 0,65), ukuran viewport dikendalikan agar objek tetap besar tanpa perlu mengubah landing, trim top/bottom dan sisi kusen dipersempit, kedua daun disusun simetris dengan celah tengah 0,7% dari lebar kusen. Setiap daun mendapat muka dan belakang pada z ±10 px serta keempat rusuk prismanya (tebal 20 px) yang ikut satu pivot engsel. Ditambahkan pilihan tampak depan/miring (-17°) untuk mengevaluasi volume ketika terbuka dan perubahan instruksi pada route. Bukan tahap material/ukiran akhir. Berkas kode: `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`. Source commits: `6f9fb541`, `271b634e`. Build/CI: **pending observation**; penilaian bentuk dari browser/screenshot: **pending owner review**. `/` dan `/jiplak` tidak diubah.
 
