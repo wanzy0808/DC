@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Pintu 1 V2 Tahap 5–10 dan uji kamera/screenshot merged ke `main` via PR #57–59 (CI PASS). Prototipe tiga pintu dalam satu scene WebGL + navigasi layanan sedang dibangun di `/pintu-lab/orbital` (branch `feat/pintu-v2-orbital-portal-navigation`); CI dan review visual owner masih pending. Landing utama `/` dan `/jiplak` tidak diubah.
+**STATUS AKTIF:** Pintu 1 V2 Tahap 5–10, kamera masuk/kembali, screenshot dan pemulihan WebGL merged `main` via PR #57–59 (CI PASS). Prototipe fungsional **tiga pintu satu scene → buka → kamera masuk → halaman layanan** di `/pintu-lab/orbital` sudah merged via PR #60 (CI PASS). **Belum disetujui visual:** fidelity terhadap `public/pintu1.png`, screenshot dan interaksi perangkat nyata; landing utama `/` dan `/jiplak` tetap tidak berubah sampai review owner.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -33,8 +33,8 @@
 | 11 | Fidelity visual & screenshot | Bandingkan 0°/45°/90°/110° depan/miring dan kamera melintasi kusen dengan `pintu1.png` dari browser owner. | Eksperimen kamera lab merged PR #58 — CI PASS; screenshot/fidelity owner pending |
 | 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Pemulihan WebGL + gambar audit di branch; CI/review perangkat pending |
-| 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Prototipe lab tiga mesh satu scene; CI/review pending; landing belum berubah |
-| 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Prototipe lab orbit → buka → kamera masuk → route → zoom-out; CI/review pending |
+| 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Merged `main` PR #60 — CI PASS; prototipe lab; review visual pending, belum dipromosikan |
+| 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Merged `main` PR #60 — CI PASS; transisi lab ke route nyata; review browser pending |
 
 ### Catatan audit V2 — Tahap 11 dan 13 (persiapan review)
 
@@ -50,7 +50,7 @@ Orbit perlahan dengan pause saat hover atau pilihan manual. Tombol pilihan dan t
 
 Files: `reference-door-model.js`, `reference-door-engine.js`, `reference-door-orbital-engine.js`, `reference-door-engine.d.ts`, `ReferenceDoorOrbitalPreview.tsx`, `app/pintu-lab/orbital/page.tsx`, `app/pintu-lab/page.tsx`, `components/Layout/PublicAtmosphere.tsx`, `app/globals.css`, `pintu3d.md`, `prd.md`. Tidak mengubah `/`, `/jiplak`, `/pintu-lab/css`, rose petals, backend, atau dashboard.
 
-**Verifikasi saat penulisan:** build/CI dan screenshot runtime belum diamati. Kelancaran WebGL perangkat nyata, clipping dan kesamaan relief dengan `public/pintu1.png` harus diuji; promosi ke landing belum dilakukan.
+**Validasi teramati:** GitHub Build Validation run `35515658674` pada head PR #60 `4274991f9f1def959af4332f48b36c0a3dca48ee` **PASS**; PR #60 squash-merged ke `main` sebagai `4c9530f207c058fd6610e5236abbbe8644b1227f`. **Belum terverifikasi:** screenshot/runtime WebGL desktop/mobile, perangkat grafis rendah daya, gerak kamera tanpa clipping, dan kesamaan relief terhadap `public/pintu1.png`. Promosi ke landing belum dilakukan.
 
 ### Catatan eksekusi V2 — Tahap 1
 
