@@ -584,7 +584,12 @@ export async function mountThreePortals(container, options) {
         const targetX = selected ? 0 : side * (mobile ? 2.44 : 3.08);
         const targetY = selected ? 0.04 : -0.13;
         const targetZ = selected ? 0.36 : -1.65;
-        target.set(targetX, targetY + (reduced ? 0 : Math.sin(t * 0.7 + portal.id * 1.2) * 0.03), targetZ);
+        const hoverLift = !reduced && hoveredId === portal.id ? 0.055 : 0;
+        target.set(
+          targetX,
+          targetY + hoverLift + (reduced ? 0 : Math.sin(t * 0.7 + portal.id * 1.2) * 0.03),
+          targetZ,
+        );
         portal.root.position.lerp(target, smooth);
         const desiredScale = selected ? 1 : mobile ? 0.72 : 0.78;
         const nextScale = THREE.MathUtils.lerp(portal.root.scale.x, desiredScale, smooth);
@@ -614,10 +619,6 @@ export async function mountThreePortals(container, options) {
           portal.backLight.intensity, selected ? 10 : 2.4, smooth,
         );
         portal.atmosphere.material.opacity = selected ? 0.055 : 0.18;
-        if (!reduced) {
-          const hoverLift = hoveredId === portal.id ? 0.055 : 0;
-          portal.root.position.y += hoverLift;
-        }
       }
       for (let i = 0; i < moteCount; i += 1) {
         const data = motesData[i];
