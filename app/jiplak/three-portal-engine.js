@@ -7,9 +7,9 @@ const IVORY = 0xe6c3c9;
 const DEEP_ROSE = 0x784b55;
 
 const WORLDS = [
-  { id: 1, image: "/wo.png" },
-  { id: 2, image: "/hp-digital.png" },
-  { id: 3, image: "/bukutamu.png" },
+  { id: 1, image: "/wo.png", door: "/pintu1.png" },
+  { id: 2, image: "/hp-digital.png", door: "/pintu2.png" },
+  { id: 3, image: "/bukutamu.png", door: "/pintu3.png" },
 ];
 
 function createArchShape(THREE, halfWidth, bottom, shoulder, crown) {
@@ -162,7 +162,7 @@ function createLeaf(THREE, side) {
   return hinge;
 }
 
-function createPortal(THREE, world, texture, groundTexture, doorLightTexture) {
+function createPortal(THREE, world, texture, doorTexture, groundTexture, doorLightTexture) {
   const root = new THREE.Group();
   // Keep the recessed backing entirely inside the arched aperture.
   // A rectangular box used to protrude above the crown and read as horns.
@@ -212,74 +212,46 @@ function createPortal(THREE, world, texture, groundTexture, doorLightTexture) {
   worldImage.position.z = -0.045;
   root.add(worldImage);
 
-  const frame = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(createFrameShape(THREE), {
-      depth: 0.22, steps: 1, curveSegments: 30,
-      bevelEnabled: true, bevelSegments: 3,
-      bevelThickness: 0.025, bevelSize: 0.018,
-    }),
-    new THREE.MeshStandardMaterial({
-      color: ROSE, metalness: 0.035, roughness: 0.7,
-      side: THREE.DoubleSide,
-    }),
-  );
-  frame.position.z = 0.035;
-  frame.castShadow = true;
-  frame.receiveShadow = true;
-  root.add(frame);
-
-  // Architectural pinstripes and restrained relief flowers are attached
-  // to the jamb, below the arch shoulder: no free-floating crown or horns.
-  const trimMaterial = new THREE.MeshStandardMaterial({
-    color: 0xd7a3ad, metalness: 0.07, roughness: 0.59,
+  // Full photographic architecture replaces the former procedural block doors.
+  // Both halves share one source image; cropping is done in UV space without
+  // stretching it. Each half hinges around its own outside jamb.
+  const imageW = doorTexture.image?.naturalWidth || doorTexture.image?.width || 1;
+  const imageH = doorTexture.image?.naturalHeight || doorTexture.image?.height || 1;
+  const facadeAspect = 2.55 / 4.55;
+  const sourceAspect = imageW / imageH;
+  const coverU = Math.min(1, facadeAspect / sourceAspect);
+  const coverV = Math.min(1, sourceAspect / facadeAspect);
+  const facade = new THREE.Group();
+  const facadeMaterial = new THREE.MeshBasicMaterial({
+    map: doorTexture, transparent: true, side: THREE.DoubleSide,
+    alphaTest: 0.025, depthWrite: true, toneMapped: false,
   });
-  const petalMaterial = new THREE.MeshStandardMaterial({
-    color: 0xba7884, metalness: 0.025, roughness: 0.76,
-    side: THREE.DoubleSide,
-  });
-  const centerMaterial = new THREE.MeshStandardMaterial({
-    color: 0xe4bdc3, metalness: 0.12, roughness: 0.55,
-  });
-
+  const halves = [];
   for (const side of [-1, 1]) {
-    const rail = new THREE.Mesh(
-      new THREE.CapsuleGeometry(0.011, 2.23, 3, 8), trimMaterial,
-    );
-    rail.position.set(side * 1.055, -0.56, 0.337);
-    root.add(rail);
-
-    // A tiny four-petal carved rosette is inset into each outer jamb.
-    // It remains part of the frame when the door leaves rotate.
-    const ornament = new THREE.Group();
-    ornament.position.set(side * 1.055, 0.76, 0.353);
-    for (let petal = 0; petal < 4; petal += 1) {
-      const angle = (petal / 4) * Math.PI * 2;
-      const leaf = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 8, 6),
-        petalMaterial,
+    const pivot = new THREE.Group();
+    const outside = side * 1.275;
+    pivot.position.set(outside, 0, 0.45);
+    const geometry = new THREE.PlaneGeometry(1.275, 4.55);
+    const uv = geometry.getAttribute("uv");
+    for (let i = 0; i < uv.count; i += 1) {
+      const originalU = uv.getX(i);
+      const originalV = uv.getY(i);
+      const halfU = side === -1 ? originalU * 0.5 : 0.5 + originalU * 0.5;
+      uv.setXY(i,
+        (1 - coverU) / 2 + halfU * coverU,
+        (1 - coverV) / 2 + originalV * coverV,
       );
-      leaf.scale.set(0.026, 0.055, 0.011);
-      leaf.position.set(
-        Math.sin(angle) * 0.042,
-        Math.cos(angle) * 0.042,
-        0,
-      );
-      leaf.rotation.z = -angle;
-      ornament.add(leaf);
     }
-    const center = new THREE.Mesh(
-      new THREE.SphereGeometry(0.022, 10, 7),
-      centerMaterial,
-    );
-    center.scale.z = 0.58;
-    center.position.z = 0.012;
-    ornament.add(center);
-    root.add(ornament);
+    uv.needsUpdate = true;
+    const face = new THREE.Mesh(geometry, facadeMaterial);
+    face.position.x = -outside + side * 0.6375;
+    face.castShadow = true;
+    pivot.add(face);
+    facade.add(pivot);
+    halves.push(pivot);
   }
-
-  const left = createLeaf(THREE, -1);
-  const right = createLeaf(THREE, 1);
-  root.add(left, right);
+  root.add(facade);
+  const [left, right] = halves;
 
   // The previous grey rectangular threshold floated in front of the arch.
   // The image and leaf now meet the existing ground/contact shadow directly.
@@ -401,7 +373,7 @@ export async function mountThreePortals(container, options) {
 
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(38, 1, 0.1, 70);
-    camera.position.set(0, 0.15, 11.6);
+    camera.position.set(0, 0.15, 10.2);
     camera.lookAt(0, -0.12, 0);
 
     const hemisphere = new THREE.HemisphereLight(0xffffff, 0x6e5661, 1.65);
@@ -463,8 +435,27 @@ export async function mountThreePortals(container, options) {
       return dispose;
     }
 
+    const doorLoaded = await Promise.all(WORLDS.map(async (world) => {
+      try {
+        const texture = await loader.loadAsync(world.door);
+        textures.push(texture);
+        return setWorldTexture(THREE, texture, renderer);
+      } catch {
+        const canvas = document.createElement("canvas");
+        canvas.width = 4; canvas.height = 4;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#c07a84";
+        context.fillRect(0, 0, 4, 4);
+        const backup = new THREE.CanvasTexture(canvas);
+        backup.colorSpace = THREE.SRGBColorSpace;
+        textures.push(backup);
+        return backup;
+      }
+    }));
+    if (disposed) return dispose;
+
     portals = WORLDS.map((world, index) => {
-      const portal = createPortal(THREE, world, loaded[index], groundTexture, doorLightTexture);
+      const portal = createPortal(THREE, world, loaded[index], doorLoaded[index], groundTexture, doorLightTexture);
       scene.add(portal.root);
       return portal;
     });
@@ -501,7 +492,7 @@ export async function mountThreePortals(container, options) {
       if (!rect.width || !rect.height) return;
       const aspect = rect.width / rect.height;
       camera.aspect = aspect;
-      camera.position.z = aspect < 0.8 ? 15.2 : aspect < 1.05 ? 13.3 : 11.6;
+      camera.position.z = aspect < 0.8 ? 15.2 : aspect < 1.05 ? 12.2 : 10.2;
       camera.fov = aspect < 0.8 ? 40 : 38;
       camera.updateProjectionMatrix();
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, aspect < 0.9 ? 1.25 : 1.5));
@@ -590,12 +581,12 @@ export async function mountThreePortals(container, options) {
         const selected = portal.id === active;
         const hoverLift = !reduced && hoveredId === portal.id ? 0.045 : 0;
         target.set(
-          Math.cos(phase) * (mobile ? 1.9 : 2.5),
+          Math.cos(phase) * (mobile ? 2.05 : 2.82),
           depth * 0.46 + hoverLift,
           depth * 1.12,
         );
         portal.root.position.lerp(target, smooth);
-        const desiredScale = 0.7 + ((depth + 1) / 2) * 0.29;
+        const desiredScale = 0.76 + ((depth + 1) / 2) * 0.43;
         const nextScale = THREE.MathUtils.lerp(portal.root.scale.x, desiredScale, smooth);
         portal.root.scale.setScalar(nextScale);
         portal.root.rotation.y = THREE.MathUtils.lerp(
@@ -606,8 +597,8 @@ export async function mountThreePortals(container, options) {
           portal.openness, selected ? 1 : 0,
           reduced ? 1 : 1 - Math.exp(-dt * 2.8),
         );
-        portal.left.rotation.y = -1.13 * portal.openness;
-        portal.right.rotation.y = 1.13 * portal.openness;
+        portal.left.rotation.y = 1.09 * portal.openness;
+        portal.right.rotation.y = -1.09 * portal.openness;
         portal.doorLight.material.opacity = Math.min(0.42, portal.openness * 0.42);
         portal.doorLight.scale.x = 0.7 + portal.openness * 0.3;
       }

@@ -3346,3 +3346,12 @@ Validation: GitHub Actions pending; visual WebGL lokal perlu diperiksa.
 Setelah tahap 1 menghapus backing kotak/tanduk/balok dan tahap 2 menambah sinar ivory saat pintu terbuka, tahap 3 menambahkan hanya list tipis matte Rose di jamb kiri/kanan serta relief roset empat kelopak ukuran kecil pada sisi frame, di bawah lengkungan. Ornamen benar-benar menempel pada frame (bukan dekorasi melayang di atas), tidak mengubah siluet arch, gambar, atau mekanisme engsel. Orbital Motion, shadow lantai, sinar ivory, material brand, bunga latar, rose petals dan landing utama `/` tidak diubah. Scope kode: hanya `app/jiplak/three-portal-engine.js`.
 
 Validation: GitHub Actions pending; pemeriksaan visual di localhost `/jiplak` diperlukan.
+
+
+---
+
+## 2026-09-20 — Jiplak grand ornate doors using uploaded assets
+
+Owner uploaded `public/pintu1.png` to `pintu4.png` and requested much larger, ornate, photographic doors rather than procedural blocks. `/jiplak` now loads `pintu1.png`, `pintu2.png`, `pintu3.png` independently for three service portals; each photographic facade is split into two UV-cropped halves attached to separate 3D hinge pivots, with the photographed ornamentation preserved instead of rebuilt as blocks. `pintu4.png` remains available for a later variation. Camera distance and front-door scale increase while the existing three-door Motion orbital timing and interactions remain; original floor shadow and opening-only ivory light remain. The old procedural arch/frame/mini-rosettes are removed from this experimental scene. Photo worlds behind the opening, flowers and petals remain. Canonical landing `/` is unchanged.
+
+Validation: GitHub Actions pending; owner visual review needed to check alpha edges, photo/hinge alignment and mobile composition.
