@@ -61,7 +61,10 @@ function DoorHingeBarrels({
                 ? "left-[3.65%]"
                 : "left-[96.35%]"
           }`}
-          style={{ top: `${point}%`, transform: "translateX(-50%) translateY(-50%) translateZ(16px)" }}
+          style={{
+            top: moving ? `${point}%` : `calc(3.5% + ${point * 0.937}%)`,
+            transform: "translateX(-50%) translateY(-50%) translateZ(16px)",
+          }}
           aria-hidden="true"
         >
           {moving ? (
@@ -124,7 +127,7 @@ function HingedLeaf({
       animate={{ rotateY: angle }}
       transition={{ duration: reducedMotion ? 0.01 : 1.05, ease: EASE }}
       style={{
-        transformOrigin: left ? "left center" : "right center",
+        transformOrigin: left ? "left center 16px" : "right center 16px",
         transformStyle: "preserve-3d",
       }}
       className={`absolute bottom-[2.8%] top-[3.5%] w-[46%] ${outer}`}
