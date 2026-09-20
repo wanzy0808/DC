@@ -142,13 +142,19 @@ function createLeaf(THREE, side) {
 
 function createPortal(THREE, world, texture, groundTexture) {
   const root = new THREE.Group();
+  // Keep the recessed backing entirely inside the arched aperture.
+  // A rectangular box used to protrude above the crown and read as horns.
   const chamber = new THREE.Mesh(
-    new THREE.BoxGeometry(1.91, 4.05, 0.6),
+    new THREE.ExtrudeGeometry(
+      createArchShape(THREE, 0.91, -2.03, 0.8, 1.94),
+      { depth: 0.36, steps: 1, bevelEnabled: false, curveSegments: 30 },
+    ),
     new THREE.MeshStandardMaterial({
       color: DEEP_ROSE, roughness: 0.91, metalness: 0,
+      side: THREE.DoubleSide,
     }),
   );
-  chamber.position.set(0, -0.04, -0.39);
+  chamber.position.set(0, 0, -0.43);
   chamber.receiveShadow = true;
   root.add(chamber);
 
@@ -200,47 +206,12 @@ function createPortal(THREE, world, texture, groundTexture) {
   frame.receiveShadow = true;
   root.add(frame);
 
-  // Dark recessed jamb makes the aperture read as a genuine architectural
-  // opening; slim trim follows the closed arch, never protrudes as horns.
-  const innerShape = createArchShape(THREE, 0.925, -2.045, 0.83, 1.96);
-  const innerTrim = new THREE.Mesh(
-    new THREE.TubeGeometry(
-      new THREE.CatmullRomCurve3(
-        innerShape.getPoints(64).map(p => new THREE.Vector3(p.x, p.y, 0.264)),
-        true, "centripetal",
-      ),
-      128, 0.009, 5, true,
-    ),
-    new THREE.MeshStandardMaterial({
-      color: 0xdfaeb6, metalness: 0.07, roughness: 0.61,
-    }),
-  );
-  root.add(innerTrim);
-
   const left = createLeaf(THREE, -1);
   const right = createLeaf(THREE, 1);
   root.add(left, right);
 
-  const stone = new THREE.MeshStandardMaterial({
-    color: SOFT_ROSE, metalness: 0.04, roughness: 0.79,
-  });
-  const threshold = new THREE.Mesh(
-    new THREE.BoxGeometry(2.4, 0.14, 0.84), stone,
-  );
-  threshold.position.set(0, -2.31, 0.26);
-  threshold.castShadow = true;
-  threshold.receiveShadow = true;
-  root.add(threshold);
-
-  const thresholdEdge = new THREE.Mesh(
-    new THREE.BoxGeometry(2.35, 0.038, 0.07),
-    new THREE.MeshStandardMaterial({
-      color: IVORY, roughness: 0.73, metalness: 0.025,
-    }),
-  );
-  thresholdEdge.position.set(0, -2.36, 0.69);
-  root.add(thresholdEdge);
-
+  // The previous grey rectangular threshold floated in front of the arch.
+  // The image and leaf now meet the existing ground/contact shadow directly.
   // Retain the soft contact shadow the owner liked. No fake pink halo,
   // spotlights, light spill or additive glow.
   const groundShadow = new THREE.Mesh(
