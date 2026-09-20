@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Gerakan &amp; bayangan
+          Ukiran pada daun pintu
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Uji bukaan bertahap pada 0°, 45°, 90°, dan 110°. Perhatikan bayangan kedua daun yang bergerak mengikuti bukaan, lalu periksa sambungan engsel dari depan dan kedua sisi.
+          Dua daun kini memiliki ukiran relief pada panel atas dan bawah. Periksa saat tertutup, lalu buka hingga 110°: ukiran harus ikut berputar bersama daun, sementara kusen tetap diam.
         </p>
       </div>
       <Pintu3DPreview />
