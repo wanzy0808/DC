@@ -16,6 +16,7 @@
 - Performa mobile, contrast, reduced motion, semantik interaksi, dan perilaku landing tetap terjaga.
 - Pintu 2/3 dan orbital Motion **tidak digandakan sebelum Pintu 1 disetujui**. Setelah disetujui, gunakan komponen inti yang sama dan aset/varian yang terpisah; jangan tiga salinan kode.
 - **Jangan mengganti landing utama (`/`) atau tiga pintu aktif di sana selama uji Pintu 1**. Preview mandiri: `/pintu-lab`. Eksperimen lama di `/jiplak` tetap tersedia; promosi ke landing dilakukan setelah approval visual.
+- **Target interaksi akhir:** memilih Pintu memicu buka kedua daun utuh → kamera zoom-in melalui bukaan → route tujuan benar-benar berubah → halaman tujuan muncul dekat lalu zoom-out lembut sampai pas viewport awal (skala 1). Ini navigasi nyata, bukan sekadar animasi pintu atau browser zoom. Lihat PRD §15.4.2; penerapan lintas route ditunda ke Tahap 15 setelah Pintu 1 disetujui.
 - Referensi `public/pintu1.png`—`pintu4.png` adalah gambar facade yang **belum boleh dipakai sebagai satu bidang bukaan bergerak**, karena gambar mungkin memuat kusen dan daun secara bersamaan. Ketika digunakan, pisahkan/mask kusen (diam) dan daun kiri/kanan (berputar) dengan tepi dan engsel yang sejajar. Jangan memotong seluruh foto termasuk kusennya lalu memutar semua bagian.
 
 ## Struktur komponen dan pembagian tanggung jawab
@@ -43,7 +44,19 @@
 | 12 | Finishing | Responsive size dan komposisi hero: pintu megah desktop tanpa memotong daun saat terbuka, ringkas di mobile. | Belum |
 | 13 | Finishing | Performa: asset optimization, reduced motion, pointer/touch/keyboard, fallback tanpa WebGL bila digunakan. | Belum |
 | 14 | Finishing | Komponen reusable dan varian visual Pintu 2/3 yang masih mempertahankan geometri engsel dan konsistensi visual Pintu 1. **Hanya setelah owner puas.** | Belum |
-| 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
+| 15 | Finishing | Integrasi tiga Pintu + orbital; klik/tap/keyboard membuka daun → zoom-in melewati kusen → navigasi route tujuan → zoom-out halaman tujuan hingga skala 1/viewport awal; cek reduced motion, back/forward, responsive. | Belum — baru keputusan UX, bukan implementasi |
+
+## Transisi masuk ke halaman tujuan — rancangan interaksi (disepakati 20 September 2026)
+
+Contoh jalur Pintu Undangan Digital: landing dengan tiga Pintu orbital → user memilih Pintu Undangan Digital → orbital berhenti, pintu terpilih difokuskan → dua daun terbuka sampai bukaan bersih, kusen tetap di tempat → pandangan bergerak maju menembus ruang kosong di antara kedua daun → transisi interior/masking menyambungkan scene dengan route `/d-invitation` (URL benar-benar berubah) → konten halaman tujuan muncul dekat, lalu perlahan zoom-out hingga komposisi awal memenuhi tepat satu viewport pada **skala normal 1**. Halaman tujuan **tidak** dipadatkan menjadi satu layar penuh jika ada konten di bawah fold; sesudah reveal, scrolling/navigasi tetap normal. Pola yang sama berlaku untuk Pintu Event Planner (`/event-planner`) dan Guestbook (`/guestbook`).
+
+**Yang harus terasa:** pengunjung seperti masuk melalui ambang pintu, bukan pintu mengecil lalu halaman tiba-tiba muncul. Saat kamera melewati kusen, kusen menjauh ke sisi luar frame dan interior menjadi penghubung singkat. Halaman baru tidak datang sebagai kartu kecil yang membesar; mulai dari sedikit lebih dekat (misalnya ~1.08–1.15, nominal untuk diuji), lalu kembali ke ukuran aslinya dengan ease halus. Ukuran viewport pertama pas secara alami; jangan zoom browser, jangan memaksa satu halaman panjang menjadi satu viewport, dan jangan merusak navbar/fokus/scroll.
+
+**Kapan transisi terjadi:** klik/tap/keyboard pada pilihan Pintu atau CTA masuk; hover hanya pause/fokus orbit dan tidak mengubah URL. Selama perpindahan route, tampilkan transition overlay/scene yang konsisten sampai destination siap, agar tidak ada putih/hitam berkedip. Hindari duplikasi halaman aktif, klik ganda, stuck overlay jika data lambat/error, dan animasi yang berjalan lagi tidak sengaja pada browser back/forward. Reduced motion harus bisa navigasi tanpa zoom. Efek zoom mendekati interior harus diperiksa secara visual karena `DoorInterior.tsx` tahap 9 masih perspektif **2.5D**; jangan mengklaim kamera bebas menembus ruangan mesh 3D yang tidak ada.
+
+**Penjadwalan:** Tahap 10 siapkan pencahayaan bukaan yang mendukung zoom; Tahap 11–13 audit clipping, perspektif dekat, viewport, performa dan reduced motion. Tahap 14 setelah approval owner baru buat model Pintu reusable, Tahap 15 implementasikan/poles dan uji transisi navigasi lintas route bersama tiga Pintu orbital. Boleh membuat eksperimen transisi Pintu 1 di `/pintu-lab` lebih dulu bila perlu, tetapi **jangan ganti** perilaku landing utama sampai Pintu 1 disetujui. Aset interior/lampu yang sudah dibuat tidak otomatis dianggap final untuk close-up.
+
+**Status:** keputusan UX dan rencana **sudah dicatat**, belum ada kode animasi zoom-in/route transition/zoom-out halaman. Persetujuan visual Tahap 9 juga masih pending; tidak mengubah status review tahap lain.
 
 ## Catatan review dan sumber keputusan
 
