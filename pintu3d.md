@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 1 geometri asli telah masuk GitHub; menunggu CI final dan review screenshot. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 2 siluet kusen referensi telah diimplementasikan; local lint/build lulus, CI remote dan review screenshot owner masih menunggu. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -14,12 +14,14 @@
 
 **Kriteria persetujuan:** setiap tahap harus membawa perubahan nyata yang bisa dilihat dalam preview, diuji buka 0°/45°/90°/110° serta depan/kiri/kanan, dicatat hasil CI *yang sudah diamati* dan feedback owner. **CI sukses bukan persetujuan visual**. Jangan klaim sama persis dengan gambar sampai sudut depan dan miring betul-betul dinilai owner. Jangan melanjutkan penggandaan pintu bila owner belum puas.
 
+**Arah komposisi final dari owner — referensi Hubtown (20 September 2026):** [hubtown.co.in](https://hubtown.co.in/) dipakai sebagai referensi rasa untuk **box/scene utama** dan animasi spasialnya, bukan untuk menyalin branding, gedung, copy, atau bentuk visualnya. Pintu DC nanti harus terasa sebagai objek utama di dalam scene WebGL yang mempunyai perspektif, kedalaman, dan pergerakan kamera; bukan kartu UI atau gambar 2D yang digeser. Inspeksi teknis mengonfirmasi halaman Hubtown memuat Three.js/WebGL, tetapi browser inspeksi tidak dapat merender kanvas WebGL-nya, jadi timing/detail geraknya tetap perlu dilihat dan dinilai dari browser owner. Catatan ini mengarahkan Tahap 11–15 (komposisi, kamera masuk, orbital, dan transisi route); **bukan alasan mengubah scope Tahap 2 atau menyalin implementasi Hubtown sekarang**.
+
 ### Checklist V2 — target, output visual, dan status
 
 | Tahap | Tujuan utama | Perubahan terlihat / kriteria review | Status |
 | --- | --- | --- | --- |
 | 1 | Pindah ke mesh 3D nyata | Fixed jamb berdimensi, dua daun utuh tebal masing-masing satu pivot luar; bukaan 0°–110°, 3 sudut kamera; **foto asli di samping**. Ornamen rinci sengaja belum dibuat, jangan menganggap mock mesh sebagai desain akhir. | Kode masuk GitHub — CI & screenshot owner pending |
-| 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Belum |
+| 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Implementasi source selesai — local lint/build PASS; CI + review owner pending |
 | 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Belum |
 | 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Belum |
 | 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Belum |
@@ -45,6 +47,16 @@
 **Belum termasuk:** mahkota/crown, sculpt acanthus, pegangan ornate presisi, materi PBR final, interior dan lighting natural, kamera fly-through, orbital tiga pintu. **Pemeriksaan teknis yang benar-benar diamati:** GitHub Build Validation run `35510014386` pada source tahap 1 awal `2cd3317f37c7a47e3614dc12f12827001bc24335` **PASS**; GitHub Build Validation run `35510120080` pada patch bukaan kosong `43fe7b4583f4715922fac2bf0f861dd5b8c53d9b` juga **PASS**. Belum ada screenshot/runtime WebGL dari browser owner.  Semua memiliki tahap tersendiri di tabel V2. **Status persetujuan visual: menunggu screenshot + feedback owner**; jangan menandai Tahap 1 selesai secara visual hanya dari build.
 
 **Riwayat sumber:** V1 (CSS 3D, bukan Three.js) ada di bagian bawah dokumen ini. Nomor Tahap 1–10 di bagian V1 hanya menggambarkan eksperimen lama; tidak diwariskan sebagai approval untuk V2.
+
+### Catatan eksekusi V2 — Tahap 2
+
+**Tujuan:** mengubah frame baseline Tahap 1 yang masih berupa post/lintel sederhana menjadi siluet arsitektural yang mengikuti `public/pintu1.png`, tanpa menyentuh bentuk daun, pivot, sudut bukaan, landing canonical, atau orbital.
+
+**Yang diubah:** `components/Landing/Pintu/reference-door-engine.js` menambahkan helper `ExtrudeGeometry` ber-bevel untuk volume profil; dua jamb menjadi pilaster dengan shaft cekung, reed depan, plinth dan capital bertingkat; lintel menjadi lima lapis cornice yang makin menonjol; crown memperoleh backplate kurva berketebalan, medali oval cembung, ring, scroll dasar dan pendant. Seluruh bagian ini menjadi anak `root` yang diam, bukan anak pivot daun. Kamera diperlebar secara vertikal agar crown dan daun terbuka tetap berada dalam frame. `ReferenceDoorPreview.tsx` dan `app/pintu-lab/page.tsx` kini menamai Tahap 2 serta meminta pemeriksaan depan/kiri/kanan.
+
+**Batas tahap:** bentuk acanthus rinci pada crown/pilaster belum dimodelkan; scroll saat ini hanya pembentuk volume/siluet dan bukan klaim pahatan final. Panel/daun tetap baseline Tahap 1 untuk dikerjakan pada Tahap 3. Pegangan presisi, material final, interior, pencahayaan dan kamera masuk tetap pada tahap masing-masing. Referensi Hubtown hanya dicatat sebagai arah scene akhir Tahap 11–15.
+
+**Validation yang benar-benar dijalankan:** `node --check` untuk engine **PASS**; ESLint pada engine, preview dan route **PASS**; `pnpm build` Next.js 16.3.3 **PASS** (54 halaman statis selesai dibuat). Source commit `41d19feaa55c15377efae3fb226cacbda708410e`. GitHub Build Validation belum teramati dan kualitas visual WebGL belum dinilai owner, sehingga Tahap 2 **belum dianggap approved**.
 
 ---
 
