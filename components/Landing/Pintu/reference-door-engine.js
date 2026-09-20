@@ -31,14 +31,36 @@ export async function mountReferenceDoor(container, options = {}) {
   const leaves = [];
   scene.add(root);
 
-  const paintedRose = new THREE.MeshStandardMaterial({ color: 0xb77f81, roughness: 0.76, metalness: 0.035 });
-  const insetRose = new THREE.MeshStandardMaterial({ color: 0xaa7778, roughness: 0.83, metalness: 0.012 });
-  const doorEdges = new THREE.MeshStandardMaterial({ color: 0xca9594, roughness: 0.7, metalness: 0.04 });
-  const pearledFrame = new THREE.MeshStandardMaterial({ color: 0xdac0b2, roughness: 0.68, metalness: 0.035 });
-  const frameShadow = new THREE.MeshStandardMaterial({ color: 0xa57c78, roughness: 0.82 });
-  const understatedMetal = new THREE.MeshStandardMaterial({ color: 0xc9977d, metalness: 0.65, roughness: 0.38 });
-  const floorMat = new THREE.MeshStandardMaterial({ color: 0xf3eeeb, roughness: 0.9 });
-  [paintedRose, insetRose, doorEdges, pearledFrame, frameShadow, understatedMetal, floorMat].forEach(m => materials.add(m));
+  // Stage 5: restrained satin paint and warmer ivory-blush architecture.
+  // Roughness is deliberately high on paint; metal is confined to hardware
+  // and thin relief, not the whole slab or large frame surfaces.
+  const paintedRose = new THREE.MeshStandardMaterial({
+    color: 0xb67b85, roughness: 0.82, metalness: 0, flatShading: false,
+  });
+  const insetRose = new THREE.MeshStandardMaterial({
+    color: 0xa86d77, roughness: 0.88, metalness: 0,
+  });
+  const doorEdges = new THREE.MeshStandardMaterial({
+    color: 0xc48d98, roughness: 0.77, metalness: 0,
+  });
+  const pearledFrame = new THREE.MeshStandardMaterial({
+    color: 0xe6d5cc, roughness: 0.84, metalness: 0,
+  });
+  const frameShadow = new THREE.MeshStandardMaterial({
+    color: 0xa88887, roughness: 0.9, metalness: 0,
+  });
+  const understatedMetal = new THREE.MeshStandardMaterial({
+    color: 0xb99387, roughness: 0.48, metalness: 0.52,
+  });
+  const roseRelief = new THREE.MeshStandardMaterial({
+    color: 0xc99a99, roughness: 0.7, metalness: 0.12,
+  });
+  const frameRelief = new THREE.MeshStandardMaterial({
+    color: 0xd9b7a7, roughness: 0.72, metalness: 0.08,
+  });
+  const floorMat = new THREE.MeshStandardMaterial({ color: 0xf3eeeb, roughness: 0.94 });
+  [paintedRose, insetRose, doorEdges, pearledFrame, frameShadow, understatedMetal, roseRelief, frameRelief, floorMat]
+    .forEach(m => materials.add(m));
 
   function box(parent, dims, position, material, cast = true) {
     const geometry = new THREE.BoxGeometry(...dims);
