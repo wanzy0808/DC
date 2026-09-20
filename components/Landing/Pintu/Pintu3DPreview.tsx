@@ -12,6 +12,9 @@ const ROSE_FACE =
 const ROSE_EDGE =
   "bg-[linear-gradient(90deg,#67313d_0%,#9c5864_45%,#c98c95_100%)]";
 
+// 20 px is the whole thickness of each leaf, not an extra piece of trim.
+const HALF_THICKNESS = 10;
+
 /**
  * Each entire leaf (front, back, thickness and every attached detail) shares
  * ONE hinge pivot. The stationary jamb/portal is outside this animated node.
@@ -28,8 +31,8 @@ function HingedLeaf({
   const left = side === "left";
   const angle = open ? (left ? -110 : 110) : 0;
   const outer = left
-    ? "left-[3.7%] origin-left"
-    : "right-[3.7%] origin-right";
+    ? "left-[3.65%] origin-left"
+    : "right-[3.65%] origin-right";
   const handle = left ? "right-[8%]" : "left-[8%]";
   const rail = left ? "right-[3.5%]" : "left-[3.5%]";
 
@@ -42,13 +45,13 @@ function HingedLeaf({
         transformOrigin: left ? "left center" : "right center",
         transformStyle: "preserve-3d",
       }}
-      className={`absolute bottom-[3.7%] top-[3.7%] w-[46.3%] ${outer}`}
+      className={`absolute bottom-[2.8%] top-[3.5%] w-[46%] ${outer}`}
       aria-hidden="true"
     >
       {/* The front and back remain separate visible faces after 90 degrees. */}
       <div
         style={{
-          transform: "translateZ(9px)",
+          transform: `translateZ(${HALF_THICKNESS}px)`,
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
         }}
@@ -64,7 +67,7 @@ function HingedLeaf({
 
       <div
         style={{
-          transform: "rotateY(180deg) translateZ(9px)",
+          transform: `rotateY(180deg) translateZ(${HALF_THICKNESS}px)`,
           backfaceVisibility: "hidden",
           WebkitBackfaceVisibility: "hidden",
         }}
@@ -75,13 +78,42 @@ function HingedLeaf({
         <div className="absolute inset-x-[14%] bottom-[13%] h-[35%] border border-[#eac5ca]/45" />
       </div>
 
+      {/* Four side faces close the 20 px prism; they follow the same pivot. */}
       <div
-        style={{ transform: "rotateY(90deg) translateZ(8px)" }}
-        className={`absolute inset-y-0 right-0 w-[18px] origin-right ${ROSE_EDGE}`}
+        style={{
+          left: "100%",
+          width: HALF_THICKNESS * 2,
+          transform: "translateX(-50%) rotateY(90deg)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+        className={`absolute inset-y-0 ${ROSE_EDGE} shadow-[inset_2px_0_4px_rgba(42,15,25,0.30)]`}
       />
       <div
-        style={{ transform: "rotateY(-90deg) translateZ(8px)" }}
-        className={`absolute inset-y-0 left-0 w-[18px] origin-left ${ROSE_EDGE}`}
+        style={{
+          left: 0,
+          width: HALF_THICKNESS * 2,
+          transform: "translateX(-50%) rotateY(-90deg)",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+        }}
+        className={`absolute inset-y-0 ${ROSE_EDGE} shadow-[inset_-2px_0_4px_rgba(42,15,25,0.30)]`}
+      />
+      <div
+        style={{
+          top: 0,
+          height: HALF_THICKNESS * 2,
+          transform: "translateY(-50%) rotateX(90deg)",
+        }}
+        className={`absolute inset-x-0 ${ROSE_EDGE}`}
+      />
+      <div
+        style={{
+          bottom: 0,
+          height: HALF_THICKNESS * 2,
+          transform: "translateY(50%) rotateX(90deg)",
+        }}
+        className={`absolute inset-x-0 ${ROSE_EDGE}`}
       />
     </motion.div>
   );
@@ -91,7 +123,7 @@ function DoorFrame({ open }: { open: boolean }) {
   return (
     <>
       {/* The opening and all jamb parts stay fixed while the leaves swing. */}
-      <div className="absolute inset-[3%] overflow-hidden bg-[#261b20] shadow-[inset_0_0_0_9px_rgba(9,7,9,0.45),inset_0_0_38px_13px_rgba(8,7,9,0.72)]">
+      <div className="absolute inset-x-[3.6%] bottom-[2.2%] top-[3%] overflow-hidden bg-[#261b20] shadow-[inset_0_0_0_9px_rgba(9,7,9,0.45),inset_0_0_38px_13px_rgba(8,7,9,0.72)]">
         <div className="absolute inset-[5%] bg-[linear-gradient(135deg,#453139_0%,#211c22_48%,#16151a_100%)]" />
         <motion.div
           initial={false}
@@ -103,15 +135,15 @@ function DoorFrame({ open }: { open: boolean }) {
       </div>
 
       {/* Frame is four continuous stationary structural elements, not a card. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[4.3%] bg-[linear-gradient(#efc8ce,#c07a84_55%,#874b56)] shadow-[0_5px_7px_rgba(40,15,23,0.26),inset_0_2px_1px_rgba(255,255,255,0.6)]" />
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-[4%] bg-[linear-gradient(90deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[5px_0_8px_rgba(39,15,23,0.3)]" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-[4%] bg-[linear-gradient(270deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[-5px_0_8px_rgba(39,15,23,0.3)]" />
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[3.4%] bg-[linear-gradient(#a2636e,#d6a0a8_48%,#74444e)] shadow-[0_4px_7px_rgba(40,15,23,0.22)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[3.5%] bg-[linear-gradient(#efc8ce,#c07a84_55%,#874b56)] shadow-[0_5px_7px_rgba(40,15,23,0.26),inset_0_2px_1px_rgba(255,255,255,0.6)]" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-[3.65%] bg-[linear-gradient(90deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[5px_0_8px_rgba(39,15,23,0.3)]" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-[3.65%] bg-[linear-gradient(270deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[-5px_0_8px_rgba(39,15,23,0.3)]" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2.2%] bg-[linear-gradient(#a2636e,#d6a0a8_48%,#74444e)] shadow-[0_4px_7px_rgba(40,15,23,0.22)]" />
 
       {(["left", "right"] as const).map((side) => (
         <div
           key={side}
-          className={`pointer-events-none absolute top-[3%] bottom-[3%] w-[1.6%] ${side === "left" ? "left-[2.7%]" : "right-[2.7%]"}`}
+          className={`pointer-events-none absolute top-[3.5%] bottom-[2.8%] w-[1.1%] ${side === "left" ? "left-[3.1%]" : "right-[3.1%]"}`}
         >
           {[18, 50, 82].map((top) => (
             <div
@@ -128,25 +160,31 @@ function DoorFrame({ open }: { open: boolean }) {
 
 export default function Pintu3DPreview() {
   const [open, setOpen] = useState(false);
+  const [angledView, setAngledView] = useState(false);
   const reducedMotion = useReducedMotion();
 
   return (
     <div className="flex w-full flex-col items-center gap-8">
-      <div className="relative flex min-h-[min(75vh,750px)] w-full items-center justify-center overflow-visible py-10">
+      <div className="relative flex min-h-[min(82dvh,820px)] w-full items-center justify-center overflow-visible py-8">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[4%] h-[9%] w-[min(73vw,610px)] rounded-[50%] bg-black/20 blur-2xl dark:bg-black/50"
+          className="pointer-events-none absolute bottom-[1%] h-[8%] w-[min(78vw,650px)] rounded-[50%] bg-black/20 blur-2xl dark:bg-black/50"
         />
         <div
-          className="relative aspect-[0.72] w-[min(65vw,480px)] shrink-0 [perspective:1550px]"
+          className="relative aspect-[0.65] w-[min(84vw,570px,calc(83dvh*0.65))] shrink-0 [perspective:1650px]"
           role="img"
           aria-label={open ? "Pintu dua daun terbuka sepenuhnya; kusen diam." : "Pintu dua daun tertutup; kusen diam."}
         >
-          <div className="absolute inset-0 [transform-style:preserve-3d]">
+          <motion.div
+            initial={false}
+            animate={{ rotateY: angledView ? -17 : 0 }}
+            transition={{ duration: reducedMotion ? 0.01 : 0.7, ease: EASE }}
+            className="absolute inset-0 [transform-style:preserve-3d]"
+          >
             <DoorFrame open={open} />
             <HingedLeaf side="left" open={open} reducedMotion={reducedMotion} />
             <HingedLeaf side="right" open={open} reducedMotion={reducedMotion} />
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -159,9 +197,17 @@ export default function Pintu3DPreview() {
         >
           {open ? "Tutup pintu" : "Buka seluruh pintu"}
         </Button>
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <Button type="button" aria-pressed={!angledView} onClick={() => setAngledView(false)}>
+            Tampak depan
+          </Button>
+          <Button type="button" aria-pressed={angledView} onClick={() => setAngledView(true)}>
+            Tampak miring
+          </Button>
+        </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Periksa kedua daun, tepi dan bagian belakangnya saat terbuka. Seluruh kusen tetap diam.
-          Detail ukiran dan bunga akan ditambahkan setelah gerakan dasar ini disetujui.
+          Buka pintu lalu pilih tampak miring untuk melihat ketebalan, sisi dan bagian belakang kedua daun.
+          Kusen tetap diam; ornamen dan ukiran detail belum ditambahkan.
         </p>
       </div>
     </div>
