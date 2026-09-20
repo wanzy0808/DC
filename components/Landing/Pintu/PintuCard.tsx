@@ -46,15 +46,18 @@ export default function PintuCard({
         <div className="absolute inset-0 bg-black/10" aria-hidden="true" />
 
         <div className="absolute inset-0 overflow-hidden">
-          <Image
-            src={`/${bgImage}`}
-            alt=""
-            fill
-            sizes="(max-width: 767px) 392px, 630px"
-            quality={100}
-            className={`object-cover object-center ${isActive ? "grayscale-0" : "grayscale"}`}
-            priority={isActive}
-          />
+          <div className="relative h-full w-full">
+            <Image
+              src={`/${bgImage}`}
+              alt=""
+              fill
+              sizes="(max-width: 767px) 392px, 630px"
+              quality={100}
+              className={`object-cover object-center ${isActive ? "grayscale-0" : "grayscale"}`}
+              loading="eager"
+              fetchPriority={isActive ? "high" : "auto"}
+            />
+          </div>
         </div>
 
         <div
