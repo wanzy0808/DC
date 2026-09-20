@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner dari screenshot. Tahap 3 dan 4 sudah dikodekan; review visual lanjut dibutuhkan, khususnya ketebalan 3D saat tampak miring.
+**Status:** Tahap 1–2 disetujui owner dari screenshot. Tahap 3–5 sudah dikodekan; review visual owner masih dibutuhkan, terutama pada tampak miring, engsel, dan bayangan daun.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -33,7 +33,7 @@
 | 2 | Dasar | Rapikan proporsi tinggi/lebar, lebar celah/ambang dan ketebalan setiap daun dari depan dan sudut miring. | Disetujui owner — screenshot; kontrol sudut miring perlu diuji tersendiri bila belum tampil pada refresh |
 | 3 | Dasar | Material utama matte Rose dengan perbedaan muka, rusuk, dan belakang serta highlight halus, tanpa kesan plastik atau tekstur melar. | Implementasi masuk GitHub — menunggu review visual |
 | 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Implementasi di GitHub — menunggu review tampak miring dan buka-tutup |
-| 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Belum |
+| 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Implementasi GitHub: empat sudut, easing buka/tutup, dua bayangan bergerak; menunggu review browser |
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Belum |
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Belum |
 | 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Belum |
@@ -46,6 +46,10 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 5 (implementasi):** atas permintaan owner untuk lanjut, preview `/pintu-lab` kini menyediakan tombol kondisi bukaan 0°, 45°, 90°, 110° selain tombol buka/tutup utama. Dua daun memakai satu target sudut dengan arah rotasi berlawanan dan easing terkontrol 1,1 detik (0,01 detik bila `prefers-reduced-motion`) tanpa overshoot/spring. Dua projected elliptical contact shadows diletakkan terpisah dari daun, berakar di kaki setiap jamb, diputar dan diubah opacity/scale-nya mengikuti target sudut dengan timing yang sama; bayangan dasar frame lama tetap. Eksposur lembut pada latar bukaan berubah secara gradual mengikuti sudut tetapi belum merupakan final light beam Tahap 10. User bisa membandingkan empat bukaan dari tampak depan/kiri/kanan; ini **visual CSS approximation** dan belum mengklaim collision solver/photometric shadows. Bentuk, material, enam bidang tiap daun, engsel serta fixed jamb tidak diubah. Source files `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`; source commits `93d5854a`, `41e81f8e`. Build/CI source stage 5 **pending observation**; review browser/screenshot owner **pending**. Landing `/`, `/jiplak`, orbital dan protected Rose petals tidak berubah.
+
+
 
 **20 September 2026 — Feedback Tahap 3 / permintaan lanjut Tahap 4:** owner menyampaikan tampak miring masih terlihat seperti lembaran dimiringkan. Ini **bukan** persetujuan visual terhadap material/volume Tahap 3. Akar teknis pada preview sebelumnya: daun telah mempunyai enam bidang, tetapi kusen hanya empat strip pada bidang datar, dan mode miring merotasi seluruh komposisi tanpa return/depth kusen. Validasi Tahap 3: GitHub Build Validation run `35498336075` pada commit `4c13211787c924fcd0185330d153cc9cd8695e20` **PASS**, bukan bukti visual kedalaman.
 
