@@ -3258,3 +3258,23 @@ Rapikan warning Next.js pada gambar Pintu `/hp-digital.png` dan `/bukutamu.png` 
 ### Validation
 - GitHub Build Validation: pending.
 - Runtime browser warning confirmation: pending local browser verification.
+
+
+---
+
+## 2026-09-20 — Copy canonical landing Pintu into temporary `/jiplak`
+
+### Requirement / Intent
+Owner meminta kode Pintu dari landing `/` dicopy secara independen ke `/jiplak`, bukan dipindahkan atau diimport sebagai komponen bersama. Tujuan: eksperimen Pintu nanti tidak mengubah landing canonical.
+
+### Implementation
+- snapshot `components/Landing/Pintu/PintuCard.tsx` disalin ke `app/jiplak/PintuCardJiplak.tsx`, termasuk gambar, ornament, tombol masuk, dan animasi buka/tutup;
+- snapshot `components/Landing/Pintu/PintuSection.tsx` disalin ke `app/jiplak/PintuSectionJiplak.tsx`, termasuk data ketiga pintu, Motion loop, scale/depth, hover pause, dan reduced motion;
+- import di section copy hanya menunjuk `./PintuCardJiplak`, bukan PintuCard canonical;
+- `app/jiplak/jiplak.tsx` memakai `PintuSectionJiplak` dan menyesuaikan active-door state nullable sesuai kontrak Pintu asli; konten, backdrop, rose petals, header/footer, dan route tetap;
+- `app/page.tsx`, `PintuSection.tsx`, `PintuCard.tsx`, dan `RosePetalBackground.tsx` canonical **tidak diubah**;
+- salinan tetap independen: perubahan berikutnya pada Pintu di `/jiplak` tidak otomatis memengaruhi landing utama.
+
+### Validation
+- GitHub Build Validation: pending.
+- Local visual/browser check: pending.
