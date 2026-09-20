@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import DoorRelief from "@/components/Landing/Pintu/DoorRelief";
 import DoorMolding, { FrameMolding } from "@/components/Landing/Pintu/DoorMolding";
 import DoorFlorals, { FrameFloralAccents } from "@/components/Landing/Pintu/DoorFlorals";
+import DoorInterior from "@/components/Landing/Pintu/DoorInterior";
 
 type Side = "left" | "right";
 type DoorAngle = 0 | 45 | 90 | 110;
@@ -227,20 +228,9 @@ function HingedLeaf({
 function DoorFrame({ angleDegrees }: { angleDegrees: DoorAngle }) {
   return (
     <>
-      {/* The opening and all jamb parts stay fixed while the leaves swing. */}
-      <div
-        className="absolute inset-x-[3.6%] bottom-[2.2%] top-[3%] overflow-hidden bg-[#261b20] shadow-[inset_0_0_0_9px_rgba(9,7,9,0.45),inset_0_0_38px_13px_rgba(8,7,9,0.72)]"
-        style={{ transform: `translateZ(-${FRAME_DEPTH}px)` }}
-      >
-        <div className="absolute inset-[5%] bg-[linear-gradient(135deg,#453139_0%,#211c22_48%,#16151a_100%)]" />
-        <motion.div
-          initial={false}
-          animate={{ opacity: 0.05 + (angleDegrees / FULLY_OPEN) * 0.45 }}
-          transition={{ duration: 1.1, ease: EASE }}
-          className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_38%,rgba(255,239,241,0.8)_0%,rgba(192,122,132,0.17)_45%,transparent_78%)]"
-        />
-        <div className="absolute inset-x-[10%] bottom-0 h-[28%] bg-[linear-gradient(0deg,rgba(200,156,166,0.21),transparent)] [clip-path:polygon(0_100%,34%_0,66%_0,100%_100%)]" />
-      </div>
+      {/* The perspective foyer stays behind the stationary 44px frame and
+          never becomes a child of either swinging door leaf. */}
+      <DoorInterior />
 
       {/* A stationary 44 px-deep architectural jamb. Each return connects
           the front trim (z=0) to the rear opening (z=-44), rather than
