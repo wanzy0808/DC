@@ -3316,5 +3316,6 @@ Three.js pass pertama terlihat seperti Pintu plastik dengan gambar yang melar; M
 - `app/page.tsx`, Pintu canonical, `LandingFloralGlow.tsx`, shared header/footer dan protected rose-petal implementation tidak diubah.
 
 ### Validation
-- GitHub Build Validation: pending.
-- Local WebGL appearance, orbital timing, hover, image crop and responsive composition: pending owner review.
+- GitHub Actions Build Validation run `35480935118` on application + documentation head `e6816880e20c3fbefdb9ab582838105b8ac803b8`: **PASS** (dependency installation, Prisma Client generation, Next.js production build and TypeScript).
+- Local WebGL appearance, orbital timing, hover, image crop and responsive composition: **pending owner browser review**. Production build does not verify visual rendering or actual GPU performance.
+- This documentation-only validation update does not alter the validated application source.
