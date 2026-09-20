@@ -52,7 +52,7 @@ function DoorHingeBarrels({
       {HINGE_POINTS.map((point) => (
         <div
           key={point}
-          className={`pointer-events-none absolute z-10 h-[34px] w-[12px] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] ${
+          className={`pointer-events-none absolute z-10 h-[34px] w-[12px] [transform-style:preserve-3d] ${
             moving
               ? isLeft
                 ? "left-0"
