@@ -5,6 +5,8 @@
  */
 import { addReferenceDoorHardware } from "./reference-door-hardware.js";
 import { addReferenceDoorLeafRelief, addReferenceDoorFrameRelief } from "./reference-door-ornaments.js";
+import { buildReferenceDoorInterior } from "./reference-door-interior.js";
+import { buildReferenceDoorLighting } from "./reference-door-lighting.js";
 const W = 2.30;
 const H = 7.12;
 const FRAME_TOP = 3.77;
@@ -253,9 +255,8 @@ export async function mountReferenceDoor(container, options = {}) {
   beveledPanel(root, [5.92, 0.14, 0.67], [0, FLOOR_Y, 0], pearledFrame, 0.045, 0.026);
   beveledPanel(root, [6.02, 0.065, 0.74], [0, FLOOR_Y - 0.10, 0], doorEdges, 0.035, 0.018);
 
-  // Stages 1–2 deliberately leave the aperture EMPTY behind the leaves.
-  // Do not fake the future interior with a flat dark/grey backing rectangle.
-  // A real room will be built as depth geometry in V2 stage 9.
+  // Fixed volume behind the threshold, not a dark photo/portal card.
+  buildReferenceDoorInterior({ THREE, root, box, materials, FLOOR_Y });
 
   // Each group pivot is at the OUTER jamb, z=0.34. The slab, side profiles,
   // front/back panels and hardware all remain children of this one hinge pivot.
@@ -293,23 +294,7 @@ export async function mountReferenceDoor(container, options = {}) {
   const ground = box(scene, [80, 0.04, 80], [0, FLOOR_Y - 0.17, 0], floorMat, false);
   ground.castShadow = false;
 
-  const ambient = new THREE.HemisphereLight(0xfff9f3, 0x8e7373, 2.0);
-  scene.add(ambient);
-  const key = new THREE.DirectionalLight(0xffeee4, 2.6);
-  key.position.set(-5, 8, 9);
-  key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
-  key.shadow.camera.left = -8;
-  key.shadow.camera.right = 8;
-  key.shadow.camera.top = 9;
-  key.shadow.camera.bottom = -9;
-  key.shadow.camera.far = 40;
-  key.shadow.bias = -0.00025;
-  key.shadow.normalBias = 0.018;
-  scene.add(key);
-  const fill = new THREE.DirectionalLight(0xf4e1e1, 0.9);
-  fill.position.set(5, 4, -4);
-  scene.add(fill);
+  const lighting = buildReferenceDoorLighting({ THREE, scene, root });
 
   let targetAngle = 0;
   let currentAngle = 0;
@@ -331,6 +316,7 @@ export async function mountReferenceDoor(container, options = {}) {
     leaves[0].pivot.rotation.y = -radians;
     leaves[1].pivot.rotation.y = radians;
     root.rotation.y = THREE.MathUtils.degToRad(currentView);
+    lighting.setOpening(currentAngle);
     renderer.render(scene, camera);
     if (currentAngle !== targetAngle || currentView !== targetView) invalidate();
   }
