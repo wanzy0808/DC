@@ -18,7 +18,7 @@ export async function mountReferenceDoor(container, options = {}) {
   let intersectionObserver;
   let visible = true;
   let previousTime = 0;
-    const scene = new THREE.Scene();
+  const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 90);
   const { root, leaves, lighting, dispose: disposeModel } =
     createReferenceDoorModel({ THREE, scene, options });
