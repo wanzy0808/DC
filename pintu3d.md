@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 di branch `feat/pintu-v2-stage5-10-sculpt-scene` (material, relief, crown/pilaster, hardware micro-finish, foyer dan lighting) serta perbaikan mobile/render Tahap 12–13; CI dan screenshot owner masih pending sebelum merge. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 dan audit awal Tahap 12–13 merged `main` via PR #57; GitHub Build Validation PASS. Uji screenshot owner dan fidelity ke foto masih pending; Tahap 11 review tidak boleh dianggap selesai. Tahap 1–10 di bagian bawah adalah riwayat eksperimen CSS **V1**, bukan status rebuild baru.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -24,14 +24,14 @@
 | 2 | Samakan siluet/proporsi kusen referensi | Ukuran pilaster, cornice berlapis, crown dan oval besar sesuai posisi/tinggi gambar; bagian ini menjadi geometri diam, tidak tampak seperti balok/topi datar. | Merged `main` via PR #53 — CI PASS; review owner pending |
 | 3 | Bentuk dan profil daun | Lebar/celah/ketebalan real, bevel, tiga panel per daun dan pertemuan molding mengikuti gambar, termasuk sisi belakang saat 110°. | Merged `main` via PR #54 — CI PASS; review owner pending |
 | 4 | Mekanik engsel dan pegangan | Barrel engsel nyata pada jamb kiri/kanan, pegangan panjang sepasang dan finial; cek tidak lepas atau saling tembus sepanjang bukaan. | Merged `main` PR #56 — CI PASS; review visual pending |
-| 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Kode di branch — CI/review pending |
-| 6 | Relief persis panel daun | Corner ornaments kecil, acanthus atas, strip tengah, center flourish bawah sebagai geometri relief sesungguhnya, mengikuti setiap daun. **Bukan rose flower crest atau simbol generik.** | Kode di branch — CI/review pending |
-| 7 | Crown & pilaster klasik detail | Medali oval dan scroll acanthus di lintel, ornaments di capital dan base, molding bertingkat; tidak melayang/terpotong. | Kode di branch — CI/review pending |
-| 8 | Finishing ukiran/hardware | Refinement micro-bevel, material cat metalik hanya pada relief, detail ukiran/corners dan handles sesuai foto; empat sudut diperiksa. | Kode di branch — CI/review pending |
-| 9 | Interior sungguh ber-volume | Ruang 3D sederhana di balik ambang, lantai/dinding/atap bertemu dengan benar saat kamera nanti masuk, tanpa kotak hitam. | Kode di branch — CI/review pending |
-| 10 | Cahaya natural | Area key/fill yang menonjolkan pahatan; cahaya ivory dari bukaan dan spill pendek mengikuti bukaan, tanpa pink fog/kotak glowing. | Kode di branch — CI/review pending |
-| 11 | Fidelity visual & screenshot | Bandingkan tertutup, 45°, 90°, 110° depan/miring terhadap `pintu1.png`, koreksi desain dan clipping berdasarkan owner. | Kode di branch — CI/review pending |
-| 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Kode di branch — CI/review pending |
+| 5 | Material satin Rose/ivory | Permukaan pintu Rose matte, kusen ivory–blush, metal champagne/rose gold terkontrol dengan roughness yang sesuai; tidak plastik mengilap. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 6 | Relief persis panel daun | Corner ornaments kecil, acanthus atas, strip tengah, center flourish bawah sebagai geometri relief sesungguhnya, mengikuti setiap daun. **Bukan rose flower crest atau simbol generik.** | Merged `main` PR #57 — CI PASS; review visual pending |
+| 7 | Crown & pilaster klasik detail | Medali oval dan scroll acanthus di lintel, ornaments di capital dan base, molding bertingkat; tidak melayang/terpotong. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 8 | Finishing ukiran/hardware | Refinement micro-bevel, material cat metalik hanya pada relief, detail ukiran/corners dan handles sesuai foto; empat sudut diperiksa. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 9 | Interior sungguh ber-volume | Ruang 3D sederhana di balik ambang, lantai/dinding/atap bertemu dengan benar saat kamera nanti masuk, tanpa kotak hitam. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 10 | Cahaya natural | Area key/fill yang menonjolkan pahatan; cahaya ivory dari bukaan dan spill pendek mengikuti bukaan, tanpa pink fog/kotak glowing. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 11 | Fidelity visual & screenshot | Bandingkan tertutup, 45°, 90°, 110° depan/miring terhadap `pintu1.png`, koreksi desain dan clipping berdasarkan owner. | Merged `main` PR #57 — CI PASS; review visual pending |
+| 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Belum |
 | 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Belum |
 | 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Belum |
@@ -92,7 +92,7 @@
 
 **Tahap 12–13 — Audit awal:** pada layar mobile, canvas pindah sebelum foto referensi dan lebar lab memakai gutter 16px. Render Three.js tetap on-demand, satu context canvas, DPR mobile dibatasi 1.25, frame yang terjadwal saat tab tersembunyi tidak lagi membuat animasi stuck ketika tab tampil lagi. Kontrol native Button tetap dapat digunakan dengan keyboard; uji langsung berbagai perangkat, clipping, back/forward, dan context loss belum dilakukan. Tahap 11 dan approval owner tetap belum selesai.
 
-**Berkas:** `reference-door-engine.js`, `reference-door-hardware.js`, `reference-door-ornaments.js` (baru), `reference-door-interior.js` (baru), `reference-door-lighting.js` (baru), `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Ruang lingkup **hanya** `/pintu-lab`; landing canonical `/`, `/jiplak`, rose petals dan orbital belum disentuh. **Status saat catatan dibuat: CI dan fidelity visual pending.** Tahap 14–15 tetap dilindungi oleh approval Pintu 1.
+**Berkas:** `reference-door-engine.js`, `reference-door-hardware.js`, `reference-door-ornaments.js` (baru), `reference-door-interior.js` (baru), `reference-door-lighting.js` (baru), `ReferenceDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Ruang lingkup **hanya** `/pintu-lab`; landing canonical `/`, `/jiplak`, rose petals dan orbital belum disentuh. **Validasi teramati:** GitHub Build Validation run `35513693995` pada head PR #57 `9aea4735d189e2c4dfd7bf99c773601324dafce8` **PASS** (termasuk production build); PR #57 merged ke `main` sebagai `5e7727ca0866922015ee28e5e789cc2e4928d9b9`. Fidelity visual dan responsif di browser tetap **pending**. Tahap 14–15 di landing utama tetap dilindungi oleh approval Pintu 1.
  
 ---
 
