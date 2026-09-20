@@ -3299,3 +3299,22 @@ Owner installed Three.js and requested an ambitious, visibly three-dimensional/d
 - GitHub Actions Build Validation run `35480379163` on source + documentation head `341e25b0a88e08c85de8fe1ee7ef13e4c4b9b915`: **PASS** (install dependencies, Prisma Client generation, Next.js production build + TypeScript).
 - Visual GPU/browser behavior: **pending local `http://localhost:3000/jiplak` verification on target device**. Production build does not prove WebGL appearance or GPU performance.
 - Subsequent documentation-only commit records the observed build result without changing application code.
+
+
+---
+
+## 2026-09-20 — Jiplak orbital / realistic material repair
+
+### Owner feedback / scope
+Three.js pass pertama terlihat seperti Pintu plastik dengan gambar yang melar; Motion orbital asli hilang. Owner menyukai contact/ground shadow, meminta perpindahan tiga Pintu kembali mengorbit seperti landing, memakai Rose brand tanpa pink glow berlebihan, dan menjaga landing canonical `/` tetap apa adanya.
+
+### Implementation
+- `app/jiplak/ThreePortalScene.tsx` mengembalikan timing orbital asli melalui Motion `animate(useMotionValue)`: tiga fase merata, 10 detik per putaran, ease `[0.42,0,0.58,1]`, repeat delay 0.8 detik, hover pause/resume, perubahan active-door mengikuti Pintu yang paling depan. Explicit selector dipertahankan dan mengarahkan kembali orbit ke dunia yang dipilih.
+- `app/jiplak/three-portal-engine.js` kini memetakan Motion progress ke ellipse x/y/z + depth scale, bukan menahan satu pintu di tengah dan dua pintu statis di sisi. Pintu memakai matte Rose `#C07A84`, panel inset, proper jamb hinge/pivot, stepped threshold, gentle natural studio lighting dan shadow lantai yang tetap ada.
+- Texture UV world foto memakai aspect-ratio-aware *cover* crop dari intrinsic image size. Tidak ada stretch; crop diperlukan mengikuti aspect aperture melengkung.
+- Menghapus shader glow/halo/saturated pink light-spill dan extraneous shine. `components/Layout/AssetDreamBackdrop.tsx` menghapus pink radial background glow khusus eksperimen, tetapi `flower.png` kiri/kanan dan protected `RosePetalBackground` tidak diubah. Soft contact shadow tetap.
+- `app/page.tsx`, Pintu canonical, `LandingFloralGlow.tsx`, shared header/footer dan protected rose-petal implementation tidak diubah.
+
+### Validation
+- GitHub Build Validation: pending.
+- Local WebGL appearance, orbital timing, hover, image crop and responsive composition: pending owner review.
