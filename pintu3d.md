@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–7 sudah dikodekan; Tahap 6–7 menunggu review visual, terutama ukiran dan molding yang harus melekat pada daun saat membuka. Tahap 3–5 belum diberi persetujuan visual eksplisit.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–8 sudah dikodekan; review visual tahap 6–8 menunggu, terutama ornamen bunga yang harus menempel pada daun/kusen sesuai bagiannya. Tahap 3–5 belum diberi persetujuan visual eksplisit.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -36,7 +36,7 @@
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Implementasi GitHub: empat sudut, easing buka/tutup, dua bayangan bergerak; menunggu review browser |
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Implementasi GitHub: relief acanthus dan sulur pada panel atas/bawah tiap daun, menunggu screenshot/review owner |
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Kode masuk GitHub — tiga lapis profil panel dan lis daun/kusen; review visual pending |
-| 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Belum |
+| 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Implementasi GitHub: crest mawar pada tiap daun dan roset kecil di lintel diam; menunggu review visual owner |
 | 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Belum |
 | 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Belum |
 | 11 | Finishing | Review screenshot empat kondisi dari desktop dan mobile; perbaiki bentuk, clipping, pixel gaps, dan sudut tak wajar. | Belum |
@@ -46,6 +46,10 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 8 (implementasi):** owner meminta lanjut setelah Tahap 7, tanpa persetujuan visual terpisah terhadap hasil tahap 6–7. Buat `components/Landing/Pintu/DoorFlorals.tsx` yang menggambar dua crest mawar Rose dengan kelopak bertingkat, bayangan relief, dudukan oval terukir, sulur dan daun acanthus; masing-masing crest diletakkan **di dalam panel atas daun kiri/kanan** pada node muka depan yang sudah menjadi anak pivot `HingedLeaf`. Crest tidak menyilang celah tengah, tidak mengubah tepi/ukuran daun, tidak menempel pada foto facade maupun membentuk tanduk di atas kusen. `FrameFloralAccents` menambahkan dua roset relief kecil di dalam balok atas *kusen tetap* (lintel) dan berada di luar node daun, sehingga tidak ikut berputar. Seluruh dekorasi tetap di dalam siluet Pintu 1 dan keluarga warna Rose matte; bukan tambahan bunga latar atau produk wedding-only. Kode preview `/pintu-lab` menampilkan instruksi mengecek crest saat 0°/110° dari tiga sisi. Source commits: `a405fcae` (komponen), `8c646973` (integrasi daun + kusen), `a2efa030` (copy preview). CI: **pending observation**; screenshot/review pemilik **pending**; SVG relief ini pendekatan 2.5D, bukan pahatan 3D fisik. `/`, `/jiplak`, orbital, rose petals, bentuk/engsel dan lighting lama tidak diubah. Tahap 9 memperdalam ruang dan Tahap 10 memperbaiki lighting; dua hal itu belum dikerjakan pada tahap ini.
+
+
 
 **20 September 2026 — Tahap 7 (implementasi):** lanjutkan detail yang benar-benar terlihat di preview tunggal `/pintu-lab` tanpa merombak desain yang sudah ada. Komponen baru `components/Landing/Pintu/DoorMolding.tsx` mendefinisikan panel trim berlapis: bingkai luar berbayang matte, lis terang kedua, cekungan dalam dengan bayangan inset dan empat sambungan sudut/miter kecil pada panel atas dan bawah. Reling perimeter dan dua lis pertemuan tengah dipasang langsung ke **muka masing-masing daun bergerak**, sesudah `DoorRelief` sehingga relief tetap terlihat di dalam panel dan semua detail mengikuti engsel hingga 110°. `FrameMolding` memasang lis tipis pada depan kusen tetap, terpisah dari node daun; tidak ada lis membentang di ruang kosong ketika pintu terbuka. Panel, kusen, material, perspektif, sudut bukaan, engsel, dan shadow lama tidak diganti. Pintu lab header/instruksi kini menjelaskan uji pertemuan panel saat tertutup dan list daun/kusen saat terbuka. Source commits: `ed5110d1`, `52d5b348`, `5e2ac0c0`. GitHub Build Validation run `35499429090` pada source head `5e2ac0c0c6f11e205588f1cadc40ff92968be9df` **PASS**. Kualitas visual molding/siluet dari browser **menunggu review owner**; build tidak membuktikan hasil tampak depan/miring. Asset/crest bunga tidak ditambahkan (Tahap 8), ruangan/lampu ditunda (Tahap 9–10). `/`, `/jiplak`, dan orbital tidak diubah.
 
