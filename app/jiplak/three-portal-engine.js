@@ -298,7 +298,6 @@ export async function mountThreePortals(container, options) {
   let onPointerLeave;
   let onPointerUp;
   let onVisibility;
-  const clock = new THREE.Clock();
 
   function dispose() {
     if (disposed) return;
@@ -335,7 +334,7 @@ export async function mountThreePortals(container, options) {
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.22;
+    renderer.toneMappingExposure = 1.05;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.domElement.setAttribute("aria-hidden", "true");
@@ -350,9 +349,9 @@ export async function mountThreePortals(container, options) {
     camera.position.set(0, 0.15, 11.6);
     camera.lookAt(0, -0.12, 0);
 
-    const hemisphere = new THREE.HemisphereLight(0xffedf1, 0x613449, 2.05);
+    const hemisphere = new THREE.HemisphereLight(0xffffff, 0x6e5661, 1.65);
     scene.add(hemisphere);
-    const key = new THREE.DirectionalLight(0xffe5ee, 3.4);
+    const key = new THREE.DirectionalLight(0xfff4f5, 2.35);
     key.position.set(-4.2, 6.3, 7);
     key.castShadow = true;
     key.shadow.mapSize.set(1024, 1024);
@@ -364,16 +363,16 @@ export async function mountThreePortals(container, options) {
     key.shadow.camera.bottom = -10;
     key.shadow.bias = -0.0005;
     scene.add(key);
-    const fillLight = new THREE.PointLight(0xf4a8c3, 15, 13, 1.6);
+    const fillLight = new THREE.PointLight(0xffffff, 5, 13, 1.8);
     fillLight.position.set(4.7, 1.9, 4.7);
     scene.add(fillLight);
 
     const ground = new THREE.Mesh(
       new THREE.PlaneGeometry(25, 19),
       new THREE.MeshPhysicalMaterial({
-        color: options.getDarkMode() ? 0x25141e : 0xf9e8ee,
-        transparent: true, opacity: options.getDarkMode() ? 0.24 : 0.31,
-        metalness: 0.22, roughness: 0.32, clearcoat: 0.7,
+        color: options.getDarkMode() ? 0x231b1f : 0xf6f2f3,
+        transparent: true, opacity: options.getDarkMode() ? 0.26 : 0.34,
+        metalness: 0.045, roughness: 0.8,
         side: THREE.DoubleSide,
       }),
     );
@@ -382,10 +381,8 @@ export async function mountThreePortals(container, options) {
     ground.receiveShadow = true;
     scene.add(ground);
 
-    const glowTexture = makeGlowTexture(THREE);
     const groundTexture = makeGroundTexture(THREE);
-    const pathTexture = makeLightPathTexture(THREE);
-    textures.push(glowTexture, groundTexture, pathTexture);
+    textures.push(groundTexture);
 
     const loader = new THREE.TextureLoader();
     const loaded = await Promise.all(WORLDS.map(async (world) => {
@@ -394,28 +391,35 @@ export async function mountThreePortals(container, options) {
         textures.push(texture);
         return setWorldTexture(THREE, texture, renderer);
       } catch {
-        const backup = makeGlowTexture(THREE);
+        const canvas = document.createElement("canvas");
+        canvas.width = canvas.height = 8;
+        const context = canvas.getContext("2d");
+        context.fillStyle = "#c07a84";
+        context.fillRect(0, 0, 8, 8);
+        const backup = new THREE.CanvasTexture(canvas);
+        backup.colorSpace = THREE.SRGBColorSpace;
         textures.push(backup);
         return backup;
       }
     }));
-    if (disposed) return dispose;
+    if (disposed) {
+      for (const texture of textures) texture.dispose();
+      return dispose;
+    }
 
     portals = WORLDS.map((world, index) => {
-      const portal = createPortal(
-        THREE, world, loaded[index], glowTexture, groundTexture, pathTexture,
-      );
+      const portal = createPortal(THREE, world, loaded[index], groundTexture);
       scene.add(portal.root);
       return portal;
     });
 
-    // A sparse constellation of real instanced 3D motes floats around the
-    // portals. The original landing's CSS rose-petal component stays intact.
-    const moteCount = reduced ? 24 : 80;
+    // Quiet floating motes are matte/neutral; the existing protected
+    // rose-petal component supplies the organic ambient motion separately.
+    const moteCount = reduced ? 12 : 36;
     const moteGeometry = new THREE.IcosahedronGeometry(0.022, 0);
     const moteMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffc7dc, transparent: true, opacity: 0.73,
-      blending: THREE.AdditiveBlending, depthWrite: false,
+      color: 0xf6e6eb, transparent: true, opacity: 0.54,
+      depthWrite: false,
     });
     const motes = new THREE.InstancedMesh(moteGeometry, moteMaterial, moteCount);
     const moteDummy = new THREE.Object3D();
@@ -464,13 +468,16 @@ export async function mountThreePortals(container, options) {
       const rect = renderer.domElement.getBoundingClientRect();
       targetPointer.x = Math.max(-1, Math.min(1, (event.clientX - rect.left) / rect.width * 2 - 1));
       targetPointer.y = Math.max(-1, Math.min(1, (event.clientY - rect.top) / rect.height * 2 - 1));
-      hoveredId = getHit(event) || 0;
+      const nextHover = getHit(event) || 0;
+      if (nextHover && nextHover !== hoveredId) options.onHover(nextHover);
+      hoveredId = nextHover;
       renderer.domElement.style.cursor = hoveredId ? "pointer" : "default";
     };
     onPointerLeave = () => {
       targetPointer.set(0, 0);
       hoveredId = 0;
       renderer.domElement.style.cursor = "default";
+      options.onLeave();
     };
     onPointerUp = (event) => {
       if (event.button !== 0) return;
@@ -493,7 +500,6 @@ export async function mountThreePortals(container, options) {
     resize();
 
     const target = new THREE.Vector3();
-    const timeOffset = clock.getElapsedTime();
     let lastTime = performance.now();
     function frame(now) {
       if (disposed) return;
@@ -501,14 +507,14 @@ export async function mountThreePortals(container, options) {
       if (!visible) { lastTime = now; return; }
       const dt = Math.min((now - lastTime) / 1000, 0.06);
       lastTime = now;
-      const t = (now / 1000) - timeOffset;
+      const t = now / 1000;
       const smooth = reduced ? 1 : 1 - Math.exp(-dt * 3.2);
       const active = options.getActiveDoor();
       const dark = options.getDarkMode();
       if (dark !== currentDark) {
         currentDark = dark;
-        ground.material.color.setHex(dark ? 0x25141e : 0xf9e8ee);
-        ground.material.opacity = dark ? 0.24 : 0.31;
+        ground.material.color.setHex(dark ? 0x231b1f : 0xf6f2f3);
+        ground.material.opacity = dark ? 0.26 : 0.34;
       }
 
       if (!reduced) cameraPointer.lerp(targetPointer, Math.min(1, dt * 2.8));
@@ -517,49 +523,35 @@ export async function mountThreePortals(container, options) {
       camera.lookAt(cameraPointer.x * -0.13, -0.13 + cameraPointer.y * -0.08, 0);
       camera.updateMatrixWorld();
 
+      // Original PintuSectionJiplak orbital formula: 3 evenly spaced
+      // doors rotating around the same ellipse with depth-driven scaling.
+      // Motion's progress value (not this render clock) owns the timing.
       const mobile = camera.aspect < 0.9;
+      const progress = options.getOrbit();
       for (const portal of portals) {
+        const phase = ((portal.id - 1) / 3 + progress) * Math.PI * 2;
+        const depth = Math.sin(phase);
         const selected = portal.id === active;
-        const goesRight = (portal.id - active + 3) % 3 === 1;
-        const side = goesRight ? 1 : -1;
-        const targetX = selected ? 0 : side * (mobile ? 2.44 : 3.08);
-        const targetY = selected ? 0.04 : -0.13;
-        const targetZ = selected ? 0.36 : -1.65;
-        const hoverLift = !reduced && hoveredId === portal.id ? 0.055 : 0;
+        const hoverLift = !reduced && hoveredId === portal.id ? 0.045 : 0;
         target.set(
-          targetX,
-          targetY + hoverLift + (reduced ? 0 : Math.sin(t * 0.7 + portal.id * 1.2) * 0.03),
-          targetZ,
+          Math.cos(phase) * (mobile ? 1.9 : 2.5),
+          depth * 0.46 + hoverLift,
+          depth * 1.12,
         );
         portal.root.position.lerp(target, smooth);
-        const desiredScale = selected ? 1 : mobile ? 0.72 : 0.78;
+        const desiredScale = 0.7 + ((depth + 1) / 2) * 0.29;
         const nextScale = THREE.MathUtils.lerp(portal.root.scale.x, desiredScale, smooth);
         portal.root.scale.setScalar(nextScale);
         portal.root.rotation.y = THREE.MathUtils.lerp(
-          portal.root.rotation.y, selected ? 0 : -side * 0.15, smooth,
+          portal.root.rotation.y, -Math.cos(phase) * 0.155, smooth,
         );
-        portal.root.rotation.z = THREE.MathUtils.lerp(
-          portal.root.rotation.z, selected ? 0 : side * 0.018, smooth,
-        );
-
+        portal.root.rotation.z = 0;
         portal.openness = THREE.MathUtils.lerp(
-          portal.openness, selected ? 1 : 0, reduced ? 1 : 1 - Math.exp(-dt * 2.35),
+          portal.openness, selected ? 1 : 0,
+          reduced ? 1 : 1 - Math.exp(-dt * 2.8),
         );
-        portal.left.rotation.y = -1.31 * portal.openness;
-        portal.right.rotation.y = 1.31 * portal.openness;
-        portal.halo.material.opacity = THREE.MathUtils.lerp(
-          portal.halo.material.opacity, selected ? 0.7 : 0.27, smooth,
-        );
-        portal.halo.scale.set(
-          4.8 + portal.openness * 0.65, 6.35 + portal.openness * 0.5, 1,
-        );
-        portal.spill.material.opacity = THREE.MathUtils.lerp(
-          portal.spill.material.opacity, selected ? 0.78 : 0.04, smooth,
-        );
-        portal.backLight.intensity = THREE.MathUtils.lerp(
-          portal.backLight.intensity, selected ? 10 : 2.4, smooth,
-        );
-        portal.atmosphere.material.opacity = selected ? 0.055 : 0.18;
+        portal.left.rotation.y = -1.13 * portal.openness;
+        portal.right.rotation.y = 1.13 * portal.openness;
       }
       for (let i = 0; i < moteCount; i += 1) {
         const data = motesData[i];
