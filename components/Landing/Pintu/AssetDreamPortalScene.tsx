@@ -182,13 +182,16 @@ function PortalCard({
         transition={{ duration: reduced ? 0.12 : 0.6, delay: reduced ? 0 : 0.1 }}
         className="pointer-events-none absolute left-1/2 top-[-13%] z-50 h-[25%] w-[145%] -translate-x-1/2"
       >
-        <Image
-          src="/tiara.png"
-          alt=""
-          fill
-          sizes="480px"
-          className="object-contain"
-        />
+        <div className="relative h-full w-full">
+          <Image
+            src="/tiara.png"
+            alt=""
+            fill
+            sizes="480px"
+            className="object-contain"
+            loading="eager"
+          />
+        </div>
       </motion.div>
 
       <div className="absolute inset-[2%] rounded-t-[49%] rounded-b-[7%] bg-[#6c3540]/52 shadow-[0_28px_50px_rgba(45,14,22,0.26)]" style={{ transform: "translateZ(-20px)" }} />
@@ -206,14 +209,17 @@ function PortalCard({
             transition={{ duration: reduced ? 0.12 : 0.85, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            <Image
-              src={portal.image}
-              alt=""
-              fill
-              priority={active}
-              sizes="(max-width: 1279px) 576px, 644px"
-              className="object-cover object-center"
-            />
+            <div className="relative h-full w-full">
+              <Image
+                src={portal.image}
+                alt=""
+                fill
+                loading="eager"
+                fetchPriority={active ? "high" : "auto"}
+                sizes="(max-width: 1279px) 576px, 644px"
+                className="object-cover object-center"
+              />
+            </div>
           </motion.div>
 
           <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(25,9,15,0.74),rgba(25,9,15,0.04)_58%,rgba(255,255,255,0.10))]" />
