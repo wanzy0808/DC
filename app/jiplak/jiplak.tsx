@@ -4,14 +4,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Sparkles } from "lucide-react";
-import AssetDreamPortalScene, {
-  type AssetDoorValue,
-} from "@/components/Landing/Pintu/AssetDreamPortalScene";
+import PintuSectionJiplak from "./PintuSectionJiplak";
 import AssetDreamBackdrop from "@/components/Layout/AssetDreamBackdrop";
 import RosePetalBackground from "@/components/Layout/RosePetalBackground";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
+type JiplakDoorValue = 1 | 2 | 3 | null;
 const ease = [0.22, 1, 0.36, 1] as const;
 
 const doorMeta = {
@@ -30,22 +29,23 @@ const doorMeta = {
 } as const;
 
 export default function JiplakLanding() {
-  const [activeDoor, setActiveDoor] = useState<AssetDoorValue>(2);
+  const [activeDoor, setActiveDoor] = useState<JiplakDoorValue>(2);
   const reduced = useReducedMotion();
   const { messages } = useLanguage();
 
+  const selectedDoor = activeDoor ?? 2;
   const key =
-    activeDoor === 1
+    selectedDoor === 1
       ? "planner"
-      : activeDoor === 2
+      : selectedDoor === 2
         ? "invitation"
         : "guestbook";
   const content = messages.home.doors[key];
-  const meta = doorMeta[activeDoor];
+  const meta = doorMeta[selectedDoor];
 
   return (
     <div className="public-page relative min-h-[calc(100dvh-88px)] overflow-hidden bg-background text-foreground">
-      <AssetDreamBackdrop activeDoor={activeDoor} />
+      <AssetDreamBackdrop activeDoor={selectedDoor} />
       <RosePetalBackground />
 
       <main className="relative z-10 mx-auto flex min-h-[calc(100dvh-88px)] w-[80vw] max-w-full items-center pb-14 pt-6 sm:pt-8 lg:pb-16 lg:pt-5">
@@ -69,7 +69,7 @@ export default function JiplakLanding() {
 
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
-                key={activeDoor}
+                key={selectedDoor}
                 initial={reduced ? false : { opacity: 0, y: 14, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 exit={reduced ? { opacity: 0 } : { opacity: 0, y: -10, filter: "blur(3px)" }}
@@ -129,7 +129,7 @@ export default function JiplakLanding() {
             </AnimatePresence>
 
             <div className="mt-9 flex items-center gap-2">
-              {([1, 2, 3] as AssetDoorValue[]).map((door) => {
+              {([1, 2, 3] as Exclude<JiplakDoorValue, null>[]).map((door) => {
                 const active = activeDoor === door;
                 return (
                   <button
@@ -166,7 +166,7 @@ export default function JiplakLanding() {
             className="relative z-20 min-w-0 lg:-mr-[3vw]"
           >
             <div className="relative mx-auto w-full max-w-[760px]">
-              <AssetDreamPortalScene
+              <PintuSectionJiplak
                 activeDoor={activeDoor}
                 setActiveDoor={setActiveDoor}
               />
