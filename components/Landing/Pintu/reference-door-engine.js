@@ -1,6 +1,6 @@
 /* Pintu 1 V2 — actual WebGL meshes. Not the prior CSS 3D or a sliced facade.
- * Reference: /public/pintu1.png. Stage 2 establishes the fixed architectural
- * silhouette: pilasters, layered cornice, a dimensional crown and oval.
+ * Reference: /public/pintu1.png. Stage 3 establishes beveled whole leaves,
+ * their exact three-panel hierarchy, meeting profile, thickness and rear face.
  * Fine acanthus carving is intentionally reserved for later sculpt milestones.
  * Each leaf's whole geometry is a child of one hinge pivot; the frame stays fixed.
  */
@@ -108,6 +108,56 @@ export async function mountReferenceDoor(container, options = {}) {
     return shape;
   }
 
+  function addPanelProfile(parent, centerX, centerY, width, height, face = 1) {
+    const direction = face < 0 ? -1 : 1;
+    const fillZ = direction * 0.122;
+    const outerZ = direction * 0.148;
+    const innerZ = direction * 0.171;
+    const outerRail = 0.065;
+    const innerRail = 0.035;
+    const innerGap = 0.115;
+
+    // A shallow recessed field plus two raised molding steps. Every piece is
+    // parented to the leaf pivot and remains visible on front/back at 110°.
+    beveledPanel(parent, [width, height, 0.024], [centerX, centerY, fillZ], insetRose, 0.055, 0.012);
+    for (const x of [-1, 1]) {
+      beveledPanel(
+        parent,
+        [outerRail, height + outerRail, 0.048],
+        [centerX + x * (width / 2 + outerRail / 2), centerY, outerZ],
+        doorEdges,
+        0.025,
+        0.012,
+      );
+      beveledPanel(
+        parent,
+        [innerRail, height - innerGap, 0.038],
+        [centerX + x * (width / 2 - innerGap), centerY, innerZ],
+        frameShadow,
+        0.016,
+        0.009,
+      );
+    }
+    for (const y of [-1, 1]) {
+      beveledPanel(
+        parent,
+        [width + outerRail, outerRail, 0.048],
+        [centerX, centerY + y * (height / 2 + outerRail / 2), outerZ],
+        doorEdges,
+        0.025,
+        0.012,
+      );
+      beveledPanel(
+        parent,
+        [width - innerGap, innerRail, 0.038],
+        [centerX, centerY + y * (height / 2 - innerGap), innerZ],
+        frameShadow,
+        0.016,
+        0.009,
+      );
+    }
+  }
+
   // Stationary frame, Stage 2: match the reference hierarchy instead of using
   // two plain posts and a flat top bar. Fine carved foliage comes in Stage 7.
   const postHeight = 7.52;
@@ -182,29 +232,29 @@ export async function mountReferenceDoor(container, options = {}) {
   // Do not fake the future interior with a flat dark/grey backing rectangle.
   // A real room will be built as depth geometry in V2 stage 9.
 
-  // Each group pivot is at the OUTER jamb, z=0.34. The material/side/back/panels
-  // all belong to the same group, including when the door swings beyond 90°.
+  // Each group pivot is at the OUTER jamb, z=0.34. The slab, side profiles,
+  // front/back panels and hardware all remain children of this one hinge pivot.
   for (const side of [-1, 1]) {
     const pivot = new THREE.Group();
     pivot.position.set(side * W, 0, 0.34);
     root.add(pivot);
-    const localX = -side * (W / 2 - 0.012);
-    const leafWidth = W - 0.055;
-    box(pivot, [leafWidth, H, 0.20], [localX, -0.035, 0], paintedRose);
-    box(pivot, [leafWidth - 0.065, H - 0.07, 0.018], [localX, -0.035, -0.104], doorEdges);
+    const leafWidth = W - 0.024;
+    const localX = -side * (W / 2 - 0.004);
+    beveledPanel(pivot, [leafWidth, H, 0.22], [localX, -0.035, 0], paintedRose, 0.045, 0.026);
 
-    // Initial classical three-panel volumes are simple proportions, not fake
-    // hand-sculpted engraving. Detailed moulding and acanthus come later.
-    for (const [y, panelH] of [[1.05, 3.65], [-1.49, 0.62], [-2.56, 1.09]]) {
-      box(pivot, [1.70, panelH, 0.026], [localX, y, 0.112], insetRose);
-      const hx = 0.85;
-      const hy = panelH / 2;
-      for (const x of [-hx, hx]) {
-        box(pivot, [0.045, panelH + 0.08, 0.042], [localX + x, y, 0.14], doorEdges);
-      }
-      for (const yy of [-hy, hy]) {
-        box(pivot, [1.77, 0.045, 0.042], [localX, y + yy, 0.14], doorEdges);
-      }
+    // The center gap is intentionally narrow like the reference, while each
+    // meeting stile and hinge edge retains a physical profile from side views.
+    const meetingX = localX - side * (leafWidth / 2 - 0.022);
+    const hingeX = localX + side * (leafWidth / 2 - 0.018);
+    beveledPanel(pivot, [0.055, H - 0.10, 0.075], [meetingX, -0.035, 0.145], doorEdges, 0.022, 0.012);
+    beveledPanel(pivot, [0.040, H - 0.16, 0.055], [hingeX, -0.035, 0.132], frameShadow, 0.018, 0.010);
+
+    // Reference hierarchy: one tall panel, one narrow horizontal panel, one
+    // lower panel. Rear profiles are quieter but preserve believable volume.
+    const panels = [[0.98, 3.64], [-1.43, 0.66], [-2.53, 1.20]];
+    for (const [y, panelH] of panels) {
+      addPanelProfile(pivot, localX, y, 1.68, panelH, 1);
+      addPanelProfile(pivot, localX, y, 1.64, panelH - 0.08, -1);
     }
 
     // Real 3D barrel along the pivot, while leaf-mount plates stay on the leaf.
