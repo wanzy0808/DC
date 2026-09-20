@@ -1,9 +1,9 @@
-/* Pintu 1 V2 — actual WebGL meshes. Not the prior CSS 3D or a sliced facade.
- * Reference: /public/pintu1.png. Stage 3 establishes beveled whole leaves,
- * their exact three-panel hierarchy, meeting profile, thickness and rear face.
- * Fine acanthus carving is intentionally reserved for later sculpt milestones.
- * Each leaf's whole geometry is a child of one hinge pivot; the frame stays fixed.
+/* Pintu 1 V2 — actual WebGL meshes, not CSS 3D or a sliced facade.
+ * Reference: /public/pintu1.png. Stage 4 adds articulated 3D hinges and paired
+ * long handles to the three-panel thick leaves from Stage 3. Sculpt and final
+ * material remain separate milestones; the frame and leaf pivots stay unchanged.
  */
+import { addReferenceDoorHardware } from "./reference-door-hardware.js";
 const W = 2.30;
 const H = 7.12;
 const FRAME_TOP = 3.77;
@@ -257,20 +257,10 @@ export async function mountReferenceDoor(container, options = {}) {
       addPanelProfile(pivot, localX, y, 1.64, panelH - 0.08, -1);
     }
 
-    // Real 3D barrel along the pivot, while leaf-mount plates stay on the leaf.
-    for (const y of [-2.69, -0.02, 2.72]) {
-      const geometry = new THREE.CylinderGeometry(0.046, 0.046, 0.31, 18);
-      geometries.add(geometry);
-      const barrel = new THREE.Mesh(geometry, understatedMetal);
-      barrel.position.set(0, y, 0.02);
-      barrel.castShadow = true;
-      pivot.add(barrel);
-      box(pivot, [0.19, 0.23, 0.035], [-side * 0.10, y, 0.11], understatedMetal);
-    }
-    // Handle remains deliberately plain; precise ornate reference hardware
-    // will be its own milestone, not a CSS glyph attached to a photo.
-    const handleX = -side * (leafWidth - 0.16);
-    box(pivot, [0.08, 0.64, 0.09], [handleX, -0.42, 0.20], understatedMetal);
+    addReferenceDoorHardware({
+      THREE, root, pivot, side, W, leafWidth, geometries,
+      understatedMetal, frameShadow, beveledPanel, box,
+    });
     leaves.push({ pivot, side });
   }
 
