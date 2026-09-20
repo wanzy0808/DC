@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–9 sudah dikodekan; Tahap 9 menunggu review ruang ketika pintu dibuka, sedangkan 3–8 belum seluruhnya disetujui secara eksplisit.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–10 sudah dikodekan; Tahap 9–10 menunggu review visual ruang dan cahaya saat pintu dibuka. Tahap 3–8 belum seluruhnya disetujui secara eksplisit.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -39,7 +39,7 @@
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Kode masuk GitHub — tiga lapis profil panel dan lis daun/kusen; review visual pending |
 | 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Implementasi GitHub: crest mawar pada tiap daun dan roset kecil di lintel diam; menunggu review visual owner |
 | 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Implementasi GitHub: foyer berperspektif dengan dinding samping, plafon, lantai dan arch bagian dalam; review visual pending |
-| 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Belum |
+| 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Kode GitHub: glow ruang di z=-42 dan proyeksi tipis di lantai mengikuti sudut 0°–110°; menunggu screenshot owner |
 | 11 | Finishing | Review screenshot empat kondisi dari desktop dan mobile; perbaiki bentuk, clipping, pixel gaps, dan sudut tak wajar. | Belum |
 | 12 | Finishing | Responsive size dan komposisi hero: pintu megah desktop tanpa memotong daun saat terbuka, ringkas di mobile. | Belum |
 | 13 | Finishing | Performa: asset optimization, reduced motion, pointer/touch/keyboard, fallback tanpa WebGL bila digunakan. | Belum |
@@ -59,6 +59,10 @@ Contoh jalur Pintu Undangan Digital: landing dengan tiga Pintu orbital → user 
 **Status:** keputusan UX dan rencana **sudah dicatat**, belum ada kode animasi zoom-in/route transition/zoom-out halaman. Persetujuan visual Tahap 9 juga masih pending; tidak mengubah status review tahap lain.
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 10 (implementasi):** owner meminta lanjutkan pengerjaan setelah rencana animasi masuk Pintu → zoom-in → halaman tujuan zoom-out dicatat (UX transisi tetap target integrasi Tahap 15, bukan diaktifkan pada landing sekarang). Buat `components/Landing/Pintu/DoorLighting.tsx` untuk dua efek yang terpisah: (a) ivory–Rose ambient glow bergradasi, transparan dan **terbatas di bidang bukaan** pada z=-42 px, tepat di depan foyer z=-44 px; (b) sinar proyeksi pendek/lembut yang bermula di ambang dan menipis di lantai. Dua efek sepenuhnya transparan saat sudut buka 0°, meningkat dengan bukaan 45°/90°/110°, sinkron dengan durasi/ease bukaan 1,1 detik atau dipersingkat oleh `prefers-reduced-motion`. Proyeksi adalah anak scene tetap (bukan daun); transform rotateX lantai berada pada wrapper terpisah dari scale Motion agar kedalaman tidak rusak. Perkuat kesan ada cahaya di dalam tanpa menutupi arsitektur foyer, tanpa balok cahaya padat, halo besar, mengubah shadow kontak yang sudah ada, atau mengubah kelopak latar. `DoorFrame` memanggil `DoorLighting` dan meneruskan sudut + reducedMotion; komponen sebelumnya untuk engsel/daun/relief/crest tidak disentuh. Copy `/pintu-lab` mengarahkan review saat tutup, setengah dan terbuka penuh. Berkas: `DoorLighting.tsx`, `Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits `e2605612`, `a6b2699f` (pemisahan transform), `ddc5a503`, `20499359`. Status GitHub CI **belum diamati**; kualitas cahaya/flicker/occlusion dari browser **pending owner review**. Tidak ada implementasi kamera masuk/zoom-out halaman; itu baru dibuat pada Tahap 15 setelah approval Pintu 1.
+
+
 
 **20 September 2026 — Screenshot Tahap 8 dan lanjut Tahap 9:** owner mengirim screenshot `/pintu-lab` posisi tertutup. Mawar crest pada panel atas dan relief/lis di panel bawah tampak berada di dalam daun kiri/kanan; owner meminta lanjut tanpa secara eksplisit menyatakan Tahap 8 final disetujui. Screenshot bukaan/sudut miring dengan crest belum diterima, jadi uji ornamen saat gerak masih pending.
 
