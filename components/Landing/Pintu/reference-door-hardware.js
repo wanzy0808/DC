@@ -80,6 +80,20 @@ export function addReferenceDoorHardware({
   grip.castShadow = true;
   grip.receiveShadow = true;
   pivot.add(grip);
+  // Stage 8 micro-finish: machined collar rings and inset mounting rivets,
+  // restrained so the door remains architectural rather than jewelry-like.
+  for (const offset of [-0.66, 0.66]) {
+    const ringGeometry = new THREE.TorusGeometry(0.057, 0.009, 8, 24);
+    geometries.add(ringGeometry);
+    const ring = new THREE.Mesh(ringGeometry, understatedMetal);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.set(handleX, handleY + offset, 0.416);
+    ring.castShadow = true;
+    pivot.add(ring);
+  }
+  for (const offset of [-0.73, 0.73]) {
+    sphere(pivot, 0.023, [handleX, handleY + offset, 0.274], understatedMetal, 16);
+  }
   for (const offset of [-0.812, 0.812]) {
     sphere(pivot, 0.045, [handleX, handleY + offset, 0.416], understatedMetal);
   }
