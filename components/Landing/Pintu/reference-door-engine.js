@@ -29,6 +29,13 @@ export async function mountReferenceDoor(container, options = {}) {
   const materials = new Set();
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 90);
+  // One reusable geometry core for all services. Only material variants
+  // change; planner preserves the locked Pintu 1 reference palette.
+  const palette = options.variant === "invitation"
+    ? { paint: 0xc58f9a, inset: 0xb7808e, edge: 0xd8a7ac }
+    : options.variant === "guestbook"
+      ? { paint: 0x9e7d8c, inset: 0x8d6f7f, edge: 0xb69aa4 }
+      : { paint: 0xb67b85, inset: 0xa86d77, edge: 0xc48d98 };
   const root = new THREE.Group();
   const leaves = [];
   scene.add(root);
@@ -37,13 +44,13 @@ export async function mountReferenceDoor(container, options = {}) {
   // Roughness is deliberately high on paint; metal is confined to hardware
   // and thin relief, not the whole slab or large frame surfaces.
   const paintedRose = new THREE.MeshStandardMaterial({
-    color: 0xb67b85, roughness: 0.82, metalness: 0, flatShading: false,
+    color: palette.paint, roughness: 0.82, metalness: 0, flatShading: false,
   });
   const insetRose = new THREE.MeshStandardMaterial({
-    color: 0xa86d77, roughness: 0.88, metalness: 0,
+    color: palette.inset, roughness: 0.88, metalness: 0,
   });
   const doorEdges = new THREE.MeshStandardMaterial({
-    color: 0xc48d98, roughness: 0.77, metalness: 0,
+    color: palette.edge, roughness: 0.77, metalness: 0,
   });
   const pearledFrame = new THREE.MeshStandardMaterial({
     color: 0xe6d5cc, roughness: 0.84, metalness: 0,
@@ -394,10 +401,11 @@ export async function mountReferenceDoor(container, options = {}) {
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.18;
-    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.enabled = !options.thumbnail;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     const mobileViewport = window.matchMedia("(max-width: 640px)").matches;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobileViewport ? 1.25 : 1.5));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,
+      options.thumbnail ? 1 : mobileViewport ? 1.25 : 1.5));
     renderer.setClearColor(0xffffff, 0);
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.style.width = "100%";
