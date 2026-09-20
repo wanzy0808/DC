@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Cahaya dari bukaan pintu
+          Kusen klasik &amp; ukiran Pintu 1
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Buka kedua daun bertahap: cahaya ivory–Rose muncul dari ruang di balik pintu dan menyentuh lantai dekat ambang. Saat tertutup cahaya harus menghilang; saat terbuka, detail ruangan dan bayangan tetap terlihat.
+          Arah visual dikembalikan ke referensi Pintu 1: kusen lebih megah dengan crown acanthus, panel klasik yang sederhana, dan ukiran rose-gold tipis. Rose crest besar di daun sudah dibuang; mekanisme buka, engsel, dan kusen 3D tetap.
         </p>
       </div>
       <Pintu3DPreview />
