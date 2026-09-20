@@ -66,7 +66,7 @@
 
 **Batas tahap:** molding Tahap 3 hanya mengunci bentuk/profil; ukiran acanthus/corner ornaments belum ditambahkan. Barrel engsel dan handle masih baseline sampai Tahap 4. Warna/material masih material sementara sampai Tahap 5. Detail relief panel, interior, cahaya dan kamera masuk tetap di tahap masing-masing.
 
-**Validation yang benar-benar dijalankan:** syntax check engine **PASS**; targeted ESLint **PASS**; Next.js 16.3.3 production build **PASS** (54 halaman statis). Source commit GitHub `e6ab1491453b02f0e8703e114fb77a7df2358393`. GitHub Build Validation run `35511726454` pada branch head `c3d6a553ae7762a398cb40fec80ecdb8647cf12c` **PASS**; PR #54 merged ke `main` sebagai `905134d93ae1df4991001fd1a964e3a1fbfd135d`. Screenshot/review owner masih **pending**, sehingga Tahap 3 belum dianggap approved secara visual.
+**Validation yang benar-benar dijalankan:** syntax check engine **PASS**; targeted ESLint **PASS**; Next.js 16.3.3 production build **PASS** (54 halaman statis). Source commit GitHub `e6ab1491453b02f0e8703e114fb77a7df2358393`. GitHub Build Validation run `35511726454` pada branch head `c3d6a553ae7762a398cb40fec80ecdb8647cf12c` **PASS**; PR #54 merged ke `main` sebagai `905134d93ae1df4991001fd1a964e3a1fbfd135d`. Owner kemudian melaporkan warning browser bahwa `THREE.PCFSoftShadowMap` telah dihapus; engine diganti memakai `THREE.PCFShadowMap` yang didukung pada fix `626d71a7fb13c44dd3e80ecff52ce923daf90cd4`, lalu syntax check, ESLint dan production build 54 halaman kembali **PASS**. Screenshot/review owner masih **pending**, sehingga Tahap 3 belum dianggap approved secara visual.
 
 ---
 
