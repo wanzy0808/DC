@@ -264,3 +264,12 @@ Follow-up:
 ## 20 September 2026 — Perbaikan warning gambar landing
 
 Perubahan teknis saja: `Image fill` di Pintu utama, portal `/jiplak`, dan bunga diberi containing block `relative` yang eksplisit; gambar yang terlihat di layar pertama memakai eager loading dan active Pintu berprioritas tinggi. Tidak ada perubahan desain, animasi, copy, asset, header/footer, maupun rose petals. Validasi build dan hilangnya warning di browser masih menunggu pengujian.
+
+
+---
+
+## 20 September 2026 — Salinan Pintu landing untuk `/jiplak`
+
+Pintu utama dicopy sebagai dua file independen: `app/jiplak/PintuSectionJiplak.tsx` dan `app/jiplak/PintuCardJiplak.tsx`. Section copy hanya memakai card copy, bukan import komponen Pintu canonical. `jiplak.tsx` memakai section baru dan kontrak active-door yang sama. Desain/background eksperimen lainnya dipertahankan; file landing `/` dan Pintu aslinya tidak disentuh.
+
+Validation: pending GitHub Actions & local visual check.
