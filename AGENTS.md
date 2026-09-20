@@ -169,6 +169,8 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 - Do not split a component that already has a clear responsibility and manageable size. Prefer a stable cohesive file over artificial fragmentation.
 - Event Panel structure is canonical: `EventPanel.tsx` owns event orchestration/API mutations and the tightly-coupled list/editor flow; `event-panel-types.ts` owns contracts; `event-panel-helpers.ts` owns pure form/date/time conversion and validation; `EventFields.tsx` owns reusable event editor field controls.
 - Seating Chart structure is canonical: `SeatingChart.tsx` remains the cohesive canvas/editor orchestration layer; `seating-chart-types.ts` owns contracts and `seating-chart-geometry.ts` owns pure table/seat geometry. Do not split the canvas into many prop-heavy presentational components unless its responsibilities materially expand.
+- Personal Invitation structure is canonical: `PersonalInvitationPanel.tsx` owns event-scoped loading, selection, and server mutations; `PersonalInvitationPanels.tsx` owns create/list/editor/password presentation; `personal-invitation-types.ts` owns contracts and `personal-invitation-helpers.ts` owns event sorting and public-link construction.
+- WA Blast structure is canonical: `WhatsAppBlastPanel.tsx` owns event selection, quota loading, purchase, and recipient mutations; `WaBlastPanels.tsx` owns recipient form and queue presentation; `wa-blast-types.ts` owns event/guest/recipient contracts.
 - Invitation Studio editor structure is canonical: `InvitationDesigner.tsx` owns orchestration/history/upload/save; `DesignerPanels.tsx` owns editor controls; `InvitationPreview.tsx` owns preview rendering; `designer-types.ts`, `designer-config.ts`, and `designer-state.ts` own model/config/state helpers.
 - RSVP form structure is canonical: `RsvpForm.tsx` owns submit orchestration/state; `RsvpPanels.tsx` owns input/success presentation; `rsvp-helpers.ts` owns pure calendar/QR/ticket helpers; `rsvp-types.ts` owns the form/ticket contracts.
 
@@ -185,6 +187,7 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 - Shared event data must be persisted and read from PostgreSQL/Prisma.
 - Event identity is event-scoped. Couple-specific fields are required only for event categories that use a couple identity.
+- Wedding same-day session invitation rule: for WEDDING only, allow optional Akad Nikah/Pemberkatan Pernikahan/Prosesi Pernikahan and Resepsi sessions on ONE eventDate with independent time/location. Different calendar days require separate event IDs and separate event-scoped Digital Invitation payments. A guest's session access must be saved per guest and enforced server-side/personal renderers; never interpret legacy `ceremonyTime`/`receptionTime` as two separate wedding sessions. Do not ship form-only fields without persistence, authorization, template/preview filtering, and migration validation. See `prd.md` §5.7.
 - Legacy fields such as `groomName`, `brideName`, `weddingHashtag`, `WEDDING`, and `ADAT_AKAD` may remain for backward compatibility but MUST NOT be treated as universal product semantics.
 - No placeholder couple names or fake invitation records.
 - Digital Invitation entitlement is event-scoped; payment for one invitation/event must not unlock another event.

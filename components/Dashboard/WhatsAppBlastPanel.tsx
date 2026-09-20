@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CreditCard, MessageCircle, Plus, RefreshCw, Trash2, Users } from "lucide-react";
+import { CreditCard, MessageCircle, Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
-  DashboardEmptyState,
   DashboardMetricCard,
   DashboardMetricGrid,
   DashboardNotice,
@@ -14,31 +12,15 @@ import {
   DashboardPageHeader,
   DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
-
-type EventOption = {
-  id: string;
-  title: string;
-  eventConfigured: boolean;
-  accessPaid: boolean;
-};
-
-type Guest = {
-  id: string;
-  name: string;
-  phone: string | null;
-};
-
-type SelectedGuest = Guest & {
-  waBlastSelected: boolean;
-  waBlastSentAt: string | null;
-};
+import { WaBlastAddRecipients, WaBlastRecipientQueue } from "@/components/Dashboard/WaBlastPanels";
+import type { WaBlastEvent, WaBlastGuest, WaBlastRecipient } from "@/components/Dashboard/wa-blast-types";
 
 export default function WhatsAppBlastPanel() {
   const { d } = useDashboardI18n();
-  const [events, setEvents] = useState<EventOption[]>([]);
+  const [events, setEvents] = useState<WaBlastEvent[]>([]);
   const [eventId, setEventId] = useState("");
-  const [guests, setGuests] = useState<Guest[]>([]);
-  const [selected, setSelected] = useState<SelectedGuest[]>([]);
+  const [guests, setGuests] = useState<WaBlastGuest[]>([]);
+  const [selected, setSelected] = useState<WaBlastRecipient[]>([]);
   const [quota, setQuota] = useState(0);
   const [remaining, setRemaining] = useState(0);
   const [existingGuestId, setExistingGuestId] = useState("");
@@ -51,7 +33,7 @@ export default function WhatsAppBlastPanel() {
     const response = await fetch("/api/invitations?all=1", { cache: "no-store" });
     const data = await response.json().catch(() => null);
     if (!response.ok) throw new Error(data?.error || d("Daftar acara belum dapat dimuat."));
-    const available = ((data?.invitations ?? []) as EventOption[]).filter(
+    const available = ((data?.invitations ?? []) as WaBlastEvent[]).filter(
       (event) => event.eventConfigured && event.accessPaid,
     );
     setEvents(available);
@@ -84,8 +66,8 @@ export default function WhatsAppBlastPanel() {
       if (!queueResponse.ok) throw new Error(queueData?.error || d("WA Blast belum dapat dimuat."));
       setQuota(queueData?.quota ?? 0);
       setRemaining(queueData?.remaining ?? 0);
-      setSelected((queueData?.selected ?? []) as SelectedGuest[]);
-      setGuests((guestData?.guests ?? []) as Guest[]);
+      setSelected((queueData?.selected ?? []) as WaBlastRecipient[]);
+      setGuests((guestData?.guests ?? []) as WaBlastGuest[]);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : d("WA Blast belum dapat dimuat."));
       setGuests([]);
@@ -278,103 +260,25 @@ export default function WhatsAppBlastPanel() {
             </DashboardPanel>
           ) : (
             <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.7fr)]">
-              <DashboardPanel
-                  eyebrow={d("Penerima")}
-                  title={d("Tambah penerima")}
-                  description={d("Gunakan data tamu yang sudah ada atau tambahkan penerima baru.")}
-              >
-
-                <div className="rounded-xl border border-border/70 bg-background p-3">
-                  <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
-                  <select
-                    value={existingGuestId}
-                    onChange={(event) => setExistingGuestId(event.target.value)}
-                    className="mt-2 w-full px-3 text-sm"
-                    disabled={busy || !canAddRecipients}
-                  >
-                    <option value="">{d("Pilih tamu")}</option>
-                    {availableGuests.map((guest) => (
-                      <option key={guest.id} value={guest.id}>
-                        {guest.name} · {guest.phone}
-                      </option>
-                    ))}
-                  </select>
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="mt-2 w-full"
-                    disabled={!existingGuestId || busy || !canAddRecipients}
-                    onClick={addExisting}
-                  >
-                    <Plus className="h-4 w-4" />
-                    {d("Tambahkan penerima")}
-                  </Button>
-                </div>
-
-                <div className="rounded-xl border border-border/70 bg-background p-3">
-                  <p className="text-xs font-semibold text-foreground">{d("Tamu belum ada")}</p>
-                  <div className="mt-2 space-y-2">
-                    <Input
-                      value={name}
-                      onChange={(event) => setName(event.target.value)}
-                      placeholder={d("Nama tamu")}
-                      disabled={busy || !canAddRecipients}
-                    />
-                    <Input
-                      value={phone}
-                      onChange={(event) => setPhone(event.target.value)}
-                      placeholder={d("Nomor WhatsApp")}
-                      disabled={busy || !canAddRecipients}
-                    />
-                    <Button
-                      type="button"
-                      size="sm"
-                      className="w-full"
-                      disabled={!name.trim() || !phone.trim() || busy || !canAddRecipients}
-                      onClick={addNew}
-                    >
-                      <Plus className="h-4 w-4" />
-                      {d("Tambah tamu & penerima")}
-                    </Button>
-                  </div>
-                </div>
-              </DashboardPanel>
-
-              <DashboardPanel
-                  eyebrow={d("Queue")}
-                  title={d("Tamu yang akan diblast")}
-                  description={d("Kuota mengikuti pilihan di atas.")}
-                  actions={
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => loadEventData(eventId)}
-                      disabled={busy}
-                    >
-                      <RefreshCw className="h-4 w-4" />
-                      {d("Muat ulang")}
-                    </Button>
-                  }
-              >
-
-                <div className="mt-4 space-y-2">
-                  {selected.length === 0 && (
-                    <DashboardEmptyState
-                      icon={Users}
-                      title={d("Belum ada penerima")}
-                      description={d("Tambahkan dari daftar tamu atau buat penerima baru.")}
-                    />
-                  )}
-                  {selected.length > 0 && <div className="overflow-x-auto"><table className="w-full min-w-[480px] text-left">
-                    <thead><tr><th className="px-3 py-3">{d("Nama tamu")}</th><th className="px-3 py-3">WhatsApp</th><th className="px-3 py-3 text-right">{d("Aksi")}</th></tr></thead>
-                    <tbody>{selected.map((guest) => <tr key={guest.id}>
-                      <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
-                      <td className="px-3 py-4 font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{guest.phone || d("Nomor belum ada")}</td>
-                      <td className="px-3 py-4 text-right"><Button type="button" size="icon-sm" onClick={() => removeGuest(guest.id)} disabled={busy} title={d("Hapus dari daftar WA Blast")} aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}><Trash2 className="size-4" /></Button></td>
-                    </tr>)}</tbody>
-                  </table></div>}
-                </div>
-              </DashboardPanel>
+              <WaBlastAddRecipients
+                availableGuests={availableGuests}
+                existingGuestId={existingGuestId}
+                setExistingGuestId={setExistingGuestId}
+                name={name}
+                setName={setName}
+                phone={phone}
+                setPhone={setPhone}
+                busy={busy}
+                canAddRecipients={canAddRecipients}
+                onAddExisting={addExisting}
+                onAddNew={addNew}
+              />
+              <WaBlastRecipientQueue
+                selected={selected}
+                busy={busy}
+                onReload={() => void loadEventData(eventId)}
+                onRemove={(id) => void removeGuest(id)}
+              />
             </div>
           )}
         </>

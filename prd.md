@@ -287,6 +287,33 @@ State/action yang harus jelas:
 
 ---
 
+### 5.7 Sesi pernikahan pada hari yang sama — requirement disetujui (implementasi pending)
+
+Scope khusus `eventCategory = WEDDING`; jangan mengubah form acara umum atau mengasumsikan semua pasangan melakukan akad/pemberkatan. Label Indonesia default untuk prosesi gereja adalah **Pemberkatan Pernikahan** (bukan Holy Matrimony atau Pengukuhan). Pilihan jenis prosesi: **Akad Nikah**, **Pemberkatan Pernikahan**, atau **Prosesi Pernikahan** (netral). Label `Resepsi` tetap terpisah. Label dapat disesuaikan untuk kebutuhan upacara/adat lain tanpa mengganti kategori utama acara.
+
+**Aturan paket dan tanggal**
+- Satu record event/invitation hanya memiliki **satu tanggal acara (`eventDate`)**. Pernikahan dengan prosesi dan resepsi **pada tanggal kalender yang sama di zona waktu acara** boleh memiliki dua sesi pada satu event, satu undangan, satu pembayaran Digital Invitation/event. Lokasi dan jam tiap sesi boleh berbeda.
+- Jika prosesi dan resepsi **pada tanggal yang berbeda**, user harus membuat **dua Rangkaian Acara**, masing-masing mempunyai `invitationId`, satu tanggal, template, publish gate, dan **paket Undangan Digital berbayar tersendiri**. Jangan menerima atau menyimpan tanggal kedua ke dalam satu event sebagai jalan pintas. Tampilkan petunjuk ini di form sebelum user membayar/menerbitkan.
+- Mengisi/mengedit detail acara dan memilih desain boleh sebelum bayar; entitlement tetap ditegakkan di saat Publish sesuai lifecycle canonical, bukan saat memilih sesi. Jangan otomatis membuat invoice, duplicate event, atau menyembunyikan workspace persiapan.
+
+**Rangkaian Acara → Pernikahan**
+- Sediakan pilihan sesi: **Prosesi Pernikahan** (jenis: Akad Nikah / Pemberkatan Pernikahan / Prosesi Pernikahan) dan **Resepsi**. Minimal satu sesi aktif; boleh keduanya.
+- Setiap sesi aktif memiliki input wajib **waktu mulai** dan **nama lokasi**; input opsional **waktu selesai, alamat, dan tautan peta**. Seluruh sesi berbagi **tanggal acara** dan **zona waktu** milik event. Jangan menyamakan `receptionTime` legacy (waktu selesai acara) dengan **waktu mulai resepsi**.
+- Jika kedua sesi dipilih, user boleh mengatur jam dan lokasi berbeda pada tanggal yang sama. Form tidak memaksa prosesi untuk pengguna yang hanya mengadakan resepsi.
+- Pada event non-pernikahan, form/jadwal existing tetap dipakai tanpa muncul istilah prosesi pernikahan.
+
+**Pilihan tamu dan rendering**
+- Satu undangan per tamu memiliki pilihan cakupan **Prosesi saja**, **Resepsi saja**, atau **Keduanya** jika kedua sesi aktif; bila hanya satu sesi aktif, cakupan otomatis sesi tersebut. Penentuan dilakukan pada daftar/manajemen tamu dan pembuatan/pengeditan Personal Invitation, bukan pada field global event yang akan berlaku untuk semua tamu.
+- Simpan cakupan per `Guest`, terikat pada `invitationId`. API validate bahwa pilihan bukan kosong, bukan sesi nonaktif, dan tidak bisa mengarah ke event lain. Saat memilih ulang tanggal/prosesi sebelum Publish, scope guest yang lama harus diperiksa/migrasi secara eksplisit; jangan diam-diam mengubah daftar undangan.
+- **Tautan personal** hanya merender sesi yang diizinkan bagi tamu tersebut (waktu/lokasi/peta dan kalender), termasuk pada template alternatif dan preview personal. Filtering wajib dilakukan sebelum data masuk ke komponen publik; jangan hanya menyembunyikan blok via CSS. Tautan publik umum tidak dapat mewakili hak akses per tamu: untuk undangan bersesi terbatas gunakan tautan personal; UI admin diberi penjelasan agar tidak mengirim tautan generik sebagai undangan khusus.
+- RSVP/QR dan check-in berikutnya perlu memiliki cakupan sesi yang konsisten: tamu yang mendapat dua sesi tidak boleh diasumsikan pasti hadir di keduanya hanya karena satu RSVP. Rancang data/migrasi dan skenario pengujian sesi sebelum mengaktifkan distribusi massal.
+- Publikasi sebuah sesi **tidak berarti** semua tamu diundang ke sesi tersebut. Hak akses event-scoped, password, dan published state tetap berlaku.
+
+**Compatibility dan urutan implementasi**
+- Saat ini `Invitation.ceremonyTime` adalah **waktu mulai event**, sedangkan `Invitation.receptionTime` adalah **waktu selesai atau sentinel `END`**, bukan dua sesi. Jangan diam-diam menafsirkan data lama sebagai pemberkatan + resepsi.
+- Implementasi harus mencakup perubahan model Prisma + migration, validasi create/update/publish di server, Rangkaian Acara UI, guest/personal invitation API + UI, seluruh renderer publik/preview, serta pengujian same-day/different-day, light/dark dan ID/EN sebelum dinyatakan selesai. Deploy dengan `pnpm db:deploy` untuk migration baru.
+- **Status:** requirement/arsitektur tercatat; kode sesi, migrasi database, pilihan per tamu, dan filtering publik **belum diimplementasikan**. Jangan mengklaim fitur sudah tersedia dari perubahan dokumentasi ini.
+
 ## 6. Dashboard Information Architecture
 
 Sidebar user:
@@ -3150,3 +3177,84 @@ Owner approved exactly two visual elements from the `/jiplak` experiment for the
 
 ### Validation
 - GitHub Actions observation: pending.
+
+
+---
+
+## 2026-09-19 — Personal Invitation Internal Cleanup (Pass 12)
+
+### Requirement / Intent
+Melanjutkan cleanup repository pada Personal Invitation tanpa mengubah hak akses, status publish, password, request API, atau navigasi. Pisahkan presentation dari event-scoped orchestration/mutation.
+
+### Implementation
+- `PersonalInvitationPanel.tsx` tetap mengelola event selection, loading invitations/guests, create/patch, password, dan publish state.
+- `PersonalInvitationPanels.tsx` memisahkan create form serta list/item editor/password UI; `personal-invitation-types.ts` menyimpan kontrak event/guest; `personal-invitation-helpers.ts` menyimpan sorting events dan pembentukan public URL.
+- `PersonalInvitationPanel.tsx` turun kira-kira dari 22.4k menjadi 12.5k karakter; endpoint, payload, URL, dan UI intent dipertahankan.
+- Affected: `components/Dashboard/PersonalInvitationPanel.tsx`, `PersonalInvitationPanels.tsx`, `personal-invitation-types.ts`, `personal-invitation-helpers.ts`, `AGENTS.md`, `README.md`, `prd.md`. PR #34 baseline conflict with newer landing changes; re-applied on current `main` in branch `refactor/personal-invitation-main-sync` to preserve new landing work.
+
+### Validation
+- Original PR #34 source Build Validation #1116: **PASS** (dependency install, Prisma generation, Next production build dan TypeScript).
+- Current-main branch Build Validation #1136 on head `cfb2d11bdd9029369e0056c1ee1469c63764e1fc`: **PASS** (dependency install, Prisma generation, Next production build and TypeScript). Documentation-only validation update follows; production database migration: N/A.
+
+### Next
+Audit dan uji flow Personal Invitation secara browser/integrasi bila tersedia; build tidak membuktikan interaksi runtime. Hindari refactor folder tanpa manfaat maintainability nyata.
+
+
+---
+
+## 2026-09-19 — WA Blast Panel Internal Cleanup (Pass 13)
+
+### Requirement / Intent
+Merapikan panel WA Blast yang mencampur event/guest contracts, quota/event fetching, order/recipient mutations, dan recipient form/queue presentation. Jangan ubah akses event-scoped, kuota, harga, endpoint, atau tampilan dashboard.
+
+### Implementation
+- `WhatsAppBlastPanel.tsx` tetap menangani pemilihan acara, loading guest/queue/quota, pembuatan order add-on, create/delete penerima, state, dan composition.
+- `WaBlastPanels.tsx` menampung reusable `WaBlastAddRecipients` dan `WaBlastRecipientQueue` dengan UI/copy/class serta disabled behavior tetap.
+- `wa-blast-types.ts` menampung kontrak event/guest/selected recipient.
+- File utama turun kira-kira dari 14.9k menjadi 10.8k karakter. Affected: `components/Dashboard/WhatsAppBlastPanel.tsx`, `WaBlastPanels.tsx`, `wa-blast-types.ts`, dan dokumen governance.
+- No database migration; API routes dan payload tetap.
+
+### Validation
+- Build Validation #1139 on application source + documentation head `8277f98a869f9595c969bb6d35797dcb213120f5`: **PASS** (dependency install, Prisma Client generation, Next production build + TypeScript).
+- Commit setelah validasi ini hanya memperbarui hasil validation di PRD dan tidak mengubah source aplikasi.
+- Database migration: N/A.
+
+### Next
+Jangan melanjutkan pemecahan komponen tanpa alasan jelas. Prioritaskan pengujian runtime event-scoped mutation, quota, serta Personal Invitation dan WA Blast, bukan sekadar mengurangi ukuran file.
+
+
+---
+
+## 2026-09-19 — Spesifikasi Sesi Pernikahan Satu Hari (docs-only)
+
+### Requirement / Intent
+Owner meminta opsi mengundang tamu hanya ke prosesi pernikahan, hanya ke resepsi, atau ke keduanya untuk pernikahan **pada tanggal yang sama**. Jika tanggal berbeda, wajib membuat event dan paket Undangan Digital baru. Label Holy Matrimony diganti bahasa Indonesia; `Pengukuhan` bukan label canonical.
+
+### Decision / Changes
+- Tambah section 5.7 untuk nama sesi, dua jadwal/tempat pada satu tanggal, entitlement per event/tanggal, undangan personal per tamu, server-side filtering, RSVP/QR, compatibility legacy, dan keperluan migrasi.
+- `AGENTS.md` dan `README.md` menegaskan batasan agar implementasi parsial tidak dipromosikan ke publik sebagai fitur selesai.
+- Tidak ada perubahan schema, route, komponen, API, atau behavior pada commit dokumentasi ini.
+
+### Validation
+- Documentation-only change; implementasi/DB migration/functional testing: **not started**. Production build bukan bukti fitur sesi sudah tersedia.
+
+### Next
+Implementasikan keseluruhan flow secara bertahap pada branch kode terpisah. Jangan merge UI input tanpa persistence, scope tamu, rendering/filtering dan server validation yang sesuai.
+
+
+---
+
+## 2026-09-20 — Landing image warning cleanup
+
+### Intent
+Rapikan warning Next.js pada gambar Pintu `/hp-digital.png` dan `/bukutamu.png` (parent `fill` terdeteksi `position: static`) serta warning LCP pada `/wo.png` dan `/flower.png`. Jangan mengubah desain, konten, ukuran, layout, animasi, maupun perilaku landing utama dan `/jiplak`.
+
+### Implementation
+- `PintuCard.tsx` dan `AssetDreamPortalScene.tsx`: beri setiap `Image fill` wrapper `relative h-full w-full` di dalam elemen absolute/animated yang sudah ada, sehingga containing block selalu eksplisit tanpa mengubah geometry atau Motion.
+- Gambar Pintu yang langsung terlihat diberi `loading="eager"`; active image memakai `fetchPriority="high"`, yang lain `auto`.
+- `LandingFloralGlow.tsx` dan `AssetDreamBackdrop.tsx`: bunga dengan `fill` memakai wrapper relative yang eksplisit dan `loading="eager"` karena berada pada initial viewport.
+- Tidak menyentuh `app/page.tsx`, `app/jiplak/jiplak.tsx`, `RosePetalBackground.tsx`, komposisi visual, stylesheet, atau aset gambar.
+
+### Validation
+- GitHub Build Validation: pending.
+- Runtime browser warning confirmation: pending local browser verification.

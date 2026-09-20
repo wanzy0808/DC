@@ -257,3 +257,10 @@ Follow-up:
 - header/footer `/jiplak` transparan agar menyatu dengan dreamy scene;
 - asset aktual memakai `tiara.png` dan `flower.png`;
 - `cloud.png` terdeteksi identik dengan `tiara.png` pada remote, jadi belum dipakai sebagai mist background; rose-petal layer tetap aktif.
+
+
+---
+
+## 20 September 2026 — Perbaikan warning gambar landing
+
+Perubahan teknis saja: `Image fill` di Pintu utama, portal `/jiplak`, dan bunga diberi containing block `relative` yang eksplisit; gambar yang terlihat di layar pertama memakai eager loading dan active Pintu berprioritas tinggi. Tidak ada perubahan desain, animasi, copy, asset, header/footer, maupun rose petals. Validasi build dan hilangnya warning di browser masih menunggu pengujian.
