@@ -89,7 +89,7 @@ export default function ReferenceDoorPreview() {
 
         <div className="min-w-0 rounded-xl border border-rose-200/60 bg-[linear-gradient(#fffaf8,#f8eeee)] p-2 dark:border-white/10 dark:bg-[linear-gradient(#282125,#171316)]">
           <div className="mb-1 flex items-center justify-between gap-3 px-2 text-xs text-foreground/65">
-            <span>Geometri Three.js · Tahap 3</span>
+            <span>Geometri Three.js · Tahap 4</span>
             <span>{status === "ready" ? "3D aktif" : status === "loading" ? "Memuat…" : "WebGL tidak tersedia"}</span>
           </div>
           <div className="relative h-[min(76dvh,710px)] min-h-[410px] w-full overflow-hidden rounded-lg">
@@ -147,8 +147,9 @@ export default function ReferenceDoorPreview() {
           ))}
         </div>
         <p className="max-w-xl text-sm leading-6 text-foreground/65">
-          Tahap 3 menyempurnakan dua daun utuh: bevel, celah tengah, ketebalan, tiga panel bertingkat,
-          dan profil belakang yang tetap terbaca pada 110°. Ukiran acanthus serta material akhir belum dibuat.
+          Tahap 4 memasang engsel beruas pada kusen dan daun, serta pegangan panjang berpasangan.
+          Periksa apakah barrel tetap segaris, pelat engsel ikut daun, dan pegangan tidak bertabrakan saat 0°–110°.
+          Ukiran acanthus serta material akhir belum dibuat.
         </p>
         <Link className="text-sm underline underline-offset-4" href="/pintu-lab/css">
           Bandingkan dengan eksperimen CSS lama

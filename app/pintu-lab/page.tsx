@@ -2,7 +2,7 @@ import ReferenceDoorPreview from "@/components/Landing/Pintu/ReferenceDoorPrevie
 
 export const metadata = {
   title: "Pintu 1 · Rebuild 3D | DC Organizer",
-  description: "Perbandingan referensi Pintu 1 dan model geometri Three.js tahap ketiga.",
+  description: "Perbandingan referensi Pintu 1 dan model geometri Three.js tahap keempat.",
 };
 
 export default function PintuLabPage() {
@@ -10,14 +10,14 @@ export default function PintuLabPage() {
     <main className="public-page relative mx-auto flex min-h-[calc(100dvh-88px)] w-[80vw] max-w-full flex-col items-center gap-5 overflow-visible py-8 text-foreground">
       <div className="max-w-2xl text-center">
         <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.12em] text-foreground/60">
-          Rebuild Pintu 1 · Tahap 3
+          Rebuild Pintu 1 · Tahap 4
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
           Dari referensi menjadi pintu 3D
         </h1>
         <p className="mt-2 text-sm leading-6 text-foreground/70 sm:text-base">
-          Acuan visual tetap pintu1.png. Tahap ini memeriksa bevel, celah tengah, ketebalan,
-          susunan tiga panel, dan sisi belakang daun dari depan maupun sudut miring.
+          Acuan visual tetap pintu1.png. Periksa engsel yang mengikat daun ke kusen dan dua
+          pegangan panjang saat tertutup, setengah terbuka, dan terbuka penuh dari tiga sudut.
         </p>
       </div>
       <ReferenceDoorPreview />
