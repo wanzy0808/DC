@@ -23,7 +23,8 @@ export default function ReferenceDoorPreview() {
   const [angle, setAngle] = useState<Angle>(0);
   const [view, setView] = useState<View>("front");
   const [travel, setTravel] = useState<"outside" | "entering" | "inside" | "leaving">("outside");
-  const [status, setStatus] = useState<"loading" | "ready" | "unsupported">("loading");
+  const [status, setStatus] = useState<"loading" | "ready" | "recovering" | "unsupported">("loading");
+  const [captureError, setCaptureError] = useState(false);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -40,6 +41,9 @@ export default function ReferenceDoorPreview() {
           reducedMotion: Boolean(reducedMotion),
           onApproachSettled: (inside) => {
             if (!cancelled) setTravel(inside ? "inside" : "outside");
+          },
+          onContextChange: (state) => {
+            if (!cancelled) setStatus(state === "lost" ? "recovering" : "ready");
           },
         });
         if (cancelled) { controller.dispose(); return; }
@@ -59,6 +63,21 @@ export default function ReferenceDoorPreview() {
       instance?.dispose();
     };
   }, [reducedMotion]);
+
+  function savePreview() {
+    if (status !== "ready") return;
+    try {
+      const png = engineRef.current?.capturePng();
+      if (!png) { setCaptureError(true); return; }
+      const anchor = document.createElement("a");
+      anchor.href = png;
+      anchor.download = `pintu1-${angle}deg-${view}-${travel}.png`;
+      anchor.click();
+      setCaptureError(false);
+    } catch {
+      setCaptureError(true);
+    }
+  }
 
   function enterFoyer() {
     if (status !== "ready" || travel !== "outside") return;
@@ -110,7 +129,8 @@ export default function ReferenceDoorPreview() {
         <div className="order-1 min-w-0 rounded-xl border border-rose-200/60 bg-[linear-gradient(#fffaf8,#f8eeee)] p-2 dark:border-white/10 dark:bg-[linear-gradient(#282125,#171316)] lg:order-2">
           <div className="mb-1 flex items-center justify-between gap-3 px-2 text-xs text-foreground/65">
             <span>Geometri Three.js · Tahap 5–10</span>
-            <span>{status === "ready" ? "3D aktif" : status === "loading" ? "Memuat…" : "WebGL tidak tersedia"}</span>
+            <span>{status === "ready" ? "3D aktif" : status === "loading" ? "Memuat…" :
+              status === "recovering" ? "Memulihkan WebGL…" : "WebGL tidak tersedia"}</span>
           </div>
           <div className="relative h-[min(73dvh,710px)] min-h-[370px] w-full overflow-hidden rounded-lg sm:min-h-[410px]">
             <div
@@ -122,6 +142,11 @@ export default function ReferenceDoorPreview() {
             {status === "loading" && (
               <p className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-foreground/65">
                 Menyiapkan geometri pintu…
+              </p>
+            )}
+            {status === "recovering" && (
+              <p role="status" className="pointer-events-none absolute inset-0 flex items-center justify-center bg-background/70 px-4 text-center text-sm text-foreground">
+                Koneksi grafis terputus. Menyambungkan kembali…
               </p>
             )}
             {status === "unsupported" && (
@@ -178,6 +203,10 @@ export default function ReferenceDoorPreview() {
             onClick={leaveFoyer}
           >Kembali ke depan</Button>
         </div>
+        <Button type="button" disabled={status !== "ready"} onClick={savePreview}>
+          Simpan gambar sudut ini
+        </Button>
+        {captureError && <p role="alert" className="text-sm text-destructive">Gambar belum dapat disimpan. Gunakan tangkapan layar perangkat.</p>}
         <p role="status" aria-live="polite" className="text-sm text-foreground/70">
           {travel === "entering" ? "Pintu membuka, kamera mendekati ruang…" :
             travel === "inside" ? "Kamera berada di dalam foyer 3D." :
