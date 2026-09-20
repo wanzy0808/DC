@@ -3278,3 +3278,23 @@ Owner meminta kode Pintu dari landing `/` dicopy secara independen ke `/jiplak`,
 ### Validation
 - GitHub Build Validation: pending.
 - Local visual/browser check: pending.
+
+
+---
+
+## 2026-09-20 — Isolated Three.js dream portals for `/jiplak`
+
+### Requirement / Intent
+Owner installed Three.js and requested an ambitious, visibly three-dimensional/dreamy rendering of **the copied Pintu on `/jiplak` only**. Preserve canonical landing `/` and the existing dreamy flower/Rose glow, rose petals, copy, header/footer and links.
+
+### Implementation
+- Added `app/jiplak/three-portal-engine.js` as a separate imperative Three.js/WebGL2 scene, loaded dynamically only when `/jiplak` mounts; package `three` was already in dependencies, so no new framework/dependency is added.
+- Added `app/jiplak/three-portal-engine.d.ts` as a typed interface to keep route-level React/TypeScript boundaries explicit without adding an uncommitted TypeScript type package to the lockfile.
+- Added `app/jiplak/ThreePortalScene.tsx` to mount/dispose WebGL, synchronize active door and theme with existing `/jiplak` UI, route active-door clicks, respect reduced motion, and render the previously copied `PintuSectionJiplak` as a functional fallback if initialization/WebGL2 fails.
+- Three scene: **three independently modeled archways**, extruded bevelled frames, real hinged split doors/handles, photos set on arched world planes, chamber depth, physical material/trim, illuminated thresholds and floor, dynamic interior point lights, shadow casting/receiving lights, procedural halo and floor light spill, floating instanced motes, animated portal position/depth and camera parallax.
+- Kept original service links and accessible DOM world selector / CTA on `/jiplak`. The fallback includes the copied PintuCard and Motion loop. WebGL resources/listeners/observers/render loop are torn down on unmount, rendering pauses while offscreen/backgrounded, and device pixel ratio is capped.
+- Only `app/jiplak/jiplak.tsx` switches to `ThreePortalScene`. `app/page.tsx`, canonical Pintu files, shared RosePetalBackground, existing floral/glow background and shared header/footer remain unchanged.
+
+### Validation
+- GitHub Build Validation: pending.
+- Visual GPU/browser behavior: requires local `http://localhost:3000/jiplak` verification on target device; CI production build alone does not validate rendered WebGL.
