@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–8 sudah dikodekan; review visual tahap 6–8 menunggu, terutama ornamen bunga yang harus menempel pada daun/kusen sesuai bagiannya. Tahap 3–5 belum diberi persetujuan visual eksplisit.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–9 sudah dikodekan; Tahap 9 menunggu review ruang ketika pintu dibuka, sedangkan 3–8 belum seluruhnya disetujui secara eksplisit.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -37,7 +37,7 @@
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Implementasi GitHub: relief acanthus dan sulur pada panel atas/bawah tiap daun, menunggu screenshot/review owner |
 | 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Kode masuk GitHub — tiga lapis profil panel dan lis daun/kusen; review visual pending |
 | 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Implementasi GitHub: crest mawar pada tiap daun dan roset kecil di lintel diam; menunggu review visual owner |
-| 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Belum |
+| 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Implementasi GitHub: foyer berperspektif dengan dinding samping, plafon, lantai dan arch bagian dalam; review visual pending |
 | 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Belum |
 | 11 | Finishing | Review screenshot empat kondisi dari desktop dan mobile; perbaiki bentuk, clipping, pixel gaps, dan sudut tak wajar. | Belum |
 | 12 | Finishing | Responsive size dan komposisi hero: pintu megah desktop tanpa memotong daun saat terbuka, ringkas di mobile. | Belum |
@@ -46,6 +46,12 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Screenshot Tahap 8 dan lanjut Tahap 9:** owner mengirim screenshot `/pintu-lab` posisi tertutup. Mawar crest pada panel atas dan relief/lis di panel bawah tampak berada di dalam daun kiri/kanan; owner meminta lanjut tanpa secara eksplisit menyatakan Tahap 8 final disetujui. Screenshot bukaan/sudut miring dengan crest belum diterima, jadi uji ornamen saat gerak masih pending.
+
+**20 September 2026 — Tahap 9 (implementasi):** buat `components/Landing/Pintu/DoorInterior.tsx` yang menggantikan kotak latar gelap lama. Ruang berupa ilustrasi perspektif arsitektural foyer netral untuk acara apa pun: dinding kiri/kanan menuju sudut belakang yang sama, plafon bercoffer, lantai dengan garis sambungan yang mengecil, dinding jauh, pilaster, arch pintu kedua dengan bukaan lebih kecil dan bidang ruang lebih jauh. Warna interior Rose/ivory hangat dan vignette kontak lembut, **bukan** portal hitam/abu-abu, gambar facade menyeluruh, wedding-only prop, kotak baru di belakang kusen, atau lampu sinar berlebihan. Komponen dipasang di `DoorFrame` pada z=-44px, berada di belakang jamb yang diam, terpisah dari node daun dan tidak memodifikasi engsel/ukiran/molding/crest. Kedalaman perspektif visual SVG adalah **2.5D**, bukan mesh ruang WebGL atau klaim dapat dimasuki; preview tampak samping masih memerlukan screenshot owner. Permukaan cahaya masih pencahayaan interior lembut saja; projected light yang mengikuti bukaan adalah lingkup Tahap 10, belum dikerjakan. Copy `app/pintu-lab/page.tsx` diperbarui untuk mengecek interior saat 110° dari tiga sudut. Source commits: `2944ed4a`, `81cb9c10`, `11b6d11f`. CI **pending observation**, validasi visual pemilik **pending**. `/`, `/jiplak`, ornamental rose petals, tiga pintu orbital, format template/backend tetap utuh.
+
+
 
 **20 September 2026 — Tahap 8 (implementasi):** owner meminta lanjut setelah Tahap 7, tanpa persetujuan visual terpisah terhadap hasil tahap 6–7. Buat `components/Landing/Pintu/DoorFlorals.tsx` yang menggambar dua crest mawar Rose dengan kelopak bertingkat, bayangan relief, dudukan oval terukir, sulur dan daun acanthus; masing-masing crest diletakkan **di dalam panel atas daun kiri/kanan** pada node muka depan yang sudah menjadi anak pivot `HingedLeaf`. Crest tidak menyilang celah tengah, tidak mengubah tepi/ukuran daun, tidak menempel pada foto facade maupun membentuk tanduk di atas kusen. `FrameFloralAccents` menambahkan dua roset relief kecil di dalam balok atas *kusen tetap* (lintel) dan berada di luar node daun, sehingga tidak ikut berputar. Seluruh dekorasi tetap di dalam siluet Pintu 1 dan keluarga warna Rose matte; bukan tambahan bunga latar atau produk wedding-only. Kode preview `/pintu-lab` menampilkan instruksi mengecek crest saat 0°/110° dari tiga sisi. Source commits: `a405fcae` (komponen), `8c646973` (integrasi daun + kusen), `a2efa030` (copy preview). CI: GitHub Build Validation run `35499730420` pada source head `a2efa0307303506a567d4e2f67f485f3e7cae0a5` **PASS**; screenshot/review pemilik **pending**; SVG relief ini pendekatan 2.5D, bukan pahatan 3D fisik. `/`, `/jiplak`, orbital, rose petals, bentuk/engsel dan lighting lama tidak diubah. Tahap 9 memperdalam ruang dan Tahap 10 memperbaiki lighting; dua hal itu belum dikerjakan pada tahap ini.
 
