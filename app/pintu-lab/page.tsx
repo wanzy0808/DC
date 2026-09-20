@@ -13,10 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Kusen 3D &amp; engsel
+          Gerakan &amp; bayangan
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Kusen sekarang memiliki sisi dalam dan kedalaman. Buka pintu lalu pilih sudut kiri atau kanan untuk memeriksa sambungan engsel dan seluruh daun yang berputar.
+          Uji bukaan bertahap pada 0°, 45°, 90°, dan 110°. Perhatikan bayangan kedua daun yang bergerak mengikuti bukaan, lalu periksa sambungan engsel dari depan dan kedua sisi.
         </p>
       </div>
       <Pintu3DPreview />
