@@ -298,6 +298,18 @@ export async function mountReferenceDoor(container, options = {}) {
   let currentAngle = 0;
   let targetView = 0;
   let currentView = 0;
+  let targetApproach = 0;
+  let currentApproach = 0;
+  let approachPending = false;
+  let baseCameraDistance = 16;
+
+  function positionCamera() {
+    const t = currentApproach * currentApproach * (3 - 2 * currentApproach);
+    // A genuine camera move across the threshold in the V2 foyer, not a
+    // CSS zoom or a shrinking picture of the whole front elevation.
+    camera.position.set(0, 0.72, THREE.MathUtils.lerp(baseCameraDistance, -4.2, t));
+    camera.lookAt(0, 0.72, -20);
+  }
 
   function render() {
     frameId = 0;
@@ -313,13 +325,22 @@ export async function mountReferenceDoor(container, options = {}) {
     currentView += (targetView - currentView) * easing;
     if (Math.abs(currentAngle - targetAngle) < 0.012) currentAngle = targetAngle;
     if (Math.abs(currentView - targetView) < 0.001) currentView = targetView;
+    if (targetApproach === 0 || (currentAngle >= 109 && Math.abs(currentView) < 0.01)) {
+      currentApproach += (targetApproach - currentApproach) * easing;
+    }
+    if (Math.abs(currentApproach - targetApproach) < 0.001) currentApproach = targetApproach;
+    positionCamera();
     const radians = THREE.MathUtils.degToRad(currentAngle);
     leaves[0].pivot.rotation.y = -radians;
     leaves[1].pivot.rotation.y = radians;
     root.rotation.y = THREE.MathUtils.degToRad(currentView);
     lighting.setOpening(currentAngle);
     renderer.render(scene, camera);
-    if (currentAngle !== targetAngle || currentView !== targetView) invalidate();
+    if (approachPending && currentApproach === targetApproach) {
+      approachPending = false;
+      options.onApproachSettled?.(targetApproach > 0);
+    }
+    if (currentAngle !== targetAngle || currentView !== targetView || currentApproach !== targetApproach) invalidate();
   }
   function invalidate() {
     if (!disposed && visible && !document.hidden && !frameId) {
@@ -337,8 +358,8 @@ export async function mountReferenceDoor(container, options = {}) {
     const halfV = THREE.MathUtils.degToRad(35 / 2);
     const distForWidth = 8.5 / (2 * Math.tan(halfV) * aspect);
     const distForHeight = 10.2 / (2 * Math.tan(halfV));
-    camera.position.set(0, 0.72, Math.max(distForHeight, distForWidth));
-    camera.lookAt(0, 0.72, 0);
+    baseCameraDistance = Math.max(distForHeight, distForWidth);
+    positionCamera();
     camera.aspect = aspect;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height, false);
@@ -392,8 +413,22 @@ export async function mountReferenceDoor(container, options = {}) {
   }
 
   return {
-    setAngle(value) { targetAngle = Math.max(0, Math.min(OPEN_MAX, value)); invalidate(); },
-    setView(value) { targetView = Math.max(-32, Math.min(32, value)); invalidate(); },
+    setAngle(value) {
+      if (targetApproach > 0 || currentApproach > 0.001) return;
+      targetAngle = Math.max(0, Math.min(OPEN_MAX, value));
+      invalidate();
+    },
+    setView(value) {
+      if (targetApproach > 0 || currentApproach > 0.001) return;
+      targetView = Math.max(-32, Math.min(32, value));
+      invalidate();
+    },
+    setApproach(value) {
+      targetApproach = Math.max(0, Math.min(1, value));
+      if (targetApproach > 0) { targetAngle = OPEN_MAX; targetView = 0; }
+      approachPending = true;
+      invalidate();
+    },
     dispose,
   };
 }
