@@ -3378,3 +3378,13 @@ Affected files: `pintu3d.md`, `components/Landing/Pintu/Pintu3DPreview.tsx`, `ap
 Setelah baseline `/pintu-lab`, pemilik meminta melanjutkan penyempurnaan Pintu 1. Pada eksperimen terisolasi ini, dimensi pintu dibuat lebih tinggi (rasio lebar:tinggi 0,65), batas ukuran mengikuti viewport, profil kusen dan celah pertemuan dua daun disesuaikan; muka dan belakang masing-masing daun diposisikan pada z ±10 px dan empat rusuk menghubungkan keduanya menjadi daun dengan volume 20 px. Semua bidang tetap merupakan anak dari pivot daun dan ikut membuka/menutup; frame dan ruang belakang tetap diam. Tersedia mode tampak miring -17° untuk memeriksa bentuk serta ketebalan saat pintu terbuka. Desain material, engsel detail, ukiran dan pencahayaan final masih tahap berikutnya. `/`, `/jiplak`, orbital, global brand dan protected background tidak diubah.
 
 Affected files: `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits: `6f9fb541acd2b2a5d5762fe84386ce4830db18cf`, `271b634e47faedd423e47cbc2e7a46d1dcedaf3c`. Validation: GitHub Build Validation **pending observation**; render/screenshot desktop-mobile and actual full-open appearance **pending owner review**.
+
+---
+
+## 2026-09-20 — Pintu 1 stages 1–2 approved; stage 3 matte Rose material
+
+Owner mengirim dua screenshot browser `/pintu-lab` (tertutup dan terbuka) dan menyatakan Tahap 1 dan Tahap 2 sudah OK. Posisi dua daun dan kusen menjadi baseline visual yang harus dipertahankan. Screenshot masih memuat heading/kontrol versi awal sehingga status tombol tampak miring pada source Tahap 2 belum terbukti dari screenshot tersebut; tidak diklaim sudah diuji terpisah.
+
+Tahap 3 menambahkan layered CSS gradients sebagai simulasi serat halus pada muka daun, belakang daun, dan seluruh rusuk ketebalan; muka dan belakang kini menggunakan shade Rose berbeda, panel muka mendapat bayangan inset matte yang lebih terbaca. Texture/gradients selalu melekat pada node daun existing, bukan lembaran/ornamen diam di depan bukaan. Tidak ada perubahan geometri, mekanisme engsel, route, orbital, backend, asset, brand fonts, ataupun protected global landing. Header/instruksi `/pintu-lab` memberi konteks pemeriksaan material. Detail ukiran/molding/bunga belum dikerjakan; belum menganggap kualitas visual Tahap 3 sudah disetujui.
+
+Affected files: `components/Landing/Pintu/Pintu3DPreview.tsx`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. Source commits: `48c31bace7fff7250447f4f78c78e415354279e4`, `4c13211787c924fcd0185330d153cc9cd8695e20`. Validation: GitHub CI **pending observation**; visual material/facing on owner browser **pending screenshot and approval**.
