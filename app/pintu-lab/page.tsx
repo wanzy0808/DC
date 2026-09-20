@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ReferenceDoorPreview from "@/components/Landing/Pintu/ReferenceDoorPreview";
 
 export const metadata = {
@@ -22,6 +23,9 @@ export default function PintuLabPage() {
         </p>
       </div>
       <ReferenceDoorPreview />
+      <Link className="text-sm underline underline-offset-4" href="/pintu-lab/orbital">
+        Uji tiga pintu 3D mengorbit dan masuk ke halaman layanan
+      </Link>
     </main>
   );
 }
