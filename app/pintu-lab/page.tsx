@@ -13,11 +13,10 @@ export default function PintuLabPage() {
           Preview terpisah · Pintu 1
         </p>
         <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">
-          Bentuk &amp; bukaan utuh
+          Proporsi &amp; ketebalan
         </h1>
         <p className="mt-3 text-sm leading-6 text-foreground/70 sm:text-base">
-          Versi awal untuk menguji dua daun yang membuka dari engsel kiri dan kanan.
-          Kusen tetap berdiri. Ukiran dan ornamen menyusul setelah mekanisme dasarnya sesuai.
+          Dua daun utuh yang membuka pada engsel kiri dan kanan. Periksa tinggi pintu, celah tengah, dan sisi daun lewat pilihan tampak depan atau miring.
         </p>
       </div>
       <Pintu3DPreview />
