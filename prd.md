@@ -3240,3 +3240,21 @@ Owner meminta opsi mengundang tamu hanya ke prosesi pernikahan, hanya ke resepsi
 
 ### Next
 Implementasikan keseluruhan flow secara bertahap pada branch kode terpisah. Jangan merge UI input tanpa persistence, scope tamu, rendering/filtering dan server validation yang sesuai.
+
+
+---
+
+## 2026-09-20 — Landing image warning cleanup
+
+### Intent
+Rapikan warning Next.js pada gambar Pintu `/hp-digital.png` dan `/bukutamu.png` (parent `fill` terdeteksi `position: static`) serta warning LCP pada `/wo.png` dan `/flower.png`. Jangan mengubah desain, konten, ukuran, layout, animasi, maupun perilaku landing utama dan `/jiplak`.
+
+### Implementation
+- `PintuCard.tsx` dan `AssetDreamPortalScene.tsx`: beri setiap `Image fill` wrapper `relative h-full w-full` di dalam elemen absolute/animated yang sudah ada, sehingga containing block selalu eksplisit tanpa mengubah geometry atau Motion.
+- Gambar Pintu yang langsung terlihat diberi `loading="eager"`; active image memakai `fetchPriority="high"`, yang lain `auto`.
+- `LandingFloralGlow.tsx` dan `AssetDreamBackdrop.tsx`: bunga dengan `fill` memakai wrapper relative yang eksplisit dan `loading="eager"` karena berada pada initial viewport.
+- Tidak menyentuh `app/page.tsx`, `app/jiplak/jiplak.tsx`, `RosePetalBackground.tsx`, komposisi visual, stylesheet, atau aset gambar.
+
+### Validation
+- GitHub Build Validation: pending.
+- Runtime browser warning confirmation: pending local browser verification.

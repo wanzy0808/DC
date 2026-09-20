@@ -25,13 +25,16 @@ export default function LandingFloralGlow() {
         transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
         className="absolute -bottom-[6%] -left-[4%] h-[72vh] w-[24vw] min-w-[210px] opacity-[0.36] sm:opacity-[0.5]"
       >
-        <Image
-          src="/flower.png"
-          alt=""
-          fill
-          sizes="28vw"
-          className="object-contain object-left-bottom"
-        />
+        <div className="relative h-full w-full">
+          <Image
+            src="/flower.png"
+            alt=""
+            fill
+            loading="eager"
+            sizes="28vw"
+            className="object-contain object-left-bottom"
+          />
+        </div>
       </motion.div>
 
       <motion.div
@@ -56,6 +59,7 @@ export default function LandingFloralGlow() {
             src="/flower.png"
             alt=""
             fill
+            loading="eager"
             sizes="26vw"
             className="object-contain object-left-bottom"
           />
