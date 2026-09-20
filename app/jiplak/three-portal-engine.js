@@ -228,6 +228,55 @@ function createPortal(THREE, world, texture, groundTexture, doorLightTexture) {
   frame.receiveShadow = true;
   root.add(frame);
 
+  // Architectural pinstripes and restrained relief flowers are attached
+  // to the jamb, below the arch shoulder: no free-floating crown or horns.
+  const trimMaterial = new THREE.MeshStandardMaterial({
+    color: 0xd7a3ad, metalness: 0.07, roughness: 0.59,
+  });
+  const petalMaterial = new THREE.MeshStandardMaterial({
+    color: 0xba7884, metalness: 0.025, roughness: 0.76,
+    side: THREE.DoubleSide,
+  });
+  const centerMaterial = new THREE.MeshStandardMaterial({
+    color: 0xe4bdc3, metalness: 0.12, roughness: 0.55,
+  });
+
+  for (const side of [-1, 1]) {
+    const rail = new THREE.Mesh(
+      new THREE.CapsuleGeometry(0.011, 2.23, 3, 8), trimMaterial,
+    );
+    rail.position.set(side * 1.055, -0.56, 0.337);
+    root.add(rail);
+
+    // A tiny four-petal carved rosette is inset into each outer jamb.
+    // It remains part of the frame when the door leaves rotate.
+    const ornament = new THREE.Group();
+    ornament.position.set(side * 1.055, 0.76, 0.353);
+    for (let petal = 0; petal < 4; petal += 1) {
+      const angle = (petal / 4) * Math.PI * 2;
+      const leaf = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 8, 6),
+        petalMaterial,
+      );
+      leaf.scale.set(0.026, 0.055, 0.011);
+      leaf.position.set(
+        Math.sin(angle) * 0.042,
+        Math.cos(angle) * 0.042,
+        0,
+      );
+      leaf.rotation.z = -angle;
+      ornament.add(leaf);
+    }
+    const center = new THREE.Mesh(
+      new THREE.SphereGeometry(0.022, 10, 7),
+      centerMaterial,
+    );
+    center.scale.z = 0.58;
+    center.position.z = 0.012;
+    ornament.add(center);
+    root.add(ornament);
+  }
+
   const left = createLeaf(THREE, -1);
   const right = createLeaf(THREE, 1);
   root.add(left, right);
