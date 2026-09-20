@@ -32,6 +32,70 @@ const ROSE_PANEL_MATERIAL = [
 
 // 20 px is the whole thickness of each leaf, not an extra piece of trim.
 const HALF_THICKNESS = 10;
+// Front face is on the existing z=0 plane, while the fixed jamb returns
+// extend *behind* it; the whole frame remains stationary during a door swing.
+const FRAME_DEPTH = 44;
+const HINGE_POINTS = [18, 50, 82] as const;
+
+function DoorHingeBarrels({
+  side,
+  moving,
+}: {
+  side: Side;
+  moving: boolean;
+}) {
+  // The fixed top/bottom barrels attach to the jamb. The central sleeve and
+  // the small mounting plate attach to the leaf's own rotating pivot.
+  const isLeft = side === "left";
+  return (
+    <>
+      {HINGE_POINTS.map((point) => (
+        <div
+          key={point}
+          className={`pointer-events-none absolute z-10 h-[34px] w-[12px] -translate-x-1/2 -translate-y-1/2 [transform-style:preserve-3d] ${
+            moving
+              ? isLeft
+                ? "left-0"
+                : "left-full"
+              : isLeft
+                ? "left-[3.65%]"
+                : "left-[96.35%]"
+          }`}
+          style={{ top: `${point}%`, transform: "translateX(-50%) translateY(-50%) translateZ(16px)" }}
+          aria-hidden="true"
+        >
+          {moving ? (
+            <>
+              <div
+                className={`absolute top-[6px] h-[22px] w-[12px] rounded-[5px] border border-[#6d3b47]/75 bg-[linear-gradient(90deg,#764550,#d9a3aa_43%,#9d626d_72%,#683844)] shadow-[1px_0_3px_rgba(37,15,22,.35)]`}
+              />
+              <div
+                className={`absolute top-[9px] h-[16px] w-[11px] rounded-sm border border-[#9a626e]/70 bg-[#b97a85] ${
+                  isLeft ? "left-[9px]" : "right-[9px]"
+                }`}
+              />
+            </>
+          ) : (
+            <>
+              <div
+                className={`absolute top-[5px] h-[24px] w-[12px] rounded-sm border border-[#9b616d]/65 bg-[linear-gradient(90deg,#925560,#cb929d,#91515d)] ${
+                  isLeft ? "right-[8px]" : "left-[8px]"
+                }`}
+              />
+              {[0, 27].map((offset) => (
+                <div
+                  key={offset}
+                  className="absolute left-0 h-[7px] w-[12px] rounded-[5px] border border-[#6d3b47]/75 bg-[linear-gradient(90deg,#77434e,#edc0c6_40%,#9a5d69_76%,#673841)] shadow-[1px_0_3px_rgba(37,15,22,.3)]"
+                  style={{ top: offset }}
+                />
+              ))}
+            </>
+          )}
+        </div>
+      ))}
+    </>
+  );
+}
 
 /**
  * Each entire leaf (front, back, thickness and every attached detail) shares
@@ -66,6 +130,7 @@ function HingedLeaf({
       className={`absolute bottom-[2.8%] top-[3.5%] w-[46%] ${outer}`}
       aria-hidden="true"
     >
+      <DoorHingeBarrels side={side} moving />
       {/* The front and back remain separate visible faces after 90 degrees. */}
       <div
         style={{
@@ -160,33 +225,59 @@ function DoorFrame({ open }: { open: boolean }) {
         <div className="absolute inset-x-[10%] bottom-0 h-[28%] bg-[linear-gradient(0deg,rgba(200,156,166,0.21),transparent)] [clip-path:polygon(0_100%,34%_0,66%_0,100%_100%)]" />
       </div>
 
+      {/* A stationary 44 px-deep architectural jamb. Each return connects
+          the front trim (z=0) to the rear opening (z=-44), rather than
+          rotating a flat rectangle to imitate a side view. */}
+      <div
+        className="pointer-events-none absolute inset-x-[3.65%] bottom-[2.2%] top-[3.5%] border-[5px] border-[#6b3946]/85 shadow-[inset_0_0_19px_rgba(0,0,0,.45)]"
+        style={{ transform: `translateZ(-${FRAME_DEPTH}px)` }}
+        aria-hidden="true"
+      />
+      {(["left", "right"] as const).map((side) => (
+        <div
+          key={`jamb-${side}`}
+          className="pointer-events-none absolute bottom-[2.2%] top-[3.5%] bg-[linear-gradient(90deg,#70404c_0%,#a46d78_43%,#ba828c_100%)] shadow-[inset_2px_0_6px_rgba(53,19,29,.28)]"
+          style={{
+            left: side === "left" ? "3.65%" : "96.35%",
+            width: FRAME_DEPTH,
+            transform: `translateX(-50%) translateZ(-${FRAME_DEPTH / 2}px) rotateY(90deg)`,
+            backfaceVisibility: "visible",
+          }}
+          aria-hidden="true"
+        />
+      ))}
+      <div
+        className="pointer-events-none absolute inset-x-[3.65%] top-[3.5%] bg-[linear-gradient(#a8707b,#76424f)] shadow-[inset_0_2px_5px_rgba(49,18,30,.4)]"
+        style={{
+          height: FRAME_DEPTH,
+          transform: `translateY(-50%) translateZ(-${FRAME_DEPTH / 2}px) rotateX(90deg)`,
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-[3.65%] bottom-[2.2%] bg-[linear-gradient(#9d6874,#62313e)]"
+        style={{
+          height: FRAME_DEPTH,
+          transform: `translateY(50%) translateZ(-${FRAME_DEPTH / 2}px) rotateX(90deg)`,
+        }}
+        aria-hidden="true"
+      />
+
       {/* Frame is four continuous stationary structural elements, not a card. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[3.5%] bg-[linear-gradient(#efc8ce,#c07a84_55%,#874b56)] shadow-[0_5px_7px_rgba(40,15,23,0.26),inset_0_2px_1px_rgba(255,255,255,0.6)]" />
       <div className="pointer-events-none absolute inset-y-0 left-0 w-[3.65%] bg-[linear-gradient(90deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[5px_0_8px_rgba(39,15,23,0.3)]" />
       <div className="pointer-events-none absolute inset-y-0 right-0 w-[3.65%] bg-[linear-gradient(270deg,#76424d,#c07a84_55%,#e9bfc5)] shadow-[-5px_0_8px_rgba(39,15,23,0.3)]" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[2.2%] bg-[linear-gradient(#a2636e,#d6a0a8_48%,#74444e)] shadow-[0_4px_7px_rgba(40,15,23,0.22)]" />
 
-      {(["left", "right"] as const).map((side) => (
-        <div
-          key={side}
-          className={`pointer-events-none absolute top-[3.5%] bottom-[2.8%] w-[1.1%] ${side === "left" ? "left-[3.1%]" : "right-[3.1%]"}`}
-        >
-          {[18, 50, 82].map((top) => (
-            <div
-              key={top}
-              style={{ top: `${top}%` }}
-              className="absolute left-0 h-[7%] w-full -translate-y-1/2 rounded-sm border border-[#74404b]/60 bg-[linear-gradient(90deg,#71404b,#e8bbc1_48%,#8b4d58)] shadow-[0_1px_3px_rgba(40,13,22,0.42)]"
-            />
-          ))}
-        </div>
-      ))}
+      <DoorHingeBarrels side="left" moving={false} />
+      <DoorHingeBarrels side="right" moving={false} />
     </>
   );
 }
 
 export default function Pintu3DPreview() {
   const [open, setOpen] = useState(false);
-  const [angledView, setAngledView] = useState(false);
+  const [view, setView] = useState<"front" | "left" | "right">("front");
   const reducedMotion = useReducedMotion();
 
   return (
@@ -203,7 +294,7 @@ export default function Pintu3DPreview() {
         >
           <motion.div
             initial={false}
-            animate={{ rotateY: angledView ? -17 : 0 }}
+            animate={{ rotateY: view === "left" ? -30 : view === "right" ? 30 : 0 }}
             transition={{ duration: reducedMotion ? 0.01 : 0.7, ease: EASE }}
             className="absolute inset-0 [transform-style:preserve-3d]"
           >
@@ -224,16 +315,19 @@ export default function Pintu3DPreview() {
           {open ? "Tutup pintu" : "Buka seluruh pintu"}
         </Button>
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <Button type="button" aria-pressed={!angledView} onClick={() => setAngledView(false)}>
+          <Button type="button" aria-pressed={view === "front"} onClick={() => setView("front")}>
             Tampak depan
           </Button>
-          <Button type="button" aria-pressed={angledView} onClick={() => setAngledView(true)}>
-            Tampak miring
+          <Button type="button" aria-pressed={view === "left"} onClick={() => setView("left")}>
+            Sudut kiri
+          </Button>
+          <Button type="button" aria-pressed={view === "right"} onClick={() => setView("right")}>
+            Sudut kanan
           </Button>
         </div>
         <p className="max-w-lg text-sm leading-6 text-foreground/65">
-          Buka pintu lalu pilih tampak miring untuk melihat ketebalan, sisi dan bagian belakang kedua daun.
-          Material matte Rose terlihat pada muka, belakang dan tepi kedua daun. Kusen tetap diam; ukiran dan ornamen menyusul.
+          Buka pintu lalu periksa dari sudut kiri atau kanan: daun berputar pada tiga engsel di setiap jamb,
+          sementara sisi dalam kusen tetap diam. Material Rose dan bentuk daun dari tahap sebelumnya dipertahankan.
         </p>
       </div>
     </div>
