@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**Status:** Tahap 1–2 disetujui owner. Tahap 3–6 sudah dikodekan; Tahap 6 menunggu review visual, terutama relief yang harus tetap melekat pada daun saat membuka. Tahap 3–5 belum diberi persetujuan visual eksplisit.
+**Status:** Tahap 1–2 disetujui owner. Tahap 3–7 sudah dikodekan; Tahap 6–7 menunggu review visual, terutama ukiran dan molding yang harus melekat pada daun saat membuka. Tahap 3–5 belum diberi persetujuan visual eksplisit.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -35,7 +35,7 @@
 | 4 | Dasar | Engsel di jamb dengan posisi vertikal masuk akal; pivot daun konsisten sampai terbuka penuh dan saat ditutup. | Implementasi di GitHub — menunggu review tampak miring dan buka-tutup |
 | 5 | Dasar | Timing bukaan/tutupan natural, collision/projection visual wajar, shadow daun bergerak; uji 0°/45°/90°/110°. | Implementasi GitHub: empat sudut, easing buka/tutup, dua bayangan bergerak; menunggu review browser |
 | 6 | Detail | Ukiran/panel relief pada **dua daun** mengikuti gerakan utuh daun, tidak ditempel pada portal diam. | Implementasi GitHub: relief acanthus dan sulur pada panel atas/bawah tiap daun, menunggu screenshot/review owner |
-| 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Belum |
+| 7 | Detail | Molding bertingkat, list dekoratif dan pertemuan panel/frame rapi saat tertutup maupun terbuka. | Kode masuk GitHub — tiga lapis profil panel dan lis daun/kusen; review visual pending |
 | 8 | Detail | Ornamen bunga/crest terintegrasi pada kusen atau daun sesuai titik penempelan, bukan bunga melayang atau tanduk. | Belum |
 | 9 | Detail | Ruang di balik bukaan mempunyai kedalaman, bukan kotak/lembaran gelap datar; cocok untuk banyak jenis acara. | Belum |
 | 10 | Detail | Cahaya ivory–Rose keluar dari celah saat buka, volumetric feel secukupnya dan grounding shadow tetap natural. | Belum |
@@ -46,6 +46,10 @@
 | 15 | Finishing | Integrasi ketiga Pintu dengan orbital Motion, hover pause/resume, navigasi dan verifikasi akhir seluruh tema/viewport. | Belum |
 
 ## Catatan review dan sumber keputusan
+
+**20 September 2026 — Tahap 7 (implementasi):** lanjutkan detail yang benar-benar terlihat di preview tunggal `/pintu-lab` tanpa merombak desain yang sudah ada. Komponen baru `components/Landing/Pintu/DoorMolding.tsx` mendefinisikan panel trim berlapis: bingkai luar berbayang matte, lis terang kedua, cekungan dalam dengan bayangan inset dan empat sambungan sudut/miter kecil pada panel atas dan bawah. Reling perimeter dan dua lis pertemuan tengah dipasang langsung ke **muka masing-masing daun bergerak**, sesudah `DoorRelief` sehingga relief tetap terlihat di dalam panel dan semua detail mengikuti engsel hingga 110°. `FrameMolding` memasang lis tipis pada depan kusen tetap, terpisah dari node daun; tidak ada lis membentang di ruang kosong ketika pintu terbuka. Panel, kusen, material, perspektif, sudut bukaan, engsel, dan shadow lama tidak diganti. Pintu lab header/instruksi kini menjelaskan uji pertemuan panel saat tertutup dan list daun/kusen saat terbuka. Source commits: `ed5110d1`, `52d5b348`, `5e2ac0c0`. Pengujian CI **menunggu observasi**, kualitas visual molding/siluet dari browser **menunggu review owner**; jangan menandai tahap selesai hanya dari build. Asset/crest bunga tidak ditambahkan (Tahap 8), ruangan/lampu ditunda (Tahap 9–10). `/`, `/jiplak`, dan orbital tidak diubah.
+
+
 
 **20 September 2026 — Screenshot owner Tahap 5:** owner mengirim tampak miring ketika pintu tertutup dan terbuka; engsel luar, sisi daun dan jamb bisa terlihat. Pada screenshot keadaan terbuka, latar ruang di balik pintu masih berupa bidang gelap dan tetap dijadwalkan untuk Tahap 9. Bagian atas pintu tampak terpotong di atas viewport pada screenshot yang sedang terscroll; ini perlu diperiksa lagi saat responsive/komposisi di Tahap 11–12, bukan alasan memperbesar atau mengganti geometri pada Tahap 6. Owner meminta lanjut tanpa menyatakan Tahap 3–5 secara eksplisit telah disetujui final.
 
