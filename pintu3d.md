@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 merged `main` via PR #57 (CI PASS) dan eksperimen kamera masuk/kembali di `/pintu-lab` merged via PR #58 (CI PASS). **Belum final:** fidelity screenshot owner (Tahap 11), audit mobile/browser lengkap (12–13), replikasi tiga pintu (14), navigasi portal ke halaman tujuan (15). Landing utama tetap tidak berubah sampai review Pintu 1.
+**STATUS AKTIF:** Rebuild V2 Three.js — Tahap 5–10 dan uji kamera lab merged `main` via PR #57–58 (CI PASS). Audit tahap 13 (pemulihan WebGL + ekspor gambar review) sedang dikerjakan di branch; screenshot/fidelity owner, audit browser nyata, replikasi tiga pintu dan navigasi portal belum final. Landing utama tetap tidak berubah sampai review Pintu 1.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -32,9 +32,15 @@
 | 10 | Cahaya natural | Area key/fill yang menonjolkan pahatan; cahaya ivory dari bukaan dan spill pendek mengikuti bukaan, tanpa pink fog/kotak glowing. | Merged `main` PR #57 — CI PASS; review visual pending |
 | 11 | Fidelity visual & screenshot | Bandingkan 0°/45°/90°/110° depan/miring dan kamera melintasi kusen dengan `pintu1.png` dari browser owner. | Eksperimen kamera lab merged PR #58 — CI PASS; screenshot/fidelity owner pending |
 | 12 | Komposisi responsif | Pintu monumental desktop, tetap utuh di mobile; kamera saat 110° tidak memotong daun, konten lab mudah dilihat tanpa scroll berlebih. | Merged `main` PR #57 — CI PASS; review visual pending |
-| 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Belum |
+| 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Pemulihan WebGL + gambar audit di branch; CI/review perangkat pending |
 | 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Belum |
 | 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Belum |
+
+### Catatan audit V2 — Tahap 11 dan 13 (persiapan review)
+
+Di `/pintu-lab`, tombol `Simpan gambar sudut ini` menangkap frame WebGL yang sedang tampil sebagai PNG, dengan nama file memuat bukaan (0/45/90/110), sudut kamera depan/kiri/kanan, dan posisi uji kamera masuk. Ini mempermudah perbandingan visual dengan `public/pintu1.png` tanpa menganggap gambar otomatis setara. Kode renderer memakai capture sekali saat tombol ditekan, bukan `preserveDrawingBuffer` yang selalu aktif.
+
+Engine menangani `webglcontextlost` dengan `preventDefault`, berhenti menjadwalkan frame, lalu `webglcontextrestored` memicu resize dan render baru memakai sudut/kamera yang terakhir dipilih. UI memberi status pemulihan dan opsi screenshot perangkat jika ekspor PNG gagal. Listener dibersihkan saat unmount. **Belum diuji** dengan WebGL context loss aktual, mobile rendah daya, atau browser back/forward; screenshot owner/fidelity visual masih pending. Perubahan ini tidak mengaktifkan tiga Pintu di landing.
 
 ### Catatan eksekusi V2 — Tahap 1
 
