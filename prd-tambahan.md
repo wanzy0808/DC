@@ -273,3 +273,12 @@ Perubahan teknis saja: `Image fill` di Pintu utama, portal `/jiplak`, dan bunga 
 Pintu utama dicopy sebagai dua file independen: `app/jiplak/PintuSectionJiplak.tsx` dan `app/jiplak/PintuCardJiplak.tsx`. Section copy hanya memakai card copy, bukan import komponen Pintu canonical. `jiplak.tsx` memakai section baru dan kontrak active-door yang sama. Desain/background eksperimen lainnya dipertahankan; file landing `/` dan Pintu aslinya tidak disentuh.
 
 Validation: pending GitHub Actions & local visual check.
+
+
+---
+
+## 20 September 2026 — Dreamy Three.js Pintu khusus `/jiplak`
+
+Eksperimen baru memakai Three.js langsung melalui lazy client import. Tiga pintu sekarang berupa mesh 3D dengan frame melengkung, ketebalan, engsel, material Rose, lantai, shadow, dunia foto di balik daun pintu, cahaya keluar dari portal, partikel, parallax dan transisi antar-dunia. Salinan `PintuSectionJiplak`/`PintuCardJiplak` tetap ada sebagai fallback WebGL2, bukan diganti dengan import komponen landing utama. Bunga, pink glow, rose petals, copy, navbar/footer `/jiplak`, dan navigasi layanan tetap. Landing utama `/` tidak disentuh.
+
+Validation: pending GitHub Actions dan visual runtime lokal.
