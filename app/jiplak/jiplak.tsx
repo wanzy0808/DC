@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight, Check, Sparkles } from "lucide-react";
-import PintuSectionJiplak from "./PintuSectionJiplak";
+import ThreePortalScene from "./ThreePortalScene";
 import AssetDreamBackdrop from "@/components/Layout/AssetDreamBackdrop";
 import RosePetalBackground from "@/components/Layout/RosePetalBackground";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
@@ -101,7 +101,7 @@ export default function JiplakLanding() {
 
                   <div className="flex items-center gap-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/42 sm:text-[10px]">
                     <Sparkles className="h-3.5 w-3.5 text-primary/70" />
-                    hover another door
+                    pilih dunia lain
                   </div>
                 </div>
 
@@ -166,7 +166,7 @@ export default function JiplakLanding() {
             className="relative z-20 min-w-0 lg:-mr-[3vw]"
           >
             <div className="relative mx-auto w-full max-w-[760px]">
-              <PintuSectionJiplak
+              <ThreePortalScene
                 activeDoor={activeDoor}
                 setActiveDoor={setActiveDoor}
               />
