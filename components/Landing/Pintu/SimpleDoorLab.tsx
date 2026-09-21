@@ -4,7 +4,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import * as THREE from "three";
 
 function archShape(width: number, height: number) {
@@ -144,10 +144,14 @@ export default function SimpleDoorLab() {
   }
   return <section className="w-full max-w-5xl space-y-4">
     <div className="relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent">
-      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden" initial={false} animate={{ scale: entering ? (reducedMotion ? 1 : 1.85) : 1, opacity: entering ? 0.95 : 0.55 }} transition={{ duration: reducedMotion ? 0 : 2.2, ease: [0.22, 1, 0.36, 1] }}>
-        <Image src="/flower.png" alt="" fill sizes="100vw" className="object-cover object-center opacity-55" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-primary/10 to-background/80" />
-      </motion.div>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false} mode="sync">
+          <motion.div key={selected} className="absolute inset-0" initial={{ opacity: 0 }} animate={{ opacity: 1, scale: entering ? (reducedMotion ? 1 : 2.3) : 1 }} exit={{ opacity: 0 }} transition={{ opacity: { duration: reducedMotion ? 0 : 0.65 }, scale: { duration: reducedMotion ? 0 : 2.8, ease: [0.22, 1, 0.36, 1] } }}>
+            <Image src={["/wo.png", "/hp-digital.png", "/bukutamu.png"][selected]} alt="" fill sizes="100vw" className="object-cover object-center" priority />
+          </motion.div>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-b from-background/55 via-primary/10 to-background/55" />
+      </div>
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected]); }} />
         <ambientLight intensity={0.85} />
