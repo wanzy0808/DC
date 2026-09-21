@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
@@ -18,6 +18,18 @@ export default function HeroSection() {
   const [portalArrival, setPortalArrival] = useState(false);
   const reducedMotion = useReducedMotion();
   const [arrivalFinished, setArrivalFinished] = useState(false);
+  const [revealCopy, setRevealCopy] = useState(false);
+  useEffect(() => {
+    if (!portalArrival || reducedMotion) return;
+    const timer = window.setTimeout(() => {
+      document.body.classList.add("dc-portal-revealing");
+      setRevealCopy(true);
+    }, 4100);
+    return () => {
+      window.clearTimeout(timer);
+      document.body.classList.remove("dc-portal-revealing");
+    };
+  }, [portalArrival, reducedMotion]);
   useLayoutEffect(() => {
     if (sessionStorage.getItem("dc-portal-entry") === "1") {
       sessionStorage.removeItem("dc-portal-entry");
@@ -73,8 +85,8 @@ export default function HeroSection() {
 
   return (
     <section className="relative grid items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-24">
-      {portalArrival && !arrivalFinished && !reducedMotion && <div aria-hidden="true" className="fixed inset-0 z-[60] bg-background" />}
-      <motion.div className="dc-invitation-hero-copy max-w-2xl" initial={false} animate={{ opacity: portalArrival && !arrivalFinished && !reducedMotion ? 0 : 1 }} transition={{ duration: 0.85, delay: portalArrival && arrivalFinished ? 0.15 : 0 }}>
+      {portalArrival && !arrivalFinished && !reducedMotion && <motion.div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[60] bg-background" initial={{ opacity: 1 }} animate={{ opacity: [1, 1, 0] }} transition={{ duration: 6.6, times: [0, 0.58, 0.87], ease: "easeInOut" }} />}
+      <motion.div className={`dc-invitation-hero-copy max-w-2xl ${portalArrival && !arrivalFinished && !reducedMotion ? "relative z-[65]" : ""}`} initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
         </p>
@@ -239,8 +251,6 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
-      <style jsx global>{`
-      `}</style>
       <style jsx>{`
         .invitation-phone-scroll {
           animation: invitation-phone-scroll 18s ease-in-out infinite;
