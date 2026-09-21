@@ -47,7 +47,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if ((!embedded && pathname === "/pagecontoh") || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+  if ((!embedded && (pathname === "/" || pathname === "/pagecontoh")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     return null;
   }
 
