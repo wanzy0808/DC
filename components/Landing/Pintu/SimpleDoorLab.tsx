@@ -61,15 +61,23 @@ function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
     copy.colorSpace = THREE.SRGBColorSpace;
     copy.wrapS = THREE.ClampToEdgeWrapping;
     copy.wrapT = THREE.ClampToEdgeWrapping;
-    copy.repeat.set(1 / 1.88, 1 / 4.06);
-    copy.offset.set(0.5, 0);
+    copy.anisotropy = 8;
     copy.needsUpdate = true;
     return copy;
   }, [source]);
-  const geometry = useMemo(() => new THREE.ShapeGeometry(archShape(1.88, 4.06), 48), []);
+  const geometry = useMemo(() => {
+    const shape = new THREE.ShapeGeometry(archShape(1.88, 4.06), 64);
+    const position = shape.getAttribute("position");
+    const uv = shape.getAttribute("uv");
+    for (let i = 0; i < position.count; i++) {
+      uv.setXY(i, (position.getX(i) + 0.94) / 1.88, position.getY(i) / 4.06);
+    }
+    uv.needsUpdate = true;
+    return shape;
+  }, []);
   return <group position={[0, 0, -0.19]}>
     <mesh geometry={geometry}><meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} /></mesh>
-    <mesh geometry={geometry} position={[0, 0, 0.008]}><meshBasicMaterial color="#fff0d8" transparent opacity={opening ? 0.08 : 0.32} depthWrite={false} side={THREE.DoubleSide} /></mesh>
+
   </group>;
 }
 
@@ -124,7 +132,37 @@ function PortalCamera({ entering, reducedMotion, selected, onArrive }: { enterin
   return null;
 }
 
-function Door({ opening, image }: { opening: boolean; image: string }) {
+function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
+  const label = useRef<THREE.MeshBasicMaterial>(null);
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1024;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+    if (context) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.fillStyle = "#fffaf3";
+      context.textAlign = "center";
+      context.textBaseline = "middle";
+      context.font = "600 64px Georgia, serif";
+      context.shadowColor = "rgba(76,38,48,0.65)";
+      context.shadowBlur = 14;
+      context.fillText(title, 512, 128, 930);
+    }
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    return map;
+  }, [title]);
+  useFrame((_, delta) => {
+    if (label.current) label.current.opacity = THREE.MathUtils.damp(label.current.opacity, opening ? 0 : 1, 5, delta);
+  });
+  return <mesh position={[0, 2.25, 0.132]} renderOrder={3}>
+    <planeGeometry args={[1.56, 0.39]} />
+    <meshBasicMaterial ref={label} map={texture} transparent depthWrite={false} toneMapped={false} polygonOffset polygonOffsetFactor={-2} />
+  </mesh>;
+}
+
+function Door({ opening, image, title }: { opening: boolean; image: string; title: string }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
@@ -140,6 +178,7 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
         <Arch width={1.88} height={4.06} depth={0.075} color={palette.panel} gradient />
         <Arch width={1.67} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
         <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
+        <DoorTitle title={title} opening={opening} />
         {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#e9e5df" roughness={0.58} metalness={0.12} /></mesh>)}
         <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#e9e5df" metalness={0.28} roughness={0.48} /></mesh>
 
@@ -188,7 +227,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: 
     });
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={portal.image} />
+    <Door opening={opening[index]} image={portal.image} title={portal.title} />
     <GroundShadow />
     <Fireflies offset={index * 2.1} reducedMotion={reducedMotion} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
@@ -216,7 +255,6 @@ export default function SimpleDoorLab() {
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
-      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center gap-3 font-[family-name:var(--font-dc-heading)] text-xs text-[#865c65] sm:gap-8">{PORTALS.map(({ title }, index) => <span key={title} className={`min-w-0 flex-1 text-center transition-opacity ${selected === index ? "opacity-100" : "opacity-60"}`}>{title}</span>)}</div>
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Empat pintu · pilih tujuan untuk mendekat</span>
     </div>
     <div className="flex flex-wrap items-center justify-center gap-3">
