@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Pintu 1 V2 Tahap 5–10, kamera masuk/kembali, screenshot dan pemulihan WebGL merged `main` via PR #57–59 (CI PASS). Prototipe **tiga pintu → buka → kamera masuk → halaman layanan** di `/pintu-lab/orbital` merged PR #60 (CI PASS); koreksi ukiran menempel pada mesh, pilihan orbital tetap, dan GPU redraw saat idle diperbaiki via PR #62 (CI PASS). **Belum disetujui visual:** fidelity terhadap `public/pintu1.png`, screenshot/interaksi perangkat nyata; landing utama `/` dan `/jiplak` tetap tidak berubah sampai review owner.
+**STATUS AKTIF:** Screenshot nyata owner pada `/pintu-lab` (21 September 2026, posisi tertutup/depan) menunjukkan Pintu 1 V2 **belum mirip referensi**: crown terbaca sebagai loop/donut, ornamen daun tempelan, warna terlalu terang, dan foto pembanding tampak lebih kecil. Sedang diperbaiki di branch `fix/pintu-v2-reference-screenshot-crown-lighting`; CI dan screenshot setelah patch masih pending. Prototipe lab satu/tiga pintu sudah tersedia, tetapi landing utama `/` dan `/jiplak` tetap terlindungi sampai fidelity disetujui.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -35,6 +35,14 @@
 | 13 | Performa & aksesibilitas | Lazy-load WebGL, render on demand, cleanup, low-power/reduced-motion fallback, kontrol keyboard/touch; uji peramban nyata. | Pemulihan WebGL + gambar audit di branch; CI/review perangkat pending |
 | 14 | Reuse tiga pintu | Baru setelah approval Pintu 1, varian Pintu 2/3 memakai core yang sama dan aset hanya dimuat saat perlu. | Merged `main` PR #60 — CI PASS; prototipe lab; review visual pending, belum dipromosikan |
 | 15 | Integrasi orbital + transisi portal | Buka dua daun → kamera zoom-in melewati kusen → pindah route sungguhan → zoom-out halaman tujuan ke skala 1. Fallback dan browser back/forward aman. | Merged `main` PR #60 — CI PASS; transisi lab ke route nyata; review browser pending |
+
+### Screenshot owner 21 September — perbaikan referensi Tahap 11
+
+**Bukti visual:** screenshot browser lokal owner memperlihatkan `/pintu-lab` pada sudut depan 0°. Mahkota model tampak seperti lingkaran oval dan dua loop besar (bukan pahatan acanthus kompak pada foto), field daun terisi motif putih berbentuk kelopak/gantungan yang tidak mengikuti referensi tipis, kusen/cornice tampil seperti blok mainan, intensitas cahaya menghilangkan shading dan membuat pink hampir neon. Foto asli terlihat sekitar setengah tinggi model 3D sehingga visual sulit dibandingkan. Ini **verdict visual tidak sesuai**, bukan lagi status "belum pernah ada screenshot". Tampilan 45°/90°/110° dan varian orbital belum diamati; tidak mengklaim masalah selesai dengan build saja.
+
+**Perubahan terisolasi:** `reference-door-crown.js` membuat crest acanthus ber-volume kecil yang duduk di atas cornice, bead oval klasik kecil, tanpa torus/scroll oval besar. `reference-door-model.js` menghapus crown ber-loop/medali yang oversized, menyesuaikan material ke satin Rose–ivory yang tidak overexposed, mempertahankan panel/pivot/engsel. `reference-door-ornaments.js` mengganti pola empat-corner/kelopak tebal dengan filigree memanjang di dua sudut atas panel, detail waist/lower yang halus, dan flute pilaster fixed; semua tetap mesh bergerak sesuai daun atau fixed sesuai kusen. `reference-door-lighting.js`, `reference-door-interior.js`, `reference-door-engine.js`, `reference-door-orbital-engine.js` menurunkan key/fill/exposure/foyer fill sambil menjaga spill bukaan dan navigasi. `ReferenceDoorPreview.tsx` memakai dua panel pembanding sama lebar/tinggi dan copy lebih terbaca. `/pintu-lab/orbital` ikut menerima perbaikan dari shared model, **tanpa** mempromosikan Pintu ke landing utama.
+
+**Validasi saat mulai:** CI dan review screenshot sesudah revisi belum tersedia; jangan klaim foto telah dicocokkan 1:1. Ketepatan pahatan halus terhadap gambar asli mungkin tetap memerlukan sculpted GLB yang digambar desainer bila prosedural tidak memadai.
 
 ### Catatan audit V2 — Tahap 11 dan 13 (persiapan review)
 
