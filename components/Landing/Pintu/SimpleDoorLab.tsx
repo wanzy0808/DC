@@ -49,12 +49,12 @@ function PortalWorld({ image }: { image: string }) {
     copy.colorSpace = THREE.SRGBColorSpace;
     copy.wrapS = THREE.ClampToEdgeWrapping;
     copy.wrapT = THREE.ClampToEdgeWrapping;
-    copy.repeat.set(1 / 1.68, 1 / 4.06);
+    copy.repeat.set(1 / 1.88, 1 / 4.06);
     copy.offset.set(0.5, 0);
     copy.needsUpdate = true;
     return copy;
   }, [source]);
-  const geometry = useMemo(() => new THREE.ShapeGeometry(archShape(1.68, 4.06), 48), []);
+  const geometry = useMemo(() => new THREE.ShapeGeometry(archShape(1.88, 4.06), 48), []);
   return <mesh geometry={geometry} position={[0, 0, -0.19]}>
     <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} />
   </mesh>;
@@ -62,7 +62,7 @@ function PortalWorld({ image }: { image: string }) {
 
 function GroundShadow() {
   return <mesh position={[0, -2.145, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-    <planeGeometry args={[2.25, 1.45]} />
+    <planeGeometry args={[2.55, 1.45]} />
     <shadowMaterial transparent opacity={0.26} depthWrite={false} />
   </mesh>;
 }
@@ -97,14 +97,12 @@ function PortalCamera({ entering, reducedMotion, selected, onArrive }: { enterin
   const { camera } = useThree();
   const progress = useRef(0);
   const arrived = useRef(false);
-  const focusX = useRef(0);
   useFrame((_, delta) => {
     progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 18 : 2.4, delta);
     const t = progress.current;
     const eased = t * t * (3 - 2 * t);
-    focusX.current = THREE.MathUtils.damp(focusX.current, (selected - 1) * 2.55, 3.2, delta);
-    camera.position.set(focusX.current, 0.05 - eased * 0.12, 11.7 - eased * 12.65);
-    camera.lookAt(focusX.current, -0.05, -2);
+    camera.position.set(0, 0.05 - eased * 0.12, 11.7 - eased * 11.1);
+    camera.lookAt(0, -0.05, -2);
     if (entering && t > 0.96 && !arrived.current) {
       arrived.current = true;
       onArrive();
@@ -118,21 +116,21 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#aeb0b7", metal: "#d1a9a0" };
+  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} />
     <group position={[0, 0, -0.16]}>
-      <Arch width={1.82} height={4.18} depth={0.09} color={palette.frame} />
+      <Arch width={2.02} height={4.18} depth={0.09} color={palette.frame} />
     </group>
-    <group ref={pivot} position={[-0.84, 0, -0.065]}>
-      <group position={[0.84, 0, 0]}>
-        <Arch width={1.68} height={4.06} depth={0.075} color={palette.panel} gradient />
-        <Arch width={1.47} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
-        <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
-        {[-0.52, 0.52].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#aeb0b7" roughness={0.58} metalness={0.12} /></mesh>)}
-        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#aeb0b7" metalness={0.28} roughness={0.48} /></mesh>
+    <group ref={pivot} position={[-0.94, 0, -0.065]}>
+      <group position={[0.94, 0, 0]}>
+        <Arch width={1.88} height={4.06} depth={0.075} color={palette.panel} gradient />
+        <Arch width={1.67} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
+        <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
+        {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#e9e5df" roughness={0.58} metalness={0.12} /></mesh>)}
+        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#e9e5df" metalness={0.28} roughness={0.48} /></mesh>
 
-        <mesh position={[0.57, 1.85, 0.115]} castShadow>
+        <mesh position={[0.67, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
           <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
         </mesh>
@@ -143,51 +141,67 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
       </group>
     </group>
     <mesh position={[0, 0.018, 0.12]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[1.75, 0.24]} />
+      <planeGeometry args={[1.95, 0.24]} />
       <meshBasicMaterial color="#ffe4c7" transparent opacity={opening ? 0.75 : 0.28} depthWrite={false} />
     </mesh>
   </group>;
 }
 
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void }) {
+  const groups = useRef<(THREE.Group | null)[]>([]);
+  const phase = useRef(0);
+  useFrame((_, delta) => {
+    if (selected === null && !reducedMotion && !entering) phase.current += delta * 0.18;
+    else if (selected !== null) {
+      const target = -selected * Math.PI * 2 / 3;
+      const diff = Math.atan2(Math.sin(target - phase.current), Math.cos(target - phase.current));
+      phase.current += diff * (1 - Math.exp(-3.4 * delta));
+    }
+    groups.current.forEach((group, index) => {
+      if (!group) return;
+      const theta = phase.current + index * Math.PI * 2 / 3;
+      const x = Math.sin(theta) * 2.65;
+      const z = Math.cos(theta) * 1.1;
+      group.position.set(x, 0, z);
+      group.rotation.y = -Math.sin(theta) * 0.17;
+      group.scale.setScalar(0.84 + (z + 1.1) / 2.2 * 0.16);
+    });
+  });
+  return <>{[0, 1, 2].map((index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
+    <Door opening={opening[index]} image={["/wo.png", "/hp-digital.png", "/bukutamu.png"][index]} />
+    <GroundShadow />
+    <Fireflies offset={index * 2.1} reducedMotion={reducedMotion} />
+    <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
+  </group>)}</>;
+}
+
 export default function SimpleDoorLab() {
   const [opening, setOpening] = useState([false, false, false]);
-  const [selected, setSelected] = useState(1);
-  const [angle, setAngle] = useState(0);
+  const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   function enterPortal() {
-    if (!opening[selected] || entering) return;
+    if (selected === null || !opening[selected] || entering) return;
     setEntering(true);
   }
   return <section className="w-full max-w-5xl space-y-4">
     <div className="relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent">
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected]); }} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected ?? 0]); }} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
-        {[-1, 0, 1].map((offset, index) => (
-          <group key={index} position={[offset * 2.55, 0, 0]} rotation={[0, angle, 0]}>
-            <Door opening={opening[index]} image={["/wo.png", "/hp-digital.png", "/bukutamu.png"][index]} />
-            <GroundShadow />
-            <Fireflies offset={index * 2.1} reducedMotion={Boolean(reducedMotion)} />
-            <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
-          </group>
-        ))}
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening([0, 1, 2].map((i) => i === index)); }} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center gap-3 font-[family-name:var(--font-dc-heading)] text-xs text-[#865c65] sm:gap-8">{["Event Planner", "Digital Invitation", "Guestbook"].map((title, index) => <span key={title} className={`min-w-0 flex-1 text-center transition-opacity ${selected === index ? "opacity-100" : "opacity-60"}`}>{title}</span>)}</div>
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Tiga pintu · pilih tujuan untuk mendekat</span>
     </div>
-    <div className="flex flex-wrap items-center justify-center gap-2">
-      {["Event Planner", "Undangan Digital", "Guestbook"].map((label, index) => <button key={label} type="button" disabled={entering} onClick={() => { setSelected(index); setAngle(0); }} className={`rounded-full px-4 py-2 text-sm transition-colors ${selected === index ? "bg-[#a65e69] text-white" : "border border-[#c07a84]/50 text-foreground hover:bg-[#c07a84]/10"}`}>{label}</button>)}
-    </div>
     <div className="flex flex-wrap items-center justify-center gap-3">
-      <button type="button" disabled={entering} onClick={() => setOpening(v => v.map((open, index) => index === selected ? !open : open))} className="rounded-full bg-[#c07a84] px-5 py-2 text-white">{opening[selected] ? "Tutup pintu" : "Buka pintu"}</button>
-      <button type="button" disabled={entering} onClick={() => setAngle(v => v === 0 ? -0.35 : 0)} className="rounded-full border border-[#c07a84] px-5 py-2 text-foreground"> {angle === 0 ? "Lihat ketebalan" : "Tampak depan"} </button>
-      <button type="button" disabled={!opening[selected] || entering} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk portal"}</button>
+      <span className="text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : ["Event Planner", "Undangan Digital", "Guestbook"][selected]}</span>
+      <button type="button" disabled={selected === null || entering || !opening[selected]} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk"}</button>
     </div>
   </section>;
 }
