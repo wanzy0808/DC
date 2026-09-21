@@ -24,7 +24,7 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="dc-theme-toggle h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-primary/35 dark:bg-transparent dark:text-primary dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary"
+      className="dc-theme-toggle h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-[#A65E69]/45 dark:bg-[#C07A84] dark:text-black dark:hover:border-[#A65E69]/45 dark:hover:bg-[#A65E69] dark:hover:text-black"
     >
       {isDarkMode ? (
         <Sun className="h-4 w-4" aria-hidden="true" />
