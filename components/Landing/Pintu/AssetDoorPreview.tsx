@@ -8,14 +8,19 @@ import { Button } from "@/components/ui/button";
 import type { AssetDoorControls } from "./asset-door-engine";
 
 type View = "front" | "left" | "right";
+type Angle = 0 | 45 | 90 | 110;
 const VIEW_ANGLES: Record<View, number> = { front: 0, left: -27, right: 27 };
+const OPEN_ANGLES: Angle[] = [0, 45, 90, 110];
 
 export default function AssetDoorPreview() {
   const mountRef = useRef<HTMLDivElement>(null);
   const engineRef = useRef<AssetDoorControls | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "recovering" | "error">("loading");
   const [view, setView] = useState<View>("front");
-  const [modelInfo, setModelInfo] = useState<{ url: string; meshCount: number } | null>(null);
+  const [angle, setAngle] = useState<Angle>(0);
+  const [modelInfo, setModelInfo] = useState<{
+    url: string; meshCount: number; canOpen: boolean; faceCount: number;
+  } | null>(null);
   const [saveFailed, setSaveFailed] = useState(false);
   const reducedMotion = useReducedMotion();
 
@@ -59,13 +64,19 @@ export default function AssetDoorPreview() {
     engineRef.current?.setView(VIEW_ANGLES[next]);
   }
 
+  function changeAngle(next: Angle) {
+    if (!modelInfo?.canOpen) return;
+    setAngle(next);
+    engineRef.current?.setAngle(next);
+  }
+
   function saveImage() {
     try {
       const png = engineRef.current?.capturePng();
       if (!png) { setSaveFailed(true); return; }
       const link = document.createElement("a");
       link.href = png;
-      link.download = `pintu-glb-${view}.png`;
+      link.download = `pintu-40k-${view}-${angle}deg.png`;
       link.click();
       setSaveFailed(false);
     } catch {
@@ -91,7 +102,7 @@ export default function AssetDoorPreview() {
         </div>
         <div className="min-w-0 rounded-xl border border-rose-200/60 bg-[#faf4ef] p-2 dark:border-white/10 dark:bg-[#242024]">
           <div className="mb-1 flex items-center justify-between gap-3 px-2 text-sm font-semibold text-foreground">
-            <span>Model GLB · Rose &amp; ivory</span>
+            <span>Model GLB 40k · Rose satin</span>
             <span className="text-xs font-normal text-foreground/70">
               {status === "loading" ? "Memuat…" : status === "ready" ? "3D aktif" :
                 status === "recovering" ? "Memulihkan WebGL…" : "Tidak dapat dimuat"}
@@ -102,7 +113,7 @@ export default function AssetDoorPreview() {
               ref={mountRef}
               className="absolute inset-0"
               role="img"
-              aria-label={`Model 3D dari file GLB, tampak ${view}, dengan cahaya lembut di kaki pintu.`}
+              aria-label={`Model 3D GLB 40k tampak ${view}, buka ${angle} derajat, dengan cahaya lembut di kaki pintu.`}
             />
             {status === "loading" && (
               <p className="pointer-events-none absolute inset-0 flex items-center justify-center px-4 text-center text-sm text-foreground/75">
@@ -128,14 +139,17 @@ export default function AssetDoorPreview() {
       <div className="flex flex-col items-center gap-3">
         <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Sudut pandang pintu GLB">
           {(["front", "left", "right"] as View[]).map(next => (
-            <Button
-              key={next}
-              type="button"
-              disabled={status !== "ready"}
-              aria-pressed={view === next}
-              onClick={() => changeView(next)}
-            >
+            <Button key={next} type="button" disabled={status !== "ready"}
+              aria-pressed={view === next} onClick={() => changeView(next)}>
               {next === "front" ? "Depan" : next === "left" ? "Sudut kiri" : "Sudut kanan"}
+            </Button>
+          ))}
+        </div>
+        <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Bukaan dua daun pintu GLB">
+          {OPEN_ANGLES.map(next => (
+            <Button key={next} type="button" disabled={status !== "ready" || !modelInfo?.canOpen}
+              aria-pressed={angle === next} onClick={() => changeAngle(next)}>
+              {next}°
             </Button>
           ))}
           <Button type="button" disabled={status !== "ready"} onClick={saveImage}>
@@ -144,11 +158,12 @@ export default function AssetDoorPreview() {
         </div>
         {saveFailed && <p role="alert" className="text-sm text-destructive">Gambar gagal disimpan. Gunakan tangkapan layar perangkat.</p>}
         <p role="status" className="text-center text-sm text-foreground/75">
-          {modelInfo ? `Asset aktif: ${modelInfo.url} · ${modelInfo.meshCount} mesh` : "Menyiapkan pratinjau GLB."}
+          {modelInfo ? `Asset aktif: ${modelInfo.url} · ${modelInfo.faceCount.toLocaleString("id-ID")} bidang segitiga · ${modelInfo.canOpen ? "Buka–tutup aktif" : "Bukaan tidak tersedia"}` : "Menyiapkan pratinjau GLB."}
         </p>
         <p className="max-w-2xl text-center text-sm leading-6 text-foreground/75">
-          Material Rose–ivory dan sorot lembut hanya di bawah kaki pintu. GLB saat ini ditampilkan utuh:
-          bukaan daun belum diaktifkan sebelum bagian kusen dan daun dapat dipisahkan tanpa merusak ukiran.
+          Warna Rose satin mengikuti bidang pahatan asli, dengan kusen ivory-blush dan cahaya kecil di kaki pintu.
+          Kedua daun dipisahkan dari model GLB untuk uji engsel. Perhatikan sambungan kusen
+          dan panel saat membuka: pemisahan otomatis dari satu mesh masih perlu pemeriksaan visual.
         </p>
         <Link className="text-sm underline underline-offset-4" href="/pintu-lab/procedural">
           Lihat model procedural sebelumnya
