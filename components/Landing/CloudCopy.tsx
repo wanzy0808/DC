@@ -38,6 +38,13 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
   const textVisible = phase === "rest" || phase === "return";
   const assemble = phase === "return";
   const cloudVisible = phase === "rest" || phase === "depart" || phase === "return";
+  const cloudLobes = [
+    { className: "inset-x-[2%] inset-y-[5%] rounded-[48%]", x: 0, y: 28, delay: 0 },
+    { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full", x: -45, y: -42, delay: 0.13 },
+    { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full", x: 45, y: -42, delay: 0.23 },
+    { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full", x: -42, y: 38, delay: 0.33 },
+    { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full", x: 42, y: 38, delay: 0.43 },
+  ];
   return (
     <motion.div
       onPointerEnter={(event) => { if (event.pointerType === "mouse" && !reduced && phase === "rest") setPhase("depart"); }}
@@ -57,26 +64,23 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : "absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[12%] lg:w-[min(26vw,370px)]"}
     >
       <div className="relative isolate px-7 py-9 text-center sm:px-9 sm:py-11">
-        {/* Each lobe pops into its original position separately, assembling the cloud in place. */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={{ filter: "drop-shadow(1.5px 0 0 #C07A84) drop-shadow(-1.5px 0 0 #C07A84) drop-shadow(0 1.5px 0 #C07A84) drop-shadow(0 -1.5px 0 #C07A84)" }}>
-        {[
-          { className: "inset-x-[2%] inset-y-[5%] rounded-[48%] bg-background/75 dark:bg-white/15 ", x: 0, y: 28, delay: 0 },
-          { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full bg-background/75 dark:bg-white/15", x: -45, y: -42, delay: 0.13 },
-          { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full bg-background/75 dark:bg-white/15", x: 45, y: -42, delay: 0.23 },
-          { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full bg-background/75 dark:bg-white/15", x: -42, y: 38, delay: 0.33 },
-          { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full bg-background/75 dark:bg-white/15", x: 42, y: 38, delay: 0.43 },
-        ].map((lobe, index) => (
-          <motion.div
-            key={index}
-            aria-hidden="true"
-            className={`pointer-events-none absolute ${lobe.className}`}
-            initial={false}
-            animate={assemble
-              ? { opacity: [0, 1, 1], x: [lobe.x, -lobe.x * 0.08, 0], y: [lobe.y, -lobe.y * 0.08, 0], scale: [0.35, 1.1, 1] }
-              : { opacity: cloudVisible ? 1 : 0, x: 0, y: 0, scale: 1 }}
-            transition={assemble ? { duration: 0.62, delay: lobe.delay, times: [0, 0.75, 1], ease: "easeOut" } : { duration: 0 }}
-          />
-        ))}
+        {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute inset-0" style={{ filter: "drop-shadow(1px 0 0 #C07A84) drop-shadow(-1px 0 0 #C07A84) drop-shadow(0 1px 0 #C07A84) drop-shadow(0 -1px 0 #C07A84)" }}>
+            {cloudLobes.map((lobe, index) => (
+              <motion.div
+                key={index}
+                className={`absolute ${lobe.className} bg-background dark:bg-[#181416]`}
+                initial={false}
+                animate={assemble
+                  ? { opacity: [0, 1, 1], x: [lobe.x, -lobe.x * 0.08, 0], y: [lobe.y, -lobe.y * 0.08, 0], scale: [0.35, 1.1, 1] }
+                  : { opacity: cloudVisible ? 1 : 0, x: 0, y: 0, scale: 1 }}
+                transition={assemble ? { duration: 0.62, delay: lobe.delay, times: [0, 0.75, 1], ease: "easeOut" } : { duration: 0 }}
+              />
+            ))}
+          </div>
+          {/* Fade the whole assembled silhouette into the frame instead of stacking translucent circles. */}
+          <div className="absolute inset-0 bg-background/20 dark:bg-transparent" />
         </div>
         <motion.div className="relative z-10" initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
         {top ? (
