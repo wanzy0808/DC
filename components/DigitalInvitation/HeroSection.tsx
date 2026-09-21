@@ -18,6 +18,7 @@ export default function HeroSection() {
   const [portalArrival, setPortalArrival] = useState(false);
   const reducedMotion = useReducedMotion();
   const [arrivalFinished, setArrivalFinished] = useState(false);
+  const [scrollFinished, setScrollFinished] = useState(false);
   useLayoutEffect(() => {
     if (sessionStorage.getItem("dc-portal-entry") === "1") {
       sessionStorage.removeItem("dc-portal-entry");
@@ -92,7 +93,7 @@ export default function HeroSection() {
       </div>
 
       <div className="relative mx-auto w-full max-w-xl lg:pr-4">
-        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival ? { scale: [reducedMotion ? 1 : 3.2, 1], opacity: [1, 1] } : { scale: 1, opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 2.35, ease: [0.25, 0.1, 0.2, 1], times: [0, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
+        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival ? { scale: scrollFinished || reducedMotion ? 1 : 3.2, opacity: 1 } : { scale: 1, opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 2.35, ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival && scrollFinished) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
           <div className="relative aspect-[0.68] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
@@ -124,7 +125,7 @@ export default function HeroSection() {
                   <div className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#151515] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
                 </div>
 
-                <div className={`invitation-phone-scroll absolute inset-x-0 top-0 w-full ${portalArrival && !arrivalFinished ? "invitation-phone-scroll-paused" : ""}`}>
+                <motion.div className={`invitation-phone-scroll absolute inset-x-0 top-0 w-full ${portalArrival ? "invitation-phone-scroll-paused" : ""}`} animate={portalArrival ? { y: reducedMotion ? "0%" : ["0%", "0%", "-38%", "-38%"] } : { y: "0%" }} transition={{ duration: reducedMotion ? 0 : 3.5, times: [0, 0.2, 0.82, 1], ease: "easeInOut" }} onAnimationComplete={() => { if (portalArrival) setScrollFinished(true); }}>
                   <article className="min-h-full bg-[#f8f4f1] px-7 pb-16 pt-12 text-[#2a2220] dark:bg-[#111111] dark:text-white">
                     <div className="mx-auto max-w-[250px] text-center">
                       <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.28em] text-[#8b5d62] dark:text-primary">
@@ -223,7 +224,7 @@ export default function HeroSection() {
                       </p>
                     </div>
                   </article>
-                </div>
+                </motion.div>
               </div>
             </div>
           </div>
@@ -237,7 +238,7 @@ export default function HeroSection() {
         }
 
         .invitation-phone-scroll-paused {
-          animation-play-state: paused;
+          animation: none;
         }
 
         @keyframes invitation-phone-scroll {
