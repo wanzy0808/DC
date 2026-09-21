@@ -6,7 +6,7 @@
 export function addReferenceDoorCrown({
   THREE, root, geometries, frameMaterial, leafMaterial, trimMaterial, FRAME_TOP,
 }) {
-  const baseY = FRAME_TOP + 0.66;
+  const baseY = FRAME_TOP + 0.33;
   function sculpt(shape, depth, x, y, z, material, bevel = 0.012) {
     const geometry = new THREE.ExtrudeGeometry(shape, {
       depth, steps: 1, curveSegments: 16, bevelEnabled: true,
