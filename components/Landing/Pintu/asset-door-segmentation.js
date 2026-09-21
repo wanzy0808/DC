@@ -5,6 +5,8 @@
  * Seams at the artificial cut are experimental pending screenshot validation.
  */
 
+import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+
 export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
   const originalGeometries = new Set();
   const originalMaterials = new Set();
@@ -41,13 +43,17 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
   const output = [[], [], []]; // stationary, left, right
   const outputNormals = [[], [], []];
   const outputColors = [[], [], []];
+  // Reference Pintu 1: warm ivory-blush ARCHITECTURE, muted Rose LEAVES.
+  // Previous build tinted the entire crown/pilaster mauve and painted every
+  // forward-facing vertex of the leaves a different color, causing the
+  // artificial two-tone / clay-sticker look regardless of actual carving.
   const paint = [
-    new THREE.Color(0xc8aba9), // muted ivory/blush of the reference frame
-    new THREE.Color(0xbe8b95), // satin Rose, left leaf
-    new THREE.Color(0xbe8b95), // satin Rose, right leaf
+    new THREE.Color(0xe7d7d0), // cornice, crown, jamb / pilaster
+    new THREE.Color(0xbf8794), // left slab: dusty rose satin
+    new THREE.Color(0xbf8794), // right slab: the SAME paint
   ];
-  const lightPaint = new THREE.Color(0xd3b6b0);
-  const carvedPaint = new THREE.Color(0xc99e9d);
+  const crownIvory = new THREE.Color(0xf1e5dc);
+  const leafMolding = new THREE.Color(0xd1a5ab);
   let clippedTriangles = 0;
 
   function interpolate(a, b, axis, boundary) {
@@ -91,14 +97,19 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
         output[role].push(...vertex.p);
         const normal = new THREE.Vector3(...vertex.n).normalize();
         outputNormals[role].push(normal.x, normal.y, normal.z);
-        const z = (vertex.p[2] - bounds.min.z) / depth;
-        // A subtly shaded paint layer follows original geometric depth. We
-        // do not paint a random pink/gold checkerboard over the carved mesh.
+        const z = THREE.MathUtils.clamp((vertex.p[2] - bounds.min.z) / depth, 0, 1);
+        const x = Math.abs(vertex.p[0] - seamX);
+        // Same-color leaf body. Only a very small highlight on physically
+        // protruding front mouldings, never a z-driven recolor of whole panels
+        // or giant gold patches. Color follows actual GLB relief; we invent
+        // no substitute SVG/extruded ornament geometry.
+        const isMolding = role !== 0 && z > 0.90 &&
+          x > size.x * 0.045 && x < size.x * 0.31;
         const tint = role === 0
-          ? (vertex.p[1] > topEdge ? lightPaint : paint[0])
-          : (z > 0.84 ? carvedPaint : paint[role]);
-        const shade = 0.89 + Math.min(1, Math.max(0, z)) * 0.10;
-        outputColors[role].push(tint.r * shade, tint.g * shade, tint.b * shade);
+          ? (vertex.p[1] > topEdge ? crownIvory : paint[0])
+          : (isMolding ? leafMolding : paint[role]);
+        const variation = 0.975 + 0.025 * z;
+        outputColors[role].push(tint.r * variation, tint.g * variation, tint.b * variation);
       }
     }
   }
@@ -158,18 +169,25 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
 
   for (let role = 0; role < 3; role += 1) {
     if (!output[role].length) continue;
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.Float32BufferAttribute(output[role], 3));
-    geometry.setAttribute("normal", new THREE.Float32BufferAttribute(outputNormals[role], 3));
-    geometry.setAttribute("color", new THREE.Float32BufferAttribute(outputColors[role], 3));
+    const rawGeometry = new THREE.BufferGeometry();
+    rawGeometry.setAttribute("position", new THREE.Float32BufferAttribute(output[role], 3));
+    rawGeometry.setAttribute("normal", new THREE.Float32BufferAttribute(outputNormals[role], 3));
+    rawGeometry.setAttribute("color", new THREE.Float32BufferAttribute(outputColors[role], 3));
+    // gltfjsx / higher polygon budgets do not add detail to a mesh. This
+    // existing Three.js utility reconciles normals across split triangles
+    // while retaining pronounced moulding edges (>~52°) instead of letting
+    // the exporter average carved corners into a melted clay surface.
+    const geometry = toCreasedNormals(rawGeometry, THREE.MathUtils.degToRad(52));
+    rawGeometry.dispose();
     geometry.computeBoundingSphere();
     const material = new THREE.MeshPhysicalMaterial({
       color: 0xffffff,
       vertexColors: true,
-      roughness: role === 0 ? 0.75 : 0.68,
-      metalness: 0.025,
-      clearcoat: role === 0 ? 0.07 : 0.16,
-      clearcoatRoughness: 0.8,
+      roughness: role === 0 ? 0.70 : 0.65,
+      metalness: 0,
+      clearcoat: role === 0 ? 0.045 : 0.09,
+      clearcoatRoughness: 0.66,
+      envMapIntensity: role === 0 ? 0.38 : 0.48,
       side: THREE.DoubleSide,
     });
     createdGeometries.push(geometry);
