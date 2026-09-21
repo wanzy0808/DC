@@ -24,6 +24,7 @@ import {
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import RegisterDialog from "./RegisterDialog";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function BurgerMenuContent() {
@@ -48,18 +49,18 @@ export default function BurgerMenuContent() {
 
   const serviceActive = services.some(({ href }) => pathname === href);
   const neutralButton =
-    "border border-primary/25 bg-background/45 text-foreground shadow-none backdrop-blur-sm hover:border-primary/60 hover:bg-primary/10 hover:text-foreground dark:border-primary/30 dark:bg-background/45 dark:text-foreground dark:hover:border-primary/60 dark:hover:bg-primary/15 dark:hover:text-foreground";
-  const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start rounded-xl px-4 py-3 text-left text-sm`;
-  const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start rounded-lg px-4 py-2.5 text-left text-[13px]`;
+    "border border-primary/25 !rounded-2xl bg-background/45 text-foreground shadow-none backdrop-blur-sm transition-[background-color,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10 hover:text-foreground dark:border-primary/30 dark:bg-background/45 dark:text-foreground dark:hover:border-primary/60 dark:hover:bg-primary/15 dark:hover:text-foreground";
+  const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start !rounded-2xl px-4 py-3 text-left text-sm`;
+  const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start !rounded-2xl px-4 py-2.5 text-left text-[13px]`;
 
   return (
     <SheetContent
       side="right"
-      className="flex w-[min(92vw,420px)] flex-col overflow-hidden border-l border-primary/30 bg-background/90 p-0 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-xl"
+      className="flex w-[min(92vw,420px)] flex-col overflow-hidden border-l border-primary/30 !rounded-l-[28px] bg-background/90 p-0 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-xl"
     >
       <motion.div
-        initial={shouldReduceMotion ? false : { opacity: 0, x: 18 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, x: 28, scale: 0.97 }}
+        animate={{ opacity: 1, x: 0, scale: 1 }}
         transition={
           shouldReduceMotion
             ? undefined
@@ -68,13 +69,13 @@ export default function BurgerMenuContent() {
         className="flex min-h-0 flex-1 flex-col overflow-y-auto"
       >
         <SheetHeader className="shrink-0 border-b border-primary/15 bg-background/35 px-6 pb-5 pt-7 pr-14 text-left sm:px-7">
-          <SheetTitle className="font-[family-name:var(--font-dc-heading)] text-2xl font-normal leading-tight text-[var(--foreground)]">
-            {nav.navigation}
+          <SheetTitle className="w-fit rounded-2xl border border-primary/25 bg-background/45 px-4 py-3 backdrop-blur-sm">
+            <BrandWordmark size="mobile" />
           </SheetTitle>
         </SheetHeader>
 
         <nav className="flex-1 space-y-2 bg-transparent p-4 sm:p-5">
-          <div className="space-y-1.5 rounded-[18px] border border-primary/20 bg-background/30 p-2">
+          <div className="space-y-1.5 rounded-[24px] border border-primary/20 bg-background/30 p-2">
             <Button
               type="button"
               aria-expanded={servicesOpen}
