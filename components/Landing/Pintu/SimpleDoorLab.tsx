@@ -157,10 +157,10 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
       context.fillStyle = "#fffaf3";
       context.textAlign = "center";
       context.textBaseline = "middle";
-      context.font = "600 64px Georgia, serif";
+      context.font = "700 88px Georgia, serif";
       context.shadowColor = "rgba(76,38,48,0.65)";
       context.shadowBlur = 14;
-      context.fillText(title, 512, 128, 930);
+      context.fillText(title, 512, 128, 980);
     }
     const map = new THREE.CanvasTexture(canvas);
     map.colorSpace = THREE.SRGBColorSpace;
@@ -170,7 +170,7 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
     if (label.current) label.current.opacity = THREE.MathUtils.damp(label.current.opacity, opening ? 0 : 1, 5, delta);
   });
   return <mesh position={[0, 0.66, 0.132]} renderOrder={3}>
-    <planeGeometry args={[1.56, 0.39]} />
+    <planeGeometry args={[1.72, 0.48]} />
     <meshBasicMaterial ref={label} map={texture} transparent depthWrite={false} toneMapped={false} polygonOffset polygonOffsetFactor={-2} />
   </mesh>;
 }
@@ -237,8 +237,8 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
       const z = Math.cos(theta) * 1.25;
       group.position.set(x, 0, z);
       group.rotation.y = -Math.sin(theta) * 0.17;
-      const orbitScale = 0.62 + (z + 1.25) / 2.5 * 0.12;
-      const selectedScale = selected === index ? 1.12 : 0.65;
+      const orbitScale = 0.69 + (z + 1.25) / 2.5 * 0.12;
+      const selectedScale = selected === index ? 1.12 : 0.70;
       const targetScale = selected === null ? orbitScale : selectedScale;
       const nextScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.8, delta);
       group.scale.setScalar(nextScale);
