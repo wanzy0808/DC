@@ -42,7 +42,19 @@ function Arch({ width, height, depth, color, z = 0, gradient = false }: { width:
   </mesh>;
 }
 
-function PortalWorld({ image }: { image: string }) {
+function DoorFrame() {
+  const geometry = useMemo(() => {
+    const outer = archShape(2.02, 4.18);
+    const inner = archShape(1.88, 4.06);
+    // Shape holes must wind opposite the outer contour.
+    const hole = new THREE.Path(inner.getPoints(64).reverse());
+    outer.holes.push(hole);
+    return new THREE.ExtrudeGeometry(outer, { depth: 0.09, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 2, curveSegments: 48 });
+  }, []);
+  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#b16b78" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
+}
+
+function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
   const source = useLoader(THREE.TextureLoader, image);
   const texture = useMemo(() => {
     const copy = source.clone();
@@ -55,9 +67,10 @@ function PortalWorld({ image }: { image: string }) {
     return copy;
   }, [source]);
   const geometry = useMemo(() => new THREE.ShapeGeometry(archShape(1.88, 4.06), 48), []);
-  return <mesh geometry={geometry} position={[0, 0, -0.19]}>
-    <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} />
-  </mesh>;
+  return <group position={[0, 0, -0.19]}>
+    <mesh geometry={geometry}><meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} /></mesh>
+    <mesh geometry={geometry} position={[0, 0, 0.008]}><meshBasicMaterial color="#fff0d8" transparent opacity={opening ? 0.08 : 0.32} depthWrite={false} side={THREE.DoubleSide} /></mesh>
+  </group>;
 }
 
 function GroundShadow() {
@@ -118,9 +131,9 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
   });
   const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
-    <PortalWorld image={image} />
+    <PortalWorld image={image} opening={opening} />
     <group position={[0, 0, -0.16]}>
-      <Arch width={2.02} height={4.18} depth={0.09} color={palette.frame} />
+      <DoorFrame />
     </group>
     <group ref={pivot} position={[-0.94, 0, -0.065]}>
       <group position={[0.94, 0, 0]}>
@@ -192,7 +205,7 @@ export default function SimpleDoorLab() {
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
-        <pointLight position={[0, -1.35, -0.1]} intensity={opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
+        <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening([0, 1, 2].map((i) => i === index)); }} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
@@ -201,7 +214,7 @@ export default function SimpleDoorLab() {
     </div>
     <div className="flex flex-wrap items-center justify-center gap-3">
       <span className="text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : ["Event Planner", "Undangan Digital", "Guestbook"][selected]}</span>
-      <button type="button" disabled={selected === null || entering || !opening[selected]} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk"}</button>
+      <button type="button" disabled={selected === null || entering || (selected !== null && !opening[selected])} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk"}</button>
     </div>
   </section>;
 }
