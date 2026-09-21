@@ -2,6 +2,7 @@ export type OrbitalDoorId = 1 | 2 | 3;
 
 export type OrbitalDoorControls = {
   pause: (paused: boolean) => void;
+  resume: () => void;
   select: (id: OrbitalDoorId) => void;
   enter: (id: OrbitalDoorId) => boolean;
   cancel: () => void;
