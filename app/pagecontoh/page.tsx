@@ -5,9 +5,57 @@ import Footer from "@/components/Layout/Footer";
 import SimpleDoorLab from "@/components/Landing/Pintu/SimpleDoorLab";
 import LandingFloralGlow from "@/components/Landing/LandingFloralGlow";
 import { motion, useReducedMotion } from "motion/react";
+import { Volume2, VolumeX } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function PageContoh() {
   const reduced = useReducedMotion();
+  const [soundOn, setSoundOn] = useState(false);
+  const [volume, setVolume] = useState(30);
+  const audio = useRef<{ context: AudioContext; gain: GainNode } | null>(null);
+
+  useEffect(() => () => {
+    const current = audio.current;
+    audio.current = null;
+    if (current) void current.context.close();
+  }, []);
+
+  function toggleSound() {
+    if (soundOn) {
+      audio.current?.gain.gain.setTargetAtTime(0, audio.current.context.currentTime, 0.12);
+      setSoundOn(false);
+      return;
+    }
+    try {
+      if (!audio.current) {
+        const context = new AudioContext();
+        const gain = context.createGain();
+        gain.gain.value = 0;
+        gain.connect(context.destination);
+        for (const [frequency, level] of [[174.61, 0.24], [261.63, 0.15], [349.23, 0.1]] as const) {
+          const oscillator = context.createOscillator();
+          const voice = context.createGain();
+          oscillator.type = "sine";
+          oscillator.frequency.value = frequency;
+          voice.gain.value = level;
+          oscillator.connect(voice).connect(gain);
+          oscillator.start();
+        }
+        audio.current = { context, gain };
+      }
+      void audio.current.context.resume();
+      audio.current.gain.gain.setTargetAtTime(volume / 100 * 0.13, audio.current.context.currentTime, 0.2);
+      setSoundOn(true);
+    } catch {
+      setSoundOn(false);
+    }
+  }
+
+  function changeVolume(value: number) {
+    setVolume(value);
+    if (audio.current) audio.current.gain.gain.setTargetAtTime(soundOn ? value / 100 * 0.13 : 0, audio.current.context.currentTime, 0.08);
+  }
   return (
     <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground">
       {/* One continuous scene behind the framed composition and its outer margins. */}
@@ -19,6 +67,14 @@ export default function PageContoh() {
         </main>
         <div className="pointer-events-none relative z-30 border-b border-primary/15 bg-background/35 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Navbar embedded /></div>
         <div className="flex-1" aria-hidden="true" />
+        <div className="absolute bottom-16 left-4 z-40 flex items-center gap-2 rounded-xl border border-primary/25 bg-background/85 p-2 shadow-sm backdrop-blur-md sm:bottom-14 sm:left-6">
+          <Button size="icon-sm" onClick={toggleSound} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
+            {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
+          </Button>
+          <label htmlFor="contoh-volume" className="sr-only">Volume suara</label>
+          <input id="contoh-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="w-20 cursor-pointer accent-[#C07A84] sm:w-24" aria-valuetext={volume + "%"} />
+          <span className="w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-foreground/70">{volume}%</span>
+        </div>
         <div className="pointer-events-none relative z-20 border-t border-primary/15 bg-background/30 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
       </motion.div>
     </div>
