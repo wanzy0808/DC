@@ -7,6 +7,7 @@ import { motion, useReducedMotion } from "motion/react";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import { useTheme } from "@/components/Theme/ThemeProvider";
 
 function archShape(width: number, height: number) {
   const s = new THREE.Shape();
@@ -83,7 +84,7 @@ function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
   </group>;
 }
 
-function GroundShadow({ fullFrame }: { fullFrame: boolean }) {
+function GroundShadow({ fullFrame, isDarkMode }: { fullFrame: boolean; isDarkMode: boolean }) {
   // A soft, transparent contact shadow: no rectangular floor plane or hard-edged shadow box.
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -100,6 +101,21 @@ function GroundShadow({ fullFrame }: { fullFrame: boolean }) {
     }
     return new THREE.CanvasTexture(canvas);
   }, []);
+  const glowTexture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 128;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(64, 64, 3, 64, 64, 64);
+      gradient.addColorStop(0, "rgba(255,255,255,0.95)");
+      gradient.addColorStop(0.3, "rgba(255,255,255,0.55)");
+      gradient.addColorStop(0.7, "rgba(255,255,255,0.12)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 128, 128);
+    }
+    return new THREE.CanvasTexture(canvas);
+  }, []);
   return <group>
   <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
     <planeGeometry args={[2.9, 1.6]} />
@@ -107,7 +123,7 @@ function GroundShadow({ fullFrame }: { fullFrame: boolean }) {
   </mesh>
   {fullFrame && <mesh position={[0, -2.139, 0.05]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-2}>
     <planeGeometry args={[2.65, 1.35]} />
-    <meshBasicMaterial map={texture} color="#ffffff" transparent depthWrite={false} toneMapped={false} opacity={0.28} blending={THREE.AdditiveBlending} />
+    <meshBasicMaterial map={glowTexture} color={isDarkMode ? "#ffffff" : "#21151a"} transparent depthWrite={false} toneMapped={false} opacity={isDarkMode ? 0.85 : 0.3} blending={isDarkMode ? THREE.AdditiveBlending : THREE.NormalBlending} />
   </mesh>}
   </group>;
 }
@@ -242,7 +258,7 @@ const PORTALS = [
   { title: "Undangan Fisik", image: "/Ufisik.png", href: "/undangan-fisik" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean }) {
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   const buttonAnchor = useMemo(() => new THREE.Vector3(), []);
@@ -299,7 +315,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} />
-    <GroundShadow fullFrame={fullFrame} />
+    <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;
 }
@@ -310,6 +326,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   const [entering, setEntering] = useState(false);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
+  const { isDarkMode } = useTheme();
   const enterButton = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   function enterPortal() {
@@ -325,7 +342,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       
