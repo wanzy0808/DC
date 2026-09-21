@@ -32,12 +32,12 @@ function PortalCamera({ entering, reducedMotion, onArrive }: { entering: boolean
   const progress = useRef(0);
   const arrived = useRef(false);
   useFrame((_, delta) => {
-    progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 15 : 0.9, delta);
+    progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 18 : 2.4, delta);
     const t = progress.current;
     const eased = t * t * (3 - 2 * t);
     camera.position.set(0, 0.05 - eased * 0.12, 6.7 - eased * 7.65);
     camera.lookAt(0, -0.05, -2);
-    if (entering && t > 0.995 && !arrived.current) {
+    if (entering && t > 0.96 && !arrived.current) {
       arrived.current = true;
       onArrive();
     }
@@ -91,7 +91,7 @@ export default function SimpleDoorLab() {
   return <section className="w-full max-w-5xl space-y-4">
     <div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
       <Canvas shadows camera={{ position: [0, 0.05, 6.7], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onArrive={() => router.push("/digital-invitation")} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onArrive={() => router.push("/d-invitation")} />
         <color attach="background" args={["#f8e6e6"]} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
@@ -105,7 +105,7 @@ export default function SimpleDoorLab() {
           <meshStandardMaterial color="#f5d8d9" roughness={0.83} />
         </mesh>
       </Canvas>
-      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 2.1, duration: reducedMotion ? 0 : 1.2 }} />
+      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Eksperimen portal · tanpa GLB</span>
     </div>
     <div className="flex flex-wrap items-center justify-center gap-3">
