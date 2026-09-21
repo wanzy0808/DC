@@ -38,13 +38,6 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
   const textVisible = phase === "rest" || phase === "return";
   const assemble = phase === "return";
   const cloudVisible = phase === "rest" || phase === "depart" || phase === "return";
-  const cloudLobes = [
-    { className: "inset-x-[2%] inset-y-[5%] rounded-[48%]", x: 0, y: 28, delay: 0 },
-    { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full", x: -45, y: -42, delay: 0.13 },
-    { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full", x: 45, y: -42, delay: 0.23 },
-    { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full", x: -42, y: 38, delay: 0.33 },
-    { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full", x: 42, y: 38, delay: 0.43 },
-  ];
   return (
     <motion.div
       onPointerEnter={(event) => { if (event.pointerType === "mouse" && !reduced && phase === "rest") setPhase("depart"); }}
@@ -60,25 +53,16 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: 0 }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-[5%] top-1 z-20 w-[min(78vw,340px)] sm:left-[8%] sm:top-2 lg:left-[11%] lg:top-[3%] lg:w-[min(29vw,475px)]"
+        ? "absolute left-[5%] top-1 z-20 w-[min(78vw,340px)] sm:left-[3%] sm:top-2 lg:left-[2%] lg:top-[3%] lg:w-[min(29vw,475px)]"
         : "absolute bottom-1 right-[5%] z-20 w-[min(69vw,285px)] sm:bottom-2 sm:right-[8%] lg:bottom-[3%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
     >
       <div className="relative isolate px-9 py-12 text-center sm:px-12 sm:py-14">
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0">
-            {cloudLobes.map((lobe, index) => (
-              <motion.div
-                key={index}
-                className={`absolute ${lobe.className} bg-background/25 dark:bg-white/[0.085]`}
-                initial={false}
-                animate={assemble
-                  ? { opacity: [0, 1, 1], x: [lobe.x, -lobe.x * 0.08, 0], y: [lobe.y, -lobe.y * 0.08, 0], scale: [0.35, 1.1, 1] }
-                  : { opacity: cloudVisible ? 1 : 0, x: 0, y: 0, scale: 1 }}
-                transition={assemble ? { duration: 0.62, delay: lobe.delay, times: [0, 0.75, 1], ease: "easeOut" } : { duration: 0 }}
-              />
-            ))}
-          </div>
+          {/* A single translucent cloud silhouette prevents overlapping circles in dark mode. */}
+          <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-background/30 dark:text-[#241b20]/80" aria-hidden="true" initial={false} animate={{ opacity: cloudVisible ? 1 : 0 }} transition={{ duration: 0.2 }}>
+            <path d="M70 251 C36 249 22 221 30 193 C8 166 20 130 51 117 C52 83 80 60 112 65 C133 28 178 21 208 43 C242 8 298 24 307 66 C346 66 369 95 367 126 C399 148 400 185 374 208 C377 240 344 262 311 249 C282 271 251 260 230 250 C202 263 170 255 153 248 C122 269 88 263 70 251 Z" fill="currentColor" />
+          </motion.svg>
           {/* One outer contour, with no opaque fill or internal circle borders. */}
           <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-primary/65" fill="none" aria-hidden="true" initial={false} animate={{ opacity: cloudVisible ? 1 : 0 }} transition={{ duration: 0.15 }}>
             <motion.path initial={false} animate={{ pathLength: assemble ? [0, 0, 1] : cloudVisible ? 1 : 0 }} transition={{ duration: assemble ? 1.3 : 0.15, times: [0, 0.5, 1], ease: "easeOut" }} d="M70 251 C36 249 22 221 30 193 C8 166 20 130 51 117 C52 83 80 60 112 65 C133 28 178 21 208 43 C242 8 298 24 307 66 C346 66 369 95 367 126 C399 148 400 185 374 208 C377 240 344 262 311 249 C282 271 251 260 230 250 C202 263 170 255 153 248 C122 269 88 263 70 251 Z" stroke="currentColor" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
