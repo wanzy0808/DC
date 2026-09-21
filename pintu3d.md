@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Pintu 1 di `/pintu-lab` memakai GLB asli `40k.glb` (satu mesh unrigged) dengan uji bukaan dari clipping mesh; revisi lanjutan pada branch `fix/pintu-40k-reference-palette-relief-review` menyesuaikan bingkai ivory-blush, daun Rose satin, shading pahatan dan kontras lighting mendekati `public/pintu1.png`. `Door40k.tsx` yang dihasilkan `gltfjsx` merupakan komponen STATIC satu mesh, bukan model kiri/kanan berengsel; kini dependensinya disejajarkan dengan Fiber/Three yang benar-benar terpasang. CI serta screenshot visual versi revisi **belum diamati** saat catatan dibuat. Landing `/`, `/jiplak` dan orbital tetap tidak diubah sampai review.
+**STATUS AKTIF:** Pintu 1 GLB `40k.glb` di `/pintu-lab`: PR #66 merged `main` (CI PASS), mengoreksi frame ivory–blush, daun Rose satin, smoothing sudut ukiran melalui utilitas Three dan mengurangi flat lighting. `Door40k.tsx` generated kini dapat dipakai sebagai preview Fiber statis tanpa dependency Drei yang belum terpasang; buka–tutup lab tetap melalui pemisahan mesh GLB original 0°–110°. **Kualitas visual 1:1 dengan `pintu1.png` dan seam saat buka belum disetujui**; landing `/`, `/jiplak` dan orbital tetap tidak diubah.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -12,7 +12,7 @@
 
 **Batas fidelity nyata:** `40k.glb` hanya punya satu mesh 40k segitiga tanpa UV, material berbeda, rig/daun asli atau tekstur ornamen; komponen `gltfjsx` tidak menambah geometri detail. Split otomatis masih bisa membelah list/handle, normal crease tidak dapat memahat ulang ukiran yang bentuknya berbeda dari foto, dan lokasi warna material individual tidak dapat dipastikan presisi tanpa geometri/part terpisah. **Jangan klaim 1:1 terhadap `pintu1.png` atau pintu final sebelum membandingkan screenshot sudut depan/miring dan bukaan.** Perubahan ini tidak mengubah `40k.glb`, tidak menambah flat overlay foto atau crest generik.
 
-**File:** `Door40k.tsx`, `asset-door-segmentation.js`, `asset-door-engine.js`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. **Validasi pada saat penulisan:** GitHub CI dan WebGL screenshot versi baru masih pending.
+**File:** `Door40k.tsx`, `asset-door-segmentation.js`, `asset-door-engine.js`, `app/pintu-lab/page.tsx`, `pintu3d.md`, `prd.md`. **Validasi setelah merge:** GitHub Build Validation run `35556148699` pada source head `3939af7f748bc8cbca9012179486c88ace9b80e9` **PASS** termasuk Next.js production build/TypeScript. PR #66 squash-merged ke `main` commit `e7cad99f26f7dc8cb62462fa29915de1c34291c4`. Screenshot WebGL di desktop/mobile, normal pahatan dari beberapa sudut dan clipping di 45°–110° setelah patch **belum teramati**; build bukan approval visual.
 
 ## Percobaan asset-first GLB — 21 September 2026
 
