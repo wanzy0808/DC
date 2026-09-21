@@ -131,7 +131,10 @@ export async function mountOrbitalDoors(container, options = {}) {
       entered = true;
       options.onEntered?.(selected);
     }
-    if (!options.reducedMotion || entering || targetPhase !== null) invalidate();
+    // A pinned/hover-paused scene is static: do not keep redrawing 24–30 fps.
+    // Re-enter the loop on a real interaction, unpause, or a pending transition.
+    if ((!paused && !options.reducedMotion) ||
+      (entering && (opening < 110 || approach < 1)) || targetPhase !== null) invalidate();
   }
 
   function invalidate() {
