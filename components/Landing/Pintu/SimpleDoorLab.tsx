@@ -89,29 +89,41 @@ function GroundShadow() {
   </mesh>;
 }
 
-function Fireflies({ offset, reducedMotion }: { offset: number; reducedMotion: boolean }) {
+function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   const points = useRef<THREE.Points>(null);
-  const positions = useMemo(() => {
-    const array = new Float32Array(24 * 3);
-    for (let i = 0; i < 24; i++) {
-      const t = i * 2.399963;
-      const radius = 0.6 + ((i * 17) % 23) / 20;
-      array[i * 3] = Math.cos(t) * radius;
-      array[i * 3 + 1] = -1.65 + ((i * 13) % 23) / 23 * 4.5;
-      array[i * 3 + 2] = 0.35 + ((i * 7) % 13) / 13 * 1.1;
-    }
-    return array;
+  const base = useMemo(() => {
+    const particles = Array.from({ length: 54 }, (_, i) => {
+      const seed = (n: number) => {
+        const v = Math.sin((i + 1) * n * 127.1) * 43758.5453;
+        return v - Math.floor(v);
+      };
+      return {
+        x: (seed(1.1) - 0.5) * 9.5,
+        y: (seed(2.3) - 0.5) * 4.6,
+        z: -0.35 + seed(3.7) * 3.1,
+        speed: 0.12 + seed(4.9) * 0.27,
+        phase: seed(5.3) * Math.PI * 2,
+        radius: 0.08 + seed(6.7) * 0.28,
+      };
+    });
+    return particles;
   }, []);
+  const positions = useMemo(() => new Float32Array(base.length * 3), [base]);
   useFrame(({ clock }) => {
-    if (!points.current || reducedMotion) return;
-    const t = clock.elapsedTime;
-    points.current.position.y = Math.sin(t * 0.43 + offset) * 0.14;
-    points.current.rotation.y = Math.sin(t * 0.2 + offset) * 0.08;
-    (points.current.material as THREE.PointsMaterial).opacity = 0.43 + Math.sin(t * 1.5 + offset) * 0.17;
+    if (!points.current) return;
+    const time = reducedMotion ? 0 : clock.elapsedTime;
+    for (let i = 0; i < base.length; i++) {
+      const p = base[i];
+      positions[i * 3] = p.x + Math.sin(time * p.speed + p.phase) * p.radius;
+      positions[i * 3 + 1] = p.y + Math.sin(time * p.speed * 0.73 + p.phase * 1.7) * 0.2;
+      positions[i * 3 + 2] = p.z + Math.cos(time * p.speed * 0.64 + p.phase) * 0.19;
+    }
+    points.current.geometry.attributes.position.needsUpdate = true;
+    (points.current.material as THREE.PointsMaterial).opacity = reducedMotion ? 0.28 : 0.3 + Math.sin(time * 0.37) * 0.06;
   });
-  return <points ref={points} position={[0, 0, 0]}>
+  return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial color="#fff0d8" size={0.052} transparent opacity={0.55} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+    <pointsMaterial color="#ffe8bd" size={0.037} transparent opacity={0.32} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
   </points>;
 }
 
@@ -251,7 +263,6 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} />
     <GroundShadow />
-    <Fireflies offset={index * 2.1} reducedMotion={reducedMotion} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;
 }
@@ -275,6 +286,7 @@ export default function SimpleDoorLab() {
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
+        <Fireflies reducedMotion={Boolean(reducedMotion)} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
