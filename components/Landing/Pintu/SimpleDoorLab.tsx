@@ -27,6 +27,13 @@ function Arch({ width, height, depth, color, z = 0 }: { width: number; height: n
   </mesh>;
 }
 
+function GroundShadow() {
+  return <mesh position={[0, -2.145, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+    <planeGeometry args={[2.25, 1.45]} />
+    <shadowMaterial transparent opacity={0.26} depthWrite={false} />
+  </mesh>;
+}
+
 function Fireflies({ offset, reducedMotion }: { offset: number; reducedMotion: boolean }) {
   const points = useRef<THREE.Points>(null);
   const positions = useMemo(() => {
@@ -122,11 +129,12 @@ export default function SimpleDoorLab() {
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected]); }} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
-        <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} />
+        <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         {[-1, 0, 1].map((offset, index) => (
           <group key={index} position={[offset * 2.55, 0, 0]} rotation={[0, angle, 0]}>
             <Door opening={opening[index]} />
+            <GroundShadow />
             <Fireflies offset={index * 2.1} reducedMotion={Boolean(reducedMotion)} />
             <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
           </group>
