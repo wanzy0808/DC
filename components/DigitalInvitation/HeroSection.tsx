@@ -25,7 +25,10 @@ export default function HeroSection() {
     }
   }, []);
   useLayoutEffect(() => {
-    if (!portalArrival || reducedMotion || arrivalFinished) return;
+    if (!portalArrival || reducedMotion || arrivalFinished) {
+      document.body.classList.remove("dc-portal-arriving");
+      return;
+    }
     document.body.classList.add("dc-portal-arriving");
     return () => document.body.classList.remove("dc-portal-arriving");
   }, [portalArrival, reducedMotion, arrivalFinished]);
@@ -70,7 +73,7 @@ export default function HeroSection() {
 
   return (
     <section className="grid items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-24">
-      <motion.div className="max-w-2xl" initial={false} animate={{ opacity: portalArrival && !arrivalFinished && !reducedMotion ? 0 : 1 }} transition={{ duration: 0.85, delay: portalArrival && arrivalFinished ? 0.15 : 0 }}>
+      <motion.div className="dc-invitation-hero-copy max-w-2xl" initial={false} animate={{ opacity: portalArrival && !arrivalFinished && !reducedMotion ? 0 : 1 }} transition={{ duration: 0.85, delay: portalArrival && arrivalFinished ? 0.15 : 0 }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
         </p>
@@ -236,12 +239,6 @@ export default function HeroSection() {
       </div>
 
       <style jsx global>{`
-        body.dc-portal-arriving .dc-navbar,
-        body.dc-portal-arriving footer {
-          opacity: 0 !important;
-          pointer-events: none;
-        }
-        .dc-navbar, footer { transition: opacity 0.85s ease; }
       `}</style>
       <style jsx>{`
         .invitation-phone-scroll {
