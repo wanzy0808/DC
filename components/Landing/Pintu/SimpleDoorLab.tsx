@@ -5,6 +5,7 @@ import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import * as THREE from "three";
+import { Button } from "@/components/ui/button";
 
 function archShape(width: number, height: number) {
   const s = new THREE.Shape();
@@ -162,41 +163,7 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   </mesh>;
 }
 
-function PortalEnter({ visible, onEnter }: { visible: boolean; onEnter: () => void }) {
-  const material = useRef<THREE.MeshBasicMaterial>(null);
-  const texture = useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 160;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      ctx.fillStyle = "#c7567e";
-      ctx.beginPath();
-      ctx.roundRect(5, 5, 502, 150, 75);
-      ctx.fill();
-      ctx.strokeStyle = "#f8d7e3";
-      ctx.lineWidth = 5;
-      ctx.stroke();
-      ctx.fillStyle = "#ffffff";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.font = "600 66px Georgia, serif";
-      ctx.fillText("Masuk", 256, 82);
-    }
-    const map = new THREE.CanvasTexture(canvas);
-    map.colorSpace = THREE.SRGBColorSpace;
-    return map;
-  }, []);
-  useFrame((_, delta) => {
-    if (material.current) material.current.opacity = THREE.MathUtils.damp(material.current.opacity, visible ? 1 : 0, 5, delta);
-  });
-  return <mesh position={[0, 1.55, -0.168]} visible={visible} renderOrder={5} onClick={(event) => { event.stopPropagation(); onEnter(); }} onPointerOver={() => { document.body.style.cursor = "pointer"; }} onPointerOut={() => { document.body.style.cursor = ""; }}>
-    <planeGeometry args={[0.95, 0.3]} />
-    <meshBasicMaterial ref={material} map={texture} transparent depthWrite={false} toneMapped={false} />
-  </mesh>;
-}
-
-function Door({ opening, image, title, showEnter, onEnter }: { opening: boolean; image: string; title: string; showEnter: boolean; onEnter: () => void }) {
+function Door({ opening, image, title }: { opening: boolean; image: string; title: string }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
@@ -204,7 +171,6 @@ function Door({ opening, image, title, showEnter, onEnter }: { opening: boolean;
   const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} opening={opening} />
-    <PortalEnter visible={showEnter} onEnter={onEnter} />
     <group position={[0, 0, -0.16]}>
       <DoorFrame />
     </group>
@@ -238,10 +204,10 @@ const PORTALS = [
   { title: "Event Planner", image: "/wo.png", href: "/event-planner" },
   { title: "Undangan Digital", image: "/hp-digital.png", href: "/d-invitation" },
   { title: "Guestbook", image: "/bukutamu.png", href: "/guestbook" },
-  { title: "Undangan Fisik", image: "/wo.png", href: "/undangan-fisik" },
+  { title: "Undangan Fisik", image: "/UndanganFisik.png", href: "/undangan-fisik" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, onEnter }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; onEnter: () => void }) {
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   useFrame((_, delta) => {
@@ -266,7 +232,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, on
     });
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={portal.image} title={portal.title} showEnter={selected === index && opening[index] && !entering} onEnter={onEnter} />
+    <Door opening={opening[index]} image={portal.image} title={portal.title} />
     <GroundShadow />
     <Fireflies offset={index * 2.1} reducedMotion={reducedMotion} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
@@ -291,11 +257,12 @@ export default function SimpleDoorLab() {
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} onEnter={enterPortal} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Empat pintu · pilih tujuan untuk mendekat</span>
+      {selected !== null && opening[selected] && !entering && <div className="pointer-events-none absolute inset-x-0 top-[70%] z-10 flex justify-center"><Button size="sm" className="pointer-events-auto" onClick={enterPortal}>Masuk</Button></div>}
     </div>
-    <p className="text-center text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk di dalam pintu untuk melanjutkan"}</p>
+    <p className="text-center text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
   </section>;
 }
