@@ -13,39 +13,33 @@ export default function PageContoh() {
   const reduced = useReducedMotion();
   const [soundOn, setSoundOn] = useState(false);
   const [volume, setVolume] = useState(30);
-  const audio = useRef<{ context: AudioContext; gain: GainNode } | null>(null);
+  const audio = useRef<HTMLAudioElement | null>(null);
 
-  useEffect(() => () => {
-    const current = audio.current;
-    audio.current = null;
-    if (current) void current.context.close();
+  useEffect(() => {
+    const player = new Audio("/A%20Himitsu%20-%20Fragile.mp3");
+    player.loop = true;
+    player.preload = "none";
+    player.volume = volume / 100;
+    audio.current = player;
+    return () => {
+      player.pause();
+      player.removeAttribute("src");
+      player.load();
+      audio.current = null;
+    };
   }, []);
 
-  function toggleSound() {
+  async function toggleSound() {
+    const player = audio.current;
+    if (!player) return;
     if (soundOn) {
-      audio.current?.gain.gain.setTargetAtTime(0, audio.current.context.currentTime, 0.12);
+      player.pause();
       setSoundOn(false);
       return;
     }
     try {
-      if (!audio.current) {
-        const context = new AudioContext();
-        const gain = context.createGain();
-        gain.gain.value = 0;
-        gain.connect(context.destination);
-        for (const [frequency, level] of [[174.61, 0.24], [261.63, 0.15], [349.23, 0.1]] as const) {
-          const oscillator = context.createOscillator();
-          const voice = context.createGain();
-          oscillator.type = "sine";
-          oscillator.frequency.value = frequency;
-          voice.gain.value = level;
-          oscillator.connect(voice).connect(gain);
-          oscillator.start();
-        }
-        audio.current = { context, gain };
-      }
-      void audio.current.context.resume();
-      audio.current.gain.gain.setTargetAtTime(volume / 100 * 0.13, audio.current.context.currentTime, 0.2);
+      player.volume = volume / 100;
+      await player.play();
       setSoundOn(true);
     } catch {
       setSoundOn(false);
@@ -54,7 +48,7 @@ export default function PageContoh() {
 
   function changeVolume(value: number) {
     setVolume(value);
-    if (audio.current) audio.current.gain.gain.setTargetAtTime(soundOn ? value / 100 * 0.13 : 0, audio.current.context.currentTime, 0.08);
+    if (audio.current) audio.current.volume = value / 100;
   }
   return (
     <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground">
