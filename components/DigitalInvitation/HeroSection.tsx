@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
   CalendarDays,
@@ -13,6 +15,14 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function HeroSection() {
   const { locale } = useLanguage();
+  const [portalArrival, setPortalArrival] = useState(false);
+  const reducedMotion = useReducedMotion();
+  useEffect(() => {
+    if (sessionStorage.getItem("dc-portal-entry") === "1") {
+      sessionStorage.removeItem("dc-portal-entry");
+      setPortalArrival(true);
+    }
+  }, []);
   const copy =
     locale === "en"
       ? {
@@ -81,7 +91,7 @@ export default function HeroSection() {
       </div>
 
       <div className="relative mx-auto w-full max-w-xl lg:pr-4">
-        <div className="relative mx-auto w-[min(100%,430px)]">
+        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival ? { scale: [reducedMotion ? 1 : 2.7, 1], opacity: [0.95, 1] } : { scale: 1, opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 1.05, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "50% 38%" }}>
           <div className="relative aspect-[0.68] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
@@ -216,7 +226,7 @@ export default function HeroSection() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <style jsx>{`
