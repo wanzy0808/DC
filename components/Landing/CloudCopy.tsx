@@ -58,17 +58,18 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
     >
       <div className="relative isolate px-7 py-9 text-center sm:px-9 sm:py-11">
         {/* Each lobe pops into its original position separately, assembling the cloud in place. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={{ filter: "drop-shadow(1.5px 0 0 #C07A84) drop-shadow(-1.5px 0 0 #C07A84) drop-shadow(0 1.5px 0 #C07A84) drop-shadow(0 -1.5px 0 #C07A84)" }}>
         {[
-          { className: "inset-x-[2%] inset-y-[5%] rounded-[48%] bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md", x: 0, y: 28, delay: 0 },
-          { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full bg-background/95", x: -45, y: -42, delay: 0.13 },
-          { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full border border-primary/50 bg-background/95", x: 45, y: -42, delay: 0.23 },
-          { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full border border-primary/50 bg-background/95", x: -42, y: 38, delay: 0.33 },
-          { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full border border-primary/50 bg-background/95", x: 42, y: 38, delay: 0.43 },
+          { className: "inset-x-[2%] inset-y-[5%] rounded-[48%] bg-background ", x: 0, y: 28, delay: 0 },
+          { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full bg-background", x: -45, y: -42, delay: 0.13 },
+          { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full bg-background", x: 45, y: -42, delay: 0.23 },
+          { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full bg-background", x: -42, y: 38, delay: 0.33 },
+          { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full bg-background", x: 42, y: 38, delay: 0.43 },
         ].map((lobe, index) => (
           <motion.div
             key={index}
             aria-hidden="true"
-            className={`pointer-events-none absolute -z-10 ${lobe.className}`}
+            className={`pointer-events-none absolute ${lobe.className}`}
             initial={false}
             animate={assemble
               ? { opacity: [0, 1, 1], x: [lobe.x, -lobe.x * 0.08, 0], y: [lobe.y, -lobe.y * 0.08, 0], scale: [0.35, 1.1, 1] }
@@ -76,6 +77,7 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
             transition={assemble ? { duration: 0.62, delay: lobe.delay, times: [0, 0.75, 1], ease: "easeOut" } : { duration: 0 }}
           />
         ))}
+        </div>
         <motion.div className="relative z-10" initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
         {top ? (
           <>
