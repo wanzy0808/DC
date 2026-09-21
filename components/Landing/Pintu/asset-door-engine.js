@@ -35,12 +35,12 @@ export async function mountAssetDoor(container, options = {}) {
   const createdMaterials = [];
   const createdTextures = [];
 
-  const ambient = new THREE.HemisphereLight(0xfff3e9, 0x66535d, 0.82);
+  const ambient = new THREE.HemisphereLight(0xfff6ef, 0x74636b, 0.56);
   scene.add(ambient);
-  const key = new THREE.DirectionalLight(0xffe9df, 1.45);
+  const key = new THREE.DirectionalLight(0xffeee6, 1.67);
   key.position.set(-4.6, 7.8, 5.3);
   key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.mapSize.set(1536, 1536);
   key.shadow.camera.left = -7;
   key.shadow.camera.right = 7;
   key.shadow.camera.top = 9;
@@ -50,7 +50,7 @@ export async function mountAssetDoor(container, options = {}) {
   key.shadow.bias = -0.00022;
   key.shadow.normalBias = 0.011;
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0xffe5de, 0.34);
+  const fill = new THREE.DirectionalLight(0xffe5de, 0.23);
   fill.position.set(5, 4, -5);
   scene.add(fill);
   const floor = new THREE.Mesh(
@@ -65,7 +65,7 @@ export async function mountAssetDoor(container, options = {}) {
   scene.add(floor);
 
   // Light only at the threshold; the ground receives the real door shadow.
-  const threshold = new THREE.SpotLight(0xffddca, 2.4, 4.8, Math.PI / 3.5, 0.92, 2);
+  const threshold = new THREE.SpotLight(0xffddca, 1.65, 4.2, Math.PI / 3.8, 0.95, 2);
   threshold.position.set(0, 0.75, 1);
   threshold.target.position.set(0, 0, 0.15);
   scene.add(threshold, threshold.target);
@@ -201,7 +201,7 @@ export async function mountAssetDoor(container, options = {}) {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "default" });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.91;
+    renderer.toneMappingExposure = 0.92;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,
