@@ -118,7 +118,7 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#d8b477", metal: "#d1a9a0" };
+  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#aeb0b7", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} />
     <group position={[0, 0, -0.16]}>
@@ -129,8 +129,8 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
         <Arch width={1.68} height={4.06} depth={0.075} color={palette.panel} gradient />
         <Arch width={1.47} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
         <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
-        {[-0.52, 0.52].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#d8b477" roughness={0.58} metalness={0.12} /></mesh>)}
-        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#d8b477" metalness={0.28} roughness={0.48} /></mesh>
+        {[-0.52, 0.52].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#aeb0b7" roughness={0.58} metalness={0.12} /></mesh>)}
+        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#aeb0b7" metalness={0.28} roughness={0.48} /></mesh>
 
         <mesh position={[0.57, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
