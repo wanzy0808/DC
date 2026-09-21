@@ -47,7 +47,7 @@ export default function Footer() {
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+  if (pathname === "/pagecontoh" || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     return null;
   }
 
