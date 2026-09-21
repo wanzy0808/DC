@@ -25,25 +25,24 @@ export default function HeroSection() {
       document.body.classList.add("dc-portal-revealing");
       setRevealCopy(true);
     }, 4100);
-    return () => {
-      window.clearTimeout(timer);
-      document.body.classList.remove("dc-portal-revealing");
-    };
+    return () => window.clearTimeout(timer);
   }, [portalArrival, reducedMotion]);
   useLayoutEffect(() => {
     if (sessionStorage.getItem("dc-portal-entry") === "1") {
       sessionStorage.removeItem("dc-portal-entry");
       setPortalArrival(true);
     }
+    return () => {
+      document.body.classList.remove("dc-portal-arriving", "dc-portal-revealing");
+    };
   }, []);
   useLayoutEffect(() => {
     if (!portalArrival) return;
     if (reducedMotion || arrivalFinished) {
-      document.body.classList.remove("dc-portal-arriving");
+      document.body.classList.remove("dc-portal-arriving", "dc-portal-revealing");
       return;
     }
     document.body.classList.add("dc-portal-arriving");
-    return () => document.body.classList.remove("dc-portal-arriving");
   }, [portalArrival, reducedMotion, arrivalFinished]);
   const copy =
     locale === "en"
