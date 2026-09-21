@@ -182,14 +182,13 @@ export function createReferenceDoorModel({ THREE, scene, options = {} }) {
     beveledPanel(root, [0.76, 0.88, 0.59], [x, 3.38, -0.02], pearledFrame, 0.07, 0.032);
   }
 
-  // Five stepped cornice layers create real front/side depth and the slight
-  // outward projection seen in the uploaded reference.
-  beveledPanel(root, [5.62, 0.42, 0.54], [0, FRAME_TOP - 0.09, -0.045], pearledFrame, 0.05, 0.03);
-  beveledPanel(root, [5.84, 0.18, 0.61], [0, FRAME_TOP + 0.17, -0.025], frameShadow, 0.045, 0.026);
-  beveledPanel(root, [6.02, 0.22, 0.67], [0, FRAME_TOP + 0.34, 0], pearledFrame, 0.05, 0.03);
-  beveledPanel(root, [6.24, 0.14, 0.72], [0, FRAME_TOP + 0.51, 0.015], doorEdges, 0.045, 0.026);
-  beveledPanel(root, [6.38, 0.12, 0.76], [0, FRAME_TOP + 0.64, 0.025], pearledFrame, 0.04, 0.024);
-  box(root, [5.58, 0.075, 0.075], [0, FRAME_TOP - 0.34, 0.27], frameShadow);
+  // The screenshot exposes an oversized stack of shelf-like bars. The
+  // reference has one restrained classical lintel with a fine projecting lip.
+  // Three thin physically beveled layers replace five tall horizontal slabs.
+  beveledPanel(root, [5.56, 0.27, 0.54], [0, FRAME_TOP - 0.07, -0.045], pearledFrame, 0.045, 0.020);
+  beveledPanel(root, [5.89, 0.12, 0.62], [0, FRAME_TOP + 0.14, -0.02], frameShadow, 0.035, 0.018);
+  beveledPanel(root, [6.14, 0.15, 0.72], [0, FRAME_TOP + 0.285, 0.015], pearledFrame, 0.040, 0.018);
+  box(root, [5.53, 0.05, 0.075], [0, FRAME_TOP - 0.29, 0.27], frameShadow);
 
   // Screenshot audit: the reference's center crest is compact carved
   // acanthus, not an oversized oval ring with floating torus curls.
