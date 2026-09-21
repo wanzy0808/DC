@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
-import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { Menu } from "lucide-react";
@@ -32,8 +32,8 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />
           <LanguageToggle />
-          <Sheet>
-            <SheetTrigger
+          <Dialog>
+            <DialogTrigger
               render={
                 <Button
                   variant="outline"
@@ -46,7 +46,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
               }
             />
             <BurgerMenuContent />
-          </Sheet>
+          </Dialog>
         </div>
       </div>
     </header>
