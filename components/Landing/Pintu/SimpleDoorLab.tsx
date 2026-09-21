@@ -267,7 +267,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   </group>)}</>;
 }
 
-export default function SimpleDoorLab() {
+export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boolean }) {
   const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
@@ -278,8 +278,8 @@ export default function SimpleDoorLab() {
     if (selected === null || !opening[selected] || entering) return;
     setEntering(true);
   }
-  return <section className="w-full max-w-5xl space-y-4">
-    <div className="relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent">
+  return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
+    <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => {  if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(PORTALS[selected ?? 0].href); }} />
         <ambientLight intensity={0.85} />
@@ -290,9 +290,9 @@ export default function SimpleDoorLab() {
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
-      <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Empat pintu · pilih tujuan untuk mendekat</span>
+      <span className={fullFrame ? "pointer-events-none absolute bottom-20 left-5 text-xs text-[#865c65] sm:bottom-16" : "pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]"}>Empat pintu · pilih tujuan untuk mendekat</span>
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
-    <p className="text-center text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
+    <p className={fullFrame ? "pointer-events-none absolute inset-x-0 bottom-14 text-center text-sm text-foreground/70 sm:bottom-10" : "text-center text-sm text-foreground/70"}>{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
   </section>;
 }
