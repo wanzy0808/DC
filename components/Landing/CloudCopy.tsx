@@ -33,13 +33,13 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: phase === "return" ? 1.2 : 0.85, ease: [0.22, 1, 0.36, 1] }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-2 top-4 z-20 w-[min(78vw,340px)] sm:left-7 sm:top-8 lg:left-[5%] lg:top-[12%] lg:w-[min(28vw,410px)]"
-        : "absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[12%] lg:w-[min(24vw,335px)]"}
+        ? "absolute left-2 top-4 z-20 w-[min(78vw,340px)] sm:left-7 sm:top-8 lg:left-[5%] lg:top-[12%] lg:w-[min(30vw,440px)]"
+        : "absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[12%] lg:w-[min(26vw,370px)]"}
     >
-      <div className="relative isolate px-7 py-7 text-center sm:px-9 sm:py-9">
+      <div className="relative isolate px-7 py-9 text-center sm:px-9 sm:py-11">
         {/* Multiple overlapping soft lobes create a cloud silhouette rather than a rounded card. */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-[5%] inset-y-[13%] -z-10 rounded-[48%] border border-primary/10 bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md" />
-        <div aria-hidden="true" className="pointer-events-none absolute -top-[8%] left-[17%] -z-10 h-[76%] w-[43%] rounded-full bg-background/95" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-[5%] inset-y-[13%] -z-10 rounded-[48%] border-2 border-primary/65 bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md" />
+        <div aria-hidden="true" className="pointer-events-none absolute -top-[8%] left-[17%] -z-10 h-[76%] w-[43%] rounded-full border border-primary/50 bg-background/95" />
         <div aria-hidden="true" className="pointer-events-none absolute -top-[13%] right-[14%] -z-10 h-[86%] w-[47%] rounded-full bg-background/95" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-[1%] left-[5%] -z-10 h-[65%] w-[42%] rounded-full bg-background/95" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-[1%] right-[4%] -z-10 h-[69%] w-[43%] rounded-full bg-background/95" />
@@ -47,11 +47,13 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
           <>
             <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/55 sm:text-[10px]">{locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"}</p>
             <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-xl leading-tight text-primary sm:text-2xl lg:text-[clamp(1.4rem,2.2vw,2.4rem)]">{locale === "en" ? <>Every story<br />begins somewhere.</> : <>Setiap cerita<br />punya awalnya.</>}</h1>
+            <p className="mx-auto mt-3 max-w-[29ch] text-[11px] leading-relaxed text-foreground/75 sm:text-xs">{locale === "en" ? "A celebration, a gathering, or a small moment with the people who matter. Choose the door that feels like your story." : "Perayaan, pertemuan, atau momen sederhana bersama orang-orang terdekat. Pilih pintu yang paling menggambarkan ceritamu."}</p>
           </>
         ) : (
           <>
             <p className="font-[family-name:var(--font-dc-heading)] text-base leading-snug text-primary sm:text-xl">{locale === "en" ? "The next chapter is yours." : "Bab berikutnya milikmu."}</p>
             <p className="mt-2 text-[11px] leading-relaxed text-foreground/70 sm:text-xs">{locale === "en" ? "Open a door. Make the moment yours." : "Buka satu pintu. Jadikan momennya milikmu."}</p>
+            <p className="mx-auto mt-2 max-w-[29ch] text-[11px] leading-relaxed text-foreground/75 sm:text-xs">{locale === "en" ? "From the first invitation to the last warm farewell, let every detail feel personal and worth remembering." : "Dari undangan pertama hingga salam perpisahan yang hangat, biarkan setiap detail terasa personal dan layak dikenang."}</p>
           </>
         )}
       </div>
