@@ -157,7 +157,7 @@
   border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
   color: var(--primary) !important;
   box-shadow: none !important;
-  border-radius: 12px !important;
+  border-radius: 16px !important;
 }
 .dc-navbar .dc-theme-toggle:hover,
 .dc-navbar .dc-language-toggle button:hover,
