@@ -444,7 +444,8 @@ aside nav > p { font-family: var(--font-dc-heading); }
   .dc-portal-arrival { animation: none; }
 }
 
-/* Keep every destination-page element except the invitation preview hidden during portal arrival. */
+/* The portal sets this on body BEFORE routing, preventing a one-frame flash.
+   Reveal the page chrome and every section only while the phone zooms out. */
 body.dc-portal-arriving:not(.dc-portal-revealing) .dc-navbar,
 body.dc-portal-arriving:not(.dc-portal-revealing) footer,
 body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-hero-copy,
@@ -452,6 +453,11 @@ body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-other-sections 
   opacity: 0 !important;
   pointer-events: none !important;
 }
-.dc-navbar, footer, .dc-invitation-hero-copy, .dc-invitation-other-sections {
-  transition: opacity 850ms ease, visibility 850ms ease;
+body.dc-portal-arriving.dc-portal-revealing .dc-navbar,
+body.dc-portal-arriving.dc-portal-revealing footer,
+body.dc-portal-arriving.dc-portal-revealing .dc-invitation-other-sections {
+  opacity: 1;
+}
+.dc-navbar, footer, .dc-invitation-other-sections {
+  transition: opacity 1650ms cubic-bezier(0.22, 1, 0.36, 1);
 }
