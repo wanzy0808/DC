@@ -24,6 +24,11 @@ export default function HeroSection() {
       setPortalArrival(true);
     }
   }, []);
+  useLayoutEffect(() => {
+    if (!portalArrival || reducedMotion || arrivalFinished) return;
+    document.body.classList.add("dc-portal-arriving");
+    return () => document.body.classList.remove("dc-portal-arriving");
+  }, [portalArrival, reducedMotion, arrivalFinished]);
   const copy =
     locale === "en"
       ? {
@@ -230,6 +235,14 @@ export default function HeroSection() {
         </motion.div>
       </div>
 
+      <style jsx global>{`
+        body.dc-portal-arriving .dc-navbar,
+        body.dc-portal-arriving footer {
+          opacity: 0 !important;
+          pointer-events: none;
+        }
+        .dc-navbar, footer { transition: opacity 0.85s ease; }
+      `}</style>
       <style jsx>{`
         .invitation-phone-scroll {
           animation: invitation-phone-scroll 18s ease-in-out infinite;
