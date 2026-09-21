@@ -66,11 +66,11 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
       <div className="relative isolate px-7 py-9 text-center sm:px-9 sm:py-11">
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute inset-0" style={{ filter: "drop-shadow(1px 0 0 #C07A84) drop-shadow(-1px 0 0 #C07A84) drop-shadow(0 1px 0 #C07A84) drop-shadow(0 -1px 0 #C07A84)" }}>
+          <div className="absolute inset-0">
             {cloudLobes.map((lobe, index) => (
               <motion.div
                 key={index}
-                className={`absolute ${lobe.className} bg-background dark:bg-[#181416]`}
+                className={`absolute ${lobe.className} bg-background/10 dark:bg-white/[0.035]`}
                 initial={false}
                 animate={assemble
                   ? { opacity: [0, 1, 1], x: [lobe.x, -lobe.x * 0.08, 0], y: [lobe.y, -lobe.y * 0.08, 0], scale: [0.35, 1.1, 1] }
@@ -79,8 +79,10 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
               />
             ))}
           </div>
-          {/* Fade the whole assembled silhouette into the frame instead of stacking translucent circles. */}
-          <div className="absolute inset-0 bg-background/20 dark:bg-transparent" />
+          {/* One outer contour, with no opaque fill or internal circle borders. */}
+          <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-primary/65" fill="none" aria-hidden="true" initial={false} animate={{ opacity: assemble ? [0, 0, 1] : cloudVisible ? 1 : 0 }} transition={{ duration: assemble ? 1 : 0.15 }}>
+            <path d="M70 251 C36 249 22 221 30 193 C8 166 20 130 51 117 C52 83 80 60 112 65 C133 28 178 21 208 43 C242 8 298 24 307 66 C346 66 369 95 367 126 C399 148 400 185 374 208 C377 240 344 262 311 249 C282 271 251 260 230 250 C202 263 170 255 153 248 C122 269 88 263 70 251 Z" stroke="currentColor" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
+          </motion.svg>
         </div>
         <motion.div className="relative z-10" initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
         {top ? (
