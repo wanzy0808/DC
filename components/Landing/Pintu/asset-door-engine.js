@@ -14,6 +14,9 @@ const ASSET_URLS = ["/40k.glb", "/mesh-40k.glb", "/mesh_40k.glb", "/mesh.glb", "
 export async function mountAssetDoor(container, options = {}) {
   const THREE = await import("three");
   const scene = new THREE.Scene();
+  // User screenshot: a transparent canvas on a white card made the GLB
+  // practically invisible. Give only the lab canvas a neutral studio backdrop.
+  scene.background = new THREE.Color(0xece4e0);
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 100);
   let renderer;
   let model;
@@ -35,9 +38,9 @@ export async function mountAssetDoor(container, options = {}) {
   const createdMaterials = [];
   const createdTextures = [];
 
-  const ambient = new THREE.HemisphereLight(0xfff6ef, 0x74636b, 0.56);
+  const ambient = new THREE.HemisphereLight(0xfff6ef, 0x85747b, 0.72);
   scene.add(ambient);
-  const key = new THREE.DirectionalLight(0xffeee6, 1.67);
+  const key = new THREE.DirectionalLight(0xfff3ec, 1.12);
   key.position.set(-4.6, 7.8, 5.3);
   key.castShadow = true;
   key.shadow.mapSize.set(1536, 1536);
@@ -50,7 +53,7 @@ export async function mountAssetDoor(container, options = {}) {
   key.shadow.bias = -0.00022;
   key.shadow.normalBias = 0.011;
   scene.add(key);
-  const fill = new THREE.DirectionalLight(0xffe5de, 0.23);
+  const fill = new THREE.DirectionalLight(0xffe5de, 0.24);
   fill.position.set(5, 4, -5);
   scene.add(fill);
   const floor = new THREE.Mesh(
@@ -201,12 +204,12 @@ export async function mountAssetDoor(container, options = {}) {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "default" });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 0.92;
+    renderer.toneMappingExposure = 0.86;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,
       window.matchMedia("(max-width: 640px)").matches ? 1.2 : 1.5));
-    renderer.setClearColor(0xffffff, 0);
+    renderer.setClearColor(0xece4e0, 1);
     renderer.domElement.setAttribute("aria-hidden", "true");
     renderer.domElement.style.cssText = "display:block;width:100%;height:100%;";
     container.appendChild(renderer.domElement);

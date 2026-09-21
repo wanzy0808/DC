@@ -5,8 +5,6 @@
  * Seams at the artificial cut are experimental pending screenshot validation.
  */
 
-import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
-
 export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
   const originalGeometries = new Set();
   const originalMaterials = new Set();
@@ -39,21 +37,12 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
   const seamX = center.x;
   const bottomEdge = bounds.min.y + size.y * 0.035;
   const topEdge = bounds.max.y - size.y * 0.205;
-  const depth = Math.max(size.z, 0.001);
   const output = [[], [], []]; // stationary, left, right
   const outputNormals = [[], [], []];
-  const outputColors = [[], [], []];
-  // Reference Pintu 1: warm ivory-blush ARCHITECTURE, muted Rose LEAVES.
-  // Previous build tinted the entire crown/pilaster mauve and painted every
-  // forward-facing vertex of the leaves a different color, causing the
-  // artificial two-tone / clay-sticker look regardless of actual carving.
-  const paint = [
-    new THREE.Color(0xe7d7d0), // cornice, crown, jamb / pilaster
-    new THREE.Color(0xbf8794), // left slab: dusty rose satin
-    new THREE.Color(0xbf8794), // right slab: the SAME paint
-  ];
-  const crownIvory = new THREE.Color(0xf1e5dc);
-  const leafMolding = new THREE.Color(0xd1a5ab);
+  // Keep paint on actual geometry, NOT vertex-derived washes. The exported
+  // single-mesh model has no authored material IDs or separate ornament UVs.
+  // A single controlled material per physical role is predictable under both
+  // bright and dark app themes and keeps carved shape visible.
   let clippedTriangles = 0;
 
   function interpolate(a, b, axis, boundary) {
@@ -97,19 +86,7 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
         output[role].push(...vertex.p);
         const normal = new THREE.Vector3(...vertex.n).normalize();
         outputNormals[role].push(normal.x, normal.y, normal.z);
-        const z = THREE.MathUtils.clamp((vertex.p[2] - bounds.min.z) / depth, 0, 1);
-        const x = Math.abs(vertex.p[0] - seamX);
-        // Same-color leaf body. Only a very small highlight on physically
-        // protruding front mouldings, never a z-driven recolor of whole panels
-        // or giant gold patches. Color follows actual GLB relief; we invent
-        // no substitute SVG/extruded ornament geometry.
-        const isMolding = role !== 0 && z > 0.90 &&
-          x > size.x * 0.045 && x < size.x * 0.31;
-        const tint = role === 0
-          ? (vertex.p[1] > topEdge ? crownIvory : paint[0])
-          : (isMolding ? leafMolding : paint[role]);
-        const variation = 0.975 + 0.025 * z;
-        outputColors[role].push(tint.r * variation, tint.g * variation, tint.b * variation);
+
       }
     }
   }
@@ -172,22 +149,17 @@ export function buildHingedAssetDoor({ THREE, model, height = 7.6 }) {
     const rawGeometry = new THREE.BufferGeometry();
     rawGeometry.setAttribute("position", new THREE.Float32BufferAttribute(output[role], 3));
     rawGeometry.setAttribute("normal", new THREE.Float32BufferAttribute(outputNormals[role], 3));
-    rawGeometry.setAttribute("color", new THREE.Float32BufferAttribute(outputColors[role], 3));
-    // gltfjsx / higher polygon budgets do not add detail to a mesh. This
-    // existing Three.js utility reconciles normals across split triangles
-    // while retaining pronounced moulding edges (>~52°) instead of letting
-    // the exporter average carved corners into a melted clay surface.
-    const geometry = toCreasedNormals(rawGeometry, THREE.MathUtils.degToRad(52));
-    rawGeometry.dispose();
+    // The previous per-vertex tint + crease-normal pass produced an almost
+    // invisible pastel model on a light canvas in the owner's screenshot.
+    // Keep the GLB's original geometric normals: no regenerated normals,
+    // fake highlights or vertex-color interpolation across cut triangles.
+    const geometry = rawGeometry;
     geometry.computeBoundingSphere();
-    const material = new THREE.MeshPhysicalMaterial({
-      color: 0xffffff,
-      vertexColors: true,
-      roughness: role === 0 ? 0.70 : 0.65,
+    const material = new THREE.MeshStandardMaterial({
+      color: role === 0 ? 0xd0b6aa : 0xaf7283,
+      roughness: role === 0 ? 0.87 : 0.78,
       metalness: 0,
-      clearcoat: role === 0 ? 0.045 : 0.09,
-      clearcoatRoughness: 0.66,
-      envMapIntensity: role === 0 ? 0.38 : 0.48,
+      envMapIntensity: 0.16,
       side: THREE.DoubleSide,
     });
     createdGeometries.push(geometry);
