@@ -83,7 +83,7 @@ function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
   </group>;
 }
 
-function GroundShadow() {
+function GroundShadow({ fullFrame }: { fullFrame: boolean }) {
   // A soft, transparent contact shadow: no rectangular floor plane or hard-edged shadow box.
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -100,13 +100,10 @@ function GroundShadow() {
     }
     return new THREE.CanvasTexture(canvas);
   }, []);
-  return <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
+  return <group>\n  <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
     <planeGeometry args={[2.9, 1.6]} />
     <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} opacity={0.8} />
-  </mesh>;
-}
-
-function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
+  </mesh>\n  {fullFrame && <mesh position={[0, -2.139, 0.05]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-2}>\n    <planeGeometry args={[2.65, 1.35]} />\n    <meshBasicMaterial map={texture} color="#ffffff" transparent depthWrite={false} toneMapped={false} opacity={0.28} blending={THREE.AdditiveBlending} />\n  </mesh>}\n  </group>;\n}\n\nfunction Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   const points = useRef<THREE.Points>(null);
   const base = useMemo(() => {
     const particles = Array.from({ length: 54 }, (_, i) => {
@@ -236,7 +233,7 @@ const PORTALS = [
   { title: "Undangan Fisik", image: "/Ufisik.png", href: "/undangan-fisik" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null> }) {
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   const buttonAnchor = useMemo(() => new THREE.Vector3(), []);
@@ -293,7 +290,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} />
-    <GroundShadow />
+    <GroundShadow fullFrame={fullFrame} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;
 }
@@ -312,7 +309,6 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
-      {fullFrame && <div aria-hidden="true" className="pointer-events-none absolute bottom-[12%] left-1/2 h-[22%] w-[min(54vw,620px)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.20)_0%,rgba(0,0,0,0.08)_35%,transparent_72%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.23)_0%,rgba(255,255,255,0.09)_35%,transparent_72%)]" />}
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => {  if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(PORTALS[selected ?? 0].href); }} />
         <ambientLight intensity={0.85} />
@@ -320,7 +316,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       
