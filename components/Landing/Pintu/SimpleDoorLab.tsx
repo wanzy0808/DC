@@ -25,12 +25,12 @@ function Arch({ width, height, depth, color, z = 0, gradient = false }: { width:
   useMemo(() => {
     const position = geometry.getAttribute("position");
     const colors = new Float32Array(position.count * 3);
-    const bottom = new THREE.Color("#713346");
-    const middle = new THREE.Color("#a64e69");
-    const top = new THREE.Color("#cf7893");
+    const bottom = new THREE.Color("#9e5868");
+    const middle = new THREE.Color("#c07a84");
+    const top = new THREE.Color("#c07a84");
     for (let i = 0; i < position.count; i++) {
-      const t = THREE.MathUtils.smoothstep(position.getY(i) / height, 0, 1);
-      const colorAt = t < 0.55 ? bottom.clone().lerp(middle, t / 0.55) : middle.clone().lerp(top, (t - 0.55) / 0.45);
+      const t = THREE.MathUtils.smoothstep(position.getY(i) / height, 0, 0.44);
+      const colorAt = t < 0.8 ? bottom.clone().lerp(middle, t / 0.8) : middle.clone().lerp(top, (t - 0.8) / 0.2);
       colors[i * 3] = colorAt.r;
       colors[i * 3 + 1] = colorAt.g;
       colors[i * 3 + 2] = colorAt.b;
@@ -51,7 +51,7 @@ function DoorFrame() {
     outer.holes.push(hole);
     return new THREE.ExtrudeGeometry(outer, { depth: 0.09, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 2, curveSegments: 48 });
   }, []);
-  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#b16b78" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
+  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#c07a84" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
 }
 
 function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
@@ -201,7 +201,7 @@ function Door({ opening, image, title, showEnter, onEnter }: { opening: boolean;
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
+  const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} opening={opening} />
     <PortalEnter visible={showEnter} onEnter={onEnter} />
