@@ -207,10 +207,11 @@ const PORTALS = [
   { title: "Undangan Fisik", image: "/UndanganFisik.png", href: "/undangan-fisik" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void }) {
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null> }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
-  useFrame((_, delta) => {
+  const buttonAnchor = useMemo(() => new THREE.Vector3(), []);
+  useFrame(({ camera, size }, delta) => {
     if (selected === null && !reducedMotion && !entering) phase.current += delta * 0.18;
     else if (selected !== null) {
       const target = -selected * Math.PI * 2 / PORTALS.length;
@@ -230,6 +231,22 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: 
       const nextScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.8, delta);
       group.scale.setScalar(nextScale);
     });
+    const button = enterButton.current;
+    const active = selected === null ? null : groups.current[selected];
+    if (button && active) {
+      buttonAnchor.set(0, -1.42, 0.14);
+      active.localToWorld(buttonAnchor);
+      buttonAnchor.project(camera);
+      const x = (buttonAnchor.x + 1) * size.width / 2;
+      const y = (1 - buttonAnchor.y) * size.height / 2;
+      button.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${active.scale.x.toFixed(3)})`;
+      const centered = Math.abs(active.position.x) < 0.32;
+      button.style.opacity = centered && opening[selected!] && !entering ? "1" : "0";
+      button.style.pointerEvents = centered && opening[selected!] && !entering ? "auto" : "none";
+    } else if (button) {
+      button.style.opacity = "0";
+      button.style.pointerEvents = "none";
+    }
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} />
@@ -245,6 +262,7 @@ export default function SimpleDoorLab() {
   const [entering, setEntering] = useState(false);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
+  const enterButton = useRef<HTMLDivElement>(null);
   function enterPortal() {
     if (selected === null || !opening[selected] || entering) return;
     setEntering(true);
@@ -257,11 +275,11 @@ export default function SimpleDoorLab() {
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Empat pintu · pilih tujuan untuk mendekat</span>
-      {selected !== null && opening[selected] && !entering && <div className="pointer-events-none absolute inset-x-0 top-[70%] z-10 flex justify-center"><Button size="sm" className="pointer-events-auto" onClick={enterPortal}>Masuk</Button></div>}
+      <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
     <p className="text-center text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
   </section>;
