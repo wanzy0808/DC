@@ -52,6 +52,7 @@ export default function DigitalInvitationPage() {
     <main className="relative z-10 min-h-screen w-full overflow-x-clip bg-transparent text-foreground">
       <div className="mx-auto w-[80vw] max-w-full space-y-28 py-14 md:space-y-36 md:py-20">
         <HeroSection />
+        <div className="dc-invitation-other-sections space-y-28 md:space-y-36">
         <FeatureSection />
         <TemplateCollection />
         <CtaStudioSection />
@@ -73,6 +74,7 @@ export default function DigitalInvitationPage() {
           description={copy.faqDescription}
           items={digitalInvitationFaq[locale]}
         />
+        </div>
       </div>
     </main>
   );
