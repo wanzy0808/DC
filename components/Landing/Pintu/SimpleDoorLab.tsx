@@ -131,7 +131,7 @@ function GroundShadow({ fullFrame, isDarkMode }: { fullFrame: boolean; isDarkMod
 function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   const points = useRef<THREE.Points>(null);
   const base = useMemo(() => {
-    const particles = Array.from({ length: 54 }, (_, i) => {
+    const particles = Array.from({ length: 110 }, (_, i) => {
       const seed = (n: number) => {
         const v = Math.sin((i + 1) * n * 127.1) * 43758.5453;
         return v - Math.floor(v);
@@ -148,6 +148,22 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
     return particles;
   }, []);
   const positions = useMemo(() => new Float32Array(base.length * 3), [base]);
+  const glowMap = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 64;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, "rgba(255,245,250,0.95)");
+      gradient.addColorStop(0.16, "rgba(250,184,211,0.72)");
+      gradient.addColorStop(0.42, "rgba(229,137,180,0.24)");
+      gradient.addColorStop(1, "rgba(229,137,180,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 64, 64);
+    }
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+  useEffect(() => () => glowMap.dispose(), [glowMap]);
   useFrame(({ clock }) => {
     if (!points.current) return;
     const time = reducedMotion ? 0 : clock.elapsedTime;
@@ -158,11 +174,11 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
       positions[i * 3 + 2] = p.z + Math.cos(time * p.speed * 0.64 + p.phase) * 0.19;
     }
     points.current.geometry.attributes.position.needsUpdate = true;
-    (points.current.material as THREE.PointsMaterial).opacity = reducedMotion ? 0.28 : 0.3 + Math.sin(time * 0.37) * 0.06;
+    (points.current.material as THREE.PointsMaterial).opacity = reducedMotion ? 0.38 : 0.42 + Math.sin(time * 0.37) * 0.09;
   });
   return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial color="#ffdc73" size={0.037} transparent opacity={0.32} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+    <pointsMaterial map={glowMap} color="#f5b1cc" size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
   </points>;
 }
 
