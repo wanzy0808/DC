@@ -2,6 +2,14 @@
 
 DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest management, optional WA Blast distribution, and event-day guestbook/check-in operations. The product is not limited to weddings: each user can create as many event workspaces as needed and activate invitations per event.
 
+## Approved Landing Page
+
+As approved on 21 September 2026, `/` renders the unchanged `/pagecontoh` experience through `app/page.tsx` re-exporting `app/pagecontoh/page.tsx`. The preview route remains available for visual comparison. The current landing is the canonical reference for subsequent public marketing styling; **do not modify approved content, assets, interactions, layout, animations, controls, or other pages unless the owner explicitly requests that specific change**. Reuse existing components and dependencies before adding new ones.
+
+The current scene consists of the continuous floral background and animated petals, rounded main frame, embedded Navbar/Footer, orbiting Three.js doors, two transparent cloud-copy elements with an outer Rose outline and puzzle/letter-reveal animation, bilingual text, theme controls, audio player, and Instagram link. The main implementation lives in `app/pagecontoh/page.tsx`; related pieces live in `components/Landing/`, `components/Layout/`, `components/Theme/`, and `components/I18n/`. Existing UI stack: Next.js, React, TypeScript, Tailwind CSS, Motion (`motion/react`), Three.js/React Three Fiber where already used, and shared UI components. Preserve the exact currently approved visual implementation rather than treating this description as a redesign specification.
+
+Follow the scoped-change and validation contract in `AGENTS.md` and the canonical landing requirement in `prd.md`. The separate `/pintu-lab` GLB experiment is not the approved homepage door implementation.
+
 ## Product Model
 
 ### Digital Invitation
