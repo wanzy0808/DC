@@ -18,20 +18,20 @@ function archShape(width: number, height: number) {
 
 function Arch({ width, height, depth, color, z = 0 }: { width: number; height: number; depth: number; color: string; z?: number }) {
   const geometry = useMemo(() => new THREE.ExtrudeGeometry(archShape(width, height), {
-    depth, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.018, bevelThickness: 0.018, curveSegments: 48,
+    depth, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.009, bevelThickness: 0.009, curveSegments: 48,
   }), [width, height, depth]);
   return <mesh geometry={geometry} position={[0, 0, z]} castShadow receiveShadow>
-    <meshStandardMaterial color={color} roughness={0.68} metalness={0.02} />
+    <meshStandardMaterial color={color} roughness={0.82} metalness={0} />
   </mesh>;
 }
 
 function Door({ opening }: { opening: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
-    if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 3, delta);
+    if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
   return <group position={[0, -1.55, 0]}>
-    <mesh position={[0, 1.55, -0.18]} receiveShadow>
+    <mesh position={[0, 1.55, -0.23]} receiveShadow>
       <planeGeometry args={[20, 20]} />
       <meshStandardMaterial color="#f7d5d7" side={THREE.DoubleSide} />
     </mesh>
@@ -65,10 +65,10 @@ export default function SimpleDoorLab() {
     <div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
       <Canvas shadows camera={{ position: [0, 0.05, 6.7], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
         <color attach="background" args={["#f8e6e6"]} />
-        <ambientLight intensity={1.7} />
-        <hemisphereLight args={["#fff1e6", "#ad7180", 1.4]} />
-        <directionalLight position={[-3, 6, 5]} intensity={2.2} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} />
-        <pointLight position={[0, -1.35, -0.1]} intensity={opening ? 15 : 4} color="#ffe5bc" distance={3.5} />
+        <ambientLight intensity={0.85} />
+        <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
+        <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} />
+        <pointLight position={[0, -1.35, -0.1]} intensity={opening ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <group rotation={[0, angle, 0]}>
           <Door opening={opening} />
         </group>
