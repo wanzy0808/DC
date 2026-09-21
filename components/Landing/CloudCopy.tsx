@@ -60,8 +60,8 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: 0 }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-2 top-4 z-20 w-[min(78vw,340px)] sm:left-7 sm:top-8 lg:left-[2%] lg:top-[10%] lg:w-[min(29vw,475px)]"
-        : "absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[10%] lg:w-[min(25vw,420px)]"}
+        ? "absolute left-[5%] top-1 z-20 w-[min(78vw,340px)] sm:left-[8%] sm:top-2 lg:left-[11%] lg:top-[3%] lg:w-[min(29vw,475px)]"
+        : "absolute bottom-1 right-[5%] z-20 w-[min(69vw,285px)] sm:bottom-2 sm:right-[8%] lg:bottom-[3%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
     >
       <div className="relative isolate px-9 py-12 text-center sm:px-12 sm:py-14">
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
