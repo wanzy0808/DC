@@ -43,7 +43,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
                   aria-expanded={menuOpen}
                   aria-controls="dc-burger-dropdown"
                   onClick={() => setMenuOpen((open) => !open)}
-                  className="h-11 w-11 !rounded-2xl border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-primary/35 dark:bg-transparent dark:text-primary dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary"
+                  className="dc-burger-toggle h-11 w-11 !rounded-2xl border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-primary/35 dark:bg-transparent dark:text-primary dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
