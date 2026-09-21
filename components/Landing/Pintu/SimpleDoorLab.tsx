@@ -290,7 +290,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
-      <span className={fullFrame ? "pointer-events-none absolute bottom-20 left-5 text-xs text-[#865c65] sm:bottom-16" : "pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]"}>Empat pintu · pilih tujuan untuk mendekat</span>
+      
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
     <p className={fullFrame ? "pointer-events-none absolute inset-x-0 bottom-14 text-center text-sm text-foreground/70 sm:bottom-10" : "text-center text-sm text-foreground/70"}>{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
