@@ -147,24 +147,29 @@
 .text-dc-maroon { color: var(--primary); }
 .dc-navbar { background: transparent; }
 
-/* Landing chrome should visually merge with the page canvas. Landing-only dark controls keep Dashboard behavior untouched. */
+/* Landing navbar controls share the same transparent, pink-outlined treatment in both themes. */
 .dc-navbar--landing { background: var(--background); }
 .dc-navbar--landing.dc-navbar--jiplak { background: transparent; }
-.dark .dc-navbar--landing .dc-language-toggle button[aria-pressed="true"] {
-  background: var(--primary) !important;
-  color: #0B0B0C !important;
+.dc-navbar .dc-theme-toggle,
+.dc-navbar .dc-language-toggle button,
+.dc-navbar .dc-burger-toggle {
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  border-radius: 12px !important;
 }
-.dark .dc-navbar--landing .dc-language-toggle button[aria-pressed="true"]:hover {
-  background: var(--primary) !important;
-  color: #0B0B0C !important;
-}
-.dark .dc-navbar--landing .dc-theme-toggle,
-.dark .dc-navbar--landing .dc-theme-toggle:hover {
+.dc-navbar .dc-theme-toggle:hover,
+.dc-navbar .dc-language-toggle button:hover,
+.dc-navbar .dc-burger-toggle:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
   border-color: var(--primary) !important;
-  background: var(--primary) !important;
-  color: #0B0B0C !important;
+  color: var(--primary) !important;
 }
-
+.dc-navbar .dc-language-toggle button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+  color: var(--primary) !important;
+}
 @keyframes publicTextReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dcSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
 @keyframes dcPageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
