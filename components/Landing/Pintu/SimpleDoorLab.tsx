@@ -4,7 +4,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Html } from "@react-three/drei";
 import { motion, useReducedMotion } from "motion/react";
 import * as THREE from "three";
 
@@ -82,7 +81,7 @@ function PortalCamera({ entering, reducedMotion, selected, onArrive }: { enterin
   return null;
 }
 
-function Door({ opening, title }: { opening: boolean; title: string }) {
+function Door({ opening }: { opening: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
@@ -99,7 +98,7 @@ function Door({ opening, title }: { opening: boolean; title: string }) {
         <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} />
         {[-0.52, 0.52].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#e7b5bd" roughness={0.58} metalness={0.12} /></mesh>)}
         <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#e8b8bf" metalness={0.28} roughness={0.48} /></mesh>
-        <Html transform center position={[0, 2.43, 0.135]} distanceFactor={3.7} style={{ pointerEvents: "none", opacity: opening ? 0 : 1, transition: "opacity 450ms ease" }}><div style={{ width: 160, textAlign: "center", fontFamily: "var(--font-dc-heading), serif", fontSize: 14, letterSpacing: "0.06em", lineHeight: 1.3, color: "#fff3f2", textShadow: "0 1px 6px #884652" }}>{title}</div></Html>
+
         <mesh position={[0.57, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
           <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
@@ -142,7 +141,7 @@ export default function SimpleDoorLab() {
         <pointLight position={[0, -1.35, -0.1]} intensity={opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         {[-1, 0, 1].map((offset, index) => (
           <group key={index} position={[offset * 2.55, 0, 0]} rotation={[0, angle, 0]}>
-            <Door opening={opening[index]} title={["Event Planner", "Digital Invitation", "Guestbook"][index]} />
+            <Door opening={opening[index]} />
             <GroundShadow />
             <Fireflies offset={index * 2.1} reducedMotion={Boolean(reducedMotion)} />
             <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
@@ -150,6 +149,7 @@ export default function SimpleDoorLab() {
         ))}
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
+      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center gap-3 font-[family-name:var(--font-dc-heading)] text-xs text-[#865c65] sm:gap-8">{["Event Planner", "Digital Invitation", "Guestbook"].map((title, index) => <span key={title} className={`min-w-0 flex-1 text-center transition-opacity ${selected === index ? "opacity-100" : "opacity-60"}`}>{title}</span>)}</div>
       <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Tiga pintu · pilih tujuan untuk mendekat</span>
     </div>
     <div className="flex flex-wrap items-center justify-center gap-2">
