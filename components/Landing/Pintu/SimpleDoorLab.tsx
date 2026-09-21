@@ -312,6 +312,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
+      {fullFrame && <div aria-hidden="true" className="pointer-events-none absolute bottom-[12%] left-1/2 h-[22%] w-[min(54vw,620px)] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.20)_0%,rgba(0,0,0,0.08)_35%,transparent_72%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.23)_0%,rgba(255,255,255,0.09)_35%,transparent_72%)]" />}
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => {  if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(PORTALS[selected ?? 0].href); }} />
         <ambientLight intensity={0.85} />
