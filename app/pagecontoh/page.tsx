@@ -13,15 +13,13 @@ export default function PageContoh() {
       {/* One continuous scene behind the framed composition and its outer margins. */}
       <LandingFloralGlow />
       <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.2),transparent_62%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.2),transparent_65%)]" />
-      <motion.div initial={reduced ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="relative z-10 mx-auto my-3 flex min-h-[calc(100dvh-1.5rem)] w-[calc(100%-1.5rem)] max-w-[1680px] flex-col overflow-hidden rounded-[22px] border border-primary/30 bg-background/35 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-6 sm:min-h-[calc(100dvh-3rem)] sm:w-[calc(100%-3rem)] lg:my-8 lg:min-h-[calc(100dvh-4rem)] lg:w-[calc(100%-4rem)]">
-        <div className="relative z-30 border-b border-primary/15"><Navbar embedded /></div>
-        <main className="relative flex flex-1 flex-col items-center justify-center px-3 py-5 sm:px-6">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_52%,rgba(217,163,170,0.11),transparent_64%)]" aria-hidden />
-          <div className="relative z-10 w-full max-w-5xl">
-            <SimpleDoorLab />
-          </div>
+      <motion.div initial={reduced ? false : { opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="relative z-10 mx-auto my-1 flex h-[calc(100dvh-0.5rem)] w-[calc(100%-0.5rem)] flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/35 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-2 sm:h-[calc(100dvh-1rem)] sm:w-[calc(100%-1rem)] lg:my-3 lg:h-[calc(100dvh-1.5rem)] lg:w-[calc(100%-1.5rem)]">
+        <main className="absolute inset-0 z-0">
+          <SimpleDoorLab fullFrame />
         </main>
-        <div className="relative z-20 border-t border-primary/15"><Footer embedded /></div>
+        <div className="pointer-events-none relative z-30 border-b border-primary/15 bg-background/35 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Navbar embedded /></div>
+        <div className="flex-1" aria-hidden="true" />
+        <div className="pointer-events-none relative z-20 border-t border-primary/15 bg-background/30 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
       </motion.div>
     </div>
   );
