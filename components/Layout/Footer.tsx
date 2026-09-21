@@ -39,22 +39,22 @@ function YoutubeIcon({ className }: { className?: string }) {
   );
 }
 
-export default function Footer() {
+export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
   const isJiplak = pathname === "/jiplak";
-  const isLanding = pathname === "/" || isJiplak;
+  const isLanding = pathname === "/" || isJiplak || (embedded && pathname === "/pagecontoh");
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if (pathname === "/pagecontoh" || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+  if ((!embedded && pathname === "/pagecontoh") || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     return null;
   }
 
   if (isLanding) {
     return (
       <footer
-        className={`absolute bottom-0 left-0 z-20 w-full border-none py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs ${
+        className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs ${
           isJiplak ? "bg-transparent" : "bg-background"
         }`}
       >
