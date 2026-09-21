@@ -154,10 +154,10 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
     const context = canvas.getContext("2d");
     if (context) {
       const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
-      gradient.addColorStop(0, "rgba(255,245,250,0.95)");
-      gradient.addColorStop(0.16, "rgba(250,184,211,0.72)");
-      gradient.addColorStop(0.42, "rgba(229,137,180,0.24)");
-      gradient.addColorStop(1, "rgba(229,137,180,0)");
+      gradient.addColorStop(0, "rgba(255,253,222,0.95)");
+      gradient.addColorStop(0.16, "rgba(255,226,130,0.72)");
+      gradient.addColorStop(0.42, "rgba(255,197,86,0.24)");
+      gradient.addColorStop(1, "rgba(255,197,86,0)");
       context.fillStyle = gradient;
       context.fillRect(0, 0, 64, 64);
     }
@@ -178,7 +178,7 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   });
   return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial map={glowMap} color="#f5b1cc" size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+    <pointsMaterial map={glowMap} color="#ffe6a1" size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
   </points>;
 }
 
