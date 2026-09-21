@@ -14,7 +14,7 @@ export default function Navbar() {
   const pathname = usePathname();
   const isJiplak = pathname === "/jiplak";
   const isLanding = pathname === "/" || isJiplak;
-  if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
+  if (pathname === "/pagecontoh" || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
     <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${
