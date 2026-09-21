@@ -3571,3 +3571,12 @@ Physical geometry correction: `reference-door-ornaments.js` re-seats the procedu
 
 
 **Validation setelah merge (21 September 2026):** GitHub Build Validation run `35548795364` pada source head `251e838bdf5640773aa01ad6d18a9886e5e1a2b1` **PASS** (Next.js TypeScript/build). Dua run awal untuk PR #62 gagal TypeScript karena `OrbitalDoorControls` belum memuat method `resume`; kontrak `reference-door-orbital-engine.d.ts` disinkronkan sebelum run lulus. PR #62 merged ke `main` sebagai `98cede6f51220106b72c85522555516b1ffffd34`, dokumentasi status diperbarui commit `360438f1ecf8b9354ca1647cf39978299eec653c`. **Screenshot browser, visual fidelity terhadap `pintu1.png`, FPS aktual dan uji perangkat nyata masih pending; CI bukan bukti persetujuan visual.**
+
+
+---
+
+## 2026-09-21 — Pintu V2: screenshot owner menyatakan bentuk belum sesuai referensi
+
+Owner memperlihatkan screenshot nyata `/pintu-lab` dengan Pintu 1 tertutup tampak depan. Model menunjukkan mahkota torus/loop besar, ornamen leaf yang tampak seperti tempelan/kelopak terang, frame/panel terkesan mainan, pencahayaan terlalu terang sehingga shading hilang, dan foto asli berukuran tidak sebanding dengan viewport 3D. Screenshot **membuktikan visual Pintu 1 belum approved**, bukan sekadar screenshot pending. Tugas tahap 11 perlu koreksi bentuk sebelum replikasi atau promosi landing dianggap siap; gambar 45°–110° dan orbital belum diuji visual.
+
+Perbaikan di branch `fix/pintu-v2-reference-screenshot-crown-lighting`: buat `reference-door-crown.js` crest acanthus kecil ber-volume yang menyatu dengan cornice, mengganti oval ring serta torus loop besar dengan bead oval klasik kecil; sederhanakan flourish `reference-door-ornaments.js` menjadi ukiran tipis terikat pada panel/pilaster; set ulang material Rose/ivory yang lebih kalem pada `reference-door-model.js`, penurunan intensitas key/fill/spill/foyer melalui `reference-door-lighting.js`, `reference-door-interior.js`, dan exposure renderer di `reference-door-engine.js`/`reference-door-orbital-engine.js`; komposisi `ReferenceDoorPreview.tsx` mengukur foto asli dan 3D pada viewport setara. Dokumentasi status visual di `pintu3d.md`. Semua perubahan di lab dan shared model; tidak mengubah landing utama `/`, `/jiplak`, protected rose petals, produk, atau database. **CI dan hasil screenshot browser setelah patch belum diamati pada saat entry ditulis**; jangan menganggap perbaikan geometris ini sebagai persetujuan visual.
