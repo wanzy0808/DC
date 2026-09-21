@@ -29,7 +29,7 @@ export default function AssetDoorPreview() {
         // Loads only when the lab opens; the canonical landing and orbital
         // keep their current assets until a visual review of this GLB.
         const { mountAssetDoor } = await import("./asset-door-engine");
-        if (cancelled) return;
+        if (cancelled || !mount) return;
         const instance = await mountAssetDoor(mount, {
           reducedMotion: Boolean(reducedMotion),
           onLoaded: info => { if (!cancelled) setModelInfo(info); },
