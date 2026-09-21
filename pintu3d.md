@@ -1,6 +1,6 @@
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
-**STATUS AKTIF:** Screenshot owner 21 September menunjukkan model GLB 40k **nyaris tidak terlihat** di sisi kanan meskipun status 3D aktif dan bukaan aktif. Revisi berikutnya memperbaiki material per bagian dan memberi latar canvas netral untuk kontras; bukan menyatakan fidelity sudah tercapai. Kode branch `fix/pintu-40k-invisible-canvas-contrast` masih menunggu CI dan screenshot setelah revisi saat catatan dibuat. Landing utama `/`, `/jiplak`, dan orbital tetap tidak diubah.
+**STATUS AKTIF:** Screenshot owner 21 September memperlihatkan Pintu 1 GLB 40k nyaris tidak terlihat pada kanan `/pintu-lab` meskipun status 3D aktif. Perbaikan kontras/model warna telah merged `main` via PR #67 (Build Validation **PASS**): material ivory–blush pada frame, dusty Rose pada daun, latar canvas studio hangat dan pencahayaan lebih terkendali. **Screenshot setelah perbaikan belum diverifikasi; kemiripan detail dengan `pintu1.png` dan seam bukaan masih pending.** Landing `/`, `/jiplak`, orbital tetap tidak diganti.
 **Dibuat:** 20 September 2026
 **Ruang lingkup:** Pintu 1 (Event Planner) sebagai objek visual 3D yang akan menjadi referensi untuk tiga Pintu landing. Dokumen ini adalah *tracker teknis dan visual*, bukan PRD kedua; bila ada perubahan requirement produk, `prd.md` tetap canonical.
 
@@ -10,7 +10,7 @@ Owner mengirim screenshot desktop `/pintu-lab` pada 0°: foto referensi jelas di
 
 Perbaikan sengaja sempit: `asset-door-segmentation.js` berhenti membuat warna per-vertex atau melewatkan hasil clip ke `toCreasedNormals` (keduanya bukan kebutuhan pemisahan pintu); mesh kusen dicat satu material ivory–blush yang lebih kontras, kedua daun memakai satu material dusty Rose berpigmen cukup jelas, dengan normals sumber yang telah dihitung GLTFLoader dan diperbarui hanya oleh transform geometri. `asset-door-engine.js` memakai latar studio netral khusus canvas lab, mengurangi intensitas key/exposure yang menyebabkan pastel hilang, dan mempertahankan spotlight kecil di bawah kaki. Sumber geometri `40k.glb` tetap asli; pivot buka-tutup dan sudut kamera tetap tersedia. Pembagian otomatis satu mesh belum dipastikan bebas clipping; screenshot desktop/mobile setelah patch tetap diperlukan.
 
-**Affected:** `asset-door-segmentation.js`, `asset-door-engine.js`, `pintu3d.md`, Appendix A `prd.md`. **CI dan screenshot setelah patch pending pada saat entry ini ditulis.**
+**Affected:** `asset-door-segmentation.js`, `asset-door-engine.js`, `pintu3d.md`, Appendix A `prd.md`. **Validasi pasca-implementasi:** GitHub Build Validation run `35557109796` pada source head `c7a4bcc4003dadf66edfcea1fa6a41435b99b581` **PASS** (Next.js/TypeScript), PR #67 squash-merged ke `main` commit `039089bc22c7cce9b26be1bc07f0ed5f23ac2f4d`. Screenshot WebGL aktual sesudah revisi, 45°–110° serta fidelity referensi belum dinilai; build lulus bukan approval visual.
 
 ## Audit repo dan koreksi fidelity GLB — 21 September 2026
 
