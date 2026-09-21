@@ -19,12 +19,27 @@ function archShape(width: number, height: number) {
   return s;
 }
 
-function Arch({ width, height, depth, color, z = 0 }: { width: number; height: number; depth: number; color: string; z?: number }) {
+function Arch({ width, height, depth, color, z = 0, gradient = false }: { width: number; height: number; depth: number; color: string; z?: number; gradient?: boolean }) {
   const geometry = useMemo(() => new THREE.ExtrudeGeometry(archShape(width, height), {
     depth, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.009, bevelThickness: 0.009, curveSegments: 48,
   }), [width, height, depth]);
+  useMemo(() => {
+    const position = geometry.getAttribute("position");
+    const colors = new Float32Array(position.count * 3);
+    const bottom = new THREE.Color("#9e5868");
+    const middle = new THREE.Color("#c07a84");
+    const top = new THREE.Color("#edbdc4");
+    for (let i = 0; i < position.count; i++) {
+      const t = THREE.MathUtils.smoothstep(position.getY(i) / height, 0, 1);
+      const colorAt = t < 0.55 ? bottom.clone().lerp(middle, t / 0.55) : middle.clone().lerp(top, (t - 0.55) / 0.45);
+      colors[i * 3] = colorAt.r;
+      colors[i * 3 + 1] = colorAt.g;
+      colors[i * 3 + 2] = colorAt.b;
+    }
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+  }, [geometry, height]);
   return <mesh geometry={geometry} position={[0, 0, z]} castShadow receiveShadow>
-    <meshStandardMaterial color={color} roughness={0.82} metalness={0} />
+    {gradient ? <meshStandardMaterial vertexColors roughness={0.75} metalness={0.03} /> : <meshStandardMaterial color={color} roughness={0.82} metalness={0} />}
   </mesh>;
 }
 
@@ -93,9 +108,9 @@ function Door({ opening }: { opening: boolean }) {
     </group>
     <group ref={pivot} position={[-0.84, 0, -0.065]}>
       <group position={[0.84, 0, 0]}>
-        <Arch width={1.68} height={4.06} depth={0.075} color={palette.panel} />
+        <Arch width={1.68} height={4.06} depth={0.075} color={palette.panel} gradient />
         <Arch width={1.47} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
-        <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} />
+        <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
         {[-0.52, 0.52].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#e7b5bd" roughness={0.58} metalness={0.12} /></mesh>)}
         <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#e8b8bf" metalness={0.28} roughness={0.48} /></mesh>
 
