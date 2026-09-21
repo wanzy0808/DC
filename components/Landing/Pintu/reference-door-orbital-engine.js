@@ -44,11 +44,11 @@ export async function mountOrbitalDoors(container, options = {}) {
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 85);
   const models = [];
-  const hemisphere = new THREE.HemisphereLight(0xfff7f0, 0xb5a3a4, 1.7);
-  const key = new THREE.DirectionalLight(0xffefe7, 2.4);
+  const hemisphere = new THREE.HemisphereLight(0xfff4ed, 0x796669, 0.75);
+  const key = new THREE.DirectionalLight(0xffe9dd, 1.55);
   key.position.set(-7, 11, 13);
   scene.add(hemisphere, key);
-  const fill = new THREE.DirectionalLight(0xffe9e0, 0.55);
+  const fill = new THREE.DirectionalLight(0xe9c7c5, 0.32);
   fill.position.set(8, 5, -9);
   scene.add(fill);
 
@@ -201,7 +201,7 @@ export async function mountOrbitalDoors(container, options = {}) {
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: "default" });
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.16;
+    renderer.toneMappingExposure = 0.91;
     renderer.shadowMap.enabled = false;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, window.matchMedia("(max-width: 640px)").matches ? 1 : 1.25));
     renderer.setClearColor(0xffffff, 0);

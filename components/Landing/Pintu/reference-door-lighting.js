@@ -2,10 +2,10 @@
  * No glowing portal plane, no pink fog and no animated light attached to a leaf.
  */
 export function buildReferenceDoorLighting({ THREE, scene, root }) {
-  const ambient = new THREE.HemisphereLight(0xfff7f1, 0xb7a5a2, 1.3);
+  const ambient = new THREE.HemisphereLight(0xfff4ed, 0x796669, 0.60);
   scene.add(ambient);
 
-  const key = new THREE.DirectionalLight(0xfff2e9, 2.15);
+  const key = new THREE.DirectionalLight(0xffe9dd, 1.36);
   key.position.set(-5.0, 8.2, 8.8);
   key.castShadow = true;
   key.shadow.mapSize.set(1024, 1024);
@@ -19,14 +19,14 @@ export function buildReferenceDoorLighting({ THREE, scene, root }) {
   key.shadow.normalBias = 0.018;
   scene.add(key);
 
-  const fill = new THREE.DirectionalLight(0xffe5df, 0.68);
+  const fill = new THREE.DirectionalLight(0xe9c7c5, 0.36);
   fill.position.set(5, 4, -5);
   scene.add(fill);
 
   // Spotlight originates BEHIND the threshold and points softly at the
   // foreground floor. At 0° it has zero intensity; opening the leaves reveals
   // the short spill without painting a conspicuous opaque light volume.
-  const spill = new THREE.SpotLight(0xffebd8, 0, 8.5, Math.PI / 5, 0.82, 2);
+  const spill = new THREE.SpotLight(0xffe9d9, 0, 8.5, Math.PI / 5, 0.82, 2);
   spill.position.set(0, 2.1, -1.8);
   spill.target.position.set(0, -3.68, 1.9);
   root.add(spill);
@@ -37,7 +37,7 @@ export function buildReferenceDoorLighting({ THREE, scene, root }) {
     setOpening(degrees) {
       const t = Math.min(1, Math.max(0, degrees / 105));
       // smoothstep: no abrupt flash between the closed and open positions.
-      spill.intensity = 12 * t * t * (3 - 2 * t);
+      spill.intensity = 4.2 * t * t * (3 - 2 * t);
     },
   };
 }

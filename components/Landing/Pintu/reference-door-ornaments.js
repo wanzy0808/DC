@@ -1,137 +1,92 @@
-/* Pintu 1 V2 — sculpted relief, never a flattened photograph.
- * Stage 6 adds shallow bevelled acanthus/volutes on moving leaves.
- * Stage 7 adds a matching fixed crown and restrained pilaster accents.
- * The details are procedural approximations; owner review against pintu1.png
- * is still required before claiming exact ornamental fidelity.
+/* Reference-door shallow carving: narrow architectural flourishes, not
+ * oversized stickers or floating generic flowers. All leaf coordinates stay
+ * inside one moving panel; the pilaster decoration remains fixed to the jamb.
  */
-function makeSculpt({ THREE, geometries, material }) {
-  function leaf(parent, x, y, z, length, width, tilt = 0) {
-    const s = new THREE.Shape();
-    s.moveTo(0, -length * 0.5);
-    s.bezierCurveTo(width * 0.64, -length * 0.39, width * 0.66, -length * 0.05, width * 0.18, length * 0.32);
-    s.quadraticCurveTo(width * 0.08, length * 0.47, 0, length * 0.5);
-    s.quadraticCurveTo(-width * 0.08, length * 0.47, -width * 0.18, length * 0.32);
-    s.bezierCurveTo(-width * 0.66, -length * 0.05, -width * 0.64, -length * 0.39, 0, -length * 0.5);
-    s.closePath();
-    const g = new THREE.ExtrudeGeometry(s, {
-      depth: 0.025, bevelEnabled: true, bevelSegments: 2, steps: 1,
-      bevelThickness: 0.009, bevelSize: 0.009, curveSegments: 10,
+function sculptTools({ THREE, geometries, material }) {
+  function leaf(parent, x, y, z, length, width, rotation = 0) {
+    const shape = new THREE.Shape();
+    shape.moveTo(0, -length * 0.5);
+    shape.bezierCurveTo(width * 0.55, -length * 0.25, width * 0.57, length * 0.05, 0, length * 0.5);
+    shape.bezierCurveTo(-width * 0.57, length * 0.05, -width * 0.55, -length * 0.25, 0, -length * 0.5);
+    shape.closePath();
+    const geometry = new THREE.ExtrudeGeometry(shape, {
+      depth: 0.015, steps: 1, bevelEnabled: true, bevelSegments: 2,
+      bevelSize: 0.005, bevelThickness: 0.005, curveSegments: 12,
     });
-    geometries.add(g);
-    const mesh = new THREE.Mesh(g, material);
+    geometries.add(geometry);
+    const mesh = new THREE.Mesh(geometry, material);
     mesh.position.set(x, y, z);
-    mesh.rotation.z = tilt;
+    mesh.rotation.z = rotation;
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     parent.add(mesh);
-    return mesh;
   }
-  function vine(parent, points, z, radius = 0.014) {
-    const curve = new THREE.CatmullRomCurve3(points.map(([x, y]) => new THREE.Vector3(x, y, z)));
-    const g = new THREE.TubeGeometry(curve, 24, radius, 5, false);
-    geometries.add(g);
-    const mesh = new THREE.Mesh(g, material);
+  function stem(parent, points, z, radius = 0.007) {
+    const path = new THREE.CatmullRomCurve3(points.map(([x, y]) => new THREE.Vector3(x, y, z)));
+    const geometry = new THREE.TubeGeometry(path, 20, radius, 5, false);
+    geometries.add(geometry);
+    const mesh = new THREE.Mesh(geometry, material);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     parent.add(mesh);
-    return mesh;
   }
-  function oval(parent, x, y, z, rx, ry) {
-    const g = new THREE.SphereGeometry(1, 20, 12);
-    geometries.add(g);
-    const mesh = new THREE.Mesh(g, material);
-    mesh.scale.set(rx, ry, 0.035);
-    mesh.position.set(x, y, z);
-    mesh.castShadow = true;
-    parent.add(mesh);
-  }
-  return { leaf, vine, oval };
+  return { leaf, stem };
 }
 
-export function addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometries, material }) {
-  const { leaf, vine, oval } = makeSculpt({ THREE, geometries, material });
-  // The inset field's front face is at ~0.146 in leaf-local coordinates.
-  // All relief has a back surface penetrating that field; 0.21+ from earlier
-  // stages put the ornament completely in mid-air, especially at oblique view.
-  const panelVineZ = 0.149;
-  const panelLeafZ = 0.140;
-  const panelOvalZ = 0.151;
-  // Upper panel: four small mirrored corner arrangements, inside the inner
-  // moldings (panel range x ±0.84, y -0.84..2.80). Nothing crosses a seam.
-  for (const vertical of [-1, 1]) {
-    const cy = vertical > 0 ? 2.40 : -0.46;
-    for (const horizontal of [-1, 1]) {
-      const cx = localX + horizontal * 0.54;
-      vine(pivot, [[cx - horizontal * 0.14, cy - vertical * 0.14],
-        [cx, cy], [cx + horizontal * 0.16, cy + vertical * 0.12]], panelVineZ, 0.012);
-      leaf(pivot, cx + horizontal * 0.045, cy + vertical * 0.085, panelLeafZ,
-        0.22, 0.115, -horizontal * vertical * 0.57);
-      leaf(pivot, cx - horizontal * 0.115, cy - vertical * 0.025, panelLeafZ,
-        0.16, 0.082, horizontal * vertical * 0.72);
-    }
-  }
-  // Reference-like restrained upward acanthus around the upper-panel crest,
-  // not a rose emblem or a large motif obscuring the recessed field.
+export function addReferenceDoorLeafRelief({ THREE, pivot, localX, geometries, material }) {
+  const { leaf, stem } = sculptTools({ THREE, geometries, material });
+  // Inset fill is centered at z=.122 with depth=.024; carving bases at .140
+  // interpenetrate the fill without projecting into the inner panel moldings.
+  const z = 0.140;
+  const stemZ = 0.151;
+  // In the reference the tall fields are largely empty: fine acanthus trails
+  // descend only from the TWO upper corners, rather than four bold corner icons.
   for (const hand of [-1, 1]) {
-    const cx = localX + hand * 0.20;
-    vine(pivot, [[localX, 2.40], [cx * 0.3 + localX * 0.7, 2.44],
-      [cx, 2.52]], panelVineZ, 0.014);
-    leaf(pivot, localX + hand * 0.18, 2.48, panelLeafZ, 0.28, 0.105, -hand * 0.54);
-  }
-  oval(pivot, localX, 2.48, panelOvalZ, 0.075, 0.082);
-
-  // The narrow center panel holds a slim paired flourish, not a separate badge.
-  vine(pivot, [[localX - 0.41, -1.43], [localX - 0.12, -1.39],
-    [localX, -1.43], [localX + 0.12, -1.39], [localX + 0.41, -1.43]], panelVineZ, 0.012);
-  for (const hand of [-1, 1]) {
-    leaf(pivot, localX + hand * 0.22, -1.40, panelLeafZ, 0.16, 0.068, hand * 0.9);
+    const x = localX + hand * 0.51;
+    stem(pivot, [[x + hand * 0.07, 2.59], [x - hand * 0.03, 2.49],
+      [x - hand * 0.01, 2.28], [x - hand * 0.09, 2.08]], stemZ);
+    stem(pivot, [[x + hand * 0.05, 2.48], [x + hand * 0.14, 2.35],
+      [x + hand * 0.12, 2.22]], stemZ, 0.006);
+    leaf(pivot, x + hand * 0.025, 2.53, z, 0.15, 0.067, hand * 0.42);
+    leaf(pivot, x - hand * 0.055, 2.39, z, 0.13, 0.060, -hand * 0.55);
+    leaf(pivot, x + hand * 0.11, 2.33, z, 0.10, 0.052, -hand * 0.80);
+    leaf(pivot, x - hand * 0.075, 2.13, z, 0.10, 0.046, hand * 0.34);
   }
 
-  // Lower panel: small symmetric rising vines. All pieces are attached to
-  // their owning pivot and stay inside the low recessed panel at 110 degrees.
+  // Thin, almost engraved waist flourish at the short horizontal panel.
   for (const hand of [-1, 1]) {
-    vine(pivot, [[localX, -2.80], [localX + hand * 0.19, -2.62],
-      [localX + hand * 0.34, -2.36]], panelVineZ, 0.013);
-    leaf(pivot, localX + hand * 0.18, -2.55, panelLeafZ, 0.25, 0.11, -hand * 0.64);
-    leaf(pivot, localX + hand * 0.34, -2.36, panelLeafZ, 0.18, 0.085, -hand * 0.31);
+    stem(pivot, [[localX, -1.43], [localX + hand * 0.14, -1.42],
+      [localX + hand * 0.29, -1.46]], stemZ, 0.006);
+    leaf(pivot, localX + hand * 0.17, -1.40, z, 0.10, 0.047, hand * 0.75);
   }
-  oval(pivot, localX, -2.76, panelOvalZ, 0.056, 0.064);
-  // side is retained to make ownership explicit (never draw across two leaves).
-  void side;
+
+  // Lower field repeats a small restrained V-shaped acanthus flourish close
+  // to its top-center, keeping most of the recessed surface unadorned.
+  for (const hand of [-1, 1]) {
+    stem(pivot, [[localX, -2.53], [localX + hand * 0.17, -2.45],
+      [localX + hand * 0.27, -2.34]], stemZ, 0.008);
+    leaf(pivot, localX + hand * 0.14, -2.44, z, 0.17, 0.075, -hand * 0.52);
+    leaf(pivot, localX + hand * 0.26, -2.32, z, 0.10, 0.050, -hand * 0.84);
+  }
 }
 
 export function addReferenceDoorFrameRelief({ THREE, root, geometries, material }) {
-  const { leaf, vine, oval } = makeSculpt({ THREE, geometries, material });
-  // Crown's beveled extruded face reaches ~0.395; set relief backs inside
-  // the crown instead of suspending the vines at z=0.48 in empty space.
-  const crownVineZ = 0.386;
-  const crownLeafZ = 0.385;
-  // Crown sculpt sits on the fixed beveled crown silhouette below the central
-  // medallion and extends outward symmetrically. It never follows a leaf.
-  for (const hand of [-1, 1]) {
-    vine(root, [[hand * 0.49, 4.39], [hand * 0.82, 4.47],
-      [hand * 1.21, 4.52], [hand * 1.62, 4.38]], crownVineZ, 0.025);
-    for (let i = 0; i < 4; i += 1) {
-      const x = hand * (0.71 + i * 0.235);
-      const y = 4.51 - i * 0.037;
-      leaf(root, x, y, crownLeafZ, 0.30 - i * 0.028, 0.145 - i * 0.01,
-        hand * (0.64 + i * 0.1));
-    }
-    vine(root, [[hand * 0.45, 4.56], [hand * 0.82, 4.70],
-      [hand * 1.16, 4.57]], crownVineZ, 0.016);
-  }
-  // Raised detailing on the fixed pilaster capitals/plinths, not on the
-  // moving doors. Centered within each block's front surface.
+  const { leaf, stem } = sculptTools({ THREE, geometries, material });
+  // The center crown is modeled by reference-door-crown.js. Do not overlay a
+  // second array of vines/ovals that changes its reference silhouette.
   for (const hand of [-1, 1]) {
     const x = hand * 2.63;
-    for (const y of [3.39, -3.41]) {
-      // The capital and base have different front depths. Their relief
-      // back surfaces touch the matching solid face at both heights.
-      const faceZ = y > 0 ? 0.304 : 0.331;
-      oval(root, x, y, faceZ, 0.063, 0.072);
+    // Three narrow vertical flutes follow the existing pilaster shaft.
+    for (const offset of [-0.077, 0, 0.077]) {
+      stem(root, [[x + offset, -2.67], [x + offset, -0.3],
+        [x + offset, 2.33]], 0.373, 0.007);
+    }
+    // Capital and plinth keep their own small fixed carved detail.
+    for (const y of [3.37, -3.42]) {
+      const z = y > 0 ? 0.304 : 0.329;
       for (const direction of [-1, 1]) {
-        leaf(root, x + direction * 0.15, y, faceZ, 0.19, 0.09,
-          direction * 0.68);
+        leaf(root, x + direction * 0.12, y, z, 0.15, 0.075,
+          direction * 0.46);
       }
     }
   }

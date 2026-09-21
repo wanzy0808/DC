@@ -107,28 +107,27 @@ export default function ReferenceDoorPreview() {
 
   return (
     <section className="w-full space-y-4">
-      <div className="grid w-full items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-        <div className="order-2 rounded-xl border border-rose-200/60 bg-white/55 p-3 dark:border-white/10 dark:bg-black/20 lg:order-1">
-          <p className="mb-2 text-sm font-semibold text-foreground">Referensi bentuk — jangan diubah</p>
-          <div className="relative mx-auto aspect-[.80] w-full max-w-[300px]">
+      <div className="grid w-full items-stretch gap-4 lg:grid-cols-2">
+        <div className="order-2 min-w-0 rounded-xl border border-rose-200/60 bg-[#fbf7f4] p-2 dark:border-white/10 dark:bg-[#242024] lg:order-1">
+          <p className="mb-1 px-2 text-sm font-semibold text-foreground">Referensi asli · pintu1.png</p>
+          <div className="relative mx-auto h-[min(73dvh,710px)] min-h-[370px] w-full overflow-hidden rounded-lg sm:min-h-[410px]">
             <Image
               src="/pintu1.png"
               alt="Referensi Pintu 1 dengan kusen klasik bermahkota, ukiran acanthus rose-gold, dan dua daun berpanel."
               fill
-              sizes="(max-width: 1024px) 80vw, 300px"
+              sizes="(max-width: 1024px) 90vw, 40vw"
               className="object-contain"
               priority
             />
           </div>
-          <p className="mt-2 text-xs leading-5 text-foreground/65">
-            Kusen, crown, panel, ukiran, dan pegangan di gambar ini menjadi acuan tahap berikutnya.
-            Jangan mengganti bentuk ornamen dengan motif baru.
+          <p className="mt-1 px-2 text-sm leading-6 text-foreground/80">
+            Perhatikan siluet mahkota, proporsi panel, dan ukiran tipis pada kusen.
           </p>
         </div>
 
-        <div className="order-1 min-w-0 rounded-xl border border-rose-200/60 bg-[linear-gradient(#fffaf8,#f8eeee)] p-2 dark:border-white/10 dark:bg-[linear-gradient(#282125,#171316)] lg:order-2">
-          <div className="mb-1 flex items-center justify-between gap-3 px-2 text-xs text-foreground/65">
-            <span>Geometri Three.js · Tahap 5–10</span>
+        <div className="order-1 min-w-0 rounded-xl border border-rose-200/60 bg-[#f7f1ed] p-2 dark:border-white/10 dark:bg-[#242024] lg:order-2">
+          <div className="mb-1 flex items-center justify-between gap-3 px-2 text-sm font-semibold text-foreground/85">
+            <span>Model Three.js · revisi referensi</span>
             <span>{status === "ready" ? "3D aktif" : status === "loading" ? "Memuat…" :
               status === "recovering" ? "Memulihkan WebGL…" : "WebGL tidak tersedia"}</span>
           </div>
@@ -214,11 +213,8 @@ export default function ReferenceDoorPreview() {
             "Uji gerak masuk hanya di lab; belum berpindah halaman."}
         </p>
         <p className="max-w-xl text-sm leading-6 text-foreground/65">
-          Permukaan satin Rose dan ivory, detail relief pada daun serta crown, dan foyer 3D di balik bukaan.
-          Uji 0°/45°/90°/110° dari depan dan kedua sudut miring: ukiran harus ikut daun,
-          frame tetap diam, ruang terlihat ber-volume, dan cahaya ambang muncul hanya ketika terbuka.
-          Kemiripan detail dengan referensi tetap memerlukan review visual. Tombol uji masuk
-          hanya memindahkan kamera dalam mesh foyer; tidak mengubah route atau landing utama.
+          Bandingkan mahkota, tiga panel, kusen, dan kedalaman ukiran dengan referensi pada ukuran yang sebanding.
+          Uji bukaan 0°–110° dari depan dan samping. Model ini masih perlu pemeriksaan visual sebelum dipakai di landing.
         </p>
         <Link className="text-sm underline underline-offset-4" href="/pintu-lab/css">
           Bandingkan dengan eksperimen CSS lama
