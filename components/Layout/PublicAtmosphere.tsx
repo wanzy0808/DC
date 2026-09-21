@@ -47,7 +47,7 @@ export function PublicContent({ children }: { children: ReactNode }) {
   const isPrivateArea = privatePrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-  const isLanding = pathname === "/" || pathname === "/jiplak";
+  const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
   const isDigitalInvitation = pathname === "/d-invitation";
 
   return (
