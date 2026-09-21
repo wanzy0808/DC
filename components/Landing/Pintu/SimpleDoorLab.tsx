@@ -160,28 +160,35 @@ function Door({ opening, image }: { opening: boolean; image: string }) {
   </group>;
 }
 
+const PORTALS = [
+  { title: "Event Planner", image: "/wo.png", href: "/event-planner" },
+  { title: "Undangan Digital", image: "/hp-digital.png", href: "/d-invitation" },
+  { title: "Guestbook", image: "/bukutamu.png", href: "/guestbook" },
+  { title: "Undangan Fisik", image: "/wo.png", href: "/undangan-fisik" },
+];
+
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   useFrame((_, delta) => {
     if (selected === null && !reducedMotion && !entering) phase.current += delta * 0.18;
     else if (selected !== null) {
-      const target = -selected * Math.PI * 2 / 3;
+      const target = -selected * Math.PI * 2 / PORTALS.length;
       const diff = Math.atan2(Math.sin(target - phase.current), Math.cos(target - phase.current));
       phase.current += diff * (1 - Math.exp(-3.4 * delta));
     }
     groups.current.forEach((group, index) => {
       if (!group) return;
-      const theta = phase.current + index * Math.PI * 2 / 3;
-      const x = Math.sin(theta) * 2.65;
-      const z = Math.cos(theta) * 1.1;
+      const theta = phase.current + index * Math.PI * 2 / PORTALS.length;
+      const x = Math.sin(theta) * 2.85;
+      const z = Math.cos(theta) * 1.25;
       group.position.set(x, 0, z);
       group.rotation.y = -Math.sin(theta) * 0.17;
-      group.scale.setScalar(0.84 + (z + 1.1) / 2.2 * 0.16);
+      group.scale.setScalar(0.84 + (z + 1.25) / 2.5 * 0.16);
     });
   });
-  return <>{[0, 1, 2].map((index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={["/wo.png", "/hp-digital.png", "/bukutamu.png"][index]} />
+  return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
+    <Door opening={opening[index]} image={portal.image} />
     <GroundShadow />
     <Fireflies offset={index * 2.1} reducedMotion={reducedMotion} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
@@ -189,7 +196,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: 
 }
 
 export default function SimpleDoorLab() {
-  const [opening, setOpening] = useState([false, false, false]);
+  const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
   const router = useRouter();
@@ -201,19 +208,19 @@ export default function SimpleDoorLab() {
   return <section className="w-full max-w-5xl space-y-4">
     <div className="relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent">
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected ?? 0]); }} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => {  if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(PORTALS[selected ?? 0].href); }} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening([0, 1, 2].map((i) => i === index)); }} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} />
       </Canvas>
       <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ delay: reducedMotion ? 0 : 0.65, duration: reducedMotion ? 0 : 0.55 }} />
-      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center gap-3 font-[family-name:var(--font-dc-heading)] text-xs text-[#865c65] sm:gap-8">{["Event Planner", "Digital Invitation", "Guestbook"].map((title, index) => <span key={title} className={`min-w-0 flex-1 text-center transition-opacity ${selected === index ? "opacity-100" : "opacity-60"}`}>{title}</span>)}</div>
-      <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Tiga pintu · pilih tujuan untuk mendekat</span>
+      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center gap-3 font-[family-name:var(--font-dc-heading)] text-xs text-[#865c65] sm:gap-8">{PORTALS.map(({ title }, index) => <span key={title} className={`min-w-0 flex-1 text-center transition-opacity ${selected === index ? "opacity-100" : "opacity-60"}`}>{title}</span>)}</div>
+      <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Empat pintu · pilih tujuan untuk mendekat</span>
     </div>
     <div className="flex flex-wrap items-center justify-center gap-3">
-      <span className="text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : ["Event Planner", "Undangan Digital", "Guestbook"][selected]}</span>
+      <span className="text-sm text-foreground/70">{selected === null ? "Klik pintu untuk memilih tujuan" : PORTALS[selected].title}</span>
       <button type="button" disabled={selected === null || entering || (selected !== null && !opening[selected])} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-6 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk"}</button>
     </div>
   </section>;
