@@ -37,7 +37,8 @@ export default function HeroSection() {
     }
   }, []);
   useLayoutEffect(() => {
-    if (!portalArrival || reducedMotion || arrivalFinished) {
+    if (!portalArrival) return;
+    if (reducedMotion || arrivalFinished) {
       document.body.classList.remove("dc-portal-arriving");
       return;
     }
@@ -85,8 +86,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative grid items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-24">
-      {portalArrival && !arrivalFinished && !reducedMotion && <motion.div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[60] bg-background" initial={{ opacity: 1 }} animate={{ opacity: [1, 1, 0] }} transition={{ duration: 6.6, times: [0, 0.58, 0.87], ease: "easeInOut" }} />}
-      <motion.div className={`dc-invitation-hero-copy max-w-2xl ${portalArrival && !arrivalFinished && !reducedMotion ? "relative z-[65]" : ""}`} initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
+      <motion.div className="dc-invitation-hero-copy max-w-2xl" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
         </p>
