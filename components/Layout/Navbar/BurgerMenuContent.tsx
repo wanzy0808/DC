@@ -16,11 +16,11 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import {
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import RegisterDialog from "./RegisterDialog";
@@ -48,19 +48,23 @@ export default function BurgerMenuContent() {
   ] as const;
 
   const serviceActive = services.some(({ href }) => pathname === href);
+  const itemMotion = (index: number) => shouldReduceMotion ? {} : {
+    initial: { opacity: 0, x: 32 },
+    animate: { opacity: 1, x: 0 },
+    transition: { duration: 0.38, delay: 0.16 + index * 0.085, ease: [0.22, 1, 0.36, 1] as const },
+  };
   const neutralButton =
-    "border border-primary/25 !rounded-2xl bg-background/45 text-foreground shadow-none backdrop-blur-sm transition-[background-color,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10 hover:text-foreground dark:border-primary/30 dark:bg-background/45 dark:text-foreground dark:hover:border-primary/60 dark:hover:bg-primary/15 dark:hover:text-foreground";
+    "border border-primary/25 !rounded-[20px] bg-background/45 text-foreground shadow-none backdrop-blur-sm transition-[background-color,border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-primary/60 hover:bg-primary/10 hover:text-foreground dark:border-primary/30 dark:bg-background/45 dark:text-foreground dark:hover:border-primary/60 dark:hover:bg-primary/15 dark:hover:text-foreground";
   const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start !rounded-2xl px-4 py-3 text-left text-sm`;
   const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start !rounded-2xl px-4 py-2.5 text-left text-[13px]`;
 
   return (
-    <SheetContent
-      side="right"
-      className="flex w-[min(92vw,420px)] flex-col overflow-hidden border-l border-primary/30 !rounded-l-[28px] bg-background/90 p-0 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-xl"
+    <DialogContent
+      className="flex max-h-[min(85dvh,720px)] w-[min(92vw,440px)] max-w-none flex-col gap-0 overflow-hidden !rounded-[32px] border border-primary/35 bg-background/90 p-0 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.14)] backdrop-blur-xl sm:max-w-[440px]"
     >
       <motion.div
-        initial={shouldReduceMotion ? false : { opacity: 0, x: 28, scale: 0.97 }}
-        animate={{ opacity: 1, x: 0, scale: 1 }}
+        initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.82 }}
+        animate={{ opacity: 1, scale: 1 }}
         transition={
           shouldReduceMotion
             ? undefined
@@ -68,14 +72,14 @@ export default function BurgerMenuContent() {
         }
         className="flex min-h-0 flex-1 flex-col overflow-y-auto"
       >
-        <SheetHeader className="shrink-0 border-b border-primary/15 bg-background/35 px-6 pb-5 pt-7 pr-14 text-left sm:px-7">
-          <SheetTitle className="w-fit rounded-2xl border border-primary/25 bg-background/45 px-4 py-3 backdrop-blur-sm">
+        <DialogHeader className="shrink-0 border-b border-primary/15 bg-background/35 px-6 pb-5 pt-7 pr-14 text-left sm:px-7">
+          <DialogTitle className="w-fit rounded-2xl border border-primary/25 bg-background/45 px-4 py-3 backdrop-blur-sm">
             <BrandWordmark size="mobile" />
-          </SheetTitle>
-        </SheetHeader>
+          </DialogTitle>
+        </DialogHeader>
 
         <nav className="flex-1 space-y-2 bg-transparent p-4 sm:p-5">
-          <div className="space-y-1.5 rounded-[24px] border border-primary/20 bg-background/30 p-2">
+          <motion.div {...itemMotion(0)} className="space-y-1.5 rounded-[24px] border border-primary/20 bg-background/30 p-2">
             <Button
               type="button"
               aria-expanded={servicesOpen}
@@ -101,7 +105,8 @@ export default function BurgerMenuContent() {
                   {services.map(({ href, label, icon: Icon }) => {
                     const active = pathname === href;
                     return (
-                      <SheetClose
+                      <motion.div key={href} {...itemMotion(1 + services.findIndex((item) => item.href === href))}>
+                      <DialogClose
                         key={href}
                         nativeButton={false}
                         render={
@@ -117,17 +122,19 @@ export default function BurgerMenuContent() {
                           </Button>
                         }
                       />
+                      </motion.div>
                     );
                   })}
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
+          </motion.div>
 
           {secondary.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
             return (
-              <SheetClose
+              <motion.div key={href} {...itemMotion(4 + secondary.findIndex((item) => item.href === href))}>
+              <DialogClose
                 key={href}
                 nativeButton={false}
                 render={
@@ -143,12 +150,14 @@ export default function BurgerMenuContent() {
                   </Button>
                 }
               />
+              </motion.div>
             );
           })}
 
           <div className="my-4 border-t border-primary/15" />
 
-          <SheetClose
+          <motion.div {...itemMotion(7)}>
+          <DialogClose
             nativeButton={false}
             render={
               <Button
@@ -164,6 +173,8 @@ export default function BurgerMenuContent() {
             }
           />
 
+          </motion.div>
+          <motion.div {...itemMotion(8)}>
           <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
             <DialogTrigger
               render={<Button size="lg" className={topButtonClass} />}
@@ -173,8 +184,9 @@ export default function BurgerMenuContent() {
             </DialogTrigger>
             <RegisterDialog onSwitchToLogin={() => setRegisterOpen(false)} />
           </Dialog>
+          </motion.div>
         </nav>
       </motion.div>
-    </SheetContent>
+    </DialogContent>
   );
 }
