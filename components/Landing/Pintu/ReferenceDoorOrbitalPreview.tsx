@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 type DoorId = 1 | 2 | 3;
 type OrbitalControls = {
   pause: (paused: boolean) => void;
+  resume: () => void;
   select: (id: DoorId) => void;
   enter: (id: DoorId) => boolean;
   cancel: () => void;
@@ -27,6 +28,7 @@ export default function ReferenceDoorOrbitalPreview() {
   const [active, setActive] = useState<DoorId>(2);
   const [status, setStatus] = useState<"loading" | "ready" | "recovering" | "fallback">("loading");
   const [entering, setEntering] = useState(false);
+  const [pinned, setPinned] = useState(false);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const current = DESTINATIONS[active - 1];
@@ -96,6 +98,12 @@ export default function ReferenceDoorOrbitalPreview() {
     if (entering) return;
     controls.current?.select(id);
     setActive(id);
+    setPinned(true);
+  }
+
+  function resumeOrbit() {
+    controls.current?.resume();
+    setPinned(false);
   }
 
   function enterDoor() {
@@ -136,7 +144,9 @@ export default function ReferenceDoorOrbitalPreview() {
           </p>
         )}
         <div className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-xs text-foreground/65">
-          {entering ? "Pintu membuka · kamera memasuki ruang…" : "Pilih layanan untuk memusatkan pintu."}
+          {entering ? "Pintu membuka · kamera memasuki ruang…" :
+            pinned ? "Pilihan tetap di depan sampai kamu memilih Putar lagi." :
+              "Pilih layanan untuk memusatkan pintu."}
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-2" role="group" aria-label="Pilih pintu layanan">
@@ -151,6 +161,11 @@ export default function ReferenceDoorOrbitalPreview() {
         ))}
       </div>
       <div className="flex flex-wrap items-center justify-center gap-3">
+        {pinned && !reducedMotion && (
+          <Button type="button" disabled={entering || status !== "ready"} onClick={resumeOrbit}>
+            Putar lagi
+          </Button>
+        )}
         <Button type="button" disabled={entering || status !== "ready"} onClick={enterDoor}>
           Masuk · {current.label}
         </Button>

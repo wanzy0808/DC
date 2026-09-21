@@ -23,6 +23,9 @@ export async function mountOrbitalDoors(container, options = {}) {
   let visible = true;
   let frameId = 0;
   let previousTime = 0;
+  let previousPaint = 0;
+  // Three ornate assemblies: limit costly canvas paints, not user input.
+  const frameInterval = window.matchMedia("(max-width: 640px)").matches ? 1000 / 24 : 1000 / 30;
   let renderer;
   let resizeObserver;
   let intersectionObserver;
@@ -30,6 +33,8 @@ export async function mountOrbitalDoors(container, options = {}) {
   let lastReported = 2;
   let phase = INITIAL_PHASE;
   let targetPhase = null;
+  let hoverPaused = false;
+  let manuallySelected = false;
   let paused = Boolean(options.reducedMotion);
   let entering = false;
   let entered = false;
@@ -82,9 +87,15 @@ export async function mountOrbitalDoors(container, options = {}) {
     frameId = 0;
     if (disposed || contextLost || !renderer || !visible || document.hidden) {
       previousTime = 0;
+      previousPaint = 0;
       return;
     }
     const now = performance.now();
+    if (previousPaint && now - previousPaint < frameInterval) {
+      invalidate();
+      return;
+    }
+    previousPaint = now;
     const dt = previousTime ? Math.min((now - previousTime) / 1000, 0.05) : 0.016;
     previousTime = now;
     const ease = options.reducedMotion ? 1 : 1 - Math.exp(-dt * 5.8);
@@ -120,7 +131,10 @@ export async function mountOrbitalDoors(container, options = {}) {
       entered = true;
       options.onEntered?.(selected);
     }
-    if (!options.reducedMotion || entering || targetPhase !== null) invalidate();
+    // A pinned/hover-paused scene is static: do not keep redrawing 24–30 fps.
+    // Re-enter the loop on a real interaction, unpause, or a pending transition.
+    if ((!paused && !options.reducedMotion) ||
+      (entering && (opening < 110 || approach < 1)) || targetPhase !== null) invalidate();
   }
 
   function invalidate() {
@@ -139,18 +153,24 @@ export async function mountOrbitalDoors(container, options = {}) {
     renderer.setSize(width, height, false);
     invalidate();
   }
-  function onVisibility() { previousTime = 0; invalidate(); }
+  function onVisibility() {
+    previousTime = 0;
+    previousPaint = 0;
+    invalidate();
+  }
   function onContextLost(event) {
     event.preventDefault();
     contextLost = true;
     if (frameId) window.cancelAnimationFrame(frameId);
     frameId = 0;
     previousTime = 0;
+    previousPaint = 0;
     options.onContextChange?.("lost");
   }
   function onContextRestored() {
     contextLost = false;
     previousTime = 0;
+    previousPaint = 0;
     options.onContextChange?.("restored");
     resize();
   }
@@ -207,13 +227,21 @@ export async function mountOrbitalDoors(container, options = {}) {
   return {
     pause(value) {
       if (entering || disposed) return;
-      paused = Boolean(value) || Boolean(options.reducedMotion);
+      hoverPaused = Boolean(value);
+      paused = hoverPaused || manuallySelected || Boolean(options.reducedMotion);
+      invalidate();
+    },
+    resume() {
+      if (entering || disposed) return;
+      manuallySelected = false;
+      paused = hoverPaused || Boolean(options.reducedMotion);
       invalidate();
     },
     select(id) {
       if (!IDS.includes(id) || entering || disposed) return;
       selected = id;
       lastReported = id;
+      manuallySelected = true;
       paused = true;
       const desired = FRONT - (id - 1) * STEP;
       targetPhase = phase + wrap(desired - phase);
@@ -225,6 +253,7 @@ export async function mountOrbitalDoors(container, options = {}) {
       if (!IDS.includes(id) || entering || disposed) return false;
       selected = id;
       lastReported = id;
+      manuallySelected = true;
       paused = true;
       const desired = FRONT - (id - 1) * STEP;
       targetPhase = phase + wrap(desired - phase);
@@ -239,7 +268,8 @@ export async function mountOrbitalDoors(container, options = {}) {
       opening = 0;
       approach = 0;
       targetPhase = null;
-      paused = Boolean(options.reducedMotion);
+      paused = hoverPaused || manuallySelected || Boolean(options.reducedMotion);
+      previousPaint = 0;
       updateCamera();
       invalidate();
     },

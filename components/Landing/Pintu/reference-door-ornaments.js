@@ -50,6 +50,12 @@ function makeSculpt({ THREE, geometries, material }) {
 
 export function addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometries, material }) {
   const { leaf, vine, oval } = makeSculpt({ THREE, geometries, material });
+  // The inset field's front face is at ~0.146 in leaf-local coordinates.
+  // All relief has a back surface penetrating that field; 0.21+ from earlier
+  // stages put the ornament completely in mid-air, especially at oblique view.
+  const panelVineZ = 0.149;
+  const panelLeafZ = 0.140;
+  const panelOvalZ = 0.151;
   // Upper panel: four small mirrored corner arrangements, inside the inner
   // moldings (panel range x ±0.84, y -0.84..2.80). Nothing crosses a seam.
   for (const vertical of [-1, 1]) {
@@ -57,10 +63,10 @@ export function addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometr
     for (const horizontal of [-1, 1]) {
       const cx = localX + horizontal * 0.54;
       vine(pivot, [[cx - horizontal * 0.14, cy - vertical * 0.14],
-        [cx, cy], [cx + horizontal * 0.16, cy + vertical * 0.12]], 0.218, 0.012);
-      leaf(pivot, cx + horizontal * 0.045, cy + vertical * 0.085, 0.211,
+        [cx, cy], [cx + horizontal * 0.16, cy + vertical * 0.12]], panelVineZ, 0.012);
+      leaf(pivot, cx + horizontal * 0.045, cy + vertical * 0.085, panelLeafZ,
         0.22, 0.115, -horizontal * vertical * 0.57);
-      leaf(pivot, cx - horizontal * 0.115, cy - vertical * 0.025, 0.211,
+      leaf(pivot, cx - horizontal * 0.115, cy - vertical * 0.025, panelLeafZ,
         0.16, 0.082, horizontal * vertical * 0.72);
     }
   }
@@ -69,55 +75,62 @@ export function addReferenceDoorLeafRelief({ THREE, pivot, side, localX, geometr
   for (const hand of [-1, 1]) {
     const cx = localX + hand * 0.20;
     vine(pivot, [[localX, 2.40], [cx * 0.3 + localX * 0.7, 2.44],
-      [cx, 2.52]], 0.221, 0.014);
-    leaf(pivot, localX + hand * 0.18, 2.48, 0.216, 0.28, 0.105, -hand * 0.54);
+      [cx, 2.52]], panelVineZ, 0.014);
+    leaf(pivot, localX + hand * 0.18, 2.48, panelLeafZ, 0.28, 0.105, -hand * 0.54);
   }
-  oval(pivot, localX, 2.48, 0.224, 0.075, 0.082);
+  oval(pivot, localX, 2.48, panelOvalZ, 0.075, 0.082);
 
   // The narrow center panel holds a slim paired flourish, not a separate badge.
   vine(pivot, [[localX - 0.41, -1.43], [localX - 0.12, -1.39],
-    [localX, -1.43], [localX + 0.12, -1.39], [localX + 0.41, -1.43]], 0.222, 0.012);
+    [localX, -1.43], [localX + 0.12, -1.39], [localX + 0.41, -1.43]], panelVineZ, 0.012);
   for (const hand of [-1, 1]) {
-    leaf(pivot, localX + hand * 0.22, -1.40, 0.217, 0.16, 0.068, hand * 0.9);
+    leaf(pivot, localX + hand * 0.22, -1.40, panelLeafZ, 0.16, 0.068, hand * 0.9);
   }
 
   // Lower panel: small symmetric rising vines. All pieces are attached to
   // their owning pivot and stay inside the low recessed panel at 110 degrees.
   for (const hand of [-1, 1]) {
     vine(pivot, [[localX, -2.80], [localX + hand * 0.19, -2.62],
-      [localX + hand * 0.34, -2.36]], 0.218, 0.013);
-    leaf(pivot, localX + hand * 0.18, -2.55, 0.213, 0.25, 0.11, -hand * 0.64);
-    leaf(pivot, localX + hand * 0.34, -2.36, 0.213, 0.18, 0.085, -hand * 0.31);
+      [localX + hand * 0.34, -2.36]], panelVineZ, 0.013);
+    leaf(pivot, localX + hand * 0.18, -2.55, panelLeafZ, 0.25, 0.11, -hand * 0.64);
+    leaf(pivot, localX + hand * 0.34, -2.36, panelLeafZ, 0.18, 0.085, -hand * 0.31);
   }
-  oval(pivot, localX, -2.76, 0.221, 0.056, 0.064);
+  oval(pivot, localX, -2.76, panelOvalZ, 0.056, 0.064);
   // side is retained to make ownership explicit (never draw across two leaves).
   void side;
 }
 
 export function addReferenceDoorFrameRelief({ THREE, root, geometries, material }) {
   const { leaf, vine, oval } = makeSculpt({ THREE, geometries, material });
+  // Crown's beveled extruded face reaches ~0.395; set relief backs inside
+  // the crown instead of suspending the vines at z=0.48 in empty space.
+  const crownVineZ = 0.386;
+  const crownLeafZ = 0.385;
   // Crown sculpt sits on the fixed beveled crown silhouette below the central
   // medallion and extends outward symmetrically. It never follows a leaf.
   for (const hand of [-1, 1]) {
     vine(root, [[hand * 0.49, 4.39], [hand * 0.82, 4.47],
-      [hand * 1.21, 4.52], [hand * 1.62, 4.38]], 0.480, 0.025);
+      [hand * 1.21, 4.52], [hand * 1.62, 4.38]], crownVineZ, 0.025);
     for (let i = 0; i < 4; i += 1) {
       const x = hand * (0.71 + i * 0.235);
       const y = 4.51 - i * 0.037;
-      leaf(root, x, y, 0.475, 0.30 - i * 0.028, 0.145 - i * 0.01,
+      leaf(root, x, y, crownLeafZ, 0.30 - i * 0.028, 0.145 - i * 0.01,
         hand * (0.64 + i * 0.1));
     }
     vine(root, [[hand * 0.45, 4.56], [hand * 0.82, 4.70],
-      [hand * 1.16, 4.57]], 0.478, 0.016);
+      [hand * 1.16, 4.57]], crownVineZ, 0.016);
   }
   // Raised detailing on the fixed pilaster capitals/plinths, not on the
   // moving doors. Centered within each block's front surface.
   for (const hand of [-1, 1]) {
     const x = hand * 2.63;
     for (const y of [3.39, -3.41]) {
-      oval(root, x, y, 0.355, 0.063, 0.072);
+      // The capital and base have different front depths. Their relief
+      // back surfaces touch the matching solid face at both heights.
+      const faceZ = y > 0 ? 0.304 : 0.331;
+      oval(root, x, y, faceZ, 0.063, 0.072);
       for (const direction of [-1, 1]) {
-        leaf(root, x + direction * 0.15, y, 0.354, 0.19, 0.09,
+        leaf(root, x + direction * 0.15, y, faceZ, 0.19, 0.09,
           direction * 0.68);
       }
     }

@@ -52,6 +52,16 @@ Files: `reference-door-model.js`, `reference-door-engine.js`, `reference-door-or
 
 **Validasi teramati:** GitHub Build Validation run `35515658674` pada head PR #60 `4274991f9f1def959af4332f48b36c0a3dca48ee` **PASS**; PR #60 squash-merged ke `main` sebagai `4c9530f207c058fd6610e5236abbbe8644b1227f`. **Belum terverifikasi:** screenshot/runtime WebGL desktop/mobile, perangkat grafis rendah daya, gerak kamera tanpa clipping, dan kesamaan relief terhadap `public/pintu1.png`. Promosi ke landing belum dilakukan.
 
+
+
+### Audit geometri dan interaksi V2 — 21 September 2026
+
+**Relief harus menempel ke permukaan:** inspeksi koordinat mesh menunjukkan pahatan prosedural pada daun sebelumnya bermula di z≈0,211–0,224 sementara front bidang inset sekitar z≈0,146; crown sebelumnya berada di z≈0,475–0,480 sedangkan front crown sekitar z≈0,395. Karena ada celah, ukiran berpotensi terlihat seperti ornamen melayang dari sudut miring. `reference-door-ornaments.js` memindahkan dasar geometri daun, batang, medali kecil, acanthus crown dan aksen capital/base ke kedalaman yang saling beririsan dengan bidang nyata masing-masing. Siluet/panel/medali oval asli, pivot, material dan landing `/` tidak diganti. **Masih perlu screenshot berbagai sudut** untuk mengonfirmasi pahatan tidak tampak menembus molding maupun melayang.
+
+**Orbital harus menjaga pilihan:** sebelumnya hover leave memanggil `pause(false)` sehingga pemilihan manual bisa kembali ikut orbit sebelum pengguna menekan `Masuk`. `reference-door-orbital-engine.js` sekarang memisahkan `hoverPaused` dan `manuallySelected` agar pilihan tetap terpusat sampai pengguna memilih `Putar lagi`; tombol eksplisitnya ditambahkan di `ReferenceDoorOrbitalPreview.tsx`. Redraw canvas dibatasi sekitar 30 fps desktop dan 24 fps mobile tanpa menghentikan input atau render on-demand; ini batas frekuensi teoretis, **bukan benchmark FPS aktual**. Reduced motion tetap mematikan rotasi otomatis; shortcut Esc/Batal dan fallback link tetap ada.
+
+**Scope/validasi saat ditulis:** branch `fix/pintu-v2-relief-contact-orbital-frame-budget`; affected `reference-door-ornaments.js`, `reference-door-orbital-engine.js`, `ReferenceDoorOrbitalPreview.tsx`, `pintu3d.md`, `prd.md`. CI dan screenshot browser nyata masih pending saat catatan ini ditulis; tidak mengklaim visual Pintu 1 approved atau mempromosikan prototipe ke landing utama.
+
 ### Catatan eksekusi V2 — Tahap 1
 
 **Tujuan:** membuktikan bahwa model di `/pintu-lab` sekarang benar-benar dirender oleh Three.js/WebGL sebagai volume dan dua daun engsel, bukan CSS transform terhadap gambar. **Belum mencoba meniru relief rumit**: tahap ini hanya baseline struktur agar tidak mengulangi kegagalan mengklaim icon/flat drawing sudah sama dengan referensi.
