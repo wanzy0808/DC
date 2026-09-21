@@ -7,28 +7,42 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
   const { locale } = useLanguage();
   const reduced = useReducedMotion();
-  const [flying, setFlying] = useState(false);
+  const [phase, setPhase] = useState<"rest" | "depart" | "return">("rest");
   useEffect(() => {
-    if (!flying) return;
-    const timer = window.setTimeout(() => setFlying(false), 1450);
+    if (phase !== "depart") return;
+    const timer = window.setTimeout(() => setPhase("return"), 1050);
     return () => window.clearTimeout(timer);
-  }, [flying]);
+  }, [phase]);
+  useEffect(() => {
+    if (phase !== "return") return;
+    const timer = window.setTimeout(() => setPhase("rest"), 1250);
+    return () => window.clearTimeout(timer);
+  }, [phase]);
   const top = corner === "top";
   return (
     <motion.div
-      onPointerEnter={(event) => { if (event.pointerType === "mouse" && !reduced) setFlying(true); }}
-      onPointerDown={() => { if (!reduced) setFlying(true); }}
-      initial={reduced ? false : { opacity: 0, y: 18 }}
-      animate={{ opacity: flying ? 0.35 : 1, x: flying ? (top ? -105 : 105) : 0, y: flying ? (top ? -65 : 65) : 0, rotate: flying ? (top ? -8 : 8) : 0, scale: flying ? 0.84 : 1 }}
-      transition={{ type: "spring", stiffness: flying ? 95 : 65, damping: 18, delay: flying ? 0 : top ? 0.2 : 0.7 }}
+      onPointerEnter={(event) => { if (event.pointerType === "mouse" && !reduced && phase === "rest") setPhase("depart"); }}
+      onPointerDown={() => { if (!reduced && phase === "rest") setPhase("depart"); }}
+      initial={reduced ? false : { opacity: 0, y: 14 }}
+      animate={phase === "depart"
+        ? { opacity: 0, x: top ? -440 : 440, y: top ? -130 : 130, rotate: top ? -11 : 11, scale: 0.85 }
+        : phase === "return" ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
+        : { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
+      transition={phase === "depart"
+        ? { duration: 0.95, ease: [0.32, 0, 0.65, 1] }
+        : { duration: phase === "return" ? 1.2 : 0.85, ease: [0.22, 1, 0.36, 1] }}
+      style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "pointer-events-auto absolute left-2 top-4 z-20 w-[min(78vw,340px)] sm:left-7 sm:top-8 lg:left-[5%] lg:top-[12%] lg:w-[min(28vw,410px)]"
-        : "pointer-events-auto absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[12%] lg:right-[5%] lg:w-[min(24vw,335px)]"}
+        ? "absolute left-2 top-4 z-20 w-[min(78vw,340px)] sm:left-7 sm:top-8 lg:left-[5%] lg:top-[12%] lg:w-[min(28vw,410px)]"
+        : "absolute bottom-5 right-2 z-20 w-[min(69vw,285px)] sm:bottom-9 sm:right-8 lg:bottom-[12%] lg:w-[min(24vw,335px)]"}
     >
-      <div className="relative isolate px-7 py-6 text-center sm:px-9 sm:py-8">
-        <div aria-hidden="true" className="absolute inset-0 -z-10 rounded-[48%_52%_47%_53%/52%_48%_52%_48%] border border-primary/10 bg-background/75 shadow-[0_14px_45px_rgba(192,122,132,0.09)] backdrop-blur-md" />
-        <div aria-hidden="true" className="absolute -bottom-2 left-[19%] -z-20 size-12 rounded-full bg-background/70 blur-[2px]" />
-        <div aria-hidden="true" className="absolute -top-2 right-[17%] -z-20 size-14 rounded-full bg-background/70 blur-[2px]" />
+      <div className="relative isolate px-7 py-7 text-center sm:px-9 sm:py-9">
+        {/* Multiple overlapping soft lobes create a cloud silhouette rather than a rounded card. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-[5%] inset-y-[13%] -z-10 rounded-[48%] border border-primary/10 bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md" />
+        <div aria-hidden="true" className="pointer-events-none absolute -top-[8%] left-[17%] -z-10 h-[76%] w-[43%] rounded-full bg-background/95" />
+        <div aria-hidden="true" className="pointer-events-none absolute -top-[13%] right-[14%] -z-10 h-[86%] w-[47%] rounded-full bg-background/95" />
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-[1%] left-[5%] -z-10 h-[65%] w-[42%] rounded-full bg-background/95" />
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-[1%] right-[4%] -z-10 h-[69%] w-[43%] rounded-full bg-background/95" />
         {top ? (
           <>
             <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/55 sm:text-[10px]">{locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"}</p>
