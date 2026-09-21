@@ -17,8 +17,8 @@ export default function PintuLabPage() {
           Pintu 3D dari model asli
         </h1>
         <p className="mt-2 text-sm leading-6 text-foreground/85 sm:text-base">
-          Cek warna Rose, detail ukiran, dan pencahayaan lembut di bawah kaki pintu.
-          Model belum dipisah untuk animasi buka-tutup.
+          Bandingkan mahkota, ukiran, kusen ivory–blush, dan daun Rose satin dengan foto asli.
+          Coba bukaan 0°–110° untuk menilai hasil pemisahan geometri GLB.
         </p>
       </div>
       <AssetDoorPreview />
