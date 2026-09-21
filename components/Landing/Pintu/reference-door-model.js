@@ -4,6 +4,7 @@
  */
 import { addReferenceDoorHardware } from "./reference-door-hardware.js";
 import { addReferenceDoorLeafRelief, addReferenceDoorFrameRelief } from "./reference-door-ornaments.js";
+import { addReferenceDoorCrown } from "./reference-door-crown.js";
 import { buildReferenceDoorInterior } from "./reference-door-interior.js";
 import { buildReferenceDoorLighting } from "./reference-door-lighting.js";
 
@@ -30,28 +31,28 @@ export function createReferenceDoorModel({ THREE, scene, options = {} }) {
   // Roughness is deliberately high on paint; metal is confined to hardware
   // and thin relief, not the whole slab or large frame surfaces.
   const paintedRose = new THREE.MeshStandardMaterial({
-    color: palette.paint, roughness: 0.82, metalness: 0, flatShading: false,
+    color: palette.paint, roughness: 0.88, metalness: 0, flatShading: false,
   });
   const insetRose = new THREE.MeshStandardMaterial({
-    color: palette.inset, roughness: 0.88, metalness: 0,
+    color: palette.inset, roughness: 0.92, metalness: 0,
   });
   const doorEdges = new THREE.MeshStandardMaterial({
-    color: palette.edge, roughness: 0.77, metalness: 0,
+    color: palette.edge, roughness: 0.83, metalness: 0,
   });
   const pearledFrame = new THREE.MeshStandardMaterial({
-    color: 0xe6d5cc, roughness: 0.84, metalness: 0,
+    color: 0xd6bcb1, roughness: 0.86, metalness: 0,
   });
   const frameShadow = new THREE.MeshStandardMaterial({
-    color: 0xa88887, roughness: 0.9, metalness: 0,
+    color: 0x9b7777, roughness: 0.9, metalness: 0,
   });
   const understatedMetal = new THREE.MeshStandardMaterial({
-    color: 0xb99387, roughness: 0.48, metalness: 0.52,
+    color: 0x98706b, roughness: 0.57, metalness: 0.38,
   });
   const roseRelief = new THREE.MeshStandardMaterial({
-    color: 0xc99a99, roughness: 0.7, metalness: 0.12,
+    color: 0x8f5f6a, roughness: 0.87, metalness: 0.035,
   });
   const frameRelief = new THREE.MeshStandardMaterial({
-    color: 0xd9b7a7, roughness: 0.72, metalness: 0.08,
+    color: 0xb78e83, roughness: 0.81, metalness: 0.05,
   });
   const floorMat = new THREE.MeshStandardMaterial({ color: 0xf3eeeb, roughness: 0.94 });
   [paintedRose, insetRose, doorEdges, pearledFrame, frameShadow, understatedMetal, roseRelief, frameRelief, floorMat]
@@ -107,22 +108,6 @@ export function createReferenceDoorModel({ THREE, scene, options = {} }) {
 
   function beveledPanel(parent, dims, position, material, radius = 0.055, bevel = 0.028) {
     return extrude(parent, roundedRect(dims[0], dims[1], radius), dims[2], position, material, bevel);
-  }
-
-  function crownSilhouette() {
-    const shape = new THREE.Shape();
-    shape.moveTo(-2.12, -0.40);
-    shape.lineTo(2.12, -0.40);
-    shape.bezierCurveTo(1.91, -0.08, 1.68, 0.04, 1.43, 0.15);
-    shape.bezierCurveTo(1.18, 0.26, 1.12, 0.58, 0.88, 0.57);
-    shape.bezierCurveTo(0.64, 0.56, 0.57, 0.93, 0.39, 1.05);
-    shape.bezierCurveTo(0.22, 1.18, 0.16, 1.57, 0, 1.83);
-    shape.bezierCurveTo(-0.16, 1.57, -0.22, 1.18, -0.39, 1.05);
-    shape.bezierCurveTo(-0.57, 0.93, -0.64, 0.56, -0.88, 0.57);
-    shape.bezierCurveTo(-1.12, 0.58, -1.18, 0.26, -1.43, 0.15);
-    shape.bezierCurveTo(-1.68, 0.04, -1.91, -0.08, -2.12, -0.40);
-    shape.closePath();
-    return shape;
   }
 
   function addPanelProfile(parent, centerX, centerY, width, height, face = 1) {
@@ -206,41 +191,12 @@ export function createReferenceDoorModel({ THREE, scene, options = {} }) {
   beveledPanel(root, [6.38, 0.12, 0.76], [0, FRAME_TOP + 0.64, 0.025], pearledFrame, 0.04, 0.024);
   box(root, [5.58, 0.075, 0.075], [0, FRAME_TOP - 0.34, 0.27], frameShadow);
 
-  // Crown is a beveled extruded silhouette, not a flat sprite. Its convex oval
-  // and ring establish the reference's visual center; detailed acanthus is later.
-  const crown = extrude(root, crownSilhouette(), 0.24, [0, FRAME_TOP + 0.65, 0.22], pearledFrame, 0.055);
-  crown.scale.y = 0.62;
-  const ovalGeometry = new THREE.SphereGeometry(0.50, 36, 24);
-  geometries.add(ovalGeometry);
-  const oval = new THREE.Mesh(ovalGeometry, pearledFrame);
-  oval.scale.set(0.72, 1.08, 0.34);
-  oval.position.set(0, FRAME_TOP + 1.10, 0.43);
-  oval.castShadow = true;
-  root.add(oval);
-  const ovalRingGeometry = new THREE.TorusGeometry(0.50, 0.075, 16, 48);
-  geometries.add(ovalRingGeometry);
-  const ovalRing = new THREE.Mesh(ovalRingGeometry, understatedMetal);
-  ovalRing.scale.set(0.74, 1.10, 0.82);
-  ovalRing.position.set(0, FRAME_TOP + 1.10, 0.47);
-  ovalRing.castShadow = true;
-  root.add(ovalRing);
-  for (const side of [-1, 1]) {
-    const scrollGeometry = new THREE.TorusGeometry(0.30, 0.065, 14, 36, Math.PI * 1.55);
-    geometries.add(scrollGeometry);
-    const scroll = new THREE.Mesh(scrollGeometry, understatedMetal);
-    scroll.scale.set(1.12, 0.78, 0.72);
-    scroll.rotation.z = side * 0.70;
-    scroll.position.set(side * 0.66, FRAME_TOP + 0.83, 0.47);
-    scroll.castShadow = true;
-    root.add(scroll);
-  }
-  const pendantGeometry = new THREE.ConeGeometry(0.16, 0.42, 24);
-  geometries.add(pendantGeometry);
-  const pendant = new THREE.Mesh(pendantGeometry, understatedMetal);
-  pendant.rotation.z = Math.PI;
-  pendant.position.set(0, FRAME_TOP + 0.49, 0.43);
-  pendant.castShadow = true;
-  root.add(pendant);
+  // Screenshot audit: the reference's center crest is compact carved
+  // acanthus, not an oversized oval ring with floating torus curls.
+  addReferenceDoorCrown({
+    THREE, root, geometries, frameMaterial: pearledFrame,
+    leafMaterial: frameRelief, trimMaterial: understatedMetal, FRAME_TOP,
+  });
 
   addReferenceDoorFrameRelief({ THREE, root, geometries, material: frameRelief });
 
