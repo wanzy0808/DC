@@ -445,12 +445,11 @@ aside nav > p { font-family: var(--font-dc-heading); }
 }
 
 /* Keep every destination-page element except the invitation preview hidden during portal arrival. */
-body.dc-portal-arriving .dc-navbar,
-body.dc-portal-arriving footer,
-body.dc-portal-arriving .dc-invitation-hero-copy,
-body.dc-portal-arriving .dc-invitation-other-sections {
+body.dc-portal-arriving:not(.dc-portal-revealing) .dc-navbar,
+body.dc-portal-arriving:not(.dc-portal-revealing) footer,
+body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-hero-copy,
+body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-other-sections {
   opacity: 0 !important;
-  visibility: hidden !important;
   pointer-events: none !important;
 }
 .dc-navbar, footer, .dc-invitation-hero-copy, .dc-invitation-other-sections {
