@@ -207,3 +207,18 @@ At the end of every material implementation change:
 - Append the implementation change, rationale, affected files/area, commit(s), and validation status to Appendix A of the same `prd.md`.
 - Do not create parallel/split PRD files for normal implementation history.
 - Never claim build, lint, CI, migration, or deployment success without an actual observed result.
+
+
+## Approved landing-page baseline (21 September 2026)
+
+The owner has approved the exact current `/pagecontoh` composition as the production landing page `/`. Treat the approved implementation as a **locked visual and interaction baseline**, not as a starting point for unsolicited redesign. The homepage re-exports `app/pagecontoh/page.tsx`; keep `/pagecontoh` available as the visual reference.
+
+**Change-control contract:** Implement only what the owner explicitly asks to change. Do not add, remove, rename, reposition, restyle, replace, simplify, or "improve" unrelated content, assets, controls, effects, animations, links, sections, routes, or components. Do not interpret approval of one change as approval to modify other areas. When a necessary technical fix has a visible side effect, explain it and ask before changing the approved composition. Preserve existing working behavior and make the smallest scoped diff.
+
+**Visual source of truth:** `app/pagecontoh/page.tsx` and its existing imported components, assets, classes, theme states, responsive behavior, and motion settings define the approved landing language. Future landing pages and related public marketing UI should reuse their established styling and existing libraries/components rather than inventing new card, button, color, typography, animation, background, or layout systems. This is a style reference, **not** permission to clone landing-only decorative elements onto every page or alter Dashboard/Invitation templates without instruction.
+
+Approved landing composition: continuous floral/glow/petal scene; centered rounded main frame; embedded shared navbar and compact footer; four orbiting 3D service doors; two transparent rose-outlined cloud copy areas whose pieces assemble in place and whose bilingual text reveals letter by letter; audio controls and Instagram link. Light/dark styling and ID/EN behavior must remain consistent with the approved implementation. Preserve exact copy and positioning unless explicitly requested.
+
+Implementation references: `app/page.tsx`, `app/pagecontoh/page.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Landing/CloudCopy.tsx`, `components/Landing/LandingFloralGlow.tsx`, `components/Landing/WindRosePetals.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Theme/ThemeToggle.tsx`, `components/I18n/LanguageToggle.tsx`, and `components/ui/button.tsx`. Existing stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion (`motion/react`), Three.js and React Three Fiber where already used, and existing shared providers/components. No new dependency merely for a visual preference.
+
+Before changing the landing, inspect the current source and compare the requested change against this baseline. Afterward check both `/` and `/pagecontoh` in light/dark and ID/EN where relevant; report honestly if browser/build validation was not performed. Earlier experimental restrictions against promoting `/pagecontoh` to `/` are superseded by the owner's explicit approval on 21 September 2026; this does **not** approve promoting the separate `/pintu-lab` GLB experiment or changing its reference requirements.
