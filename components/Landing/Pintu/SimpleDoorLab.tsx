@@ -36,30 +36,28 @@ function Door({ opening }: { opening: boolean }) {
       <meshStandardMaterial color="#f7d5d7" side={THREE.DoubleSide} />
     </mesh>
     <group position={[0, 0, -0.16]}>
-      <Arch width={2.25} height={3.12} depth={0.22} color="#bd7c85" />
-      <Arch width={2.05} height={3.02} depth={0.24} color="#e4aab1" z={0.12} />
+      <Arch width={2.12} height={3.05} depth={0.09} color="#bd7c85" />
     </group>
     <group ref={pivot} position={[-0.99, 0, 0.21]}>
       <group position={[0.99, 0, 0]}>
-        <Arch width={1.96} height={2.94} depth={0.13} color="#d79aa4" />
-        <Arch width={1.68} height={2.68} depth={0.012} color="#e8b5bb" z={0.15} />
-        <mesh position={[0, 0.64, 0.183]} castShadow>
+        <Arch width={1.96} height={2.94} depth={0.075} color="#d79aa4" />
+        <mesh position={[0, 0.64, 0.092]} castShadow>
           <boxGeometry args={[1.37, 0.018, 0.016]} />
           <meshStandardMaterial color="#b97782" roughness={0.48} />
         </mesh>
-        <mesh position={[0, 0.47, 0.185]} castShadow>
+        <mesh position={[0, 0.47, 0.094]} castShadow>
           <boxGeometry args={[0.016, 0.36, 0.018]} />
           <meshStandardMaterial color="#b97782" />
         </mesh>
-        <mesh position={[0, 0.47, 0.215]} castShadow>
+        <mesh position={[0, 0.47, 0.12]} castShadow>
           <sphereGeometry args={[0.052, 12, 12]} />
           <meshStandardMaterial color="#b77e66" metalness={0.65} roughness={0.27} />
         </mesh>
-        <mesh position={[0.67, 1.26, 0.20]} castShadow>
+        <mesh position={[0.67, 1.26, 0.11]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
           <meshStandardMaterial color="#c99579" metalness={0.65} roughness={0.25} />
         </mesh>
-        <mesh position={[0.67, 1.26, 0.25]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <mesh position={[0.67, 1.26, 0.16]} rotation={[0, 0, Math.PI / 2]} castShadow>
           <capsuleGeometry args={[0.022, 0.18, 4, 12]} />
           <meshStandardMaterial color="#c99579" metalness={0.65} roughness={0.25} />
         </mesh>
