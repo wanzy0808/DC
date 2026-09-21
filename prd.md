@@ -1086,6 +1086,16 @@ User harus menerima warning sebelum permanent deletion. Financial record mengiku
 
 ---
 
+### 15.4.1b — Approved production landing baseline (21 September 2026)
+
+Owner explicitly approved the existing `/pagecontoh` experience as the production landing page at `/`, **without any change to its contents**. `app/page.tsx` re-exports `app/pagecontoh/page.tsx`; `/pagecontoh` remains an accessible visual reference. This approval supersedes earlier instructions prohibiting promotion of the preview to `/` and applies only to this exact approved composition, **not** to the separate `/pintu-lab` GLB experiment.
+
+The approved landing is a continuous botanical/rose-glow/petal scene with a rounded main frame, embedded navbar and footer, four orbiting 3D doors, two transparent cloud-copy regions with a single outer rose outline, puzzle-like in-place cloud assembly and letter-by-letter bilingual copy, audio controls, and Instagram link. The precise existing component code, layout, assets, animations, content, responsive states, light/dark modes, and ID/EN states are the visual/behavioral source of truth. Future related marketing surfaces must follow this established design language using existing components and installed libraries where appropriate; this does not authorize copying landing-specific decoration onto unrelated surfaces.
+
+**Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve both `/` and `/pagecontoh` and prevent duplicate global navbar/footer on either route. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
+
+Canonical references: `app/page.tsx`, `app/pagecontoh/page.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Landing/CloudCopy.tsx`, `components/Landing/LandingFloralGlow.tsx`, `components/Landing/WindRosePetals.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Theme/ThemeToggle.tsx`, `components/I18n/LanguageToggle.tsx`, and `components/ui/button.tsx`. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
+
 ## 15. Design System & UX Rules
 
 ### 15.1 Typography
@@ -3631,3 +3641,10 @@ Screenshot nyata owner di `/pintu-lab` pada 0° menunjukkan foto `pintu1.png` je
 
 
 **Validasi sesudah revisi:** GitHub Build Validation run `35557109796` terhadap PR #67 source head `c7a4bcc4003dadf66edfcea1fa6a41435b99b581` **PASS**, termasuk Next.js production build/TypeScript; PR #67 squash-merged ke `main` commit `039089bc22c7cce9b26be1bc07f0ed5f23ac2f4d`. Status tracker `pintu3d.md` diperbarui setelah merge. Screenshot user sebelum fix memperlihatkan model nyaris tak terlihat; screenshot *sesudah* fix belum diamati dan kesamaan terhadap `pintu1.png` belum approved.
+
+
+---
+
+## 2026-09-21 — Approved landing baseline and documentation lock
+
+Owner confirmed that the final `/pagecontoh` is complete and must be used at `/` unchanged. Homepage promotion commits: `684d50d9f9136086df473f10c09b0f2354b94cbe` (route), `15354ebc44e42fef8f7d599369b22a6254db025d` (avoid duplicate navbar), `fba879a804aee30486d8cc4081c659ef833b39c7` (avoid duplicate footer), `dbd8014d554bbac66bc4c3ba4a34b12ceec38cb7` (full-width layout). Documentation commits: `7c49c3240c274ce5a2a5f4bdb8d78a5760b91241` (AGENTS.md), `f9c1612092acc62be72fdae4560a5f65ac0b1dad` (README.md), plus this PRD update. Rationale: preserve the owner's approved appearance and interactions and prevent unsolicited additions/removals or parallel visual systems. Affected: `app/page.tsx`, shared landing layout/chrome, `AGENTS.md`, `README.md`, `prd.md`. Validation: GitHub write operations confirmed; production build, CI, browser visual check, and cross-theme/responsive testing were **not performed** during this documentation update.
