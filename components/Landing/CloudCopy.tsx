@@ -59,8 +59,8 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
       <div className="relative isolate px-7 py-9 text-center sm:px-9 sm:py-11">
         {/* Each lobe pops into its original position separately, assembling the cloud in place. */}
         {[
-          { className: "inset-x-[5%] inset-y-[13%] rounded-[48%] border-2 border-primary/65 bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md", x: 0, y: 28, delay: 0 },
-          { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full border border-primary/50 bg-background/95", x: -45, y: -42, delay: 0.13 },
+          { className: "inset-x-[2%] inset-y-[5%] rounded-[48%] bg-background/90 shadow-[0_12px_40px_rgba(192,122,132,0.10)] backdrop-blur-md", x: 0, y: 28, delay: 0 },
+          { className: "-top-[8%] left-[17%] h-[76%] w-[43%] rounded-full bg-background/95", x: -45, y: -42, delay: 0.13 },
           { className: "-top-[13%] right-[14%] h-[86%] w-[47%] rounded-full border border-primary/50 bg-background/95", x: 45, y: -42, delay: 0.23 },
           { className: "bottom-[1%] left-[5%] h-[65%] w-[42%] rounded-full border border-primary/50 bg-background/95", x: -42, y: 38, delay: 0.33 },
           { className: "bottom-[1%] right-[4%] h-[69%] w-[43%] rounded-full border border-primary/50 bg-background/95", x: 42, y: 38, delay: 0.43 },
@@ -76,7 +76,7 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
             transition={assemble ? { duration: 0.62, delay: lobe.delay, times: [0, 0.75, 1], ease: "easeOut" } : { duration: 0 }}
           />
         ))}
-        <motion.div initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
+        <motion.div className="relative z-10" initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
         {top ? (
           <>
             <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-foreground/55 sm:text-[10px]"><LetterLine text={locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
