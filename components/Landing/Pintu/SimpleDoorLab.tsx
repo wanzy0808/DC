@@ -123,7 +123,7 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   });
   return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial color="#ffe8bd" size={0.037} transparent opacity={0.32} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+    <pointsMaterial color="#ffdc73" size={0.037} transparent opacity={0.32} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
   </points>;
 }
 
