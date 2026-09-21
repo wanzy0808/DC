@@ -11,7 +11,7 @@ export default function PublicAtmosphere() {
   const isPrivateArea = privatePrefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-  const isLanding = pathname === "/" || pathname === "/jiplak";
+  const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
 
   // The landing page and its temporary clone already own their interactive
   // background. Keeping a second global background causes duplicate layers.
