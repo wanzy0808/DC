@@ -85,7 +85,7 @@ export default function PageContoh() {
         </main>
         <div className="pointer-events-none relative z-30 border-b border-primary/15 bg-background/35 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Navbar embedded /></div>
         <div className="pointer-events-none relative z-20 flex-1"><CloudCopy corner="top" /><CloudCopy corner="bottom" /></div>
-        <div className="relative z-40 flex min-h-12 items-center gap-3 border-t border-primary/15 bg-background/45 px-3 backdrop-blur-sm sm:px-6">
+        <div className="relative z-40 grid min-h-12 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-t border-primary/15 bg-background/45 px-3 backdrop-blur-sm sm:px-6">
           <div className="flex shrink-0 items-center gap-2">
             <Button size="icon-sm" variant="ghost" onClick={toggleSound} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
               {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
@@ -94,7 +94,7 @@ export default function PageContoh() {
             <input id="contoh-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="w-14 cursor-pointer accent-[#C07A84] sm:w-20" aria-valuetext={volume + "%"} />
             <span className="hidden w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-foreground/70 sm:block">{volume}%</span>
           </div>
-          <div className="pointer-events-none min-w-0 flex-1 [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
+          <div className="pointer-events-none absolute inset-x-0 flex justify-center [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div><div aria-hidden="true" />
           <a href="https://www.instagram.com/dc.organizer/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram DC Organizer" title="Instagram DC Organizer" className="flex size-8 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
             <svg aria-hidden="true" className="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" /><circle cx="12" cy="12" r="4.1" /><circle cx="17.8" cy="6.4" r="1" fill="currentColor" stroke="none" /></svg>
           </a>
