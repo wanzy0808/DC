@@ -8,9 +8,11 @@ import { motion, useReducedMotion } from "motion/react";
 import { Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function PageContoh() {
   const reduced = useReducedMotion();
+  const { locale } = useLanguage();
   const [soundOn, setSoundOn] = useState(false);
   const [volume, setVolume] = useState(50);
   const audio = useRef<HTMLAudioElement | null>(null);
@@ -81,7 +83,28 @@ export default function PageContoh() {
           <SimpleDoorLab fullFrame />
         </main>
         <div className="pointer-events-none relative z-30 border-b border-primary/15 bg-background/35 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Navbar embedded /></div>
-        <div className="flex-1" aria-hidden="true" />
+        <div className="pointer-events-none relative z-20 flex-1">
+          <div className="absolute inset-x-4 top-5 text-center sm:inset-x-8 sm:top-8 lg:inset-x-auto lg:left-[5%] lg:top-[12%] lg:max-w-[29rem] lg:text-left">
+            <motion.p
+              initial={reduced ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.15 }}
+              className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.22em] text-foreground/55 sm:text-xs"
+            >
+              {locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"}
+            </motion.p>
+            <h1 className="mt-3 font-[family-name:var(--font-dc-heading)] text-[clamp(1.5rem,3vw,3.2rem)] leading-[1.18] tracking-[-0.025em] text-primary sm:mt-4">
+              {(locale === "en" ? ["Every story", "begins somewhere."] : ["Setiap cerita", "punya awalnya."]).map((line, index) => (
+                <motion.span key={line} className="block" initial={reduced ? false : { opacity: 0, y: 24, filter: "blur(6px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }} transition={{ duration: 0.95, delay: 0.38 + index * 0.22, ease: [0.22, 1, 0.36, 1] }}>
+                  {line}
+                </motion.span>
+              ))}
+            </h1>
+            <motion.p initial={reduced ? false : { opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.75, delay: 1.1 }} className="mx-auto mt-3 max-w-[19rem] text-xs leading-6 text-foreground/75 sm:mt-5 sm:max-w-[25rem] sm:text-sm lg:mx-0">
+              {locale === "en" ? "Choose a door. We'll take care of the moments beyond it." : "Pilih pintumu. Biar kami menemani setiap momen setelahnya."}
+            </motion.p>
+          </div>
+        </div>
         <div className="relative z-40 flex flex-wrap items-center justify-between gap-2 border-t border-primary/15 bg-background/30 px-3 backdrop-blur-sm sm:px-6"><div className="relative z-40 flex items-center gap-2 rounded-xl border border-primary/25 bg-background/85 px-2 py-1 shadow-sm backdrop-blur-md">
           <Button size="icon-sm" onClick={toggleSound} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
             {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
