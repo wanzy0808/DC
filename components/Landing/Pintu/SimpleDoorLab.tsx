@@ -83,9 +83,25 @@ function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
 }
 
 function GroundShadow() {
-  return <mesh position={[0, -2.145, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-    <planeGeometry args={[2.55, 1.45]} />
-    <shadowMaterial transparent opacity={0.26} depthWrite={false} />
+  // A soft, transparent contact shadow: no rectangular floor plane or hard-edged shadow box.
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 128;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(64, 64, 5, 64, 64, 64);
+      gradient.addColorStop(0, "rgba(83,39,53,0.36)");
+      gradient.addColorStop(0.35, "rgba(83,39,53,0.19)");
+      gradient.addColorStop(0.72, "rgba(83,39,53,0.055)");
+      gradient.addColorStop(1, "rgba(83,39,53,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 128, 128);
+    }
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+  return <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
+    <planeGeometry args={[2.9, 1.6]} />
+    <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} opacity={0.8} />
   </mesh>;
 }
 
@@ -284,7 +300,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={() => {  if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(PORTALS[selected ?? 0].href); }} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
-        <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[2048, 2048]} shadow-bias={-0.0002} shadow-radius={5} />
+        <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} />
