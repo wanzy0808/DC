@@ -12,16 +12,37 @@ import { Button } from "@/components/ui/button";
 export default function PageContoh() {
   const reduced = useReducedMotion();
   const [soundOn, setSoundOn] = useState(false);
-  const [volume, setVolume] = useState(30);
+  const [volume, setVolume] = useState(50);
   const audio = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const player = new Audio("/A%20Himitsu%20-%20Fragile.mp3");
     player.loop = true;
-    player.preload = "none";
+    player.preload = "auto";
     player.volume = volume / 100;
     audio.current = player;
+    let disposed = false;
+    const start = () => {
+      if (disposed || audio.current !== player || !player.paused) return;
+      void player.play().then(() => {
+        if (!disposed) setSoundOn(true);
+      }).catch(() => {
+        if (!disposed) setSoundOn(false);
+      });
+    };
+    start();
+    // Browsers may block autoplay with sound until the first user interaction.
+    const firstInteraction = () => {
+      start();
+      window.removeEventListener("pointerdown", firstInteraction);
+      window.removeEventListener("keydown", firstInteraction);
+    };
+    window.addEventListener("pointerdown", firstInteraction);
+    window.addEventListener("keydown", firstInteraction);
     return () => {
+      disposed = true;
+      window.removeEventListener("pointerdown", firstInteraction);
+      window.removeEventListener("keydown", firstInteraction);
       player.pause();
       player.removeAttribute("src");
       player.load();
