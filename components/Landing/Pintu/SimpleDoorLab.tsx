@@ -293,6 +293,6 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
       
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
-    <p className={fullFrame ? "pointer-events-none absolute inset-x-0 bottom-14 text-center text-sm text-foreground/70 sm:bottom-10" : "text-center text-sm text-foreground/70"}>{selected === null ? "Klik pintu untuk memilih tujuan" : entering ? "Memasuki portal…" : "Klik Masuk untuk melanjutkan"}</p>
+    
   </section>;
 }
