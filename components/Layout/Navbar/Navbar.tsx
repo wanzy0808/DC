@@ -39,7 +39,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
                   variant="outline"
                   size="icon"
                   aria-label="Buka menu navigasi"
-                  className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary"
+                  className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-primary/35 dark:bg-transparent dark:text-primary dark:hover:border-primary dark:hover:bg-primary/5 dark:hover:text-primary"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
