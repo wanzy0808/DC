@@ -38,26 +38,14 @@ function Door({ opening }: { opening: boolean }) {
     <group position={[0, 0, -0.16]}>
       <Arch width={2.12} height={3.05} depth={0.09} color="#bd7c85" />
     </group>
-    <group ref={pivot} position={[-0.99, 0, 0.21]}>
+    <group ref={pivot} position={[-0.99, 0, -0.065]}>
       <group position={[0.99, 0, 0]}>
         <Arch width={1.96} height={2.94} depth={0.075} color="#d79aa4" />
-        <mesh position={[0, 0.64, 0.092]} castShadow>
-          <boxGeometry args={[1.37, 0.018, 0.016]} />
-          <meshStandardMaterial color="#b97782" roughness={0.48} />
-        </mesh>
-        <mesh position={[0, 0.47, 0.094]} castShadow>
-          <boxGeometry args={[0.016, 0.36, 0.018]} />
-          <meshStandardMaterial color="#b97782" />
-        </mesh>
-        <mesh position={[0, 0.47, 0.12]} castShadow>
-          <sphereGeometry args={[0.052, 12, 12]} />
-          <meshStandardMaterial color="#b77e66" metalness={0.65} roughness={0.27} />
-        </mesh>
-        <mesh position={[0.67, 1.26, 0.11]} castShadow>
+        <mesh position={[0.67, 1.26, 0.095]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
           <meshStandardMaterial color="#c99579" metalness={0.65} roughness={0.25} />
         </mesh>
-        <mesh position={[0.67, 1.26, 0.16]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <mesh position={[0.67, 1.26, 0.145]} rotation={[0, 0, Math.PI / 2]} castShadow>
           <capsuleGeometry args={[0.022, 0.18, 4, 12]} />
           <meshStandardMaterial color="#c99579" metalness={0.65} roughness={0.25} />
         </mesh>
