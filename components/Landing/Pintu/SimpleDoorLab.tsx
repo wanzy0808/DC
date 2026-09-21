@@ -2,6 +2,8 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "motion/react";
 import * as THREE from "three";
 
 function archShape(width: number, height: number) {
@@ -61,8 +63,15 @@ function Door({ opening }: { opening: boolean }) {
 export default function SimpleDoorLab() {
   const [opening, setOpening] = useState(false);
   const [angle, setAngle] = useState(0);
+  const [entering, setEntering] = useState(false);
+  const router = useRouter();
+  const reducedMotion = useReducedMotion();
+  function enterPortal() {
+    if (!opening || entering) return;
+    setEntering(true);
+  }
   return <section className="w-full max-w-5xl space-y-4">
-    <div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
+    <motion.div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]" animate={{ scale: entering && !reducedMotion ? 1.14 : 1 }} transition={{ duration: reducedMotion ? 0 : 1.15, ease: "easeInOut" }} onAnimationComplete={() => { if (entering) router.push("/digital-invitation"); }}>
       <Canvas shadows camera={{ position: [0, 0.05, 6.7], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
         <color attach="background" args={["#f8e6e6"]} />
         <ambientLight intensity={0.85} />
@@ -77,11 +86,13 @@ export default function SimpleDoorLab() {
           <meshStandardMaterial color="#f5d8d9" roughness={0.83} />
         </mesh>
       </Canvas>
-      <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Eksperimen geometri Three.js · tanpa GLB</span>
-    </div>
+      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_65%,rgba(255,234,206,0.95),rgba(245,171,187,0.55)_45%,rgba(255,245,241,0.98)_85%)]" initial={false} animate={{ opacity: entering ? 1 : 0 }} transition={{ duration: reducedMotion ? 0 : 1.1 }} />
+      <span className="pointer-events-none absolute bottom-4 left-4 text-xs text-[#865c65]">Eksperimen portal · tanpa GLB</span>
+    </motion.div>
     <div className="flex flex-wrap items-center justify-center gap-3">
-      <button type="button" onClick={() => setOpening(v => !v)} className="rounded-full bg-[#c07a84] px-5 py-2 text-white">{opening ? "Tutup pintu" : "Buka pintu"}</button>
-      <button type="button" onClick={() => setAngle(v => v === 0 ? -0.35 : 0)} className="rounded-full border border-[#c07a84] px-5 py-2 text-foreground"> {angle === 0 ? "Lihat ketebalan" : "Tampak depan"} </button>
+      <button type="button" disabled={entering} onClick={() => setOpening(v => !v)} className="rounded-full bg-[#c07a84] px-5 py-2 text-white">{opening ? "Tutup pintu" : "Buka pintu"}</button>
+      <button type="button" disabled={entering} onClick={() => setAngle(v => v === 0 ? -0.35 : 0)} className="rounded-full border border-[#c07a84] px-5 py-2 text-foreground"> {angle === 0 ? "Lihat ketebalan" : "Tampak depan"} </button>
+      <button type="button" disabled={!opening || entering} onClick={enterPortal} className="rounded-full bg-[#a65e69] px-5 py-2 text-white disabled:cursor-not-allowed disabled:opacity-40">{entering ? "Memasuki portal…" : "Masuk portal"}</button>
     </div>
   </section>;
 }
