@@ -91,7 +91,7 @@ export default function SimpleDoorLab() {
   return <section className="w-full max-w-5xl space-y-4">
     <div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
       <Canvas shadows camera={{ position: [0, 0.05, 6.7], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onArrive={() => router.push("/d-invitation")} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onArrive={() => { sessionStorage.setItem("dc-portal-entry", "1"); router.push("/d-invitation"); }} />
         <color attach="background" args={["#f8e6e6"]} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
