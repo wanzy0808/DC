@@ -57,7 +57,7 @@ export function buildReferenceDoorInterior({ THREE, root, box, materials, FLOOR_
 
   // The foyer remains visible when the leaves open, without relying on a
   // billboard or an oversized pink glow projected over its architecture.
-  const interiorFill = new THREE.PointLight(0xffebdc, 9, 15, 2);
+  const interiorFill = new THREE.PointLight(0xffebdc, 2.4, 15, 2);
   interiorFill.position.set(0, 2.35, -5.2);
   root.add(interiorFill);
 }
