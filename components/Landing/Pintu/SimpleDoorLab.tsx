@@ -246,7 +246,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     const button = enterButton.current;
     const active = selected === null ? null : groups.current[selected];
     if (button && active) {
-      buttonAnchor.set(0, -1.42, 0.14);
+      buttonAnchor.set(0, -2.45, 0.14);
       active.localToWorld(buttonAnchor);
       buttonAnchor.project(camera);
       const x = (buttonAnchor.x + 1) * size.width / 2;
