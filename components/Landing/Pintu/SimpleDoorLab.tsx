@@ -223,7 +223,11 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect }: 
       const z = Math.cos(theta) * 1.25;
       group.position.set(x, 0, z);
       group.rotation.y = -Math.sin(theta) * 0.17;
-      group.scale.setScalar(0.84 + (z + 1.25) / 2.5 * 0.16);
+      const orbitScale = 0.62 + (z + 1.25) / 2.5 * 0.12;
+      const selectedScale = selected === index ? 1.12 : 0.65;
+      const targetScale = selected === null ? orbitScale : selectedScale;
+      const nextScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.8, delta);
+      group.scale.setScalar(nextScale);
     });
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
