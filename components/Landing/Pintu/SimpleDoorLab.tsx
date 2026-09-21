@@ -27,6 +27,32 @@ function Arch({ width, height, depth, color, z = 0 }: { width: number; height: n
   </mesh>;
 }
 
+function Fireflies({ offset, reducedMotion }: { offset: number; reducedMotion: boolean }) {
+  const points = useRef<THREE.Points>(null);
+  const positions = useMemo(() => {
+    const array = new Float32Array(54 * 3);
+    for (let i = 0; i < 54; i++) {
+      const t = i * 2.399963;
+      const radius = 0.6 + ((i * 17) % 23) / 20;
+      array[i * 3] = Math.cos(t) * radius;
+      array[i * 3 + 1] = -1.65 + ((i * 13) % 53) / 53 * 4.5;
+      array[i * 3 + 2] = 0.35 + ((i * 7) % 13) / 13 * 1.1;
+    }
+    return array;
+  }, []);
+  useFrame(({ clock }) => {
+    if (!points.current || reducedMotion) return;
+    const t = clock.elapsedTime;
+    points.current.position.y = Math.sin(t * 0.43 + offset) * 0.14;
+    points.current.rotation.y = Math.sin(t * 0.2 + offset) * 0.08;
+    (points.current.material as THREE.PointsMaterial).opacity = 0.43 + Math.sin(t * 1.5 + offset) * 0.17;
+  });
+  return <points ref={points} position={[0, 0, 0]}>
+    <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
+    <pointsMaterial color="#fff0d8" size={0.052} transparent opacity={0.55} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+  </points>;
+}
+
 function PortalCamera({ entering, reducedMotion, selected, onArrive }: { entering: boolean; reducedMotion: boolean; selected: number; onArrive: () => void }) {
   const { camera } = useThree();
   const progress = useRef(0);
@@ -36,8 +62,8 @@ function PortalCamera({ entering, reducedMotion, selected, onArrive }: { enterin
     progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 18 : 2.4, delta);
     const t = progress.current;
     const eased = t * t * (3 - 2 * t);
-    focusX.current = THREE.MathUtils.damp(focusX.current, (selected - 1) * 2.8, 3.2, delta);
-    camera.position.set(focusX.current, 0.05 - eased * 0.12, 9.8 - eased * 10.75);
+    focusX.current = THREE.MathUtils.damp(focusX.current, (selected - 1) * 2.55, 3.2, delta);
+    camera.position.set(focusX.current, 0.05 - eased * 0.12, 11.7 - eased * 12.65);
     camera.lookAt(focusX.current, -0.05, -2);
     if (entering && t > 0.96 && !arrived.current) {
       arrived.current = true;
@@ -47,41 +73,37 @@ function PortalCamera({ entering, reducedMotion, selected, onArrive }: { enterin
   return null;
 }
 
-function Door({ opening, index }: { opening: boolean; index: number }) {
+function Door({ opening }: { opening: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = [
-    { frame: "#b97883", panel: "#dca5ae", trim: "#f1cbd0", metal: "#c99579" },
-    { frame: "#a8788c", panel: "#d4aab8", trim: "#f2d6de", metal: "#d7b6a1" },
-    { frame: "#9e7887", panel: "#c9a1b1", trim: "#e8cad5", metal: "#c5a9a3" },
-  ][index];
-  return <group position={[0, -1.55, 0]}>
-    <mesh position={[0, 1.55, -4.5]} receiveShadow>
+  const palette = { frame: "#b16b78", panel: "#c07a84", trim: "#e5b6bd", metal: "#d1a9a0" };
+  return <group position={[0, -2.12, 0]}>
+    <mesh position={[0, 2.12, -4.5]} receiveShadow>
       <planeGeometry args={[20, 20]} />
       <meshStandardMaterial color="#f7d5d7" side={THREE.DoubleSide} />
     </mesh>
     <group position={[0, 0, -0.16]}>
-      <Arch width={2.12} height={3.05} depth={0.09} color={palette.frame} />
+      <Arch width={1.82} height={4.18} depth={0.09} color={palette.frame} />
     </group>
-    <group ref={pivot} position={[-0.99, 0, -0.065]}>
-      <group position={[0.99, 0, 0]}>
-        <Arch width={1.96} height={2.94} depth={0.075} color={palette.panel} />
-        <Arch width={1.72} height={2.68} depth={0.012} z={0.079} color={palette.trim} />
-        <Arch width={1.66} height={2.62} depth={0.013} z={0.095} color={palette.panel} />
-        <mesh position={[0.67, 1.26, 0.115]} castShadow>
+    <group ref={pivot} position={[-0.84, 0, -0.065]}>
+      <group position={[0.84, 0, 0]}>
+        <Arch width={1.68} height={4.06} depth={0.075} color={palette.panel} />
+        <Arch width={1.47} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
+        <Arch width={1.41} height={3.72} depth={0.013} z={0.095} color={palette.panel} />
+        <mesh position={[0.57, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
           <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
         </mesh>
-        <mesh position={[0.67, 1.26, 0.165]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <mesh position={[0.57, 1.85, 0.165]} rotation={[0, 0, Math.PI / 2]} castShadow>
           <capsuleGeometry args={[0.022, 0.18, 4, 12]} />
-          <meshStandardMaterial color="#c99579" metalness={0.65} roughness={0.25} />
+          <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
         </mesh>
       </group>
     </group>
     <mesh position={[0, 0.018, 0.12]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeGeometry args={[2.0, 0.24]} />
+      <planeGeometry args={[1.75, 0.24]} />
       <meshBasicMaterial color="#ffe4c7" transparent opacity={opening ? 0.75 : 0.28} depthWrite={false} />
     </mesh>
   </group>;
@@ -99,8 +121,8 @@ export default function SimpleDoorLab() {
     setEntering(true);
   }
   return <section className="w-full max-w-5xl space-y-4">
-    <div className="relative h-[min(75dvh,690px)] min-h-[420px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
-      <Canvas shadows camera={{ position: [0, 0.05, 9.8], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
+    <div className="relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden rounded-2xl bg-[#f8e6e6]">
+      <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected} onArrive={() => { const destinations = ["/event-planner", "/d-invitation", "/guestbook"]; if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); } router.push(destinations[selected]); }} />
         <color attach="background" args={["#f8e6e6"]} />
         <ambientLight intensity={0.85} />
@@ -108,12 +130,13 @@ export default function SimpleDoorLab() {
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} />
         <pointLight position={[0, -1.35, -0.1]} intensity={opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         {[-1, 0, 1].map((offset, index) => (
-          <group key={index} position={[offset * 2.8, 0, 0]} rotation={[0, angle, 0]}>
-            <Door opening={opening[index]} index={index} />
+          <group key={index} position={[offset * 2.55, 0, 0]} rotation={[0, angle, 0]}>
+            <Door opening={opening[index]} />
+            <Fireflies offset={index * 2.1} reducedMotion={Boolean(reducedMotion)} />
             <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
           </group>
         ))}
-        <mesh position={[0, -1.57, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <mesh position={[0, -2.14, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
           <planeGeometry args={[200, 200]} />
           <meshStandardMaterial color="#f5d8d9" roughness={0.83} />
         </mesh>
