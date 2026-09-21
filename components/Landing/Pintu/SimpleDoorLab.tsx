@@ -213,10 +213,10 @@ function Door({ opening, image, title }: { opening: boolean; image: string; titl
 }
 
 const PORTALS = [
-  { title: "Event Planner", image: "/wo.png", href: "/event-planner" },
-  { title: "Undangan Digital", image: "/hp-digital.png", href: "/d-invitation" },
-  { title: "Guestbook", image: "/bukutamu.png", href: "/guestbook" },
-  { title: "Undangan Fisik", image: "/UndanganFisik.png", href: "/undangan-fisik" },
+  { title: "Event Planner", image: "/eventplanner.png", href: "/event-planner" },
+  { title: "Undangan Digital", image: "/Idigi.png", href: "/d-invitation" },
+  { title: "Guestbook", image: "/guestbook.png", href: "/guestbook" },
+  { title: "Undangan Fisik", image: "/Ufisik.png", href: "/undangan-fisik" },
 ];
 
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null> }) {
