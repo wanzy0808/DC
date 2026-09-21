@@ -3583,3 +3583,12 @@ Perbaikan di branch `fix/pintu-v2-reference-screenshot-crown-lighting`: buat `re
 
 
 **Validation hasil revisi (21 September 2026):** GitHub Build Validation run `35549463327` pada PR #63 head `e36fc8c3a7dabaec37f365559096023bf983fadc` **PASS**, termasuk production build Next.js; PR #63 squash-merged ke `main` sebagai `da8aa8b973caa8b9527a3568410320daec8e7b8f`. `pintu3d.md` status validation diperbarui commit `e471ca939238f3b3bb2325aafea05900653faaa8`. Screenshot owner pada versi **sebelum** patch membuktikan fidelity visual gagal; screenshot setelah patch belum teramati. **Jangan menyatakan bentuk final/approved hanya dari CI.**
+
+
+---
+
+## 2026-09-21 — Pintu 1: GLB asset-first, cat Rose–ivory dan cahaya di kaki pintu
+
+Owner memilih mengutamakan model GLB AI yang telah dibuat daripada terus mengukir Pintu 1 secara procedural. Pemeriksaan GitHub `main` hanya menemukan `public/white_mesh.glb` (360.788 byte), belum ada `public/mesh.glb` yang disebut owner sebagai asset lokal; jangan mengklaim file itu telah di-push ke repo. Untuk pratinjau **khusus** `/pintu-lab`, viewer `asset-door-engine.js` mengutamakan `/mesh.glb` jika tersedia di komputer/deployment, dan memuat `/white_mesh.glb` sebagai fallback yang sudah ada di repo. `GLTFLoader` dimuat secara lazy di route lab; ukuran/aset dinormalisasi ke lantai, material asli di-clone untuk mempertahankan texture/normal map bila ada, warna menamai frame/leaf/hardware jika mesh terpisah dan tint blush umum bila semuanya menyatu. Lantai menggunakan material penerima bayangan, sorot hangat pendek dan tekstur radial alpha berukuran kecil hanya di kaki pintu. Kamera depan/kiri/kanan dan PNG capture tersedia. Tidak mengklaim satu mesh fused bisa diwarnai terpisah atau dianimasikan sebagai daun kiri/kanan; tombol bukaan/masuk tidak ditawarkan di mode GLB sampai pivot benar tersedia.
+
+`app/pintu-lab/page.tsx` memakai `AssetDoorPreview.tsx` baru; implementasi procedural semula dipindah tanpa menghapus ke `/pintu-lab/procedural`. `/pintu-lab/orbital`, landing utama `/`, `/jiplak`, font/branding, protected rose petals, layanan, dan backend tetap tidak berubah. Affected code: `components/Landing/Pintu/asset-door-engine.js`, `asset-door-engine.d.ts`, `AssetDoorPreview.tsx`, `app/pintu-lab/page.tsx`, `app/pintu-lab/procedural/page.tsx`; docs: `pintu3d.md`, `prd.md`. Branch `feat/pintu-lab-asset-first-glb-lighting`; **validasi CI dan screenshot GLB setelah perubahan masih pending saat entry dibuat**, jangan menyatakan fidelity visual final.
