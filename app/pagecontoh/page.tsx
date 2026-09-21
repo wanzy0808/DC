@@ -61,15 +61,14 @@ export default function PageContoh() {
         </main>
         <div className="pointer-events-none relative z-30 border-b border-primary/15 bg-background/35 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Navbar embedded /></div>
         <div className="flex-1" aria-hidden="true" />
-        <div className="absolute bottom-16 left-4 z-40 flex items-center gap-2 rounded-xl border border-primary/25 bg-background/85 p-2 shadow-sm backdrop-blur-md sm:bottom-14 sm:left-6">
+        <div className="relative z-40 flex flex-wrap items-center justify-between gap-2 border-t border-primary/15 bg-background/30 px-3 backdrop-blur-sm sm:px-6"><div className="relative z-40 flex items-center gap-2 rounded-xl border border-primary/25 bg-background/85 px-2 py-1 shadow-sm backdrop-blur-md">
           <Button size="icon-sm" onClick={toggleSound} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
             {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
           </Button>
           <label htmlFor="contoh-volume" className="sr-only">Volume suara</label>
           <input id="contoh-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="w-20 cursor-pointer accent-[#C07A84] sm:w-24" aria-valuetext={volume + "%"} />
           <span className="w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-foreground/70">{volume}%</span>
-        </div>
-        <div className="pointer-events-none relative z-20 border-t border-primary/15 bg-background/30 backdrop-blur-sm [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
+        </div><div className="pointer-events-none min-w-0 flex-1 [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div></div>
       </motion.div>
     </div>
   );
