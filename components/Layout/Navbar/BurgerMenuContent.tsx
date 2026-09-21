@@ -48,14 +48,14 @@ export default function BurgerMenuContent() {
 
   const serviceActive = services.some(({ href }) => pathname === href);
   const neutralButton =
-    "border border-black/10 bg-white text-black shadow-sm hover:bg-neutral-100 hover:text-black dark:border-white/15 dark:bg-white dark:text-black dark:hover:bg-neutral-100";
-  const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start rounded-[10px] px-3 py-2.5 text-left text-[13px]`;
-  const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start rounded-[9px] px-3 py-2 text-left text-[12px]`;
+    "border border-primary/25 bg-background/45 text-foreground shadow-none backdrop-blur-sm hover:border-primary/60 hover:bg-primary/10 hover:text-foreground dark:border-primary/30 dark:bg-background/45 dark:text-foreground dark:hover:border-primary/60 dark:hover:bg-primary/15 dark:hover:text-foreground";
+  const topButtonClass = `${neutralButton} h-auto min-h-11 w-full justify-start rounded-xl px-4 py-3 text-left text-sm`;
+  const subButtonClass = `${neutralButton} h-auto min-h-10 w-full justify-start rounded-lg px-4 py-2.5 text-left text-[13px]`;
 
   return (
     <SheetContent
       side="right"
-      className="flex w-[min(92vw,420px)] flex-col overflow-hidden border-l border-[var(--border)] bg-[var(--background)] p-0 text-[var(--foreground)] shadow-2xl"
+      className="flex w-[min(92vw,420px)] flex-col overflow-hidden border-l border-primary/30 bg-background/90 p-0 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-xl"
     >
       <motion.div
         initial={shouldReduceMotion ? false : { opacity: 0, x: 18 }}
@@ -67,14 +67,14 @@ export default function BurgerMenuContent() {
         }
         className="flex min-h-0 flex-1 flex-col overflow-y-auto"
       >
-        <SheetHeader className="shrink-0 border-b border-[var(--border)] px-6 pb-5 pt-7 pr-14 text-left sm:px-7">
+        <SheetHeader className="shrink-0 border-b border-primary/15 bg-background/35 px-6 pb-5 pt-7 pr-14 text-left sm:px-7">
           <SheetTitle className="font-[family-name:var(--font-dc-heading)] text-2xl font-normal leading-tight text-[var(--foreground)]">
             {nav.navigation}
           </SheetTitle>
         </SheetHeader>
 
-        <nav className="flex-1 space-y-2 bg-primary/[0.035] p-3 dark:bg-primary/[0.055]">
-          <div className="space-y-1.5 rounded-xl border border-primary/10 bg-background/45 p-1.5">
+        <nav className="flex-1 space-y-2 bg-transparent p-4 sm:p-5">
+          <div className="space-y-1.5 rounded-[18px] border border-primary/20 bg-background/30 p-2">
             <Button
               type="button"
               aria-expanded={servicesOpen}
@@ -145,7 +145,7 @@ export default function BurgerMenuContent() {
             );
           })}
 
-          <div className="my-3 border-t border-[var(--border)]" />
+          <div className="my-4 border-t border-primary/15" />
 
           <SheetClose
             nativeButton={false}
