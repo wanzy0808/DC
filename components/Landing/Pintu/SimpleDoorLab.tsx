@@ -100,10 +100,19 @@ function GroundShadow({ fullFrame }: { fullFrame: boolean }) {
     }
     return new THREE.CanvasTexture(canvas);
   }, []);
-  return <group>\n  <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
+  return <group>
+  <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
     <planeGeometry args={[2.9, 1.6]} />
     <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} opacity={0.8} />
-  </mesh>\n  {fullFrame && <mesh position={[0, -2.139, 0.05]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-2}>\n    <planeGeometry args={[2.65, 1.35]} />\n    <meshBasicMaterial map={texture} color="#ffffff" transparent depthWrite={false} toneMapped={false} opacity={0.28} blending={THREE.AdditiveBlending} />\n  </mesh>}\n  </group>;\n}\n\nfunction Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
+  </mesh>
+  {fullFrame && <mesh position={[0, -2.139, 0.05]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-2}>
+    <planeGeometry args={[2.65, 1.35]} />
+    <meshBasicMaterial map={texture} color="#ffffff" transparent depthWrite={false} toneMapped={false} opacity={0.28} blending={THREE.AdditiveBlending} />
+  </mesh>}
+  </group>;
+}
+
+function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   const points = useRef<THREE.Points>(null);
   const base = useMemo(() => {
     const particles = Array.from({ length: 54 }, (_, i) => {
