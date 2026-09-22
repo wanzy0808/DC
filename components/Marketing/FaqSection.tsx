@@ -23,19 +23,19 @@ export default function FaqSection({
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="mx-auto max-w-4xl space-y-10">
+    <section className="mx-auto max-w-4xl space-y-8 md:space-y-10">
       <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-      <div className="space-y-3">
+      <div className="space-y-4">
         {items.map((item, index) => {
           const isOpen = open === index;
           return (
-            <div key={item.question} className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]/75">
+            <div key={item.question} className="overflow-hidden rounded-[28px] border border-primary/70 bg-[var(--card)]/75 md:rounded-[32px]">
               <Button
                 type="button"
                 onClick={() => setOpen(isOpen ? null : index)}
                 aria-expanded={isOpen}
                 size="sm"
-                className="h-auto min-h-11 w-full min-w-0 justify-between rounded-none border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base"
+                className={`h-auto min-h-11 w-full min-w-0 justify-between border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base ${isOpen ? "rounded-t-[28px] rounded-b-none md:rounded-t-[32px]" : "rounded-[28px] md:rounded-[32px]"}`}
               >
                 <span className="font-[family-name:var(--font-dc-heading)] font-semibold">
                   {item.question}
