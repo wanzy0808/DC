@@ -334,10 +334,12 @@ export function ContentPanel({
 
 export function MusicPanel({
   musicUrl,
+  defaultTrack,
   setMusicUrl,
   onUpload,
 }: {
   musicUrl: string;
+  defaultTrack: string;
   setMusicUrl: (value: string) => void;
   onUpload: (file: File) => void;
 }) {
@@ -345,8 +347,9 @@ export function MusicPanel({
     <div>
       <Heading
         title="Musik"
-        description="Gunakan URL audio atau unggah satu track."
+        description="Semua tema punya musik bawaan. Gunakan URL atau unggah musik untuk menggantinya."
       />
+      <p className="mt-4 text-xs leading-6 text-muted-foreground">Musik bawaan tema: <span className="font-semibold text-primary">{defaultTrack}</span>. Kosongkan URL untuk memakai musik bawaan.</p>
       <input
         value={musicUrl}
         onChange={(event) => setMusicUrl(event.target.value)}
