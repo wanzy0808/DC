@@ -139,7 +139,7 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
   }
 
   return (
-    <DialogContent className={`${authCardClass} max-h-[calc(100dvh-32px)] w-[min(94vw,490px)] gap-0 overflow-y-auto overscroll-contain p-6 sm:max-h-[min(88dvh,800px)] sm:max-w-[490px] sm:p-8`}>
+    <DialogContent overlayClassName="z-[100]" className={`${authCardClass} z-[101] max-h-[calc(100dvh-32px)] w-[min(94vw,490px)] gap-0 overflow-y-auto overscroll-contain p-6 sm:max-h-[min(88dvh,800px)] sm:max-w-[490px] sm:p-8`}>
       <DialogHeader className={authHeaderClass}>
         <span aria-hidden="true" className={authEyebrowClass} />
         <DialogTitle className={authTitleClass}>
