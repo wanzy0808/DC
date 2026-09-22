@@ -81,7 +81,7 @@ export default function TemplateCollection() {
   return (
     <section className="space-y-14 md:space-y-16">
       <div className="w-full border-b border-border/70 pb-7">
-        <div className="mx-auto flex w-full max-w-[980px] flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
+        <div className="mx-auto flex w-full flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
           <div className="max-w-2xl">
             <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
               {copy.eyebrow}
