@@ -21,6 +21,7 @@ export function InvitationPreview({
   photoAssignments,
   onEditPhoto,
   designKey,
+  musicUrl,
 }: {
   invitation: InvitationDesignerInvitation | null;
   templateKey: string;
@@ -33,16 +34,18 @@ export function InvitationPreview({
   photoAssignments?: PhotoAssignments;
   onEditPhoto?: (slot: PhotoSlot) => void;
   designKey?: string;
+  musicUrl?: string;
 }) {
   if (!invitation) {
     return <div className="grid min-h-[560px] place-items-center rounded-2xl border border-border bg-background text-sm text-muted-foreground">Memuat pratinjau undangan…</div>;
   }
+  const previewInvitation = musicUrl === undefined ? invitation : { ...invitation, musicUrl };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={invitation} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} />;
+    return <RomanticRoseTemplate invitation={previewInvitation} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} />;
   }
   return (
     <UniversalInvitationTemplate
-      invitation={invitation}
+      invitation={previewInvitation}
       templateKey={templateKey}
       designKey={designKey}
       preview
