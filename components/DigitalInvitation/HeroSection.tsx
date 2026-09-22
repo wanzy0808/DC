@@ -54,7 +54,7 @@ export default function HeroSection({ ready }: { ready: boolean }) {
         };
 
   return (
-    <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 pb-0 lg:max-w-[1200px] lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10 lg:pb-0">
+    <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 pb-0 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10 lg:pb-0">
       <div className="dc-invitation-hero-copy min-w-0 w-full max-w-none lg:-translate-x-4">
         <PuzzleAssemble ready={ready} direction="top" delay={0.04}>
           <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
