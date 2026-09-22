@@ -77,9 +77,9 @@ export default function FeatureSection() {
   return (
     <section
       id="fitur"
-      className="scroll-mt-24 border-y border-border/70 py-12 md:py-14"
+      className="scroll-mt-24 border-y border-border/70 py-10 md:py-12"
     >
-      <div className="mb-10 max-w-2xl">
+      <div className="mb-8 max-w-2xl md:mb-10">
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
           {copy[0]}
         </p>
