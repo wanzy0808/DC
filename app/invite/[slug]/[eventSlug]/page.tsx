@@ -3,11 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
 import { slugifyEvent } from "@/lib/invitations/slug";
-import PublicInvitation, {
-  InvitationLockedState,
-} from "@/components/PublicInvitation/PublicInvitation";
-import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
-import RomanticRoseTemplate from "@/components/PublicInvitation/RomanticRoseTemplate";
+import { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import PublicInvitationRenderer from "@/components/PublicInvitation/PublicInvitationRenderer";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
 export default async function EventInvitationPage({
@@ -56,13 +53,5 @@ export default async function EventInvitationPage({
     data: { viewCount: { increment: 1 } },
   });
 
-  const templateKey = invitation.templateKey.split("::")[0];
-  if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={invitation} />;
-  }
-  if (templateKey === "eternal-blossom") {
-    return <ClassicInvitationTemplate invitation={invitation} />;
-  }
-
-  return <PublicInvitation invitation={invitation} />;
+  return <PublicInvitationRenderer invitation={invitation} />;
 }
