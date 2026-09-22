@@ -138,6 +138,12 @@ Tombol **Masuk** dan **Daftar** di burger menu marketing/public membuka modal be
 
 Popup mengikuti viewport, bukan koordinat parent navbar: kelas visual `authCardClass` TIDAK boleh menimpa `position:fixed` milik `DialogContent`. Pada desktop letakkan modal di pusat layar, gunakan padding dan gap yang lebih ringkas untuk Daftar dan `max-height` relatif terhadap `dvh` dengan scroll **di dalam dialog** jika layar pendek. Pada mobile sisakan ruang tepi dan pastikan tombol, consent, maupun close X tetap dapat diakses. Hindari dua popup atau overlay bertumpuk dengan menempatkan satu dialog owner di root layout. Backdrop/popup auth harus berada di atas widget navigasi marketing mengambang (z-index modal lebih tinggi daripada mini-door) dengan overlay override yang spesifik auth, bukan menaikkan semua dialog secara global.
 
+### 4.1d Restore burger and align auth backgrounds to landing (22 September 2026)
+
+Perubahan modal Masuk/Daftar **tidak boleh mengubah gaya navigasi burger** yang sudah disetujui: posisi, dimensi, urutan item, animasi, submenu Layanan, kelas `itemClass`, dan markup visual lama tetap dipakai. Item Masuk mempertahankan tampilan `Link` awal dan hanya membatalkan navigasi untuk membuka dialog pada halaman yang sedang terlihat; item Daftar tetap memakai `Button` bersama, bukan native button yang dapat berbeda stylenya. `Navbar.tsx` dan halaman landing/Pintu tidak dirombak untuk kebutuhan auth.
+
+Background **kedua dialog auth** mengikuti atmosfer landing: tema `background` existing untuk light/dark, permukaan sedikit transparan, radial glow Rose lembut dan backdrop Rose transparan yang tidak menggelapkan bunga/kelopak marketing sampai hilang. Jangan memasang lapisan bunga, kelopak, atau pemutar audio duplikat di dalam popup; gunakan ambience yang sudah dimount oleh halaman di belakangnya. Modal tetap di atas widget mengambang dan formulir tetap readable pada tema light/dark.
+
 ### 4.2 System roles
 
 Role aplikasi yang tetap dapat digunakan untuk backoffice:
@@ -4229,3 +4235,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Files:** `components/Auth/auth-styles.ts`, `components/Auth/LoginDialog.tsx`, `components/Auth/AuthDialogHost.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `components/Layout/Navbar/BurgerMenuContent.tsx`, `components/ui/dialog.tsx`, `app/layout.tsx`, `app/login/page.tsx`, `prd.md`, `AGENTS.md`, `README.md`.
 
 **Validasi:** Build Validation GitHub Actions **PASS** untuk perubahan inti modal login/register, redirect `/login`, dan check sesi existing pada commit `da136c39a6d361326180b36914ce8126b83d8f82` ([run 35735189420](https://github.com/wanzy0808/DC/actions/runs/35735189420)). Penyesuaian overlay di atas widget navigasi mengambang diperiksa pada commit setelahnya; uji visual/klik/keyboard pada browser localhost desktop/mobile belum dilakukan.
+
+
+---
+
+## 2026-09-22 — Pemulihan visual burger dan background auth sesuai landing
+
+**Permintaan:** Pulihkan menu burger ke style sebelumnya setelah perubahan Login/Daftar dan samakan background kedua modal auth dengan landing page.
+
+**Implementasi:** `BurgerMenuContent.tsx` dipulihkan dari markup/kode sebelum refactor modal (commit `2ddb8cf7b787c0fef037fe00956cb9763602a3c6`) dengan satu-satunya adaptasi pada aksi Masuk dan Daftar: `Link` asli Masuk mencegah navigasi saat klik dan membuka `AuthDialogHost`; Daftar kembali menggunakan komponen `Button` asli dengan event untuk membuka dialog yang sama. Kelas `itemClass`, dropdown Navbar, urutan layanan, ikon, submenu, spacing dan animasi tetap seperti semula. `auth-styles.ts` menggunakan `background` light/dark serta radial Rose glow seperti landing untuk card kedua auth, sementara `LoginDialog.tsx` dan `RegisterDialog.tsx` memiliki backdrop Rose ringan alih-alih hitam hampir opak, sehingga layer bunga/kelopak marketing existing tetap terlihat tanpa menambah dekorasi ganda. Tidak ada perubahan pada Pintu, auth API, URL kompatibilitas, atau dashboard.
+
+**Files:** `components/Layout/Navbar/BurgerMenuContent.tsx`, `components/Auth/auth-styles.ts`, `components/Auth/LoginDialog.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Validasi:** GitHub Build Validation diperiksa setelah kode di-push. Uji visual pada browser nyata desktop/mobile masih diperlukan.
