@@ -1326,6 +1326,13 @@ Marketing minimum menjelaskan:
 
 Guestbook marketing juga harus event-oriented.
 
+### 16.1 Guestbook dan Undangan Fisik — main frame marketing
+
+Halaman `/guestbook` dan `/undangan-fisik` menggunakan komposisi frame viewport yang sudah disetujui pada `/d-invitation` dan `/event-planner`: bingkai Rose responsif ±90vw; navbar embedded tetap di atas, footer compact embedded berisi player musik persisten serta Instagram tetap di bawah, hanya `main` di tengah yang scroll. Dekorasi bunga, kelopak dan Rose glow memakai **satu** `PublicMarketingAtmosphere` per route di dalam scene, bukan overlay dekorasi global tambahan. Semua konten memakai satu lebar tengah 88% mobile / 80vw mulai sm, `max-w-[1100px]`, dengan gap antarsection 80px mobile / 96px desktop. Global `PublicAtmosphere`, `PublicContent`, Navbar, Footer serta `MarketingFloatingControls` harus mengecualikan kedua framed route ini agar tidak menumpuk background, footer, navbar atau kontrol audio/Instagram.
+
+Pakai `ScrollReveal` berbasis panel scroll internal untuk opacity/translateY per section (`once:false`) dan `MarketingTextReveal` untuk animasi ulang teks hanya setelah keluar dari viewport panel lalu masuk kembali, dari arah scroll mana pun; kendali interaktif, animasi `prefers-reduced-motion` dan keyboard tetap berfungsi. Visual kartu mengikuti Rose outline/radius dan tipografi Cinzel/Fauna One/DM Mono marketing. Pertahankan data fitur/check-in, review/FAQ/paket dan tautan pada Guestbook; pada Undangan Fisik pertahankan ilustrasi cetak, proses pemesanan, target anchor `#proses` / `#konsultasi` di dalam scroll panel serta tautan WhatsApp dan Digital Invitation. Kedua route tetap bisa dikunjungi dari widget Pintu kiri. Jangan mengubah konten, pintu landing, Dashboard atau undangan tamu.
+
+
 ---
 
 ## 17. Key API / Server Contracts
@@ -4125,3 +4132,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commits:** `48a3164e50e3d51786db8ca0ba381726d06fa8b1`, `645183f1ec86f40b45c6a0b786379e3a97f123f6`, `32b7912ea10da5120baf03f33873fa45e2ba319b`.
 
 **Validasi:** Inspeksi source GitHub; lint/build/CI dan pengujian visual di browser/perangkat belum diverifikasi.
+
+
+---
+
+## 2026-09-22 — Guestbook dan Undangan Fisik mengikuti frame marketing
+
+**Permintaan:** Benahi kedua halaman layanan agar styling dan interaksi sejalan dengan baseline landing serta halaman Digital Invitation/Event Planner yang telah ber-frame, tanpa mengganti konten atau komponen utama.
+
+**Implementasi:** `app/guestbook/page.tsx` dan `app/undangan-fisik/page.tsx` memakai embedded Navbar/Footer, satu ambience bunga/kelopak dan Rose glow, satu scroll panel di tengah frame 90vw serta kolom responsif max 1100px. Section diberi ScrollReveal dan text replay via MarketingTextReveal ber-root pada panel. Guestbook mempertahankan Hero/Feature/Process/Paket/Reviews/FAQ, dengan opsi rounded Rose pada paket/review dan FAQ wide. Undangan Fisik mempertahankan ilustrasi, feature cards, urutan proses serta anchor konsultasi dan WhatsApp, dengan kartu/border Rose dan pengaturan jarak lebih konsisten. Pemeriksaan empat route-global (PublicAtmosphere/PublicContent, Navbar, Footer, MarketingFloatingControls) menonaktifkan chrome/dekorasi ganda pada dua halaman baru; player musik dan kontrol lain tetap memakai komponen bersama. Landing Pintu dan konten/katalog/undangan pelanggan tidak diubah.
+
+**Code commits:** `bcf99d5d7f8d966d9e498bf980b1192bb9befe41`, `8b20029f162944bf5540f2d2934ec81e75f1ed92`, `23ab3849b7a2334d93a7bebb382436e13d8f941e`, `3f761572ea4b8b6e883fedaff01a02c033c30752`, `e926b9e06a246ed6dea8db57a66a107c5075f7b4`, `785053d5a10edb375b747b5790e4d21e99a301e8`.
+
+**Files:** `app/guestbook/page.tsx`, `app/undangan-fisik/page.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/MarketingFloatingControls.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Validasi:** Source GitHub diperiksa; build/CI dan visual browser/perangkat harus diverifikasi sebelum diklaim PASS.
