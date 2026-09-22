@@ -60,7 +60,7 @@ export function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
   }, [visible]);
 
   return (
-    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-[#fcf7f6]" aria-hidden="true">
+    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-[#fcf7f6]" aria-hidden="true" inert>
       {visible ? (
         <div
           className="pointer-events-none absolute left-1/2 top-0 w-[390px]"
