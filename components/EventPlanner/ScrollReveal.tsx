@@ -19,6 +19,7 @@ export default function ScrollReveal({
 
   return (
     <motion.div
+      className="[&_h1]:text-primary [&_h2]:text-primary [&_h3]:text-primary"
       initial={{ opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ root: scrollRoot, once: false, amount: 0.06 }}
