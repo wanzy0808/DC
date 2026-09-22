@@ -15,7 +15,7 @@ export default function ScrollReveal({
   scrollRoot: RefObject<HTMLElement | null>;
 }) {
   const reducedMotion = useReducedMotion();
-  if (reducedMotion) return <div>{children}</div>;
+  if (reducedMotion) return <div className="[&_h1]:text-primary [&_h2]:text-primary [&_h3]:text-primary">{children}</div>;
 
   return (
     <motion.div
