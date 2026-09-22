@@ -84,16 +84,16 @@ export default function HeroSection() {
         };
 
   return (
-    <section className="relative grid items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-24">
-      <motion.div className="dc-invitation-hero-copy max-w-2xl" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
+    <section className="relative grid min-w-0 items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-12 lg:pb-24">
+      <motion.div className="dc-invitation-hero-copy min-w-0 w-full max-w-none" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
         </p>
-        <h1 className="mt-6 max-w-xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
+        <h1 className="mt-6 max-w-3xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
           {copy.title}
           <span className="mt-2 block text-foreground">{copy.accent}</span>
         </h1>
-        <p className="mt-7 max-w-xl font-[family-name:var(--font-dc-body)] text-base leading-8 text-foreground/70 md:text-lg">
+        <p className="mt-7 max-w-2xl font-[family-name:var(--font-dc-body)] text-base leading-8 text-foreground/70 md:text-lg">
           {copy.description}
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -111,9 +111,9 @@ export default function HeroSection() {
         </div>
       </motion.div>
 
-      <div className={`relative mx-auto w-full max-w-xl lg:pr-4 ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
-        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
-          <div className="relative aspect-[0.68] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
+      <div className={`relative mx-auto w-full min-w-0 max-w-lg ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
+        <motion.div className="relative mx-auto w-[min(100%,340px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
+          <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
               aria-hidden="true"
