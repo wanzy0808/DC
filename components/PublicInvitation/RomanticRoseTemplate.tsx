@@ -104,7 +104,7 @@ export default function RomanticRoseTemplate({
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
-  const { cover, gallery, assignment, photos } = media;
+  const { cover, gallery, assignment } = media;
   const groomPhoto = media.personOne;
   const bridePhoto = media.personTwo;
   const editPhoto = (slot: PhotoSlot, label: string) =>
