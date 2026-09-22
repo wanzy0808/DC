@@ -12,6 +12,7 @@ type FaqSectionProps = {
   title: string;
   description: string;
   items: readonly FaqItem[];
+  wide?: boolean;
 };
 
 export default function FaqSection({
@@ -19,11 +20,12 @@ export default function FaqSection({
   title,
   description,
   items,
+  wide = false,
 }: FaqSectionProps) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="mx-auto max-w-4xl space-y-8 md:space-y-10">
+    <section className={`mx-auto w-full space-y-8 md:space-y-10 ${wide ? "max-w-none" : "max-w-4xl"}`}>
       <SectionHeading eyebrow={eyebrow} title={title} description={description} />
       <div className="space-y-4">
         {items.map((item, index) => {
@@ -43,7 +45,7 @@ export default function FaqSection({
                 <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </Button>
               {isOpen ? (
-                <div className="border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6">
+                <div data-dc-text-reveal className="border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6">
                   {item.answer}
                 </div>
               ) : null}
