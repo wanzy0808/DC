@@ -349,7 +349,7 @@ export function MusicPanel({
         title="Musik"
         description="Semua tema punya musik bawaan. Gunakan URL atau unggah musik untuk menggantinya."
       />
-      <p className="mt-4 text-xs leading-6 text-muted-foreground">Musik bawaan tema: <span className="font-semibold text-primary">{defaultTrack}</span>. Kosongkan URL untuk memakai musik bawaan.</p>
+      <p className="mt-4 text-xs leading-6 text-muted-foreground">Musik bawaan tema: <span className="font-semibold text-primary">{defaultTrack}</span>. Digunakan jika belum ada URL atau musik yang diunggah.</p>
       <input
         value={musicUrl}
         onChange={(event) => setMusicUrl(event.target.value)}
