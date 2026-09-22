@@ -478,3 +478,6 @@ body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-other-sections 
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Cover begins as a small pink glow, becomes fully opaque, then the persistent overlay fades on the destination. */
+@keyframes dc-portal-cover { from { opacity: 0; } to { opacity: 1; } }
