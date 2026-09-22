@@ -215,19 +215,17 @@ export default function RomanticRoseTemplate({
             </div>
           </section>
 
-          {gallery.length > 0 && (
-            <section className="bg-[#fffaf8] px-6 py-20">
+          <section className="bg-[#fffaf8] px-6 py-20">
               <RoseHeading eyebrow="Our memories">Galeri Foto</RoseHeading>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
-              <div className="grid grid-cols-2 gap-3">
+              {gallery.length ? <div className="grid grid-cols-2 gap-3">
                 {gallery.map((photo, index) => (
                   <div key={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
                     <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                   </div>
                 ))}
-              </div>
+              </div> : <p className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
             </section>
-          )}
 
           <section className="bg-[#f8eef0] px-8 py-20 text-center">
             <RoseHeading eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
@@ -273,16 +271,16 @@ export default function RomanticRoseTemplate({
             </section>
           )}
 
-          {sections.gift && hasGift && (
+          {sections.gift && (
             <section className="bg-[#f8eef0] px-7 py-20 text-center">
               <RoseHeading eyebrow="With gratitude">Tanda Kasih</RoseHeading>
               <Gift className="mx-auto h-6 w-6 text-[#a65e69]" />
-              <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-[#e8cbd3] bg-white/85 p-6">
+              {hasGift ? <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-[#e8cbd3] bg-white/85 p-6">
                 <p className="text-sm text-[#916f7a]">{invitation.giftBankName}</p>
                 <p className="mt-2 text-sm font-semibold">{invitation.giftAccountName}</p>
                 <p className="mt-2 break-all font-[family-name:var(--font-dc-heading)] text-lg">{invitation.giftAccountNumber}</p>
                 {invitation.giftAccountNumber && <button type="button" onClick={() => navigator.clipboard?.writeText(invitation.giftAccountNumber || "")} className="mt-5 min-h-10 rounded-full border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
-              </div>
+              </div> : <p className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
             </section>
           )}
 
