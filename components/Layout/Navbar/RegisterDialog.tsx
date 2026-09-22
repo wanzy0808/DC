@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import GoogleIcon from "@/components/Auth/GoogleIcon";
-import { authErrorClass, authFieldClass, authGoogleButtonClass, authSubmitButtonClass } from "@/components/Auth/auth-styles";
+import { authCardClass, authChoiceBoxClass, authDescriptionClass, authErrorClass, authEyebrowClass, authFieldClass, authGoogleButtonClass, authHeaderClass, authLabelClass, authPasswordToggleClass, authSecondaryLinkClass, authSeparatorClass, authSubmitButtonClass, authTitleClass } from "@/components/Auth/auth-styles";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -138,17 +138,18 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
   }
 
   return (
-    <DialogContent className="max-h-[min(92dvh,900px)] w-[min(94vw,490px)] gap-0 overflow-y-auto rounded-[32px] border border-primary/40 bg-card/95 p-5 text-foreground shadow-[0_24px_90px_rgba(75,35,47,0.23)] backdrop-blur-xl sm:max-w-[490px] sm:p-8">
-      <DialogHeader className="gap-2 border-b border-primary/20 pb-5 pr-9 text-left">
-        <DialogTitle className="font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary">
+    <DialogContent className={`${authCardClass} max-h-[min(92dvh,900px)] w-[min(94vw,490px)] gap-0 overflow-y-auto p-6 sm:max-w-[490px] sm:p-10`}>
+      <DialogHeader className={`${authHeaderClass} pr-9`}>
+        <span aria-hidden="true" className={authEyebrowClass} />
+        <DialogTitle className={authTitleClass}>
           {t.title}
         </DialogTitle>
-        <DialogDescription className="font-[family-name:var(--font-dc-body)] text-sm leading-6 text-muted-foreground">
+        <DialogDescription className={authDescriptionClass}>
           {t.description}
         </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={submit} className="space-y-5 pt-6">
+      <form onSubmit={submit} className="space-y-5 pt-7">
         <Button asChild size="lg" className={authGoogleButtonClass}>
           <a href={`/api/auth/google?next=${encodeURIComponent(next)}`}>
             <GoogleIcon />
@@ -158,12 +159,12 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
 
         <div className="flex items-center gap-3" aria-hidden="true">
           <span className="h-px flex-1 bg-primary/25" />
-          <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">{t.separator}</span>
+          <span className={authSeparatorClass}>{t.separator}</span>
           <span className="h-px flex-1 bg-primary/25" />
         </div>
 
         <div className="space-y-4">
-          <label htmlFor="dc-register-email" className="block text-sm font-medium text-foreground">
+          <label htmlFor="dc-register-email" className={authLabelClass}>
             {t.email}
             <input
               id="dc-register-email"
@@ -177,7 +178,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
           </label>
 
           <div>
-            <label htmlFor="dc-register-password" className="block text-sm font-medium text-foreground">
+            <label htmlFor="dc-register-password" className={authLabelClass}>
               {t.password}
             </label>
             <div className="relative">
@@ -195,7 +196,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
               <button
                 type="button"
                 onClick={() => setShowPassword((value) => !value)}
-                className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className={authPasswordToggleClass}
                 aria-pressed={showPassword}
                 aria-label={showPassword ? t.hidePassword : t.showPassword}
               >
@@ -206,7 +207,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
           </div>
 
           <div>
-            <label htmlFor="dc-register-password-confirm" className="block text-sm font-medium text-foreground">
+            <label htmlFor="dc-register-password-confirm" className={authLabelClass}>
               {t.confirm}
             </label>
             <div className="relative">
@@ -223,7 +224,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((value) => !value)}
-                className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                className={authPasswordToggleClass}
                 aria-pressed={showConfirmPassword}
                 aria-label={showConfirmPassword ? t.hideConfirm : t.showConfirm}
               >
@@ -233,7 +234,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
           </div>
         </div>
 
-        <div className="space-y-3 rounded-[22px] border border-primary/20 bg-primary/[0.035] p-4 text-xs text-muted-foreground">
+        <div className={authChoiceBoxClass}>
           <label className="flex cursor-pointer items-start gap-3">
             <input
               required
@@ -263,7 +264,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
           {loading ? t.loading : t.submit}
         </Button>
 
-        <div className="space-y-4 text-center text-sm text-muted-foreground">
+        <div className="space-y-4 border-t border-primary/15 pt-5 text-center font-[family-name:var(--font-dc-body)] text-sm text-muted-foreground">
           <p>
             {t.haveAccount}{" "}
             <button
@@ -272,14 +273,14 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
                 if (onSwitchToLogin) onSwitchToLogin();
                 else router.push(`/login?next=${encodeURIComponent(next)}`);
               }}
-              className="font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/75"
+              className={authSecondaryLinkClass}
             >
               {t.login}
             </button>
           </p>
-          <p className="border-t border-primary/20 pt-4 text-xs leading-6">
+          <p className="text-xs leading-6">
             {t.vendorText}{" "}
-            <Link href="/vendor-register" className="font-semibold text-primary underline underline-offset-4 hover:text-primary/75">
+            <Link href="/vendor-register" className={authSecondaryLinkClass}>
               {t.vendorLink}
             </Link>
           </p>
