@@ -1,4 +1,13 @@
+"use client";
+
+import { useRef } from "react";
 import Link from "next/link";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
+import MarketingTextReveal from "@/components/DigitalInvitation/MarketingTextReveal";
+import ScrollReveal from "@/components/EventPlanner/ScrollReveal";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { ArrowRight, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import FounderSection from "@/components/EventPlanner/FounderSection";
@@ -19,10 +28,31 @@ function consultationUrl(message: string) {
 }
 
 export default function EventPlannerPage() {
+  const { locale } = useLanguage();
+  const scrollRoot = useRef<HTMLElement>(null);
+
   return (
-    <main className="relative z-10 min-h-screen w-full overflow-x-clip pb-20 pt-24 text-[var(--foreground)]">
-      <div className="mx-auto w-[80vw] max-w-full space-y-28">
-        <header className="border-b border-[var(--border)] pb-9">
+    <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <PublicMarketingAtmosphere />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.12),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.11),transparent_65%)]" />
+      <div className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]">
+        <div className="relative z-50 shrink-0 border-b border-primary/15 bg-background/70 backdrop-blur-sm">
+          <Navbar embedded />
+        </div>
+        <main
+          ref={scrollRoot}
+          tabIndex={0}
+          aria-label={locale === "en" ? "Event planner page content" : "Konten halaman Event Planner"}
+          className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+        >
+          <MarketingTextReveal
+            className="mx-auto flex w-[88%] max-w-[1100px] flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16"
+            scrollRoot={scrollRoot}
+            ready
+            locale={locale}
+          >
+        <ScrollReveal scrollRoot={scrollRoot}>
+        <header className="border-b border-primary/30 pb-9">
           <div className="max-w-3xl">
             <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
               [ DC ORGANIZER / EVENT PLANNER ]
@@ -35,12 +65,14 @@ export default function EventPlannerPage() {
             </p>
           </div>
         </header>
+        </ScrollReveal>
 
-        <FounderSection />
-        <ServicesSection />
-        <PortfolioSection />
+        <ScrollReveal scrollRoot={scrollRoot}><FounderSection /></ScrollReveal>
+        <ScrollReveal scrollRoot={scrollRoot}><ServicesSection /></ScrollReveal>
+        <ScrollReveal scrollRoot={scrollRoot}><PortfolioSection /></ScrollReveal>
 
-        <section className="border-y border-[var(--border)] py-12 md:py-16">
+        <ScrollReveal scrollRoot={scrollRoot}>
+        <section className="border-y border-primary/30 py-10 md:py-12">
           <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
             <div className="max-w-3xl">
               <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">
@@ -61,7 +93,9 @@ export default function EventPlannerPage() {
             </Button>
           </div>
         </section>
+        </ScrollReveal>
 
+        <ScrollReveal scrollRoot={scrollRoot}>
         <section className="space-y-10" aria-labelledby="event-planner-packages">
           <div className="mx-auto max-w-3xl text-center">
             <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
@@ -82,7 +116,7 @@ export default function EventPlannerPage() {
             {plannerPackages.map((item) => (
               <article
                 key={item.key}
-                className="flex h-full flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6 md:p-7"
+                className="flex h-full flex-col rounded-[28px] border border-primary/35 bg-[var(--card)]/70 p-6 md:rounded-[32px] md:p-7"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -130,21 +164,28 @@ export default function EventPlannerPage() {
             WhatsApp konsultasi: +62 821-2478-6516
           </p>
         </section>
+        </ScrollReveal>
 
+        <ScrollReveal scrollRoot={scrollRoot}>
         <ReviewsGrid
           eyebrow="Client Stories"
           title="Saat host bisa benar-benar hadir di acaranya sendiri"
           description="Cerita dari klien yang mempercayakan koordinasi dan planning kepada DC Organizer."
           reviews={plannerReviews}
         />
+        </ScrollReveal>
 
+        <ScrollReveal scrollRoot={scrollRoot}>
         <FaqSection
           title="Pertanyaan tentang Event Planner"
           description="Hal-hal yang paling sering ditanyakan sebelum memulai konsultasi dan menentukan scope acara."
           items={plannerFaq}
+          wide
         />
+        </ScrollReveal>
 
-        <section className="rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-8 md:p-12">
+        <ScrollReveal scrollRoot={scrollRoot}>
+        <section className="rounded-[32px] border border-primary/35 bg-[var(--card)]/70 p-8 md:rounded-[40px] md:p-12">
           <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.2em] text-[var(--primary)]">
             [ READY WHEN YOU ARE ]
           </p>
@@ -167,7 +208,11 @@ export default function EventPlannerPage() {
             </a>
           </Button>
         </section>
+        </ScrollReveal>
+          </MarketingTextReveal>
+        </main>
+        <MarketingFrameFooter />
       </div>
-    </main>
+    </div>
   );
 }
