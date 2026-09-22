@@ -1,3 +1,4 @@
+import { invitationTemplates } from "@/lib/templates/catalog";
 import { invitationFonts, invitationPalettes, type FontKey, type PaletteKey } from "@/lib/templates/design";
 import type { InvitationTemplatePreset } from "@/components/InvitationStudio/designer-types";
 
@@ -7,15 +8,9 @@ export const invitationDecorOptions = [
   "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?auto=format&fit=crop&q=80&w=700",
 ];
 
-export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = {
-  "romantic-rose": { layout: "editorial", palette: "blush", font: "cinzelFauna" },
-  "botanical-ivory": { layout: "botanical", palette: "pearl", font: "cinzelFauna" },
-  "eternal-blossom": { layout: "editorial", palette: "blush", font: "playfairLora" },
-  "modern-maroon": { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
-  "garden-light": { layout: "garden", palette: "sage", font: "playfairLora" },
-  "midnight-romance": { layout: "midnight", palette: "midnight", font: "cinzelFauna" },
-  "classic-pearl": { layout: "classic", palette: "pearl", font: "playfairLora" },
-};
+export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = Object.fromEntries(
+  invitationTemplates.map((template) => [template.key, template.preset]),
+);
 
 export const invitationPaletteOptions = Object.entries(invitationPalettes) as [
   PaletteKey,
