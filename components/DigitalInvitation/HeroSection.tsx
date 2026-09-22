@@ -24,7 +24,7 @@ export default function HeroSection() {
     const timer = window.setTimeout(() => {
       document.body.classList.add("dc-portal-revealing");
       setRevealCopy(true);
-    }, 4100);
+    }, 2550);
     return () => window.clearTimeout(timer);
   }, [portalArrival, reducedMotion]);
   useLayoutEffect(() => {
@@ -112,7 +112,7 @@ export default function HeroSection() {
       </motion.div>
 
       <div className={`relative mx-auto w-full max-w-xl lg:pr-4 ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
-        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 6.6, times: [0, 0.58, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
+        <motion.div className="relative mx-auto w-[min(100%,430px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
           <div className="relative aspect-[0.68] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
@@ -144,7 +144,7 @@ export default function HeroSection() {
                   <div className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#151515] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
                 </div>
 
-                <motion.div className={`invitation-phone-scroll absolute inset-x-0 top-0 w-full ${portalArrival ? "invitation-phone-scroll-paused" : ""}`} animate={portalArrival ? { y: reducedMotion ? "0%" : ["0%", "0%", "-38%", "-38%"] } : { y: "0%" }} transition={{ duration: reducedMotion ? 0 : 3.5, times: [0, 0.2, 0.82, 1], ease: "easeInOut" }} >
+                <motion.div className={`invitation-phone-scroll absolute inset-x-0 top-0 w-full ${portalArrival ? "invitation-phone-scroll-paused" : ""}`} initial={portalArrival ? { y: "-38%" } : false} animate={portalArrival ? { y: reducedMotion ? "0%" : ["-38%", "-38%", "0%"] } : { y: "0%" }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: "easeInOut" }} >
                   <article className="min-h-full bg-[#f8f4f1] px-7 pb-16 pt-12 text-[#2a2220] dark:bg-[#111111] dark:text-white">
                     <div className="mx-auto max-w-[250px] text-center">
                       <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.28em] text-[#8b5d62] dark:text-primary">
