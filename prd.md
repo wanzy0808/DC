@@ -682,6 +682,8 @@ Halaman `/template-design` merupakan marketing page dengan visual baseline landi
 
 Area isi berbahasa Indonesia default dan responsif terhadap ID/EN navbar; memakai Cinzel untuk heading, Fauna One untuk isi/UI dan DM Mono untuk metadata. Copy ringkas dan tidak mengulang brand/undangan/galeri secara berlebihan. Gunakan palet Rose dan border/transparansi ringan yang sesuai marketing baseline. Kartu katalog harus tetap bersumber dari API/manifest tunggal dan thumbnail real yang lazy-load; filter/pencarian/sort serta preview modal tetap berfungsi tanpa login. Modal preview yang memanjang dibuka di atas bingkai, dapat scroll sendiri, dan tidak terpotong oleh overflow main frame. Tombol pemakaian template membawa pengguna ke Dashboard untuk login/buat event dahulu, tidak membuka Studio anonim. Mode terang/gelap, aksesibilitas keyboard dan interaksi mobile tetap berlaku.
 
+**Kontrak kontrol galeri (22 September 2026):** Di `/template-design`, kolom pencarian, chip filter, trigger Urutkan dan setiap opsi menu menggunakan bentuk pill/rounded penuh dan outline Rose yang jelas pada Light/Dark. Panel dropdown Urutkan sendiri membentuk kapsul dengan sudut lebar dan border Rose, bukan menu native/persegi; opsi Urutan katalog, Nama A–Z dan Nama Z–A tetap mendukung ID/EN, klik di luar, Escape dan pemilihan keyboard. Reuse `components/Templates/gallery-control-styles.ts` agar ukuran, radius, warna border dan focus konsisten; jangan menulis ulang gaya masing-masing kontrol. CTA Lihat Undangan tetap memakai komponen `Button` canonical dengan pengecualian bentuk pill khusus katalog yang diminta owner. Standar ini hanya untuk area katalog, tidak mengganti shape global Button atau mengubah navbar/landing/dashboard/renderer undangan.
+
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
 Katalog dengan puluhan/ratusan template tidak boleh membuat setiap public invitation mengirim seluruh code dan asset semua template ke browser visitor.
@@ -3939,3 +3941,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commit:** `78a54870799e170aca620974755e66c9fa264205`.
 
 **Validasi:** Penggantian kode dan keberadaan tiga opsi sort, kedua comparator, rounded CTA/input, dan dropdown diverifikasi secara statis sebelum commit. GitHub Actions/build dan inspeksi visual browser belum dijalankan pada perubahan ini; tidak diklaim PASS.
+
+
+---
+
+## 2026-09-22 — Menyatukan pill controls dan dropdown Urutkan pada galeri template
+
+**Feedback:** Trigger Urutkan sudah pill, tetapi panel dropdown masih `rounded-2xl` dan item `rounded-xl`, sehingga outline Rose dan bentuk kurang konsisten. Owner meminta gaya round + outline pink dibuat standar, tanpa merombak halaman lain.
+
+**Implementasi:** Tambah `components/Templates/gallery-control-styles.ts` sebagai satu sumber class untuk search, filter, sort trigger, panel menu, opsi menu dan CTA katalog. `/template-design` memakai token ini; panel dibulatkan menjadi 32px dengan outline Rose, opsi menu dan filter memakai `rounded-full` + Rose border; tombol CTA tetap render dari `Button` dengan override bentuk pill yang hanya berlaku di katalog. Pilihan A–Z dan Z–A, deep link Romantic Rose, modal, ID/EN, theme dan fitur undangan tidak diubah.
+
+**Affected files:** `components/Templates/gallery-control-styles.ts`, `app/template-design/page.tsx`, `AGENTS.md`, `prd.md`.
+
+**Code commits:** `e2978288a3b96a31f2e79e86e86b2511877a4434`, `8972117b3e0c020ac331ba9ed9c35f2e9ad8728d`; AGENTS rule commit `707f7889dc235f0aacb2031ef80ca501b2b9af60`.
+
+**Validation:** Source changes, shared-class consumption and sort behavior checked statically. Tidak ada klaim CI/build/visual PASS sebelum workflow/browser menjalankan pemeriksaan aktual.
