@@ -1143,6 +1143,7 @@ Bukan melalui banyak warna/variant berbeda.
 
 ### 15.4 Surfaces/layout
 
+- Halaman marketing `/d-invitation` memakai **main frame yang sama secara ukuran/proporsi visual dengan landing yang disetujui**: rounded Rose-border frame setinggi viewport dengan Navbar dan compact Footer di dalam frame, sedangkan semua section marketing berada dalam satu panel tengah yang scrollable mandiri (desktop dan mobile). Scroll halaman luar bukan penggerak utama konten; desain/copy, link, bahasa, tema, dan bagian yang sudah ada tetap dipertahankan. Section yang memasuki viewport panel scroll muncul lembut (opacity/translate, sekali per section); reduced-motion menampilkan konten tanpa gerakan. Perubahan ini khusus halaman `/d-invitation`, bukan perubahan landing `/` atau koreografi transisi Pintu yang sedang ditunda.
 - Main panel radius sekitar 12px.
 - Nested utility surface sekitar 8–10px.
 - Input target minimum sekitar 44px.
@@ -3648,3 +3649,16 @@ Screenshot nyata owner di `/pintu-lab` pada 0° menunjukkan foto `pintu1.png` je
 ## 2026-09-21 — Approved landing baseline and documentation lock
 
 Owner confirmed that the final `/pagecontoh` is complete and must be used at `/` unchanged. Homepage promotion commits: `684d50d9f9136086df473f10c09b0f2354b94cbe` (route), `15354ebc44e42fef8f7d599369b22a6254db025d` (avoid duplicate navbar), `fba879a804aee30486d8cc4081c659ef833b39c7` (avoid duplicate footer), `dbd8014d554bbac66bc4c3ba4a34b12ceec38cb7` (full-width layout). Documentation commits: `7c49c3240c274ce5a2a5f4bdb8d78a5760b91241` (AGENTS.md), `f9c1612092acc62be72fdae4560a5f65ac0b1dad` (README.md), plus this PRD update. Rationale: preserve the owner's approved appearance and interactions and prevent unsolicited additions/removals or parallel visual systems. Affected: `app/page.tsx`, shared landing layout/chrome, `AGENTS.md`, `README.md`, `prd.md`. Validation: GitHub write operations confirmed; production build, CI, browser visual check, and cross-theme/responsive testing were **not performed** during this documentation update.
+
+
+---
+
+## 2026-09-22 — Digital Invitation marketing page: framed internal scroll and section reveal
+
+**Owner request:** Tunda revisi transisi Pintu; ubah hanya pengalaman halaman `/d-invitation` agar seluruh konten berada di main frame seperti landing, scroll terjadi di dalam frame, dan section muncul lembut saat di-scroll turun.
+
+**Implementation:** `app/d-invitation/page.tsx` membungkus Hero, fitur, template, Studio CTA, paket, review, dan FAQ dalam frame viewport dengan inner scroll panel dan Motion `whileInView` ber-root panel scroll (`once`, reduced motion supported). Navbar dan compact Footer ditanam di atas/bawah panel frame agar tidak ikut scroll; `components/Layout/Navbar/Navbar.tsx` dan `components/Layout/Footer.tsx` mencegah global chrome ganda hanya pada route ini. Landing `/`, komponen Pintu, dataset/produk, dan API tidak diubah. Keputusan tata letak tercatat pada §15.4 di atas.
+
+**Commits:** `d0bc8bca38005fab5c590d7314f59ee152a5ec5e` (frame, inner scroll, reveals), `187ac2c04b4cd60a2f187ac26e169e1546107253` (embedded navbar tanpa duplikasi), `c26510ce476f85be98104242ac45f662409c6bbf` (embedded footer ringkas tanpa duplikasi). File: `app/d-invitation/page.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `prd.md`.
+
+**Validation:** GitHub write berhasil. Build, CI, preview browser, responsive dan screenshot owner **belum dijalankan/diamati** untuk perubahan ini.
