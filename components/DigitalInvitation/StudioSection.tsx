@@ -14,14 +14,14 @@ export default function StudioSection() {
           title: "Start with a template. Shape it around your event.",
           description:
             "Add photos, choose the right tone, write the invitation copy, and keep venue, time, RSVP, and guest-facing details together before publishing.",
-          action: "Enter Design Studio",
+          action: "Start from Dashboard",
         }
       : {
           eyebrow: "Design Studio",
           title: "Mulai dari template. Bentuk sesuai karakter acaramu.",
           description:
             "Masukkan foto, pilih nuansa, tulis isi undangan, lalu rapikan venue, waktu, RSVP, dan informasi yang perlu dilihat tamu sebelum dipublikasikan.",
-          action: "Masuk Studio",
+          action: "Mulai dari Dashboard",
         };
 
   return (
@@ -44,7 +44,7 @@ export default function StudioSection() {
           size="lg"
           className="min-w-[9rem] font-[family-name:var(--font-dc-body)] text-base"
         >
-          <Link href="/dashboard/editor">
+          <Link href="/dashboard">
             {copy.action}
             <ArrowUpRight className="h-4 w-4" />
           </Link>
