@@ -34,7 +34,9 @@ export const templateDemoInvitation: InvitationDesignerInvitation = {
   giftAccountNumber: null,
   assets: [
     { id: "gallery-demo-cover", type: "IMAGE", url: templateDemoPhoto, title: "Foto contoh" },
-    { id: "gallery-demo-second", type: "IMAGE", url: "/couple2.jpg", title: "Foto contoh" },
-    { id: "gallery-demo-third", type: "IMAGE", url: "/couple3.jpg", title: "Foto contoh" },
+    { id: "gallery-demo-second", type: "IMAGE", url: "/man.jpg", title: "Foto contoh mempelai pertama" },
+    { id: "gallery-demo-third", type: "IMAGE", url: "/female.jpg", title: "Foto contoh mempelai kedua" },
+    { id: "gallery-demo-fourth", type: "IMAGE", url: "/couple2.jpg", title: "Foto contoh pasangan" },
+    { id: "gallery-demo-fifth", type: "IMAGE", url: "/couple3.jpg", title: "Foto contoh pasangan" },
   ],
 };
