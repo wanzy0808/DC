@@ -1,6 +1,7 @@
 import type { EventCategory } from "@/lib/events/catalog";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationSections } from "@/lib/templates/sections";
+import type { PhotoAssignments } from "@/lib/templates/photo-slots";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -57,6 +58,7 @@ export type InvitationDesignState = {
   font: FontKey;
   decor: string;
   sections: InvitationSections;
+  photos: PhotoAssignments;
 };
 
 export type InvitationTemplateLayout =
