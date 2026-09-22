@@ -7,6 +7,7 @@ import { LanguageProvider } from "@/components/I18n/LanguageProvider";
 import { isLocale, LOCALE_COOKIE, type Locale } from "@/lib/i18n";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import Footer from "@/components/Layout/Footer";
+import PortalTransition from "@/components/Landing/Pintu/PortalTransition";
 import PublicAtmosphere, { PublicContent } from "@/components/Layout/PublicAtmosphere";
 
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
       <body className={`${cinzel.variable} ${faunaOne.variable} ${dmMono.variable} antialiased min-h-screen flex flex-col justify-between overflow-x-hidden`}>
         <LanguageProvider initialLocale={locale}>
           <ThemeProvider>
+            <PortalTransition />
             <PublicAtmosphere />
             <Navbar />
             <PublicContent>{children}</PublicContent>
