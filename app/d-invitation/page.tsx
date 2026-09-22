@@ -1,7 +1,7 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import PuzzleAssemble from "@/components/DigitalInvitation/PuzzleAssemble";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
@@ -20,9 +20,24 @@ import {
 
 export default function DigitalInvitationPage() {
   const { locale } = useLanguage();
-  const reducedMotion = useReducedMotion();
   const scrollRoot = useRef<HTMLElement>(null);
-  const reveal = { once: true, amount: 0.14, root: scrollRoot };
+  const [assembleReady, setAssembleReady] = useState(false);
+
+  useEffect(() => {
+    // When reached through a marketing link or Pintu, assemble behind the
+    // opening veil. Direct loads and refreshes assemble immediately.
+    if (document.documentElement.dataset.dcMarketingTransition !== "1") {
+      const frame = requestAnimationFrame(() => setAssembleReady(true));
+      return () => cancelAnimationFrame(frame);
+    }
+    const onReveal = () => setAssembleReady(true);
+    window.addEventListener("dc-marketing-reveal", onReveal);
+    const fallback = window.setTimeout(onReveal, 4300);
+    return () => {
+      window.removeEventListener("dc-marketing-reveal", onReveal);
+      window.clearTimeout(fallback);
+    };
+  }, []);
   const copy =
     locale === "en"
       ? {
@@ -64,7 +79,7 @@ export default function DigitalInvitationPage() {
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.12),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.11),transparent_65%)]" />
       <div className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]">
         <div className="relative z-50 shrink-0 border-b border-primary/15 bg-background/70 backdrop-blur-sm">
-          <Navbar embedded />
+          <PuzzleAssemble ready={assembleReady} direction="top" delay={0.02} className="w-full"><Navbar embedded /></PuzzleAssemble>
         </div>
         <main
           ref={scrollRoot}
@@ -73,18 +88,18 @@ export default function DigitalInvitationPage() {
           className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <div className="mx-auto w-[88%] max-w-full space-y-28 py-12 sm:w-[80vw] md:space-y-36 md:py-20">
-            <HeroSection />
+            <HeroSection ready={assembleReady} />
             <div className="dc-invitation-other-sections space-y-28 md:space-y-36">
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04}>
                 <FeatureSection />
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              </PuzzleAssemble>
+              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07}>
                 <TemplateCollection />
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              </PuzzleAssemble>
+              <PuzzleAssemble ready={assembleReady} direction="bottom" scrollRoot={scrollRoot} delay={0.07}>
                 <CtaStudioSection />
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              </PuzzleAssemble>
+              <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.07}>
                 <PackageShowcase
                   eyebrow={copy.packageEyebrow}
                   title={copy.packageTitle}
@@ -92,26 +107,26 @@ export default function DigitalInvitationPage() {
                   packageKeys={["INVITATION_BASIC"]}
                   note={copy.packageNote}
                 />
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              </PuzzleAssemble>
+              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07}>
                 <ReviewsGrid
                   eyebrow={copy.reviewEyebrow}
                   title={copy.reviewTitle}
                   description={copy.reviewDescription}
                   reviews={digitalInvitationReviews[locale]}
                 />
-              </motion.div>
-              <motion.div initial={reducedMotion ? false : { opacity: 0, y: 36 }} whileInView={{ opacity: 1, y: 0 }} viewport={reveal} transition={{ duration: 0.72, ease: [0.22, 1, 0.36, 1] }}>
+              </PuzzleAssemble>
+              <PuzzleAssemble ready={assembleReady} direction="bottom" scrollRoot={scrollRoot} delay={0.07}>
                 <FaqSection
                   title={copy.faqTitle}
                   description={copy.faqDescription}
                   items={digitalInvitationFaq[locale]}
                 />
-              </motion.div>
+              </PuzzleAssemble>
             </div>
           </div>
         </main>
-        <MarketingFrameFooter />
+        <PuzzleAssemble ready={assembleReady} direction="bottom" delay={0.02} className="shrink-0"><MarketingFrameFooter /></PuzzleAssemble>
       </div>
     </div>
   );
