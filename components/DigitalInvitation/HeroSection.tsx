@@ -85,7 +85,7 @@ export default function HeroSection() {
 
   return (
     <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 border-b border-border/70 pb-20 lg:max-w-[1200px] lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10 lg:pb-24">
-      <motion.div className="dc-invitation-hero-copy min-w-0 w-full max-w-none" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
+      <motion.div className="dc-invitation-hero-copy min-w-0 w-full max-w-none lg:-translate-x-4" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
         </p>
@@ -111,7 +111,7 @@ export default function HeroSection() {
         </div>
       </motion.div>
 
-      <div className={`relative mx-auto w-full min-w-0 max-w-lg ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
+      <div className={`relative mx-auto w-full min-w-0 max-w-lg lg:translate-x-4 ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
         <motion.div className="relative mx-auto w-[min(100%,340px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
           <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
