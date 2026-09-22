@@ -12,16 +12,18 @@ type PackageShowcaseProps = {
   description: string;
   packageKeys: string[];
   note?: string;
+  /** Use the more rounded outlined package card on /d-invitation. */
+  roundedCard?: boolean;
 };
 
-export default function PackageShowcase({ eyebrow, title, description, packageKeys, note }: PackageShowcaseProps) {
+export default function PackageShowcase({ eyebrow, title, description, packageKeys, note, roundedCard = false }: PackageShowcaseProps) {
   const { locale } = useLanguage();
   const packages = packageKeys.map(getServicePackage).filter(Boolean);
   const chooseLabel = locale === "en" ? "Choose package" : "Pilih paket";
   const featuredLabel = locale === "en" ? "Best value" : "Paling lengkap";
 
   return (
-    <section className="space-y-10">
+    <section className="space-y-8 md:space-y-10">
       <div className="mx-auto max-w-3xl space-y-3 text-center">
         <p className="text-xs font-mono font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">[ {eyebrow} ]</p>
         <h2 className="font-[family-name:var(--font-dc-heading)] text-3xl md:text-4xl lg:text-5xl">{title}</h2>
@@ -32,7 +34,7 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
           if (!item) return null;
           const featured = packageKeys.length === 3 && index === 2;
           return (
-            <article key={item.key} className={`relative flex h-full w-full max-w-[430px] flex-col rounded-3xl border p-6 md:p-7 ${featured ? "border-[var(--primary)] bg-[var(--primary)]/[0.07] shadow-[0_20px_60px_rgba(122,28,37,0.12)]" : "border-[var(--border)] bg-[var(--card)]/75"}`}>
+            <article key={item.key} className={`relative flex h-full w-full max-w-[430px] flex-col border p-6 md:p-7 ${roundedCard ? "rounded-[40px] border-primary/70 md:rounded-[48px]" : "rounded-3xl"} ${featured ? "border-[var(--primary)] bg-[var(--primary)]/[0.07] shadow-[0_20px_60px_rgba(122,28,37,0.12)]" : roundedCard ? "bg-[var(--card)]/75" : "border-[var(--border)] bg-[var(--card)]/75"}`}>
               {featured ? <span className="absolute right-5 top-5 rounded-full bg-[var(--primary)] px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-white">{featuredLabel}</span> : null}
               <p className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--primary)]">DC Organizer</p>
               <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-dc-heading)] text-2xl">{item.name[locale]}</h3>
