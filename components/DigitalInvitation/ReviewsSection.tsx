@@ -22,7 +22,7 @@ export default function ReviewsSection({
   reviews,
 }: ReviewsSectionProps) {
   return (
-    <section className="space-y-10">
+    <section className="space-y-8 md:space-y-10">
       <div className="mx-auto max-w-2xl space-y-3 text-center">
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
           {eyebrow}
