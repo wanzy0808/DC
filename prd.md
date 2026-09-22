@@ -613,6 +613,14 @@ Halaman publik `/template-design` mengambil built-in template dari `lib/template
 
 Tombol dari katalog publik menuju Dashboard untuk membuat acara lebih dahulu; pemilihan/simpan template event dilakukan di Invitation Studio setelah `invitationId` valid. Jangan menyebut berkas designer (HTML/ZIP) sebagai template built-in yang sudah dapat dirender tanpa proses integrasi. Permukaan marketing `/d-invitation` dan landing tidak otomatis ikut berubah saat katalog ini diperbaiki.
 
+### 7.2.9b Satu sumber katalog untuk semua halaman (22 September 2026)
+
+`lib/templates/catalog.ts` adalah manifest tunggal untuk template built-in yang **siap dirender**: key, identitas, kategori, thumbnail/preview mode, dan Studio preset milik template didaftarkan sekali. Halaman publik `/template-design`, koleksi `/d-invitation`, dan pilihan template di Invitation Studio wajib membaca API katalog yang sama (`/api/templates` via `lib/templates/use-template-catalog.ts`), tanpa array unggulan/showcase/preset terpisah. Ketika template kode baru terintegrasi dan sekali diregistrasikan ke manifest, tiga permukaan ikut berubah pada deployment/refresh tanpa mengedit tiga halaman.
+
+Designer upload yang telah berstatus `PUBLISHED` di database muncul otomatis lewat API pada galeri publik dan marketing sebagai `previewType: image`, `ready: false`. File HTML/ZIP/JSON yang diunggah belum merupakan komponen React dan **tidak boleh** dapat dipilih sebagai template aktif di Studio/publish sampai developer mengintegrasikan renderer dan mengubah statusnya menjadi ready lewat registrasi master. Jangan menampilkan klaim bahwa foto preview sama dengan output undangan publik apabila belum ada renderer. Studio menampilkan hanya `ready: true`. Fallback built-in tetap tersedia ketika query katalog upload tidak berhasil; publik tidak mendapat akses untuk download paket designer secara langsung dari endpoint katalog.
+
+Preview undangan publik dapat dibuka tanpa login, tetapi tombol penggunaan dari `/template-design` atau `/d-invitation` mengarahkan ke `/dashboard` untuk login dan membuat/memilih event terlebih dahulu. `/dashboard/editor` dan semua turunannya harus tetap diproteksi oleh pengecekan sesi server-side dan editor membutuhkan `invitationId` valid; tidak ada akses anonim ke Studio melalui deep link maupun manipulasi URL.
+
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
 Katalog dengan puluhan/ratusan template tidak boleh membuat setiap public invitation mengirim seluruh code dan asset semua template ke browser visitor.
@@ -3779,3 +3787,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `2143e800d6d39dc5f8d7135a2056d06b580b3f45` (katalog), `aac8aae2ed5b9698a3e8e7eaa1526ee96017b71e` (demo fixture), `4b02db304f95ca12454761b42e3904ed6649b1a4` (galeri interaktif).
 
 **Validation:** Intermediate commits setelah perubahan tipe katalog gagal pada TypeScript karena page lama masih memakai field `id/status/image`; setelah page diubah, build final perlu diperiksa dari GitHub Actions. Belum ada browser/visual QA di localhost oleh agent ini.
+
+
+---
+
+## 2026-09-22 — Unified public/Studio invitation template catalog
+
+**Owner request:** Galeri `/template-design`, koleksi di `/d-invitation`, dan pilihan di Invitation Studio harus sinkron tanpa mengulang hard-coded daftar; pengunjung tanpa login dapat preview tetapi tidak bisa masuk Studio.
+
+**Implementation:** Satu manifest built-in `lib/templates/catalog.ts` sekarang memegang kategori, tipe preview, serta Studio preset. `data/templates/showcase.ts` dan `components/InvitationStudio/designer-config.ts` menurunkan data tersebut dari manifest, bukan menyalin daftar per halaman. Endpoint `/api/templates` menyatukan ready built-ins dengan entri designer `PUBLISHED` yang ditandai `ready:false` sebagai image-preview-only (tidak mengirim path/ZIP template). Shared client hook `lib/templates/use-template-catalog.ts` memberi daftar yang sama ke `/template-design`, `components/DigitalInvitation/TemplateSection.tsx`, dan Studio. Marketing menampilkan lazy real template thumbnails dari `components/Templates/TemplateGalleryCanvas.tsx` serta deep link ke galeri publik `?template=...`; galeri membuka preview pilihan. Upload designer dipamerkan otomatis setelah publish, namun tidak bisa dipilih di Studio sampai memiliki renderer yang sudah terdaftar. `components/DigitalInvitation/StudioSection.tsx` diarahkan ke `/dashboard` (bukan editor tanpa event), dan existing `app/dashboard/layout.tsx` serta `app/dashboard/editor/page.tsx` tetap menjadi otorisasi sesi server-side. Pintu, landing, sistem pembayaran/DB undangan, dan halaman undangan tamu tidak berubah.
+
+**Files:** `lib/templates/catalog.ts`, `components/InvitationStudio/designer-config.ts`, `data/templates/showcase.ts`, `app/api/templates/route.ts`, `lib/templates/use-template-catalog.ts`, `components/InvitationStudio/DesignerPanels.tsx`, `components/InvitationStudio/InvitationDesigner.tsx`, `app/template-design/page.tsx`, `components/Templates/TemplateGalleryCanvas.tsx`, `components/DigitalInvitation/TemplateSection.tsx`, `components/DigitalInvitation/StudioSection.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Key code commits:** `7c7f75e1ff91d9928e0e2d57da689fdfe576c9aa` (manifest), `a63f226f999c76f56ce8ac18d05f2e258010dbbb` (API), `739ee5e7bf0a757f1f797d88e80d64d3f161eb0b` (hook), `65bf92813f9141d74e1450bd39fe69525d7fdf99` (Studio), `41149a31c7653cdb7b48741ddd3c98673ac60098` (public gallery), `2c92cff8b2c0010e5fe02810719aec29638001c6` (shared thumbnails), `9c45787cf1847c4aaf9fc437e962188bc02ea46e` (marketing), `aedf6d0315e040d6c3e9fd86c89e6722394f5b07` (deep link), `9febfe93e691acea4204f55ef65b13354d22916e` (auth-first CTA).
+
+**Validation:** Intermediate partial commits may fail while consumers migrate to the new catalog shape; check GitHub Actions result for the latest combined commit. No local browser visual QA was run by this agent.
