@@ -3,6 +3,8 @@
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import RosePetalBackground from "@/components/Layout/RosePetalBackground";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import { isMarketingPath } from "@/lib/marketing-paths";
 
 const privatePrefixes = ["/dashboard", "/admin"];
 
@@ -13,10 +15,11 @@ export default function PublicAtmosphere() {
   );
   const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
 
-  // The landing page and its temporary clone already own their interactive
-  // background. Keeping a second global background causes duplicate layers.
-  if (isPrivateArea || isLanding) return null;
+  // Framed pages own their ambient layers inside their isolated scene; don't double them here.
+  if (isPrivateArea || isLanding || pathname === "/d-invitation") return null;
+  if (isMarketingPath(pathname)) return <PublicMarketingAtmosphere />;
 
+  // Preserve existing background behavior for unrelated public routes.
   return <RosePetalBackground />;
 }
 
