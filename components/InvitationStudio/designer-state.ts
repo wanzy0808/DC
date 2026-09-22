@@ -10,6 +10,7 @@ import {
   parseInvitationSections,
   withInvitationSections,
 } from "@/lib/templates/sections";
+import { parsePhotoAssignments, withPhotoAssignments } from "@/lib/templates/photo-slots";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import type {
   InvitationDesignerInvitation,
@@ -74,9 +75,12 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withInvitationSections(
-    makeDesignKey(state.template, state.palette, state.font, state.decor),
-    state.sections,
+  return withPhotoAssignments(
+    withInvitationSections(
+      makeDesignKey(state.template, state.palette, state.font, state.decor),
+      state.sections,
+    ),
+    state.photos,
   );
 }
 
@@ -95,5 +99,6 @@ export function invitationDesignStateFromKey(
     font: parsed.font || preset.font,
     decor: parsed.decor || fallbackDecor,
     sections: parseInvitationSections(key),
+    photos: parsePhotoAssignments(key),
   };
 }
