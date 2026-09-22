@@ -16,7 +16,7 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   const imagePrefix = `/uploads/images/${asset.invitationId}/`;
   const isEventOwnedImage = asset.type === "IMAGE"
     && asset.url.startsWith(imagePrefix)
-    && /^[0-9a-f-]{36}\\.webp$/.test(asset.url.slice(imagePrefix.length));
+    && /^[0-9a-f-]{36}\.webp$/.test(asset.url.slice(imagePrefix.length));
   // Only remove generated files in the verified event folder; never unlink
   // arbitrary URLs/legacy assets on behalf of an incoming client request.
   if (asset.url.startsWith("/uploads/music/") || isEventOwnedImage) {
