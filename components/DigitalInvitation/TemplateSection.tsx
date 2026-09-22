@@ -82,23 +82,23 @@ export default function TemplateCollection() {
     <section className="space-y-14 md:space-y-16">
       <div className="w-full border-b border-border/70 pb-7">
         <div className="mx-auto flex w-full max-w-[980px] flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
-        <div className="max-w-2xl">
-          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
-            {copy.eyebrow}
-          </p>
-          <h2 className="mt-4 font-[family-name:var(--font-dc-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
-            {copy.title}
-          </h2>
-          <p className="mt-3 max-w-xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65">
-            {copy.description}
-          </p>
-        </div>
-        <Button asChild size="sm" className="min-w-0 shrink-0 text-xs normal-case tracking-normal">
-          <Link href="/template-design">
-            {copy.all}
-            <ArrowUpRight className="h-3.5 w-3.5" />
-          </Link>
-        </Button>
+          <div className="max-w-2xl">
+            <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
+              {copy.eyebrow}
+            </p>
+            <h2 className="mt-4 font-[family-name:var(--font-dc-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
+              {copy.title}
+            </h2>
+            <p className="mt-3 max-w-xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65">
+              {copy.description}
+            </p>
+          </div>
+          <Button asChild size="sm" className="min-w-0 shrink-0 text-xs normal-case tracking-normal">
+            <Link href="/template-design">
+              {copy.all}
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
+          </Button>
         </div>
       </div>
 
