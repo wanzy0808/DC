@@ -30,6 +30,11 @@ const destinations = [
     en: { title: "Guestbook", description: "QR check-in and guest tracking on site." },
   },
   {
+    href: "/undangan-fisik",
+    id: { title: "Undangan Fisik", description: "Undangan cetak untuk momen istimewa." },
+    en: { title: "Printed Invitations", description: "Printed invitations for special occasions." },
+  },
+  {
     href: "/template-design",
     id: { title: "Koleksi Desain", description: "Jelajahi tema dan pratinjau undangan." },
     en: { title: "Design Collection", description: "Explore themes and invitation previews." },
@@ -139,7 +144,7 @@ export default function MarketingDoorNavigator() {
             <div className="mb-3 flex items-start justify-between gap-3 border-b border-primary/20 px-1 pb-3">
               <div>
                 <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">
-                  DC Organizer
+                  {isEnglish ? "Explore" : "Jelajahi"}
                 </p>
                 <p className="mt-1 font-[family-name:var(--font-dc-heading)] text-base text-foreground">
                   {pageLabel}
