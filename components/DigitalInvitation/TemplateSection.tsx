@@ -56,11 +56,7 @@ export default function TemplateCollection() {
       <div className="grid justify-items-center gap-8 md:grid-cols-3">
         {templates.map((template) => (
           <article key={template.key} className="group w-full min-w-0">
-            <Link
-              href={`/template-design?template=${encodeURIComponent(template.key)}`}
-              className="relative mx-auto block aspect-[0.72] w-full max-w-[270px] overflow-hidden rounded-[28px] border-2 border-[#111111] bg-white p-2 shadow-lg shadow-black/5 transition-transform duration-500 hover:-translate-y-1.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary dark:border-white dark:bg-[#111113] dark:shadow-black/20"
-              aria-label={`${copy.preview}: ${template.name}`}
-            >
+            <div className="relative mx-auto aspect-[0.72] w-full max-w-[270px] overflow-hidden rounded-[28px] border-2 border-[#111111] bg-white p-2 shadow-lg shadow-black/5 transition-transform duration-500 group-hover:-translate-y-1.5 dark:border-white dark:bg-[#111113] dark:shadow-black/20">
               <div className="relative h-full overflow-hidden rounded-[21px] bg-[#fcf7f6]">
                 {template.ready ? (
                   <TemplateCardCanvas templateKey={template.key} />
@@ -71,7 +67,12 @@ export default function TemplateCollection() {
               <span className="absolute left-4 top-4 border border-white/30 bg-black/45 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-white backdrop-blur-md">
                 {template.category}
               </span>
-            </Link>
+              <Link
+                href={`/template-design?template=${encodeURIComponent(template.key)}`}
+                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-primary"
+                aria-label={`${copy.preview}: ${template.name}`}
+              />
+            </div>
             <div className="mx-auto max-w-[270px] pt-5">
               <div className="flex items-baseline justify-between gap-3">
                 <h3 className="min-w-0 break-words font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
