@@ -1143,6 +1143,7 @@ Bukan melalui banyak warna/variant berbeda.
 
 ### 15.4 Surfaces/layout
 
+- Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
 - Semua halaman **marketing publik** memakai komponen dekorasi bersama: bunga `flower.png` pada kiri/kanan dan Rose glow dari `LandingFloralGlow`, serta animasi petal interaktif dari `WindRosePetals`. Landing `/` dan `/pagecontoh` serta frame `/d-invitation` merender layer di dalam scene masing-masing; halaman marketing lain merender melalui `PublicAtmosphere` agar tidak ada layer ganda. Reuse asset dan gerakan yang sudah disetujui, hormati reduced-motion. Dekorasi marketing ini tidak otomatis dipasang di Dashboard/Admin/Studio/checkout atau undangan publik milik pelanggan.
 - Musik latar marketing adalah **satu audio player persisten** di root layout: track dan volume/mute tidak restart setiap navigasi antarhalaman marketing; autoplay hanya jika browser mengizinkan, user bisa mute/play dan atur volume secara manual. Kontrol berada di kiri bawah serta tautan Instagram resmi DC Organizer di kanan bawah pada setiap halaman marketing. Untuk main frame, kedua kontrol tertanam pada bar footer; halaman marketing tanpa frame memakai floating control di tepi bawah. Jangan menduplikasi player, petals, atau tombol Instagram dalam satu halaman.
 - Halaman marketing `/d-invitation` memakai **main frame yang sama secara ukuran/proporsi visual dengan landing yang disetujui**: rounded Rose-border frame setinggi viewport dengan Navbar dan compact Footer di dalam frame, sedangkan semua section marketing berada dalam satu panel tengah yang scrollable mandiri (desktop dan mobile). Scroll halaman luar bukan penggerak utama konten; desain/copy, link, bahasa, tema, dan bagian yang sudah ada tetap dipertahankan. Section yang memasuki viewport panel scroll muncul lembut (opacity/translate, sekali per section); reduced-motion menampilkan konten tanpa gerakan. Perubahan ini khusus halaman `/d-invitation`, bukan perubahan landing `/` atau koreografi transisi Pintu yang sedang ditunda.
@@ -3679,3 +3680,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `e62d10156a3588104898b5d92cfd377bb7dbebb6`, `82e6d8e9a12367858b63ef4acedd6de7b45f24fd`, `4e5611287a5f8e892e82f8222918d9cf0f0a2e96`, `05558464820ceba8a29bddb9646b8cad326fe164`, `c612a848e0fad66e931aee372f410dc6ee8a597d`, `c6bd8ee820837d0dd27864433fe8a7432b9a8804`, `d68363d81a996217394703b281e58c4a3f7b4a0d`, `a0fdfb4c97a97d96ec75938a1e4cd0d7aa84213d`, `ff3d10fbe88562d945629827c9bfc4f5b551de4e`, `9179e7afadc1fd63f51d9449ac3488af2ab07200`, `807631bfd7a72431f84638e0848ffde1434801e1`.
 
 **Validasi:** Penulisan ke GitHub berhasil; build, CI, browser preview, screenshot/penilaian visual dan tes cross-route sesudah perubahan belum dijalankan/diamati. Browser dapat menolak autoplay sampai interaksi pertama; ini tidak boleh dipresentasikan sebagai bug player atau klaim autoplay selalu berhasil.
+
+
+---
+
+## 2026-09-22 — Digital Invitation hero: tall phone and wider text composition
+
+**Intent:** Owner melihat mockup smartphone pada Hero `/d-invitation` terlalu lebar seperti tablet, sementara kolom tulisan terasa sempit. Pertahankan isi undangan, animasi scroll dan arrival, serta main frame; ubah hanya rasio dan komposisi hero.
+
+**Implementation:** Pada `components/DigitalInvitation/HeroSection.tsx`, mockup dari max-width 430px / aspect-ratio 0.68 menjadi max-width 340px / aspect-ratio 9:19.5 agar lebih tinggi dan ramping; kolom desktop dari 0.92fr:1.08fr menjadi 1.18fr:0.82fr, menghapus batas sempit text wrapper dan memperlebar max-width heading/description. Responsive width tetap dibatasi oleh container; Pintu, landing, section lain, dataset dan API tidak disentuh. Keputusan proporsi dicatat di §15.4 dan `AGENTS.md`.
+
+**Commits:** `0fff90d0bb1fb4353f0927475754e9cfa48d6ec8` (hero proportions), `1f151eeb14849b36e211135e3b41ca47ef00d14c` (agent rules). Files: `components/DigitalInvitation/HeroSection.tsx`, `AGENTS.md`, `prd.md`.
+
+**Validation:** GitHub update berhasil; build, CI, browser preview, screenshot mobile/desktop **belum dijalankan atau diamati** untuk perubahan ini.
