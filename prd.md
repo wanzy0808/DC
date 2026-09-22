@@ -122,6 +122,12 @@ Dashboard onboarding untuk user umum hanya membutuhkan profil workspace seperti 
 
 Data event diisi ketika user membuat Rangkaian Acara.
 
+### 4.1a Konsistensi visual Login dan Daftar (22 September 2026)
+
+Masuk (`/login`) dan Daftar (dialog yang dibuka dari menu navbar maupun tombol Daftar di login) memakai identitas UI publik DC Organizer yang sama: tipografi Cinzel untuk heading, Fauna One untuk label/form, warna Rose sebagai aksen, permukaan `background/card` mengikuti light/dark, outline Rose, CTA Rose, dan kolom input serta tombol berbentuk pill sesuai token global `--dc-control-radius`. Kartu login lebar baca sekitar 480px di tengah halaman yang responsif; dialog pendaftaran lebar sekitar 490px dengan scroll internal ketika tinggi layar terbatas agar kolom, checkbox dan tombol dapat dijangkau di mobile. Navbar, footer, latar/kelopak global dan brand `BrandWordmark` tetap milik layout bersama; jangan menduplikasi dekorasi/pemutar musik atau mengubah landing Pintu.
+
+Kedua formulir memakai Google Icon dan kelas visual form yang sama melalui `components/Auth/`, mendukung ID sebagai bahasa default serta label EN lewat LanguageProvider, fokus keyboard yang terlihat, label input eksplisit, tombol lihat/sembunyikan kata sandi, serta pesan error `role="alert"`. Pendaftaran tetap meminta email, password minimal delapan karakter, konfirmasi password, Terms/Privacy consent dan pilihan newsletter seperti semula; layanan Google, respons API, verifikasi email, redirect `next` yang aman, dan role-based routing tetap dipertahankan. Tautan Daftar pada login harus benar-benar membuka dialog melalui `/login?register=1&next=...`; Masuk pada dialog mengarah kembali ke `/login` dan menutup panel asal agar menu burger tidak tertinggal di atas formulir. Jangan membuka Studio/area privat melalui perubahan visual ini.
+
 ### 4.2 System roles
 
 Role aplikasi yang tetap dapat digunakan untuk backoffice:
@@ -4170,3 +4176,20 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commits:** `5b90d96477fbcba89174ca5588049eb5b544da45`, `b0871868ae1361e7a62102951036e3975ae00926`, `19ea5bf98fa2f753b26aff4d8a18b241e8816f9f`, `fb4cc6825d183a80f2152ed10993279980a7f874`, `082db9970b91b5da658ac8040190cc360cb7362d`, `e535773dd256ea85449191d9f5ab1340df817b20`, `05a0b0e331256310109d475fbe0feeb497e9ea05`, `0aedb8aea6fc8cbd2abbd52bfb9e1c741204b0ad`, `ef8b69403d103b0af9f2c9c526afe4901e4f3877`, `901edd28756a0d0cae8f58ecfb7d04345c9bfd6b`.
 
 **Validasi:** GitHub Actions Build Validation **PASS** untuk penerapan musik di 10 tema dan integrasi Studio/marketing audio pada commit `167c5557813a5287dda9da598b119d2a47d9081c` ([run 35731068483](https://github.com/wanzy0808/DC/actions/runs/35731068483)). Perbaikan terakhir pada microcopy panel Musik (`a8ef28322be5ddbb711b59d066438cf60c619181`) menunggu run-nya; pengujian playback/autoplay/mobile di browser nyata dan status lisensi audio untuk distribusi komersial belum diverifikasi.
+
+
+---
+
+## 2026-09-22 — Login dan Daftar menyatu dengan gaya Rose publik
+
+**Permintaan:** Rapikan Login dan Daftar pada menu supaya tidak lagi terlihat berbeda dari style DC Organizer.
+
+**Temuan:** Halaman Login dan RegisterDialog sebelumnya memaksa `bg-white/text-black`, tombol Google dan submit netral bersudut kotak, border input netral sehingga dark mode tidak konsisten. Tautan Daftar pada login sebelumnya mengarah ke `/?register=1` tanpa handler landing yang sesuai; tombol Masuk pada dialog menu hanya menutup dialog tanpa menavigasi ke login.
+
+**Perubahan:** `components/Auth/GoogleIcon.tsx` dan `components/Auth/auth-styles.ts` dipakai bersama oleh Login dan RegisterDialog agar tombol, pill input, error dan pilihan provider seragam; form mengikuti token theme Light/Dark, font Cinzel/Fauna/DM Mono, Rose border dan CTA. Halaman login memiliki kartu responsif dengan glow ringan, tombol lihat/sembunyikan password dan entrance halus yang menghormati reduced motion. RegisterDialog menjadi dialog Rose responsif dengan max-height/scroll, label input, show/hide password/konfirmasi, consent, Google Sign-In dan link yang tetap bekerja. BurgerMenuContent memakai pill navigation dan menavigasi ke /login saat pengguna menekan Masuk dari dialog, termasuk mempertahankan `next` yang aman. `PublicContent` hanya melepas batas 75vw pada route /login agar kartu tidak menyempit di ponsel. Login + dialog membaca ID/EN dari LanguageProvider; API login/register, role, password validation, email verification, entitlement, Pintu dan halaman marketing lain tidak diubah.
+
+**File utama:** `app/login/page.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `components/Layout/Navbar/BurgerMenuContent.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Auth/GoogleIcon.tsx`, `components/Auth/auth-styles.ts`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Commits implementasi:** `f7475d7801d75bc400a657024fb598a95d429178`, `437b7b3b10354b25551089b3dd8554798cfd844c`, `4aba83b5f17ab3f65bf4db210fcc7080cfbbdbd0`, `ad2eb60727cc2836de97a51375bc9d79e7254f4f`, `f2056ef076ffcfe595ccfbb4fda4b15a19a0a448`, `af58cc7addb95710d5f0530c41c2a4179b049be0`.
+
+**Validasi:** Build GitHub Actions pada commit `ad2eb60727cc2836de97a51375bc9d79e7254f4f` selesai PASS. Pada commit login yang lebih awal (`4aba83b5...`) CI sempat gagal karena properti `onRegistered` belum disertakan pada dialog; properti tersebut ditambahkan pada commit berikutnya dan build PASS. Build untuk keseluruhan navigasi/width dan uji visual-browser/handset masih perlu diverifikasi; validasi login/registrasi end-to-end memerlukan server/database.
