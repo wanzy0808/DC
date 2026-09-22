@@ -204,7 +204,7 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
                 {showPassword ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
               </button>
             </div>
-            <p id="dc-register-password-hint" className="mt-1.5 text-xs text-muted-foreground">{t.minimum}</p>
+            <p id="dc-register-password-hint" className="mt-1.5 text-xs text-[#74646a] dark:text-[#74646a]">{t.minimum}</p>
           </div>
 
           <div>
@@ -265,7 +265,7 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
           {loading ? t.loading : t.submit}
         </Button>
 
-        <div className="space-y-3 border-t border-primary/15 pt-4 text-center font-[family-name:var(--font-dc-body)] text-sm text-muted-foreground">
+        <div className="space-y-3 border-t border-primary/15 pt-4 text-center font-[family-name:var(--font-dc-body)] text-sm text-[#74646a] dark:text-[#74646a]">
           <p>
             {t.haveAccount}{" "}
             <button
