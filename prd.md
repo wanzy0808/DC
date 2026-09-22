@@ -3728,3 +3728,14 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Implementation:** Hanya `components/DigitalInvitation/HeroSection.tsx` diubah secara visual: tambahkan `lg:-translate-x-4` ke wrapper copy dan `lg:translate-x-4` ke wrapper HP (masing-masing 16px, desktop saja). Ukuran grid, gap, font, rasio HP, konten, animasi kedatangan HP, frame, serta perilaku mobile tetap sama. Commit: `e7a30f5fda7b3c6cd0001991c36e03a43a2ee53e`.
 
 **Validation:** GitHub write berhasil; build/CI/browser preview belum dijalankan.
+
+
+---
+
+## 2026-09-22 — Digital Invitation: one divider below Hero
+
+**Owner feedback:** Dua garis horizontal terlihat antara Hero dan section Fitur di `/d-invitation`. Hero memakai `border-b`, sementara Fitur memakai `border-y`, sehingga dua border terlihat terpisah karena spacing section.
+
+**Change:** Hapus hanya `border-b border-border/70` dari section Hero di `components/DigitalInvitation/HeroSection.tsx`. Pertahankan border atas Fitur sebagai satu-satunya garis pemisah, border bawah Fitur, spacing, tata letak, HP, animasi, dan semua section lain. Commit: `12d6fef5218d4b9ab179a755ab50e49d6cec31fd`.
+
+**Validation:** GitHub write berhasil; build/CI/preview browser belum dijalankan.
