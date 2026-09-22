@@ -262,7 +262,7 @@ export default function InvitationDesigner() {
         </aside>
 
         <aside className="overflow-y-auto border-r border-border/70 bg-background p-5">
-          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={readyTemplates} />}
+          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
           {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
           {panel === "color" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
           {panel === "font" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
