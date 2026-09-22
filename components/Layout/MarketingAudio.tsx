@@ -22,6 +22,8 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isMarketing = isMarketingPath(pathname);
   const playerRef = useRef<HTMLAudioElement | null>(null);
+  const previewPlayerRef = useRef<HTMLAudioElement | null>(null);
+  const resumeMarketingRef = useRef(false);
   const transitionAudioRef = useRef<AudioContext | null>(null);
   const allowedRef = useRef(isMarketing);
   const manuallyMutedRef = useRef(false);
@@ -54,10 +56,30 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
     };
     player.addEventListener("play", onPlay);
     player.addEventListener("pause", onPause);
+    const onInvitationPlay = (event: Event) => {
+      const previewPlayer = (event as CustomEvent<{ player: HTMLAudioElement }>).detail?.player;
+      if (!previewPlayer || !allowedRef.current) return;
+      if (!previewPlayerRef.current) resumeMarketingRef.current = !player.paused;
+      previewPlayerRef.current = previewPlayer;
+      player.pause();
+    };
+    const onInvitationPause = (event: Event) => {
+      const previewPlayer = (event as CustomEvent<{ player: HTMLAudioElement }>).detail?.player;
+      if (!previewPlayer || previewPlayer !== previewPlayerRef.current) return;
+      previewPlayerRef.current = null;
+      if (resumeMarketingRef.current && allowedRef.current && !manuallyMutedRef.current) {
+        void player.play().catch(() => setSoundOn(false));
+      }
+      resumeMarketingRef.current = false;
+    };
+    window.addEventListener("dc-invitation-music-play", onInvitationPlay);
+    window.addEventListener("dc-invitation-music-pause", onInvitationPause);
     window.addEventListener("pointerdown", startOnGesture);
     window.addEventListener("keydown", startOnGesture);
     if (allowedRef.current) void player.play().catch(() => setSoundOn(false));
     return () => {
+      window.removeEventListener("dc-invitation-music-play", onInvitationPlay);
+      window.removeEventListener("dc-invitation-music-pause", onInvitationPause);
       window.removeEventListener("pointerdown", startOnGesture);
       window.removeEventListener("keydown", startOnGesture);
       player.removeEventListener("play", onPlay);
