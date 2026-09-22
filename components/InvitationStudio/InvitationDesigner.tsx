@@ -16,7 +16,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { invitationTemplates } from "@/lib/templates/catalog";
+import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import {
   invitationFonts,
   invitationPalettes,
@@ -49,6 +49,8 @@ import type {
 } from "@/components/InvitationStudio/designer-types";
 
 export default function InvitationDesigner() {
+  const catalog = useTemplateCatalog();
+  const readyTemplates = catalog.filter((item) => item.ready);
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [preview, setPreview] = useState(false);
@@ -107,8 +109,8 @@ export default function InvitationDesigner() {
   }, []);
 
   const template =
-    invitationTemplates.find((item) => item.key === design.template) ||
-    invitationTemplates[0];
+    readyTemplates.find((item) => item.key === design.template) ||
+    readyTemplates[0];
   const palette = invitationPalettes[design.palette];
   const fontPair = invitationFonts[design.font];
   const designKey = makeInvitationDesignStateKey(design);
@@ -121,6 +123,10 @@ export default function InvitationDesigner() {
   }
 
   function selectTemplate(templateKey: string) {
+    if (!readyTemplates.some((item) => item.key === templateKey)) {
+      setNotice("Template ini masih menunggu integrasi renderer.");
+      return;
+    }
     const preset = invitationTemplatePresets[templateKey] || invitationTemplatePresets["botanical-ivory"];
     change({
       template: templateKey,
@@ -219,7 +225,7 @@ export default function InvitationDesigner() {
             INVITATION STUDIO
           </p>
           <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-            {identity.label} · {invitation?.title || "Acara"} · {template.name}
+            {identity.label} · {invitation?.title || "Acara"} · {template?.name || "Template"}
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -256,7 +262,7 @@ export default function InvitationDesigner() {
         </aside>
 
         <aside className="overflow-y-auto border-r border-border/70 bg-background p-5">
-          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} />}
+          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={readyTemplates} />}
           {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
           {panel === "color" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
           {panel === "font" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
