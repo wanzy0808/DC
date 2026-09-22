@@ -219,3 +219,8 @@ pnpm db:deploy
 ## Left-side mini-door navigation
 
 The public marketing routes `/`, `/pagecontoh`, `/event-planner`, `/d-invitation`, `/guestbook`, `/undangan-fisik`, and `/template-design` share `components/Layout/MarketingDoorNavigator.tsx` through `app/layout.tsx`. A compact Rose mini-door at the left edge opens a descriptive, bilingual destination picker. The active page is marked, and Escape, outside click, or the close button dismisses the panel. On small screens it opens above the trigger and its list scrolls independently. Normal marketing route links reuse the existing image-free Rose `PortalTransition`. The widget does not render on Dashboard, Studio, customer invitation pages, or the separate `/jiplak` experiment; it does not alter the primary landing doors.
+
+
+## Guestbook & Printed Invitation framed marketing pages
+
+`/guestbook` and `/undangan-fisik` now share the approved public marketing viewport layout: 90vw Rose frame, embedded Navbar/footer, one floral/rose-petal background, fixed audio/Instagram controls in the compact frame footer, and a scrollable middle panel with a responsive centered content column capped at 1100px. Both reuse `EventPlanner/ScrollReveal` and `DigitalInvitation/MarketingTextReveal` with an inner-scroll root for repeatable section/text entrances; reduced-motion disables the reveal. Guestbook retains interactive feature tabs, package, reviews, and FAQ. Printed invitations retain the illustration, steps, in-panel process/consultation anchors and WhatsApp CTA. The global layout suppresses duplicate chrome/ambient effects on both framed routes. No changes were made to the approved landing Pintu or customer invitation renderer.
