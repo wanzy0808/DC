@@ -106,6 +106,7 @@ export default function PortalTransition() {
   useEffect(() => {
     if (!pending.current || pending.current.path !== pathname || phase !== "hold") return;
     const timer = window.setTimeout(() => {
+      document.documentElement.dataset.dcMarketingTransition = "reveal";
       setPhase("reveal");
       // Destination sections begin assembling in sync with the opening veil.
       window.dispatchEvent(new Event("dc-marketing-reveal"));
