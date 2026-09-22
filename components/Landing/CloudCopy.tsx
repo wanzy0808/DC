@@ -60,10 +60,10 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           {/* A single translucent cloud silhouette prevents overlapping circles in dark mode. */}
-          <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-background/30 dark:text-[#241b20]/80" aria-hidden="true" initial={false} animate={{ opacity: cloudVisible ? 1 : 0 }} transition={{ duration: 0.2 }}>
+          <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-[#F8E9ED]/95 dark:text-[#302126]/95" aria-hidden="true" initial={false} animate={{ opacity: cloudVisible ? 1 : 0 }} transition={{ duration: 0.2 }}>
             <path d="M70 251 C36 249 22 221 30 193 C8 166 20 130 51 117 C52 83 80 60 112 65 C133 28 178 21 208 43 C242 8 298 24 307 66 C346 66 369 95 367 126 C399 148 400 185 374 208 C377 240 344 262 311 249 C282 271 251 260 230 250 C202 263 170 255 153 248 C122 269 88 263 70 251 Z" fill="currentColor" />
           </motion.svg>
-          {/* One outer contour, with no opaque fill or internal circle borders. */}
+          {/* One continuous rose outline around the filled cloud. */}
           <motion.svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute -inset-[5%] h-[110%] w-[110%] overflow-visible text-primary/65" fill="none" aria-hidden="true" initial={false} animate={{ opacity: cloudVisible ? 1 : 0 }} transition={{ duration: 0.15 }}>
             <motion.path initial={false} animate={{ pathLength: assemble ? [0, 0, 1] : cloudVisible ? 1 : 0 }} transition={{ duration: assemble ? 1.3 : 0.15, times: [0, 0.5, 1], ease: "easeOut" }} d="M70 251 C36 249 22 221 30 193 C8 166 20 130 51 117 C52 83 80 60 112 65 C133 28 178 21 208 43 C242 8 298 24 307 66 C346 66 369 95 367 126 C399 148 400 185 374 208 C377 240 344 262 311 249 C282 271 251 260 230 250 C202 263 170 255 153 248 C122 269 88 263 70 251 Z" stroke="currentColor" strokeWidth="1.3" vectorEffect="non-scaling-stroke" />
           </motion.svg>
