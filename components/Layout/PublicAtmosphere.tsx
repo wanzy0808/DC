@@ -16,7 +16,7 @@ export default function PublicAtmosphere() {
   const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
 
   // Framed pages own their ambient layers inside their isolated scene; don't double them here.
-  if (isPrivateArea || isLanding || pathname === "/d-invitation") return null;
+  if (isPrivateArea || isLanding || pathname === "/d-invitation" || pathname === "/template-design") return null;
   if (isMarketingPath(pathname)) return <PublicMarketingAtmosphere />;
 
   // Preserve existing background behavior for unrelated public routes.
@@ -51,14 +51,14 @@ export function PublicContent({ children }: { children: ReactNode }) {
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
   const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
-  const isDigitalInvitation = pathname === "/d-invitation";
+  const isFramedMarketing = pathname === "/d-invitation" || pathname === "/template-design";
 
   return (
     <main
       className={`${arrivalPath === pathname ? "dc-portal-arrival " : ""}${
         isPrivateArea
           ? "w-full min-h-screen"
-          : isLanding || isDigitalInvitation
+          : isLanding || isFramedMarketing
             ? "public-content landing-page w-full mx-auto flex-1 flex flex-col relative z-10"
             : "public-content public-page w-[75vw] max-w-[75vw] mx-auto flex-1 flex flex-col relative z-10"
       }`}
