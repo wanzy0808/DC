@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import PuzzleAssemble from "@/components/DigitalInvitation/PuzzleAssemble";
+import MarketingTextReveal from "@/components/DigitalInvitation/MarketingTextReveal";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
@@ -87,7 +88,12 @@ export default function DigitalInvitationPage() {
           aria-label={locale === "en" ? "Digital invitation page content" : "Konten halaman undangan digital"}
           className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <div className="mx-auto flex w-[88%] max-w-full flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16">
+          <MarketingTextReveal
+            className="mx-auto flex w-[88%] max-w-[1100px] flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16"
+            scrollRoot={scrollRoot}
+            ready={assembleReady}
+            locale={locale}
+          >
             <HeroSection ready={assembleReady} />
             <div className="dc-invitation-other-sections flex flex-col gap-20 md:gap-24">
               <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04}>
@@ -106,6 +112,7 @@ export default function DigitalInvitationPage() {
                   description={copy.packageDescription}
                   packageKeys={["INVITATION_BASIC"]}
                   roundedCard
+                  wide
                   note={copy.packageNote}
                 />
               </PuzzleAssemble>
@@ -119,13 +126,14 @@ export default function DigitalInvitationPage() {
               </PuzzleAssemble>
               <PuzzleAssemble ready={assembleReady} direction="bottom" scrollRoot={scrollRoot} delay={0.07}>
                 <FaqSection
+                  wide
                   title={copy.faqTitle}
                   description={copy.faqDescription}
                   items={digitalInvitationFaq[locale]}
                 />
               </PuzzleAssemble>
             </div>
-          </div>
+          </MarketingTextReveal>
         </main>
         <PuzzleAssemble ready={assembleReady} direction="bottom" delay={0.02} className="shrink-0"><MarketingFrameFooter /></PuzzleAssemble>
       </div>
