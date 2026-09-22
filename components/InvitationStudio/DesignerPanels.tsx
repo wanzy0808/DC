@@ -82,12 +82,14 @@ export function TemplatePanel({
         description="Pilih template. Komposisi, palet awal, dan canvas langsung berubah."
       />
       <div className="mt-5 grid gap-3">
-        {templates.filter((item) => item.ready).map((item) => (
+        {templates.map((item) => (
           <button
             type="button"
             key={item.key}
             onClick={() => onSelect(item.key)}
-            className={`overflow-hidden rounded-xl border text-left transition ${
+            disabled={!item.ready}
+            aria-label={item.ready ? item.name : `${item.name} · pratinjau saja, belum bisa digunakan`}
+            className={`overflow-hidden rounded-xl border text-left transition disabled:cursor-not-allowed disabled:opacity-65 ${
               selected === item.key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border hover:border-primary/40"
@@ -112,6 +114,7 @@ export function TemplatePanel({
               <span className="mt-1 block text-xs leading-4 text-muted-foreground">
                 {item.description}
               </span>
+              {!item.ready && <span className="mt-2 block text-[11px] text-primary">Preview designer · belum dapat digunakan</span>}
             </span>
           </button>
         ))}
