@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Music2, Volume2, VolumeX } from "lucide-react";
 
 export type InvitationMusicHandle = { playOnOpen: () => void };
@@ -53,15 +53,9 @@ const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
       void audio.play().catch(() => setPlaying(false));
     };
 
-    // React 19 accepts refs on components; forwardRef also works with older clients.
-    useEffect(() => {
-      if (ref && typeof ref !== "function") ref.current = {
-        playOnOpen: () => { if (!preview) start(); },
-      };
-      return () => {
-        if (ref && typeof ref !== "function") ref.current = null;
-      };
-    });
+    useImperativeHandle(ref, () => ({
+      playOnOpen: () => { if (!preview) start(); },
+    }));
 
     const toggle = () => {
       const audio = audioRef.current;
