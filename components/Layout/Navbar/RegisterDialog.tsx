@@ -245,7 +245,7 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
               className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[var(--primary)]"
             />
             <span className="leading-relaxed">
-              {t.terms} <span className="font-medium text-primary">{t.termsName}</span> {t.and} <span className="font-medium text-primary">{t.privacy}</span>.
+              {t.terms} <span className="font-medium text-primary">{t.termsName}</span> {t.and} <Link href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline decoration-primary/40 underline-offset-4 transition-colors hover:decoration-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary" onClick={(event) => event.stopPropagation()}>{t.privacy}</Link>.
             </span>
           </label>
           <label className="flex cursor-pointer items-start gap-3">
