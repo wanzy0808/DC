@@ -126,11 +126,17 @@ Data event diisi ketika user membuat Rangkaian Acara.
 
 Masuk (`/login`) dan Daftar (dialog yang dibuka dari menu navbar maupun tombol Daftar di login) memakai identitas UI publik DC Organizer yang sama: tipografi Cinzel untuk heading, Fauna One untuk label/form, warna Rose sebagai aksen, permukaan `background/card` mengikuti light/dark, outline Rose, CTA Rose, dan kolom input serta tombol berbentuk pill sesuai token global `--dc-control-radius`. Kartu login lebar baca sekitar 480px di tengah halaman yang responsif; dialog pendaftaran lebar sekitar 490px dengan scroll internal ketika tinggi layar terbatas agar kolom, checkbox dan tombol dapat dijangkau di mobile. Navbar, footer, latar/kelopak global dan brand `BrandWordmark` tetap milik layout bersama; jangan menduplikasi dekorasi/pemutar musik atau mengubah landing Pintu.
 
-Kedua formulir memakai Google Icon dan kelas visual form yang sama melalui `components/Auth/`, mendukung ID sebagai bahasa default serta label EN lewat LanguageProvider, fokus keyboard yang terlihat, label input eksplisit, tombol lihat/sembunyikan kata sandi, serta pesan error `role="alert"`. Pendaftaran tetap meminta email, password minimal delapan karakter, konfirmasi password, Terms/Privacy consent dan pilihan newsletter seperti semula; layanan Google, respons API, verifikasi email, redirect `next` yang aman, dan role-based routing tetap dipertahankan. Tautan Daftar pada login harus benar-benar membuka dialog melalui `/login?register=1&next=...`; Masuk pada dialog mengarah kembali ke `/login` dan menutup panel asal agar menu burger tidak tertinggal di atas formulir. Jangan membuka Studio/area privat melalui perubahan visual ini.
+Kedua formulir memakai Google Icon dan kelas visual form yang sama melalui `components/Auth/`, mendukung ID sebagai bahasa default serta label EN lewat LanguageProvider, fokus keyboard yang terlihat, label input eksplisit, tombol lihat/sembunyikan kata sandi, serta pesan error `role="alert"`. Pendaftaran tetap meminta email, password minimal delapan karakter, konfirmasi password, Terms/Privacy consent dan pilihan newsletter seperti semula; layanan Google, respons API, verifikasi email, redirect `next` yang aman, dan role-based routing tetap dipertahankan. Masuk dan Daftar dari burger menu harus membuka dialog tanpa berpindah halaman. Tautan login/register lama (mis. `/login?register=1&next=...`) tetap berfungsi melalui redirect ke beranda dengan query `auth=register`/`auth=login` yang memunculkan dialog bersama; berpindah Masuk ↔ Daftar di dalam dialog tidak boleh membuat burger menu tertinggal. Jangan membuka Studio/area privat melalui perubahan visual ini.
 
 ### 4.1b Shared auth component styling refinement (22 September 2026)
 
 Login dan Daftar harus terlihat sebagai satu keluarga komponen, bukan sekadar memakai warna yang sama. `components/Auth/auth-styles.ts` menjadi sumber kelas bersama untuk card surface, decorative Rose eyebrow, title, description, label, field, password-toggle, Google action, separator, error, submit, secondary link dan consent/choice box. Login dan Register memakai ritme spacing, tipografi, outline Rose, radius, shadow dan state Light/Dark yang sama. Dialog Daftar tetap dapat scroll di layar pendek dan close `X` tetap mendapat ruang. Perubahan visual tidak boleh mengubah endpoint auth, Google OAuth, safe `next` redirect, verifikasi email, validasi password/Terms, atau role routing.
+
+### 4.1c Login/Daftar sebagai dialog terpusat (22 September 2026)
+
+Tombol **Masuk** dan **Daftar** di burger menu marketing/public membuka modal bersama pada halaman yang sedang dilihat, bukan membuka halaman Login tersendiri. Dialog berada di global `components/Auth/AuthDialogHost.tsx` sekali dari root layout di luar subtree burger, sehingga menutup burger tidak me-unmount dialog. `LoginDialog.tsx` mempertahankan login email/password, Google OAuth, role-based redirect, error server dan toggle password; `RegisterDialog.tsx` tetap punya ketentuan password, consent dan registrasi asli. Aksi link silang Masuk ↔ Daftar berpindah isi dialog yang sama; setelah mendaftar berhasil, tampilkan pemberitahuan verifikasi email pada dialog Masuk. URL lama `/login`, `/login?register=1`, dan `/login?error=google_...` tetap menjadi entry point kompatibel: redirect ke `/?auth=login|register&next=...` untuk membuka popup; `next` harus disanitasi sebagai path internal sebelum dipakai. Jangan mengganti API/auth callback maupun memberikan akses private dari UI saja.
+
+Popup mengikuti viewport, bukan koordinat parent navbar: kelas visual `authCardClass` TIDAK boleh menimpa `position:fixed` milik `DialogContent`. Pada desktop letakkan modal di pusat layar, gunakan padding dan gap yang lebih ringkas untuk Daftar dan `max-height` relatif terhadap `dvh` dengan scroll **di dalam dialog** jika layar pendek. Pada mobile sisakan ruang tepi dan pastikan tombol, consent, maupun close X tetap dapat diakses. Hindari dua popup atau overlay bertumpuk dengan menempatkan satu dialog owner di root layout.
 
 ### 4.2 System roles
 
@@ -4210,3 +4216,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Files:** `components/Auth/auth-styles.ts`, `app/login/page.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
 
 **Validasi:** GitHub Actions diperiksa setelah perubahan; pengujian visual localhost pada ukuran desktop/mobile belum dilakukan dari sesi ini.
+
+
+---
+
+## 2026-09-22 — Login dan Daftar sebagai dialog yang dipusatkan
+
+**Permintaan:** Login tidak perlu lagi menjadi page sendiri seperti sebelumnya; menu Masuk harus tampil seperti dialog Daftar, dan popup Daftar di desktop jangan jatuh terlalu ke bawah.
+
+**Implementasi:** `components/Auth/LoginDialog.tsx` memindahkan UI/form login ke popup tanpa mengubah endpoint atau login Google, dan `components/Auth/AuthDialogHost.tsx` menjadi satu pengelola dialog persistent dari `app/layout.tsx`. `BurgerMenuContent.tsx` membuka Login/Daftar melalui interaksi lokal yang menutup burger tetapi tidak mengganti route. `app/login/page.tsx` menjadi redirect kompatibilitas ke beranda dengan `?auth=login|register`, `next` yang aman dan error Google agar semua link existing tetap membuka dialog, bukan halaman terpisah. Switching dua mode dan pesan verifikasi registrasi kini tampil dalam dialog yang sama. `RegisterDialog.tsx` menerima prop `next` dari host dan mengurangi spacing/padding desktop sambil mempertahankan scroll internal pada layar pendek. Penyebab popup Daftar turun, yaitu `relative` di `authCardClass` yang meng-override `DialogContent.fixed`, dihapus. Pintu landing, section dan autentikasi server tidak diubah.
+
+**Files:** `components/Auth/auth-styles.ts`, `components/Auth/LoginDialog.tsx`, `components/Auth/AuthDialogHost.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `components/Layout/Navbar/BurgerMenuContent.tsx`, `app/layout.tsx`, `app/login/page.tsx`, `prd.md`, `AGENTS.md`, `README.md`.
+
+**Validasi:** GitHub Actions CI diperiksa pada commit final; visual dan perilaku modal di browser localhost desktop/mobile harus diuji setelah sync.
