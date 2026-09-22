@@ -43,7 +43,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
   const isJiplak = pathname === "/jiplak";
-  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/pagecontoh" || pathname === "/d-invitation"));
+  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design"));
   const { messages } = useLanguage();
   const { footer } = messages;
 
