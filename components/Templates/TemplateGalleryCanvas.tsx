@@ -35,7 +35,7 @@ export function TemplateCanvas({
 }
 
 /** Lazily render the actual Studio canvas for each visible card (not a stock-image mockup). */
-export function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
+export function TemplateCardCanvas({ templateKey, phone = false }: { templateKey: string; phone?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -60,11 +60,16 @@ export function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
   }, [visible]);
 
   return (
-    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-background" aria-hidden="true" inert>
+    <div
+      ref={root}
+      className={phone ? "relative h-full w-full overflow-hidden bg-background" : "relative h-[340px] w-full overflow-hidden bg-background"}
+      aria-hidden="true"
+      inert
+    >
       {visible ? (
         <div
-          className="pointer-events-none absolute left-1/2 top-[-112px] w-[390px]"
-          style={{ transform: "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
+          className={phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-112px] w-[390px]"}
+          style={{ transform: phone ? "translateX(-50%) scale(0.55)" : "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
         >
           <TemplateCanvas templateKey={templateKey} />
         </div>
