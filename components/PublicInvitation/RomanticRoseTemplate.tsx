@@ -1,0 +1,282 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { CalendarDays, ChevronDown, Gift, Heart, MapPin, Music2 } from "lucide-react";
+import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import { parseDesignKey } from "@/lib/templates/design";
+import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
+
+export const romanticRoseManifest = {
+  key: "romantic-rose",
+  name: "Romantic Rose",
+  categories: ["WEDDING"],
+  sections: ["cover", "greeting", "identity", "event", "dateTime", "gallery", "countdown", "location", "rsvp", "wishes", "gift", "closing", "footer"],
+  defaultOrder: ["cover", "greeting", "identity", "event", "dateTime", "gallery", "countdown", "location", "rsvp", "wishes", "gift", "closing", "footer"],
+  optional: ["gallery", "rsvp", "wishes", "gift"],
+  customization: { photos: true, cover: true, music: true, sections: ["rsvp", "wishes", "gift"], palette: false, fonts: false, order: false },
+  animation: { envelope: true, respectReducedMotion: true },
+  assets: { photos: "invitation.assets", fonts: ["Cinzel", "Fauna One"] },
+  preview: { shortNames: true, longNames: true, withoutPhoto: true, manyPhotos: true, optionalSections: true },
+} as const;
+
+type RoseInvitation = {
+  slug: string;
+  title: string;
+  groomName: string;
+  brideName: string;
+  venue: string;
+  address?: string | null;
+  mapUrl?: string | null;
+  timezone: string;
+  eventDate: Date | string;
+  ceremonyTime: string | null;
+  receptionTime: string | null;
+  description: string | null;
+  templateKey: string;
+  musicUrl?: string | null;
+  giftBankName?: string | null;
+  giftAccountName?: string | null;
+  giftAccountNumber?: string | null;
+  assets: { id: string; type: "IMAGE" | "AUDIO"; url: string; title: string | null }[];
+};
+
+function readableDate(value: Date | string, timezone: string) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Tanggal belum ditentukan";
+  return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: timezone }).format(date);
+}
+
+function daysRemaining(value: Date | string, now: number) {
+  const date = new Date(value).getTime();
+  if (!Number.isFinite(date)) return null;
+  const diff = Math.max(0, date - now);
+  return {
+    days: Math.floor(diff / 86400000),
+    hours: Math.floor((diff / 3600000) % 24),
+    minutes: Math.floor((diff / 60000) % 60),
+    seconds: Math.floor((diff / 1000) % 60),
+  };
+}
+
+function RoseHeading({ eyebrow, children }: { eyebrow: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-7 text-center">
+      <p className="mb-3 text-[10px] uppercase tracking-[0.32em] text-[#ad6b7e]">{eyebrow}</p>
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
+      <span className="mx-auto mt-4 block h-px w-16 bg-[#d8a7b3]" />
+    </div>
+  );
+}
+
+function RosePhoto({ url, alt, className }: { url?: string; alt: string; className: string }) {
+  return url ? (
+    <img src={url} alt={alt} className={className} loading="lazy" />
+  ) : (
+    <div role="img" aria-label={alt} className={className + " flex items-center justify-center bg-gradient-to-br from-[#f6dbe1] via-[#fdf7f4] to-[#deb4c1]"}>
+      <Heart className="h-10 w-10 text-[#c58a9c]/70" strokeWidth={1} />
+    </div>
+  );
+}
+
+/**
+ * One shared presentation template; invitation/event/asset data stays per invitation.
+ * Preview uses the same section visibility as the public renderer.
+ * Wishes remains an explicit non-submitting placeholder until the shared Wishes API exists.
+ */
+export default function RomanticRoseTemplate({
+  invitation,
+  preview = false,
+  sections: sectionOverride,
+  coverUrl,
+}: {
+  invitation: RoseInvitation;
+  preview?: boolean;
+  sections?: InvitationSections;
+  coverUrl?: string;
+}) {
+  const [opened, setOpened] = useState(false);
+  const [now, setNow] = useState<number | null>(null);
+  const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
+  const photos = invitation.assets.filter((item) => item.type === "IMAGE");
+  const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor;
+  const cover = configuredCover && photos.some((item) => item.url === configuredCover)
+    ? configuredCover
+    : photos[0]?.url ?? (configuredCover?.startsWith("/uploads/") ? configuredCover : undefined);
+  const groomPhoto = photos.find((item) => item.title?.toLowerCase().startsWith("pria-"))?.url ?? photos[1]?.url ?? cover;
+  const bridePhoto = photos.find((item) => item.title?.toLowerCase().startsWith("wanita-"))?.url ?? photos[2]?.url ?? cover;
+  const displayName = [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ");
+  const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
+  const countdown = daysRemaining(invitation.eventDate, now ?? 0);
+  const music = invitation.musicUrl || invitation.assets.find((item) => item.type === "AUDIO")?.url;
+  const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
+  const scrollHint = <ChevronDown className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
+
+  useEffect(() => {
+    if (!opened) return;
+    setNow(Date.now());
+    const interval = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(interval);
+  }, [opened]);
+
+  return (
+    <main className="relative isolate min-h-[760px] overflow-hidden bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]">
+      {!opened ? (
+        <section className="relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
+          <div className="pointer-events-none absolute -left-20 top-10 h-56 w-56 rounded-full border border-white/60" />
+          <div className="pointer-events-none absolute -right-20 bottom-10 h-64 w-64 rounded-full border border-white/70" />
+          <p className="mb-7 text-[10px] uppercase tracking-[0.3em] text-[#8e586d]">The wedding invitation</p>
+          <div className="relative w-full max-w-[300px] drop-shadow-[0_24px_40px_rgba(119,56,80,0.21)]">
+            <div className="absolute inset-x-0 top-0 h-1/2 origin-top [clip-path:polygon(0_0,100%_0,50%_100%)] bg-[#d8a0b0] shadow-xl" />
+            <div className="relative mt-2 flex min-h-[345px] flex-col items-center justify-center border border-[#dbadba] bg-[#fffdfb] p-5 shadow-[inset_0_0_0_7px_#f9e9ed]">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-[#ad7889]">Untuk yang terkasih</p>
+              <span className="my-6 grid h-12 w-12 place-items-center rounded-full border border-[#d9a7b4] text-[#a76b80]"><Heart className="h-5 w-5" /></span>
+              <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl leading-relaxed text-[#713b50]">{displayName || "Undangan Pernikahan"}</h1>
+              <p className="mt-5 text-xs text-[#966a7c]">{eventDate}</p>
+            </div>
+            <div className="relative -mt-9 h-24 bg-[#edc6d0] [clip-path:polygon(0_0,50%_55%,100%_0,100%_100%,0_100%)]" aria-hidden />
+            <span className="absolute bottom-6 left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-4 border-[#edc6d0] bg-[#b7798d] text-white shadow-md"><Heart className="h-5 w-5" fill="currentColor" /></span>
+          </div>
+          <p className="mt-8 text-xs leading-6 text-[#815768]">Dengan hangat kami mengundang Anda<br />untuk merayakan hari istimewa kami.</p>
+          <button type="button" onClick={() => setOpened(true)} className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
+            Buka Undangan
+          </button>
+          {preview && <p className="mt-4 text-[11px] text-[#8e586d]">Preview · foto dan isi mengikuti undangan ini</p>}
+        </section>
+      ) : (
+        <div className="mx-auto max-w-2xl">
+          <section className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
+            <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" className="h-full w-full object-cover" /></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
+            <div className="relative z-10 flex w-full flex-col items-center">
+              <p className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">The wedding of</p>
+              <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || invitation.title}</h1>
+              <div className="mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
+                <RosePhoto url={cover} alt="Foto sampul pasangan" className="aspect-[3/4] w-full object-cover" />
+              </div>
+              <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
+              {scrollHint}
+            </div>
+          </section>
+
+          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+            <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
+            <p className="mx-auto max-w-md text-sm leading-8 text-[#765460]">{invitation.description || "Kami mengundang Anda untuk hadir dan berbagi kebahagiaan dalam perayaan pernikahan kami."}</p>
+          </section>
+
+          <section className="bg-[#f8eef0] px-7 py-20">
+            <RoseHeading eyebrow="The two of us">Mempelai</RoseHeading>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="min-w-0 text-center">
+                <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" className="mx-auto aspect-[3/4] w-full rounded-t-full rounded-b-xl object-cover shadow-lg" />
+                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.groomName || "Mempelai pertama"}</h3>
+              </div>
+              <div className="min-w-0 text-center">
+                <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" className="mx-auto aspect-[3/4] w-full rounded-t-full rounded-b-xl object-cover shadow-lg" />
+                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.brideName || "Mempelai kedua"}</h3>
+              </div>
+            </div>
+          </section>
+
+          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+            <RoseHeading eyebrow="Save the date">Detail Acara</RoseHeading>
+            <p className="text-sm leading-7 text-[#765460]">{invitation.title || "Perayaan Pernikahan"}</p>
+            <p className="mt-3 text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</p>
+          </section>
+
+          <section className="bg-[#f8eef0] px-8 py-20 text-center">
+            <RoseHeading eyebrow="A day to remember">Tanggal & Waktu</RoseHeading>
+            <div className="mx-auto flex max-w-sm flex-col items-center gap-3 rounded-3xl border border-[#e7cbd3] bg-white/70 px-6 py-9">
+              <CalendarDays className="h-6 w-6 text-[#a65e69]" />
+              <p className="font-[family-name:var(--font-dc-heading)] text-xl">{eventDate}</p>
+              {invitation.ceremonyTime && <p className="text-sm">Mulai: {invitation.ceremonyTime}</p>}
+              {invitation.receptionTime && <p className="text-sm">Selesai: {invitation.receptionTime === "END" ? "- end" : invitation.receptionTime}</p>}
+              <p className="text-xs text-[#916f7a]">{invitation.timezone || "Asia/Jakarta"}</p>
+            </div>
+          </section>
+
+          {photos.length > 0 && (
+            <section className="bg-[#fffaf8] px-6 py-20">
+              <RoseHeading eyebrow="Our memories">Galeri Foto</RoseHeading>
+              <div className="grid grid-cols-2 gap-3">
+                {photos.map((photo, index) => (
+                  <div key={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
+                    <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section className="bg-[#f8eef0] px-8 py-20 text-center">
+            <RoseHeading eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
+            {now !== null && countdown ? (
+              <div className="grid grid-cols-4 gap-2">
+                {([["Hari", countdown.days], ["Jam", countdown.hours], ["Menit", countdown.minutes], ["Detik", countdown.seconds]] as const).map(([label, value]) => (
+                  <div key={label} className="rounded-xl border border-[#e8cbd3] bg-white/85 p-2">
+                    <p className="font-[family-name:var(--font-dc-heading)] text-xl text-[#7b465a]">{String(value).padStart(2, "0")}</p>
+                    <p className="mt-1 text-[10px] text-[#906978]">{label}</p>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
+          </section>
+
+          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+            <RoseHeading eyebrow="Find your way">Lokasi</RoseHeading>
+            <MapPin className="mx-auto mb-3 h-6 w-6 text-[#a65e69]" />
+            <h3 className="text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</h3>
+            {invitation.address && <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#765460]">{invitation.address}</p>}
+            {invitation.mapUrl && (
+              <a href={invitation.mapUrl} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#a65e69] px-6 py-3 text-sm text-white hover:bg-[#8e4d5d]">
+                <MapPin className="h-4 w-4" /> Buka Google Maps
+              </a>
+            )}
+          </section>
+
+          {sections.rsvp && (
+            <section className="bg-[#f8eef0] px-5 py-20">
+              <RoseHeading eyebrow="Your presence means so much">Konfirmasi Kehadiran</RoseHeading>
+              {preview ? (
+                <div className="rounded-2xl border border-[#e8cbd3] bg-white/80 p-6 text-center text-sm text-[#765460]">Form RSVP akan tersedia di undangan yang sudah dipublikasikan.</div>
+              ) : (
+                <RsvpForm slug={invitation.slug} eventDate={invitation.eventDate} venue={invitation.venue} title={invitation.title || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+              )}
+            </section>
+          )}
+
+          {sections.wishes && (
+            <section className="bg-[#fffaf8] px-7 py-20 text-center">
+              <RoseHeading eyebrow="A little note of love">Ucapan & Doa</RoseHeading>
+              <p className="mx-auto max-w-sm text-sm leading-7 text-[#765460]">Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia.</p>
+            </section>
+          )}
+
+          {sections.gift && hasGift && (
+            <section className="bg-[#f8eef0] px-7 py-20 text-center">
+              <RoseHeading eyebrow="With gratitude">Tanda Kasih</RoseHeading>
+              <Gift className="mx-auto h-6 w-6 text-[#a65e69]" />
+              <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-[#e8cbd3] bg-white/85 p-6">
+                <p className="text-sm text-[#916f7a]">{invitation.giftBankName}</p>
+                <p className="mt-2 text-sm font-semibold">{invitation.giftAccountName}</p>
+                <p className="mt-2 break-all font-[family-name:var(--font-dc-heading)] text-lg">{invitation.giftAccountNumber}</p>
+                {invitation.giftAccountNumber && <button type="button" onClick={() => navigator.clipboard?.writeText(invitation.giftAccountNumber || "")} className="mt-5 min-h-10 rounded-full border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
+              </div>
+            </section>
+          )}
+
+          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+            <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
+            <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
+            <p className="mx-auto max-w-sm text-sm leading-8 text-[#765460]">Kehadiran dan doa baik Anda berarti bagi kami. Sampai bertemu di hari bahagia!</p>
+            <p className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
+          </section>
+
+          <footer className="flex flex-col items-center gap-4 border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-8 text-center">
+            {music && <div className="flex items-center gap-2 text-xs text-[#7b465a]"><Music2 className="h-4 w-4" /><audio src={music} controls preload="none" aria-label="Musik undangan" className="h-8 w-52 max-w-full" /></div>}
+            <p className="text-[10px] uppercase tracking-[0.22em] text-[#906978]">Created with DC Organizer</p>
+          </footer>
+        </div>
+      )}
+    </main>
+  );
+}
