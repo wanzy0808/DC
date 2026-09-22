@@ -60,10 +60,10 @@ export function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
   }, [visible]);
 
   return (
-    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-[#fcf7f6]" aria-hidden="true" inert>
+    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-background" aria-hidden="true" inert>
       {visible ? (
         <div
-          className="pointer-events-none absolute left-1/2 top-0 w-[390px]"
+          className="pointer-events-none absolute left-1/2 top-[-112px] w-[390px]"
           style={{ transform: "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
         >
           <TemplateCanvas templateKey={templateKey} />
@@ -71,7 +71,7 @@ export function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
       ) : (
         <div className="grid h-full place-items-center text-xs text-[#916f7a]">Pratinjau template</div>
       )}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fcf7f6] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/15 to-transparent" />
     </div>
   );
 }
