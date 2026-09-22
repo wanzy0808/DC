@@ -215,3 +215,7 @@ pnpm db:deploy
 - `prd.md` is the single product-requirement source of truth and contains consolidated implementation history in Appendix A.
 - `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
 - Do not create or revive split PRD/changelog files for normal work. If the owner explicitly requests `prd-tambahan.md`, it may be maintained only as a supplemental non-canonical delta log; `prd.md` remains authoritative.
+
+## Left-side mini-door navigation
+
+The public marketing routes `/`, `/pagecontoh`, `/event-planner`, `/d-invitation`, `/guestbook`, `/undangan-fisik`, and `/template-design` share `components/Layout/MarketingDoorNavigator.tsx` through `app/layout.tsx`. A compact Rose mini-door at the left edge opens a descriptive, bilingual destination picker. The active page is marked, and Escape, outside click, or the close button dismisses the panel. On small screens it opens above the trigger and its list scrolls independently. Normal marketing route links reuse the existing image-free Rose `PortalTransition`. The widget does not render on Dashboard, Studio, customer invitation pages, or the separate `/jiplak` experiment; it does not alter the primary landing doors.
