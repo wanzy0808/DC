@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { CalendarDays, ChevronDown, Gift, Heart, MapPin, Music2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
+import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
@@ -100,6 +102,7 @@ export default function RomanticRoseTemplate({
   onEditPhoto?: (slot: PhotoSlot) => void;
 }) {
   const [opened, setOpened] = useState(false);
+  const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
@@ -121,8 +124,9 @@ export default function RomanticRoseTemplate({
   const displayName = [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ");
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
   const countdown = daysRemaining(invitation.eventDate, now ?? 0);
-  const music = invitation.musicUrl || invitation.assets.find((item) => item.type === "AUDIO")?.url;
+  const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
+  const handleOpen = () => { musicRef.current?.playOnOpen(); setOpened(true); };
   const scrollHint = <ChevronDown className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
 
   useEffect(() => {
@@ -134,6 +138,7 @@ export default function RomanticRoseTemplate({
 
   return (
     <main className="relative isolate min-h-[760px] overflow-hidden bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]">
+      <InvitationMusic ref={musicRef} source={music} opened={opened} preview={preview} />
       {!opened ? (
         <section className="relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
           <div className="pointer-events-none absolute -left-20 top-10 h-56 w-56 rounded-full border border-white/60" />
@@ -151,7 +156,7 @@ export default function RomanticRoseTemplate({
             <span className="absolute bottom-6 left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-4 border-[#edc6d0] bg-[#b7798d] text-white shadow-md"><Heart className="h-5 w-5" fill="currentColor" /></span>
           </div>
           <p className="mt-8 text-xs leading-6 text-[#815768]">Dengan hangat kami mengundang Anda<br />untuk merayakan hari istimewa kami.</p>
-          <button type="button" onClick={() => setOpened(true)} className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
+          <button type="button" onClick={handleOpen} className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
             Buka Undangan
           </button>
           {preview && <p className="mt-4 text-[11px] text-[#8e586d]">Preview · foto dan isi mengikuti undangan ini</p>}
@@ -292,7 +297,6 @@ export default function RomanticRoseTemplate({
           </section>
 
           <footer className="flex flex-col items-center gap-4 border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-8 text-center">
-            {music && <div className="flex items-center gap-2 text-xs text-[#7b465a]"><Music2 className="h-4 w-4" /><audio src={music} controls preload="none" aria-label="Musik undangan" className="h-8 w-52 max-w-full" /></div>}
             <p className="text-[10px] uppercase tracking-[0.22em] text-[#906978]">Created with DC Organizer</p>
           </footer>
         </div>
