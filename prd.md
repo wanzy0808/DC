@@ -3926,3 +3926,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commits:** `e081c83dfafcbc7ea493641556b3b24172fc8f5e` (10-theme catalog), `c0d8c3b9e924f713352a183dfc0d9f2bf8be56a2` (theme scenes), `6d61c03391fc3c83b4c12b3a6d6f4fcf74cd8278` (section and photo-mode layouts), `80704dfda75bbd9314b317099a7584d5d3c6725c` (true folded envelope variants), `f649821049e6051a71b397a3fb36cc16c877826e` (thumbnail viewport), `3b9e77c381bad4efc80268225991bc36bab51116` (Studio photo-free mode), `fc789ee57863796e4da9a06c2342672dd1550753` (Studio live thumbnails), `77ac7d1f00ec0f88d0d9730818564ed7e2cdfbdf` (public photo filter/badges).
 
 **Validation:** GitHub Actions successful for theme scenes, shared section renderer, folded envelopes, thumbnail viewport and Studio photo-mode changes; verify the latest combined run before claiming final PASS. No screenshot/browser QA on owner's localhost available via connector in this task.
+
+
+---
+
+## 2026-09-22 — Perapian kontrol pencarian dan urutan pada galeri template
+
+**Permintaan owner:** Fokus pada `/template-design?template=romantic-rose`: tombol Lihat Undangan dan kolom cari berbentuk pill/rounded penuh dengan outline Rose, pilihan Urutkan memiliki menu rounded ber-outline Rose serta dua arah A–Z dan Z–A.
+
+**Implementasi:** Hanya `app/template-design/page.tsx` yang diubah: tombol CTA kartu menjadi `rounded-full` + border Rose; kolom pencarian `rounded-full`, border Rose dan fokus Rose; native select diganti dropdown berbasis button/menu rounded dengan border Rose (kontrol dan panel), opsi urutan katalog/Nama A–Z/Nama Z–A (ID/EN); sorting `localeCompare` naik dan turun; menu menutup saat memilih, klik di luar, atau Escape. Shared template catalog, renderer Romantic Rose, deep-link preview, dan landing/Pintu tidak disentuh.
+
+**Code commit:** `78a54870799e170aca620974755e66c9fa264205`.
+
+**Validasi:** Penggantian kode dan keberadaan tiga opsi sort, kedua comparator, rounded CTA/input, dan dropdown diverifikasi secara statis sebelum commit. GitHub Actions/build dan inspeksi visual browser belum dijalankan pada perubahan ini; tidak diklaim PASS.
