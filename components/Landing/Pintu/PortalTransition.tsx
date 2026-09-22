@@ -54,9 +54,9 @@ export default function PortalTransition() {
       }
       document.documentElement.dataset.dcMarketingTransition = "1";
       playRef.current();
+      const cover = viaDoor ? DOOR_COVER_MS : COVER_MS;
       setCoverDuration(cover);
       setPhase("cover");
-      const cover = viaDoor ? DOOR_COVER_MS : COVER_MS;
       timers.current.push(window.setTimeout(() => setPhase("hold"), cover));
       // The 3D door owns its camera zoom and router.push; ordinary links navigate after cover.
       if (!viaDoor) {
