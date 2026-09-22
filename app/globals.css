@@ -147,7 +147,7 @@
 .text-dc-maroon { color: var(--primary); }
 .dc-navbar { background: transparent; }
 
-/* Landing navbar controls share the same transparent, pink-outlined treatment in both themes. */
+/* Public navbar controls: identical colors in light/dark; retain individual sizes. */
 .dc-navbar--landing { background: var(--background); }
 .dc-navbar--landing.dc-navbar--jiplak { background: transparent; }
 .dc-navbar .dc-theme-toggle,
@@ -157,8 +157,10 @@
   border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
   color: var(--primary) !important;
   box-shadow: none !important;
-  border-radius: 16px !important;
 }
+.dc-navbar .dc-theme-toggle,
+.dc-navbar .dc-burger-toggle { border-radius: 16px !important; }
+.dc-navbar .dc-language-toggle button { border-radius: 10px !important; }
 .dc-navbar .dc-theme-toggle:hover,
 .dc-navbar .dc-language-toggle button:hover,
 .dc-navbar .dc-burger-toggle:hover {
