@@ -682,7 +682,7 @@ Halaman `/template-design` merupakan marketing page dengan visual baseline landi
 
 Area isi berbahasa Indonesia default dan responsif terhadap ID/EN navbar; memakai Cinzel untuk heading, Fauna One untuk isi/UI dan DM Mono untuk metadata. Copy ringkas dan tidak mengulang brand/undangan/galeri secara berlebihan. Gunakan palet Rose dan border/transparansi ringan yang sesuai marketing baseline. Kartu katalog harus tetap bersumber dari API/manifest tunggal dan thumbnail real yang lazy-load; filter/pencarian/sort serta preview modal tetap berfungsi tanpa login. Modal preview yang memanjang dibuka di atas bingkai, dapat scroll sendiri, dan tidak terpotong oleh overflow main frame. Tombol pemakaian template membawa pengguna ke Dashboard untuk login/buat event dahulu, tidak membuka Studio anonim. Mode terang/gelap, aksesibilitas keyboard dan interaksi mobile tetap berlaku.
 
-**Kontrak kontrol galeri (22 September 2026):** Di `/template-design`, kolom pencarian, chip filter, trigger Urutkan dan setiap opsi menu menggunakan bentuk pill/rounded penuh dan outline Rose yang jelas pada Light/Dark. Panel dropdown Urutkan sendiri membentuk kapsul dengan sudut lebar dan border Rose, bukan menu native/persegi; opsi Urutan katalog, Nama A–Z dan Nama Z–A tetap mendukung ID/EN, klik di luar, Escape dan pemilihan keyboard. Reuse `components/Templates/gallery-control-styles.ts` agar ukuran, radius, warna border dan focus konsisten; jangan menulis ulang gaya masing-masing kontrol. CTA Lihat Undangan tetap memakai komponen `Button` canonical dengan pengecualian bentuk pill khusus katalog yang diminta owner. Standar ini hanya untuk area katalog, tidak mengganti shape global Button atau mengubah navbar/landing/dashboard/renderer undangan.
+**Kontrak global kontrol aplikasi (22 September 2026):** Semua kontrol UI aplikasi generik memakai satu design system: tombol CTA, input satu baris, chip filter, trigger dropdown dan setiap opsi menu berbentuk pill/rounded penuh dengan outline Rose yang jelas di Light/Dark; panel menu custom menggunakan radius kapsul dan border Rose. Token radius, radius menu, outline ada di `app/globals.css`; pakai `components/ui/button.tsx`, `components/ui/input.tsx` dan `components/ui/control-styles.ts` sebagai sumber bersama, bukan file style khusus halaman. `/template-design` menggunakan source yang sama untuk kolom Cari, chip filter dan Urutkan (Urutan katalog, Nama A–Z, Nama Z–A; ID/EN, Escape, klik di luar), tanpa duplikasi class shape/border. Popup native `<select>` dirender sistem operasi sehingga bentuk opsi tidak dapat dikendalikan penuh; ketika opsi menu harus rounded pakai dropdown custom yang aksesibel. Pengecualian geometry tetap berlaku untuk navbar/control icon khusus yang sudah disetujui, checkbox/radio, textarea multi-baris, dan artistik template undangan; token global tidak boleh mengubah layout/warna frame, Pintu, atau ilustrasi undangan.
 
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
@@ -3949,10 +3949,25 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 
 **Feedback:** Trigger Urutkan sudah pill, tetapi panel dropdown masih `rounded-2xl` dan item `rounded-xl`, sehingga outline Rose dan bentuk kurang konsisten. Owner meminta gaya round + outline pink dibuat standar, tanpa merombak halaman lain.
 
-**Implementasi:** Tambah `components/Templates/gallery-control-styles.ts` sebagai satu sumber class untuk search, filter, sort trigger, panel menu, opsi menu dan CTA katalog. `/template-design` memakai token ini; panel dibulatkan menjadi 32px dengan outline Rose, opsi menu dan filter memakai `rounded-full` + Rose border; tombol CTA tetap render dari `Button` dengan override bentuk pill yang hanya berlaku di katalog. Pilihan A–Z dan Z–A, deep link Romantic Rose, modal, ID/EN, theme dan fitur undangan tidak diubah.
+**Implementasi:** Pada iterasi sebelumnya, `components/Templates/gallery-control-styles.ts` dibuat sebagai sumber class lokal untuk search, filter, sort trigger, panel menu, opsi menu dan CTA katalog; sumber tersebut telah dipindah ke `components/ui/control-styles.ts` pada perubahan design system global berikutnya. `/template-design` memakai token ini; panel dibulatkan menjadi 32px dengan outline Rose, opsi menu dan filter memakai `rounded-full` + Rose border; tombol CTA tetap render dari `Button` dengan override bentuk pill yang hanya berlaku di katalog. Pilihan A–Z dan Z–A, deep link Romantic Rose, modal, ID/EN, theme dan fitur undangan tidak diubah.
 
 **Affected files:** `components/Templates/gallery-control-styles.ts`, `app/template-design/page.tsx`, `AGENTS.md`, `prd.md`.
 
 **Code commits:** `e2978288a3b96a31f2e79e86e86b2511877a4434`, `8972117b3e0c020ac331ba9ed9c35f2e9ad8728d`; AGENTS rule commit `707f7889dc235f0aacb2031ef80ca501b2b9af60`.
 
 **Validation:** Source changes, shared-class consumption and sort behavior checked statically. Tidak ada klaim CI/build/visual PASS sebelum workflow/browser menjalankan pemeriksaan aktual.
+
+
+---
+
+## 2026-09-22 — Standar kontrol Rose pill dipindah ke design system global
+
+**Feedback owner:** Jangan membuat file style yang hanya berlaku untuk `/template-design`; bentuk pill/round dan outline Rose perlu konsisten dari global UI system supaya setiap halaman/komponen baru tidak perlu dipoles ulang secara manual.
+
+**Implementasi:** `app/globals.css` mendefinisikan `--dc-control-radius`, `--dc-control-menu-radius`, dan `--dc-control-outline`, serta baseline input/select dan form field Dashboard. `components/ui/control-styles.ts` menjadi class source global untuk input, chip filter, trigger/menu/option dropdown, dan CTA. `components/ui/button-variants.ts` mengubah delapan size Button menjadi radius global dengan border Rose; `components/ui/input.tsx` memakai token radius dan Rose border/focus. `/template-design` sekarang mengimpor global controlStyles, tidak lagi memiliki konstanta gallery khusus. Pola ini berlaku pada seluruh aplikasi melalui shared primitives dan native form baseline; elemen artwork, navigasi terproteksi, checkbox/radio, dan textarea multi-baris tetap mempertahankan geometry khusus. Kebutuhan rounded pada popup opsi harus dipenuhi melalui menu custom, bukan mengandalkan opsi popup native select.
+
+**Affected files:** `app/globals.css`, `components/ui/control-styles.ts`, `components/ui/button-variants.ts`, `components/ui/input.tsx`, `app/template-design/page.tsx`, `components/Templates/gallery-control-styles.ts` (dihapus setelah migrasi), `AGENTS.md`, `prd.md`, `README.md`.
+
+**Commits:** `2c713b448245083ab63abcf2f5acc12c5f322856`, `a21e21d903849d41dd2642de4815e9ed2da3fb56`, `59c88405778118079ed30ef5717f4530e606e296`, `36391e9397195238b59cd2576f3a68fd344eab65`, `242ee86911d3b72668cd65dbb61774b892a01573`, `7d92b59108178cd42934ad66c134483a36293729`.
+
+**Validasi:** Kode dan kontrak global diverifikasi statis pada GitHub. CI/build serta pemeriksaan visual pada localhost tidak diklaim PASS tanpa hasil aktual.
