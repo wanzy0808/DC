@@ -140,6 +140,18 @@ model Invitation {
   eventConfigured    Boolean           @default(false)
   ceremonyTime       String?
   receptionTime      String?
+  weddingCeremonyEnabled Boolean @default(false)
+  weddingReceptionEnabled Boolean @default(false)
+  weddingCeremonyStart String?
+  weddingCeremonyEnd String?
+  weddingCeremonyVenue String?
+  weddingCeremonyAddress String?
+  weddingCeremonyMapUrl String?
+  weddingReceptionStart String?
+  weddingReceptionEnd String?
+  weddingReceptionVenue String?
+  weddingReceptionAddress String?
+  weddingReceptionMapUrl String?
   description        String?           @db.Text
   weddingHashtag     String?
   dressCode          String?
@@ -278,6 +290,7 @@ model Guest {
   personalPasswordProtected Boolean       @default(false)
   personalPasswordHash      String?
   personalViewCount         Int           @default(0)
+  weddingSessionAccess      String?
   createdAt                 DateTime      @default(now())
   updatedAt                 DateTime      @updatedAt
   invitation                Invitation    @relation(fields: [invitationId], references: [id], onDelete: Cascade)

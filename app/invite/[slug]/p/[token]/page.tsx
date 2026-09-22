@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
+import { redactWeddingInvitationForGuest } from "@/lib/events/wedding-sessions";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
 import PublicInvitation, {
@@ -28,7 +29,7 @@ export default async function PersonalInvitationPage({
   });
   if (!guest) notFound();
 
-  if (!guest.personalPublished || !hasPaidDigitalInvitation(invitation.payment)) {
+  if (!guest.personalPublished || !invitation.eventConfigured || !invitation.isPublished || !invitation.templateKey.trim() || !hasPaidDigitalInvitation(invitation.payment)) {
     return <InvitationLockedState />;
   }
 
@@ -50,12 +51,15 @@ export default async function PersonalInvitationPage({
     data: { personalViewCount: { increment: 1 } },
   });
 
+  const scopedInvitation = redactWeddingInvitationForGuest(invitation, guest.weddingSessionAccess);
+  const visibleInvitation = scopedInvitation ? { ...scopedInvitation, personalGuestId: guest.id, personalGuestToken: guest.personalToken || undefined, personalGuestName: guest.name } : null;
+  if (!visibleInvitation) return <InvitationLockedState />;
   const templateKey = invitation.templateKey.split("::")[0];
   const content =
     templateKey === "eternal-blossom" ? (
-      <ClassicInvitationTemplate invitation={invitation} />
+      <ClassicInvitationTemplate invitation={visibleInvitation} />
     ) : (
-      <PublicInvitation invitation={invitation} />
+      <PublicInvitation invitation={visibleInvitation} />
     );
 
   return (

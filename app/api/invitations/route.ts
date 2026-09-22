@@ -11,6 +11,8 @@ import {
   normalizeIndonesiaTimezone,
 } from "@/lib/events/catalog";
 
+import { hasWeddingSessions, parseWeddingSessions, validWeddingSessionAccess } from "@/lib/events/wedding-sessions";
+
 type InvitationType = "WEDDING" | "ADAT_AKAD";
 
 const END_TIME_SENTINEL = "END";
@@ -105,6 +107,18 @@ const EVENT_DETAIL_MUTATION_FIELDS = [
   "eventDate",
   "ceremonyTime",
   "receptionTime",
+  "weddingCeremonyEnabled",
+  "weddingReceptionEnabled",
+  "weddingCeremonyStart",
+  "weddingCeremonyEnd",
+  "weddingCeremonyVenue",
+  "weddingCeremonyAddress",
+  "weddingCeremonyMapUrl",
+  "weddingReceptionStart",
+  "weddingReceptionEnd",
+  "weddingReceptionVenue",
+  "weddingReceptionAddress",
+  "weddingReceptionMapUrl",
   "description",
   "eventNotes",
   "eventConfigured",
@@ -301,6 +315,8 @@ export async function POST(request: Request) {
       const eventDate = new Date(String(body.eventDate ?? ""));
       const ceremonyTime = String(body.ceremonyTime ?? "").trim() || null;
       const receptionTime = String(body.receptionTime ?? "").trim() || null;
+      const weddingSessions = wedding ? parseWeddingSessions(body as Record<string, unknown>) : null;
+      if (wedding && weddingSessions?.error) return NextResponse.json({ error: weddingSessions.error }, { status: 400 });
       const requestedTitle = String(body.title ?? "").trim();
       const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
 
@@ -357,6 +373,7 @@ export async function POST(request: Request) {
         eventDate,
         ceremonyTime,
         receptionTime,
+        ...(weddingSessions?.value ?? {}),
         description: String(body.description ?? "").trim() || null,
         eventNotes: String(body.eventNotes ?? "").trim() || null,
         eventConfigured: true,
@@ -495,6 +512,31 @@ export async function PUT(request: Request) {
     const eventDate = new Date(rawEventDate);
     const ceremonyTime = String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null;
     const receptionTime = String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null;
+    const sessionFieldChanged = [
+      "weddingCeremonyEnabled", "weddingReceptionEnabled", "weddingCeremonyStart",
+      "weddingCeremonyEnd", "weddingCeremonyVenue", "weddingCeremonyAddress",
+      "weddingCeremonyMapUrl", "weddingReceptionStart", "weddingReceptionEnd",
+      "weddingReceptionVenue", "weddingReceptionAddress", "weddingReceptionMapUrl",
+    ].some((field) => Object.prototype.hasOwnProperty.call(body, field));
+    const usingSessions = wedding && (sessionFieldChanged || hasWeddingSessions(invitation));
+    const weddingSessions = usingSessions
+      ? parseWeddingSessions({ ...invitation, ...body } as Record<string, unknown>)
+      : null;
+    if (weddingSessions?.error) return NextResponse.json({ error: weddingSessions.error }, { status: 400 });
+    if (sessionFieldChanged && !wedding) {
+      return NextResponse.json({ error: "Sesi Upacara Nikah dan Resepsi hanya tersedia untuk Pernikahan." }, { status: 400 });
+    }
+    if (sessionFieldChanged && weddingSessions?.value) {
+      const guestAccess = await prisma.guest.findMany({
+        where: { invitationId: invitation.id, weddingSessionAccess: { not: null } },
+        select: { weddingSessionAccess: true },
+      });
+      if (guestAccess.some((guest) => !validWeddingSessionAccess(weddingSessions.value!, guest.weddingSessionAccess))) {
+        return NextResponse.json({
+          error: "Ada tamu yang masih diundang ke sesi yang hendak dinonaktifkan. Perbarui cakupan undangan tamu terlebih dahulu.",
+        }, { status: 409 });
+      }
+    }
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
     const requestedTitle = String(body.title ?? invitation.title).trim();
     const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
@@ -579,6 +621,7 @@ export async function PUT(request: Request) {
         eventConfigured,
         ceremonyTime,
         receptionTime,
+        ...(weddingSessions?.value ?? (!wedding ? { weddingCeremonyEnabled: false, weddingReceptionEnabled: false } : {})),
         title,
         templateKey,
         description: String(body.description ?? invitation.description ?? "").trim() || null,

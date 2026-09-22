@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher/qr";
+import { hasWeddingSessions, validWeddingSessionAccess } from "@/lib/events/wedding-sessions";
 import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
@@ -43,7 +44,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       return NextResponse.json({ error: "Status kehadiran tidak valid." }, { status: 400 });
     }
 
+    const scopedWedding = invitation.eventCategory === "WEDDING" && hasWeddingSessions(invitation);
     const guestId = String(body.guestId ?? "").trim();
+    const guestToken = String(body.guestToken ?? "").trim();
+    if (scopedWedding && (!guestId || !guestToken)) {
+      return NextResponse.json({ error: "RSVP untuk pernikahan bersesi hanya tersedia melalui tautan personal tamu." }, { status: 403 });
+    }
     const name = String(body.name ?? "").trim();
     const phone = String(body.phone ?? "").trim();
     const plusOnes = Math.min(10, Math.max(0, Number(body.plusOnes ?? 0)));
@@ -52,6 +58,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     if (guestId) {
       guest = await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } });
       if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
+      if (scopedWedding && (
+        !guest.personalPublished || guest.personalToken !== guestToken ||
+        !validWeddingSessionAccess(invitation, guest.weddingSessionAccess)
+      )) {
+        return NextResponse.json({ error: "Akses RSVP sesi pernikahan ini tidak valid." }, { status: 403 });
+      }
       guest = await prisma.guest.update({
         where: { id: guest.id },
         data: {

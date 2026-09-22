@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { CalendarDays, Clock3, LockKeyhole, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import WeddingSessionSchedule from "@/components/PublicInvitation/WeddingSessionSchedule";
+import { hasWeddingSessions, readWeddingSessionValues } from "@/lib/events/wedding-sessions";
 import {
   buildEventTitle,
   getEventCategory,
@@ -15,6 +17,9 @@ export { weddingParentLine };
 export type PublicInvitationData = {
   id: string;
   slug: string;
+  personalGuestId?: string;
+  personalGuestToken?: string;
+  personalGuestName?: string;
   title: string;
   eventCategory: string;
   groomName: string;
@@ -32,6 +37,18 @@ export type PublicInvitationData = {
   eventDate: Date;
   ceremonyTime: string | null;
   receptionTime: string | null;
+  weddingCeremonyEnabled: boolean;
+  weddingReceptionEnabled: boolean;
+  weddingCeremonyStart: string | null;
+  weddingCeremonyEnd: string | null;
+  weddingCeremonyVenue: string | null;
+  weddingCeremonyAddress: string | null;
+  weddingCeremonyMapUrl: string | null;
+  weddingReceptionStart: string | null;
+  weddingReceptionEnd: string | null;
+  weddingReceptionVenue: string | null;
+  weddingReceptionAddress: string | null;
+  weddingReceptionMapUrl: string | null;
   description: string | null;
   eventNotes?: string | null;
   dressCode?: string | null;
@@ -100,6 +117,9 @@ export default function PublicInvitation({
           "putri",
         )
       : "";
+  const weddingSchedule = eventCategory === "WEDDING" && hasWeddingSessions(invitation)
+    ? readWeddingSessionValues(invitation)
+    : [];
   const startTime = invitation.ceremonyTime;
   const endTime = invitation.receptionTime;
   const timeLabel = startTime
@@ -154,20 +174,20 @@ export default function PublicInvitation({
               <CalendarDays className="h-4 w-4 text-primary" />
               {formatDate(invitation.eventDate, invitation.timezone)}
             </div>
-            {timeLabel && (
+            {weddingSchedule.length === 0 && timeLabel && (
               <div className="flex items-center justify-center gap-2">
                 <Clock3 className="h-4 w-4 text-primary" />
                 {timeLabel}
               </div>
             )}
-            <div className="flex items-center justify-center gap-2">
+            {weddingSchedule.length === 0 && <div className="flex items-center justify-center gap-2">
               <MapPin className="h-4 w-4 text-primary" />
               {invitation.venue}
-            </div>
-            {invitation.address && (
+            </div>}
+            {weddingSchedule.length === 0 && invitation.address && (
               <p className="text-xs text-muted-foreground">{invitation.address}</p>
             )}
-            {invitation.mapUrl && (
+            {weddingSchedule.length === 0 && invitation.mapUrl && (
               <a
                 href={invitation.mapUrl}
                 target="_blank"
@@ -177,6 +197,9 @@ export default function PublicInvitation({
                 Lihat Lokasi
               </a>
             )}
+            {weddingSchedule.length > 0 && (
+              <WeddingSessionSchedule sessions={weddingSchedule} timezoneLabel={timezone.label} />
+            )}
           </div>
         </header>
 
@@ -184,6 +207,9 @@ export default function PublicInvitation({
           <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
             <RsvpForm
               slug={invitation.slug}
+              guestId={invitation.personalGuestId}
+              guestToken={invitation.personalGuestToken}
+              guestName={invitation.personalGuestName}
               eventDate={invitation.eventDate}
               venue={invitation.venue}
               title={title}
