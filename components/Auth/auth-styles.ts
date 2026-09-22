@@ -1,6 +1,6 @@
 /** Shared visual contract for Login and Register. UI only; auth behavior stays in page/dialog code. */
 export const authCardClass =
-  "w-full rounded-[32px] border border-primary/35 bg-card/90 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.12)] backdrop-blur-xl dark:shadow-[0_18px_75px_rgba(0,0,0,0.28)]";
+  "w-full rounded-[32px] border border-primary/35 bg-background/90 bg-[radial-gradient(ellipse_at_50%_30%,rgba(217,163,170,0.19),transparent_74%)] text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.12)] backdrop-blur-xl dark:bg-background/90 dark:bg-[radial-gradient(ellipse_at_50%_30%,rgba(192,122,132,0.19),transparent_74%)] dark:shadow-[0_18px_75px_rgba(0,0,0,0.28)]";
 
 export const authHeaderClass =
   "space-y-3 text-center";
