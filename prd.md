@@ -487,7 +487,7 @@ Optional section harus dapat diaktifkan/dinonaktifkan tanpa menghapus shared fea
 
 ### 7.2.3a Universal envelope + 13-section contract (22 September 2026)
 
-Setiap template undangan yang READY, termasuk tujuh built-in dan semua template baru setelah renderer terintegrasi, WAJIB memiliki amplop digital interaktif dengan tombol **Buka Undangan** sebelum Cover; amplop bukan pengganti Cover, bukan pintu marketing landing. Seluruh renderer real di halaman publik, Invitation Studio, dan galeri template menampilkan section semantik berikut secara konsisten:
+Setiap template undangan yang READY, termasuk sepuluh built-in dan semua template baru setelah renderer terintegrasi, WAJIB memiliki amplop digital interaktif dengan tombol **Buka Undangan** sebelum Cover; amplop bukan pengganti Cover, bukan pintu marketing landing. Seluruh renderer real di halaman publik, Invitation Studio, dan galeri template menampilkan section semantik berikut secara konsisten:
 
 1. Cover / Hero
 2. Introduction / Greeting
@@ -508,6 +508,27 @@ Tiga feature section RSVP/Wishes/Gift dapat dinonaktifkan oleh customer lewat to
 Template memiliki gaya sendiri untuk amplop, ornamen, frame foto, palette, fonts, animasi, layout dan (bila manifest mengizinkan) urutan section. Feature logic, photo role, countdown, audio, RSVP, keamanan dan data milik shared engine. Komponen publik dan Studio harus merender presentasi yang sama, bukan menampilkan mock section di Studio dan konten berbeda di URL publik. Ketiga jalur URL undangan tamu—utama, per acara, dan personal—wajib melewati satu shared renderer dispatcher. Key dari upload designer baru tetap preview gambar tidak aktif sampai renderer sesuai kontrak ini selesai dibuat dan terdaftar.
 
 Semua contoh foto yang dipakai katalog, gallery fixture, dan Studio default harus mengambil asset yang SUDAH ADA di public/: /couple.jpg, /couple2.jpg, /couple3.jpg, /man.jpg, /female.jpg, bukan URL Unsplash. File tersebut hanya dummy/demo; foto undangan pelanggan selalu berasal dari InvitationAsset milik event sendiri, bukan fallback foto demo. Kode tema baru mengambil foto contoh dari manifest/shared fixture, tidak duplikasi file. Sharp WebP tetap wajib untuk semua upload image baru sesuai §7.2.7b.
+
+### 7.2.3b Sepuluh tema berbeda: lima dengan foto, lima tanpa foto (22 September 2026)
+
+Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Target katalog bawaan saat ini **10 template keseluruhan (7 key lama dipertahankan demi kompatibilitas undangan existing + 3 key baru), 5 dengan foto dan 5 tanpa foto**:
+
+| Mode | Stable key | Identitas visual, bukan sekadar warna |
+| --- | --- | --- |
+| Foto | `romantic-rose` | Nuansa Rose, amplop cinta, portrait floral, galeri pasangan |
+| Foto | `eternal-blossom` | Scrapbook/portrait miring dengan floral dan foto berbingkai lengkung |
+| Foto | `modern-maroon` | Editorial maroon asimetris, foto dengan potongan diagonal dan teks vertikal |
+| Foto | `garden-light` | Lengkungan taman botanical dengan cabang daun dan foto melengkung |
+| Foto | `midnight-romance` | Latar gelap berbintang, portrait oval, ornamen bulan dan cahaya emas |
+| Tanpa foto | `botanical-ivory` | Kartu botanical ivory simetris dengan ilustrasi daun |
+| Tanpa foto | `classic-pearl` | Tipografi dan crest oval klasik dengan double ornamental lines |
+| Tanpa foto | `golden-art-deco` | Hitam/emas, garis geometri Art Deco dan frame simetris |
+| Tanpa foto | `paper-cut-botanical` | Ilustrasi lapisan kertas/cutout daun berwarna sage |
+| Tanpa foto | `celestial-ink` | Galaksi tinta, orbit concentric dan konstelasi bulan-bintang tanpa portrait |
+
+Untuk setiap theme, amplop digital tetap punya lipatan/flap dan aksi "Buka Undangan" riil; visual envelope, Cover dan section decoration mengikuti identitas theme berbeda. Foto preview berbasis aset `public/` yang sudah ada, tanpa mengambil URL Unsplash. Tanpa-foto bukan sekadar menyembunyikan tag `img`: tutup, Hero, Identity, Gallery/Media dan dekorasi mengutamakan tipografi, ornamen/ilustrasi dan data event, tidak merender media customer walaupun sebelumnya pernah mengupload foto untuk theme lain. Studio tidak memunculkan input slot/upload untuk theme tanpa foto (koleksi event tetap tersimpan dan muncul bila customer beralih kembali ke theme foto). Gallery/media tanpa foto tetap section semantik ke-6 tetapi menjadi surface story/illustration tanpa menciptakan foto/memori personal palsu. Image-preview-only designer submissions tidak otomatis dipaksa masuk hitungan 5/5 dan tidak selectable hingga renderer asli tersedia.
+
+Galeri publik dan pemilih template Studio menampilkan thumbnail scene visual yang benar-benar digunakan renderer, bukan image sama untuk sejumlah theme; identifikasi jelas melalui badge/filter "Dengan foto" dan "Tanpa foto". Tetap gunakan satu katalog untuk Studio, `/template-design`, `/d-invitation`, tanpa menggandakan API RSVP, assets/customer media, format penyimpanan atau bypass akses Studio. Semua theme tetap menjalankan kontrak 13 section/amplop di §7.2.3a dan integrasi Sharp WebP untuk media upload customer.
 
 ### 7.2.4 Template-owned presentation and default order
 
@@ -3890,3 +3911,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `c1c02879` renderer; `f00d5723` draft template; `caa6af4b` Studio renderer; `d7cd54b5` Studio draft key; `822c5701`, `a61f212c` dispatcher; `f8c3e08b`, `2f51c1d2`, `9df9615a` public routes; `228a67f1` shared catalog; `65e3ee46` demo fixture; `f69ba7de` Studio local sample; `078f450e` Romantic Rose empty state.
 
 **Validasi:** Build GitHub Actions untuk implementasi penuh dan dokumentasi hingga `c3a0e611d23d794402c0f27883b91551e0a5fb77` berhasil. Commit tambahan fixture dan filtering slot event category masih diperiksa oleh GitHub Actions. Belum dilakukan pemeriksaan visual langsung di localhost pengguna.\n\n**Follow-up:** Fixture galeri juga memakai `public/man.jpg` dan `public/female.jpg` untuk foto individu dan `couple2.jpg`/`couple3.jpg` untuk galeri (commit `d759226c39e7f3d2126601fadbb6227b1057299e`). Studio sekarang memfilter slot foto individu agar hanya ditawarkan pada event dengan identitas pasangan; host tunggal/noncouple tidak lagi diminta memilih foto mempelai (`cdbc3df9ab15a23c0dee658cb84586a019b16592`).
+
+
+---
+
+## 2026-09-22 — Sepuluh tema dengan identitas visual terpisah; lima dengan foto dan lima tanpa foto
+
+**Owner feedback:** Katalog sebelumnya terlihat seperti satu template dengan pergantian warna. Owner meminta 10 tema yang benar-benar berbeda; 5 memanfaatkan foto pengguna, 5 benar-benar tanpa foto. Pertahankan amplop interaktif dan 13 section, katalog/Studio/public renderer tunggal, aset local public dan PRD/AGENTS/README.
+
+**Perubahan requirement dan arsitektur:** §7.2.3b merinci stable key dan visual direction masing-masing mode 5/5. Tujuh key legacy tetap ada untuk kompatibilitas invitation yang sudah disimpan, tiga key tambahan adalah `golden-art-deco`, `paper-cut-botanical`, `celestial-ink`. Manifest `lib/templates/catalog.ts` kini menjadi satu sumber `usesPhotos` dan `photoSlots` untuk 10 built-in. Theme tanpa foto tidak memakai uploaded customer photo meski acara memiliki foto dari theme sebelumnya; Studio panel Foto menjelaskan bahwa theme itu tidak memerlukan unggah dan seluruh aset lama tetap tersimpan.
+
+**Implementasi:** `components/PublicInvitation/InvitationThemeScenes.tsx` berisi sembilan art-directed entry envelope (folded flap/seal), Hero berbeda dan ornament per theme selain Romantic Rose (yang sudah memiliki sendiri); `components/PublicInvitation/UniversalInvitationTemplate.tsx` meneruskan shared normalized event data, section logic/RSVP/wishes/gift/countdown dan foto hanya pada theme yang mendukung, dengan section/divider/gallery layout responsif sesuai identitas theme. `components/Templates/TemplateGalleryCanvas.tsx` menampilkan bagian tengah amplop saat thumbnail di-load sehingga perbedaan theme terlihat di list. `components/InvitationStudio/DesignerPanels.tsx` memakai thumbnail live renderer serta label Dengan foto/Tanpa foto; `components/InvitationStudio/InvitationDesigner.tsx` tidak menampilkan photo-slot picker pada 5 theme nonfoto. `app/template-design/page.tsx` punya filter foto/nonfoto beserta badge card ID/EN. Semua public invite routes tetap memakai `PublicInvitationRenderer.tsx`. No change to marketing Pintu, landing, auth, Sharp upload, tenant isolation, DB model.
+
+**Code commits:** `e081c83dfafcbc7ea493641556b3b24172fc8f5e` (10-theme catalog), `c0d8c3b9e924f713352a183dfc0d9f2bf8be56a2` (theme scenes), `6d61c03391fc3c83b4c12b3a6d6f4fcf74cd8278` (section and photo-mode layouts), `80704dfda75bbd9314b317099a7584d5d3c6725c` (true folded envelope variants), `f649821049e6051a71b397a3fb36cc16c877826e` (thumbnail viewport), `3b9e77c381bad4efc80268225991bc36bab51116` (Studio photo-free mode), `fc789ee57863796e4da9a06c2342672dd1550753` (Studio live thumbnails), `77ac7d1f00ec0f88d0d9730818564ed7e2cdfbdf` (public photo filter/badges).
+
+**Validation:** GitHub Actions successful for theme scenes, shared section renderer, folded envelopes, thumbnail viewport and Studio photo-mode changes; verify the latest combined run before claiming final PASS. No screenshot/browser QA on owner's localhost available via connector in this task.
