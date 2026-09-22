@@ -1,31 +1,15 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
+import GoogleIcon from "@/components/Auth/GoogleIcon";
+import { authErrorClass, authFieldClass, authGoogleButtonClass, authSubmitButtonClass } from "@/components/Auth/auth-styles";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { Dialog } from "@/components/ui/dialog";
+import RegisterDialog from "@/components/Layout/Navbar/RegisterDialog";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
-function GoogleIcon() {
-  return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-      <path
-        fill="#4285F4"
-        d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"
-      />
-      <path
-        fill="#34A853"
-        d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.15C3.15 21.32 7.22 24 12 24z"
-      />
-      <path
-        fill="#FBBC05"
-        d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.18C.43 8.13 0 9.87 0 11.7c0 1.83.43 3.57 1.18 5.1l4.09 2.56 1.18-4.09z"
-      />
-      <path
-        fill="#EA4335"
-        d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.68 1.18 6.6l4.09 3.15c.95-2.85 3.6-4.96 6.73-4.96z"
-      />
-    </svg>
-  );
-}
 
 function destinationForRole(role: string, next: string) {
   if (role === "OWNER") return "/owner";
@@ -34,10 +18,43 @@ function destinationForRole(role: string, next: string) {
   return next;
 }
 
-const neutralButton =
-  "border border-black/10 bg-white text-black shadow-sm hover:bg-neutral-100 hover:text-black dark:border-black/10 dark:bg-white dark:text-black dark:hover:bg-neutral-100";
+const copy = {
+  id: {
+    title: "Masuk",
+    description: "Lanjutkan mengelola acara dan undanganmu.",
+    google: "Masuk dengan Google",
+    separator: "atau dengan email",
+    email: "Email",
+    password: "Kata sandi",
+    submit: "Masuk",
+    loading: "Memproses...",
+    noAccount: "Belum punya akun?",
+    register: "Daftar",
+    showPassword: "Tampilkan kata sandi",
+    hidePassword: "Sembunyikan kata sandi",
+  },
+  en: {
+    title: "Sign in",
+    description: "Continue managing your events and invitations.",
+    google: "Continue with Google",
+    separator: "or with email",
+    email: "Email",
+    password: "Password",
+    submit: "Sign in",
+    loading: "Signing in...",
+    noAccount: "New here?",
+    register: "Create account",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+  },
+} as const;
 
 export default function LoginPage() {
+  const { locale } = useLanguage();
+  const t = copy[locale];
+  const reducedMotion = useReducedMotion();
+  const [registerOpen, setRegisterOpen] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -47,6 +64,7 @@ export default function LoginPage() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const requestedNext = params.get("next");
+    if (params.get("register") === "1") setRegisterOpen(true);
     if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//")) {
       setNext(requestedNext);
     }
@@ -123,86 +141,110 @@ export default function LoginPage() {
     }
   }
 
-  const registerHref = `/?register=1&next=${encodeURIComponent(next)}`;
+  const registerHref = `/login?register=1&next=${encodeURIComponent(next)}`;
   const googleHref = `/api/auth/google?next=${encodeURIComponent(next)}`;
 
+  const closeRegister = () => {
+    setRegisterOpen(false);
+    window.history.replaceState({}, "", `/login?next=${encodeURIComponent(next)}`);
+  };
+
   return (
-    <main className="relative z-10 grid min-h-screen place-items-center px-6 py-10 text-[var(--foreground)]">
-      <form
-        onSubmit={submit}
-        className="w-full max-w-md space-y-5 rounded-3xl border border-black/10 bg-white p-8 text-black shadow-xl"
+    <main className="relative isolate flex w-full flex-1 items-center justify-center overflow-hidden px-4 py-12 text-foreground sm:px-6 sm:py-16">
+      <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[580px] w-[min(100%,900px)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse,rgba(192,122,132,0.17),transparent_72%)] dark:bg-[radial-gradient(ellipse,rgba(192,122,132,0.12),transparent_72%)]" />
+      <motion.div
+        initial={reducedMotion ? false : { opacity: 0, y: 18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-[480px]"
       >
-        <div>
-          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-            DC Organizer
-          </p>
-          <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl font-normal">
-            Masuk
-          </h1>
-          <p className="mt-2 text-sm leading-6 text-black/55">
-            Akses acara, undangan digital, dan operasional tamu dalam satu workspace.
-          </p>
-        </div>
-
-        <Button asChild size="lg" className={`w-full gap-3 rounded-xl ${neutralButton}`}>
-          <a href={googleHref}>
-            <GoogleIcon />
-            <span>Masuk dengan Google</span>
-          </a>
-        </Button>
-
-        <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-black/10" />
-          <span className="text-xs text-black/40">atau</span>
-          <div className="h-px flex-1 bg-black/10" />
-        </div>
-
-        <label className="block text-sm text-black/75">
-          Email
-          <input
-            required
-            type="email"
-            autoComplete="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-black outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-        </label>
-
-        <label className="block text-sm text-black/75">
-          Password
-          <input
-            required
-            type="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-black outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-        </label>
-
-        {error && (
-          <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
-        )}
-
-        <Button
-          type="submit"
-          disabled={loading}
-          size="lg"
-          className={`w-full rounded-xl ${neutralButton}`}
+        <form
+          onSubmit={submit}
+          className="relative w-full space-y-6 rounded-[32px] border border-primary/35 bg-card/85 p-6 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.11)] backdrop-blur-md sm:p-10"
         >
-          {loading ? "Memproses..." : "Masuk"}
-        </Button>
+          <div className="space-y-3 text-center">
+            <span aria-hidden="true" className="mx-auto block h-1 w-12 rounded-full bg-primary/70" />
+            <h1 className="font-[family-name:var(--font-dc-heading)] text-3xl font-normal text-primary sm:text-4xl">
+              {t.title}
+            </h1>
+            <p className="mx-auto max-w-[33ch] font-[family-name:var(--font-dc-body)] text-sm leading-7 text-muted-foreground">
+              {t.description}
+            </p>
+          </div>
 
-        <p className="text-center text-sm text-black/60">
-          Belum punya akun?{" "}
-          <Link href={registerHref} className="font-medium text-primary underline underline-offset-2">
-            Daftar
-          </Link>
-        </p>
-      </form>
+          <Button asChild size="lg" className={authGoogleButtonClass}>
+            <a href={googleHref}>
+              <GoogleIcon />
+              <span>{t.google}</span>
+            </a>
+          </Button>
+
+          <div className="flex items-center gap-3" aria-hidden="true">
+            <span className="h-px flex-1 bg-primary/25" />
+            <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">{t.separator}</span>
+            <span className="h-px flex-1 bg-primary/25" />
+          </div>
+
+          <div className="space-y-4">
+            <label htmlFor="dc-login-email" className="block text-sm font-medium text-foreground">
+              {t.email}
+              <input
+                id="dc-login-email"
+                required
+                type="email"
+                autoComplete="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className={authFieldClass}
+              />
+            </label>
+
+            <div>
+              <label htmlFor="dc-login-password" className="block text-sm font-medium text-foreground">{t.password}</label>
+              <div className="relative">
+                <input
+                  id="dc-login-password"
+                  required
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                  className={authFieldClass + " pr-14"}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((value) => !value)}
+                  aria-label={showPassword ? t.hidePassword : t.showPassword}
+                  aria-pressed={showPassword}
+                  className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                >
+                  {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {error && <p role="alert" className={authErrorClass}>{error}</p>}
+
+          <Button type="submit" disabled={loading} size="lg" className={authSubmitButtonClass}>
+            {loading ? t.loading : t.submit}
+          </Button>
+
+          <p className="text-center text-sm text-muted-foreground">
+            {t.noAccount}{" "}
+            <Link
+              href={registerHref}
+              onClick={() => setRegisterOpen(true)}
+              className="font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/75"
+            >
+              {t.register}
+            </Link>
+          </p>
+        </form>
+      </motion.div>
+      <Dialog open={registerOpen} onOpenChange={(open) => { if (open) setRegisterOpen(true); else closeRegister(); }}>
+        <RegisterDialog onSwitchToLogin={closeRegister} onRegistered={closeRegister} />
+      </Dialog>
     </main>
   );
 }
