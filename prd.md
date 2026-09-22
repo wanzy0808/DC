@@ -631,6 +631,12 @@ Designer upload yang telah berstatus `PUBLISHED` di database muncul otomatis lew
 
 Preview undangan publik dapat dibuka tanpa login, tetapi tombol penggunaan dari `/template-design` atau `/d-invitation` mengarahkan ke `/dashboard` untuk login dan membuat/memilih event terlebih dahulu. `/dashboard/editor` dan semua turunannya harus tetap diproteksi oleh pengecekan sesi server-side dan editor membutuhkan `invitationId` valid; tidak ada akses anonim ke Studio melalui deep link maupun manipulasi URL.
 
+### 7.2.9c Konsistensi visual galeri publik dengan main frame marketing (22 September 2026)
+
+Halaman `/template-design` merupakan marketing page dengan visual baseline landing terverifikasi `/` dan `/d-invitation`, bukan halaman terpisah dengan full-page putih, navbar/footer tambahan atau dekorasi marketing ganda. Gunakan komponen bersama `Navbar embedded`, `PublicMarketingAtmosphere` dan `MarketingFrameFooter`; bingkai utama di desktop berukuran sesuai frame marketing yang disetujui (lebar ±90vw dengan margin luar), radius 18px, border Rose tipis, permukaan transparan, dan konten sekitar 80vw di dalam frame. Hanya main bagian tengah yang scroll; navbar dan footer tetap pada tempatnya. Di mobile frame tetap responsif tanpa menyebabkan scroll horizontal. `PublicAtmosphere`, `PublicContent`, Navbar/Footer global dan `MarketingFloatingControls` harus memperlakukan rute ini sebagai framed marketing page supaya tidak menduplikasi bunga/rose-petal animation, pemutar musik, Instagram, navbar atau footer. Musik tetap satu player dari marketing provider dan mengikuti pilihan mute/reduced motion. Jangan mengubah landing/Pintu atau desain `/d-invitation` ketika menyamakan shell galeri.
+
+Area isi berbahasa Indonesia default dan responsif terhadap ID/EN navbar; memakai Cinzel untuk heading, Fauna One untuk isi/UI dan DM Mono untuk metadata. Copy ringkas dan tidak mengulang brand/undangan/galeri secara berlebihan. Gunakan palet Rose dan border/transparansi ringan yang sesuai marketing baseline. Kartu katalog harus tetap bersumber dari API/manifest tunggal dan thumbnail real yang lazy-load; filter/pencarian/sort serta preview modal tetap berfungsi tanpa login. Modal preview yang memanjang dibuka di atas bingkai, dapat scroll sendiri, dan tidak terpotong oleh overflow main frame. Tombol pemakaian template membawa pengguna ke Dashboard untuk login/buat event dahulu, tidak membuka Studio anonim. Mode terang/gelap, aksesibilitas keyboard dan interaksi mobile tetap berlaku.
+
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
 Katalog dengan puluhan/ratusan template tidak boleh membuat setiap public invitation mengirim seluruh code dan asset semua template ke browser visitor.
@@ -3830,3 +3836,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Validation:** GitHub Actions build completed successfully on combined code + PRD commit `22f6de7eb2de17241b8f473e8c92dc9e0b73939c`, confirming the shared photo-slot Studio/preview/public renderer and Sharp upload code compile. Later cleanup changes require their own latest CI check. No manual local-device visual QA performed by the agent.
 
 **Follow-up cleanup:** Removed obsolete `DecorPanel` cover-only picker from `components/InvitationStudio/DesignerPanels.tsx` after shared `PhotoPanel` became the canonical panel (`3efe58b70bb98d6a59291ae8c97b92150ca385e1`), removed an unused Romantic Rose binding (`e35ad7ac25c3800406fc006b2c26b571b610daf7`). New event-scoped WebP files are also deleted from disk when their owned asset is deleted; legacy and external URLs are not unlinked by this new cleanup path (`1c0138b080ece163ed347ebd300f606b6da5813f`, `00e62047500385eb42efe62f88e522a8a995960c`).
+
+
+---
+
+## 2026-09-22 — Galeri template mengikuti main frame landing dan /d-invitation
+
+**Permintaan:** Menyesuaikan `http://localhost:3000/template-design` dengan gaya visual landing/`/d-invitation`, khususnya konten ditempatkan di dalam main frame, sembari mengikuti aturan AGENTS/PRD/README dan menjaga katalog/preview/login.
+
+**Implementasi:** `app/template-design/page.tsx` menggunakan shell dengan frame Rose 90vw, `Navbar embedded`, `MarketingFrameFooter`, dan satu `PublicMarketingAtmosphere`. Main tengah saja yang scroll dengan konten 80vw desktop; style copy, input, filter, kartu dan tipografi mengikuti tema marketing Cinzel/Fauna One/DM Mono dan ID/EN; katalog tetap data-driven, viewer preview di atas frame, dan deep-link hanya sekali diproses agar dialog tidak membuka ulang setelah ditutup. `components/Layout/PublicAtmosphere.tsx`, `Navbar/Navbar.tsx`, `Footer.tsx`, dan `MarketingFloatingControls.tsx` mengenali `/template-design` sebagai framed page sehingga tidak menggandakan global navbar/footer/audio/Instagram/floral. Tidak mengubah landing, Pintu, atau desain halaman `/d-invitation` sendiri.
+
+**Files:** `app/template-design/page.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/MarketingFloatingControls.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Code commits:** `dbf530233e3972141ceda197ba74e19c419269f4` (ambient/global wrapper), `ea7a66a2e173ea594588c20d131a8ce0f2c2781f` (navbar), `7988ddfd8dc37e5f9690e6107deaede090c64d3c` / `cd849ee713e5e1462ce41599084f840207dcaf51` (footer), `eca75b40032c96a25e44964aa26c1ac00186e2ab` (floating controls), `b04123152ab7782235ebd00b2dc819afa33c4afe` (gallery frame and visual redesign).
+
+**Validation:** UI change committed via GitHub. Latest combined GitHub Actions build to be verified; no direct browser/localhost screenshot check performed by this agent.
