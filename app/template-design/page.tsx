@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Eye, Search, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Eye, Search, X } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
@@ -26,6 +26,8 @@ export default function TemplateDesignPage() {
   const { locale } = useLanguage();
   const catalog = useTemplateCatalog();
   const deepLinkHandled = useRef(false);
+  const sortMenuRef = useRef<HTMLDivElement>(null);
+  const sortTriggerRef = useRef<HTMLButtonElement>(null);
   const copy = locale === "en"
     ? {
         eyebrow: "Invitation collection",
@@ -38,7 +40,8 @@ export default function TemplateDesignPage() {
         withoutPhoto: "Without photos",
         sort: "Sort by",
         catalog: "Catalog order",
-        name: "Name A–Z",
+        nameAsc: "Name A–Z",
+        nameDesc: "Name Z–A",
         available: "designs available",
         none: "No templates match your search.",
         ready: "Preview uses the published invitation renderer",
@@ -68,7 +71,8 @@ export default function TemplateDesignPage() {
         withoutPhoto: "Tanpa foto",
         sort: "Urutkan",
         catalog: "Urutan katalog",
-        name: "Nama A–Z",
+        nameAsc: "Nama A–Z",
+        nameDesc: "Nama Z–A",
         available: "desain tersedia",
         none: "Tidak ada template yang cocok dengan pencarianmu.",
         ready: "Preview mengikuti renderer undangan publik",
@@ -91,7 +95,8 @@ export default function TemplateDesignPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
   const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
-  const [sort, setSort] = useState<"Katalog" | "Nama">("Katalog");
+  const [sort, setSort] = useState<"Katalog" | "NamaAsc" | "NamaDesc">("Katalog");
+  const [sortOpen, setSortOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
 
@@ -101,12 +106,18 @@ export default function TemplateDesignPage() {
       (category === "Semua" || template.category === category) &&
       (photoFilter === "all" || (template.ready && (photoFilter === "photo" ? template.usesPhotos : !template.usesPhotos))),
     );
-    return sort === "Nama"
-      ? [...result].sort((a, b) => a.name.localeCompare(b.name, "id"))
-      : result;
+    if (sort === "NamaAsc") return [...result].sort((a, b) => a.name.localeCompare(b.name, "id"));
+    if (sort === "NamaDesc") return [...result].sort((a, b) => b.name.localeCompare(a.name, "id"));
+    return result;
   }, [catalog, category, query, sort, photoFilter]);
 
   const selected = catalog.find((item) => item.key === selectedKey);
+  const sortOptions = [
+    { value: "Katalog", label: copy.catalog },
+    { value: "NamaAsc", label: copy.nameAsc },
+    { value: "NamaDesc", label: copy.nameDesc },
+  ] as const;
+  const sortLabel = sortOptions.find((option) => option.value === sort)?.label ?? copy.catalog;
 
   // Marketing cards deep-link to a specific preview. Public preview never opens Studio.
   useEffect(() => {
@@ -135,6 +146,25 @@ export default function TemplateDesignPage() {
       window.removeEventListener("keydown", onKeyDown);
     };
   }, [selectedKey]);
+
+  useEffect(() => {
+    if (!sortOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (!sortMenuRef.current?.contains(event.target as Node)) setSortOpen(false);
+    };
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSortOpen(false);
+        sortTriggerRef.current?.focus();
+      }
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [sortOpen]);
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
@@ -165,7 +195,7 @@ export default function TemplateDesignPage() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={copy.search}
-              className="min-h-12 w-full rounded-2xl border border-primary/25 bg-background/75 py-3 pl-10 pr-4 text-sm shadow-sm backdrop-blur-md outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+              className="min-h-12 w-full rounded-full border border-primary/80 bg-background/75 py-3 pl-10 pr-5 text-sm shadow-sm backdrop-blur-md outline-none transition hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/50"
             />
           </div>
         </div>
@@ -194,17 +224,41 @@ export default function TemplateDesignPage() {
               </button>
             ))}
           </div>
-          <label className="flex items-center gap-3 text-xs text-foreground/65">
-            {copy.sort}
-            <select
-              value={sort}
-              onChange={(event) => setSort(event.target.value as "Katalog" | "Nama")}
-              className="min-h-10 rounded-xl border border-primary/25 bg-background/70 px-3 text-xs text-foreground outline-none focus:border-primary"
+          <div ref={sortMenuRef} className="relative z-20 flex items-center gap-3 text-xs text-foreground/65">
+            <span id="template-sort-label">{copy.sort}</span>
+            <button
+              ref={sortTriggerRef}
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={sortOpen}
+              aria-labelledby="template-sort-label template-sort-value"
+              onClick={() => setSortOpen((open) => !open)}
+              className="flex min-h-11 min-w-[155px] items-center justify-between gap-3 rounded-full border border-primary/80 bg-background/85 px-4 py-2 text-xs text-foreground shadow-sm transition hover:border-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             >
-              <option value="Katalog">{copy.catalog}</option>
-              <option value="Nama">{copy.name}</option>
-            </select>
-          </label>
+              <span id="template-sort-value">{sortLabel}</span>
+              <ChevronDown className={`h-4 w-4 shrink-0 text-primary transition-transform ${sortOpen ? "rotate-180" : ""}`} aria-hidden />
+            </button>
+            {sortOpen && (
+              <div role="menu" aria-label={copy.sort} className="absolute right-0 top-[calc(100%+8px)] z-30 w-48 overflow-hidden rounded-2xl border border-primary/80 bg-background p-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.16)]">
+                {sortOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={sort === option.value}
+                    onClick={() => {
+                      setSort(option.value);
+                      setSortOpen(false);
+                      sortTriggerRef.current?.focus();
+                    }}
+                    className={`flex min-h-10 w-full items-center rounded-xl px-3 text-left text-xs transition hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${sort === option.value ? "bg-primary/10 text-primary" : "text-foreground/80"}`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
@@ -228,7 +282,7 @@ export default function TemplateDesignPage() {
               <div className="px-5 pb-5 pt-3">
                 <p className="min-h-12 text-sm leading-6 text-foreground/65">{template.description}</p>
                 <p className="mt-2 text-[11px] text-foreground/50">{!template.ready ? copy.designer : template.previewType === "public" ? copy.ready : copy.studio}</p>
-                <Button onClick={() => openPreview(template.key)} size="sm" className="mt-4 w-full rounded-xl text-sm">
+                <Button onClick={() => openPreview(template.key)} size="sm" className="mt-4 min-h-11 w-full rounded-full border-primary/80 text-sm focus-visible:ring-primary/60">
                   {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
               </div>
