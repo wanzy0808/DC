@@ -1,33 +1,80 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
+import { invitationTemplates } from "@/lib/templates/catalog";
 import { TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
+
+const previewLimit = 3;
+
+function randomKeys(keys: string[]) {
+  const shuffled = [...keys];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const choice = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[choice]] = [shuffled[choice], shuffled[index]];
+  }
+  return shuffled.slice(0, previewLimit);
+}
 
 export default function TemplateCollection() {
   const { locale } = useLanguage();
   const templates = useTemplateCatalog();
+  // Deterministic initial render prevents an SSR hydration mismatch.
+  // The public endpoint replaces this with paid-event popularity or a random
+  // choice when no template has been sold.
+  const [featuredKeys, setFeaturedKeys] = useState<string[]>(
+    () => invitationTemplates.slice(0, previewLimit).map((template) => template.key),
+  );
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/templates/featured", { cache: "no-store", signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Featured templates unavailable");
+        return response.json() as Promise<{ keys: string[] }>;
+      })
+      .then(({ keys }) => {
+        if (!controller.signal.aborted && Array.isArray(keys)) {
+          const allowed = new Set(invitationTemplates.map((template) => template.key));
+          const uniqueKeys = [...new Set(keys.filter((key) => allowed.has(key)))];
+          if (uniqueKeys.length) setFeaturedKeys(uniqueKeys.slice(0, previewLimit));
+        }
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) {
+          // Database may be offline in local development: show a neutral random
+          // selection, never label it a verified top-seller.
+          setFeaturedKeys(randomKeys(invitationTemplates.map((template) => template.key)));
+        }
+      });
+    return () => controller.abort();
+  }, []);
+
+  const featuredTemplates = featuredKeys.flatMap((key) => {
+    const template = templates.find((item) => item.key === key && item.ready);
+    return template ? [template] : [];
+  });
+
   const copy =
     locale === "en"
       ? {
           eyebrow: "Template Collection",
           title: "Choose a visual direction that fits your event.",
-          description: "Explore the same up-to-date collection as the public gallery and Invitation Studio. Preview a design without signing in.",
+          description: "A small selection to get you started. Explore the full collection and preview any design without signing in.",
           all: "Explore all templates",
           preview: "View preview",
-          previewOnly: "Designer preview · not yet in Studio",
           ready: "Available in Studio",
         }
       : {
           eyebrow: "Koleksi Template",
           title: "Pilih visual yang paling cocok dengan suasana acaramu.",
-          description: "Lihat desain dari katalog yang sama dengan galeri publik dan Invitation Studio. Kamu bisa melihat preview tanpa login.",
+          description: "Tiga pilihan untuk inspirasi awal. Jelajahi koleksi lengkap dan lihat pratinjau tanpa login.",
           all: "Lihat semua template",
           preview: "Lihat pratinjau",
-          previewOnly: "Preview designer · belum tersedia di Studio",
           ready: "Tersedia di Studio",
         };
 
@@ -53,37 +100,40 @@ export default function TemplateCollection() {
         </Button>
       </div>
 
-      <div className="grid justify-items-center gap-8 md:grid-cols-3">
-        {templates.map((template) => (
-          <article key={template.key} className="group w-full min-w-0">
-            <div className="relative mx-auto aspect-[0.72] w-full max-w-[270px] overflow-hidden rounded-[28px] border-2 border-[#111111] bg-white p-2 shadow-lg shadow-black/5 transition-transform duration-500 group-hover:-translate-y-1.5 dark:border-white dark:bg-[#111113] dark:shadow-black/20">
-              <div className="relative h-full overflow-hidden rounded-[21px] bg-[#fcf7f6]">
-                {template.ready ? (
-                  <TemplateCardCanvas templateKey={template.key} />
-                ) : (
-                  <img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" />
-                )}
+      <div className="grid justify-items-center gap-10 md:grid-cols-3 md:gap-6">
+        {featuredTemplates.map((template) => (
+          <article key={template.key} className="group flex w-full min-w-0 max-w-[290px] flex-col items-center">
+            <div className="relative mx-auto aspect-[9/19.5] w-full max-w-[238px] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_55px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-transform duration-500 group-hover:-translate-y-1.5 dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
+              <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-12 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+              <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+              <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+              <div className="relative h-full overflow-hidden rounded-[39px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
+                <div className="pointer-events-none absolute inset-[7px] z-20 rounded-[33px] border border-white/10" aria-hidden="true" />
+                <div className="relative h-full overflow-hidden rounded-[32px] bg-[#f8f4f1] dark:bg-[#111111]">
+                  <TemplateCardCanvas templateKey={template.key} phone />
+                </div>
+                <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 z-30 h-5 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]">
+                  <span className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#151515]" />
+                </div>
               </div>
-              <span className="absolute left-4 top-4 border border-white/30 bg-black/45 px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-white backdrop-blur-md">
-                {template.category}
-              </span>
               <Link
                 href={`/template-design?template=${encodeURIComponent(template.key)}`}
-                className="absolute inset-0 z-10 focus-visible:outline-2 focus-visible:outline-offset-[-4px] focus-visible:outline-primary"
+                className="absolute inset-0 z-40 rounded-[42px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                 aria-label={`${copy.preview}: ${template.name}`}
               />
             </div>
-            <div className="mx-auto max-w-[270px] pt-5">
-              <div className="flex items-baseline justify-between gap-3">
-                <h3 className="min-w-0 break-words font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
-                  {template.name}
-                </h3>
-                <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
-                  {template.ready ? copy.ready : copy.previewOnly}
-                </span>
-              </div>
+            <div className="mt-6 flex w-full max-w-[270px] flex-col items-center text-center">
+              <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground/50">
+                {template.category}
+              </p>
+              <h3 className="mt-2 font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
+                {template.name}
+              </h3>
               <p className="mt-2 text-xs leading-6 text-foreground/60">{template.description}</p>
-              <Button asChild size="xs" className="mt-3 min-w-0 text-xs">
+              <p className="mt-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
+                {copy.ready}
+              </p>
+              <Button asChild size="xs" className="mt-4 min-w-0 text-xs">
                 <Link href={`/template-design?template=${encodeURIComponent(template.key)}`}>
                   {copy.preview} <ArrowUpRight className="h-3 w-3" />
                 </Link>
