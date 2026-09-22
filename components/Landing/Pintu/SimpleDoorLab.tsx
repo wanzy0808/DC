@@ -1,9 +1,11 @@
 "use client";
 
-import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
+/* eslint-disable react-hooks/immutability -- React Three Fiber useFrame intentionally mutates GPU buffers, Three objects, and projected control refs. */
+
+import { Canvas, useFrame, useLoader } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { motion, useReducedMotion } from "motion/react";
+import { useReducedMotion } from "motion/react";
 import * as THREE from "three";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
@@ -57,7 +59,7 @@ function DoorFrame() {
   return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#c07a84" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
 }
 
-function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
+function PortalWorld({ image }: { image: string }) {
   const source = useLoader(THREE.TextureLoader, image);
   const texture = useMemo(() => {
     const copy = source.clone();
@@ -182,24 +184,6 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   </points>;
 }
 
-function PortalCamera({ entering, reducedMotion, selected, onArrive }: { entering: boolean; reducedMotion: boolean; selected: number; onArrive: () => void }) {
-  const { camera } = useThree();
-  const progress = useRef(0);
-  const arrived = useRef(false);
-  useFrame((_, delta) => {
-    progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 18 : 2.4, delta);
-    const t = progress.current;
-    const eased = t * t * (3 - 2 * t);
-    camera.position.set(0, 0.05 - eased * 0.12, 11.7 - eased * 11.1);
-    camera.lookAt(0, -0.05, -2);
-    if (entering && t > 0.96 && !arrived.current) {
-      arrived.current = true;
-      onArrive();
-    }
-  });
-  return null;
-}
-
 function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   const label = useRef<THREE.MeshBasicMaterial>(null);
   const texture = useMemo(() => {
@@ -237,7 +221,7 @@ function Door({ opening, image, title }: { opening: boolean; image: string; titl
   });
   const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
-    <PortalWorld image={image} opening={opening} />
+    <PortalWorld image={image} />
     <group position={[0, 0, -0.16]}>
       <DoorFrame />
     </group>
@@ -274,13 +258,13 @@ const PORTALS = [
   { title: "Undangan Fisik", image: "/Ufisik.png", href: "/undangan-fisik" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
+function OrbitalDoors({ selected, opening, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   const buttonAnchor = useMemo(() => new THREE.Vector3(), []);
   const closeAnchor = useMemo(() => new THREE.Vector3(), []);
   useFrame(({ camera, size }, delta) => {
-    if (selected === null && !reducedMotion && !entering) phase.current += delta * 0.18;
+    if (selected === null && !reducedMotion) phase.current += delta * 0.18;
     else if (selected !== null) {
       const target = -selected * Math.PI * 2 / PORTALS.length;
       const diff = Math.atan2(Math.sin(target - phase.current), Math.cos(target - phase.current));
@@ -302,7 +286,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     const close = closeButton.current;
     const button = enterButton.current;
     const active = selected === null ? null : groups.current[selected];
-    if (close && active && !entering) {
+    if (close && active) {
       closeAnchor.set(0.88, 2.18, 0.16);
       active.localToWorld(closeAnchor);
       closeAnchor.project(camera);
@@ -322,14 +306,14 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
       const y = (1 - buttonAnchor.y) * size.height / 2;
       button.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%) scale(${active.scale.x.toFixed(3)})`;
       const centered = Math.abs(active.position.x) < 0.32;
-      button.style.opacity = centered && opening[selected!] && !entering ? "1" : "0";
-      button.style.pointerEvents = centered && opening[selected!] && !entering ? "auto" : "none";
+      button.style.opacity = centered && opening[selected!] ? "1" : "0";
+      button.style.pointerEvents = centered && opening[selected!] ? "auto" : "none";
     } else if (button) {
       button.style.opacity = "0";
       button.style.pointerEvents = "none";
     }
   });
-  return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
+  return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
@@ -339,40 +323,45 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
 export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boolean }) {
   const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
-  const [entering, setEntering] = useState(false);
+  const [departing, setDeparting] = useState(false);
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const recoveryTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionStarted = useRef(false);
-  useEffect(() => () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); }, []);
-  function finishZoom() {
-    if (transitionStarted.current || selected === null) return;
-    transitionStarted.current = true;
-    window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
-    // The persistent overlay fully hides the 3D door before navigating.
-    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 1050);
-  }
+  useEffect(() => () => {
+    if (navigationTimer.current) clearTimeout(navigationTimer.current);
+    if (recoveryTimer.current) clearTimeout(recoveryTimer.current);
+  }, []);
   const router = useRouter();
   const reducedMotion = useReducedMotion();
   const { isDarkMode } = useTheme();
   const enterButton = useRef<HTMLDivElement>(null);
   const closeButton = useRef<HTMLButtonElement>(null);
   function enterPortal() {
-    if (selected === null || !opening[selected] || entering) return;
+    if (selected === null || !opening[selected] || transitionStarted.current) return;
+    transitionStarted.current = true;
     window.dispatchEvent(new Event("dc-portal-prime"));
-    setEntering(true);
+    setDeparting(true);
+    window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
+    // Do not fly the camera through, enlarge, or carry the selected Pintu into
+    // the transition. The scene fades out and the Rose veil/puzzle takes over.
+    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 755);
+    recoveryTimer.current = setTimeout(() => {
+      transitionStarted.current = false;
+      setDeparting(false);
+    }, 8200);
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
-    <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
+    <div className={`${fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"} transition-opacity duration-150 ${departing ? "opacity-0" : "opacity-100"}`}>
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={finishZoom} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
+        <OrbitalDoors selected={selected} opening={opening} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
       <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>
-      <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
+      <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || departing}>Masuk</Button></div>
     </div>
     
   </section>;

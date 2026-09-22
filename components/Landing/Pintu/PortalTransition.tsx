@@ -1,20 +1,21 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
 import { isMarketingPath } from "@/lib/marketing-paths";
 import { useMarketingTransitionAudio } from "@/components/Layout/MarketingAudio";
 
 const COVER_MS = 780;
-const DOOR_COVER_MS = 950;
+const PORTAL_COVER_MS = 720;
 const REVEAL_MS = 900;
 const STALLED_ROUTE_MS = 8000;
 type Phase = "idle" | "cover" | "hold" | "reveal";
 type PendingRoute = { path: string; href: string };
 
 /**
- * One persistent rose veil for both a door entry and ordinary marketing links.
+ * One persistent rose veil for both a Pintu selection and ordinary marketing links.
+ * The selected Pintu belongs only to the landing; it is removed before this transition starts.
  * Cover -> route commit -> reveal. Dashboard/auth/checkout/external links are not intercepted.
  */
 export default function PortalTransition() {
@@ -24,23 +25,27 @@ export default function PortalTransition() {
   const { primeTransitionSound, playTransitionSound } = useMarketingTransitionAudio();
   const primeRef = useRef(primeTransitionSound);
   const playRef = useRef(playTransitionSound);
-  primeRef.current = primeTransitionSound;
-  playRef.current = playTransitionSound;
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [coverDuration, setCoverDuration] = useState(COVER_MS);
   const pending = useRef<PendingRoute | null>(null);
   const timers = useRef<number[]>([]);
-  const clearTimers = () => {
+
+  useEffect(() => {
+    primeRef.current = primeTransitionSound;
+    playRef.current = playTransitionSound;
+  }, [playTransitionSound, primeTransitionSound]);
+
+  const clearTimers = useCallback(() => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
-  };
-  const reset = () => {
+  }, []);
+  const reset = useCallback(() => {
     clearTimers();
     pending.current = null;
     delete document.documentElement.dataset.dcMarketingTransition;
     setPhase("idle");
-  };
+  }, [clearTimers]);
 
   useEffect(() => {
     const begin = (href: string, viaDoor: boolean) => {
@@ -54,11 +59,12 @@ export default function PortalTransition() {
       }
       document.documentElement.dataset.dcMarketingTransition = "1";
       playRef.current();
-      const cover = viaDoor ? DOOR_COVER_MS : COVER_MS;
+      const cover = viaDoor ? PORTAL_COVER_MS : COVER_MS;
       setCoverDuration(cover);
       setPhase("cover");
       timers.current.push(window.setTimeout(() => setPhase("hold"), cover));
-      // The 3D door owns its camera zoom and router.push; ordinary links navigate after cover.
+      // The landing owns the final router push for a Pintu selection. Ordinary
+      // links navigate here after the same veil has covered their source page.
       if (!viaDoor) {
         timers.current.push(window.setTimeout(() => {
           if (pending.current) router.push(pending.current.href);
@@ -101,7 +107,7 @@ export default function PortalTransition() {
       clearTimers();
       delete document.documentElement.dataset.dcMarketingTransition;
     };
-  }, [router, reducedMotion]);
+  }, [clearTimers, reset, router, reducedMotion]);
 
   useEffect(() => {
     if (!pending.current || pending.current.path !== pathname || phase !== "hold") return;
@@ -113,7 +119,7 @@ export default function PortalTransition() {
       timers.current.push(window.setTimeout(reset, REVEAL_MS + 80));
     }, 90);
     return () => clearTimeout(timer);
-  }, [pathname, phase]);
+  }, [pathname, phase, reset]);
 
   if (phase === "idle" || reducedMotion) return null;
   return (

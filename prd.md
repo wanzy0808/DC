@@ -1195,6 +1195,14 @@ Bukan melalui banyak warna/variant berbeda.
 - Gunakan satu orkestrator/shared transition state untuk tiga Pintu dan tiap route, sehingga timing, masking/portal interior, responsive viewport, reduced motion, touch/keyboard, serta cancel/error handling konsisten. Aset interior 2.5D `/pintu-lab` **belum** otomatis menjadi ruang 3D yang benar-benar dapat diterbangi kamera; uji close-up/scale, dan gunakan scene/overlay yang mendukung ilusi transisi tanpa memperbesar ilustrasi hingga tampak datar/pixelated.
 - Untuk `prefers-reduced-motion`: langsung navigasi dengan fade singkat atau tanpa zoom. Jangan memblokir akses bila animasi tidak didukung, ketika halaman destination belum siap, atau saat koneksi lambat. Timing akhir disetel lewat review screenshot/video browser, bukan angka tetap yang diasumsikan selesai.
 - Implementasikan pengujian interaksi transisi **setelah Pintu 1 disetujui visualnya**: Tahap 10 lighting menyiapkan titik terang di bukaan; Tahap 11–13 memverifikasi clipping/responsivitas/performa; Tahap 14 membuat komponen Pintu reusable; **Tahap 15** menggabungkan tiga Pintu + orbital + zoom-in lintas route + zoom-out halaman. Landing utama `/` tidak diubah selama preview `/pintu-lab` belum disetujui.
+- **Koreksi owner 22 September 2026 untuk landing canonical saat ini:** Pintu tetap menjadi selector/orbit pada landing, tetapi setelah user menekan `Masuk`, objek Pintu dan kamera **tidak** menjadi bagian transisi lintas route. Scene Pintu langsung fade, shared Rose veil + sound lembut mengambil alih, lalu komponen halaman tujuan tersusun. Jangan zoom kamera menembus kusen, memperbesar Pintu, atau membawa facade Pintu ke `/d-invitation`. Eksperimen kamera-masuk pada lab tetap boleh disimpan sebagai riwayat/eksperimen, bukan behavior landing aktif.
+
+### 15.4.3 Puzzle arrival `/d-invitation` (22 September 2026)
+
+- Shared Rose veil menutup halaman asal, route Next.js tetap berpindah secara nyata, lalu veil membuka halaman tujuan tanpa black flash. Efek suara transisi berupa swoosh sintetis yang sangat pelan dan mengikuti mute/volume marketing; kegagalan Web Audio tidak boleh menahan navigasi.
+- Saat `/d-invitation` datang, embedded Navbar, kepingan copy Hero, mockup HP, setiap section marketing, dan frame footer tersusun dari arah berbeda lalu berhenti di layout finalnya. Section di bawah fold baru dirakit sekali ketika masuk viewport panel scroll internal.
+- Puzzle memakai elemen DOM asli agar link, button, language/theme control, serta isi section tetap interaktif. Gerak dibatasi pada transform, opacity, scale kecil, dan blur singkat; tidak mengubah ukuran/posisi final yang sudah disetujui dan tidak menduplikasi petals, flowers, audio player, atau content.
+- `prefers-reduced-motion` menampilkan seluruh content langsung tanpa puzzle berat dan tanpa sound transisi. Recovery timeout wajib melepaskan veil bila route gagal commit agar halaman tidak tertutup permanen.
 
 ### 15.5 User-facing copy
 
@@ -3739,3 +3747,31 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Change:** Hapus hanya `border-b border-border/70` dari section Hero di `components/DigitalInvitation/HeroSection.tsx`. Pertahankan border atas Fitur sebagai satu-satunya garis pemisah, border bawah Fitur, spacing, tata letak, HP, animasi, dan semua section lain. Commit: `12d6fef5218d4b9ab179a755ab50e49d6cec31fd`.
 
 **Validation:** GitHub write berhasil; build/CI/preview browser belum dijalankan.
+
+
+---
+
+## 2026-09-22 — Remove Pintu object from the active route transition
+
+**Owner clarification:** Pintu pada landing tetap; yang harus dibuang hanya Pintu yang masih ikut terlihat/bergerak pada fase transisi setelah tombol `Masuk` ditekan.
+
+**Implementation:** `SimpleDoorLab` tidak lagi menjalankan `PortalCamera` yang menerbangkan kamera mendekati dan melewati kusen. Saat `Masuk`, scene WebGL Pintu fade dalam 150 ms, sound diprime, shared `dc-portal-start` veil dimulai segera, dan route berpindah setelah veil menutup source page. Orbit, pemilihan Pintu, bukaan daun sebelum user menekan `Masuk`, label layanan, background landing, serta destination tetap. `PortalTransition` memakai durasi handoff Pintu 720 ms dan menjelaskan bahwa objek Pintu hanya milik landing; glow/veil dan puzzle assembly destination menjadi transition visual aktif. Recovery timer mengembalikan scene bila route gagal commit agar landing tidak tertinggal kosong.
+
+**Affected:** `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Landing/Pintu/PortalTransition.tsx`, `prd.md`, `prd-tambahan.md`.
+
+**Validation:** targeted ESLint, `tsc --noEmit`, dan Next.js production build **PASS** (58 route generated). Browser visual/sound timing dan remote CI pending pada saat catatan dibuat.
+
+
+---
+
+## 2026-09-22 — Rose veil, subtle sound, and puzzle assembly `/d-invitation`
+
+**Owner request:** Percayakan ulang rasa transisi pindah halaman, tambahkan sound effect tipis, lalu buat seluruh komponen `/d-invitation` datang sebagai kepingan puzzle yang menyatu.
+
+**Implementation:** `PortalTransition` menjadi orkestrator persisten untuk cover → route commit → reveal pada surface marketing. `MarketingAudioProvider` menghasilkan swoosh singkat melalui Web Audio yang mengikuti mute/volume dan tidak memblokir navigasi. `PuzzleAssemble` menggerakkan DOM asli; Hero dirakit menjadi lima keping copy dan satu keping HP, sedangkan Navbar, Feature, Template, Studio CTA, Package, Reviews, FAQ, dan frame footer tersusun satu kali sesuai arrival/inner-scroll viewport. Direct load memiliki fallback reveal; reduced motion menampilkan content tanpa animasi berat. Follow-up menghapus Pintu/kamera dari fase lintas route dan menstabilkan timer serta ref lifecycle agar sesuai aturan React terbaru.
+
+**Affected:** `components/Landing/Pintu/PortalTransition.tsx`, `components/Layout/MarketingAudio.tsx`, `components/DigitalInvitation/PuzzleAssemble.tsx`, `components/DigitalInvitation/HeroSection.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `app/d-invitation/page.tsx`, `app/globals.css`, `app/layout.tsx`, `AGENTS.md`, `prd.md`.
+
+**Source commits:** `0e0a5ca`, `e48adf7`, `fb59ff9`, `d4a586c`, `e6ab5b0`, `c38046d`, `6da29bf`, `0174eef`, `3bd2227`, dan `472889f`.
+
+**Validation:** targeted ESLint **PASS** dan Next.js 16.3.3 production build **PASS** (58 route generated). Pemeriksaan browser visual/audio tidak selesai karena preview lokal tidak dapat dijangkau oleh sesi browser terpisah; screenshot owner, timing sound nyata, responsive visual, dan remote CI masih pending.

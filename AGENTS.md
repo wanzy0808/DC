@@ -1,8 +1,10 @@
 <!-- BEGIN:nextjs-agent-rules -->
 
-# Next.js Agent Rules
+# This is NOT the Next.js you know
 
-This project uses a current Next.js version with potentially breaking APIs and conventions. Before writing Next.js-specific code, inspect the relevant guides under `node_modules/next/dist/docs/` available in the repository environment and heed deprecation notices.
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
 
@@ -145,6 +147,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Interactive spring: `stiffness: 400`, `damping: 25`.
 - Scroll reveal uses `whileInView` with `viewport.once`.
 - Marketing `/d-invitation` uses the approved landing-style viewport frame: embedded navbar and compact footer remain fixed within the frame, all marketing sections scroll inside its central panel, and per-section `whileInView` reveals must observe that inner scroll root (not the document viewport). Preserve the existing landing `/` scene and honor reduced motion.
+- Arrival at `/d-invitation` uses the shared Rose veil and subtle transition sound, then assembles the embedded navbar, Hero pieces, each marketing section, and frame footer from the real interactive DOM. Keep the puzzle motion restrained (transform/opacity/brief blur), one-shot, rooted to the inner scroll panel below the fold, and disabled for reduced motion. Do not reintroduce the Pintu object into the cross-route transition or duplicate page content solely for animation.
 - Digital Invitation marketing hero proportion: present the illustrative phone as a narrow, tall smartphone (approximately 9:19.5 with responsive width), allocate the larger desktop column to the hero copy, and allow heading/description to use that width. Center the **pair** within the main frame (desktop hero max-width ~1200px) with a moderate gap so the copy and phone sit closer together instead of hugging opposite edges. Keep the existing phone content, scroll animation, portal arrival effect, main frame, and landing unchanged unless requested.
 - Use `AnimatePresence mode="wait"` for tab/modal/page transitions where applicable.
 - Always respect `useReducedMotion()` and remove heavy motion when requested.
