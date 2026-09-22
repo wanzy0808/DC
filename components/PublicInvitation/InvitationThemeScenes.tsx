@@ -42,8 +42,62 @@ function BotanicalSprig({ mirrored = false }: { mirrored?: boolean }) {
     {[0,1,2,3,4].map(n=><Leaf key={n} className={`absolute h-16 w-16 opacity-55 ${n%2 ? "left-9 rotate-[65deg]" : "left-0 -rotate-[30deg]"}`} style={{top:`${n*52}px`}} strokeWidth={0.75}/>)}
   </div>;
 }
+type EnvelopeVisual = {
+  backdrop: string;
+  surface: string;
+  flap: string;
+  border: string;
+  ink: string;
+  symbol: string;
+  effect: string;
+  photoPosition?: string;
+};
+const envelopeVisuals: Record<string, EnvelopeVisual> = {
+  "eternal-blossom": { backdrop: "#fbe5ed", surface: "#fff6f8", flap: "#df9eb8", border: "#bd6e8e", ink: "#67334b", symbol: "❀", effect: "rounded-[30px]", photoPosition: "rotate-[-5deg]" },
+  "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
+  "garden-light": { backdrop: "#e8f0d9", surface: "#fcfdf0", flap: "#adbf98", border: "#6a8458", ink: "#405a3e", symbol: "❧", effect: "rounded-t-[95px] rounded-b-[14px]", photoPosition: "rotate-[-3deg]" },
+  "midnight-romance": { backdrop: "#080e22", surface: "#18213c", flap: "#263452", border: "#cdb986", ink: "#f5e8c9", symbol: "✦", effect: "rounded-t-[130px] rounded-b-[22px]", photoPosition: "rotate-[4deg]" },
+  "botanical-ivory": { backdrop: "#f0efde", surface: "#fffdf2", flap: "#cbd6ba", border: "#849878", ink: "#50634d", symbol: "❧", effect: "rounded-[9px]" },
+  "classic-pearl": { backdrop: "#efebe1", surface: "#fffdf6", flap: "#dcd0b8", border: "#b3a181", ink: "#534a3d", symbol: "◇", effect: "rounded-t-[140px] rounded-b-[14px]" },
+  "golden-art-deco": { backdrop: "#171912", surface: "#23271d", flap: "#a48b49", border: "#dfc482", ink: "#f1d99f", symbol: "◆", effect: "rounded-none" },
+  "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
+  "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
+};
+function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps) {
+  const style = envelopeVisuals[theme] || envelopeVisuals["botanical-ivory"];
+  const usesPhoto = ["eternal-blossom","modern-maroon","garden-light","midnight-romance"].includes(theme);
+  return (
+    <section data-invitation-section="envelope" className={`${center} relative`} style={{backgroundColor:style.backdrop,color:style.ink}}>
+      <div aria-hidden className="pointer-events-none absolute inset-5 border opacity-30" style={{borderColor:style.border}}/>
+      {theme === "garden-light" || theme === "botanical-ivory" || theme === "paper-cut-botanical" ? <>
+        <BotanicalSprig/><BotanicalSprig mirrored/>
+      </> : theme === "celestial-ink" || theme === "midnight-romance" ? <>
+        <div aria-hidden className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
+        <Moon aria-hidden className="absolute right-9 top-10 h-11 w-11 opacity-50"/>
+      </> : theme === "golden-art-deco" ? <div aria-hidden className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : theme === "eternal-blossom" ? <Flower2 aria-hidden className="absolute -left-12 top-5 h-44 w-44 -rotate-12 opacity-20" strokeWidth={0.7}/> : null}
+      <p className={`${caption} relative mb-9 opacity-80`}>{theme === "modern-maroon" ? "Private / 01" : "A personal invitation"}</p>
+      <div className="relative w-[min(74vw,310px)] pt-11">
+        {usesPhoto && <div className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
+          <Portrait src={cover} focus={focus} alt="Foto utama pada kartu undangan" />
+        </div>}
+        <div className={`relative mt-12 flex min-h-[275px] flex-col items-center justify-end overflow-hidden border px-6 pb-10 pt-20 shadow-[0_22px_44px_#0002] ${style.effect}`} style={{backgroundColor:style.surface,borderColor:style.border}}>
+          <div aria-hidden className="absolute inset-x-0 top-0 z-10 h-44 origin-top opacity-95 [clip-path:polygon(0_0,100%_0,50%_100%)]" style={{backgroundColor:style.flap}}/>
+          <div aria-hidden className="absolute left-1/2 top-[105px] z-20 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 text-3xl shadow-md" style={{borderColor:style.surface,backgroundColor:style.border,color:style.surface}}>{style.symbol}</div>
+          <div className="relative z-20 mt-8 w-full border-t pt-6 text-center" style={{borderColor:style.border}}>
+            <p className="text-[9px] uppercase tracking-[.25em] opacity-70">Untuk momen istimewa</p>
+            <Names className="mt-3 text-xl">{names}</Names>
+            <p className="mt-3 text-xs opacity-75">{date}</p>
+          </div>
+        </div>
+      </div>
+      <Open onClick={onOpen} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
+      {preview && <p className="relative mt-4 text-[11px] opacity-60">Pratinjau · data contoh</p>}
+    </section>
+  );
+}
 export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview}: SceneProps) {
-  const isEnvelope = stage === "envelope";
+  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} stage={stage} onOpen={onOpen} preview={preview} />;
+  const isEnvelope = false;
   const content = isEnvelope ? "You're Invited" : "The Celebration";
   if (theme === "eternal-blossom") return <section className={`${center} bg-[#ffedf0] text-[#622a43]`} data-invitation-section={stage}>
     <div aria-hidden className="absolute inset-x-0 top-0 h-[240px] bg-[radial-gradient(circle_at_50%_0%,#f4b9c9,transparent_70%)]" />
