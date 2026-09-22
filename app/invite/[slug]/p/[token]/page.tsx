@@ -2,11 +2,8 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hasInvitationAccess } from "@/lib/invitations/password";
-import PublicInvitation, {
-  InvitationLockedState,
-} from "@/components/PublicInvitation/PublicInvitation";
-import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
-import RomanticRoseTemplate from "@/components/PublicInvitation/RomanticRoseTemplate";
+import { InvitationLockedState } from "@/components/PublicInvitation/PublicInvitation";
+import PublicInvitationRenderer from "@/components/PublicInvitation/PublicInvitationRenderer";
 import PersonalInvitationPasswordGate from "@/components/PublicInvitation/PersonalInvitationPasswordGate";
 
 export default async function PersonalInvitationPage({
@@ -51,15 +48,7 @@ export default async function PersonalInvitationPage({
     data: { personalViewCount: { increment: 1 } },
   });
 
-  const templateKey = invitation.templateKey.split("::")[0];
-  const content =
-    templateKey === "romantic-rose" ? (
-      <RomanticRoseTemplate invitation={invitation} />
-    ) : templateKey === "eternal-blossom" ? (
-      <ClassicInvitationTemplate invitation={invitation} />
-    ) : (
-      <PublicInvitation invitation={invitation} />
-    );
+  const content = <PublicInvitationRenderer invitation={invitation} />;
 
   return (
     <>
