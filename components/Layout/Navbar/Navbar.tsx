@@ -16,8 +16,8 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const isJiplak = pathname === "/jiplak";
-  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/d-invitation" || pathname === "/template-design"));
-  if ((!embedded && (pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
+  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner"));
+  if ((!embedded && (pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
     <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${
