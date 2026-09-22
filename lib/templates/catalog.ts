@@ -1,3 +1,4 @@
+import type { PhotoSlot } from "@/lib/templates/photo-slots";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationTemplateLayout } from "@/components/InvitationStudio/designer-types";
 
@@ -9,6 +10,7 @@ export type InvitationTemplate = {
   assetPath: string;
   category: string;
   previewType: "public" | "studio";
+  photoSlots: PhotoSlot[];
   preset: { layout: InvitationTemplateLayout; palette: PaletteKey; font: FontKey };
 };
 
@@ -17,6 +19,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "romantic-rose",
     category: "Floral",
     previewType: "public",
+    photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "editorial", palette: "blush", font: "cinzelFauna" },
     name: "Romantic Rose",
     description: "Amplop digital, galeri foto pasangan, dan 13 bagian undangan dalam nuansa rose.",
@@ -27,6 +30,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "botanical-ivory",
     category: "Botanical",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "botanical", palette: "pearl", font: "cinzelFauna" },
     name: "Botanical Ivory",
     description:
@@ -39,6 +43,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "eternal-blossom",
     category: "Floral",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "editorial", palette: "blush", font: "playfairLora" },
     name: "Eternal Blossom",
     description: "Floral editorial yang lembut untuk perayaan personal dan intimate.",
@@ -50,6 +55,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "modern-maroon",
     category: "Modern",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
     name: "Modern Maroon",
     description: "Editorial modern dengan aksen berani untuk berbagai jenis acara.",
@@ -61,6 +67,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "garden-light",
     category: "Botanical",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "garden", palette: "sage", font: "playfairLora" },
     name: "Garden Light",
     description: "Botanical terang untuk acara outdoor, garden, dan daytime celebration.",
@@ -72,6 +79,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "midnight-romance",
     category: "Modern",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "midnight", palette: "midnight", font: "cinzelFauna" },
     name: "Midnight Romance",
     description: "Dramatis, intimate, dan elegan untuk acara malam hari.",
@@ -83,6 +91,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "classic-pearl",
     category: "Classic",
     previewType: "studio",
+    photoSlots: ["cover"],
     preset: { layout: "classic", palette: "pearl", font: "playfairLora" },
     name: "Classic Pearl",
     description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
