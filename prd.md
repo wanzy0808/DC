@@ -1255,6 +1255,7 @@ Bukan melalui banyak warna/variant berbeda.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
 - Dashboard boleh memakai table/graph ketika datanya berasal dari database/API atau derived metric yang dapat dijelaskan; jangan membuat angka/mock chart untuk dekorasi.
 - Pintu tetap core public navigation surface.
+- Widget navigasi Pintu mini bersifat pelengkap pada halaman marketing publik (`/`, `/pagecontoh`, `/event-planner`, `/d-invitation`, `/guestbook`, `/undangan-fisik`, `/template-design`), bukan pengganti Pintu utama, burger atau navbar. Widget tetap di sisi kiri, tertutup secara default, dibuka lewat klik/tap/keyboard, dan menampilkan tujuan sebagai miniatur pintu, judul, deskripsi pendek serta indikator halaman aktif. Tujuan diambil dari rute nyata, copy mengikuti locale ID/EN, panel dapat ditutup dengan tombol, Escape, klik di luar, atau setelah navigasi. Pada mobile panel dapat discroll tanpa menutup konten utama; tidak muncul di Dashboard, Studio, atau undangan pelanggan. Tautan antarmarketing memakai `PortalTransition` Rose existing tanpa gambar pintu kedua dan menghormati reduced motion.
 - Ornamen/bunga dekoratif di bagian atas setiap Pintu merupakan bagian dari closed-door surface: saat Pintu aktif/terbuka ornamen harus ikut fade/keluar, lalu kembali saat Pintu tertutup. Behavior mengikuti state Pintu yang sama dan tetap menghormati reduced motion.
 - Landing 80vw harus memperlakukan copy + Pintu sebagai satu komposisi: orbit dapat melebar dan carousel dapat masuk ke arah copy selama responsive clipping tetap aman.
 - Copy kiri landing boleh diperlebar dan sedikit dibesarkan secara vertikal agar mengisi 80vw secara proporsional tanpa mengalahkan Pintu.
@@ -4109,3 +4110,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **File kode:** `components/Landing/Pintu/SimpleDoorLab.tsx`. **Commit kode:** `2047cde503d5e6be7a303845c5fcb8bed508f20a`. **AGENTS commit:** `ae723d5e362414bb1aec8b2af575447432e7fd31`.
 
 **Validasi:** Inspeksi kode pada GitHub; build/CI, timing pada perangkat nyata dan screenshot browser masih pending. Tidak mengklaim pemeriksaan visual telah PASS.
+
+
+---
+
+## 2026-09-22 — Widget navigasi Pintu mini di sisi kiri halaman marketing
+
+**Permintaan:** Tambahkan widget di kiri untuk berpindah ke halaman lain, berbentuk pintu dan menjelaskan tujuan setiap halaman.
+
+**Implementasi:** Komponen `MarketingDoorNavigator` di-host sekali oleh root layout dan hanya terlihat di tujuh halaman marketing yang relevan. Trigger Pintu mini Rose membuka panel berisi Beranda, Event Planner, Digital Invitation, Guestbook, Undangan Fisik, dan Koleksi Desain; setiap item menampilkan Pintu mini, judul serta microcopy tujuan, dengan halaman aktif ditandai. Panel responsif, tertutup secara default, mendukung ID/EN, keyboard/Escape, klik di luar, close button dan reduced-motion. Tautan menggunakan Link existing sehingga `PortalTransition` menangani navigasi cross-route tanpa gambar Pintu kedua. Pintu 3D utama, frame halaman, navbar, footer, Dashboard dan invitation renderer pelanggan tidak diubah.
+
+**Files:** `components/Layout/MarketingDoorNavigator.tsx`, `app/layout.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Code commits:** `48a3164e50e3d51786db8ca0ba381726d06fa8b1`, `645183f1ec86f40b45c6a0b786379e3a97f123f6`, `32b7912ea10da5120baf03f33873fa45e2ba319b`.
+
+**Validasi:** Inspeksi source GitHub; lint/build/CI dan pengujian visual di browser/perangkat belum diverifikasi.
