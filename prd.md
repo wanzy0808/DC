@@ -481,9 +481,33 @@ Invitation disusun dari section reusable yang dapat dikomposisikan, misalnya:
 - Closing;
 - Footer.
 
-Daftar section dapat berkembang. Tidak semua event category atau template wajib memakai semua section.
+Daftar section dapat berkembang. Seluruh template undangan READY wajib mengikuti amplop + 13-section universal di §7.2.3a, dengan isi Identity disesuaikan event category serta toggles RSVP/Wishes/Gift tetap boleh OFF.
 
 Optional section harus dapat diaktifkan/dinonaktifkan tanpa menghapus shared feature/data secara tidak sengaja. Public renderer hanya merender section yang aktif dan valid untuk invitation tersebut.
+
+### 7.2.3a Universal envelope + 13-section contract (22 September 2026)
+
+Setiap template undangan yang READY, termasuk tujuh built-in dan semua template baru setelah renderer terintegrasi, WAJIB memiliki amplop digital interaktif dengan tombol **Buka Undangan** sebelum Cover; amplop bukan pengganti Cover, bukan pintu marketing landing. Seluruh renderer real di halaman publik, Invitation Studio, dan galeri template menampilkan section semantik berikut secara konsisten:
+
+1. Cover / Hero
+2. Introduction / Greeting
+3. Identity / Host / Couple
+4. Event Detail
+5. Date & Time
+6. Gallery / Media
+7. Countdown
+8. Location / Maps
+9. RSVP / Konfirmasi Kehadiran
+10. Wishes / Ucapan Tamu
+11. Gift / E-Angpao
+12. Closing
+13. Footer
+
+Tiga feature section RSVP/Wishes/Gift dapat dinonaktifkan oleh customer lewat toggle yang sudah ada; section OFF tidak menghapus datanya. Section dengan media, Maps, atau informasi bank yang belum diisi tidak boleh membuat foto, alamat, nomor rekening atau aksi palsu: tampilkan empty state jujur atau sembunyikan kontennya sambil mempertahankan slot struktural. Identity mengikuti jenis acara (couple, individual, host), bukan selalu wedding. Form RSVP aktif hanya pada undangan publik; preview tidak boleh menyimpan data customer. Wishes masih menunggu shared persistence API sehingga hanya boleh menampilkan keterangan transparan, bukan form yang berpura-pura aktif.
+
+Template memiliki gaya sendiri untuk amplop, ornamen, frame foto, palette, fonts, animasi, layout dan (bila manifest mengizinkan) urutan section. Feature logic, photo role, countdown, audio, RSVP, keamanan dan data milik shared engine. Komponen publik dan Studio harus merender presentasi yang sama, bukan menampilkan mock section di Studio dan konten berbeda di URL publik. Ketiga jalur URL undangan tamu—utama, per acara, dan personal—wajib melewati satu shared renderer dispatcher. Key dari upload designer baru tetap preview gambar tidak aktif sampai renderer sesuai kontrak ini selesai dibuat dan terdaftar.
+
+Semua contoh foto yang dipakai katalog, gallery fixture, dan Studio default harus mengambil asset yang SUDAH ADA di public/: /couple.jpg, /couple2.jpg, /couple3.jpg, /man.jpg, /female.jpg, bukan URL Unsplash. File tersebut hanya dummy/demo; foto undangan pelanggan selalu berasal dari InvitationAsset milik event sendiri, bukan fallback foto demo. Kode tema baru mengambil foto contoh dari manifest/shared fixture, tidak duplikasi file. Sharp WebP tetap wajib untuk semua upload image baru sesuai §7.2.7b.
 
 ### 7.2.4 Template-owned presentation and default order
 
@@ -619,7 +643,7 @@ Template belum siap masuk katalog production bila variasi umum menyebabkan overf
 
 ### 7.2.9a Katalog visual /template-design
 
-Halaman publik `/template-design` mengambil built-in template dari `lib/templates/catalog.ts`, bukan list contoh/nomor template palsu yang terpisah dari Studio. Kartu desain menampilkan visual dari `InvitationPreview` sungguhan dan lazily mount ketika masuk viewport, sedangkan modal memungkinkan pengunjung melihat isi undangan (termasuk alur amplop pada template yang mendukungnya) serta mencoba toggle section tanpa menulis database. Preview hanya memakai fixture `data/templates/preview-invitation.ts` yang jelas diberi label data contoh dan tidak membaca konten pelanggan. Template Romantic Rose memakai renderer publik juga saat Studio preview; template lain yang belum mempunyai renderer publik khusus diberi label eksplisit sebagai pratinjau desain Studio agar tidak menyiratkan 1:1 public rendering.
+Halaman publik `/template-design` mengambil built-in template dari `lib/templates/catalog.ts`, bukan list contoh/nomor template palsu yang terpisah dari Studio. Kartu desain menampilkan visual dari `InvitationPreview` sungguhan dan lazily mount ketika masuk viewport, sedangkan modal memungkinkan pengunjung melihat isi undangan (termasuk alur amplop pada template yang mendukungnya) serta mencoba toggle section tanpa menulis database. Preview hanya memakai fixture `data/templates/preview-invitation.ts` yang jelas diberi label data contoh dan tidak membaca konten pelanggan. Semua built-in READY kini memakai presentasi publik yang sama dengan Studio dan galeri, melalui renderer Romantic Rose atau Universal renderer. Hanya upload designer tanpa renderer yang tetap berupa pratinjau gambar.
 
 Tombol dari katalog publik menuju Dashboard untuk membuat acara lebih dahulu; pemilihan/simpan template event dilakukan di Invitation Studio setelah `invitationId` valid. Jangan menyebut berkas designer (HTML/ZIP) sebagai template built-in yang sudah dapat dirender tanpa proses integrasi. Permukaan marketing `/d-invitation` dan landing tidak otomatis ikut berubah saat katalog ini diperbaiki.
 
@@ -3851,3 +3875,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commits:** `dbf530233e3972141ceda197ba74e19c419269f4` (ambient/global wrapper), `ea7a66a2e173ea594588c20d131a8ce0f2c2781f` (navbar), `7988ddfd8dc37e5f9690e6107deaede090c64d3c` / `cd849ee713e5e1462ce41599084f840207dcaf51` (footer), `eca75b40032c96a25e44964aa26c1ac00186e2ab` (floating controls), `b04123152ab7782235ebd00b2dc819afa33c4afe` (gallery frame and visual redesign).
 
 **Validation:** UI change committed via GitHub. Latest combined GitHub Actions build to be verified; no direct browser/localhost screenshot check performed by this agent.
+
+
+---
+
+## 2026-09-22 — Semua template: amplop digital, 13 sections dan asset demo lokal
+
+**Permintaan:** Amplop Buka Undangan sebelum Cover untuk semua template READY, diikuti Cover/Hero, Greeting, Identity, Event, DateTime, Gallery, Countdown, Location, RSVP, Wishes, Gift, Closing, Footer. Foto contoh memakai aset di public/ daripada Unsplash.
+
+**Implementasi:** `components/PublicInvitation/UniversalInvitationTemplate.tsx` adalah renderer 13-section + amplop real untuk enam built-in selain Romantic Rose; desain tetap berbeda menurut preset dalam manifest tunggal. `components/InvitationStudio/InvitationPreview.tsx` menggunakan renderer publik yang sama, bukan mock section. `InvitationDesigner.tsx` mengoper draft designKey agar tema dan pilihan Studio terlihat langsung. `components/PublicInvitation/PublicInvitationRenderer.tsx` menjadi dispatcher bersama untuk route undangan utama, per-acara dan personal; key tidak diintegrasikan mendapat locked state. Romantic Rose tetap punya amplop khas dan 13 section, dengan gallery/gift empty state jujur bila data tidak ada. Catalog sekarang menyatakan renderer public dan role foto yang didukung untuk tujuh built-ins, thumbnail dan fixture menggunakan public/couple.jpg, couple2.jpg, couple3.jpg. Default image Studio juga memakai asset lokal. Preview RSVP non-submitting, public RSVP menggunakan shared form real, Wishes belum menyimpan ucapan karena shared Wishes API belum tersedia.
+
+**Affected files:** `components/PublicInvitation/UniversalInvitationTemplate.tsx`, `components/PublicInvitation/PublicInvitationRenderer.tsx`, `components/PublicInvitation/RomanticRoseTemplate.tsx`, `components/InvitationStudio/InvitationPreview.tsx`, `components/InvitationStudio/InvitationDesigner.tsx`, ketiga route `app/invite/[slug]/`, `lib/templates/catalog.ts`, `data/templates/preview-invitation.ts`, `components/InvitationStudio/designer-config.ts`, `prd.md`, `AGENTS.md`, `README.md`.
+
+**Commits:** `c1c02879` renderer; `f00d5723` draft template; `caa6af4b` Studio renderer; `d7cd54b5` Studio draft key; `822c5701`, `a61f212c` dispatcher; `f8c3e08b`, `2f51c1d2`, `9df9615a` public routes; `228a67f1` shared catalog; `65e3ee46` demo fixture; `f69ba7de` Studio local sample; `078f450e` Romantic Rose empty state.
+
+**Validasi:** Build CI commit kode sampai `f69ba7de` sukses. Verifikasi CI commit gabungan paling baru sebelum mengklaim build akhir; belum dilakukan pemeriksaan visual langsung di localhost pengguna.
