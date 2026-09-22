@@ -1,6 +1,6 @@
 import RomanticRoseTemplate from "@/components/PublicInvitation/RomanticRoseTemplate";
 import UniversalInvitationTemplate from "@/components/PublicInvitation/UniversalInvitationTemplate";
-import type { PublicInvitationData } from "@/components/PublicInvitation/PublicInvitation";
+import { InvitationLockedState, type PublicInvitationData } from "@/components/PublicInvitation/PublicInvitation";
 import { invitationTemplates } from "@/lib/templates/catalog";
 import { parseDesignKey } from "@/lib/templates/design";
 
@@ -12,5 +12,5 @@ export default function PublicInvitationRenderer({ invitation }: { invitation: P
   if (invitationTemplates.some((template) => template.key === key)) {
     return <UniversalInvitationTemplate invitation={invitation} templateKey={key} />;
   }
-  return null;
+  return <InvitationLockedState />;
 }
