@@ -22,7 +22,7 @@ export default function PortfolioSection() {
         {plannerPortfolio.map((item) => (
           <article
             key={item.name}
-            className="group overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)]/70"
+            className="group overflow-hidden rounded-[28px] border border-primary/35 bg-[var(--card)]/70 md:rounded-[32px]"
           >
             <button
               type="button"
