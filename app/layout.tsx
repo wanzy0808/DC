@@ -11,6 +11,7 @@ import PortalTransition from "@/components/Landing/Pintu/PortalTransition";
 import PublicAtmosphere, { PublicContent } from "@/components/Layout/PublicAtmosphere";
 import { MarketingAudioProvider } from "@/components/Layout/MarketingAudio";
 import MarketingFloatingControls from "@/components/Layout/MarketingFloatingControls";
+import MarketingDoorNavigator from "@/components/Layout/MarketingDoorNavigator";
 
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
 const faunaOne = Fauna_One({ subsets: ["latin"], weight: "400", variable: "--font-fauna" });
@@ -38,6 +39,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <PublicContent>{children}</PublicContent>
               <Footer />
               <MarketingFloatingControls />
+              <MarketingDoorNavigator />
             </MarketingAudioProvider>
           </ThemeProvider>
         </LanguageProvider>
