@@ -172,6 +172,7 @@ export default function EventPlannerPage() {
           title="Saat host bisa benar-benar hadir di acaranya sendiri"
           description="Cerita dari klien yang mempercayakan koordinasi dan planning kepada DC Organizer."
           reviews={plannerReviews}
+          framed
         />
         </ScrollReveal>
 
