@@ -607,6 +607,12 @@ Template baru minimal diuji terhadap variasi:
 
 Template belum siap masuk katalog production bila variasi umum menyebabkan overflow, layout rusak, section kosong yang janggal, atau core interaction tidak dapat digunakan.
 
+### 7.2.9a Katalog visual /template-design
+
+Halaman publik `/template-design` mengambil built-in template dari `lib/templates/catalog.ts`, bukan list contoh/nomor template palsu yang terpisah dari Studio. Kartu desain menampilkan visual dari `InvitationPreview` sungguhan dan lazily mount ketika masuk viewport, sedangkan modal memungkinkan pengunjung melihat isi undangan (termasuk alur amplop pada template yang mendukungnya) serta mencoba toggle section tanpa menulis database. Preview hanya memakai fixture `data/templates/preview-invitation.ts` yang jelas diberi label data contoh dan tidak membaca konten pelanggan. Template Romantic Rose memakai renderer publik juga saat Studio preview; template lain yang belum mempunyai renderer publik khusus diberi label eksplisit sebagai pratinjau desain Studio agar tidak menyiratkan 1:1 public rendering.
+
+Tombol dari katalog publik menuju Dashboard untuk membuat acara lebih dahulu; pemilihan/simpan template event dilakukan di Invitation Studio setelah `invitationId` valid. Jangan menyebut berkas designer (HTML/ZIP) sebagai template built-in yang sudah dapat dirender tanpa proses integrasi. Permukaan marketing `/d-invitation` dan landing tidak otomatis ikut berubah saat katalog ini diperbaiki.
+
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
 Katalog dengan puluhan/ratusan template tidak boleh membuat setiap public invitation mengirim seluruh code dan asset semua template ke browser visitor.
@@ -3758,3 +3764,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `9182dd2100e011f5cf843ae0a18d0a76ac839492` (template), `b2d129caa3734436af244bda02a327223efeb880` (catalog), `dc0b3dbde93429d96e82af3520683aeaec56008f` (preset), `0e322d20e1af17f2af9967b7fb32f125bd55fa3a` / `c97d1765431f125d31b850d62077062f46ecbe58` / `4022c0a82cd7892c97a12d964d719c0a2b3d932e` (public routes), `8eca305e26fcfa59cf4febabe60b02ed9849368e` (canvas), `485f9fdeae944134a8f2d30f97012108a56d3d0e` / `fd1436a289516e29ec3d08298a246d1423fb7027` (photo picker and wiring).
 
 **Validation:** GitHub writes confirmed; CI build was in progress at documentation time. Browser/device visual QA and shared Wishes implementation not completed.
+
+
+---
+
+## 2026-09-22 — /template-design menampilkan template yang benar-benar ada
+
+**Permintaan:** Galeri di `http://localhost:3000/template-design` harus memperlihatkan desain undangan yang sudah dibuat, bukan delapan kartu mock `Tema 167` dan sejenisnya.
+
+**Implementasi:** `data/templates/showcase.ts` sekarang menurunkan item dari katalog bawaan `lib/templates/catalog.ts` (7 entri pada perubahan ini). `data/templates/preview-invitation.ts` menyediakan fixture demo terpisah dan tidak menulis/membaca data event pelanggan. `app/template-design/page.tsx` menggantikan kartu gambar stok/tampilan pasangan palsu dengan actual `InvitationPreview` yang lazy-mount berdasarkan IntersectionObserver; modal membuka preview yang bisa discroll, membuka amplop Romantic Rose, dan mencoba toggle RSVP/Wishes/Gift secara lokal. Filter, pencarian, dan pengurutan sekarang menggunakan item katalog nyata. Brand memakai `BrandWordmark`; tombol beralih ke Dashboard untuk membuat acara lebih dulu, bukan membuka Editor tanpa invitationId yang valid. Renderer publik lain yang masih berbeda dengan Studio preview diberi label sebagai preview Studio. Tidak mengubah marketing `/d-invitation`, Pintu atau route undangan publik.
+
+**Files:** `data/templates/showcase.ts`, `data/templates/preview-invitation.ts`, `app/template-design/page.tsx`, `prd.md`.
+
+**Commits:** `2143e800d6d39dc5f8d7135a2056d06b580b3f45` (katalog), `aac8aae2ed5b9698a3e8e7eaa1526ee96017b71e` (demo fixture), `4b02db304f95ca12454761b42e3904ed6649b1a4` (galeri interaktif).
+
+**Validation:** Intermediate commits setelah perubahan tipe katalog gagal pada TypeScript karena page lama masih memakai field `id/status/image`; setelah page diubah, build final perlu diperiksa dari GitHub Actions. Belum ada browser/visual QA di localhost oleh agent ini.
