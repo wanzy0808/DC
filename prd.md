@@ -128,6 +128,10 @@ Masuk (`/login`) dan Daftar (dialog yang dibuka dari menu navbar maupun tombol D
 
 Kedua formulir memakai Google Icon dan kelas visual form yang sama melalui `components/Auth/`, mendukung ID sebagai bahasa default serta label EN lewat LanguageProvider, fokus keyboard yang terlihat, label input eksplisit, tombol lihat/sembunyikan kata sandi, serta pesan error `role="alert"`. Pendaftaran tetap meminta email, password minimal delapan karakter, konfirmasi password, Terms/Privacy consent dan pilihan newsletter seperti semula; layanan Google, respons API, verifikasi email, redirect `next` yang aman, dan role-based routing tetap dipertahankan. Tautan Daftar pada login harus benar-benar membuka dialog melalui `/login?register=1&next=...`; Masuk pada dialog mengarah kembali ke `/login` dan menutup panel asal agar menu burger tidak tertinggal di atas formulir. Jangan membuka Studio/area privat melalui perubahan visual ini.
 
+### 4.1b Shared auth component styling refinement (22 September 2026)
+
+Login dan Daftar harus terlihat sebagai satu keluarga komponen, bukan sekadar memakai warna yang sama. `components/Auth/auth-styles.ts` menjadi sumber kelas bersama untuk card surface, decorative Rose eyebrow, title, description, label, field, password-toggle, Google action, separator, error, submit, secondary link dan consent/choice box. Login dan Register memakai ritme spacing, tipografi, outline Rose, radius, shadow dan state Light/Dark yang sama. Dialog Daftar tetap dapat scroll di layar pendek dan close `X` tetap mendapat ruang. Perubahan visual tidak boleh mengubah endpoint auth, Google OAuth, safe `next` redirect, verifikasi email, validasi password/Terms, atau role routing.
+
 ### 4.2 System roles
 
 Role aplikasi yang tetap dapat digunakan untuk backoffice:
@@ -4193,3 +4197,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits implementasi:** `f7475d7801d75bc400a657024fb598a95d429178`, `437b7b3b10354b25551089b3dd8554798cfd844c`, `4aba83b5f17ab3f65bf4db210fcc7080cfbbdbd0`, `ad2eb60727cc2836de97a51375bc9d79e7254f4f`, `f2056ef076ffcfe595ccfbb4fda4b15a19a0a448`, `af58cc7addb95710d5f0530c41c2a4179b049be0`.
 
 **Validasi:** Build GitHub Actions pada commit `ad2eb60727cc2836de97a51375bc9d79e7254f4f` selesai PASS. Pada commit login yang lebih awal (`4aba83b5...`) CI sempat gagal karena properti `onRegistered` belum disertakan pada dialog; properti tersebut ditambahkan pada commit berikutnya dan build PASS. Build Validation GitHub Actions untuk keseluruhan kode Login, RegisterDialog, BurgerMenuContent dan lebar responsif route /login **PASS** pada commit `af58cc7addb95710d5f0530c41c2a4179b049be0` ([run 35732600720](https://github.com/wanzy0808/DC/actions/runs/35732600720)). Uji visual-browser/handset dan uji login/registrasi end-to-end dengan server/database masih perlu dilakukan.
+
+
+---
+
+## 2026-09-22 — Login dan Daftar diseragamkan
+
+**Permintaan:** Rapikan menu Masuk/Login dan Daftar agar terlihat memakai style yang sama.
+
+**Implementasi:** `components/Auth/auth-styles.ts` kini menyediakan token kelas visual bersama untuk card, header, accent bar, title/description, label/input, password toggle, Google button, separator, CTA, error, secondary link dan consent surface. `app/login/page.tsx` memakai seluruh token tersebut. `components/Layout/Navbar/RegisterDialog.tsx` diselaraskan dengan struktur visual Login: header terpusat, Rose accent bar, field/password control/Google action/CTA/link yang sama, sementara Terms/Privacy, promo opt-in, scroll modal mobile dan logic submit tetap dipertahankan. Dokumentasi lama yang menyebut auth harus putih/hitam netral diperbaiki agar pengecualian itu hanya berlaku pada burger navigation; auth mengikuti canonical Rose system.
+
+**Files:** `components/Auth/auth-styles.ts`, `app/login/page.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Validasi:** GitHub Actions diperiksa setelah perubahan; pengujian visual localhost pada ukuran desktop/mobile belum dilakukan dari sesi ini.
