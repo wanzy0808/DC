@@ -51,7 +51,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
               {menuOpen && (
                 <>
                   <button type="button" aria-label="Tutup menu" className="fixed inset-0 z-40 cursor-default bg-transparent" onClick={() => setMenuOpen(false)} />
-                  <motion.div id="dc-burger-dropdown" initial={reducedMotion ? false : { opacity: 0, scale: 0.88, y: -12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -10 }} transition={{ duration: reducedMotion ? 0.1 : 0.32, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top right" }} className="absolute right-0 top-[calc(100%+10px)] z-50 w-[min(88vw,370px)] max-h-[min(75dvh,650px)] overflow-y-auto !rounded-[28px] border border-primary/35 bg-background/95 p-3 shadow-[0_18px_65px_rgba(75,35,47,0.16)] backdrop-blur-xl">
+                  <motion.div id="dc-burger-dropdown" initial={reducedMotion ? false : { opacity: 0, scale: 0.88, y: -12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -10 }} transition={{ duration: reducedMotion ? 0.1 : 0.32, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top right" }} className="absolute right-0 top-[calc(100%+32px)] z-50 w-[min(88vw,370px)] max-h-[min(75dvh,650px)] overflow-y-auto !rounded-[28px] border border-primary/35 bg-background/95 p-3 shadow-[0_18px_65px_rgba(75,35,47,0.16)] backdrop-blur-xl">
                     <BurgerMenuContent onClose={() => setMenuOpen(false)} />
                   </motion.div>
                 </>
