@@ -72,8 +72,8 @@ function eventCountdown(value: Date | string, now: number | null) {
   ] as const;
 }
 
-/** One real public/Studio presentation for the six non-Romantic Rose built-in themes.
- * Section logic, media ownership and RSVP are shared; visual palette/layout remain template-owned.
+/** One shared feature engine for nine individually art-directed non-Romantic Rose themes.
+ * Section logic, media ownership and RSVP are shared; themed envelope, cover and section art remain template-owned.
  */
 export default function UniversalInvitationTemplate({
   invitation,
