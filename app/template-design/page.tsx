@@ -15,6 +15,7 @@ import {
 } from "@/lib/templates/sections";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { TemplateCanvas, TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
+import { galleryControlStyles } from "@/components/Templates/gallery-control-styles";
 
 const optionalSections: { key: InvitationSectionKey; label: string }[] = [
   { key: "rsvp", label: "RSVP" },
@@ -195,7 +196,7 @@ export default function TemplateDesignPage() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder={copy.search}
-              className="min-h-12 w-full rounded-full border border-primary/80 bg-background/75 py-3 pl-10 pr-5 text-sm shadow-sm backdrop-blur-md outline-none transition hover:border-primary focus:border-primary focus:ring-2 focus:ring-primary/50"
+              className={galleryControlStyles.field}
             />
           </div>
         </div>
@@ -207,7 +208,7 @@ export default function TemplateDesignPage() {
             ["no-photo", copy.withoutPhoto],
           ] as const).map(([value, label]) => (
             <button key={value} type="button" onClick={() => setPhotoFilter(value)} aria-pressed={photoFilter === value}
-              className={`min-h-11 rounded-full border px-5 py-2 text-xs font-medium transition ${photoFilter === value ? "border-primary bg-primary text-white dark:text-black" : "border-primary/25 bg-background/65 text-foreground/80 hover:border-primary/60 hover:bg-primary/10"}`}>{label}</button>
+              className={`${galleryControlStyles.filter} ${photoFilter === value ? "bg-primary text-white dark:text-black" : "bg-background/65 text-foreground/80 hover:bg-primary/10"}`}>{label}</button>
           ))}
         </div>
         <div className="mb-8 mt-5 flex flex-wrap items-center justify-between gap-5">
@@ -218,7 +219,7 @@ export default function TemplateDesignPage() {
                 type="button"
                 aria-pressed={category === item}
                 onClick={() => setCategory(item)}
-                className={`min-h-10 rounded-full border px-4 py-2 font-[family-name:var(--font-dc-body)] text-xs transition ${category === item ? "border-primary bg-primary text-white shadow-sm dark:text-black" : "border-primary/25 bg-background/65 text-foreground/75 hover:border-primary/60 hover:bg-primary/10 hover:text-primary"}`}
+                className={`${galleryControlStyles.filter} min-h-10 px-4 font-[family-name:var(--font-dc-body)] ${category === item ? "bg-primary text-white shadow-sm dark:text-black" : "bg-background/65 text-foreground/75 hover:bg-primary/10 hover:text-primary"}`}
               >
                 {item === "Semua" ? copy.all : item}
               </button>
@@ -233,13 +234,13 @@ export default function TemplateDesignPage() {
               aria-expanded={sortOpen}
               aria-labelledby="template-sort-label template-sort-value"
               onClick={() => setSortOpen((open) => !open)}
-              className="flex min-h-11 min-w-[155px] items-center justify-between gap-3 rounded-full border border-primary/80 bg-background/85 px-4 py-2 text-xs text-foreground shadow-sm transition hover:border-primary hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+              className={galleryControlStyles.trigger}
             >
               <span id="template-sort-value">{sortLabel}</span>
               <ChevronDown className={`h-4 w-4 shrink-0 text-primary transition-transform ${sortOpen ? "rotate-180" : ""}`} aria-hidden />
             </button>
             {sortOpen && (
-              <div role="menu" aria-label={copy.sort} className="absolute right-0 top-[calc(100%+8px)] z-30 w-48 overflow-hidden rounded-2xl border border-primary/80 bg-background p-1.5 shadow-[0_16px_36px_rgba(0,0,0,0.16)]">
+              <div role="menu" aria-label={copy.sort} className={galleryControlStyles.menu}>
                 {sortOptions.map((option) => (
                   <button
                     key={option.value}
@@ -251,7 +252,7 @@ export default function TemplateDesignPage() {
                       setSortOpen(false);
                       sortTriggerRef.current?.focus();
                     }}
-                    className={`flex min-h-10 w-full items-center rounded-xl px-3 text-left text-xs transition hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 ${sort === option.value ? "bg-primary/10 text-primary" : "text-foreground/80"}`}
+                    className={`${galleryControlStyles.option} ${sort === option.value ? "border-primary bg-primary/10 text-primary" : "border-primary/30 text-foreground/80"}`}
                   >
                     {option.label}
                   </button>
@@ -282,7 +283,7 @@ export default function TemplateDesignPage() {
               <div className="px-5 pb-5 pt-3">
                 <p className="min-h-12 text-sm leading-6 text-foreground/65">{template.description}</p>
                 <p className="mt-2 text-[11px] text-foreground/50">{!template.ready ? copy.designer : template.previewType === "public" ? copy.ready : copy.studio}</p>
-                <Button onClick={() => openPreview(template.key)} size="sm" className="mt-4 min-h-11 w-full rounded-full border-primary/80 text-sm focus-visible:ring-primary/60">
+                <Button onClick={() => openPreview(template.key)} size="sm" className={galleryControlStyles.cta}>
                   {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
               </div>
