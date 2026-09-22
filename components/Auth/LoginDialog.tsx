@@ -147,7 +147,7 @@ export default function LoginDialog({
   }
 
   return (
-    <DialogContent className={`${authCardClass} max-h-[calc(100dvh-32px)] w-[min(94vw,480px)] gap-0 overflow-y-auto p-6 sm:max-w-[480px] sm:p-9`}>
+    <DialogContent overlayClassName="z-[100]" className={`${authCardClass} z-[101] max-h-[calc(100dvh-32px)] w-[min(94vw,480px)] gap-0 overflow-y-auto p-6 sm:max-w-[480px] sm:p-9`}>
       <DialogHeader className={authHeaderClass}>
         <span aria-hidden="true" className={authEyebrowClass} />
         <DialogTitle className={authTitleClass}>{t.title}</DialogTitle>
