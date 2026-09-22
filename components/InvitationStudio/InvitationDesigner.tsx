@@ -269,7 +269,7 @@ export default function InvitationDesigner() {
               setDressCode={setDressCode}
             />
           )}
-          {panel === "decor" && <DecorPanel selected={design.decor} onSelect={(value) => change({ decor: value })} onUpload={(file) => uploadAsset(file, "IMAGE")} />}
+          {panel === "decor" && <DecorPanel selected={design.decor} photos={invitation?.assets ?? []} onSelect={(value) => change({ decor: value })} onUpload={(file) => uploadAsset(file, "IMAGE")} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
         </aside>
 
