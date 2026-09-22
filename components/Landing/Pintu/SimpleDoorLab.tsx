@@ -348,7 +348,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
     transitionStarted.current = true;
     window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
     // The persistent overlay fully hides the 3D door before navigating.
-    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 80 : 2350);
+    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), 2350);
   }
   const router = useRouter();
   const reducedMotion = useReducedMotion();
