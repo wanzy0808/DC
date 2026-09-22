@@ -340,17 +340,15 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
-  const [glowRevealing, setGlowRevealing] = useState(false);
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); document.body.classList.remove("dc-portal-arriving"); }, []);
+  const transitionStarted = useRef(false);
+  useEffect(() => () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); }, []);
   function finishZoom() {
-    if (glowRevealing || selected === null) return;
-    setGlowRevealing(true);
-    // Navigate at peak glow, keeping the existing destination and its arrival effect.
-    navigationTimer.current = setTimeout(() => {
-      if (selected === 1) { sessionStorage.setItem("dc-portal-entry", "1"); document.body.classList.add("dc-portal-arriving"); }
-      router.push(PORTALS[selected].href);
-    }, reducedMotion ? 0 : 950);
+    if (transitionStarted.current || selected === null) return;
+    transitionStarted.current = true;
+    window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
+    // The persistent overlay fully hides the 3D door before navigating.
+    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 80 : 2350);
   }
   const router = useRouter();
   const reducedMotion = useReducedMotion();
@@ -372,10 +370,6 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
-      {/* The existing door imagery stays untouched. A soft pink bloom begins only once camera zoom completes. */}
-      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_50%_55%,rgba(255,248,250,1)_0%,rgba(255,217,231,0.98)_34%,rgba(244,153,188,0.96)_75%,rgba(221,117,160,0.96)_100%)]" initial={false} animate={{ opacity: glowRevealing ? 1 : 0, scale: glowRevealing ? 1.18 : 0.78 }} transition={{ duration: reducedMotion ? 0 : 0.95, ease: [0.22, 1, 0.36, 1] }} />
-      <motion.div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_52%,rgba(255,255,255,0.93)_0%,rgba(255,243,248,0.7)_32%,rgba(255,214,232,0)_78%)]" initial={false} animate={{ opacity: glowRevealing ? 0.9 : 0, scale: glowRevealing ? 1.55 : 0.35 }} transition={{ duration: reducedMotion ? 0 : 0.95, ease: [0.22, 1, 0.36, 1] }} />
-      
       <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
