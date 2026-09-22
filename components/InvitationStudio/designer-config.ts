@@ -8,6 +8,7 @@ export const invitationDecorOptions = [
 ];
 
 export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = {
+  "romantic-rose": { layout: "editorial", palette: "blush", font: "cinzelFauna" },
   "botanical-ivory": { layout: "botanical", palette: "pearl", font: "cinzelFauna" },
   "eternal-blossom": { layout: "editorial", palette: "blush", font: "playfairLora" },
   "modern-maroon": { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
