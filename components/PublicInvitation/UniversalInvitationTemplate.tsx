@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Music2, Sparkles, Star } from "lucide-react";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
+import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
@@ -95,6 +97,7 @@ export default function UniversalInvitationTemplate({
   designKey?: string;
 }) {
   const [opened, setOpened] = useState(false);
+  const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const key = templateKey || parseDesignKey(invitation.templateKey).template;
   const template = getInvitationTemplate(key);
@@ -121,7 +124,7 @@ export default function UniversalInvitationTemplate({
   const countdown = eventCountdown(invitation.eventDate, now);
   const maps = invitation.mapUrl && /^https?:\/\//i.test(invitation.mapUrl) ? invitation.mapUrl : null;
   const hasGift = Boolean(invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim());
-  const music = invitation.musicUrl || invitation.assets.find((item) => item.type === "AUDIO")?.url;
+  const music = resolveInvitationMusic(key, invitation.musicUrl, invitation.assets);
   const frame = layout === "midnight" ? "rounded-full" : layout === "maroon" ? "rounded-none" : layout === "editorial" ? "rounded-2xl" : "rounded-t-[140px] rounded-b-xl";
   const panel = layout === "midnight" ? "rounded-3xl" : layout === "maroon" ? "rounded-sm" : layout === "editorial" ? "rounded-xl" : "rounded-[28px]";
   const css = {
@@ -141,6 +144,8 @@ export default function UniversalInvitationTemplate({
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
   }, [opened]);
+
+  const handleOpen = () => { musicRef.current?.playOnOpen(); setOpened(true); };
 
   const changePhoto = (slot: PhotoSlot, label: string) =>
     preview && onEditPhoto ? (
@@ -189,6 +194,7 @@ export default function UniversalInvitationTemplate({
       className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel}`}
       style={css}
     >
+      <InvitationMusic ref={musicRef} source={music} opened={opened} preview={preview} />
       {!opened ? (
         <InvitationThemeScenes
           theme={key}
@@ -197,7 +203,7 @@ export default function UniversalInvitationTemplate({
           cover={usesPhotos ? media.cover : undefined}
           focus={media.assignment.focus.cover}
           stage="envelope"
-          onOpen={() => setOpened(true)}
+          onOpen={handleOpen}
           preview={preview}
         />
       ) : (
@@ -209,7 +215,7 @@ export default function UniversalInvitationTemplate({
             cover={usesPhotos ? media.cover : undefined}
             focus={media.assignment.focus.cover}
             stage="cover"
-            onOpen={() => setOpened(true)}
+            onOpen={handleOpen}
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
           />
 
@@ -324,7 +330,6 @@ export default function UniversalInvitationTemplate({
           ), 11)}
 
           <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-8 text-center">
-            {music && <div className="flex items-center gap-2 text-xs text-[var(--inv-accent)]"><Music2 aria-hidden className="h-4 w-4" /><audio src={music} controls preload="none" aria-label="Musik undangan" className="h-9 w-52 max-w-full" /></div>}
             <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--inv-accent)]">Created with DC Organizer</p>
           </footer>
         </div>
