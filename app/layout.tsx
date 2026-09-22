@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import { Cinzel, DM_Mono, Fauna_One } from "next/font/google";
 import "./globals.css";
@@ -12,6 +13,7 @@ import PublicAtmosphere, { PublicContent } from "@/components/Layout/PublicAtmos
 import { MarketingAudioProvider } from "@/components/Layout/MarketingAudio";
 import MarketingFloatingControls from "@/components/Layout/MarketingFloatingControls";
 import MarketingDoorNavigator from "@/components/Layout/MarketingDoorNavigator";
+import AuthDialogHost from "@/components/Auth/AuthDialogHost";
 
 const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
 const faunaOne = Fauna_One({ subsets: ["latin"], weight: "400", variable: "--font-fauna" });
@@ -40,6 +42,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
               <Footer />
               <MarketingFloatingControls />
               <MarketingDoorNavigator />
+              <Suspense fallback={null}><AuthDialogHost /></Suspense>
             </MarketingAudioProvider>
           </ThemeProvider>
         </LanguageProvider>
