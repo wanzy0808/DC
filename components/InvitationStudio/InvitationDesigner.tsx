@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
+import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import {
   invitationFonts,
   invitationPalettes,
@@ -25,7 +27,6 @@ import type { InvitationSectionKey } from "@/lib/templates/sections";
 import {
   ColorPanel,
   ContentPanel,
-  DecorPanel,
   DesignerTool,
   FontPanel,
   MusicPanel,
@@ -53,6 +54,7 @@ export default function InvitationDesigner() {
   const readyTemplates = catalog.filter((item) => item.ready);
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
+  const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [preview, setPreview] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat undangan...");
@@ -67,6 +69,7 @@ export default function InvitationDesigner() {
     font: "cinzelFauna",
     decor: invitationDecorOptions[0],
     sections: { rsvp: true, wishes: true, gift: true },
+    photos: defaultPhotoAssignments(),
   });
 
   async function load() {
@@ -133,6 +136,7 @@ export default function InvitationDesigner() {
       palette: preset.palette,
       font: preset.font,
     });
+    setActivePhotoSlot("cover");
   }
 
   function setSection(section: InvitationSectionKey, enabled: boolean) {
@@ -142,6 +146,28 @@ export default function InvitationDesigner() {
         [section]: enabled,
       },
     });
+  }
+
+  function setPhoto(slot: "cover" | "personOne" | "personTwo", id: string | null) {
+    change({ photos: { ...design.photos, [slot]: id } });
+  }
+
+  function toggleGalleryPhoto(id: string) {
+    const allIds = (invitation?.assets ?? []).filter((asset) => asset.type === "IMAGE").map((asset) => asset.id);
+    const current = design.photos.gallery ?? allIds;
+    const gallery = id === "*"
+      ? design.photos.gallery === null ? [] : null
+      : current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
+    change({ photos: { ...design.photos, gallery } });
+  }
+
+  function setPhotoFocus(slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) {
+    change({ photos: { ...design.photos, focus: { ...design.photos.focus, [slot]: focus } } });
+  }
+
+  function editPhotoFromCanvas(slot: PhotoSlot) {
+    setActivePhotoSlot(slot);
+    setPanel("decor");
   }
 
   function undo() {
@@ -180,11 +206,11 @@ export default function InvitationDesigner() {
           ? { ...current, assets: [...current.assets, data.asset] }
           : current,
       );
-      if (assetType === "IMAGE") change({ decor: data.asset.url });
-      else setMusicUrl(data.asset.url);
+      if (assetType === "AUDIO") setMusicUrl(data.asset.url);
       setNotice(assetType === "IMAGE" ? "Foto berhasil diunggah." : "Musik berhasil diunggah.");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Upload gagal.");
+      if (assetType === "IMAGE") throw error;
     }
   }
 
@@ -275,7 +301,19 @@ export default function InvitationDesigner() {
               setDressCode={setDressCode}
             />
           )}
-          {panel === "decor" && <DecorPanel selected={design.decor} photos={invitation?.assets ?? []} onSelect={(value) => change({ decor: value })} onUpload={(file) => uploadAsset(file, "IMAGE")} />}
+          {panel === "decor" && (
+            <PhotoPanel
+              photos={invitation?.assets ?? []}
+              slots={catalog.find((item) => item.key === design.template && item.ready)?.photoSlots ?? ["cover"]}
+              assignments={design.photos}
+              activeSlot={activePhotoSlot}
+              onActiveSlotChange={setActivePhotoSlot}
+              onSetPhoto={setPhoto}
+              onToggleGallery={toggleGalleryPhoto}
+              onSetFocus={setPhotoFocus}
+              onUpload={(file) => uploadAsset(file, "IMAGE")}
+            />
+          )}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
         </aside>
 
@@ -290,6 +328,8 @@ export default function InvitationDesigner() {
               eventTag={eventTag}
               dressCode={dressCode}
               sections={design.sections}
+              photoAssignments={design.photos}
+              onEditPhoto={editPhotoFromCanvas}
             />
           </div>
         </main>
@@ -311,6 +351,7 @@ export default function InvitationDesigner() {
                 eventTag={eventTag}
                 dressCode={dressCode}
                 sections={design.sections}
+                photoAssignments={design.photos}
               />
             </div>
           </div>
