@@ -1,6 +1,9 @@
 "use client";
 
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
+
+const RomanticRoseTemplate = dynamic(() => import("@/components/PublicInvitation/RomanticRoseTemplate"));
 import { weddingParentLine } from "@/lib/events/parents";
 import { getIndonesiaTimezone } from "@/lib/events/catalog";
 import {
@@ -36,6 +39,10 @@ export function InvitationPreview({
   dressCode: string;
   sections: InvitationSections;
 }) {
+  if (templateKey === "romantic-rose" && invitation) {
+    return <RomanticRoseTemplate invitation={invitation} preview sections={sections} coverUrl={decorUrl} />;
+  }
+
   const layout =
     (invitationTemplatePresets[templateKey] ||
       invitationTemplatePresets["botanical-ivory"]).layout;
