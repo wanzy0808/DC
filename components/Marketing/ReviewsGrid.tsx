@@ -13,9 +13,10 @@ type ReviewsGridProps = {
   title: string;
   description: string;
   reviews: Review[];
+  framed?: boolean;
 };
 
-export default function ReviewsGrid({ eyebrow, title, description, reviews }: ReviewsGridProps) {
+export default function ReviewsGrid({ eyebrow, title, description, reviews, framed = false }: ReviewsGridProps) {
   return (
     <section className="space-y-10">
       <SectionHeading eyebrow={eyebrow} title={title} description={description} />
@@ -23,10 +24,10 @@ export default function ReviewsGrid({ eyebrow, title, description, reviews }: Re
         {reviews.map((item) => (
           <article
             key={`${item.name}-${item.date ?? item.role ?? "review"}`}
-            className="flex h-full flex-col justify-between rounded-2xl border border-[var(--border)] bg-[var(--card)]/75 p-6 shadow-sm"
+            className={`flex h-full flex-col justify-between border bg-[var(--card)]/75 p-6 shadow-sm ${framed ? "rounded-[28px] border-primary/35 md:rounded-[32px]" : "rounded-2xl border-[var(--border)]"}`}
           >
             <div>
-              <div className="flex gap-1 text-dc-gold" aria-label="5 dari 5 bintang">
+              <div className={`flex gap-1 ${framed ? "text-primary" : "text-dc-gold"}`} aria-label="5 dari 5 bintang">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <Star key={index} className="h-3.5 w-3.5 fill-current" />
                 ))}
