@@ -30,7 +30,7 @@ export default function PortalTransition() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [coverDuration, setCoverDuration] = useState(COVER_MS);
   const pending = useRef<PendingRoute | null>(null);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const timers = useRef<number[]>([]);
   const clearTimers = () => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
