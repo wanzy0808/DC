@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import { Play } from "lucide-react";
 import SectionHeading from "@/components/Marketing/SectionHeading";
@@ -57,7 +58,12 @@ export default function PortfolioSection() {
           </article>
         ))}
       </div>
-      <VideoModal url={activeVideo} onClose={() => setActiveVideo(null)} />
+      {activeVideo && typeof document !== "undefined"
+        ? createPortal(
+            <VideoModal url={activeVideo} onClose={() => setActiveVideo(null)} />,
+            document.body,
+          )
+        : null}
     </section>
   );
 }
