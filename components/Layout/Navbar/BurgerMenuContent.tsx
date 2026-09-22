@@ -2,22 +2,23 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import RegisterDialog from "./RegisterDialog";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function BurgerMenuContent({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
-  const router = useRouter();
   const reduced = useReducedMotion();
   const [servicesOpen, setServicesOpen] = useState(true);
-  const [registerOpen, setRegisterOpen] = useState(false);
   const { messages } = useLanguage();
   const { nav } = messages;
+  function openAuth(mode: "login" | "register") {
+    const requestedNext = new URLSearchParams(window.location.search).get("next");
+    const next = requestedNext?.startsWith("/") && !requestedNext.startsWith("//") ? requestedNext : "/dashboard";
+    onClose();
+    window.dispatchEvent(new CustomEvent("dc-auth-open", { detail: { mode, next } }));
+  }
   const items = [
     { href: "/packages", label: nav.packages, icon: Package },
     { href: "/template-design", label: nav.templates, icon: LayoutTemplate },
@@ -37,19 +38,10 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
   return (
     <nav aria-label={nav.navigation} className="space-y-2">
       <motion.div {...reveal(0)}>
-        <Link href="/login" onClick={onClose} aria-current={pathname === "/login" ? "page" : undefined} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></Link>
+        <button type="button" onClick={() => openAuth("login")} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></button>
       </motion.div>
       <motion.div {...reveal(1)}>
-        <Dialog open={registerOpen} onOpenChange={setRegisterOpen}>
-          <DialogTrigger render={<Button className={itemClass} />}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></DialogTrigger>
-          <RegisterDialog onSwitchToLogin={() => {
-            const requestedNext = new URLSearchParams(window.location.search).get("next");
-            const next = requestedNext?.startsWith("/") && !requestedNext.startsWith("//") ? requestedNext : "/dashboard";
-            setRegisterOpen(false);
-            onClose();
-            router.push(`/login?next=${encodeURIComponent(next)}`);
-          }} onRegistered={() => { setRegisterOpen(false); onClose(); }} />
-        </Dialog>
+        <button type="button" onClick={() => openAuth("register")} className={itemClass}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></button>
       </motion.div>
       {items.map(({ href, label, icon: Icon }, index) => (
         <motion.div key={href} {...reveal(index + 2)}>
