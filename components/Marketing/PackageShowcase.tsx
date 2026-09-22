@@ -14,22 +14,24 @@ type PackageShowcaseProps = {
   note?: string;
   /** Use the more rounded outlined package card on /d-invitation. */
   roundedCard?: boolean;
+  /** Let the /d-invitation section occupy the shared marketing content width. */
+  wide?: boolean;
 };
 
-export default function PackageShowcase({ eyebrow, title, description, packageKeys, note, roundedCard = false }: PackageShowcaseProps) {
+export default function PackageShowcase({ eyebrow, title, description, packageKeys, note, roundedCard = false, wide = false }: PackageShowcaseProps) {
   const { locale } = useLanguage();
   const packages = packageKeys.map(getServicePackage).filter(Boolean);
   const chooseLabel = locale === "en" ? "Choose package" : "Pilih paket";
   const featuredLabel = locale === "en" ? "Best value" : "Paling lengkap";
 
   return (
-    <section className="space-y-8 md:space-y-10">
+    <section className={`w-full space-y-8 md:space-y-10 ${wide ? "max-w-none" : ""}`}>
       <div className="mx-auto max-w-3xl space-y-3 text-center">
         <p className="text-xs font-mono font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">[ {eyebrow} ]</p>
         <h2 className="font-[family-name:var(--font-dc-heading)] text-3xl md:text-4xl lg:text-5xl">{title}</h2>
         <p className="text-sm leading-7 text-[var(--muted-foreground)] md:text-base">{description}</p>
       </div>
-      <div className={`mx-auto grid w-full max-w-4xl justify-items-center gap-6 ${packages.length === 2 ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
+      <div className={`mx-auto grid w-full ${wide ? "max-w-none" : "max-w-4xl"} justify-items-center gap-6 ${packages.length === 2 ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
         {packages.map((item, index) => {
           if (!item) return null;
           const featured = packageKeys.length === 3 && index === 2;
