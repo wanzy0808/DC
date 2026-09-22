@@ -3717,3 +3717,14 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `48d5b3041e222c6ab94354288d9e4952ec1f1eaa` (hero spacing), `fca5d7b2508e814d43f84c9e60860e6d10fa44a7` (agent note).
 
 **Validation:** GitHub write berhasil; build/CI/preview visual belum dijalankan atau diamati untuk perubahan ini.
+
+
+---
+
+## 2026-09-22 — Hero minor position nudge only
+
+**Owner request:** Geser teks Hero `/d-invitation` sedikit ke kiri dan mockup HP sedikit ke kanan tanpa mengubah hal lain.
+
+**Implementation:** Hanya `components/DigitalInvitation/HeroSection.tsx` diubah secara visual: tambahkan `lg:-translate-x-4` ke wrapper copy dan `lg:translate-x-4` ke wrapper HP (masing-masing 16px, desktop saja). Ukuran grid, gap, font, rasio HP, konten, animasi kedatangan HP, frame, serta perilaku mobile tetap sama. Commit: `e7a30f5fda7b3c6cd0001991c36e03a43a2ee53e`.
+
+**Validation:** GitHub write berhasil; build/CI/browser preview belum dijalankan.
