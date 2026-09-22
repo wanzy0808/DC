@@ -35,6 +35,7 @@ import {
   TemplatePanel,
 } from "@/components/InvitationStudio/DesignerPanels";
 import { InvitationPreview } from "@/components/InvitationStudio/InvitationPreview";
+import { getInvitationDefaultMusic } from "@/lib/templates/music";
 import {
   invitationDecorOptions,
   invitationTemplatePresets,
@@ -326,7 +327,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "music" && <MusicPanel musicUrl={musicUrl} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
+          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
         </aside>
 
         <main className="flex items-start justify-center overflow-auto bg-foreground/[0.025] p-6 sm:p-10">
@@ -342,6 +343,7 @@ export default function InvitationDesigner() {
               sections={design.sections}
               photoAssignments={design.photos}
               designKey={designKey}
+              musicUrl={musicUrl}
               onEditPhoto={editPhotoFromCanvas}
             />
           </div>
@@ -366,6 +368,7 @@ export default function InvitationDesigner() {
                 sections={design.sections}
                 photoAssignments={design.photos}
               designKey={designKey}
+              musicUrl={musicUrl}
               />
             </div>
           </div>
