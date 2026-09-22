@@ -11,6 +11,7 @@ export type InvitationTemplate = {
   category: string;
   previewType: "public" | "studio";
   photoSlots: PhotoSlot[];
+  usesPhotos: boolean;
   preset: { layout: InvitationTemplateLayout; palette: PaletteKey; font: FontKey };
 };
 
@@ -19,6 +20,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "romantic-rose",
     category: "Floral",
     previewType: "public",
+    usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "editorial", palette: "blush", font: "cinzelFauna" },
     name: "Romantic Rose",
@@ -30,7 +32,8 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "botanical-ivory",
     category: "Botanical",
     previewType: "public",
-    photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    usesPhotos: false,
+    photoSlots: [],
     preset: { layout: "botanical", palette: "pearl", font: "cinzelFauna" },
     name: "Botanical Ivory",
     description:
@@ -43,6 +46,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "eternal-blossom",
     category: "Floral",
     previewType: "public",
+    usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "editorial", palette: "blush", font: "playfairLora" },
     name: "Eternal Blossom",
@@ -55,6 +59,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "modern-maroon",
     category: "Modern",
     previewType: "public",
+    usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
     name: "Modern Maroon",
@@ -67,6 +72,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "garden-light",
     category: "Botanical",
     previewType: "public",
+    usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "garden", palette: "sage", font: "playfairLora" },
     name: "Garden Light",
@@ -79,6 +85,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "midnight-romance",
     category: "Modern",
     previewType: "public",
+    usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
     preset: { layout: "midnight", palette: "midnight", font: "cinzelFauna" },
     name: "Midnight Romance",
@@ -91,13 +98,50 @@ export const invitationTemplates: InvitationTemplate[] = [
     key: "classic-pearl",
     category: "Classic",
     previewType: "public",
-    photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    usesPhotos: false,
+    photoSlots: [],
     preset: { layout: "classic", palette: "pearl", font: "playfairLora" },
     name: "Classic Pearl",
     description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
     previewImage:
       "/couple2.jpg",
     assetPath: "/templates/classic-pearl",
+  },
+  {
+    key: "golden-art-deco",
+    category: "Art Deco",
+    previewType: "public",
+    usesPhotos: false,
+    photoSlots: [],
+    preset: { layout: "classic", palette: "champagne", font: "cinzelFauna" },
+    name: "Golden Art Deco",
+    description: "Komposisi geometris emas dan garis simetris, sepenuhnya tanpa foto.",
+    previewImage: "/flower.png",
+    assetPath: "/templates/golden-art-deco",
+  },
+  {
+    key: "paper-cut-botanical",
+    category: "Illustration",
+    previewType: "public",
+    usesPhotos: false,
+    photoSlots: [],
+    preset: { layout: "garden", palette: "sage", font: "cinzelFauna" },
+    name: "Paper Cut Botanical",
+    description: "Kolase daun dan lapisan kertas berwarna sage, tanpa foto.",
+    previewImage: "/flower.png",
+    assetPath: "/templates/paper-cut-botanical",
+  },
+  {
+    key: "celestial-ink",
+    category: "Celestial",
+    previewType: "public",
+    usesPhotos: false,
+    photoSlots: [],
+    preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
+    name: "Celestial Ink",
+    description: "Langit malam, orbit dan bintang berilustrasi tanpa foto.",
+    previewImage: "/flower.png",
+    assetPath: "/templates/celestial-ink",
   },
 ];
 
