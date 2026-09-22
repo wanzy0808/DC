@@ -1143,7 +1143,7 @@ Bukan melalui banyak warna/variant berbeda.
 
 ### 15.4 Surfaces/layout
 
-- Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. **Keduanya dikelompokkan di tengah main frame** (max-width hero sekitar 1080px di desktop, gap kolom lebih rapat), bukan menempel di sisi luar frame. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
+- Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. **Keduanya dikelompokkan di tengah main frame** (max-width hero sekitar 1200px di desktop, gap kolom sedang), bukan menempel di sisi luar frame. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
 - Semua halaman **marketing publik** memakai komponen dekorasi bersama: bunga `flower.png` pada kiri/kanan dan Rose glow dari `LandingFloralGlow`, serta animasi petal interaktif dari `WindRosePetals`. Landing `/` dan `/pagecontoh` serta frame `/d-invitation` merender layer di dalam scene masing-masing; halaman marketing lain merender melalui `PublicAtmosphere` agar tidak ada layer ganda. Reuse asset dan gerakan yang sudah disetujui, hormati reduced-motion. Dekorasi marketing ini tidak otomatis dipasang di Dashboard/Admin/Studio/checkout atau undangan publik milik pelanggan.
 - Musik latar marketing adalah **satu audio player persisten** di root layout: track dan volume/mute tidak restart setiap navigasi antarhalaman marketing; autoplay hanya jika browser mengizinkan, user bisa mute/play dan atur volume secara manual. Kontrol berada di kiri bawah serta tautan Instagram resmi DC Organizer di kanan bawah pada setiap halaman marketing. Untuk main frame, kedua kontrol tertanam pada bar footer; halaman marketing tanpa frame memakai floating control di tepi bawah. Jangan menduplikasi player, petals, atau tombol Instagram dalam satu halaman.
 - Halaman marketing `/d-invitation` memakai **main frame yang sama secara ukuran/proporsi visual dengan landing yang disetujui**: rounded Rose-border frame setinggi viewport dengan Navbar dan compact Footer di dalam frame, sedangkan semua section marketing berada dalam satu panel tengah yang scrollable mandiri (desktop dan mobile). Scroll halaman luar bukan penggerak utama konten; desain/copy, link, bahasa, tema, dan bagian yang sudah ada tetap dipertahankan. Section yang memasuki viewport panel scroll muncul lembut (opacity/translate, sekali per section); reduced-motion menampilkan konten tanpa gerakan. Perubahan ini khusus halaman `/d-invitation`, bukan perubahan landing `/` atau koreografi transisi Pintu yang sedang ditunda.
@@ -3706,3 +3706,14 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `31855c90a5252587188c119c84c88cc23a0a801a` (hero alignment); `3cefddecfc2b40f547e28815043ea5b0f465e9fb` (agent convention).
 
 **Validation:** GitHub update confirmed; build, CI, browser rendering, responsive screenshot belum dijalankan/diamati untuk edit ini.
+
+
+---
+
+## 2026-09-22 — Digital Invitation hero: loosen over-centered columns
+
+**Owner feedback:** Penempatan copy dan HP setelah perubahan 1080px/32px terlalu rapat ke tengah. Lebarkan area hero menjadi max-width 1200px dan naikkan gap desktop dari 32px ke 40px; pertahankan grid 1.18fr:0.82fr, rasio HP 9:19.5 dan lebar maksimum HP 340px, serta perilaku mobile. Hanya `components/DigitalInvitation/HeroSection.tsx` yang diubah secara visual; aturan terkait diperbarui di `AGENTS.md` dan canonical §15.4 `prd.md`. Landing, Pintu, frame, dan section lain tidak disentuh.
+
+**Commits:** `48d5b3041e222c6ab94354288d9e4952ec1f1eaa` (hero spacing), `fca5d7b2508e814d43f84c9e60860e6d10fa44a7` (agent note).
+
+**Validation:** GitHub write berhasil; build/CI/preview visual belum dijalankan atau diamati untuk perubahan ini.
