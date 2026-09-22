@@ -688,7 +688,7 @@ Area isi berbahasa Indonesia default dan responsif terhadap ID/EN navbar; memaka
 
 Marketing `/d-invitation` menampilkan maksimal **tiga** preview template READY dari manifest/katalog bersama, bukan keseluruhan katalog. Urutan utama diambil dari jumlah event/undangan yang sudah memiliki entitlement Digital Invitation berstatus `Payment.status = PAID` dan `packageKey` termasuk paket Digital Invitation, dikelompokkan menurut `Invitation.templateKey` yang **saat ini tersimpan**. Satu event dihitung sekali melalui relasi Payment unik per invitation; transaksi masih pending, failed/refunded, add-on WA Blast, dan Guestbook-only tidak dihitung. Pada jumlah template berbayar kurang dari tiga, sisa slot diisi pilihan acak dari template siap lain tanpa duplikasi; bila belum ada satu pun penjualan, tampilkan tiga pilihan acak. Jika database tidak dapat diakses, gunakan pilihan acak tanpa klaim peringkat/label best-seller palsu. Tidak ada identitas, data pelanggan, atau angka order pribadi dalam respons endpoint publik.
 
-Keterbatasan data saat ini: template bisa diganti setelah pembayaran, dan tidak ada snapshot immutable template pada saat transaksi. Maka urutan didasarkan pada template yang sedang dipakai pada event berbayar, bukan histori pembelian template yang tak bisa diubah. Jika pelaporan penjualan per-template historis dibutuhkan kelak, perlu snapshot/ledger yang benar; jangan membuat angka atau data semu. Endpoint `/api/templates/featured` mengembalikan hanya kunci template READY untuk marketing. Semua template tetap tersedia di galeri penuh dan Studio melalui manifest dan `/api/templates`, tidak membuat daftar unggulan hardcoded per halaman. Setiap preview ringkas memakai frame smartphone dengan aspek sekitar **9:19.5**, bezel metal gelap, tombol samping dan notch sesuai mockup Hero `/d-invitation`; renderer preview tetap real dan lazy-load. Perubahan tidak memengaruhi hero, Pintu, landing atau pilihan Studio. Header Koleksi Template dan CTA Lihat Semua Template di sebelah kanan dikelompokkan lebih dekat ke tengah frame (wrapper maksimal sekitar 980px, jarak responsif); jangan letakkan keduanya di ujung berlawanan dari keseluruhan area konten. Susunan mobile tetap vertikal.
+Keterbatasan data saat ini: template bisa diganti setelah pembayaran, dan tidak ada snapshot immutable template pada saat transaksi. Maka urutan didasarkan pada template yang sedang dipakai pada event berbayar, bukan histori pembelian template yang tak bisa diubah. Jika pelaporan penjualan per-template historis dibutuhkan kelak, perlu snapshot/ledger yang benar; jangan membuat angka atau data semu. Endpoint `/api/templates/featured` mengembalikan hanya kunci template READY untuk marketing. Semua template tetap tersedia di galeri penuh dan Studio melalui manifest dan `/api/templates`, tidak membuat daftar unggulan hardcoded per halaman. Setiap preview ringkas memakai frame smartphone dengan aspek sekitar **9:19.5**, bezel metal gelap, tombol samping dan notch sesuai mockup Hero `/d-invitation`; renderer preview tetap real dan lazy-load. Perubahan tidak memengaruhi hero, Pintu, landing atau pilihan Studio. Header Koleksi Template dan CTA Lihat Semua Template di sebelah kanan dikelompokkan lebih dekat ke tengah frame (wrapper maksimal sekitar 980px, jarak responsif); jangan letakkan keduanya di ujung berlawanan dari keseluruhan area konten. Susunan mobile tetap vertikal. Tombol Lihat semua template memakai kapitalisasi kalimat biasa (tanpa CSS uppercase atau tracking lebar) dalam kedua bahasa.
 
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
@@ -4007,3 +4007,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commit:** `92b1e69cd625137f438393d6c96bf21cff480f37`; **AGENTS commit:** `e3a3afed2db6e5735a07e2e13abdc43368e19c20`.
 
 **Validasi:** Pemeriksaan statis pada perubahan class; screenshot localhost dan build/CI belum diverifikasi.
+
+
+---
+
+## 2026-09-22 — CTA Lihat semua template tanpa uppercase
+
+**Permintaan:** Tombol Lihat semua template di bagian Koleksi Template `/d-invitation` tidak memakai all-caps.
+
+**Implementasi:** Menghapus `uppercase` dan tracking lebar pada CTA di `components/DigitalInvitation/TemplateSection.tsx`, diganti `normal-case tracking-normal`. Teks, link, tombol lain, dan posisi header tidak diubah.
+
+**Commit:** `037119a19497903a898e0c65992ac1cf3ac40693`.
+
+**Validasi:** Perubahan sumber tercatat di GitHub; build dan preview visual lokal belum dijalankan.
