@@ -13,6 +13,7 @@ import {
   type PaletteKey,
 } from "@/lib/templates/design";
 import type { InvitationSections } from "@/lib/templates/sections";
+import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import {
   formatInvitationEventDate,
@@ -29,6 +30,8 @@ export function InvitationPreview({
   eventTag,
   dressCode,
   sections,
+  photoAssignments,
+  onEditPhoto,
 }: {
   invitation: InvitationDesignerInvitation | null;
   templateKey: string;
@@ -38,9 +41,13 @@ export function InvitationPreview({
   eventTag: string;
   dressCode: string;
   sections: InvitationSections;
+  photoAssignments?: PhotoAssignments;
+  onEditPhoto?: (slot: PhotoSlot) => void;
 }) {
+  const media = resolveInvitationPhotos(invitation?.assets ?? [], invitation?.templateKey ?? "", decorUrl, photoAssignments);
+  const chosenCover = media.cover ?? decorUrl;
   if (templateKey === "romantic-rose" && invitation) {
-    return <RomanticRoseTemplate invitation={invitation} preview sections={sections} coverUrl={decorUrl} />;
+    return <RomanticRoseTemplate invitation={invitation} preview sections={sections} coverUrl={chosenCover} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} />;
   }
 
   const layout =
@@ -125,14 +132,15 @@ export function InvitationPreview({
             }}
           />
         )}
-        {layout === "maroon" && decorUrl && (
+        {layout === "maroon" && chosenCover && (
           <img
-            src={decorUrl}
+            src={chosenCover}
             alt=""
             className="h-52 w-full object-cover opacity-75"
           />
         )}
 
+        {onEditPhoto && layout === "maroon" && <button type="button" onClick={() => onEditPhoto("cover")} className="absolute inset-x-3 top-3 z-10 rounded-lg bg-black/60 px-3 py-2 text-xs text-white">Atur foto cover</button>}
         <div className={layout === "maroon" ? "px-7 pt-8" : ""}>
           <p
             className="text-[8px] uppercase tracking-[0.24em]"
@@ -159,7 +167,7 @@ export function InvitationPreview({
               style={{ borderColor: palette.soft, background: palette.bg }}
             >
               <img
-                src={decorUrl}
+                src={chosenCover}
                 alt=""
                 className={`${
                   layout === "midnight" ? "aspect-square" : "aspect-[4/5]"
@@ -175,6 +183,7 @@ export function InvitationPreview({
                           : "rounded-[18px]"
                 }`}
               />
+              {onEditPhoto && <button type="button" onClick={() => onEditPhoto("cover")} className="mt-2 w-full rounded-lg border border-current/20 px-2 py-2 text-xs">Atur foto cover</button>}
             </div>
           )}
 
