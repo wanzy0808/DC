@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
+import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
@@ -32,6 +33,7 @@ export async function POST(request:Request){
   if(!previewExt)return NextResponse.json({error:"Preview harus JPG, PNG, atau WEBP."},{status:400});
   if(!templateExt)return NextResponse.json({error:"File template harus ZIP, HTML, atau JSON."},{status:400});
   if(preview.size>5*1024*1024 || template.size>25*1024*1024)return NextResponse.json({error:"Ukuran preview maksimal 5 MB dan template maksimal 25 MB."},{status:400});
+  const previewBuffer=await sharp(Buffer.from(await preview.arrayBuffer()),{limitInputPixels:40_000_000}).rotate().resize({width:1200,height:1800,fit:"inside",withoutEnlargement:true}).webp({quality:82,effort:4}).toBuffer();
   const base=safeName(name)||"template";
   for(let attempt=0;attempt<3;attempt++){
    let folder="";
@@ -40,8 +42,8 @@ export async function POST(request:Request){
     const nextNumber=Math.max(0,Number(latest?.templateNo??"0"))+1; const templateNo=String(nextNumber).padStart(3,"0");
     folder=path.join(process.cwd(),"public","uploads","templates",templateNo);
     await mkdir(folder,{recursive:true});
-    const previewName=`${base}-${randomUUID()}.${previewExt}`; const templateName=`${base}-${randomUUID()}.${templateExt}`;
-    await writeFile(path.join(folder,previewName),Buffer.from(await preview.arrayBuffer()));
+    const previewName=`${base}-${randomUUID()}.webp`; const templateName=`${base}-${randomUUID()}.${templateExt}`;
+    await writeFile(path.join(folder,previewName),previewBuffer);
     await writeFile(path.join(folder,templateName),Buffer.from(await template.arrayBuffer()));
     try{
      const created=await prisma.designerTemplate.create({data:{templateNo,name,tags,previewUrl:`/uploads/templates/${templateNo}/${previewName}`,templateFile:`/uploads/templates/${templateNo}/${templateName}`,designerId:designer.id}});
