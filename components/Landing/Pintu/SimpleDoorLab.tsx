@@ -57,8 +57,14 @@ function DoorFrame() {
   return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#c07a84" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
 }
 
-function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
+function PortalWorld({ image, entering }: { image: string; entering: boolean }) {
   const source = useLoader(THREE.TextureLoader, image);
+  const imageMaterial = useRef<THREE.MeshBasicMaterial>(null);
+  useFrame((_, delta) => {
+    if (imageMaterial.current) {
+      imageMaterial.current.opacity = THREE.MathUtils.damp(imageMaterial.current.opacity, entering ? 0 : 1, 4.5, delta);
+    }
+  });
   const texture = useMemo(() => {
     const copy = source.clone();
     copy.colorSpace = THREE.SRGBColorSpace;
@@ -79,8 +85,13 @@ function PortalWorld({ image, opening }: { image: string; opening: boolean }) {
     return shape;
   }, []);
   return <group position={[0, 0, -0.19]}>
-    <mesh geometry={geometry}><meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} /></mesh>
-
+    {/* The service image is visible while choosing a door, then fades into an image-free Rose passage as the camera enters. */}
+    <mesh geometry={geometry} position={[0, 0, -0.008]}>
+      <meshBasicMaterial color="#e8a9bd" toneMapped={false} side={THREE.DoubleSide} />
+    </mesh>
+    <mesh geometry={geometry}>
+      <meshBasicMaterial ref={imageMaterial} map={texture} transparent depthWrite={false} side={THREE.DoubleSide} toneMapped={false} />
+    </mesh>
   </group>;
 }
 
@@ -182,16 +193,22 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   </points>;
 }
 
-function PortalCamera({ entering, reducedMotion, selected, onArrive }: { entering: boolean; reducedMotion: boolean; selected: number; onArrive: () => void }) {
+function PortalCamera({ entering, reducedMotion, onCover, onArrive }: { entering: boolean; reducedMotion: boolean; onCover: () => void; onArrive: () => void }) {
   const { camera } = useThree();
   const progress = useRef(0);
   const arrived = useRef(false);
+  const coverStarted = useRef(false);
   useFrame((_, delta) => {
     progress.current = THREE.MathUtils.damp(progress.current, entering ? 1 : 0, reducedMotion ? 18 : 2.4, delta);
     const t = progress.current;
     const eased = t * t * (3 - 2 * t);
-    camera.position.set(0, 0.05 - eased * 0.12, 11.7 - eased * 11.1);
+    // Stop just in front of the selected portal surface; passing behind it would expose other orbiting doors.
+    camera.position.set(0, 0.05 - eased * 0.12, 11.7 - eased * 9.8);
     camera.lookAt(0, -0.05, -2);
+    if (entering && t > 0.7 && !coverStarted.current) {
+      coverStarted.current = true;
+      onCover();
+    }
     if (entering && t > 0.96 && !arrived.current) {
       arrived.current = true;
       onArrive();
@@ -230,14 +247,14 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   </mesh>;
 }
 
-function Door({ opening, image, title }: { opening: boolean; image: string; title: string }) {
+function Door({ opening, image, title, entering }: { opening: boolean; image: string; title: string; entering: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
   const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
-    <PortalWorld image={image} opening={opening} />
+    <PortalWorld image={image} entering={entering} />
     <group position={[0, 0, -0.16]}>
       <DoorFrame />
     </group>
@@ -330,7 +347,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     }
   });
   return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={portal.image} title={portal.title} />
+    <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;
@@ -343,12 +360,17 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionStarted = useRef(false);
   useEffect(() => () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); }, []);
-  function finishZoom() {
+  function startRoseCover() {
     if (transitionStarted.current || selected === null) return;
     transitionStarted.current = true;
+    // Start the image-free Rose veil during the existing camera zoom, before its view could reach the portal plane.
     window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
-    // The persistent overlay fully hides the 3D door before navigating.
-    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 1050);
+  }
+  function finishZoom() {
+    if (selected === null) return;
+    startRoseCover(); // Fallback if the mid-zoom callback was missed (including reduced motion).
+    // Route change happens only after the veil has covered the original door; no second door scene is rendered.
+    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 220);
   }
   const router = useRouter();
   const reducedMotion = useReducedMotion();
@@ -363,7 +385,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
       <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} selected={selected ?? 0} onArrive={finishZoom} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startRoseCover} onArrive={finishZoom} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
