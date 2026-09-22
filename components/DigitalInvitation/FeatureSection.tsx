@@ -11,7 +11,6 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type FeatureItem = [
   icon: LucideIcon,
-  label: string,
   title: string,
   description: string,
 ];
@@ -23,19 +22,16 @@ export default function FeatureSection() {
       ? [
           [
             Palette,
-            "01",
             "One template for one event",
             "Choose the design that fits the occasion, then personalize the content, photos, colors, music, venue, and event details.",
           ],
           [
             Sparkles,
-            "02",
             "A studio that stays simple",
             "Keep invitation content in one workspace so every event can be edited and published independently.",
           ],
           [
             Users,
-            "03",
             "RSVP and guest management included",
             "Collect responses, plus-one information, and manage the guest list for the selected event without mixing data from your other events.",
           ],
@@ -43,19 +39,16 @@ export default function FeatureSection() {
       : [
           [
             Palette,
-            "01",
             "Satu template untuk satu acara",
             "Pilih desain yang cocok untuk acaranya, lalu personalisasi konten, foto, warna, musik, venue, dan detail yang ingin dibagikan.",
           ],
           [
             Sparkles,
-            "02",
             "Studio yang tetap sederhana",
             "Kelola isi undangan dalam satu workspace agar setiap acara bisa diedit dan dipublikasikan secara independen.",
           ],
           [
             Users,
-            "03",
             "RSVP dan manajemen tamu termasuk",
             "Terima respons, data plus one, dan kelola daftar tamu untuk acara yang dipilih tanpa mencampur data dengan acara lain.",
           ],
@@ -79,7 +72,8 @@ export default function FeatureSection() {
       id="fitur"
       className="scroll-mt-24 border-y border-border/70 py-10 md:py-12"
     >
-      <div className="mb-8 max-w-2xl md:mb-10">
+      <div className="mx-auto w-full max-w-[960px]">
+        <div className="mb-8 max-w-2xl md:mb-10">
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
           {copy[0]}
         </p>
@@ -88,26 +82,21 @@ export default function FeatureSection() {
         </h2>
       </div>
 
-      <div className="grid gap-0 md:grid-cols-3">
-        {features.map(([Icon, label, title, description], index) => (
+        <div className="grid gap-0 md:grid-cols-3">
+          {features.map(([Icon, title, description], index) => (
           <article
-            key={label}
-            className={`py-6 md:px-7 ${
+            key={title}
+            className={`py-6 md:px-6 ${
               index > 0
                 ? "border-t border-border/70 md:border-l md:border-t-0"
                 : ""
             }`}
           >
-            <div className="flex items-center justify-between">
-              <Icon
-                className="h-5 w-5 text-primary"
-                strokeWidth={1.6}
-                aria-hidden="true"
-              />
-              <span className="font-[family-name:var(--font-dc-mono)] text-[9px] tracking-[0.18em] text-foreground/45">
-                {label}
-              </span>
-            </div>
+            <Icon
+              className="h-5 w-5 text-primary"
+              strokeWidth={1.6}
+              aria-hidden="true"
+            />
             <h3 className="mt-6 max-w-xs font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
               {title}
             </h3>
@@ -122,7 +111,8 @@ export default function FeatureSection() {
               {copy[2]}
             </div>
           </article>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
