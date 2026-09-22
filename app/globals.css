@@ -437,49 +437,21 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 
-/* Experimental Pintu orbital: only a destination reached through this portal
-   receives one short content-scale arrival; browser zoom is never modified. */
-@keyframes dc-portal-arrive {
-  from { opacity: 0.92; transform: scale(1.085) translateY(10px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+/* Shared marketing navigation veil. No body-level opacity rules: individual
+   destination pieces assemble when the veil begins to uncover their page. */
+@keyframes dc-marketing-veil-in {
+  from { clip-path: circle(0% at 50% 50%); opacity: 0.84; }
+  to { clip-path: circle(155% at 50% 50%); opacity: 1; }
 }
-
-.dc-portal-arrival {
-  transform-origin: top center;
-  animation: dc-portal-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes dc-marketing-veil-out {
+  from { clip-path: circle(155% at 50% 50%); opacity: 1; }
+  to { clip-path: circle(0% at 50% 50%); opacity: 0; }
 }
-
-@media (prefers-reduced-motion: reduce) {
-  .dc-portal-arrival { animation: none; }
+@keyframes dc-marketing-glow-in {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
 }
-
-/* The portal sets this on body BEFORE routing, preventing a one-frame flash.
-   Reveal the page chrome and every section only while the phone zooms out. */
-body.dc-portal-arriving:not(.dc-portal-revealing) header.dc-navbar,
-body.dc-portal-arriving:not(.dc-portal-revealing) footer,
-body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-hero-copy,
-body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-other-sections {
-  opacity: 0 !important;
-  pointer-events: none !important;
+@keyframes dc-marketing-glow-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.25); }
 }
-body.dc-portal-arriving.dc-portal-revealing header.dc-navbar,
-body.dc-portal-arriving.dc-portal-revealing footer,
-body.dc-portal-arriving.dc-portal-revealing .dc-invitation-other-sections {
-  opacity: 1;
-}
-.dc-navbar, footer, .dc-invitation-other-sections {
-  transition: opacity 1650ms cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* Portal-specific page elements have their own stacking contexts; hide each directly. */
-body.dc-portal-arriving:not(.dc-portal-revealing) header.dc-navbar *,
-body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-hero-copy *,
-body.dc-portal-arriving:not(.dc-portal-revealing) .dc-invitation-other-sections * {
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Cover begins as a small pink glow, becomes fully opaque, then the persistent overlay fades on the destination. */
-@keyframes dc-portal-cover { from { opacity: 0; } to { opacity: 1; } }
-
-@keyframes dc-portal-grow { from { transform: scale(0.005); opacity: 0; } to { transform: scale(1); opacity: 1; } }
