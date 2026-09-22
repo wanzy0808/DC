@@ -52,6 +52,7 @@ export function PublicContent({ children }: { children: ReactNode }) {
   );
   const isLanding = pathname === "/" || pathname === "/jiplak" || pathname === "/pagecontoh";
   const isFramedMarketing = pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik";
+  const isAuthPage = pathname === "/login";
 
   return (
     <main
@@ -60,7 +61,9 @@ export function PublicContent({ children }: { children: ReactNode }) {
           ? "w-full min-h-screen"
           : isLanding || isFramedMarketing
             ? "public-content landing-page w-full mx-auto flex-1 flex flex-col relative z-10"
-            : "public-content public-page w-[75vw] max-w-[75vw] mx-auto flex-1 flex flex-col relative z-10"
+            : isAuthPage
+              ? "public-content w-full mx-auto flex-1 flex flex-col relative z-10"
+              : "public-content public-page w-[75vw] max-w-[75vw] mx-auto flex-1 flex flex-col relative z-10"
       }`}
     >
       {children}
