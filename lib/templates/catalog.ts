@@ -8,6 +8,13 @@ export type InvitationTemplate = {
 
 export const invitationTemplates: InvitationTemplate[] = [
   {
+    key: "romantic-rose",
+    name: "Romantic Rose",
+    description: "Amplop digital, galeri foto pasangan, dan 13 bagian undangan dalam nuansa rose.",
+    previewImage: "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=900",
+    assetPath: "/templates/romantic-rose",
+  },
+  {
     key: "botanical-ivory",
     name: "Botanical Ivory",
     description:
