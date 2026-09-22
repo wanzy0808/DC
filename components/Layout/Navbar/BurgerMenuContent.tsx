@@ -30,7 +30,7 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
     { href: "/d-invitation", label: nav.invitation, icon: LayoutTemplate },
     { href: "/guestbook", label: nav.guestbook, icon: BookOpen },
   ];
-  const itemClass = "flex min-h-11 w-full items-center justify-start gap-3 rounded-[var(--dc-control-radius)] border border-primary/35 bg-card/60 px-4 py-2.5 text-left font-[family-name:var(--font-dc-body)] text-sm text-foreground shadow-none transition-[background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-primary/70 hover:bg-primary/10 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:border-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary dark:bg-card/60 dark:text-foreground dark:hover:bg-primary/15 dark:hover:text-primary";
+  const itemClass = "flex min-h-11 w-full items-center justify-start gap-3 rounded-[var(--dc-control-radius)] border border-primary/35 bg-card/60 px-4 py-2.5 text-left font-[family-name:var(--font-dc-body)] text-sm text-primary shadow-none transition-[background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-primary/70 hover:bg-primary/10 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:border-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary dark:bg-card/60 dark:text-primary dark:hover:bg-primary/15 dark:hover:text-primary";
   const reveal = (index: number) => reduced ? {} : {
     initial: { opacity: 0, x: 26 },
     animate: { opacity: 1, x: 0 },
