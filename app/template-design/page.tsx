@@ -34,6 +34,8 @@ export default function TemplateDesignPage() {
         search: "Search templates...",
         searchLabel: "Search invitation templates",
         all: "All",
+        withPhoto: "With photos",
+        withoutPhoto: "Without photos",
         sort: "Sort by",
         catalog: "Catalog order",
         name: "Name A–Z",
@@ -62,6 +64,8 @@ export default function TemplateDesignPage() {
         search: "Cari desain...",
         searchLabel: "Cari template undangan",
         all: "Semua",
+        withPhoto: "Dengan foto",
+        withoutPhoto: "Tanpa foto",
         sort: "Urutkan",
         catalog: "Urutan katalog",
         name: "Nama A–Z",
@@ -86,6 +90,7 @@ export default function TemplateDesignPage() {
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
+  const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
   const [sort, setSort] = useState<"Katalog" | "Nama">("Katalog");
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
@@ -93,12 +98,13 @@ export default function TemplateDesignPage() {
   const filteredTemplates = useMemo(() => {
     const result = catalog.filter((template) =>
       `${template.name} ${template.description} ${template.category}`.toLocaleLowerCase("id").includes(query.trim().toLocaleLowerCase("id")) &&
-      (category === "Semua" || template.category === category),
+      (category === "Semua" || template.category === category) &&
+      (photoFilter === "all" || (template.ready && (photoFilter === "photo" ? template.usesPhotos : !template.usesPhotos))),
     );
     return sort === "Nama"
       ? [...result].sort((a, b) => a.name.localeCompare(b.name, "id"))
       : result;
-  }, [catalog, category, query, sort]);
+  }, [catalog, category, query, sort, photoFilter]);
 
   const selected = catalog.find((item) => item.key === selectedKey);
 
@@ -164,7 +170,17 @@ export default function TemplateDesignPage() {
           </div>
         </div>
 
-        <div className="mb-8 mt-7 flex flex-wrap items-center justify-between gap-5">
+        <div className="mt-7 flex flex-wrap gap-2" aria-label={locale === "en" ? "Filter designs by photo use" : "Filter penggunaan foto"}>
+          {([
+            ["all", copy.all],
+            ["photo", copy.withPhoto],
+            ["no-photo", copy.withoutPhoto],
+          ] as const).map(([value, label]) => (
+            <button key={value} type="button" onClick={() => setPhotoFilter(value)} aria-pressed={photoFilter === value}
+              className={`min-h-11 rounded-full border px-5 py-2 text-xs font-medium transition ${photoFilter === value ? "border-primary bg-primary text-white dark:text-black" : "border-primary/25 bg-background/65 text-foreground/80 hover:border-primary/60 hover:bg-primary/10"}`}>{label}</button>
+          ))}
+        </div>
+        <div className="mb-8 mt-5 flex flex-wrap items-center justify-between gap-5">
           <div className="flex flex-wrap gap-2" aria-label={locale === "en" ? "Filter design categories" : "Filter jenis desain"}>
             {categories.map((item) => (
               <button
@@ -199,6 +215,7 @@ export default function TemplateDesignPage() {
                 {template.ready ? <TemplateCardCanvas templateKey={template.key} /> : (
                   <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
                 )}
+                {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
                 <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-4">
                   <div className="min-w-0">
                     <p className="mb-1 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
