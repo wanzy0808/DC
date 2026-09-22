@@ -84,7 +84,7 @@ export default function HeroSection() {
         };
 
   return (
-    <section className="relative grid min-w-0 items-center gap-14 border-b border-border/70 pb-20 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-12 lg:pb-24">
+    <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 border-b border-border/70 pb-20 lg:max-w-[1080px] lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-8 lg:pb-24">
       <motion.div className="dc-invitation-hero-copy min-w-0 w-full max-w-none" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
         <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
           {copy.eyebrow}
