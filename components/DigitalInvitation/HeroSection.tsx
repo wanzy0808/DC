@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useLayoutEffect, useState } from "react";
-import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowUpRight,
   CalendarDays,
@@ -12,38 +10,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import PuzzleAssemble from "@/components/DigitalInvitation/PuzzleAssemble";
 
-export default function HeroSection() {
+export default function HeroSection({ ready }: { ready: boolean }) {
   const { locale } = useLanguage();
-  const [portalArrival, setPortalArrival] = useState(false);
-  const reducedMotion = useReducedMotion();
-  const [arrivalFinished, setArrivalFinished] = useState(false);
-  const [revealCopy, setRevealCopy] = useState(false);
-  useEffect(() => {
-    if (!portalArrival || reducedMotion) return;
-    const timer = window.setTimeout(() => {
-      document.body.classList.add("dc-portal-revealing");
-      setRevealCopy(true);
-    }, 2550);
-    return () => window.clearTimeout(timer);
-  }, [portalArrival, reducedMotion]);
-  useLayoutEffect(() => {
-    if (sessionStorage.getItem("dc-portal-entry") === "1") {
-      sessionStorage.removeItem("dc-portal-entry");
-      setPortalArrival(true);
-    }
-    return () => {
-      document.body.classList.remove("dc-portal-arriving", "dc-portal-revealing");
-    };
-  }, []);
-  useLayoutEffect(() => {
-    if (!portalArrival) return;
-    if (reducedMotion || arrivalFinished) {
-      document.body.classList.remove("dc-portal-arriving", "dc-portal-revealing");
-      return;
-    }
-    document.body.classList.add("dc-portal-arriving");
-  }, [portalArrival, reducedMotion, arrivalFinished]);
   const copy =
     locale === "en"
       ? {
@@ -85,34 +55,44 @@ export default function HeroSection() {
 
   return (
     <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 pb-20 lg:max-w-[1200px] lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10 lg:pb-24">
-      <motion.div className="dc-invitation-hero-copy min-w-0 w-full max-w-none lg:-translate-x-4" initial={false} animate={{ opacity: portalArrival && !revealCopy && !reducedMotion ? 0 : 1, y: portalArrival && !revealCopy && !reducedMotion ? 18 : 0 }} transition={{ duration: 1.65, ease: [0.22, 1, 0.36, 1] }}>
-        <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
-          {copy.eyebrow}
-        </p>
-        <h1 className="mt-6 max-w-3xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
-          {copy.title}
-          <span className="mt-2 block text-foreground">{copy.accent}</span>
-        </h1>
-        <p className="mt-7 max-w-2xl font-[family-name:var(--font-dc-body)] text-base leading-8 text-foreground/70 md:text-lg">
-          {copy.description}
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Button asChild size="lg">
-            <Link href="/template-design" className="gap-2">
-              {copy.explore}
-              <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-        <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
-          {copy.tags.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-      </motion.div>
+      <div className="dc-invitation-hero-copy min-w-0 w-full max-w-none lg:-translate-x-4">
+        <PuzzleAssemble ready={ready} direction="top" delay={0.04}>
+          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
+            {copy.eyebrow}
+          </p>
+        </PuzzleAssemble>
+        <PuzzleAssemble ready={ready} direction="left" delay={0.12}>
+          <h1 className="mt-6 max-w-3xl font-[family-name:var(--font-dc-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
+            {copy.title}
+            <span className="mt-2 block text-foreground">{copy.accent}</span>
+          </h1>
+        </PuzzleAssemble>
+        <PuzzleAssemble ready={ready} direction="right" delay={0.22}>
+          <p className="mt-7 max-w-2xl font-[family-name:var(--font-dc-body)] text-base leading-8 text-foreground/70 md:text-lg">
+            {copy.description}
+          </p>
+        </PuzzleAssemble>
+        <PuzzleAssemble ready={ready} direction="bottom" delay={0.3}>
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <Button asChild size="lg">
+              <Link href="/template-design" className="gap-2">
+                {copy.explore}
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </PuzzleAssemble>
+        <PuzzleAssemble ready={ready} direction="left" delay={0.38}>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
+            {copy.tags.map((tag) => (
+              <span key={tag}>{tag}</span>
+            ))}
+          </div>
+        </PuzzleAssemble>
+      </div>
 
-      <div className={`relative mx-auto w-full min-w-0 max-w-lg lg:translate-x-4 ${portalArrival && !arrivalFinished && !reducedMotion ? "z-[70]" : ""}`}>
-        <motion.div className="relative mx-auto w-[min(100%,340px)]" initial={false} animate={portalArrival && !reducedMotion ? { scale: [3.2, 3.2, 1], x: ["-18vw", "-18vw", "0vw"], opacity: 1 } : { scale: 1, x: "0vw", opacity: 1 }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: [0.25, 0.1, 0.2, 1] }} onAnimationComplete={() => { if (portalArrival) setArrivalFinished(true); }} style={{ transformOrigin: "50% 38%" }}>
+      <div className="relative mx-auto w-full min-w-0 max-w-lg lg:translate-x-4">
+        <PuzzleAssemble ready={ready} direction="right" delay={0.15} className="relative mx-auto w-[min(100%,340px)]">
           <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
@@ -144,7 +124,7 @@ export default function HeroSection() {
                   <div className="absolute right-2 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[#151515] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)]" />
                 </div>
 
-                <motion.div className={`invitation-phone-scroll absolute inset-x-0 top-0 w-full ${portalArrival ? "invitation-phone-scroll-paused" : ""}`} initial={portalArrival ? { y: "-38%" } : false} animate={portalArrival ? { y: reducedMotion ? "0%" : ["-38%", "-38%", "0%"] } : { y: "0%" }} transition={{ duration: reducedMotion ? 0 : 5.8, times: [0, 0.24, 1], ease: "easeInOut" }} >
+                <div className="invitation-phone-scroll absolute inset-x-0 top-0 w-full">
                   <article className="min-h-full bg-[#f8f4f1] px-7 pb-16 pt-12 text-[#2a2220] dark:bg-[#111111] dark:text-white">
                     <div className="mx-auto max-w-[250px] text-center">
                       <p className="font-[family-name:var(--font-dc-mono)] text-[7px] uppercase tracking-[0.28em] text-[#8b5d62] dark:text-primary">
@@ -243,21 +223,17 @@ export default function HeroSection() {
                       </p>
                     </div>
                   </article>
-                </motion.div>
+                </div>
               </div>
             </div>
           </div>
-        </motion.div>
+        </PuzzleAssemble>
       </div>
 
       <style jsx>{`
         .invitation-phone-scroll {
           animation: invitation-phone-scroll 18s ease-in-out infinite;
           will-change: transform;
-        }
-
-        .invitation-phone-scroll-paused {
-          animation: none;
         }
 
         @keyframes invitation-phone-scroll {
