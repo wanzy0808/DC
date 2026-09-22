@@ -40,6 +40,14 @@ export default function TemplateDesignPage() {
 
   const selected = catalog.find((item) => item.key === selectedKey);
 
+  // Marketing cards deep-link to a specific preview. Public preview never opens Studio.
+  useEffect(() => {
+    const requested = new URLSearchParams(window.location.search).get("template");
+    if (requested && catalog.some((item) => item.key === requested)) {
+      setSelectedKey(requested);
+    }
+  }, [catalog]);
+
   function openPreview(key: string) {
     setSections({ ...defaultInvitationSections });
     setSelectedKey(key);
