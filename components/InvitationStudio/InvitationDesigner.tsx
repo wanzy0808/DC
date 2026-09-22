@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import {
   invitationFonts,
@@ -118,6 +119,11 @@ export default function InvitationDesigner() {
   const fontPair = invitationFonts[design.font];
   const designKey = makeInvitationDesignStateKey(design);
   const identity = getInvitationEventIdentity(invitation);
+  // Couple-only photo roles are not relevant to single-host and general events.
+  const supportedPhotoSlots = template?.photoSlots ?? (["cover"] as PhotoSlot[]);
+  const photoSlots = getEventCategory(identity.category).nameMode === "couple"
+    ? supportedPhotoSlots
+    : supportedPhotoSlots.filter((slot) => slot !== "personOne" && slot !== "personTwo");
 
   function change(next: Partial<InvitationDesignState>) {
     setHistory((current) => [...current.slice(-14), designKey]);
@@ -304,7 +310,7 @@ export default function InvitationDesigner() {
           {panel === "decor" && (
             <PhotoPanel
               photos={invitation?.assets ?? []}
-              slots={catalog.find((item) => item.key === design.template && item.ready)?.photoSlots ?? ["cover"]}
+              slots={photoSlots}
               assignments={design.photos}
               activeSlot={activePhotoSlot}
               onActiveSlotChange={setActivePhotoSlot}
