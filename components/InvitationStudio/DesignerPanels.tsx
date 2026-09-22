@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import type { CatalogTemplate } from "@/lib/templates/use-template-catalog";
+import { TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type {
   InvitationSectionKey,
@@ -95,11 +96,14 @@ export function TemplatePanel({
             }`}
           >
             <span className="relative block">
-              <img
-                src={item.previewImage}
-                alt=""
-                className="h-28 w-full object-cover"
-              />
+              {item.ready ? (
+                <span className="block h-44 overflow-hidden">
+                  <TemplateCardCanvas templateKey={item.key} />
+                </span>
+              ) : (
+                <img src={item.previewImage} alt="" loading="lazy" className="h-44 w-full object-cover" />
+              )}
+              {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? "Dengan foto" : "Tanpa foto"}</span>}
               {selected === item.key && (
                 <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-white dark:text-black">
                   <Check className="h-4 w-4" />
