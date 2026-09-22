@@ -11,6 +11,7 @@ import {
   normalizeEventCategory,
 } from "@/lib/events/catalog";
 import { parseInvitationSections } from "@/lib/templates/sections";
+import { resolveInvitationPhotos } from "@/lib/templates/photo-slots";
 
 function Divider() {
   return (
@@ -68,7 +69,8 @@ export default function ClassicInvitationTemplate({
 }: {
   invitation: PublicInvitationData;
 }) {
-  const image = invitation.assets?.find((asset) => asset.type === "IMAGE")?.url;
+  const photo = resolveInvitationPhotos(invitation.assets ?? [], invitation.templateKey);
+  const image = photo.cover;
   const eventCategory = normalizeEventCategory(invitation.eventCategory);
   const category = getEventCategory(eventCategory);
   const timezone = getIndonesiaTimezone(invitation.timezone);
@@ -148,6 +150,7 @@ export default function ClassicInvitationTemplate({
                   src={image}
                   alt=""
                   className="h-full w-full rounded-t-[118px] object-cover"
+                  style={{ objectPosition: `center ${photo.assignment.focus.cover}` }}
                 />
               ) : (
                 <div className="h-full w-full rounded-t-[118px] bg-stone-200" />
