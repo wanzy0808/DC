@@ -10,6 +10,12 @@ The current scene consists of the continuous floral background and animated peta
 
 Follow the scoped-change and validation contract in `AGENTS.md` and the canonical landing requirement in `prd.md`. The separate `/pintu-lab` GLB experiment is not the approved homepage door implementation.
 
+## Shared invitation template catalog
+
+`lib/templates/catalog.ts` is the **single registry for render-ready built-in templates** (including the Studio preset and preview/category metadata). `/api/templates` publishes that registry alongside published designer submissions as `ready: false` image previews. `lib/templates/use-template-catalog.ts` feeds the public gallery at `/template-design`, the marketing collection inside `/d-invitation`, and the authenticated Studio selection. Studio allows only `ready: true` templates, so uploaded HTML/ZIP/JSON design packages cannot be mistaken for working invitation renderers. When a newly implemented template is registered once in the master catalog, all three surfaces pick it up automatically after deployment/refresh. Published designer uploads appear as preview-only entries without a code change; they require renderer integration before becoming usable templates.
+
+Public visitors can explore all previews without an account. Choosing a usable template goes through `/dashboard` to login and event creation; `/dashboard/editor` is protected by the server-side Dashboard layout and requires an actual `invitationId`. The preview fixture in `data/templates/preview-invitation.ts` is gallery-only and never reads/writes customer invitation content.
+
 ## Product Model
 
 ### Digital Invitation
