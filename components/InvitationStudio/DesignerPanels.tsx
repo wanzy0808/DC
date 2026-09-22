@@ -8,7 +8,7 @@ import {
   Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { invitationTemplates } from "@/lib/templates/catalog";
+import type { CatalogTemplate } from "@/lib/templates/use-template-catalog";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type {
   InvitationSectionKey,
@@ -69,9 +69,11 @@ function Heading({
 export function TemplatePanel({
   selected,
   onSelect,
+  templates,
 }: {
   selected: string;
   onSelect: (key: string) => void;
+  templates: CatalogTemplate[];
 }) {
   return (
     <div>
@@ -80,7 +82,7 @@ export function TemplatePanel({
         description="Pilih template. Komposisi, palet awal, dan canvas langsung berubah."
       />
       <div className="mt-5 grid gap-3">
-        {invitationTemplates.map((item) => (
+        {templates.filter((item) => item.ready).map((item) => (
           <button
             type="button"
             key={item.key}
