@@ -509,6 +509,14 @@ Template memiliki gaya sendiri untuk amplop, ornamen, frame foto, palette, fonts
 
 Semua contoh foto yang dipakai katalog, gallery fixture, dan Studio default harus mengambil asset yang SUDAH ADA di public/: /couple.jpg, /couple2.jpg, /couple3.jpg, /man.jpg, /female.jpg, bukan URL Unsplash. File tersebut hanya dummy/demo; foto undangan pelanggan selalu berasal dari InvitationAsset milik event sendiri, bukan fallback foto demo. Kode tema baru mengambil foto contoh dari manifest/shared fixture, tidak duplikasi file. Sharp WebP tetap wajib untuk semua upload image baru sesuai §7.2.7b.
 
+### 7.2.3c Musik bawaan untuk seluruh template undangan (22 September 2026)
+
+Semua template undangan READY wajib menyediakan **musik undangan bawaan** tanpa mengharuskan pengguna terlebih dahulu mengunggah MP3. Satu `lib/templates/music.ts` menyimpan pemetaan stable key ke audio yang sudah tersedia di `public/`; pilihan `Invitation.musicUrl` yang disimpan pemilik event menjadi prioritas, dilanjutkan aset `InvitationAsset` bertipe AUDIO pada event yang sama, baru kemudian musik tema bawaan. Tidak perlu menggandakan audio, menyimpan lagu per pelanggan atau mengubah skema database. Template baru harus mendaftarkan musik default pada manifest musik bersama; jangan memakai track template lain secara implisit dalam produksi.
+
+Player berada di luar subtree amplop yang di-unmount dan digunakan bersama oleh semua renderer template siap (`RomanticRoseTemplate` dan `UniversalInvitationTemplate`), dengan tombol musik **play/pause yang tetap mudah dijangkau** setelah amplop dibuka; lagu di-loop dan pengguna selalu bisa menjedanya. Pada halaman undangan publik, pemutaran dicoba langsung pada gesture klik/tap `Buka Undangan`, bukan autoplay saat page load atau di `useEffect`; jika browser memblokir play, undangan tetap dapat dibuka dan tombol play manual harus tetap berfungsi. Satu undangan hanya memiliki satu elemen audio aktif: hapus player kedua yang sebelumnya berada di footer. Saat berganti ke undangan/preview lain atau meninggalkan komponen, hentikan player sebelumnya. Perhatikan tab tersembunyi dan keyboard accessibility. Preview katalog/Studio **tidak** mengaktifkan musik otomatis (banyak preview card dimount bersamaan); audio hanya bermain jika user menekan play secara eksplisit. Saat audio preview bermain pada route marketing, hentikan sementara musik ambience marketing lalu kembalikan sesuai pilihan mute pengguna setelah preview selesai, sehingga tidak ada dua lagu bertumpuk.
+
+Menu Musik di Studio tetap membolehkan URL atau upload lagu per event, menunjukkan musik bawaan untuk tema yang dipilih, dan preview dapat mendengar lagu yang sedang diedit tanpa menunggu Save. Jangan pasang musik undangan pada halaman Dashboard, landing, guestbook, atau undangan belum terbit. Asset dan lisensi lagu yang digunakan untuk distribusi publik harus dipastikan sesuai hak penggunaan oleh pengelola sebelum rilis komersial.
+
 ### 7.2.3b Sepuluh tema berbeda: lima dengan foto, lima tanpa foto (22 September 2026)
 
 Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Target katalog bawaan saat ini **10 template keseluruhan (7 key lama dipertahankan demi kompatibilitas undangan existing + 3 key baru), 5 dengan foto dan 5 tanpa foto**:
@@ -4147,3 +4155,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Files:** `app/guestbook/page.tsx`, `app/undangan-fisik/page.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/MarketingFloatingControls.tsx`, `components/Guestbook/HeroSection.tsx`, `components/Guestbook/FeatureSection.tsx`, `components/Guestbook/ProcessSection.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
 
 **Validasi:** Build Validation GitHub Actions **PASS** pada commit shell/dua halaman `785053d5a10edb375b747b5790e4d21e99a301e8` ([run 35730049634](https://github.com/wanzy0808/DC/actions/runs/35730049634)); validasi commit styling Guestbook terakhir dan pemeriksaan visual localhost/perangkat masih pending.
+
+
+---
+
+## 2026-09-22 — Musik bawaan untuk semua sepuluh template undangan
+
+**Permintaan:** Semua tema undangan memiliki musik yang bisa didengar tamu, tidak terbatas pada template yang kebetulan sudah mengunggah audio.
+
+**Implementasi:** `lib/templates/music.ts` memetakan 10 stable key template READY ke berkas MP3 yang sudah tersedia di folder `public/`; musik URL khusus per event dan aset AUDIO tetap prioritas terhadap default. `components/PublicInvitation/InvitationMusic.tsx` menyediakan satu player bersama yang dimount sebelum amplop, mulai pada gesture Buka Undangan publik, loop, tombol pause/play mengambang setelah amplop, penghentian saat tab tersembunyi/unmount serta koordinasi agar dua preview tidak bermain bersamaan. Footer audio lama di `RomanticRoseTemplate` dan `UniversalInvitationTemplate` dihilangkan. Preview Studio/galeri tidak autoplay, namun dapat menyalakan lagu manual; `MarketingAudio` menghindari background marketing dan lagu undangan bersuara bersamaan. `InvitationPreview`, `InvitationDesigner`, dan `DesignerPanels.MusicPanel` mengizinkan pratinjau perubahan URL musik sebelum save sekaligus menampilkan judul musik default dari tema. Renderer undangan lain melalui dispatcher otomatis mengikuti kedua renderer ready. Tidak mengubah data event, fitur RSVP, konten template atau 3D Pintu landing.
+
+**Files:** `lib/templates/music.ts`, `components/PublicInvitation/InvitationMusic.tsx`, `components/PublicInvitation/RomanticRoseTemplate.tsx`, `components/PublicInvitation/UniversalInvitationTemplate.tsx`, `components/Layout/MarketingAudio.tsx`, `components/InvitationStudio/InvitationPreview.tsx`, `components/InvitationStudio/InvitationDesigner.tsx`, `components/InvitationStudio/DesignerPanels.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Code commits:** `5b90d96477fbcba89174ca5588049eb5b544da45`, `b0871868ae1361e7a62102951036e3975ae00926`, `19ea5bf98fa2f753b26aff4d8a18b241e8816f9f`, `fb4cc6825d183a80f2152ed10993279980a7f874`, `082db9970b91b5da658ac8040190cc360cb7362d`, `e535773dd256ea85449191d9f5ab1340df817b20`, `05a0b0e331256310109d475fbe0feeb497e9ea05`, `0aedb8aea6fc8cbd2abbd52bfb9e1c741204b0ad`, `ef8b69403d103b0af9f2c9c526afe4901e4f3877`, `901edd28756a0d0cae8f58ecfb7d04345c9bfd6b`.
+
+**Validasi:** GitHub Actions build/TS sedang diperiksa; uji visual/audio pada browser desktop dan ponsel belum dijalankan di localhost.
