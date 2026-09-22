@@ -80,7 +80,7 @@ export default function FeatureSection() {
           <h2 className="mt-3 max-w-xl font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary md:text-4xl">
             {copy[1]}
           </h2>
-      </div>
+        </div>
 
         <div className="grid gap-0 md:grid-cols-3">
           {features.map(([Icon, title, description], index) => (
@@ -110,7 +110,7 @@ export default function FeatureSection() {
                 />
                 {copy[2]}
               </div>
-          </article>
+            </article>
           ))}
         </div>
       </div>
