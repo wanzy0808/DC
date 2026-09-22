@@ -92,7 +92,7 @@ export default function TemplateCollection() {
             {copy.description}
           </p>
         </div>
-        <Button asChild size="sm" className="min-w-0 shrink-0 text-xs uppercase tracking-[0.14em]">
+        <Button asChild size="sm" className="min-w-0 shrink-0 text-xs normal-case tracking-normal">
           <Link href="/template-design">
             {copy.all}
             <ArrowUpRight className="h-3.5 w-3.5" />
