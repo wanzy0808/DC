@@ -8,7 +8,7 @@ import { MarketingInstagramLink } from "@/components/Layout/MarketingFrameFooter
 /** Unframed marketing pages keep music at bottom-left and Instagram at bottom-right. */
 export default function MarketingFloatingControls() {
   const pathname = usePathname();
-  if (!isMarketingPath(pathname) || pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation") return null;
+  if (!isMarketingPath(pathname) || pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design") return null;
   return <>
     <div className="fixed bottom-4 left-3 z-[60] rounded-xl border border-primary/25 bg-background/90 px-2 py-1.5 shadow-lg backdrop-blur-md sm:bottom-5 sm:left-5">
       <MarketingAudioControls />

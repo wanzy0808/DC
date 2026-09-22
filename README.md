@@ -10,6 +10,10 @@ The current scene consists of the continuous floral background and animated peta
 
 Follow the scoped-change and validation contract in `AGENTS.md` and the canonical landing requirement in `prd.md`. The separate `/pintu-lab` GLB experiment is not the approved homepage door implementation.
 
+## Framed public template gallery
+
+The public `/template-design` gallery uses the same frame and visual language as the approved landing and `/d-invitation`: centered 90vw Rose-bordered marketing shell, shared embedded Navbar and Footer, one public floral/petal atmosphere, and a scrollable inner catalog targeting 80vw on desktop. Root-layout Navbar/Footer, ambience and floating music/Instagram controls are suppressed on this framed route to avoid duplicate chrome; the footer inside the frame displays the existing persistent marketing audio controls and Instagram link. Interactive previews remain overlay dialogs outside the scroll-clipped frame. Light/dark and ID/EN follow the shared providers. This scoped gallery update does not alter the approved landing, Pintu or `/d-invitation` layouts.
+
 ## Shared invitation template catalog
 
 `lib/templates/catalog.ts` is the **single registry for render-ready built-in templates** (including the Studio preset and preview/category metadata). `/api/templates` publishes that registry alongside published designer submissions as `ready: false` image previews. `lib/templates/use-template-catalog.ts` feeds the public gallery at `/template-design`, the marketing collection inside `/d-invitation`, and the authenticated Studio selection. Studio lists uploaded designer previews as disabled items and allows selection only for `ready: true` templates, so uploaded HTML/ZIP/JSON design packages cannot be mistaken for working invitation renderers. When a newly implemented template is registered once in the master catalog, all three surfaces pick it up automatically after deployment/refresh. Published designer uploads appear as preview-only entries without a code change; they require renderer integration before becoming usable templates.
