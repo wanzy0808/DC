@@ -76,7 +76,10 @@ const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
             setPlaying(true);
             window.dispatchEvent(new CustomEvent("dc-invitation-music-play", { detail: { player: event.currentTarget } }));
           }}
-          onPause={() => setPlaying(false)}
+          onPause={(event) => {
+            setPlaying(false);
+            window.dispatchEvent(new CustomEvent("dc-invitation-music-pause", { detail: { player: event.currentTarget } }));
+          }}
           onError={() => {
             setFailed(true);
             setPlaying(false);
