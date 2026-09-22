@@ -64,15 +64,17 @@ export async function POST(request: Request) {
     let title = file.name;
 
     if (type === "IMAGE") {
-      outputBuffer = await sharp(originalBuffer)
+      // Decode and transcode actual image bytes; never just rename an uploaded file.
+      outputBuffer = await sharp(originalBuffer, { limitInputPixels: 40_000_000 })
         .rotate()
         .resize({ width: 2000, height: 2000, fit: "inside", withoutEnlargement: true })
-        .webp({ quality: 82 })
+        .webp({ quality: 82, effort: 4 })
         .toBuffer();
       fileName = `${randomUUID()}.webp`;
-      uploadDirectory = path.join(process.cwd(), "public", "uploads", "images");
-      savedPath = path.join(process.cwd(), "public", "uploads", "images", fileName);
-      url = `/uploads/images/${fileName}`;
+      // Keep new user uploads event-scoped; legacy URLs continue to work.
+      uploadDirectory = path.join(process.cwd(), "public", "uploads", "images", invitation.id);
+      savedPath = path.join(uploadDirectory, fileName);
+      url = `/uploads/images/${invitation.id}/${fileName}`;
       title = path.basename(file.name, path.extname(file.name)) + ".webp";
     } else {
       outputBuffer = originalBuffer;
