@@ -5,27 +5,82 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import GoogleIcon from "@/components/Auth/GoogleIcon";
+import { authErrorClass, authFieldClass, authGoogleButtonClass, authSubmitButtonClass } from "@/components/Auth/auth-styles";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface RegisterDialogProps {
   onSwitchToLogin?: () => void;
+  onRegistered?: () => void;
 }
 
-function GoogleIcon() {
-  return (
-    <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z" />
-      <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.18v3.15C3.15 21.32 7.22 24 12 24z" />
-      <path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.6H1.18C.43 8.13 0 9.87 0 11.7c0 1.83.43 3.57 1.18 5.1l4.09 2.56 1.18-4.09z" />
-      <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.22 0 3.15 2.68 1.18 6.6l4.09 3.15c.95-2.85 3.6-4.96 6.73-4.96z" />
-    </svg>
-  );
-}
+const copy = {
+  id: {
+    title: "Daftar",
+    description: "Buat akun untuk mulai menyiapkan acaramu.",
+    google: "Daftar dengan Google",
+    separator: "atau dengan email",
+    email: "Email",
+    password: "Kata sandi",
+    confirm: "Konfirmasi kata sandi",
+    minimum: "Minimal 8 karakter",
+    showPassword: "Tampilkan kata sandi",
+    hidePassword: "Sembunyikan kata sandi",
+    showConfirm: "Tampilkan konfirmasi kata sandi",
+    hideConfirm: "Sembunyikan konfirmasi kata sandi",
+    terms: "Saya menyetujui",
+    termsName: "Syarat & Ketentuan",
+    privacy: "Kebijakan Privasi",
+    and: "dan",
+    promo: "Saya ingin menerima email promo dan newsletter DC Organizer.",
+    submit: "Daftar",
+    loading: "Memproses...",
+    haveAccount: "Sudah punya akun?",
+    login: "Masuk",
+    vendorText: "Punya bisnis terkait acara?",
+    vendorLink: "Bergabung sebagai vendor",
+    requiredTerms: "Kamu perlu menyetujui Syarat & Ketentuan dan Kebijakan Privasi.",
+    minimumError: "Kata sandi minimal 8 karakter.",
+    mismatchError: "Konfirmasi kata sandi tidak cocok.",
+    registerError: "Pendaftaran gagal.",
+    connectionError: "Tidak dapat terhubung ke server.",
+  },
+  en: {
+    title: "Create account",
+    description: "Create an account to start planning your event.",
+    google: "Continue with Google",
+    separator: "or with email",
+    email: "Email",
+    password: "Password",
+    confirm: "Confirm password",
+    minimum: "At least 8 characters",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
+    showConfirm: "Show confirmation password",
+    hideConfirm: "Hide confirmation password",
+    terms: "I agree to the",
+    termsName: "Terms & Conditions",
+    privacy: "Privacy Policy",
+    and: "and",
+    promo: "I want to receive promotional emails and DC Organizer newsletters.",
+    submit: "Create account",
+    loading: "Creating account...",
+    haveAccount: "Already have an account?",
+    login: "Sign in",
+    vendorText: "Work in the events industry?",
+    vendorLink: "Join as a vendor",
+    requiredTerms: "Please agree to the Terms & Conditions and Privacy Policy.",
+    minimumError: "Password must have at least 8 characters.",
+    mismatchError: "Passwords do not match.",
+    registerError: "Registration failed.",
+    connectionError: "Unable to connect to the server.",
+  },
+} as const;
 
-const neutralButton =
-  "border border-black/10 bg-white text-black shadow-sm hover:bg-neutral-100 hover:text-black dark:border-black/10 dark:bg-white dark:text-black dark:hover:bg-neutral-100";
-
-export default function RegisterDialog({ onSwitchToLogin }: RegisterDialogProps) {
+export default function RegisterDialog({ onSwitchToLogin, onRegistered }: RegisterDialogProps) {
+  const { locale } = useLanguage();
+  const t = copy[locale];
   const router = useRouter();
   const [next, setNext] = useState("/dashboard");
   const [email, setEmail] = useState("");
@@ -49,15 +104,15 @@ export default function RegisterDialog({ onSwitchToLogin }: RegisterDialogProps)
     event.preventDefault();
     setError("");
     if (!agreedTerms) {
-      setError("Kamu perlu menyetujui Syarat & Ketentuan dan Kebijakan Privasi.");
+      setError(t.requiredTerms);
       return;
     }
     if (password.length < 8) {
-      setError("Password minimal 8 karakter.");
+      setError(t.minimumError);
       return;
     }
     if (password !== confirmPassword) {
-      setError("Konfirmasi password tidak cocok.");
+      setError(t.mismatchError);
       return;
     }
 
@@ -70,104 +125,125 @@ export default function RegisterDialog({ onSwitchToLogin }: RegisterDialogProps)
       });
       const data = await response.json();
       if (!response.ok) {
-        setError(data.error ?? "Pendaftaran gagal.");
+        setError(data.error ?? t.registerError);
       } else {
+        onRegistered?.();
         router.push(`/login?next=${encodeURIComponent(next)}`);
       }
     } catch {
-      setError("Tidak dapat terhubung ke server.");
+      setError(t.connectionError);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <DialogContent className="max-h-[90vh] overflow-y-auto border-black/10 bg-white text-black sm:max-w-md">
-      <DialogHeader className="border-b border-black/10 pb-4 pr-10 text-left">
-        <DialogTitle className="font-[family-name:var(--font-dc-heading)] text-2xl font-normal text-black">
-          Daftar
+    <DialogContent className="max-h-[min(92dvh,900px)] w-[min(94vw,490px)] gap-0 overflow-y-auto rounded-[32px] border border-primary/40 bg-card/95 p-5 text-foreground shadow-[0_24px_90px_rgba(75,35,47,0.23)] backdrop-blur-xl sm:max-w-[490px] sm:p-8">
+      <DialogHeader className="gap-2 border-b border-primary/20 pb-5 pr-9 text-left">
+        <DialogTitle className="font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary">
+          {t.title}
         </DialogTitle>
+        <DialogDescription className="font-[family-name:var(--font-dc-body)] text-sm leading-6 text-muted-foreground">
+          {t.description}
+        </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={submit} className="space-y-5 py-4">
-        <Button asChild size="lg" className={`w-full gap-3 rounded-xl ${neutralButton}`}>
+      <form onSubmit={submit} className="space-y-5 pt-6">
+        <Button asChild size="lg" className={authGoogleButtonClass}>
           <a href={`/api/auth/google?next=${encodeURIComponent(next)}`}>
             <GoogleIcon />
-            <span>Daftar dengan Google</span>
+            <span>{t.google}</span>
           </a>
         </Button>
 
-        <div className="flex items-center gap-3">
-          <div className="h-px flex-1 bg-black/10" />
-          <span className="text-xs text-black/45">atau lanjutkan dengan</span>
-          <div className="h-px flex-1 bg-black/10" />
+        <div className="flex items-center gap-3" aria-hidden="true">
+          <span className="h-px flex-1 bg-primary/25" />
+          <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">{t.separator}</span>
+          <span className="h-px flex-1 bg-primary/25" />
         </div>
 
-        <input
-          required
-          type="email"
-          autoComplete="email"
-          placeholder="Alamat Email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          className="w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-sm text-black outline-none transition placeholder:text-black/35 focus:border-primary focus:ring-1 focus:ring-primary"
-        />
+        <div className="space-y-4">
+          <label htmlFor="dc-register-email" className="block text-sm font-medium text-foreground">
+            {t.email}
+            <input
+              id="dc-register-email"
+              required
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              className={authFieldClass}
+            />
+          </label>
 
-        <div className="relative">
-          <input
-            required
-            minLength={8}
-            type={showPassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Kata Sandi"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            className="w-full rounded-xl border border-black/15 bg-white px-4 py-3 pr-12 text-sm text-black outline-none transition placeholder:text-black/35 focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-          <Button
-            type="button"
-            size="icon-xs"
-            onClick={() => setShowPassword((value) => !value)}
-            className={`absolute right-2 top-2.5 ${neutralButton}`}
-            aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
-          >
-            {showPassword ? <EyeOff /> : <Eye />}
-          </Button>
+          <div>
+            <label htmlFor="dc-register-password" className="block text-sm font-medium text-foreground">
+              {t.password}
+            </label>
+            <div className="relative">
+              <input
+                id="dc-register-password"
+                required
+                minLength={8}
+                type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                aria-describedby="dc-register-password-hint"
+                className={authFieldClass + " pr-14"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((value) => !value)}
+                className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                aria-pressed={showPassword}
+                aria-label={showPassword ? t.hidePassword : t.showPassword}
+              >
+                {showPassword ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
+              </button>
+            </div>
+            <p id="dc-register-password-hint" className="mt-1.5 text-xs text-muted-foreground">{t.minimum}</p>
+          </div>
+
+          <div>
+            <label htmlFor="dc-register-password-confirm" className="block text-sm font-medium text-foreground">
+              {t.confirm}
+            </label>
+            <div className="relative">
+              <input
+                id="dc-register-password-confirm"
+                required
+                minLength={8}
+                type={showConfirmPassword ? "text" : "password"}
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                className={authFieldClass + " pr-14"}
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword((value) => !value)}
+                className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                aria-pressed={showConfirmPassword}
+                aria-label={showConfirmPassword ? t.hideConfirm : t.showConfirm}
+              >
+                {showConfirmPassword ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="relative">
-          <input
-            required
-            minLength={8}
-            type={showConfirmPassword ? "text" : "password"}
-            autoComplete="new-password"
-            placeholder="Konfirmasi Kata Sandi"
-            value={confirmPassword}
-            onChange={(event) => setConfirmPassword(event.target.value)}
-            className="w-full rounded-xl border border-black/15 bg-white px-4 py-3 pr-12 text-sm text-black outline-none transition placeholder:text-black/35 focus:border-primary focus:ring-1 focus:ring-primary"
-          />
-          <Button
-            type="button"
-            size="icon-xs"
-            onClick={() => setShowConfirmPassword((value) => !value)}
-            className={`absolute right-2 top-2.5 ${neutralButton}`}
-            aria-label={showConfirmPassword ? "Sembunyikan konfirmasi password" : "Tampilkan konfirmasi password"}
-          >
-            {showConfirmPassword ? <EyeOff /> : <Eye />}
-          </Button>
-        </div>
-
-        <div className="space-y-3 pt-1 text-xs text-black/70">
+        <div className="space-y-3 rounded-[22px] border border-primary/20 bg-primary/[0.035] p-4 text-xs text-muted-foreground">
           <label className="flex cursor-pointer items-start gap-3">
             <input
               required
               type="checkbox"
               checked={agreedTerms}
               onChange={(event) => setAgreedTerms(event.target.checked)}
-              className="mt-0.5 rounded accent-[var(--primary)]"
+              className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[var(--primary)]"
             />
             <span className="leading-relaxed">
-              Saya menyetujui <span className="text-primary underline">Syarat & Ketentuan</span> beserta <span className="text-primary underline">Kebijakan Privasi</span>.
+              {t.terms} <span className="font-medium text-primary">{t.termsName}</span> {t.and} <span className="font-medium text-primary">{t.privacy}</span>.
             </span>
           </label>
           <label className="flex cursor-pointer items-start gap-3">
@@ -175,46 +251,38 @@ export default function RegisterDialog({ onSwitchToLogin }: RegisterDialogProps)
               type="checkbox"
               checked={agreedPromo}
               onChange={(event) => setAgreedPromo(event.target.checked)}
-              className="mt-0.5 rounded accent-[var(--primary)]"
+              className="mt-0.5 size-4 shrink-0 cursor-pointer accent-[var(--primary)]"
             />
-            <span className="leading-relaxed">
-              Saya ingin menerima email promo dan newsletter DC Organizer.
-            </span>
+            <span className="leading-relaxed">{t.promo}</span>
           </label>
         </div>
 
-        {error && (
-          <p className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
-        )}
+        {error && <p role="alert" className={authErrorClass}>{error}</p>}
 
-        <Button
-          type="submit"
-          disabled={loading}
-          size="lg"
-          className={`w-full rounded-xl font-medium ${neutralButton}`}
-        >
-          {loading ? "Memproses..." : "Daftar"}
+        <Button type="submit" disabled={loading} size="lg" className={authSubmitButtonClass}>
+          {loading ? t.loading : t.submit}
         </Button>
 
-        <div className="space-y-3 pt-1 text-center text-xs text-black/65">
+        <div className="space-y-4 text-center text-sm text-muted-foreground">
           <p>
-            Sudah punya akun?{" "}
+            {t.haveAccount}{" "}
             <button
               type="button"
-              onClick={onSwitchToLogin}
-              className="font-medium text-primary underline underline-offset-2"
+              onClick={() => {
+                if (onSwitchToLogin) onSwitchToLogin();
+                else router.push(`/login?next=${encodeURIComponent(next)}`);
+              }}
+              className="font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/75"
             >
-              Masuk
+              {t.login}
             </button>
           </p>
-          <div className="-mx-6 -mb-4 mt-6 rounded-b-lg border-t border-black/10 bg-neutral-50 p-3">
-            <span>Punya bisnis terkait acara? </span>
-            <Link href="/vendor-register" className="font-medium text-primary hover:underline">
-              Bergabung sebagai vendor
+          <p className="border-t border-primary/20 pt-4 text-xs leading-6">
+            {t.vendorText}{" "}
+            <Link href="/vendor-register" className="font-semibold text-primary underline underline-offset-4 hover:text-primary/75">
+              {t.vendorLink}
             </Link>
-          </div>
+          </p>
         </div>
       </form>
     </DialogContent>
