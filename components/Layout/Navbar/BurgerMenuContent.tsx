@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function BurgerMenuContent({ onClose }: { onClose: () => void }) {
@@ -38,10 +39,10 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
   return (
     <nav aria-label={nav.navigation} className="space-y-2">
       <motion.div {...reveal(0)}>
-        <button type="button" onClick={() => openAuth("login")} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></button>
+        <Link href="/login" onClick={(event) => { event.preventDefault(); openAuth("login"); }} aria-current={pathname === "/login" ? "page" : undefined} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></Link>
       </motion.div>
       <motion.div {...reveal(1)}>
-        <button type="button" onClick={() => openAuth("register")} className={itemClass}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></button>
+        <Button className={itemClass} onClick={() => openAuth("register")}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></Button>
       </motion.div>
       {items.map(({ href, label, icon: Icon }, index) => (
         <motion.div key={href} {...reveal(index + 2)}>
