@@ -98,6 +98,23 @@ export default function LoginDialog({
     }
   }, [googleError, t.googleConfig, t.googleFailed]);
 
+  useEffect(() => {
+    let active = true;
+    // Keep the previous /login behavior: an existing signed-in user goes to
+    // their permitted destination instead of seeing the sign-in form again.
+    void fetch("/api/auth/session", { cache: "no-store" })
+      .then(async (response) => response.ok
+        ? await response.json() as { authenticated?: boolean; user?: { role: string } }
+        : null)
+      .then((session) => {
+        if (active && session?.authenticated) {
+          window.location.replace(destinationForRole(session.user?.role ?? "USER", next));
+        }
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, [next]);
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
