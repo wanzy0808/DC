@@ -147,7 +147,9 @@
 .text-dc-maroon { color: var(--primary); }
 .dc-navbar { background: transparent; }
 
-/* Public navbar controls: identical colors in light/dark; retain individual sizes. */
+/* Single source of truth for public navbar button appearance (both themes).
+   button-variants.ts supplies shared button behavior and dimensions; do not
+   duplicate these appearance rules in ThemeToggle/LanguageToggle/Navbar. */
 .dc-navbar--landing { background: var(--background); }
 .dc-navbar--landing.dc-navbar--jiplak { background: transparent; }
 .dc-navbar .dc-theme-toggle,
