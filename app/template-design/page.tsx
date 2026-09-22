@@ -131,12 +131,7 @@ export default function TemplateDesignPage() {
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
           {filteredTemplates.map((template) => (
             <article key={template.key} className="group min-w-0 overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_8px_28px_rgba(80,45,58,0.05)] transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_16px_38px_rgba(80,45,58,0.1)]">
-              <button
-                type="button"
-                onClick={() => openPreview(template.key)}
-                aria-label={`Lihat pratinjau ${template.name}`}
-                className="block w-full overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
-              >
+              <div className="relative w-full overflow-hidden text-left">
                 {template.ready ? <TemplateCardCanvas templateKey={template.key} /> : (
                   <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
                 )}
@@ -147,7 +142,8 @@ export default function TemplateDesignPage() {
                   </div>
                   <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
                 </div>
-              </button>
+                <button type="button" onClick={() => openPreview(template.key)} aria-label={`Lihat pratinjau ${template.name}`} className="absolute inset-0 z-10 w-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" />
+              </div>
               <div className="px-5 pb-5 pt-3">
                 <p className="min-h-12 text-xs leading-6 text-foreground/60">{template.description}</p>
                 <p className="mt-2 text-[11px] text-foreground/50">{!template.ready ? "Desain designer · pratinjau gambar, belum tersedia di Studio" : template.previewType === "public" ? "Preview mengikuti renderer undangan publik" : "Pratinjau desain Invitation Studio"}</p>
