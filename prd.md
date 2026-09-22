@@ -140,9 +140,9 @@ Popup mengikuti viewport, bukan koordinat parent navbar: kelas visual `authCardC
 
 ### 4.1d Restore burger and align auth backgrounds to landing (22 September 2026)
 
-Perubahan modal Masuk/Daftar **tidak boleh mengubah gaya navigasi burger** yang sudah disetujui: posisi, dimensi, urutan item, animasi, submenu Layanan, kelas `itemClass`, dan markup visual lama tetap dipakai. Item Masuk mempertahankan tampilan `Link` awal dan hanya membatalkan navigasi untuk membuka dialog pada halaman yang sedang terlihat; item Daftar tetap memakai `Button` bersama, bukan native button yang dapat berbeda stylenya. `Navbar.tsx` dan halaman landing/Pintu tidak dirombak untuk kebutuhan auth.
+Perubahan modal Masuk/Daftar **tidak boleh mengubah layout/animasi navigasi burger** yang sudah disetujui: posisi, dimensi, urutan item, animasi, submenu Layanan dan markup visual lama tetap dipakai. **Seluruh label dan ikon item burger berwarna Rose** (`text-primary`, `dark:text-primary`) dalam kondisi default; jangan membiarkan `text-foreground`/`dark:text-foreground` menimpa Rose atau membiarkan warna teks default Button menimpa teks Daftar. Item Masuk mempertahankan tampilan `Link` awal dan hanya membatalkan navigasi untuk membuka dialog pada halaman yang sedang terlihat; item Daftar tetap memakai `Button` bersama, bukan native button yang dapat berbeda stylenya. `Navbar.tsx` dan halaman landing/Pintu tidak dirombak untuk kebutuhan auth.
 
-Background **kedua dialog auth** mengikuti atmosfer landing: tema `background` existing untuk light/dark, permukaan sedikit transparan, radial glow Rose lembut dan backdrop Rose transparan yang tidak menggelapkan bunga/kelopak marketing sampai hilang. Jangan memasang lapisan bunga, kelopak, atau pemutar audio duplikat di dalam popup; gunakan ambience yang sudah dimount oleh halaman di belakangnya. Modal tetap di atas widget mengambang dan formulir tetap readable pada tema light/dark.
+Background **kedua dialog auth** memakai permukaan **putih pada Light dan Dark Mode**, dengan hanya sedikit radial glow Rose (bukan `bg-background` yang menjadi hitam di Dark Mode). Semua label, field, helper text, Google button dan copy sekunder di panel putih harus memiliki warna teks gelap yang tetap terbaca di kedua mode. Overlay Rose transparan tidak boleh menggelapkan bunga/kelopak marketing sampai hilang. Jangan memasang lapisan bunga, kelopak, atau pemutar audio duplikat di dalam popup; gunakan ambience yang sudah dimount oleh halaman di belakangnya. Modal tetap di atas widget mengambang dan formulir tetap readable pada tema light/dark.
 
 ### 4.2 System roles
 
@@ -4248,3 +4248,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Files:** `components/Layout/Navbar/BurgerMenuContent.tsx`, `components/Auth/auth-styles.ts`, `components/Auth/LoginDialog.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
 
 **Validasi:** GitHub Build Validation diperiksa setelah kode di-push. Uji visual pada browser nyata desktop/mobile masih diperlukan.
+
+
+---
+
+## 2026-09-22 — Warna teks burger Rose dan popup auth putih
+
+**Permintaan:** Cek CSS yang menyebabkan seluruh isi burger tidak pink; Login dan Daftar memakai background putih dengan glow pink tipis, bukan background tema yang menjadi gelap/terlalu pink.
+
+**Akar masalah:** `BurgerMenuContent.itemClass` memiliki `text-foreground` dan `dark:text-foreground` yang menimpa Rose; Daftar juga mewarisi warna teks dari `Button` global. Popup menggunakan `bg-background/90` dan `dark:bg-background/90`, sehingga Dark Mode memakai permukaan gelap; beberapa helper/form mengikuti `text-muted-foreground` tema gelap walau permukaan popup diubah putih.
+
+**Perubahan:** `BurgerMenuContent.tsx` sekarang memakai `text-primary` dan `dark:text-primary` untuk seluruh item tanpa mengubah posisi, struktur, urutan, ikon, ukuran, atau motion burger. `auth-styles.ts` memakai permukaan putih di kedua tema dengan radial glow Rose hanya 10%, shadow lembut, label/input/Google button/helper gelap terbaca pada putih dan tetap konsisten dengan palet Rose. `LoginDialog.tsx` dan `RegisterDialog.tsx` menyesuaikan teks helper dan status inline untuk panel putih pada Dark Mode. Tidak ada perubahan endpoint autentikasi, Pintu landing maupun mekanisme dialog/modal.
+
+**Files:** `components/Layout/Navbar/BurgerMenuContent.tsx`, `components/Auth/auth-styles.ts`, `components/Auth/LoginDialog.tsx`, `components/Layout/Navbar/RegisterDialog.tsx`, `AGENTS.md`, `README.md`, `prd.md`.
+
+**Validasi:** GitHub Actions Build Validation dipantau setelah update kode; verifikasi visual browser desktop/mobile dan pengujian alur login/registrasi berbasis database tetap diperlukan setelah sync.
