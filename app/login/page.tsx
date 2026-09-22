@@ -4,7 +4,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 import GoogleIcon from "@/components/Auth/GoogleIcon";
-import { authErrorClass, authFieldClass, authGoogleButtonClass, authSubmitButtonClass } from "@/components/Auth/auth-styles";
+import { authCardClass, authDescriptionClass, authErrorClass, authEyebrowClass, authFieldClass, authGoogleButtonClass, authHeaderClass, authLabelClass, authPasswordToggleClass, authSecondaryLinkClass, authSeparatorClass, authSubmitButtonClass, authTitleClass } from "@/components/Auth/auth-styles";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Dialog } from "@/components/ui/dialog";
 import RegisterDialog from "@/components/Layout/Navbar/RegisterDialog";
@@ -160,14 +160,14 @@ export default function LoginPage() {
       >
         <form
           onSubmit={submit}
-          className="relative w-full space-y-6 rounded-[32px] border border-primary/35 bg-card/85 p-6 text-foreground shadow-[0_18px_75px_rgba(75,35,47,0.11)] backdrop-blur-md sm:p-10"
+          className={`${authCardClass} space-y-6 p-6 sm:p-10`}
         >
-          <div className="space-y-3 text-center">
-            <span aria-hidden="true" className="mx-auto block h-1 w-12 rounded-full bg-primary/70" />
-            <h1 className="font-[family-name:var(--font-dc-heading)] text-3xl font-normal text-primary sm:text-4xl">
+          <div className={authHeaderClass}>
+            <span aria-hidden="true" className={authEyebrowClass} />
+            <h1 className={authTitleClass}>
               {t.title}
             </h1>
-            <p className="mx-auto max-w-[33ch] font-[family-name:var(--font-dc-body)] text-sm leading-7 text-muted-foreground">
+            <p className={authDescriptionClass}>
               {t.description}
             </p>
           </div>
@@ -181,12 +181,12 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-3" aria-hidden="true">
             <span className="h-px flex-1 bg-primary/25" />
-            <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">{t.separator}</span>
+            <span className={authSeparatorClass}>{t.separator}</span>
             <span className="h-px flex-1 bg-primary/25" />
           </div>
 
           <div className="space-y-4">
-            <label htmlFor="dc-login-email" className="block text-sm font-medium text-foreground">
+            <label htmlFor="dc-login-email" className={authLabelClass}>
               {t.email}
               <input
                 id="dc-login-email"
@@ -200,7 +200,7 @@ export default function LoginPage() {
             </label>
 
             <div>
-              <label htmlFor="dc-login-password" className="block text-sm font-medium text-foreground">{t.password}</label>
+              <label htmlFor="dc-login-password" className={authLabelClass}>{t.password}</label>
               <div className="relative">
                 <input
                   id="dc-login-password"
@@ -216,7 +216,7 @@ export default function LoginPage() {
                   onClick={() => setShowPassword((value) => !value)}
                   aria-label={showPassword ? t.hidePassword : t.showPassword}
                   aria-pressed={showPassword}
-                  className="absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                  className={authPasswordToggleClass}
                 >
                   {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
                 </button>
@@ -235,7 +235,7 @@ export default function LoginPage() {
             <Link
               href={registerHref}
               onClick={() => setRegisterOpen(true)}
-              className="font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/75"
+              className={authSecondaryLinkClass}
             >
               {t.register}
             </Link>
