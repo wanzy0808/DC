@@ -143,6 +143,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Natural entrance easing: `[0.22, 1, 0.36, 1]`, normally `0.4s–0.6s`.
 - Interactive spring: `stiffness: 400`, `damping: 25`.
 - Scroll reveal uses `whileInView` with `viewport.once`.
+- Marketing `/d-invitation` uses the approved landing-style viewport frame: embedded navbar and compact footer remain fixed within the frame, all marketing sections scroll inside its central panel, and per-section `whileInView` reveals must observe that inner scroll root (not the document viewport). Preserve the existing landing `/` scene and honor reduced motion.
 - Use `AnimatePresence mode="wait"` for tab/modal/page transitions where applicable.
 - Always respect `useReducedMotion()` and remove heavy motion when requested.
 - Motion must never reduce usability or obscure important content.
