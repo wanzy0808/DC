@@ -87,9 +87,9 @@ export default function DigitalInvitationPage() {
           aria-label={locale === "en" ? "Digital invitation page content" : "Konten halaman undangan digital"}
           className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <div className="mx-auto w-[88%] max-w-full space-y-28 py-12 sm:w-[80vw] md:space-y-36 md:py-20">
+          <div className="mx-auto flex w-[88%] max-w-full flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16">
             <HeroSection ready={assembleReady} />
-            <div className="dc-invitation-other-sections space-y-28 md:space-y-36">
+            <div className="dc-invitation-other-sections flex flex-col gap-20 md:gap-24">
               <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04}>
                 <FeatureSection />
               </PuzzleAssemble>
@@ -105,6 +105,7 @@ export default function DigitalInvitationPage() {
                   title={copy.packageTitle}
                   description={copy.packageDescription}
                   packageKeys={["INVITATION_BASIC"]}
+                  roundedCard
                   note={copy.packageNote}
                 />
               </PuzzleAssemble>
