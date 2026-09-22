@@ -307,7 +307,13 @@ export default function InvitationDesigner() {
               setDressCode={setDressCode}
             />
           )}
-          {panel === "decor" && (
+          {panel === "decor" && template && !template.usesPhotos ? (
+            <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">Tema tanpa foto</h2>
+              <p className="text-sm leading-7 text-muted-foreground">Desain ini menggunakan tipografi dan ilustrasi, tanpa slot foto. Koleksi foto acara tetap tersimpan jika nanti kamu mengganti tema dengan foto.</p>
+              <p className="text-xs text-primary">Pilih tema bertanda “Dengan foto” untuk mengatur cover, foto individu, dan galeri.</p>
+            </div>
+          ) : panel === "decor" && (
             <PhotoPanel
               photos={invitation?.assets ?? []}
               slots={photoSlots}
