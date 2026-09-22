@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { CalendarDays, ChevronDown, Gift, Heart, MapPin, Music2 } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import { parseDesignKey } from "@/lib/templates/design";
+import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 
 export const romanticRoseManifest = {
@@ -68,9 +69,9 @@ function RoseHeading({ eyebrow, children }: { eyebrow: string; children: React.R
   );
 }
 
-function RosePhoto({ url, alt, className }: { url?: string; alt: string; className: string }) {
+function RosePhoto({ url, alt, className, focus = "center" }: { url?: string; alt: string; className: string; focus?: "top" | "center" | "bottom" }) {
   return url ? (
-    <img src={url} alt={alt} className={className} loading="lazy" />
+    <img src={url} alt={alt} className={className} style={{ objectPosition: `center ${focus}` }} loading="lazy" />
   ) : (
     <div role="img" aria-label={alt} className={className + " flex items-center justify-center bg-gradient-to-br from-[#f6dbe1] via-[#fdf7f4] to-[#deb4c1]"}>
       <Heart className="h-10 w-10 text-[#c58a9c]/70" strokeWidth={1} />
@@ -88,22 +89,35 @@ export default function RomanticRoseTemplate({
   preview = false,
   sections: sectionOverride,
   coverUrl,
+  photoAssignments,
+  onEditPhoto,
 }: {
   invitation: RoseInvitation;
   preview?: boolean;
   sections?: InvitationSections;
   coverUrl?: string;
+  photoAssignments?: PhotoAssignments;
+  onEditPhoto?: (slot: PhotoSlot) => void;
 }) {
   const [opened, setOpened] = useState(false);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
-  const photos = invitation.assets.filter((item) => item.type === "IMAGE");
-  const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor;
-  const cover = configuredCover && photos.some((item) => item.url === configuredCover)
-    ? configuredCover
-    : photos[0]?.url ?? (configuredCover?.startsWith("/uploads/") ? configuredCover : undefined);
-  const groomPhoto = photos.find((item) => item.title?.toLowerCase().startsWith("pria-"))?.url ?? photos[1]?.url ?? cover;
-  const bridePhoto = photos.find((item) => item.title?.toLowerCase().startsWith("wanita-"))?.url ?? photos[2]?.url ?? cover;
+  const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
+  const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
+  const { cover, gallery, assignment, photos } = media;
+  const groomPhoto = media.personOne;
+  const bridePhoto = media.personTwo;
+  const editPhoto = (slot: PhotoSlot, label: string) =>
+    preview && onEditPhoto ? (
+      <button
+        type="button"
+        onClick={() => onEditPhoto(slot)}
+        className="absolute inset-0 z-20 flex items-end justify-center bg-transparent pb-2 text-[11px] font-semibold text-transparent transition hover:bg-black/20 hover:text-white focus-visible:bg-black/25 focus-visible:text-white focus-visible:outline-2 focus-visible:outline-primary"
+        aria-label={`Ganti foto ${label}`}
+      >
+        Ganti foto
+      </button>
+    ) : null;
   const displayName = [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ");
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
   const countdown = daysRemaining(invitation.eventDate, now ?? 0);
@@ -145,13 +159,14 @@ export default function RomanticRoseTemplate({
       ) : (
         <div className="mx-auto max-w-2xl">
           <section className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
-            <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" className="h-full w-full object-cover" /></div>
+            <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" focus={assignment.focus.cover} className="h-full w-full object-cover" /></div>
             <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
             <div className="relative z-10 flex w-full flex-col items-center">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">The wedding of</p>
               <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || invitation.title}</h1>
-              <div className="mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
-                <RosePhoto url={cover} alt="Foto sampul pasangan" className="aspect-[3/4] w-full object-cover" />
+              <div className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
+                <RosePhoto url={cover} alt="Foto sampul pasangan" focus={assignment.focus.cover} className="aspect-[3/4] w-full object-cover" />
+                {editPhoto("cover", "cover utama")}
               </div>
               <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
               {scrollHint}
@@ -167,11 +182,17 @@ export default function RomanticRoseTemplate({
             <RoseHeading eyebrow="The two of us">Mempelai</RoseHeading>
             <div className="grid grid-cols-2 gap-4">
               <div className="min-w-0 text-center">
-                <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" className="mx-auto aspect-[3/4] w-full rounded-t-full rounded-b-xl object-cover shadow-lg" />
+                <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
+                  <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" focus={assignment.focus.personOne} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
+                  {editPhoto("personOne", "mempelai pertama")}
+                </div>
                 <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.groomName || "Mempelai pertama"}</h3>
               </div>
               <div className="min-w-0 text-center">
-                <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" className="mx-auto aspect-[3/4] w-full rounded-t-full rounded-b-xl object-cover shadow-lg" />
+                <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
+                  <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" focus={assignment.focus.personTwo} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
+                  {editPhoto("personTwo", "mempelai kedua")}
+                </div>
                 <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.brideName || "Mempelai kedua"}</h3>
               </div>
             </div>
@@ -194,11 +215,12 @@ export default function RomanticRoseTemplate({
             </div>
           </section>
 
-          {photos.length > 0 && (
+          {gallery.length > 0 && (
             <section className="bg-[#fffaf8] px-6 py-20">
               <RoseHeading eyebrow="Our memories">Galeri Foto</RoseHeading>
+              {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
               <div className="grid grid-cols-2 gap-3">
-                {photos.map((photo, index) => (
+                {gallery.map((photo, index) => (
                   <div key={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
                     <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                   </div>
