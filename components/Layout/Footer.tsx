@@ -147,7 +147,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
             <ul className="space-y-2 font-[family-name:var(--font-dc-body)] text-xs font-light opacity-70">
               <li>{footer.faq}</li>
               <li>{footer.terms}</li>
-              <li><Link href="/privacy-policy" className="transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link></li>
+              <li><Link href="/privacy-policy" className="text-inherit transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link></li>
             </ul>
           </div>
 
@@ -188,7 +188,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
           <p>© 2026 PT DC ORGANIZER INDONESIA. {footer.rights}</p>
           <div className="flex gap-4">
             <span>{footer.legal}</span>
-            <Link href="/privacy-policy" className="transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link>
+            <Link href="/privacy-policy" className="text-inherit transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link>
           </div>
         </div>
       </div>
