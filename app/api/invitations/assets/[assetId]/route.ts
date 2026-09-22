@@ -13,7 +13,13 @@ export async function DELETE(_request: Request, { params }: { params: Promise<{ 
   if (!asset) return NextResponse.json({ error: "Asset tidak ditemukan." }, { status: 404 });
   const deleted = await prisma.invitationAsset.deleteMany({ where: { id: assetId, ownerId: user.id } });
   if (!deleted.count) return NextResponse.json({ error: "Asset tidak ditemukan." }, { status: 404 });
-  if (asset.url.startsWith("/uploads/music/")) {
+  const imagePrefix = `/uploads/images/${asset.invitationId}/`;
+  const isEventOwnedImage = asset.type === "IMAGE"
+    && asset.url.startsWith(imagePrefix)
+    && /^[0-9a-f-]{36}\\.webp$/.test(asset.url.slice(imagePrefix.length));
+  // Only remove generated files in the verified event folder; never unlink
+  // arbitrary URLs/legacy assets on behalf of an incoming client request.
+  if (asset.url.startsWith("/uploads/music/") || isEventOwnedImage) {
     await unlink(path.join(process.cwd(), "public", asset.url.slice(1))).catch(() => undefined);
   }
   return NextResponse.json({ ok: true });
