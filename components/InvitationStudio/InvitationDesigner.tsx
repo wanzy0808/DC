@@ -329,6 +329,7 @@ export default function InvitationDesigner() {
               dressCode={dressCode}
               sections={design.sections}
               photoAssignments={design.photos}
+              designKey={designKey}
               onEditPhoto={editPhotoFromCanvas}
             />
           </div>
@@ -352,6 +353,7 @@ export default function InvitationDesigner() {
                 dressCode={dressCode}
                 sections={design.sections}
                 photoAssignments={design.photos}
+              designKey={designKey}
               />
             </div>
           </div>
