@@ -348,7 +348,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
     transitionStarted.current = true;
     window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
     // The persistent overlay fully hides the 3D door before navigating.
-    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), 2350);
+    navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 1050);
   }
   const router = useRouter();
   const reducedMotion = useReducedMotion();
@@ -357,6 +357,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   const closeButton = useRef<HTMLButtonElement>(null);
   function enterPortal() {
     if (selected === null || !opening[selected] || entering) return;
+    window.dispatchEvent(new Event("dc-portal-prime"));
     setEntering(true);
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
