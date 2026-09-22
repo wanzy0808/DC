@@ -7,6 +7,7 @@ import PublicInvitation, {
   InvitationLockedState,
 } from "@/components/PublicInvitation/PublicInvitation";
 import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
+import RomanticRoseTemplate from "@/components/PublicInvitation/RomanticRoseTemplate";
 import InvitationPasswordGate from "@/components/PublicInvitation/InvitationPasswordGate";
 
 export default async function EventInvitationPage({
@@ -56,6 +57,9 @@ export default async function EventInvitationPage({
   });
 
   const templateKey = invitation.templateKey.split("::")[0];
+  if (templateKey === "romantic-rose") {
+    return <RomanticRoseTemplate invitation={invitation} />;
+  }
   if (templateKey === "eternal-blossom") {
     return <ClassicInvitationTemplate invitation={invitation} />;
   }
