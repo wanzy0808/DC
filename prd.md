@@ -557,6 +557,12 @@ Setiap template wajib mengikuti contract yang konsisten, minimal mencakup:
 
 Template renderer menerima normalized invitation/event data dari shared engine dan tidak mengambil ownership atas authorization, entitlement, payment, ownership, RSVP persistence, Wishes persistence, Gift transaction, atau security rules.
 
+### 7.2.7a Romantic Rose reference template (22 September 2026)
+
+Template undangan pernikahan `romantic-rose` memakai satu file presentation `components/PublicInvitation/RomanticRoseTemplate.tsx`, dimulai dari amplop digital `Buka Undangan` sebelum Cover. Susunan visual default: Cover, Greeting, Identity, Event, Date & Time, Gallery (jika ada foto), Countdown, Location/Maps, RSVP, Wishes, Gift, Closing, Footer. Data pasangan, event, foto, audio, dan nomor rekening tetap berasal dari record undangan yang sama; tidak ada backend atau database per template.
+
+Upload beberapa foto memakai API asset undangan yang sudah ada. Studio menyediakan pemilihan cover dari foto tersimpan, foto kedua/ketiga digunakan untuk masing-masing mempelai dan semua foto tampil dalam galeri. Preview Studio memakai presentation Romantic Rose yang sama dengan public renderer; section RSVP/Wishes/Gift mengikuti section visibility state. RSVP menggunakan `RsvpForm` bersama. Wishes belum memiliki shared persistence/API di repo, sehingga template hanya memberi placeholder transparan, tanpa form palsu/penyimpanan palsu. Gift hanya tampil jika aktif dan rekening tersedia. Palette dan typography khusus Romantic Rose terkunci agar kualitas visual terjaga; animation toggle per section dan full capability-aware Studio control masih tahap selanjutnya, tidak boleh diklaim sudah selesai.
+
 ### 7.2.8 Designer-friendly template intake
 
 Designer tidak diwajibkan memahami React, Next.js, TypeScript, Prisma, API, atau backend logic untuk menyumbangkan desain template. Designer menyerahkan design package/reference; developer/AI menerjemahkannya menjadi presentation layer yang mengikuti Template Contract.
@@ -3739,3 +3745,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Change:** Hapus hanya `border-b border-border/70` dari section Hero di `components/DigitalInvitation/HeroSection.tsx`. Pertahankan border atas Fitur sebagai satu-satunya garis pemisah, border bawah Fitur, spacing, tata letak, HP, animasi, dan semua section lain. Commit: `12d6fef5218d4b9ab179a755ab50e49d6cec31fd`.
 
 **Validation:** GitHub write berhasil; build/CI/preview browser belum dijalankan.
+
+
+---
+
+## 2026-09-22 — Romantic Rose photo-driven invitation template
+
+**Request:** Satu template undangan wedding lengkap dengan amplop digital sebelum Cover, 13 bagian section, personal wedding photos, dan satu data/feature engine yang reuse untuk setiap event.
+
+**Implementation:** Menambah satu template presentation `components/PublicInvitation/RomanticRoseTemplate.tsx` dengan manifest/capabilities dan amplop pembuka; galeri dari `InvitationAsset`, cover dapat dipilih dari aset milik event di Studio, foto kedua/ketiga sebagai foto mempelai, countdown, Maps, shared RSVP form, Gift berbasis data event, dan optional-section visibility yang sama di Studio/public. Registrasi katalog, preset Studio, live canvas, dan route publik/route personal invitation disambungkan tanpa backend/database baru. Wishes sengaja tidak mengirim/mengarang data karena shared Wishes API belum tersedia. File yang berubah: `components/PublicInvitation/RomanticRoseTemplate.tsx`, `lib/templates/catalog.ts`, `components/InvitationStudio/designer-config.ts`, `components/InvitationStudio/InvitationPreview.tsx`, `components/InvitationStudio/DesignerPanels.tsx`, `components/InvitationStudio/InvitationDesigner.tsx`, `app/invite/[slug]/page.tsx`, `app/invite/[slug]/[eventSlug]/page.tsx`, `app/invite/[slug]/p/[token]/page.tsx`, dan `prd.md`. Tidak mengubah marketing `/d-invitation`, halaman utama, maupun Pintu.
+
+**Commits:** `9182dd2100e011f5cf843ae0a18d0a76ac839492` (template), `b2d129caa3734436af244bda02a327223efeb880` (catalog), `dc0b3dbde93429d96e82af3520683aeaec56008f` (preset), `0e322d20e1af17f2af9967b7fb32f125bd55fa3a` / `c97d1765431f125d31b850d62077062f46ecbe58` / `4022c0a82cd7892c97a12d964d719c0a2b3d932e` (public routes), `8eca305e26fcfa59cf4febabe60b02ed9849368e` (canvas), `485f9fdeae944134a8f2d30f97012108a56d3d0e` / `fd1436a289516e29ec3d08298a246d1423fb7027` (photo picker and wiring).
+
+**Validation:** GitHub writes confirmed; CI build was in progress at documentation time. Browser/device visual QA and shared Wishes implementation not completed.
