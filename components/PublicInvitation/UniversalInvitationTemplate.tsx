@@ -82,6 +82,7 @@ export default function UniversalInvitationTemplate({
   coverUrl,
   onEditPhoto,
   templateKey,
+  designKey,
 }: {
   invitation: InvitationData;
   preview?: boolean;
@@ -90,17 +91,21 @@ export default function UniversalInvitationTemplate({
   coverUrl?: string;
   onEditPhoto?: (slot: PhotoSlot) => void;
   templateKey?: string;
+  designKey?: string;
 }) {
   const [opened, setOpened] = useState(false);
   const [now, setNow] = useState<number | null>(null);
   const key = templateKey || parseDesignKey(invitation.templateKey).template;
   const template = getInvitationTemplate(key);
-  const design = parseDesignKey(invitation.templateKey);
+  const activeDesignKey = designKey || (parseDesignKey(invitation.templateKey).template === key
+    ? invitation.templateKey
+    : `${key}::${template.preset.palette}::${template.preset.font}`);
+  const design = parseDesignKey(activeDesignKey);
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
   const font = invitationFonts[design.font] || invitationFonts[template.preset.font];
   const layout = template.preset.layout;
-  const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
-  const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, coverUrl, photoAssignments);
+  const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
+  const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
   const names = couple
