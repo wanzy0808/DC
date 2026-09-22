@@ -14,7 +14,7 @@ export default function ServicesSection() {
         {plannerServices.map((service) => (
           <article
             key={service.title}
-            className="rounded-2xl border border-[var(--border)] bg-[var(--card)]/70 p-6 md:p-7"
+            className="rounded-[28px] border border-primary/35 bg-[var(--card)]/70 p-6 md:rounded-[32px] md:p-7"
           >
             <div className="flex justify-end">
               <Check className="h-5 w-5 text-[var(--primary)]" />
