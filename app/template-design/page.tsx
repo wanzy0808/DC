@@ -13,7 +13,7 @@ import {
   type InvitationSectionKey,
   type InvitationSections,
 } from "@/lib/templates/sections";
-import { templateShowcaseCategories, templateShowcaseItems } from "@/data/templates/showcase";
+import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
 
 const InvitationPreview = dynamic(
@@ -92,6 +92,8 @@ const optionalSections: { key: InvitationSectionKey; label: string }[] = [
 ];
 
 export default function TemplateDesignPage() {
+  const catalog = useTemplateCatalog();
+  const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
   const [sort, setSort] = useState<"Katalog" | "Nama">("Katalog");
@@ -99,16 +101,16 @@ export default function TemplateDesignPage() {
   const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
 
   const filteredTemplates = useMemo(() => {
-    const result = templateShowcaseItems.filter((template) =>
+    const result = catalog.filter((template) =>
       `${template.name} ${template.description} ${template.category}`.toLocaleLowerCase("id").includes(query.trim().toLocaleLowerCase("id")) &&
       (category === "Semua" || template.category === category),
     );
     return sort === "Nama"
       ? [...result].sort((a, b) => a.name.localeCompare(b.name, "id"))
       : result;
-  }, [category, query, sort]);
+  }, [catalog, category, query, sort]);
 
-  const selected = templateShowcaseItems.find((item) => item.key === selectedKey);
+  const selected = catalog.find((item) => item.key === selectedKey);
 
   function openPreview(key: string) {
     setSections({ ...defaultInvitationSections });
@@ -164,7 +166,7 @@ export default function TemplateDesignPage() {
 
         <div className="mb-8 mt-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-2" aria-label="Filter jenis desain">
-            {templateShowcaseCategories.map((item) => (
+            {categories.map((item) => (
               <button
                 key={item}
                 type="button"
@@ -199,7 +201,9 @@ export default function TemplateDesignPage() {
                 aria-label={`Lihat pratinjau ${template.name}`}
                 className="block w-full overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
               >
-                <TemplateCardCanvas templateKey={template.key} />
+                {template.ready ? <TemplateCardCanvas templateKey={template.key} /> : (
+                  <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
+                )}
                 <div className="flex items-center justify-between gap-3 border-b border-border/70 px-5 py-4">
                   <div className="min-w-0">
                     <p className="mb-1 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
@@ -210,9 +214,9 @@ export default function TemplateDesignPage() {
               </button>
               <div className="px-5 pb-5 pt-3">
                 <p className="min-h-12 text-xs leading-6 text-foreground/60">{template.description}</p>
-                <p className="mt-2 text-[11px] text-foreground/50">{template.previewType === "public" ? "Preview mengikuti renderer undangan publik" : "Pratinjau desain Invitation Studio"}</p>
+                <p className="mt-2 text-[11px] text-foreground/50">{!template.ready ? "Desain designer · pratinjau gambar, belum tersedia di Studio" : template.previewType === "public" ? "Preview mengikuti renderer undangan publik" : "Pratinjau desain Invitation Studio"}</p>
                 <Button onClick={() => openPreview(template.key)} size="sm" className="mt-4 w-full rounded-xl text-xs">
-                  Lihat undangan <ArrowRight className="h-4 w-4" aria-hidden />
+                  {template.ready ? "Lihat undangan" : "Lihat desain"} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
               </div>
             </article>
@@ -250,7 +254,7 @@ export default function TemplateDesignPage() {
                 </button>
               </div>
               <p className="mt-3 hidden text-xs leading-6 text-foreground/60 md:block">{selected.description}</p>
-              <div className="mt-4 flex flex-wrap gap-2 md:mt-7" aria-label="Coba tampilkan atau sembunyikan bagian undangan">
+              {selected.ready && <div className="mt-4 flex flex-wrap gap-2 md:mt-7" aria-label="Coba tampilkan atau sembunyikan bagian undangan">
                 {optionalSections.map((item) => (
                   <label key={item.key} className="flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs">
                     <input
@@ -262,18 +266,22 @@ export default function TemplateDesignPage() {
                     {item.label}
                   </label>
                 ))}
-              </div>
-              <p className="mt-3 hidden text-xs leading-6 text-foreground/55 md:block">Toggle hanya untuk mencoba preview. Perubahan tidak disimpan.</p>
-              <div className="mt-4 flex flex-col gap-2 md:mt-8">
+              </div>}
+              <p className="mt-3 hidden text-xs leading-6 text-foreground/55 md:block">{selected.ready ? "Toggle hanya untuk mencoba preview. Perubahan tidak disimpan." : "Desain designer ini masih berupa paket preview; belum dapat digunakan dalam Invitation Studio."}</p>
+              {selected.ready && <div className="mt-4 flex flex-col gap-2 md:mt-8">
                 <Button asChild size="sm" className="rounded-xl text-xs">
                   <Link href="/dashboard">Buat undangan <ArrowRight className="h-4 w-4" aria-hidden /></Link>
                 </Button>
-                <p className="text-[11px] leading-5 text-foreground/50">Buat acara terlebih dahulu, lalu pilih {selected.name} di Studio.</p>
-              </div>
+                <p className="text-[11px] leading-5 text-foreground/50">Login dan buat acara terlebih dahulu, lalu pilih {selected.name} di Studio.</p>
+              </div>}
             </aside>
             <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
               <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
-                <TemplateCanvas key={selected.key} templateKey={selected.key} sections={sections} />
+                {selected.ready ? (
+                  <TemplateCanvas key={selected.key} templateKey={selected.key} sections={sections} />
+                ) : (
+                  <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /><p className="px-4 py-5 text-center text-xs leading-6 text-[#765460]">Pratinjau gambar dari designer. Belum terintegrasi menjadi template interaktif.</p></div>
+                )}
               </div>
             </div>
           </div>
