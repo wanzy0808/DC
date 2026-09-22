@@ -26,7 +26,7 @@ export default function StudioSection() {
 
   return (
     <section className="border-y border-border/70 py-10 md:py-12">
-      <div className="mx-auto grid w-full max-w-[960px] items-center gap-5 md:grid-cols-[minmax(0,1fr)_auto] md:gap-8">
+      <div className="mx-auto grid w-full items-center gap-5 md:grid-cols-[minmax(0,680px)_auto] md:justify-center md:gap-8">
         <div className="max-w-3xl">
           <div className="flex items-center gap-2 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.25em] text-primary">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
