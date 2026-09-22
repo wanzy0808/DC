@@ -1,3 +1,13 @@
+## 22 September 2026 — Perbaikan transisi landing aktif, tanpa pintu kedua
+
+**Tujuan owner:** Setelah klik `Masuk` dan kamera mendekati Pintu pilihan, transisi tidak boleh memperlihatkan pintu layanan yang lain, pintu kedua di belakang bidang gambar, atau asset gambar pintu berulang sebelum halaman tujuan. Pintu asli untuk memilih layanan, orbital, daun, kusen dan visual yang sudah diterima tetap dipertahankan.
+
+**Perubahan terisolasi pada landing aktif (bukan promosi GLB V2 dari lab):** `components/Landing/Pintu/SimpleDoorLab.tsx` memudarkan foto `PortalWorld` yang semula terlihat selama pilihan menjadi permukaan cahaya Rose polos khusus ketika `entering`, menjaga kamera pada sisi depan bidang portal supaya orbit di belakang tidak terlihat, dan memulai Rose veil shared saat zoom berjalan; setelah zoom+veil menutup adegan Pintu asli, router menuju URL tujuan yang sama. `PortalTransition.tsx` tidak merender gambar Pintu; lab `/pintu-lab`, model GLB, bentuk daun Pintu, musik/SFX dan semua halaman tujuan tidak disentuh. Ini hanya perbaikan koreografi produk yang sekarang aktif; tidak mengubah status approval geometri V2.
+
+**File/commit:** `SimpleDoorLab.tsx` — `2047cde503d5e6be7a303845c5fcb8bed508f20a`; requirement di `prd.md` §15.4.2 dan catatan `AGENTS.md`.
+
+**Pemeriksaan yang masih dibutuhkan:** Screenshot/video perpindahan ke `/d-invitation`, `/event-planner` dan `/guestbook` di browser nyata, termasuk reduced-motion, mobile, slow navigation, dan interaksi ketika user Back. Build/CI serta review visual owner belum diamati, sehingga tidak dinyatakan PASS.
+
 # Pintu 3D — Panduan Tahapan Visual DC Organizer
 
 **STATUS AKTIF:** Screenshot owner 21 September memperlihatkan Pintu 1 GLB 40k nyaris tidak terlihat pada kanan `/pintu-lab` meskipun status 3D aktif. Perbaikan kontras/model warna telah merged `main` via PR #67 (Build Validation **PASS**): material ivory–blush pada frame, dusty Rose pada daun, latar canvas studio hangat dan pencahayaan lebih terkendali. **Screenshot setelah perbaikan belum diverifikasi; kemiripan detail dengan `pintu1.png` dan seam bukaan masih pending.** Landing `/`, `/jiplak`, orbital tetap tidak diganti.
