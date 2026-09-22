@@ -11,6 +11,7 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 interface RegisterDialogProps {
+  next?: string;
   onSwitchToLogin?: () => void;
   onRegistered?: () => void;
 }
@@ -78,7 +79,7 @@ const copy = {
   },
 } as const;
 
-export default function RegisterDialog({ onSwitchToLogin, onRegistered }: RegisterDialogProps) {
+export default function RegisterDialog({ next: providedNext, onSwitchToLogin, onRegistered }: RegisterDialogProps) {
   const { locale } = useLanguage();
   const t = copy[locale];
   const router = useRouter();
@@ -94,11 +95,11 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
   const [agreedPromo, setAgreedPromo] = useState(false);
 
   useEffect(() => {
-    const requestedNext = new URLSearchParams(window.location.search).get("next");
+    const requestedNext = providedNext ?? new URLSearchParams(window.location.search).get("next");
     if (requestedNext?.startsWith("/") && !requestedNext.startsWith("//")) {
       setNext(requestedNext);
     }
-  }, []);
+  }, [providedNext]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -127,8 +128,8 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
       if (!response.ok) {
         setError(data.error ?? t.registerError);
       } else {
-        onRegistered?.();
-        router.push(`/login?next=${encodeURIComponent(next)}`);
+        if (onRegistered) onRegistered();
+        else router.push(`/login?next=${encodeURIComponent(next)}`);
       }
     } catch {
       setError(t.connectionError);
@@ -138,8 +139,8 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
   }
 
   return (
-    <DialogContent className={`${authCardClass} max-h-[min(92dvh,900px)] w-[min(94vw,490px)] gap-0 overflow-y-auto p-6 sm:max-w-[490px] sm:p-10`}>
-      <DialogHeader className={`${authHeaderClass} pr-9`}>
+    <DialogContent className={`${authCardClass} max-h-[calc(100dvh-32px)] w-[min(94vw,490px)] gap-0 overflow-y-auto overscroll-contain p-6 sm:max-h-[min(88dvh,800px)] sm:max-w-[490px] sm:p-8`}>
+      <DialogHeader className={authHeaderClass}>
         <span aria-hidden="true" className={authEyebrowClass} />
         <DialogTitle className={authTitleClass}>
           {t.title}
@@ -149,7 +150,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
         </DialogDescription>
       </DialogHeader>
 
-      <form onSubmit={submit} className="space-y-5 pt-7">
+      <form onSubmit={submit} className="space-y-4 pt-5">
         <Button asChild size="lg" className={authGoogleButtonClass}>
           <a href={`/api/auth/google?next=${encodeURIComponent(next)}`}>
             <GoogleIcon />
@@ -264,7 +265,7 @@ export default function RegisterDialog({ onSwitchToLogin, onRegistered }: Regist
           {loading ? t.loading : t.submit}
         </Button>
 
-        <div className="space-y-4 border-t border-primary/15 pt-5 text-center font-[family-name:var(--font-dc-body)] text-sm text-muted-foreground">
+        <div className="space-y-3 border-t border-primary/15 pt-4 text-center font-[family-name:var(--font-dc-body)] text-sm text-muted-foreground">
           <p>
             {t.haveAccount}{" "}
             <button
