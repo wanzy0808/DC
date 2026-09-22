@@ -40,16 +40,16 @@ export default function ProcessSection() {
         {steps.map(({ icon: Icon, number, title, text }) => (
           <article
             key={number}
-            className="rounded-2xl border border-border bg-card/60 p-6"
+            className="rounded-[28px] border border-primary/35 bg-card/75 p-6 md:rounded-[32px]"
           >
-            <span className="font-[family-name:var(--font-dm-mono)] text-xs text-primary">
+            <span className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">
               {number}
             </span>
             <Icon className="mt-8 h-6 w-6 text-primary" />
-            <h3 className="mt-5 font-[family-name:var(--font-cinzel)] text-xl">
+            <h3 className="mt-5 font-[family-name:var(--font-dc-heading)] text-xl">
               {title}
             </h3>
-            <p className="mt-3 font-[family-name:var(--font-fauna)] text-sm leading-6 text-muted-foreground">
+            <p className="mt-3 font-[family-name:var(--font-dc-body)] text-sm leading-6 text-muted-foreground">
               {text}
             </p>
           </article>
