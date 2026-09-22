@@ -79,8 +79,9 @@ export default function TemplateCollection() {
         };
 
   return (
-    <section className="space-y-9">
-      <div className="mx-auto flex w-full max-w-[980px] flex-col justify-between gap-6 border-b border-border/70 pb-7 sm:flex-row sm:items-end sm:gap-12">
+    <section className="space-y-14 md:space-y-16">
+      <div className="w-full border-b border-border/70 pb-7">
+        <div className="mx-auto flex w-full max-w-[980px] flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
         <div className="max-w-2xl">
           <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
             {copy.eyebrow}
@@ -98,6 +99,7 @@ export default function TemplateCollection() {
             <ArrowUpRight className="h-3.5 w-3.5" />
           </Link>
         </Button>
+        </div>
       </div>
 
       <div className="grid justify-items-center gap-10 md:grid-cols-3 md:gap-6">
@@ -133,11 +135,6 @@ export default function TemplateCollection() {
               <p className="mt-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
                 {copy.ready}
               </p>
-              <Button asChild size="xs" className="mt-4 min-w-0 text-xs">
-                <Link href={`/template-design?template=${encodeURIComponent(template.key)}`}>
-                  {copy.preview} <ArrowUpRight className="h-3 w-3" />
-                </Link>
-              </Button>
             </div>
           </article>
         ))}
