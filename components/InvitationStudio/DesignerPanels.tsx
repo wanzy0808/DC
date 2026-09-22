@@ -15,7 +15,6 @@ import type {
   InvitationSections,
 } from "@/lib/templates/sections";
 import {
-  invitationDecorOptions,
   invitationFontOptions,
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
@@ -325,76 +324,6 @@ export function ContentPanel({
           />
         </label>
       </div>
-    </div>
-  );
-}
-
-export function DecorPanel({
-  selected,
-  photos,
-  onSelect,
-  onUpload,
-}: {
-  selected: string;
-  photos: InvitationDesignerInvitation["assets"];
-  onSelect: (value: string) => void;
-  onUpload: (file: File) => Promise<void>;
-}) {
-  const uploaded = photos.filter((asset) => asset.type === "IMAGE");
-  return (
-    <div>
-      <Heading
-        title="Foto & dekorasi"
-        description="Unggah foto sendiri. Untuk Romantic Rose, foto pertama dipakai sebagai sampul, foto kedua dan ketiga untuk masing-masing mempelai. Pilih sampul dari foto yang sudah diunggah."
-      />
-      {uploaded.length > 0 && (
-        <>
-          <p className="mt-5 text-xs font-semibold text-foreground">Foto milikmu · {uploaded.length}</p>
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {uploaded.map((photo, index) => (
-              <button
-                type="button"
-                key={photo.id}
-                onClick={() => onSelect(photo.url)}
-                aria-label={"Jadikan foto " + (index + 1) + " sebagai sampul"}
-                aria-pressed={selected === photo.url}
-                className={"relative overflow-hidden rounded-xl border " + (selected === photo.url ? "border-primary ring-2 ring-primary/20" : "border-border")}
-              >
-                <img src={photo.url} alt={"Foto " + (index + 1)} className="aspect-square w-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/60 px-1 py-1 text-center text-[10px] text-white">{selected === photo.url ? "Sampul" : "Pilih sampul"}</span>
-              </button>
-            ))}
-          </div>
-        </>
-      )}
-      <p className="mt-5 text-xs font-semibold text-foreground">Visual bawaan</p>
-      <div className="mt-3 grid grid-cols-3 gap-2">
-        {invitationDecorOptions.map((item) => (
-          <button
-            type="button"
-            key={item}
-            onClick={() => onSelect(item)}
-            className={"overflow-hidden rounded-xl border " + (selected === item ? "border-primary" : "border-border")}
-          >
-            <img src={item} alt="" className="aspect-square w-full object-cover" />
-          </button>
-        ))}
-      </div>
-      <label className="mt-4 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-dashed border-primary/30 px-3 py-3 text-xs font-semibold text-primary">
-        <Upload className="h-4 w-4" /> Upload foto (bisa pilih beberapa)
-        <input
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          multiple
-          className="sr-only"
-          onChange={async (event) => {
-            const files = Array.from(event.currentTarget.files ?? []);
-            event.currentTarget.value = "";
-            for (const file of files) await onUpload(file);
-          }}
-        />
-      </label>
-      <p className="mt-2 text-[11px] leading-5 text-muted-foreground">JPG, PNG, atau WebP · maksimal 15 MB per foto · maksimal 30 foto per undangan.</p>
     </div>
   );
 }
