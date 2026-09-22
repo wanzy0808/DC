@@ -207,7 +207,7 @@ export default function LoginDialog({
         </div>
 
         {registrationComplete && !error && (
-          <p role="status" className="rounded-[20px] border border-primary/35 bg-primary/10 px-4 py-3 text-sm leading-6 text-foreground">{t.registered}</p>
+          <p role="status" className="rounded-[20px] border border-primary/35 bg-primary/10 px-4 py-3 text-sm leading-6 text-[#21191c] dark:text-[#21191c]">{t.registered}</p>
         )}
         {error && <p role="alert" className={authErrorClass}>{error}</p>}
 
@@ -215,7 +215,7 @@ export default function LoginDialog({
           {loading ? t.loading : t.submit}
         </Button>
 
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-center text-sm text-[#74646a] dark:text-[#74646a]">
           {t.noAccount}{" "}
           <button type="button" onClick={onSwitchToRegister} className={authSecondaryLinkClass}>
             {t.register}
