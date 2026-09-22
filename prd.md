@@ -688,7 +688,7 @@ Area isi berbahasa Indonesia default dan responsif terhadap ID/EN navbar; memaka
 
 Marketing `/d-invitation` menampilkan maksimal **tiga** preview template READY dari manifest/katalog bersama, bukan keseluruhan katalog. Urutan utama diambil dari jumlah event/undangan yang sudah memiliki entitlement Digital Invitation berstatus `Payment.status = PAID` dan `packageKey` termasuk paket Digital Invitation, dikelompokkan menurut `Invitation.templateKey` yang **saat ini tersimpan**. Satu event dihitung sekali melalui relasi Payment unik per invitation; transaksi masih pending, failed/refunded, add-on WA Blast, dan Guestbook-only tidak dihitung. Pada jumlah template berbayar kurang dari tiga, sisa slot diisi pilihan acak dari template siap lain tanpa duplikasi; bila belum ada satu pun penjualan, tampilkan tiga pilihan acak. Jika database tidak dapat diakses, gunakan pilihan acak tanpa klaim peringkat/label best-seller palsu. Tidak ada identitas, data pelanggan, atau angka order pribadi dalam respons endpoint publik.
 
-Keterbatasan data saat ini: template bisa diganti setelah pembayaran, dan tidak ada snapshot immutable template pada saat transaksi. Maka urutan didasarkan pada template yang sedang dipakai pada event berbayar, bukan histori pembelian template yang tak bisa diubah. Jika pelaporan penjualan per-template historis dibutuhkan kelak, perlu snapshot/ledger yang benar; jangan membuat angka atau data semu. Endpoint `/api/templates/featured` mengembalikan hanya kunci template READY untuk marketing. Semua template tetap tersedia di galeri penuh dan Studio melalui manifest dan `/api/templates`, tidak membuat daftar unggulan hardcoded per halaman. Setiap preview ringkas memakai frame smartphone dengan aspek sekitar **9:19.5**, bezel metal gelap, tombol samping dan notch sesuai mockup Hero `/d-invitation`; renderer preview tetap real dan lazy-load. Perubahan tidak memengaruhi hero, Pintu, landing atau pilihan Studio.
+Keterbatasan data saat ini: template bisa diganti setelah pembayaran, dan tidak ada snapshot immutable template pada saat transaksi. Maka urutan didasarkan pada template yang sedang dipakai pada event berbayar, bukan histori pembelian template yang tak bisa diubah. Jika pelaporan penjualan per-template historis dibutuhkan kelak, perlu snapshot/ledger yang benar; jangan membuat angka atau data semu. Endpoint `/api/templates/featured` mengembalikan hanya kunci template READY untuk marketing. Semua template tetap tersedia di galeri penuh dan Studio melalui manifest dan `/api/templates`, tidak membuat daftar unggulan hardcoded per halaman. Setiap preview ringkas memakai frame smartphone dengan aspek sekitar **9:19.5**, bezel metal gelap, tombol samping dan notch sesuai mockup Hero `/d-invitation`; renderer preview tetap real dan lazy-load. Perubahan tidak memengaruhi hero, Pintu, landing atau pilihan Studio. Header Koleksi Template dan CTA Lihat Semua Template di sebelah kanan dikelompokkan lebih dekat ke tengah frame (wrapper maksimal sekitar 980px, jarak responsif); jangan letakkan keduanya di ujung berlawanan dari keseluruhan area konten. Susunan mobile tetap vertikal.
 
 ### 7.2.10 Template performance, lazy loading, and asset isolation
 
@@ -3994,3 +3994,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Code commits:** `acbfeeab7875cdae75e60a45c97779d94588e4cf` (featured API), `ca0a679f716bf7c4719c880f25031aae5bcfe1a3` (phone thumbnail), `323ff91fad92c140c17134f42654b2a48c236d2f` (marketing section).
 
 **Validasi:** Pemeriksaan sumber dan kontrak API/limit/card dilakukan di GitHub; production build, pengujian database nyata, dan screenshot browser tidak dinyatakan PASS tanpa hasil aktual.
+
+
+---
+
+## 2026-09-22 — Header Koleksi Template lebih dekat ke tengah
+
+**Permintaan:** Pada `/d-invitation`, judul/keterangan Koleksi Template dan tombol di kanan didekatkan ke tengah, tetap dengan jarak yang nyaman.
+
+**Implementasi:** `components/DigitalInvitation/TemplateSection.tsx` memberi header wrapper `mx-auto w-full max-w-[980px]` dan jarak dua kolom responsif `sm:gap-12`. Tiga kartu smartphone, urutan terjual/acak, hero, dan seksi lain tidak berubah. Aturan posisi ini juga dicatat di `AGENTS.md` serta §7.2.9d.
+
+**Code commit:** `92b1e69cd625137f438393d6c96bf21cff480f37`; **AGENTS commit:** `e3a3afed2db6e5735a07e2e13abdc43368e19c20`.
+
+**Validasi:** Pemeriksaan statis pada perubahan class; screenshot localhost dan build/CI belum diverifikasi.
