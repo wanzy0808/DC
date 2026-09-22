@@ -30,6 +30,14 @@ export async function POST(request: Request) {
     const assetCount = await prisma.invitationAsset.count({ where: { invitationId: invitation.id } });
     if (assetCount >= 30) return NextResponse.json({ error: "Maksimal 30 asset per undangan." }, { status: 400 });
     const type = body.type === "AUDIO" ? "AUDIO" : "IMAGE";
+    // Remote image URLs bypass Sharp and can retain JPEG/PNG originals.
+    // New invitation photos must use the authenticated binary uploader instead.
+    if (type === "IMAGE") {
+      return NextResponse.json(
+        { error: "Foto harus diunggah lewat Studio agar otomatis dikonversi ke WebP." },
+        { status: 400 },
+      );
+    }
     const url = String(body.url ?? "").trim();
     if (!url || !/^https?:\/\//i.test(url)) return NextResponse.json({ error: "Asset harus berupa URL http atau https." }, { status: 400 });
     const asset = await prisma.invitationAsset.create({
