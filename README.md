@@ -10,6 +10,10 @@ The current scene consists of the continuous floral background and animated peta
 
 Follow the scoped-change and validation contract in `AGENTS.md` and the canonical landing requirement in `prd.md`. The separate `/pintu-lab` GLB experiment is not the approved homepage door implementation.
 
+## Landing door navigation: one door, then Rose light
+
+The three/four existing selectable service doors remain unchanged on the approved landing. After a visitor presses `Masuk`, the existing camera zoom continues toward the selected open doorway, its inner service-image plane fades into plain Rose light, and the shared image-free Rose veil takes over during the zoom before the destination route is shown. The camera stops just before the flat portal plane instead of passing behind it and revealing other orbital doors; there is no second door asset or repeated door illustration in the transition. The `/d-invitation`, `/event-planner`, `/guestbook`, and `/undangan-fisik` destinations and the shared sound/reduced-motion behavior remain as before. This is limited to the active landing `SimpleDoorLab.tsx` navigation, not the GLB rebuild in `/pintu-lab`.
+
 ## Framed public template gallery
 
 The public `/template-design` gallery uses the same frame and visual language as the approved landing and `/d-invitation`: centered 90vw Rose-bordered marketing shell, shared embedded Navbar and Footer, one public floral/petal atmosphere, and a scrollable inner catalog targeting 80vw on desktop. Root-layout Navbar/Footer, ambience and floating music/Instagram controls are suppressed on this framed route to avoid duplicate chrome; the footer inside the frame displays the existing persistent marketing audio controls and Instagram link. Interactive previews remain overlay dialogs outside the scroll-clipped frame. Light/dark and ID/EN follow the shared providers. This scoped gallery update does not alter the approved landing, Pintu or `/d-invitation` layouts.
