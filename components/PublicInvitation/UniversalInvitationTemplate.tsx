@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
-import { CalendarDays, ChevronDown, Gift, Heart, MapPin, Music2 } from "lucide-react";
+import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Music2, Sparkles, Star } from "lucide-react";
+import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
@@ -104,6 +105,8 @@ export default function UniversalInvitationTemplate({
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
   const font = invitationFonts[design.font] || invitationFonts[template.preset.font];
   const layout = template.preset.layout;
+  const usesPhotos = template.usesPhotos;
+  const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
@@ -151,19 +154,35 @@ export default function UniversalInvitationTemplate({
       </button>
     ) : null;
 
-  const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => (
-    <section
-      key={keyName}
-      data-invitation-section={keyName}
-      className="px-6 py-16 text-center sm:px-8"
-      style={{ backgroundColor: index % 2 ? "var(--inv-surface)" : "var(--inv-bg)" }}
-    >
-      <p className="text-[10px] uppercase tracking-[0.23em] text-[var(--inv-accent)]">{headings[keyName][0]}</p>
-      <h2 className="mt-3 text-2xl leading-snug text-[var(--inv-ink)]" style={{ fontFamily: font.heading }}>{headings[keyName][1]}</h2>
-      <div className="mx-auto my-6 h-px w-14 bg-[var(--inv-soft)]" />
-      {children}
-    </section>
-  );
+  const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
+    const left = key === "modern-maroon" || key === "golden-art-deco";
+    const paper = key === "paper-cut-botanical";
+    const celestial = key === "celestial-ink";
+    const contrast = isInkTheme && index % 2 === 0;
+    const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
+    const color = contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
+    return (
+      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 py-16 sm:px-9 ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+        style={{ backgroundColor: backdrop, color }}
+      >
+        {key === "botanical-ivory" && <div aria-hidden className="pointer-events-none absolute -right-10 top-2 rotate-[-24deg] text-[#71826a]/20"><Leaf className="h-36 w-36" strokeWidth={0.6}/></div>}
+        {key === "classic-pearl" && <div aria-hidden className="pointer-events-none absolute inset-3 border border-[#b4a88c]/35" />}
+        {paper && <div aria-hidden className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[35px] border-[#a6bb90]/50" />}
+        {celestial && <div aria-hidden className="pointer-events-none absolute -left-12 -top-10 h-40 w-40 rounded-full border border-[#b5cce4]/35" />}
+        {key === "golden-art-deco" && <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
+        <div className="relative">
+          <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>
+          <h2 className={`mt-3 text-2xl leading-snug ${left ? "uppercase tracking-[.04em]" : ""}`} style={{fontFamily:font.heading}}>{headings[keyName][1]}</h2>
+          <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
+            <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
+            {key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+            <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
+          </div>
+          {children}
+        </div>
+      </section>
+    );
+  };
 
   return (
     <main
@@ -171,51 +190,28 @@ export default function UniversalInvitationTemplate({
       style={css}
     >
       {!opened ? (
-        <section className="relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden px-6 py-16 text-center">
-          <div aria-hidden className="pointer-events-none absolute inset-0 opacity-65" style={{ background: "radial-gradient(ellipse at 50% 35%,var(--inv-surface),var(--inv-bg) 67%,var(--inv-soft))" }} />
-          <div aria-hidden className="pointer-events-none absolute -left-20 top-24 h-56 w-56 rounded-full border border-[var(--inv-soft)] opacity-70" />
-          <div aria-hidden className="pointer-events-none absolute -right-16 bottom-20 h-44 w-44 rounded-full border border-[var(--inv-soft)] opacity-70" />
-          <p className="relative mb-9 text-[10px] uppercase tracking-[0.3em] text-[var(--inv-accent)]">{identity.label} · Digital Invitation</p>
-          <div className="relative w-full max-w-[285px] drop-shadow-[0_20px_35px_rgba(35,25,30,0.18)]">
-            <div className="absolute inset-x-0 top-0 z-10 h-36 origin-top [clip-path:polygon(0_0,100%_0,50%_100%)] bg-[var(--inv-soft)]" />
-            <div className="relative mt-3 flex min-h-[344px] flex-col items-center justify-center border border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 pb-12 pt-16">
-              <p className="text-[10px] uppercase tracking-[0.18em] text-[var(--inv-accent)]">Dengan hormat mengundang</p>
-              <Heart className="my-6 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} aria-hidden />
-              <h1 className="break-words text-2xl leading-relaxed" style={{ fontFamily: font.heading }}>{names || eventTitle}</h1>
-              <p className="mt-5 text-xs opacity-70">{date}</p>
-            </div>
-            <div aria-hidden className="relative -mt-16 h-36 bg-[var(--inv-soft)] [clip-path:polygon(0_0,50%_55%,100%_0,100%_100%,0_100%)]" />
-            <div aria-hidden className="absolute bottom-7 left-1/2 z-10 grid h-11 w-11 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--inv-soft)] bg-[var(--inv-accent)] text-[var(--inv-surface)]">
-              <Heart className="h-5 w-5" fill="currentColor" />
-            </div>
-          </div>
-          <p className="relative mt-8 max-w-xs text-sm leading-7 opacity-75">Kehadiran Anda akan berarti bagi kami.</p>
-          <button
-            type="button"
-            onClick={() => setOpened(true)}
-            className="relative mt-7 min-h-11 rounded-full bg-[var(--inv-accent)] px-8 py-3 text-sm font-semibold text-[var(--inv-surface)] shadow-lg transition hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--inv-accent)]"
-          >
-            Buka Undangan
-          </button>
-          {preview && <p className="relative mt-4 text-[11px] opacity-60">Pratinjau · data contoh</p>}
-        </section>
+        <InvitationThemeScenes
+          theme={key}
+          names={names || eventTitle}
+          date={date}
+          cover={usesPhotos ? media.cover : undefined}
+          focus={media.assignment.focus.cover}
+          stage="envelope"
+          onOpen={() => setOpened(true)}
+          preview={preview}
+        />
       ) : (
         <div>
-          <section data-invitation-section="cover" className="relative flex min-h-[650px] flex-col items-center justify-center px-6 py-14 text-center">
-            <div aria-hidden className="absolute inset-0 opacity-20" style={{ background: "radial-gradient(circle at 50% 35%,var(--inv-soft),transparent 66%)" }} />
-            <p className="relative text-[10px] uppercase tracking-[0.28em] text-[var(--inv-accent)]">{identity.label}</p>
-            <h1 className="relative mt-5 max-w-full break-words text-3xl leading-relaxed sm:text-4xl" style={{ fontFamily: font.heading }}>{names || eventTitle}</h1>
-            <div className={`relative mt-9 w-[min(70vw,285px)] overflow-hidden border-[6px] border-[var(--inv-surface)] shadow-[0_18px_38px_rgba(0,0,0,.13)] ${frame}`}>
-              {media.cover ? (
-                <img src={media.cover} alt="Foto utama acara" loading="lazy" className="aspect-[3/4] w-full object-cover" style={{ objectPosition: `center ${media.assignment.focus.cover}` }} />
-              ) : (
-                <div className="flex aspect-[3/4] items-center justify-center bg-[var(--inv-soft)]/30"><Heart className="h-10 w-10 text-[var(--inv-accent)]" strokeWidth={1} /></div>
-              )}
-              {changePhoto("cover", "cover")}
-            </div>
-            <p className="relative mt-8 text-sm opacity-75">{date}</p>
-            <ChevronDown aria-hidden className="relative mt-7 h-5 w-5 animate-bounce text-[var(--inv-accent)] motion-reduce:animate-none" />
-          </section>
+          <InvitationThemeScenes
+            theme={key}
+            names={names || eventTitle}
+            date={date}
+            cover={usesPhotos ? media.cover : undefined}
+            focus={media.assignment.focus.cover}
+            stage="cover"
+            onOpen={() => setOpened(true)}
+            onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
+          />
 
           {section("greeting", <p className="mx-auto max-w-md text-sm leading-8 opacity-80">{invitation.description || "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."}</p>, 1)}
 
@@ -225,10 +221,11 @@ export default function UniversalInvitationTemplate({
                 <>
                   {([["personOne", invitation.groomName, media.personOne], ["personTwo", invitation.brideName, media.personTwo]] as const).map(([slot, name, url]) => (
                     <div key={slot} className="min-w-0">
-                      <div className={`relative mx-auto overflow-hidden ${frame}`}>
-                        {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={{ objectPosition: `center ${media.assignment.focus[slot]}` }} /> : <div className="aspect-[3/4] bg-[var(--inv-soft)]/30" />}
+                      {usesPhotos && <div className={`relative mx-auto overflow-hidden ${frame}`}>
+                        {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={{ objectPosition: `center ${media.assignment.focus[slot]}` }} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
-                      </div>
+                      </div>}
+                      {!usesPhotos && <div aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>}
                       <p className="mt-4 break-words text-base" style={{ fontFamily: font.heading }}>{name || "Nama belum diisi"}</p>
                     </div>
                   ))}
@@ -258,18 +255,23 @@ export default function UniversalInvitationTemplate({
           ), 4)}
 
           {section("gallery", (
-            <>
+            usesPhotos ? <>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
               {media.gallery.length ? (
-                <div className="grid grid-cols-2 gap-3">
+                <div className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : "grid-cols-2"}`}>
                   {media.gallery.map((asset, index) => (
-                    <div key={asset.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
+                    <div key={asset.id} className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
                       <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                     </div>
                   ))}
                 </div>
               ) : <p className="text-sm opacity-65">Belum ada foto galeri.</p>}
-            </>
+            </> : (
+              <div className="relative mx-auto flex min-h-48 max-w-xs flex-col items-center justify-center border border-current/25 px-6 py-10">
+                <div aria-hidden className="mb-5 flex items-center gap-4 text-3xl opacity-60">{key === "celestial-ink" ? "✧ ✦ ☾" : key === "golden-art-deco" ? "◇ ◆ ◇" : key === "paper-cut-botanical" ? "❧ ❦ ❧" : "✦ ❖ ✦"}</div>
+                <p className="text-sm leading-7 opacity-75">Kenangan indah hadir dalam setiap momen yang kita rayakan bersama.</p>
+              </div>
+            )
           ), 5)}
 
           {section("countdown", countdown ? (
