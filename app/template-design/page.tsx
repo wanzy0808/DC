@@ -1,98 +1,280 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
-import { ChevronDown, Eye, Filter, Search, Sparkles } from "lucide-react";
+import { ArrowRight, Eye, Search, X } from "lucide-react";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
 import { Button } from "@/components/ui/button";
+import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
+import { invitationFonts, invitationPalettes } from "@/lib/templates/design";
+import {
+  defaultInvitationSections,
+  type InvitationSectionKey,
+  type InvitationSections,
+} from "@/lib/templates/sections";
 import { templateShowcaseCategories, templateShowcaseItems } from "@/data/templates/showcase";
+import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
+
+const InvitationPreview = dynamic(
+  () => import("@/components/InvitationStudio/InvitationPreview").then((module) => module.InvitationPreview),
+  { loading: () => <div className="grid min-h-[550px] place-items-center bg-[#fcf7f6] text-xs text-[#916f7a]">Memuat pratinjau…</div> },
+);
+
+function TemplateCanvas({
+  templateKey,
+  sections = defaultInvitationSections,
+}: {
+  templateKey: string;
+  sections?: InvitationSections;
+}) {
+  const preset = invitationTemplatePresets[templateKey] ?? invitationTemplatePresets["botanical-ivory"];
+  return (
+    <InvitationPreview
+      invitation={{ ...templateDemoInvitation, templateKey }}
+      templateKey={templateKey}
+      palette={invitationPalettes[preset.palette]}
+      fontPair={invitationFonts[preset.font]}
+      decorUrl={templateDemoPhoto}
+      eventTag=""
+      dressCode=""
+      sections={sections}
+    />
+  );
+}
+
+/** Lazily render the actual Studio canvas for each visible card (not a stock-image mockup). */
+function TemplateCardCanvas({ templateKey }: { templateKey: string }) {
+  const root = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const element = root.current;
+    if (!element || visible) return;
+    if (typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px" },
+    );
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [visible]);
+
+  return (
+    <div ref={root} className="relative h-[340px] w-full overflow-hidden bg-[#fcf7f6]" aria-hidden="true">
+      {visible ? (
+        <div
+          className="pointer-events-none absolute left-1/2 top-0 w-[390px]"
+          style={{ transform: "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
+        >
+          <TemplateCanvas templateKey={templateKey} />
+        </div>
+      ) : (
+        <div className="grid h-full place-items-center text-xs text-[#916f7a]">Pratinjau template</div>
+      )}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#fcf7f6] to-transparent" />
+    </div>
+  );
+}
+
+const optionalSections: { key: InvitationSectionKey; label: string }[] = [
+  { key: "rsvp", label: "RSVP" },
+  { key: "wishes", label: "Ucapan" },
+  { key: "gift", label: "E-Angpao" },
+];
 
 export default function TemplateDesignPage() {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
-  const [sort, setSort] = useState("Terbaru");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [sort, setSort] = useState<"Katalog" | "Nama">("Katalog");
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
+  const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
 
   const filteredTemplates = useMemo(() => {
-    const result = templateShowcaseItems.filter(({ id, name, category: itemCategory }) =>
-      `${id} ${name} ${itemCategory}`.toLowerCase().includes(query.toLowerCase()) &&
-      (category === "Semua" || itemCategory === category),
+    const result = templateShowcaseItems.filter((template) =>
+      `${template.name} ${template.description} ${template.category}`.toLocaleLowerCase("id").includes(query.trim().toLocaleLowerCase("id")) &&
+      (category === "Semua" || template.category === category),
     );
-    return sort === "Nama" ? [...result].sort((a, b) => a.name.localeCompare(b.name)) : result;
+    return sort === "Nama"
+      ? [...result].sort((a, b) => a.name.localeCompare(b.name, "id"))
+      : result;
   }, [category, query, sort]);
 
-  const selected = templateShowcaseItems.find(({ id }) => id === selectedId);
+  const selected = templateShowcaseItems.find((item) => item.key === selectedKey);
+
+  function openPreview(key: string) {
+    setSections({ ...defaultInvitationSections });
+    setSelectedKey(key);
+  }
+
+  useEffect(() => {
+    if (!selectedKey) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedKey(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [selectedKey]);
 
   return (
-    <main className="min-h-screen bg-white text-[#191317] [font-family:var(--font-dc-sans)]">
-      <header className="sticky top-0 z-30 flex h-[68px] items-center justify-between border-b border-[#e9dfe5] bg-white/95 px-5 backdrop-blur-md sm:px-8">
-        <Link href="/" className="font-[family-name:var(--font-dc-heading)] text-xl font-bold tracking-[0.08em] text-primary">DC Organizer</Link>
-        <nav className="hidden items-center gap-8 text-xs text-[#756b72] md:flex">
-          <Link href="/d-invitation" className="hover:text-primary">Produk</Link>
-          <span className="font-medium text-primary">Template</span>
-          <Link href="/" className="hover:text-primary">Blog</Link>
-        </nav>
-        <div className="flex items-center gap-2">
-          <Button type="button" size="sm" className="hidden h-9 rounded-xl bg-transparent px-3 text-[10px] text-primary shadow-none hover:bg-primary/5 sm:flex">
-            ID <ChevronDown className="h-3 w-3" />
-          </Button>
-          <Button asChild size="sm" className="rounded-xl px-4 text-[10px] font-medium">
-            <Link href="/dashboard">Ke Dashboard</Link>
-          </Button>
+    <main className="min-h-screen bg-background font-[family-name:var(--font-dc-body)] text-foreground">
+      <header className="sticky top-0 z-30 border-b border-border/70 bg-background/95 backdrop-blur-md">
+        <div className="mx-auto flex min-h-[76px] w-[calc(100%-2rem)] items-center justify-between gap-4 py-3 lg:w-[80vw]">
+          <Link href="/" aria-label="Beranda DC Organizer"><BrandWordmark size="dashboard" /></Link>
+          <nav className="flex items-center gap-3 text-xs sm:gap-6">
+            <Link href="/d-invitation" className="text-foreground/65 transition hover:text-primary">Undangan Digital</Link>
+            <Link href="/dashboard" className="rounded-full border border-primary/35 px-4 py-2.5 text-primary transition hover:bg-primary/5">Dashboard</Link>
+          </nav>
         </div>
       </header>
 
-      <section className="mx-auto max-w-[1420px] px-5 pb-16 pt-10 sm:px-8 lg:px-12">
-        <div className="mb-7 flex flex-col justify-between gap-5 border-b border-[#eee5e9] pb-7 lg:flex-row lg:items-end">
+      <section className="mx-auto w-[calc(100%-2rem)] pb-20 pt-11 lg:w-[80vw]">
+        <div className="flex flex-col justify-between gap-6 border-b border-border/70 pb-8 md:flex-row md:items-end">
           <div>
-            <p className="text-[10px] uppercase tracking-[0.25em] text-primary">DC Organizer</p>
-            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl sm:text-4xl">Pilih template undanganmu</h1>
-            <p className="mt-2 max-w-xl text-sm text-[#80767d]">Temukan desain yang paling dekat dengan cerita hari bahagiamu.</p>
+            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.22em] text-primary">Koleksi DC Organizer</p>
+            <h1 className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl text-primary sm:text-4xl">Template undangan</h1>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-foreground/65">
+              Lihat desain yang tersedia di Invitation Studio. Pilih Pratinjau untuk mencoba alur undangannya sebelum membuat acara.
+            </p>
           </div>
-          <div className="relative w-full max-w-xs">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-[#aa9da5]" />
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Cari template" className="w-full rounded-lg border border-[#e6dfe4] bg-white py-2.5 pl-10 pr-3 text-xs outline-none transition focus:border-primary" />
+          <div className="relative w-full max-w-sm shrink-0">
+            <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45" aria-hidden />
+            <input
+              aria-label="Cari template undangan"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Cari desain..."
+              className="min-h-11 w-full rounded-xl border border-border bg-background py-3 pl-10 pr-4 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
+            />
           </div>
         </div>
 
-        <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-2">
+        <div className="mb-8 mt-6 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap gap-2" aria-label="Filter jenis desain">
             {templateShowcaseCategories.map((item) => (
-              <Button key={item} type="button" size="sm" onClick={() => setCategory(item)} className={`rounded-xl px-4 text-[10px] ${category === item ? "" : "bg-transparent text-[#71676e] shadow-none hover:bg-primary/5 hover:text-primary"}`}>{item}</Button>
+              <button
+                key={item}
+                type="button"
+                aria-pressed={category === item}
+                onClick={() => setCategory(item)}
+                className={`min-h-10 rounded-full border px-4 py-2 text-xs transition ${category === item ? "border-primary bg-primary text-white dark:text-black" : "border-border bg-background text-foreground/70 hover:border-primary/40 hover:text-primary"}`}
+              >
+                {item}
+              </button>
             ))}
           </div>
-          <div className="flex gap-2">
-            <Button type="button" size="sm" onClick={() => setCategory(category === "Semua" ? "Floral" : "Semua")} className="rounded-xl bg-transparent text-[10px] text-[#71676e] shadow-none hover:bg-primary/5 hover:text-primary"><Filter className="h-3.5 w-3.5" />Filter</Button>
-            <label className="flex items-center gap-2 rounded-xl border border-[#e6dfe4] px-3 py-2 text-[10px] text-[#71676e]">Urutkan<select value={sort} onChange={(event) => setSort(event.target.value)} className="bg-transparent font-medium outline-none"><option>Terbaru</option><option>Nama</option></select></label>
-          </div>
+          <label className="flex items-center gap-3 text-xs text-foreground/65">
+            Urutkan
+            <select
+              value={sort}
+              onChange={(event) => setSort(event.target.value as "Katalog" | "Nama")}
+              className="min-h-10 rounded-xl border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-primary"
+            >
+              <option value="Katalog">Urutan katalog</option>
+              <option value="Nama">Nama A–Z</option>
+            </select>
+          </label>
         </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {filteredTemplates.map(({ id, name, category: itemCategory, status, image }) => (
-            <article key={id} className="group overflow-hidden rounded-xl border border-[#eee3e8] bg-white shadow-[0_5px_18px_rgba(90,34,55,0.06)] transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_15px_30px_rgba(90,34,55,0.12)]">
-              <div className="relative aspect-[0.7] overflow-hidden bg-[#f8eef2]">
-                <img src={image} alt={name} className="absolute inset-0 h-full w-full object-cover opacity-75 mix-blend-multiply transition duration-500 group-hover:scale-105" />
-                <span className="absolute left-3 top-3 rounded-xl bg-primary px-2.5 py-1 text-[9px] font-medium text-white">{status}</span>
-                {status === "Studio" && <span className="absolute right-3 top-3 flex items-center gap-1 rounded-xl bg-primary px-2.5 py-1 text-[9px] font-medium text-white"><Sparkles className="h-3 w-3" />Studio</span>}
-                <div className="absolute inset-x-5 bottom-6 rounded-lg border border-white/70 bg-white/80 p-4 text-center shadow-lg backdrop-blur-sm"><p className="font-[family-name:var(--font-dc-heading)] text-xl text-primary">Vidi & Hening</p><p className="mt-1 text-[8px] uppercase tracking-[0.25em] text-primary/70">We are getting married</p><div className="mx-auto mt-4 h-10 w-10 border-4 border-primary/80" /></div>
+        <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} desain tersedia</p>
+        <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {filteredTemplates.map((template) => (
+            <article key={template.key} className="group min-w-0 overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_8px_28px_rgba(80,45,58,0.05)] transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_16px_38px_rgba(80,45,58,0.1)]">
+              <button
+                type="button"
+                onClick={() => openPreview(template.key)}
+                aria-label={`Lihat pratinjau ${template.name}`}
+                className="block w-full overflow-hidden text-left focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+              >
+                <TemplateCardCanvas templateKey={template.key} />
+                <div className="flex items-center justify-between gap-3 border-b border-border/70 px-5 py-4">
+                  <div className="min-w-0">
+                    <p className="mb-1 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
+                    <h2 className="truncate font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{template.name}</h2>
+                  </div>
+                  <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
+                </div>
+              </button>
+              <div className="px-5 pb-5 pt-3">
+                <p className="min-h-12 text-xs leading-6 text-foreground/60">{template.description}</p>
+                <p className="mt-2 text-[11px] text-foreground/50">{template.previewType === "public" ? "Preview mengikuti renderer undangan publik" : "Pratinjau desain Invitation Studio"}</p>
+                <Button onClick={() => openPreview(template.key)} size="sm" className="mt-4 w-full rounded-xl text-xs">
+                  Lihat undangan <ArrowRight className="h-4 w-4" aria-hidden />
+                </Button>
               </div>
-              <div className="flex items-center justify-between gap-3 p-3">
-                <div className="min-w-0"><h2 className="truncate font-[family-name:var(--font-dc-heading)] text-sm">{id} · {name}</h2><p className="mt-1 text-[10px] text-[#92868d]">{itemCategory}</p></div>
-                <Button type="button" size="xs" onClick={() => setSelectedId(id)} className="shrink-0 rounded-xl px-3 text-[10px]"><Eye className="h-3 w-3" />Pratinjau</Button>
-              </div>
-              <Button asChild size="sm" className="mx-3 mb-3 w-[calc(100%-1.5rem)] rounded-xl text-[10px]"><Link href="/dashboard/editor">Gunakan template</Link></Button>
             </article>
           ))}
         </div>
-        {filteredTemplates.length === 0 && <div className="py-24 text-center text-sm text-[#877b83]">Template tidak ditemukan.</div>}
+        {filteredTemplates.length === 0 && (
+          <div className="rounded-xl border border-dashed border-border px-6 py-20 text-center text-sm text-foreground/60">Tidak ada template yang cocok dengan pencarianmu.</div>
+        )}
+
+        <p className="mt-8 text-xs leading-6 text-foreground/50">
+          Foto dan nama pada pratinjau merupakan data contoh. Untuk memakai foto sendiri, buat acara lalu unggah foto melalui Invitation Studio.
+        </p>
       </section>
 
       {selected && (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-[#24131d]/55 p-5" role="dialog" aria-modal="true" onClick={() => setSelectedId(null)}>
-          <div className="grid max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-2xl md:grid-cols-2" onClick={(event) => event.stopPropagation()}>
-            <div className="relative min-h-[420px] bg-[#f8eef2]"><img src={selected.image} alt={selected.name} className="h-full w-full object-cover opacity-75 mix-blend-multiply" /><div className="absolute inset-x-12 bottom-10 rounded-xl bg-white/85 p-7 text-center backdrop-blur"><p className="font-[family-name:var(--font-dc-heading)] text-3xl text-primary">Vidi &amp; Hening</p><p className="mt-2 text-[10px] uppercase tracking-widest text-primary/70">The wedding invitation</p></div></div>
-            <div className="flex flex-col justify-between p-7">
-              <div><Button type="button" size="xs" onClick={() => setSelectedId(null)} className="float-right rounded-xl bg-transparent text-xs text-[#8a7d85] shadow-none hover:bg-primary/5 hover:text-primary">Tutup</Button><p className="text-[10px] uppercase tracking-[0.25em] text-primary">Template {selected.id}</p><h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl">{selected.name}</h2><p className="mt-2 text-sm text-[#83777e]">{selected.category} · {selected.status}</p><p className="mt-7 text-sm leading-7 text-[#625861]">Desain undangan dengan layout responsif, RSVP realtime, galeri, musik, dan QR check-in yang bisa disesuaikan di editor.</p></div>
-              <Button asChild size="lg" className="mt-8 rounded-xl"><Link href="/dashboard/editor">Pilih template ini</Link></Button>
+        <div
+          role="presentation"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-2 backdrop-blur-sm sm:p-5"
+          onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedKey(null); }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="template-preview-title"
+            className="flex max-h-[95dvh] w-full max-w-[950px] min-w-0 flex-col overflow-hidden rounded-2xl bg-background shadow-2xl md:flex-row"
+          >
+            <aside className="shrink-0 border-b border-border p-4 md:w-[310px] md:border-b-0 md:border-r md:p-6">
+              <div className="flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">Pratinjau · data contoh</p>
+                  <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-dc-heading)] text-xl text-primary">{selected.name}</h2>
+                </div>
+                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label="Tutup pratinjau" className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-foreground/70 hover:text-primary">
+                  <X className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+              <p className="mt-3 hidden text-xs leading-6 text-foreground/60 md:block">{selected.description}</p>
+              <div className="mt-4 flex flex-wrap gap-2 md:mt-7" aria-label="Coba tampilkan atau sembunyikan bagian undangan">
+                {optionalSections.map((item) => (
+                  <label key={item.key} className="flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs">
+                    <input
+                      type="checkbox"
+                      checked={sections[item.key]}
+                      onChange={(event) => setSections((current) => ({ ...current, [item.key]: event.target.checked }))}
+                      className="accent-[#a65e69]"
+                    />
+                    {item.label}
+                  </label>
+                ))}
+              </div>
+              <p className="mt-3 hidden text-xs leading-6 text-foreground/55 md:block">Toggle hanya untuk mencoba preview. Perubahan tidak disimpan.</p>
+              <div className="mt-4 flex flex-col gap-2 md:mt-8">
+                <Button asChild size="sm" className="rounded-xl text-xs">
+                  <Link href="/dashboard">Buat undangan <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+                </Button>
+                <p className="text-[11px] leading-5 text-foreground/50">Buat acara terlebih dahulu, lalu pilih {selected.name} di Studio.</p>
+              </div>
+            </aside>
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
+              <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
+                <TemplateCanvas key={selected.key} templateKey={selected.key} sections={sections} />
+              </div>
             </div>
           </div>
         </div>
