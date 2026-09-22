@@ -1143,7 +1143,7 @@ Bukan melalui banyak warna/variant berbeda.
 
 ### 15.4 Surfaces/layout
 
-- Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
+- Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. **Keduanya dikelompokkan di tengah main frame** (max-width hero sekitar 1080px di desktop, gap kolom lebih rapat), bukan menempel di sisi luar frame. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
 - Semua halaman **marketing publik** memakai komponen dekorasi bersama: bunga `flower.png` pada kiri/kanan dan Rose glow dari `LandingFloralGlow`, serta animasi petal interaktif dari `WindRosePetals`. Landing `/` dan `/pagecontoh` serta frame `/d-invitation` merender layer di dalam scene masing-masing; halaman marketing lain merender melalui `PublicAtmosphere` agar tidak ada layer ganda. Reuse asset dan gerakan yang sudah disetujui, hormati reduced-motion. Dekorasi marketing ini tidak otomatis dipasang di Dashboard/Admin/Studio/checkout atau undangan publik milik pelanggan.
 - Musik latar marketing adalah **satu audio player persisten** di root layout: track dan volume/mute tidak restart setiap navigasi antarhalaman marketing; autoplay hanya jika browser mengizinkan, user bisa mute/play dan atur volume secara manual. Kontrol berada di kiri bawah serta tautan Instagram resmi DC Organizer di kanan bawah pada setiap halaman marketing. Untuk main frame, kedua kontrol tertanam pada bar footer; halaman marketing tanpa frame memakai floating control di tepi bawah. Jangan menduplikasi player, petals, atau tombol Instagram dalam satu halaman.
 - Halaman marketing `/d-invitation` memakai **main frame yang sama secara ukuran/proporsi visual dengan landing yang disetujui**: rounded Rose-border frame setinggi viewport dengan Navbar dan compact Footer di dalam frame, sedangkan semua section marketing berada dalam satu panel tengah yang scrollable mandiri (desktop dan mobile). Scroll halaman luar bukan penggerak utama konten; desain/copy, link, bahasa, tema, dan bagian yang sudah ada tetap dipertahankan. Section yang memasuki viewport panel scroll muncul lembut (opacity/translate, sekali per section); reduced-motion menampilkan konten tanpa gerakan. Perubahan ini khusus halaman `/d-invitation`, bukan perubahan landing `/` atau koreografi transisi Pintu yang sedang ditunda.
@@ -3693,3 +3693,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Commits:** `0fff90d0bb1fb4353f0927475754e9cfa48d6ec8` (hero proportions), `1f151eeb14849b36e211135e3b41ca47ef00d14c` (agent rules). Files: `components/DigitalInvitation/HeroSection.tsx`, `AGENTS.md`, `prd.md`.
 
 **Validation:** GitHub update berhasil; build, CI, browser preview, screenshot mobile/desktop **belum dijalankan atau diamati** untuk perubahan ini.
+
+
+---
+
+## 2026-09-22 — Digital Invitation hero: center the copy and phone together
+
+**Request / rationale:** Owner ingin tulisan dan mockup HP lebih saling mendekat ke tengah pada Hero `/d-invitation`, tanpa mengubah rasio smartphone maupun konten/animasi yang sudah ada.
+
+**Implementation:** Batasi lebar grid hero desktop ke `max-w-[1080px]`, pusatkan dengan `mx-auto`, dan rapatkan gap antar-kolom dari `lg:gap-12` menjadi `lg:gap-8`. Grid tetap 1.18fr:0.82fr, phone tetap 340px/9:19.5, dan layout mobile tetap satu kolom. File: `components/DigitalInvitation/HeroSection.tsx`, `AGENTS.md`, `prd.md`. Landing `/`, transisi Pintu, mockup content, audio, footer, dan section lain tidak diubah.
+
+**Commits:** `31855c90a5252587188c119c84c88cc23a0a801a` (hero alignment); `3cefddecfc2b40f547e28815043ea5b0f465e9fb` (agent convention).
+
+**Validation:** GitHub update confirmed; build, CI, browser rendering, responsive screenshot belum dijalankan/diamati untuk edit ini.
