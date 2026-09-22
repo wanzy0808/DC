@@ -42,7 +42,7 @@ export default function PortalTransition() {
   return <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[9999]"
     style={{
       background: "radial-gradient(ellipse at 50% 52%, #fff7fa 0%, #ffd8e7 32%, #f3a1bd 72%, #d8799b 100%)",
-      opacity: phase === "cover" ? 1 : phase === "hold" ? 1 : 0,
+      opacity: phase === "reveal" ? 0 : 1,
       transition: phase === "cover" ? `opacity ${COVER_MS}ms cubic-bezier(.22,1,.36,1)` : phase === "reveal" ? `opacity ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1)` : "none",
       animation: phase === "cover" ? `dc-portal-cover ${COVER_MS}ms cubic-bezier(.22,1,.36,1) both` : undefined,
     }} />;
