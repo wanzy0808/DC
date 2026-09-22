@@ -10,8 +10,8 @@ export default function FounderSection() {
   return (
     <section className="grid items-center gap-10 lg:grid-cols-12">
       <div className="relative lg:col-span-5">
-        <div className="rounded-3xl border border-[var(--border)] bg-[var(--card)] p-2">
-          <div className="relative h-[460px] overflow-hidden rounded-2xl">
+        <div className="rounded-[32px] border border-primary/35 bg-[var(--card)]/75 p-2">
+          <div className="relative h-[360px] overflow-hidden rounded-[25px] sm:h-[460px]">
             <Image
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"
               alt="Founder DC Organizer"
@@ -20,7 +20,7 @@ export default function FounderSection() {
             />
           </div>
         </div>
-        <div className="absolute -bottom-5 -right-3 max-w-xs rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 shadow-xl">
+        <div className="absolute -bottom-5 right-0 w-[min(18rem,calc(100%-1rem))] rounded-[24px] border border-primary/35 bg-[var(--card)] p-5 shadow-xl sm:-right-3">
           <div className="flex items-center gap-2 text-[var(--primary)]">
             <Sparkles className="h-4 w-4" />
             <span className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold">
