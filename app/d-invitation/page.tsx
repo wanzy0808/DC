@@ -3,7 +3,8 @@
 import { useRef } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
-import Footer from "@/components/Layout/Footer";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import HeroSection from "@/components/DigitalInvitation/HeroSection";
 import FeatureSection from "@/components/DigitalInvitation/FeatureSection";
@@ -57,6 +58,8 @@ export default function DigitalInvitationPage() {
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      {/* The same flowers and wind-driven petals as the landing, behind the scrolling main frame. */}
+      <PublicMarketingAtmosphere />
       {/* Match the approved landing frame. Only the center panel scrolls; navigation stays visible. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.12),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.11),transparent_65%)]" />
       <div className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]">
@@ -108,9 +111,7 @@ export default function DigitalInvitationPage() {
             </div>
           </div>
         </main>
-        <div className="relative z-40 shrink-0 border-t border-primary/15 bg-background/70 px-4 backdrop-blur-sm">
-          <Footer embedded />
-        </div>
+        <MarketingFrameFooter />
       </div>
     </div>
   );
