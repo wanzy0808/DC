@@ -355,9 +355,7 @@ export default function PersonalInvitationPanel() {
   return (
     <DashboardPage>
       <DashboardPageHeader
-        eyebrow={d("Distribusi")}
         title={d("Personal Invitation")}
-        description={d("Buat tautan personal untuk tamu yang dipilih.")}
       >
         <EventScopePicker
           events={events}
