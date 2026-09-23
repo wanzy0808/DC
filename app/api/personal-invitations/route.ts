@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
+import { findGuestsByContact } from "@/lib/guests/identity";
 
 async function getEventInvitation(userId: string, invitationId: string) {
   if (!invitationId) return null;
@@ -147,13 +148,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Nomor WhatsApp maksimal 32 karakter." }, { status: 400 });
     }
     if (phone) {
-      const duplicate = await prisma.guest.findFirst({
-        where: { invitationId: invitation.id, name: { equals: name, mode: "insensitive" }, phone },
-        select: { id: true },
-      });
-      if (duplicate) {
+      const matches = await findGuestsByContact(invitation.id, name, phone);
+      if (matches.length) {
         return NextResponse.json(
-          { error: "Nama dan nomor ini sudah terdaftar. Pilih tamu dari daftar agar tidak membuat duplikat.", guestId: duplicate.id },
+          {
+            error: matches.length > 1
+              ? "Ada beberapa tamu dengan nama dan nomor ini. Periksa daftar tamu lalu pilih penerima yang benar."
+              : "Tamu ini sudah ada. Pilih dari daftar tamu agar RSVP, WA Blast dan meja tetap memakai data yang sama.",
+            ...(matches.length === 1 ? { guestId: matches[0].id } : {}),
+          },
           { status: 409 },
         );
       }
