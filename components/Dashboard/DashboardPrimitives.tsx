@@ -81,7 +81,7 @@ export function DashboardMetricCard({
         </span>
       )}
       <div className="min-w-0">
-        <p className="text-[14px] leading-5 text-muted-foreground">{label}</p>
+        <p className="dc-ui-label text-[14px] leading-5 text-muted-foreground">{label}</p>
         <div className="mt-1 break-words text-[28px] font-semibold leading-none text-foreground tabular-nums">{value}</div>
       </div>
     </article>
@@ -104,7 +104,7 @@ export function DashboardCompactStat({
         className,
       )}
     >
-      <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="dc-ui-label font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
       <div className="mt-1.5 break-words text-base font-semibold text-foreground">{value}</div>
@@ -214,7 +214,7 @@ export function DashboardEmptyState({
           <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </span>
       )}
-      <p className="text-base font-semibold text-foreground">{title}</p>
+      <p className="dc-ui-title text-base font-semibold text-foreground">{title}</p>
       {description && (
         <p className="mt-1.5 max-w-xl text-sm leading-6 text-muted-foreground">{description}</p>
       )}
