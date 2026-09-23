@@ -70,6 +70,7 @@ export default function DashboardPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
+  const contentScrollRef = useRef<HTMLElement>(null);
   const [profileSection, setProfileSection] = useState<"profile" | "security">("profile");
   const [onboarding, setOnboarding] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -271,6 +272,7 @@ export default function DashboardPage() {
   }
 
   function go(id: DashboardTab) {
+    if (contentScrollRef.current) contentScrollRef.current.scrollTop = 0;
     setTab(id);
     if (invitationTabs.has(id)) setInvitationMenuOpen(true);
     setMobileOpen(false);
@@ -284,9 +286,9 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="dc-dashboard dc-dashboard--redesign min-h-screen font-[family-name:var(--font-dc-sans)] text-foreground"
+      className="dc-dashboard dc-dashboard--redesign relative isolate flex h-dvh min-h-0 w-full flex-col overflow-hidden font-[family-name:var(--font-dc-sans)] text-foreground"
     >
-      <div className="dc-dashboard-frame flex min-h-screen">
+      <div className="dc-dashboard-frame relative flex h-[90dvh] min-h-0 w-[90vw] overflow-hidden">
         <DashboardSidebar
           tab={tab}
           onNavigate={go}
@@ -296,7 +298,7 @@ export default function DashboardPage() {
           onCloseMobile={() => setMobileOpen(false)}
         />
 
-        <div className="min-w-0 flex-1">
+        <div className="dc-dashboard-workspace flex min-h-0 min-w-0 flex-1 flex-col">
           <header className="dc-dashboard-header sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
             <div className="flex min-h-16 w-full min-w-0 items-stretch">
               <div className="dc-dashboard-brand hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
@@ -420,7 +422,7 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          <main className="min-w-0 overflow-x-clip">
+          <main ref={contentScrollRef} tabIndex={0} aria-label={d("Konten dashboard")} className="dc-dashboard-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary">
             {tab === "overview" && (
               <WorkspaceOverview ctx={ctx} events={events} onGo={go} />
             )}
