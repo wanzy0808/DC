@@ -247,6 +247,49 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       ) : null}
                     </div>
                   </div>
+                  {invitation.accessPaid && qrOpenId === invitation.id && (
+                    <div
+                      id={"invitation-qr-" + invitation.id}
+                      className="mt-4 flex flex-col gap-4 border-t border-primary/15 pt-4 sm:flex-row sm:items-center"
+                    >
+                      <div className="shrink-0 self-start bg-white p-2">
+                        {qrErrorId === invitation.id ? (
+                          <div role="alert" className="flex h-[208px] w-[208px] items-center justify-center p-3 text-center text-sm text-[#7A1C25]">
+                            {d("QR belum berhasil dibuat. Tutup dan coba lagi.")}
+                          </div>
+                        ) : (
+                          <img
+                            src={qrImageHref}
+                            alt={d("QR Undangan") + " · " + title}
+                            width={208}
+                            height={208}
+                            loading="lazy"
+                            onError={() => setQrErrorId(invitation.id)}
+                            className="block h-[208px] w-[208px]"
+                          />
+                        )}
+                      </div>
+                      <div className="min-w-0 space-y-3">
+                        <div>
+                          <h4 className="dc-ui-title text-base font-semibold text-primary">{d("QR Undangan")}</h4>
+                          <p className="mt-1 max-w-lg text-sm leading-6 text-muted-foreground">
+                            {d("Satu QR untuk undangan ini. Bisa dibagikan kepada tamu, bukan tiket QR check-in per tamu.")}
+                          </p>
+                          {!invitation.isPublished && (
+                            <p className="mt-1 text-sm text-muted-foreground">
+                              {d("QR sudah bisa diunduh, tetapi undangan baru bisa dibuka setelah Publish.")}
+                            </p>
+                          )}
+                        </div>
+                        <Button asChild size="sm">
+                          <a href={qrDownloadHref} download={"dc-organizer-undangan-" + invitation.id + "-qr.png"}>
+                            <Download className="size-4" aria-hidden="true" />
+                            {d("Download QR PNG")}
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
+                  )}
                 </article>
               );
             })}
