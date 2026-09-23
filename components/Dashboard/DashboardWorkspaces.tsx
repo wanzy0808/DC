@@ -80,17 +80,12 @@ export function WorkspaceOverview({
 
   return (
     <DashboardPageShell>
-      <DashboardPageHeader
-        eyebrow={d("Beranda")}
-        title={<>{d("Halo")}, {ctx?.profile.displayName || d("Akun")}</>}
-        description={d("Pantau semua persiapan dan aktivitas terbaru dari sini.")}
-        actions={<>
-            <Button onClick={() => onGo("events")} size="sm">
-              <CalendarDays className="h-4 w-4" />
-              {d("Tambah acara")}
-            </Button>
-        </>}
-      />
+      <div className="mb-4 flex justify-end">
+        <Button onClick={() => onGo("events")} size="sm">
+          <CalendarDays className="h-4 w-4" />
+          {d("Tambah acara")}
+        </Button>
+      </div>
 
       <DashboardMetricGrid className="mt-4">
         {stats.map((item) => (
@@ -108,9 +103,6 @@ export function WorkspaceOverview({
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
             <div>
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Terbaru")}</h2>
-              <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-                {active} {d("aktif")} · {published} {d("terbit")}
-              </p>
             </div>
             <Button onClick={() => onGo("events")} size="sm">
               {d("Lihat semua")}
@@ -181,11 +173,8 @@ export function WorkspaceOverview({
         <DashboardSurface className="min-w-0 p-5 sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-primary">
-                {d("Ringkasan data")}
-              </p>
-              <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-                {d("Ringkasan performa")}
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
+                {d("RSVP")} &amp; {d("Publikasi")}
               </h2>
             </div>
             <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
@@ -266,10 +255,7 @@ export function WorkspaceOverview({
             </div>
           </div>
 
-          <p className="mt-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-            Akses cepat
-          </p>
-          <div className="mt-2 divide-y divide-border/70 border-y border-border/70">
+          <div className="mt-5 divide-y divide-border/70 border-y border-border/70">
             {[
               { id: "invitation" as DashboardTab, label: "Undangan Digital", icon: Mail },
               { id: "rsvp" as DashboardTab, label: "RSVP", icon: MessageSquareHeart },
