@@ -151,7 +151,7 @@ export function DashboardSectionHeader({
             {eyebrow}
           </p>
         )}
-        <h2 className={`${eyebrow ? "mt-1.5" : ""} font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-foreground sm:text-2xl`}>
+        <h2 className={`${eyebrow ? "mt-1.5" : ""} dc-ui-title font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-primary sm:text-2xl`}>
           {title}
         </h2>
         {description && (
