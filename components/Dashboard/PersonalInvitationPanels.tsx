@@ -15,11 +15,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
-  DashboardCompactStat,
   DashboardEmptyState,
   DashboardPanel,
   DashboardStatusBadge,
 } from "@/components/Dashboard/DashboardPrimitives";
+import {
+  PersonalInvitationGuestFields,
+  type GuestInvitationForm,
+} from "@/components/Dashboard/PersonalInvitationGuestFields";
 import { buildPersonalInvitationPublicUrl } from "@/components/Dashboard/personal-invitation-helpers";
 import type {
   PersonalInvitationEvent,
@@ -28,7 +31,6 @@ import type {
 } from "@/components/Dashboard/personal-invitation-types";
 
 export function PersonalInvitationCreatePanel({
-  selectedEvent,
   availableGuests,
   guestId,
   setGuestId,
@@ -36,6 +38,8 @@ export function PersonalInvitationCreatePanel({
   setName,
   phone,
   setPhone,
+  profile,
+  setProfile,
   loading,
   busyId,
   protectedCount,
@@ -51,6 +55,8 @@ export function PersonalInvitationCreatePanel({
   setName: (value: string) => void;
   phone: string;
   setPhone: (value: string) => void;
+  profile: GuestInvitationForm;
+  setProfile: (next: GuestInvitationForm) => void;
   loading: boolean;
   busyId: string | null;
   protectedCount: number;
@@ -59,77 +65,95 @@ export function PersonalInvitationCreatePanel({
   onCreateNew: () => void;
 }) {
   const { d } = useDashboardI18n();
+  const selectedGuest = availableGuests.find((guest) => guest.id === guestId);
+  const busy = loading || Boolean(busyId);
+  const valid = Number.isInteger(profile.invitedPax) && profile.invitedPax >= 1
+    && profile.invitedPax <= 30 && Boolean(profile.category.trim())
+    && Boolean(guestId ? selectedGuest : name.trim());
 
   return (
-    <DashboardPanel
-      title={d("Buat Personal Invitation")}
-    >
-      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4">
-        <p className="text-xs font-semibold text-foreground">
-          {d("Dari daftar tamu")}
-        </p>
-        <select
-          value={guestId}
-          onChange={(event) => setGuestId(event.target.value)}
-          disabled={loading || Boolean(busyId)}
-          className="mt-2 w-full px-3 text-sm"
-        >
-          <option value="">{d("Pilih tamu")}</option>
-          {availableGuests.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-              {item.phone ? ` · ${item.phone}` : ""}
-            </option>
-          ))}
-        </select>
-        <Button
-          type="button"
-          size="sm"
-          className="mt-2 w-full"
-          disabled={!guestId || Boolean(busyId)}
-          onClick={onCreateExisting}
-        >
-          <Plus className="h-4 w-4" />
-          {d("Buat Personal Invitation")}
-        </Button>
-      </div>
-
-      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-border/70 bg-background p-3">
-        <p className="text-xs font-semibold text-foreground">
-          {d("Tamu belum ada")}
-        </p>
-        <div className="mt-2 space-y-2">
-          <Input
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder={d("Nama tamu")}
-            disabled={Boolean(busyId)}
-          />
-          <Input
-            value={phone}
-            onChange={(event) => setPhone(event.target.value)}
-            placeholder={d("Nomor WhatsApp (opsional)")}
-            disabled={Boolean(busyId)}
-          />
-          <Button
-            type="button"
-            size="sm"
-            className="w-full"
-            disabled={!name.trim() || Boolean(busyId)}
-            onClick={onCreateNew}
+    <DashboardPanel title={d("Buat Undangan Personal")}>
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!valid || busy) return;
+          if (guestId) onCreateExisting();
+          else onCreateNew();
+        }}
+        className="space-y-5"
+      >
+        <label className="block min-w-0 text-sm font-medium text-foreground">
+          {d("Sumber penerima")}
+          <select
+            value={guestId}
+            onChange={(event) => setGuestId(event.target.value)}
+            disabled={busy}
+            className="mt-1.5 min-h-11 w-full border border-primary/25 bg-background px-3 text-sm text-foreground"
           >
-            <Plus className="h-4 w-4" />
-            {d("Tambah & buat undangan")}
+            <option value="">{d("Tambah tamu baru")}</option>
+            {availableGuests.map((guest) => (
+              <option key={guest.id} value={guest.id}>
+                {guest.name}{guest.phone ? ` · ${guest.phone}` : ""}
+              </option>
+            ))}
+          </select>
+          <span className="mt-1 block text-xs text-muted-foreground">
+            {d("Pilih tamu yang sudah ada agar nama dan nomor tidak tersimpan dua kali.")}
+          </span>
+        </label>
+
+        {selectedGuest ? (
+          <div className="border-y border-primary/15 py-3">
+            <p className="text-sm font-semibold text-foreground">{selectedGuest.name}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{selectedGuest.phone || d("Tanpa nomor WhatsApp")}</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {d("Data ini terhubung dengan RSVP, WA Blast, dan pengaturan meja.")}
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="block min-w-0 text-sm font-medium text-foreground">
+              {d("Nama penerima")}
+              <Input
+                value={name}
+                maxLength={120}
+                onChange={(event) => setName(event.target.value)}
+                placeholder={d("Contoh: Bapak Andi")}
+                required
+                disabled={busy}
+                className="mt-1.5"
+              />
+            </label>
+            <label className="block min-w-0 text-sm font-medium text-foreground">
+              {d("Nomor WhatsApp (opsional)")}
+              <Input
+                type="tel"
+                value={phone}
+                maxLength={32}
+                onChange={(event) => setPhone(event.target.value)}
+                placeholder="08xxxxxxxxxx"
+                disabled={busy}
+                className="mt-1.5"
+              />
+            </label>
+          </div>
+        )}
+
+        <PersonalInvitationGuestFields value={profile} onChange={setProfile} disabled={busy} />
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary/15 pt-4">
+          <p className="text-xs text-muted-foreground">
+            {d("Buat satu tautan personal untuk penerima ini.")}
+          </p>
+          <Button type="submit" size="sm" disabled={!valid || busy}>
+            <Plus className="size-4" />
+            {busyId ? d("Menyimpan...") : d("Buat undangan")}
           </Button>
         </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-2">
-        <DashboardCompactStat
-          label={d("Password")}
-          value={String(protectedCount)}
-        />
-        <DashboardCompactStat label={d("Draft")} value={String(draftCount)} />
+      </form>
+      <div className="flex flex-wrap gap-4 border-t border-primary/15 pt-3 text-xs text-muted-foreground">
+        <span>{d("Password")}: {protectedCount}</span>
+        <span>{d("Draft")}: {draftCount}</span>
       </div>
     </DashboardPanel>
   );
