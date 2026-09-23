@@ -9,7 +9,6 @@ import {
   CircleHelp,
   LogOut,
   Menu,
-  MessageCircle,
   Receipt,
   Settings2,
   X,
@@ -37,6 +36,7 @@ import {
 } from "@/components/Dashboard/DashboardWorkspaces";
 import { dashboardTabMeta, invitationTabs } from "@/components/Dashboard/dashboard-navigation";
 import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
+import DashboardWhatsAppHelp from "@/components/Dashboard/DashboardWhatsAppHelp";
 import {
   fetchEventGuestData,
   sortDashboardEvents,
@@ -433,17 +433,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <Button asChild size="icon-lg" className="fixed bottom-5 right-5 z-50 rounded-full">
-        <a
-          href="https://wa.me/6282124786516?text=Halo%2C%20aku%20ingin%20tanya2%20mengenai%20DC%20Organizer."
-          target="_blank"
-          rel="noreferrer"
-          aria-label={d("Buka bantuan WhatsApp")}
-          title={d("Buka bantuan WhatsApp")}
-        >
-          <MessageCircle className="h-6 w-6" strokeWidth={2} />
-        </a>
-      </Button>
+      <DashboardWhatsAppHelp />
 
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
