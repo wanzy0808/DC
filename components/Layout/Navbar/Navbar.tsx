@@ -16,7 +16,6 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const isJiplak = pathname === "/jiplak";
-  const isLandingWordmark = embedded && (pathname === "/" || pathname === "/pagecontoh");
   const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
   if ((!embedded && (pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
@@ -26,10 +25,9 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
         ? `dc-navbar--landing ${isJiplak ? "dc-navbar--jiplak bg-transparent" : "bg-background"}`
         : "bg-transparent"
     }`}>
-      <div className={`mx-auto flex w-[80vw] max-w-full items-center justify-between ${isLandingWordmark ? "py-5 sm:py-4" : "py-5"}`}>
+      <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5 sm:py-4">
         <Link href="/" className="group block min-w-0">
           <BrandWordmark
-            size={isLandingWordmark ? "landing" : "public"}
             showTagline
             className="transition-transform group-hover:scale-[1.01]"
           />
