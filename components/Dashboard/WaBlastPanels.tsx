@@ -41,7 +41,7 @@ export function WaBlastAddRecipients({
     <DashboardPanel
       title={d("Tambah penerima")}
     >
-      <div className="rounded-2xl border border-primary/20 bg-primary/[0.025] p-4">
+      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4">
         <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
         <select
           value={existingGuestId}
@@ -68,7 +68,7 @@ export function WaBlastAddRecipients({
         </Button>
       </div>
 
-      <div className="rounded-xl border border-border/70 bg-background p-3">
+      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-border/70 bg-background p-3">
         <p className="text-xs font-semibold text-foreground">{d("Tamu belum ada")}</p>
         <div className="mt-2 space-y-2">
           <Input
@@ -127,7 +127,7 @@ export function WaBlastRecipientQueue({
       ) : (
         <div className="grid gap-3">
           {selected.map((guest) => (
-            <article key={guest.id} className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/[0.025] px-4 py-3">
+            <article key={guest.id} className="dc-dashboard-detail-card flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] px-4 py-3">
               <div className="min-w-0">
                 <h3 className="break-words text-sm font-semibold text-foreground">{guest.name}</h3>
                 <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone || d("Nomor belum ada")}</p>
