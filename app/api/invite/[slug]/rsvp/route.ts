@@ -102,49 +102,40 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
           { status: 409 },
         );
       }
-      const existing = matches[0];
-      if (existing?.personalToken) {
+      if (matches.length === 1) {
+        // Name + phone are NOT proof of ownership. Do not overwrite the
+        // canonical guest's RSVP from a public generic link (personal or not).
         return NextResponse.json(
-          { error: "Gunakan tautan undangan personal yang dikirimkan untuk mengisi RSVP." },
+          { error: "Nama dan WhatsApp ini sudah terdaftar. Gunakan tautan undangan personal atau hubungi admin acara untuk memperbarui RSVP." },
           { status: 409 },
         );
       }
-      if (existing) {
-        if (existing.checkedIn && (existing.rsvpStatus !== status || existing.plusOnes !== confirmedPlusOnes)) {
-          return NextResponse.json(
-            { error: "Tamu sudah check-in. Perubahan RSVP perlu dibantu admin acara." },
-            { status: 409 },
-          );
-        }
-        // Reuse the original Guest.id: RSVP, seating, check-in and WA Blast now
-        // read the same row. Do not reset its tags, category or placement.
-        guest = await prisma.guest.update({
-          where: { id: existing.id },
-          data: {
-            source: "RSVP",
-            rsvpStatus,
-            plusOnes: confirmedPlusOnes,
-            invitedPax: Math.max(existing.invitedPax, confirmedPlusOnes + 1),
-          },
-        });
-      } else {
-        guest = await prisma.guest.create({
-          data: {
-            invitationId: invitation.id,
-            name,
-            phone,
-            source: "RSVP",
-            rsvpStatus,
-            plusOnes: confirmedPlusOnes,
-            invitedPax: Math.max(1, confirmedPlusOnes + 1),
-          },
-        });
-      }
+      guest = await prisma.guest.create({
+        data: {
+          invitationId: invitation.id,
+          name,
+          phone,
+          source: "RSVP",
+          rsvpStatus,
+          plusOnes: confirmedPlusOnes,
+          invitedPax: Math.max(1, confirmedPlusOnes + 1),
+        },
+      });
     }
 
     const qrToken = status === "ATTENDING" ? createGuestQrToken(guest.id) : null;
     return NextResponse.json(
-      { guest, qrToken },
+      {
+        guest: {
+          id: guest.id,
+          name: guest.name,
+          phone: guest.phone,
+          plusOnes: guest.plusOnes,
+          rsvpStatus: guest.rsvpStatus,
+          invitedPax: guest.invitedPax,
+        },
+        qrToken,
+      },
       {
         headers: {
           "X-RateLimit-Limit": "5",
