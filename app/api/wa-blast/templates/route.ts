@@ -24,10 +24,12 @@ function validate(input: Record<string, unknown>) {
   if (!title || title.length > 120) return "Judul pesan harus 1–120 karakter.";
   if (!body || body.length > 3000) return "Isi pesan harus 1–3000 karakter.";
   // Restrict only brace-style placeholders, not ordinary WhatsApp punctuation.
-  const tokens = body.match(/\{[^{}]*\}/g) || [];
   const allowed = new Set(["{nama}", "{acara}", "{tanggal}", "{lokasi}", "{link}"]);
-  if (tokens.some((token) => !allowed.has(token)) || /[{}]/.test(body.replace(/\{[^{}]*\}/g, ""))) {
-    return "Variabel pesan hanya boleh {nama}, {acara}, {tanggal}, {lokasi}, dan {link}.";
+  for (const text of [title, body]) {
+    const tokens = text.match(/\{[^{}]*\}/g) || [];
+    if (tokens.some((token) => !allowed.has(token)) || /[{}]/.test(text.replace(/\{[^{}]*\}/g, ""))) {
+      return "Variabel pesan hanya boleh {nama}, {acara}, {tanggal}, {lokasi}, dan {link}.";
+    }
   }
   return null;
 }
