@@ -15,11 +15,20 @@ Customer dashboard should feel like the approved DC Organizer landing without du
 ## Implementation stages
 - [x] Audit README, AGENTS, PRD and current customer dashboard shell, navigation and primitive components.
 - [x] Create this redesign plan to record scope, decisions and validation.
-- [ ] Stage 1: replace fragile sidebar overrides with a cohesive curved-outside navigation component on desktop/mobile. Remove double-selected Acara group and conflicting hover/active colors; check responsive, keyboard and reduced motion.
-- [ ] Stage 2: unify customer dashboard shell and shared page primitives, simplify Beranda's redundant text, prioritize operational metrics, latest events and real RSVP/publication visualizations.
+- [x] Stage 1: replace fragile sidebar overrides with a cohesive curved-outside navigation component on desktop/mobile. Remove double-selected Acara group and conflicting hover/active colors; check responsive, keyboard and reduced motion.
+- [x] Stage 2: unify customer dashboard shell and shared page primitives, simplify Beranda's redundant text, prioritize operational metrics, latest events and real RSVP/publication visualizations.
 - [ ] Stage 3: audit and restyle Rangkaian Acara, Undangan Digital, Personal Invitation, WA Blast, RSVP, Manajemen Tamu, and Usher screens using shared primitives; retain current function and event scoping.
 - [ ] Stage 4: validate Next.js build/TypeScript and test desktop/mobile Light/Dark, ID/EN, hover/active, keyboard, zero-data and populated states; fix regressions before marking complete.
 - [ ] Record finishing details in AGENTS.md, prd.md, README.md and prd-tambahan.md when verified.
 
+## Implemented in this iteration
+- Added `components/Dashboard/DashboardSidebar.tsx` as the single owner of customer sidebar markup for mobile and desktop, with mobile backdrop and keyboard-focusable existing Button controls.
+- Removed the two competing legacy sidebar CSS rule groups and implemented a scoped curved-outside active/hover treatment. Every top-level and submenu item has 20px vertical separation so 9px corner facets do not overlap adjacent items. Acara expanded state is distinct from selected child.
+- Updated shared DashboardPrimitives geometry and simplified every workspace's page-header presentation without changing event/API semantics.
+- Beranda keeps real counts, real RSVP coverage and publication status; removed repeated decorative labels and redundant intro. Empty RSVP data now shows a dash rather than a misleading 0% number.
+- Removed the account dropdown help item that previously only closed the menu without opening any help surface.
+
 ## Validation log
-- No build or browser visual validation has been run for this redesign yet. Do not mark later stages complete before implementation and verification.
+- GitHub source updates committed to main; Next.js build and live browser visual checks are still pending. Stage 1 and 2 implementation checkboxes indicate source implementation, **not** visual approval.
+- Stage 3 remains open: inspect every operational workspace for redundant copy, control/layout inconsistency, and real chart opportunities without changing business logic.
+- Stage 4 remains open: keyboard, Light/Dark, narrow/large desktop, mobile overlay, ID/EN, active+hover adjacency, zero/populated state, build and TypeScript.
