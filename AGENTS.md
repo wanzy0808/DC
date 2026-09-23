@@ -64,6 +64,12 @@ Use only these application UI fonts:
 
 Do not introduce additional fonts, random Google Fonts, template fonts, or intentional browser/system fallback styling. Invitation-template typography may remain dynamic when it belongs to invitation content itself.
 
+### Title Case for visible names and headings (23 September 2026)
+
+- **Every word in a customer-facing name or standalone UI title starts with a capital letter.** Apply Title Case consistently to page titles, section/frame/card headers (including large Dashboard frames), navigation names, metric titles, and displayed person/event names: `Manajemen Tamu`, `Daftar Undangan`, `Nama Di Amplop`.
+- Keep official spelling of brands, acronyms and product names, e.g. `DC Organizer`, `RSVP`, `VIP`, `VVIP`, `WhatsApp`; preserve numerals, punctuation and ID/EN meaning. Do not force uppercase on every letter, translate proper names, or apply Title Case to complete sentences, descriptions, helper text, message bodies, URLs or code identifiers.
+- For user-entered names/event titles, use **display-only capitalization**; do not silently overwrite data in Prisma, API payloads, RSVP, messages or personal invitation storage. Reuse the Dashboard's scoped title/name display convention (`dc-ui-title` / `dc-ui-name` / `dc-ui-label`) for dashboard labels outside semantic heading tags. Ensure new UI headers in both ID/EN follow the same rule, without changing the approved landing/door or invitation-template artwork as a side effect.
+
 ## 4. Canonical Theme
 ### Desktop View
 
