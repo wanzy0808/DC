@@ -30,10 +30,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
             <CalendarDays className="h-4 w-4" />
           </span>
           <div className="min-w-0">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-primary">
-              {d("Acara aktif")}
-            </p>
-            <p className="mt-1 text-sm text-foreground">{d("Silakan buat rangkaian acara dulu.")}</p>
+            <p className="text-sm text-foreground">{d("Belum ada acara")}</p>
           </div>
         </div>
       </DashboardSurface>
@@ -43,8 +40,8 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
   return (
     <div className="max-w-xl">
       <label className="block">
-        <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
-          {d("Acara aktif")}
+        <span className="mb-1.5 block text-sm font-semibold text-foreground">
+          {d("Pilih acara")}
         </span>
         <span className="relative block">
           <select
@@ -52,7 +49,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
             onChange={(event) => onChange(event.target.value)}
             disabled={disabled}
             aria-label={d("Pilih acara")}
-            className="h-11 w-full appearance-none rounded-[10px] border border-border bg-background px-3 pr-10 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:cursor-not-allowed"
+            className="min-h-11 w-full appearance-none border border-primary/25 bg-background px-4 pr-10 text-sm text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15 disabled:cursor-not-allowed"
           >
             {events.map((event) => (
               <option key={event.id} value={event.id}>
