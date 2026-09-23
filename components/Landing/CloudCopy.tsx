@@ -53,10 +53,10 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: 0 }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-[5%] top-1 z-20 w-[min(78vw,340px)] sm:left-[3%] sm:top-2 lg:left-[2%] lg:top-[3%] lg:w-[min(29vw,475px)]"
-        : "absolute bottom-1 right-[5%] z-20 w-[min(69vw,285px)] sm:bottom-2 sm:right-[8%] lg:bottom-[3%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
+        ? "absolute left-[5%] top-1 z-20 w-[min(84vw,390px)] sm:left-[3%] sm:top-2 lg:left-[2%] lg:top-[3%] lg:w-[min(31vw,510px)]"
+         : "absolute bottom-[4%] right-[5%] z-20 w-[min(76vw,320px)] sm:bottom-[5%] sm:right-[8%] lg:bottom-[6%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
     >
-      <div className="relative isolate px-9 py-12 text-center sm:px-12 sm:py-14">
+      <div className={top ? "relative isolate px-9 py-10 text-center sm:px-12 sm:py-12 lg:px-14" : "relative isolate px-8 py-9 text-center sm:px-10 sm:py-10 lg:px-12"}>
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           {/* A single translucent cloud silhouette prevents overlapping circles in dark mode. */}
@@ -71,15 +71,15 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         <motion.div className="relative z-10" initial={false} animate={{ opacity: textVisible ? 1 : 0 }} transition={{ duration: 0.1, delay: assemble ? 1.05 : 0 }}>
         {top ? (
           <>
-            <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.13em] text-neutral-700 dark:text-white/85 sm:text-[10px]"><LetterLine text={locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
-            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-xl leading-tight text-primary sm:text-2xl lg:text-[clamp(1.25rem,1.8vw,1.9rem)]"><LetterLine text={locale === "en" ? "Every story" : "Setiap cerita"} active={textVisible} delay={assemble ? 1.55 : 0} /><br /><LetterLine text={locale === "en" ? "begins somewhere." : "punya awalnya."} active={textVisible} delay={assemble ? 1.85 : 0} /></h1>
-            <p className="mx-auto mt-3 max-w-[33ch] text-[10px] leading-relaxed text-neutral-800 dark:text-white/90 sm:text-[11px]"><LetterLine text={locale === "en" ? "A celebration, a gathering, or a small moment with the people who matter. Choose the door that feels like your story." : "Perayaan, pertemuan, atau momen sederhana bersama orang-orang terdekat. Pilih pintu yang paling menggambarkan ceritamu."} active={textVisible} delay={assemble ? 2.2 : 0} /></p>
+            <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.10em] text-neutral-700 dark:text-white/85 sm:text-[11px]"><LetterLine text={locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
+            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-[25px] leading-[1.16] text-primary sm:text-[30px] lg:text-[clamp(1.85rem,2vw,2.1rem)]"><LetterLine text={locale === "en" ? "Every story" : "Setiap cerita"} active={textVisible} delay={assemble ? 1.55 : 0} /><br /><LetterLine text={locale === "en" ? "begins somewhere." : "punya awalnya."} active={textVisible} delay={assemble ? 1.85 : 0} /></h1>
+            <p className="mx-auto mt-3 max-w-[39ch] text-[12px] leading-[1.55] text-neutral-800 dark:text-white/90 sm:text-[13px] lg:text-[14px]"><LetterLine text={locale === "en" ? "A celebration, a gathering, or a small moment with the people who matter. Choose the door that feels like your story." : "Perayaan, pertemuan, atau momen sederhana bersama orang-orang terdekat. Pilih pintu yang paling menggambarkan ceritamu."} active={textVisible} delay={assemble ? 2.2 : 0} /></p>
           </>
         ) : (
           <>
-            <p className="font-[family-name:var(--font-dc-heading)] text-base leading-snug text-primary sm:text-xl"><LetterLine text={locale === "en" ? "The next chapter is yours." : "Bab berikutnya milikmu."} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
-            <p className="mt-2 text-[11px] leading-relaxed text-neutral-800 dark:text-white/90 sm:text-xs"><LetterLine text={locale === "en" ? "Open a door. Make the moment yours." : "Buka satu pintu. Jadikan momennya milikmu."} active={textVisible} delay={assemble ? 1.65 : 0} /></p>
-            <p className="mx-auto mt-2 max-w-[33ch] text-[11px] leading-relaxed text-neutral-800 dark:text-white/90 sm:text-xs"><LetterLine text={locale === "en" ? "From the first invitation to the last warm farewell, let every detail feel personal and worth remembering." : "Dari undangan pertama hingga salam perpisahan yang hangat, biarkan setiap detail terasa personal dan layak dikenang."} active={textVisible} delay={assemble ? 2.05 : 0} /></p>
+            <p className="font-[family-name:var(--font-dc-heading)] text-[20px] leading-[1.2] text-primary sm:text-[23px] lg:text-[24px]"><LetterLine text={locale === "en" ? "The next chapter is yours." : "Bab berikutnya milikmu."} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
+            <p className="mt-2 text-[12px] leading-[1.5] text-neutral-800 dark:text-white/90 sm:text-[13px]"><LetterLine text={locale === "en" ? "Open a door. Make the moment yours." : "Buka satu pintu. Jadikan momennya milikmu."} active={textVisible} delay={assemble ? 1.65 : 0} /></p>
+            <p className="mx-auto mt-2 max-w-[37ch] text-[12px] leading-[1.5] text-neutral-800 dark:text-white/90 sm:text-[13px]"><LetterLine text={locale === "en" ? "From the first invitation to the last warm farewell, let every detail feel personal and worth remembering." : "Dari undangan pertama hingga salam perpisahan yang hangat, biarkan setiap detail terasa personal dan layak dikenang."} active={textVisible} delay={assemble ? 2.05 : 0} /></p>
           </>
         )}
         </motion.div>
