@@ -4348,3 +4348,14 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Konfigurasi operasional lokal:** `APP_URL="http://localhost:3000"`, `GOOGLE_CLIENT_ID` dan `GOOGLE_CLIENT_SECRET` di private `.env.local` (jangan dikirim ke chat/push ke Git), OAuth Google Cloud tipe **Web application** dengan redirect URI resmi persis `http://localhost:3000/api/auth/google/callback`; jalankan browser dari host `localhost` agar cookie state sesuai, jangan `192.168.x.x` jika APP_URL masih localhost. Perubahan env memerlukan restart `pnpm dev`, dan penyimpanan akun/sesi memerlukan database aktif/schema siap. Domain produksi memakai domain dan HTTPS callback resmi yang terdaftar terpisah. Pengaturan consent/audience/testing dapat memengaruhi akses akun Google tergantung scopes dan policy; jangan menganggap setiap mode Testing memerlukan penambahan test user untuk basic `openid email profile` tanpa memeriksa setting aktual Google.
 
 **Pengujian:** CI build lulus hanya memverifikasi struktur/build kode, bukan kredensial operator dan alur jaringan Google/OAuth di localhost; status real login tetap perlu diverifikasi setelah setup privat dilakukan. Tidak menyentuh `BurgerMenuContent`, `Navbar`, `auth-styles`, `RegisterDialog`, landing, atau pintu/animasi.
+
+
+---
+
+## 2026-09-23 — Hierarki editorial dua awan pada landing
+
+**Permintaan:** Revisi khusus kritik nomor 3: kedua ornamen awan pada landing saling bersaing tetapi teks di dalamnya terlalu kecil; awan kiri harus menjadi pembuka cerita yang lebih terbaca/dominan, sedangkan awan kanan menjadi lanjutan yang lebih tenang dan tidak terlalu dekat ke bawah. Tidak ada persetujuan untuk mengubah pintu, bunga, navbar, font brand, copy ataupun animasi.
+
+**Implementasi:** `components/Landing/CloudCopy.tsx` saja: awan kiri sedikit lebih lebar pada desktop/mobile, judul serta deskripsi diperbesar dan ruang internal disesuaikan agar narasi pembuka menjadi fokus; awan kanan dirapikan tipografinya secara lebih ringan dan dinaikkan beberapa persen dari footer supaya tidak terlewat. Konten Indonesia/Inggris, SVG cloud outline/fill, keluarga font Cinzel/Fauna/DM Mono, reveal huruf, leave/return interaction, background, Pintu 3D/orbit/camera/portal, serta seluruh layout komponen lain tidak diubah. `AGENTS.md` menyimpan batas revisi ini.
+
+**Validasi:** GitHub Actions memeriksa build setelah commit `97d285f613b6bc2061557f9c42ae6ba9c387373e`; screenshot nyata pada lebar/tinggi desktop dan mobile serta mode ID/EN perlu diperiksa owner setelah sync sebelum menyatakan overlap/komposisi final. Jangan memperluas scope ke kritik desain lain sebelum diminta.
