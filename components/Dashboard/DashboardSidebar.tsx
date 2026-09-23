@@ -39,7 +39,7 @@ export default function DashboardSidebar({
         id="dc-dashboard-sidebar"
         className={`dc-dashboard-sidebar ${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
       >
-        <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex flex-1 flex-col gap-2">
+        <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex flex-1 flex-col gap-3">
           <Button
             type="button"
             aria-current={tab === "overview" ? "page" : undefined}
@@ -50,7 +50,7 @@ export default function DashboardSidebar({
             <span className="min-w-0 truncate">{d("Beranda")}</span>
           </Button>
 
-          <div className="dc-sidebar-group mt-3 flex flex-col gap-1.5">
+          <div className="dc-sidebar-group mt-3 flex flex-col gap-3">
             <Button
               type="button"
               aria-expanded={invitationMenuOpen}
@@ -63,7 +63,7 @@ export default function DashboardSidebar({
               <ChevronDown className={`size-4 shrink-0 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`} />
             </Button>
             {invitationMenuOpen && (
-              <div id="dc-dashboard-event-nav" className="dc-sidebar-subnav flex flex-col gap-1.5">
+              <div id="dc-dashboard-event-nav" className="dc-sidebar-subnav flex flex-col gap-3">
                 {invitationNav.map((item) => {
                   const Icon = item.icon;
                   return (
