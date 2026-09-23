@@ -4,11 +4,9 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
-  CalendarDays,
   CheckCircle2,
   ChevronDown,
   CircleHelp,
-  Home,
   LogOut,
   Menu,
   MessageCircle,
@@ -37,12 +35,8 @@ import {
   UsherPanel,
   WorkspaceOverview,
 } from "@/components/Dashboard/DashboardWorkspaces";
-import {
-  dashboardTabMeta,
-  invitationNav,
-  invitationTabs,
-  secondaryNav,
-} from "@/components/Dashboard/dashboard-navigation";
+import { dashboardTabMeta, invitationTabs } from "@/components/Dashboard/dashboard-navigation";
+import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
 import {
   fetchEventGuestData,
   sortDashboardEvents,
@@ -271,89 +265,14 @@ export default function DashboardPage() {
       className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-dc-sans)] text-foreground`}
     >
       <div className="flex min-h-screen">
-        <aside
-          className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
-        >
-          <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
-<Button
-              type="button"
-              aria-current={tab === "overview" ? "page" : undefined}
-              onClick={() => go("overview")}
-              className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[16px] font-medium shadow-none ${
-                tab === "overview" ? "is-active" : ""
-              }`}
-            >
-              <span className="grid size-6 shrink-0 place-items-center text-current">
-                <Home className="h-[18px] w-[18px]" strokeWidth={1.9} />
-              </span>
-              <span className="min-w-0 truncate">{d("Beranda")}</span>
-            </Button>
-
-            <div className="rounded-xl border border-transparent bg-transparent p-1.5">
-              <Button
-                type="button"
-                aria-expanded={invitationMenuOpen}
-                onClick={() => setInvitationMenuOpen((value) => !value)}
-                className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[16px] font-medium shadow-none ${
-                  invitationActive ? "is-section-open" : ""
-                }`}
-              >
-                <span className="grid size-6 shrink-0 place-items-center">
-                  <CalendarDays className="h-[18px] w-[18px]" strokeWidth={1.9} />
-                </span>
-                <span className="min-w-0 truncate">{d("Acara")}</span>
-                <ChevronDown
-                  className={`ml-auto h-3.5 w-3.5 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`}
-                />
-              </Button>
-
-              {invitationMenuOpen && (
-                <div className="mt-1 space-y-1 pl-3">
-                  {invitationNav.map((item) => {
-                    const Icon = item.icon;
-                    const active = tab === item.id;
-                    return (
-                      <Button
-                        key={item.id}
-                        type="button"
-                        aria-current={active ? "page" : undefined}
-                        onClick={() => go(item.id)}
-                        className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2 text-left text-[15px] font-medium shadow-none ${
-                          active ? "is-active" : ""
-                        }`}
-                      >
-                        <span className="grid size-5 shrink-0 place-items-center">
-                          <Icon className="h-4 w-4" strokeWidth={1.9} />
-                        </span>
-                        <span className="min-w-0 truncate">{d(item.label)}</span>
-                      </Button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-
-            {secondaryNav.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Button
-                  key={item.id}
-                  type="button"
-                  aria-current={tab === item.id ? "page" : undefined}
-                  onClick={() => go(item.id)}
-                  className={`h-auto w-full min-w-0 justify-start rounded-[10px] border border-transparent bg-transparent px-3 py-3 text-left font-[family-name:var(--font-dc-sans)] text-[16px] font-medium shadow-none ${
-                    tab === item.id ? "is-active" : ""
-                  }`}
-                >
-                  <span className="grid size-6 shrink-0 place-items-center text-current">
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
-                  </span>
-                  <span className="min-w-0 truncate">{d(item.label)}</span>
-                </Button>
-              );
-            })}
-          </nav>
-        </aside>
+        <DashboardSidebar
+          tab={tab}
+          onNavigate={go}
+          invitationMenuOpen={invitationMenuOpen}
+          onToggleInvitationMenu={() => setInvitationMenuOpen((value) => !value)}
+          mobileOpen={mobileOpen}
+          onCloseMobile={() => setMobileOpen(false)}
+        />
 
         <div className="min-w-0 flex-1">
           <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
