@@ -4359,3 +4359,14 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Implementasi:** `components/Landing/CloudCopy.tsx` saja: awan kiri sedikit lebih lebar pada desktop/mobile, judul serta deskripsi diperbesar dan ruang internal disesuaikan agar narasi pembuka menjadi fokus; awan kanan dirapikan tipografinya secara lebih ringan dan dinaikkan beberapa persen dari footer supaya tidak terlewat. Konten Indonesia/Inggris, SVG cloud outline/fill, keluarga font Cinzel/Fauna/DM Mono, reveal huruf, leave/return interaction, background, Pintu 3D/orbit/camera/portal, serta seluruh layout komponen lain tidak diubah. `AGENTS.md` menyimpan batas revisi ini.
 
 **Validasi:** GitHub Actions memeriksa build setelah commit `97d285f613b6bc2061557f9c42ae6ba9c387373e`; screenshot nyata pada lebar/tinggi desktop dan mobile serta mode ID/EN perlu diperiksa owner setelah sync sebelum menyatakan overlap/komposisi final. Jangan memperluas scope ke kritik desain lain sebelum diminta.
+
+
+---
+
+## 2026-09-23 — Ukuran branding landing diperjelas tanpa menambah tinggi navbar
+
+**Permintaan:** Branding DC Organizer dan tagline di kiri navbar landing `/` dan `/pagecontoh` lebih terbaca dibanding ilustrasi Pintu pada desktop; jangan menambah tinggi navbar atau background dan jangan mengubah area lain yang sudah disetujui.
+
+**Perubahan:** Tambah varian `landing` ke `BrandWordmark` (nama Cinzel dari sebelumnya `text-3xl`/30px menjadi 34px mulai `sm` dan 36px mulai `lg`; tagline mono sebelumnya 8px menjadi 9px/10px mulai `sm`/`lg`). Ukuran mobile tetap semula untuk mengurangi risiko bertabrakan dengan kontrol kanan. `Navbar` memilih varian ini **hanya** pada `embedded` landing pathname `/` atau `/pagecontoh`, mempertahankan varian `public` untuk halaman lain, serta mengganti padding vertikal wrapper hanya pada landing dari `py-5` menjadi `py-5 sm:py-4` agar tinggi navbar desktop tidak bertambah. Nama, tagline, typography, warna Rose, posisi, interaksi dan navbar background lama dipertahankan. Dashboard wordmark serta pintu, awan, bunga, footer, popup auth dan kontrol kanan tidak diubah.
+
+**Files:** `components/Brand/BrandWordmark.tsx`, `components/Layout/Navbar/Navbar.tsx`, `AGENTS.md`, `README.md`, `prd.md`. **Validasi:** Build Validation GitHub Actions diperiksa setelah push; screenshot desktop/mobile nyata perlu dilihat setelah sinkronisasi untuk memastikan ukuran baru tetap pas di navbar.
