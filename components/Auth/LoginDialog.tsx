@@ -43,7 +43,12 @@ const copy = {
     register: "Daftar",
     showPassword: "Tampilkan kata sandi",
     hidePassword: "Sembunyikan kata sandi",
-    googleConfig: "Google Sign-In belum dikonfigurasi di server.",
+    googleConfig: "Masuk dengan Google belum tersedia. Periksa konfigurasi OAuth server.",
+    googleState: "Sesi Google tidak cocok atau sudah kedaluwarsa. Coba lagi dari alamat situs yang sama.",
+    googleDenied: "Akses Google dibatalkan. Pilih akun dan lanjutkan jika ingin masuk.",
+    googleToken: "Kode Google tidak dapat diverifikasi. Periksa Client Secret dan alamat callback OAuth.",
+    googleProfile: "Google tidak memberikan email yang terverifikasi. Coba akun Google lain.",
+    googleDatabase: "Akun atau sesi Google belum bisa disimpan. Periksa koneksi database.",
     googleFailed: "Google Sign-In gagal. Silakan coba lagi.",
     registered: "Akun dibuat. Periksa email untuk verifikasi sebelum masuk.",
     loginFailed: "Login gagal.",
@@ -63,7 +68,12 @@ const copy = {
     register: "Create account",
     showPassword: "Show password",
     hidePassword: "Hide password",
-    googleConfig: "Google Sign-In is not configured on the server.",
+    googleConfig: "Google Sign-In is unavailable. Check the server OAuth configuration.",
+    googleState: "Your Google sign-in session expired or does not match. Try again on the same site address.",
+    googleDenied: "Google access was cancelled. Select an account to continue signing in.",
+    googleToken: "Google could not verify the sign-in code. Check the OAuth client secret and callback URL.",
+    googleProfile: "Google did not provide a verified email address. Try another Google account.",
+    googleDatabase: "Could not save the Google account or session. Check the database connection.",
     googleFailed: "Google Sign-In failed. Please try again.",
     registered: "Account created. Check your email to verify it before signing in.",
     loginFailed: "Sign in failed.",
@@ -93,10 +103,18 @@ export default function LoginDialog({
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const messages: Record<string, string> = {
+      google_config: t.googleConfig,
+      google_state: t.googleState,
+      google_denied: t.googleDenied,
+      google_token: t.googleToken,
+      google_profile: t.googleProfile,
+      google_database: t.googleDatabase,
+    };
     if (googleError?.startsWith("google_")) {
-      setError(googleError === "google_config" ? t.googleConfig : t.googleFailed);
+      setError(messages[googleError] ?? t.googleFailed);
     }
-  }, [googleError, t.googleConfig, t.googleFailed]);
+  }, [googleError, t]);
 
   useEffect(() => {
     let active = true;
