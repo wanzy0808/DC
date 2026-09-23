@@ -20,6 +20,8 @@ export default function RsvpForm({
   slug,
   guestId,
   guestName,
+  guestToken,
+  invitedPax,
   eventDate,
   venue,
   title,
@@ -65,6 +67,7 @@ export default function RsvpForm({
         body: JSON.stringify({
           ...form,
           guestId,
+          guestToken,
           plusOnes: Number(form.plusOnes),
         }),
       });
@@ -109,6 +112,7 @@ export default function RsvpForm({
         <RsvpInputPanel
           guestId={guestId}
           guestName={guestName}
+          invitedPax={invitedPax}
           form={form}
           setForm={setForm}
           message={message}
