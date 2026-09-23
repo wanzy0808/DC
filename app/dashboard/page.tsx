@@ -60,6 +60,7 @@ export default function DashboardPage() {
   const [guestMenuOpen, setGuestMenuOpen] = useState(false);
   const [ctx, setCtx] = useState<DashboardContext | null>(null);
   const [events, setEvents] = useState<DashboardEvent[]>([]);
+  const [activeEventId, setActiveEventId] = useState("");
   const [rsvpEventId, setRsvpEventId] = useState("");
   const [rsvpGuests, setRsvpGuests] = useState<DashboardGuest[]>([]);
   const [rsvpLoading, setRsvpLoading] = useState(false);
@@ -100,7 +101,8 @@ export default function DashboardPage() {
         ),
       );
       setEvents(configured);
-      const firstId = configured[0]?.id ?? "";
+      const firstId = configured.find((event) => event.accessPaid)?.id ?? configured[0]?.id ?? "";
+      setActiveEventId((current) => configured.some((event) => event.id === current) ? current : firstId);
       setRsvpEventId((current) =>
         configured.some((event) => event.id === current) ? current : firstId,
       );
@@ -304,6 +306,13 @@ export default function DashboardPage() {
     router.push("/login");
   }
 
+  function selectEvent(id: string) {
+    setActiveEventId(id);
+    setRsvpEventId(id);
+    setPlacementEventId(id);
+    setUsherEventId(id);
+  }
+
   function go(id: DashboardTab) {
     if (contentScrollRef.current) contentScrollRef.current.scrollTop = 0;
     setTab(id);
@@ -475,13 +484,13 @@ export default function DashboardPage() {
             {tab === "invitation" && (
               <InvitationWorkspacePanel onCreateSequence={() => go("events")} />
             )}
-            {tab === "waBlast" && <WhatsAppBlastPanel />}
-            {tab === "personalInvitation" && <PersonalInvitationPanel />}
+            {tab === "waBlast" && <WhatsAppBlastPanel selectedEventId={activeEventId} onSelectEvent={selectEvent} />}
+            {tab === "personalInvitation" && <PersonalInvitationPanel selectedEventId={activeEventId} onSelectEvent={selectEvent} />}
             {tab === "rsvp" && (
               <RsvpWorkspace
                 events={events}
                 selectedId={rsvpEventId}
-                onSelect={setRsvpEventId}
+                onSelect={selectEvent}
                 selectedEvent={rsvpEvent}
                 guests={rsvpGuests}
                 loading={rsvpLoading}
@@ -493,7 +502,7 @@ export default function DashboardPage() {
               <PlacementWorkspace
                 events={events}
                 selectedId={placementEventId}
-                onSelect={setPlacementEventId}
+                onSelect={selectEvent}
                 selectedEvent={placementEvent}
                 guests={placementGuests}
                 tables={placementTables}
@@ -513,7 +522,7 @@ export default function DashboardPage() {
                 <UsherPanel
                   events={events}
                   selectedId={usherEventId}
-                  onSelect={setUsherEventId}
+                  onSelect={selectEvent}
                   guests={usherGuests}
                   onRefresh={refreshUsher}
                 />
