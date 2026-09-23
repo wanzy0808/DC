@@ -9,7 +9,6 @@ import {
   CircleHelp,
   LogOut,
   Menu,
-  MessageCircle,
   Receipt,
   Settings2,
   X,
@@ -293,7 +292,9 @@ export default function DashboardPage() {
                     size="icon"
                     className="h-11 w-11 border-primary/35 bg-transparent text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary lg:hidden"
                     onClick={() => setMobileOpen((value) => !value)}
-                    aria-label={d("Buka menu dashboard")}
+                    aria-label={mobileOpen ? d("Tutup menu dashboard") : d("Buka menu dashboard")}
+                    aria-expanded={mobileOpen}
+                    aria-controls="dc-dashboard-sidebar"
                     title={d("Buka menu dashboard")}
                   >
                     {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -306,9 +307,6 @@ export default function DashboardPage() {
                   <div className="hidden h-8 w-px bg-border/70 sm:block lg:hidden" />
 
                   <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
-                      {d(meta.eyebrow)}
-                    </p>
                     <div className="flex min-w-0 items-center gap-2">
                       <p className="truncate text-base font-semibold text-foreground sm:text-lg">
                         {d(meta.title)}
@@ -372,11 +370,6 @@ export default function DashboardPage() {
                             icon={CircleHelp}
                             text={d("Buka FAQ")}
                             onClick={() => router.push("/faq")}
-                          />
-                          <DashboardMenuItem
-                            icon={MessageCircle}
-                            text={d("Buka bantuan")}
-                            onClick={() => setProfileMenu(false)}
                           />
                           <div className="my-2 border-t border-border" />
                           <DashboardMenuItem icon={LogOut} text={d("Keluar akun")} danger onClick={logout} />
