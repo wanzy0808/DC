@@ -83,13 +83,9 @@ export function TemplatePanel({
       />
       <div className="mt-5 grid gap-3">
         {templates.map((item) => (
-          <button
-            type="button"
+          <div
             key={item.key}
-            onClick={() => onSelect(item.key)}
-            disabled={!item.ready}
-            aria-label={item.ready ? item.name : `${item.name} · pratinjau saja, belum bisa digunakan`}
-            className={`overflow-hidden rounded-xl border text-left transition disabled:cursor-not-allowed disabled:opacity-65 ${
+            className={`relative overflow-hidden rounded-xl border text-left transition ${
               selected === item.key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border hover:border-primary/40"
@@ -119,7 +115,15 @@ export function TemplatePanel({
               </span>
               {!item.ready && <span className="mt-2 block text-[11px] text-primary">Preview designer · belum dapat digunakan</span>}
             </span>
-          </button>
+            <button
+              type="button"
+              onClick={() => onSelect(item.key)}
+              disabled={!item.ready}
+              aria-label={item.ready ? item.name : `${item.name} · pratinjau saja, belum bisa digunakan`}
+              aria-pressed={selected === item.key}
+              className="absolute inset-0 z-10 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-65"
+            />
+          </div>
         ))}
       </div>
     </div>
