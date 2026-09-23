@@ -55,8 +55,9 @@ export function PersonalInvitationGuestFields({
   disabled?: boolean;
 }) {
   const { d } = useDashboardI18n();
-  const set = <K extends keyof GuestInvitationForm>(key: K, next: GuestInvitationForm[K]) =>
+  function set<K extends keyof GuestInvitationForm>(key: K, next: GuestInvitationForm[K]) {
     onChange({ ...value, [key]: next });
+  }
 
   return (
     <div className="space-y-4">
