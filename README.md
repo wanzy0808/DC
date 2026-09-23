@@ -312,3 +312,12 @@ Follow `Dashboard-redesign.md` for completed code stages, remaining workspace au
 ### WA Blast message templates (23 September 2026)
 
 Customer Acara → WA Blast includes invitation, RSVP reminder, event-day reminder and thank-you draft templates saved per owned paid Digital Invitation (up to 30/event). Five placeholders personalize the editor preview; copy is enabled only for a real selected recipient and, when a public URL is used, a published invitation. This feature does not send WA messages, schedule deliveries or spend quotas; recipient selection and addon credits remain the existing functionality. After syncing, **run `pnpm db:deploy` against your database** for `20260923110000_add_wa_blast_message_templates`. See `Dashboard-redesign.md` for limitations and QA.
+
+
+## Framed Beranda and account profile (23 September 2026)
+
+The authenticated customer `/dashboard` now has one landing-inspired Rose-outlined mainframe: the shared customer sidebar, navbar controls, and all active panels sit within a continuous responsive shell. The approved public landing/Pintu is untouched. Beranda still reads real event, invitation, guest and RSVP data.
+
+Navbar account menu provides My Profile, Account Settings (password), transactions, packages, FAQ and sign out. `DashboardAccountPanel` edits the existing user name, uploads and displays a separate account avatar through `/api/profile/avatar`, and changes a password via `/api/profile/password` after validating the current password. Uploads are Sharp-decoded to user-specific WebP files and persisted as `User.avatarUrl`. Changing a password revokes previous sessions and issues a fresh current session; email is read-only in this initial iteration. Avatar files use the same local-disk upload pattern as existing invitation media; production storage must be persistent.
+
+**After syncing:** run `pnpm db:deploy` on the intended database to apply `20260923115000_user_avatar_url` (as well as any pending prior migrations), then run `pnpm db:generate` if needed before building. Review GitHub Actions before declaring the build validated. Authenticated browser QA for photos/password and mobile frame remains pending.
