@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
   CheckCircle2,
   ChevronDown,
   CircleHelp,
   LogOut,
+  KeyRound,
+  UserRound,
   Menu,
   Receipt,
   Settings2,
@@ -35,6 +38,7 @@ import {
 } from "@/components/Dashboard/DashboardWorkspaces";
 import { dashboardTabMeta, invitationTabs } from "@/components/Dashboard/dashboard-navigation";
 import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
+import DashboardAccountPanel from "@/components/Dashboard/DashboardAccountPanel";
 import DashboardWhatsAppHelp from "@/components/Dashboard/DashboardWhatsAppHelp";
 import {
   fetchEventGuestData,
@@ -65,6 +69,7 @@ export default function DashboardPage() {
   const [usherGuests, setUsherGuests] = useState<DashboardGuest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
+  const [profileSection, setProfileSection] = useState<"profile" | "security">("profile");
   const [onboarding, setOnboarding] = useState(false);
   const [saving, setSaving] = useState(false);
   const [onboardingError, setOnboardingError] = useState("");
@@ -262,7 +267,7 @@ export default function DashboardPage() {
     <div
       className="dc-dashboard dc-dashboard--redesign min-h-screen font-[family-name:var(--font-dc-sans)] text-foreground"
     >
-      <div className="flex min-h-screen">
+      <div className="dc-dashboard-frame flex min-h-screen">
         <DashboardSidebar
           tab={tab}
           onNavigate={go}
@@ -332,7 +337,9 @@ export default function DashboardPage() {
                       title={d("Menu akun")}
                     >
                       <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-current">
-                        {profileLabel.slice(0, 2)}
+                        {ctx?.profile.avatarUrl ? (
+                          <Image src={ctx.profile.avatarUrl} alt="" width={36} height={36} unoptimized className="size-full rounded-full object-cover" />
+                        ) : profileLabel.slice(0, 2)}
                       </span>
                       <span className="hidden max-w-36 truncate text-sm font-medium sm:inline">{profileLabel}</span>
                       <ChevronDown
@@ -341,7 +348,7 @@ export default function DashboardPage() {
                     </Button>
 
                     {profileMenu && (
-                      <div className="absolute right-0 mt-3 w-64 overflow-hidden rounded-xl border border-border bg-background p-2.5 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
+                      <div className="dc-dashboard-account-menu absolute right-0 z-50 mt-3 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-[24px] border border-primary/35 bg-background p-3 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                         <div className="px-2 pb-3 pt-1">
                           <p className="font-[family-name:var(--font-dc-heading)] text-base font-semibold">
                             {profileLabel}
@@ -355,6 +362,17 @@ export default function DashboardPage() {
                           <LanguageToggle />
                         </div>
                         <div className="space-y-1.5">
+                          <DashboardMenuItem
+                            icon={UserRound}
+                            text={d("Profil Saya")}
+                            onClick={() => { setProfileSection("profile"); go("profile"); }}
+                          />
+                          <DashboardMenuItem
+                            icon={KeyRound}
+                            text={d("Pengaturan akun")}
+                            onClick={() => { setProfileSection("security"); go("profile"); }}
+                          />
+                          <div className="my-2 border-t border-primary/15" />
                           <DashboardMenuItem
                             icon={Receipt}
                             text={d("Lihat transaksi")}
@@ -384,6 +402,16 @@ export default function DashboardPage() {
           <main className="min-w-0 overflow-x-clip">
             {tab === "overview" && (
               <WorkspaceOverview ctx={ctx} events={events} onGo={go} />
+            )}
+            {tab === "profile" && ctx && (
+              <DashboardAccountPanel
+                displayName={ctx.profile.displayName}
+                email={ctx.profile.email}
+                avatarUrl={ctx.profile.avatarUrl}
+                section={profileSection}
+                onSectionChange={setProfileSection}
+                onUpdated={load}
+              />
             )}
             {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
             {tab === "invitation" && (
