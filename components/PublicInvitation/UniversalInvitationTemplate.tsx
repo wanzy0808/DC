@@ -23,11 +23,11 @@ type InvitationData = {
   groomFatherName?: string | null;
   groomMotherName?: string | null;
   groomChildOrder?: number | null;
-  groomChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
+  groomChildPosition?: string | null;
   brideFatherName?: string | null;
   brideMotherName?: string | null;
   brideChildOrder?: number | null;
-  brideChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
+  brideChildPosition?: string | null;
   venue: string;
   address?: string | null;
   mapUrl?: string | null;
