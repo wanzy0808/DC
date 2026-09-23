@@ -29,10 +29,11 @@ export default function LandingFloralGlow() {
           <Image
             src="/flower.png"
             alt=""
-            fill
+            width={800}
+            height={1200}
             loading="eager"
             sizes="28vw"
-            className="object-contain object-left-bottom"
+            className="absolute inset-0 h-full w-full object-contain object-left-bottom"
           />
         </div>
       </motion.div>
@@ -58,10 +59,11 @@ export default function LandingFloralGlow() {
           <Image
             src="/flower.png"
             alt=""
-            fill
+            width={800}
+            height={1200}
             loading="eager"
             sizes="26vw"
-            className="object-contain object-left-bottom"
+            className="absolute inset-0 h-full w-full object-contain object-left-bottom"
           />
         </div>
       </motion.div>
