@@ -92,8 +92,8 @@ export function PersonalInvitationCreatePanel({
           >
             <option value="">{d("Tambah tamu baru")}</option>
             {availableGuests.map((guest) => (
-              <option key={guest.id} value={guest.id}>
-                <span className="dc-ui-name">{guest.name}</span>{guest.phone ? ` · ${guest.phone}` : ""}
+              <option key={guest.id} value={guest.id} className="dc-ui-name">
+                {guest.name}{guest.phone ? ` · ${guest.phone}` : ""}
               </option>
             ))}
           </select>
