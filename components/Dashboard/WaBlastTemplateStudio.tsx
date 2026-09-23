@@ -304,7 +304,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
             disabled={!recipients.length}
             className="min-h-11 w-full border border-primary/25 bg-background px-4 text-sm font-normal"
           >
-            {recipients.length ? recipients.map((item) => <option key={item.id} value={item.id}>{displayTitleCase(item.name)}</option>) : <option value="">{d("Contoh · belum ada penerima")}</option>}
+            {recipients.length ? recipients.map((item) => <option key={item.id} value={item.id}>{displayTitleCase(item.name)}</option>) : <option value="">{displayTitleCase(d("Contoh · belum ada penerima"))}</option>}
           </select>
         </label>
         <div className="dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.055] p-4">
