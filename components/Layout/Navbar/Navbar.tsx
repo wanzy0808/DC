@@ -28,12 +28,11 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
       <div className="mx-auto flex w-[calc(100%-28px)] max-w-full items-center justify-between gap-2 py-3 sm:w-[80vw] sm:py-4">
         <Link href="/" className="group block min-w-0">
           <BrandWordmark
-            size="mobile"
             showTagline
             className="transition-transform group-hover:scale-[1.01]"
           />
         </Link>
-        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3 [&_.dc-theme-toggle]:!h-8 [&_.dc-theme-toggle]:!w-8 sm:[&_.dc-theme-toggle]:!h-11 sm:[&_.dc-theme-toggle]:!w-11 [&_.dc-language-toggle]:!h-8 sm:[&_.dc-language-toggle]:!h-11 [&_.dc-language-toggle_button]:!h-8 [&_.dc-language-toggle_button]:!min-w-7 [&_.dc-language-toggle_button]:!px-1 sm:[&_.dc-language-toggle_button]:!h-9 sm:[&_.dc-language-toggle_button]:!min-w-10 sm:[&_.dc-language-toggle_button]:!px-2.5">
           <ThemeToggle />
           <LanguageToggle />
           <div className="relative">
@@ -44,7 +43,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
                   aria-expanded={menuOpen}
                   aria-controls="dc-burger-dropdown"
                   onClick={() => setMenuOpen((open) => !open)}
-                  className="dc-burger-toggle h-9 w-9 sm:h-11 sm:w-11"
+                  className="dc-burger-toggle !h-8 !w-8 sm:!h-11 sm:!w-11"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
