@@ -634,6 +634,7 @@ body:has(.dc-dashboard--redesign) {
   overflow: hidden;
 }
 .dc-dashboard.dc-dashboard--redesign {
+  --dc-dashboard-card-stripe: 0.3cm;
   --dc-dashboard-canvas: #ffffff;
   --dc-dashboard-card: #ffffff;
   --dc-dashboard-border: rgb(192 122 132 / 53%);
@@ -877,36 +878,52 @@ body:has(.dc-dashboard--redesign) {
   border: 1px solid var(--dc-dashboard-border) !important;
   box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
 }
-/* Brand card geometry: three square corners, only the top-right curves.
-   All Rose emphasis runs down the LEFT edge, including compact metrics.
-   Keep controls, badges and the outer mainframe's own geometry unchanged. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-surface {
+/* One deliberate card system for ALL dashboard workspaces.
+   All cards have a ~0.3cm left brand stripe, square on three corners and
+   round ONLY at the top-right. Controls, badges, input fields, chart strokes
+   and the outer frame do not inherit this treatment. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
+  .dc-dashboard-surface,
+  .dc-dashboard-metric,
+  .dc-dashboard-overview-hero,
+  .dc-dashboard-compact-stat,
+  .dc-dashboard-notice,
+  .dc-dashboard-empty-state,
+  .dc-dashboard-detail-card
+) {
+  box-sizing: border-box;
   border: 1px solid var(--dc-dashboard-border) !important;
-  border-left: 3px solid var(--primary) !important;
+  border-left: var(--dc-dashboard-card-stripe) solid var(--primary) !important;
   border-radius: 0 26px 0 0 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview .dc-dashboard-metric--featured {
-  border: 1px solid var(--dc-dashboard-border) !important;
-  border-left: 3px solid var(--primary) !important;
-  border-radius: 0 22px 0 0 !important;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
+  .dc-dashboard-compact-stat,
+  .dc-dashboard-notice,
+  .dc-dashboard-empty-state,
+  .dc-dashboard-detail-card
+) {
+  border-top-right-radius: 22px !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-hero {
-  border-left: 4px solid var(--primary) !important;
-  border-radius: 0 28px 0 0 !important;
+  border-top-right-radius: 28px !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-events,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-progress {
-  border-left-width: 4px !important;
+/* A detail card can be nested inside a shared surface. Keep the inner panel
+   neutral and let the same-size Rose stripe establish visual consistency. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card {
+  min-width: 0;
+  background: var(--dc-dashboard-card) !important;
+  box-shadow: 0 8px 26px rgb(93 42 57 / 4%);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-compact-stat,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-notice {
-  border-left: 3px solid var(--primary) !important;
-  border-radius: 0 18px 0 0 !important;
-}
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-empty-state {
-  border-left: 3px solid var(--primary) !important;
-  border-radius: 0 22px 0 0 !important;
+/* Presentational card text is not allowed to overlap the thicker left stripe. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
+  .dc-dashboard-metric,
+  .dc-dashboard-compact-stat,
+  .dc-dashboard-notice,
+  .dc-dashboard-empty-state,
+  .dc-dashboard-detail-card
+) {
+  padding-left: max(1rem, 1.25rem - var(--dc-dashboard-card-stripe) / 4);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
   background: rgb(192 122 132 / 15%);
