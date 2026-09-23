@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
@@ -36,7 +37,7 @@ export async function PATCH(request: Request) {
         { status: 400 },
       );
     }
-    const data: Record<string, unknown> = { ...profile };
+    const data: Prisma.GuestUncheckedUpdateInput = { ...profile };
     if (body.name !== undefined) {
       const name = String(body.name).trim();
       if (!name || name.length > 120) {
@@ -52,7 +53,7 @@ export async function PATCH(request: Request) {
       data.phone = phone || null;
     }
     const nextName = (data.name as string | undefined) ?? guest.name;
-    const nextPhone = (data.phone as string | null | undefined) ?? guest.phone;
+    const nextPhone = data.phone === undefined ? guest.phone : (data.phone as string | null);
     if (nextPhone) {
       const matches = await findGuestsByContact(guest.invitationId, nextName, nextPhone);
       if (matches.some((match) => match.id !== id)) {
@@ -83,7 +84,7 @@ export async function PATCH(request: Request) {
       if (!["PENDING", "ATTENDING", "NOT_ATTENDING", "TENTATIVE"].includes(value)) {
         return NextResponse.json({ error: "Status RSVP tidak valid." }, { status: 400 });
       }
-      data.rsvpStatus = value;
+      data.rsvpStatus = value as "PENDING" | "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE";
     }
     if (body.plusOnes !== undefined) {
       const count = Number(body.plusOnes);
