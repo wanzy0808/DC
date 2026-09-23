@@ -129,3 +129,7 @@ Deployment/QA:
 - Owner selected solid brand Rose in the area **outside** the landing-style customer mainframe instead of pale radial glow. `app/globals.css` now uses `var(--primary)` as the full exterior fill on both Light and Dark; the frame has a lighter contrasting border. The frame's viewport sizing and inner scroll model remain unchanged.
 - Small metric cards have a 3px Rose top stroke; shared information surfaces have a 3px Rose left stroke (Beranda's event and RSVP/publication panels: 4px). Interior cards remain neutral white/near-black per theme, without decorative photo assets or content changes.
 - App commit `0b2415e`. Browser screenshots/CI for this CSS revision still need verification.
+
+## 23 September 2026 — WhatsApp help anchored inside frame
+
+- Moved the existing floating dashboard WhatsApp help into `dc-dashboard-frame`, inset 20px on mobile / 24px from the frame's lower-right on larger screens. The panel opens upward with a frame-bounded width and max-height so it does not protrude beyond the pink external border. `app/dashboard/page.tsx` and `DashboardWhatsAppHelp.tsx` only; existing two-contact routing and number-hiding UI unchanged. Code commits `4e6a0ed`, `9058293`; browser visual QA remains pending.
