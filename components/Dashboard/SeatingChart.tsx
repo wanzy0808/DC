@@ -517,7 +517,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       >
 
         <div
-          className="min-w-0 overflow-hidden rounded-2xl border border-primary/20 bg-primary/[0.035]"
+          className="dc-dashboard-seating-stage min-w-0 overflow-hidden bg-primary/[0.025]"
           onDragOver={(event) => {
             event.preventDefault();
             const rect = event.currentTarget.getBoundingClientRect();
