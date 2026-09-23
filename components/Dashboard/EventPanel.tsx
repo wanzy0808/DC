@@ -318,7 +318,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                     ? d("Draft")
                     : d("Belum desain");
               return (
-                <article key={event.id} className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                <article key={event.id} className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <h3 className="break-words text-base font-semibold text-foreground">
