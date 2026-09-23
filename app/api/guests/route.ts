@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
+import { findGuestsByContact } from "@/lib/guests/identity";
 
 async function getInvitation(userId: string, invitationId?: string) {
   if (invitationId) {
@@ -142,13 +143,15 @@ export async function POST(request: Request) {
     }
 
     if (phone) {
-      const duplicate = await prisma.guest.findFirst({
-        where: { invitationId: invitation.id, name: { equals: name, mode: "insensitive" }, phone },
-        select: { id: true },
-      });
-      if (duplicate) {
+      const matches = await findGuestsByContact(invitation.id, name, phone);
+      if (matches.length) {
         return NextResponse.json(
-          { error: "Nama dan nomor ini sudah terdaftar pada acara ini.", guestId: duplicate.id },
+          {
+            error: matches.length > 1
+              ? "Beberapa tamu dengan nama dan nomor ini sudah ada. Periksa daftar tamu terlebih dahulu."
+              : "Nama dan nomor ini sudah terdaftar pada acara ini. Gunakan data tamu yang sudah ada.",
+            ...(matches.length === 1 ? { guestId: matches[0].id } : {}),
+          },
           { status: 409 },
         );
       }
