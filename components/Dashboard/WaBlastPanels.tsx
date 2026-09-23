@@ -131,6 +131,11 @@ export function WaBlastRecipientQueue({
               <div className="min-w-0">
                 <h3 className="break-words text-sm font-semibold text-foreground">{guest.name}</h3>
                 <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone || d("Nomor belum ada")}</p>
+                {(guest.category || guest.tags?.length || guest.invitedPax) && (
+                  <p className="mt-1 break-words text-xs text-muted-foreground">
+                    {[guest.category || d("Reguler"), ...(guest.tags ?? []), guest.invitedPax ? `${guest.invitedPax} ${d("orang diundang")}` : ""].filter(Boolean).join(" · ")}
+                  </p>
+                )}
               </div>
               <Button
                 type="button"
