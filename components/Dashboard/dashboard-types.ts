@@ -1,7 +1,7 @@
 import type { EventScopeOption } from "@/components/Dashboard/EventScopePicker";
 
 export type DashboardContext = {
-  profile: { displayName: string; email: string };
+  profile: { displayName: string; email: string; avatarUrl: string | null };
   wedding: {
     invitationId: string | null;
     groomName: string;
