@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CreditCard, MessageCircle, Plus, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   DashboardMetricCard,
   DashboardMetricGrid,
@@ -220,7 +221,7 @@ export default function WhatsAppBlastPanel() {
               ) : (
                 events.map((event) => (
                   <option key={event.id} value={event.id}>
-                    {event.title || d("Acara tanpa judul")}
+                    {displayTitleCase(event.title || d("Acara tanpa judul"))}
                   </option>
                 ))
               )}
