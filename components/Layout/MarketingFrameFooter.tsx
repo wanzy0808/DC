@@ -11,7 +11,7 @@ export function MarketingInstagramLink() {
 
 /** Fixed bottom edge of the landing-style frame, shared by marketing subpages. */
 export default function MarketingFrameFooter() {
-  return <div className="relative z-40 grid min-h-12 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-t border-primary/15 bg-background/45 px-3 backdrop-blur-sm sm:px-6">
+  return <div className="relative z-40 grid min-h-12 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 bg-transparent px-3 sm:px-6">
     <MarketingAudioControls />
     <div className="pointer-events-none absolute inset-x-0 flex justify-center [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
     <div aria-hidden="true" />
