@@ -409,6 +409,20 @@ aside nav > p { font-family: var(--font-dc-heading); }
   color: color-mix(in srgb, var(--foreground) 72%, transparent);
 }
 
+/* Data-form dropdowns: the browser-owned chevron can hug the right edge.
+   Replace ONLY these form select arrows with a 15px Rose chevron inset 18px;
+   nav menus and controls with their own external/compact arrows opt out. */
+:is(.dc-dashboard, .dc-usher) main select:not([data-dc-native-chevron]),
+:is(.dc-dashboard, .dc-usher) main select:not([data-dc-native-chevron]):is(:hover, :focus, :focus-visible, :disabled) {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 3rem !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23C07A84' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-position: right 18px center !important;
+  background-repeat: no-repeat !important;
+  background-size: 15px 15px !important;
+}
+
 /* Quick-access rows read as discrete controls instead of one flat spreadsheet block. */
 .dc-dashboard main div.grid[class*="sm:grid-cols-2"] > button[class*="justify-start"] {
   margin: 0.375rem;
