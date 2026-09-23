@@ -343,9 +343,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
     <div className="mt-5 grid min-w-0 gap-4 xl:grid-cols-[minmax(260px,0.7fr)_minmax(0,1.7fr)]">
       <aside className="min-w-0 space-y-4">
         <DashboardPanel
-            eyebrow={d("Setup")}
             title={d("Struktur meja")}
-            description={d("Atur jumlah meja dan kapasitas kursi sebelum menempatkan tamu.")}
             actions={
               <DashboardStatusBadge active={visibleTables.length > 0}>
                 {visibleTables.length} {locale === "en" ? "tables" : "meja"}
@@ -397,9 +395,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         </DashboardPanel>
 
         <DashboardPanel
-            eyebrow={d("Roster")}
             title={d("Belum ditempatkan")}
-            description={d("Tambahkan tamu manual atau tarik tamu yang belum memiliki meja ke denah.")}
             actions={
               <DashboardStatusBadge active={unassigned.length > 0}>
                 {unassigned.length} {locale === "en" ? "guests" : "tamu"}
@@ -493,7 +489,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   setDraggedGuestId(guest.id);
                   setSwapCandidate(null);
                 }}
-                className="cursor-grab rounded-lg border border-border/75 bg-background px-3 py-2.5 text-xs transition hover:border-primary/30 hover:bg-primary/[0.035] active:cursor-grabbing"
+                className="cursor-grab rounded-2xl border border-primary/20 bg-primary/[0.035] px-4 py-3 text-sm transition hover:border-primary/40 hover:bg-primary/[0.08] active:cursor-grabbing"
               >
                 <div className="truncate font-medium text-foreground">{guest.name}</div>
                 {(guest.category || Boolean(guest.tags?.length)) && (
@@ -511,9 +507,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       </aside>
 
       <DashboardPanel className="min-w-0"
-          eyebrow={d("Seating")}
           title={d("Denah tempat duduk")}
-          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
           actions={
             <div className="flex gap-2">
               <DashboardCompactStat label={d("Meja")} value={String(visibleTables.length)} className="min-w-20" />
@@ -523,7 +517,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       >
 
         <div
-          className="min-w-0 overflow-hidden rounded-xl border border-border/80 bg-background"
+          className="min-w-0 overflow-hidden rounded-2xl border border-primary/20 bg-primary/[0.035]"
           onDragOver={(event) => {
             event.preventDefault();
             const rect = event.currentTarget.getBoundingClientRect();
