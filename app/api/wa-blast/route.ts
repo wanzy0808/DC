@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { findGuestsByContact } from "@/lib/guests/identity";
 
 async function getOwnedInvitation(userId: string, invitationId: string) {
   if (!invitationId) return null;
@@ -90,8 +91,35 @@ export async function POST(request: Request) {
 
     const name = String(body.name ?? "").trim();
     const phone = String(body.phone ?? "").trim();
-    if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
-    if (!phone) return NextResponse.json({ error: "Nomor WhatsApp wajib diisi." }, { status: 400 });
+    if (!name || name.length > 120) {
+      return NextResponse.json({ error: "Nama tamu wajib diisi (maksimal 120 karakter)." }, { status: 400 });
+    }
+    if (!phone || phone.length > 32) {
+      return NextResponse.json({ error: "Nomor WhatsApp wajib diisi (maksimal 32 karakter)." }, { status: 400 });
+    }
+
+    const matches = await findGuestsByContact(invitation.id, name, phone);
+    if (matches.length > 1) {
+      return NextResponse.json(
+        { error: "Beberapa tamu dengan nama dan nomor ini sudah terdaftar. Pilih penerima dari daftar tamu." },
+        { status: 409 },
+      );
+    }
+    if (matches.length === 1) {
+      const existing = matches[0];
+      if (existing.waBlastSelected) {
+        return NextResponse.json(
+          { error: "Tamu ini sudah ada dalam daftar WA Blast.", guestId: existing.id },
+          { status: 409 },
+        );
+      }
+      const updated = await prisma.guest.update({
+        where: { id: existing.id },
+        data: { waBlastSelected: true },
+        select: { id: true, name: true, phone: true, waBlastSelected: true, waBlastSentAt: true },
+      });
+      return NextResponse.json({ guest: updated, reusedGuest: true });
+    }
 
     const guest = await prisma.guest.create({
       data: {
