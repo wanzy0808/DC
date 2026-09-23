@@ -191,9 +191,7 @@ export default function WhatsAppBlastPanel() {
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardPageHeader
-          eyebrow={d("Distribusi")}
           title={d("WA Blast")}
-          description={d("Pilih undangan aktif, cek kuota, lalu siapkan penerima.")}
           actions={
             eventId ? (
               <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
