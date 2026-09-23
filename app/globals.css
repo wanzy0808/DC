@@ -645,10 +645,7 @@ body:has(.dc-dashboard--redesign) {
   min-height: 0;
   padding: 0;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 10% 15%, rgb(217 163 170 / 24%), transparent 43%),
-    radial-gradient(ellipse at 90% 85%, rgb(192 122 132 / 16%), transparent 42%),
-    var(--background);
+  background: var(--primary);
 }
 .dark .dc-dashboard.dc-dashboard--redesign {
   --dc-dashboard-canvas: #0b0b0c;
@@ -658,10 +655,7 @@ body:has(.dc-dashboard--redesign) {
   --dc-dashboard-rail-hover: rgb(192 122 132 / 18%);
   --dc-dashboard-rail-active: #c07a84;
   --dc-dashboard-header-bg: #0b0b0c;
-  background:
-    radial-gradient(ellipse at 12% 12%, rgb(192 122 132 / 14%), transparent 42%),
-    radial-gradient(ellipse at 89% 88%, rgb(192 122 132 / 9%), transparent 47%),
-    var(--background);
+  background: var(--primary);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
   position: relative;
@@ -674,10 +668,10 @@ body:has(.dc-dashboard--redesign) {
   min-height: 0;
   margin: auto;
   overflow: hidden;
-  border: 1.5px solid var(--primary);
+  border: 1.5px solid rgb(255 255 255 / 75%);
   border-radius: 18px;
   background: var(--dc-dashboard-canvas);
-  box-shadow: 0 18px 75px rgb(75 35 47 / 12%), 0 0 0 5px rgb(192 122 132 / 5%);
+  box-shadow: 0 18px 65px rgb(75 35 47 / 24%), inset 0 0 0 1px rgb(192 122 132 / 30%);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-workspace {
   display: flex;
@@ -882,6 +876,21 @@ body:has(.dc-dashboard--redesign) {
   background: var(--dc-dashboard-card) !important;
   border: 1px solid var(--dc-dashboard-border) !important;
   box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
+}
+/* Card accents: precise Rose edges, not an all-pink card background.
+   Shared surfaces receive a left rail; compact metrics get a top edge. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-surface {
+  border: 1px solid var(--dc-dashboard-border) !important;
+  border-left: 3px solid var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview .dc-dashboard-metric--featured {
+  border: 1px solid var(--dc-dashboard-border) !important;
+  border-top: 3px solid var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-events,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-progress {
+  border-left-width: 4px !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
   background: rgb(192 122 132 / 15%);
