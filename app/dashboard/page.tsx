@@ -67,6 +67,7 @@ export default function DashboardPage() {
   const [placementGuests, setPlacementGuests] = useState<DashboardGuest[]>([]);
   const [placementTables, setPlacementTables] = useState<DashboardTable[]>([]);
   const [placementLoading, setPlacementLoading] = useState(false);
+  const [usherEventId, setUsherEventId] = useState("");
   const [usherGuests, setUsherGuests] = useState<DashboardGuest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
@@ -107,15 +108,11 @@ export default function DashboardPage() {
         configured.some((event) => event.id === current) ? current : firstId,
       );
 
-      const firstGuestbookEvent = configured.find((event) => event.accessPaid);
-      if (firstGuestbookEvent) {
-        const dataForUsher = await fetchEventGuestData(firstGuestbookEvent.id, d("Data acara belum dapat dimuat.")).catch(
-          () => ({ guests: [], tables: [] }),
-        );
-        setUsherGuests(dataForUsher.guests);
-      } else {
-        setUsherGuests([]);
-      }
+      setUsherEventId((current) =>
+        configured.some((event) => event.id === current)
+          ? current
+          : configured.find((event) => event.accessPaid)?.id ?? firstId,
+      );
     }
   };
 
@@ -188,16 +185,15 @@ export default function DashboardPage() {
   useEffect(() => {
     if (tab !== "usher") return;
     let active = true;
-    const selected = events.find((event) => event.accessPaid);
-    if (!selected) {
+    if (!usherEventId) {
       setUsherGuests([]);
       return;
     }
-    fetchEventGuestData(selected.id, d("Data acara belum dapat dimuat."))
+    fetchEventGuestData(usherEventId, d("Data acara belum dapat dimuat."))
       .then((data) => { if (active) setUsherGuests(data.guests); })
       .catch(() => { if (active) setUsherGuests([]); });
     return () => { active = false; };
-  }, [tab, events]);
+  }, [tab, usherEventId]);
 
   useEffect(() => {
     if (tab !== "overview") return;
@@ -253,6 +249,12 @@ export default function DashboardPage() {
     const data = await fetchEventGuestData(placementEventId, d("Data acara belum dapat dimuat."));
     setPlacementGuests(data.guests);
     setPlacementTables(data.tables);
+  }
+
+  async function refreshUsher() {
+    if (!usherEventId) return;
+    const data = await fetchEventGuestData(usherEventId, d("Data acara belum dapat dimuat."));
+    setUsherGuests(data.guests);
   }
 
   async function saveOnboarding() {
@@ -508,7 +510,13 @@ export default function DashboardPage() {
                 upgradeLabel={d("Lihat DashboardGuest Book Digital")}
                 onUpgrade={() => router.push("/packages?package=GUESTBOOK_DIGITAL")}
               >
-                <UsherPanel guests={usherGuests} onRefresh={load} />
+                <UsherPanel
+                  events={events}
+                  selectedId={usherEventId}
+                  onSelect={setUsherEventId}
+                  guests={usherGuests}
+                  onRefresh={refreshUsher}
+                />
               </FeatureGate>
             )}
           </main>
