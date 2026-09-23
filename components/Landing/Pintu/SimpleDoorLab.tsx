@@ -385,7 +385,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   </group>)}</>;
 }
 
-export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boolean }) {
+export default function SimpleDoorLab({ fullFrame = false, onDoorOpenChange }: { fullFrame?: boolean; onDoorOpenChange?: (open: boolean) => void }) {
   const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
@@ -423,9 +423,9 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
-      <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>
+      <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); onDoorOpenChange?.(false); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
     </div>
     
