@@ -244,17 +244,17 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
   );
 }
 
-/** Beranda's card hierarchy: separated heading, roomy body, neutral surface. */
+/** Flat content section: the heading is not a card around other cards. */
 export function DashboardPanel({ children, className, ...header }: Parameters<typeof DashboardSectionHeader>[0] & {
   children?: ReactNode;
   className?: string;
 }) {
   return (
-    <DashboardSurface className={classes("dc-dashboard-panel min-w-0 overflow-hidden", className)}>
-      <div className="border-b border-primary/15 bg-primary/[0.035] px-5 py-5 sm:px-6">
+    <section className={classes("dc-dashboard-section min-w-0", className)}>
+      <div className="mb-4 border-b border-primary/20 pb-4">
         <DashboardSectionHeader {...header} />
       </div>
-      {children && <div className="min-w-0 space-y-4 p-5 sm:p-6">{children}</div>}
-    </DashboardSurface>
+      {children && <div className="min-w-0 space-y-4">{children}</div>}
+    </section>
   );
 }
