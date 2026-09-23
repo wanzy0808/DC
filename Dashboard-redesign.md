@@ -58,3 +58,15 @@ Source changes are committed directly to `main`. Screenshot and browser visual v
 ### Source build checkpoint (23 September 2026)
 
 GitHub Actions **Build Validation** run [35816868869](https://github.com/wanzy0808/DC/actions/runs/35816868869) completed successfully on application source commit `da4c01183389ceab576c2c5a7df3ec0ba8b1a270` (includes Beranda redesign, shell/nav CSS, and shared-primitives changes). Later commits in this iteration modify repository documentation only. This confirms remote build/TypeScript validation for the described source but does **not** verify that the desktop/mobile browser matches the owner screenshot; visual QA and functional walkthrough remain open.
+
+## 23 September 2026 — Stage 3, operational page layout pass
+
+Implementation in `main`:
+- `Rangkaian Acara`: replaced the minimum-760px horizontally scrolling dense event table with responsive event cards showing saved title, date, venue, actual status and the original Edit/Hapus/Undangan actions. Published records remain non-editable/non-deletable; event form, validation and save logic are unchanged. Empty state no longer repeats the header's Tambah acara CTA.
+- `Undangan Digital`: replaced the minimum-780px invitation table with responsive cards for each real invitation and its views, publication state and existing Studio/Complete Event/Publish/Purchase/Public links. The page header owns Tambah acara, panel header owns Refresh; no duplicate action in the empty state. Response list uses Rose panel language and keeps real guest responses.
+- `WA Blast`: purchase CTA appears in the quota panel when quota is zero, or in the page header when there is a quota; no duplicate same-action buttons or empty panel body. All quota/recipient rules remain unchanged.
+- `Personal Invitation`: changed the first metric label from the repeated page title to Total; existing links and event-scoped workflow are unchanged.
+
+Remaining Stage 3: review the detailed Personal Invitation, WA Blast recipients, RSVP, Manajemen Tamu/Seating, Usher controls and screen density at mobile/desktop, including real/no-data states. Do not claim these whole pages are finished from their shared primitives alone.
+
+Validation: GitHub Actions build for InvitationWorkspacePanel source commit [c38a33d](https://github.com/wanzy0808/DC/actions/runs/35817433003) passed. Builds for subsequent EventPanel, WA Blast and Personal Invitation commits were still running at the time of this note. No actual browser screenshot comparison has been run for this stage.
