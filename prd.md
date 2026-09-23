@@ -4322,3 +4322,16 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Peringatan clock:** `THREE.Clock` deprecated tidak menyebabkan error image; scene masih memakai React Three Fiber, yang dapat memunculkan peringatan melalui internal library. Jangan mengklaim peringatan pasti hilang atau menaikkan major/minor dependency hanya untuk menekannya tanpa pengujian kompatibilitas.
 
 **Validasi:** Build Validation GitHub Actions untuk code perubahan texture loader selesai PASS pada commit `3e5709d7927132cc5c5aaccdf31d60fd4f2b71b5` (run `35802656323`). Perubahan bunga, dokumentasi dan status CI terakhir dicek setelah push; status langsung HTTP localhost, rendering di GPU, dan apakah file remote telah tersinkron ke Windows pengguna belum bisa diperiksa lewat GitHub CI.
+
+
+---
+
+## 2026-09-23 — Three.js shadow-map warning on marketing Canvas
+
+**Laporan:** `pnpm dev` menghasilkan pengulangan `THREE.WebGLShadowMap: PCFSoftShadowMap has been removed. Using PCFShadowMap instead.` dan `THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.` pada navigasi dari landing ke `/d-invitation`. Route dan endpoint `/api/templates`, `/api/templates/featured` mengembalikan 200; pada cuplikan ini tidak ada lagi exception memuat `eventplanner.png`.
+
+**Diagnosis:** Pintu landing aktif `SimpleDoorLab` masih memberi `<Canvas shadows>` pada React Three Fiber 9; opsi boolean dapat menyetel `PCFSoftShadowMap` bawaan library meskipun source app tidak menyebut konstanta tersebut. Three.js yang sekarang menghapus mode lama dan secara internal memakai `PCFShadowMap`. Clock dapat dibuat pada inisialisasi root/Canvas internal React Three Fiber, bukan hanya akibat komponen `Fireflies` membaca `state.clock.elapsedTime`.
+
+**Perbaikan minimal:** `components/Landing/Pintu/SimpleDoorLab.tsx` menetapkan `shadows={{ type: THREE.PCFShadowMap }}` sehingga shadow tetap aktif dan pilihan mode yang kompatibel tidak bergantung pada default lama. Geometri Pintu, directional/point light, material, kamera, animasi zoom dan transisi Rose, aset portal, ketukan sound dan layout tetap. Tidak menambahkan `console.warn` filter, mengubah semua renderer Three.js atau memperbarui dependency mayor/minor; peringatan `THREE.Clock` yang berasal dari library mungkin tetap muncul hingga ada perubahan upstream yang teruji kompatibel.
+
+**Validasi:** Periksa GitHub Actions pada commit `c4778b6fa7a3bde27013055bbed38a3c11de1bb0` dan commit dokumentasi berikutnya; CI build tidak memverifikasi konsol browser/GPU pada perangkat pengguna. Browser lokal perlu diuji setelah sync untuk memastikan warning soft-shadow berhenti tanpa regresi visual.
