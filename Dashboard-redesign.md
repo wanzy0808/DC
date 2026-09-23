@@ -91,3 +91,19 @@ GitHub Actions Build Validation passed for RSVP, Usher and event-scope source co
 
 ### Build checkpoint
 GitHub Actions build [SeatingChart run 35817823351](https://github.com/wanzy0808/DC/actions/runs/35817823351) passed. The WA Blast and Personal Invitation detail commits are newer; verify their own builds before marking the source pass fully green. Stage 4 visual/functional walkthrough remains pending.
+
+## 23 September 2026 — WA Blast message-template workflow (owner content reference)
+
+Content-only inspiration from the supplied third-party screenshots: add editable invitation, RSVP reminder, event-day reminder and thank-you message templates. **Do not reproduce the screenshot's magenta/white UI**; this dashboard uses the DC Organizer Rose primitives and existing Acara → WA Blast navigation.
+
+Implemented:
+- New `WaBlastTemplateStudio` inside an existing paid Digital Invitation's WA Blast workspace. Template list, create/edit/delete, editable name/title/message/category, 5 inline placeholders, 3-column desktop / stacked narrow-screen layout and real guest preview. Templates remain accessible when WA Blast recipient quota is zero, provided the underlying Digital Invitation is paid.
+- `WaBlastTemplate` Prisma model + `20260923110000_add_wa_blast_message_templates` migration + authenticated, event-owner-scoped CRUD endpoint `/api/wa-blast/templates`. Up to 30 saved templates per invitation, strict field lengths and allowed placeholder validation. Templates are deleted with their invitation.
+- Presets: Undangan, Pengingat RSVP, Pengingat hari acara, Ucapan terima kasih. Placeholders `{nama}`, `{acara}`, `{tanggal}`, `{lokasi}`, `{link}` are filled with the chosen queued recipient and real event fields in preview. If no recipient exists the preview explicitly displays a sample guest name; copying requires an actual selected recipient. Copying a message containing `{link}` also requires a published public invitation.
+- Copy button places the personalized **text** on clipboard. This is intentionally **not** mass sending, scheduling, quota use, or a fake delivery confirmation: the existing WA Blast backend currently manages paid quota and recipient selection only. A separate provider-backed delivery/credit-ledger implementation must be specified, authorized, and verified before enabling any "Kirim Blast" action.
+- Contact numbers for the floating dashboard WhatsApp help menu remain hidden; genuine recipient phone numbers remain visible inside authenticated recipient management.
+
+Deployment/QA:
+- **Database migration required** after syncing code: run `pnpm db:deploy` against the intended database before testing saved templates. GitHub Actions generates Prisma and builds code but does not migrate the user's database.
+- GitHub Actions Build Validation for app integration commit [e80eb68](https://github.com/wanzy0808/DC/actions/runs/35818742769) passed. The earlier studio-only commit failed because the event preview type extension had not been committed yet; later integrated code passes. Follow up with live authenticated create/edit/delete, zero-quota, event-switch, language, clipboard, draft/public link and phone viewport tests.
+- Still pending: actual WA delivery integration (not part of this iteration), approval of visual layout from owner's dashboard screenshot and complete responsive QA.
