@@ -76,7 +76,7 @@ export default function RsvpAnalyticsPanel({
     () => ({
       total: guests.length,
       attending: guests.filter((guest) => guest.rsvpStatus === "ATTENDING").length,
-      pax: guests.reduce((sum, guest) => sum + guest.plusOnes + 1, 0),
+      pax: guests.filter((guest) => guest.rsvpStatus === "ATTENDING").reduce((sum, guest) => sum + guest.plusOnes + 1, 0),
       checkedIn: guests.filter((guest) => guest.checkedIn).length,
     }),
     [guests],
