@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
+import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 
 async function getEventInvitation(userId: string, invitationId: string) {
   if (!invitationId) return null;
@@ -102,6 +103,16 @@ export async function POST(request: Request) {
       );
     }
 
+    let profile;
+    try {
+      profile = parsePersonalGuestFields(body);
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Data undangan personal tidak valid." },
+        { status: 400 },
+      );
+    }
+
     const guestId = String(body.guestId ?? "").trim();
     const token = await uniqueToken();
 
@@ -114,7 +125,7 @@ export async function POST(request: Request) {
       }
       const updated = await prisma.guest.update({
         where: { id: guest.id },
-        data: { personalToken: guest.personalToken || token },
+        data: { ...profile, personalToken: guest.personalToken || token },
       });
       return NextResponse.json({
         invitation: sanitizeGuest(updated),
@@ -124,8 +135,23 @@ export async function POST(request: Request) {
 
     const name = String(body.name ?? "").trim();
     const phone = String(body.phone ?? "").trim() || null;
-    if (!name) {
-      return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
+    if (!name || name.length > 120) {
+      return NextResponse.json({ error: "Nama tamu wajib diisi (maksimal 120 karakter)." }, { status: 400 });
+    }
+    if (phone && phone.length > 32) {
+      return NextResponse.json({ error: "Nomor WhatsApp maksimal 32 karakter." }, { status: 400 });
+    }
+    if (phone) {
+      const duplicate = await prisma.guest.findFirst({
+        where: { invitationId: invitation.id, name: { equals: name, mode: "insensitive" }, phone },
+        select: { id: true },
+      });
+      if (duplicate) {
+        return NextResponse.json(
+          { error: "Nama dan nomor ini sudah terdaftar. Pilih tamu dari daftar agar tidak membuat duplikat.", guestId: duplicate.id },
+          { status: 409 },
+        );
+      }
     }
 
     const guest = await prisma.guest.create({
@@ -133,6 +159,8 @@ export async function POST(request: Request) {
         invitationId: invitation.id,
         name,
         phone,
+        ...profile,
+        category: profile.category ?? "REGULAR",
         source: "MANUAL",
         personalToken: token,
       },
@@ -200,17 +228,41 @@ export async function PATCH(request: Request) {
       personalPublished?: boolean;
       personalPasswordProtected?: boolean;
       personalPasswordHash?: string | null;
+      personalSharedAt?: Date | null;
+      personalAddressee?: string | null;
+      recipientType?: "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP";
+      invitedPax?: number;
+      category?: string | null;
+      tags?: string[];
+      personalGreeting?: string | null;
     } = {};
 
     if (typeof body.name === "string") {
       const name = body.name.trim();
-      if (!name) {
-        return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
+      if (!name || name.length > 120) {
+        return NextResponse.json({ error: "Nama tamu wajib diisi (maksimal 120 karakter)." }, { status: 400 });
       }
       data.name = name;
     }
-    if (typeof body.phone === "string") data.phone = body.phone.trim() || null;
+    if (typeof body.phone === "string") {
+      if (body.phone.trim().length > 32) return NextResponse.json({ error: "Nomor WhatsApp maksimal 32 karakter." }, { status: 400 });
+      data.phone = body.phone.trim() || null;
+    }
     if (typeof body.published === "boolean") data.personalPublished = body.published;
+    try {
+      Object.assign(data, parsePersonalGuestFields(body));
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Data undangan personal tidak valid." },
+        { status: 400 },
+      );
+    }
+    if (typeof body.markShared === "boolean") {
+      if (body.markShared && !(data.personalPublished ?? guest.personalPublished)) {
+        return NextResponse.json({ error: "Terbitkan undangan sebelum menandai tautan telah dibagikan." }, { status: 409 });
+      }
+      data.personalSharedAt = body.markShared ? new Date() : null;
+    }
 
     if (typeof body.passwordProtected === "boolean") {
       if (!body.passwordProtected) {
