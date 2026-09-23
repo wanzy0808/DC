@@ -267,6 +267,11 @@ model Guest {
   phone                     String?
   category                  String?
   tags                      String[]      @default([])
+  personalAddressee         String?
+  recipientType             String        @default("INDIVIDUAL")
+  invitedPax                Int           @default(1)
+  personalGreeting          String?       @db.Text
+  personalSharedAt          DateTime?
   source                    GuestSource   @default(MANUAL)
   rsvpStatus                RsvpStatus    @default(PENDING)
   plusOnes                  Int           @default(0)
