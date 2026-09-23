@@ -274,12 +274,8 @@ export default function DashboardPage() {
         <aside
           className={`${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
         >
-          <nav className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
-            <p className="px-3 pb-2 pt-3 font-[family-name:var(--font-dc-mono)] text-[11px] font-semibold uppercase tracking-[0.14em]">
-              {d("Menu")}
-            </p>
-
-            <Button
+          <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex-1 space-y-2 p-3.5">
+<Button
               type="button"
               aria-current={tab === "overview" ? "page" : undefined}
               onClick={() => go("overview")}
