@@ -506,6 +506,7 @@ export type InvitationWhereInput = {
   assets?: Prisma.InvitationAssetListRelationFilter
   tables?: Prisma.WeddingTableListRelationFilter
   guests?: Prisma.GuestListRelationFilter
+  waBlastTemplates?: Prisma.WaBlastTemplateListRelationFilter
 }
 
 export type InvitationOrderByWithRelationInput = {
@@ -554,6 +555,7 @@ export type InvitationOrderByWithRelationInput = {
   assets?: Prisma.InvitationAssetOrderByRelationAggregateInput
   tables?: Prisma.WeddingTableOrderByRelationAggregateInput
   guests?: Prisma.GuestOrderByRelationAggregateInput
+  waBlastTemplates?: Prisma.WaBlastTemplateOrderByRelationAggregateInput
 }
 
 export type InvitationWhereUniqueInput = Prisma.AtLeast<{
@@ -605,6 +607,7 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   assets?: Prisma.InvitationAssetListRelationFilter
   tables?: Prisma.WeddingTableListRelationFilter
   guests?: Prisma.GuestListRelationFilter
+  waBlastTemplates?: Prisma.WaBlastTemplateListRelationFilter
 }, "id" | "slug">
 
 export type InvitationOrderByWithAggregationInput = {
@@ -744,6 +747,7 @@ export type InvitationCreateInput = {
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateInput = {
@@ -791,6 +795,7 @@ export type InvitationUncheckedCreateInput = {
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUpdateInput = {
@@ -838,6 +843,7 @@ export type InvitationUpdateInput = {
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateInput = {
@@ -885,6 +891,7 @@ export type InvitationUncheckedUpdateInput = {
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateManyInput = {
@@ -1303,6 +1310,20 @@ export type InvitationUpdateOneRequiredWithoutGuestsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.InvitationUpdateToOneWithWhereWithoutGuestsInput, Prisma.InvitationUpdateWithoutGuestsInput>, Prisma.InvitationUncheckedUpdateWithoutGuestsInput>
 }
 
+export type InvitationCreateNestedOneWithoutWaBlastTemplatesInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedCreateWithoutWaBlastTemplatesInput>
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutWaBlastTemplatesInput
+  connect?: Prisma.InvitationWhereUniqueInput
+}
+
+export type InvitationUpdateOneRequiredWithoutWaBlastTemplatesNestedInput = {
+  create?: Prisma.XOR<Prisma.InvitationCreateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedCreateWithoutWaBlastTemplatesInput>
+  connectOrCreate?: Prisma.InvitationCreateOrConnectWithoutWaBlastTemplatesInput
+  upsert?: Prisma.InvitationUpsertWithoutWaBlastTemplatesInput
+  connect?: Prisma.InvitationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvitationUpdateToOneWithWhereWithoutWaBlastTemplatesInput, Prisma.InvitationUpdateWithoutWaBlastTemplatesInput>, Prisma.InvitationUncheckedUpdateWithoutWaBlastTemplatesInput>
+}
+
 export type InvitationCreateWithoutOwnerInput = {
   id?: string
   slug: string
@@ -1347,6 +1368,7 @@ export type InvitationCreateWithoutOwnerInput = {
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutOwnerInput = {
@@ -1393,6 +1415,7 @@ export type InvitationUncheckedCreateWithoutOwnerInput = {
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutOwnerInput = {
@@ -1510,6 +1533,7 @@ export type InvitationCreateWithoutAssetsInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutAssetsInput = {
@@ -1556,6 +1580,7 @@ export type InvitationUncheckedCreateWithoutAssetsInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutAssetsInput = {
@@ -1618,6 +1643,7 @@ export type InvitationUpdateWithoutAssetsInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutAssetsInput = {
@@ -1664,6 +1690,7 @@ export type InvitationUncheckedUpdateWithoutAssetsInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateWithoutPaymentInput = {
@@ -1710,6 +1737,7 @@ export type InvitationCreateWithoutPaymentInput = {
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutPaymentInput = {
@@ -1756,6 +1784,7 @@ export type InvitationUncheckedCreateWithoutPaymentInput = {
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutPaymentInput = {
@@ -1818,6 +1847,7 @@ export type InvitationUpdateWithoutPaymentInput = {
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutPaymentInput = {
@@ -1864,6 +1894,7 @@ export type InvitationUncheckedUpdateWithoutPaymentInput = {
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateWithoutOrdersInput = {
@@ -1910,6 +1941,7 @@ export type InvitationCreateWithoutOrdersInput = {
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutOrdersInput = {
@@ -1956,6 +1988,7 @@ export type InvitationUncheckedCreateWithoutOrdersInput = {
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutOrdersInput = {
@@ -2018,6 +2051,7 @@ export type InvitationUpdateWithoutOrdersInput = {
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutOrdersInput = {
@@ -2064,6 +2098,7 @@ export type InvitationUncheckedUpdateWithoutOrdersInput = {
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateWithoutTablesInput = {
@@ -2110,6 +2145,7 @@ export type InvitationCreateWithoutTablesInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutInvitationInput
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutTablesInput = {
@@ -2156,6 +2192,7 @@ export type InvitationUncheckedCreateWithoutTablesInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutInvitationInput
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutTablesInput = {
@@ -2218,6 +2255,7 @@ export type InvitationUpdateWithoutTablesInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutInvitationNestedInput
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutTablesInput = {
@@ -2264,6 +2302,7 @@ export type InvitationUncheckedUpdateWithoutTablesInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutInvitationNestedInput
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateWithoutGuestsInput = {
@@ -2310,6 +2349,7 @@ export type InvitationCreateWithoutGuestsInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutInvitationInput
   assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationUncheckedCreateWithoutGuestsInput = {
@@ -2356,6 +2396,7 @@ export type InvitationUncheckedCreateWithoutGuestsInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutInvitationInput
   assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
   tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedCreateNestedManyWithoutInvitationInput
 }
 
 export type InvitationCreateOrConnectWithoutGuestsInput = {
@@ -2418,6 +2459,7 @@ export type InvitationUpdateWithoutGuestsInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutInvitationNestedInput
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutGuestsInput = {
@@ -2464,6 +2506,211 @@ export type InvitationUncheckedUpdateWithoutGuestsInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutInvitationNestedInput
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
+}
+
+export type InvitationCreateWithoutWaBlastTemplatesInput = {
+  id?: string
+  slug: string
+  type: $Enums.InvitationType
+  title: string
+  eventCategory?: string
+  templateKey?: string
+  groomName?: string
+  brideName?: string
+  groomFatherName?: string | null
+  groomMotherName?: string | null
+  groomChildOrder?: number | null
+  brideFatherName?: string | null
+  brideMotherName?: string | null
+  brideChildOrder?: number | null
+  venue?: string
+  address?: string | null
+  mapUrl?: string | null
+  timezone?: string
+  eventDate?: Date | string
+  eventConfigured?: boolean
+  ceremonyTime?: string | null
+  receptionTime?: string | null
+  description?: string | null
+  weddingHashtag?: string | null
+  dressCode?: string | null
+  liveStreamUrl?: string | null
+  eventNotes?: string | null
+  giftBankName?: string | null
+  giftAccountName?: string | null
+  giftAccountNumber?: string | null
+  musicUrl?: string | null
+  isPublished?: boolean
+  passwordProtected?: boolean
+  passwordHash?: string | null
+  viewCount?: number
+  waBlastQuota?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  owner: Prisma.UserCreateNestedOneWithoutInvitationsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutInvitationInput
+  orders?: Prisma.PaymentOrderCreateNestedManyWithoutInvitationInput
+  assets?: Prisma.InvitationAssetCreateNestedManyWithoutInvitationInput
+  tables?: Prisma.WeddingTableCreateNestedManyWithoutInvitationInput
+  guests?: Prisma.GuestCreateNestedManyWithoutInvitationInput
+}
+
+export type InvitationUncheckedCreateWithoutWaBlastTemplatesInput = {
+  id?: string
+  ownerId: string
+  slug: string
+  type: $Enums.InvitationType
+  title: string
+  eventCategory?: string
+  templateKey?: string
+  groomName?: string
+  brideName?: string
+  groomFatherName?: string | null
+  groomMotherName?: string | null
+  groomChildOrder?: number | null
+  brideFatherName?: string | null
+  brideMotherName?: string | null
+  brideChildOrder?: number | null
+  venue?: string
+  address?: string | null
+  mapUrl?: string | null
+  timezone?: string
+  eventDate?: Date | string
+  eventConfigured?: boolean
+  ceremonyTime?: string | null
+  receptionTime?: string | null
+  description?: string | null
+  weddingHashtag?: string | null
+  dressCode?: string | null
+  liveStreamUrl?: string | null
+  eventNotes?: string | null
+  giftBankName?: string | null
+  giftAccountName?: string | null
+  giftAccountNumber?: string | null
+  musicUrl?: string | null
+  isPublished?: boolean
+  passwordProtected?: boolean
+  passwordHash?: string | null
+  viewCount?: number
+  waBlastQuota?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  payment?: Prisma.PaymentUncheckedCreateNestedOneWithoutInvitationInput
+  orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutInvitationInput
+  assets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutInvitationInput
+  tables?: Prisma.WeddingTableUncheckedCreateNestedManyWithoutInvitationInput
+  guests?: Prisma.GuestUncheckedCreateNestedManyWithoutInvitationInput
+}
+
+export type InvitationCreateOrConnectWithoutWaBlastTemplatesInput = {
+  where: Prisma.InvitationWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvitationCreateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedCreateWithoutWaBlastTemplatesInput>
+}
+
+export type InvitationUpsertWithoutWaBlastTemplatesInput = {
+  update: Prisma.XOR<Prisma.InvitationUpdateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedUpdateWithoutWaBlastTemplatesInput>
+  create: Prisma.XOR<Prisma.InvitationCreateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedCreateWithoutWaBlastTemplatesInput>
+  where?: Prisma.InvitationWhereInput
+}
+
+export type InvitationUpdateToOneWithWhereWithoutWaBlastTemplatesInput = {
+  where?: Prisma.InvitationWhereInput
+  data: Prisma.XOR<Prisma.InvitationUpdateWithoutWaBlastTemplatesInput, Prisma.InvitationUncheckedUpdateWithoutWaBlastTemplatesInput>
+}
+
+export type InvitationUpdateWithoutWaBlastTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  eventCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
+  groomName?: Prisma.StringFieldUpdateOperationsInput | string
+  brideName?: Prisma.StringFieldUpdateOperationsInput | string
+  groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venue?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventConfigured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ceremonyTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receptionTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weddingHashtag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dressCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveStreamUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftBankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  passwordProtected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  waBlastQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  owner?: Prisma.UserUpdateOneRequiredWithoutInvitationsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutInvitationNestedInput
+  orders?: Prisma.PaymentOrderUpdateManyWithoutInvitationNestedInput
+  assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
+  tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
+  guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+}
+
+export type InvitationUncheckedUpdateWithoutWaBlastTemplatesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  slug?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumInvitationTypeFieldUpdateOperationsInput | $Enums.InvitationType
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  eventCategory?: Prisma.StringFieldUpdateOperationsInput | string
+  templateKey?: Prisma.StringFieldUpdateOperationsInput | string
+  groomName?: Prisma.StringFieldUpdateOperationsInput | string
+  brideName?: Prisma.StringFieldUpdateOperationsInput | string
+  groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  venue?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventConfigured?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ceremonyTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  receptionTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weddingHashtag?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dressCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  liveStreamUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  eventNotes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftBankName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftAccountName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  giftAccountNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  passwordProtected?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  viewCount?: Prisma.IntFieldUpdateOperationsInput | number
+  waBlastQuota?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payment?: Prisma.PaymentUncheckedUpdateOneWithoutInvitationNestedInput
+  orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutInvitationNestedInput
+  assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
+  tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
+  guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationCreateManyOwnerInput = {
@@ -2551,6 +2798,7 @@ export type InvitationUpdateWithoutOwnerInput = {
   assets?: Prisma.InvitationAssetUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateWithoutOwnerInput = {
@@ -2597,6 +2845,7 @@ export type InvitationUncheckedUpdateWithoutOwnerInput = {
   assets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutInvitationNestedInput
   tables?: Prisma.WeddingTableUncheckedUpdateManyWithoutInvitationNestedInput
   guests?: Prisma.GuestUncheckedUpdateManyWithoutInvitationNestedInput
+  waBlastTemplates?: Prisma.WaBlastTemplateUncheckedUpdateManyWithoutInvitationNestedInput
 }
 
 export type InvitationUncheckedUpdateManyWithoutOwnerInput = {
@@ -2650,6 +2899,7 @@ export type InvitationCountOutputType = {
   assets: number
   tables: number
   guests: number
+  waBlastTemplates: number
 }
 
 export type InvitationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2657,6 +2907,7 @@ export type InvitationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extens
   assets?: boolean | InvitationCountOutputTypeCountAssetsArgs
   tables?: boolean | InvitationCountOutputTypeCountTablesArgs
   guests?: boolean | InvitationCountOutputTypeCountGuestsArgs
+  waBlastTemplates?: boolean | InvitationCountOutputTypeCountWaBlastTemplatesArgs
 }
 
 /**
@@ -2695,6 +2946,13 @@ export type InvitationCountOutputTypeCountTablesArgs<ExtArgs extends runtime.Typ
  */
 export type InvitationCountOutputTypeCountGuestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GuestWhereInput
+}
+
+/**
+ * InvitationCountOutputType without action
+ */
+export type InvitationCountOutputTypeCountWaBlastTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WaBlastTemplateWhereInput
 }
 
 
@@ -2744,6 +3002,7 @@ export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   assets?: boolean | Prisma.Invitation$assetsArgs<ExtArgs>
   tables?: boolean | Prisma.Invitation$tablesArgs<ExtArgs>
   guests?: boolean | Prisma.Invitation$guestsArgs<ExtArgs>
+  waBlastTemplates?: boolean | Prisma.Invitation$waBlastTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.InvitationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invitation"]>
 
@@ -2883,6 +3142,7 @@ export type InvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   assets?: boolean | Prisma.Invitation$assetsArgs<ExtArgs>
   tables?: boolean | Prisma.Invitation$tablesArgs<ExtArgs>
   guests?: boolean | Prisma.Invitation$guestsArgs<ExtArgs>
+  waBlastTemplates?: boolean | Prisma.Invitation$waBlastTemplatesArgs<ExtArgs>
   _count?: boolean | Prisma.InvitationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InvitationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2901,6 +3161,7 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     assets: Prisma.$InvitationAssetPayload<ExtArgs>[]
     tables: Prisma.$WeddingTablePayload<ExtArgs>[]
     guests: Prisma.$GuestPayload<ExtArgs>[]
+    waBlastTemplates: Prisma.$WaBlastTemplatePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3342,6 +3603,7 @@ export interface Prisma__InvitationClient<T, Null = never, ExtArgs extends runti
   assets<T extends Prisma.Invitation$assetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$assetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvitationAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tables<T extends Prisma.Invitation$tablesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$tablesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeddingTablePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   guests<T extends Prisma.Invitation$guestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$guestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  waBlastTemplates<T extends Prisma.Invitation$waBlastTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invitation$waBlastTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WaBlastTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3923,6 +4185,30 @@ export type Invitation$guestsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.GuestScalarFieldEnum | Prisma.GuestScalarFieldEnum[]
+}
+
+/**
+ * Invitation.waBlastTemplates
+ */
+export type Invitation$waBlastTemplatesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WaBlastTemplate
+   */
+  select?: Prisma.WaBlastTemplateSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WaBlastTemplate
+   */
+  omit?: Prisma.WaBlastTemplateOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WaBlastTemplateInclude<ExtArgs> | null
+  where?: Prisma.WaBlastTemplateWhereInput
+  orderBy?: Prisma.WaBlastTemplateOrderByWithRelationInput | Prisma.WaBlastTemplateOrderByWithRelationInput[]
+  cursor?: Prisma.WaBlastTemplateWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WaBlastTemplateScalarFieldEnum | Prisma.WaBlastTemplateScalarFieldEnum[]
 }
 
 /**

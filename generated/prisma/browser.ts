@@ -77,3 +77,8 @@ export type Guest = Prisma.GuestModel
  * 
  */
 export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model WaBlastTemplate
+ * 
+ */
+export type WaBlastTemplate = Prisma.WaBlastTemplateModel

@@ -408,7 +408,8 @@ export const ModelName = {
   DesignerTemplate: 'DesignerTemplate',
   WeddingTable: 'WeddingTable',
   Guest: 'Guest',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  WaBlastTemplate: 'WaBlastTemplate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -424,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "emailVerificationToken" | "accountActionToken" | "invitation" | "invitationAsset" | "payment" | "paymentOrder" | "designerTemplate" | "weddingTable" | "guest" | "auditLog"
+    modelProps: "user" | "session" | "emailVerificationToken" | "accountActionToken" | "invitation" | "invitationAsset" | "payment" | "paymentOrder" | "designerTemplate" | "weddingTable" | "guest" | "auditLog" | "waBlastTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1316,6 +1317,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WaBlastTemplate: {
+      payload: Prisma.$WaBlastTemplatePayload<ExtArgs>
+      fields: Prisma.WaBlastTemplateFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WaBlastTemplateFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WaBlastTemplateFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        findFirst: {
+          args: Prisma.WaBlastTemplateFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WaBlastTemplateFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        findMany: {
+          args: Prisma.WaBlastTemplateFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>[]
+        }
+        create: {
+          args: Prisma.WaBlastTemplateCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        createMany: {
+          args: Prisma.WaBlastTemplateCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WaBlastTemplateCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>[]
+        }
+        delete: {
+          args: Prisma.WaBlastTemplateDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        update: {
+          args: Prisma.WaBlastTemplateUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        deleteMany: {
+          args: Prisma.WaBlastTemplateDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WaBlastTemplateUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WaBlastTemplateUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>[]
+        }
+        upsert: {
+          args: Prisma.WaBlastTemplateUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WaBlastTemplatePayload>
+        }
+        aggregate: {
+          args: Prisma.WaBlastTemplateAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWaBlastTemplate>
+        }
+        groupBy: {
+          args: Prisma.WaBlastTemplateGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaBlastTemplateGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WaBlastTemplateCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WaBlastTemplateCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1359,6 +1434,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   passwordHash: 'passwordHash',
+  avatarUrl: 'avatarUrl',
   firstName: 'firstName',
   lastName: 'lastName',
   role: 'role',
@@ -1574,6 +1650,20 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const WaBlastTemplateScalarFieldEnum = {
+  id: 'id',
+  invitationId: 'invitationId',
+  category: 'category',
+  name: 'name',
+  title: 'title',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WaBlastTemplateScalarFieldEnum = (typeof WaBlastTemplateScalarFieldEnum)[keyof typeof WaBlastTemplateScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1981,6 +2071,7 @@ export type GlobalOmitConfig = {
   weddingTable?: Prisma.WeddingTableOmit
   guest?: Prisma.GuestOmit
   auditLog?: Prisma.AuditLogOmit
+  waBlastTemplate?: Prisma.WaBlastTemplateOmit
 }
 
 /* Types for Logging */

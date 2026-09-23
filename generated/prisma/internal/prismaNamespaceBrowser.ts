@@ -62,7 +62,8 @@ export const ModelName = {
   DesignerTemplate: 'DesignerTemplate',
   WeddingTable: 'WeddingTable',
   Guest: 'Guest',
-  AuditLog: 'AuditLog'
+  AuditLog: 'AuditLog',
+  WaBlastTemplate: 'WaBlastTemplate'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -85,6 +86,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   email: 'email',
   passwordHash: 'passwordHash',
+  avatarUrl: 'avatarUrl',
   firstName: 'firstName',
   lastName: 'lastName',
   role: 'role',
@@ -300,6 +302,20 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const WaBlastTemplateScalarFieldEnum = {
+  id: 'id',
+  invitationId: 'invitationId',
+  category: 'category',
+  name: 'name',
+  title: 'title',
+  body: 'body',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WaBlastTemplateScalarFieldEnum = (typeof WaBlastTemplateScalarFieldEnum)[keyof typeof WaBlastTemplateScalarFieldEnum]
 
 
 export const SortOrder = {
