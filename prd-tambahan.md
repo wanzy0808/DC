@@ -289,3 +289,11 @@ Validation: GitHub Actions Build Validation run `35480379163` **PASS** on applic
 ## 20 September 2026 — Revisi Pintu Three.js di `/jiplak`
 
 Revisi hanya eksperimen: kembalikan orbital Motion tiga pintu seperti landing (10 detik, hover pause/resume), perbaiki rasio foto dengan cover crop, ganti plastik glossy menjadi panel kayu/arsitektur matte dalam palet Rose canonical, rapikan engsel dan frame. Shadow lantai dipertahankan; pink halo, light spill dan background radial glow dihapus sementara. Bunga, rose petals, route dan landing utama tetap. Validation: GitHub Build Validation run `35480935118` **PASS** on source head `e6816880e20c3fbefdb9ab582838105b8ac803b8` (dependencies, Prisma generation, production build + TypeScript); actual WebGL appearance and orbital interaction in localhost: **pending visual review**.
+
+
+## 23 September 2026 — Dashboard navigation & functional-first UI
+
+- Sidebar customer uses the existing neutral Light/Dark canvas and Rose brand, with curved outside corners on hover/active inspired by the owner-provided reference. This is a shape reference only: do not copy its blue colors, branding, or content.
+- Shared sidebar navigation styling applies to all tabs within the customer dashboard; mobile and desktop use the same rail. Keep existing navigation, access rules, keyboard focus, and ID/EN controls.
+- Remove decorative labels and repeated introduction text where the screen already communicates the context; prioritize actual actions and real counts/charts. Graphs must be based on real product data, never invented sample numbers.
+- This commit updates the common sidebar shell; remaining workspace/page content needs a separate per-page audit and runtime visual check. Do not mark the entire dashboard as fully redesigned or validated.
