@@ -51,12 +51,15 @@ export default async function PersonalInvitationPreviewPage({
             Pratinjau Personal Invitation
           </p>
           <p className="truncate text-sm font-medium">
-            {invitation.title || "Acara"} · {guest.name}
+            {invitation.title || "Acara"} · {guest.personalAddressee || guest.name}
           </p>
         </div>
       </div>
       <div className="border-b border-border bg-background px-4 py-3 text-center font-[family-name:var(--font-dc-sans)] text-sm">
-        Undangan khusus untuk <strong>{guest.name}</strong>
+        Undangan khusus untuk <strong>{guest.personalAddressee || guest.name}</strong>
+        {guest.personalGreeting && (
+          <p className="mx-auto mt-2 max-w-xl whitespace-pre-wrap text-sm text-muted-foreground">{guest.personalGreeting}</p>
+        )}
       </div>
       {content}
     </main>
