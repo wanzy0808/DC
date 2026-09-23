@@ -50,9 +50,9 @@ export default function DashboardWhatsAppHelp() {
   }, [open]);
 
   return (
-    <div ref={rootRef} className="fixed bottom-5 right-5 z-[70] flex flex-col items-end gap-3">
+    <div ref={rootRef} className="absolute bottom-5 right-5 z-[70] flex max-w-[calc(100%-2.5rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       {open && (
-        <div id="dc-dashboard-whatsapp-options" className="w-[min(330px,calc(100vw-2.5rem))] overflow-hidden rounded-[24px] border border-primary/25 bg-background p-2 text-foreground shadow-[0_16px_45px_rgba(0,0,0,0.16)]">
+        <div id="dc-dashboard-whatsapp-options" className="max-h-[calc(90dvh-6rem)] w-[min(330px,calc(90vw-3rem))] max-w-full overflow-x-hidden overflow-y-auto overscroll-contain rounded-[24px] border border-primary/25 bg-background p-2 text-foreground shadow-[0_16px_45px_rgba(0,0,0,0.16)]">
           <div className="flex items-center justify-between gap-2 px-3 py-2">
             <p className="text-sm font-semibold">{d("Hubungi kami")}</p>
             <button type="button" aria-label={d("Tutup")} onClick={() => setOpen(false)} className="grid size-8 place-items-center rounded-full text-muted-foreground transition hover:bg-primary/10 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary">
