@@ -369,7 +369,6 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
           <DashboardEmptyState
             icon={CalendarDays}
             title={d("Belum ada acara")}
-
           />
         </DashboardSurface>
       )}
