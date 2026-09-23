@@ -64,7 +64,7 @@ export function PersonalInvitationCreatePanel({
     <DashboardPanel
       title={d("Buat Personal Invitation")}
     >
-      <div className="rounded-2xl border border-primary/20 bg-primary/[0.025] p-4">
+      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4">
         <p className="text-xs font-semibold text-foreground">
           {d("Dari daftar tamu")}
         </p>
@@ -94,7 +94,7 @@ export function PersonalInvitationCreatePanel({
         </Button>
       </div>
 
-      <div className="rounded-xl border border-border/70 bg-background p-3">
+      <div className="dc-dashboard-detail-card rounded-tr-[22px] border border-border/70 bg-background p-3">
         <p className="text-xs font-semibold text-foreground">
           {d("Tamu belum ada")}
         </p>
@@ -219,7 +219,7 @@ export function PersonalInvitationListPanel({
           return (
             <article
               key={item.id}
-              className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5"
+              className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
@@ -348,7 +348,7 @@ export function PersonalInvitationListPanel({
               </div>
 
               {passwordOpen && (
-                <div className="mt-3 flex flex-col gap-2 rounded-lg border border-primary/15 bg-primary/[0.035] p-3 sm:flex-row sm:items-center">
+                <div className="dc-dashboard-detail-card mt-3 flex flex-col gap-2 rounded-tr-[22px] border border-primary/15 bg-primary/[0.035] p-3 sm:flex-row sm:items-center">
                   <Input
                     type="password"
                     value={password}
