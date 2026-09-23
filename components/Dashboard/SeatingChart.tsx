@@ -498,6 +498,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   </p>
                 )}
                 <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                  {guest.invitedPax ? `${guest.invitedPax} ${d("orang diundang")} · ` : ""}
                   {guest.source === "RSVP" ? `RSVP · ${d("Hadir")}` : d("Manual")}
                 </div>
               </div>
