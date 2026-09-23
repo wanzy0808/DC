@@ -99,7 +99,8 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
     title: fillWaMessage(form.title, variables),
     body: fillWaMessage(form.body, variables),
   }), [form.title, form.body, variables]);
-  const canCopy = Boolean(recipient && (!form.body.includes("{link}") || publicLink));
+  const hasPublicLink = form.title.includes("{link}") || form.body.includes("{link}");
+  const canCopy = Boolean(recipient && (!hasPublicLink || publicLink));
   const valid = Boolean(form.name.trim() && form.title.trim() && form.body.trim()
     && form.name.trim().length <= 80 && form.title.trim().length <= 120 && form.body.trim().length <= 3000);
 
@@ -310,7 +311,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
           <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-foreground">{preview.body}</p>
         </div>
         {!recipients.length && <p className="text-xs text-muted-foreground">{d("Tambahkan penerima untuk pratinjau dengan nama asli.")}</p>}
-        {form.body.includes("{link}") && !publicLink && (
+        {hasPublicLink && !publicLink && (
           <p className="text-xs text-muted-foreground">{d("Terbitkan undangan agar tautan dapat digunakan.")}</p>
         )}
         <Button type="button" size="sm" onClick={() => void copy()} disabled={!canCopy || mode === "idle"}>
