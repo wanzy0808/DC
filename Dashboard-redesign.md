@@ -127,9 +127,16 @@ Deployment/QA:
 ## 23 September 2026 — Brand Rose exterior and directional card strokes
 
 - Owner selected solid brand Rose in the area **outside** the landing-style customer mainframe instead of pale radial glow. `app/globals.css` now uses `var(--primary)` as the full exterior fill on both Light and Dark; the frame has a lighter contrasting border. The frame's viewport sizing and inner scroll model remain unchanged.
-- Small metric cards have a 3px Rose top stroke; shared information surfaces have a 3px Rose left stroke (Beranda's event and RSVP/publication panels: 4px). Interior cards remain neutral white/near-black per theme, without decorative photo assets or content changes.
+- Small metric cards now have a 3px Rose LEFT stroke, the same side as shared information surfaces (Beranda's event and RSVP/publication panels: 4px). All small dashboard cards have only their top-right corner rounded; the other three are squared. Interior cards remain neutral white/near-black per theme, without decorative photo assets or content changes.
 - App commit `0b2415e`. Browser screenshots/CI for this CSS revision still need verification.
 
 ## 23 September 2026 — WhatsApp help anchored inside frame
 
 - Moved the existing floating dashboard WhatsApp help into `dc-dashboard-frame`, inset 20px on mobile / 24px from the frame's lower-right on larger screens. The panel opens upward with a frame-bounded width and max-height so it does not protrude beyond the pink external border. `app/dashboard/page.tsx` and `DashboardWhatsAppHelp.tsx` only; existing two-contact routing and number-hiding UI unchanged. Code commits `4e6a0ed`, `9058293`; browser visual QA remains pending.
+
+
+## 23 September 2026 — Small card geometry: top-right radius, Rose accents left
+
+- Following the owner correction, replace round-all-corners on shared dashboard cards with **only top-right radius** (18–28px by card scale); top-left, bottom-left and bottom-right are square. Beranda's welcome panel follows the same corner rule. Do not modify the larger mainframe's radius or functional buttons/badges.
+- All Rose accent strokes are on the LEFT, including compact metric cards, which no longer use a top stroke. Standard left rule is 3px; Beranda's event/RSVP panels and welcome hero use 4px. Light card fill remains white, Dark remains near-black.
+- Implemented in `DashboardPrimitives.tsx`, `DashboardWorkspaces.tsx` and scoped `app/globals.css`. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Visual/browser and CI checks still pending.
