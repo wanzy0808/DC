@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher/qr";
+import { findGuestsByContact } from "@/lib/guests/identity";
 import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
@@ -51,45 +52,94 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       return NextResponse.json({ error: "Jumlah pendamping tidak valid." }, { status: 400 });
     }
 
+    // RSVP attendance is separate from the invitation allowance. A decline or
+    // tentative reply must never leave phantom companions in attendee counts.
+    const confirmedPlusOnes = status === "ATTENDING" ? plusOnes : 0;
+    const rsvpStatus = status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE";
     let guest;
     if (guestId) {
       guest = await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } });
       if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
-      // Personalized RSVP must update its OWN canonical guest record. A bare
-      // guest ID is not sufficient to modify another recipient's RSVP.
+      // Only the personalized token can update an existing personal recipient.
       if (!guest.personalToken || !guest.personalPublished
         || String(body.guestToken ?? "") !== guest.personalToken) {
         return NextResponse.json({ error: "Tautan tamu tidak valid." }, { status: 403 });
       }
-      if (status === "ATTENDING" && plusOnes + 1 > guest.invitedPax) {
+      if (status === "ATTENDING" && confirmedPlusOnes + 1 > guest.invitedPax) {
         return NextResponse.json(
           { error: `Kuota undangan ini maksimal ${guest.invitedPax} orang, termasuk penerima.` },
           { status: 400 },
+        );
+      }
+      if (guest.checkedIn && (guest.rsvpStatus !== status || guest.plusOnes !== confirmedPlusOnes)) {
+        return NextResponse.json(
+          { error: "Tamu sudah check-in. Perubahan RSVP perlu dibantu admin acara." },
+          { status: 409 },
         );
       }
       guest = await prisma.guest.update({
         where: { id: guest.id },
         data: {
           source: "RSVP",
-          rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE",
-          plusOnes,
+          rsvpStatus,
+          plusOnes: confirmedPlusOnes,
         },
       });
     } else {
-      if (plusOnes > 10) return NextResponse.json({ error: "Jumlah pendamping maksimal 10 orang." }, { status: 400 });
-      if (!name || !phone) {
-        return NextResponse.json({ error: "Nama dan nomor WhatsApp wajib diisi." }, { status: 400 });
+      if (status === "ATTENDING" && confirmedPlusOnes > 10) {
+        return NextResponse.json({ error: "Jumlah pendamping maksimal 10 orang." }, { status: 400 });
       }
-      guest = await prisma.guest.create({
-        data: {
-          invitationId: invitation.id,
-          name,
-          phone,
-          source: "RSVP",
-          rsvpStatus: status as "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE",
-          plusOnes,
-        },
-      });
+      if (!name || !phone || name.length > 120 || phone.length > 32) {
+        return NextResponse.json(
+          { error: "Nama (maksimal 120 karakter) dan WhatsApp (maksimal 32 karakter) wajib diisi." },
+          { status: 400 },
+        );
+      }
+      const matches = await findGuestsByContact(invitation.id, name, phone);
+      if (matches.length > 1) {
+        return NextResponse.json(
+          { error: "Data penerima tidak dapat dibedakan. Hubungi admin acara untuk konfirmasi." },
+          { status: 409 },
+        );
+      }
+      const existing = matches[0];
+      if (existing?.personalToken) {
+        return NextResponse.json(
+          { error: "Gunakan tautan undangan personal yang dikirimkan untuk mengisi RSVP." },
+          { status: 409 },
+        );
+      }
+      if (existing) {
+        if (existing.checkedIn && (existing.rsvpStatus !== status || existing.plusOnes !== confirmedPlusOnes)) {
+          return NextResponse.json(
+            { error: "Tamu sudah check-in. Perubahan RSVP perlu dibantu admin acara." },
+            { status: 409 },
+          );
+        }
+        // Reuse the original Guest.id: RSVP, seating, check-in and WA Blast now
+        // read the same row. Do not reset its tags, category or placement.
+        guest = await prisma.guest.update({
+          where: { id: existing.id },
+          data: {
+            source: "RSVP",
+            rsvpStatus,
+            plusOnes: confirmedPlusOnes,
+            invitedPax: Math.max(existing.invitedPax, confirmedPlusOnes + 1),
+          },
+        });
+      } else {
+        guest = await prisma.guest.create({
+          data: {
+            invitationId: invitation.id,
+            name,
+            phone,
+            source: "RSVP",
+            rsvpStatus,
+            plusOnes: confirmedPlusOnes,
+            invitedPax: Math.max(1, confirmedPlusOnes + 1),
+          },
+        });
+      }
     }
 
     const qrToken = status === "ATTENDING" ? createGuestQrToken(guest.id) : null;
