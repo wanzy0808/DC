@@ -434,7 +434,7 @@ export function UsherPanel({
         ) : (
           <div className="grid gap-3">
             {guests.map((guest) => (
-              <article key={guest.id} className="flex min-w-0 flex-col gap-3 rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+              <article key={guest.id} className="dc-dashboard-detail-card flex min-w-0 flex-col gap-3 rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
                 <div className="min-w-0">
                   <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
                   {guest.phone && <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone}</p>}
