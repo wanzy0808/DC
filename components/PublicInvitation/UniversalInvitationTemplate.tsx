@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
@@ -86,8 +87,10 @@ export default function UniversalInvitationTemplate({
   onEditPhoto,
   templateKey,
   designKey,
+  personalGuest,
 }: {
   invitation: InvitationData;
+  personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
   sections?: InvitationSections;
   photoAssignments?: PhotoAssignments;
@@ -305,7 +308,7 @@ export default function UniversalInvitationTemplate({
             <div className="mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] p-6 text-sm leading-7">
               Form RSVP tersedia di undangan yang sudah dipublikasikan.
             </div>
-          ) : <RsvpForm slug={invitation.slug} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
+          ) : <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
             <p className="mx-auto max-w-sm text-sm leading-7 opacity-70">Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia.</p>
