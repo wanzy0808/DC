@@ -12,9 +12,11 @@ export const EMPTY_EVENT_FORM: EventForm = {
   groomFatherName: "",
   groomMotherName: "",
   groomChildOrder: "",
+  groomChildPosition: "",
   brideFatherName: "",
   brideMotherName: "",
   brideChildOrder: "",
+  brideChildPosition: "",
   venue: "",
   address: "",
   mapUrl: "",
@@ -111,11 +113,13 @@ export function eventInvitationToForm(
     groomChildOrder: invitation.groomChildOrder
       ? String(invitation.groomChildOrder)
       : "",
+    groomChildPosition: invitation.groomChildPosition ?? (invitation.groomChildOrder ? "NUMBER" : ""),
     brideFatherName: invitation.brideFatherName || "",
     brideMotherName: invitation.brideMotherName || "",
     brideChildOrder: invitation.brideChildOrder
       ? String(invitation.brideChildOrder)
       : "",
+    brideChildPosition: invitation.brideChildPosition ?? (invitation.brideChildOrder ? "NUMBER" : ""),
     venue: invitation.venue || "",
     address: invitation.address || "",
     mapUrl: invitation.mapUrl || "",
