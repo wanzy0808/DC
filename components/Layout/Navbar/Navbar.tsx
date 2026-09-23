@@ -22,7 +22,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   return (
     <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${
       isLanding
-        ? `dc-navbar--landing ${isJiplak ? "dc-navbar--jiplak bg-transparent" : "bg-background"}`
+        ? `dc-navbar--landing ${isJiplak ? "dc-navbar--jiplak bg-transparent" : "bg-transparent"}`
         : "bg-transparent"
     }`}>
       <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5 sm:py-4">
