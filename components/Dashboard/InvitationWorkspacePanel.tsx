@@ -221,6 +221,21 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       ) : (
                         <Button type="button" size="sm" onClick={onCreateSequence}><CalendarDays className="size-4" />{d("Lengkapi acara")}</Button>
                       )}
+                      {invitation.accessPaid && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          aria-expanded={qrOpenId === invitation.id}
+                          aria-controls={"invitation-qr-" + invitation.id}
+                          onClick={() => {
+                            setQrErrorId(null);
+                            setQrOpenId((current) => current === invitation.id ? null : invitation.id);
+                          }}
+                        >
+                          <QrCode className="size-4" aria-hidden="true" />
+                          {qrOpenId === invitation.id ? d("Tutup QR") : d("Buat QR")}
+                        </Button>
+                      )}
                       {invitation.isPublished ? (
                         <Button asChild size="sm"><a href={publicUrl(invitation)} target="_blank" rel="noopener noreferrer" aria-label={`${d("Buka publik")} · ${title}`}><ArrowUpRight className="size-4" />{d("Buka publik")}</a></Button>
                       ) : invitation.eventConfigured && hasDesign ? (
