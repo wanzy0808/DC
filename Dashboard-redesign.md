@@ -70,3 +70,14 @@ Implementation in `main`:
 Remaining Stage 3: review the detailed Personal Invitation, WA Blast recipients, RSVP, Manajemen Tamu/Seating, Usher controls and screen density at mobile/desktop, including real/no-data states. Do not claim these whole pages are finished from their shared primitives alone.
 
 Validation: GitHub Actions build for InvitationWorkspacePanel source commit [c38a33d](https://github.com/wanzy0808/DC/actions/runs/35817433003) passed. Builds for subsequent EventPanel, WA Blast and Personal Invitation commits were still running at the time of this note. No actual browser screenshot comparison has been run for this stage.
+
+## 23 September 2026 — Stage 3, RSVP / Manajemen Tamu / Usher pass
+
+Implemented in customer dashboard source:
+- `RsvpAnalyticsPanel`: replaced the 940px minimum-width RSVP table with responsive guest cards. Search by name/phone, sorting, ascending/descending order, filtered CSV export, individual QR generation, and permission-controlled manual check-in still use the existing handlers and API paths. Each real guest card shows RSVP status, pax, check-in, table and actions; zero guests and zero search matches have different concise empty states. No fake metrics introduced.
+- `DashboardWorkspaces`: Usher's minimum-width table becomes a responsive guest roster retaining real check-in status and phone, with existing refresh and scanner link. RSVP and guest placement preserve event scope selection. Manajemen Tamu uses concise "Penempatan" heading rather than repeating its page title/explanatory paragraph.
+- `EventScopePicker`: a shared, concise event selector is used by RSVP and Manajemen Tamu, with clear zero-event state and stronger Rose outline.
+- `SeatingChart`: removed repeated eyebrow/intro paragraphs and restyled the draggable guest roster and floor-plan surface to match the shared Rose cards. Existing drag-and-drop, swap confirmation, table capacity, seat assignment, save route and notice flows remain unchanged.
+
+### QA checkpoint
+GitHub Actions Build Validation passed for RSVP, Usher and event-scope source commits: [RSVP run 35817725296](https://github.com/wanzy0808/DC/actions/runs/35817725296), [Usher run 35817744806](https://github.com/wanzy0808/DC/actions/runs/35817744806), and [picker run 35817760967](https://github.com/wanzy0808/DC/actions/runs/35817760967). SeatingChart's later build and desktop/mobile **visual and interaction checks** were pending at the time of this note. Avoid marking Stage 3/4 complete until the remaining Personal Invitation and WA Blast details, functional walkthrough and browser review are verified.
