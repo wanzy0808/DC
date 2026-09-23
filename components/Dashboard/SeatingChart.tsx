@@ -8,6 +8,7 @@ import { useTheme } from "@/components/Theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   DashboardCompactStat,
   DashboardEmptyState,
@@ -431,10 +432,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               >
                 <option value="">{d("Semua kategori")}</option>
                 {categoryFilter && !categories.includes(categoryFilter) && (
-                  <option value={categoryFilter}>{categoryFilter}</option>
+                  <option value={categoryFilter}>{displayTitleCase(categoryFilter)}</option>
                 )}
                 {categories.map((category) => (
-                  <option key={category} value={category}>{category}</option>
+                  <option key={category} value={category}>{displayTitleCase(category)}</option>
                 ))}
               </select>
             </label>
@@ -447,10 +448,10 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
               >
                 <option value="">{d("Semua tag")}</option>
                 {tagFilter && !tags.includes(tagFilter) && (
-                  <option value={tagFilter}>{tagFilter}</option>
+                  <option value={tagFilter}>{displayTitleCase(tagFilter)}</option>
                 )}
                 {tags.map((tag) => (
-                  <option key={tag} value={tag}>{tag}</option>
+                  <option key={tag} value={tag}>{displayTitleCase(tag)}</option>
                 ))}
               </select>
             </label>
