@@ -915,15 +915,9 @@ body:has(.dc-dashboard--redesign) {
   background: var(--dc-dashboard-card) !important;
   box-shadow: 0 8px 26px rgb(93 42 57 / 4%);
 }
-/* Presentational card text is not allowed to overlap the thicker left stripe. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
-  .dc-dashboard-metric,
-  .dc-dashboard-compact-stat,
-  .dc-dashboard-notice,
-  .dc-dashboard-empty-state,
-  .dc-dashboard-detail-card
-) {
-  padding-left: max(1rem, 1.25rem - var(--dc-dashboard-card-stripe) / 4);
+/* Template list entries are actionable cards: keep selected state visible. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
   background: rgb(192 122 132 / 15%);
