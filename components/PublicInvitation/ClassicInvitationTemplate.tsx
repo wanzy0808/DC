@@ -112,6 +112,7 @@ export default function ClassicInvitationTemplate({
           invitation.groomMotherName,
           invitation.groomChildOrder,
           "putra",
+          invitation.groomChildPosition,
         )
       : "";
   const brideParents =
@@ -121,6 +122,7 @@ export default function ClassicInvitationTemplate({
           invitation.brideMotherName,
           invitation.brideChildOrder,
           "putri",
+          invitation.brideChildPosition,
         )
       : "";
   const rsvpTitle = eventTitle || identityTitle || "Acara";
