@@ -217,7 +217,7 @@ export default function WhatsAppBlastPanel() {
               aria-label={d("Pilih acara untuk WA Blast")}
             >
               {events.length === 0 ? (
-                <option value="">{d("Belum ada undangan aktif")}</option>
+                <option value="">{displayTitleCase(d("Belum ada undangan aktif"))}</option>
               ) : (
                 events.map((event) => (
                   <option key={event.id} value={event.id}>
