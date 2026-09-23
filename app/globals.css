@@ -888,8 +888,8 @@ body:has(.dc-dashboard--redesign) {
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-hero {
   border-top-right-radius: 28px !important;
 }
-/* A detail card can be nested inside a shared surface. Keep the inner panel
-   neutral and let the same-size Rose stripe establish visual consistency. */
+/* Standalone detail cards keep their shape; rows in a larger panel are
+   flattened by the single-frame section rule further below. */
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card {
   min-width: 0;
   background: var(--dc-dashboard-card) !important;
@@ -904,6 +904,65 @@ body:has(.dc-dashboard--redesign) {
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card[aria-pressed="true"] {
   background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
+}
+/* Owner's revised hierarchy: only LARGE group panels carry a Rose stripe.
+   Metrics are simple columns within one framed group, not four smaller cards. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group {
+  box-sizing: border-box;
+  border: 1px solid var(--dc-dashboard-border) !important;
+  border-left: var(--dc-dashboard-card-stripe) solid var(--primary) !important;
+  border-radius: 0 26px 0 0 !important;
+  background: var(--dc-dashboard-card) !important;
+  box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
+  padding: 0.625rem;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group .dc-dashboard-metric,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview .dc-dashboard-metric-group .dc-dashboard-metric--featured {
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group .dc-dashboard-metric > span {
+  background: transparent !important;
+}
+/* A dashboard section owns one frame. Nested detail/list records are plain
+   rows separated by a hairline, never separately framed or striped. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card {
+  border: 0 !important;
+  border-bottom: 1px solid var(--dc-dashboard-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding-block: 1rem !important;
+  padding-inline: 0 !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card:last-child {
+  border-bottom: 0 !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel :is(
+  .dc-dashboard-compact-stat,
+  .dc-dashboard-empty-state,
+  .dc-dashboard-notice
+) {
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel :is(
+  button.dc-dashboard-detail-card,
+  [draggable="true"].dc-dashboard-detail-card
+):hover:not([aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--primary) 7%, var(--dc-dashboard-card)) !important;
+}
+@media (min-width: 640px) {
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group {
+    padding: 0.875rem;
+  }
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
   background: rgb(192 122 132 / 15%);
