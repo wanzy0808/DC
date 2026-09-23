@@ -53,7 +53,7 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: 0 }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-1/2 top-[clamp(78px,12dvh,135px)] z-20 w-[min(88%,390px)] -translate-x-1/2 sm:left-[3%] sm:top-2 sm:translate-x-0 lg:left-[2%] lg:top-[3%] lg:w-[min(31vw,510px)]"
+        ? "absolute left-1/2 top-[clamp(12px,3dvh,32px)] z-20 w-[min(88%,390px)] -translate-x-1/2 sm:left-[3%] sm:top-2 sm:translate-x-0 lg:left-[2%] lg:top-[3%] lg:w-[min(31vw,510px)]"
          : "absolute bottom-[clamp(55px,9dvh,110px)] right-1/2 z-20 w-[min(78%,320px)] translate-x-1/2 sm:bottom-[5%] sm:right-[8%] sm:translate-x-0 lg:bottom-[6%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
     >
       <div className={top ? "relative isolate px-5 py-6 text-center sm:px-12 sm:py-12 lg:px-14" : "relative isolate px-5 py-5 text-center sm:px-10 sm:py-10 lg:px-12"}>
