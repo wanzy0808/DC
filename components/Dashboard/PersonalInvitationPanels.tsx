@@ -348,7 +348,7 @@ export function PersonalInvitationListPanel({
               </div>
 
               {passwordOpen && (
-                <div className="dc-dashboard-detail-card mt-3 flex flex-col gap-2 rounded-tr-[22px] border border-primary/15 bg-primary/[0.035] p-3 sm:flex-row sm:items-center">
+                <div className="mt-4 flex flex-col gap-2 border-t border-primary/20 pt-4 sm:flex-row sm:items-center">
                   <Input
                     type="password"
                     value={password}
