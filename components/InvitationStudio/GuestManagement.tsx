@@ -2,6 +2,7 @@
 
 import { type FormEvent, useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import {
   GuestInputPanel,
   GuestListTable,
@@ -153,12 +154,9 @@ export default function GuestManagement() {
       </div>
 
       <div className="flex justify-end">
-        <Link
-          href="/api/guests/export"
-          className="rounded-xl border border-black/10 bg-white px-4 py-2.5 text-xs transition-colors hover:bg-black/5 dark:border-white/10 dark:bg-[#121116] dark:hover:bg-white/10"
-        >
-          Download CSV RSVP
-        </Link>
+        <Button asChild size="sm">
+          <Link href="/api/guests/export">Download CSV RSVP</Link>
+        </Button>
       </div>
 
       <GuestListTable guests={guests} />
