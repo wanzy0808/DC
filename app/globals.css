@@ -233,6 +233,15 @@ aside nav > p { font-family: var(--font-dc-heading); }
   text-transform: capitalize;
 }
 
+/* Native dropdown chrome is not a heading: extend Title Case to the selected
+   value and options without touching typed inputs, messages or stored data.
+   Explicitly format dynamic option text in JSX too (OS menus can ignore CSS). */
+:is(.dc-dashboard, .dc-usher) select,
+:is(.dc-dashboard, .dc-usher) select option {
+  text-transform: capitalize;
+}
+
+
 /* Branded, continuous dashboard chrome. Landing and public navbar are untouched. */
 .dc-dashboard .dc-dashboard-sidebar {
   background: var(--dc-dashboard-rail);
