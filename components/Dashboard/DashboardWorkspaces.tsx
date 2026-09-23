@@ -80,7 +80,7 @@ export function WorkspaceOverview({
 
   return (
     <DashboardPageShell className="dc-dashboard-overview">
-      <section className="dc-dashboard-overview-hero relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-[28px] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
+      <section className="dc-dashboard-overview-hero relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-tr-[28px] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
         <div className="relative z-[1] min-w-0">
           <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-white sm:text-[30px]">
             {d("Halo")}, {ctx?.profile.displayName?.trim() || d("Akun")}
