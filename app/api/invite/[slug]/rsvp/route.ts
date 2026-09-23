@@ -46,12 +46,27 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
     const guestId = String(body.guestId ?? "").trim();
     const name = String(body.name ?? "").trim();
     const phone = String(body.phone ?? "").trim();
-    const plusOnes = Math.min(10, Math.max(0, Number(body.plusOnes ?? 0)));
+    const plusOnes = Number(body.plusOnes ?? 0);
+    if (!Number.isInteger(plusOnes) || plusOnes < 0 || plusOnes > 29) {
+      return NextResponse.json({ error: "Jumlah pendamping tidak valid." }, { status: 400 });
+    }
 
     let guest;
     if (guestId) {
       guest = await prisma.guest.findFirst({ where: { id: guestId, invitationId: invitation.id } });
       if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan." }, { status: 404 });
+      // Personalized RSVP must update its OWN canonical guest record. A bare
+      // guest ID is not sufficient to modify another recipient's RSVP.
+      if (!guest.personalToken || !guest.personalPublished
+        || String(body.guestToken ?? "") !== guest.personalToken) {
+        return NextResponse.json({ error: "Tautan tamu tidak valid." }, { status: 403 });
+      }
+      if (status === "ATTENDING" && plusOnes + 1 > guest.invitedPax) {
+        return NextResponse.json(
+          { error: `Kuota undangan ini maksimal ${guest.invitedPax} orang, termasuk penerima.` },
+          { status: 400 },
+        );
+      }
       guest = await prisma.guest.update({
         where: { id: guest.id },
         data: {
@@ -61,6 +76,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
         },
       });
     } else {
+      if (plusOnes > 10) return NextResponse.json({ error: "Jumlah pendamping maksimal 10 orang." }, { status: 400 });
       if (!name || !phone) {
         return NextResponse.json({ error: "Nama dan nomor WhatsApp wajib diisi." }, { status: 400 });
       }
