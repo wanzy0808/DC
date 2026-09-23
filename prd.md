@@ -1256,6 +1256,13 @@ Application UI hanya memakai:
 
 Template typography boleh dinamis bila merupakan konten invitation, bukan shell aplikasi.
 
+### 5.4a Pilihan Urutan Anak & Format Keterangan Orang Tua (23 September 2026)
+
+- Pada form pernikahan, **masing-masing mempelai** memiliki pilihan tunggal berbentuk radio/bullet check: `Anak Tertua`, `Anak Termuda`, atau `Anak Keberapa`. Hanya pilihan ketiga memunculkan input angka urutan anak positif; angka wajib diisi bila dipilih. Pilihan awal boleh kosong agar data pernikahan lama yang tidak memiliki urutan anak tetap opsional. Nilai numerik lama dibuka kembali pada pilihan ketiga, bukan dianggap otomatis Sulung.
+- Urutan anak disimpan tanpa menduplikasi nama/data keluarga: `Invitation.groomChildOrder` / `brideChildOrder` tetap `Int?` numerik; `Invitation.groomChildPosition` / `brideChildPosition` menyimpan pilihan `ELDEST`, `YOUNGEST`, `NUMBER` atau null. Anak termuda tidak bisa disimpulkan dari angka urutan anak tanpa mengetahui jumlah saudara. Saat memilih tertua/termuda, angka urutan sebelumnya dikosongkan; data undangan lama dipertahankan.
+- Format tampilan terpusat di `lib/events/parents.ts`: `Putra/Putri Sulung Dari Bapak Chandra & Ibu Juni`, `Putra/Putri Bungsu Dari Bapak Chandra & Ibu Juni`, atau `Putra/Putri Kedua Dari Bapak Chandra & Ibu Juni` untuk urutan 2. Setiap kata pada keterangan keluarga dan nama orang tua yang ditampilkan diawali huruf kapital di Dashboard preview, Studio preview, dan undangan publik seluruh tema. Data nama asli di DB/API dan isi deskripsi tetap apa adanya. Jika parent kosong, jangan tampilkan placeholder.
+- Perubahan membutuhkan migrasi DB kolom baru dan regenerasi Prisma sebelum build lokal; server tetap memvalidasi pilihan serta angka, dan kebijakan kunci acara terbit tetap berlaku.
+
 ### 15.1a Kapitalisasi Nama & Judul (23 September 2026)
 
 - Nama yang **ditampilkan** dan seluruh judul UI yang berdiri sendiri wajib menggunakan **Title Case** (huruf kapital pada awal setiap kata), termasuk judul halaman, judul frame/panel besar, judul bagian, nama menu, judul metrik, serta nama tamu dan judul acara yang ditampilkan. Contoh: `Manajemen Tamu`, `Daftar Acara`, `Nama Di Amplop`, `Undangan Personal`.
@@ -4544,3 +4551,12 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Implementasi:** `app/globals.css` menerapkan kapitalisasi khusus Dashboard untuk heading, menu dan kelas nama/judul/label eksplisit, tanpa menyentuh landing dan artwork undangan. `components/Dashboard/DashboardPrimitives.tsx` menandai label metrik dan judul empty state; `DashboardWorkspaces.tsx`, `PersonalInvitationPanels.tsx`, dan `InvitationWorkspacePanel.tsx` menandai nama tamu/penerima serta judul acara yang tampil. Dropdown tamu tetap memakai isi `option` berupa teks biasa. Penambahan aturan lintas halaman dicatat di `AGENTS.md` dan `README.md`; requirement aktif pada §15.1a.
 
 **Commits aplikasi:** `568b5d77`, `7f494d52`, `9d4590a3`, `91fb6727`, `c8c76d67`, `71c7f4d4`. **Validasi:** perubahan source diperiksa pada file terkait; build, CI, browser Light/Dark, ID/EN dan mobile belum dijalankan/diverifikasi dalam sesi ini. Tidak ada perubahan skema atau migrasi data.
+
+
+### 2026-09-23 — Teks Orang Tua Title Case Dan Pilihan Anak Tertua/Termuda/Numerik
+
+**Requirement/hasil:** Keterangan keluarga pada form dan undangan memakai Title Case, termasuk `Dari` dan nama orang tua. Setiap mempelai dapat memilih Anak Tertua / Anak Termuda / Anak Keberapa (radio eksklusif); input angka hanya tersedia untuk mode numerik. Preview Dashboard dan renderer publik menggunakan formatter terpusat; tema Romantic Rose dan sembilan tema Universal kini menampilkan keterangan orang tua di bagian identitas/mempelai, bukan hanya renderer Classic/legacy.
+
+**Penyimpanan & kompatibilitas:** Dua kolom mode nullable ditambahkan pada model `Invitation` dengan migrasi `20260923152000_wedding_child_position`; urutan anak numerik lama tidak dimigrasikan maupun ditafsir ulang. API membuat, memperbarui, memvalidasi, dan mengembalikan data yang sama; publish lock tetap berlaku. Tidak ada duplikasi parent atau child order pada tabel Guest, dan tidak ada perubahan desain Pintu/landing. Dibutuhkan `pnpm db:deploy`, `pnpm db:generate` setelah pull sebelum menjalankan aplikasi dengan DB yang dituju.
+
+**Affected:** `lib/events/parents.ts`, `components/Dashboard/{EventFields,EventPanel,event-panel-helpers,event-panel-types,useDashboardI18n}.ts(x)`, `app/api/invitations/route.ts`, `components/PublicInvitation/{PublicInvitation,ClassicInvitationTemplate,RomanticRoseTemplate,UniversalInvitationTemplate}.tsx`, `prisma/schema.prisma`, migrasi terkait, `tests/wedding-parents.test.mjs`, `.github/workflows/build.yml`, `AGENTS.md` dan `README.md`. **Validasi:** regression tests ditambahkan ke CI dan build akan menjalankan Prisma generate; status hasil CI, integrasi DB/migrasi nyata serta browser/mobile belum diverifikasi saat entry ditulis. 
