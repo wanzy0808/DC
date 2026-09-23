@@ -14,7 +14,6 @@ import {
   X,
 } from "lucide-react";
 import ThemeToggle from "@/components/Theme/ThemeToggle";
-import { useTheme } from "@/components/Theme/ThemeProvider";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
@@ -51,7 +50,6 @@ import type {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const { isDarkMode } = useTheme();
   const { d } = useDashboardI18n();
   const [tab, setTab] = useState<DashboardTab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
@@ -178,7 +176,7 @@ export default function DashboardPage() {
 
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
   const accent = "text-primary";
-  const surface = isDarkMode ? "bg-[#0B0B0C]" : "bg-background";
+
   const savedProfileName = ctx?.profile.displayName?.trim();
   const profileLabel =
     savedProfileName && savedProfileName.toLowerCase() !== "dashboard"
@@ -262,7 +260,7 @@ export default function DashboardPage() {
 
   return (
     <div
-      className={`dc-dashboard min-h-screen ${surface} font-[family-name:var(--font-dc-sans)] text-foreground`}
+      className="dc-dashboard dc-dashboard--redesign min-h-screen font-[family-name:var(--font-dc-sans)] text-foreground"
     >
       <div className="flex min-h-screen">
         <DashboardSidebar
@@ -275,9 +273,9 @@ export default function DashboardPage() {
         />
 
         <div className="min-w-0 flex-1">
-          <header className="sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
+          <header className="dc-dashboard-header sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
             <div className="flex min-h-16 w-full min-w-0 items-stretch">
-              <div className="hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
+              <div className="dc-dashboard-brand hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
                 <Link href="/" className="group block min-w-0">
                   <BrandWordmark
                     size="dashboard"
@@ -287,7 +285,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <div className="mx-auto flex min-h-16 w-[80vw] max-w-[calc(100%-2rem)] min-w-0 items-center gap-3">
+                <div className="dc-dashboard-header-inner mx-auto flex min-h-16 w-[80vw] max-w-[calc(100%-2rem)] min-w-0 items-center gap-3">
                   <Button
                     type="button"
                     size="icon"
@@ -309,7 +307,7 @@ export default function DashboardPage() {
 
                   <div className="min-w-0">
                     <div className="flex min-w-0 items-center gap-2">
-                      <p className="truncate text-base font-semibold text-foreground sm:text-lg">
+                      <p className="dc-dashboard-header-title truncate text-base font-semibold text-foreground sm:text-lg">
                         {d(meta.title)}
                       </p>
                       {scopedHeaderEvent && (
@@ -320,12 +318,12 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="ml-auto hidden items-center gap-1 sm:flex">
+                  <div className="dc-dashboard-header-controls ml-auto hidden items-center gap-1 sm:flex">
                     <ThemeToggle />
                     <LanguageToggle />
                   </div>
 
-                  <div className="relative">
+                  <div className="dc-dashboard-account relative">
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
