@@ -204,20 +204,79 @@ aside nav > p { font-family: var(--font-dc-heading); }
    DC Organizer dashboard system
    Single source of truth for dashboard shell, surfaces, forms and tables.
    -------------------------------------------------------------------------- */
-.dc-dashboard { background: var(--background); color: var(--foreground); }
-
-/* Customer sidebar uses its own navigation component and geometry. */
-.dc-dashboard .dc-dashboard-sidebar {
-  background: var(--background);
+.dc-dashboard {
+  --dc-dashboard-canvas: #fff5f7;
+  --dc-dashboard-card: #ffffff;
+  --dc-dashboard-border: #edd6db;
+  --dc-dashboard-rail: #bf7987;
+  --dc-dashboard-rail-hover: #a75d70;
+  --dc-dashboard-rail-active: #814255;
+  --dc-dashboard-header-bg: #fff9fa;
+  background: var(--dc-dashboard-canvas);
   color: var(--foreground);
-  border-color: var(--border);
 }
-.dc-dashboard header {
+.dark .dc-dashboard {
+  --dc-dashboard-canvas: #140f13;
+  --dc-dashboard-card: #21191f;
+  --dc-dashboard-border: #49343e;
+  --dc-dashboard-rail: #57303e;
+  --dc-dashboard-rail-hover: #744253;
+  --dc-dashboard-rail-active: #a65e69;
+  --dc-dashboard-header-bg: #1c141b;
+}
+
+/* Branded, continuous dashboard chrome. Landing and public navbar are untouched. */
+.dc-dashboard .dc-dashboard-sidebar {
+  background: var(--dc-dashboard-rail);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: inset -1px 0 rgb(255 255 255 / 12%);
+}
+.dc-dashboard .dc-dashboard-header {
   height: 72px !important;
-  background: var(--background) !important;
+  background: var(--dc-dashboard-header-bg) !important;
   color: var(--foreground) !important;
-  border-color: var(--border) !important;
+  border-color: var(--dc-dashboard-border) !important;
+  box-shadow: 0 1px 16px rgb(111 44 62 / 4%) !important;
+}
+.dc-dashboard .dc-dashboard-brand {
+  background: var(--dc-dashboard-rail);
+  border-color: rgb(255 255 255 / 14%) !important;
+}
+.dc-dashboard .dc-dashboard-brand .text-primary { color: #fff !important; }
+.dc-dashboard .dc-dashboard-header-title {
+  color: var(--primary);
+  font-family: var(--font-dc-heading);
+  font-size: 18px;
+  font-weight: 600;
+}
+.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
+.dc-dashboard .dc-dashboard-header .dc-language-toggle button,
+.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 48%, transparent) !important;
+  color: var(--primary) !important;
   box-shadow: none !important;
+}
+.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
+.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button { border-radius: 16px !important; }
+.dc-dashboard .dc-dashboard-header .dc-language-toggle button { border-radius: 10px !important; }
+.dc-dashboard .dc-dashboard-header .dc-theme-toggle:hover,
+.dc-dashboard .dc-dashboard-header .dc-language-toggle button:hover,
+.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button:hover {
+  background: color-mix(in srgb, var(--primary) 10%, transparent) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+.dc-dashboard .dc-dashboard-header .dc-language-toggle button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 16%, transparent) !important;
+  border-color: var(--primary) !important;
+  color: var(--primary) !important;
+}
+.dark .dc-dashboard .dc-dashboard-header .dc-theme-toggle,
+.dark .dc-dashboard .dc-dashboard-header .dc-language-toggle button,
+.dark .dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+  color: #fff !important;
 }
 
 /* Account dropdown items mirror the same Dark Mode rule. */
@@ -234,7 +293,7 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main {
   min-width: 0;
   min-height: calc(100vh - 72px);
-  background: var(--background);
+  background: var(--dc-dashboard-canvas);
   color: var(--foreground);
   font-size: 0.9375rem;
   line-height: 1.6;
@@ -252,24 +311,24 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main textarea,
 .dc-dashboard main select { font-size: 0.9rem !important; }
 
-/* One workspace width: roomy mobile gutters, 80vw capped by the desktop pane. */
+/* Shared workspace stays wide but never stretches cards into blank tables. */
 .dc-dashboard-page {
   width: calc(100% - 2rem);
   max-width: 100%;
   margin-inline: auto;
 }
 @media (min-width: 1024px) {
-  .dc-dashboard-page { width: min(80vw, calc(100% - 2rem)); }
+  .dc-dashboard-page { width: min(80vw, calc(100% - 3rem)); }
 }
-
 .dc-dashboard-surface {
-  border-color: var(--border) !important;
-  background: var(--background) !important;
+  border-color: var(--dc-dashboard-border) !important;
+  background: var(--dc-dashboard-card) !important;
+  box-shadow: 0 12px 38px rgb(93 42 57 / 6%);
 }
-
 .dc-dashboard-metric {
-  border-color: color-mix(in srgb, var(--primary) 12%, var(--border)) !important;
-  background: var(--background) !important;
+  border-color: var(--dc-dashboard-border) !important;
+  background: var(--dc-dashboard-card) !important;
+  box-shadow: 0 9px 30px rgb(93 42 57 / 5%);
 }
 
 
@@ -427,19 +486,18 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 }
 
 
-/* One nav component owns hover, active and its outside corner geometry.
-   Never apply these styles to public navbar or workspace controls. */
+/* Brand Rose sidebar. Only selected items have outside corner flares: hovering
+   an adjacent item cannot stack two colored corner wedges. */
 .dc-dashboard .dc-dashboard-sidebar-nav {
-  --dc-sidebar-corner: 9px;
-  padding: 1.25rem 0 1.5rem 0.875rem;
-  background: var(--background);
+  --dc-sidebar-corner: 10px;
+  padding: 1.25rem 0 2rem 0.875rem;
+  background: var(--dc-dashboard-rail);
 }
-.dc-dashboard .dc-sidebar-group {
-  background: transparent;
-  border: 0;
-}
+.dc-dashboard .dc-sidebar-group { background: transparent; border: 0; }
 .dc-dashboard .dc-sidebar-subnav {
-  margin-left: 0.5rem;
+  margin: 0 0 0 0.625rem;
+  padding-left: 0.5rem;
+  border-left: 1px solid rgb(255 255 255 / 25%);
 }
 .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link {
   --dc-sidebar-fill: transparent;
@@ -451,39 +509,40 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
   justify-content: flex-start;
   gap: 0.875rem;
   width: 100%;
-  min-height: 52px;
+  min-height: 48px;
   margin: 0;
-  padding: 0.75rem 1rem 0.75rem 0.875rem;
+  padding: 0.75rem 0.875rem 0.75rem 0.875rem;
   border: 0 !important;
-  border-radius: 23px 0 0 23px !important;
+  border-radius: 22px 0 0 22px !important;
   background: transparent !important;
-  color: var(--foreground) !important;
+  color: #fff !important;
   box-shadow: none !important;
   font-family: var(--font-dc-sans);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   text-align: left;
   transform: none !important;
-  transition: background-color 200ms ease, color 200ms ease !important;
+  transition: background-color 180ms ease, color 180ms ease !important;
 }
 .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-sublink {
-  min-height: 48px;
-  font-size: 15px;
-  padding-left: 0.875rem;
+  min-height: 44px;
+  font-size: 14px;
+  padding-left: 0.75rem;
   gap: 0.75rem;
 }
 .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
-  --dc-sidebar-fill: #C07A84;
-  background: var(--dc-sidebar-fill) !important;
+  background: var(--dc-dashboard-rail-hover) !important;
   color: #fff !important;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]) {
-  --dc-sidebar-fill: #A65E69;
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]),
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]):hover {
+  --dc-sidebar-fill: var(--dc-dashboard-rail-active);
   background: var(--dc-sidebar-fill) !important;
   color: #fff !important;
+  font-weight: 600;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(:hover, .is-active, [aria-current="page"])::before,
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(:hover, .is-active, [aria-current="page"])::after {
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before,
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
   content: "";
   position: absolute;
   right: 0;
@@ -492,20 +551,74 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
   height: var(--dc-sidebar-corner);
   pointer-events: none;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(:hover, .is-active, [aria-current="page"])::before {
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before {
   top: calc(-1 * var(--dc-sidebar-corner));
-  background: radial-gradient(circle at 0 0, transparent calc(var(--dc-sidebar-corner) - .5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
+  background: radial-gradient(circle at 0 0, transparent calc(var(--dc-sidebar-corner) - 0.5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(:hover, .is-active, [aria-current="page"])::after {
+.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
   bottom: calc(-1 * var(--dc-sidebar-corner));
-  background: radial-gradient(circle at 0 100%, transparent calc(var(--dc-sidebar-corner) - .5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--dc-sidebar-corner) - 0.5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
 }
 .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:focus-visible {
-  outline: 2px solid var(--primary) !important;
+  outline: 2px solid #fff !important;
   outline-offset: -3px;
 }
+/* A stronger overview hierarchy without adding decorative filler cards. */
+.dc-dashboard .dc-dashboard-overview-hero {
+  background: linear-gradient(115deg, #864357 0%, #aa6576 62%, #c07a84 100%);
+  box-shadow: 0 16px 38px rgb(132 65 83 / 18%);
+}
+.dark .dc-dashboard .dc-dashboard-overview-hero {
+  background: linear-gradient(115deg, #793f51 0%, #a65e69 100%);
+}
+.dc-dashboard .dc-dashboard-overview-hero::after {
+  content: "";
+  position: absolute;
+  right: -2rem;
+  top: -5rem;
+  width: 16rem;
+  height: 16rem;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2.5rem rgb(255 255 255 / 5%), 0 0 0 5rem rgb(255 255 255 / 4%);
+  pointer-events: none;
+}
+.dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
+  border-color: #fff !important;
+  background: #fff !important;
+  color: #864357 !important;
+  box-shadow: 0 4px 15px rgb(60 20 36 / 13%) !important;
+}
+.dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+  background: #fff0f3 !important;
+  color: #864357 !important;
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
+  background: #f6e1e5 !important;
+  border-color: #e5b2bb !important;
+}
+.dark .dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
+  background: #442633 !important;
+  border-color: #744253 !important;
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric {
+  min-height: 110px;
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric .text-2xl {
+  font-size: 30px !important;
+  line-height: 1.1 !important;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric > span {
+  background: color-mix(in srgb, var(--primary) 14%, var(--dc-dashboard-card));
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-event-list article:last-child { border-bottom: 0; }
+@media (max-width: 639px) {
+  .dc-dashboard .dc-dashboard-overview-hero { padding: 1.5rem; }
+  .dc-dashboard .dc-dashboard-header-inner { gap: 0.5rem; }
+  .dc-dashboard .dc-dashboard-header-title { font-size: 14px; }
+}
 @media (prefers-reduced-motion: reduce) {
-  .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link {
-    transition: none !important;
-  }
+  .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link { transition: none !important; }
 }
