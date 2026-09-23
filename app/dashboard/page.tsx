@@ -9,6 +9,7 @@ import {
   CircleHelp,
   LogOut,
   Menu,
+  MessageCircle,
   Receipt,
   Settings2,
   X,
