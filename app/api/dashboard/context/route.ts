@@ -51,7 +51,7 @@ export async function GET() {
   const invitationPublished = invitations.some((item) => item.isPublished);
 
   return NextResponse.json({
-    profile: { displayName: user.firstName, email: user.email },
+    profile: { displayName: user.firstName, email: user.email, avatarUrl: user.avatarUrl },
     wedding: firstInvitation
       ? {
           invitationId: firstInvitation.id,
