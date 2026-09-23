@@ -4,6 +4,12 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Tutup QR": "Close QR",
+  "QR Undangan": "Invitation QR",
+  "Download QR PNG": "Download QR PNG",
+  "QR belum berhasil dibuat. Tutup dan coba lagi.": "Could not generate the QR code. Close and try again.",
+  "Satu QR untuk undangan ini. Bisa dibagikan kepada tamu, bukan tiket QR check-in per tamu.": "One QR code for this invitation. Share it with guests; it is not an individual guest check-in ticket.",
+  "QR sudah bisa diunduh, tetapi undangan baru bisa dibuka setelah Publish.": "You can download the QR code now, but guests can only open the invitation after it is published.",
   "Urutan Anak": "Birth Order",
   "Anak Tertua": "Eldest Child",
   "Anak Termuda": "Youngest Child",
