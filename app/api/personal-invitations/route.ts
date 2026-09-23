@@ -62,6 +62,7 @@ export async function GET(request: Request) {
 
     const guests = await prisma.guest.findMany({
       where: { invitationId: invitation.id, personalToken: { not: null } },
+      include: { table: { select: { id: true, name: true } } },
       orderBy: { createdAt: "desc" },
     });
 
@@ -122,6 +123,10 @@ export async function POST(request: Request) {
       });
       if (!guest) {
         return NextResponse.json({ error: "Tamu tidak ditemukan pada acara ini." }, { status: 404 });
+      }
+      if (profile.invitedPax !== undefined && guest.rsvpStatus === "ATTENDING"
+        && profile.invitedPax < guest.plusOnes + 1) {
+        return NextResponse.json({ error: "Kuota tidak boleh lebih kecil dari RSVP hadir yang sudah tersimpan." }, { status: 409 });
       }
       const updated = await prisma.guest.update({
         where: { id: guest.id },
@@ -248,7 +253,12 @@ export async function PATCH(request: Request) {
       if (body.phone.trim().length > 32) return NextResponse.json({ error: "Nomor WhatsApp maksimal 32 karakter." }, { status: 400 });
       data.phone = body.phone.trim() || null;
     }
-    if (typeof body.published === "boolean") data.personalPublished = body.published;
+    if (typeof body.published === "boolean") {
+      if (body.published && !invitation.isPublished) {
+        return NextResponse.json({ error: "Terbitkan undangan acara sebelum membagikan undangan personal." }, { status: 409 });
+      }
+      data.personalPublished = body.published;
+    }
     try {
       Object.assign(data, parsePersonalGuestFields(body));
     } catch (error) {
@@ -256,6 +266,10 @@ export async function PATCH(request: Request) {
         { error: error instanceof Error ? error.message : "Data undangan personal tidak valid." },
         { status: 400 },
       );
+    }
+    if (data.invitedPax !== undefined && guest.rsvpStatus === "ATTENDING"
+      && data.invitedPax < guest.plusOnes + 1) {
+      return NextResponse.json({ error: "Kuota tidak boleh lebih kecil dari RSVP hadir yang sudah tersimpan." }, { status: 409 });
     }
     if (typeof body.markShared === "boolean") {
       if (body.markShared && !(data.personalPublished ?? guest.personalPublished)) {
