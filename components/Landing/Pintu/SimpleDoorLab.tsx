@@ -336,8 +336,9 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
       group.rotation.y = -Math.sin(theta) * 0.17;
       // Preserve the existing orbit and scale easing; only strengthen perspective:
       // rear doors recede a little more, front doors read a little larger.
-      const orbitScale = 0.62 + (z + 1.25) / 2.5 * 0.23;
-      const selectedScale = selected === index ? 1.12 : 0.70;
+      const orbitScale = (0.62 + (z + 1.25) / 2.5 * 0.23) * (size.width < 640 ? Math.min(1, size.width / 500) : 1);
+      const mobileScale = size.width < 640 ? Math.min(1, size.width / 500) : 1;
+      const selectedScale = (selected === index ? 1.12 : 0.70) * mobileScale;
       const targetScale = selected === null
         ? orbitScale * (hovered.current === index && !reducedMotion ? 1.10 : 1)
         : selectedScale;
