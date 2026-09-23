@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import type { PersonalInvitationGuest } from "@/components/Dashboard/personal-invitation-types";
 
 export type GuestInvitationForm = {
@@ -109,7 +110,7 @@ export function PersonalInvitationGuestFields({
           className="mt-1.5 min-h-11 w-full border border-primary/25 bg-background px-3 text-sm text-foreground"
         >
           {value.category && !["REGULAR", "VIP", "VVIP"].includes(value.category) && (
-            <option value={value.category}>{value.category}</option>
+            <option value={value.category}>{displayTitleCase(value.category)}</option>
           )}
           <option value="REGULAR">{d("Reguler")}</option>
           <option value="VIP">VIP</option>
