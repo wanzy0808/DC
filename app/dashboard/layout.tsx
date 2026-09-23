@@ -8,53 +8,6 @@ import DashboardGate from "@/components/Dashboard/DashboardGate";
 // unauthenticated visitor can never render a dashboard child directly.
 export const dynamic = "force-dynamic";
 
-const dashboardShellCss = `
-  .dc-dashboard {
-    min-height: 100dvh;
-  }
-
-  .dc-dashboard > .flex {
-    min-height: 100dvh;
-    padding-top: 72px;
-  }
-
-  .dc-dashboard > .flex > div > header {
-    position: fixed !important;
-    inset: 0 0 auto 0;
-    width: 100%;
-    z-index: 60;
-  }
-
-  .dc-dashboard > .flex > div > header > div {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .dc-dashboard > .flex > aside {
-    height: calc(100dvh - 72px);
-    min-height: calc(100dvh - 72px) !important;
-    position: sticky;
-    top: 72px;
-    overflow-y: auto;
-  }
-
-  .dc-dashboard main table {
-    border-collapse: separate;
-  }
-
-
-  @media (max-width: 1023px) {
-    .dc-dashboard > .flex > aside {
-      top: 72px !important;
-      bottom: 0 !important;
-      height: auto;
-      min-height: 0 !important;
-    }
-  }
-`;
-
 export default async function DashboardLayout({
   children,
 }: Readonly<{
@@ -71,7 +24,6 @@ export default async function DashboardLayout({
 
   return (
     <DashboardGate>
-      <style>{dashboardShellCss}</style>
       {children}
     </DashboardGate>
   );
