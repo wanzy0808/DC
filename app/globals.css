@@ -623,3 +623,127 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 @media (prefers-reduced-motion: reduce) {
   .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link { transition: none !important; }
 }
+
+
+/* Framed customer workspace: landing-inspired single Rose boundary, not a
+   second public landing. Only the dashboard shell changes; event panels
+   retain their shared data and controls. */
+.dc-dashboard.dc-dashboard--redesign {
+  min-height: 100dvh;
+  padding-block: clamp(12px, 2.5vh, 28px);
+  background:
+    radial-gradient(ellipse at 4% 10%, rgb(192 122 132 / 15%), transparent 43%),
+    radial-gradient(ellipse at 98% 90%, rgb(192 122 132 / 12%), transparent 45%),
+    var(--background);
+}
+.dark .dc-dashboard.dc-dashboard--redesign {
+  --dc-dashboard-canvas: #0b0b0c;
+  --dc-dashboard-card: #151114;
+  --dc-dashboard-border: #704454;
+  --dc-dashboard-header-bg: #0b0b0c;
+  background:
+    radial-gradient(ellipse at 3% 12%, rgb(192 122 132 / 12%), transparent 42%),
+    var(--background);
+}
+.dc-dashboard .dc-dashboard-frame {
+  width: 94vw;
+  min-width: 0;
+  min-height: calc(100dvh - 56px);
+  margin-inline: auto;
+  overflow: clip;
+  border: 1.5px solid var(--primary);
+  border-radius: 32px;
+  background: var(--dc-dashboard-canvas);
+  box-shadow: 0 24px 80px rgb(112 51 69 / 12%), 0 0 0 6px rgb(192 122 132 / 5%);
+}
+.dc-dashboard .dc-dashboard-frame > .min-w-0.flex-1 {
+  min-width: 0;
+  background: var(--dc-dashboard-canvas);
+}
+.dc-dashboard .dc-dashboard-frame .dc-dashboard-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: calc(100dvh - 56px);
+  min-height: 0 !important;
+  overflow-y: auto;
+}
+.dc-dashboard .dc-dashboard-sidebar-brand {
+  background: var(--dc-dashboard-rail);
+  border-color: rgb(255 255 255 / 25%);
+}
+.dc-dashboard .dc-dashboard-sidebar-brand .text-primary {
+  color: #fff !important;
+}
+.dc-dashboard .dc-dashboard-header {
+  position: sticky;
+  top: 0;
+  z-index: 35;
+  height: 72px !important;
+  box-shadow: none !important;
+}
+.dc-dashboard .dc-dashboard-header > div,
+.dc-dashboard .dc-dashboard-header-inner { min-height: 72px; }
+.dc-dashboard .dc-dashboard-header .dc-dashboard-brand { display: none !important; }
+.dc-dashboard .dc-dashboard-header-inner {
+  width: min(80vw, calc(100% - 3rem));
+  max-width: 100%;
+}
+.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
+.dc-dashboard .dc-dashboard-header .dc-language-toggle button,
+.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+  border-radius: var(--dc-control-radius) !important;
+  border-color: var(--primary) !important;
+}
+.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+  padding-inline: 0.5rem 0.875rem;
+}
+.dc-dashboard .dc-dashboard-account-menu {
+  border-color: var(--primary);
+  background: var(--dc-dashboard-card);
+  box-shadow: 0 16px 50px rgb(76 32 47 / 16%);
+}
+.dc-dashboard .dc-dashboard-account-menu-item {
+  border-radius: var(--dc-control-radius) !important;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+.dc-dashboard .dc-dashboard-account-menu-item:hover {
+  background: color-mix(in srgb, var(--primary) 13%, var(--dc-dashboard-card)) !important;
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent) !important;
+  color: var(--primary) !important;
+}
+.dark .dc-dashboard .dc-dashboard-account-menu-item { background: transparent !important; }
+.dark .dc-dashboard .dc-dashboard-account-menu-item:hover {
+  background: var(--primary) !important;
+  color: #fff !important;
+}
+.dc-dashboard .dc-dashboard-account-page .dc-dashboard-surface {
+  border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent) !important;
+  box-shadow: 0 12px 40px rgb(93 42 57 / 6%);
+}
+.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric {
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent) !important;
+}
+@media (max-width: 1023px) {
+  .dc-dashboard .dc-dashboard-frame {
+    width: calc(100% - 20px);
+    min-height: calc(100dvh - 24px);
+    border-radius: 24px;
+  }
+  .dc-dashboard .dc-dashboard-frame .dc-dashboard-sidebar {
+    position: fixed;
+    inset: 12px auto 12px 12px;
+    height: auto;
+    max-height: calc(100dvh - 24px);
+    border-radius: 24px;
+    box-shadow: 0 20px 70px rgb(0 0 0 / 30%);
+  }
+  .dc-dashboard .dc-dashboard-header-inner {
+    width: calc(100% - 1.25rem);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-dashboard .dc-dashboard-frame { scroll-behavior: auto; }
+}
