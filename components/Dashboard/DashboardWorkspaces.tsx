@@ -312,7 +312,7 @@ export function RsvpWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Kehadiran")} title={d("RSVP")} description={d("Pantau respons dan konfirmasi tamu.")}>
+      <DashboardPageHeader title={d("RSVP")}>
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -364,7 +364,7 @@ export function PlacementWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader eyebrow={d("Tamu")} title={d("Manajemen Tamu")} description={d("Atur daftar tamu, meja, dan posisi duduk.")}>
+      <DashboardPageHeader title={d("Manajemen Tamu")}>
       <EventScopePicker
         events={events}
         value={selectedId}
@@ -428,7 +428,6 @@ function PlacementPanel({
   return (
     <div className="space-y-4">
         <DashboardSectionHeader
-          eyebrow={d("Manajemen Tamu")}
           title={d("Tamu & seating")}
           description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
           actions={
@@ -476,9 +475,7 @@ export function UsherPanel({
   return (
     <DashboardPageShell>
         <DashboardPageHeader
-          eyebrow={d("Usher App")}
           title={d("Check-in")}
-          description={d("Pantau check-in dan lanjutkan ke scanner saat siap.")}
           actions={
             <>
               <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
@@ -492,7 +489,7 @@ export function UsherPanel({
           <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
           <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
         </DashboardMetricGrid>
-        <DashboardPanel className="mt-4" title={d("Daftar tamu")} description={d("Pantau status check-in tamu sebelum membuka scanner.")}>
+        <DashboardPanel className="mt-4" title={d("Daftar tamu")}>
           {guests.length === 0 ? <DashboardEmptyState icon={Users} title={d("Belum ada tamu")} /> : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[560px] text-left">
