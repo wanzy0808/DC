@@ -70,6 +70,7 @@ export type DashboardGuest = {
 
 export type DashboardTab =
   | "overview"
+  | "profile"
   | "events"
   | "invitation"
   | "waBlast"
