@@ -124,6 +124,8 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
+    // Refresh the shared Guest records whenever this workspace is opened again.
+    if (tab !== "rsvp") return;
     let active = true;
     if (!rsvpEventId) {
       setRsvpGuests([]);
@@ -148,9 +150,10 @@ export default function DashboardPage() {
     return () => {
       active = false;
     };
-  }, [rsvpEventId]);
+  }, [rsvpEventId, tab]);
 
   useEffect(() => {
+    if (tab !== "placement") return;
     let active = true;
     if (!placementEventId) {
       setPlacementGuests([]);
@@ -180,7 +183,34 @@ export default function DashboardPage() {
     return () => {
       active = false;
     };
-  }, [placementEventId]);
+  }, [placementEventId, tab]);
+
+  useEffect(() => {
+    if (tab !== "usher") return;
+    let active = true;
+    const selected = events.find((event) => event.accessPaid);
+    if (!selected) {
+      setUsherGuests([]);
+      return;
+    }
+    fetchEventGuestData(selected.id, d("Data acara belum dapat dimuat."))
+      .then((data) => { if (active) setUsherGuests(data.guests); })
+      .catch(() => { if (active) setUsherGuests([]); });
+    return () => { active = false; };
+  }, [tab, events]);
+
+  useEffect(() => {
+    if (tab !== "overview") return;
+    let active = true;
+    fetch("/api/dashboard/context", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const next = (await response.json()) as DashboardContext;
+        if (active) setCtx(next);
+      })
+      .catch(() => undefined);
+    return () => { active = false; };
+  }, [tab]);
 
   useEffect(() => {
     if (!profileMenu) return;
