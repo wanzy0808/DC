@@ -276,9 +276,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
   return (
     <DashboardPage>
       <DashboardPageHeader
-            eyebrow={d("Persiapan")}
             title={loading ? d("Memuat acara...") : events.length ? d("Daftar acara") : d("Buat acara pertama")}
-            description={d("Atur identitas, waktu, lokasi, dan status sebelum lanjut ke Undangan Digital.")}
             actions={
               <Button
                 type="button"
