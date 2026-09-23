@@ -3,7 +3,7 @@
 import { CalendarDays, ChevronDown, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import { invitationNav, invitationTabs, secondaryNav } from "@/components/Dashboard/dashboard-navigation";
+import { invitationNav, secondaryNav } from "@/components/Dashboard/dashboard-navigation";
 import type { DashboardTab } from "@/components/Dashboard/dashboard-types";
 
 type DashboardSidebarProps = {
@@ -24,7 +24,6 @@ export default function DashboardSidebar({
   onCloseMobile,
 }: DashboardSidebarProps) {
   const { d } = useDashboardI18n();
-  const inInvitationGroup = invitationTabs.has(tab);
 
   return (
     <>
@@ -40,7 +39,7 @@ export default function DashboardSidebar({
         id="dc-dashboard-sidebar"
         className={`dc-dashboard-sidebar ${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
       >
-        <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex flex-1 flex-col gap-5">
+        <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex flex-1 flex-col gap-2">
           <Button
             type="button"
             aria-current={tab === "overview" ? "page" : undefined}
@@ -51,20 +50,20 @@ export default function DashboardSidebar({
             <span className="min-w-0 truncate">{d("Beranda")}</span>
           </Button>
 
-          <div className="dc-sidebar-group flex flex-col gap-5">
+          <div className="dc-sidebar-group mt-3 flex flex-col gap-1.5">
             <Button
               type="button"
               aria-expanded={invitationMenuOpen}
               aria-controls="dc-dashboard-event-nav"
               onClick={onToggleInvitationMenu}
-              className={`dc-sidebar-link ${inInvitationGroup ? "is-section-open" : ""}`}
+              className="dc-sidebar-link dc-sidebar-group-trigger"
             >
               <CalendarDays className="size-5 shrink-0" strokeWidth={1.9} />
               <span className="min-w-0 flex-1 truncate">{d("Acara")}</span>
               <ChevronDown className={`size-4 shrink-0 transition-transform ${invitationMenuOpen ? "rotate-180" : ""}`} />
             </Button>
             {invitationMenuOpen && (
-              <div id="dc-dashboard-event-nav" className="dc-sidebar-subnav flex flex-col gap-5">
+              <div id="dc-dashboard-event-nav" className="dc-sidebar-subnav flex flex-col gap-1.5">
                 {invitationNav.map((item) => {
                   const Icon = item.icon;
                   return (
