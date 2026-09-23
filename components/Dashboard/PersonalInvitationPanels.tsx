@@ -93,7 +93,7 @@ export function PersonalInvitationCreatePanel({
             <option value="">{d("Tambah tamu baru")}</option>
             {availableGuests.map((guest) => (
               <option key={guest.id} value={guest.id}>
-                {guest.name}{guest.phone ? ` · ${guest.phone}` : ""}
+                <span className="dc-ui-name">{guest.name}</span>{guest.phone ? ` · ${guest.phone}` : ""}
               </option>
             ))}
           </select>
@@ -104,7 +104,7 @@ export function PersonalInvitationCreatePanel({
 
         {selectedGuest ? (
           <div className="border-y border-primary/15 py-3">
-            <p className="text-sm font-semibold text-foreground">{selectedGuest.name}</p>
+            <p className="dc-ui-name text-sm font-semibold text-foreground">{selectedGuest.name}</p>
             <p className="mt-1 text-sm text-muted-foreground">{selectedGuest.phone || d("Tanpa nomor WhatsApp")}</p>
             <p className="mt-1 text-xs text-muted-foreground">
               {d("Data ini terhubung dengan RSVP, WA Blast, dan pengaturan meja.")}
@@ -283,11 +283,11 @@ export function PersonalInvitationListPanel({
                   ) : (
                     <>
                       <p className="break-words text-sm font-semibold text-foreground">
-                        {item.personalAddressee || item.name}
+                        <span className="dc-ui-name">{item.personalAddressee || item.name}</span>
                       </p>
                       {item.personalAddressee && item.personalAddressee !== item.name && (
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          {d("Data tamu")}: {item.name}
+                          {d("Data tamu")}: <span className="dc-ui-name">{item.name}</span>
                         </p>
                       )}
                       <p className="mt-1 break-words text-xs text-muted-foreground">
