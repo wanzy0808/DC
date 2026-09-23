@@ -20,19 +20,28 @@ const features: Feature[] = [
 
 export const dynamic = "force-dynamic";
 
-export default async function UsherPage() {
+export default async function UsherPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ invitationId?: string }>;
+}) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const invitation = await prisma.invitation.findFirst({
-    where: { ownerId: user.id },
+  const requestedId = (await searchParams).invitationId?.trim() || "";
+  const invitations = await prisma.invitation.findMany({
+    where: { ownerId: user.id, eventConfigured: true },
     include: { payment: true },
     orderBy: { createdAt: "asc" },
   });
-
+  const invitation = requestedId
+    ? invitations.find((item) => item.id === requestedId)
+    : invitations.find((item) => hasPaidGuestbook(item.payment));
   const usherActive = hasPaidGuestbook(invitation?.payment);
 
-  if (usherActive) return <UsherWorkspace />;
+  if (usherActive && invitation) {
+    return <UsherWorkspace invitationId={invitation.id} eventTitle={invitation.title} />;
+  }
 
   return (
     <div className="dc-dashboard min-h-dvh bg-background text-foreground">
