@@ -3,6 +3,10 @@ export type WaBlastEvent = {
   title: string;
   eventConfigured: boolean;
   accessPaid: boolean;
+  slug?: string;
+  venue?: string;
+  eventDate?: string;
+  isPublished?: boolean;
 };
 
 export type WaBlastGuest = {
