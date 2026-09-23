@@ -28,7 +28,13 @@ import type {
   PersonalInvitationItem,
 } from "@/components/Dashboard/personal-invitation-types";
 
-export default function PersonalInvitationPanel() {
+export default function PersonalInvitationPanel({
+  selectedEventId,
+  onSelectEvent,
+}: {
+  selectedEventId: string;
+  onSelectEvent: (id: string) => void;
+}) {
   const { d } = useDashboardI18n();
   const [events, setEvents] = useState<PersonalInvitationEvent[]>([]);
   const [eventId, setEventId] = useState("");
@@ -76,12 +82,11 @@ export default function PersonalInvitationPanel() {
 
       setEvents(configured);
       setEventId((current) => {
+        if (selectedEventId && configured.some((event) => event.id === selectedEventId)) {
+          return selectedEventId;
+        }
         if (configured.some((event) => event.id === current)) return current;
-        return (
-          configured.find((event) => event.accessPaid)?.id ??
-          configured[0]?.id ??
-          ""
-        );
+        return configured.find((event) => event.accessPaid)?.id ?? configured[0]?.id ?? "";
       });
     } catch (error) {
       setEvents([]);
@@ -94,7 +99,13 @@ export default function PersonalInvitationPanel() {
     } finally {
       setEventsLoading(false);
     }
-  }, [d]);
+  }, [d, selectedEventId]);
+
+  useEffect(() => {
+    if (selectedEventId && events.some((event) => event.id === selectedEventId)) {
+      setEventId(selectedEventId);
+    }
+  }, [selectedEventId, events]);
 
   const loadCurrent = useCallback(async () => {
     if (!eventId || !selectedEvent) {
@@ -384,7 +395,7 @@ export default function PersonalInvitationPanel() {
         <EventScopePicker
           events={events}
           value={eventId}
-          onChange={setEventId}
+          onChange={(id) => { setEventId(id); onSelectEvent(id); }}
           disabled={eventsLoading || Boolean(busyId)}
         />
       </DashboardPageHeader>
