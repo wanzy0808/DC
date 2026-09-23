@@ -372,7 +372,7 @@ export default function PersonalInvitationPanel() {
           <DashboardMetricGrid className="mt-4 xl:grid-cols-3">
             <DashboardMetricCard
               icon={ContactRound}
-              label={d("Personal Invitation")}
+              label={d("Total")}
               value={String(personal.length)}
             />
             <DashboardMetricCard
