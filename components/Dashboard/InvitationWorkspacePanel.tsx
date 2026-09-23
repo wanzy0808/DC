@@ -195,7 +195,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     ? d("Siap publish")
                     : d("Belum desain");
               return (
-                <article key={invitation.id} className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                <article key={invitation.id} className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
                       <h3 className="break-words text-base font-semibold text-foreground">{title}</h3>
@@ -248,7 +248,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           {responders.map((guest) => (
             <div
               key={guest.id}
-              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/15 bg-primary/[0.025] px-4 py-3"
+              className="dc-dashboard-detail-card flex flex-wrap items-center justify-between gap-3 rounded-tr-[22px] border border-primary/15 bg-primary/[0.025] px-4 py-3"
             >
               <div className="min-w-0">
                 <span className="block truncate text-xs font-medium text-foreground">
