@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Check, Copy, FilePlus2, Pencil, RefreshCw, Save, Trash2, X } from "lucide-react";
+import { Copy, FilePlus2, Save, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   DashboardEmptyState,
   DashboardNotice,
   DashboardPanel,
-  DashboardStatusBadge,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
@@ -317,7 +316,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
         <Button type="button" size="sm" onClick={() => void copy()} disabled={!canCopy || mode === "idle"}>
           <Copy className="size-4" aria-hidden="true" />{d("Salin pesan")}
         </Button>
-        <p className="text-xs text-muted-foreground">{d("Template tersimpan sebagai draf. Menyalin pesan tidak mengirim WA Blast atau mengurangi kuota.")}</p>
+        <p className="text-xs text-muted-foreground">{d("Template tidak dikirim otomatis. Menyalin pesan tidak mengurangi kuota.")}</p>
       </DashboardPanel>
     </div>
   );
