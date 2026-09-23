@@ -152,3 +152,11 @@ Deployment/QA:
 ## 23 September 2026 — Remove decorative circle from Beranda gradient
 
 - Removed the Beranda welcome card's concentric-ring `::after` and its circular radial gradient overlay. Kept the light/dark linear gradients, heading/CTA and 0.3cm Rose left stroke intact. The RSVP circular progress visualization is functional data and remains unchanged. App commit `69dfbb27`. Browser visual QA remains pending.
+
+
+## 23 September 2026 — Flatten operational workspace hierarchy
+
+- Owner rejected "frame inside frame" across dashboard tabs. Refactored shared `DashboardPanel` to an unboxed semantic section: the heading/actions sit directly on the main workspace canvas with a subtle horizontal separator, and cards are direct content children. No larger rounded, colored or Rose-striped wrapper encloses event/invitation/WA Blast/RSVP/guest/Usher tiles.
+- Specifically unboxed the Event list and empty state, the empty event selector, and the Personal Invitation password editor nested within a guest card. Existing `DashboardPanel` consumers inherit the change without duplicating component-specific wrappers.
+- Preserve one-layer standalone cards with the uniform `0.3cm` left Rose border, top-right-only rounding, neutral white/near-black fills. Leave Beranda's peer-level hero/metric/summary cards, standalone account form panels, functional seating stage, input borders, badge/buttons and the approved public landing/Pintu unchanged. Keep actual event/RSVP/WA data and all actions.
+- App commits: `934f6032`, `2dbf3a23`, `7010c3d4`, `77912eaa`. Visual and browser QA (desktop/mobile, Light/Dark, real data) plus CI remain pending.
