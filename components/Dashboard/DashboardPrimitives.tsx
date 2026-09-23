@@ -34,7 +34,7 @@ export function DashboardSurface({
     <section
       {...props}
       className={classes(
-        "dc-dashboard-surface rounded-[24px] border border-border/70 bg-background shadow-[0_6px_28px_rgba(24,14,16,0.025)]",
+        "dc-dashboard-surface rounded-[24px] border border-primary/15 bg-background shadow-[0_10px_36px_rgba(78,32,47,0.045)]",
         className,
       )}
     >
@@ -51,7 +51,7 @@ export function DashboardMetricGrid({
   className?: string;
 }) {
   return (
-    <section className={classes("grid gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>
+    <section className={classes("grid gap-4 sm:grid-cols-2 xl:grid-cols-4", className)}>
       {children}
     </section>
   );
@@ -71,18 +71,18 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-[22px] border border-border/70 bg-background p-5 shadow-[0_6px_24px_rgba(24,14,16,0.025)]",
+        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-[22px] border border-primary/15 bg-background px-5 py-6 shadow-[0_8px_28px_rgba(78,32,47,0.045)]",
         className,
       )}
     >
       {Icon && (
-        <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
+        <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-primary/10 text-primary">
           <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </span>
       )}
       <div className="min-w-0">
-        <p className="text-[13px] leading-5 text-muted-foreground">{label}</p>
-        <div className="mt-1 break-words text-2xl font-semibold leading-none text-foreground">{value}</div>
+        <p className="text-[14px] leading-5 text-muted-foreground">{label}</p>
+        <div className="mt-1 break-words text-[28px] font-semibold leading-none text-foreground tabular-nums">{value}</div>
       </div>
     </article>
   );
@@ -123,7 +123,7 @@ export function DashboardNotice({
     <div
       role="status"
       className={classes(
-        "dc-dashboard-notice rounded-xl border border-primary/15 bg-primary/[0.035] px-4 py-3.5 text-sm leading-6 text-muted-foreground",
+        "dc-dashboard-notice rounded-2xl border border-primary/25 bg-primary/[0.065] px-4 py-3.5 text-sm leading-6 text-foreground",
         className,
       )}
     >
@@ -151,7 +151,7 @@ export function DashboardSectionHeader({
             {eyebrow}
           </p>
         )}
-        <h2 className="mt-1.5 font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-foreground sm:text-2xl">
+        <h2 className={`${eyebrow ? "mt-1.5" : ""} font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-foreground sm:text-2xl`}>
           {title}
         </h2>
         {description && (
@@ -205,7 +205,7 @@ export function DashboardEmptyState({
   return (
     <div
       className={classes(
-        "flex min-h-40 flex-col items-start justify-center rounded-xl border border-dashed border-border/80 bg-background px-5 py-7",
+        "flex min-h-40 flex-col items-start justify-center rounded-2xl border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-7",
         className,
       )}
     >
@@ -232,10 +232,10 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
   children?: ReactNode;
 }) {
   return (
-    <div className="mb-5 flex flex-col gap-4 border-b border-border/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-6 flex flex-col gap-4 border-b border-primary/20 pb-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         {eyebrow && <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.1em] text-primary">{eyebrow}</p>}
-        <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{title}</h1>
+        <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-primary sm:text-3xl">{title}</h1>
         {description && <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>}
         {children && <div className="mt-3">{children}</div>}
       </div>
@@ -251,7 +251,7 @@ export function DashboardPanel({ children, className, ...header }: Parameters<ty
 }) {
   return (
     <DashboardSurface className={classes("dc-dashboard-panel min-w-0 overflow-hidden", className)}>
-      <div className="border-b border-border/70 px-5 py-4 sm:px-6">
+      <div className="border-b border-primary/15 bg-primary/[0.035] px-5 py-5 sm:px-6">
         <DashboardSectionHeader {...header} />
       </div>
       {children && <div className="min-w-0 space-y-4 p-5 sm:p-6">{children}</div>}
