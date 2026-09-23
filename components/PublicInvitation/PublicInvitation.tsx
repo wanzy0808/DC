@@ -22,9 +22,11 @@ export type PublicInvitationData = {
   groomFatherName?: string | null;
   groomMotherName?: string | null;
   groomChildOrder?: number | null;
+  groomChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
   brideFatherName?: string | null;
   brideMotherName?: string | null;
   brideChildOrder?: number | null;
+  brideChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -89,6 +91,7 @@ export default function PublicInvitation({
           invitation.groomMotherName,
           invitation.groomChildOrder,
           "putra",
+          invitation.groomChildPosition,
         )
       : "";
   const brideParents =
@@ -98,6 +101,7 @@ export default function PublicInvitation({
           invitation.brideMotherName,
           invitation.brideChildOrder,
           "putri",
+          invitation.brideChildPosition,
         )
       : "";
   const startTime = invitation.ceremonyTime;
