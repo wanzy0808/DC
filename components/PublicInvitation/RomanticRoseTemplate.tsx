@@ -47,6 +47,8 @@ type RoseInvitation = {
   description: string | null;
   templateKey: string;
   musicUrl?: string | null;
+  weddingHashtag?: string | null;
+  dressCode?: string | null;
   giftBankName?: string | null;
   giftAccountName?: string | null;
   giftAccountNumber?: string | null;
@@ -144,17 +146,17 @@ export default function RomanticRoseTemplate({
   const scrollHint = <ChevronDown className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
 
   useEffect(() => {
-    if (!opened) return;
+    if (!opened && sections.envelope !== false) return;
     setNow(Date.now());
     const interval = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(interval);
-  }, [opened]);
+  }, [opened, sections.envelope]);
 
   return (
     <main className="relative isolate min-h-[760px] overflow-hidden bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]">
-      <InvitationMusic ref={musicRef} source={music} opened={opened} preview={preview} />
-      {!opened ? (
-        <section className="relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
+      {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
+      {!opened && sections.envelope !== false ? (
+        <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
           <div className="pointer-events-none absolute -left-20 top-10 h-56 w-56 rounded-full border border-white/60" />
           <div className="pointer-events-none absolute -right-20 bottom-10 h-64 w-64 rounded-full border border-white/70" />
           <p className="mb-7 text-[10px] uppercase tracking-[0.3em] text-[#8e586d]">The wedding invitation</p>
@@ -177,7 +179,7 @@ export default function RomanticRoseTemplate({
         </section>
       ) : (
         <div className="mx-auto max-w-2xl">
-          <section className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
+          {sections.cover !== false && (<section data-invitation-section="cover" className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
             <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" focus={assignment.focus.cover} className="h-full w-full object-cover" /></div>
             <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
             <div className="relative z-10 flex w-full flex-col items-center">
@@ -190,14 +192,14 @@ export default function RomanticRoseTemplate({
               <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
               {scrollHint}
             </div>
-          </section>
+          </section>)}
 
-          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.greeting !== false && (<section data-invitation-section="greeting" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
             <p className="mx-auto max-w-md text-sm leading-8 text-[#765460]">{invitation.description || "Kami mengundang Anda untuk hadir dan berbagi kebahagiaan dalam perayaan pernikahan kami."}</p>
-          </section>
+          </section>)}
 
-          <section className="bg-[#f8eef0] px-7 py-20">
+          {sections.identity !== false && (<section data-invitation-section="identity" className="bg-[#f8eef0] px-7 py-20">
             <RoseHeading eyebrow="The two of us">Mempelai</RoseHeading>
             <div className="grid grid-cols-2 gap-4">
               <div className="min-w-0 text-center">
@@ -217,15 +219,16 @@ export default function RomanticRoseTemplate({
                 {brideParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{brideParents}</p>}
               </div>
             </div>
-          </section>
+          </section>)}
 
-          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.event !== false && (<section data-invitation-section="event" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="Save the date">Detail Acara</RoseHeading>
             <p className="text-sm leading-7 text-[#765460]">{invitation.title || "Perayaan Pernikahan"}</p>
             <p className="mt-3 text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</p>
-          </section>
+            {invitation.dressCode && <p className="mt-4 text-sm text-[#765460]">Dress code · {invitation.dressCode}</p>}
+          </section>)}
 
-          <section className="bg-[#f8eef0] px-8 py-20 text-center">
+          {sections.dateTime !== false && (<section data-invitation-section="dateTime" className="bg-[#f8eef0] px-8 py-20 text-center">
             <RoseHeading eyebrow="A day to remember">Tanggal & Waktu</RoseHeading>
             <div className="mx-auto flex max-w-sm flex-col items-center gap-3 rounded-3xl border border-[#e7cbd3] bg-white/70 px-6 py-9">
               <CalendarDays className="h-6 w-6 text-[#a65e69]" />
@@ -234,9 +237,9 @@ export default function RomanticRoseTemplate({
               {invitation.receptionTime && <p className="text-sm">Selesai: {invitation.receptionTime === "END" ? "- end" : invitation.receptionTime}</p>}
               <p className="text-xs text-[#916f7a]">{invitation.timezone || "Asia/Jakarta"}</p>
             </div>
-          </section>
+          </section>)}
 
-          <section className="bg-[#fffaf8] px-6 py-20">
+          {sections.gallery !== false && (<section data-invitation-section="gallery" className="bg-[#fffaf8] px-6 py-20">
               <RoseHeading eyebrow="Our memories">Galeri Foto</RoseHeading>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
               {gallery.length ? <div className="grid grid-cols-2 gap-3">
@@ -246,9 +249,9 @@ export default function RomanticRoseTemplate({
                   </div>
                 ))}
               </div> : <p className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
-            </section>
+            </section>)}
 
-          <section className="bg-[#f8eef0] px-8 py-20 text-center">
+          {sections.countdown !== false && (<section data-invitation-section="countdown" className="bg-[#f8eef0] px-8 py-20 text-center">
             <RoseHeading eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
             {now !== null && countdown ? (
               <div className="grid grid-cols-4 gap-2">
@@ -260,9 +263,9 @@ export default function RomanticRoseTemplate({
                 ))}
               </div>
             ) : <p className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
-          </section>
+          </section>)}
 
-          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.location !== false && (<section data-invitation-section="location" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="Find your way">Lokasi</RoseHeading>
             <MapPin className="mx-auto mb-3 h-6 w-6 text-[#a65e69]" />
             <h3 className="text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</h3>
@@ -272,10 +275,10 @@ export default function RomanticRoseTemplate({
                 <MapPin className="h-4 w-4" /> Buka Google Maps
               </a>
             )}
-          </section>
+          </section>)}
 
           {sections.rsvp && (
-            <section className="bg-[#f8eef0] px-5 py-20">
+            <section data-invitation-section="rsvp" className="bg-[#f8eef0] px-5 py-20">
               <RoseHeading eyebrow="Your presence means so much">Konfirmasi Kehadiran</RoseHeading>
               {preview ? (
                 <div className="rounded-2xl border border-[#e8cbd3] bg-white/80 p-6 text-center text-sm text-[#765460]">Form RSVP akan tersedia di undangan yang sudah dipublikasikan.</div>
@@ -286,14 +289,14 @@ export default function RomanticRoseTemplate({
           )}
 
           {sections.wishes && (
-            <section className="bg-[#fffaf8] px-7 py-20 text-center">
+            <section data-invitation-section="wishes" className="bg-[#fffaf8] px-7 py-20 text-center">
               <RoseHeading eyebrow="A little note of love">Ucapan & Doa</RoseHeading>
               <p className="mx-auto max-w-sm text-sm leading-7 text-[#765460]">Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia.</p>
             </section>
           )}
 
           {sections.gift && (
-            <section className="bg-[#f8eef0] px-7 py-20 text-center">
+            <section data-invitation-section="gift" className="bg-[#f8eef0] px-7 py-20 text-center">
               <RoseHeading eyebrow="With gratitude">Tanda Kasih</RoseHeading>
               <Gift className="mx-auto h-6 w-6 text-[#a65e69]" />
               {hasGift ? <div className="mx-auto mt-6 max-w-sm rounded-2xl border border-[#e8cbd3] bg-white/85 p-6">
@@ -305,16 +308,17 @@ export default function RomanticRoseTemplate({
             </section>
           )}
 
-          <section className="bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.closing !== false && (<section data-invitation-section="closing" className="bg-[#fffaf8] px-8 py-20 text-center">
             <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
             <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
             <p className="mx-auto max-w-sm text-sm leading-8 text-[#765460]">Kehadiran dan doa baik Anda berarti bagi kami. Sampai bertemu di hari bahagia!</p>
             <p className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
-          </section>
+            {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
+          </section>)}
 
-          <footer className="flex flex-col items-center gap-4 border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-8 text-center">
+          {sections.footer !== false && <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-8 text-center">
             <p className="text-[10px] uppercase tracking-[0.22em] text-[#906978]">Created with DC Organizer</p>
-          </footer>
+          </footer>}
         </div>
       )}
     </main>

@@ -13,8 +13,13 @@ import {
   SlidersHorizontal,
   Type,
   Undo2,
-  X,
+  RotateCcw,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Smartphone,
 } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { defaultInvitationSections } from "@/lib/templates/sections";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -51,12 +56,16 @@ import type {
   InvitationDesignState,
 } from "@/components/InvitationStudio/designer-types";
 
-export default function InvitationDesigner() {
+export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: (dirty: boolean) => void }) {
   const catalog = useTemplateCatalog();
   const readyTemplates = catalog.filter((item) => item.ready);
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
+  const [inspectorOpen, setInspectorOpen] = useState(true);
+  const [mobileCanvas, setMobileCanvas] = useState(false);
+  const [previewVersion, setPreviewVersion] = useState(0);
+  const [savedState, setSavedState] = useState("");
   const [preview, setPreview] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat undangan...");
@@ -70,16 +79,16 @@ export default function InvitationDesigner() {
     palette: "pearl",
     font: "cinzelFauna",
     decor: invitationDecorOptions[0],
-    sections: { rsvp: true, wishes: true, gift: true },
+    sections: { ...defaultInvitationSections },
     photos: defaultPhotoAssignments(),
   });
 
   async function load() {
-    setNotice("Memuat undangan...");
     const params = new URLSearchParams(window.location.search);
     const invitationId = params.get("invitationId")?.trim() || "";
     const legacyType =
       params.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
+    if (!invitationId) throw new Error("Pilih acara dari Dashboard untuk membuka Studio.");
     const query = invitationId
       ? `?id=${encodeURIComponent(invitationId)}&type=${legacyType}`
       : `?type=${legacyType}`;
@@ -97,7 +106,9 @@ export default function InvitationDesigner() {
     setMusicUrl(next.musicUrl || "");
     setEventTag(next.weddingHashtag || "");
     setDressCode(next.dressCode || "");
-    setDesign(invitationDesignStateFromKey(next.templateKey, fallbackDecor));
+    const loadedDesign = invitationDesignStateFromKey(next.templateKey, fallbackDecor);
+    setDesign(loadedDesign);
+    setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
     setHistory([]);
     setFuture([]);
     setNotice("Siap diedit.");
@@ -120,6 +131,15 @@ export default function InvitationDesigner() {
   const fontPair = invitationFonts[design.font];
   const designKey = makeInvitationDesignStateKey(design);
   const identity = getInvitationEventIdentity(invitation);
+  const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
+  const dirty = Boolean(invitation && savedState !== currentState);
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
+  useEffect(() => {
+    if (!dirty) return;
+    const preventExit = (event: BeforeUnloadEvent) => { event.preventDefault(); };
+    window.addEventListener("beforeunload", preventExit);
+    return () => window.removeEventListener("beforeunload", preventExit);
+  }, [dirty]);
   // Couple-only photo roles are not relevant to single-host and general events.
   const supportedPhotoSlots = template?.photoSlots ?? (["cover"] as PhotoSlot[]);
   const photoSlots = getEventCategory(identity.category).nameMode === "couple"
@@ -175,6 +195,8 @@ export default function InvitationDesigner() {
   function editPhotoFromCanvas(slot: PhotoSlot) {
     setActivePhotoSlot(slot);
     setPanel("decor");
+    setInspectorOpen(true);
+    setMobileCanvas(false);
   }
 
   function undo() {
@@ -223,6 +245,7 @@ export default function InvitationDesigner() {
 
   async function save() {
     if (!invitation) return;
+    if (saving) return;
     setSaving(true);
     setNotice("Menyimpan desain...");
     try {
@@ -236,12 +259,12 @@ export default function InvitationDesigner() {
           musicUrl,
           weddingHashtag: eventTag,
           dressCode,
-          isPublished: invitation.isPublished,
         }),
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Gagal menyimpan.");
       setInvitation(data.invitation);
+      setSavedState(currentState);
       setNotice("Desain tersimpan.");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Gagal menyimpan.");
@@ -251,27 +274,20 @@ export default function InvitationDesigner() {
   }
 
   return (
-    <section className="dc-invitation-studio-shell min-h-[calc(100vh-64px)] bg-background font-[family-name:var(--font-dc-sans)] text-foreground">
-      <header className="flex min-h-16 flex-wrap items-center justify-between gap-3 border-b border-border/70 bg-background px-5 py-3 sm:px-7">
-        <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dc-heading)] text-sm tracking-[0.14em] text-primary">
-            INVITATION STUDIO
-          </p>
-          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
-            {identity.label} · {invitation?.title || "Acara"} · {template?.name || "Template"}
-          </p>
+    <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
+      <header className="dc-studio-toolbar">
+        <div className="min-w-0 flex-1">
+          <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitation?.title || "Studio"}</h1>
+          <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? "Desain tersimpan" : notice}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <span className="hidden max-w-52 truncate text-[11px] text-muted-foreground md:block">
-            {notice}
-          </span>
-          <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label="Undo" title="Undo">
+          <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label="Urungkan desain" title="Urungkan desain">
             <Undo2 className="h-4 w-4" />
           </Button>
-          <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label="Redo" title="Redo">
+          <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label="Ulangi desain" title="Ulangi desain">
             <Redo2 className="h-4 w-4" />
           </Button>
-          <Button onClick={() => setPreview(true)} size="sm">
+          <Button onClick={() => setPreview(true)} disabled={!invitation} size="sm">
             <Eye className="h-4 w-4" />
             Pratinjau
           </Button>
@@ -282,23 +298,30 @@ export default function InvitationDesigner() {
         </div>
       </header>
 
-      <div className="grid min-h-[calc(100vh-128px)] lg:grid-cols-[96px_390px_minmax(0,1fr)]">
-        <aside className="border-r border-border/70 bg-background p-2">
-          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => setPanel("template")} />
-          <DesignerTool active={panel === "sections"} label="Section" icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => setPanel("sections")} />
-          <DesignerTool active={panel === "color"} label="Warna" icon={<Palette className="h-4 w-4" />} onClick={() => setPanel("color")} />
-          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => setPanel("font")} />
-          <div className="my-1 border-t border-border/60" />
-          <DesignerTool active={panel === "content"} label="Isi" icon={<FilePenLine className="h-4 w-4" />} onClick={() => setPanel("content")} />
-          <DesignerTool active={panel === "decor"} label="Foto" icon={<ImagePlus className="h-4 w-4" />} onClick={() => setPanel("decor")} />
-          <DesignerTool active={panel === "music"} label="Musik" icon={<Music2 className="h-4 w-4" />} onClick={() => setPanel("music")} />
-        </aside>
+      <div className="dc-studio-mobile-view" aria-label="Tampilan Studio">
+        <button type="button" aria-pressed={!mobileCanvas} onClick={() => setMobileCanvas(false)}>Pengaturan</button>
+        <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>Undangan</button>
+      </div>
+      <div className="dc-studio-workspace">
+        <nav className="dc-studio-rail" aria-label="Alat desain">
+          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
+          <DesignerTool active={panel === "sections"} label="Bagian" icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
+          <DesignerTool active={panel === "color"} label="Warna" icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
+          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
+          <div className="dc-studio-rail-divider" />
+          <DesignerTool active={panel === "content"} label="Isi" icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
+          <DesignerTool active={panel === "decor"} label="Foto" icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "music"} label="Musik" icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
+        </nav>
 
-        <aside className="overflow-y-auto border-r border-border/70 bg-background p-5">
+        <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
+          <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
           {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
           {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
-          {panel === "color" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
-          {panel === "font" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
+          {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
+          {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
+          {panel === "font" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Font Romantic Rose mengikuti desain asli tema.</p>}
+          {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
           {panel === "content" && (
             <ContentPanel
               invitation={invitation}
@@ -328,10 +351,22 @@ export default function InvitationDesigner() {
             />
           )}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
+          </fieldset>
         </aside>
 
-        <main className="flex items-start justify-center overflow-auto bg-foreground/[0.025] p-6 sm:p-10">
-          <div className="w-[390px] max-w-full origin-top">
+        <div className="dc-studio-canvas">
+          <div className="dc-studio-canvas-toolbar">
+            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? "Sembunyikan panel" : "Tampilkan panel"} title={inspectorOpen ? "Sembunyikan panel" : "Tampilkan panel"}>
+              {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+            </button>
+            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Pratinjau"}</span>
+            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />Ponsel</span>
+            <button type="button" className="dc-studio-icon" onClick={() => setPreviewVersion((value) => value + 1)} aria-label="Ulangi pratinjau dari awal" title="Ulangi dari awal"><RotateCcw size={17} /></button>
+          </div>
+          <div className="dc-studio-canvas-scroll">
+          <div className="dc-studio-preview-surface">
+            {!preview && <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
+
             <InvitationPreview
               invitation={invitation}
               templateKey={design.template}
@@ -346,34 +381,25 @@ export default function InvitationDesigner() {
               musicUrl={musicUrl}
               onEditPhoto={editPhotoFromCanvas}
             />
+            </div>}
           </div>
-        </main>
-      </div>
-
-      {preview && (
-        <div className="fixed inset-0 z-[100] grid place-items-center bg-black/65 p-4" onClick={() => setPreview(false)}>
-          <div className="relative max-h-[92vh] overflow-auto rounded-[28px] bg-background p-3" onClick={(event) => event.stopPropagation()}>
-            <Button size="icon-sm" onClick={() => setPreview(false)} className="absolute right-4 top-4 z-20" aria-label="Tutup pratinjau" title="Tutup pratinjau">
-              <X className="h-4 w-4" />
-            </Button>
-            <div className="w-[390px] max-w-[86vw]">
-              <InvitationPreview
-                invitation={invitation}
-                templateKey={design.template}
-                palette={palette}
-                fontPair={fontPair}
-                decorUrl={design.decor}
-                eventTag={eventTag}
-                dressCode={dressCode}
-                sections={design.sections}
-                photoAssignments={design.photos}
-              designKey={designKey}
-              musicUrl={musicUrl}
-              />
-            </div>
           </div>
         </div>
-      )}
+      </div>
+
+      <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>
+      <Dialog open={preview} onOpenChange={setPreview}>
+        <DialogContent data-watermark={invitation?.accessPaid === false} className="dc-studio-preview-dialog max-h-[94dvh] overflow-y-auto p-3 pt-14" overlayClassName="z-[100]">
+          <DialogTitle className="sr-only">Pratinjau Undangan</DialogTitle>
+          <div className="dc-studio-preview-surface">
+            <InvitationPreview
+              invitation={invitation} templateKey={design.template} palette={palette} fontPair={fontPair}
+              decorUrl={design.decor} eventTag={eventTag} dressCode={dressCode} sections={design.sections}
+              photoAssignments={design.photos} designKey={designKey} musicUrl={musicUrl}
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

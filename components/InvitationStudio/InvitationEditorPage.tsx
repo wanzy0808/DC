@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, LayoutTemplate, Send } from "lucide-react";
+import { ArrowLeft, Send } from "lucide-react";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
+import ThemeToggle from "@/components/Theme/ThemeToggle";
+import "./studio.css";
 import InvitationDesigner from "@/components/InvitationStudio/InvitationDesigner";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
@@ -29,6 +32,7 @@ export default function InvitationEditorPage() {
     isPublished: false,
   });
   const [notice, setNotice] = useState("");
+  const [dirty, setDirty] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const copy =
     locale === "en"
@@ -68,7 +72,7 @@ export default function InvitationEditorPage() {
   }, []);
 
   async function publish() {
-    if (publishing) return;
+    if (publishing || dirty) return;
     setPublishing(true);
     setNotice("Memeriksa undangan...");
     try {
@@ -113,29 +117,23 @@ export default function InvitationEditorPage() {
 
   return (
     <main
-      className={`dc-invitation-editor min-h-screen bg-background font-[family-name:var(--font-dc-sans)] text-foreground ${previewOnly ? "dc-unlicensed-studio" : ""}`}
+      className={`dc-invitation-editor font-[family-name:var(--font-dc-sans)] text-foreground ${previewOnly ? "dc-unlicensed-studio" : ""}`}
       onContextMenu={previewOnly ? (event) => event.preventDefault() : undefined}
     >
-      <header className="border-b border-border/70 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex min-h-16 w-[calc(100%-2rem)] flex-wrap items-center gap-3 py-3 lg:w-[80vw]">
+      <div className="dc-studio-frame">
+      <header className="dc-studio-page-header">
+        <div className="flex min-w-0 flex-1 items-center gap-3">
           <Button asChild size="icon">
             <Link href="/dashboard" aria-label={copy.back} title={copy.back}>
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
-          <Link
-            href="/"
-            className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold tracking-[0.16em] text-primary hover:text-primary/80"
-          >
-            DC Organizer
-          </Link>
-          <span className="h-5 w-px bg-border" />
-          <span className="inline-flex items-center gap-2 text-xs text-muted-foreground">
-            <LayoutTemplate className="h-4 w-4 text-primary" />
-            {copy.studio}
-          </span>
+          <Link href="/" className="min-w-0"><BrandWordmark size="mobile" /></Link>
+          <span className="hidden border-l border-primary/25 pl-3 text-sm text-muted-foreground sm:block">Studio</span>
+        </div>
+        <ThemeToggle />
           {notice && (
-            <span className="ml-auto hidden max-w-80 truncate text-[11px] text-muted-foreground lg:block" role="status">
+            <span className="ml-auto max-w-80 text-[11px] text-muted-foreground lg:block" role="status">
               {notice}
             </span>
           )}
@@ -143,84 +141,24 @@ export default function InvitationEditorPage() {
             type="button"
             size="sm"
             onClick={publish}
-            disabled={!studio.invitationId || publishing || studio.isPublished}
+            disabled={!studio.invitationId || publishing || studio.isPublished || dirty}
+            title={dirty ? "Simpan perubahan sebelum menerbitkan" : undefined}
             className={notice ? "" : "ml-auto"}
           >
             <Send className="h-4 w-4" />
-            {publishing ? "Memeriksa..." : studio.isPublished ? "Sudah terbit" : "Publish"}
+            {publishing ? "Memeriksa..." : studio.isPublished ? "Sudah terbit" : "Terbitkan"}
           </Button>
-          <Link href="/dashboard" className="text-xs text-muted-foreground hover:text-foreground">
-            {copy.home}
-          </Link>
-        </div>
+
       </header>
 
       {previewOnly && (
         <div className="border-b border-primary/15 bg-primary/[0.035] px-4 py-2 text-center text-xs text-muted-foreground" role="status">
-          Mode preview ber-watermark. Desain boleh disiapkan dan disimpan sekarang; paket hanya diperlukan saat Publish.
+          Desain bisa disimpan sekarang. Paket diperlukan saat terbitkan.
         </div>
       )}
 
-      <InvitationDesigner />
-      <style jsx global>{`
-        .dc-invitation-editor .dc-invitation-studio-shell {
-          background: var(--background);
-          color: var(--foreground);
-        }
-        .dc-invitation-editor .dc-invitation-studio-shell > div > main > div:first-child {
-          width: 390px;
-          max-width: 100%;
-          border: 2px solid var(--foreground);
-          border-radius: 28px;
-          padding: 0;
-          background: var(--background);
-          box-shadow: 0 18px 50px rgb(0 0 0 / 18%);
-          overflow: hidden;
-        }
-        .dark .dc-invitation-editor .dc-invitation-studio-shell > div > main > div:first-child {
-          box-shadow: 0 18px 50px rgb(0 0 0 / 45%);
-        }
-        .dc-invitation-editor .dc-invitation-studio-shell > div > main > div:first-child > div {
-          border-radius: 26px !important;
-          box-shadow: none !important;
-        }
-        .dc-invitation-editor button,
-        .dc-invitation-editor input,
-        .dc-invitation-editor label {
-          font-family: var(--font-dc-sans);
-        }
-        .dc-unlicensed-studio .dc-invitation-studio-shell img {
-          -webkit-user-drag: none;
-          user-select: none;
-        }
-        .dc-unlicensed-studio .dc-invitation-studio-shell > div > main > div:first-child,
-        .dc-unlicensed-studio .dc-invitation-studio-shell > div.fixed > div.relative {
-          position: relative;
-          isolation: isolate;
-        }
-        .dc-unlicensed-studio .dc-invitation-studio-shell > div > main > div:first-child::after,
-        .dc-unlicensed-studio .dc-invitation-studio-shell > div.fixed > div.relative::after {
-          content: "PREVIEW • DC ORGANIZER";
-          position: absolute;
-          left: -18%;
-          right: -18%;
-          top: 46%;
-          z-index: 40;
-          transform: rotate(-24deg);
-          border-block: 1px solid currentColor;
-          padding: 14px 0;
-          color: var(--primary);
-          background: color-mix(in srgb, var(--background) 78%, transparent);
-          font-family: var(--font-dm-mono);
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.28em;
-          text-align: center;
-          opacity: 0.72;
-          pointer-events: none;
-          user-select: none;
-        }
-      `}</style>
+      <InvitationDesigner onDirtyChange={setDirty} />
+      </div>
     </main>
   );
 }

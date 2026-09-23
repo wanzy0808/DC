@@ -1,13 +1,14 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import {
   Check,
-  Gift,
-  MessageCircleHeart,
   Upload,
 } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { invitationSectionItems } from "@/lib/templates/sections";
+import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
+import { Input } from "@/components/ui/input";
 import type { CatalogTemplate } from "@/lib/templates/use-template-catalog";
 import { TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
@@ -34,16 +35,9 @@ export function DesignerTool({
   onClick: () => void;
 }) {
   return (
-    <Button
-      onClick={onClick}
-      className={`mb-1 grid h-auto min-h-[64px] w-full justify-items-center gap-1 px-2 py-2 text-xs ${
-        active ? "ring-2 ring-primary/35" : ""
-      }`}
-      aria-pressed={active}
-    >
-      {icon}
-      <span>{label}</span>
-    </Button>
+    <button type="button" onClick={onClick} className="dc-studio-tool" aria-pressed={active}>
+      {icon}<span>{label}</span>
+    </button>
   );
 }
 
@@ -56,10 +50,10 @@ function Heading({
 }) {
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-foreground">
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
         {title}
       </h2>
-      <p className="mt-1 text-xs leading-5 text-muted-foreground">
+      <p className="mt-1 text-sm leading-6 text-muted-foreground">
         {description}
       </p>
     </div>
@@ -78,10 +72,10 @@ export function TemplatePanel({
   return (
     <div>
       <Heading
-        title="Template Undangan"
-        description="Pilih template. Komposisi, palet awal, dan canvas langsung berubah."
+        title="Pilih Tema"
+        description="Lihat desainnya langsung di sebelah kanan."
       />
-      <div className="mt-5 grid gap-3">
+      <div className="mt-5 grid grid-cols-2 gap-3">
         {templates.map((item) => (
           <div
             key={item.key}
@@ -93,11 +87,11 @@ export function TemplatePanel({
           >
             <span className="relative block">
               {item.ready ? (
-                <span className="block h-44 overflow-hidden">
+                <span className="block h-36 overflow-hidden">
                   <TemplateCardCanvas templateKey={item.key} />
                 </span>
               ) : (
-                <img src={item.previewImage} alt="" loading="lazy" className="h-44 w-full object-cover" />
+                <img src={item.previewImage} alt="" loading="lazy" className="h-36 w-full object-cover" />
               )}
               {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? "Dengan foto" : "Tanpa foto"}</span>}
               {selected === item.key && (
@@ -106,12 +100,9 @@ export function TemplatePanel({
                 </span>
               )}
             </span>
-            <span className="block bg-background p-3.5">
+            <span className="block bg-background p-3">
               <span className="block font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">
                 {item.name}
-              </span>
-              <span className="mt-1 block text-xs leading-4 text-muted-foreground">
-                {item.description}
               </span>
               {!item.ready && <span className="mt-2 block text-[11px] text-primary">Preview designer · belum dapat digunakan</span>}
             </span>
@@ -137,63 +128,17 @@ export function SectionsPanel({
   sections: InvitationSections;
   onChange: (section: InvitationSectionKey, enabled: boolean) => void;
 }) {
-  const items: {
-    key: InvitationSectionKey;
-    title: string;
-    description: string;
-    icon: ReactNode;
-  }[] = [
-    {
-      key: "rsvp",
-      title: "RSVP",
-      description: "Form konfirmasi kehadiran.",
-      icon: <Check className="h-4 w-4" />,
-    },
-    {
-      key: "wishes",
-      title: "Wishes",
-      description: "Ucapan dan doa tamu.",
-      icon: <MessageCircleHeart className="h-4 w-4" />,
-    },
-    {
-      key: "gift",
-      title: "Gift / E-Angpao",
-      description: "Informasi hadiah digital.",
-      icon: <Gift className="h-4 w-4" />,
-    },
-  ];
-
   return (
     <div>
-      <Heading
-        title="Section Undangan"
-        description="Nyalakan hanya section yang dipakai. Canvas berubah langsung dan state ikut tersimpan."
-      />
-      <div className="mt-5 space-y-2">
-        {items.map((item) => (
-          <label
-            key={item.key}
-            className="flex min-h-16 cursor-pointer items-center gap-3 rounded-xl border border-border bg-background p-3"
-          >
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-              {item.icon}
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-xs font-semibold text-foreground">
-                {item.title}
-              </span>
-              <span className="mt-0.5 block text-xs leading-4 text-muted-foreground">
-                {item.description}
-              </span>
-            </span>
+      <Heading title="Bagian & Fitur" description="Sembunyikan bagian tanpa menghapus isinya." />
+      <div className="mt-4 divide-y divide-primary/15">
+        {invitationSectionItems.map((item) => (
+          <label key={item.key} className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-3">
+            <span className="text-sm">{item.title}</span>
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
-              <input
-                type="checkbox"
-                className="peer sr-only"
-                checked={sections[item.key]}
-                onChange={(event) => onChange(item.key, event.target.checked)}
-              />
-              <span className="absolute inset-0 rounded-full bg-border transition peer-checked:bg-primary" />
+              <input type="checkbox" role="switch" className="peer sr-only" checked={sections[item.key] !== false}
+                onChange={(event) => onChange(item.key, event.target.checked)} />
+              <span className="absolute inset-0 rounded-full bg-foreground/20 transition peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary" />
               <span className="absolute left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
             </span>
           </label>
@@ -213,8 +158,8 @@ export function ColorPanel({
   return (
     <div>
       <Heading
-        title="Palet warna"
-        description="Palet bisa diubah lagi setelah memilih template."
+        title="Palet Warna"
+        description="Pilih kombinasi warna untuk tema ini."
       />
       <div className="mt-5 space-y-2">
         {invitationPaletteOptions.map(([key, item]) => (
@@ -222,6 +167,7 @@ export function ColorPanel({
             type="button"
             key={key}
             onClick={() => onSelect(key)}
+            aria-pressed={selected === key}
             className={`flex min-h-14 w-full items-center gap-3 rounded-xl border px-3 text-left ${
               selected === key
                 ? "border-primary ring-2 ring-primary/20"
@@ -250,33 +196,37 @@ export function FontPanel({
   selected: FontKey;
   onSelect: (key: FontKey) => void;
 }) {
+  const [search, setSearch] = useState("");
+  const options = invitationFontOptions.filter(([, item]) => item.name.toLowerCase().includes(search.toLowerCase()));
   return (
     <div>
       <Heading
-        title="Font pairing"
-        description="Tipografi langsung diterapkan pada canvas."
+        title="Pasangan Font"
+        description="Nama huruf ditampilkan dengan font aslinya."
       />
-      <div className="mt-5 space-y-2">
-        {invitationFontOptions.map(([key, item]) => (
+      <InvitationFonts families={invitationFontOptions.flatMap(([, item]) => [item.heading, item.body])} />
+      <Input className="mt-4" aria-label="Cari font" placeholder="Cari nama font…" value={search} onChange={(event) => setSearch(event.target.value)} />
+      <div className="mt-4 space-y-2">
+        {options.length === 0 && <p className="py-4 text-sm text-muted-foreground">Font tidak ditemukan.</p>}
+        {options.map(([key, item]) => (
           <button
             type="button"
             key={key}
             onClick={() => onSelect(key)}
+            aria-pressed={selected === key}
             className={`w-full rounded-xl border px-3 py-3 text-left ${
               selected === key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border"
             }`}
           >
-            <span className="block text-xs text-muted-foreground">
-              {item.name}
-            </span>
             <span
               className="mt-1 block text-lg text-foreground"
               style={{ fontFamily: item.heading }}
             >
-              Aa Bb
+              {item.heading}
             </span>
+            <span className="mt-1 block text-sm text-muted-foreground" style={{ fontFamily: item.body }}>{item.body}</span>
           </button>
         ))}
       </div>
@@ -300,10 +250,10 @@ export function ContentPanel({
   return (
     <div>
       <Heading
-        title="Isi undangan"
-        description="Nama, tanggal, waktu, lokasi, dan orang tua tetap mengikuti Rangkaian Acara."
+        title="Isi Undangan"
+        description="Identitas dan jadwal mengikuti data acara."
       />
-      <div className="mt-5 rounded-xl border border-border p-4">
+      <div className="mt-5 border-y border-primary/20 py-4">
         <p className="text-xs font-semibold text-foreground">
           {invitation?.title || "Acara"}
         </p>
@@ -351,10 +301,11 @@ export function MusicPanel({
     <div>
       <Heading
         title="Musik"
-        description="Semua tema punya musik bawaan. Gunakan URL atau unggah musik untuk menggantinya."
+        description="Gunakan lagu bawaan atau pilih lagu sendiri."
       />
       <p className="mt-4 text-xs leading-6 text-muted-foreground">Musik bawaan tema: <span className="font-semibold text-primary">{defaultTrack}</span>. Digunakan jika belum ada URL atau musik yang diunggah.</p>
       <input
+        aria-label="URL musik"
         value={musicUrl}
         onChange={(event) => setMusicUrl(event.target.value)}
         placeholder="https://.../music.mp3"

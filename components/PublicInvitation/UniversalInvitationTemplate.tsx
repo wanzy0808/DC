@@ -5,6 +5,7 @@ import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "l
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
+import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
@@ -153,11 +154,11 @@ export default function UniversalInvitationTemplate({
   } as CSSProperties;
 
   useEffect(() => {
-    if (!opened) return;
+    if (!opened && sections.envelope !== false) return;
     setNow(Date.now());
     const timer = window.setInterval(() => setNow(Date.now()), 1000);
     return () => window.clearInterval(timer);
-  }, [opened]);
+  }, [opened, sections.envelope]);
 
   const handleOpen = () => { musicRef.current?.playOnOpen(); setOpened(true); };
 
@@ -174,6 +175,7 @@ export default function UniversalInvitationTemplate({
     ) : null;
 
   const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
+    if (sections[keyName] === false) return null;
     const left = key === "modern-maroon" || key === "golden-art-deco";
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
@@ -208,8 +210,9 @@ export default function UniversalInvitationTemplate({
       className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel}`}
       style={css}
     >
-      <InvitationMusic ref={musicRef} source={music} opened={opened} preview={preview} />
-      {!opened ? (
+      <InvitationFonts families={[font.heading, font.body]} />
+      {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
+      {!opened && sections.envelope !== false ? (
         <InvitationThemeScenes
           theme={key}
           names={names || eventTitle}
@@ -222,7 +225,7 @@ export default function UniversalInvitationTemplate({
         />
       ) : (
         <div>
-          <InvitationThemeScenes
+          {sections.cover !== false && (<InvitationThemeScenes
             theme={key}
             names={names || eventTitle}
             date={date}
@@ -231,7 +234,7 @@ export default function UniversalInvitationTemplate({
             stage="cover"
             onOpen={handleOpen}
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
-          />
+          />)}
 
           {section("greeting", <p className="mx-auto max-w-md text-sm leading-8 opacity-80">{invitation.description || "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."}</p>, 1)}
 
@@ -344,9 +347,9 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-8 text-center">
+          {sections.footer !== false && <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-8 text-center">
             <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--inv-accent)]">Created with DC Organizer</p>
-          </footer>
+          </footer>}
         </div>
       )}
     </main>

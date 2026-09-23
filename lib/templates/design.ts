@@ -50,7 +50,7 @@ export const invitationFonts = {
   stintPontano: { name: "Stint Ultra Expanded + Pontano Sans", heading: "Stint Ultra Expanded", body: "Pontano Sans" },
   sourceSansAlegreya: { name: "Source Sans 3 + Alegreya", heading: "Source Sans 3", body: "Alegreya" },
   syneInter: { name: "Syne + Inter", heading: "Syne", body: "Inter" },
-  ultraSlabo: { name: "Ultra + Slabo", heading: "Ultra", body: "Slabo" },
+  ultraSlabo: { name: "Ultra + Slabo 27px", heading: "Ultra", body: "Slabo 27px" },
   ubuntuRokkitt: { name: "Ubuntu + Rokkitt", heading: "Ubuntu", body: "Rokkitt" },
   yellowtailRethink: { name: "Yellowtail + Rethink Sans", heading: "Yellowtail", body: "Rethink Sans" },
   yesevaJosefin: { name: "Yeseva One + Josefin Sans", heading: "Yeseva One", body: "Josefin Sans" },

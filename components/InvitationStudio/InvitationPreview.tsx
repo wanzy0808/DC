@@ -22,6 +22,8 @@ export function InvitationPreview({
   onEditPhoto,
   designKey,
   musicUrl,
+  eventTag,
+  dressCode,
 }: {
   invitation: InvitationDesignerInvitation | null;
   templateKey: string;
@@ -39,7 +41,7 @@ export function InvitationPreview({
   if (!invitation) {
     return <div className="grid min-h-[560px] place-items-center rounded-2xl border border-border bg-background text-sm text-muted-foreground">Memuat pratinjau undangan…</div>;
   }
-  const previewInvitation = musicUrl === undefined ? invitation : { ...invitation, musicUrl };
+  const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
     return <RomanticRoseTemplate invitation={previewInvitation} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} />;
   }
