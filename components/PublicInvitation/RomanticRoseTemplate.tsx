@@ -7,6 +7,7 @@ import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
+import { weddingParentLine } from "@/lib/events/parents";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 
@@ -28,6 +29,14 @@ type RoseInvitation = {
   title: string;
   groomName: string;
   brideName: string;
+  groomFatherName?: string | null;
+  groomMotherName?: string | null;
+  groomChildOrder?: number | null;
+  groomChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
+  brideFatherName?: string | null;
+  brideMotherName?: string | null;
+  brideChildOrder?: number | null;
+  brideChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
   venue: string;
   address?: string | null;
   mapUrl?: string | null;
@@ -125,6 +134,8 @@ export default function RomanticRoseTemplate({
       </button>
     ) : null;
   const displayName = [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ");
+  const groomParents = weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition);
+  const brideParents = weddingParentLine(invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition);
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
   const countdown = daysRemaining(invitation.eventDate, now ?? 0);
   const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
@@ -195,6 +206,7 @@ export default function RomanticRoseTemplate({
                   {editPhoto("personOne", "mempelai pertama")}
                 </div>
                 <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.groomName || "Mempelai pertama"}</h3>
+                {groomParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{groomParents}</p>}
               </div>
               <div className="min-w-0 text-center">
                 <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
@@ -202,6 +214,7 @@ export default function RomanticRoseTemplate({
                   {editPhoto("personTwo", "mempelai kedua")}
                 </div>
                 <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.brideName || "Mempelai kedua"}</h3>
+                {brideParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{brideParents}</p>}
               </div>
             </div>
           </section>
