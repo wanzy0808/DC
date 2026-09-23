@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { CalendarDays, Clock3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,7 @@ import {
 import {
   weddingParentLine,
   type WeddingChildKind,
+  type WeddingChildPosition,
 } from "@/lib/events/parents";
 
 const timeHours = Array.from({ length: 24 }, (_, index) =>
@@ -31,6 +32,8 @@ export function WeddingFamilyFields({
   father,
   mother,
   order,
+  position,
+  onPosition,
   onFather,
   onMother,
   onOrder,
@@ -40,6 +43,8 @@ export function WeddingFamilyFields({
   father: string;
   mother: string;
   order: string;
+  position: WeddingChildPosition | "";
+  onPosition: (value: WeddingChildPosition) => void;
   onFather: (value: string) => void;
   onMother: (value: string) => void;
   onOrder: (value: string) => void;
@@ -51,12 +56,13 @@ export function WeddingFamilyFields({
     mother,
     Number.isInteger(parsedOrder) ? parsedOrder : null,
     kind,
+    position || null,
   );
 
   return (
     <div className="space-y-3">
       <p className="text-xs font-semibold">{title}</p>
-      <ChildOrderField value={order} onChange={onOrder} />
+      <ChildOrderField value={order} position={position} onPosition={onPosition} onChange={onOrder} />
       <EventField label={d("Nama bapak")} value={father} onChange={onFather} />
       <EventField label={d("Nama ibu")} value={mother} onChange={onMother} />
       {familyLine && (
@@ -70,28 +76,55 @@ export function WeddingFamilyFields({
 
 function ChildOrderField({
   value,
+  position,
+  onPosition,
   onChange,
 }: {
   value: string;
+  position: WeddingChildPosition | "";
+  onPosition: (value: WeddingChildPosition) => void;
   onChange: (value: string) => void;
 }) {
   const { d } = useDashboardI18n();
+  const fieldId = useId();
+  const options: { value: WeddingChildPosition; label: string }[] = [
+    { value: "ELDEST", label: d("Anak Tertua") },
+    { value: "YOUNGEST", label: d("Anak Termuda") },
+    { value: "NUMBER", label: d("Anak Keberapa") },
+  ];
 
   return (
-    <label className="block">
-      <span className="mb-1.5 block text-xs font-semibold">
-        {d("Anak keberapa")} ({d("opsional")})
-      </span>
-      <Input
-        type="number"
-        min={1}
-        step={1}
-        inputMode="numeric"
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        placeholder={d("Contoh: 1")}
-      />
-    </label>
+    <fieldset className="space-y-2">
+      <legend className="mb-1.5 text-xs font-semibold">{d("Urutan Anak")} ({d("opsional")})</legend>
+      <div className="flex flex-wrap gap-2" role="group">
+        {options.map((option) => (
+          <label key={option.value} className={`inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border px-3 py-2 text-sm transition ${position === option.value ? "border-primary bg-primary/10 text-foreground" : "border-primary/30 text-foreground hover:border-primary"}`}>
+            <input
+              type="radio"
+              name={`child-position-${fieldId}`}
+              checked={position === option.value}
+              onChange={() => onPosition(option.value)}
+              className="size-4 accent-primary"
+            />
+            {option.label}
+          </label>
+        ))}
+      </div>
+      {position === "NUMBER" && (
+        <label className="block">
+          <span className="mb-1.5 block text-xs font-semibold">{d("Anak Keberapa")}</span>
+          <Input
+            type="number"
+            min={1}
+            step={1}
+            inputMode="numeric"
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            placeholder={d("Contoh: 2")}
+          />
+        </label>
+      )}
+    </fieldset>
   );
 }
 
