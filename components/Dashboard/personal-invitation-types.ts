@@ -11,7 +11,7 @@ export type PersonalInvitationGuest = {
   personalAddressee?: string | null;
   personalGreeting?: string | null;
   personalSharedAt?: string | null;
-  rsvpStatus?: "PENDING" | "ATTENDING" | "DECLINED";
+  rsvpStatus?: "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE" | "PENDING";
   plusOnes?: number;
   checkedIn?: boolean;
   table?: { id: string; name: string } | null;
