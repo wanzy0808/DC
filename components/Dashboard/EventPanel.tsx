@@ -25,6 +25,7 @@ import {
   DashboardStatusBadge,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   EventDateField,
   EventField,
@@ -399,9 +400,9 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   onChange={(event) => selectCategory(event.target.value)}
                   className="h-11 w-full rounded-[10px] border border-border bg-background px-3 text-sm outline-none focus:border-primary"
                 >
-                  <option value="">{d("Pilih jenis acara")}</option>
+                  <option value="">{displayTitleCase(d("Pilih jenis acara"))}</option>
                   {eventCategoryOptions.map((item) => (
-                    <option key={item.key} value={item.key}>{locale === "en" ? ({ WEDDING: "Wedding", SILVER_WEDDING: "Silver Wedding", GOLDEN_WEDDING: "Golden Wedding", BIRTHDAY: "Birthday", BABY_SHOWER: "Baby Shower", OTHER: "Other Event" } as Record<string, string>)[item.key] || item.label : item.label}</option>
+                    <option key={item.key} value={item.key}>{displayTitleCase(locale === "en" ? ({ WEDDING: "Wedding", SILVER_WEDDING: "Silver Wedding", GOLDEN_WEDDING: "Golden Wedding", BIRTHDAY: "Birthday", BABY_SHOWER: "Baby Shower", OTHER: "Other Event" } as Record<string, string>)[item.key] || item.label : item.label)}</option>
                   ))}
                 </select>
               </label>
@@ -521,7 +522,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                   >
                     {indonesiaTimezones.map((item) => (
                       <option key={item.value} value={item.value}>
-                        {item.label} · {item.description}
+                        {displayTitleCase(item.label)} · {displayTitleCase(item.description)}
                       </option>
                     ))}
                   </select>
