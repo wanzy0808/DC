@@ -130,10 +130,10 @@ model Invitation {
   groomFatherName    String?
   groomMotherName    String?
   groomChildOrder    Int?
-  brideFatherName    String?
+  groomChildPosition String?\n  brideFatherName    String?
   brideMotherName    String?
   brideChildOrder    Int?
-  venue              String            @default("")
+  brideChildPosition String?\n  venue              String            @default("")
   address            String?
   mapUrl             String?
   timezone           String            @default("Asia/Jakarta")
