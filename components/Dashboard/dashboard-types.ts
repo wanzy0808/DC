@@ -59,6 +59,11 @@ export type DashboardGuest = {
   category?: string | null;
   tags?: string[];
   phone: string | null;
+  personalAddressee?: string | null;
+  recipientType?: "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP";
+  invitedPax?: number;
+  personalGreeting?: string | null;
+  personalSharedAt?: string | null;
   source?: "RSVP" | "MANUAL";
   rsvpStatus: string;
   plusOnes: number;
