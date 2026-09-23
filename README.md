@@ -127,6 +127,7 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Cinzel: display, headings, titles, branding.
 - Fauna One: body copy and application UI.
 - DM Mono: metadata, status, technical labels.
+- Visible UI names and standalone titles (including dashboard frame/panel headings, menu names, metric titles and displayed person/event names) use **Title Case**: capitalize the first letter of each word. Preserve official acronyms/brand spelling (`DC Organizer`, `RSVP`, `VIP`, `WhatsApp`). Sentences/descriptions and user-written messages retain natural capitalization. Customer names and event titles are capitalized **for display only**; their stored values are untouched. Dashboard heading/menu capitalization is scoped in `app/globals.css`, with `dc-ui-name`, `dc-ui-title` and `dc-ui-label` for non-heading labels; new UI should follow the same convention in both ID/EN. See canonical `prd.md` §15.1a and `AGENTS.md` §3.
 - Light background: `#FFFFFF`; primary text: `#111111`.
 - Dark background: `#0B0B0C`; primary text: `#FFFFFF`.
 - Rose is concentrated on meaningful accents, controls, selected states, links, and headings; page surfaces stay neutral.
