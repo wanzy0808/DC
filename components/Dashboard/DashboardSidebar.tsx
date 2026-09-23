@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
 import { CalendarDays, ChevronDown, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
@@ -39,6 +41,11 @@ export default function DashboardSidebar({
         id="dc-dashboard-sidebar"
         className={`dc-dashboard-sidebar ${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
       >
+        <div className="dc-dashboard-sidebar-brand flex min-h-[72px] shrink-0 items-center border-b border-white/20 px-5">
+          <Link href="/" aria-label="DC Organizer" className="inline-flex min-w-0 items-center">
+            <BrandWordmark size="dashboard" />
+          </Link>
+        </div>
         <nav aria-label={d("Navigasi dashboard")} className="dc-dashboard-sidebar-nav flex flex-1 flex-col gap-3">
           <Button
             type="button"
