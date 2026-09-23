@@ -24,6 +24,11 @@ export type RsvpGuest = {
   id: string;
   name: string;
   phone: string | null;
+  category?: string | null;
+  tags?: string[];
+  personalAddressee?: string | null;
+  invitedPax?: number;
+  personalSharedAt?: string | null;
   rsvpStatus: string;
   plusOnes: number;
   checkedIn?: boolean;
@@ -274,6 +279,13 @@ export default function RsvpAnalyticsPanel({
                   <div className="min-w-0">
                     <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
                     {guest.phone && <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone}</p>}
+                    {(guest.category || guest.tags?.length || guest.invitedPax) && (
+                      <p className="mt-1 break-words text-xs text-muted-foreground">
+                        {[guest.category || d("Reguler"), ...(guest.tags ?? []),
+                          guest.invitedPax ? `${d("Diundang")} ${guest.invitedPax} pax` : ""]
+                          .filter(Boolean).join(" · ")}
+                      </p>
+                    )}
                   </div>
                   <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
                     {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
