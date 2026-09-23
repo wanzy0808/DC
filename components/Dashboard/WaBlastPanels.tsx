@@ -4,6 +4,7 @@ import { Plus, RefreshCw, Trash2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   DashboardEmptyState,
   DashboardPanel,
@@ -52,7 +53,7 @@ export function WaBlastAddRecipients({
           <option value="">{d("Pilih tamu")}</option>
           {availableGuests.map((guest) => (
             <option key={guest.id} value={guest.id}>
-              {guest.name} · {guest.phone}
+              {displayTitleCase(guest.name)} · {guest.phone}
             </option>
           ))}
         </select>
