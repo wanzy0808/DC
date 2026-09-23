@@ -302,11 +302,11 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       )}
 
       {events.length > 0 && (
-        <DashboardSurface className="mt-5 overflow-hidden">
-          <div className="border-b border-primary/15 bg-primary/[0.035] px-5 py-4 sm:px-6">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-foreground">{d("Daftar acara")}</h2>
+        <section className="mt-6 min-w-0">
+          <div className="mb-4 border-b border-primary/20 pb-4">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">{d("Daftar acara")}</h2>
           </div>
-          <div className="grid gap-3 p-4 sm:p-5">
+          <div className="grid gap-3">
             {events.map((event) => {
               const draft = !event.eventConfigured;
               const hasDesign = Boolean(event.templateKey?.trim());
@@ -361,16 +361,16 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
               );
             })}
           </div>
-        </DashboardSurface>
+        </section>
       )}
 
       {!loading && !events.length && editorMode === "closed" && (
-        <DashboardSurface className="mt-5 p-4 sm:p-5">
+        <div className="mt-5">
           <DashboardEmptyState
             icon={CalendarDays}
             title={d("Belum ada acara")}
           />
-        </DashboardSurface>
+        </div>
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
