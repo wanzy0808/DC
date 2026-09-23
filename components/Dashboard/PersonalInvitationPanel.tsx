@@ -355,7 +355,7 @@ export default function PersonalInvitationPanel() {
   return (
     <DashboardPage>
       <DashboardPageHeader
-        title={d("Personal Invitation")}
+        title={d("Undangan Personal")}
       >
         <EventScopePicker
           events={events}
