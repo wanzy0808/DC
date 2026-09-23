@@ -146,7 +146,7 @@ export default function DashboardAccountPanel({
         </div>
       </div>
 
-      {notice && <p role="status" className="mb-4 rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">{notice}</p>}
+      {notice && <p role="status" className="dc-dashboard-notice mb-4 rounded-tr-[22px] border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">{notice}</p>}
       {error && <p role="alert" className="mb-4 rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">{error}</p>}
 
       {section === "profile" ? (
