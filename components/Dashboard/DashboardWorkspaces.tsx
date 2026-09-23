@@ -399,11 +399,17 @@ function LoadingSurface() {
 }
 
 export function UsherPanel({
+  events,
+  selectedId,
+  onSelect,
   guests,
   onRefresh,
 }: {
+  events: DashboardEvent[];
+  selectedId: string;
+  onSelect: (id: string) => void;
   guests: DashboardGuest[];
-  onRefresh: () => void;
+  onRefresh: () => void | Promise<void>;
 }) {
   const { d } = useDashboardI18n();
   const checked = guests.filter((guest) => guest.checkedIn).length;
@@ -418,11 +424,13 @@ export function UsherPanel({
               {d("Muat ulang")}
             </Button>
             <Button asChild size="sm">
-              <Link href="/dashboard/usher"><QrCode className="size-4" aria-hidden="true" />{d("Buka Usher App")}</Link>
+              <Link href={selectedId ? `/dashboard/usher?invitationId=${encodeURIComponent(selectedId)}` : "/dashboard/usher"}><QrCode className="size-4" aria-hidden="true" />{d("Buka Usher App")}</Link>
             </Button>
           </>
         }
-      />
+      >
+        <EventScopePicker events={events} value={selectedId} onChange={onSelect} />
+      </DashboardPageHeader>
       <DashboardMetricGrid className="xl:grid-cols-2">
         <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
         <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
