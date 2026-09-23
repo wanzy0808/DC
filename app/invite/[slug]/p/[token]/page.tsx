@@ -38,7 +38,7 @@ export default async function PersonalInvitationPage({
       <PersonalInvitationPasswordGate
         slug={slug}
         token={token}
-        guestName={guest.name}
+        guestName={guest.personalAddressee || guest.name}
       />
     );
   }
@@ -48,12 +48,15 @@ export default async function PersonalInvitationPage({
     data: { personalViewCount: { increment: 1 } },
   });
 
-  const content = <PublicInvitationRenderer invitation={invitation} />;
+  const content = <PublicInvitationRenderer invitation={invitation} personalGuest={{ id: guest.id, name: guest.name, token, invitedPax: guest.invitedPax }} />;
 
   return (
     <>
       <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-[family-name:var(--font-fauna)] text-sm text-foreground">
-        Undangan khusus untuk <strong>{guest.name}</strong>
+        Undangan khusus untuk <strong>{guest.personalAddressee || guest.name}</strong>
+        {guest.personalGreeting && (
+          <p className="mx-auto mt-2 max-w-xl whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{guest.personalGreeting}</p>
+        )}
       </div>
       {content}
     </>
