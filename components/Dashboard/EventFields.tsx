@@ -224,7 +224,7 @@ export function EventTimeField({
       {open && !disabled && (
         <div className="absolute right-0 z-40 mt-2 grid w-full min-w-52 grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-xl border border-border bg-background p-3 shadow-xl">
           <select
-            data-dc-native-chevron
+            data-dc-native-chevron="true"
             value={hour}
             onChange={(event) =>
               onChange(`${event.target.value}:${minute}`)
@@ -237,7 +237,7 @@ export function EventTimeField({
           </select>
           <span>:</span>
           <select
-            data-dc-native-chevron
+            data-dc-native-chevron="true"
             value={minute}
             onChange={(event) =>
               onChange(`${hour}:${event.target.value}`)
