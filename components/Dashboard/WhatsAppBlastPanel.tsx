@@ -162,7 +162,9 @@ export default function WhatsAppBlastPanel() {
       setName("");
       setPhone("");
       await loadEventData(eventId);
-      setNotice(d("Tamu baru ditambahkan ke daftar WA Blast."));
+      setNotice(data?.reusedGuest
+        ? d("Tamu yang sudah ada ditambahkan ke daftar WA Blast.")
+        : d("Tamu baru ditambahkan ke daftar WA Blast."));
     } catch (error) {
       setNotice(error instanceof Error ? error.message : d("Tamu belum dapat ditambahkan."));
       setBusy(false);
