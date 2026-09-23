@@ -62,13 +62,9 @@ export function PersonalInvitationCreatePanel({
 
   return (
     <DashboardPanel
-      eyebrow={`${d("Tamu")} · ${selectedEvent.title || d("Acara")}`}
       title={d("Buat Personal Invitation")}
-      description={d(
-        "Gunakan tamu yang sudah ada atau tambahkan tamu baru untuk membuat tautan personal.",
-      )}
     >
-      <div className="rounded-xl border border-border/70 bg-background p-3">
+      <div className="rounded-2xl border border-primary/20 bg-primary/[0.025] p-4">
         <p className="text-xs font-semibold text-foreground">
           {d("Dari daftar tamu")}
         </p>
@@ -188,11 +184,7 @@ export function PersonalInvitationListPanel({
 
   return (
     <DashboardPanel
-      eyebrow={`${d("Daftar")} · ${selectedEvent.title || d("Acara")}`}
-      title={d("Personal Invitation")}
-      description={d(
-        "Kelola status publish, password, dan tautan personal setiap tamu.",
-      )}
+      title={d("Daftar undangan")}
       actions={
         <Button
           type="button"
@@ -205,7 +197,7 @@ export function PersonalInvitationListPanel({
         </Button>
       }
     >
-      <div className="mt-4 space-y-3">
+      <div className="space-y-3">
         {personal.length === 0 && (
           <DashboardEmptyState
             icon={ContactRound}
@@ -227,7 +219,7 @@ export function PersonalInvitationListPanel({
           return (
             <article
               key={item.id}
-              className="rounded-xl border border-border/70 bg-background p-3.5"
+              className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
