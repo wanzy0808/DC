@@ -877,20 +877,36 @@ body:has(.dc-dashboard--redesign) {
   border: 1px solid var(--dc-dashboard-border) !important;
   box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
 }
-/* Card accents: precise Rose edges, not an all-pink card background.
-   Shared surfaces receive a left rail; compact metrics get a top edge. */
+/* Brand card geometry: three square corners, only the top-right curves.
+   All Rose emphasis runs down the LEFT edge, including compact metrics.
+   Keep controls, badges and the outer mainframe's own geometry unchanged. */
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-surface {
   border: 1px solid var(--dc-dashboard-border) !important;
   border-left: 3px solid var(--primary) !important;
+  border-radius: 0 26px 0 0 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric,
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview .dc-dashboard-metric--featured {
   border: 1px solid var(--dc-dashboard-border) !important;
-  border-top: 3px solid var(--primary) !important;
+  border-left: 3px solid var(--primary) !important;
+  border-radius: 0 22px 0 0 !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-hero {
+  border-left: 4px solid var(--primary) !important;
+  border-radius: 0 28px 0 0 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-events,
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-progress {
   border-left-width: 4px !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-compact-stat,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-notice {
+  border-left: 3px solid var(--primary) !important;
+  border-radius: 0 18px 0 0 !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-empty-state {
+  border-left: 3px solid var(--primary) !important;
+  border-radius: 0 22px 0 0 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
   background: rgb(192 122 132 / 15%);
