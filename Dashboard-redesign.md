@@ -34,3 +34,23 @@ Customer dashboard should feel like the approved DC Organizer landing without du
 - Stage 4 remains open: keyboard, Light/Dark, narrow/large desktop, mobile overlay, ID/EN, active+hover adjacency, zero/populated state, build and TypeScript.
 
 - WhatsApp help: the floating dashboard trigger now opens two clear routes: Wedding Planner → Christine (+62 821-2478-6516), and physical/digital invitations or Guestbook → Admin (+62 812-8500-9609). Both open wa.me with relevant prefills; menu supports outside click, Escape and ID/EN. Source committed; browser testing pending.
+
+## 23 September 2026 — Owner screenshot review: stronger Rose / functional overview
+
+The owner reviewed a full-width dashboard screenshot and rejected the nearly all-white canvas, weak brand presence, sparse oversized latest-events card, disconnected button styling and the old neutral-rail sidebar. The owner explicitly authorized dashboard redesign even where the earlier neutral-rail visual baseline conflicts with this new direction.
+
+### Implemented in source
+- Dashboard-only Rose sidebar from top brand block through desktop/mobile rail. White navigation labels, darker active Rose and distinct muted hover. Only the active item draws 10px outside corners; 12px vertical gaps prevent collision with adjacent hovered rows. Expanded Acara opener is not automatically selected.
+- Header remains one continuous restrained marketing-style control family, but with a warm near-white Rose canvas; brand wordmark is white inside the Rose brand block. Shared global landing navbar and Pintu are untouched.
+- Customer workspace canvas now uses a very pale Rose tint (`#fff5f7`) instead of pure white. Dark mode uses a near-black Rose-tinted canvas, dark neutral cards and a deep Rose rail; controls keep accessible color contrast.
+- Shared dashboard card/metric/page-header primitives now emphasize Rose outlines, larger readable figures, and a consistent surface/spacing rhythm across customer workspaces.
+- Beranda replaces the tall empty "Terbaru" table with up to five compact event rows (real title/date/venue/status and the existing Studio route). The top Rose hero offers the existing Tambah acara action; four actual metrics, RSVP coverage and publication progress remain live-derived. Cards in the two-column overview align to their own content rather than stretching one empty box to the other's height. Empty data stays honest.
+- Normal workspace Button continues to use the canonical shared Button primitive. The white button inside the deep-Rose overview hero is a scoped contrast exception, not a new application-wide button variant.
+
+### Remaining work
+- [ ] Visually review with the owner's actual dashboard screenshot viewport, narrower laptop and phone (ID/EN and light/dark) after sync; adjust oversize/cropping/contrast based on actual browser rendering.
+- [ ] Audit the functional layout of each dashboard workspace (forms/tables, on-page primary action, filtering and short labels) and remove obsolete historical CSS without changing data or permissions.
+- [ ] Verify all new source commits with production build/TypeScript and keyboard/hover behaviors before final approval.
+
+### Validation
+Source changes are committed directly to `main`. Screenshot and browser visual verification are **pending**; GitHub Actions status must be recorded against the final application-code commit rather than an older green build.
