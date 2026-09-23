@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -69,6 +69,7 @@ export default function DashboardPage() {
   const [usherGuests, setUsherGuests] = useState<DashboardGuest[]>([]);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileMenu, setProfileMenu] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
   const [profileSection, setProfileSection] = useState<"profile" | "security">("profile");
   const [onboarding, setOnboarding] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -178,6 +179,24 @@ export default function DashboardPage() {
       active = false;
     };
   }, [placementEventId]);
+
+  useEffect(() => {
+    if (!profileMenu) return;
+    const closeOutside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !accountMenuRef.current?.contains(event.target)) {
+        setProfileMenu(false);
+      }
+    };
+    const closeEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setProfileMenu(false);
+    };
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeEscape);
+    };
+  }, [profileMenu]);
 
   const canGuestbook = ctx?.entitlements.hasGuestbook ?? false;
   const accent = "text-primary";
@@ -328,12 +347,14 @@ export default function DashboardPage() {
                     <LanguageToggle />
                   </div>
 
-                  <div className="dc-dashboard-account relative">
+                  <div ref={accountMenuRef} className="dc-dashboard-account relative">
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
                       className="dc-dashboard-account-button h-11 min-w-0 border-primary/35 bg-transparent px-2 text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-white/20 dark:text-white dark:hover:border-white/35 dark:hover:bg-white/[0.07] dark:hover:text-white"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
+                      aria-expanded={profileMenu}
+                      aria-haspopup="true"
                       title={d("Menu akun")}
                     >
                       <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-current">
