@@ -64,6 +64,13 @@ Use only these application UI fonts:
 
 Do not introduce additional fonts, random Google Fonts, template fonts, or intentional browser/system fallback styling. Invitation-template typography may remain dynamic when it belongs to invitation content itself.
 
+### Wedding family order and invitation copy (23 September 2026)
+
+- The wedding setup for EACH partner exposes one mutually exclusive radio selection: **Anak Tertua** (eldest), **Anak Termuda** (youngest), or **Anak Keberapa** (numeric). Only the numeric selection reveals an integer input (>0), required when that option is selected. A previously saved numeric order must reopen with numeric selected. An untouched legacy wedding with no order remains optional/blank.
+- Keep canonical `Invitation.groomChildOrder` / `brideChildOrder` as nullable numeric fields. Store the additional mutually exclusive mode in `groomChildPosition` / `brideChildPosition`, limited to `ELDEST`, `YOUNGEST`, `NUMBER` or null; NEVER pretend youngest has a knowable numeric sibling position or encode mode with negative/sentinel numbers. Preserve old data and the event's publish lock. An eldest/youngest selection clears the numeric order.
+- The single `weddingParentLine` formatter in `lib/events/parents.ts` owns family copy for Dashboard preview, Studio preview and EVERY ready public invitation theme: `Putra/Putri Sulung`, `Putra/Putri Bungsu`, or numeric Indonesian ordinal; render **Title Case** including `Dari Bapak Chandra & Ibu Juni`. This transformation is display-only; never mutate saved names or alter narrative descriptions.
+- Keep parent data optional (no dummy labels if either parent absent); public and Studio render the same saved wedding information. After schema edits, run `pnpm db:deploy` against the intended database and `pnpm db:generate` before running the app. CI must regenerate Prisma, test the shared formatter and build.
+
 ### Title Case for visible names and headings (23 September 2026)
 
 - **Every word in a customer-facing name or standalone UI title starts with a capital letter.** Apply Title Case consistently to page titles, section/frame/card headers (including large Dashboard frames), navigation names, metric titles, and displayed person/event names: `Manajemen Tamu`, `Daftar Undangan`, `Nama Di Amplop`.
