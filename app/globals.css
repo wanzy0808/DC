@@ -225,6 +225,14 @@ aside nav > p { font-family: var(--font-dc-heading); }
   --dc-dashboard-header-bg: #1c141b;
 }
 
+/* Display-only Title Case for dashboard names and headings. Never mutate customer data,
+   sentence descriptions, database identifiers, or protected public invitation artwork. */
+.dc-dashboard :is(h1, h2, h3, h4, h5, h6),
+.dc-dashboard .dc-sidebar-link > span,
+.dc-dashboard :is(.dc-ui-name, .dc-ui-title, .dc-ui-label) {
+  text-transform: capitalize;
+}
+
 /* Branded, continuous dashboard chrome. Landing and public navbar are untouched. */
 .dc-dashboard .dc-dashboard-sidebar {
   background: var(--dc-dashboard-rail);
