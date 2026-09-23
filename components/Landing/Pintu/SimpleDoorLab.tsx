@@ -117,6 +117,38 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
   </group>;
 }
 
+/** A soft pool of light revealed by the opening panel, without a rectangular overlay. */
+function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: boolean }) {
+  const material = useRef<THREE.SpriteMaterial>(null);
+  const map = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 256;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128);
+      gradient.addColorStop(0, "rgba(255,246,234,0.72)");
+      gradient.addColorStop(0.27, "rgba(255,220,207,0.35)");
+      gradient.addColorStop(0.65, "rgba(235,157,170,0.09)");
+      gradient.addColorStop(1, "rgba(235,157,170,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 256, 256);
+    }
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+  useEffect(() => () => map.dispose(), [map]);
+  useFrame((_, delta) => {
+    if (material.current) {
+      material.current.opacity = THREE.MathUtils.damp(
+        material.current.opacity, opening ? (entering ? 0.62 : 0.43) : 0, 2.6, delta,
+      );
+    }
+  });
+  return <sprite position={[0, 1.85, -0.145]} scale={[2.0, 3.6, 1]}>
+    <spriteMaterial ref={material} map={map} color="#ffe6de" transparent opacity={0}
+      depthWrite={false} toneMapped={false} blending={THREE.AdditiveBlending} />
+  </sprite>;
+}
+
 function GroundShadow({ fullFrame, isDarkMode }: { fullFrame: boolean; isDarkMode: boolean }) {
   // A soft, transparent contact shadow: no rectangular floor plane or hard-edged shadow box.
   const texture = useMemo(() => {
@@ -277,6 +309,7 @@ function Door({ opening, image, title, entering }: { opening: boolean; image: st
   const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} entering={entering} />
+    <DoorOpeningGlow opening={opening} entering={entering} />
     <group position={[0, 0, -0.16]}>
       <DoorFrame />
     </group>
@@ -381,7 +414,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
-    <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
+    <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 1.65 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;
 }
 
