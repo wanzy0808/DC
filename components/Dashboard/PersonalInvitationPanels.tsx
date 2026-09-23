@@ -167,6 +167,8 @@ export function PersonalInvitationListPanel({
   setEditName,
   editPhone,
   setEditPhone,
+  editProfile,
+  setEditProfile,
   passwordId,
   setPasswordId,
   password,
@@ -187,6 +189,8 @@ export function PersonalInvitationListPanel({
   setEditName: (value: string) => void;
   editPhone: string;
   setEditPhone: (value: string) => void;
+  editProfile: GuestInvitationForm;
+  setEditProfile: (value: GuestInvitationForm) => void;
   passwordId: string | null;
   setPasswordId: (value: string | null) => void;
   password: string;
@@ -248,27 +252,56 @@ export function PersonalInvitationListPanel({
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
                   {editing ? (
-                    <div className="grid gap-2 sm:grid-cols-2">
-                      <Input
-                        value={editName}
-                        onChange={(event) => setEditName(event.target.value)}
-                        placeholder={d("Nama tamu")}
-                      />
-                      <Input
-                        value={editPhone}
-                        onChange={(event) => setEditPhone(event.target.value)}
-                        placeholder={d("Nomor WhatsApp")}
+                    <div className="space-y-4">
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <label className="text-sm font-medium text-foreground">
+                          {d("Nama penerima")}
+                          <Input
+                            value={editName}
+                            maxLength={120}
+                            onChange={(event) => setEditName(event.target.value)}
+                            className="mt-1.5"
+                          />
+                        </label>
+                        <label className="text-sm font-medium text-foreground">
+                          {d("Nomor WhatsApp (opsional)")}
+                          <Input
+                            type="tel"
+                            maxLength={32}
+                            value={editPhone}
+                            onChange={(event) => setEditPhone(event.target.value)}
+                            className="mt-1.5"
+                          />
+                        </label>
+                      </div>
+                      <PersonalInvitationGuestFields
+                        value={editProfile}
+                        onChange={setEditProfile}
+                        disabled={busyId === item.id}
                       />
                     </div>
                   ) : (
                     <>
-                      <p className="truncate text-sm font-semibold text-foreground">
-                        {item.name}
+                      <p className="break-words text-sm font-semibold text-foreground">
+                        {item.personalAddressee || item.name}
                       </p>
-                      <p className="mt-0.5 truncate font-[family-name:var(--font-dc-mono)] text-[11px] text-muted-foreground">
-                        {item.phone || d("Tanpa nomor")} ·{" "}
-                        {item.personalViewCount || 0} dibuka
+                      {item.personalAddressee && item.personalAddressee !== item.name && (
+                        <p className="mt-0.5 text-xs text-muted-foreground">
+                          {d("Data tamu")}: {item.name}
+                        </p>
+                      )}
+                      <p className="mt-1 break-words text-xs text-muted-foreground">
+                        {item.phone || d("Tanpa nomor")} · {item.personalViewCount || 0} {d("kali dibuka")}
                       </p>
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {item.category || d("Reguler")} · {item.invitedPax ?? 1} {d("orang diundang")}
+                        {(item.tags?.length ?? 0) > 0 ? ` · ${item.tags?.join(", ")}` : ""}
+                      </p>
+                      {item.personalGreeting && (
+                        <p className="mt-1 break-words text-xs italic text-muted-foreground">
+                          {item.personalGreeting}
+                        </p>
+                      )}
                     </>
                   )}
                 </div>
@@ -328,6 +361,24 @@ export function PersonalInvitationListPanel({
                 <DashboardStatusBadge active={item.personalPublished}>
                   {item.personalPublished ? d("Terbit") : d("Draft")}
                 </DashboardStatusBadge>
+                <DashboardStatusBadge active={Boolean(item.personalSharedAt)}>
+                  {item.personalSharedAt ? d("Ditandai dibagikan") : d("Belum dibagikan")}
+                </DashboardStatusBadge>
+                <DashboardStatusBadge active={item.rsvpStatus === "ATTENDING"}>
+                  {item.rsvpStatus === "ATTENDING"
+                    ? `${d("Hadir")} · ${(item.plusOnes ?? 0) + 1} pax`
+                    : item.rsvpStatus === "NOT_ATTENDING"
+                      ? d("Tidak hadir")
+                      : item.rsvpStatus === "TENTATIVE"
+                        ? d("Tentatif")
+                        : d("Belum RSVP")}
+                </DashboardStatusBadge>
+                {item.checkedIn && (
+                  <DashboardStatusBadge active>{d("Sudah check-in")}</DashboardStatusBadge>
+                )}
+                {item.table?.name && (
+                  <span className="text-xs text-muted-foreground">{d("Meja")}: {item.table.name}</span>
+                )}
                 <DashboardStatusBadge
                   active={item.personalPasswordProtected}
                 >
@@ -363,11 +414,27 @@ export function PersonalInvitationListPanel({
                 )}
 
                 {item.personalPublished && publicUrl && (
-                  <Button asChild size="sm">
-                    <a href={publicUrl} target="_blank" rel="noreferrer">
-                      {d("Buka publik")}
-                    </a>
-                  </Button>
+                  <>
+                    <Button asChild size="sm">
+                      <a href={publicUrl} target="_blank" rel="noreferrer">
+                        {d("Buka publik")}
+                      </a>
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      disabled={busyId === item.id}
+                      onClick={() => onPatch(
+                        item.id,
+                        { markShared: !item.personalSharedAt },
+                        item.personalSharedAt
+                          ? d("Penanda dibagikan dibatalkan.")
+                          : d("Ditandai dibagikan secara manual; status pengiriman WhatsApp tidak diverifikasi."),
+                      )}
+                    >
+                      {item.personalSharedAt ? d("Batalkan tanda dibagikan") : d("Tandai dibagikan")}
+                    </Button>
+                  </>
                 )}
               </div>
 
