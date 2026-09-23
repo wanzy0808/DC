@@ -122,3 +122,10 @@ Deployment/QA:
 - Previous Rose-full sidebar and pink-tinted dashboard canvas were also not the requested white/black landing-style theme. The new dashboard palette uses white sidebar/background/cards in Light and near-black sidebar/background/cards in Dark, with stronger Rose outlines, typography, hover/selected navigation and landing-style primary CTA. Beranda's hero changes from a dark Rose slab to a light/dark Rose-outlined card; real event/RSVP metrics and operations are unchanged.
 - Files: `app/dashboard/page.tsx`, `components/Dashboard/DashboardSidebar.tsx`, `app/globals.css`, `prd.md`, `README.md`, `AGENTS.md`, `Dashboard-redesign.md`. Commits: `267ae839`, `d09c230f`, `7543b6ef` plus documentation commits.
 - **QA not yet verified:** desktop/mobile long-content scrolling inside the frame, header account dropdown, sidebar overlay, nested Studio/complex table behavior, Light/Dark screenshots and GitHub Actions build. Do not describe this as a visually approved result.
+
+
+## 23 September 2026 — Brand Rose exterior and directional card strokes
+
+- Owner selected solid brand Rose in the area **outside** the landing-style customer mainframe instead of pale radial glow. `app/globals.css` now uses `var(--primary)` as the full exterior fill on both Light and Dark; the frame has a lighter contrasting border. The frame's viewport sizing and inner scroll model remain unchanged.
+- Small metric cards have a 3px Rose top stroke; shared information surfaces have a 3px Rose left stroke (Beranda's event and RSVP/publication panels: 4px). Interior cards remain neutral white/near-black per theme, without decorative photo assets or content changes.
+- App commit `0b2415e`. Browser screenshots/CI for this CSS revision still need verification.
