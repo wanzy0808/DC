@@ -1,14 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-
-function normalizeTags(value: unknown): string[] {
-  if (!Array.isArray(value)) return [];
-  const normalized = value
-    .map((tag: unknown) => String(tag).trim())
-    .filter((tag: string) => tag.length > 0);
-  return Array.from(new Set<string>(normalized)).slice(0, 20);
-}
+import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 
 export async function PATCH(
   request: Request,
@@ -34,15 +27,19 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const category =
-      body.category == null || String(body.category).trim() === ""
-        ? null
-        : String(body.category).trim().slice(0, 80);
-    const tags = normalizeTags(body.tags);
+    let profile;
+    try {
+      profile = parsePersonalGuestFields({ category: body.category ?? "", tags: body.tags ?? [] });
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Kategori dan kelompok tamu tidak valid." },
+        { status: 400 },
+      );
+    }
 
     const updated = await prisma.guest.update({
       where: { id },
-      data: { category, tags },
+      data: { category: profile.category, tags: profile.tags },
       select: {
         id: true,
         invitationId: true,
