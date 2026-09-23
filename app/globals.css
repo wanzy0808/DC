@@ -940,6 +940,13 @@ body:has(.dc-dashboard--redesign) {
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card:last-child {
   border-bottom: 0 !important;
 }
+/* A stack of plain records should read as ONE list, not spaced-apart tiles. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .grid:has(> .dc-dashboard-detail-card) {
+  gap: 0 !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card + .dc-dashboard-detail-card {
+  margin-top: 0 !important;
+}
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel :is(
   .dc-dashboard-compact-stat,
   .dc-dashboard-empty-state,
