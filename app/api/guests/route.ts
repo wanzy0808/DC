@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 
 async function getInvitation(userId: string, invitationId?: string) {
   if (invitationId) {
@@ -119,12 +120,38 @@ export async function POST(request: Request) {
     const name = String(body.name ?? "").trim();
     const tableId = String(body.tableId ?? "").trim() || null;
     const plusOnes = Number(body.plusOnes ?? 0);
-    const category = String(body.category ?? "").trim() || null;
-    const tags = normalizeTags(body.tags);
+    let sharedGuestProfile;
+    try {
+      sharedGuestProfile = parsePersonalGuestFields(body);
+    } catch (error) {
+      return NextResponse.json(
+        { error: error instanceof Error ? error.message : "Data tamu tidak valid." },
+        { status: 400 },
+      );
+    }
+    const category = sharedGuestProfile.category ?? (String(body.category ?? "").trim() || null);
+    const tags = sharedGuestProfile.tags ?? normalizeTags(body.tags);
 
     if (!name) return NextResponse.json({ error: "Nama tamu wajib diisi." }, { status: 400 });
+    const phone = String(body.phone ?? "").trim() || null;
+    if (phone && phone.length > 32) {
+      return NextResponse.json({ error: "Nomor WhatsApp maksimal 32 karakter." }, { status: 400 });
+    }
     if (!Number.isInteger(plusOnes) || plusOnes < 0) {
       return NextResponse.json({ error: "Jumlah plus one tidak valid." }, { status: 400 });
+    }
+
+    if (phone) {
+      const duplicate = await prisma.guest.findFirst({
+        where: { invitationId: invitation.id, name: { equals: name, mode: "insensitive" }, phone },
+        select: { id: true },
+      });
+      if (duplicate) {
+        return NextResponse.json(
+          { error: "Nama dan nomor ini sudah terdaftar pada acara ini.", guestId: duplicate.id },
+          { status: 409 },
+        );
+      }
     }
 
     if (tableId) {
@@ -142,8 +169,9 @@ export async function POST(request: Request) {
       data: {
         invitationId: invitation.id,
         name,
-        phone: String(body.phone ?? "").trim() || null,
-        category,
+        phone,
+        ...sharedGuestProfile,
+        category: category ?? "REGULAR",
         tags,
         tableId,
         plusOnes,
