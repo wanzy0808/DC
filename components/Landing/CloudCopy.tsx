@@ -53,10 +53,10 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         : { duration: 0 }}
       style={{ pointerEvents: phase === "rest" ? "auto" : "none" }}
       className={top
-        ? "absolute left-[5%] top-1 z-20 w-[min(84vw,390px)] sm:left-[3%] sm:top-2 lg:left-[2%] lg:top-[3%] lg:w-[min(31vw,510px)]"
-         : "absolute bottom-[4%] right-[5%] z-20 w-[min(76vw,320px)] sm:bottom-[5%] sm:right-[8%] lg:bottom-[6%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
+        ? "absolute left-1/2 top-[clamp(78px,12dvh,135px)] z-20 w-[min(88%,390px)] -translate-x-1/2 sm:left-[3%] sm:top-2 sm:translate-x-0 lg:left-[2%] lg:top-[3%] lg:w-[min(31vw,510px)]"
+         : "absolute bottom-[clamp(55px,9dvh,110px)] right-1/2 z-20 w-[min(78%,320px)] translate-x-1/2 sm:bottom-[5%] sm:right-[8%] sm:translate-x-0 lg:bottom-[6%] lg:right-[11%] lg:w-[min(25vw,420px)]"}
     >
-      <div className={top ? "relative isolate px-9 py-10 text-center sm:px-12 sm:py-12 lg:px-14" : "relative isolate px-8 py-9 text-center sm:px-10 sm:py-10 lg:px-12"}>
+      <div className={top ? "relative isolate px-5 py-6 text-center sm:px-12 sm:py-12 lg:px-14" : "relative isolate px-5 py-5 text-center sm:px-10 sm:py-10 lg:px-12"}>
         {/* A single alpha silhouette keeps the rose outline outside the cloud only. */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           {/* A single translucent cloud silhouette prevents overlapping circles in dark mode. */}
@@ -72,13 +72,13 @@ export default function CloudCopy({ corner }: { corner: "top" | "bottom" }) {
         {top ? (
           <>
             <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.10em] text-neutral-700 dark:text-white/85 sm:text-[11px]"><LetterLine text={locale === "en" ? "For moments worth remembering" : "Untuk momen yang ingin dikenang"} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
-            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-[25px] leading-[1.16] text-primary sm:text-[30px] lg:text-[clamp(1.85rem,2vw,2.1rem)]"><LetterLine text={locale === "en" ? "Every story" : "Setiap cerita"} active={textVisible} delay={assemble ? 1.55 : 0} /><br /><LetterLine text={locale === "en" ? "begins somewhere." : "punya awalnya."} active={textVisible} delay={assemble ? 1.85 : 0} /></h1>
-            <p className="mx-auto mt-3 max-w-[39ch] text-[12px] leading-[1.55] text-neutral-800 dark:text-white/90 sm:text-[13px] lg:text-[14px]"><LetterLine text={locale === "en" ? "A celebration, a gathering, or a small moment with the people who matter. Choose the door that feels like your story." : "Perayaan, pertemuan, atau momen sederhana bersama orang-orang terdekat. Pilih pintu yang paling menggambarkan ceritamu."} active={textVisible} delay={assemble ? 2.2 : 0} /></p>
+            <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-[20px] leading-[1.16] text-primary sm:text-[30px] lg:text-[clamp(1.85rem,2vw,2.1rem)]"><LetterLine text={locale === "en" ? "Every story" : "Setiap cerita"} active={textVisible} delay={assemble ? 1.55 : 0} /><br /><LetterLine text={locale === "en" ? "begins somewhere." : "punya awalnya."} active={textVisible} delay={assemble ? 1.85 : 0} /></h1>
+            <p className="mx-auto mt-3 max-w-[39ch] text-[11px] leading-[1.45] text-neutral-800 dark:text-white/90 sm:text-[13px] lg:text-[14px]"><LetterLine text={locale === "en" ? "A celebration, a gathering, or a small moment with the people who matter. Choose the door that feels like your story." : "Perayaan, pertemuan, atau momen sederhana bersama orang-orang terdekat. Pilih pintu yang paling menggambarkan ceritamu."} active={textVisible} delay={assemble ? 2.2 : 0} /></p>
           </>
         ) : (
           <>
-            <p className="font-[family-name:var(--font-dc-heading)] text-[20px] leading-[1.2] text-primary sm:text-[23px] lg:text-[24px]"><LetterLine text={locale === "en" ? "The next chapter is yours." : "Bab berikutnya milikmu."} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
-            <p className="mt-2 text-[12px] leading-[1.5] text-neutral-800 dark:text-white/90 sm:text-[13px]"><LetterLine text={locale === "en" ? "Open a door. Make the moment yours." : "Buka satu pintu. Jadikan momennya milikmu."} active={textVisible} delay={assemble ? 1.65 : 0} /></p>
+            <p className="font-[family-name:var(--font-dc-heading)] text-[17px] leading-[1.2] text-primary sm:text-[23px] lg:text-[24px]"><LetterLine text={locale === "en" ? "The next chapter is yours." : "Bab berikutnya milikmu."} active={textVisible} delay={assemble ? 1.1 : 0} /></p>
+            <p className="mt-2 text-[11px] leading-[1.4] text-neutral-800 dark:text-white/90 sm:text-[13px]"><LetterLine text={locale === "en" ? "Open a door. Make the moment yours." : "Buka satu pintu. Jadikan momennya milikmu."} active={textVisible} delay={assemble ? 1.65 : 0} /></p>
             <p className="mx-auto mt-2 max-w-[37ch] text-[12px] leading-[1.5] text-neutral-800 dark:text-white/90 sm:text-[13px]"><LetterLine text={locale === "en" ? "From the first invitation to the last warm farewell, let every detail feel personal and worth remembering." : "Dari undangan pertama hingga salam perpisahan yang hangat, biarkan setiap detail terasa personal dan layak dikenang."} active={textVisible} delay={assemble ? 2.05 : 0} /></p>
           </>
         )}
