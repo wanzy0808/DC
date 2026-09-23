@@ -21,12 +21,11 @@ import {
   authTitleClass,
 } from "@/components/Auth/auth-styles";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { dashboardRouteForRole } from "@/lib/auth/dashboard-route";
 
 function destinationForRole(role: string, next: string) {
-  if (role === "OWNER") return "/owner";
-  if (role === "ADMIN" || role === "FINANCE") return "/admin";
-  if (role === "DESIGNER" || role === "EDITOR") return "/designer";
-  return next;
+  const dashboard = dashboardRouteForRole(role);
+  return dashboard === "/dashboard" ? next : dashboard;
 }
 
 const copy = {
