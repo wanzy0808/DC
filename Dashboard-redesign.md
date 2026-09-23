@@ -107,3 +107,11 @@ Deployment/QA:
 - **Database migration required** after syncing code: run `pnpm db:deploy` against the intended database before testing saved templates. GitHub Actions generates Prisma and builds code but does not migrate the user's database.
 - GitHub Actions Build Validation for app integration commit [e80eb68](https://github.com/wanzy0808/DC/actions/runs/35818742769) passed. The earlier studio-only commit failed because the event preview type extension had not been committed yet; later integrated code passes. Follow up with live authenticated create/edit/delete, zero-quota, event-switch, language, clipboard, draft/public link and phone viewport tests.
 - Still pending: actual WA delivery integration (not part of this iteration), approval of visual layout from owner's dashboard screenshot and complete responsive QA.
+
+
+## 23 September 2026 — Framed Beranda + real account settings (initial implementation)
+
+- Adopted landing's compositional motif, **not** its floral/door assets: one 94vw desktop / responsive mobile Rose-outline mainframe with the shared brand rail, navbar and content inside. Earlier fixed full-window header CSS in `app/dashboard/layout.tsx` was removed. Operational content outside Beranda keeps its existing components and genuine data.
+- Navbar avatar now reads `DashboardContext.profile.avatarUrl`; dropdown adds Profil Saya and Pengaturan akun while retaining transaction/package/FAQ/logout items. The profile/security panel is a dashboard tab inside the same frame, with separate name/photo and current-password/new-password forms, proper ID/EN copy and visible status errors.
+- User-scoped profile WebP upload, optional `User.avatarUrl` column/migration and authenticated current-password verification/session rotation are implemented server-side; no fake local-only profile. Images are stored on disk as existing assets are; persistent media storage is required on deployed infrastructure.
+- **Deployment:** sync source, run `pnpm db:deploy` for migration `20260923115000_user_avatar_url`, regenerate Prisma if needed. **Validation:** actual build/CI, browser screenshots (desktop/mobile; Light/Dark), local upload persistence and password/current-session behavior have not yet been verified. No claim of visual approval or passing tests at this stage.
