@@ -484,64 +484,54 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 }
 
 
-/* Dashboard navigation: curved outside corners inspired by the owner's sidebar
-   reference. Scoped to the customer rail; public navigation stays unchanged. */
+/* Customer dashboard navigation — selected item is one uninterrupted surface.
+   Hover stays neutral-tinted; the open Acara group is never a second selected item. */
 .dc-dashboard .dc-dashboard-sidebar-nav {
-  --dc-nav-rail: var(--background);
-  --dc-nav-selected: #A65E69;
-  padding: 1rem 0 1.5rem 0.875rem !important;
-}
-.dc-dashboard .dc-dashboard-sidebar-nav > button,
-.dc-dashboard .dc-dashboard-sidebar-nav > div > button,
-.dc-dashboard .dc-dashboard-sidebar-nav > div > div button {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  min-height: 52px;
-  border-radius: 24px 0 0 24px !important;
-  padding-inline: 0.875rem 1rem;
-  text-align: left;
+  padding: 1rem 0.75rem 1.5rem 0.875rem !important;
+  background: var(--background) !important;
 }
 .dc-dashboard .dc-dashboard-sidebar-nav > div {
   padding: 0 !important;
-  border-radius: 0 !important;
+  border: 0 !important;
+  background: transparent !important;
 }
 .dc-dashboard .dc-dashboard-sidebar-nav > div > div {
-  padding-left: 0.5rem;
-  padding-right: 0;
+  margin-top: 0.375rem;
+  padding-left: 0.625rem;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"]) {
-  --dc-nav-selected: var(--primary);
-  border-color: transparent !important;
-  background: var(--dc-nav-selected) !important;
+.dc-dashboard .dc-dashboard-sidebar-nav button {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 50px;
+  border: 0 !important;
+  border-radius: 22px 8px 8px 22px !important;
+  background: transparent !important;
+  color: var(--foreground) !important;
+  box-shadow: none !important;
+  transition: background-color 180ms ease, color 180ms ease !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:hover:not(.is-active):not([aria-current="page"]) {
+  background: color-mix(in srgb, var(--primary) 13%, var(--background)) !important;
+  color: var(--foreground) !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button.is-section-open:not([aria-current="page"]):not(:hover) {
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]),
+.dark .dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]) {
+  background: #A65E69 !important;
   color: #fff !important;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]) {
-  --dc-nav-selected: #A65E69;
-}
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::before,
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  z-index: -1;
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-}
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::before {
-  top: -20px;
-  border-radius: 0 0 20px 0;
-  box-shadow: 0 10px 0 0 var(--dc-nav-selected);
-}
-.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::after {
-  bottom: -20px;
-  border-radius: 0 20px 0 0;
-  box-shadow: 0 -10px 0 0 var(--dc-nav-selected);
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]):hover,
+.dark .dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]):hover {
+  background: #A65E69 !important;
+  color: #fff !important;
 }
 .dc-dashboard .dc-dashboard-sidebar-nav button:focus-visible {
   outline: 2px solid var(--primary) !important;
-  outline-offset: -3px;
+  outline-offset: 2px;
 }
 @media (prefers-reduced-motion: reduce) {
   .dc-dashboard .dc-dashboard-sidebar-nav button { transition: none !important; }
