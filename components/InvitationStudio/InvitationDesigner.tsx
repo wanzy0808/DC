@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Eye,
   FilePenLine,
@@ -19,6 +19,7 @@ import {
   Smartphone,
 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
@@ -67,6 +68,8 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   const [previewVersion, setPreviewVersion] = useState(0);
   const [savedState, setSavedState] = useState("");
   const [preview, setPreview] = useState(false);
+  const audioMutation = useRef(false);
+  const [audioBusy, setAudioBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("Memuat undangan...");
   const [history, setHistory] = useState<string[]>([]);
@@ -166,6 +169,37 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     setActivePhotoSlot("cover");
   }
 
+  function restoreDefaults() {
+    const preset = invitationTemplatePresets[design.template];
+    if (!preset) return;
+    change({ palette: preset.palette, font: preset.font, sections: { ...defaultInvitationSections } });
+    setNotice("Warna, font, dan bagian kembali ke default. Foto, musik, dan isi tetap tersimpan. Klik Simpan Desain untuk menerapkan.");
+  }
+
+  async function deleteMusic(id: string) {
+    if (!invitation || audioMutation.current || saving) return;
+    const asset = invitation.assets.find((item) => item.id === id && item.type === "AUDIO");
+    if (!asset) return;
+    audioMutation.current = true;
+    setAudioBusy(true);
+    try {
+      const response = await fetch(`/api/invitations/assets/${encodeURIComponent(id)}`, { method: "DELETE" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Musik belum dapat dihapus.");
+      setInvitation((current) => current ? {
+        ...current, assets: current.assets.filter((item) => item.id !== id),
+        musicUrl: current.musicUrl === asset.url ? null : current.musicUrl,
+      } : current);
+      if (musicUrl === asset.url) setMusicUrl("");
+      setNotice("Musik dihapus. Slot tersedia untuk unggahan baru.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Musik belum dapat dihapus.");
+    } finally {
+      audioMutation.current = false;
+      setAudioBusy(false);
+    }
+  }
+
   function setSection(section: InvitationSectionKey, enabled: boolean) {
     change({
       sections: {
@@ -217,6 +251,13 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
 
   async function uploadAsset(file: File, assetType: "IMAGE" | "AUDIO") {
     if (!invitation) return;
+    if (assetType === "AUDIO") {
+      if (audioMutation.current || saving) return;
+      const error = audioUploadError(file, invitation.assets.filter((asset) => asset.type === "AUDIO").length);
+      if (error) { setNotice(error); return; }
+      audioMutation.current = true;
+      setAudioBusy(true);
+    }
     setNotice(assetType === "IMAGE" ? "Mengunggah foto..." : "Mengunggah musik...");
     try {
       const formData = new FormData();
@@ -240,12 +281,14 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Upload gagal.");
       if (assetType === "IMAGE") throw error;
+    } finally {
+      if (assetType === "AUDIO") { audioMutation.current = false; setAudioBusy(false); }
     }
   }
 
   async function save() {
     if (!invitation) return;
-    if (saving) return;
+    if (saving || audioMutation.current) return;
     setSaving(true);
     setNotice("Menyimpan desain...");
     try {
@@ -281,6 +324,9 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
           <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? "Desain tersimpan" : notice}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
+          <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title="Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.">
+            <RotateCcw className="h-4 w-4" /> Kembalikan ke Default
+          </Button>
           <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label="Urungkan desain" title="Urungkan desain">
             <Undo2 className="h-4 w-4" />
           </Button>
@@ -291,7 +337,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
             <Eye className="h-4 w-4" />
             Pratinjau
           </Button>
-          <Button onClick={save} disabled={saving || !invitation} size="sm">
+          <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
             <Save className="h-4 w-4" />
             {saving ? "Menyimpan..." : "Simpan desain"}
           </Button>
@@ -350,7 +396,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} />}
+          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
 

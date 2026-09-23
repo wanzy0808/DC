@@ -6,11 +6,11 @@ import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-const maxAudioSize = 10 * 1024 * 1024;
+import { audioUploadError, MAX_AUDIO_FILES } from "@/lib/invitations/audio-limits";
+
+class AssetLimitError extends Error {}
 const maxImageSize = 15 * 1024 * 1024;
 const maxImages = 30;
-const maxAudio = 1;
-const allowedAudioTypes = new Set(["audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/aac", "audio/mp4", "audio/x-m4a"]);
 const allowedImageTypes = new Set(["image/jpeg", "image/jpg", "image/png", "image/webp"]);
 
 export const runtime = "nodejs";
@@ -35,8 +35,9 @@ export async function POST(request: Request) {
       if (!allowedImageTypes.has(file.type) || file.size > maxImageSize) {
         return NextResponse.json({ error: "Gunakan JPG, PNG, atau WebP maksimal 15 MB." }, { status: 400 });
       }
-    } else if (!allowedAudioTypes.has(file.type) || file.size > maxAudioSize) {
-      return NextResponse.json({ error: "Gunakan audio MP3, WAV, OGG, AAC, atau M4A maksimal 10 MB." }, { status: 400 });
+    } else {
+      const error = audioUploadError(file, 0);
+      if (error) return NextResponse.json({ error }, { status: 400 });
     }
 
     const invitation = await prisma.invitation.findFirst({
@@ -52,8 +53,8 @@ export async function POST(request: Request) {
     if (type === "IMAGE" && assetCount >= maxImages) {
       return NextResponse.json({ error: `Maksimal ${maxImages} foto per undangan.` }, { status: 400 });
     }
-    if (type === "AUDIO" && assetCount >= maxAudio) {
-      return NextResponse.json({ error: "Maksimal 1 musik custom per undangan." }, { status: 400 });
+    if (type === "AUDIO" && assetCount >= MAX_AUDIO_FILES) {
+      return NextResponse.json({ error: "Maksimal 2 musik per undangan. Hapus salah satu untuk menggantinya." }, { status: 400 });
     }
 
     const originalBuffer = Buffer.from(await file.arrayBuffer());
@@ -78,7 +79,7 @@ export async function POST(request: Request) {
       title = path.basename(file.name, path.extname(file.name)) + ".webp";
     } else {
       outputBuffer = originalBuffer;
-      const extension = path.extname(file.name).toLowerCase() || ".mp3";
+      const extension = ({ "audio/mpeg": ".mp3", "audio/mp3": ".mp3", "audio/wav": ".wav", "audio/ogg": ".ogg", "audio/aac": ".aac", "audio/mp4": ".m4a", "audio/x-m4a": ".m4a" } as Record<string, string>)[file.type];
       fileName = `${randomUUID()}${extension}`;
       uploadDirectory = path.join(process.cwd(), "public", "uploads", "music");
       savedPath = path.join(process.cwd(), "public", "uploads", "music", fileName);
@@ -89,8 +90,15 @@ export async function POST(request: Request) {
     await writeFile(savedPath, outputBuffer);
 
     try {
-      const asset = await prisma.invitationAsset.create({
-        data: { invitationId, ownerId: user.id, type, url, title },
+      const asset = await prisma.$transaction(async (tx) => {
+        // Serialize uploads for this invitation, including simultaneous requests.
+        await tx.$queryRaw`SELECT "id" FROM "Invitation" WHERE "id" = ${invitationId} FOR UPDATE`;
+        const count = await tx.invitationAsset.count({ where: { invitationId, type } });
+        const limit = type === "AUDIO" ? MAX_AUDIO_FILES : maxImages;
+        if (count >= limit) throw new AssetLimitError(type === "AUDIO"
+          ? "Maksimal 2 musik per undangan. Hapus salah satu untuk menggantinya."
+          : `Maksimal ${maxImages} foto per undangan.`);
+        return tx.invitationAsset.create({ data: { invitationId, ownerId: user.id, type, url, title } });
       });
       return NextResponse.json({ asset, optimized: type === "IMAGE", bytes: outputBuffer.byteLength }, { status: 201 });
     } catch (error) {
@@ -98,8 +106,9 @@ export async function POST(request: Request) {
       savedPath = null;
       throw error;
     }
-  } catch {
+  } catch (error) {
     if (savedPath) await unlink(savedPath).catch(() => undefined);
+    if (error instanceof AssetLimitError) return NextResponse.json({ error: error.message }, { status: 400 });
     return NextResponse.json({ error: "File belum dapat diunggah." }, { status: 500 });
   }
 }

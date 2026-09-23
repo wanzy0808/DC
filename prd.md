@@ -498,6 +498,14 @@ Kontrak terbaru terdiri dari **15 kontrol ON/OFF**: Amplop Digital, Sampul, Sala
 
 Simpan kompatibilitas `sections=` untuk RSVP/Wishes/Gift dan `hidden=` untuk bagian tambahan pada design key event yang sama; tidak membuat schema/API baru. Desain lama mempertahankan nilai tiga toggle dan seluruh bagian tambahan ON. Kedua renderer nyata membaca kontrak sama untuk Studio dan publik. Nama font heading/body ditulis dengan font masing-masing; font katalog dimuat saat diperlukan. Romantic Rose tetap mengunci palet/font dan menjelaskan alasan alih-alih menawarkan kontrol yang diabaikan renderer. Hashtag/dress code yang belum disimpan harus terlihat langsung di pratinjau. Terbitkan nonaktif selama ada perubahan belum disimpan; simpan desain tidak mengirim ulang status publikasi lama.
 
+### 7.2.1b Kembalikan ke Default dan koleksi musik (23 September 2026)
+
+Tombol **Kembalikan ke Default** mengembalikan palet, font, dan 15 visibility flag ke preset tema yang sedang dipilih (semua flag ON). Tidak mengganti tema atau menghapus foto, pilihan musik, maupun isi acara. Perubahan langsung terlihat, dapat di-Undo, dan baru persisten melalui Simpan Desain.
+
+Unggahan musik dibatasi **2 aset AUDIO per undangan, masing-masing maksimal 3 MB (3 × 1024 × 1024 byte)**. Pemeriksaan jenis, ukuran, dan kuota berjalan pada client serta server; count+create diserialisasi melalui row lock Invitation agar request bersamaan tidak melewati kuota. Panel menampilkan pilihan lagu bawaan, daftar unggahan, jumlah slot, dan Hapus; lagu bawaan tidak memakai slot. Penghapusan aset membebaskan slot, membersihkan referensi musicUrl apabila file itu aktif, serta menghapus file lokal terverifikasi. Unggahan baru otomatis dipilih untuk pratinjau; pilihan disimpan lewat Simpan Desain. Aset lama tidak dihapus otomatis walaupun melampaui batas baru; pengguna dapat menghapusnya sendiri. Pembuatan aset baru melalui URL tidak diperbolehkan karena ukuran file tidak dapat diverifikasi; gunakan uploader binary. URL musik lama masih kompatibel. Ketentuan ini menggantikan batas audio sebelumnya (1 file/10 MB) dan penambahan URL di panel Musik.
+
+Foto tetap melalui Sharp: decode, orientasi otomatis, resize maksimal 2000×2000 tanpa pembesaran, encode WebP quality 82, simpan event-scoped. Batas foto tetap 30 file dan input maksimal 15 MB. Fitur Wishes masih placeholder tanpa persistence; jangan mengklaim seluruh fungsi selesai hanya karena 15 toggle tersedia.
+
 ### 7.2.2 Scalable template architecture
 
 DC Organizer harus mendukung katalog undangan dalam skala besar — puluhan hingga ratusan template — tanpa membuat aplikasi, backend, database flow, atau feature implementation terpisah untuk setiap template.
@@ -4654,3 +4662,13 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Commit:** commit implementasi berjudul `Refine Studio canvas and add all 15 invitation visibility controls` (entry ini disertakan dalam commit yang sama).
 
 **Validasi:** TypeScript dan production `pnpm build` berhasil; seluruh 17 tes lulus, termasuk tiga tes baru untuk kompatibilitas legacy dan round-trip 15 switch. `git diff --check` bersih. Build masih memberi warning tracing filesystem dari endpoint upload yang sudah ada. Pemeriksaan lint terbatas menemukan pola effect/state lama pada orchestration Studio dan warning lama; tidak diklaim lint global lulus. Browser visual/klik Light, Dark, HP belum berhasil dilakukan: runtime Chromium tidak terpasang dan unduhannya gagal (arsip invalid). Route sementara untuk QA sudah dihapus. Simpan/publish terhadap database pelanggan dan audio perangkat nyata belum diuji; jangan menyamakan build dengan verifikasi tersebut. Tidak ada migrasi database.
+
+### 2026-09-23 — Kembalikan ke Default, musik 2 × 3 MB dan hapus unggahan
+
+**Alasan/implementasi:** Owner meminta reset tampilan serta dua musik masing-masing 3 MB dengan slot yang dapat digunakan ulang setelah dihapus. Studio kini mereset warna/font/15 toggle tema aktif lewat history Undo tanpa menghapus isi/media; Simpan Desain tetap diperlukan. Panel Musik menampilkan radio lagu bawaan/unggahan, kuota, hapus dan upload dengan status proses. Batas file diterapkan client/server, termasuk pemeriksaan ulang count+create di transaksi dengan row lock Invitation. Delete memakai lock sama dan membersihkan musicUrl aktif serta file lokal yang cocok pola generated filename; URL-only asset creation ditolak agar tidak melewati validasi ukuran. Legacy saved music URL/aset lama dipertahankan. Sharp foto tetap pipeline sebelumnya.
+
+**Area:** `components/InvitationStudio/{InvitationDesigner,DesignerPanels}.tsx`, `app/api/invitations/assets/{route,upload/route,[assetId]/route}.ts`, `lib/invitations/audio-limits.ts`, `tests/audio-limits.test.mjs`, AGENTS/README/PRD. Tidak ada migrasi database.
+
+**Commit:** `Add Studio default reset and enforce two 3 MB music uploads` (entry disertakan dalam commit implementasi yang sama).
+
+**Validasi:** `pnpm exec tsc --noEmit`, seluruh 20 tes, production build, dan `git diff --check` lulus. Tiga tes tambahan mencakup batas tepat 3 MiB/1 byte lebih, file kedua/ketiga/slot kembali, empty MIME tidak sesuai. Smoke check Sharp dengan byte PNG nyata 2400×1200 menghasilkan WebP 2000×1000. Build tetap memiliki warning tracing filesystem upload yang sudah ada. Database concurrency, upload/hapus melalui akun nyata, preview audio, dan visual browser belum diuji end-to-end. Wishes tetap belum mempunyai persistence; toggle tersedia tidak berarti semua layanan produk selesai.

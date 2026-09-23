@@ -379,3 +379,8 @@ All invitation-personalization inputs and guest statuses live on the existing ev
 ## Studio canvas and visibility controls (23 September 2026)
 
 Studio now has a bounded Rose frame, a collapsible settings panel, a separately scrolling invitation canvas, and Pengaturan/Undangan views on mobile. Bagian exposes 15 switches: digital envelope, the 13 content sections, and music. Their state persists with the existing event design key; old designs remain compatible and no database migration is needed. Turning off the envelope opens content directly; music then starts manually. Font choices show the actual heading/body names in their fonts. Romantic Rose correctly explains its locked typography/palette. Unsaved hashtag and dress code reach the same real preview renderer, and publishing requires saving pending edits first. The approved marketing landing remains unchanged.
+
+
+## Restore Studio defaults and music limits
+
+`Kembalikan ke Default` resets the current theme’s palette, font and 15 switches, preserving event text, photos and music. Undo is available; Save Design persists the reset. Music supports two uploaded files per invitation, each up to 3 MiB. Select a song or delete an upload to free a slot; built-in music is separate from this quota. Limits are enforced server-side even for simultaneous uploads. New URL-only assets are rejected; existing saved music URLs remain compatible. Photo uploads still use Sharp to create WebP. No database migration is required.

@@ -5,7 +5,8 @@ import {
   Check,
   Upload,
 } from "lucide-react";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
 import { invitationSectionItems } from "@/lib/templates/sections";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { Input } from "@/components/ui/input";
@@ -287,43 +288,48 @@ export function ContentPanel({
 }
 
 export function MusicPanel({
-  musicUrl,
-  defaultTrack,
-  setMusicUrl,
-  onUpload,
+  musicUrl, defaultTrack, defaultUrl, assets, busy, setMusicUrl, onUpload, onDelete,
 }: {
   musicUrl: string;
   defaultTrack: string;
+  defaultUrl: string;
+  assets: InvitationDesignerInvitation["assets"];
+  busy: boolean;
   setMusicUrl: (value: string) => void;
   onUpload: (file: File) => void;
+  onDelete: (id: string) => void;
 }) {
+  const tracks = assets.filter((asset) => asset.type === "AUDIO");
+  const activeUrl = musicUrl || tracks[0]?.url || defaultUrl;
+  const full = tracks.length >= MAX_AUDIO_FILES;
   return (
     <div>
-      <Heading
-        title="Musik"
-        description="Gunakan lagu bawaan atau pilih lagu sendiri."
-      />
-      <p className="mt-4 text-xs leading-6 text-muted-foreground">Musik bawaan tema: <span className="font-semibold text-primary">{defaultTrack}</span>. Digunakan jika belum ada URL atau musik yang diunggah.</p>
-      <input
-        aria-label="URL musik"
-        value={musicUrl}
-        onChange={(event) => setMusicUrl(event.target.value)}
-        placeholder="https://.../music.mp3"
-        className="mt-5 w-full rounded-[10px] border border-border bg-background px-3 py-3 text-xs outline-none focus:border-primary"
-      />
-      <label className={buttonVariants({ size: "sm", className: "mt-3 flex min-h-11 w-full cursor-pointer px-3 py-3" })}>
-        <Upload className="h-4 w-4" /> Upload musik
-        <input
-          type="file"
-          accept="audio/mpeg,audio/wav,audio/ogg,audio/aac,audio/mp4,audio/x-m4a"
-          className="sr-only"
-          onChange={(event) => {
-            const file = event.target.files?.[0];
-            if (file) onUpload(file);
-            event.currentTarget.value = "";
-          }}
-        />
-      </label>
+      <Heading title="Musik" description="Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya." />
+      <fieldset disabled={busy} className="mt-5 min-w-0 space-y-3 border-0 p-0">
+        <legend className="sr-only">Pilih musik</legend>
+        <label className="flex min-h-12 cursor-pointer items-center gap-3 border-b border-primary/20 py-3 text-sm">
+          <input type="radio" name="studio-music" checked={activeUrl === defaultUrl} onChange={() => setMusicUrl(defaultUrl)} className="accent-primary" />
+          <span>{defaultTrack}<span className="mt-1 block text-xs text-muted-foreground">Bawaan tema · tidak memakai slot</span></span>
+        </label>
+        {musicUrl && musicUrl !== defaultUrl && !tracks.some((track) => track.url === musicUrl) && (
+          <p className="text-xs text-muted-foreground">Musik tersimpan sebelumnya sedang digunakan.</p>
+        )}
+        {tracks.map((track) => (
+          <div key={track.id} className="flex items-center gap-3 border-b border-primary/20 py-3">
+            <label className="flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 text-sm">
+              <input type="radio" name="studio-music" checked={activeUrl === track.url} onChange={() => setMusicUrl(track.url)} className="accent-primary" />
+              <span className="break-all">{track.title || "Musik unggahan"}</span>
+            </label>
+            <Button size="sm" onClick={() => onDelete(track.id)} aria-label={`Hapus ${track.title || "musik"}`}>Hapus</Button>
+          </div>
+        ))}
+        <p className="text-xs text-muted-foreground">{tracks.length} / {MAX_AUDIO_FILES} file</p>
+        <label aria-disabled={full || busy} className={buttonVariants({ size: "sm", className: `flex min-h-11 w-full cursor-pointer px-3 py-3 ${full || busy ? "pointer-events-none opacity-50" : ""}` })}>
+          <Upload className="h-4 w-4" /> {busy ? "Memproses…" : "Unggah Musik"}
+          <input type="file" accept={AUDIO_MIME_TYPES.join(",")} disabled={full || busy} className="sr-only"
+            onChange={(event) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.currentTarget.value = ""; }} />
+        </label>
+      </fieldset>
     </div>
   );
 }
