@@ -430,7 +430,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 onChange={(event) => setCategoryFilter(event.target.value)}
                 className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
               >
-                <option value="">{d("Semua kategori")}</option>
+                <option value="">{displayTitleCase(d("Semua kategori"))}</option>
                 {categoryFilter && !categories.includes(categoryFilter) && (
                   <option value={categoryFilter}>{displayTitleCase(categoryFilter)}</option>
                 )}
@@ -446,7 +446,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                 onChange={(event) => setTagFilter(event.target.value)}
                 className="mt-1 min-h-11 w-full rounded-md border border-border bg-background px-3 text-sm text-foreground"
               >
-                <option value="">{d("Semua tag")}</option>
+                <option value="">{displayTitleCase(d("Semua tag"))}</option>
                 {tagFilter && !tags.includes(tagFilter) && (
                   <option value={tagFilter}>{displayTitleCase(tagFilter)}</option>
                 )}
