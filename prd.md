@@ -4575,3 +4575,12 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Owner Panel:** Header `components/Owner/OwnerDashboard.tsx` sekarang berisi `SessionLogoutButton` yang memanggil endpoint sesi existing dan membuka Login hanya setelah keberhasilan server, dengan loading/retryable error. `components/Admin/AdminLogoutButton.tsx` menggunakan komponen shared yang sama; tidak ada duplikasi endpoint atau autentikasi baru.
 
 **Area/berkas:** `components/Dashboard/{EventScopePicker,EventPanel,RsvpAnalyticsPanel,PersonalInvitationPanels,PersonalInvitationGuestFields,SeatingChart,WaBlastPanels,WaBlastTemplateStudio,WhatsAppBlastPanel}.tsx`, `components/InvitationStudio/RsvpPanels.tsx`, `components/{Owner/OwnerDashboard,Admin/AdminLogoutButton,Auth/SessionLogoutButton}.tsx`, `lib/text/display-title-case.ts`, `app/globals.css`, `tests/display-title-case.test.mjs`, `AGENTS.md`, `README.md`. **Database:** tidak ada perubahan skema ataupun migrasi tambahan; migrasi wedding child position dilaporkan owner sudah dijalankan secara lokal. **Validasi:** GitHub Actions pada commit `310ca5af` sukses (`https://github.com/wanzy0808/DC/actions/runs/35840955348`): Prisma generate, semua `node --test tests/*.test.mjs` termasuk tes Title Case dropdown, dan production build. Interaksi native popup lintas browser serta sesi Logout Owner secara end-to-end masih memerlukan uji browser login nyata.
+
+
+### 2026-09-23 — Jarak Panah Dropdown Pada Input Data
+
+**Permintaan:** Panah pada field dropdown data/form terlalu menempel pada sisi kanan, sementara panah menu navigasi sudah sesuai dan tidak perlu berubah.
+
+**Implementasi:** `app/globals.css` menargetkan hanya native `select` di dalam `main` area `dc-dashboard`/`dc-usher`: panah bawaan browser diganti dengan ikon SVG Rose 15px berjarak sekitar 18px dari batas kanan; ruang teks diberikan 3rem agar tidak bertabrakan. Gambar panah dipertahankan ketika kontrol hover/focus/disabled. `components/Dashboard/EventScopePicker.tsx` (memiliki ikon sendiri) serta dua dropdown jam/menit compact di `EventFields.tsx` mengecualikan styling baru melalui `data-dc-native-chevron="true"`. Panah menu/sidebar/navbar, layout field, label/nilai pilihan, database, dan template undangan tidak diubah.
+
+**Validasi:** Kode telah dikirim ke branch `main`; hasil CI/build dan pemeriksaan visual lintas browser dicatat terpisah setelah pemeriksaan. Tidak ada migrasi DB.
