@@ -9,6 +9,8 @@ import {
   PenLine,
   Plus,
   RefreshCw,
+  QrCode,
+  Download,
   Send,
   Users,
 } from "lucide-react";
@@ -76,6 +78,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [qrOpenId, setQrOpenId] = useState<string | null>(null);
+  const [qrErrorId, setQrErrorId] = useState<string | null>(null);
   const [notice, setNotice] = useState("");
 
   const load = useCallback(async () => {
@@ -187,6 +191,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
               const hasDesign = Boolean(invitation.templateKey?.trim());
               const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
               const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
+              const qrImageHref = `/api/invitations/qr?invitationId=${encodeURIComponent(invitation.id)}`;
+              const qrDownloadHref = `${qrImageHref}&download=1`;
               const status = invitation.isPublished
                 ? d("Terbit · terkunci")
                 : !invitation.eventConfigured
