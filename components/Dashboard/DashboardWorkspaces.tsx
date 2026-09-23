@@ -74,215 +74,152 @@ export function WorkspaceOverview({
   const stats = [
     { label: d("Total acara"), value: events.length, icon: CalendarDays },
     { label: d("Undangan aktif"), value: active, icon: Mail },
-    { label: d("Total RSVP"), value: overview?.totalRsvp ?? 0, icon: MessageSquareHeart },
-    { label: d("Total tamu"), value: overview?.totalGuests ?? 0, icon: Users },
+    { label: d("Total RSVP"), value: totalRsvp, icon: MessageSquareHeart },
+    { label: d("Total tamu"), value: totalGuests, icon: Users },
   ];
 
   return (
-    <DashboardPageShell>
-      <div className="mb-4 flex justify-end">
-        <Button onClick={() => onGo("events")} size="sm">
-          <CalendarDays className="h-4 w-4" />
+    <DashboardPageShell className="dc-dashboard-overview">
+      <section className="dc-dashboard-overview-hero relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-[28px] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
+        <div className="relative z-[1] min-w-0">
+          <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-white sm:text-[30px]">
+            {d("Halo")}, {ctx?.profile.displayName?.trim() || d("Akun")}
+          </h1>
+        </div>
+        <Button type="button" size="lg" onClick={() => onGo("events")} className="dc-dashboard-overview-cta relative z-[1] shrink-0 self-start sm:self-auto">
+          <CalendarDays className="size-4" />
           {d("Tambah acara")}
         </Button>
-      </div>
+      </section>
 
-      <DashboardMetricGrid className="mt-4">
-        {stats.map((item) => (
+      <DashboardMetricGrid className="mt-5">
+        {stats.map((item, index) => (
           <DashboardMetricCard
             key={item.label}
             icon={item.icon}
             label={item.label}
             value={String(item.value)}
+            className={index === 0 ? "dc-dashboard-metric--featured" : ""}
           />
         ))}
       </DashboardMetricGrid>
 
-      <section className="mt-4 grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1.65fr)_minmax(280px,0.75fr)]">
-        <DashboardSurface className="min-w-0 overflow-hidden">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border/70 px-5 py-4 sm:px-6">
-            <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">{d("Terbaru")}</h2>
-            </div>
-            <Button onClick={() => onGo("events")} size="sm">
+      <section className="mt-5 grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.8fr)]">
+        <DashboardSurface className="dc-dashboard-overview-events min-w-0 overflow-hidden">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 px-5 py-5 sm:px-6">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">
+              {d("Terbaru")}
+            </h2>
+            <Button type="button" size="sm" onClick={() => onGo("events")}>
               {d("Lihat semua")}
+              <ChevronDown className="size-4 -rotate-90" aria-hidden="true" />
             </Button>
           </div>
-
           {events.length ? (
-            <div className="overflow-x-auto px-4 pb-4 sm:px-5">
-              <table className="w-full min-w-[760px] border-separate border-spacing-0 text-left">
-                <thead>
-                  <tr className="text-[11px] text-muted-foreground">
-                    <th className="px-3 py-3 font-medium">{d("Acara")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
-                    <th className="px-3 py-3 font-medium">{d("Status")}</th>
-                    <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {events.slice(0, 6).map((event) => (
-                    <tr key={event.id} className="border-t border-border/60">
-                      <td className="max-w-64 px-3 py-3.5">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {event.title || d("Acara tanpa judul")}
-                        </p>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3.5 text-xs text-muted-foreground">
-                        {formatEventDate(event.eventDate, locale)}
-                      </td>
-                      <td className="max-w-52 px-3 py-3.5 text-xs text-muted-foreground">
-                        <p className="truncate">{event.venue || "—"}</p>
-                      </td>
-                      <td className="px-3 py-3.5">
-                        <DashboardStatusBadge active={event.isPublished}>
-                          {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
-                        </DashboardStatusBadge>
-                      </td>
-                      <td className="px-3 py-3.5 text-right">
-                        <Link
-                          href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
-                          className="text-xs font-semibold text-primary hover:underline"
-                        >
-                          {d("Undangan")}
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="dc-dashboard-event-list divide-y divide-primary/10 px-4 py-1 sm:px-5">
+              {events.slice(0, 5).map((event) => (
+                <article key={event.id} className="flex min-w-0 flex-col gap-3 px-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="break-words text-base font-semibold leading-snug text-foreground">
+                      {event.title || d("Acara tanpa judul")}
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {formatEventDate(event.eventDate, locale)}
+                      {event.venue ? ` · ${event.venue}` : ""}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    <DashboardStatusBadge active={event.isPublished}>
+                      {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
+                    </DashboardStatusBadge>
+                    <Link
+                      href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
+                      className="dc-dashboard-event-action inline-flex min-h-10 items-center gap-1.5 rounded-full border border-primary/25 px-3.5 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    >
+                      {d("Undangan")}
+                      <ChevronDown className="size-4 -rotate-90" aria-hidden="true" />
+                    </Link>
+                  </div>
+                </article>
+              ))}
             </div>
           ) : (
-            <div className="px-5 py-8 sm:px-6">
-              <div className="flex max-w-xl items-start gap-3">
-                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-                  <CalendarDays className="h-4 w-4" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold">{d("Belum ada acara")}</p>
-                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    {d("Buat acara pertama untuk mulai menyiapkan undangan digital.")}
-                  </p>
-                </div>
-              </div>
+            <div className="flex items-center gap-3 px-6 py-8">
+              <CalendarDays className="size-6 shrink-0 text-primary" aria-hidden="true" />
+              <p className="text-sm text-muted-foreground">{d("Belum ada acara")}</p>
             </div>
           )}
         </DashboardSurface>
 
-        <DashboardSurface className="min-w-0 p-5 sm:p-6">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold">
-                {d("RSVP")} &amp; {d("Publikasi")}
-              </h2>
-            </div>
-            <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
-              <MessageSquareHeart className="h-4 w-4" />
-            </span>
+        <DashboardSurface className="dc-dashboard-overview-progress min-w-0 overflow-hidden">
+          <div className="border-b border-primary/10 px-5 py-5 sm:px-6">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">
+              {d("RSVP")} &amp; {d("Publikasi")}
+            </h2>
           </div>
-
-          <div className="mt-5 rounded-xl border border-border/70 p-4">
-            <div className="flex flex-col items-center gap-5 sm:flex-row xl:flex-col 2xl:flex-row">
+          <div className="space-y-6 p-5 sm:p-6">
+            <div className="flex flex-wrap items-center gap-6">
               <figure
-                className="relative size-32 shrink-0"
-                aria-label={`Cakupan RSVP ${rsvpCoverage}%`}
+                className="relative size-28 shrink-0"
+                aria-label={locale === "en" ? `RSVP response rate ${totalGuests ? rsvpCoverage + "%" : "not available"}` : `Cakupan RSVP ${totalGuests ? rsvpCoverage + "%" : "belum tersedia"}`}
               >
-                <svg viewBox="0 0 42 42" className="size-32 -rotate-90" aria-hidden="true">
-                  <circle
-                    cx="21"
-                    cy="21"
-                    r="15.9155"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3.4"
-                    className="text-foreground/[0.07]"
-                  />
-                  <circle
-                    cx="21"
-                    cy="21"
-                    r="15.9155"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="3.4"
-                    strokeLinecap="round"
-                    strokeDasharray={`${rsvpCoverage} ${100 - rsvpCoverage}`}
-                    className="text-primary"
-                  />
+                <svg viewBox="0 0 42 42" className="size-28 -rotate-90" aria-hidden="true">
+                  <circle cx="21" cy="21" r="15.9155" fill="none" stroke="currentColor" strokeWidth="3.8" className="text-primary/10" />
+                  {totalGuests > 0 && (
+                    <circle cx="21" cy="21" r="15.9155" fill="none" stroke="currentColor" strokeWidth="3.8" strokeLinecap="round" strokeDasharray={`${rsvpCoverage} ${100 - rsvpCoverage}`} className="text-primary" />
+                  )}
                 </svg>
                 <div className="absolute inset-0 grid place-items-center text-center">
                   <div>
-                    <p className="text-2xl font-semibold leading-none">{rsvpCoverage}%</p>
-                    <p className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
-                      RSVP
-                    </p>
+                    <p className="text-2xl font-semibold leading-none text-foreground">{totalGuests ? `${rsvpCoverage}%` : "—"}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">RSVP</p>
                   </div>
                 </div>
               </figure>
-
-              <div className="w-full min-w-0 space-y-3">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Sudah merespons")}</span>
-                  <span className="text-sm font-semibold">{totalRsvp}</span>
+              <dl className="min-w-[130px] flex-1 space-y-2 text-sm">
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">{d("Sudah merespons")}</dt>
+                  <dd className="font-semibold tabular-nums text-foreground">{totalRsvp}</dd>
                 </div>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Belum merespons")}</span>
-                  <span className="text-sm font-semibold">{pendingRsvp}</span>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">{d("Belum merespons")}</dt>
+                  <dd className="font-semibold tabular-nums text-foreground">{pendingRsvp}</dd>
                 </div>
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-xs text-muted-foreground">{d("Total tamu")}</span>
-                  <span className="text-sm font-semibold">{totalGuests}</span>
+                <div className="flex justify-between gap-3">
+                  <dt className="text-muted-foreground">{d("Total tamu")}</dt>
+                  <dd className="font-semibold tabular-nums text-foreground">{totalGuests}</dd>
                 </div>
-              </div>
+              </dl>
             </div>
-          </div>
-
-          <div className="mt-4 rounded-xl border border-border/70 p-4">
-            <div className="flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold">{d("Publikasi")}</p>
-                <p className="mt-1 text-[11px] text-muted-foreground">{locale === "en" ? `${published} of ${events.length} events published` : `${published} dari ${events.length} acara sudah terbit`}</p>
+            <div className="border-t border-primary/10 pt-5">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm font-semibold text-foreground">{d("Publikasi")}</p>
+                <p className="font-[family-name:var(--font-dc-mono)] text-sm font-semibold text-primary">{events.length ? `${publishRate}%` : "—"}</p>
               </div>
-              <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold text-primary">
-                {publishRate}%
+              <div
+                className="mt-3 h-2.5 overflow-hidden rounded-full bg-primary/10"
+                role="progressbar"
+                aria-label={d("Publikasi")}
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={publishRate}
+              >
+                <div className="h-full rounded-full bg-primary transition-[width] motion-reduce:transition-none" style={{ width: `${publishRate}%` }} />
+              </div>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {locale === "en" ? `${published} of ${events.length} published` : `${published} dari ${events.length} terbit`}
               </p>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-foreground/[0.07]">
-              <div
-                className="h-full rounded-full bg-primary transition-[width]"
-                style={{ width: `${publishRate}%` }}
-              />
+            <div className="grid grid-cols-2 gap-2 border-t border-primary/10 pt-5">
+              <Button type="button" size="sm" onClick={() => onGo("rsvp")} className="w-full">
+                <MessageSquareHeart className="size-4" />
+                RSVP
+              </Button>
+              <Button type="button" size="sm" onClick={() => onGo("placement")} className="w-full">
+                <Users className="size-4" />
+                {d("Tamu")}
+              </Button>
             </div>
-          </div>
-
-          <div className="mt-5 divide-y divide-border/70 border-y border-border/70">
-            {[
-              { id: "invitation" as DashboardTab, label: "Undangan Digital", icon: Mail },
-              { id: "rsvp" as DashboardTab, label: "RSVP", icon: MessageSquareHeart },
-              { id: "placement" as DashboardTab, label: "Manajemen Tamu", icon: Users },
-              { id: "waBlast" as DashboardTab, label: "WA Blast", icon: Send },
-            ].map((item) => {
-              const Icon = item.icon;
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => onGo(item.id)}
-                  className="flex min-h-12 w-full items-center gap-3 py-3 text-left text-sm transition hover:text-primary"
-                >
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-primary/[0.08] text-primary">
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={1.9} />
-                  </span>
-                  <span className="min-w-0 flex-1 truncate">{item.label}</span>
-                  <ChevronDown className="h-3.5 w-3.5 -rotate-90 text-muted-foreground" />
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-4 flex items-center justify-between gap-4 rounded-xl bg-foreground/[0.018] px-4 py-3">
-            <span className="text-xs text-muted-foreground">{locale === "en" ? "Total invitation visits" : "Total kunjungan undangan"}</span>
-            <span className="text-sm font-semibold">{overview?.invitationsShared ?? 0}</span>
           </div>
         </DashboardSurface>
       </section>
