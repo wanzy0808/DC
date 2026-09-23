@@ -32,14 +32,14 @@ export default function DashboardSidebar({
       {mobileOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-40 bg-black/45 lg:hidden"
+          className="absolute inset-0 z-40 bg-black/45 lg:hidden"
           aria-label={d("Tutup menu dashboard")}
           onClick={onCloseMobile}
         />
       )}
       <aside
         id="dc-dashboard-sidebar"
-        className={`dc-dashboard-sidebar ${mobileOpen ? "fixed inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-screen`}
+        className={`dc-dashboard-sidebar ${mobileOpen ? "absolute inset-y-0 left-0 z-50 flex" : "hidden"} w-64 shrink-0 flex-col border-r border-border lg:flex lg:min-h-0`}
       >
         <div className="dc-dashboard-sidebar-brand flex min-h-[72px] shrink-0 items-center border-b border-white/20 px-5">
           <Link href="/" aria-label="DC Organizer" className="inline-flex min-w-0 items-center">
