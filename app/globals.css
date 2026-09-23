@@ -328,6 +328,50 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main textarea,
 .dc-dashboard main select { font-size: 0.9rem !important; }
 
+/* Dashboard frame titles share one Rose + Title Case treatment.
+   This targets section/frame headings only; row/card names remain neutral unless
+   their component explicitly opts into the title treatment. */
+.dc-dashboard main .dc-dashboard-panel h2,
+.dc-dashboard main .dc-dashboard-surface > h2,
+.dc-dashboard main section > h2,
+.dc-dashboard main section > div:first-child > h2 {
+  color: var(--primary) !important;
+  text-transform: capitalize;
+}
+
+/* All canonical Button primitives inside operational content use the same
+   DC Organizer filled Rose treatment. Local legacy white/outline/text-Rose
+   overrides may not visually replace the primary button contract. Header/nav
+   controls remain outside <main> and retain their approved special styling. */
+:is(.dc-dashboard, .dc-usher) main .dc-app-button {
+  border-color: color-mix(in srgb, var(--primary) 80%, transparent) !important;
+  background: #C07A84 !important;
+  color: #ffffff !important;
+  box-shadow: 0 3px 8px rgb(17 17 17 / 16%), inset 0 1px 0 rgb(255 255 255 / 18%) !important;
+}
+:is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
+  border-color: #A65E69 !important;
+  background: #A65E69 !important;
+  color: #ffffff !important;
+}
+:is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
+  background: #C07A84 !important;
+  color: #ffffff !important;
+}
+.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button {
+  background: #C07A84 !important;
+  color: #000000 !important;
+}
+.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
+  border-color: #D9A3AA !important;
+  background: #D9A3AA !important;
+  color: #000000 !important;
+}
+.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
+  background: #C07A84 !important;
+  color: #000000 !important;
+}
+
 /* Shared workspace stays wide but never stretches cards into blank tables. */
 .dc-dashboard-page {
   width: calc(100% - 2rem);
