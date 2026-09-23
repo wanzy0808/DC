@@ -1,7 +1,6 @@
 "use client";
 
 import { CalendarDays, ChevronDown } from "lucide-react";
-import { DashboardSurface } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 
 export type EventScopeOption = {
@@ -24,7 +23,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
 
   if (!events.length) {
     return (
-      <DashboardSurface className="p-4 sm:p-5">
+      <div className="py-2">
         <div className="flex items-center gap-3">
           <span className="grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
             <CalendarDays className="h-4 w-4" />
@@ -33,7 +32,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
             <p className="text-sm text-foreground">{d("Belum ada acara")}</p>
           </div>
         </div>
-      </DashboardSurface>
+      </div>
     );
   }
 
