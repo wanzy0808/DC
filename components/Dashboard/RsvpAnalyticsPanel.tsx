@@ -224,135 +224,107 @@ export default function RsvpAnalyticsPanel({
         ))}
       </DashboardMetricGrid>
 
-      <DashboardPanel className="mt-4 min-w-0"
-          eyebrow={d("RSVP")}
-          title={d("Daftar tamu")}
-          description={
-            locale === "en"
-              ? `${filtered.length} of ${guests.length} guests shown. Search, sort, export, or check in from the same table.`
-              : `${filtered.length} dari ${guests.length} tamu ditampilkan. Cari, urutkan, export, atau lakukan check-in dari tabel yang sama.`
-          }
+      <DashboardPanel
+        className="mt-5 min-w-0"
+        title={d("Daftar tamu")}
+        actions={<span className="text-sm font-semibold tabular-nums text-primary">{filtered.length} / {guests.length}</span>}
       >
-
-        <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[minmax(14rem,1fr)_minmax(10rem,auto)_auto_auto] sm:items-end">
-            <div className="relative min-w-0">
-              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-foreground/45" />
-              <Input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                placeholder={d("Cari nama / telepon")}
-                className="min-w-0 pl-9"
-              />
-            </div>
-
-            <select
-              value={sortKey}
-              onChange={(event) => setSortKey(event.target.value as SortKey)}
-              className="h-10 w-full min-w-0 rounded-[10px] border border-border bg-background px-3 text-xs text-foreground outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/15"
-              aria-label={d("Urutkan tamu")}
-            >
-              {(Object.keys(sortLabel) as SortKey[]).map((key) => (
-                <option key={key} value={key}>
-                  {d(sortLabel[key])}
-                </option>
-              ))}
-            </select>
-
-            <Button
-              size="sm"
-              onClick={() => setAscending((value) => !value)}
-              title={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
-              aria-label={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
-            >
-              <ArrowDownUp className="h-4 w-4" />
-              {ascending ? d("Urutan naik") : d("Urutan turun")}
-            </Button>
-
-            <Button onClick={exportCsv} size="sm" title={d("Export daftar RSVP sebagai CSV")}>
-              <Download className="h-4 w-4" />
-              {d("Export CSV")}
-            </Button>
+        <div className="grid min-w-0 gap-3 sm:grid-cols-[minmax(12rem,1fr)_minmax(9rem,12rem)_auto_auto] sm:items-center">
+          <label className="relative block min-w-0">
+            <span className="sr-only">{d("Cari nama / telepon")}</span>
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-primary" aria-hidden="true" />
+            <Input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={d("Cari nama / telepon")}
+              className="w-full min-w-0 pl-9"
+            />
+          </label>
+          <select
+            value={sortKey}
+            onChange={(event) => setSortKey(event.target.value as SortKey)}
+            className="min-h-10 w-full min-w-0 border border-primary/25 bg-background px-3 text-sm text-foreground outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/15"
+            aria-label={d("Urutkan tamu")}
+          >
+            {(Object.keys(sortLabel) as SortKey[]).map((key) => (
+              <option key={key} value={key}>{d(sortLabel[key])}</option>
+            ))}
+          </select>
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setAscending((value) => !value)}
+            aria-label={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
+            title={ascending ? d("Ubah ke urutan turun") : d("Ubah ke urutan naik")}
+          >
+            <ArrowDownUp className="size-4" aria-hidden="true" />
+            {ascending ? d("Urutan naik") : d("Urutan turun")}
+          </Button>
+          <Button type="button" onClick={exportCsv} size="sm" title={d("Export daftar RSVP sebagai CSV")}>
+            <Download className="size-4" aria-hidden="true" />
+            {d("Export CSV")}
+          </Button>
         </div>
 
-        <div className="mt-4 min-w-0 overflow-x-auto">
-          <table className="w-full min-w-[940px] text-left">
-            <thead>
-              <tr className="border-b border-border font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-foreground/50">
-                <th className="px-3 py-3 font-medium">{d("Nama")}</th>
-                <th className="px-3 py-3 font-medium">RSVP</th>
-                <th className="px-3 py-3 font-medium">{d("Pax")}</th>
-                <th className="px-3 py-3 font-medium">{d("Check-in")}</th>
-                <th className="px-3 py-3 font-medium">{d("Meja")}</th>
-                <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((guest) => (
-                <tr
-                  key={guest.id}
-                  className="border-b border-border/80 text-xs transition-colors hover:bg-foreground/[0.025]"
-                >
-                  <td className="px-3 py-3">
-                    <p className="font-semibold text-foreground">{guest.name}</p>
-                    <p className="mt-0.5 text-[11px] text-foreground/50">
-                      {guest.phone || d("Tanpa nomor")}
-                    </p>
-                  </td>
-                  <td className="px-3 py-3">
-                    <span className="font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/70">
-                      {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
-                    </span>
-                  </td>
-                  <td className="px-3 py-3 font-[family-name:var(--font-dc-mono)] text-foreground/70">
-                    {guest.plusOnes + 1}
-                  </td>
-                  <td className="px-3 py-3">
-                    {guest.checkedIn ? (
-                      <span className="font-semibold text-emerald-700 dark:text-emerald-300">{d("Sudah")}</span>
-                    ) : (
-                      <span className="text-foreground/55">{d("Belum")}</span>
-                    )}
-                  </td>
-                  <td className="px-3 py-3 text-foreground/65">
-                    {guest.table?.name || "—"}
-                  </td>
-                  <td className="px-3 py-3">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        size="xs"
-                        title={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
-                        aria-label={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
-                        disabled={busyId === guest.id}
-                        onClick={() => showQr(guest)}
-                      >
-                        <QrCode className="h-3.5 w-3.5" />
-                        {d("Buat QR")}
-                      </Button>
-                      <Button
-                        size="xs"
-                        title={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
-                        aria-label={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
-                        disabled={busyId === guest.id || Boolean(guest.checkedIn)}
-                        onClick={() => manualCheckIn(guest)}
-                      >
-                        <CheckCircle2 className="h-3.5 w-3.5" />
-                        {guest.checkedIn ? d("Sudah check-in") : d("Check-in")}
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-              {!filtered.length && (
-                <tr>
-                  <td colSpan={7} className="px-4 py-12 text-center text-sm text-foreground/50">
-                    {locale === "en" ? "No RSVP data for this event yet." : "Belum ada data RSVP untuk acara ini."}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        {filtered.length ? (
+          <div className="grid min-w-0 gap-3">
+            {filtered.map((guest) => (
+              <article key={guest.id} className="min-w-0 rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
+                    {guest.phone && <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone}</p>}
+                  </div>
+                  <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-sm font-semibold text-primary">
+                    {d(statusLabel[guest.rsvpStatus] ?? guest.rsvpStatus)}
+                  </span>
+                </div>
+                <dl className="mt-4 grid grid-cols-3 gap-3 border-y border-primary/15 py-3 text-sm">
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{d("Pax")}</dt>
+                    <dd className="mt-1 font-semibold tabular-nums text-foreground">{guest.plusOnes + 1}</dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{d("Check-in")}</dt>
+                    <dd className="mt-1 font-semibold text-foreground">{guest.checkedIn ? d("Sudah") : d("Belum")}</dd>
+                  </div>
+                  <div className="min-w-0">
+                    <dt className="text-muted-foreground">{d("Meja")}</dt>
+                    <dd className="mt-1 break-words font-semibold text-foreground">{guest.table?.name || "—"}</dd>
+                  </div>
+                </dl>
+                <div className="mt-4 flex flex-wrap justify-end gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    title={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
+                    aria-label={locale === "en" ? `Create QR for ${guest.name}` : `Buat QR untuk ${guest.name}`}
+                    disabled={busyId === guest.id}
+                    onClick={() => showQr(guest)}
+                  >
+                    <QrCode className="size-4" aria-hidden="true" />
+                    {d("Buat QR")}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    title={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
+                    aria-label={guest.checkedIn ? (locale === "en" ? `${guest.name} is checked in` : `${guest.name} sudah check-in`) : (locale === "en" ? `Manual check-in ${guest.name}` : `Check-in manual ${guest.name}`)}
+                    disabled={busyId === guest.id || Boolean(guest.checkedIn)}
+                    onClick={() => manualCheckIn(guest)}
+                  >
+                    <CheckCircle2 className="size-4" aria-hidden="true" />
+                    {guest.checkedIn ? d("Sudah check-in") : d("Check-in")}
+                  </Button>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="rounded-2xl border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-8 text-sm text-muted-foreground">
+            {guests.length ? d("Tidak ada tamu yang cocok.") : d("Belum ada data RSVP untuk acara ini.")}
+          </p>
+        )}
 
         {slug && (
           <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/45">
