@@ -271,9 +271,9 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
             </label>
             <div className="flex flex-wrap gap-2">
               {WA_MESSAGE_PLACEHOLDERS.map((placeholder) => (
-                <button key={placeholder} type="button" onClick={() => setForm((current) => ({ ...current, body: current.body + placeholder }))} disabled={saving || form.body.length + placeholder.length > 3000} className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-semibold text-primary transition hover:bg-primary/20 disabled:opacity-50">
+                <Button key={placeholder} type="button" size="xs" onClick={() => setForm((current) => ({ ...current, body: current.body + placeholder }))} disabled={saving || form.body.length + placeholder.length > 3000}>
                   {placeholder}
-                </button>
+                </Button>
               ))}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-primary/15 pt-4">
