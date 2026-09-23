@@ -8,6 +8,7 @@ import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
+import { weddingParentLine } from "@/lib/events/parents";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -19,6 +20,14 @@ type InvitationData = {
   eventCategory: string;
   groomName: string;
   brideName: string;
+  groomFatherName?: string | null;
+  groomMotherName?: string | null;
+  groomChildOrder?: number | null;
+  groomChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
+  brideFatherName?: string | null;
+  brideMotherName?: string | null;
+  brideChildOrder?: number | null;
+  brideChildPosition?: "ELDEST" | "YOUNGEST" | "NUMBER" | null;
   venue: string;
   address?: string | null;
   mapUrl?: string | null;
@@ -122,6 +131,8 @@ export default function UniversalInvitationTemplate({
     : identity.nameMode === "single"
       ? invitation.groomName || invitation.title
       : invitation.title;
+  const groomParents = couple ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition) : "";
+  const brideParents = couple ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition) : "";
   const eventTitle = invitation.title || names || "Perayaan";
   const date = displayDate(invitation.eventDate, invitation.timezone);
   const countdown = eventCountdown(invitation.eventDate, now);
@@ -236,6 +247,7 @@ export default function UniversalInvitationTemplate({
                       </div>}
                       {!usesPhotos && <div aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>}
                       <p className="mt-4 break-words text-base" style={{ fontFamily: font.heading }}>{name || "Nama belum diisi"}</p>
+                      {(slot === "personOne" ? groomParents : brideParents) && <p className="mx-auto mt-2 max-w-[18rem] text-xs leading-5 opacity-75">{slot === "personOne" ? groomParents : brideParents}</p>
                     </div>
                   ))}
                 </>
