@@ -143,9 +143,11 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       groomFatherName: value === "WEDDING" ? current.groomFatherName : "",
       groomMotherName: value === "WEDDING" ? current.groomMotherName : "",
       groomChildOrder: value === "WEDDING" ? current.groomChildOrder : "",
+      groomChildPosition: value === "WEDDING" ? current.groomChildPosition : "",
       brideFatherName: value === "WEDDING" ? current.brideFatherName : "",
       brideMotherName: value === "WEDDING" ? current.brideMotherName : "",
       brideChildOrder: value === "WEDDING" ? current.brideChildOrder : "",
+      brideChildPosition: value === "WEDDING" ? current.brideChildPosition : "",
     }));
   }
 
@@ -199,10 +201,12 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
           brideName: form.brideName,
           groomFatherName: form.groomFatherName,
           groomMotherName: form.groomMotherName,
-          groomChildOrder: form.groomChildOrder,
+          groomChildOrder: form.groomChildPosition === "NUMBER" ? form.groomChildOrder : "",
+          groomChildPosition: form.groomChildPosition || null,
           brideFatherName: form.brideFatherName,
           brideMotherName: form.brideMotherName,
-          brideChildOrder: form.brideChildOrder,
+          brideChildOrder: form.brideChildPosition === "NUMBER" ? form.brideChildOrder : "",
+          brideChildPosition: form.brideChildPosition || null,
           venue: form.venue,
           address: form.address,
           mapUrl: form.mapUrl,
@@ -429,6 +433,8 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                         father={form.groomFatherName}
                         mother={form.groomMotherName}
                         order={form.groomChildOrder}
+                        position={form.groomChildPosition}
+                        onPosition={(position) => setForm((current) => ({ ...current, groomChildPosition: position, groomChildOrder: position === "NUMBER" ? current.groomChildOrder : "" }))}
                         onFather={(value) => field("groomFatherName", value)}
                         onMother={(value) => field("groomMotherName", value)}
                         onOrder={(value) => field("groomChildOrder", value)}
@@ -439,6 +445,8 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                         father={form.brideFatherName}
                         mother={form.brideMotherName}
                         order={form.brideChildOrder}
+                        position={form.brideChildPosition}
+                        onPosition={(position) => setForm((current) => ({ ...current, brideChildPosition: position, brideChildOrder: position === "NUMBER" ? current.brideChildOrder : "" }))}
                         onFather={(value) => field("brideFatherName", value)}
                         onMother={(value) => field("brideMotherName", value)}
                         onOrder={(value) => field("brideChildOrder", value)}
