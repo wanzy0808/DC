@@ -148,3 +148,7 @@ Deployment/QA:
 - Extended the same class/geometry to nested individual event and invitation tiles, recent RSVP and Ushers, personal invitations, WA recipients/template selection/preview, seating guest list, profile success notice, metrics, info sections and empty states. Explicit `dc-dashboard-detail-card` avoids accidentally altering regular buttons, badges, form inputs, modals or the interactive seating stage. Selected WA template and draggable recipient hover remain visibly distinct.
 - Implementation: `app/globals.css`, `DashboardAccountPanel.tsx`, `DashboardWorkspaces.tsx`, `EventPanel.tsx`, `InvitationWorkspacePanel.tsx`, `RsvpAnalyticsPanel.tsx`, `PersonalInvitationPanels.tsx`, `WaBlastPanels.tsx`, `WaBlastTemplateStudio.tsx`, `SeatingChart.tsx`; relevant docs updated. CSS commit `88421462`; subsequent detail-card commits and selected-state fix recorded in PRD.
 - QA still required: real browser screenshots and behavior (both themes, desktop/mobile, scroll, empty/busy, RSVP/guest rows, WA selected states and seating drag/drop), plus GitHub Actions build; do not claim visual sign-off or CI pass from static code inspection alone.
+
+## 23 September 2026 — Remove decorative circle from Beranda gradient
+
+- Removed the Beranda welcome card's concentric-ring `::after` and its circular radial gradient overlay. Kept the light/dark linear gradients, heading/CTA and 0.3cm Rose left stroke intact. The RSVP circular progress visualization is functional data and remains unchanged. App commit `69dfbb27`. Browser visual QA remains pending.
