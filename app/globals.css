@@ -482,3 +482,67 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
   from { opacity: 1; }
   to { opacity: 0; }
 }
+
+
+/* Dashboard navigation: curved outside corners inspired by the owner's sidebar
+   reference. Scoped to the customer rail; public navigation stays unchanged. */
+.dc-dashboard .dc-dashboard-sidebar-nav {
+  --dc-nav-rail: var(--background);
+  --dc-nav-selected: #A65E69;
+  padding: 1rem 0 1.5rem 0.875rem !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav > button,
+.dc-dashboard .dc-dashboard-sidebar-nav > div > button,
+.dc-dashboard .dc-dashboard-sidebar-nav > div > div button {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 52px;
+  border-radius: 24px 0 0 24px !important;
+  padding-inline: 0.875rem 1rem;
+  text-align: left;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav > div {
+  padding: 0 !important;
+  border-radius: 0 !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav > div > div {
+  padding-left: 0.5rem;
+  padding-right: 0;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"]) {
+  --dc-nav-selected: var(--primary);
+  border-color: transparent !important;
+  background: var(--dc-nav-selected) !important;
+  color: #fff !important;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(.is-active, [aria-current="page"]) {
+  --dc-nav-selected: #A65E69;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::before,
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  z-index: -1;
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::before {
+  top: -20px;
+  border-radius: 0 0 20px 0;
+  box-shadow: 0 10px 0 0 var(--dc-nav-selected);
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:is(:hover, .is-active, [aria-current="page"])::after {
+  bottom: -20px;
+  border-radius: 0 20px 0 0;
+  box-shadow: 0 -10px 0 0 var(--dc-nav-selected);
+}
+.dc-dashboard .dc-dashboard-sidebar-nav button:focus-visible {
+  outline: 2px solid var(--primary) !important;
+  outline-offset: -3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .dc-dashboard .dc-dashboard-sidebar-nav button { transition: none !important; }
+}
