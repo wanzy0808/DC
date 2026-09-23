@@ -2,6 +2,7 @@
 
 import type { FormEvent } from "react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { Armchair, Lock, Plus, Users } from "lucide-react";
 import type {
   GuestForm,
@@ -27,12 +28,9 @@ export function GuestManagementLockedState() {
           Atur nama tamu, nomor meja, posisi kursi, RSVP, dan plus one setelah
           paket Guestbook Digital aktif.
         </p>
-        <Link
-          href="/packages"
-          className="mt-7 inline-flex items-center gap-2 rounded-xl bg-[#E60087] px-5 py-3 text-xs font-medium text-white"
-        >
-          <Lock className="h-4 w-4" /> Upgrade Guestbook Digital
-        </Link>
+        <Button asChild size="lg" className="mt-7">
+          <Link href="/packages"><Lock className="h-4 w-4" /> Upgrade Guestbook Digital</Link>
+        </Button>
       </div>
     </div>
   );
@@ -104,9 +102,9 @@ export function TableSetupPanel({
         </label>
       </div>
 
-      <button className="inline-flex items-center gap-2 rounded-xl bg-[#7A1C25] px-4 py-3 text-xs font-medium text-white">
-        <Plus className="h-4 w-4" /> Tambah meja
-      </button>
+      <Button type="submit" size="sm">
+        <Plus className="h-4 w-4" /> Tambah Meja
+      </Button>
 
       <div className="flex flex-wrap gap-2 border-t border-black/5 pt-4 dark:border-white/10">
         {tables.map((table) => (
@@ -202,9 +200,9 @@ export function GuestInputPanel({
         </label>
       </div>
 
-      <button className="inline-flex items-center gap-2 rounded-xl bg-[#7A1C25] px-4 py-3 text-xs font-medium text-white">
-        <Plus className="h-4 w-4" /> Simpan data tamu
-      </button>
+      <Button type="submit" size="sm">
+        <Plus className="h-4 w-4" /> Simpan Data Tamu
+      </Button>
     </form>
   );
 }
