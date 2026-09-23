@@ -36,7 +36,7 @@ import {
   UsherPanel,
   WorkspaceOverview,
 } from "@/components/Dashboard/DashboardWorkspaces";
-import { dashboardTabMeta, invitationTabs } from "@/components/Dashboard/dashboard-navigation";
+import { dashboardTabMeta, guestManagementTabs, invitationTabs } from "@/components/Dashboard/dashboard-navigation";
 import DashboardSidebar from "@/components/Dashboard/DashboardSidebar";
 import DashboardAccountPanel from "@/components/Dashboard/DashboardAccountPanel";
 import DashboardWhatsAppHelp from "@/components/Dashboard/DashboardWhatsAppHelp";
@@ -57,6 +57,7 @@ export default function DashboardPage() {
   const { d } = useDashboardI18n();
   const [tab, setTab] = useState<DashboardTab>("overview");
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
+  const [guestMenuOpen, setGuestMenuOpen] = useState(false);
   const [ctx, setCtx] = useState<DashboardContext | null>(null);
   const [events, setEvents] = useState<DashboardEvent[]>([]);
   const [rsvpEventId, setRsvpEventId] = useState("");
@@ -275,12 +276,12 @@ export default function DashboardPage() {
     if (contentScrollRef.current) contentScrollRef.current.scrollTop = 0;
     setTab(id);
     if (invitationTabs.has(id)) setInvitationMenuOpen(true);
+    if (guestManagementTabs.has(id)) setGuestMenuOpen(true);
     setMobileOpen(false);
     setProfileMenu(false);
   }
 
   const meta = dashboardTabMeta[tab];
-  const invitationActive = invitationTabs.has(tab);
   const scopedHeaderEvent =
     tab === "rsvp" ? rsvpEvent : tab === "placement" ? placementEvent : null;
 
@@ -294,6 +295,8 @@ export default function DashboardPage() {
           onNavigate={go}
           invitationMenuOpen={invitationMenuOpen}
           onToggleInvitationMenu={() => setInvitationMenuOpen((value) => !value)}
+          guestMenuOpen={guestMenuOpen}
+          onToggleGuestMenu={() => setGuestMenuOpen((value) => !value)}
           mobileOpen={mobileOpen}
           onCloseMobile={() => setMobileOpen(false)}
         />
