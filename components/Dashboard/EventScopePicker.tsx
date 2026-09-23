@@ -2,6 +2,7 @@
 
 import { CalendarDays, ChevronDown } from "lucide-react";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 
 export type EventScopeOption = {
   id: string;
@@ -52,7 +53,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
           >
             {events.map((event) => (
               <option key={event.id} value={event.id}>
-                {event.title.trim() || d("Acara tanpa judul")}
+                {displayTitleCase(event.title.trim() || d("Acara tanpa judul"))}
               </option>
             ))}
           </select>
