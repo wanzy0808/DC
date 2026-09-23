@@ -247,7 +247,7 @@ export default function UniversalInvitationTemplate({
                       </div>}
                       {!usesPhotos && <div aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>}
                       <p className="mt-4 break-words text-base" style={{ fontFamily: font.heading }}>{name || "Nama belum diisi"}</p>
-                      {(slot === "personOne" ? groomParents : brideParents) && <p className="mx-auto mt-2 max-w-[18rem] text-xs leading-5 opacity-75">{slot === "personOne" ? groomParents : brideParents}</p>
+                      {(slot === "personOne" ? groomParents : brideParents) && <p className="mx-auto mt-2 max-w-[18rem] text-xs leading-5 opacity-75">{slot === "personOne" ? groomParents : brideParents}</p>}
                     </div>
                   ))}
                 </>
