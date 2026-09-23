@@ -117,22 +117,19 @@ export default function PortalTransition() {
 
   if (phase === "idle" || reducedMotion) return null;
   return (
-    <div aria-hidden="true" className="pointer-events-auto fixed inset-0 z-[9999] overflow-hidden">
-      <div
-        className="absolute inset-0 bg-[#fae9ef] dark:bg-[#251b21]"
-        style={{
-          clipPath: "circle(155% at 50% 50%)",
-          animation: phase === "cover"
-            ? `dc-marketing-veil-in ${coverDuration}ms cubic-bezier(.22,1,.36,1) both`
-            : phase === "reveal"
-              ? `dc-marketing-veil-out ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1) both`
-              : undefined,
-        }}
-      />
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(255,248,252,.94)_0%,rgba(246,186,206,.76)_25%,rgba(192,122,132,.18)_57%,transparent_78%)] dark:bg-[radial-gradient(circle_at_50%_50%,rgba(255,234,242,.9)_0%,rgba(211,137,158,.56)_30%,rgba(192,122,132,.13)_65%,transparent_85%)]"
-        style={{ animation: phase === "cover" ? "dc-marketing-glow-in 780ms ease-out both" : phase === "reveal" ? "dc-marketing-glow-out 700ms ease-in both" : undefined, opacity: phase === "hold" ? 1 : undefined }}
-      />
-    </div>
+    <div
+      aria-hidden="true"
+      className="pointer-events-auto fixed inset-0 z-[9999] bg-[#fae9ef] bg-[radial-gradient(ellipse_120%_135%_at_50%_50%,#fff8fb_0%,#f8dce7_36%,#efd1dc_68%,#fae9ef_100%)] dark:bg-[#251b21] dark:bg-[radial-gradient(ellipse_120%_135%_at_50%_50%,#fff3f8_0%,#ecc0d2_30%,#996678_68%,#251b21_100%)]"
+      style={{
+        // A single full-viewport Rose surface fades in and out. Unlike a
+        // separately scaled rectangular glow, it cannot expose its own edges
+        // as box-shaped seams during the door's camera zoom.
+        animation: phase === "cover"
+          ? `dc-marketing-veil-in ${coverDuration}ms cubic-bezier(.22,1,.36,1) both`
+          : phase === "reveal"
+            ? `dc-marketing-veil-out ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1) both`
+            : undefined,
+      }}
+    />
   );
 }
