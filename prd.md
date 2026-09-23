@@ -122,6 +122,11 @@ Dashboard onboarding untuk user umum hanya membutuhkan profil workspace seperti 
 
 Data event diisi ketika user membuat Rangkaian Acara.
 
+### 4.1g Profil akun dan keamanan (23 September 2026)
+
+Customer dashboard menyediakan Profil Saya untuk melihat/mengubah nama depan, nama belakang, foto profil pribadi (bukan foto event), dan menampilkan email akun sebagai read-only. Foto JPG/PNG/WebP maksimal 5 MB divalidasi dan ditranscode Sharp ke WebP sebelum disimpan dengan nama acak di folder per-user; URL disimpan di `User.avatarUrl`. Header menampilkan avatar tersimpan, fallback inisial jika belum ada foto. Pengaturan Akun menyediakan ganti password dengan verifikasi password saat ini, hash bcrypt baru dan pencabutan sesi sebelumnya, kemudian membentuk sesi aktif baru. Seluruh mutasi akun diperiksa server-side melalui sesi; user tidak boleh mengubah profil pengguna lain. Email change, provider OAuth password reset, dan pengelolaan notifikasi bukan bagian scope tahap pertama ini.
+
+
 ### 4.1a Konsistensi visual Login dan Daftar (22 September 2026)
 
 Masuk (`/login`) dan Daftar (dialog yang dibuka dari menu navbar maupun tombol Daftar di login) memakai identitas UI publik DC Organizer yang sama: tipografi Cinzel untuk heading, Fauna One untuk label/form, warna Rose sebagai aksen, permukaan popup putih dengan glow pink tipis dalam kedua mode (bukan card gelap saat Dark Mode), outline Rose, CTA Rose, dan kolom input serta tombol berbentuk pill sesuai token global `--dc-control-radius`. Kartu login lebar baca sekitar 480px di tengah halaman yang responsif; dialog pendaftaran lebar sekitar 490px dengan scroll internal ketika tinggi layar terbatas agar kolom, checkbox dan tombol dapat dijangkau di mobile. Navbar, footer, latar/kelopak global dan brand `BrandWordmark` tetap milik layout bersama; jangan menduplikasi dekorasi/pemutar musik atau mengubah landing Pintu.
@@ -355,6 +360,11 @@ Scope khusus `eventCategory = WEDDING`; jangan mengubah form acara umum atau men
 - **Status:** requirement/arsitektur tercatat; kode sesi, migrasi database, pilihan per tamu, dan filtering publik **belum diimplementasikan**. Jangan mengklaim fitur sudah tersedia dari perubahan dokumentasi ini.
 
 ## 6. Dashboard Information Architecture
+
+### 6.0 Mainframe dashboard (pembaruan 23 September 2026)
+
+Customer `/dashboard` menggunakan satu mainframe responsif ber-outline Rose yang membingkai sidebar, header, dan konten operasional sebagaimana komposisi landing, tanpa menyalin ilustrasi Pintu, bunga, music player atau animasi marketing. Sidebar tetap Rose dengan label putih dan status hover/active berbeda; konten Light neutral/putih dengan Rose lembut, Dark near-black dengan Rose accent. Brand memakai `BrandWordmark` sekali pada rail; header berisi judul page, kontrol tema/bahasa, serta menu pengguna. Seluruh konten dan interaksi dalam frame tetap berbasis data asli; layout mobile mempertahankan navigasi drawer. Ketentuan frame ini menggantikan deskripsi historis yang menempatkan header fixed melewati seluruh viewport. Beranda adalah contoh awal untuk audit panel lainnya.
+
 
 Sidebar user:
 - **Beranda**
@@ -4447,4 +4457,4 @@ Menu pengguna pada navbar membuka **Profil Saya** (foto akun JPG/PNG/WebP sampai
 
 **Affected:** `app/dashboard/{page,layout}.tsx`, `components/Dashboard/{DashboardSidebar,DashboardAccountPanel,dashboard-types,dashboard-navigation,useDashboardI18n}.tsx`, `app/globals.css`, `app/api/{profile,profile/avatar,profile/password,dashboard/context}/route.ts`, `prisma/schema.prisma`, `prisma/migrations/20260923115000_user_avatar_url/migration.sql`, `README.md`, `AGENTS.md`, `Dashboard-redesign.md`, `prd.md`.
 
-**Commits:** implementasi bertahap langsung ke `main`, mulai `a08c4c4` (schema) sampai commit dokumentasi akhir untuk tahap ini. **Validasi:** build/CI belum dikonfirmasi pada saat penulisan; browser desktop/mobile dan akses database produksi belum diuji. Sesudah sync jalankan `pnpm db:deploy` terhadap database target, kemudian `pnpm db:generate` (jika client belum dibangun ulang). Uji unggah foto, update nama, password salah/benar, login ulang perangkat lain, Light/Dark dan dropdown mobile. Penyimpanan avatar ke disk VPS mengikuti pola upload existing; deployment dengan filesystem ephemeral perlu media storage persisten sebelum produksi.
+**Commits:** implementasi bertahap langsung ke `main`: `a08c4c4` (schema), `315c0bb` (migrasi), `fbca130` (avatar API), `3f96cea` (password API), `cb3c56d` (panel akun), `50d32b1` (integrasi Beranda/menu), `528fd88` (layout), `ce8f16c` (brand rail), `36bac74` (mainframe CSS), `de0a685` (i18n), dan dokumentasi lanjutannya. **Validasi:** build/CI belum dikonfirmasi pada saat penulisan; browser desktop/mobile dan akses database produksi belum diuji. Sesudah sync jalankan `pnpm db:deploy` terhadap database target, kemudian `pnpm db:generate` (jika client belum dibangun ulang). Uji unggah foto, update nama, password salah/benar, login ulang perangkat lain, Light/Dark dan dropdown mobile. Penyimpanan avatar ke disk VPS mengikuti pola upload existing; deployment dengan filesystem ephemeral perlu media storage persisten sebelum produksi.
