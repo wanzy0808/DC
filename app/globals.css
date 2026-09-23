@@ -453,21 +453,15 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 
-/* Shared marketing navigation veil. No body-level opacity rules: individual
-   destination pieces assemble when the veil begins to uncover their page. */
+/* One full-viewport Rose surface covers and uncovers marketing routes.
+   Do not scale the gradient layer or clip it into a separate opaque shape:
+   either can reveal rectangular compositor seams during the 3D camera zoom.
+   Destination pieces still assemble as this single surface fades away. */
 @keyframes dc-marketing-veil-in {
-  from { clip-path: circle(0% at 50% 50%); opacity: 0.84; }
-  to { clip-path: circle(155% at 50% 50%); opacity: 1; }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes dc-marketing-veil-out {
-  from { clip-path: circle(155% at 50% 50%); opacity: 1; }
-  to { clip-path: circle(0% at 50% 50%); opacity: 0; }
-}
-@keyframes dc-marketing-glow-in {
-  from { opacity: 0; transform: scale(0.7); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes dc-marketing-glow-out {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(1.25); }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
