@@ -10,6 +10,7 @@ import {
   DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   fillWaMessage,
   WA_MESSAGE_CATEGORIES,
@@ -245,7 +246,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
                 disabled={saving}
                 className="min-h-11 w-full border border-primary/25 bg-background px-4 text-sm font-normal"
               >
-                {WA_MESSAGE_CATEGORIES.map((item) => <option key={item.id} value={item.id}>{locale === "en" ? item.english : item.label}</option>)}
+                {WA_MESSAGE_CATEGORIES.map((item) => <option key={item.id} value={item.id}>{displayTitleCase(locale === "en" ? item.english : item.label)}</option>)}
               </select>
             </label>
             <label className="grid gap-1.5 text-sm font-semibold text-foreground">
@@ -303,7 +304,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
             disabled={!recipients.length}
             className="min-h-11 w-full border border-primary/25 bg-background px-4 text-sm font-normal"
           >
-            {recipients.length ? recipients.map((item) => <option key={item.id} value={item.id}>{item.name}</option>) : <option value="">{d("Contoh · belum ada penerima")}</option>}
+            {recipients.length ? recipients.map((item) => <option key={item.id} value={item.id}>{displayTitleCase(item.name)}</option>) : <option value="">{d("Contoh · belum ada penerima")}</option>}
           </select>
         </label>
         <div className="dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.055] p-4">
