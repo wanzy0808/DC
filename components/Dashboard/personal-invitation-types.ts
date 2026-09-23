@@ -4,6 +4,17 @@ export type PersonalInvitationGuest = {
   id: string;
   name: string;
   phone: string | null;
+  category?: string | null;
+  tags?: string[];
+  recipientType?: "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP";
+  invitedPax?: number;
+  personalAddressee?: string | null;
+  personalGreeting?: string | null;
+  personalSharedAt?: string | null;
+  rsvpStatus?: "PENDING" | "ATTENDING" | "DECLINED";
+  plusOnes?: number;
+  checkedIn?: boolean;
+  table?: { id: string; name: string } | null;
   personalToken?: string | null;
   personalPublished?: boolean;
   personalPasswordProtected?: boolean;
