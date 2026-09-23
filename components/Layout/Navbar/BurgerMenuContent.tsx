@@ -1,17 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
+import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutDashboard, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { dashboardRouteForRole } from "@/lib/auth/dashboard-route";
 
 export default function BurgerMenuContent({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
   const [servicesOpen, setServicesOpen] = useState(true);
+  // Remount on every burger open and check the live server session. The user
+  // may have signed in/out on another route or browser tab.
+  const [session, setSession] = useState<"checking" | "signedOut" | "signedIn">("checking");
+  const [dashboardHref, setDashboardHref] = useState("/dashboard");
+  useEffect(() => {
+    const controller = new AbortController();
+    void (async () => {
+      try {
+        const response = await fetch("/api/auth/session", {
+          cache: "no-store",
+          credentials: "same-origin",
+          signal: controller.signal,
+        });
+        if (response.status === 401) {
+          setSession("signedOut");
+          return;
+        }
+        if (!response.ok) throw new Error("Session could not be verified");
+        const result = await response.json() as {
+          authenticated?: boolean;
+          user?: { role?: string };
+        };
+        if (!result.authenticated) {
+          setSession("signedOut");
+          return;
+        }
+        setDashboardHref(dashboardRouteForRole(result.user?.role));
+        setSession("signedIn");
+      } catch {
+        if (!controller.signal.aborted) setSession("signedOut");
+      }
+    })();
+    return () => controller.abort();
+  }, []);
   const { messages } = useLanguage();
   const { nav } = messages;
   function openAuth(mode: "login" | "register") {
