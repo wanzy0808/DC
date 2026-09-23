@@ -489,7 +489,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   setDraggedGuestId(guest.id);
                   setSwapCandidate(null);
                 }}
-                className="cursor-grab rounded-2xl border border-primary/20 bg-primary/[0.035] px-4 py-3 text-sm transition hover:border-primary/40 hover:bg-primary/[0.08] active:cursor-grabbing"
+                className="dc-dashboard-detail-card cursor-grab rounded-tr-[22px] border border-primary/20 bg-primary/[0.035] px-4 py-3 text-sm transition hover:border-primary/40 hover:bg-primary/[0.08] active:cursor-grabbing"
               >
                 <div className="truncate font-medium text-foreground">{guest.name}</div>
                 {(guest.category || Boolean(guest.tags?.length)) && (
@@ -661,7 +661,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         </div>
 
         {swapCandidate && (
-          <div className="mt-3 rounded-xl border border-primary/20 bg-primary/[0.045] p-4">
+          <div className="dc-dashboard-detail-card mt-3 rounded-tr-[22px] border border-primary/20 bg-primary/[0.045] p-4">
             <p className="text-xs font-medium leading-5 text-foreground">
               {locale === "en" ? `Seat occupied by ${swapCandidate.target.guest?.name}. Swap with ${draggedGuest?.name}?` : `Kursi ditempati ${swapCandidate.target.guest?.name}. Tukar dengan ${draggedGuest?.name}?`}
             </p>
