@@ -45,7 +45,7 @@ export default function EventScopePicker({ events, value, onChange, disabled = f
         </span>
         <span className="relative block">
           <select
-            data-dc-native-chevron
+            data-dc-native-chevron="true"
             value={value}
             onChange={(event) => onChange(event.target.value)}
             disabled={disabled}
