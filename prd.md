@@ -4471,6 +4471,13 @@ Menu pengguna pada navbar membuka **Profil Saya** (foto akun JPG/PNG/WebP sampai
 
 ### 2026-09-23 — Backdrop Rose solid dan garis aksen kartu Beranda
 
-Owner memilih bidang luar mainframe berwarna pink brand yang tebal/solid, bukan radial glow pucat atau white/black kosong. `/dashboard` menggunakan background luar `var(--primary)` (`#C07A84`) pada Light dan Dark; mainframe tetap berpermukaan putih atau hitam di dalam, border frame dibuat terang agar kontras dari Rose luar. Ukuran frame, inner scrolling, sidebar, navbar, data asli dan landing/Pintu tidak berubah. Shared dashboard surfaces memiliki border Rose halus ditambah garis sisi kiri 3px; panel ringkasan acara dan RSVP/publikasi memakai garis kiri 4px; metric cards memakai garis atas Rose 3px. Penempatan garis sengaja berbeda menurut jenis kartu untuk menjaga hirarki tanpa memberi seluruh kartu fill pink.
+Owner memilih bidang luar mainframe berwarna pink brand yang tebal/solid, bukan radial glow pucat atau white/black kosong. `/dashboard` menggunakan background luar `var(--primary)` (`#C07A84`) pada Light dan Dark; mainframe tetap berpermukaan putih atau hitam di dalam, border frame dibuat terang agar kontras dari Rose luar. Ukuran frame, inner scrolling, sidebar, navbar, data asli dan landing/Pintu tidak berubah. Shared dashboard surfaces memiliki border Rose halus dengan garis sisi kiri 3px; panel ringkasan acara dan RSVP/publikasi memakai garis kiri 4px; metric cards kini juga memakai garis kiri Rose 3px, bukan garis atas. Seluruh kartu kecil hanya membulat pada sudut kanan atas; ketiga sudut lainnya siku. Tidak ada seluruh kartu yang diberi fill pink.
 
 **Affected:** `app/globals.css`, `prd.md`, `AGENTS.md`, `README.md`, `Dashboard-redesign.md`. **Commit aplikasi:** `0b2415e`. **Validasi:** perubahan CSS terpasang di `main`; browser visual dan build CI terbaru belum diverifikasi.
+
+
+### 2026-09-23 — Geometri kartu dashboard: siku dengan round hanya kanan atas
+
+Pembaruan pilihan owner: kartu-kartu kecil dashboard (statistik, panel informasi/acara/RSVP, compact stat, notifikasi dan empty state) memakai tiga sudut siku dan hanya sudut **kanan atas** membulat. Semua garis aksen Rose diposisikan **vertikal di kiri**, bukan di atas; ketebalan standar 3px dan panel utama Beranda/hero 4px. Kartu tetap putih pada Light Mode dan near-black pada Dark Mode. Perubahan berlaku pada komponen bersama (`DashboardPrimitives`) dan kartu Beranda (`DashboardWorkspaces`) dengan CSS khusus `dc-dashboard-scroll`; mainframe luar, radius tombol/badge, sidebar, scroll internal, WhatsApp dan data asli tidak diubah.
+
+**Affected:** `components/Dashboard/DashboardPrimitives.tsx`, `components/Dashboard/DashboardWorkspaces.tsx`, `app/globals.css`, dokumentasi. **Commits aplikasi:** `f1ef401c`, `35d2a89b`, `c50ef71f`. QA visual desktop/mobile dan CI setelah perubahan ini belum diverifikasi.
