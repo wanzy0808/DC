@@ -406,7 +406,7 @@ export default function SimpleDoorLab({ fullFrame = false }: { fullFrame?: boole
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
-      <Canvas shadows camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
+      <Canvas shadows={{ type: THREE.PCFShadowMap }} camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startRoseCover} onArrive={finishZoom} />
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
