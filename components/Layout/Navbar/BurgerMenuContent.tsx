@@ -73,12 +73,25 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
   };
   return (
     <nav aria-label={nav.navigation} className="space-y-2">
-      <motion.div {...reveal(0)}>
-        <Link href="/login" onClick={(event) => { event.preventDefault(); openAuth("login"); }} aria-current={pathname === "/login" ? "page" : undefined} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></Link>
-      </motion.div>
-      <motion.div {...reveal(1)}>
-        <Button className={itemClass} onClick={() => openAuth("register")}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></Button>
-      </motion.div>
+      {session === "checking" ? (
+        <div aria-hidden="true" className="space-y-2">
+          <div className="h-11 animate-pulse rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/5" />
+          <div className="h-11 animate-pulse rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/5" />
+        </div>
+      ) : session === "signedIn" ? (
+        <motion.div {...reveal(0)}>
+          <Link href={dashboardHref} onClick={onClose} aria-current={pathname === dashboardHref ? "page" : undefined} className={itemClass}><LayoutDashboard className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.dashboard}</span></Link>
+        </motion.div>
+      ) : (
+        <>
+          <motion.div {...reveal(0)}>
+            <Link href="/login" onClick={(event) => { event.preventDefault(); openAuth("login"); }} aria-current={pathname === "/login" ? "page" : undefined} className={itemClass}><LogIn className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.login}</span></Link>
+          </motion.div>
+          <motion.div {...reveal(1)}>
+            <Button className={itemClass} onClick={() => openAuth("register")}><UserPlus className="size-4 shrink-0" strokeWidth={1.8} /><span>{nav.register}</span></Button>
+          </motion.div>
+        </>
+      )}
       {items.map(({ href, label, icon: Icon }, index) => (
         <motion.div key={href} {...reveal(index + 2)}>
           <Link href={href} onClick={onClose} aria-current={pathname === href ? "page" : undefined} className={itemClass}><Icon className="size-4 shrink-0" strokeWidth={1.8} /><span>{label}</span></Link>
