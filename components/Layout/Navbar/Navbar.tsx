@@ -25,14 +25,15 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
         ? `dc-navbar--landing ${isJiplak ? "dc-navbar--jiplak bg-transparent" : "bg-transparent"}`
         : "bg-transparent"
     }`}>
-      <div className="mx-auto flex w-[80vw] max-w-full items-center justify-between py-5 sm:py-4">
+      <div className="mx-auto flex w-[calc(100%-28px)] max-w-full items-center justify-between gap-2 py-3 sm:w-[80vw] sm:py-4">
         <Link href="/" className="group block min-w-0">
           <BrandWordmark
+            size="mobile"
             showTagline
             className="transition-transform group-hover:scale-[1.01]"
           />
         </Link>
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-3">
           <ThemeToggle />
           <LanguageToggle />
           <div className="relative">
@@ -43,7 +44,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
                   aria-expanded={menuOpen}
                   aria-controls="dc-burger-dropdown"
                   onClick={() => setMenuOpen((open) => !open)}
-                  className="dc-burger-toggle h-11 w-11"
+                  className="dc-burger-toggle h-9 w-9 sm:h-11 sm:w-11"
                 >
                   <Menu className="h-5 w-5" />
                 </Button>
