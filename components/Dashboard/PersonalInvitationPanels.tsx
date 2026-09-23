@@ -14,6 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   DashboardEmptyState,
   DashboardPanel,
@@ -90,10 +91,10 @@ export function PersonalInvitationCreatePanel({
             disabled={busy}
             className="mt-1.5 min-h-11 w-full border border-primary/25 bg-background px-3 text-sm text-foreground"
           >
-            <option value="">{d("Tambah tamu baru")}</option>
+            <option value="">{displayTitleCase(d("Tambah tamu baru"))}</option>
             {availableGuests.map((guest) => (
               <option key={guest.id} value={guest.id} className="dc-ui-name">
-                {guest.name}{guest.phone ? ` · ${guest.phone}` : ""}
+                {displayTitleCase(guest.name)}{guest.phone ? ` · ${guest.phone}` : ""}
               </option>
             ))}
           </select>
