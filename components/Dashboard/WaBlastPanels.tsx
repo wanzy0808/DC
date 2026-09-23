@@ -50,7 +50,7 @@ export function WaBlastAddRecipients({
           className="mt-2 w-full px-3 text-sm"
           disabled={busy || !canAddRecipients}
         >
-          <option value="">{d("Pilih tamu")}</option>
+          <option value="">{displayTitleCase(d("Pilih tamu"))}</option>
           {availableGuests.map((guest) => (
             <option key={guest.id} value={guest.id}>
               {displayTitleCase(guest.name)} · {guest.phone}
