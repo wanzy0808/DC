@@ -51,7 +51,7 @@ export function DashboardMetricGrid({
   className?: string;
 }) {
   return (
-    <section className={classes("grid gap-4 sm:grid-cols-2 xl:grid-cols-4", className)}>
+    <section className={classes("dc-dashboard-metric-group grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-4", className)}>
       {children}
     </section>
   );
@@ -71,7 +71,7 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-tr-[22px] border border-primary/15 bg-background px-5 py-6 shadow-[0_8px_28px_rgba(78,32,47,0.045)]",
+        "dc-dashboard-metric flex min-w-0 items-center gap-3 px-4 py-5",
         className,
       )}
     >
@@ -244,17 +244,17 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
   );
 }
 
-/** Flat content section: the heading is not a card around other cards. */
+/** One large frame per section; its contents are rows, never nested cards. */
 export function DashboardPanel({ children, className, ...header }: Parameters<typeof DashboardSectionHeader>[0] & {
   children?: ReactNode;
   className?: string;
 }) {
   return (
-    <section className={classes("dc-dashboard-section min-w-0", className)}>
-      <div className="mb-4 border-b border-primary/20 pb-4">
+    <DashboardSurface className={classes("dc-dashboard-panel min-w-0 overflow-hidden", className)}>
+      <div className="border-b border-primary/20 px-5 py-5 sm:px-6">
         <DashboardSectionHeader {...header} />
       </div>
-      {children && <div className="min-w-0 space-y-4">{children}</div>}
-    </section>
+      {children && <div className="min-w-0 space-y-4 p-5 sm:p-6">{children}</div>}
+    </DashboardSurface>
   );
 }
