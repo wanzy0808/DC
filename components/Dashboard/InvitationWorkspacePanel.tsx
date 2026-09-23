@@ -71,7 +71,7 @@ function publicUrl(invitation: Invitation) {
 }
 
 export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
-  const { d } = useDashboardI18n();
+  const { d, locale } = useDashboardI18n();
   const [invitations, setInvitations] = useState<Invitation[]>([]);
   const [guests, setGuests] = useState<Guest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -155,7 +155,10 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
   return (
     <DashboardPage>
-      <DashboardPageHeader title={d("Undangan Digital")} />
+      <DashboardPageHeader
+        title={d("Undangan Digital")}
+        actions={<Button type="button" size="sm" onClick={onCreateSequence}><Plus className="size-4" />{d("Tambah acara")}</Button>}
+      />
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardMetricGrid>
@@ -166,19 +169,8 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       </DashboardMetricGrid>
 
       <DashboardPanel className="mt-5"
-          title={d("Undangan")}
-          actions={
-            <>
-              <Button type="button" size="sm" onClick={onCreateSequence}>
-                <Plus className="h-4 w-4" />
-                {d("Tambah acara")}
-              </Button>
-              <Button type="button" size="sm" onClick={() => load()} disabled={loading}>
-                <RefreshCw className="h-4 w-4" />
-                {d("Muat ulang")}
-              </Button>
-            </>
-          }
+          title={d("Daftar undangan")}
+          actions={<Button type="button" size="sm" onClick={() => load()} disabled={loading} aria-label={d("Muat ulang")}><RefreshCw className="size-4" />{d("Muat ulang")}</Button>}
       >
 
         {invitations.length === 0 ? (
@@ -186,50 +178,67 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
             className="mt-4"
             icon={CalendarDays}
             title={d("Belum ada acara")}
-            description={d("Buat rangkaian acara terlebih dahulu untuk mulai mendesain Undangan Digital.")}
-            action={
-              <Button type="button" size="sm" onClick={onCreateSequence}>
-                <Plus className="h-4 w-4" />
-                {d("Tambah acara")}
-              </Button>
-            }
+            description={d("Tambah acara untuk mulai mendesain undangan.")}
           />
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[780px] text-left">
-              <thead><tr>{["Nama", "Venue", "Status", "Dibuka", "Aksi"].map(label => <th key={label} className="px-3 py-3">{d(label)}</th>)}</tr></thead>
-              <tbody>{invitations.map((invitation) => {
-                const title = invitation.title.trim() || d("Acara tanpa judul");
-                const hasDesign = Boolean(invitation.templateKey?.trim());
-                const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
-                const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
-                return (
-                  <tr key={invitation.id}>
-                    <td className="max-w-64 px-3 py-4"><p className="break-words text-sm font-semibold">{title}</p></td>
-                    <td className="max-w-48 px-3 py-4 text-sm text-muted-foreground">{invitation.venue || d("Belum diatur")}</td>
-                    <td className="px-3 py-4"><DashboardStatusBadge active={invitation.isPublished}>{invitation.isPublished ? d("Terbit · terkunci") : !invitation.eventConfigured ? d("Belum lengkap") : hasDesign ? d("Siap publish") : d("Belum desain")}</DashboardStatusBadge></td>
-                    <td className="px-3 py-4 font-[family-name:var(--font-dc-mono)] text-sm">{invitation.viewCount || 0}</td>
-                    <td className="px-3 py-4">
-                      <div className="flex flex-wrap justify-end gap-2">
-                        {invitation.eventConfigured ? <Button asChild size="sm"><Link href={studioHref} aria-label={`${hasDesign ? d("Edit undangan") : d("Buat undangan")} · ${title}`}><PenLine className="size-4" />{hasDesign ? d("Edit undangan") : d("Buat undangan")}</Link></Button> : <Button size="sm" onClick={onCreateSequence}><CalendarDays className="size-4" />{d("Lengkapi acara")}</Button>}
-                        {invitation.isPublished ? <Button asChild size="sm"><a href={publicUrl(invitation)} target="_blank" rel="noreferrer" aria-label={`${d("Buka publik")} · ${title}`}><ArrowUpRight className="size-4" />{d("Buka publik")}</a></Button> : invitation.eventConfigured && hasDesign ? invitation.accessPaid ? <Button size="sm" disabled={loading || busyId === invitation.id} onClick={() => publishInvitation(invitation)}><Send className="size-4" />{busyId === invitation.id ? d("Menyimpan...") : d("Publish")}</Button> : <Button asChild size="sm"><Link href={purchaseHref}><Send className="size-4" />{d("Beli paket & publish")}</Link></Button> : <span className="self-center text-xs text-muted-foreground">{invitation.eventConfigured ? d("Simpan template dulu") : d("Lengkapi acara dulu")}</span>}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}</tbody>
-            </table>
+          <div className="grid gap-3">
+            {invitations.map((invitation) => {
+              const title = invitation.title.trim() || d("Acara tanpa judul");
+              const hasDesign = Boolean(invitation.templateKey?.trim());
+              const studioHref = `/dashboard/editor?type=${invitation.type}&invitationId=${encodeURIComponent(invitation.id)}`;
+              const purchaseHref = `/packages?package=INVITATION_BASIC&invitationId=${encodeURIComponent(invitation.id)}`;
+              const status = invitation.isPublished
+                ? d("Terbit · terkunci")
+                : !invitation.eventConfigured
+                  ? d("Belum lengkap")
+                  : hasDesign
+                    ? d("Siap publish")
+                    : d("Belum desain");
+              return (
+                <article key={invitation.id} className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                  <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h3 className="break-words text-base font-semibold text-foreground">{title}</h3>
+                      {invitation.venue && <p className="mt-1 truncate text-sm text-muted-foreground">{invitation.venue}</p>}
+                    </div>
+                    <DashboardStatusBadge active={invitation.isPublished}>{status}</DashboardStatusBadge>
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-primary/15 pt-4">
+                    <span className="inline-flex items-center gap-1.5 text-sm text-muted-foreground" aria-label={locale === "en" ? `${invitation.viewCount || 0} views` : `${invitation.viewCount || 0} kali dibuka`}>
+                      <Eye className="size-4 text-primary" aria-hidden="true" />
+                      <span className="tabular-nums">{invitation.viewCount || 0}</span>
+                      {d("Dibuka")}
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      {invitation.eventConfigured ? (
+                        <Button asChild size="sm"><Link href={studioHref} aria-label={`${hasDesign ? d("Edit undangan") : d("Buat undangan")} · ${title}`}><PenLine className="size-4" />{hasDesign ? d("Edit undangan") : d("Buat undangan")}</Link></Button>
+                      ) : (
+                        <Button type="button" size="sm" onClick={onCreateSequence}><CalendarDays className="size-4" />{d("Lengkapi acara")}</Button>
+                      )}
+                      {invitation.isPublished ? (
+                        <Button asChild size="sm"><a href={publicUrl(invitation)} target="_blank" rel="noopener noreferrer" aria-label={`${d("Buka publik")} · ${title}`}><ArrowUpRight className="size-4" />{d("Buka publik")}</a></Button>
+                      ) : invitation.eventConfigured && hasDesign ? (
+                        invitation.accessPaid ? (
+                          <Button type="button" size="sm" disabled={loading || busyId === invitation.id} onClick={() => publishInvitation(invitation)}><Send className="size-4" />{busyId === invitation.id ? d("Menyimpan...") : d("Publish")}</Button>
+                        ) : (
+                          <Button asChild size="sm"><Link href={purchaseHref}><Send className="size-4" />{d("Beli paket & publish")}</Link></Button>
+                        )
+                      ) : null}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </DashboardPanel>
 
       <DashboardPanel className="mt-5"
           title={d("Respons terbaru")}
-          description={d("Respons terbaru dari undangan yang sudah dibagikan.")}
-          actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
+          actions={<DashboardStatusBadge active>{responders.length} {d("respons")}</DashboardStatusBadge>}
       >
 
-        <div className="mt-4 max-h-80 space-y-2 overflow-y-auto pr-1">
+        <div className="max-h-80 space-y-2 overflow-y-auto pr-1">
           {responders.length === 0 && (
             <DashboardEmptyState
               title={d("Belum ada respons")}
@@ -239,7 +248,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           {responders.map((guest) => (
             <div
               key={guest.id}
-              className="flex items-center justify-between gap-3 rounded-xl border border-border/70 bg-background px-3 py-2.5"
+              className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/15 bg-primary/[0.025] px-4 py-3"
             >
               <div className="min-w-0">
                 <span className="block truncate text-xs font-medium text-foreground">
