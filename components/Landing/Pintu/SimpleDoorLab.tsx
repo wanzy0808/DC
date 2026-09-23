@@ -1,6 +1,6 @@
 "use client";
 
-import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
@@ -58,22 +58,44 @@ function DoorFrame() {
 }
 
 function PortalWorld({ image, entering }: { image: string; entering: boolean }) {
-  const source = useLoader(THREE.TextureLoader, image);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
   const imageMaterial = useRef<THREE.MeshBasicMaterial>(null);
+  useEffect(() => {
+    let cancelled = false;
+    let loaded: THREE.Texture | null = null;
+    // A missing or still-syncing local image should not crash the whole 3D
+    // landing. Keep the existing Rose portal surface while its image loads.
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      image,
+      (nextTexture) => {
+        loaded = nextTexture;
+        if (cancelled) {
+          nextTexture.dispose();
+          return;
+        }
+        nextTexture.colorSpace = THREE.SRGBColorSpace;
+        nextTexture.wrapS = THREE.ClampToEdgeWrapping;
+        nextTexture.wrapT = THREE.ClampToEdgeWrapping;
+        nextTexture.anisotropy = 8;
+        nextTexture.needsUpdate = true;
+        setTexture(nextTexture);
+      },
+      undefined,
+      (error) => {
+        if (!cancelled) console.warn(`[DC Organizer] Portal image unavailable: ${image}. Confirm that the file exists in local public/ and responds with HTTP 200.`, error);
+      },
+    );
+    return () => {
+      cancelled = true;
+      if (loaded) loaded.dispose();
+    };
+  }, [image]);
   useFrame((_, delta) => {
     if (imageMaterial.current) {
       imageMaterial.current.opacity = THREE.MathUtils.damp(imageMaterial.current.opacity, entering ? 0 : 1, 4.5, delta);
     }
   });
-  const texture = useMemo(() => {
-    const copy = source.clone();
-    copy.colorSpace = THREE.SRGBColorSpace;
-    copy.wrapS = THREE.ClampToEdgeWrapping;
-    copy.wrapT = THREE.ClampToEdgeWrapping;
-    copy.anisotropy = 8;
-    copy.needsUpdate = true;
-    return copy;
-  }, [source]);
   const geometry = useMemo(() => {
     const shape = new THREE.ShapeGeometry(archShape(1.88, 4.06), 64);
     const position = shape.getAttribute("position");
@@ -89,9 +111,9 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
     <mesh geometry={geometry} position={[0, 0, -0.008]}>
       <meshBasicMaterial color="#e8a9bd" toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
-    <mesh geometry={geometry}>
+    {texture && <mesh geometry={geometry}>
       <meshBasicMaterial ref={imageMaterial} map={texture} transparent depthWrite={false} side={THREE.DoubleSide} toneMapped={false} />
-    </mesh>
+    </mesh>}
   </group>;
 }
 
