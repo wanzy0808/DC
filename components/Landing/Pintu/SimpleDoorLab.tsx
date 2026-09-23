@@ -316,9 +316,11 @@ const PORTALS = [
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
+  const hovered = useRef<number | null>(null);
   const buttonAnchor = useMemo(() => new THREE.Vector3(), []);
   const closeAnchor = useMemo(() => new THREE.Vector3(), []);
   useFrame(({ camera, size }, delta) => {
+    if (selected !== null || entering) hovered.current = null;
     if (selected === null && !reducedMotion && !entering) phase.current += delta * 0.18;
     else if (selected !== null) {
       const target = -selected * Math.PI * 2 / PORTALS.length;
@@ -332,9 +334,13 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
       const z = Math.cos(theta) * 1.25;
       group.position.set(x, 0, z);
       group.rotation.y = -Math.sin(theta) * 0.17;
-      const orbitScale = 0.69 + (z + 1.25) / 2.5 * 0.12;
+      // Preserve the existing orbit and scale easing; only strengthen perspective:
+      // rear doors recede a little more, front doors read a little larger.
+      const orbitScale = 0.62 + (z + 1.25) / 2.5 * 0.23;
       const selectedScale = selected === index ? 1.12 : 0.70;
-      const targetScale = selected === null ? orbitScale : selectedScale;
+      const targetScale = selected === null
+        ? orbitScale * (hovered.current === index && !reducedMotion ? 1.10 : 1)
+        : selectedScale;
       const nextScale = THREE.MathUtils.damp(group.scale.x, targetScale, 3.8, delta);
       group.scale.setScalar(nextScale);
     });
@@ -368,7 +374,10 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
       button.style.pointerEvents = "none";
     }
   });
-  return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }} onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
+  return <>{PORTALS.map((portal, index) => <group key={index} ref={(node) => { groups.current[index] = node; }}
+    onPointerOver={(event) => { event.stopPropagation(); if (selected === null && !entering && !reducedMotion) hovered.current = index; }}
+    onPointerOut={(event) => { event.stopPropagation(); if (hovered.current === index) hovered.current = null; }}
+    onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 3 : 0.15} color="#ffe1d5" distance={2.8} />
