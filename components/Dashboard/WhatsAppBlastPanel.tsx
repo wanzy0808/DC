@@ -193,7 +193,7 @@ export default function WhatsAppBlastPanel() {
       <DashboardPageHeader
           title={d("WA Blast")}
           actions={
-            eventId ? (
+            eventId && quota > 0 ? (
               <Button type="button" size="sm" onClick={purchaseAddon} disabled={busy}>
                 <CreditCard className="h-4 w-4" />
                 {d("Beli 50 quota · Rp75.000")}
@@ -245,7 +245,6 @@ export default function WhatsAppBlastPanel() {
 
           {quota === 0 ? (
             <DashboardPanel className="mt-5"
-                eyebrow={d("Kuota")}
                 title={d("WA Blast belum aktif")}
                 description={d("WA Blast tidak termasuk dalam harga Undangan Digital. Setiap pembelian menambah 50 kuota ke pilihan saat ini.")}
                 actions={
@@ -254,8 +253,7 @@ export default function WhatsAppBlastPanel() {
                     {d("Beli 50 quota · Rp75.000")}
                   </Button>
                 }
-            >
-            </DashboardPanel>
+            />
           ) : (
             <div className="mt-5 grid gap-4 2xl:grid-cols-[minmax(280px,0.8fr)_minmax(0,1.7fr)]">
               <WaBlastAddRecipients
