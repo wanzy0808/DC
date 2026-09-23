@@ -572,18 +572,6 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 .dark .dc-dashboard .dc-dashboard-overview-hero {
   background: linear-gradient(115deg, #793f51 0%, #a65e69 100%);
 }
-.dc-dashboard .dc-dashboard-overview-hero::after {
-  content: "";
-  position: absolute;
-  right: -2rem;
-  top: -5rem;
-  width: 16rem;
-  height: 16rem;
-  border: 1px solid rgb(255 255 255 / 16%);
-  border-radius: 50%;
-  box-shadow: 0 0 0 2.5rem rgb(255 255 255 / 5%), 0 0 0 5rem rgb(255 255 255 / 4%);
-  pointer-events: none;
-}
 .dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
   border-color: #fff !important;
   background: #fff !important;
@@ -835,22 +823,14 @@ body:has(.dc-dashboard--redesign) {
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
   border: 1.5px solid var(--primary) !important;
-  background:
-    radial-gradient(circle at 94% 2%, rgb(192 122 132 / 21%), transparent 45%),
-    linear-gradient(115deg, #ffffff, #fff2f5 90%) !important;
+  background: linear-gradient(115deg, #ffffff, #fff2f5 90%) !important;
   box-shadow: 0 12px 40px rgb(192 122 132 / 11%);
 }
 .dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
-  background:
-    radial-gradient(circle at 94% 5%, rgb(192 122 132 / 23%), transparent 45%),
-    linear-gradient(115deg, #0b0b0c, #180e14 90%) !important;
+  background: linear-gradient(115deg, #0b0b0c, #180e14 90%) !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero h1 {
   color: var(--primary) !important;
-}
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero::after {
-  border-color: rgb(192 122 132 / 22%);
-  box-shadow: 0 0 0 2.5rem rgb(192 122 132 / 5%), 0 0 0 5rem rgb(192 122 132 / 3%);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
   background: var(--primary) !important;
