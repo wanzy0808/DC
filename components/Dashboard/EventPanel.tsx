@@ -22,7 +22,6 @@ import {
   DashboardPage,
   DashboardPageHeader,
   DashboardStatusBadge,
-  DashboardSurface,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import {
