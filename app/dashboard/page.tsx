@@ -480,9 +480,9 @@ export default function DashboardPage() {
             )}
           </main>
         </div>
-      </div>
 
-      <DashboardWhatsAppHelp />
+        <DashboardWhatsAppHelp />
+      </div>
 
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
