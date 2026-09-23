@@ -18,7 +18,7 @@ import {
 import type { IssuedGuestQr, UsherGuest, UsherTab } from "@/components/Usher/types";
 import { parseUsherQrToken, usherQrImageUrl } from "@/components/Usher/utils";
 
-export default function UsherWorkspace() {
+export default function UsherWorkspace({ invitationId, eventTitle }: { invitationId: string; eventTitle: string }) {
   const [tab, setTab] = useState<UsherTab>("checkin");
   const [guests, setGuests] = useState<UsherGuest[]>([]);
   const [search, setSearch] = useState("");
@@ -37,7 +37,7 @@ export default function UsherWorkspace() {
 
   const loadGuests = useCallback(async () => {
     try {
-      const response = await fetch("/api/usher/guests", { cache: "no-store" });
+      const response = await fetch(`/api/usher/guests?invitationId=${encodeURIComponent(invitationId)}`, { cache: "no-store" });
       const data = await response.json();
       if (response.ok) {
         setGuests(data.guests ?? []);
@@ -50,7 +50,7 @@ export default function UsherWorkspace() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [invitationId]);
 
   useEffect(() => {
     loadGuests();
@@ -75,7 +75,7 @@ export default function UsherWorkspace() {
       const response = await fetch("/api/usher/checkin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token }),
+        body: JSON.stringify({ token, invitationId }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -92,7 +92,7 @@ export default function UsherWorkspace() {
     } finally {
       setCheckingIn(false);
     }
-  }, [checkingIn, stopScanner]);
+  }, [checkingIn, stopScanner, invitationId]);
 
   const startScanner = useCallback(async () => {
     setScannerError("");
@@ -167,7 +167,7 @@ export default function UsherWorkspace() {
         <div className="flex items-center gap-4">
           <BrandWordmark size="dashboard" />
           <div className="h-5 w-px bg-border" />
-          <div><p className="text-xs font-semibold">Usher App</p><p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Hari-H Check-in</p></div>
+          <div><p className="text-xs font-semibold">Usher App</p><p className="max-w-52 truncate text-xs uppercase tracking-[0.08em] text-muted-foreground" title={eventTitle}>{eventTitle}</p></div>
         </div>
         <div className="flex items-center gap-2 text-xs">
           <ThemeToggle />
