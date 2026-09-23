@@ -13,6 +13,7 @@ import {
   DashboardPanel,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { WaBlastAddRecipients, WaBlastRecipientQueue } from "@/components/Dashboard/WaBlastPanels";
+import WaBlastTemplateStudio from "@/components/Dashboard/WaBlastTemplateStudio";
 import type { WaBlastEvent, WaBlastGuest, WaBlastRecipient } from "@/components/Dashboard/wa-blast-types";
 
 export default function WhatsAppBlastPanel() {
@@ -242,6 +243,12 @@ export default function WhatsAppBlastPanel() {
             <Metric icon={Users} label={d("Dipilih")} value={String(selected.length)} />
             <Metric icon={Plus} label={d("Sisa")} value={String(remaining)} />
           </DashboardMetricGrid>
+
+          <WaBlastTemplateStudio
+            key={eventId}
+            event={events.find((event) => event.id === eventId)!}
+            recipients={selected}
+          />
 
           {quota === 0 ? (
             <DashboardPanel className="mt-5"
