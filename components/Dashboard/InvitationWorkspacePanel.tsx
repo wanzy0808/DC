@@ -155,7 +155,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
 
   return (
     <DashboardPage>
-      <DashboardPageHeader eyebrow={d("Publikasi")} title={d("Undangan Digital")} description={d("Pilih yang ingin kamu desain atau terbitkan.")} />
+      <DashboardPageHeader title={d("Undangan Digital")} />
       {notice && <DashboardNotice className="mb-4">{notice}</DashboardNotice>}
 
       <DashboardMetricGrid>
@@ -166,9 +166,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       </DashboardMetricGrid>
 
       <DashboardPanel className="mt-5"
-          eyebrow={d("Daftar")}
           title={d("Undangan")}
-          description={d("Buka Studio, lanjutkan desain, atau publish dari daftar ini.")}
           actions={
             <>
               <Button type="button" size="sm" onClick={onCreateSequence}>
@@ -226,7 +224,6 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
       </DashboardPanel>
 
       <DashboardPanel className="mt-5"
-          eyebrow={d("RSVP")}
           title={d("Respons terbaru")}
           description={d("Respons terbaru dari undangan yang sudah dibagikan.")}
           actions={<DashboardStatusBadge active>{responders.length} respons</DashboardStatusBadge>}
