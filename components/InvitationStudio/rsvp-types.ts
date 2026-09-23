@@ -1,7 +1,16 @@
+export type PersonalRsvpGuest = {
+  id: string;
+  name: string;
+  token: string;
+  invitedPax: number;
+};
+
 export type RsvpFormProps = {
   slug: string;
   guestId?: string;
   guestName?: string;
+  guestToken?: string;
+  invitedPax?: number;
   eventDate?: string | Date;
   venue?: string | null;
   title?: string | null;
