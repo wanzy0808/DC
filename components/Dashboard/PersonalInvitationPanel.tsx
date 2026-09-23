@@ -16,6 +16,12 @@ import {
   PersonalInvitationListPanel,
 } from "@/components/Dashboard/PersonalInvitationPanels";
 import { sortPersonalInvitationEvents } from "@/components/Dashboard/personal-invitation-helpers";
+import {
+  emptyGuestInvitationForm,
+  guestInvitationFormFrom,
+  guestInvitationProfilePayload,
+  type GuestInvitationForm,
+} from "@/components/Dashboard/PersonalInvitationGuestFields";
 import type {
   PersonalInvitationEvent,
   PersonalInvitationGuest,
@@ -31,6 +37,8 @@ export default function PersonalInvitationPanel() {
   const [guestId, setGuestId] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [profile, setProfile] = useState<GuestInvitationForm>({ ...emptyGuestInvitationForm });
+  const [editProfile, setEditProfile] = useState<GuestInvitationForm>({ ...emptyGuestInvitationForm });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editPhone, setEditPhone] = useState("");
@@ -158,6 +166,7 @@ export default function PersonalInvitationPanel() {
     setGuestId("");
     setName("");
     setPhone("");
+    setProfile({ ...emptyGuestInvitationForm });
     setEditingId(null);
     setPasswordId(null);
     setPassword("");
@@ -174,6 +183,12 @@ export default function PersonalInvitationPanel() {
     [guests, personalIds],
   );
 
+  function selectExistingGuest(id: string) {
+    setGuestId(id);
+    const guest = availableGuests.find((item) => item.id === id);
+    setProfile(guest ? guestInvitationFormFrom(guest) : { ...emptyGuestInvitationForm });
+  }
+
   async function createFromExisting() {
     if (!eventId || !guestId) return;
 
@@ -184,7 +199,11 @@ export default function PersonalInvitationPanel() {
       const response = await fetch("/api/personal-invitations", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ invitationId: eventId, guestId }),
+        body: JSON.stringify({
+          invitationId: eventId,
+          guestId,
+          ...guestInvitationProfilePayload(profile),
+        }),
       });
       const data = await response.json().catch(() => null);
 
@@ -195,6 +214,7 @@ export default function PersonalInvitationPanel() {
       }
 
       setGuestId("");
+      setProfile({ ...emptyGuestInvitationForm });
       await loadCurrent();
       setNotice(d("Personal Invitation dibuat untuk acara ini."));
     } catch (error) {
@@ -222,6 +242,7 @@ export default function PersonalInvitationPanel() {
           invitationId: eventId,
           name: name.trim(),
           phone: phone.trim(),
+          ...guestInvitationProfilePayload(profile),
         }),
       });
       const data = await response.json().catch(() => null);
@@ -234,6 +255,7 @@ export default function PersonalInvitationPanel() {
 
       setName("");
       setPhone("");
+      setProfile({ ...emptyGuestInvitationForm });
       await loadCurrent();
       setNotice(d("Tamu dan Personal Invitation dibuat untuk acara ini."));
     } catch (error) {
@@ -278,6 +300,7 @@ export default function PersonalInvitationPanel() {
             : item,
         ),
       );
+      await loadCurrent();
       setNotice(successMessage);
       return true;
     } catch (error) {
@@ -296,6 +319,7 @@ export default function PersonalInvitationPanel() {
     setEditingId(item.id);
     setEditName(item.name);
     setEditPhone(item.phone || "");
+    setEditProfile(guestInvitationFormFrom(item));
   }
 
   async function saveEdit(item: PersonalInvitationItem) {
@@ -303,7 +327,7 @@ export default function PersonalInvitationPanel() {
 
     const ok = await patchPersonalInvitation(
       item.id,
-      { name: editName.trim(), phone: editPhone.trim() },
+      { name: editName.trim(), phone: editPhone.trim(), ...guestInvitationProfilePayload(editProfile) },
       d("Data tamu diperbarui."),
     );
 
@@ -392,11 +416,13 @@ export default function PersonalInvitationPanel() {
               selectedEvent={selectedEvent}
               availableGuests={availableGuests}
               guestId={guestId}
-              setGuestId={setGuestId}
+              setGuestId={selectExistingGuest}
               name={name}
               setName={setName}
               phone={phone}
               setPhone={setPhone}
+              profile={profile}
+              setProfile={setProfile}
               loading={loading}
               busyId={busyId}
               protectedCount={protectedCount}
@@ -413,6 +439,8 @@ export default function PersonalInvitationPanel() {
               setEditName={setEditName}
               editPhone={editPhone}
               setEditPhone={setEditPhone}
+              editProfile={editProfile}
+              setEditProfile={setEditProfile}
               passwordId={passwordId}
               setPasswordId={setPasswordId}
               password={password}
