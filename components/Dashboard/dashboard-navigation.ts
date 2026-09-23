@@ -41,6 +41,7 @@ export const dashboardTabMeta: Record<
   { eyebrow: string; title: string }
 > = {
   overview: { eyebrow: "Dashboard", title: "Beranda" },
+  profile: { eyebrow: "Akun", title: "Profil Saya" },
   events: { eyebrow: "Persiapan", title: "Rangkaian Acara" },
   invitation: { eyebrow: "Publikasi", title: "Undangan" },
   personalInvitation: { eyebrow: "Distribusi", title: "Personal Invitation" },
