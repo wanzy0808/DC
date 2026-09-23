@@ -53,9 +53,11 @@ export type InvitationMinAggregateOutputType = {
   groomFatherName: string | null
   groomMotherName: string | null
   groomChildOrder: number | null
+  groomChildPosition: string | null
   brideFatherName: string | null
   brideMotherName: string | null
   brideChildOrder: number | null
+  brideChildPosition: string | null
   venue: string | null
   address: string | null
   mapUrl: string | null
@@ -95,9 +97,11 @@ export type InvitationMaxAggregateOutputType = {
   groomFatherName: string | null
   groomMotherName: string | null
   groomChildOrder: number | null
+  groomChildPosition: string | null
   brideFatherName: string | null
   brideMotherName: string | null
   brideChildOrder: number | null
+  brideChildPosition: string | null
   venue: string | null
   address: string | null
   mapUrl: string | null
@@ -137,9 +141,11 @@ export type InvitationCountAggregateOutputType = {
   groomFatherName: number
   groomMotherName: number
   groomChildOrder: number
+  groomChildPosition: number
   brideFatherName: number
   brideMotherName: number
   brideChildOrder: number
+  brideChildPosition: number
   venue: number
   address: number
   mapUrl: number
@@ -195,9 +201,11 @@ export type InvitationMinAggregateInputType = {
   groomFatherName?: true
   groomMotherName?: true
   groomChildOrder?: true
+  groomChildPosition?: true
   brideFatherName?: true
   brideMotherName?: true
   brideChildOrder?: true
+  brideChildPosition?: true
   venue?: true
   address?: true
   mapUrl?: true
@@ -237,9 +245,11 @@ export type InvitationMaxAggregateInputType = {
   groomFatherName?: true
   groomMotherName?: true
   groomChildOrder?: true
+  groomChildPosition?: true
   brideFatherName?: true
   brideMotherName?: true
   brideChildOrder?: true
+  brideChildPosition?: true
   venue?: true
   address?: true
   mapUrl?: true
@@ -279,9 +289,11 @@ export type InvitationCountAggregateInputType = {
   groomFatherName?: true
   groomMotherName?: true
   groomChildOrder?: true
+  groomChildPosition?: true
   brideFatherName?: true
   brideMotherName?: true
   brideChildOrder?: true
+  brideChildPosition?: true
   venue?: true
   address?: true
   mapUrl?: true
@@ -408,9 +420,11 @@ export type InvitationGroupByOutputType = {
   groomFatherName: string | null
   groomMotherName: string | null
   groomChildOrder: number | null
+  groomChildPosition: string | null
   brideFatherName: string | null
   brideMotherName: string | null
   brideChildOrder: number | null
+  brideChildPosition: string | null
   venue: string
   address: string | null
   mapUrl: string | null
@@ -473,9 +487,11 @@ export type InvitationWhereInput = {
   groomFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  groomChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  brideChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   venue?: Prisma.StringFilter<"Invitation"> | string
   address?: Prisma.StringNullableFilter<"Invitation"> | string | null
   mapUrl?: Prisma.StringNullableFilter<"Invitation"> | string | null
@@ -522,9 +538,11 @@ export type InvitationOrderByWithRelationInput = {
   groomFatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   groomMotherName?: Prisma.SortOrderInput | Prisma.SortOrder
   groomChildOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  groomChildPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   brideFatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   brideMotherName?: Prisma.SortOrderInput | Prisma.SortOrder
   brideChildOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  brideChildPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   venue?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   mapUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -574,9 +592,11 @@ export type InvitationWhereUniqueInput = Prisma.AtLeast<{
   groomFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  groomChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  brideChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   venue?: Prisma.StringFilter<"Invitation"> | string
   address?: Prisma.StringNullableFilter<"Invitation"> | string | null
   mapUrl?: Prisma.StringNullableFilter<"Invitation"> | string | null
@@ -623,9 +643,11 @@ export type InvitationOrderByWithAggregationInput = {
   groomFatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   groomMotherName?: Prisma.SortOrderInput | Prisma.SortOrder
   groomChildOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  groomChildPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   brideFatherName?: Prisma.SortOrderInput | Prisma.SortOrder
   brideMotherName?: Prisma.SortOrderInput | Prisma.SortOrder
   brideChildOrder?: Prisma.SortOrderInput | Prisma.SortOrder
+  brideChildPosition?: Prisma.SortOrderInput | Prisma.SortOrder
   venue?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   mapUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -673,9 +695,11 @@ export type InvitationScalarWhereWithAggregatesInput = {
   groomFatherName?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   groomMotherName?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   groomChildOrder?: Prisma.IntNullableWithAggregatesFilter<"Invitation"> | number | null
+  groomChildPosition?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   brideFatherName?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   brideMotherName?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   brideChildOrder?: Prisma.IntNullableWithAggregatesFilter<"Invitation"> | number | null
+  brideChildPosition?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   venue?: Prisma.StringWithAggregatesFilter<"Invitation"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
   mapUrl?: Prisma.StringNullableWithAggregatesFilter<"Invitation"> | string | null
@@ -714,9 +738,11 @@ export type InvitationCreateInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -763,9 +789,11 @@ export type InvitationUncheckedCreateInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -810,9 +838,11 @@ export type InvitationUpdateInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -859,9 +889,11 @@ export type InvitationUncheckedUpdateInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -907,9 +939,11 @@ export type InvitationCreateManyInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -948,9 +982,11 @@ export type InvitationUpdateManyMutationInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -990,9 +1026,11 @@ export type InvitationUncheckedUpdateManyInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1042,9 +1080,11 @@ export type InvitationCountOrderByAggregateInput = {
   groomFatherName?: Prisma.SortOrder
   groomMotherName?: Prisma.SortOrder
   groomChildOrder?: Prisma.SortOrder
+  groomChildPosition?: Prisma.SortOrder
   brideFatherName?: Prisma.SortOrder
   brideMotherName?: Prisma.SortOrder
   brideChildOrder?: Prisma.SortOrder
+  brideChildPosition?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapUrl?: Prisma.SortOrder
@@ -1091,9 +1131,11 @@ export type InvitationMaxOrderByAggregateInput = {
   groomFatherName?: Prisma.SortOrder
   groomMotherName?: Prisma.SortOrder
   groomChildOrder?: Prisma.SortOrder
+  groomChildPosition?: Prisma.SortOrder
   brideFatherName?: Prisma.SortOrder
   brideMotherName?: Prisma.SortOrder
   brideChildOrder?: Prisma.SortOrder
+  brideChildPosition?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapUrl?: Prisma.SortOrder
@@ -1133,9 +1175,11 @@ export type InvitationMinOrderByAggregateInput = {
   groomFatherName?: Prisma.SortOrder
   groomMotherName?: Prisma.SortOrder
   groomChildOrder?: Prisma.SortOrder
+  groomChildPosition?: Prisma.SortOrder
   brideFatherName?: Prisma.SortOrder
   brideMotherName?: Prisma.SortOrder
   brideChildOrder?: Prisma.SortOrder
+  brideChildPosition?: Prisma.SortOrder
   venue?: Prisma.SortOrder
   address?: Prisma.SortOrder
   mapUrl?: Prisma.SortOrder
@@ -1336,9 +1380,11 @@ export type InvitationCreateWithoutOwnerInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1383,9 +1429,11 @@ export type InvitationUncheckedCreateWithoutOwnerInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1460,9 +1508,11 @@ export type InvitationScalarWhereInput = {
   groomFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   groomChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  groomChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideFatherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideMotherName?: Prisma.StringNullableFilter<"Invitation"> | string | null
   brideChildOrder?: Prisma.IntNullableFilter<"Invitation"> | number | null
+  brideChildPosition?: Prisma.StringNullableFilter<"Invitation"> | string | null
   venue?: Prisma.StringFilter<"Invitation"> | string
   address?: Prisma.StringNullableFilter<"Invitation"> | string | null
   mapUrl?: Prisma.StringNullableFilter<"Invitation"> | string | null
@@ -1501,9 +1551,11 @@ export type InvitationCreateWithoutAssetsInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1549,9 +1601,11 @@ export type InvitationUncheckedCreateWithoutAssetsInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1611,9 +1665,11 @@ export type InvitationUpdateWithoutAssetsInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1659,9 +1715,11 @@ export type InvitationUncheckedUpdateWithoutAssetsInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1705,9 +1763,11 @@ export type InvitationCreateWithoutPaymentInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1753,9 +1813,11 @@ export type InvitationUncheckedCreateWithoutPaymentInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1815,9 +1877,11 @@ export type InvitationUpdateWithoutPaymentInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1863,9 +1927,11 @@ export type InvitationUncheckedUpdateWithoutPaymentInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1909,9 +1975,11 @@ export type InvitationCreateWithoutOrdersInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -1957,9 +2025,11 @@ export type InvitationUncheckedCreateWithoutOrdersInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2019,9 +2089,11 @@ export type InvitationUpdateWithoutOrdersInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2067,9 +2139,11 @@ export type InvitationUncheckedUpdateWithoutOrdersInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2113,9 +2187,11 @@ export type InvitationCreateWithoutTablesInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2161,9 +2237,11 @@ export type InvitationUncheckedCreateWithoutTablesInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2223,9 +2301,11 @@ export type InvitationUpdateWithoutTablesInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2271,9 +2351,11 @@ export type InvitationUncheckedUpdateWithoutTablesInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2317,9 +2399,11 @@ export type InvitationCreateWithoutGuestsInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2365,9 +2449,11 @@ export type InvitationUncheckedCreateWithoutGuestsInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2427,9 +2513,11 @@ export type InvitationUpdateWithoutGuestsInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2475,9 +2563,11 @@ export type InvitationUncheckedUpdateWithoutGuestsInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2521,9 +2611,11 @@ export type InvitationCreateWithoutWaBlastTemplatesInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2569,9 +2661,11 @@ export type InvitationUncheckedCreateWithoutWaBlastTemplatesInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2631,9 +2725,11 @@ export type InvitationUpdateWithoutWaBlastTemplatesInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2679,9 +2775,11 @@ export type InvitationUncheckedUpdateWithoutWaBlastTemplatesInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2725,9 +2823,11 @@ export type InvitationCreateManyOwnerInput = {
   groomFatherName?: string | null
   groomMotherName?: string | null
   groomChildOrder?: number | null
+  groomChildPosition?: string | null
   brideFatherName?: string | null
   brideMotherName?: string | null
   brideChildOrder?: number | null
+  brideChildPosition?: string | null
   venue?: string
   address?: string | null
   mapUrl?: string | null
@@ -2766,9 +2866,11 @@ export type InvitationUpdateWithoutOwnerInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2813,9 +2915,11 @@ export type InvitationUncheckedUpdateWithoutOwnerInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2860,9 +2964,11 @@ export type InvitationUncheckedUpdateManyWithoutOwnerInput = {
   groomFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   groomChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  groomChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideFatherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideMotherName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   brideChildOrder?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  brideChildPosition?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   venue?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   mapUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2969,9 +3075,11 @@ export type InvitationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   groomFatherName?: boolean
   groomMotherName?: boolean
   groomChildOrder?: boolean
+  groomChildPosition?: boolean
   brideFatherName?: boolean
   brideMotherName?: boolean
   brideChildOrder?: boolean
+  brideChildPosition?: boolean
   venue?: boolean
   address?: boolean
   mapUrl?: boolean
@@ -3019,9 +3127,11 @@ export type InvitationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   groomFatherName?: boolean
   groomMotherName?: boolean
   groomChildOrder?: boolean
+  groomChildPosition?: boolean
   brideFatherName?: boolean
   brideMotherName?: boolean
   brideChildOrder?: boolean
+  brideChildPosition?: boolean
   venue?: boolean
   address?: boolean
   mapUrl?: boolean
@@ -3062,9 +3172,11 @@ export type InvitationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   groomFatherName?: boolean
   groomMotherName?: boolean
   groomChildOrder?: boolean
+  groomChildPosition?: boolean
   brideFatherName?: boolean
   brideMotherName?: boolean
   brideChildOrder?: boolean
+  brideChildPosition?: boolean
   venue?: boolean
   address?: boolean
   mapUrl?: boolean
@@ -3105,9 +3217,11 @@ export type InvitationSelectScalar = {
   groomFatherName?: boolean
   groomMotherName?: boolean
   groomChildOrder?: boolean
+  groomChildPosition?: boolean
   brideFatherName?: boolean
   brideMotherName?: boolean
   brideChildOrder?: boolean
+  brideChildPosition?: boolean
   venue?: boolean
   address?: boolean
   mapUrl?: boolean
@@ -3134,7 +3248,7 @@ export type InvitationSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "slug" | "type" | "title" | "eventCategory" | "templateKey" | "groomName" | "brideName" | "groomFatherName" | "groomMotherName" | "groomChildOrder" | "brideFatherName" | "brideMotherName" | "brideChildOrder" | "venue" | "address" | "mapUrl" | "timezone" | "eventDate" | "eventConfigured" | "ceremonyTime" | "receptionTime" | "description" | "weddingHashtag" | "dressCode" | "liveStreamUrl" | "eventNotes" | "giftBankName" | "giftAccountName" | "giftAccountNumber" | "musicUrl" | "isPublished" | "passwordProtected" | "passwordHash" | "viewCount" | "waBlastQuota" | "createdAt" | "updatedAt", ExtArgs["result"]["invitation"]>
+export type InvitationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ownerId" | "slug" | "type" | "title" | "eventCategory" | "templateKey" | "groomName" | "brideName" | "groomFatherName" | "groomMotherName" | "groomChildOrder" | "groomChildPosition" | "brideFatherName" | "brideMotherName" | "brideChildOrder" | "brideChildPosition" | "venue" | "address" | "mapUrl" | "timezone" | "eventDate" | "eventConfigured" | "ceremonyTime" | "receptionTime" | "description" | "weddingHashtag" | "dressCode" | "liveStreamUrl" | "eventNotes" | "giftBankName" | "giftAccountName" | "giftAccountNumber" | "musicUrl" | "isPublished" | "passwordProtected" | "passwordHash" | "viewCount" | "waBlastQuota" | "createdAt" | "updatedAt", ExtArgs["result"]["invitation"]>
 export type InvitationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Invitation$paymentArgs<ExtArgs>
@@ -3176,9 +3290,11 @@ export type $InvitationPayload<ExtArgs extends runtime.Types.Extensions.Internal
     groomFatherName: string | null
     groomMotherName: string | null
     groomChildOrder: number | null
+    groomChildPosition: string | null
     brideFatherName: string | null
     brideMotherName: string | null
     brideChildOrder: number | null
+    brideChildPosition: string | null
     venue: string
     address: string | null
     mapUrl: string | null
@@ -3645,9 +3761,11 @@ export interface InvitationFieldRefs {
   readonly groomFatherName: Prisma.FieldRef<"Invitation", 'String'>
   readonly groomMotherName: Prisma.FieldRef<"Invitation", 'String'>
   readonly groomChildOrder: Prisma.FieldRef<"Invitation", 'Int'>
+  readonly groomChildPosition: Prisma.FieldRef<"Invitation", 'String'>
   readonly brideFatherName: Prisma.FieldRef<"Invitation", 'String'>
   readonly brideMotherName: Prisma.FieldRef<"Invitation", 'String'>
   readonly brideChildOrder: Prisma.FieldRef<"Invitation", 'Int'>
+  readonly brideChildPosition: Prisma.FieldRef<"Invitation", 'String'>
   readonly venue: Prisma.FieldRef<"Invitation", 'String'>
   readonly address: Prisma.FieldRef<"Invitation", 'String'>
   readonly mapUrl: Prisma.FieldRef<"Invitation", 'String'>

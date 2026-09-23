@@ -28,12 +28,14 @@ export type AggregateGuest = {
 
 export type GuestAvgAggregateOutputType = {
   seatNumber: number | null
+  invitedPax: number | null
   plusOnes: number | null
   personalViewCount: number | null
 }
 
 export type GuestSumAggregateOutputType = {
   seatNumber: number | null
+  invitedPax: number | null
   plusOnes: number | null
   personalViewCount: number | null
 }
@@ -46,6 +48,11 @@ export type GuestMinAggregateOutputType = {
   name: string | null
   phone: string | null
   category: string | null
+  personalAddressee: string | null
+  recipientType: string | null
+  invitedPax: number | null
+  personalGreeting: string | null
+  personalSharedAt: Date | null
   source: $Enums.GuestSource | null
   rsvpStatus: $Enums.RsvpStatus | null
   plusOnes: number | null
@@ -71,6 +78,11 @@ export type GuestMaxAggregateOutputType = {
   name: string | null
   phone: string | null
   category: string | null
+  personalAddressee: string | null
+  recipientType: string | null
+  invitedPax: number | null
+  personalGreeting: string | null
+  personalSharedAt: Date | null
   source: $Enums.GuestSource | null
   rsvpStatus: $Enums.RsvpStatus | null
   plusOnes: number | null
@@ -97,6 +109,11 @@ export type GuestCountAggregateOutputType = {
   phone: number
   category: number
   tags: number
+  personalAddressee: number
+  recipientType: number
+  invitedPax: number
+  personalGreeting: number
+  personalSharedAt: number
   source: number
   rsvpStatus: number
   plusOnes: number
@@ -118,12 +135,14 @@ export type GuestCountAggregateOutputType = {
 
 export type GuestAvgAggregateInputType = {
   seatNumber?: true
+  invitedPax?: true
   plusOnes?: true
   personalViewCount?: true
 }
 
 export type GuestSumAggregateInputType = {
   seatNumber?: true
+  invitedPax?: true
   plusOnes?: true
   personalViewCount?: true
 }
@@ -136,6 +155,11 @@ export type GuestMinAggregateInputType = {
   name?: true
   phone?: true
   category?: true
+  personalAddressee?: true
+  recipientType?: true
+  invitedPax?: true
+  personalGreeting?: true
+  personalSharedAt?: true
   source?: true
   rsvpStatus?: true
   plusOnes?: true
@@ -161,6 +185,11 @@ export type GuestMaxAggregateInputType = {
   name?: true
   phone?: true
   category?: true
+  personalAddressee?: true
+  recipientType?: true
+  invitedPax?: true
+  personalGreeting?: true
+  personalSharedAt?: true
   source?: true
   rsvpStatus?: true
   plusOnes?: true
@@ -187,6 +216,11 @@ export type GuestCountAggregateInputType = {
   phone?: true
   category?: true
   tags?: true
+  personalAddressee?: true
+  recipientType?: true
+  invitedPax?: true
+  personalGreeting?: true
+  personalSharedAt?: true
   source?: true
   rsvpStatus?: true
   plusOnes?: true
@@ -300,6 +334,11 @@ export type GuestGroupByOutputType = {
   phone: string | null
   category: string | null
   tags: string[]
+  personalAddressee: string | null
+  recipientType: string
+  invitedPax: number
+  personalGreeting: string | null
+  personalSharedAt: Date | null
   source: $Enums.GuestSource
   rsvpStatus: $Enums.RsvpStatus
   plusOnes: number
@@ -349,6 +388,11 @@ export type GuestWhereInput = {
   phone?: Prisma.StringNullableFilter<"Guest"> | string | null
   category?: Prisma.StringNullableFilter<"Guest"> | string | null
   tags?: Prisma.StringNullableListFilter<"Guest">
+  personalAddressee?: Prisma.StringNullableFilter<"Guest"> | string | null
+  recipientType?: Prisma.StringFilter<"Guest"> | string
+  invitedPax?: Prisma.IntFilter<"Guest"> | number
+  personalGreeting?: Prisma.StringNullableFilter<"Guest"> | string | null
+  personalSharedAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
@@ -378,6 +422,11 @@ export type GuestOrderByWithRelationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrder
+  personalAddressee?: Prisma.SortOrderInput | Prisma.SortOrder
+  recipientType?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
+  personalGreeting?: Prisma.SortOrderInput | Prisma.SortOrder
+  personalSharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
@@ -412,6 +461,11 @@ export type GuestWhereUniqueInput = Prisma.AtLeast<{
   phone?: Prisma.StringNullableFilter<"Guest"> | string | null
   category?: Prisma.StringNullableFilter<"Guest"> | string | null
   tags?: Prisma.StringNullableListFilter<"Guest">
+  personalAddressee?: Prisma.StringNullableFilter<"Guest"> | string | null
+  recipientType?: Prisma.StringFilter<"Guest"> | string
+  invitedPax?: Prisma.IntFilter<"Guest"> | number
+  personalGreeting?: Prisma.StringNullableFilter<"Guest"> | string | null
+  personalSharedAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
@@ -440,6 +494,11 @@ export type GuestOrderByWithAggregationInput = {
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.SortOrderInput | Prisma.SortOrder
   tags?: Prisma.SortOrder
+  personalAddressee?: Prisma.SortOrderInput | Prisma.SortOrder
+  recipientType?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
+  personalGreeting?: Prisma.SortOrderInput | Prisma.SortOrder
+  personalSharedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
@@ -474,6 +533,11 @@ export type GuestScalarWhereWithAggregatesInput = {
   phone?: Prisma.StringNullableWithAggregatesFilter<"Guest"> | string | null
   category?: Prisma.StringNullableWithAggregatesFilter<"Guest"> | string | null
   tags?: Prisma.StringNullableListFilter<"Guest">
+  personalAddressee?: Prisma.StringNullableWithAggregatesFilter<"Guest"> | string | null
+  recipientType?: Prisma.StringWithAggregatesFilter<"Guest"> | string
+  invitedPax?: Prisma.IntWithAggregatesFilter<"Guest"> | number
+  personalGreeting?: Prisma.StringNullableWithAggregatesFilter<"Guest"> | string | null
+  personalSharedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Guest"> | Date | string | null
   source?: Prisma.EnumGuestSourceWithAggregatesFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusWithAggregatesFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntWithAggregatesFilter<"Guest"> | number
@@ -498,6 +562,11 @@ export type GuestCreateInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -526,6 +595,11 @@ export type GuestUncheckedCreateInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -550,6 +624,11 @@ export type GuestUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -578,6 +657,11 @@ export type GuestUncheckedUpdateInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -604,6 +688,11 @@ export type GuestCreateManyInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -628,6 +717,11 @@ export type GuestUpdateManyMutationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -653,6 +747,11 @@ export type GuestUncheckedUpdateManyInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -694,6 +793,11 @@ export type GuestCountOrderByAggregateInput = {
   phone?: Prisma.SortOrder
   category?: Prisma.SortOrder
   tags?: Prisma.SortOrder
+  personalAddressee?: Prisma.SortOrder
+  recipientType?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
+  personalGreeting?: Prisma.SortOrder
+  personalSharedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
@@ -713,6 +817,7 @@ export type GuestCountOrderByAggregateInput = {
 
 export type GuestAvgOrderByAggregateInput = {
   seatNumber?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
   personalViewCount?: Prisma.SortOrder
 }
@@ -725,6 +830,11 @@ export type GuestMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  personalAddressee?: Prisma.SortOrder
+  recipientType?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
+  personalGreeting?: Prisma.SortOrder
+  personalSharedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
@@ -750,6 +860,11 @@ export type GuestMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   phone?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  personalAddressee?: Prisma.SortOrder
+  recipientType?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
+  personalGreeting?: Prisma.SortOrder
+  personalSharedAt?: Prisma.SortOrder
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
@@ -769,6 +884,7 @@ export type GuestMinOrderByAggregateInput = {
 
 export type GuestSumOrderByAggregateInput = {
   seatNumber?: Prisma.SortOrder
+  invitedPax?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
   personalViewCount?: Prisma.SortOrder
 }
@@ -923,6 +1039,11 @@ export type GuestCreateWithoutCheckedInByInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -950,6 +1071,11 @@ export type GuestUncheckedCreateWithoutCheckedInByInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1004,6 +1130,11 @@ export type GuestScalarWhereInput = {
   phone?: Prisma.StringNullableFilter<"Guest"> | string | null
   category?: Prisma.StringNullableFilter<"Guest"> | string | null
   tags?: Prisma.StringNullableListFilter<"Guest">
+  personalAddressee?: Prisma.StringNullableFilter<"Guest"> | string | null
+  recipientType?: Prisma.StringFilter<"Guest"> | string
+  invitedPax?: Prisma.IntFilter<"Guest"> | number
+  personalGreeting?: Prisma.StringNullableFilter<"Guest"> | string | null
+  personalSharedAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
@@ -1028,6 +1159,11 @@ export type GuestCreateWithoutInvitationInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1054,6 +1190,11 @@ export type GuestUncheckedCreateWithoutInvitationInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1104,6 +1245,11 @@ export type GuestCreateWithoutTableInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1130,6 +1276,11 @@ export type GuestUncheckedCreateWithoutTableInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1182,6 +1333,11 @@ export type GuestCreateManyCheckedInByInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1205,6 +1361,11 @@ export type GuestUpdateWithoutCheckedInByInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1232,6 +1393,11 @@ export type GuestUncheckedUpdateWithoutCheckedInByInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1257,6 +1423,11 @@ export type GuestUncheckedUpdateManyWithoutCheckedInByInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1281,6 +1452,11 @@ export type GuestCreateManyInvitationInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1305,6 +1481,11 @@ export type GuestUpdateWithoutInvitationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1331,6 +1512,11 @@ export type GuestUncheckedUpdateWithoutInvitationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1356,6 +1542,11 @@ export type GuestUncheckedUpdateManyWithoutInvitationInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1381,6 +1572,11 @@ export type GuestCreateManyTableInput = {
   phone?: string | null
   category?: string | null
   tags?: Prisma.GuestCreatetagsInput | string[]
+  personalAddressee?: string | null
+  recipientType?: string
+  invitedPax?: number
+  personalGreeting?: string | null
+  personalSharedAt?: Date | string | null
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
@@ -1405,6 +1601,11 @@ export type GuestUpdateWithoutTableInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1431,6 +1632,11 @@ export type GuestUncheckedUpdateWithoutTableInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1456,6 +1662,11 @@ export type GuestUncheckedUpdateManyWithoutTableInput = {
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   category?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.GuestUpdatetagsInput | string[]
+  personalAddressee?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recipientType?: Prisma.StringFieldUpdateOperationsInput | string
+  invitedPax?: Prisma.IntFieldUpdateOperationsInput | number
+  personalGreeting?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  personalSharedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1484,6 +1695,11 @@ export type GuestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   phone?: boolean
   category?: boolean
   tags?: boolean
+  personalAddressee?: boolean
+  recipientType?: boolean
+  invitedPax?: boolean
+  personalGreeting?: boolean
+  personalSharedAt?: boolean
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
@@ -1513,6 +1729,11 @@ export type GuestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   phone?: boolean
   category?: boolean
   tags?: boolean
+  personalAddressee?: boolean
+  recipientType?: boolean
+  invitedPax?: boolean
+  personalGreeting?: boolean
+  personalSharedAt?: boolean
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
@@ -1542,6 +1763,11 @@ export type GuestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   phone?: boolean
   category?: boolean
   tags?: boolean
+  personalAddressee?: boolean
+  recipientType?: boolean
+  invitedPax?: boolean
+  personalGreeting?: boolean
+  personalSharedAt?: boolean
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
@@ -1571,6 +1797,11 @@ export type GuestSelectScalar = {
   phone?: boolean
   category?: boolean
   tags?: boolean
+  personalAddressee?: boolean
+  recipientType?: boolean
+  invitedPax?: boolean
+  personalGreeting?: boolean
+  personalSharedAt?: boolean
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
@@ -1588,7 +1819,7 @@ export type GuestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type GuestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invitationId" | "tableId" | "seatNumber" | "name" | "phone" | "category" | "tags" | "source" | "rsvpStatus" | "plusOnes" | "checkedIn" | "checkedInAt" | "checkedInById" | "waBlastSelected" | "waBlastSentAt" | "personalToken" | "personalPublished" | "personalPasswordProtected" | "personalPasswordHash" | "personalViewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
+export type GuestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invitationId" | "tableId" | "seatNumber" | "name" | "phone" | "category" | "tags" | "personalAddressee" | "recipientType" | "invitedPax" | "personalGreeting" | "personalSharedAt" | "source" | "rsvpStatus" | "plusOnes" | "checkedIn" | "checkedInAt" | "checkedInById" | "waBlastSelected" | "waBlastSentAt" | "personalToken" | "personalPublished" | "personalPasswordProtected" | "personalPasswordHash" | "personalViewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
 export type GuestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invitation?: boolean | Prisma.InvitationDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Guest$tableArgs<ExtArgs>
@@ -1621,6 +1852,11 @@ export type $GuestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     phone: string | null
     category: string | null
     tags: string[]
+    personalAddressee: string | null
+    recipientType: string
+    invitedPax: number
+    personalGreeting: string | null
+    personalSharedAt: Date | null
     source: $Enums.GuestSource
     rsvpStatus: $Enums.RsvpStatus
     plusOnes: number
@@ -2070,6 +2306,11 @@ export interface GuestFieldRefs {
   readonly phone: Prisma.FieldRef<"Guest", 'String'>
   readonly category: Prisma.FieldRef<"Guest", 'String'>
   readonly tags: Prisma.FieldRef<"Guest", 'String[]'>
+  readonly personalAddressee: Prisma.FieldRef<"Guest", 'String'>
+  readonly recipientType: Prisma.FieldRef<"Guest", 'String'>
+  readonly invitedPax: Prisma.FieldRef<"Guest", 'Int'>
+  readonly personalGreeting: Prisma.FieldRef<"Guest", 'String'>
+  readonly personalSharedAt: Prisma.FieldRef<"Guest", 'DateTime'>
   readonly source: Prisma.FieldRef<"Guest", 'GuestSource'>
   readonly rsvpStatus: Prisma.FieldRef<"Guest", 'RsvpStatus'>
   readonly plusOnes: Prisma.FieldRef<"Guest", 'Int'>
