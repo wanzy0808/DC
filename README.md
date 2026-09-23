@@ -326,3 +326,8 @@ Navbar account menu provides My Profile, Account Settings (password), transactio
 ### Dashboard mainframe correction — inner scrolling and landing palette
 
 The first dashboard frame was allowed to grow with the whole page. The current `/dashboard` shell now matches the framed marketing page's viewport scroll model: a bounded responsive Rose frame (90vw/90dvh mobile, 23–27px inset on larger screens), a fixed-in-frame sidebar and header, and `dc-dashboard-scroll` as the sole vertically scrolling customer content panel. Mobile drawer/scrim stay within the frame, and changing dashboard tabs resets inner scroll position. Light surfaces and sidebar are white; Dark surfaces and sidebar are near-black; Rose is visible in borders, text, focused/selected controls, hero accents and key buttons. Approved public landing/Pintu, actual event/guest/RSVP data and authenticated profile APIs are unchanged. Browser visual/CI confirmation still required.
+
+
+### Rose exterior and card accents (23 September 2026)
+
+The customer dashboard's space **outside** its fixed viewport mainframe now uses solid brand Rose `#C07A84` in both themes. The inner workspace remains white in Light and near-black in Dark; a lighter frame edge keeps the Rose exterior visually distinct. Shared information panels have a slim Rose left rule, with a stronger left rule on Beranda's event and RSVP/publication panels; compact metric cards use a top rule. Changes are CSS-only and preserve actual content, internal scrolling, navbar, profile actions and the approved public landing/Pintu. Browser/CI visual validation remains pending.
