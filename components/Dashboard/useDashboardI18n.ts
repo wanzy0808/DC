@@ -98,6 +98,8 @@ const english: Record<string, string> = {
   "Usher App": "Usher App",
   "Buka menu dashboard": "Open dashboard menu",
   "Menu akun": "Account menu",
+  "Profil Saya": "My profile",
+  "Pengaturan akun": "Account settings",
   "Lihat transaksi": "View transactions",
   "Beli layanan": "Buy services",
   "Buka FAQ": "Open FAQ",
