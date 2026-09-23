@@ -1,11 +1,12 @@
 "use client";
 
+import { Fragment } from "react";
 import Link from "next/link";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
-import { CalendarDays, ChevronDown, Home } from "lucide-react";
+import { CalendarDays, ChevronDown, Home, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
-import { invitationNav, secondaryNav } from "@/components/Dashboard/dashboard-navigation";
+import { guestManagementNav, invitationNav, secondaryNav } from "@/components/Dashboard/dashboard-navigation";
 import type { DashboardTab } from "@/components/Dashboard/dashboard-types";
 
 type DashboardSidebarProps = {
@@ -13,6 +14,8 @@ type DashboardSidebarProps = {
   onNavigate: (tab: DashboardTab) => void;
   invitationMenuOpen: boolean;
   onToggleInvitationMenu: () => void;
+  guestMenuOpen: boolean;
+  onToggleGuestMenu: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 };
@@ -22,6 +25,8 @@ export default function DashboardSidebar({
   onNavigate,
   invitationMenuOpen,
   onToggleInvitationMenu,
+  guestMenuOpen,
+  onToggleGuestMenu,
   mobileOpen,
   onCloseMobile,
 }: DashboardSidebarProps) {
@@ -93,16 +98,51 @@ export default function DashboardSidebar({
           {secondaryNav.map((item) => {
             const Icon = item.icon;
             return (
-              <Button
-                key={item.id}
-                type="button"
-                aria-current={tab === item.id ? "page" : undefined}
-                onClick={() => onNavigate(item.id)}
-                className={`dc-sidebar-link ${tab === item.id ? "is-active" : ""}`}
-              >
-                <Icon className="size-5 shrink-0" strokeWidth={1.9} />
-                <span className="min-w-0 truncate">{d(item.label)}</span>
-              </Button>
+              <Fragment key={item.id}>
+                {item.id === "usher" && (
+                  <div className="dc-sidebar-group flex flex-col gap-3">
+                    <Button
+                      type="button"
+                      aria-expanded={guestMenuOpen}
+                      aria-controls="dc-dashboard-guest-nav"
+                      onClick={onToggleGuestMenu}
+                      className={`dc-sidebar-link dc-sidebar-group-trigger ${tab === "personalInvitation" || tab === "placement" ? "is-active" : ""}`}
+                    >
+                      <Users className="size-5 shrink-0" strokeWidth={1.9} />
+                      <span className="min-w-0 flex-1 truncate">{d("Manajemen Tamu")}</span>
+                      <ChevronDown className={`size-4 shrink-0 transition-transform ${guestMenuOpen ? "rotate-180" : ""}`} />
+                    </Button>
+                    {guestMenuOpen && (
+                      <div id="dc-dashboard-guest-nav" className="dc-sidebar-subnav flex flex-col gap-3">
+                        {guestManagementNav.map((guestItem) => {
+                          const GuestIcon = guestItem.icon;
+                          return (
+                            <Button
+                              key={guestItem.id}
+                              type="button"
+                              aria-current={tab === guestItem.id ? "page" : undefined}
+                              onClick={() => onNavigate(guestItem.id)}
+                              className={`dc-sidebar-link dc-sidebar-sublink ${tab === guestItem.id ? "is-active" : ""}`}
+                            >
+                              <GuestIcon className="size-[18px] shrink-0" strokeWidth={1.9} />
+                              <span className="min-w-0 truncate">{d(guestItem.label)}</span>
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+                <Button
+                  type="button"
+                  aria-current={tab === item.id ? "page" : undefined}
+                  onClick={() => onNavigate(item.id)}
+                  className={`dc-sidebar-link ${tab === item.id ? "is-active" : ""}`}
+                >
+                  <Icon className="size-5 shrink-0" strokeWidth={1.9} />
+                  <span className="min-w-0 truncate">{d(item.label)}</span>
+                </Button>
+              </Fragment>
             );
           })}
         </nav>
