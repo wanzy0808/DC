@@ -162,6 +162,7 @@ model Invitation {
   assets             InvitationAsset[]
   tables             WeddingTable[]
   guests             Guest[]
+  waBlastTemplates   WaBlastTemplate[]
 
   @@index([ownerId, type])
 }
@@ -303,4 +304,19 @@ model AuditLog {
   actor     User?    @relation("ActorLogs", fields: [actorId], references: [id], onDelete: SetNull)
 
   @@index([entity, entityId])
+}
+
+
+model WaBlastTemplate {
+  id           String     @id @default(cuid())
+  invitationId String
+  category     String
+  name         String
+  title        String
+  body         String     @db.Text
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  invitation   Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, category])
 }
