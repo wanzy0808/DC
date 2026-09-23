@@ -335,4 +335,9 @@ The customer dashboard's space **outside** its fixed viewport mainframe now uses
 
 ### Single top-right corner on dashboard cards (23 September 2026)
 
-Shared dashboard surfaces, compact metrics, compact stats, notices, empty states and the Beranda welcome panel now use square corners except for the top-right, with all accent strokes on the left (3px standard / 4px on prominent panels). The source primitives and scoped CSS reflect the same geometry; the outer mainframe, badges, buttons and marketing landing remain unchanged. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Browser/CI verification remains pending.
+Shared dashboard surfaces, compact metrics, compact stats, notices, empty states and the Beranda welcome panel use square corners except for the top-right, with one shared 0.3cm Rose accent stroke on the left (no per-card thickness variation). The source primitives and scoped CSS reflect the same geometry; the outer mainframe, badges, buttons and marketing landing remain unchanged. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Browser/CI verification remains pending.
+
+
+### Uniform card stripes across customer dashboard (23 September 2026)
+
+Card design is now governed by a single token, `--dc-dashboard-card-stripe: 0.3cm`: a uniformly thick brand Rose left border, hairline remaining borders, and only a rounded top-right corner. This applies to Beranda, event, invitation, personal invitation, WA Blast draft templates and recipient panels, RSVP, guest placement, Usher overview, profile and their nested detail cards via `dc-dashboard-detail-card`. The old 3px/4px hierarchy is superseded. Controls, status badges, modals, seating drag/drop stage and the outer mainframe retain their own geometry. No endpoint, data, permission, scrolling or landing behavior changed; build and viewport/browser visual validation still required.
