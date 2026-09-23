@@ -269,7 +269,7 @@ export default function RsvpAnalyticsPanel({
         {filtered.length ? (
           <div className="grid min-w-0 gap-3">
             {filtered.map((guest) => (
-              <article key={guest.id} className="min-w-0 rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+              <article key={guest.id} className="dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
@@ -321,7 +321,7 @@ export default function RsvpAnalyticsPanel({
             ))}
           </div>
         ) : (
-          <p className="rounded-2xl border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-8 text-sm text-muted-foreground">
+          <p className="dc-dashboard-detail-card rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-8 text-sm text-muted-foreground">
             {guests.length ? d("Tidak ada tamu yang cocok.") : d("Belum ada data RSVP untuk acara ini.")}
           </p>
         )}
