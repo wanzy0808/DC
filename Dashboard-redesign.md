@@ -29,6 +29,6 @@ Customer dashboard should feel like the approved DC Organizer landing without du
 - Removed the account dropdown help item that previously only closed the menu without opening any help surface.
 
 ## Validation log
-- GitHub source updates committed to main; Next.js build and live browser visual checks are still pending. Stage 1 and 2 implementation checkboxes indicate source implementation, **not** visual approval.
-- Stage 3 remains open: inspect every operational workspace for redundant copy, control/layout inconsistency, and real chart opportunities without changing business logic.
+- GitHub source updates committed to main. Remote GitHub clone for a local build was attempted but network DNS access to github.com is unavailable in this runtime. Next.js build and live browser visual checks are still pending. Stage 1 and 2 implementation checkboxes indicate source implementation, **not** visual approval.
+- Stage 3 is partially implemented: first-pass copy cleanup across EventPanel, InvitationWorkspacePanel, PersonalInvitationPanel, WhatsAppBlastPanel, RSVP, guest placement and Usher; all consume updated shared primitives. Still inspect each operational workspace for remaining control/layout inconsistency and real chart opportunities without changing business logic.
 - Stage 4 remains open: keyboard, Light/Dark, narrow/large desktop, mobile overlay, ID/EN, active+hover adjacency, zero/populated state, build and TypeScript.
