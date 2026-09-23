@@ -198,7 +198,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                 <article key={invitation.id} className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h3 className="break-words text-base font-semibold text-foreground">{title}</h3>
+                      <h3 className="dc-ui-name break-words text-base font-semibold text-foreground">{title}</h3>
                       {invitation.venue && <p className="mt-1 truncate text-sm text-muted-foreground">{invitation.venue}</p>}
                     </div>
                     <DashboardStatusBadge active={invitation.isPublished}>{status}</DashboardStatusBadge>
