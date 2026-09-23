@@ -81,3 +81,13 @@ Implemented in customer dashboard source:
 
 ### QA checkpoint
 GitHub Actions Build Validation passed for RSVP, Usher and event-scope source commits: [RSVP run 35817725296](https://github.com/wanzy0808/DC/actions/runs/35817725296), [Usher run 35817744806](https://github.com/wanzy0808/DC/actions/runs/35817744806), and [picker run 35817760967](https://github.com/wanzy0808/DC/actions/runs/35817760967). SeatingChart's later build and desktop/mobile **visual and interaction checks** were pending at the time of this note. Avoid marking Stage 3/4 complete until the remaining Personal Invitation and WA Blast details, functional walkthrough and browser review are verified.
+
+## 23 September 2026 — Stage 3, WA Blast / Personal Invitation detail pass
+
+- `WaBlastPanels`: replaced the 480px minimum-width recipient queue table with responsive recipient cards, retaining phone numbers inside the authenticated management surface and the original per-recipient remove action. Removed duplicate "Penerima"/"Queue" eyebrows and quota explanation already present in the page metrics. Form controls are preserved; surfaces use shared Rose card geometry.
+- `PersonalInvitationPanels`: the create and manage panels use the shared Rose card family with redundant event/page name eyebrows and descriptive filler removed; personal-invitation preview, publish/unpublish, edit, password, public link and existing guest flows stay intact.
+- The user-requested rule to **hide WhatsApp help contact numbers** still applies to the floating help menu; operational guest/recipient phone numbers remain visible where needed to manage invitations and WA Blast.
+- All operational workspaces now have a source styling pass, but that does not mean their desktop/mobile browser behavior is visually approved. Check long guest names, many recipients, open password form, quota-zero screen, stage resizing, and both themes.
+
+### Build checkpoint
+GitHub Actions build [SeatingChart run 35817823351](https://github.com/wanzy0808/DC/actions/runs/35817823351) passed. The WA Blast and Personal Invitation detail commits are newer; verify their own builds before marking the source pass fully green. Stage 4 visual/functional walkthrough remains pending.
