@@ -307,3 +307,8 @@ A second source of rectangular seams was the existing *page frame itself*: the l
 Follow `Dashboard-redesign.md` for completed code stages, remaining workspace audit, and validation status. The dashboard now has a shared desktop/mobile `DashboardSidebar` with Rose curved-outside active/hover states, concise Beranda metrics from the existing API, and shared neutral dashboard primitives. These changes do not alter the approved public landing or its door/animation. This is not yet a full-dashboard visual approval; the per-workspace pass and build/browser checks remain pending.
 
 **Latest dashboard visual pass (23 September 2026):** Based on the owner screenshot, the customer rail/brand block use stronger Rose, Light Mode canvas is #fff5f7, dashboard utilities visually follow the existing landing navbar, and Beranda now shows compact real-event actions alongside factual RSVP/publication summaries rather than a stretched blank events table. Source commits are on main; per-workspace polish and browser QA remain tracked in `Dashboard-redesign.md`.
+
+
+### WA Blast message templates (23 September 2026)
+
+Customer Acara → WA Blast includes invitation, RSVP reminder, event-day reminder and thank-you draft templates saved per owned paid Digital Invitation (up to 30/event). Five placeholders personalize the editor preview; copy is enabled only for a real selected recipient and, when a public URL is used, a published invitation. This feature does not send WA messages, schedule deliveries or spend quotas; recipient selection and addon credits remain the existing functionality. After syncing, **run `pnpm db:deploy` against your database** for `20260923110000_add_wa_blast_message_templates`. See `Dashboard-redesign.md` for limitations and QA.
