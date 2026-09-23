@@ -138,5 +138,13 @@ Deployment/QA:
 ## 23 September 2026 — Small card geometry: top-right radius, Rose accents left
 
 - Following the owner correction, replace round-all-corners on shared dashboard cards with **only top-right radius** (18–28px by card scale); top-left, bottom-left and bottom-right are square. Beranda's welcome panel follows the same corner rule. Do not modify the larger mainframe's radius or functional buttons/badges.
-- All Rose accent strokes are on the LEFT, including compact metric cards, which no longer use a top stroke. Standard left rule is 3px; Beranda's event/RSVP panels and welcome hero use 4px. Light card fill remains white, Dark remains near-black.
+- All Rose accent strokes are on the LEFT, including compact metric cards, which no longer use a top stroke. **Historical:** this iteration used 3px / 4px; the later owner requirement supersedes both with one shared 0.3cm width across all dashboard cards. Light card fill remains white, Dark remains near-black.
 - Implemented in `DashboardPrimitives.tsx`, `DashboardWorkspaces.tsx` and scoped `app/globals.css`. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Visual/browser and CI checks still pending.
+
+
+## 23 September 2026 — All-workspace card thickness unified at 0.3cm
+
+- Replaced the historical 3px/4px variations on shared dashboard cards with `--dc-dashboard-card-stripe: 0.3cm`, used uniformly on the left edge of every card; all keep top-right-only radius and neutral Light/Dark fills.
+- Extended the same class/geometry to nested individual event and invitation tiles, recent RSVP and Ushers, personal invitations, WA recipients/template selection/preview, seating guest list, profile success notice, metrics, info sections and empty states. Explicit `dc-dashboard-detail-card` avoids accidentally altering regular buttons, badges, form inputs, modals or the interactive seating stage. Selected WA template and draggable recipient hover remain visibly distinct.
+- Implementation: `app/globals.css`, `DashboardAccountPanel.tsx`, `DashboardWorkspaces.tsx`, `EventPanel.tsx`, `InvitationWorkspacePanel.tsx`, `RsvpAnalyticsPanel.tsx`, `PersonalInvitationPanels.tsx`, `WaBlastPanels.tsx`, `WaBlastTemplateStudio.tsx`, `SeatingChart.tsx`; relevant docs updated. CSS commit `88421462`; subsequent detail-card commits and selected-state fix recorded in PRD.
+- QA still required: real browser screenshots and behavior (both themes, desktop/mobile, scroll, empty/busy, RSVP/guest rows, WA selected states and seating drag/drop), plus GitHub Actions build; do not claim visual sign-off or CI pass from static code inspection alone.
