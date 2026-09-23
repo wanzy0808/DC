@@ -250,12 +250,12 @@ export function RsvpWorkspace({
   return (
     <DashboardPageShell>
       <DashboardPageHeader title={d("RSVP")}>
-      <EventScopePicker
-        events={events}
-        value={selectedId}
-        onChange={onSelect}
-        disabled={loading}
-      />
+        <EventScopePicker
+          events={events}
+          value={selectedId}
+          onChange={onSelect}
+          disabled={loading}
+        />
       </DashboardPageHeader>
       {selectedEvent && (
         <div className="mt-4">
@@ -302,12 +302,12 @@ export function PlacementWorkspace({
   return (
     <DashboardPageShell>
       <DashboardPageHeader title={d("Manajemen Tamu")}>
-      <EventScopePicker
-        events={events}
-        value={selectedId}
-        onChange={onSelect}
-        disabled={loading}
-      />
+        <EventScopePicker
+          events={events}
+          value={selectedId}
+          onChange={onSelect}
+          disabled={loading}
+        />
       </DashboardPageHeader>
       {selectedEvent && (
         <div className="mt-4">
@@ -365,8 +365,7 @@ function PlacementPanel({
   return (
     <div className="space-y-4">
         <DashboardSectionHeader
-          title={d("Tamu & seating")}
-          description={d("Tarik tamu ke kursi untuk menyimpan posisi dan melihat distribusi meja secara visual.")}
+          title={d("Penempatan")}
           actions={
             <Button onClick={onRefresh} size="sm" title={d("Muat ulang data tamu dan meja")}>
               <RefreshCw className="h-4 w-4" />
@@ -411,37 +410,43 @@ export function UsherPanel({
   const checked = guests.filter((guest) => guest.checkedIn).length;
   return (
     <DashboardPageShell>
-        <DashboardPageHeader
-          title={d("Check-in")}
-          actions={
-            <>
-              <Button onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
-                <RefreshCw className="h-4 w-4" />{d("Muat ulang")}
-              </Button>
-              <Button asChild size="sm"><Link href="/dashboard/usher"><QrCode className="size-4" />{d("Buka Usher App")}</Link></Button>
-            </>
-          }
-        />
-        <DashboardMetricGrid className="mt-4 xl:grid-cols-2">
-          <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
-          <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
-        </DashboardMetricGrid>
-        <DashboardPanel className="mt-4" title={d("Daftar tamu")}>
-          {guests.length === 0 ? <DashboardEmptyState icon={Users} title={d("Belum ada tamu")} /> : (
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[560px] text-left">
-                <thead><tr><th className="px-3 py-3">{d("Nama tamu")}</th><th className="px-3 py-3">WhatsApp</th><th className="px-3 py-3">{d("Status")}</th></tr></thead>
-                <tbody>{guests.map(guest => (
-                  <tr key={guest.id}>
-                    <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
-                    <td className="px-3 py-4 text-sm text-muted-foreground">{guest.phone || "—"}</td>
-                    <td className="px-3 py-4"><DashboardStatusBadge active={guest.checkedIn}>{guest.checkedIn ? d("Check-in") : d("Belum check-in")}</DashboardStatusBadge></td>
-                  </tr>
-                ))}</tbody>
-              </table>
-            </div>
-          )}
-        </DashboardPanel>
+      <DashboardPageHeader
+        title={d("Check-in")}
+        actions={
+          <>
+            <Button type="button" onClick={onRefresh} size="sm" title={d("Muat ulang status check-in")}>
+              <RefreshCw className="size-4" aria-hidden="true" />
+              {d("Muat ulang")}
+            </Button>
+            <Button asChild size="sm">
+              <Link href="/dashboard/usher"><QrCode className="size-4" aria-hidden="true" />{d("Buka Usher App")}</Link>
+            </Button>
+          </>
+        }
+      />
+      <DashboardMetricGrid className="xl:grid-cols-2">
+        <DashboardMetricCard icon={Users} label={d("Total tamu")} value={String(guests.length)} />
+        <DashboardMetricCard icon={CheckCircle2} label={d("Check-in")} value={String(checked)} />
+      </DashboardMetricGrid>
+      <DashboardPanel className="mt-5" title={d("Daftar tamu")}>
+        {guests.length === 0 ? (
+          <DashboardEmptyState icon={Users} title={d("Belum ada tamu")} />
+        ) : (
+          <div className="grid gap-3">
+            {guests.map((guest) => (
+              <article key={guest.id} className="flex min-w-0 flex-col gap-3 rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+                <div className="min-w-0">
+                  <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
+                  {guest.phone && <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone}</p>}
+                </div>
+                <DashboardStatusBadge active={guest.checkedIn}>
+                  {guest.checkedIn ? d("Check-in") : d("Belum check-in")}
+                </DashboardStatusBadge>
+              </article>
+            ))}
+          </div>
+        )}
+      </DashboardPanel>
     </DashboardPageShell>
   );
 }
