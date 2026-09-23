@@ -295,7 +295,7 @@ export default function DashboardPage() {
                 aria-expanded={invitationMenuOpen}
                 onClick={() => setInvitationMenuOpen((value) => !value)}
                 className={`h-auto w-full min-w-0 justify-start rounded-[9px] border border-transparent bg-transparent px-2.5 py-2.5 text-left text-[16px] font-medium shadow-none ${
-                  invitationActive ? "is-active" : ""
+                  invitationActive ? "is-section-open" : ""
                 }`}
               >
                 <span className="grid size-6 shrink-0 place-items-center">
