@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import {
   DashboardMetricCard,
   DashboardMetricGrid,
@@ -252,7 +253,7 @@ export default function RsvpAnalyticsPanel({
             aria-label={d("Urutkan tamu")}
           >
             {(Object.keys(sortLabel) as SortKey[]).map((key) => (
-              <option key={key} value={key}>{d(sortLabel[key])}</option>
+              <option key={key} value={key}>{displayTitleCase(d(sortLabel[key]))}</option>
             ))}
           </select>
           <Button
