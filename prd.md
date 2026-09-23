@@ -4422,3 +4422,8 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 
 - Customer sidebar hover/active uses curved-outside Rose geometry inspired by the approved screenshot; keep neutral Light/Dark page/rail backgrounds, DC Organizer branding and existing functionality. Scope this style to the customer dashboard, not the approved landing or public navbar.
 - Dashboard content prioritizes actionable controls, event-specific operational tables and factual metrics over repetitive explanatory labels. Show charts only where real persisted or derived data exists; do not invent demo figures. Preserve accessible menu states, mobile behavior, locale/theme controls and product access gates.
+
+
+### Customer dashboard redesign (23 September 2026 — in progress)
+
+`Dashboard-redesign.md` tracks staged implementation. Customer mobile/desktop sidebar uses one accessible component with non-overlapping curved-outside Rose hover and active shapes, one selected tab at a time, and a neutral white/near-black rail. Shared dashboard page and surface primitives govern operational screens. The Beranda summary renders real event, guest, RSVP and publication information rather than decorative numbers; repeated copy is removed where the screen already explains itself. Keep all existing access, event scoping, ID/EN, Light/Dark and server behavior. This is a source implementation milestone, not final visual/build sign-off; stage 3 workspace audit and stage 4 validation remain open.
