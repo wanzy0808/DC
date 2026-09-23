@@ -330,4 +330,9 @@ The first dashboard frame was allowed to grow with the whole page. The current `
 
 ### Rose exterior and card accents (23 September 2026)
 
-The customer dashboard's space **outside** its fixed viewport mainframe now uses solid brand Rose `#C07A84` in both themes. The inner workspace remains white in Light and near-black in Dark; a lighter frame edge keeps the Rose exterior visually distinct. Shared information panels have a slim Rose left rule, with a stronger left rule on Beranda's event and RSVP/publication panels; compact metric cards use a top rule. Changes are CSS-only and preserve actual content, internal scrolling, navbar, profile actions and the approved public landing/Pintu. Browser/CI visual validation remains pending.
+The customer dashboard's space **outside** its fixed viewport mainframe now uses solid brand Rose `#C07A84` in both themes. The inner workspace remains white in Light and near-black in Dark; a lighter frame edge keeps the Rose exterior visually distinct. Shared information panels and compact metric cards all have a slim Rose LEFT rule, with a stronger left rule on Beranda's event and RSVP/publication panels. Small cards have three square corners and ONLY a rounded top-right corner. Changes are CSS-only and preserve actual content, internal scrolling, navbar, profile actions and the approved public landing/Pintu. Browser/CI visual validation remains pending.
+
+
+### Single top-right corner on dashboard cards (23 September 2026)
+
+Shared dashboard surfaces, compact metrics, compact stats, notices, empty states and the Beranda welcome panel now use square corners except for the top-right, with all accent strokes on the left (3px standard / 4px on prominent panels). The source primitives and scoped CSS reflect the same geometry; the outer mainframe, badges, buttons and marketing landing remain unchanged. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Browser/CI verification remains pending.
