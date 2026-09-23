@@ -7,7 +7,7 @@ import {
   MessageCircleHeart,
   Upload,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import type { CatalogTemplate } from "@/lib/templates/use-template-catalog";
 import { TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
@@ -360,7 +360,7 @@ export function MusicPanel({
         placeholder="https://.../music.mp3"
         className="mt-5 w-full rounded-[10px] border border-border bg-background px-3 py-3 text-xs outline-none focus:border-primary"
       />
-      <label className="mt-3 flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-dashed border-primary/30 px-3 py-3 text-xs font-semibold text-primary">
+      <label className={buttonVariants({ size: "sm", className: "mt-3 flex min-h-11 w-full cursor-pointer px-3 py-3" })}>
         <Upload className="h-4 w-4" /> Upload musik
         <input
           type="file"
