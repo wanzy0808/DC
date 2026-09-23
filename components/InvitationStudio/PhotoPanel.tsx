@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, ImagePlus, Upload } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import type { PhotoAssignments, PhotoFocus, PhotoSlot } from "@/lib/templates/photo-slots";
 
@@ -83,7 +84,7 @@ export default function PhotoPanel({
             Foto belum diunggah.
           </div>
         )}
-        <label className={`mt-3 flex min-h-12 items-center justify-center gap-2 rounded-xl border border-dashed border-primary/40 px-3 text-sm font-medium text-primary ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:bg-primary/5"}`}>
+        <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
           <Upload className="h-4 w-4" />
           {uploading ? "Mengunggah foto..." : "Tambah foto"}
           <input
@@ -155,14 +156,14 @@ export default function PhotoPanel({
                     </div>
                   )}
                   {slot === "gallery" ? (
-                    <button type="button" onClick={() => onToggleGallery("*")} className="text-xs font-medium text-primary underline underline-offset-4">
-                      {assignments.gallery === null ? "Kosongkan pilihan galeri" : "Gunakan semua foto"}
-                    </button>
+                    <Button type="button" size="xs" onClick={() => onToggleGallery("*")} className="max-w-full whitespace-normal">
+                      {assignments.gallery === null ? "Kosongkan Pilihan Galeri" : "Gunakan Semua Foto"}
+                    </Button>
                   ) : (
                     <>
-                      <button type="button" onClick={() => onSetPhoto(slot, null)} className="text-xs font-medium text-primary underline underline-offset-4">
-                        Gunakan pilihan otomatis
-                      </button>
+                      <Button type="button" size="xs" onClick={() => onSetPhoto(slot, null)} className="max-w-full whitespace-normal">
+                        Gunakan Pilihan Otomatis
+                      </Button>
                       <div>
                         <p className="mb-2 text-xs font-medium">Fokus foto</p>
                         <div className="grid grid-cols-3 gap-1.5">
