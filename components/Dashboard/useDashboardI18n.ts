@@ -90,6 +90,8 @@ const english: Record<string, string> = {
   "Undangan": "Invitation",
   "Undangan Digital": "Digital Invitation",
   "Personal Invitation": "Personal Invitation",
+  "Undangan Personal": "Personal Invitation",
+  "Pengaturan Meja": "Table Setup",
   "WA Blast Add-on": "WA Blast Add-on",
   "WA Blast": "WA Blast",
   "Add-on": "Add-on",
