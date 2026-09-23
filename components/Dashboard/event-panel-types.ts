@@ -1,3 +1,4 @@
+import type { WeddingChildPosition } from "@/lib/events/parents";
 import type { EventCategory } from "@/lib/events/catalog";
 
 export type EventPanelInvitation = {
@@ -10,9 +11,11 @@ export type EventPanelInvitation = {
   groomFatherName: string | null;
   groomMotherName: string | null;
   groomChildOrder: number | null;
+  groomChildPosition?: WeddingChildPosition | null;
   brideFatherName: string | null;
   brideMotherName: string | null;
   brideChildOrder: number | null;
+  brideChildPosition?: WeddingChildPosition | null;
   venue: string;
   address: string | null;
   mapUrl: string | null;
@@ -44,9 +47,11 @@ export type EventForm = {
   groomFatherName: string;
   groomMotherName: string;
   groomChildOrder: string;
+  groomChildPosition: WeddingChildPosition | "";
   brideFatherName: string;
   brideMotherName: string;
   brideChildOrder: string;
+  brideChildPosition: WeddingChildPosition | "";
   venue: string;
   address: string;
   mapUrl: string;
