@@ -16,7 +16,7 @@ export function DashboardPage({
   return (
     <div
       className={classes(
-        "dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-7",
+        "dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-8",
         className,
       )}
     >
@@ -34,7 +34,7 @@ export function DashboardSurface({
     <section
       {...props}
       className={classes(
-        "dc-dashboard-surface rounded-2xl border border-border/70 bg-background shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
+        "dc-dashboard-surface rounded-[24px] border border-border/70 bg-background shadow-[0_6px_28px_rgba(24,14,16,0.025)]",
         className,
       )}
     >
@@ -71,7 +71,7 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-2xl border border-border/70 bg-background p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)]",
+        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-[22px] border border-border/70 bg-background p-5 shadow-[0_6px_24px_rgba(24,14,16,0.025)]",
         className,
       )}
     >
@@ -177,7 +177,7 @@ export function DashboardStatusBadge({
   return (
     <span
       className={classes(
-        "inline-flex min-h-8 items-center rounded-lg border px-2.5 py-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em]",
+        "inline-flex min-h-8 items-center rounded-full border px-3 py-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em]",
         active
           ? "border-primary/15 bg-primary/[0.08] text-primary"
           : "border-border/70 bg-background text-muted-foreground",
@@ -232,19 +232,15 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
   children?: ReactNode;
 }) {
   return (
-    <DashboardSurface className="mb-4 overflow-hidden">
-      <div className="border-l-4 border-primary px-5 py-6 sm:px-6 lg:px-8">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="min-w-0">
-            {eyebrow && <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.14em] text-primary">{eyebrow}</p>}
-            <h1 className="mt-2 break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{title}</h1>
-            {description && <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>}
-          </div>
-          {actions && <div className="flex shrink-0 flex-wrap items-center gap-3">{actions}</div>}
-        </div>
-        {children && <div className="mt-5 border-t border-border/70 pt-4">{children}</div>}
+    <div className="mb-5 flex flex-col gap-4 border-b border-border/70 pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0">
+        {eyebrow && <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.1em] text-primary">{eyebrow}</p>}
+        <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-foreground sm:text-3xl">{title}</h1>
+        {description && <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>}
+        {children && <div className="mt-3">{children}</div>}
       </div>
-    </DashboardSurface>
+      {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
+    </div>
   );
 }
 
