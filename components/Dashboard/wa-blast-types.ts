@@ -13,6 +13,9 @@ export type WaBlastGuest = {
   id: string;
   name: string;
   phone: string | null;
+  category?: string | null;
+  tags?: string[];
+  invitedPax?: number;
 };
 
 export type WaBlastRecipient = WaBlastGuest & {
