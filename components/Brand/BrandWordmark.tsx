@@ -8,7 +8,7 @@ type BrandWordmarkProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 const sizeClass: Record<BrandWordmarkSize, string> = {
-  public: "text-2xl sm:text-[34px] lg:text-[36px]",
+  public: "text-[20px] sm:text-[34px] lg:text-[36px]",
   dashboard: "text-xl",
   mobile: "text-base",
 };
