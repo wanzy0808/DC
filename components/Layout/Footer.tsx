@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import BrandWordmark from "@/components/Brand/BrandWordmark";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -75,12 +76,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
         <div className="grid grid-cols-1 items-start justify-between gap-8 md:grid-cols-12">
           <div className="space-y-4 md:col-span-6">
             <Link href="/" className="inline-block">
-              <div className="font-[family-name:var(--font-dc-heading)] text-3xl font-bold tracking-[0.2em] text-[var(--primary)]">
-                D C
-              </div>
-              <span className="block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.25em] opacity-60">
-                ORGANIZER
-              </span>
+              <BrandWordmark />
             </Link>
             <p className="max-w-sm font-[family-name:var(--font-dc-body)] text-xs font-light leading-relaxed opacity-70">
               {footer.description}
