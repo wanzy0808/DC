@@ -281,3 +281,8 @@ The auth start handler must validate *both* Google client ID and secret before s
 ## Landing cloud text hierarchy (23 September 2026)
 
 On `/` and `/pagecontoh`, `components/Landing/CloudCopy.tsx` owns the two existing outlined clouds. The top-left cloud should read as the primary opening with a larger, legible heading and body. The bottom-right cloud is the quieter continuation, modestly raised away from the footer. Keep original ID/EN copy, fonts, SVG silhouette, letter-reveal and departure/return motion, and the approved 3D door composition unchanged. Tune only responsive cloud widths, text sizes, spacing and bottom offset to avoid crowding or clipping. Do not redesign any other landing component as part of this scoped change. Visual check remains required on mobile and desktop in both languages.
+
+
+## Landing wordmark readability (23 September 2026)
+
+The owner approved a narrowly scoped increase to the brand-name and tagline readability in the embedded navbar of `/` and `/pagecontoh`. Use `BrandWordmark size="landing"` only for those landing routes; keep the existing `public`, `dashboard` and `mobile` sizes unchanged elsewhere. The landing size increases the Cinzel name on desktop (34px at sm; 36px at lg), and the mono tagline to 9px/10px at desktop, while preserving the original size on narrow mobile screens. Compensate with only the existing navbar wrapper's vertical padding (`py-5 sm:py-4`) so its height does not increase. Do not alter wordmark wording, font, color, tracking, logo position, navbar background, burger/ID/EN/theme controls, their behavior, doors, clouds, or other marketing pages. Verify mobile fit and desktop height visually before claiming final fidelity.
