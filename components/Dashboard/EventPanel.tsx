@@ -276,7 +276,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
   return (
     <DashboardPage>
       <DashboardPageHeader
-            title={loading ? d("Memuat acara...") : events.length ? d("Daftar acara") : d("Buat acara pertama")}
+            title={d("Rangkaian Acara")}
             actions={
               <Button
                 type="button"
@@ -302,97 +302,74 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       )}
 
       {events.length > 0 && (
-        <DashboardSurface className="mt-4 overflow-hidden">
-          <div className="overflow-x-auto p-4 sm:p-5">
-            <table className="w-full min-w-[760px] text-left">
-              <thead>
-                <tr className="text-[11px] text-muted-foreground">
-                  <th className="px-3 py-3 font-medium">{d("Acara")}</th>
-                  <th className="px-3 py-3 font-medium">{d("Tanggal")}</th>
-                  <th className="px-3 py-3 font-medium">{d("Lokasi")}</th>
-                  <th className="px-3 py-3 font-medium">{d("Status")}</th>
-                  <th className="px-3 py-3 text-right font-medium">{d("Aksi")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {events.map((event) => {
-                  const draft = !event.eventConfigured;
-                  const hasDesign = Boolean(event.templateKey?.trim());
-                  const status = event.isPublished
-                    ? d("Terbit")
-                    : hasDesign
-                      ? d("Siap")
-                      : draft
-                        ? d("Draft")
-                        : d("Belum desain");
-                  return (
-                    <tr key={event.id} className="text-xs">
-                      <td className="max-w-72 px-3 py-3.5">
-                        <p className="truncate text-sm font-semibold text-foreground">
-                          {draft ? d("Acara baru") : event.title || d("Acara tanpa judul")}
-                        </p>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-3.5 text-muted-foreground">
-                        {event.eventDate ? isoDateToDisplay(event.eventDate) : "—"}
-                      </td>
-                      <td className="max-w-56 px-3 py-3.5 text-muted-foreground">
-                        <p className="truncate">{draft ? d("Belum dilengkapi") : event.venue || "—"}</p>
-                      </td>
-                      <td className="px-3 py-3.5">
-                        <DashboardStatusBadge active={event.isPublished || hasDesign}>
-                          {status}
-                        </DashboardStatusBadge>
-                      </td>
-                      <td className="px-3 py-3.5">
-                        <div className="flex justify-end gap-2">
-                          {!event.isPublished && (
-                            <>
-                              <Button type="button" size="xs" onClick={() => activate(event)}>
-                                <PenLine className="h-3.5 w-3.5" />
-                                {d("Edit")}
-                              </Button>
-                              <Button
-                                type="button"
-                                size="xs"
-                                onClick={() => removeEvent(event)}
-                                disabled={saving || Boolean(deletingId)}
-                              >
-                                <Trash2 className="h-3.5 w-3.5" />
-                                {deletingId === event.id ? d("Menghapus...") : d("Hapus")}
-                              </Button>
-                            </>
-                          )}
-                          {!draft && (
-                            <Button asChild size="xs">
-                              <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
-                                <PenLine className="h-3.5 w-3.5" />
-                                {hasDesign ? d("Undangan") : d("Buat undangan")}
-                              </Link>
-                            </Button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        <DashboardSurface className="mt-5 overflow-hidden">
+          <div className="border-b border-primary/15 bg-primary/[0.035] px-5 py-4 sm:px-6">
+            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-foreground">{d("Daftar acara")}</h2>
+          </div>
+          <div className="grid gap-3 p-4 sm:p-5">
+            {events.map((event) => {
+              const draft = !event.eventConfigured;
+              const hasDesign = Boolean(event.templateKey?.trim());
+              const status = event.isPublished
+                ? d("Terbit")
+                : hasDesign
+                  ? d("Siap")
+                  : draft
+                    ? d("Draft")
+                    : d("Belum desain");
+              return (
+                <article key={event.id} className="rounded-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                  <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0">
+                      <h3 className="break-words text-base font-semibold text-foreground">
+                        {draft ? d("Acara baru") : event.title || d("Acara tanpa judul")}
+                      </h3>
+                      <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                        <span className="inline-flex items-center gap-1.5"><CalendarDays className="size-4 shrink-0 text-primary" aria-hidden="true" />{event.eventDate ? isoDateToDisplay(event.eventDate) : "—"}</span>
+                        <span className="inline-flex min-w-0 items-center gap-1.5"><MapPin className="size-4 shrink-0 text-primary" aria-hidden="true" /><span className="truncate">{draft ? d("Belum dilengkapi") : event.venue || "—"}</span></span>
+                      </p>
+                    </div>
+                    <DashboardStatusBadge active={event.isPublished || hasDesign}>{status}</DashboardStatusBadge>
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-primary/15 pt-4 sm:justify-end">
+                    {!event.isPublished && (
+                      <>
+                        <Button type="button" size="sm" onClick={() => activate(event)}>
+                          <PenLine className="size-4" />{d("Edit")}
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          onClick={() => removeEvent(event)}
+                          disabled={saving || Boolean(deletingId)}
+                        >
+                          <Trash2 className="size-4" />
+                          {deletingId === event.id ? d("Menghapus...") : d("Hapus")}
+                        </Button>
+                      </>
+                    )}
+                    {!draft && (
+                      <Button asChild size="sm">
+                        <Link href={`/dashboard/editor?type=${event.type}&invitationId=${encodeURIComponent(event.id)}`}>
+                          <PenLine className="size-4" />
+                          {hasDesign ? d("Undangan") : d("Buat undangan")}
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </DashboardSurface>
       )}
 
       {!loading && !events.length && editorMode === "closed" && (
-        <DashboardSurface className="mt-4 p-4 sm:p-5">
+        <DashboardSurface className="mt-5 p-4 sm:p-5">
           <DashboardEmptyState
             icon={CalendarDays}
             title={d("Belum ada acara")}
-            description={d("Tambahkan yang pertama untuk mulai menyiapkan detail, desain undangan, RSVP, dan tamu.")}
-            action={
-              <Button type="button" size="sm" onClick={startNewEvent}>
-                <Plus className="h-4 w-4" />
-                {d("Tambah acara")}
-              </Button>
-            }
+
           />
         </DashboardSurface>
       )}
@@ -400,7 +377,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       {editorMode !== "closed" && (editorMode === "new" || active) && (
         <section
           ref={editorRef}
-          className="dc-dashboard-surface mt-4 scroll-mt-24 rounded-2xl border border-border/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] sm:p-6"
+          className="dc-dashboard-surface mt-5 scroll-mt-24 rounded-[24px] border border-primary/20 p-5 sm:p-6"
         >
           <div className="flex items-center justify-between gap-3">
             <p className="text-sm font-semibold">
