@@ -1256,6 +1256,13 @@ Application UI hanya memakai:
 
 Template typography boleh dinamis bila merupakan konten invitation, bukan shell aplikasi.
 
+### 15.1a Kapitalisasi Nama & Judul (23 September 2026)
+
+- Nama yang **ditampilkan** dan seluruh judul UI yang berdiri sendiri wajib menggunakan **Title Case** (huruf kapital pada awal setiap kata), termasuk judul halaman, judul frame/panel besar, judul bagian, nama menu, judul metrik, serta nama tamu dan judul acara yang ditampilkan. Contoh: `Manajemen Tamu`, `Daftar Acara`, `Nama Di Amplop`, `Undangan Personal`.
+- Terapkan pada locale ID/EN dengan tetap menjaga penulisan brand dan singkatan: `DC Organizer`, `RSVP`, `VIP`, `VVIP`, `WhatsApp`. Jangan jadikan semua huruf kapital atau mengubah identifier/kode internal.
+- Kalimat naratif, deskripsi, instruksi, placeholder, isi pesan, dan konten pengguna yang bukan nama/judul tetap menggunakan kapitalisasi kalimat yang natural.
+- Kapitalisasi nama tamu/judul acara dari input pengguna **hanya untuk tampilan**; nilai asli di database, API, pencarian, RSVP, undangan, dan WA Blast tidak boleh diubah secara diam-diam. Terapkan melalui gaya heading yang terlingkup pada Dashboard dan penanda `dc-ui-name` / `dc-ui-title` / `dc-ui-label` untuk teks UI yang bukan heading; jangan mengubah visual landing/Pintu atau artwork template undangan secara tidak sengaja.
+
 ### 15.2 Color
 
 Brand palette:
@@ -4528,3 +4535,12 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Batasan saat ini:** Satu `Guest` dapat mewakili penerima perorangan, pasangan, atau rombongan dengan satu tautan dan satu record RSVP/QR. Denah meja saat ini menempatkan satu **record Guest** ke satu kursi, bukan otomatis membuat kursi tersendiri untuk setiap pendamping; hal ini harus dikembangkan dengan struktur peserta/seat tersendiri apabila kelak dibutuhkan, bukan duplikasi Guest. Import CSV/Excel, pengiriman WhatsApp sesungguhnya dan fasilitas khusus per kategori bukan bagian dari implementasi ini.
 
 **Migrasi WAJIB setelah git pull:** `pnpm db:deploy` pada database tujuan, lalu `pnpm db:generate` sebelum `pnpm build`/`pnpm dev`. Dua migrasi: `20260923124000_guest_personal_invitation_details` menambah kolom ke tabel Guest, `20260923124500_backfill_personal_invitation_quota` mempertahankan kuota minimal untuk tamu personal yang sudah RSVP hadir bersama pendamping. Tidak perlu menyalin/migrasikan tamu ke tabel lain, data lama tetap ada. Browser end-to-end (RSVP, mobile, Light/Dark, DB koneksi nyata) perlu diuji. GitHub Actions build menjalankan Prisma generate sebelum build.
+
+
+### 2026-09-23 — Title Case Nama Dan Judul UI, Termasuk Judul Frame Dashboard
+
+**Requirement:** Seluruh nama dan judul UI yang berdiri sendiri memakai huruf kapital pada awal setiap kata (Title Case), termasuk header frame/panel besar, judul halaman, nama navigasi, judul metrik, dan nama orang/acara saat ditampilkan. Singkatan/brand tetap pada ejaan resmi. Deskripsi kalimat, pesan, teks bantuan, identifier kode, dan data asli pengguna tidak diubah.
+
+**Implementasi:** `app/globals.css` menerapkan kapitalisasi khusus Dashboard untuk heading, menu dan kelas nama/judul/label eksplisit, tanpa menyentuh landing dan artwork undangan. `components/Dashboard/DashboardPrimitives.tsx` menandai label metrik dan judul empty state; `DashboardWorkspaces.tsx`, `PersonalInvitationPanels.tsx`, dan `InvitationWorkspacePanel.tsx` menandai nama tamu/penerima serta judul acara yang tampil. Dropdown tamu tetap memakai isi `option` berupa teks biasa. Penambahan aturan lintas halaman dicatat di `AGENTS.md` dan `README.md`; requirement aktif pada §15.1a.
+
+**Commits aplikasi:** `568b5d77`, `7f494d52`, `9d4590a3`, `91fb6727`, `c8c76d67`, `71c7f4d4`. **Validasi:** perubahan source diperiksa pada file terkait; build, CI, browser Light/Dark, ID/EN dan mobile belum dijalankan/diverifikasi dalam sesi ini. Tidak ada perubahan skema atau migrasi data.
