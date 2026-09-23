@@ -625,125 +625,307 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 }
 
 
-/* Framed customer workspace: landing-inspired single Rose boundary, not a
-   second public landing. Only the dashboard shell changes; event panels
-   retain their shared data and controls. */
-.dc-dashboard.dc-dashboard--redesign {
+/* Customer mainframe mirrors the approved marketing page's *scroll model*:
+   fixed viewport shell, persistent brand/navigation, and one inner scrollport.
+   Landing assets / public page chrome are deliberately not mounted here. */
+body:has(.dc-dashboard--redesign) {
+  height: 100dvh;
   min-height: 100dvh;
-  padding-block: clamp(12px, 2.5vh, 28px);
+  overflow: hidden;
+}
+.dc-dashboard.dc-dashboard--redesign {
+  --dc-dashboard-canvas: #ffffff;
+  --dc-dashboard-card: #ffffff;
+  --dc-dashboard-border: rgb(192 122 132 / 53%);
+  --dc-dashboard-rail: #ffffff;
+  --dc-dashboard-rail-hover: rgb(192 122 132 / 12%);
+  --dc-dashboard-rail-active: #c07a84;
+  --dc-dashboard-header-bg: #ffffff;
+  height: 100dvh;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
   background:
-    radial-gradient(ellipse at 4% 10%, rgb(192 122 132 / 15%), transparent 43%),
-    radial-gradient(ellipse at 98% 90%, rgb(192 122 132 / 12%), transparent 45%),
+    radial-gradient(ellipse at 10% 15%, rgb(217 163 170 / 24%), transparent 43%),
+    radial-gradient(ellipse at 90% 85%, rgb(192 122 132 / 16%), transparent 42%),
     var(--background);
 }
 .dark .dc-dashboard.dc-dashboard--redesign {
   --dc-dashboard-canvas: #0b0b0c;
-  --dc-dashboard-card: #151114;
-  --dc-dashboard-border: #704454;
+  --dc-dashboard-card: #0b0b0c;
+  --dc-dashboard-border: rgb(192 122 132 / 62%);
+  --dc-dashboard-rail: #0b0b0c;
+  --dc-dashboard-rail-hover: rgb(192 122 132 / 18%);
+  --dc-dashboard-rail-active: #c07a84;
   --dc-dashboard-header-bg: #0b0b0c;
   background:
-    radial-gradient(ellipse at 3% 12%, rgb(192 122 132 / 12%), transparent 42%),
+    radial-gradient(ellipse at 12% 12%, rgb(192 122 132 / 14%), transparent 42%),
+    radial-gradient(ellipse at 89% 88%, rgb(192 122 132 / 9%), transparent 47%),
     var(--background);
 }
-.dc-dashboard .dc-dashboard-frame {
-  width: 94vw;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex: 0 0 auto;
+  width: 90vw;
+  height: 90dvh;
   min-width: 0;
-  min-height: calc(100dvh - 56px);
-  margin-inline: auto;
-  overflow: clip;
+  min-height: 0;
+  margin: auto;
+  overflow: hidden;
   border: 1.5px solid var(--primary);
-  border-radius: 32px;
+  border-radius: 18px;
   background: var(--dc-dashboard-canvas);
-  box-shadow: 0 24px 80px rgb(112 51 69 / 12%), 0 0 0 6px rgb(192 122 132 / 5%);
+  box-shadow: 0 18px 75px rgb(75 35 47 / 12%), 0 0 0 5px rgb(192 122 132 / 5%);
 }
-.dc-dashboard .dc-dashboard-frame > .min-w-0.flex-1 {
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-workspace {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   background: var(--dc-dashboard-canvas);
 }
-.dc-dashboard .dc-dashboard-frame .dc-dashboard-sidebar {
-  position: sticky;
-  top: 0;
-  align-self: flex-start;
-  height: calc(100dvh - 56px);
-  min-height: 0 !important;
-  overflow-y: auto;
-}
-.dc-dashboard .dc-dashboard-sidebar-brand {
-  background: var(--dc-dashboard-rail);
-  border-color: rgb(255 255 255 / 25%);
-}
-.dc-dashboard .dc-dashboard-sidebar-brand .text-primary {
-  color: #fff !important;
-}
-.dc-dashboard .dc-dashboard-header {
-  position: sticky;
-  top: 0;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header {
+  position: relative;
+  top: auto;
   z-index: 35;
+  flex: 0 0 72px;
   height: 72px !important;
+  min-height: 72px;
+  background: var(--dc-dashboard-header-bg) !important;
+  border-bottom: 1px solid var(--dc-dashboard-border) !important;
   box-shadow: none !important;
 }
-.dc-dashboard .dc-dashboard-header > div,
-.dc-dashboard .dc-dashboard-header-inner { min-height: 72px; }
-.dc-dashboard .dc-dashboard-header .dc-dashboard-brand { display: none !important; }
-.dc-dashboard .dc-dashboard-header-inner {
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header > div,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
+  min-height: 72px;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-brand {
+  display: none !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
   width: min(80vw, calc(100% - 3rem));
   max-width: 100%;
 }
-.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
-.dc-dashboard .dc-dashboard-header .dc-language-toggle button,
-.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
-  border-radius: var(--dc-control-radius) !important;
-  border-color: var(--primary) !important;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll {
+  flex: 1 1 0;
+  display: block;
+  min-height: 0 !important;
+  min-width: 0;
+  height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+  background: var(--dc-dashboard-canvas);
+  color: var(--foreground);
 }
-.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
-  padding-inline: 0.5rem 0.875rem;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll > * {
+  min-width: 0;
 }
-.dc-dashboard .dc-dashboard-account-menu {
-  border-color: var(--primary);
-  background: var(--dc-dashboard-card);
-  box-shadow: 0 16px 50px rgb(76 32 47 / 16%);
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+  position: relative;
+  inset: auto;
+  top: auto;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  flex: 0 0 16rem;
+  height: 100%;
+  max-height: none;
+  min-height: 0 !important;
+  overflow: hidden;
+  border-right: 1px solid var(--dc-dashboard-border);
+  background: var(--dc-dashboard-rail);
+  color: var(--foreground);
+  box-shadow: none;
 }
-.dc-dashboard .dc-dashboard-account-menu-item {
-  border-radius: var(--dc-control-radius) !important;
-  border-color: transparent !important;
-  background: transparent !important;
-  color: var(--foreground) !important;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-brand {
+  flex: 0 0 72px;
+  min-height: 72px;
+  padding-inline: 1.25rem;
+  border-bottom: 1px solid var(--dc-dashboard-border);
+  background: var(--dc-dashboard-rail);
 }
-.dc-dashboard .dc-dashboard-account-menu-item:hover {
-  background: color-mix(in srgb, var(--primary) 13%, var(--dc-dashboard-card)) !important;
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent) !important;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-brand .text-primary {
   color: var(--primary) !important;
 }
-.dark .dc-dashboard .dc-dashboard-account-menu-item { background: transparent !important; }
-.dark .dc-dashboard .dc-dashboard-account-menu-item:hover {
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--dc-dashboard-rail);
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+  padding: 1.25rem 0.75rem 1.5rem;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link {
+  color: var(--primary) !important;
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  border-radius: var(--dc-control-radius) !important;
+  font-weight: 500;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
+  color: var(--primary) !important;
+  border-color: var(--dc-dashboard-border) !important;
+  background: var(--dc-dashboard-rail-hover) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]),
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]):hover {
+  --dc-sidebar-fill: var(--dc-dashboard-rail-active);
+  background: var(--dc-sidebar-fill) !important;
+  border-color: var(--dc-sidebar-fill) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
+  content: none;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:focus-visible {
+  outline-color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-subnav {
+  border-left-color: var(--dc-dashboard-border);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-theme-toggle,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button {
+  background: transparent !important;
+  color: var(--primary) !important;
+  border: 1px solid var(--primary) !important;
+  border-radius: var(--dc-control-radius) !important;
+  box-shadow: none !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-theme-toggle:hover,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button:hover,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button:hover,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button[aria-pressed="true"] {
+  background: var(--dc-dashboard-rail-hover) !important;
+  color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button {
+  padding-inline: 0.5rem 0.875rem;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu {
+  background: var(--dc-dashboard-card) !important;
+  border: 1px solid var(--primary) !important;
+  box-shadow: 0 16px 48px rgb(76 32 47 / 18%);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu-item {
+  border: 1px solid transparent !important;
+  border-radius: var(--dc-control-radius) !important;
+  background: transparent !important;
+  color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu-item:hover {
+  border-color: var(--primary) !important;
+  background: var(--dc-dashboard-rail-hover) !important;
+  color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
+  border: 1.5px solid var(--primary) !important;
+  background:
+    radial-gradient(circle at 94% 2%, rgb(192 122 132 / 21%), transparent 45%),
+    linear-gradient(115deg, #ffffff, #fff2f5 90%) !important;
+  box-shadow: 0 12px 40px rgb(192 122 132 / 11%);
+}
+.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
+  background:
+    radial-gradient(circle at 94% 5%, rgb(192 122 132 / 23%), transparent 45%),
+    linear-gradient(115deg, #0b0b0c, #180e14 90%) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero h1 {
+  color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero::after {
+  border-color: rgb(192 122 132 / 22%);
+  box-shadow: 0 0 0 2.5rem rgb(192 122 132 / 5%), 0 0 0 5rem rgb(192 122 132 / 3%);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
   background: var(--primary) !important;
-  color: #fff !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 16px rgb(192 122 132 / 23%) !important;
 }
-.dc-dashboard .dc-dashboard-account-page .dc-dashboard-surface {
-  border: 1px solid color-mix(in srgb, var(--primary) 42%, transparent) !important;
-  box-shadow: 0 12px 40px rgb(93 42 57 / 6%);
+.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
+  color: #0b0b0c !important;
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric {
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent) !important;
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+  background: #a65e69 !important;
+  border-color: #a65e69 !important;
+  color: #ffffff !important;
+}
+.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+  background: #d9a3aa !important;
+  border-color: #d9a3aa !important;
+  color: #0b0b0c !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-surface,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-metric,
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric--featured {
+  background: var(--dc-dashboard-card) !important;
+  border: 1px solid var(--dc-dashboard-border) !important;
+  box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
+  background: rgb(192 122 132 / 15%);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric .text-2xl {
+  color: var(--primary) !important;
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-progress [role="progressbar"] {
+  background: rgb(192 122 132 / 17%);
+}
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-page .dc-dashboard-surface {
+  border-color: var(--dc-dashboard-border) !important;
+}
+@media (min-width: 640px) {
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+    width: calc(100% - 46px);
+    height: calc(100dvh - 46px);
+  }
+}
+@media (min-width: 1024px) {
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+    width: calc(100% - 54px);
+    height: calc(100dvh - 54px);
+  }
 }
 @media (max-width: 1023px) {
-  .dc-dashboard .dc-dashboard-frame {
-    width: calc(100% - 20px);
-    min-height: calc(100dvh - 24px);
-    border-radius: 24px;
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    z-index: 50;
+    width: min(16rem, 100%);
+    height: 100%;
+    border-right: 1.5px solid var(--primary);
+    border-radius: 0;
+    box-shadow: 16px 0 48px rgb(0 0 0 / 16%);
   }
-  .dc-dashboard .dc-dashboard-frame .dc-dashboard-sidebar {
-    position: fixed;
-    inset: 12px auto 12px 12px;
-    height: auto;
-    max-height: calc(100dvh - 24px);
-    border-radius: 24px;
-    box-shadow: 0 20px 70px rgb(0 0 0 / 30%);
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar.hidden {
+    display: none;
   }
-  .dc-dashboard .dc-dashboard-header-inner {
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
     width: calc(100% - 1.25rem);
   }
 }
+@media (min-width: 1024px) {
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+    display: flex;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
-  .dc-dashboard .dc-dashboard-frame { scroll-behavior: auto; }
+  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll {
+    scroll-behavior: auto;
+  }
 }
