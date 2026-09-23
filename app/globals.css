@@ -453,6 +453,23 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
 .dc-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 
+/* While Rose light covers a route change, dissolve the DECORATIVE 90vw
+   frame chrome underneath it. Otherwise its translucent background, border,
+   shadow and backdrop blur show through the glow as a large rectangular
+   "body" even when the fullscreen veil itself has no square edges.
+   Keep layout, contents, overflow and all interactions unchanged. These
+   properties return smoothly once PortalTransition removes its state. */
+[data-dc-marketing-frame] {
+  transition: background-color 420ms ease, border-color 420ms ease,
+    box-shadow 420ms ease, backdrop-filter 420ms ease;
+}
+html[data-dc-marketing-transition] [data-dc-marketing-frame] {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
 /* One full-viewport Rose surface covers and uncovers marketing routes.
    Do not scale the gradient layer or clip it into a separate opaque shape:
    either can reveal rectangular compositor seams during the 3D camera zoom.
