@@ -3,6 +3,8 @@ import type { GuestLabels } from "@/lib/guests/filters";
 export type SeatingGuest = GuestLabels & {
   id: string;
   name: string;
+  personalAddressee?: string | null;
+  invitedPax?: number;
   tableId?: string | null;
   seatNumber?: number | null;
   rsvpStatus?: string;
