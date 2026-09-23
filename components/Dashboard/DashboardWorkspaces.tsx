@@ -301,7 +301,7 @@ export function PlacementWorkspace({
   const { d } = useDashboardI18n();
   return (
     <DashboardPageShell>
-      <DashboardPageHeader title={d("Manajemen Tamu")}>
+      <DashboardPageHeader title={d("Pengaturan Meja")}>
         <EventScopePicker
           events={events}
           value={selectedId}
