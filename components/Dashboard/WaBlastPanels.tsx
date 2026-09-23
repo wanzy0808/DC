@@ -39,11 +39,9 @@ export function WaBlastAddRecipients({
 
   return (
     <DashboardPanel
-      eyebrow={d("Penerima")}
       title={d("Tambah penerima")}
-      description={d("Gunakan data tamu yang sudah ada atau tambahkan penerima baru.")}
     >
-      <div className="rounded-xl border border-border/70 bg-background p-3">
+      <div className="rounded-2xl border border-primary/20 bg-primary/[0.025] p-4">
         <p className="text-xs font-semibold text-foreground">{d("Dari daftar tamu")}</p>
         <select
           value={existingGuestId}
@@ -116,9 +114,7 @@ export function WaBlastRecipientQueue({
 
   return (
     <DashboardPanel
-      eyebrow={d("Queue")}
       title={d("Tamu yang akan diblast")}
-      description={d("Kuota mengikuti pilihan di atas.")}
       actions={
         <Button type="button" size="sm" onClick={onReload} disabled={busy}>
           <RefreshCw className="h-4 w-4" />
@@ -126,50 +122,30 @@ export function WaBlastRecipientQueue({
         </Button>
       }
     >
-      <div className="mt-4 space-y-2">
-        {selected.length === 0 && (
-          <DashboardEmptyState
-            icon={Users}
-            title={d("Belum ada penerima")}
-            description={d("Tambahkan dari daftar tamu atau buat penerima baru.")}
-          />
-        )}
-        {selected.length > 0 && (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[480px] text-left">
-              <thead>
-                <tr>
-                  <th className="px-3 py-3">{d("Nama tamu")}</th>
-                  <th className="px-3 py-3">WhatsApp</th>
-                  <th className="px-3 py-3 text-right">{d("Aksi")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {selected.map((guest) => (
-                  <tr key={guest.id}>
-                    <td className="px-3 py-4 text-sm font-semibold">{guest.name}</td>
-                    <td className="px-3 py-4 font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">
-                      {guest.phone || d("Nomor belum ada")}
-                    </td>
-                    <td className="px-3 py-4 text-right">
-                      <Button
-                        type="button"
-                        size="icon-sm"
-                        onClick={() => onRemove(guest.id)}
-                        disabled={busy}
-                        title={d("Hapus dari daftar WA Blast")}
-                        aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}
-                      >
-                        <Trash2 className="size-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
+      {selected.length === 0 ? (
+        <DashboardEmptyState icon={Users} title={d("Belum ada penerima")} />
+      ) : (
+        <div className="grid gap-3">
+          {selected.map((guest) => (
+            <article key={guest.id} className="flex min-w-0 flex-wrap items-center justify-between gap-3 rounded-2xl border border-primary/20 bg-primary/[0.025] px-4 py-3">
+              <div className="min-w-0">
+                <h3 className="break-words text-sm font-semibold text-foreground">{guest.name}</h3>
+                <p className="mt-1 break-all text-sm text-muted-foreground">{guest.phone || d("Nomor belum ada")}</p>
+              </div>
+              <Button
+                type="button"
+                size="icon-sm"
+                onClick={() => onRemove(guest.id)}
+                disabled={busy}
+                title={d("Hapus dari daftar WA Blast")}
+                aria-label={`${d("Hapus")} ${guest.name} · WA Blast`}
+              >
+                <Trash2 className="size-4" aria-hidden="true" />
+              </Button>
+            </article>
+          ))}
+        </div>
+      )}
     </DashboardPanel>
   );
 }
