@@ -4307,3 +4307,18 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 **Files:** `app/terms-and-conditions/page.tsx`, `components/Layout/Navbar/RegisterDialog.tsx` (markup tautan saja), `components/Layout/Footer.tsx` (href saja), `AGENTS.md`, `README.md`, `prd.md`.
 
 **Validasi:** GitHub Actions build diperiksa setelah perubahan dan pengujian visual/form pada browser localhost masih harus dilakukan setelah sync. Sumber terms merupakan contoh pihak ketiga; isi hasil adaptasi harus disahkan sesuai aturan bisnis dan hukum DC Organizer sebelum produksi.
+
+
+---
+
+## 2026-09-23 — Perbaikan pemuatan PNG Pintu dan warning bunga landing
+
+**Laporan pengguna:** Saat `pnpm dev` dengan Next.js 16.3.3/Turbopack, browser melaporkan `Could not load /eventplanner.png: undefined` dari `PortalWorld` pada landing; Next/Image mengeluh `/flower.png` memiliki parent `position: static`/tinggi 0 saat `fill`; Three.js juga mengeluarkan peringatan nonfatal `THREE.Clock` deprecated.
+
+**Temuan:** GitHub `main` memuat `public/eventplanner.png` (ukuran 2.142.034 byte) beserta `Idigi.png`, `guestbook.png`, dan `Ufisik.png`. Keberadaan di remote **tidak membuktikan file bisa diambil dari localhost pengguna**: cek kesesuaian file lokal, huruf besar/kecil, status HTTP dan format PNG jika error masih muncul. Sebelumnya `PortalWorld` memakai `useLoader(THREE.TextureLoader, image)`, yang melempar ketika request atau decode texture gagal dan menjatuhkan seluruh `Canvas`.
+
+**Perubahan terbatas:** `components/Landing/Pintu/SimpleDoorLab.tsx` mengganti loader suspending/throwing khusus gambar portal dengan `THREE.TextureLoader.load` dalam `useEffect`, callback sukses/error dan disposal ketika unmount. Saat loading/gagal, mesh gambar saja tidak dirender sehingga bidang Rose yang **sudah ada** di bawahnya tetap terlihat; berhasil load menampilkan aset asli yang sama, dengan warna sRGB, clamp, anisotropy, UV dan fade `entering` existing. Tidak ada penggantian foto ke stock image, perubahan geometri/frame Pintu, interaksi, portal zoom, audio atau route. `components/Landing/LandingFloralGlow.tsx` mengganti properti `fill` pada dua Next/Image `flower.png` dengan dimensi eksplisit dan kelas absolute/inset/h-full/w-full/object-contain, mempertahankan posisi dan animasi parent existing. Tidak ada perubahan pada `AssetDreamBackdrop`/eksperimen `/jiplak` atau warna/menu auth.
+
+**Peringatan clock:** `THREE.Clock` deprecated tidak menyebabkan error image; scene masih memakai React Three Fiber, yang dapat memunculkan peringatan melalui internal library. Jangan mengklaim peringatan pasti hilang atau menaikkan major/minor dependency hanya untuk menekannya tanpa pengujian kompatibilitas.
+
+**Validasi:** Build Validation GitHub Actions untuk code perubahan texture loader selesai PASS pada commit `3e5709d7927132cc5c5aaccdf31d60fd4f2b71b5` (run `35802656323`). Perubahan bunga, dokumentasi dan status CI terakhir dicek setelah push; status langsung HTTP localhost, rendering di GPU, dan apakah file remote telah tersinkron ke Windows pengguna belum bisa diperiksa lewat GitHub CI.
