@@ -17,7 +17,7 @@ export function isWeddingChildPosition(value: unknown): value is WeddingChildPos
   return value === "ELDEST" || value === "YOUNGEST" || value === "NUMBER";
 }
 
-function childOrderLabel(childOrder?: number | null, position?: WeddingChildPosition | null) {
+function childOrderLabel(childOrder?: number | null, position?: string | null) {
   if (position === "ELDEST") return "sulung";
   if (position === "YOUNGEST") return "bungsu";
   if (!childOrder || childOrder <= 0) return "";
@@ -29,7 +29,7 @@ export function weddingParentLine(
   motherName?: string | null,
   childOrder?: number | null,
   childKind: WeddingChildKind = "anak",
-  position?: WeddingChildPosition | null,
+  position?: string | null,
 ) {
   const parents = [
     fatherName?.trim() ? `Bapak ${fatherName.trim()}` : "",
