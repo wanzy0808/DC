@@ -160,9 +160,9 @@ export function RsvpInputPanel({
         }
         className="w-full rounded-md border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10"
       >
-        <option value="ATTENDING">Saya akan hadir</option>
-        <option value="NOT_ATTENDING">Saya tidak hadir</option>
-        <option value="TENTATIVE">Saya masih tentatif</option>
+        <option value="ATTENDING">Saya Akan Hadir</option>
+        <option value="NOT_ATTENDING">Saya Tidak Hadir</option>
+        <option value="TENTATIVE">Saya Masih Tentatif</option>
       </select>
 
       {(invitedPax === undefined || invitedPax > 1) && (
