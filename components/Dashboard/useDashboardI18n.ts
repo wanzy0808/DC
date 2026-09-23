@@ -4,6 +4,11 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Urutan Anak": "Birth Order",
+  "Anak Tertua": "Eldest Child",
+  "Anak Termuda": "Youngest Child",
+  "Anak Keberapa": "Child Number",
+  "Contoh: 2": "Example: 2",
   "Template tidak dikirim otomatis. Menyalin pesan tidak mengurangi kuota.": "Templates are not sent automatically. Copying does not use credits.",
   "Template pesan": "Message templates",
   "Buat": "Create",
