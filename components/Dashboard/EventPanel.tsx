@@ -21,6 +21,7 @@ import {
   DashboardNotice,
   DashboardPage,
   DashboardPageHeader,
+  DashboardPanel,
   DashboardStatusBadge,
 } from "@/components/Dashboard/DashboardPrimitives";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
@@ -301,10 +302,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       )}
 
       {events.length > 0 && (
-        <section className="mt-6 min-w-0">
-          <div className="mb-4 border-b border-primary/20 pb-4">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">{d("Daftar acara")}</h2>
-          </div>
+        <DashboardPanel className="mt-6" title={d("Daftar acara")}>
           <div className="grid gap-3">
             {events.map((event) => {
               const draft = !event.eventConfigured;
@@ -360,16 +358,16 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
               );
             })}
           </div>
-        </section>
+        </DashboardPanel>
       )}
 
       {!loading && !events.length && editorMode === "closed" && (
-        <div className="mt-5">
+        <DashboardPanel className="mt-5" title={d("Daftar acara")}>
           <DashboardEmptyState
             icon={CalendarDays}
             title={d("Belum ada acara")}
           />
-        </div>
+        </DashboardPanel>
       )}
 
       {editorMode !== "closed" && (editorMode === "new" || active) && (
