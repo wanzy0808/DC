@@ -34,7 +34,7 @@ export function DashboardSurface({
     <section
       {...props}
       className={classes(
-        "dc-dashboard-surface rounded-[24px] border border-primary/15 bg-background shadow-[0_10px_36px_rgba(78,32,47,0.045)]",
+        "dc-dashboard-surface rounded-tr-[26px] border border-primary/15 bg-background shadow-[0_10px_36px_rgba(78,32,47,0.045)]",
         className,
       )}
     >
@@ -71,7 +71,7 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-[22px] border border-primary/15 bg-background px-5 py-6 shadow-[0_8px_28px_rgba(78,32,47,0.045)]",
+        "dc-dashboard-metric flex min-w-0 items-center gap-4 rounded-tr-[22px] border border-primary/15 bg-background px-5 py-6 shadow-[0_8px_28px_rgba(78,32,47,0.045)]",
         className,
       )}
     >
@@ -100,7 +100,7 @@ export function DashboardCompactStat({
   return (
     <div
       className={classes(
-        "min-w-0 rounded-xl border border-border/70 bg-foreground/[0.018] px-3.5 py-3",
+        "dc-dashboard-compact-stat min-w-0 rounded-tr-[18px] border border-border/70 bg-foreground/[0.018] px-3.5 py-3",
         className,
       )}
     >
@@ -123,7 +123,7 @@ export function DashboardNotice({
     <div
       role="status"
       className={classes(
-        "dc-dashboard-notice rounded-2xl border border-primary/25 bg-primary/[0.065] px-4 py-3.5 text-sm leading-6 text-foreground",
+        "dc-dashboard-notice rounded-tr-[18px] border border-primary/25 bg-primary/[0.065] px-4 py-3.5 text-sm leading-6 text-foreground",
         className,
       )}
     >
@@ -205,7 +205,7 @@ export function DashboardEmptyState({
   return (
     <div
       className={classes(
-        "flex min-h-40 flex-col items-start justify-center rounded-2xl border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-7",
+        "dc-dashboard-empty-state flex min-h-40 flex-col items-start justify-center rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-7",
         className,
       )}
     >
