@@ -17,7 +17,13 @@ import { WaBlastAddRecipients, WaBlastRecipientQueue } from "@/components/Dashbo
 import WaBlastTemplateStudio from "@/components/Dashboard/WaBlastTemplateStudio";
 import type { WaBlastEvent, WaBlastGuest, WaBlastRecipient } from "@/components/Dashboard/wa-blast-types";
 
-export default function WhatsAppBlastPanel() {
+export default function WhatsAppBlastPanel({
+  selectedEventId,
+  onSelectEvent,
+}: {
+  selectedEventId: string;
+  onSelectEvent: (id: string) => void;
+}) {
   const { d } = useDashboardI18n();
   const [events, setEvents] = useState<WaBlastEvent[]>([]);
   const [eventId, setEventId] = useState("");
@@ -39,9 +45,12 @@ export default function WhatsAppBlastPanel() {
       (event) => event.eventConfigured && event.accessPaid,
     );
     setEvents(available);
-    setEventId((current) =>
-      available.some((event) => event.id === current) ? current : available[0]?.id || "",
-    );
+    setEventId((current) => {
+      if (selectedEventId && available.some((event) => event.id === selectedEventId)) {
+        return selectedEventId;
+      }
+      return available.some((event) => event.id === current) ? current : available[0]?.id || "";
+    });
   }
 
   async function loadEventData(targetId: string) {
@@ -89,6 +98,12 @@ export default function WhatsAppBlastPanel() {
       })
       .finally(() => setBusy(false));
   }, []);
+
+  useEffect(() => {
+    if (selectedEventId && events.some((event) => event.id === selectedEventId)) {
+      setEventId(selectedEventId);
+    }
+  }, [selectedEventId, events]);
 
   useEffect(() => {
     setExistingGuestId("");
@@ -213,7 +228,7 @@ export default function WhatsAppBlastPanel() {
             </span>
             <select
               value={eventId}
-              onChange={(event) => setEventId(event.target.value)}
+              onChange={(event) => { setEventId(event.target.value); onSelectEvent(event.target.value); }}
               disabled={busy || events.length === 0}
               className="w-full px-3 text-sm outline-none"
               aria-label={d("Pilih acara untuk WA Blast")}
