@@ -915,7 +915,13 @@ body:has(.dc-dashboard--redesign) {
   background: var(--dc-dashboard-card) !important;
   box-shadow: 0 8px 26px rgb(93 42 57 / 4%);
 }
-/* Template list entries are actionable cards: keep selected state visible. */
+/* Keep hover and selected feedback on actionable card-shaped items. */
+.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
+  button.dc-dashboard-detail-card,
+  [draggable="true"].dc-dashboard-detail-card
+):hover:not([aria-pressed="true"]) {
+  background: color-mix(in srgb, var(--primary) 7%, var(--dc-dashboard-card)) !important;
+}
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card[aria-pressed="true"] {
   background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
 }
