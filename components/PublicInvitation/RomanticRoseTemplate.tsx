@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
@@ -93,8 +94,10 @@ export default function RomanticRoseTemplate({
   coverUrl,
   photoAssignments,
   onEditPhoto,
+  personalGuest,
 }: {
   invitation: RoseInvitation;
+  personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
   sections?: InvitationSections;
   coverUrl?: string;
@@ -264,7 +267,7 @@ export default function RomanticRoseTemplate({
               {preview ? (
                 <div className="rounded-2xl border border-[#e8cbd3] bg-white/80 p-6 text-center text-sm text-[#765460]">Form RSVP akan tersedia di undangan yang sudah dipublikasikan.</div>
               ) : (
-                <RsvpForm slug={invitation.slug} eventDate={invitation.eventDate} venue={invitation.venue} title={invitation.title || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+                <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={invitation.title || displayName} start={invitation.ceremonyTime} description={invitation.description} />
               )}
             </section>
           )}
