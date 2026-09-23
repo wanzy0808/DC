@@ -89,6 +89,7 @@ export function RsvpSuccessPanel({
 export function RsvpInputPanel({
   guestId,
   guestName,
+  invitedPax,
   form,
   setForm,
   message,
@@ -97,6 +98,7 @@ export function RsvpInputPanel({
 }: {
   guestId?: string;
   guestName?: string;
+  invitedPax?: number;
   form: RsvpFormState;
   setForm: (next: RsvpFormState) => void;
   message: string;
@@ -114,6 +116,9 @@ export function RsvpInputPanel({
         </h2>
         {guestName && (
           <p className="mt-1 text-sm opacity-70">Untuk: {guestName}</p>
+        )}
+        {invitedPax !== undefined && (
+          <p className="mt-1 text-sm opacity-70">Kuota undangan: {invitedPax} orang, termasuk penerima.</p>
         )}
       </div>
 
@@ -160,8 +165,22 @@ export function RsvpInputPanel({
         <option value="TENTATIVE">Saya masih tentatif</option>
       </select>
 
+      {(invitedPax === undefined || invitedPax > 1) && (
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">Membawa plus one?</legend>
+        <legend className="text-sm font-medium">Jumlah pendamping</legend>
+        {invitedPax !== undefined && invitedPax > 2 ? (
+          <Input
+            type="number"
+            min={0}
+            max={invitedPax - 1}
+            step={1}
+            value={form.plusOnes}
+            onChange={(event) => setForm({ ...form, plusOnes: event.target.value })}
+            className="max-w-28"
+            aria-label="Jumlah pendamping"
+          />
+        ) : (
+        <>
         <div className="flex gap-5 text-sm">
           <label className="flex items-center gap-2">
             <input
@@ -188,7 +207,10 @@ export function RsvpInputPanel({
             Tidak
           </label>
         </div>
+        </>
+        )}
       </fieldset>
+      )}
 
       <Button
         type="submit"
