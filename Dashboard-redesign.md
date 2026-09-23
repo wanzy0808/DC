@@ -160,3 +160,11 @@ Deployment/QA:
 - Specifically unboxed the Event list and empty state, the empty event selector, and the Personal Invitation password editor nested within a guest card. Existing `DashboardPanel` consumers inherit the change without duplicating component-specific wrappers.
 - Preserve one-layer standalone cards with the uniform `0.3cm` left Rose border, top-right-only rounding, neutral white/near-black fills. Leave Beranda's peer-level hero/metric/summary cards, standalone account form panels, functional seating stage, input borders, badge/buttons and the approved public landing/Pintu unchanged. Keep actual event/RSVP/WA data and all actions.
 - App commits: `934f6032`, `2dbf3a23`, `7010c3d4`, `77912eaa`. Visual and browser QA (desktop/mobile, Light/Dark, real data) plus CI remain pending.
+
+
+## 23 September 2026 — Owner correction: consolidate into LARGE frames, unframe internal rows
+
+- The previous flat `DashboardPanel` left too many separately framed small cards. Superseded it with one large `DashboardSurface`-backed `DashboardPanel` per section; title/actions and content share that single frame. Every detail item inside it is now a plain row, at most divided by a fine horizontal rule. Existing content and actions remain.
+- `DashboardMetricGrid` draws one large panel for all its numbers; each child `DashboardMetricCard` is a bare statistic column. Scoped dashboard CSS cancels inner border, Rose stripe, radius, card fill and shadow of metrics/record rows/compact stats/empty states/notice while preserving the top-level large panel's unified left Rose `0.3cm` accent and top-right-only corner.
+- Event list/empty state grouped back into one large panel. Seating canvas's additional visual border removed without changing onDragOver/onDrop. Keep selection/hover on WA template rows and draggable guest rows; do not remove interactive button/input/badge styling. Beranda big hero/stat/event/RSVP panels are peers, not nested.
+- Changes to `DashboardPrimitives.tsx`, `EventPanel.tsx`, `SeatingChart.tsx`, `app/globals.css`, documented across PRD, AGENTS and README. App commits `5cd96a41`, `11c2f963`, `cdc162ca`, `e3b2e472`, `99621037`. Browser desktop/mobile Light/Dark/scroll, WA selected state, seating drag-and-drop, and CI build still need live verification.
