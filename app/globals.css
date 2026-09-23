@@ -331,6 +331,9 @@ aside nav > p { font-family: var(--font-dc-heading); }
   box-shadow: 0 9px 30px rgb(93 42 57 / 5%);
 }
 
+/* Keep shared card outlines Rose-tinted instead of the generic section border. */
+.dc-dashboard main .dc-dashboard-surface { border-color: var(--dc-dashboard-border) !important; }
+.dc-dashboard main .dc-dashboard-metric { border-color: var(--dc-dashboard-border) !important; }
 
 .dc-dashboard main section { border-color: var(--border) !important; }
 .dc-dashboard main section[class*="bg-[#f3ede6]"], .dc-dashboard main section[class*="bg-[#FAF7F2]"], .dc-dashboard main section[class*="bg-[#fffaf6]"], .dc-dashboard main section[class*="bg-[#121116]"] { background: var(--background) !important; }
@@ -442,8 +445,6 @@ aside nav > p { font-family: var(--font-dc-heading); }
 .dc-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
 .dc-dashboard main [class*="bg-[#7A1C25]/10"], .dc-dashboard main [class*="bg-[#E8A5AE]/10"] { background: color-mix(in srgb, var(--primary) 9%, transparent) !important; }
 .dc-dashboard [role="dialog"], .dc-dashboard > div > div[class*="fixed"] > div { border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"] { width: 52px !important; height: 52px !important; background: var(--primary) !important; color: var(--primary-foreground) !important; border-color: var(--primary) !important; box-shadow: 0 12px 30px color-mix(in srgb, var(--primary) 20%, transparent) !important; }
-.dc-dashboard > a[aria-label="Bantuan WhatsApp"]:hover { background: #A65E69 !important; }
 .dc-dashboard main button { transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease; }
 .dc-invitation-studio > div:first-child { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
 .dc-invitation-studio .studio-tool-rail { background: var(--background); color: var(--foreground); border-color: var(--border); }
