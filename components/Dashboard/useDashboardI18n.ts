@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 const english: Record<string, string> = {
+  "Template tidak dikirim otomatis. Menyalin pesan tidak mengurangi kuota.": "Templates are not sent automatically. Copying does not use credits.",
   "Template pesan": "Message templates",
   "Buat": "Create",
   "Memuat...": "Loading...",
