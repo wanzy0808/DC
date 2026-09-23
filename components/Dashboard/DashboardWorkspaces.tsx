@@ -132,13 +132,12 @@ export function WorkspaceOverview({
                     <DashboardStatusBadge active={event.isPublished}>
                       {event.isPublished ? d("Terbit") : event.accessPaid ? d("Aktif") : d("Draft")}
                     </DashboardStatusBadge>
-                    <Link
-                      href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}
-                      className="dc-dashboard-event-action inline-flex min-h-10 items-center gap-1.5 rounded-full border border-primary/25 px-3.5 text-sm font-semibold text-primary transition hover:border-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-                    >
-                      {d("Undangan")}
-                      <ChevronDown className="size-4 -rotate-90" aria-hidden="true" />
-                    </Link>
+                    <Button asChild size="sm">
+                      <Link href={`/dashboard/editor?type=${event.type}&invitationId=${event.id}`}>
+                        {d("Undangan")}
+                        <ChevronDown className="size-4 -rotate-90" aria-hidden="true" />
+                      </Link>
+                    </Button>
                   </div>
                 </article>
               ))}
