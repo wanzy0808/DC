@@ -42,6 +42,12 @@ Drag dari pustaka aset harus mempertahankan titik drop relatif terhadap section 
 
 Sediakan preview desktop dan mobile dengan kemungkinan override tata letak yang aman agar desain tidak sekadar mengecil di HP. Scroll, pointer/touch, animasi, RSVP dan aksesibilitas harus tetap berjalan. Desainer dapat mengatur gaya narasi dan foto tanpa memodifikasi nilai data acara yang menjadi sumber tunggal. Fitur berat dimuat hanya untuk editor/template yang memakainya.
 
+### Implementasi bertahap: objek dekoratif di Customer Studio (24 September 2026)
+
+Editor undangan event-scoped `/dashboard/editor` kini mempunyai jalur **Aset** dan **Teks** untuk objek dekoratif yang sengaja ditambahkan pemilik. Gambar yang sudah berada di direktori publik template dapat dijatuhkan ke section undangan yang sedang aktif; teks dekoratif baru dapat ditambahkan ke section aktif, lalu dipilih, dipindah antar-section, diperbesar/diperkecil, diputar langsung lewat handle canvas, diubah lewat inspector kanan, disusun, diduplikasi atau dihapus. Pemindahan/transformasi oleh pointer baru dicatat sebagai satu perubahan saat pointer dilepas; koordinat relatif terhadap section. Urutan keyboard dan perlindungan input tetap berlaku. Teks baru ini **bukan** mekanisme untuk merombak judul sistem, nama, jadwal, hadiah, form RSVP, maupun label template yang terkunci.
+
+Ini **belum** mengimplementasikan editor master bebas milik Designer berizin, kemampuan master yang dipublikasikan, custom made, sistem versi, atau JSON project storage yang dibahas di §5; jalur baru ini masih memakai token `::layers=` event-scoped yang sudah ada sebagai langkah kompatibilitas, **bukan** format proyek master yang disarankan. Sebelum membuat editor master dan menyebarkan kemampuan ini ke pelanggan produksi, audit izin per template/role, benturan objek dengan tombol dan form, panjang design key, serta pengujian interaksi desktop/touch dan public renderer. Jangan menyatakan seluruh acceptance criteria Studio sudah lulus tanpa QA tersebut.
+
 ## 5. Struktur proyek, penyimpanan, dan versi
 
 Pisahkan **master template** dari **instance undangan pelanggan**:
@@ -69,4 +75,4 @@ Sebuah template/proyek belum boleh ditandai *ready* hanya karena desainnya tampa
 - Pengaturan desainer yang disimpan dirender sama pada preview dan undangan sungguhan; reload, Undo/Redo, versi master dan instance pelanggan tidak membocorkan perubahan antar-event.
 - Server menolak perubahan properti terlarang, akses lintas-event, publikasi tanpa izin, dan unggahan kode/asset yang tidak aman; keyboard/touch/reduced-motion diuji.
 
-**Batas implementasi saat dokumen dibuat:** repo sudah punya panel unggah desainer, Customer Studio event-scoped dan layer ilustrasi Cover. Belum ada bukti editor master visual seluruh section, sistem versi master, penugasan custom lengkap, maupun alur end-to-end publikasi template hasil editor. Isi `studio.md` adalah arah pembangunan dan acceptance criteria; jangan mencatatnya sebagai fitur yang sudah selesai sebelum kode dan pengujian nyata tersedia.
+**Batas implementasi saat pembaruan 24 September 2026:** repo memiliki panel unggah desainer dan Customer Studio event-scoped dengan objek dekoratif lintas section, teks dekoratif, serta handle resize/rotate (implementasi source, belum dinyatakan lulus build/QA browser). Belum ada bukti editor master visual seluruh section dengan role/capability lengkap, sistem versi master, penugasan custom lengkap, maupun alur end-to-end publikasi template hasil editor. Isi `studio.md` adalah arah pembangunan dan acceptance criteria; jangan mencatatnya sebagai fitur yang sudah selesai sebelum kode dan pengujian nyata tersedia.
