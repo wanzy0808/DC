@@ -59,7 +59,7 @@ import {
   isEventCategory,
 } from "@/lib/events/catalog";
 
-export default function EventPanel({ onSaved }: EventPanelProps) {
+export default function EventPanel({ onSaved, selectedTemplate }: EventPanelProps) {
   const { d, locale } = useDashboardI18n();
   const [events, setEvents] = useState<EventPanelInvitation[]>([]);
   const [activeId, setActiveId] = useState("");
@@ -226,7 +226,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
       }
       await load(String(data.invitation.id));
       setNotice(d("Tersimpan."));
-      onSaved();
+      onSaved(creatingNew ? { id: String(data.invitation.id), type: data.invitation.type === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING" } : undefined);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : d("Data acara belum dapat disimpan."));
     } finally {
@@ -352,7 +352,7 @@ export default function EventPanel({ onSaved }: EventPanelProps) {
                     )}
                     {!draft && (
                       <Button asChild size="sm">
-                        <Link href={`/dashboard/editor?type=${event.type}&invitationId=${encodeURIComponent(event.id)}`}>
+                        <Link href={`/dashboard/editor?type=${event.type}&invitationId=${encodeURIComponent(event.id)}${selectedTemplate ? `&template=${encodeURIComponent(selectedTemplate)}` : ""}`}>
                           <PenLine className="size-4" />
                           {hasDesign ? d("Undangan") : d("Buat undangan")}
                         </Link>
