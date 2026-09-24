@@ -181,6 +181,10 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
       font: preset.font,
     });
     rememberTemplateSelection(templateKey);
+    // Keep the browser URL aligned with an unsaved theme choice on refresh.
+    const location = new URL(window.location.href);
+    location.searchParams.set("template", templateKey);
+    window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
     setCanvasStage("envelope");
   }
@@ -325,6 +329,11 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
       setInvitation(data.invitation);
       setSavedState(currentState);
       clearTemplateSelection();
+      // After saving, stale catalog URL parameters must not reapply an old theme.
+      const location = new URL(window.location.href);
+      location.searchParams.delete("template");
+      location.searchParams.delete("from");
+      window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
       setNotice("Desain tersimpan.");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Gagal menyimpan.");
