@@ -163,11 +163,11 @@ export function TemplatePanel({
           </div>
         </div>
       </div>
-      <div className="mt-5 grid grid-cols-1 gap-5">
+      <div className="mt-5 grid grid-cols-2 justify-items-center gap-3">
         {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
-            className={`group relative overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
+            className={`group relative w-full max-w-[190px] overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
               selected === item.key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border hover:border-primary/40"
@@ -187,8 +187,8 @@ export function TemplatePanel({
                 </span>
               )}
             </span>
-            <span className="flex min-h-16 flex-wrap items-center justify-between gap-2 border-t border-primary/20 bg-background px-3 py-3">
-              <span className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold text-foreground">{item.name}</span>
+            <span className="flex min-h-14 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2.5 py-2.5">
+              <span className="font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">{item.name}</span>
               <span className="text-[11px] text-primary">{!item.ready ? (en ? "Not Available" : "Belum tersedia") : item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>
             </span>
             <button
