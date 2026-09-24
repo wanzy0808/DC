@@ -48,7 +48,7 @@ export default function StudioEntrySection({ events, selectedTemplate }: { event
           </div>
         ) : (
           <Button asChild size="lg">
-            <Link href="/dashboard">
+            <Link href={selectedTemplate ? `/dashboard?tab=events&from=template&template=${encodeURIComponent(selectedTemplate)}` : "/dashboard?tab=events"}>
               {copy.create} <ArrowUpRight className="h-4 w-4" aria-hidden />
             </Link>
           </Button>
