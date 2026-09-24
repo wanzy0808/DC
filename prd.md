@@ -370,21 +370,23 @@ Scope khusus `eventCategory = WEDDING`; jangan mengubah form acara umum atau men
 
 ### 6.0 Mainframe dashboard (pembaruan 23 September 2026)
 
-Customer `/dashboard` menggunakan satu mainframe responsif ber-outline Rose yang membingkai sidebar, header, dan konten operasional sebagaimana komposisi landing, tanpa menyalin ilustrasi Pintu, bunga, music player atau animasi marketing. Sidebar Light putih dan Dark hitam dengan label Rose, hover Rose transparan dan menu aktif Rose solid dengan label putih; area konten Light putih dan Dark hitam, outline/pilihan/card penting memakai Rose seperti landing. Seluruh kartu kecil dan panel operasional di dalam dashboard memakai garis aksen kiri Rose yang **sama tebal, 0,3 cm**, dengan tiga sudut siku dan hanya kanan atas membulat; bentuk ini juga berlaku untuk daftar acara/undangan/tamu, RSVP, WA Blast, profil, check-in dan statistik. Lis tebal tidak berlaku untuk tombol, badge, input, modal, denah tempat duduk interaktif atau border mainframe luar. Frame memiliki tinggi tetap mengikuti viewport (mobile 90dvh/90vw, desktop inset 23–27px seperti marketing frame); hanya panel konten tengah yang scroll, sedangkan bingkai luar, navbar, dan sidebar menetap di dalam viewport. Navigasi drawer mobile dan backdrop juga berada di dalam frame, tidak menutupi area di luar bingkai. Brand memakai `BrandWordmark` sekali pada rail; header berisi judul page, kontrol tema/bahasa, serta menu pengguna. Seluruh konten dan interaksi dalam frame tetap berbasis data asli; layout mobile mempertahankan navigasi drawer. Ketentuan frame ini menggantikan deskripsi historis yang menempatkan header fixed melewati seluruh viewport. Beranda adalah contoh awal untuk audit panel lainnya.
+Customer `/dashboard` menggunakan **satu mainframe responsif dengan outline Rose** yang membingkai sidebar, header, dan konten operasional seperti komposisi landing, tanpa menyalin Pintu, bunga, pemutar musik, atau animasi marketing. Sidebar dan konten Light putih, Dark hitam; Rose digunakan pada teks/ikon aksen, outline, hover, dan menu aktif sesuai token dashboard. Brand `BrandWordmark` tampil sekali di sidebar; header menampilkan judul halaman, kontrol tema/bahasa, dan menu pengguna. Frame memiliki tinggi terbatas mengikuti viewport; hanya area konten `dc-dashboard-scroll` yang dapat menggulir, sedangkan sidebar, header, dan drawer mobile tetap berada di dalam frame. Ketentuan ini menggantikan deskripsi header/body yang menggulir bebas atau membentang di luar frame.
 
+**Hierarki final:** hanya panel section besar dan peer-level Beranda yang memiliki frame/garis Rose `0,3 cm` di sisi kiri, tiga sudut siku dan hanya sudut kanan atas membulat. Satu `DashboardPanel` memuat judul, aksi, dan isinya; `DashboardMetricGrid` mengelompokkan angka dalam satu frame besar. Baris detail acara, undangan, tamu, RSVP, WA Blast, dan statistik di dalamnya **tidak** diberi frame mini/garis tebal terpisah; gunakan pemisah tipis dan penanda hover/selected hanya bila ada interaksi. Form akun yang berdiri sendiri boleh memakai satu panel besar; input, tombol, badge, modal, denah interaktif, dan mainframe luar memiliki geometri masing-masing. Data nyata dan navigasi mobile harus tetap berfungsi.
 
 Sidebar user:
 - **Beranda**
 - **Acara**
   - Rangkaian Acara
   - Undangan
-  - Personal Invitation
   - WA Blast
 - **RSVP**
 - **Manajemen Tamu**
+  - Undangan Personal
+  - Pengaturan Meja
 - **Usher App**
 
-WA Blast ditampilkan sebagai submenu **Acara / Events**, sejajar dengan Rangkaian Acara, Undangan, dan Personal Invitation. Label navigasi dan heading cukup **WA Blast**, tanpa kata Add-on. Pembelian kuota tetap terpisah dari Undangan Digital; perubahan navigasi tidak mengubah entitlement atau harga.
+WA Blast ditampilkan sebagai submenu **Acara / Events**, sejajar dengan Rangkaian Acara dan Undangan. **Undangan Personal** berada hanya di submenu **Manajemen Tamu**, bersama **Pengaturan Meja**. Label navigasi dan heading cukup **WA Blast**, tanpa kata Add-on. Pembelian kuota tetap terpisah dari Undangan Digital; perubahan navigasi tidak mengubah entitlement atau harga.
 
 Workspace yang menggunakan data event harus menyediakan explicit event scope. Tidak boleh diam-diam memilih event pertama jika user memiliki lebih dari satu event.
 
@@ -405,18 +407,15 @@ Tujuan UX: user dapat mengeksplorasi isi Dashboard dan menyiapkan operasional ac
 
 ### 6.2 Desktop dashboard shell
 
-Pada desktop dashboard menggunakan **application workspace yang memanfaatkan layar lebar**, bukan centered legacy container yang berhenti di `1400px`.
+Pada desktop, `/dashboard` memakai **mainframe yang dibatasi viewport**, bukan legacy full-width header/body atau kontainer `max-width: 1400px` yang terpisah. Sidebar dan header tetap di dalam mainframe; hanya pane konten di sebelah sidebar yang scroll. Satu `BrandWordmark` menjadi anchor di sidebar, bukan logo kedua pada header.
 
 Layout canonical:
-- background/chrome header dashboard tetap membentang selebar viewport;
-- primary header/content container menargetkan **80vw** sesuai desktop agent rule dan selalu dibatasi oleh lebar pane yang tersedia agar tidak overflow;
-- logo **DC Organizer** menjadi anchor kiri header;
-- sidebar dimulai tepat di bawah header/logo dan mempertahankan lebar navigasi yang stabil;
-- main pane memakai seluruh sisa lebar viewport di sebelah sidebar, sementara page-level workspace di dalamnya tidak boleh kembali ke `max-width: 1400px`/`92vw`;
-- pada viewport desktop yang sempit, available pane width mengalahkan target `80vw` sehingga sidebar tidak menyebabkan horizontal overflow;
-- selector/form yang memang tidak membutuhkan full width boleh tetap compact agar mudah dibaca;
-- tabel data tidak boleh dipaksa stretch memenuhi layar lebar: gunakan content-driven desktop width yang proporsional, row treatment yang jelas, dan horizontal overflow pada viewport yang lebih kecil;
-- customer-facing page/component copy **tidak menggunakan decorative sequence numbering** seperti `Workspace / 01`, `Acara 02`, `Undangan 03`, numbered feature label, atau numbered card. Gunakan label deskriptif; angka yang merupakan data nyata (tanggal, waktu, harga, jumlah, kapasitas, kuota, urutan anak, nomor telepon, metric) tetap ditampilkan.
+- mainframe memakai inset desktop sesuai frame marketing yang telah disetujui; tidak memperpanjang body saat isi dashboard tinggi;
+- konten di dalam pane menargetkan `80vw` tetapi dibatasi `max-w-full` dan lebar ruang yang benar-benar tersedia setelah sidebar;
+- sidebar tetap stabil, dan pada layar sempit gunakan drawer di dalam frame tanpa horizontal overflow;
+- panel besar memuat satu section utuh; detail di dalamnya adalah baris tanpa frame mini, dengan pemisah tipis dan kontrol berukuran nyaman;
+- selector dan form yang tidak perlu lebar penuh boleh tetap compact; daftar panjang harus responsif tanpa memaksa isi keluar dari frame;
+- copy tidak memakai decorative sequence numbering seperti `Workspace / 01`; angka yang merupakan data asli (tanggal, harga, pax, kapasitas, kuota, urutan anak, metrik) tetap ditampilkan.
 
 ### 6.3 Dashboard theme & language
 
@@ -1420,10 +1419,10 @@ Bukan melalui banyak warna/variant berbeda.
 - Grouping menggunakan spacing + subtle surface + border, bukan divider horizontal panjang berlebihan.
 - Primary public desktop header/content/footer menggunakan **80vw**; jangan mengembalikan fixed `1400px` / `92vw` page wrapper sebagai standard utama. Compact inner content boleh memiliki max-width khusus bila readability membutuhkannya.
 - Landing root header dan compact footer harus memakai canvas/background yang sama dengan body landing agar tidak terbaca sebagai kotak surface terpisah. Pada Landing Dark Mode, locale ID/EN yang aktif memakai Rose opaque dengan near-black copy, dan theme toggle memakai Rose opaque dengan near-black icon/text. Requirement ini landing-specific dan tidak boleh mengubah Dashboard/shared control behavior di luar landing.
-- Dashboard workspace mengikuti full-width application shell pada Section 6.2; jangan mengembalikan centered public-content cap ke workspace utama.
+- Dashboard workspace mengikuti mainframe viewport-terbatas pada §6.0–§6.2; jangan mengembalikan layout full-width header/body lama atau centered public-content cap yang membuat konten keluar dari pane.
 - **Beranda adalah reference visual language untuk seluruh customer Dashboard.** Rangkaian Acara, Undangan, Personal Invitation, WA Blast, RSVP, Manajemen Tamu/Seating, Usher, feature gate, empty/loading/error states, dan reusable dashboard components wajib memakai hierarchy surface/card/table/icon yang konsisten: canvas netral putih/near-black, border/shadow halus, Rose sebagai accent, bukan page-specific theme.
 - Dashboard memiliki ruang desktop yang besar, sehingga typography operasional **tidak boleh dibuat terlalu kecil**. Body/form/table copy ditargetkan sekitar 14–16px; metadata/mono kecil tetap readable sekitar 11–12px; section heading sekitar 20–24px; metric value sekitar 24px. Hindari 8–10px untuk copy yang perlu dibaca rutin.
-- Revisi visual sidebar Dashboard berdasar screenshot owner (23 September 2026) **menggantikan ketentuan rail netral sebelumnya**: Light Mode memakai rail dan blok logo Rose dengan ikon/teks putih; Dark Mode memakai rail Deep Rose dengan ikon/teks putih. Hover dan active memakai shade berbeda; lengkungan luar hanya pada menu aktif agar tidak bertabrakan dengan hover tetangga. Canvas Light Mode Rose sangat pucat (#fff5f7), card tetap putih, Dark Mode near-black Rose-tinted.
+- Baseline Dashboard terakhir (§6.0) **menggantikan rail Rose solid dan canvas Rose pucat dari iterasi screenshot awal**: Light Mode memakai sidebar/canvas putih, Dark Mode hitam/near-black, dengan aksen/outline Rose, hover dan active yang berbeda. Navigasi `DashboardSidebar` tetap mempunyai lengkungan luar hanya pada menu aktif; daftar dan metrik memakai satu frame besar per section tanpa kartu mini. Jangan mengembalikan styling screenshot lama sebagai aturan aktif.
 - Ukuran copy sidebar utama sekitar 15–16px agar nyaman dipindai; nested item tetap sedikit lebih kecil tetapi tidak terasa mikro.
 - Header control Dashboard — burger, theme toggle, ID/EN, dan account trigger — wajib mengikuti **visual language navbar landing yang sudah established**, bukan memiliki Dashboard-only control system. ThemeToggle dan LanguageToggle memakai shared component/style yang sama seperti landing. Burger Dashboard meniru treatment burger landing (transparent surface, restrained Rose border/foreground, subtle Rose hover), sedangkan account trigger mengikuti treatment navbar yang sama. Jangan menambahkan CSS override khusus Dashboard yang mengubah shared navbar controls menjadi visual system berbeda.
 - Shared dashboard primitives berada di `components/Dashboard/DashboardPrimitives.tsx` dan harus di-extend untuk surface/metric/notice baru agar workspace tidak kembali belang antar-tab.
@@ -5063,3 +5062,9 @@ Audit otomatis ulang pada [run 36010088126](https://github.com/wanzy0808/DC/acti
 ### 24 September 2026 — Penutupan batch orphan dan rencana maintenance berkelanjutan
 
 Workflow Orphan Audit kedua pada [run 36010657026](https://github.com/wanzy0808/DC/actions/runs/36010657026) menunjukkan dua helper terakhir dari rantai komponen lawas yang telah dipensiunkan, yaitu `components/InvitationStudio/guest-management-types.ts` dan `components/Landing/Pintu/asset-door-segmentation.js`, tanpa inbound static import. Keduanya dihapus dari branch aktif bersama pembaruan `checklist.md` §22, setelah source dan keterkaitan sebelumnya ditelusuri. Dua deklarasi `reference-door-*.d.ts` tetap diperlukan sebagai pasangan JavaScript eksperimen lab yang masih terhubung; primitive `components/ui/sheet.tsx` tetap dipertahankan sebagai komponen reuse. **Validasi yang sudah diamati:** refactor panel pada commit `1203d256` lolos seluruh langkah test dan build run `36009224370`; batch penghapusan 10 file pada `08db49b4` lolos run `36010088189`; batch enam file pada `c3698273` lolos run `36010656879`. Audit manual visual dan kesiapan produksi belum diuji. Commit terakhir `93db1101` telah diverifikasi pada [Build Validation run 36011178677](https://github.com/wanzy0808/DC/actions/runs/36011178677) dan [Orphan Audit run 36011178767](https://github.com/wanzy0808/DC/actions/runs/36011178767), keduanya success. Audit ulang hanya menyisakan dua deklarasi `.d.ts` yang menjadi pasangan mesin JS lab dan primitive `components/ui/sheet.tsx`, sengaja dipertahankan. Keberhasilan CI tidak membuktikan QA browser ataupun keamanan penggunaan aset/URL tersimpan.
+
+### 24 September 2026 — Sinkronisasi aturan Dashboard dan modularisasi API undangan
+
+**Konflik aktif yang diperbaiki:** §6 sebelumnya masih meletakkan Personal Invitation di bawah Acara, mengharuskan stripe `0,3 cm` pada setiap kartu kecil, dan menggambarkan full-width header; §15.4 masih mewajibkan sidebar Rose solid meski aturan owner lebih baru meminta Light putih dan Dark hitam. §6.0–§6.2/§15.4 sekarang menegaskan satu mainframe bounded, Manajemen Tamu → Undangan Personal/Pengaturan Meja, hanya frame besar beraksen Rose dengan baris internal tanpa frame mini, dan satu wordmark di sidebar. Dibandingkan dengan `dashboard-navigation.ts`, `DashboardSidebar.tsx` dan `DashboardPrimitives.tsx`. `AGENTS.md`/ `README.md` dibersihkan dari instruksi visual superseded; histori desain tetap di Appendix A, Git, dan `Dashboard-redesign.md` (jurnal bukan rulebook).
+
+**Source:** commit [`db44fade`](https://github.com/wanzy0808/DC/commit/db44fade33c46d667687c698f901cb41d48479e5) memindahkan validasi input undangan ke `lib/invitations/event-input.ts` dan lookup/slug kompatibilitas ke `lib/invitations/legacy-queries.ts`. Source handler GET/POST/PUT/DELETE, response helper, ownership filter, dan publish/entitlement checks tetap sama. Validasi: perbandingan teks handler dan ekspor modul sebelum push berhasil; [Build Validation run 36014049136](https://github.com/wanzy0808/DC/actions/runs/36014049136) dan [Orphan Audit run 36014049101](https://github.com/wanzy0808/DC/actions/runs/36014049101) pada commit source tersebut **success**. Browser/E2E, database target dan keamanan runtime tidak dinyatakan teruji. Tidak ada migrasi, penghapusan asset publik, route eksperimen, atau file UI reusable.
