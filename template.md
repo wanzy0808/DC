@@ -56,7 +56,7 @@ Bandingkan mockup dengan moodboard berdampingan: hierarki tulisan, jarak, posisi
 | 08 | countdown | Countdown | Hari, jam, menit dan detik menuju acara nyata; animasi angka halus tanpa flicker. |
 | 09 | location | Location / Maps | Venue, alamat, dan tombol **Lihat Lokasi** hanya ketika URL valid. |
 | 10 | rsvp | RSVP / Konfirmasi Kehadiran | Form bersama dan status nyata; pilihan hadir/tentatif/tidak hadir, aksi **Kirim RSVP**, konfirmasi serta QR sesuai backend. Mode contoh tidak mengirim data pelanggan. |
-| 11 | wishes | Wishes / Ucapan & Doa | Form dan daftar ucapan nyata hanya saat backend bersama aktif. Bila belum tersedia, empty state singkat dan jujur, bukan kartu tamu palsu. |
+| 11 | wishes | Wishes / Ucapan & Doa | Reuse **GuestWishes** dengan form nama + pesan dan daftar ucapan nyata yang disimpan per `Invitation.id`. Studio/katalog hanya menunjukkan form non-submitting; undangan tamu yang terbit menggunakan API shared. Ketika belum ada ucapan, tampilkan empty state jujur, bukan pesan tamu rekaan. |
 | 12 | gift | Gift / E-Angpao | Data rekening/hadiah dari pemilik dan aksi salin yang berfungsi; tanpa rekening contoh sebagai data pelanggan. |
 | 13 | closing | Closing | Kalimat penutup, nama host/pasangan sesungguhnya dan koreografi visual khas tema. |
 | 14 | footer | Footer | Penutup branding yang ringkas, tanpa penjelasan teknis, watermark contoh, atau pemutar musik kedua. |
@@ -156,9 +156,17 @@ Lightbox keyboard Escape, tombol/fokus dapat digunakan tanpa mouse, alt text ber
 
 Satu registry template pada lib/templates/catalog.ts digunakan katalog, /d-invitation, dan Studio. Section keys mengikuti lib/templates/sections.ts; renderer pelanggan dan kanvas Studio berbagi tampilan nyata. Tema baru yang masih berupa gambar boleh muncul sebagai referensi visual tetapi **belum dapat dipilih/dipublikasikan** sampai renderer siap.
 
-Foto pelanggan dibaca dari pustaka event yang sama, bukan di-upload ulang untuk setiap tema. Template tanpa foto tidak memaksa foto walaupun event memiliki aset. Upload foto baru tetap melewati Sharp → WebP. Musik satu player, pilihan pemilik event mengungguli default; penghormatan aturan autoplay browser dan mute. RSVP serta QR memakai sistem yang telah ada; jangan membuat tabel atau endpoint palsu demi demo. Wishes belum boleh ditampilkan sebagai layanan aktif sebelum backend siap.
+Foto pelanggan dibaca dari pustaka event yang sama, bukan di-upload ulang untuk setiap tema. Template tanpa foto tidak memaksa foto walaupun event memiliki aset. Upload foto baru tetap melewati Sharp → WebP. Musik satu player, pilihan pemilik event mengungguli default; penghormatan aturan autoplay browser dan mute. RSVP serta QR memakai sistem yang telah ada; jangan membuat tabel atau endpoint palsu demi demo. Wishes memakai model `GuestWish` dan endpoint bersama `/api/invite/[slug]/wishes`; seluruh tema memakai komponen presentasi `GuestWishes`, bukan membuat model/endpoint/form simpan duplikat. **Migrasi GuestWish wajib diterapkan pada database target sebelum mengaktifkan pengiriman ucapan publik.**
 
 Pengaturan font/palet hanya untuk properti yang didukung template dan harus tampak di semua bagian relevan tanpa menghilangkan identitas visual atau mengorbankan kontras. Kemampuan animasi per section dinyatakan jelas bila disediakan. Gunakan lazy loading agar membuka satu template tidak mengunduh kode/aset seluruh katalog. Pertahankan rute publik/personal, validasi server, pembayaran dan akses sesuai PRD.
+
+### Ucapan Tamu menggunakan layanan bersama, bukan teks placeholder
+
+Bagian **Ucapan Tamu** tetap merupakan satu dari 15 section toggle. Nama bagian di Studio cukup **Ucapan Tamu**; jangan menempelkan kalimat "Pengiriman ucapan belum tersedia" pada label saat fitur sudah memiliki API. Renderer tema menampilkan `components/PublicInvitation/GuestWishes.tsx` dalam section `wishes`. Form nama dan pesan hanya aktif pada undangan tamu yang telah terbit, event terkonfigurasi, pembayaran Digital Invitation valid dan akses password (jika dinyalakan) terpenuhi. Kiriman menjadi satu record `GuestWish` milik `Invitation.id`; **jangan membuat record Guest baru, mengubah RSVP, atau menganggap penulis ucapan otomatis terdaftar sebagai tamu**. Balasannya menampilkan pesan asli sebagai teks biasa tanpa HTML/ucapan fiktif. Panjang maksimum nama 80 dan pesan 600 karakter; endpoint menerapkan batas frekuensi kirim dan mengambil maksimal 30 pesan terbaru.
+
+Canvas Studio dan kartu/popup katalog tidak memanggil endpoint produksi, tidak mengirim atau membuat pesan, dan boleh menampilkan form nonaktif untuk menguji visual. Toggle OFF menyembunyikan section tanpa menghapus record pesan; ON kembali menampilkan data event yang sama. Error jaringan ditampilkan hanya ketika benar-benar terjadi, bukan sebagai kalimat tetap yang membuat pengguna mengira fitur belum tersedia.
+
+Penyimpanan ini memerlukan migrasi `prisma/migrations/20260924183000_guest_wishes/migration.sql`: setelah pull jalankan `pnpm db:deploy` dan `pnpm db:generate` terhadap database target sebelum mencoba ucapan publik. Keberhasilan build saja **bukan bukti migrasi sudah diterapkan atau fitur siap produksi**; uji kirim/muat ulang pada event berbayar yang sudah publish dan cek spam/moderasi sebelum layanan publik berskala besar.
 
 ### Menu Isi Studio hanya untuk teks naratif yang benar-benar bisa diganti
 
