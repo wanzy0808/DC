@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, type MouseEvent } from "react";
 import { ArrowDown, Play } from "lucide-react";
 import "./pencil-reverie.css";
 
@@ -52,20 +52,15 @@ export default function PencilReverieScene({
   stage, names, date, onOpen, isWedding = true, hashtag,
 }: Props) {
   const [opening, setOpening] = useState(false);
-  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => { if (openTimer.current !== null) clearTimeout(openTimer.current); }, []);
 
   const couple = isWedding ? names.split(/\s*&\s*/).filter(Boolean) : [];
   const openInvitation = () => {
     if (opening) return;
     setOpening(true);
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onOpen();
-    } else {
-      openTimer.current = setTimeout(onOpen, 1050);
-    }
+    // Play music on the actual click; the shared renderer completes this staged opening.
+    onOpen();
   };
-  const goNext = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const goNext = (event: MouseEvent<HTMLButtonElement>) => {
     event.currentTarget.closest("section")?.nextElementSibling?.scrollIntoView({
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
       block: "start",
