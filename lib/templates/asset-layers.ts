@@ -16,7 +16,7 @@ const numberBetween = (input: unknown, min: number, max: number, fallback: numbe
 export function isTemplateIllustration(src: unknown): src is string {
   if (typeof src !== "string" || src.length > 260 || !assetRoots.some((root) => src.startsWith(root))) return false;
   const segments = src.split("/").slice(2);
-  if (!segments.length || segments.some((part) => !part || part === "." || part === ".." || /%(?:2e|2f|5c)/i.test(part))) return false;
+  if (!segments.length || segments.some((part) => !part || part === "." || part === ".." || /[\\?#\x00-\x1f]/.test(part) || /%(?:2e|2f|5c|25)/i.test(part))) return false;
   return /\.(?:png|jpe?g|webp|gif|avif)$/i.test(src);
 }
 
