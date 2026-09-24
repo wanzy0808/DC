@@ -60,7 +60,7 @@ export function InkMountains({ className = "", style }: { className?: string; st
   );
 }
 
-/** Decorative media panel for a photo-free template, not a fake photo gallery. */
+/** Illustration for an empty photo gallery, never presented as a customer photo. */
 export function ZenMemoryArtwork() {
   return (
     <div aria-hidden="true" className="relative mx-auto h-56 max-w-sm overflow-hidden border border-[#938979]/40 bg-[#E9E7D9]">
