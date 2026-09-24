@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import type { InvitationSections } from "@/lib/templates/sections";
+import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { PhotoAssignments, PhotoSlot } from "@/lib/templates/photo-slots";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import { invitationFonts, invitationPalettes } from "@/lib/templates/design";
@@ -26,6 +27,7 @@ export function InvitationPreview({
   selectedAssetLayerId,
   onSelectAssetLayer,
   onMoveAssetLayer,
+  onUpdateAssetLayer,
   eventTag,
   dressCode,
 }: {
@@ -46,13 +48,14 @@ export function InvitationPreview({
   selectedAssetLayerId?: string | null;
   onSelectAssetLayer?: (id: string) => void;
   onMoveAssetLayer?: (id: string, x: number, y: number) => void;
+  onUpdateAssetLayer?: (id: string, patch: Partial<InvitationAssetLayer>) => void;
 }) {
   if (!invitation) {
     return <div className="grid min-h-[560px] place-items-center rounded-2xl border border-border bg-background text-sm text-muted-foreground">Memuat pratinjau undangan…</div>;
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} />;
+    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} />;
   }
   return (
     <UniversalInvitationTemplate
@@ -68,6 +71,7 @@ export function InvitationPreview({
       selectedAssetLayerId={selectedAssetLayerId}
       onSelectAssetLayer={onSelectAssetLayer}
       onMoveAssetLayer={onMoveAssetLayer}
+      onUpdateAssetLayer={onUpdateAssetLayer}
     />
   );
 }
