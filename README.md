@@ -315,12 +315,9 @@ The shared `components/Landing/Pintu/PortalTransition.tsx` now uses a single fix
 A second source of rectangular seams was the existing *page frame itself*: the landing and the five framed marketing destinations use a 90vw translucent background, Rose border, shadow, and backdrop blur that can show through a semi-opaque fullscreen glow. Each route-level frame now has a styling-only `data-dc-marketing-frame` attribute, and shared CSS temporarily fades its decorative background/border/shadow/blur away while `PortalTransition` sets the root `data-dc-marketing-transition` attribute, restoring the approved frame after the veil finishes. Its position, dimensions, radius, overflow, interactive contents, navbar, footer, and route-specific layout stay unchanged; the regular landing and marketing views look the same outside the transition. This complements, rather than replaces, the existing single full-viewport Rose veil: it does not change the 3D door, zoom, hover, music, transition duration, navigation, or destination assembly. After syncing, visually test an entire door-to-page transition in both themes (and normal marketing link navigation); if any box remains, capture the specific video frame where it appears so its actual layer can be isolated rather than changing approved Pintu animation speculatively.
 
 
-## Customer dashboard redesign (in progress)
+## Customer Dashboard — current layout
 
-Follow `Dashboard-redesign.md` for completed code stages, remaining workspace audit, and validation status. The dashboard now has a shared desktop/mobile `DashboardSidebar` with Rose curved-outside active/hover states, concise Beranda metrics from the existing API, and shared neutral dashboard primitives. These changes do not alter the approved public landing or its door/animation. This is not yet a full-dashboard visual approval; the per-workspace pass and build/browser checks remain pending.
-
-**Latest dashboard visual pass (23 September 2026):** Based on the owner screenshot, the customer rail/brand block use stronger Rose, Light Mode canvas is #fff5f7, dashboard utilities visually follow the existing landing navbar, and Beranda now shows compact real-event actions alongside factual RSVP/publication summaries rather than a stretched blank events table. Source commits are on main; per-workspace polish and browser QA remain tracked in `Dashboard-redesign.md`.
-
+The active frame, sidebar, color and panel rules are documented once in `prd.md` §6 and §15. `Dashboard-redesign.md` is an implementation journal, not a newer UI baseline; the remaining QA is tracked in `checklist.md`. The Dashboard uses real event/RSVP data and must not alter the approved public landing/Pintu.
 
 ### WA Blast message templates (23 September 2026)
 
@@ -341,19 +338,9 @@ Navbar account menu provides My Profile, Account Settings (password), transactio
 The first dashboard frame was allowed to grow with the whole page. The current `/dashboard` shell now matches the framed marketing page's viewport scroll model: a bounded responsive Rose frame (90vw/90dvh mobile, 23–27px inset on larger screens), a fixed-in-frame sidebar and header, and `dc-dashboard-scroll` as the sole vertically scrolling customer content panel. Mobile drawer/scrim stay within the frame, and changing dashboard tabs resets inner scroll position. Light surfaces and sidebar are white; Dark surfaces and sidebar are near-black; Rose is visible in borders, text, focused/selected controls, hero accents and key buttons. Approved public landing/Pintu, actual event/guest/RSVP data and authenticated profile APIs are unchanged. Browser visual/CI confirmation still required.
 
 
-### Rose exterior and card accents (23 September 2026)
-
-The customer dashboard's space **outside** its fixed viewport mainframe now uses solid brand Rose `#C07A84` in both themes. The inner workspace remains white in Light and near-black in Dark; a lighter frame edge keeps the Rose exterior visually distinct. Shared information panels and compact metric cards all have a slim Rose LEFT rule, with a stronger left rule on Beranda's event and RSVP/publication panels. Small cards have three square corners and ONLY a rounded top-right corner. Changes are CSS-only and preserve actual content, internal scrolling, navbar, profile actions and the approved public landing/Pintu. Browser/CI visual validation remains pending.
-
-
-### Single top-right corner on dashboard cards (23 September 2026)
-
-Shared dashboard surfaces, compact metrics, compact stats, notices, empty states and the Beranda welcome panel use square corners except for the top-right, with one shared 0.3cm Rose accent stroke on the left (no per-card thickness variation). The source primitives and scoped CSS reflect the same geometry; the outer mainframe, badges, buttons and marketing landing remain unchanged. App commits: `f1ef401c`, `35d2a89b`, `c50ef71f`. Browser/CI verification remains pending.
-
-
 ### Dashboard layout baseline (24 September 2026)
 
-The current Dashboard uses one responsive, height-bounded Rose-outlined mainframe with Light white / Dark black workspace surfaces, a shared sidebar, and an inner scrolling content pane. Each `DashboardPanel` and `DashboardMetricGrid` groups its heading, controls and rows/numbers into **one large panel**; internal records are unframed responsive rows with thin separators. Only top-level panels carry the `0.3cm` left Rose stripe and top-right-only rounding; buttons, inputs and badges retain their shared control shape. Personal Invitation now belongs under Manajemen Tamu, not Acara. See `prd.md` §6 and §15 for active design rules; prior small-card/flat-section milestones remain in Appendix A and Git history, not as competing README instructions. Desktop/mobile Light/Dark browser QA is still pending.
+The current Dashboard has a solid Rose exterior and one responsive, height-bounded Rose-outlined mainframe with Light white / Dark black workspace surfaces and sidebar, plus an inner scrolling content pane. Each `DashboardPanel` and `DashboardMetricGrid` groups its heading, controls and rows/numbers into **one large panel**; internal records are unframed responsive rows with thin separators. Only top-level panels carry the `0.3cm` left Rose stripe and top-right-only rounding; buttons, inputs and badges retain their shared control shape. Personal Invitation now belongs under Manajemen Tamu, not Acara. See `prd.md` §6 and §15 for active design rules; prior small-card/flat-section milestones remain in Appendix A and Git history, not as competing README instructions. Desktop/mobile Light/Dark browser QA is still pending.
 
 
 ### Guest Management sidebar submenu (23 September 2026)
@@ -385,14 +372,14 @@ Studio now has a bounded Rose frame, a collapsible settings panel, a separately 
 
 ## Studio renderer corrections (24 September 2026)
 
-The nine customizable themes now pass selected heading fonts through envelope/cover names and apply custom palette base colors there; their preset artwork remains the default. Cinzel/Fauna One use the loaded next/font family tokens. Romantic Rose keeps its original font/palette lock. All invitation renderers format host/couple names and event titles with display-only initial capitals, including old records. Studio shows a retry action on loading failure, identifies Wishes as not yet accepting submissions, and rejects a saved local music selection if that upload has since been deleted.
+Ready templates use their declared Studio font/palette capabilities on envelope and Cover; their individual artwork remains the preset default. The live registry, not the former nine-theme milestone, determines current theme count. Cinzel/Fauna One use the loaded next/font family tokens. Romantic Rose keeps its original font/palette lock. All invitation renderers format host/couple names and event titles with display-only initial capitals, including old records. Studio shows a retry action on loading failure and rejects a saved local music selection if that upload has since been deleted. Public Wishes now uses shared `GuestWishes` and the event-scoped API; its target database must have the GuestWish migration deployed before accepting submissions.
 
 
 ### RSVP confirmation and guest QR
 
 Public RSVP automatically shows a free on-page confirmation after saving the canonical Guest record. Attending guests see **Unduh QR Code**; declining/tentative guests see status-specific confirmation without a check-in ticket. The PNG is generated locally with `qrcode` through `/api/invite/[slug]/rsvp/qr?token=...`; append `&download=1` for an attachment. The endpoint validates the signed token, matching event, published/paid invitation and current attendance. Keep `QR_SIGNING_SECRET` configured consistently with Usher; no token is sent to an external image provider. If signing is unavailable, RSVP still reports its saved state and explains QR unavailability. The owner's RSVP workspace refreshes every 10 seconds while visible and on focus. No schema migration or WhatsApp credit is required. A real download link is issued only after a real attending RSVP; never publish sample check-in credentials.
 
-Per 24 September 2026, gambar `Zen Atelier Wedding Moodboard UI.png` berhasil diakses dari Library percakapan user. Komposisi cover/amplop, judul section, galeri asimetris, rincian nikah/resepsi dan penutup diselaraskan dengan panel contoh tersebut menggunakan aset `public/templates/`. Data sampel Aruna & Kaito hanya dipakai di pratinjau katalog, bukan undangan berbayar. Kesesuaian visual penuh masih menunggu screenshot browser mobile/desktop; PNG publik besar masih belum dioptimalkan menjadi turunan WebP.
+Per 24 September 2026, gambar `Zen Atelier Wedding Moodboard UI.png` berhasil diakses dari Library percakapan user. Komposisi cover/amplop, judul section, galeri asimetris, rincian nikah/resepsi dan penutup diselaraskan dengan panel contoh tersebut menggunakan aset `public/templates/`. Aruna & Kaito adalah nama historis dalam referensi Zen; nama standar preview katalog yang berlaku kini **Denny & Christine**, bukan data tetap untuk undangan pelanggan. Kesesuaian visual penuh masih menunggu screenshot browser mobile/desktop; PNG publik besar masih belum dioptimalkan menjadi turunan WebP.
 
 
 ### Zen Atelier visual revision (24 September 2026)
