@@ -34,22 +34,20 @@ export function readTemplateSelection(): string | null {
   if (typeof window === "undefined") return null;
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return null;
-    const item: unknown = JSON.parse(stored);
-    if (typeof item !== "object" || !item || !("key" in item) || !("expiresAt" in item)) {
+    if (stored) {
+      const item: unknown = JSON.parse(stored);
+      if (typeof item === "object" && item && "key" in item && "expiresAt" in item) {
+        const { key, expiresAt } = item as { key: unknown; expiresAt: unknown };
+        if (typeof key === "string" && isSelectableTemplate(key) &&
+            typeof expiresAt === "number" && Number.isFinite(expiresAt) &&
+            expiresAt > Date.now()) {
+          return key;
+        }
+      }
       window.localStorage.removeItem(STORAGE_KEY);
-      return null;
     }
-    const { key, expiresAt } = item as { key: unknown; expiresAt: unknown };
-    if (typeof key !== "string" || !isSelectableTemplate(key) ||
-        typeof expiresAt !== "number" || !Number.isFinite(expiresAt) ||
-        expiresAt <= Date.now()) {
-      window.localStorage.removeItem(STORAGE_KEY);
-      return null;
-    }
-    return key;
   } catch {
-    // A blocked localStorage must not prevent fallback to the cookie.
+    // Blocked, corrupt or unavailable storage must not prevent the cookie fallback.
   }
   try {
     const cookie = window.document.cookie.split("; ").find((item) => item.startsWith(`${PENDING_TEMPLATE_COOKIE}=`));
