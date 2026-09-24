@@ -1,8 +1,9 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Check,
+  Search,
   Upload,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -72,6 +73,7 @@ export function TemplatePanel({
   templates: CatalogTemplate[];
 }) {
   const [search, setSearch] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
   const [sort, setSort] = useState<"selected" | "az" | "za">("selected");
   const [limit, setLimit] = useState(18);
@@ -96,13 +98,25 @@ export function TemplatePanel({
       <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">Pilih Tema</h2>
       {activeName && <p className="mt-2 text-sm font-medium text-foreground">Dipilih: {activeName}</p>}
       <div className="mt-4 space-y-3">
-        <Input
-          type="search"
-          aria-label="Cari template"
-          placeholder="Cari nama atau tema…"
-          value={search}
-          onChange={(event) => { setSearch(event.target.value); setLimit(18); }}
-        />
+        <div className="relative">
+          <button
+            type="button"
+            aria-label="Cari template"
+            onClick={() => searchRef.current?.focus()}
+            className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
+          >
+            <Search size={17} aria-hidden="true" />
+          </button>
+          <Input
+            ref={searchRef}
+            type="search"
+            aria-label="Cari nama atau tema template"
+            placeholder="Cari nama atau tema…"
+            className="pl-11"
+            value={search}
+            onChange={(event) => { setSearch(event.target.value); setLimit(18); }}
+          />
+        </div>
         <div role="group" aria-label="Filter foto template" className="flex flex-wrap gap-2">
           {([
             ["all", "Semua"],
