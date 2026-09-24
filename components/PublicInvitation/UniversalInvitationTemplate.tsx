@@ -15,6 +15,8 @@ import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types
 import { readableInk, invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import OurStorySection from "@/components/PublicInvitation/OurStorySection";
+import InvitationAssetLayers from "@/components/PublicInvitation/InvitationAssetLayers";
+import { parseAssetLayers } from "@/lib/templates/asset-layers";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
@@ -128,6 +130,9 @@ export default function UniversalInvitationTemplate({
   coverUrl,
   onEditPhoto,
   onEnvelopeOpened,
+  selectedAssetLayerId,
+  onSelectAssetLayer,
+  onMoveAssetLayer,
   templateKey,
   designKey,
   personalGuest,
@@ -141,6 +146,9 @@ export default function UniversalInvitationTemplate({
   onEditPhoto?: (slot: PhotoSlot) => void;
   /** Optional Studio-only callback; fires after the envelope has finished opening. */
   onEnvelopeOpened?: () => void;
+  selectedAssetLayerId?: string | null;
+  onSelectAssetLayer?: (id: string) => void;
+  onMoveAssetLayer?: (id: string, x: number, y: number) => void;
   templateKey?: string;
   designKey?: string;
 }) {
@@ -159,6 +167,7 @@ export default function UniversalInvitationTemplate({
     : `${key}::${template.preset.palette}::${template.preset.font}`);
   const design = parseDesignKey(activeDesignKey);
   const editableCopy = resolveEditableCopy(activeDesignKey, key, invitation.description);
+  const illustrationLayers = parseAssetLayers(activeDesignKey);
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
   const font = invitationFonts[design.font] || invitationFonts[template.preset.font];
   const layout = template.preset.layout;
@@ -329,7 +338,7 @@ export default function UniversalInvitationTemplate({
         />
       ) : (
         <div className={key === "zen-atelier" ? "zen-content" : undefined}>
-          {sections.cover !== false && (<InvitationThemeScenes
+          {sections.cover !== false && (<div className="relative" data-studio-cover-stage><InvitationThemeScenes
             theme={key}
             isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
             hashtag={invitation.weddingHashtag}
@@ -340,7 +349,7 @@ export default function UniversalInvitationTemplate({
             stage="cover"
             onOpen={handleOpen}
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
-          />)}
+          /><InvitationAssetLayers layers={illustrationLayers} editable={preview && Boolean(onMoveAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer} onMove={onMoveAssetLayer} /></div>)}
 
           {section("greeting", key === "pencil-reverie" ? (
             <div className="pr-greeting-copy">
