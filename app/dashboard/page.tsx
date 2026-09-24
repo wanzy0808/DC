@@ -134,20 +134,32 @@ export default function DashboardPage() {
       };
     }
 
-    setRsvpLoading(true);
-    fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."))
-      .then((data) => {
+    let pending = false;
+    async function refresh(initial = false) {
+      if (pending || (!initial && document.visibilityState !== "visible")) return;
+      pending = true;
+      if (initial) setRsvpLoading(true);
+      try {
+        const data = await fetchEventGuestData(rsvpEventId, d("Data acara belum dapat dimuat."));
         if (active) setRsvpGuests(data.guests);
-      })
-      .catch(() => {
-        if (active) setRsvpGuests([]);
-      })
-      .finally(() => {
-        if (active) setRsvpLoading(false);
-      });
-
+      } catch {
+        // Retain the last successful snapshot on a transient polling failure.
+        if (active && initial) setRsvpGuests([]);
+      } finally {
+        pending = false;
+        if (active && initial) setRsvpLoading(false);
+      }
+    }
+    void refresh(true);
+    const onVisible = () => { void refresh(); };
+    const timer = window.setInterval(onVisible, 10_000);
+    window.addEventListener("focus", onVisible);
+    document.addEventListener("visibilitychange", onVisible);
     return () => {
       active = false;
+      window.clearInterval(timer);
+      window.removeEventListener("focus", onVisible);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, [rsvpEventId, tab]);
 

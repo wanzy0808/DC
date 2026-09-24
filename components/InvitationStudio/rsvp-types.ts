@@ -27,6 +27,7 @@ export type RsvpFormState = {
 };
 
 export type RsvpTicketGuest = {
+  rsvpStatus: "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE";
   id: string;
   name: string;
   phone?: string | null;

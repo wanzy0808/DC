@@ -8,7 +8,6 @@ import {
 import {
   buildGoogleCalendarUrl,
   buildRsvpTicketQrUrl,
-  downloadRsvpTicket,
 } from "@/components/InvitationStudio/rsvp-helpers";
 import type {
   RsvpFormProps,
@@ -40,7 +39,7 @@ export default function RsvpForm({
   const [qrToken, setQrToken] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  const ticketUrl = useMemo(() => buildRsvpTicketQrUrl(qrToken), [qrToken]);
+  const ticketUrl = useMemo(() => buildRsvpTicketQrUrl(slug, qrToken), [slug, qrToken]);
 
   const calendarUrl = useMemo(
     () =>
@@ -94,19 +93,11 @@ export default function RsvpForm({
 
   return (
     <section className="mx-auto max-w-xl border border-[#9b5b51]/20 bg-[#f3ede6] p-6 text-left shadow-sm dark:border-white/10 dark:bg-[#151116]">
-      {ticketGuest && qrToken ? (
+      {ticketGuest ? (
         <RsvpSuccessPanel
           ticketGuest={ticketGuest}
           ticketUrl={ticketUrl}
           calendarUrl={calendarUrl}
-          onDownload={() =>
-            downloadRsvpTicket({
-              ticketGuest,
-              ticketUrl,
-              title,
-              venue,
-            })
-          }
         />
       ) : (
         <RsvpInputPanel

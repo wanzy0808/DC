@@ -123,7 +123,12 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       });
     }
 
-    const qrToken = status === "ATTENDING" ? createGuestQrToken(guest.id) : null;
+    // A missing signing configuration must not turn a committed RSVP into a failure.
+    let qrToken: string | null = null;
+    if (status === "ATTENDING") {
+      try { qrToken = createGuestQrToken(guest.id); }
+      catch { console.error("RSVP saved, but QR signing is unavailable."); }
+    }
     return NextResponse.json(
       {
         guest: {

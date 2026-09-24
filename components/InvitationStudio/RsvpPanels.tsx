@@ -5,83 +5,53 @@ import {
   CalendarPlus,
   CheckCircle2,
   Download,
-  QrCode,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import { Input } from "@/components/ui/input";
 import type {
   RsvpFormState,
   RsvpTicketGuest,
 } from "@/components/InvitationStudio/rsvp-types";
 
-export function RsvpSuccessPanel({
-  ticketGuest,
-  ticketUrl,
-  calendarUrl,
-  onDownload,
-}: {
+export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
   ticketGuest: RsvpTicketGuest;
   ticketUrl: string;
   calendarUrl: string;
-  onDownload: () => void;
 }) {
+  const attending = ticketGuest.rsvpStatus === "ATTENDING";
   return (
-    <div className="text-center">
-      <CheckCircle2 className="mx-auto h-8 w-8 text-[#7A1C25] dark:text-[#E8A5AE]" />
-      <p className="mt-3 font-mono text-[10px] font-semibold uppercase tracking-[0.25em] text-[#7A1C25] dark:text-[#E8A5AE]">
-        Smart RSVP berhasil
-      </p>
-      <h2 className="mt-2 font-[var(--font-cinzel)] text-3xl">
-        Terima kasih, {ticketGuest.name}.
+    <div className="text-center" role="status" aria-live="polite">
+      <CheckCircle2 aria-hidden="true" className="mx-auto h-8 w-8 text-[var(--inv-accent,#7A1C25)]" />
+      <h2 className="mt-4 font-[var(--inv-heading,var(--font-cinzel))] text-3xl">
+        Terima kasih, {displayTitleCase(ticketGuest.name)}
       </h2>
-      <p className="mt-2 font-[var(--font-fauna)] text-sm text-[#5f4a4a] dark:text-white/65">
-        Simpan Digital Ticket ini. QR di bawah adalah tiket unik untuk check-in
-        hari H.
+      <p className="mt-3 text-sm leading-relaxed opacity-75">
+        {attending
+          ? "Kehadiran Anda telah berhasil dikonfirmasi. Kami menantikan kehadiran Anda di hari istimewa kami."
+          : ticketGuest.rsvpStatus === "NOT_ATTENDING"
+            ? "Konfirmasi Anda telah tersimpan. Terima kasih telah memberi kabar bahwa Anda belum dapat hadir."
+            : "Konfirmasi Anda telah tersimpan dengan status masih tentatif."}
       </p>
-
-      <div className="mx-auto mt-6 w-fit rounded-2xl border border-[#9b5b51]/20 bg-white p-3 dark:bg-[#f8f1ea]">
-        <img
-          src={ticketUrl}
-          alt="QR Digital Ticket"
-          className="h-64 w-64"
-        />
-      </div>
-
-      <div className="mt-5 grid gap-2 sm:grid-cols-2">
-        <a
-          href={ticketUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#7A1C25] px-4 py-3 font-[var(--font-fauna)] text-xs font-medium text-white"
-        >
-          <QrCode className="h-4 w-4" />
-          Simpan QR
-        </a>
-
-        <Button
-          type="button"
-          onClick={onDownload}
-          variant="outline"
-          className="h-auto rounded-xl border-[#7A1C25]/20 py-3 font-[var(--font-fauna)] text-xs"
-        >
-          <Download className="h-4 w-4" />
-          Download Ticket
+      {attending && ticketUrl && <>
+        <div className="mx-auto mt-6 w-fit rounded-2xl bg-white p-3">
+          <img src={ticketUrl} alt="QR check-in tamu" width={280} height={280} className="h-auto max-w-full" />
+        </div>
+        <Button asChild className="mt-5">
+          <a href={`${ticketUrl}&download=1`} download="dc-organizer-qr.png">
+            <Download aria-hidden="true" className="h-4 w-4" /> Unduh QR Code
+          </a>
         </Button>
-      </div>
-
-      <a
-        href={calendarUrl}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl border border-[#7A1C25]/20 px-4 py-3 font-[var(--font-fauna)] text-xs text-[#7A1C25] dark:text-[#E8A5AE]"
-      >
-        <CalendarPlus className="h-4 w-4" />
-        Tambah ke Google Calendar
-      </a>
-
-      <p className="mt-4 font-mono text-[10px] text-[#6c5a5a] dark:text-white/50">
-        Tiket tetap dapat ditunjukkan langsung dari ponsel saat tiba di venue.
-      </p>
+        <p className="mt-3 text-xs opacity-60">Simpan QR ini dan tunjukkan kepada petugas saat tiba di acara.</p>
+      </>}
+      {attending && !ticketUrl && <p className="mt-4 text-sm opacity-70">RSVP Anda sudah tersimpan. QR belum tersedia; hubungi pemilik undangan untuk bantuan.</p>}
+      {attending && calendarUrl && calendarUrl !== "#" && <div className="mt-3">
+        <Button asChild>
+          <a href={calendarUrl} target="_blank" rel="noreferrer">
+            <CalendarPlus aria-hidden="true" className="h-4 w-4" /> Tambah ke Kalender
+          </a>
+        </Button>
+      </div>}
     </div>
   );
 }
@@ -108,14 +78,11 @@ export function RsvpInputPanel({
   return (
     <form onSubmit={onSubmit} className="space-y-4 font-[var(--font-fauna)]">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-[#9b5b51]">
-          Smart RSVP
-        </p>
         <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
           Konfirmasi Kehadiran
         </h2>
         {guestName && (
-          <p className="mt-1 text-sm opacity-70">Untuk: {guestName}</p>
+          <p className="mt-1 text-sm opacity-70">Untuk: {displayTitleCase(guestName)}</p>
         )}
         {invitedPax !== undefined && (
           <p className="mt-1 text-sm opacity-70">Kuota undangan: {invitedPax} orang, termasuk penerima.</p>
@@ -165,7 +132,7 @@ export function RsvpInputPanel({
         <option value="TENTATIVE">Saya Masih Tentatif</option>
       </select>
 
-      {(invitedPax === undefined || invitedPax > 1) && (
+      {form.status === "ATTENDING" && (invitedPax === undefined || invitedPax > 1) && (
       <fieldset className="space-y-2">
         <legend className="text-sm font-medium">Jumlah pendamping</legend>
         {invitedPax !== undefined && invitedPax > 2 ? (

@@ -389,3 +389,8 @@ Studio now has a bounded Rose frame, a collapsible settings panel, a separately 
 ## Studio renderer corrections (24 September 2026)
 
 The nine customizable themes now pass selected heading fonts through envelope/cover names and apply custom palette base colors there; their preset artwork remains the default. Cinzel/Fauna One use the loaded next/font family tokens. Romantic Rose keeps its original font/palette lock. All invitation renderers format host/couple names and event titles with display-only initial capitals, including old records. Studio shows a retry action on loading failure, identifies Wishes as not yet accepting submissions, and rejects a saved local music selection if that upload has since been deleted.
+
+
+### RSVP confirmation and guest QR
+
+Public RSVP automatically shows a free on-page confirmation after saving the canonical Guest record. Attending guests see **Unduh QR Code**; declining/tentative guests see status-specific confirmation without a check-in ticket. The PNG is generated locally with `qrcode` through `/api/invite/[slug]/rsvp/qr?token=...`; append `&download=1` for an attachment. The endpoint validates the signed token, matching event, published/paid invitation and current attendance. Keep `QR_SIGNING_SECRET` configured consistently with Usher; no token is sent to an external image provider. If signing is unavailable, RSVP still reports its saved state and explains QR unavailability. The owner's RSVP workspace refreshes every 10 seconds while visible and on focus. No schema migration or WhatsApp credit is required. A real download link is issued only after a real attending RSVP; never publish sample check-in credentials.

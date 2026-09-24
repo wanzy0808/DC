@@ -959,6 +959,8 @@ Jika belum ada configured event, workspace menampilkan pesan seperti:
 
 ### 9.2 RSVP
 
+**Konfirmasi di halaman undangan — Gratis, aktif otomatis (24 September 2026):** Setiap RSVP yang berhasil disimpan ke canonical `Guest` otomatis mendapat konfirmasi, tanpa pengiriman WhatsApp atau biaya konfirmasi tambahan. Status hadir menampilkan “Terima kasih, [Nama Tamu]” (Title Case tampilan) dan “Kehadiran Anda telah berhasil dikonfirmasi. Kami menantikan kehadiran Anda di hari istimewa kami.” Tidak hadir dan tentatif menggunakan pesan sesuai status, tanpa tiket check-in. Tamu hadir mendapat tautan **Unduh QR Code** berupa PNG bertanda tangan yang berlaku untuk identitas tamu/acara yang sama; generator berjalan di server sendiri, tidak mengirim token ke layanan QR eksternal. Endpoint memverifikasi signature, acara terbit dengan entitlement valid, dan status hadir sebelum mengeluarkan gambar. RSVP yang sudah tersimpan tetap dikonfirmasi meski konfigurasi QR belum tersedia. Workspace RSVP pemilik memuat ulang data setiap 10 detik saat tab terlihat dan ketika kembali fokus; ini polling, bukan realtime WebSocket. Tidak mengubah toggle visibilitas bagian RSVP atau entitlement undangan existing.
+
 Per event mendukung:
 - RSVP status;
 - attending/not attending/tentative;
@@ -4689,3 +4691,12 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Commit:** `Fix Studio renderer customization and capitalize invitation names` (entry berada pada commit implementasi yang sama).
 
 **Validasi:** 22 unit tests lulus; uji render React menghasilkan 18 amplop/sampul + 9 preset default lulus untuk sembilan tema customizable. Nama lowercase diuji pada amplop/isi seluruh 10 tema dan keluar dengan kapital awal tiap kata. Ini pemeriksaan markup renderer, bukan screenshot/pemuatan font jaringan/interaksi browser. TypeScript dan production build final setelah koreksi kapitalisasi lulus. Warning tracing filesystem uploader yang sudah ada tetap muncul. Browser mobile/desktop, audio playback dan transaksi database nyata masih belum diuji. Tidak ada migrasi.
+
+
+### 24 September 2026 — Free RSVP confirmation and downloadable guest QR
+
+- Fixed success rendering for attending, declining and tentative replies; thank-you names use display-only Title Case.
+- Replaced external QR image/HTML-ticket download with same-origin signed PNG endpoint, event/status checks, no-store response and attachment download.
+- Missing QR signing configuration no longer reports a failed RSVP after database persistence. No schema migration, WA message or credits charged.
+- Added visible-tab 10-second RSVP dashboard refresh with cleanup and preserved snapshot on polling failure.
+- Validation: 24 Node tests, TypeScript and production build pass; SSR checked all three statuses, missing QR and hidden invalid calendar link. Existing upload filesystem tracing warning remains. QR route smoke with a stubbed repository verifies PNG attachment, forged token, cross-event, declined and unpublished-event rejection. Live DB submission/check-in and browser download were not tested in this environment; deployment requires QR_SIGNING_SECRET and existing DB configuration.
