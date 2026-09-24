@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-  isTemplateIllustration, MAX_ASSET_LAYERS, parseAssetLayers,
+  isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
   sanitizeAssetLayers, withAssetLayers,
 } from "../lib/templates/asset-layers.ts";
 
@@ -71,7 +71,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /<AssetLayerInspector/);
   assert.match(layerInspector, /layerCount >= MAX_ASSET_LAYERS/);
 
-  assert.match(editor, /findCoverDropTarget\(event\.clientX, event\.clientY\)/);
+  assert.match(editor, /findSectionDropTarget\(event\.clientX, event\.clientY\)/);
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
   assert.match(editor, /x: clamp\(\(event\.clientX - rect\.left\) \/ rect\.width \* 100\)/);
   assert.match(editor, /templateKey: designKey,/);
@@ -80,12 +80,64 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(state, /withAssetLayers\(withEditableCopy\(/);
   assert.match(state, /layers: parseAssetLayers\(key\)/);
   assert.match(preview, /selectedAssetLayerId=\{selectedAssetLayerId\}/);
+  assert.match(preview, /onUpdateAssetLayer=\{onUpdateAssetLayer\}/);
   assert.match(universal, /parseAssetLayers\(activeDesignKey\)/);
   assert.match(romantic, /parseAssetLayers\(designKey \|\| invitation\.templateKey\)/);
   assert.match(universal, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
   assert.match(romantic, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
   assert.match(browser, /onReorder\(selected\.id, 1\)/);
   assert.match(browser, /selected\.opacity/);
+  assert.match(layerInspector, /onUpdate\(selectedAssetLayer\.id, \{ rotation:/);
+  assert.match(layerInspector, /selectedAssetLayer\.kind === "text"/);
   assert.match(route, /getCurrentUser\(\)/);
   assert.match(route, /"template", "templates"/);
+});
+
+test("decorative text and section-targeted artwork survive the shared design-key codec", () => {
+  assert.ok(studioObjectSections.includes("greeting"));
+  assert.ok(studioObjectSections.includes("closing"));
+  assert.ok(!studioObjectSections.includes("music"));
+  const original = "pencil-reverie::pencil::cinzelFauna";
+  const image = { ...asset("flower"), section: "greeting", rotation: -32 };
+  const text = {
+    id: "caption", kind: "text", src: "", text: "Together, always.", section: "closing",
+    x: 45, y: 55, width: 65, opacity: 0.75, rotation: 17, fontSize: 31,
+    fontRole: "heading", color: "#C07A84",
+  };
+  const key = withAssetLayers(original, [image, text]);
+  assert.deepEqual(parseAssetLayers(key), [image, text]);
+  assert.equal(parseAssetLayers(withAssetLayers(key, [] )).length, 0);
+  assert.deepEqual(sanitizeAssetLayers([{ ...text, text: "<script>ignored</script>", color: "url(javascript:evil)" }])[0], {
+    ...text, text: "<script>ignored</script>", color: "#C07A84",
+  });
+  assert.deepEqual(sanitizeAssetLayers([{ ...text, text: "   " }]), []);
+  assert.deepEqual(sanitizeAssetLayers([{ ...text, section: "not-a-section", rotation: 9999, fontSize: 1000 }])[0], {
+    ...text, rotation: 180, fontSize: 72, section: undefined,
+  });
+});
+
+test("section selection, pointer resize/rotation, and decorative text are wired to both renderers", () => {
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  const textPanel = read("components/InvitationStudio/TextObjectPanel.tsx");
+  const inspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  assert.match(editor, /<DesignerTool active=\{panel === "text"\}/);
+  assert.match(editor, /<TextObjectPanel layers=\{design\.layers\}/);
+  assert.match(editor, /onUpdateAssetLayer=\{updateAssetLayer\}/);
+  assert.match(editor, /section: section\.dataset\.invitationSection as StudioObjectSection/);
+  assert.match(editor, /setCanvasStage\(patch\.section === "envelope"/);
+  assert.match(textPanel, /onAdd\(value, selectedSection\)/);
+  assert.match(textPanel, /maxLength=\{180\}/);
+  assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
+  assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ fontRole:/);
+  assert.match(renderer, /onPointerDown=\{\(event\) => begin\(event, "resize"\)\}/);
+  assert.match(renderer, /onPointerDown=\{\(event\) => begin\(event, "rotate"\)\}/);
+  assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
+  assert.match(renderer, /layer\.kind === "text"/);
+  assert.match(universal, /objectOverlay\(keyName\)/);
+  assert.match(universal, /objectOverlay\("cover"\)/);
+  assert.match(romantic, /objectOverlay\("greeting"\)/);
+  assert.match(romantic, /objectOverlay\("closing"\)/);
 });
