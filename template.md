@@ -1,113 +1,122 @@
-# template.md — Zen Atelier | Panduan Implementasi Visual & Interaksi
+# template.md — Panduan Semua Template Undangan DC Organizer
 
-**Status:** Spesifikasi desain untuk implementasi berikutnya; **belum berarti semua fitur sudah selesai dikodekan**.  
-**Ruang lingkup:** Template undangan digital **Zen Atelier**, katalog `/template-design` yang menampilkannya, dan pratinjau template yang memakai renderer undangan yang sama. **Jangan mengubah landing page, Pintu, identitas visual Dashboard, atau template lain.**  
-**Sumber kebenaran produk:** `prd.md` dan `AGENTS.md`. Dokumen ini memperinci *art direction, copy, komposisi, dan motion* Zen Atelier; jika mengubah kontrak produk, sinkronkan dulu ke PRD utama.
+**Cakupan:** Semua template undangan digital yang akan direncanakan, dirancang, dan dibuat bersama ChatGPT. Bukan panduan khusus Zen Atelier ataupun satu gaya visual tertentu.  
+**Fungsi:** Brief produksi desain dan interaksi, dari ide → moodboard → aset → contoh layar → coding → integrasi Studio → pengujian.  
+**Sumber aturan produk:** prd.md dan AGENTS.md. Jika kontrak produk berubah, selaraskan PRD terlebih dahulu. Jangan mengubah landing page, Pintu, Dashboard, dan template lain hanya karena sedang membuat satu template baru.
 
-## 1. Acuan visual yang wajib diikuti
+## 1. Prinsip untuk setiap template
 
-Acuan utama adalah gambar **`Zen Atelier Wedding Moodboard UI.png`** dari percakapan owner, terutama deretan contoh layar mobile **01 Cover, 02 Amplop, 03 Pasangan, 04 Detail Acara, 05 RSVP, 06 Galeri** dan contoh kecil **07 Ucapan, 08 Hadiah, 09 Closing**. Urutan nomor pada papan referensi adalah urutan *gambar contoh*, **bukan** urutan runtime undangan: runtime selalu dimulai dari Amplop Digital, lalu Cover, kemudian komponen lain sesuai kontrak 15 komponen di bawah. Jangan menafsirkan gambar moodboard sebagai screenshot website yang harus dimasukkan utuh sebagai background: buat layout responsif dengan teks/data sungguhan dan aset dekoratif terpisah.
+Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
-**Karakter desain yang harus terlihat:** kertas washi berwarna ivory/krem hangat, ruang kosong lapang, tipografi editorial Playfair Display + Inter, teks utama hampir hitam, sage yang redup, terakota/wax seal merah bata, ranting bunga tipis, pegunungan tinta di bagian bawah, pola kisi/shoji hanya sebagai aksen. Foto pasangan terasa editorial, bukan stok foto generik atau potongan hiasan ramai. Proporsi, hierarki, komposisi, jenis ornamen, posisi elemen dan susunan teks harus mengikuti contoh, bukan diserahkan pada tema Universal secara visual.
+Pakai urutan acuan: (1) permintaan spesifik owner, (2) moodboard/gambar referensi yang bisa benar-benar dilihat, (3) aset yang diperiksa secara visual, (4) ide kreatif untuk adaptasi mobile dan desktop. Jika referensi tidak tersedia atau aset tidak cocok, jelaskan bagian yang belum diketahui; jangan menyatakan hasil sudah sama persis.
 
-**Palet acuan (arah awal, bukan pengganti pilihan warna Studio):** ivory `#F4F0E6`; kertas terang `#FBF8F0`; tinta `#262B29`; sage redup `#667266`; terakota `#A9513B`; beige `#C9BDA9`. Gunakan kontras teks terbaca. **Jangan buat teks penjelas menjadi abu-abu pucat**: teks isi tetap gelap; teks sekunder hanya dipakai jika informasinya perlu.
+Sistem pelanggan tetap satu: katalog template, data event, autentikasi, Studio, foto, musik, RSVP/QR, pengaturan section dan rute undangan publik/personal. Template berhak membuat presentasi visual unik, bukan menduplikasi database dan business logic.
 
-**Aset yang sudah ada di repo:** `public/templates/` (bukan `public/template/`): `amplop1.png`, `bunga0001.png` s.d. `bunga0004.png`, `bamboo1.png`, `ensostroke.png`, `inkmountain.png`, `redsun1.png`, `japancup.png`, `japanroom1.png`, `japanroom2.png`, `darkcloud1.png`, `darkcloud2.png`. **Periksa satu per satu isi, orientasi, rasio, alpha/transparansi dan cropping gambarnya sebelum memasang.** Nama file tidak menjamin aset tersebut cocok sebagai layer atau latar. Hindari menumpuk seluruh gambar sekaligus; setiap layar perlu komposisi terkurasi. Pakai aset moodboard yang benar-benar ada dan sesuai; bila aset tertentu tidak sama dengan referensi, catat ketidakcocokannya dan minta peninjauan owner alih-alih menggantinya diam-diam dengan ilustrasi acak.
+## 2. Alur desain bersama ChatGPT — diulang untuk tiap tema
 
-Aset foto undangan berasal dari pustaka foto **event pemilik**. Nama dan foto pada moodboard, seperti **Aruna & Kaito**, hanya contoh dalam katalog. Jangan memakainya sebagai fallback undangan pelanggan yang belum mengisi data.
+### Langkah A — Brief
 
-## 2. Aturan tulisan, kontrol, dan kebersihan antarmuka
+Catat nama tema dan stable key, sasaran jenis acara, kesan yang ingin dicapai, foto atau tanpa foto, palet, pasangan font, batasan layout, pilihan dekorasi, referensi visual, tingkat motion, dan kebutuhan aset. Nama/tanggal/foto demo boleh dipilih bervariasi per tema, tetapi **tidak boleh dipakai sebagai data undangan pelanggan**.
 
-- Tombol utama pada Amplop Digital **tepat bertuliskan `Buka Undangan`**. Gunakan kapital awal kata seperti itu; jangan `BUKA UNDANGAN`, `buka undangan`, `Ketuk untuk membuka` sebagai label tombol utama, atau padanan bahasa Inggris ketika bahasa aktif Indonesia. Boleh memakai kalimat `Ketuk untuk membuka` sebagai petunjuk **singkat bila memang dibutuhkan**, tetapi pilih satu aksi utama saja.
-- **Hapus tombol `Lihat Undangan` pada Cover**, baik yang berbentuk tombol bulat panah maupun teks, bila fungsinya hanya menggulir ke section berikutnya. Setelah amplop dibuka, konten langsung berlanjut dan pengguna dapat scroll normal; jangan tambahkan CTA kedua untuk membuka isi yang sebenarnya sudah terbuka.
-- **Jangan render kata/label `Pratinjau`, `Preview`, `Preview · demo data`, atau watermark preview di dalam amplop, cover, galeri, footer, maupun isi undangan.** Jika antarmuka katalog/Studio butuh nama mode, tempatkan hanya di **chrome luar** area undangan, jangan di renderer yang dilihat tamu.
-- **Hapus** copy teknis/filler seperti `Preview mengikuti renderer undangan publik`, `Pratinjau menggunakan data contoh`, `Renderer siap digunakan`, `Pratinjau Studio`, dan tulisan abu-abu yang menjelaskan sesuatu yang sudah jelas dari judul atau tombol. Di daftar template, cukup nama tema, indikasi foto bila diperlukan untuk filter, dan tindakan memilih/membuka. Umpan balik error, batasan, akses, atau data yang memang belum ada tetap boleh tampil **di tempat yang relevan** dan dengan kontras terbaca; jangan sembunyikan informasi penting hanya demi mengurangi teks.
-- Hindari eyebrow, judul, deskripsi dan label yang mengulang informasi sama. Gunakan copy manusiawi, pendek, berbahasa Indonesia secara default. Judul/nama/kontrol memakai **Title Case** yang wajar (mis. `Galeri Foto`, `Konfirmasi Kehadiran`, `Kirim Hadiah`, `Buka Undangan`); kalimat isi memakai kapitalisasi normal. Nama pelanggan diformat pada tampilan tanpa mengubah nilai database. `DC Organizer` tetap memakai komponen wordmark resmi ketika logo brand diperlukan.
-- Jangan memasukkan teks contoh menjadi data undangan publik: `#JourneyWithYou`, nama pasangan contoh, tanggal contoh, rekening, doa, alamat, dan foto contoh hanya boleh berada di fixture demo. Konten sesungguhnya dibaca dari data event. Kutipan dekoratif boleh berupa teks tema yang memang tidak mengaku sebagai kesaksian/ucapan pengguna.
-- Studio dan halaman tamu memakai **komposisi yang sama**. Preview publik boleh menonaktifkan pengiriman RSVP atau aksi lain yang menyimpan data, tetapi tidak boleh menambahkan badge, tombol, atau penjelasan yang tidak ada pada halaman tamu.
+### Langkah B — Moodboard dan screen-by-screen
 
-## 3. Kontrak **15 komponen** wajib
+Buat moodboard warna, font, tekstur, bentuk, komposisi dan contoh tampilan mobile. Siapkan referensi tiap bagian penting: amplop, cover, identitas, detail acara, RSVP, galeri, ucapan, hadiah dan penutup; lengkapi bagian lain dari kontrak 15 komponen. Owner dapat meminta gambar dan aset dipecah satu per satu. Minta persetujuan art direction sebelum coding; jangan menyamarkan contoh moodboard sebagai hasil website final.
 
-Ada **15 kontrol/komponen desain**: **Amplop Digital + 13 bagian undangan + Musik**. **Musik adalah kontrol pemutar global yang tetap tersedia setelah undangan dibuka, bukan section vertikal ke-15 yang memaksa pengguna scroll ke bawah.** Semua komponen harus dapat diatur ON/OFF melalui sistem toggle Studio yang sudah ada, dan perubahan tampil di live canvas serta tersimpan sesuai kontrak produk. Komponen 1 adalah gerbang sebelum konten; bagian 2–14 muncul setelah dibuka; komponen 15 melayang/menempel secara tidak mengganggu.
+### Langkah C — Aset
 
-| No. | Key tersimpan | Nama di Studio | Komposisi Zen Atelier / isi yang harus tampil |
+Lihat gambar sebenarnya sebelum menentukan penempatan. Audit nama file, transparansi, rasio, resolusi, orientasi, ukuran, crop yang aman untuk teks, dan izin penggunaan. Bedakan background, ilustrasi, ornamen, thumbnail dan foto demo. Simpan turunan web pada folder konsisten per template, misalnya public/templates/<slug>/; jangan menghapus atau menimpa master diam-diam. Master berlisensi privat jangan disimpan di repo publik/web root. Optimalkan turunan gambar untuk web; upload baru milik pelanggan tetap melalui pipeline Sharp → WebP yang sudah ada.
+
+### Langkah D — Blueprint seluruh komponen
+
+Untuk masing-masing 15 komponen pada §3 tentukan struktur mobile/desktop, copy yang memang diperlukan, sumber data, dekorasi, animasi, respons interaksi, fallback data kosong, dan apakah pengguna boleh mengubah propertinya lewat Studio. Musik adalah kontrol global, bukan satu layar scroll. Urutan section isi dapat berbeda sesuai kemampuan sistem, tetapi gerbang amplop tetap mendahului konten dan tidak ada komponen wajib yang dihilangkan dari manifest.
+
+### Langkah E — Review, coding, dan perbaikan
+
+Bandingkan mockup dengan moodboard berdampingan: hierarki tulisan, jarak, posisi ornamen, jenis foto, bentuk tombol dan suasana. Jika visual belum tepat, koreksi dahulu; jangan menambah efek untuk menutup perbedaan. Setelah disetujui, coding bertahap menggunakan sistem bersama, jalankan screenshot browser HP/desktop lalu koreksi bersama owner. Catat dengan jelas mana yang baru spesifikasi, mana yang sudah terimplementasi, dan mana yang telah diuji.
+
+## 3. Kontrak wajib: tepat 15 komponen / kontrol
+
+15 = Amplop Digital + 13 bagian undangan + Musik. Komponen 01 tampil sebagai gerbang sebelum isi; komponen 02–14 adalah isi yang dapat di-scroll; komponen 15 adalah pemutar musik global yang selalu mudah dijangkau, **bukan** section panjang setelah footer. Semua komponen punya toggle ON/OFF di Studio yang berlaku pada renderer nyata dan disimpan tanpa menghapus data terkait.
+
+| No. | Key sistem | Komponen | Kontrak fungsional; presentasi boleh berbeda tiap tema |
 | --- | --- | --- | --- |
-| 01 | `envelope` | Amplop Digital | Kertas krem, amplop bersegel lilin, pengantar sangat singkat, **satu** tombol `Buka Undangan`; buka dengan animasi surat lembut. |
-| 02 | `cover` | Sampul / Cover | Ranting bunga atas, pegunungan tinta bawah, `THE WEDDING OF` hanya untuk acara pernikahan, nama pasangan besar di tengah, tanggal nyata, hashtag hanya jika diisi. **Tanpa tombol `Lihat Undangan`.** |
-| 03 | `greeting` | Salam Pembuka | Salam dan paragraf undangan asli yang dapat diedit; gaya editorial 1 kolom, ornamen sangat tipis, teks tampil bertahap. |
-| 04 | `identity` | Pasangan / Identitas | **Satu foto utama pasangan** bila foto gabungan tersedia (dari koleksi event), atau komposisi foto mempelai yang ada; nama dan hubungan keluarga nyata, quote pendek dari data/teks tema yang tidak mengaku sebagai data pelanggan. **Jangan buat identitas selalu harus dua orang:** event nonwedding mengikuti model acara. |
-| 05 | `event` | Detail Acara | Untuk wedding: blok **Upacara Nikah** dan **Resepsi** dengan ikon garis tipis, tanggal/jam/tempat sesuai field yang benar-benar tersedia. Untuk event lain gunakan label kegiatan sesuai kategori. Jangan menganggap waktu selesai sebagai otomatis jam mulai resepsi. |
-| 06 | `dateTime` | Tanggal & Waktu | Tanggal dan waktu yang benar, zona waktu, aksen kalender/garis tipis; jangan menyalin ulang seluruh Detail Acara. Prioritaskan tampilan `Save the Date` yang bersih. |
-| 07 | `gallery` | Galeri Foto | Foto event asli dalam **galeri editorial yang kaya animasi**: lihat aturan motion khusus di §4. Jika tanpa foto, ilustrasi/empty state jujur, bukan foto pasangan dummy. |
-| 08 | `countdown` | Hitung Mundur | Hari, jam, menit, detik dari tanggal acara sebenarnya; angka animasi halus saat berubah, tanpa kedipan berlebihan atau perubahan layout. |
-| 09 | `location` | Lokasi | Nama tempat/alamat nyata, **satu** tombol `Lihat Lokasi` jika URL peta valid; tanpa link palsu atau alamat yang diciptakan. |
-| 10 | `rsvp` | Konfirmasi Kehadiran | Form bersama: nama tamu dan kuota yang benar, pilihan **Saya Akan Hadir**, **Saya Mungkin Hadir**, **Saya Tidak Dapat Hadir**, pesan opsional bila API mendukung, tombol `Kirim RSVP`, feedback sukses, dan QR unduhan sesuai fitur yang sudah ada. **Jangan buat form palsu di preview yang terlihat seolah-olah berhasil menyimpan.** |
-| 11 | `wishes` | Ucapan & Doa | Daftar/kartu ucapan nyata dan form hanya bila backend Wishes bersama benar-benar siap. Jika belum aktif, tampilkan empty state jujur **sependek mungkin** di area section; jangan buat nama tamu/ucapan palsu pada publik. |
-| 12 | `gift` | Kirim Hadiah | Rekening/e-angpao milik event, nama bank/penerima dan tombol `Salin Nomor Rekening` yang berfungsi bila data tersedia. Jangan tampilkan nomor rekening/aksi palsu. |
-| 13 | `closing` | Terima Kasih | Pesan penutup dengan nama pasangan/host, ilustrasi pegunungan tinta di sisi bawah, ruang kosong luas dan animasi teks lembut. |
-| 14 | `footer` | Footer | Penutup identitas tema/brand yang ringkas, tanpa badge mode preview atau paragraf teknis; tidak membuat player musik kedua. |
-| 15 | `music` | Musik | Satu pemutar audio bersama: play/pause, status jelas, preferensi user dihormati. Musik dipicu dari gestur klik/tap membuka amplop sesuai kebijakan browser; default dan unggahan mengikuti sistem musik Studio. |
+| 01 | envelope | Amplop Digital | Gerbang sesuai tema; satu tombol utama **Buka Undangan**. Transisi buka hanya sekali; jika OFF, langsung masuk ke isi. |
+| 02 | cover | Cover / Hero | Nama/judul acara, tanggal, foto atau ilustrasi sesuai tema dan data event. **Tidak ada tombol Lihat Undangan redundan** setelah amplop dibuka. |
+| 03 | greeting | Introduction / Greeting | Salam dan pengantar asli, dengan tata letak dan tipografi khas tema. |
+| 04 | identity | Identity / Host / Couple | Identitas host/pasangan dan keluarga sesuai kategori acara; tema boleh memakai foto gabungan atau dua foto jika slot mendukung. Jangan memaksa nonwedding menjadi wedding. |
+| 05 | event | Event Detail | Jenis/rangkaian acara, tempat, informasi agenda yang benar. Jangan menebak awal resepsi dari field jam selesai; pakai data yang tersedia. |
+| 06 | dateTime | Date & Time | Tanggal, jam, dan zona waktu valid, tanpa menggandakan seluruh paragraf Detail Acara. |
+| 07 | gallery | Gallery / Media | Galeri foto/video atau artwork empty state yang jujur; utamakan motion dan interaksi kaya tetapi tetap lancar di mobile (lihat §5). |
+| 08 | countdown | Countdown | Hari, jam, menit dan detik menuju acara nyata; animasi angka halus tanpa flicker. |
+| 09 | location | Location / Maps | Venue, alamat, dan tombol **Lihat Lokasi** hanya ketika URL valid. |
+| 10 | rsvp | RSVP / Konfirmasi Kehadiran | Form bersama dan status nyata; pilihan hadir/tentatif/tidak hadir, aksi **Kirim RSVP**, konfirmasi serta QR sesuai backend. Mode contoh tidak mengirim data pelanggan. |
+| 11 | wishes | Wishes / Ucapan & Doa | Form dan daftar ucapan nyata hanya saat backend bersama aktif. Bila belum tersedia, empty state singkat dan jujur, bukan kartu tamu palsu. |
+| 12 | gift | Gift / E-Angpao | Data rekening/hadiah dari pemilik dan aksi salin yang berfungsi; tanpa rekening contoh sebagai data pelanggan. |
+| 13 | closing | Closing | Kalimat penutup, nama host/pasangan sesungguhnya dan koreografi visual khas tema. |
+| 14 | footer | Footer | Penutup branding yang ringkas, tanpa penjelasan teknis, watermark contoh, atau pemutar musik kedua. |
+| 15 | music | Musik | Satu player play/pause bersama. Musik dipicu oleh gestur pembuka bila diizinkan browser; tidak autoplay pada page load. Dapat dimatikan melalui Studio. |
 
-**Toggle:** OFF menyembunyikan komponen terkait tanpa menghapus data. Bila Amplop OFF, Cover muncul langsung. RSVP/Wishes/Gift OFF tidak menghapus data. Jangan membuat tabel customer, form backend, upload foto atau pemutar audio duplikat khusus tema. Perubahan visual harus mempertahankan ID section, pembacaan data dan jalur undangan personal/publik.
+OFF menyembunyikan komponen terkait **tanpa menghapus data**. Fitur yang belum aktif tidak boleh digambarkan seolah-olah dapat menyimpan atau mengirim. Undangan publik dan kanvas Studio memakai komponen visual yang sama; fitur simpan/submit pada mode contoh harus dilindungi.
 
-## 4. Arah motion — hidup, rapi, dan dapat dikendalikan
+## 4. Aturan teks dan CTA — berlaku untuk SEMUA tema dan katalog
 
-### 4.1 Amplop dan alur masuk
+**Hapus tulisan yang tidak membantu pengunjung mengambil tindakan.** Jangan tampilkan teks yang menjelaskan mekanisme internal, identitas data contoh, atau cara kerja pratinjau pada kartu template, bawah katalog, panel pratinjau, amplop, cover, atau isi undangan.
 
-Amplop tampil dulu. Satu klik/tap **Buka Undangan** memicu suara/musik yang diizinkan serta transisi surat dan wax seal: lift/flip ringan, opacity dan scale kecil, lalu Cover tampil. Gunakan `motion/react` atau solusi animasi yang sudah terpasang; hindari efek loading layar kosong, pintu kedua atau animasi transisi yang menghalangi akses. Jangan tambahkan tombol `Lihat Undangan` setelah cover. Hormati `prefers-reduced-motion`: ganti gerakan besar dengan perubahan instan atau fade singkat.
+**Contoh teks yang harus dihilangkan dari UI:**  
+- “Foto dan nama pada pratinjau merupakan data contoh. Untuk memakai foto sendiri, buat acara lalu unggah foto melalui Invitation Studio.”
+- “Preview mengikuti renderer undangan publik.”
+- “Pratinjau menggunakan data contoh.”, “Renderer siap digunakan.”, “Pratinjau desain Invitation Studio.”, dan keterangan lain yang menjelaskan hal yang sudah jelas.
 
-### 4.2 Animasi tipografi untuk **semua** bagian
+**Hilang dari UI bukan berarti sistem berubah:** data contoh tetap dipakai pada katalog terisolasi; CTA buat undangan tetap menuju alur login/event yang aman; status penting seperti error, perubahan belum tersimpan, batas upload, dan ketersediaan fitur tetap muncul saat memang diperlukan.
 
-Tidak ada heading yang statis sepenuhnya pada mode motion aktif. Setiap bagian memiliki animasi teks yang terkurasi, misalnya:
-- judul: blur ringan 0→jelas bersama fade + naik 8–18px;
-- nama pasangan: dua sisi masuk dari kiri/kanan secara elegan lalu diam, bukan berputar atau terus bergerak;
-- paragraf: muncul per baris/per frasa melalui fade dan sedikit translate, dengan urutan yang tetap mudah dibaca;
-- tanggal/angka/label: stagger singkat, **bukan** animasi per karakter pada seluruh paragraf panjang.
+**Aturan tombol dan label:** tombol pertama undangan tepat **Buka Undangan** dalam bahasa Indonesia dan Title Case, bukan BUKA UNDANGAN atau label acak tiap tema. Hapus **Lihat Undangan** di cover jika hanya menggulir isi yang sudah terbuka. Aksi yang benar-benar berbeda tetap memakai nama jelas, misalnya Lihat Lokasi, Kirim RSVP, Salin Nomor Rekening. Tombol mengikuti gaya template; teks/fungsi utama tetap konsisten.
 
-Gunakan variasi antarbagian, tetapi satu tata bahasa animasi yang konsisten (editorial lembut, tidak ramai). Teks harus **tetap dapat dibaca dan selectable**; jangan mengacak huruf, mengubah data, memecah teks dengan cara merusak pembaca layar, atau membuat nama pelanggan panjang terpotong. Umumnya durasi 0,4–0,85 dtk; stagger 0,04–0,12 dtk. Saat section meninggalkan viewport lalu masuk kembali, animasi boleh replay setelah benar-benar keluar dari threshold, bukan reset tiap pixel scroll; hormati reduced motion, keyboard, dan browser yang tak mendukung IntersectionObserver. Jangan animasikan input form ketika sedang diketik.
+**Tidak ada kata Pratinjau/Preview, watermark mode, badge demo, atau petunjuk developer DI DALAM renderer undangan**, termasuk amplop, cover, galeri, footer. Pada UI Studio boleh ada label kontrol yang benar-benar perlu untuk mengoperasikan editor, tetapi jangan membuat paragraf abu-abu menjelaskan demo. Nama tombol/section memakai kapitalisasi awal kata yang wajar; paragraf memakai ejaan normal. Jangan membuat seluruh tulisan tampak abu-abu pucat; utamakan kontras dan whitespace. Bahasa aplikasi default Indonesia.
 
-### 4.3 **Galeri Foto = bagian dengan eksplorasi animasi terbanyak**
+Contoh nama, foto, tanggal, hashtag, alamat, ucapan dan rekening pada moodboard **hanya fixture demo**, bukan konten otomatis untuk undangan pelanggan. Jangan menampilkan fake review atau fake ucapan seolah berasal dari tamu.
 
-Bentuk awal mengikuti mockup referensi: judul `Galeri Foto`, filter **hanya jika ada pengelompokan foto nyata**, kemudian kombinasi satu foto besar dan beberapa foto kecil sebagai **masonry/editorial asymmetrical grid**. Gunakan lebih banyak microinteraction di sini daripada section lain, tetapi **jangan menjalankan semua efek berat sekaligus**. Pilih satu mode utama yang cocok dengan jumlah foto dan sediakan fallback:
+## 5. Motion: animasi tipografi seluruh template; galeri paling ekspresif
 
-1. **Masonry Grid + Hover/Focus Effect (default untuk ≥3 foto):** foto masuk stagger dari tepi secara halus; hover/focus memperbesar foto sedikit (mis. scale 1,03), menggeser overlay tipis/teks jika relevan; sentuh/klik membuka lightbox, bukan efek hover yang tak bisa diakses mobile.
-2. **Carousel / swipe gallery (opsi jika foto banyak atau layar sempit):** drag/swipe, tombol sebelumnya/berikutnya dengan label aksesibel, indikator posisi, snap halus; jangan autoplay agresif atau mengganti foto saat user membaca.
-3. **Parallax Scrolling Gallery (aksen opsional):** kedalaman ringan pada gambar/background beberapa piksel, **hanya saat masuk viewport** pada perangkat yang mampu dan `prefers-reduced-motion: no-preference`. Nonaktifkan untuk mobile low-power atau bila mengganggu scroll.
-4. **Reveal / clip-mask / ken-burns lembut (opsional satu variasi per komposisi):** gambar muncul satu per satu dengan zoom yang selesai dan diam; hindari motion tanpa henti di seluruh foto.
-5. **Lightbox:** keyboard Escape menutup, fokus kembali ke pemicu, next/prev bila multi-foto, alt text yang masuk akal, tak menyimpan data baru.
+### 5.1 Tipografi dan alur scroll
 
-**Pemilihan otomatis yang masuk akal:** 0 foto → ilustrasi kosong jujur; 1 foto → satu gambar editorial besar; 2 foto → diptych; 3–8 → masonry asimetris dengan hover/focus dan lightbox; >8 → masonry yang tetap efisien atau carousel dengan pemuatan bertahap. Mobile tidak bergantung pada hover. Foto harus di-lazy-load, ukurannya responsif, aspek rasio stabil untuk mencegah layout shift, tanpa mengunduh semua album sebelum dibutuhkan. Gunakan `transform`/`opacity`, batasi jumlah animasi bersamaan dan hindari parallax yang memicu jank. Seluruh pengalaman galeri tetap bisa dipakai tanpa JavaScript animasi.
+Setiap tema punya *motion direction* berbeda sesuai gaya, bukan satu preset identik untuk semua template. Semua heading mendapat animasi masuk yang lembut bila animasi aktif: fade, muncul dari kiri/kanan, sedikit slide/blur, mask reveal, atau stagger per baris. Nama host/pasangan bisa mendapat koreografi paling menarik; **jangan menganimasikan seluruh paragraf per huruf sampai sulit dibaca**. Nama panjang tetap wrap baik dan selectable, screen reader membaca teks utuh.
 
-### 4.4 Animasi section lain
+Rentang awal yang boleh disesuaikan: durasi 0,4–0,9 detik, slide 8–24px, stagger 0,04–0,12 detik. Animasi boleh replay setelah bagian **benar-benar keluar viewport dan masuk kembali**, bukan reset setiap pixel scroll. Setelah transisi, teks tetap terlihat. Jika reduced motion aktif, toggle animasi OFF, atau IntersectionObserver gagal, isi tetap muncul langsung. Jangan animasikan input ketika pengguna sedang mengetik; hentikan gerak di luar layar untuk menghemat daya.
 
-Salam tampil bertahap; foto Pasangan reveal seperti lembar album; Detail Acara tiap baris muncul dari samping bergantian; tanggal masuk dengan fade; Hitung Mundur hanya angka berubah secara halus; Lokasi dan Gift microinteraction pada tombol; Ucapan menampilkan kartu bertahap jika ada data; Closing teks muncul di atas sapuan tinta yang **tidak** menghalangi keterbacaan. Animasi per section dapat dinonaktifkan jika komponen memiliki capability animasi; OFF harus menghentikan gerakan, bukan sekadar menyembunyikan kontrol.
+Amplop memiliki opening motion sesuai art direction dan tetap **satu aksi Buka Undangan**. Cover tidak perlu CTA kedua hanya untuk scroll. Identity menampilkan foto/nama dengan reveal halus; detail acara bisa masuk bergantian; countdown mengganti angka tanpa mengguncang layout; penutup menggunakan animasi yang mengakhiri cerita dengan nyaman.
 
-## 5. Perilaku per perangkat dan keterbacaan
+### 5.2 Galeri Foto = eksplorasi animasi terbesar
 
-- **Mobile first:** jadikan enam frame ponsel pada moodboard sebagai ukuran acuan visual, bukan scaling screenshot. Teks tidak terpotong; elemen dekoratif berada di belakang teks dan tidak menutup tombol/form. Area sentuh tombol umumnya ≥44×44px, jarak antaropsi RSVP cukup.
-- Desktop memakai kolom undangan dengan lebar bacaan nyaman; jangan membentangkan sebuah kartu undangan ke seluruh layar atau menjejalkan banyak frame kecil. Gunakan ruang kosong agar feel Zen terjaga.
-- Hindari grayscale/pale-gray copy yang membuat panel terasa penuh keterangan; teks utama kontras, teks sekunder lebih sedikit. Placeholder memang boleh berbeda, tetapi tetap terbaca.
-- Reduced motion: semua informasi, RSVP, galeri, foto, musik dan tombol tetap tersedia tanpa animasi. Jangan menahan tampilan dengan opacity 0 jika observer/JavaScript gagal.
-- Jangan mengunduh asset template lain saat Zen Atelier ditampilkan; manfaatkan lazy loading templat serta derivative gambar optimal dari aset yang ada. **Jangan mengubah/menghapus file master PNG dari repo secara diam-diam.**
+Pilih mode/efek yang cocok dengan identitas tema, jumlah foto dan kemampuan perangkat. **Galeri harus terasa kreatif tetapi jangan menumpuk semuanya sekaligus**: carousel + parallax + scale + autoplay tanpa jeda justru mengurangi kualitas.
 
-## 6. Integrasi Studio dan data — tetap satu sistem
+- **Masonry Grid + Hover/Focus Effect:** komposisi asimetris; reveal bertahap; hover/focus sedikit zoom dan overlay relevan; pada mobile tap membuka foto.
+- **Carousel / Swipe:** cocok untuk koleksi lebih besar atau tema yang horizontal. Snap halus, tombol prev/next yang aksesibel, posisi jelas; autoplay tidak wajib.
+- **Parallax Scrolling Gallery:** aksen kedalaman beberapa piksel saat terlihat; nonaktif pada reduced motion atau perangkat yang tersendat.
+- **Alternatif per tema:** lightbox, clip-mask reveal, polaroid, scrapbook, filmstrip, editorial split, atau Ken Burns lembut; pilih satu bahasa visual dominan.
+- 0 foto → artwork tema/empty state jujur. 1 foto → komposisi tunggal. 2 foto → diptych/dua panel. 3–8 foto → masonry/carousel sesuai tema. Banyak foto → lazy-load dan pengalaman tetap lancar. Jangan membuat chip kategori foto jika tidak ada kategori asli dalam data.
 
-Renderer Zen Atelier adalah presentasi, **bukan** layanan kedua. Tetap gunakan katalog `lib/templates/catalog.ts`, section registry `lib/templates/sections.ts`, renderer tamu dan Studio yang sama, foto `InvitationAsset` event yang sama, upload baru melalui Sharp→WebP, musik bawaan/pilihan pengguna, RSVP/QR bersama, dan akses undangan personal yang telah ada. Warna dan font yang dapat diubah di Studio harus terlihat jelas di **semua** bagian yang relevan tanpa membuat kontras buruk atau merusak hierarki moodboard. Pembatasan font/layout dibuat per kemampuan tema, bukan mengunci diam-diam kontrol yang terlihat aktif.
+Lightbox keyboard Escape, tombol/fokus dapat digunakan tanpa mouse, alt text bermakna, swipe mobile tidak mengunci scroll halaman. Gambar responsif dan lazy loading; ukurannya stabil untuk mencegah layout shift; batasi efek aktif dan utamakan transform/opacity.
 
-**Catatan kebutuhan data:** gambar moodboard memperlihatkan dua agenda Upacara Nikah dan Resepsi, namun jangan membuat asumsi bahwa field `receptionTime` saat ini adalah waktu mulai resepsi sebelum memeriksa model dan API. Bila belum ada dua waktu mulai/tempat yang terpisah, tulis gap tersebut dan pakai data yang memang ada; jangan membuat tanggal/jam/venue contoh menjadi informasi acara sungguhan.
+## 6. Studio, data, dan batasan implementasi
 
-## 7. Checklist penerimaan sebelum menyebut template selesai
+Satu registry template pada lib/templates/catalog.ts digunakan katalog, /d-invitation, dan Studio. Section keys mengikuti lib/templates/sections.ts; renderer pelanggan dan kanvas Studio berbagi tampilan nyata. Tema baru yang masih berupa gambar boleh muncul sebagai referensi visual tetapi **belum dapat dipilih/dipublikasikan** sampai renderer siap.
 
-- [ ] Sudah dicocokkan **side by side** dengan moodboard asli untuk Amplop, Cover, Pasangan, Detail Acara, RSVP, Galeri, Ucapan, Hadiah dan Closing pada viewport mobile; beda yang disengaja dicatat.
-- [ ] Semua **15 komponen** muncul pada default ON; Amplop → 13 bagian → Musik sebagai kontrol global. ON/OFF bertahan setelah save/reload, termasuk Amplop dan Musik.
-- [ ] Tombol awal hanya **Buka Undangan**; **tidak ada** tombol `Lihat Undangan` di Cover; tidak ada label `Pratinjau` apa pun **di dalam** undangan.
-- [ ] Teks filler/teknis `Preview mengikuti renderer undangan publik` dan deskripsi abu-abu tak berguna dihapus dari katalog/Studio tanpa menyembunyikan status error/akses yang penting.
-- [ ] Semua heading/nama menggunakan kapitalisasi Indonesia yang tepat; nama panjang, venue panjang, kosong/tanpa foto, foto banyak dan nonwedding sudah dites.
-- [ ] Font animation masuk/replay dengan halus; reduced motion tidak menyembunyikan teks dan keyboard/screen reader tetap berfungsi.
-- [ ] Galeri benar-benar menawarkan masonry editorial dengan hover/focus dan lightbox; carousel/parallax ditambahkan **jika memberi manfaat** dan tidak membuat mobile tersendat; 0/1/2/banyak foto teruji.
-- [ ] RSVP publik menyimpan data dan QR sesuai backend yang sudah ada; preview tidak pernah mengirim data customer. Wishes tidak berpura-pura aktif bila backend belum siap.
-- [ ] Musik tidak autoplay ketika halaman baru dimuat, gestur `Buka Undangan` bekerja, player tunggal bisa pause/resume; toggle OFF meniadakan player.
-- [ ] Foto pelanggan dan data event tidak pernah digantikan foto/nama/rekening contoh moodboard; upload foto tetap Sharp→WebP.
-- [ ] Review screenshot mobile & desktop, lintas Light/Dark aplikasi bila relevan, a11y dasar, loading/performa, TypeScript, unit test dan production build **dijalankan dan dicatat hasilnya**; jangan mengklaim PASS tanpa bukti.
+Foto pelanggan dibaca dari pustaka event yang sama, bukan di-upload ulang untuk setiap tema. Template tanpa foto tidak memaksa foto walaupun event memiliki aset. Upload foto baru tetap melewati Sharp → WebP. Musik satu player, pilihan pemilik event mengungguli default; penghormatan aturan autoplay browser dan mute. RSVP serta QR memakai sistem yang telah ada; jangan membuat tabel atau endpoint palsu demi demo. Wishes belum boleh ditampilkan sebagai layanan aktif sebelum backend siap.
 
-**Urutan kerja berikutnya:** cocokkan visual Amplop dan Cover dulu, lalu Pasangan/Detail Acara, RSVP/Galeri, Ucapan/Hadiah/Closing, kemudian komponen pendukung dan penyempurnaan Studio. Untuk setiap tahap gunakan screenshot nyata sebagai pembanding dengan moodboard; jangan menyebut hasilnya `sama persis` sebelum ada pemeriksaan visual owner.
+Pengaturan font/palet hanya untuk properti yang didukung template dan harus tampak di semua bagian relevan tanpa menghilangkan identitas visual atau mengorbankan kontras. Kemampuan animasi per section dinyatakan jelas bila disediakan. Gunakan lazy loading agar membuka satu template tidak mengunduh kode/aset seluruh katalog. Pertahankan rute publik/personal, validasi server, pembayaran dan akses sesuai PRD.
+
+## 7. Checklist sebelum menyebut sebuah tema selesai
+
+- [ ] Brief, moodboard, dan aset tema tersebut sudah diperiksa serta disetujui owner; tidak menggunakan visual Zen Atelier pada tema lain tanpa alasan.
+- [ ] Semua 15 komponen tersedia; amplop mendahului isi, musik satu kontrol global; ON/OFF tersimpan dan terpantul di kanvas serta undangan tamu.
+- [ ] Tombol utama bertuliskan **Buka Undangan**, tanpa tombol Lihat Undangan redundan dan tanpa label Pratinjau di dalam undangan.
+- [ ] Katalog/Studio bebas copy pengantar data contoh, klaim renderer, dan teks abu-abu penjelasan tak perlu; error dan informasi penting tetap jelas.
+- [ ] Foto/nama/venue/rekening demo tidak pernah menjadi konten pelanggan; data kosong, nama/venue panjang, nonwedding, dan foto banyak diuji.
+- [ ] Animasi heading halus dan dapat replay setelah keluar-masuk viewport; reduced motion, keyboard dan pembaca layar tetap berfungsi.
+- [ ] Galeri punya komposisi serta efek sesuai karakter tema; kondisi 0/1/2/banyak foto dan sentuhan mobile diperiksa.
+- [ ] RSVP publik, QR, tautan peta, Gift, musik dan seluruh kontrol yang tersedia benar-benar berfungsi; mode demo tidak menulis data pelanggan.
+- [ ] Screenshot HP dan desktop dibandingkan side by side dengan referensi tiap layar; perbedaan yang belum selesai dicatat, bukan diklaim sama persis.
+- [ ] TypeScript, tes, build, performa aset dan aksesibilitas dijalankan, dengan hasil nyata dicatat di PRD; push GitHub saja tidak berarti semua tes lulus.
+
+**Cara pakai di chat selanjutnya:** “Buat template [nama tema] mengikuti template.md; mulai brief, moodboard, contoh 15 komponen, dan aset satu per satu sebelum coding.”  
+**Penting:** dokumen ini adalah standar produksi; keberadaan checklist bukan bukti setiap template sudah memenuhi semua poin.
