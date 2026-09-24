@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FilePenLine,
   ImagePlus,
+  Layers3,
   LayoutTemplate,
   Music2,
   Palette,
@@ -25,6 +26,8 @@ import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
+import AssetPanel from "@/components/InvitationStudio/AssetPanel";
+import { isTemplateIllustration, MAX_ASSET_LAYERS, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
   invitationPalettes,
@@ -66,7 +69,7 @@ export default function InvitationDesigner() {
     defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
-    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music",
+    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets",
     envelope: "Envelope", cover: "Cover", phone: "Mobile",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
     envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
@@ -76,7 +79,7 @@ export default function InvitationDesigner() {
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
-    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik",
+    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset",
     envelope: "Amplop", cover: "Cover", phone: "Ponsel",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
     envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
@@ -87,6 +90,7 @@ export default function InvitationDesigner() {
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
+  const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
@@ -112,6 +116,7 @@ export default function InvitationDesigner() {
     sections: { ...defaultInvitationSections },
     photos: defaultPhotoAssignments(),
     copy: {},
+    layers: [],
   });
 
   async function load() {
@@ -148,6 +153,7 @@ export default function InvitationDesigner() {
     setDesign(stagedDesign);
     setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
     setCanvasStage("envelope");
+    setSelectedLayerId(null);
     setHistory([]);
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
@@ -204,6 +210,7 @@ export default function InvitationDesigner() {
       palette: preset.palette,
       font: preset.font,
       copy: templateKey === design.template ? design.copy : {},
+      layers: templateKey === design.template ? design.layers : [],
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -211,6 +218,7 @@ export default function InvitationDesigner() {
     location.searchParams.set("template", templateKey);
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
+    setSelectedLayerId(null);
     setCanvasStage("envelope");
   }
 
@@ -280,6 +288,34 @@ export default function InvitationDesigner() {
     setPanel("decor");
     setInspectorOpen(true);
     setMobileCanvas(false);
+  }
+
+  function addAssetLayer(src: string) {
+    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    change({ layers: [...design.layers, { id, src, x: 50, y: 38, width: 28, opacity: 1 }] });
+    setSelectedLayerId(id);
+    setCanvasStage("cover");
+    setInspectorOpen(true);
+  }
+
+  function updateAssetLayer(id: string, patch: Partial<InvitationAssetLayer>) {
+    if (!design.layers.some((layer) => layer.id === id)) return;
+    change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...patch } : layer) });
+  }
+
+  function removeAssetLayer(id: string) {
+    change({ layers: design.layers.filter((layer) => layer.id !== id) });
+    setSelectedLayerId(null);
+  }
+
+  function reorderAssetLayer(id: string, direction: -1 | 1) {
+    const index = design.layers.findIndex((layer) => layer.id === id);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= design.layers.length) return;
+    const next = [...design.layers];
+    [next[index], next[target]] = [next[target], next[index]];
+    change({ layers: next });
   }
 
   function undo() {
@@ -415,6 +451,7 @@ export default function InvitationDesigner() {
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setCanvasStage("cover"); setPanel("assets"); }} />
           <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
         </nav>
 
@@ -454,6 +491,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
+          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} onAdd={addAssetLayer} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
@@ -495,6 +533,9 @@ export default function InvitationDesigner() {
               photoAssignments={design.photos}
               designKey={designKey}
               musicUrl={musicUrl}
+              selectedAssetLayerId={selectedLayerId}
+              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel("assets"); setInspectorOpen(true); }}
+              onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
               onEditPhoto={editPhotoFromCanvas}
               onEnvelopeOpened={handleCanvasEnvelopeOpened}
             />
