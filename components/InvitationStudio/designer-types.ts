@@ -2,6 +2,7 @@ import type { EventCategory } from "@/lib/events/catalog";
 import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationSections } from "@/lib/templates/sections";
 import type { PhotoAssignments } from "@/lib/templates/photo-slots";
+import type { EditableInvitationCopy } from "@/lib/templates/editable-copy";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -61,6 +62,8 @@ export type InvitationDesignState = {
   decor: string;
   sections: InvitationSections;
   photos: PhotoAssignments;
+  /** Only template-owned narrative copy; never duplicates event identity or schedule. */
+  copy: EditableInvitationCopy;
 };
 
 export type InvitationTemplateLayout =
