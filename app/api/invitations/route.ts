@@ -4,45 +4,30 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
-import { isLegacyInvitationSlug, slugifyCouple } from "@/lib/invitations/slug";
 import {
   buildEventTitle,
   getEventCategory,
   normalizeEventCategory,
   normalizeIndonesiaTimezone,
 } from "@/lib/events/catalog";
-
-type InvitationType = "WEDDING" | "ADAT_AKAD";
-
-const END_TIME_SENTINEL = "END";
-
-function normalizeType(value: unknown): InvitationType {
-  return value === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
-}
-
-function slugBase(value: string) {
-  return value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
-
-function makeLegacySlug(firstName: string, userId: string, type: InvitationType) {
-  const name = slugBase(firstName);
-  const suffix = type === "ADAT_AKAD" ? "-akad" : "-moment";
-  return `${name || "event"}${suffix}-${userId.slice(-6)}`;
-}
-
-async function makeEventSlug(firstName: string, userId: string, sequence: number) {
-  const name = slugBase(firstName) || "event";
-  const base = `${name}-event-${sequence}-${userId.slice(-6)}`;
-  let candidate = base;
-  let suffix = 2;
-
-  while (await prisma.invitation.findUnique({ where: { slug: candidate }, select: { id: true } })) {
-    candidate = `${base}-${suffix}`;
-    suffix += 1;
-  }
-
-  return candidate;
-}
+import {
+  END_TIME_SENTINEL,
+  hasEventDetailMutation,
+  isValidReceptionTime,
+  isValidTime24,
+  optionalName,
+  optionalPositiveInt,
+} from "@/lib/invitations/event-input";
+import {
+  findOwnedInvitation,
+  findReusableDraft,
+  getOrCreateLegacyInvitation,
+  makeEventSlug,
+  normalizeType,
+  resolveLegacyCoupleSlug,
+  studioInvitationId,
+  type InvitationType,
+} from "@/lib/invitations/legacy-queries";
 
 function sanitizeInvitation<T extends object>(invitation: T) {
   const { passwordHash: _passwordHash, ...safeInvitation } = invitation as T & {
@@ -66,162 +51,6 @@ function databaseFailure(error: unknown, fallback: string) {
   }
 
   return NextResponse.json({ error: fallback }, { status: 500 });
-}
-
-function optionalName(value: unknown) {
-  return String(value ?? "").trim() || null;
-}
-
-function optionalPositiveInt(value: unknown) {
-  const raw = String(value ?? "").trim();
-  if (!raw) return null;
-  const parsed = Number(raw);
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : null;
-}
-
-function isValidTime24(value: string | null) {
-  return !value || /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
-}
-
-function isValidReceptionTime(value: string | null) {
-  return value === END_TIME_SENTINEL || isValidTime24(value);
-}
-
-const EVENT_DETAIL_MUTATION_FIELDS = [
-  "type",
-  "eventCategory",
-  "title",
-  "groomName",
-  "brideName",
-  "groomFatherName",
-  "groomMotherName",
-  "groomChildOrder",
-  "groomChildPosition",
-  "brideFatherName",
-  "brideMotherName",
-  "brideChildOrder",
-  "brideChildPosition",
-  "venue",
-  "address",
-  "mapUrl",
-  "timezone",
-  "eventDate",
-  "ceremonyTime",
-  "receptionTime",
-  "description",
-  "eventNotes",
-  "eventConfigured",
-] as const;
-
-function hasEventDetailMutation(body: Record<string, unknown>) {
-  return EVENT_DETAIL_MUTATION_FIELDS.some((field) =>
-    Object.prototype.hasOwnProperty.call(body, field),
-  );
-}
-
-async function getOrCreateLegacyInvitation(
-  user: { id: string; firstName: string },
-  type: InvitationType,
-) {
-  const existing = await prisma.invitation.findFirst({
-    where: { ownerId: user.id, type },
-    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-    orderBy: { createdAt: "asc" },
-  });
-  if (existing) return existing;
-
-  const invitation = await prisma.invitation.create({
-    data: {
-      ownerId: user.id,
-      slug: makeLegacySlug(user.firstName, user.id, type),
-      type,
-      templateKey: "",
-      title: "",
-      eventCategory: "OTHER",
-      groomName: "",
-      brideName: "",
-      venue: "",
-      timezone: "Asia/Jakarta",
-      description: null,
-      eventConfigured: false,
-      waBlastQuota: 0,
-    },
-  });
-
-  return prisma.invitation.findUniqueOrThrow({
-    where: { id: invitation.id },
-    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-  });
-}
-
-async function resolveLegacyCoupleSlug(
-  invitationId: string,
-  groomName: string,
-  brideName: string,
-  currentSlug: string,
-) {
-  if (!groomName || !brideName || !isLegacyInvitationSlug(currentSlug)) return currentSlug;
-
-  const base = slugifyCouple(groomName, brideName);
-  let candidate = base;
-  let suffix = 2;
-
-  while (
-    await prisma.invitation.findFirst({
-      where: { slug: candidate, id: { not: invitationId } },
-      select: { id: true },
-    })
-  ) {
-    candidate = `${base}-${suffix}`;
-    suffix += 1;
-  }
-
-  return candidate;
-}
-
-function studioInvitationId(
-  request: Request,
-  explicitId?: unknown,
-  requestedType?: InvitationType,
-) {
-  const direct = String(explicitId ?? "").trim();
-  if (direct) return direct;
-
-  const referer = request.headers.get("referer");
-  if (!referer) return "";
-  try {
-    const refererUrl = new URL(referer);
-    const refererId = refererUrl.searchParams.get("invitationId")?.trim() || "";
-    if (!refererId) return "";
-    if (!requestedType) return refererId;
-    const refererType = normalizeType(refererUrl.searchParams.get("type"));
-    return refererType === requestedType ? refererId : "";
-  } catch {
-    return "";
-  }
-}
-
-async function findOwnedInvitation(userId: string, id: string) {
-  return prisma.invitation.findFirst({
-    where: { id, ownerId: userId },
-    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-  });
-}
-
-async function findReusableDraft(userId: string) {
-  return prisma.invitation.findFirst({
-    where: {
-      ownerId: userId,
-      eventConfigured: false,
-      isPublished: false,
-      title: "",
-      venue: "",
-      groomName: "",
-      brideName: "",
-    },
-    include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
-    orderBy: { createdAt: "desc" },
-  });
 }
 
 export async function GET(request: Request) {
@@ -689,3 +518,4 @@ export async function DELETE(request: Request) {
     return databaseFailure(error, "Acara belum dapat dihapus.");
   }
 }
+
