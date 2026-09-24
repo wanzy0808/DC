@@ -40,5 +40,5 @@ test("stage-specific Zen envelope uses the supplied paper artwork and opens befo
   const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
   assert.match(universal, /musicRef\.current\?\.playOnOpen\(\)/);
   assert.match(universal, /window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
-  assert.match(universal, /setOpened\(true\); setOpening\(false\)/);
+  assert.match(universal, /setOpened\(true\);\s*setOpening\(false\);\s*onEnvelopeOpened\?\.\(\)/);
 });
