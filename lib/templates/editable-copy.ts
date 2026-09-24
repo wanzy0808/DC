@@ -3,7 +3,7 @@
  * payment and section headings are NOT editable through Studio's Isi panel.
  * Keep this registry aligned with text that the real public renderer actually uses.
  */
-export const editableInvitationCopyFields = ["greeting", "closing", "ourStory", "zenQuote"] as const;
+export const editableInvitationCopyFields = ["greeting", "closing", "ourStory", "zenQuote", "attendanceRequest", "prayerWish"] as const;
 export type EditableInvitationCopyField = (typeof editableInvitationCopyFields)[number];
 export type EditableInvitationCopy = Partial<Record<EditableInvitationCopyField, string>>;
 
@@ -12,9 +12,14 @@ export const editableCopyMaxLength: Record<EditableInvitationCopyField, number> 
   closing: 320,
   ourStory: 1600,
   zenQuote: 240,
+  attendanceRequest: 360,
+  prayerWish: 320,
 };
 
 export function availableEditableCopyFields(templateKey: string, isWedding = true): EditableInvitationCopyField[] {
+  if (templateKey === "pencil-reverie") return isWedding
+    ? ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]
+    : ["greeting", "attendanceRequest", "prayerWish", "closing"];
   return isWedding
     ? templateKey === "zen-atelier"
       ? ["greeting", "closing", "ourStory", "zenQuote"]
@@ -25,14 +30,22 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
   return {
     greeting: eventDescription?.trim() ||
-      (templateKey === "romantic-rose"
+      (templateKey === "pencil-reverie"
+        ? "Sebuah cerita kecil membawa kami menuju hari yang istimewa ini."
+        : templateKey === "romantic-rose"
         ? "Kami mengundang Anda untuk hadir dan berbagi kebahagiaan dalam perayaan pernikahan kami."
         : "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."),
-    closing: templateKey === "zen-atelier"
+    closing: templateKey === "pencil-reverie"
+      ? "Terima kasih telah menjadi bagian dari cerita kami. Sampai bertemu!"
+      : templateKey === "zen-atelier"
       ? "Atas doa, restu, dan kehadiran Anda dalam perjalanan istimewa ini."
       : templateKey === "romantic-rose"
         ? "Kehadiran dan doa baik Anda berarti bagi kami. Sampai bertemu di hari bahagia!"
         : "Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!",
+    ...(templateKey === "pencil-reverie" ? {
+      attendanceRequest: "Dengan senang hati, kami mengundang Anda untuk hadir dan merayakan hari istimewa ini bersama kami.",
+      prayerWish: "Semoga hari ini menjadi awal dari perjalanan yang penuh kasih dan kebaikan.",
+    } : {}),
     ...(templateKey === "zen-atelier" ? {
       zenQuote: "Cinta bukan tentang menemukan seseorang yang sempurna, tetapi tentang berjalan bersama dalam ketidaksempurnaan dengan hati yang tenang.",
     } : {}),
