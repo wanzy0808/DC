@@ -55,7 +55,8 @@ export type InvitationDesignerPanel =
   | "content"
   | "decor"
   | "music"
-  | "assets";
+  | "assets"
+  | "text";
 
 export type InvitationDesignState = {
   template: string;
