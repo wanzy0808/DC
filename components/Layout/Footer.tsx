@@ -43,21 +43,18 @@ function YoutubeIcon({ className }: { className?: string }) {
 export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
-  const isJiplak = pathname === "/jiplak";
-  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
+  const isLanding = pathname === "/" || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if ((!embedded && (pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
     return null;
   }
 
   if (isLanding) {
     return (
       <footer
-        className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs ${
-          isJiplak ? "bg-transparent" : "bg-background"
-        }`}
+        className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs`}
       >
         © {new Date().getFullYear()} DC Organizer. {footer.rights}
       </footer>

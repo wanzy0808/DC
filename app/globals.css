@@ -167,7 +167,6 @@
    button-variants.ts supplies shared button behavior and dimensions; do not
    duplicate these appearance rules in ThemeToggle/LanguageToggle/Navbar. */
 .dc-navbar--landing { background: transparent; }
-.dc-navbar--landing.dc-navbar--jiplak { background: transparent; }
 .dc-navbar .dc-theme-toggle,
 .dc-navbar .dc-language-toggle button,
 .dc-navbar .dc-burger-toggle {
