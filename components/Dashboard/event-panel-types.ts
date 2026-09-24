@@ -34,7 +34,9 @@ export type EventPanelInvitation = {
 
 export type EventPanelProps = {
   accent: string;
-  onSaved: () => void;
+  // Present only after successfully CREATING a new configured event.
+  onSaved: (created?: { id: string; type: EventPanelInvitation["type"] }) => void;
+  selectedTemplate?: string;
 };
 
 export type EventEditorMode = "closed" | "new" | "edit";
