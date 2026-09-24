@@ -44,3 +44,9 @@ test("old design lab routes stay retired without renaming customer media URLs", 
   assert.equal(existsSync(path("public/templates/Zen Atelier/amplop1.png")), true);
   assert.equal(existsSync(path("public/templates/pencil-reverie/bycicle.png")), true);
 });
+
+test("package metadata uses the product name rather than a starter-app placeholder", () => {
+  const pkg = JSON.parse(read("package.json"));
+  assert.equal(pkg.name, "dc-organizer");
+  assert.equal(pkg.private, true);
+});
