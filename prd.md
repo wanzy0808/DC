@@ -1633,7 +1633,7 @@ Untuk deployment yang membawa migration baru, end-to-end persistence baru diangg
 | Arsip Git dari `prd-tambahan.md`, `prd-landing.md`, `prdpaging.md`, `pintu3d.md` | File lama dihapus dari branch aktif setelah audit domain awal; referensi lengkap tersimpan di commit GitHub yang tercantum pada Appendix A. | Jangan gunakan rancangan yang tidak disetujui atau milestone historis sebagai aturan aktif; pakai §6, §7, §11 dan §15 PRD yang berlaku. |
 | Appendix A dalam `prd.md` | Riwayat tanggal, keputusan, commit, dan validasi; dapat memuat istilah/versi lama. | Tidak dipakai sebagai rule aktif dan tidak menimpa badan utama. |
 
-Dokumen baru `prd1.md`, `prdnew.md`, `PRD2.md` dan sejenisnya tidak boleh dibuat. Empat dokumen landing/delta/Pintu legacy sudah diaudit sebagai sumber historis dan dijadwalkan keluar dari branch aktif pada konsolidasi ini; jangan membuatnya kembali. Semua perubahan produk selanjutnya harus dimasukkan ke pasal kanonik PRD dan perubahan material dicatat di Appendix A. Untuk membaca detail versi lama gunakan permalink GitHub pada Appendix A, bukan memulihkan rulebook paralel.
+Dokumen baru `prd1.md`, `prdnew.md`, `PRD2.md` dan sejenisnya tidak boleh dibuat. Empat dokumen landing/delta/Pintu legacy sudah diaudit dan dihapus dari branch aktif pada konsolidasi ini; jangan membuatnya kembali. Semua perubahan produk selanjutnya harus dimasukkan ke pasal kanonik PRD dan perubahan material dicatat di Appendix A. Untuk membaca detail versi lama gunakan permalink GitHub pada Appendix A, bukan memulihkan rulebook paralel.
 
 ### 21.2 Urutan saat ada aturan tumpang tindih
 
@@ -5041,3 +5041,5 @@ Pemeriksaan `lib/templates/catalog.ts` mengidentifikasi 12 tema bawaan: enam men
 - [Jurnal eksperimen Pintu V1/V2](https://github.com/wanzy0808/DC/blob/ac243a267b2a979f8cae9c1c82161a07e5a920a5/pintu3d.md) — 15 tahap, commit/pemeriksaan lama, dan umpan balik screenshot pemilik.
 
 **Lingkup:** dokumen saja; tidak mengubah landing, Pintu, Dashboard, Studio, struktur database atau fitur lainnya. **Validasi:** pemeriksaan isi dokumen dan tautan kanonik melalui repo; tidak menjalankan build/CI, migrasi, atau tes browser. Audit menyeluruh seluruh Markdown/subfolder dan pemadatan AGENTS/README tetap pekerjaan tahap berikutnya.
+
+**Commit penghapusan terverifikasi:** `prd-tambahan.md` → `a2c2baeadc633ba2ef1490b35c566736da58a570`; `prd-landing.md` → `3865ebee42cde561da4d07aaf0dba2c9e8021df8`; `prdpaging.md` → `6c78b60f54ea21506f919120a39b73075a998753`; `pintu3d.md` → `1070176855576f3e676fb1d105f5234a67a13156`. Setiap path telah dicek tidak tersedia di branch aktif dan versi historisnya berhasil diambil kembali dari commit arsip yang tercantum di atas.
