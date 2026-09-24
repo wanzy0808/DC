@@ -97,7 +97,40 @@ Pilih mode/efek yang cocok dengan identitas tema, jumlah foto dan kemampuan pera
 
 Lightbox keyboard Escape, tombol/fokus dapat digunakan tanpa mouse, alt text bermakna, swipe mobile tidak mengunci scroll halaman. Gambar responsif dan lazy loading; ukurannya stabil untuk mencegah layout shift; batasi efek aktif dan utamakan transform/opacity.
 
-## 6. Studio, data, dan batasan implementasi
+## 6. Library dan kemampuan animasi yang SUDAH kita miliki
+
+**Jangan batasi kreativitas pada animasi fade/slide biasa.** Repo DC Organizer sudah punya beberapa library yang dapat dikombinasikan untuk membuat masing-masing template memiliki gerak, kedalaman, dan interaksi berbeda. Daftar ini diverifikasi dari `package.json` dan stack proyek; *terpasang* bukan berarti setiap efek di bawah sudah terimplementasi, sudah lolos uji performa, atau boleh diaktifkan sekaligus.
+
+| Library / teknologi | Kemampuan untuk template undangan | Contoh penerapan yang relevan |
+| --- | --- | --- |
+| **Motion** (`motion/react`) | Animasi komponen React, variants/stagger, gesture hover/tap/drag, enter/exit, layout transitions, animasi berbasis scroll. | Amplop terbuka, nama pasangan masuk dari kiri-kanan, halaman foto muncul bergantian, carousel geser, kartu ucapan muncul ketika terlihat. |
+| **GSAP** (`gsap`) | Timeline koreografi lebih kompleks, urutan animasi presisi, scrub/tween saat scroll bila plugin dan integrasinya tersedia. | Pembukaan undangan multi-lapis, teks/mask reveal, gerak ornamen mengikuti scroll, parallax galeri yang halus. Pastikan plugin yang dipakai memang tersedia sebelum mengimpornya. |
+| **Three.js + React Three Fiber** (`three`, `@react-three/fiber`) | 3D/WebGL, depth, kamera, cahaya, material dan interaksi scene. | Amplop atau objek dekoratif 3D, efek ruang/portal mini, album foto berlapis dalam satu tema yang memang memerlukan 3D. Aktifkan hanya pada tema yang sesuai dan sediakan fallback 2D. |
+| **React Konva + Konva** (`react-konva`, `konva`) | Kanvas interaktif 2D untuk komposisi objek dan manipulasi posisi/rotasi. | Scrapbook, stiker, potongan kertas, atau album foto yang bisa dipindahkan bila desainnya benar-benar membutuhkan interaksi kanvas. Jangan memakainya untuk teks utama atau form RSVP yang perlu aksesibel. |
+| **Tailwind CSS v4 + `tw-animate-css` + CSS native** | Styling responsif, keyframes, transitions, transforms, clip-path, mask, gradients, scroll snap dan efek hover/focus ringan. | Paper-fold, tombol, floating petals, reveal gambar, masonry editorial, filter foto, text masking, microinteraction tanpa beban JavaScript besar. |
+| **Lucide React** (`lucide-react`) | Ikon vektor yang konsisten; CSS/Motion bisa memberi transform, reveal atau gerakan halus. | Kontrol musik, panah carousel, penanda lokasi, RSVP, efek indikator scroll seperlunya. |
+| **Next.js 16 + React 19** | Komposisi komponen, lazy loading lewat dynamic import, optimasi/pemisahan asset dan state interaktif. | Hanya unduh implementasi tema yang dibuka; mount galeri berat saat diperlukan; hindari mengunduh 3D pada tema 2D. |
+| **Sharp** (`sharp`) | Pengolahan aset gambar dan konversi WebP di sisi server, **bukan** mesin animasi. | Optimalkan foto pengguna dan turunan gambar tema agar gallery/parallax tetap ringan di HP. |
+
+**Catatan akurasi:** `@react-three/drei` **tidak tercantum dalam dependency `package.json` saat panduan ini diperbarui**. Jangan menganggapnya tersedia tanpa pemeriksaan dan persetujuan untuk menambah dependency. Native `IntersectionObserver`, `requestAnimationFrame`, CSS dan `prefers-reduced-motion` juga dapat dipakai tanpa menambah library. Jangan memilih library hanya karena tersedia: gunakan opsi paling sederhana yang mampu menghasilkan desain sesuai moodboard dan menjaga performa.
+
+### Contoh kombinasi efek menurut bagian dan arah tema
+
+- **Amplop:** Motion untuk gerak flap, segel, surat, dan crossfade; GSAP timeline jika pembukaannya memiliki banyak tahap; 3D hanya bila brief meminta amplop 3D, bukan sebagai standar semua tema.
+- **Cover dan tipografi:** variants/stagger Motion atau timeline GSAP untuk judul muncul dari kiri/kanan, clip-mask reveal, perubahan tracking, dan decorative strokes. Tetap gunakan teks HTML nyata dan jangan membuat elemen dekoratif menutupi nama.
+- **Galeri (bagian paling kaya animasi):** CSS Grid/Masonry + Motion untuk layout/hover/focus, drag carousel untuk swipe, GSAP *atau* animasi scroll Motion untuk parallax, mask reveal, lightbox dengan enter/exit, dan efek depth 3D bila sesuai tema. Pilih satu teknik utama dan paling banyak beberapa aksen; jangan menjalankan semua engine atas elemen yang sama.
+- **Countdown, lokasi, RSVP, hadiah:** animate angka/pergantian state dan feedback tombol dengan Motion/CSS; utamakan respons cepat dan aksesibilitas, jangan menggeser field saat pengguna mengetik.
+- **Closing:** timeline tipografi, ilustrasi bergerak pelan, partikel ringan atau fade yang mengikuti art direction; animasi selesai dengan seluruh pesan tetap terbaca.
+
+### Aturan pemilihan library sebelum coding
+
+1. Catat **efek → library → alasan → kebutuhan asset → fallback mobile/reduced-motion** dalam brief tema. Untuk efek sederhana, utamakan CSS atau Motion; untuk koreografi berantai GSAP; untuk 3D Three/Fiber; untuk kanvas interaktif 2D Konva.
+2. Pastikan kompatibilitas React/Next, dependency serta plugin yang benar-benar terpasang melalui repo. Hindari memasang paket baru atau mencampur Motion dan GSAP pada properti `transform`/opacity yang sama tanpa orkestrasi jelas.
+3. Hormati `prefers-reduced-motion`, kontrol animasi ON/OFF bila tersedia, keterbacaan teks, keyboard/touch, dan fallback bila WebGL gagal. Animasi tidak boleh menahan isi pada opacity 0 atau menghambat RSVP.
+4. Lazy-load hanya kemampuan berat yang digunakan tema aktif. Batasi animasi bersamaan, hentikan pekerjaan ketika section tidak terlihat, hindari layout thrashing dan parallax berlebihan; evaluasi HP kelas menengah, bukan desktop saja.
+5. Nilai kualitas dari **kesesuaian dengan moodboard dan hasil nyata**, bukan jumlah efek/library. Satu tema bisa minimal dan tenang; tema lain bisa sinematik, playful, scrapbook atau 3D. Tetap berbeda identitas meskipun memakai library bersama.
+
+## 7. Studio, data, dan batasan implementasi
 
 Satu registry template pada lib/templates/catalog.ts digunakan katalog, /d-invitation, dan Studio. Section keys mengikuti lib/templates/sections.ts; renderer pelanggan dan kanvas Studio berbagi tampilan nyata. Tema baru yang masih berupa gambar boleh muncul sebagai referensi visual tetapi **belum dapat dipilih/dipublikasikan** sampai renderer siap.
 
@@ -105,7 +138,7 @@ Foto pelanggan dibaca dari pustaka event yang sama, bukan di-upload ulang untuk 
 
 Pengaturan font/palet hanya untuk properti yang didukung template dan harus tampak di semua bagian relevan tanpa menghilangkan identitas visual atau mengorbankan kontras. Kemampuan animasi per section dinyatakan jelas bila disediakan. Gunakan lazy loading agar membuka satu template tidak mengunduh kode/aset seluruh katalog. Pertahankan rute publik/personal, validasi server, pembayaran dan akses sesuai PRD.
 
-## 7. Checklist sebelum menyebut sebuah tema selesai
+## 8. Checklist sebelum menyebut sebuah tema selesai
 
 - [ ] Brief, moodboard, dan aset tema tersebut sudah diperiksa serta disetujui owner; tidak menggunakan visual Zen Atelier pada tema lain tanpa alasan.
 - [ ] Semua 15 komponen tersedia; amplop mendahului isi, musik satu kontrol global; ON/OFF tersimpan dan terpantul di kanvas serta undangan tamu.
@@ -114,6 +147,7 @@ Pengaturan font/palet hanya untuk properti yang didukung template dan harus tamp
 - [ ] Foto/nama/venue/rekening demo tidak pernah menjadi konten pelanggan; data kosong, nama/venue panjang, nonwedding, dan foto banyak diuji.
 - [ ] Animasi heading halus dan dapat replay setelah keluar-masuk viewport; reduced motion, keyboard dan pembaca layar tetap berfungsi.
 - [ ] Galeri punya komposisi serta efek sesuai karakter tema; kondisi 0/1/2/banyak foto dan sentuhan mobile diperiksa.
+- [ ] Library animasi dipilih dan digunakan sesuai brief/moodboard (CSS/Motion/GSAP/Three/Fiber/Konva bila relevan), bukan diasumsikan semua dipakai; dependency, reduced motion, fallback dan performa mobile diperiksa.
 - [ ] RSVP publik, QR, tautan peta, Gift, musik dan seluruh kontrol yang tersedia benar-benar berfungsi; mode demo tidak menulis data pelanggan.
 - [ ] Screenshot HP dan desktop dibandingkan side by side dengan referensi tiap layar; perbedaan yang belum selesai dicatat, bukan diklaim sama persis.
 - [ ] TypeScript, tes, build, performa aset dan aksesibilitas dijalankan, dengan hasil nyata dicatat di PRD; push GitHub saja tidak berarti semua tes lulus.
