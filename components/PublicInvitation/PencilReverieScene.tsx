@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { ArrowDown, Play } from "lucide-react";
+import Image from "next/image";
 import "./pencil-reverie.css";
 
 /**
@@ -19,7 +20,7 @@ type Props = {
 };
 
 function Art({ file, className, eager = false }: { file: string; className: string; eager?: boolean }) {
-  return <img aria-hidden="true" alt="" src={root + file} className={className} loading={eager ? "eager" : "lazy"} decoding="async" />;
+  return <Image aria-hidden="true" alt="" src={root + file} width={1254} height={1254} sizes="(max-width: 640px) 65vw, 380px" className={className} priority={eager} />;
 }
 
 function Scribble({ className = "" }: { className?: string }) {
