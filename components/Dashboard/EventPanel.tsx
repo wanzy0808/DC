@@ -226,7 +226,7 @@ export default function EventPanel({ onSaved, selectedTemplate }: EventPanelProp
       }
       await load(String(data.invitation.id));
       setNotice(d("Tersimpan."));
-      onSaved(creatingNew ? { id: String(data.invitation.id), type: data.invitation.type === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING" } : undefined);
+      onSaved(editorMode === "new" ? { id: String(data.invitation.id), type: data.invitation.type === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING" } : undefined);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : d("Data acara belum dapat disimpan."));
     } finally {
