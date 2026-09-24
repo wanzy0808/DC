@@ -25,6 +25,7 @@ import {
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
 import { formatInvitationEventDate } from "@/components/InvitationStudio/designer-state";
+import { invitationTitleCase } from "@/lib/events/parents";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 
 export function DesignerTool({
@@ -108,7 +109,7 @@ export function TemplatePanel({
 
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">Pilih Tema</h2>
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Choose a Theme" : "Pilih Tema"}</h2>
       {activeName && <p className="mt-2 text-sm font-medium text-foreground">{en ? "Selected" : "Dipilih"}: {activeName}</p>}
       <div className="mt-4 space-y-3">
         <div className="relative">
@@ -211,6 +212,14 @@ export function TemplatePanel({
   );
 }
 
+const sectionNamesEnglish: Record<InvitationSectionKey, string> = {
+  envelope: "Digital Envelope", cover: "Cover", greeting: "Greeting",
+  identity: "Identity", event: "Event Details", dateTime: "Date & Time",
+  gallery: "Gallery / Media", countdown: "Countdown", location: "Location",
+  rsvp: "RSVP", wishes: "Guest Wishes", gift: "Gifts / E-Angpao",
+  closing: "Closing", footer: "Footer", music: "Music",
+};
+
 export function SectionsPanel({
   sections,
   onChange,
@@ -218,13 +227,14 @@ export function SectionsPanel({
   sections: InvitationSections;
   onChange: (section: InvitationSectionKey, enabled: boolean) => void;
 }) {
+  const { locale } = useLanguage();
   return (
     <div>
       <Heading title="Bagian & Fitur" description="Sembunyikan bagian tanpa menghapus isinya." />
       <div className="mt-4 divide-y divide-primary/15">
         {invitationSectionItems.map((item) => (
           <label key={item.key} className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-3">
-            <span className="text-sm">{item.title}{item.key === "wishes" && <span className="mt-1 block text-xs text-muted-foreground">Pengiriman ucapan belum tersedia.</span>}</span>
+            <span className="text-sm">{locale === "en" ? sectionNamesEnglish[item.key] : item.title}{item.key === "wishes" && <span className="mt-1 block text-xs text-foreground/75">{locale === "en" ? "Sending wishes is not available yet." : "Pengiriman ucapan belum tersedia."}</span>}</span>
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
               <input type="checkbox" role="switch" className="peer sr-only" checked={sections[item.key] !== false}
                 onChange={(event) => onChange(item.key, event.target.checked)} />
@@ -286,6 +296,7 @@ export function FontPanel({
   selected: FontKey;
   onSelect: (key: FontKey) => void;
 }) {
+  const { locale } = useLanguage();
   const [search, setSearch] = useState("");
   const options = invitationFontOptions.filter(([, item]) => item.name.toLowerCase().includes(search.toLowerCase()));
   return (
@@ -295,9 +306,9 @@ export function FontPanel({
         description="Nama huruf ditampilkan dengan font aslinya."
       />
       <InvitationFonts families={invitationFontOptions.flatMap(([, item]) => [item.heading, item.body])} />
-      <Input className="mt-4" aria-label="Cari font" placeholder="Cari nama font…" value={search} onChange={(event) => setSearch(event.target.value)} />
+      <Input className="mt-4" aria-label={locale === "en" ? "Search fonts" : "Cari font"} placeholder={locale === "en" ? "Search fonts…" : "Cari nama font…"} value={search} onChange={(event) => setSearch(event.target.value)} />
       <div className="mt-4 space-y-2">
-        {options.length === 0 && <p className="py-4 text-sm text-muted-foreground">Font tidak ditemukan.</p>}
+        {options.length === 0 && <p className="py-4 text-sm text-foreground">{locale === "en" ? "No fonts found." : "Font tidak ditemukan."}</p>}
         {options.map(([key, item]) => (
           <button
             type="button"
@@ -337,6 +348,7 @@ export function ContentPanel({
   setEventTag: (value: string) => void;
   setDressCode: (value: string) => void;
 }) {
+  const { locale } = useLanguage();
   return (
     <div>
       <Heading
@@ -345,16 +357,16 @@ export function ContentPanel({
       />
       <div className="mt-5 border-y border-primary/20 py-4">
         <p className="text-xs font-semibold text-foreground">
-          {invitation?.title || "Acara"}
+          {invitationTitleCase(invitation?.title || (locale === "en" ? "Event" : "Acara"))}
         </p>
         <p className="mt-1 text-xs leading-4 text-muted-foreground">
           {formatInvitationEventDate(invitation)} ·{" "}
-          {invitation?.venue || "Lokasi belum diatur"}
+          {invitation?.venue || (locale === "en" ? "Venue not set" : "Lokasi belum diatur")}
         </p>
       </div>
       <div className="mt-4 space-y-3">
         <label className="block text-[11px] font-semibold">
-          Tag / hashtag acara
+          {locale === "en" ? "Event hashtag" : "Tag / hashtag acara"}
           <input
             value={eventTag}
             onChange={(event) => setEventTag(event.target.value)}
@@ -388,6 +400,8 @@ export function MusicPanel({
   onUpload: (file: File) => void;
   onDelete: (id: string) => void;
 }) {
+  const { locale } = useLanguage();
+  const en = locale === "en";
   const tracks = assets.filter((asset) => asset.type === "AUDIO");
   const activeUrl = musicUrl || tracks[0]?.url || defaultUrl;
   const full = tracks.length >= MAX_AUDIO_FILES;
@@ -395,26 +409,26 @@ export function MusicPanel({
     <div>
       <Heading title="Musik" description="Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya." />
       <fieldset disabled={busy} className="mt-5 min-w-0 space-y-3 border-0 p-0">
-        <legend className="sr-only">Pilih musik</legend>
+        <legend className="sr-only">{en ? "Choose music" : "Pilih musik"}</legend>
         <label className="flex min-h-12 cursor-pointer items-center gap-3 border-b border-primary/20 py-3 text-sm">
           <input type="radio" name="studio-music" checked={activeUrl === defaultUrl} onChange={() => setMusicUrl(defaultUrl)} className="accent-primary" />
-          <span>{defaultTrack}<span className="mt-1 block text-xs text-muted-foreground">Bawaan tema · tidak memakai slot</span></span>
+          <span>{defaultTrack}<span className="mt-1 block text-xs text-muted-foreground">{en ? "Theme music · no upload slot used" : "Bawaan tema · tidak memakai slot"}</span></span>
         </label>
         {musicUrl && musicUrl !== defaultUrl && !tracks.some((track) => track.url === musicUrl) && (
-          <p className="text-xs text-muted-foreground">Musik tersimpan sebelumnya sedang digunakan.</p>
+          <p className="text-xs text-muted-foreground">{en ? "Previously saved music is in use." : "Musik tersimpan sebelumnya sedang digunakan."}</p>
         )}
         {tracks.map((track) => (
           <div key={track.id} className="flex items-center gap-3 border-b border-primary/20 py-3">
             <label className="flex min-h-11 min-w-0 flex-1 cursor-pointer items-center gap-3 text-sm">
               <input type="radio" name="studio-music" checked={activeUrl === track.url} onChange={() => setMusicUrl(track.url)} className="accent-primary" />
-              <span className="break-all">{track.title || "Musik unggahan"}</span>
+              <span className="break-all">{track.title || (en ? "Uploaded Music" : "Musik unggahan")}</span>
             </label>
-            <Button size="sm" onClick={() => onDelete(track.id)} aria-label={`Hapus ${track.title || "musik"}`}>Hapus</Button>
+            <Button size="sm" onClick={() => onDelete(track.id)} aria-label={`${en ? "Delete" : "Hapus"} ${track.title || (en ? "music" : "musik")}`}>{en ? "Delete" : "Hapus"}</Button>
           </div>
         ))}
-        <p className="text-xs text-muted-foreground">{tracks.length} / {MAX_AUDIO_FILES} file</p>
+        <p className="text-xs text-muted-foreground">{tracks.length} / {MAX_AUDIO_FILES} {en ? "files" : "file"}</p>
         <label aria-disabled={full || busy} className={buttonVariants({ size: "sm", className: `flex min-h-11 w-full cursor-pointer px-3 py-3 ${full || busy ? "pointer-events-none opacity-50" : ""}` })}>
-          <Upload className="h-4 w-4" /> {busy ? "Memproses…" : "Unggah Musik"}
+          <Upload className="h-4 w-4" /> {busy ? (en ? "Processing…" : "Memproses…") : (en ? "Upload Music" : "Unggah Musik")}
           <input type="file" accept={AUDIO_MIME_TYPES.join(",")} disabled={full || busy} className="sr-only"
             onChange={(event) => { const file = event.target.files?.[0]; if (file) onUpload(file); event.currentTarget.value = ""; }} />
         </label>
