@@ -1,245 +1,194 @@
-/* Pencil Reverie — intentionally scoped to this template. All illustrations are non-photo. */
+/*
+ * Pencil Reverie — complete illustration first. No object-fit:cover,
+ * clipped lamp, huge negative offsets, or multiple competing background PNGs.
+ * Intentionally scoped: other invitation themes keep their own styles.
+ */
 .pr-invitation{
-  --pr-paper:var(--inv-bg,#f8f2e9);
-  --pr-ink:var(--inv-ink,#3a3532);
-  --pr-rose:var(--inv-accent,#bd7885);
-  --pr-soft:var(--inv-soft,#ddc7ba);
-  --pr-sheet:var(--inv-surface,#fffaf3);
-  background:var(--pr-paper);color:var(--pr-ink);
-  --inv-body:Quicksand,sans-serif;
+ --pr-paper:var(--inv-bg,#f8f2e9);
+ --pr-card:var(--inv-surface,#fffaf4);
+ --pr-ink:var(--inv-ink,#393431);
+ --pr-rose:var(--inv-accent,#bb7785);
+ --pr-rule:var(--inv-soft,#d7c1ba);
+ color:var(--pr-ink);background:var(--pr-paper);
 }
-.pr-invitation .pr-scene,.pr-invitation .pr-section{color:var(--pr-ink);background-color:var(--pr-paper)!important;}
-.pr-scene,.pr-section{isolation:isolate;}
-.pr-scene{position:relative;min-height:760px;min-height:max(760px,100svh);overflow:hidden;text-align:center;}
-.pr-paper-fibers{position:absolute;inset:0;z-index:-1;pointer-events:none;
- background-image:repeating-linear-gradient(37deg,transparent 0 3px,#9d856007 4px 5px),radial-gradient(ellipse at 25% 14%,#ad97750b,transparent 60%);opacity:.7}
-.pr-scene img,.pr-section-art img,.pr-identity-polaroid img,.pr-memory-grid img,.pr-prize img{display:block;max-width:none;object-fit:contain;pointer-events:none;user-select:none}
-.pr-scene img{position:absolute}
-.pr-overline{font-size:10px;letter-spacing:.24em;line-height:1.7;font-weight:600}
-.pr-scene button,.pr-invitation .dc-app-button{cursor:pointer;border-radius:9px;transition:filter .2s ease,box-shadow .2s ease,transform .2s ease}
-.pr-scene button:focus-visible,.pr-invitation a:focus-visible,.pr-invitation button:focus-visible{outline:2px solid var(--pr-rose);outline-offset:4px}
-@media(hover:hover){.pr-scene button:hover{filter:brightness(1.06);box-shadow:0 6px 12px #45352d15}}
+.pr-invitation .pr-scene,.pr-invitation .pr-section{color:var(--pr-ink);background:var(--pr-paper)!important}
+.pr-invitation :is(button,a):focus-visible{outline:2px solid var(--pr-rose);outline-offset:4px}
+.pr-invitation :is(.pr-scene,.pr-section) img{display:block;max-width:100%;height:auto;object-fit:contain}
+.pr-scene{position:relative;isolation:isolate;display:flex;flex-direction:column;align-items:center;
+ min-height:760px;padding:28px 0 36px;text-align:center;overflow:hidden;
+ background-image:repeating-linear-gradient(45deg,transparent 0 5px,#99795508 6px 7px)}
+.pr-overline{font-size:10px;line-height:1.5;letter-spacing:.26em;font-weight:600}
+.pr-gate-intro{width:100%;padding:23px 18px 0}
+.pr-gate-intro>p{margin:10px auto 0;max-width:90%;font:italic clamp(21px,5vw,27px)/1.45 var(--inv-heading,Georgia,serif)}
+.pr-letter-illustration{position:relative;width:min(100%,485px);margin:20px auto 0;isolation:isolate}
+.pr-letter-paper,.pr-cover-paper{width:100%;height:auto!important;object-fit:contain}
+.pr-letter-copy{position:absolute;z-index:2;left:15%;right:18%;top:30%;height:37%;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:7px;overflow-wrap:anywhere;pointer-events:none;
+ background:color-mix(in srgb,var(--pr-card) 65%,transparent);border-radius:4px}
+.pr-letter-copy p{font-size:11px;letter-spacing:.09em}
+.pr-letter-copy h1{max-width:100%;font:clamp(20px,5.8vw,36px)/1.25 var(--inv-heading,Georgia,serif);overflow-wrap:anywhere;text-wrap:balance}
+.pr-letter-copy span{font-size:11px;letter-spacing:.06em}
+.pr-heart-doodle{position:absolute;z-index:3;right:13%;top:54%;width:32px;height:32px;color:var(--pr-rose);
+ transform:rotate(17deg)}
+.pr-heart-doodle path{stroke-dasharray:200;stroke-dashoffset:200;animation:pr-sketch-heart 5s ease-in-out infinite}
+.pr-open-button{position:relative;z-index:4;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+ margin:0 auto 18px;min-height:48px;padding:10px 24px;border-radius:9px;background:var(--pr-rose);color:#fff;
+ font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 6px 14px #42312b1a;transition:transform .25s ease,filter .25s ease}
+.pr-open-button:disabled{cursor:wait}
+.pr-envelope[data-pr-opening] .pr-letter-illustration{animation:pr-turn-letter 1.05s cubic-bezier(.3,.72,.3,1) both}
+.pr-envelope[data-pr-opening] .pr-open-button{animation:pr-open-fade .6s ease both}
+.pr-envelope[data-pr-opening] .pr-gate-intro{animation:pr-open-fade .8s ease both}
+.pr-cover-heading{margin:25px auto 0;padding:0 14px}
+.pr-cover-illustration{position:relative;isolation:isolate;width:min(100%,520px);margin:7px auto 0}
+.pr-cover-copy{position:absolute;z-index:2;top:11%;left:42%;right:4%;padding:5px 6px 9px;display:flex;
+ flex-direction:column;align-items:center;gap:8px;overflow-wrap:anywhere;
+ background:color-mix(in srgb,var(--pr-paper) 76%,transparent);border-radius:4px}
+.pr-cover-names{display:flex;flex-direction:column;align-items:center;gap:1px;width:100%;
+ font:clamp(29px,7.9vw,48px)/1.06 var(--inv-heading,Georgia,serif);letter-spacing:-.045em;text-wrap:balance}
+.pr-cover-names span{max-width:100%;overflow-wrap:anywhere}
+.pr-cover-names em{font:italic .62em/1 var(--inv-heading,Georgia,serif);color:var(--pr-rose);letter-spacing:0}
+.pr-cover-date{font-size:10px;line-height:1.4;letter-spacing:.06em}
+.pr-cover-hashtag{max-width:100%;font-size:10px;overflow-wrap:anywhere}
+.pr-cover-illustration>.pr-heart-doodle{right:4%;top:36%;width:27px}
+.pr-cover-end{display:flex;flex-direction:column;align-items:center;gap:13px;margin:-6px auto 4px;
+ font:italic 13px/1.4 var(--inv-heading,Georgia,serif)}
+.pr-scroll-down{display:grid;place-items:center;width:44px;height:44px;border-radius:50%!important;
+ background:var(--pr-rose);color:#fff;cursor:pointer;box-shadow:0 5px 12px #56383030;
+ animation:pr-arrow-bob 3.2s ease-in-out infinite}
+.pr-cover[data-pr-long=true] .pr-cover-copy{position:relative;top:auto;left:auto;right:auto;order:-1;
+ width:88%;margin:18px auto 0;padding:12px 10px;background:var(--pr-paper)}
+.pr-cover[data-pr-long=true] .pr-cover-illustration{display:flex;flex-direction:column}
+.pr-cover[data-pr-long=true] .pr-cover-names{font-size:clamp(29px,6.3vw,44px)}
+.pr-cover[data-pr-long=true] .pr-cover-illustration>.pr-heart-doodle{top:54%;right:6%}
 
-/* Unframed handwritten/layered cover. The name stays readable even on narrow phones. */
-.pr-cover{background:var(--pr-paper);}
-.pr-cover-town{position:absolute;bottom:5%;left:-6%;width:112%;height:51%;opacity:.28;color:var(--pr-ink)}
-.pr-cover-copy{position:absolute;z-index:7;top:10%;left:18%;right:11%;pointer-events:none;text-align:center}
-.pr-cover-names{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;max-width:100%;margin:13px auto 0;
- font:clamp(40px,10.6vw,64px)/1.04 var(--inv-heading,Georgia,serif);letter-spacing:-.047em;overflow-wrap:anywhere;text-wrap:balance}
-.pr-cover-names span{display:block;max-width:100%;}
-.pr-cover-names em{font:italic 31px/1.1 var(--inv-heading,Georgia,serif);color:var(--pr-rose);letter-spacing:0}
-.pr-cover-date{margin-top:16px;font-size:11px;letter-spacing:.19em}
-.pr-cover-hashtag{max-width:75%;margin:10px auto 0;font-size:11px;overflow-wrap:anywhere}
-.pr-cover-lamp{z-index:3;left:-14%;bottom:11%;width:40%;height:60%;object-position:left bottom;transform-origin:bottom center;animation:pr-lamp-light 9s ease-in-out infinite}
-.pr-cover-balloons{z-index:2;right:-9%;top:8%;width:35%;height:29%;transform-origin:bottom center;animation:pr-balloon 6s ease-in-out infinite}
-.pr-cover-polaroid{z-index:2;right:1%;bottom:30%;width:33%;height:22%;transform:rotate(8deg)}
-.pr-cover-bicycle{z-index:4;left:-14%;bottom:3%;width:66%;height:41%;object-position:left bottom;animation:pr-bicycle 7s ease-in-out infinite}
-.pr-cover-couple{z-index:5;right:-4%;bottom:9%;width:63%;height:42%;object-position:right bottom;filter:drop-shadow(0 5px 5px #3b272816);animation:pr-couple-appear .95s ease both}
-.pr-cover-books{z-index:3;left:31%;bottom:8%;width:33%;height:16%;opacity:.83}
-.pr-cover-camera{z-index:4;left:47%;bottom:4%;width:24%;height:11%;transform:rotate(-13deg)}
-.pr-cover-ticket{z-index:5;right:-12%;bottom:0;width:46%;height:20%;transform:rotate(15deg)}
-.pr-cover-clock{position:absolute!important;z-index:4;right:9%;bottom:37%;transform:scale(.65)}
-.pr-cover-heart{position:absolute;z-index:7;top:22%;right:5%;width:42px;height:42px;color:var(--pr-rose)}
-.pr-cover-handnote{position:absolute;z-index:6;top:35%;right:4%;max-width:34%;font:italic 16px/1.15 "Playfair Display",Georgia,serif;transform:rotate(-8deg);color:var(--pr-rose)}
-.pr-scroll-down{position:absolute;z-index:9;left:50%;bottom:26px;display:grid;place-items:center;width:44px;height:44px;
- background:var(--pr-rose);border:1px solid #fff6;color:white;border-radius:50%!important;transform:translateX(-50%);
- box-shadow:0 4px 12px #4b35302b;animation:pr-scroll-bob 2.7s ease-in-out infinite}
-.pr-cover .pr-overline{opacity:0;animation:pr-copy-appear .8s .12s both}
-.pr-cover-names{opacity:0;animation:pr-copy-appear .85s .27s both}
-.pr-cover-date,.pr-cover-hashtag{opacity:0;animation:pr-copy-appear .75s .55s both}
-
-/* Opening: scrapbook postcard with a real staged page-turn, not a flat default envelope. */
-.pr-envelope{padding-top:1px}
-.pr-letter-intro{position:relative;z-index:5;margin:79px auto 0;width:min(90%,410px)}
-.pr-letter-intro p{margin-top:12px;font:italic clamp(22px,5vw,30px)/1.4 var(--inv-heading,Georgia,serif);text-wrap:balance}
-.pr-letter-heart{position:absolute;right:3%;top:24px;width:34px;height:34px;color:var(--pr-rose)}
-.pr-scribble path:first-child{stroke-dasharray:250;stroke-dashoffset:250;animation:pr-draw-heart 3.2s ease-in-out 1s infinite}
-.pr-letter-stage{position:relative;width:min(94%,450px);height:490px;margin:10px auto 0;transform-origin:bottom center;transition:transform .9s cubic-bezier(.2,.7,.24,1),opacity .9s}
-.pr-letter-stage img{position:absolute}
-.pr-letter-balloons{top:-2%;right:1%;width:30%;height:35%;animation:pr-balloon 5s ease-in-out infinite}
-.pr-letter-polaroid{z-index:1;left:1%;top:3%;width:69%;height:70%;transform:rotate(-10deg);filter:drop-shadow(0 8px 7px #43332120)}
-.pr-letter-couple{z-index:2;right:0;top:6%;width:66%;height:67%;transform:rotate(4deg);filter:drop-shadow(0 7px 7px #4632231b)}
-.pr-letter-ticket{z-index:3;left:-8%;bottom:6%;width:57%;height:31%;transform:rotate(-13deg);animation:pr-ticket-float 5s ease-in-out infinite}
-.pr-letter-cassette{position:absolute;z-index:4;left:23%;bottom:1%;width:65%;height:32%;transform:rotate(8deg)}
-.pr-letter-cassette-img{position:relative!important;width:100%;height:100%}
-.pr-reel{position:absolute;top:43%;width:11%;aspect-ratio:1;border:2px dashed #5a4c41;border-radius:50%;opacity:.6;animation:pr-reel 4s linear infinite}
-.pr-reel-one{left:28%}.pr-reel-two{right:26%}
-.pr-letter-ribbon{z-index:5;right:-4%;bottom:0;width:31%;height:34%;animation:pr-ribbon 6s ease-in-out infinite}
-.pr-letter-camera{z-index:3;left:4%;bottom:1%;width:24%;height:20%;transform:rotate(-13deg)}
-.pr-pencil-note{position:absolute;z-index:6;top:42%;left:0;max-width:29%;font:italic 17px/1.15 "Playfair Display",Georgia,serif;transform:rotate(-10deg);color:var(--pr-rose)}
-.pr-paper-tape{position:absolute;z-index:6;display:block;width:71px;height:20px;background:#d4b89eab;box-shadow:0 1px 2px #74604e16;opacity:.8}
-.pr-paper-tape-a{top:13%;left:6%;transform:rotate(-27deg)}.pr-paper-tape-b{top:28%;right:8%;transform:rotate(21deg)}
-.pr-open-button{position:relative;z-index:7;display:inline-flex;justify-content:center;align-items:center;gap:10px;
- min-height:48px;padding:11px 28px;background:var(--pr-rose);color:white;font-weight:600;font-size:12px;letter-spacing:.035em;
- box-shadow:0 6px 16px #46302f28}
-.pr-open-button:disabled{cursor:default}
-.pr-open-hint{position:relative;z-index:2;margin:13px auto 10px;font-size:11px;opacity:.75}
-.pr-envelope[data-pr-opening] .pr-letter-stage{transform:translateY(-50px) rotate(-8deg) scale(1.12);opacity:0}
-.pr-envelope[data-pr-opening] .pr-letter-intro{animation:pr-envelope-exit .75s ease both}
-.pr-envelope[data-pr-opening] .pr-open-button{animation:pr-envelope-exit .5s ease both}
-
-/* Each section gets its own illustrative composition instead of repeating the same corner bow. */
-.pr-invitation .pr-section{position:relative;overflow:hidden;min-height:335px;padding:81px 25px 91px;
- background-image:radial-gradient(circle at 20% 8%,#a98a6420,transparent 46%),repeating-linear-gradient(30deg,transparent 0 6px,#69564507 7px 8px)!important}
-.pr-invitation .pr-section:nth-of-type(2n){background-color:var(--pr-sheet)!important}
-.pr-invitation .pr-section>div.relative{position:relative;z-index:2;max-width:510px;margin-inline:auto}
-.pr-invitation .pr-section h2{font:clamp(28px,6.8vw,39px)/1.2 var(--inv-heading,Georgia,serif);letter-spacing:-.035em;color:var(--pr-ink)}
+/* Editorial sections: a complete illustration is its own page panel after readable content. */
+.pr-invitation .pr-section{position:relative;display:flex;flex-direction:column;align-items:stretch;
+ padding:64px 24px 36px!important;min-height:300px;overflow:hidden!important;
+ background-image:repeating-linear-gradient(40deg,transparent 0 5px,#99795508 6px 7px)!important}
+.pr-invitation .pr-section:nth-of-type(even){background-color:var(--pr-card)!important}
+.pr-invitation .pr-section>div.relative{position:relative;z-index:2;order:1;width:100%;
+ max-width:470px;margin:0 auto!important}
+.pr-invitation .pr-section h2{font:clamp(27px,6vw,36px)/1.23 var(--inv-heading,Georgia,serif);
+ letter-spacing:-.035em;color:var(--pr-ink)}
 .pr-invitation .pr-section>div.relative>p:first-child{display:none}
-.pr-invitation .pr-section>div.relative>div:nth-child(3){margin-top:15px;margin-bottom:30px;color:var(--pr-rose)}
-.pr-invitation .pr-section>div.relative>div:nth-child(3) svg{color:var(--pr-rose)}
-.pr-section-art{position:absolute;inset:0;z-index:0;pointer-events:none;}
-.pr-section-art img{position:absolute}
-.pr-section-art .pr-art-one{width:38%;height:200px;object-position:top right;right:-9%;top:-48px;transform:rotate(13deg)}
-.pr-section-art .pr-art-two{width:39%;height:190px;object-position:bottom left;left:-11%;bottom:-47px;transform:rotate(-12deg)}
-.pr-section-art .pr-art-three{width:23%;height:130px;object-position:center;right:-5%;bottom:4%;transform:rotate(12deg)}
-.pr-section-art .pr-art-note{position:absolute;right:12%;bottom:19px;max-width:38%;text-align:right;font:italic 16px/1.2 var(--inv-heading,Georgia,serif);color:var(--pr-rose);transform:rotate(-7deg)}
-.pr-section-art[data-part=greeting] .pr-art-one{width:39%;right:-7%;top:-26px}
-.pr-section-art[data-part=greeting] .pr-art-two{width:33%;left:-7%;bottom:-17px}
-.pr-section-art[data-part=identity] .pr-art-one{width:29%;right:-9%;top:-4px}.pr-section-art[data-part=identity] .pr-art-two{width:30%;left:-10%;bottom:-9px}
-.pr-section-art[data-part=event] .pr-art-one{top:4%;width:29%;height:240px;right:-8%}
-.pr-section-art[data-part=event] .pr-art-two{left:-9%;bottom:-10px;width:47%;height:155px}
-.pr-section-art[data-part=dateTime] .pr-art-one{width:33%}
-.pr-section-art[data-part=countdown] .pr-art-one{right:-4%;width:28%}
-.pr-section-art[data-part=gallery] .pr-art-one{width:34%;top:-52px}
-.pr-section-art[data-part=rsvp] .pr-art-one{width:26%;right:-5%}.pr-section-art[data-part=rsvp] .pr-art-two{width:24%;left:-7%}
-.pr-section-art[data-part=gift] .pr-art-one{width:29%;top:2%}
-.pr-section-art[data-part=closing] .pr-art-one{width:36%;right:-5%;top:-50px}.pr-section-art[data-part=closing] .pr-art-two{width:46%;left:-11%;bottom:-80px}
-.pr-section-art .pr-art-three{opacity:.76}
-.pr-invitation .pr-section[data-invitation-section=identity]{padding-top:80px}
-.pr-identity-polaroid{position:relative;width:min(78%,340px);margin:8px auto 36px;padding:11px 11px 42px;
- background:var(--pr-sheet);transform:rotate(-5deg);box-shadow:0 10px 27px #4b302421}
-.pr-identity-polaroid img{width:100%;aspect-ratio:4/5;object-fit:contain}
-.pr-identity-polaroid .pr-polaroid-tape{position:absolute;z-index:3;left:37%;top:-12px;width:79px;height:22px;transform:rotate(-10deg);background:#ccb09c9c}
-.pr-identity-signature{display:block;margin:18px auto 0;max-width:92%;font:italic 16px/1.5 var(--inv-heading,Georgia,serif);color:var(--pr-rose)}
-.pr-invitation .pr-identity-names{font:clamp(27px,6vw,40px)/1.15 var(--inv-heading,Georgia,serif)!important;text-wrap:balance;overflow-wrap:anywhere}
-.pr-date-scrap{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;margin:0 auto;max-width:330px;padding:30px 18px;border:1px solid var(--pr-soft);
- background:var(--pr-sheet);clip-path:polygon(0 0,94% 0,100% 8%,100% 100%,7% 100%,0 91%);box-shadow:0 7px 15px #3f302016}
-.pr-date-scrap .pr-date-label{font-size:10px;letter-spacing:.2em}
-.pr-invitation .pr-section[data-invitation-section=dateTime] .pr-date-scrap p{margin-top:9px}
-.pr-invitation .pr-section[data-invitation-section=dateTime] .pr-date-scrap p:first-of-type{font:clamp(20px,5vw,28px)/1.2 var(--inv-heading,Georgia,serif)}
-.pr-memory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px 11px;margin:8px auto 34px;max-width:465px;padding:9px 0 16px}
-.pr-memory-grid figure{position:relative;min-width:0;padding:9px 9px 25px;background:var(--pr-sheet);box-shadow:0 5px 12px #4d3b2c20;transform:rotate(-5deg);transition:transform .45s ease,box-shadow .45s}
-.pr-memory-grid figure:nth-child(2n){transform:translateY(18px) rotate(6deg)}
-.pr-memory-grid figure:nth-child(3n){transform:translateY(5px) rotate(-8deg)}
-.pr-memory-grid img{width:100%;aspect-ratio:3/4;object-fit:contain}
-.pr-memory-grid figcaption{padding-top:3px;font:italic 14px var(--inv-heading,Georgia,serif);color:var(--pr-ink);overflow-wrap:anywhere}
-.pr-memory-grid figure:before{content:"";position:absolute;top:-9px;left:35%;width:60px;height:18px;background:#cab19a9c;transform:rotate(-7deg)}
-.pr-invitation .pr-section[data-invitation-section=gallery] .pr-memory-note{display:block;margin:4px auto 0;max-width:255px;font:italic 18px var(--inv-heading);color:var(--pr-rose)}
-.pr-event-story{max-width:400px;margin:0 auto;padding:25px 20px;background:var(--pr-sheet);border:1px solid var(--pr-soft);text-align:left}
-.pr-event-story h3{font:22px/1.4 var(--inv-heading)}
-.pr-event-story p{font-size:13px;line-height:1.85;overflow-wrap:anywhere}
-.pr-countdown-canvas{position:relative;max-width:350px;margin:0 auto;padding:16px 0}
-.pr-clock-art{position:relative;display:block;width:88px;height:88px;border:2px solid var(--pr-ink);border-radius:50%;background:var(--pr-sheet);
- box-shadow:0 0 0 7px color-mix(in srgb,var(--pr-rose) 8%,transparent),inset 0 0 0 5px var(--pr-paper)}
-.pr-clock-face{position:absolute;inset:10px;border-radius:50%;border:1px dashed var(--pr-soft)}
-.pr-clock-hand{position:absolute;bottom:50%;left:calc(50% - 1px);width:2px;border-radius:2px;transform-origin:bottom center;background:var(--pr-ink)}
-.pr-clock-hour{height:22px;animation:pr-clock-back 120s linear infinite}.pr-clock-minute{height:32px;animation:pr-clock-back 16s linear infinite}
-.pr-clock-dot{position:absolute;left:50%;top:50%;width:7px;height:7px;transform:translate(-50%,-50%);border-radius:50%;background:var(--pr-rose)}
-.pr-countdown-canvas .pr-clock-art{margin:0 auto 21px}
-.pr-invitation .pr-section[data-invitation-section=countdown] .grid>div{padding:8px 2px;border:0;border-bottom:1px solid var(--pr-soft);background:transparent;border-radius:0}
-.pr-invitation .pr-section[data-invitation-section=countdown] .grid p:first-child{font-variant-numeric:tabular-nums;font-size:24px}
-.pr-invitation .pr-section[data-invitation-section=rsvp] .dc-app-button,.pr-invitation .pr-section[data-invitation-section=rsvp] button[type=submit]{border-radius:8px;background:var(--pr-rose);color:#fff;min-height:43px}
-.pr-invitation .pr-section[data-invitation-section=rsvp] form{background:transparent}
-.pr-invitation .pr-section[data-invitation-section=rsvp] input,.pr-invitation .pr-section[data-invitation-section=rsvp] textarea{accent-color:var(--pr-rose)}
-.pr-invitation .pr-section[data-invitation-section=gift] button,.pr-invitation .pr-section[data-invitation-section=location] a{border-radius:8px;background:var(--pr-rose);color:#fff}
-.pr-invitation .pr-section[data-invitation-section=gift] .pr-gift-panel{border:1px solid var(--pr-soft);background:var(--pr-sheet);padding:24px 18px}
-.pr-invitation .pr-section[data-invitation-section=closing]{min-height:570px;padding-top:97px;padding-bottom:210px}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{max-width:330px;margin:0 auto;text-align:left}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy p{line-height:1.9}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy p:last-child{font:italic 24px var(--inv-heading);color:var(--pr-rose)}
-.pr-invitation footer[data-invitation-section=footer]{background:var(--pr-paper)!important}
-.pr-invitation .pr-section[data-pr-visible=true] h2{animation:pr-copy-appear .78s cubic-bezier(.23,.8,.22,1) both}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-identity-polaroid{animation:pr-art-reveal 1s cubic-bezier(.2,.75,.2,1) both}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-memory-grid figure{animation:pr-polaroid-enter .75s cubic-bezier(.2,.75,.2,1) both}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-memory-grid figure:nth-child(2){animation-delay:.1s}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-memory-grid figure:nth-child(3){animation-delay:.2s}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-memory-grid figure:nth-child(4){animation-delay:.3s}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-section-art .pr-art-one{animation:pr-ornament-enter .9s both}
-.pr-invitation .pr-section[data-pr-visible=true] .pr-section-art .pr-art-two{animation:pr-ornament-enter 1.1s .12s both}
-@media(hover:hover){.pr-memory-grid figure:hover{transform:translateY(-7px) rotate(0deg);box-shadow:0 14px 24px #422b2530}}
-@keyframes pr-copy-appear{from{opacity:0;transform:translateY(18px);filter:blur(2px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
-@keyframes pr-art-reveal{from{opacity:0;transform:translateY(26px) rotate(-12deg) scale(.93)}to{opacity:1;transform:translateY(0) rotate(-5deg) scale(1)}}
-@keyframes pr-polaroid-enter{from{opacity:0;translate:0 22px}to{opacity:1;translate:0 0}}
-@keyframes pr-ornament-enter{from{opacity:0;translate:0 22px}to{opacity:1;translate:0 0}}
-@keyframes pr-clock-back{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
-@keyframes pr-reel{to{transform:rotate(360deg)}}
-@keyframes pr-draw-heart{0%{stroke-dashoffset:250;opacity:.1}35%,65%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.25}}
-@keyframes pr-balloon{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
-@keyframes pr-ticket-float{0%,100%{transform:rotate(-13deg) translateY(0)}50%{transform:rotate(-9deg) translateY(-5px)}}
-@keyframes pr-ribbon{0%,100%{transform:rotate(-16deg)}50%{transform:rotate(-11deg)}}
-@keyframes pr-bicycle{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
-@keyframes pr-lamp-light{0%,100%{filter:drop-shadow(0 0 0 transparent)}50%{filter:drop-shadow(0 0 7px #d7aa6f80)}}
-@keyframes pr-couple-appear{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pr-scroll-bob{0%,100%{translate:0 0}50%{translate:0 5px}}
-@keyframes pr-envelope-exit{to{opacity:0;transform:translateY(-14px)}}
-@media(max-width:420px){
-.pr-letter-intro{margin-top:67px}.pr-letter-stage{height:465px;margin-top:12px}
-.pr-cover-copy{top:12%;left:17%;right:8%}
-.pr-cover-lamp{left:-16%;width:37%}.pr-cover-couple{right:-4%;width:67%}
-.pr-cover-handnote{top:37%;right:3%;font-size:13px}
-.pr-cover-bicycle{width:73%;left:-16%}
-.pr-section-art .pr-art-one{width:32%}
-}
-@media(max-width:350px){
-.pr-cover-names{font-size:37px}.pr-cover-copy{top:14%}.pr-cover-handnote{top:38%;font-size:12px}
-.pr-cover-couple{width:69%}.pr-cover-ticket{right:-18%}
-.pr-letter-stage{height:440px}.pr-invitation .pr-section{padding-inline:19px}
-}
-@media(min-width:640px){.pr-cover-copy{top:9%;left:22%;right:17%}.pr-cover-names{font-size:66px}
-.pr-cover-lamp{left:1%;max-width:34%}.pr-cover-bicycle{left:0;width:50%}.pr-cover-couple{right:0;width:50%}
-.pr-cover-handnote{right:14%}.pr-cover-balloons{right:6%;width:25%}.pr-cover-town{left:0;width:100%}}
+.pr-invitation .pr-section>div.relative>span[aria-hidden]{margin:18px auto 24px}
+.pr-section-art{position:relative!important;inset:auto!important;z-index:1!important;order:2;
+ display:block;width:min(100%,475px);height:auto!important;margin:30px auto 0!important;overflow:visible!important}
+.pr-section-whole-image{display:block!important;position:static!important;width:100%!important;
+ height:auto!important;max-width:100%!important;object-fit:contain!important;opacity:1!important;
+ transform:none!important;filter:none!important}
+.pr-section-art[data-part=location]{width:min(62%,280px)}
+.pr-section-art[data-part=countdown]{width:min(54%,240px)}
+.pr-section-art[data-part=identity]{width:min(60%,280px)}
+.pr-section-art[data-part=dateTime]{width:min(74%,340px)}
+.pr-section-art[data-part=gift]{width:min(56%,240px)}
+.pr-section-art[data-part=wishes]{width:min(58%,245px)}
+.pr-section-art[data-part=event]{width:min(92%,430px)}
+.pr-section-art[data-part=closing]{width:min(95%,470px);margin-top:18px!important}
+.pr-invitation .pr-section[data-invitation-section=gallery] .pr-section-art{display:none}
+.pr-invitation .pr-section[data-invitation-section=identity]{padding-top:75px!important}
+.pr-identity-story{text-align:center}
+.pr-identity-polaroid{position:relative;width:min(80%,330px);margin:4px auto 34px;
+ padding:10px 10px 27px;background:var(--pr-card);border:1px solid var(--pr-rule);
+ box-shadow:0 8px 21px #4c34301c;transform:rotate(-3deg)}
+.pr-identity-polaroid img{width:100%;height:auto!important;object-fit:contain!important}
+.pr-polaroid-tape{position:absolute;top:-9px;left:39%;height:19px;width:70px;background:#cdb49c90;transform:rotate(-10deg)}
+.pr-identity-names{font:clamp(29px,6vw,42px)/1.2 var(--inv-heading,Georgia,serif);overflow-wrap:anywhere}
+.pr-identity-signature{margin-top:14px;font:italic 17px/1.5 var(--inv-heading,Georgia,serif);color:var(--pr-rose)}
+.pr-event-story{width:min(94%,390px);margin:5px auto;text-align:left;border-top:1px solid var(--pr-rule);
+ border-bottom:1px solid var(--pr-rule);padding:23px 14px}
+.pr-event-story h3{font:24px/1.3 var(--inv-heading,Georgia,serif)}
+.pr-event-story p{overflow-wrap:anywhere}
+.pr-date-scrap{width:min(100%,370px);margin:0 auto;padding:26px 12px 29px;
+ background:var(--pr-card);border:1px solid var(--pr-rule);text-align:center;
+ box-shadow:0 6px 13px #503c2a10}
+.pr-date-scrap p{line-height:1.7}
+.pr-invitation .pr-section[data-invitation-section=dateTime] .pr-date-scrap p:first-of-type{
+ font:clamp(21px,5vw,28px)/1.3 var(--inv-heading,Georgia,serif)}
+.pr-invitation .pr-section[data-invitation-section=location] a,
+.pr-invitation .pr-section[data-invitation-section=gift] button,
+.pr-invitation .pr-section[data-invitation-section=rsvp] button[type=submit]{
+ border-radius:9px!important;background:var(--pr-rose)!important;color:#fff!important}
+.pr-invitation .pr-section[data-invitation-section=rsvp] .zen-rsvp{border:0;box-shadow:none;
+ background:transparent;padding:0}
+.pr-invitation .pr-section[data-invitation-section=rsvp] :is(input,textarea){accent-color:var(--pr-rose)}
+.pr-invitation .pr-section[data-invitation-section=gift] .pr-gift-panel{
+ max-width:400px;margin:0 auto;border:1px solid var(--pr-rule);background:var(--pr-card);padding:23px 18px}
+.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{
+ max-width:375px;text-align:left;margin:8px auto 0}
+.pr-closing-copy p:last-child{font:italic 24px/1.4 var(--inv-heading,Georgia,serif)}
+.pr-countdown-canvas{max-width:390px;margin:0 auto}
+.pr-clock-art{position:relative;display:block;width:82px;height:82px;margin:3px auto 22px;
+ border:2px solid var(--pr-ink);border-radius:50%;background:var(--pr-card);
+ box-shadow:inset 0 0 0 6px var(--pr-card),0 0 0 3px var(--pr-rule)}
+.pr-clock-face{position:absolute;inset:9px;border:1px dashed var(--pr-rule);border-radius:50%}
+.pr-clock-hand{position:absolute;left:calc(50% - 1px);bottom:50%;width:2px;transform-origin:bottom;background:var(--pr-ink)}
+.pr-clock-hour{height:22px;animation:pr-clock-back 110s linear infinite}
+.pr-clock-minute{height:30px;animation:pr-clock-back 14s linear infinite}
+.pr-clock-dot{position:absolute;top:50%;left:50%;width:7px;height:7px;transform:translate(-50%,-50%);
+ border-radius:50%;background:var(--pr-rose)}
+.pr-invitation .pr-section[data-invitation-section=countdown] .grid>div{
+ border-radius:0;background:transparent;border:0;border-bottom:1px solid var(--pr-rule)}
+.pr-invitation .pr-section[data-invitation-section=countdown] .grid p:first-child{font-variant-numeric:tabular-nums}
+
+/* Gallery: whole drawings on staggered archival sheets, not forced square image crops. */
+.pr-memory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 12px;
+ align-items:start;width:100%;margin:26px auto 38px;max-width:480px}
+.pr-polaroid-button{display:block;min-width:0;padding:0;border:0;background:transparent;cursor:zoom-in;
+ transform:rotate(-3deg);transition:transform .35s ease,filter .35s ease}
+.pr-polaroid-button:nth-child(even){transform:translateY(14px) rotate(3deg)}
+.pr-polaroid-sheet{position:relative;display:block;padding:8px 8px 16px;background:var(--pr-card);
+ border:1px solid var(--pr-rule);box-shadow:0 5px 12px #46352f17}
+.pr-polaroid-sheet:before{content:"";position:absolute;z-index:3;left:calc(50% - 26px);top:-8px;
+ width:52px;height:15px;background:#cdb69da6;transform:rotate(-5deg)}
+.pr-polaroid-image{display:block;width:100%!important;height:auto!important;max-height:none!important;
+ object-fit:contain!important}
+.pr-polaroid-caption{display:block;margin-top:8px;font:italic 12px/1.45 var(--inv-heading,Georgia,serif);
+ overflow-wrap:anywhere}
+.pr-lightbox{position:fixed;z-index:9999;inset:0;display:grid;align-items:center;
+ grid-template-columns:44px minmax(0,1fr) 44px;gap:4px;padding:54px 9px 24px;background:#25201df2}
+.pr-lightbox button{display:grid;place-items:center;min-height:44px;border:1px solid #fff8;
+ border-radius:7px;color:#fff;background:#2b2726}
+.pr-lightbox-close{position:absolute;top:8px;right:12px;width:44px}
+.pr-lightbox-previous{grid-column:1;grid-row:1}.pr-lightbox-next{grid-column:3;grid-row:1}
+.pr-lightbox-art{grid-column:2;grid-row:1;margin:0;padding:12px;background:#fffaf4;
+ color:#373230;max-width:100%;max-height:82svh;overflow-y:auto}
+.pr-lightbox-image{display:block!important;width:auto!important;height:auto!important;
+ max-height:68svh!important;max-width:100%!important;object-fit:contain!important;margin:0 auto}
+.pr-lightbox-art figcaption{padding:9px 0;text-align:center;font:italic 15px var(--inv-heading,Georgia,serif)}
+@media(hover:hover){.pr-open-button:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.pr-polaroid-button:hover{transform:translateY(-5px) rotate(0deg);filter:drop-shadow(0 6px 8px #34272032)}}
+
+/* Scene and section motion only when actually visible. */
+.pr-scene[data-pr-active=false] *, .pr-scene[data-pr-active=false] *:before,
+.pr-scene[data-pr-active=false] *:after{animation-play-state:paused!important}
+.pr-invitation .pr-section[data-pr-visible=true] h2{animation:pr-title-enter .72s cubic-bezier(.22,.72,.23,1) both}
+.pr-invitation .pr-section[data-pr-visible=true] .pr-section-whole-image{animation:pr-art-enter .95s cubic-bezier(.2,.7,.25,1) both}
+.pr-invitation .pr-section[data-pr-visible=true] .pr-polaroid-button{animation:pr-polaroid-enter .7s both}
+.pr-invitation .pr-section[data-pr-visible=true] .pr-polaroid-button:nth-child(2n){animation-delay:.1s}
+.pr-invitation .pr-section[data-pr-visible=true] .pr-polaroid-button:nth-child(3n){animation-delay:.2s}
+.pr-cover-copy{animation:pr-title-enter 1s both}
+@keyframes pr-turn-letter{0%{opacity:1;transform:rotate(0deg) translateY(0) scale(1)}
+ 55%{opacity:1;transform:rotate(-3deg) translateY(-11px) scale(1.02)}
+ 100%{opacity:0;transform:rotate(-7deg) translateY(-28px) scale(.95)}}
+@keyframes pr-open-fade{to{opacity:0;transform:translateY(-8px)}}
+@keyframes pr-sketch-heart{0%{stroke-dashoffset:200;opacity:.4}38%,66%{stroke-dashoffset:0;opacity:1}100%{stroke-dashoffset:0;opacity:.45}}
+@keyframes pr-arrow-bob{0%,100%{translate:0 0}50%{translate:0 4px}}
+@keyframes pr-title-enter{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pr-art-enter{from{opacity:0;translate:0 15px}to{opacity:1;translate:0 0}}
+@keyframes pr-polaroid-enter{from{opacity:0;translate:0 20px}to{opacity:1;translate:0 0}}
+@keyframes pr-clock-back{to{transform:rotate(-360deg)}}
+@media(min-width:640px){.pr-scene{min-height:900px}.pr-cover-copy{top:13%;left:40%;right:8%}
+.pr-cover-names{font-size:49px}.pr-cover-heading{margin-top:40px}
+.pr-invitation .pr-section{padding-inline:45px!important}
+.pr-section-art{max-width:470px}}
+@media(max-width:380px){.pr-cover-names{font-size:clamp(26px,7vw,31px)}
+.pr-letter-copy h1{font-size:clamp(19px,5.1vw,27px)}.pr-letter-copy{gap:4px}
+.pr-cover-copy{top:11%;left:42%;right:3%}
+.pr-cover-illustration>.pr-heart-doodle{width:22px}}
 @media(prefers-reduced-motion:reduce){
 .pr-invitation *, .pr-invitation *:before,.pr-invitation *:after{
- animation:none!important;transition:none!important;scroll-behavior:auto!important;filter:none!important}
-.pr-cover .pr-overline,.pr-cover-names,.pr-cover-date,.pr-cover-hashtag{opacity:1!important}
-.pr-invitation .pr-section[data-pr-visible=true] h2,.pr-invitation .pr-section[data-pr-visible=true] .pr-memory-grid figure{opacity:1!important}
-}
-
-
-/* Illustrated gallery: each artwork is an actual scrapbook page, not a generic card grid. */
-.pr-memory-grid .pr-polaroid-button{min-width:0;padding:0;border:0;background:transparent;text-align:center;cursor:zoom-in;transform:rotate(-5deg);transition:transform .3s ease,filter .3s}
-.pr-memory-grid .pr-polaroid-button:nth-child(even){transform:translateY(19px) rotate(6deg)}
-.pr-memory-grid .pr-polaroid-button:nth-child(3n){transform:translateY(7px) rotate(-7deg)}
-.pr-memory-grid .pr-polaroid-sheet{position:relative;display:block;width:100%;padding:9px 9px 27px;background:var(--pr-sheet);box-shadow:0 6px 17px #4b382526}
-.pr-memory-grid .pr-polaroid-sheet:before{content:"";position:absolute;top:-10px;left:calc(50% - 30px);width:60px;height:21px;background:#d1b49e9e;transform:rotate(-9deg)}
-.pr-memory-grid .pr-polaroid-sheet img{width:100%;height:165px;object-fit:contain;max-width:100%}
-.pr-memory-grid .pr-polaroid-caption{display:block;min-height:21px;margin-top:5px;font:italic 13px/1.35 var(--inv-heading,Georgia,serif)}
-.pr-invitation .pr-section[data-invitation-section=gallery] .pr-memory-note{display:block;margin:13px auto 0;max-width:255px;font:italic 18px var(--inv-heading,Georgia,serif);color:var(--pr-rose)}
-.pr-lightbox{position:fixed;z-index:9999;inset:0;display:grid;grid-template-columns:minmax(30px,1fr) minmax(0,500px) minmax(30px,1fr);align-items:center;justify-items:center;gap:4px;padding:55px 10px;background:#201d1aec;color:#fff}
-.pr-lightbox figure{max-height:min(85vh,750px);width:100%;margin:0;padding:14px 14px 26px;overflow:auto;background:var(--pr-sheet);color:var(--pr-ink);box-shadow:0 16px 30px #0004;transform:rotate(-2deg)}
-.pr-lightbox figure img{width:100%;max-height:65vh;object-fit:contain}
-.pr-lightbox figcaption{text-align:center;margin-top:10px;font:italic 18px var(--inv-heading)}
-.pr-lightbox button{display:grid;place-items:center;width:40px;height:44px;border:1px solid #fff8;border-radius:8px;color:#fff;background:#0005}
-.pr-lightbox .pr-lightbox-close{position:absolute;top:12px;right:13px}
-.pr-lightbox .pr-lightbox-previous{grid-column:1;grid-row:1}
-.pr-lightbox figure{grid-column:2;grid-row:1}
-.pr-lightbox .pr-lightbox-next{grid-column:3;grid-row:1}
-@media(hover:hover){.pr-memory-grid .pr-polaroid-button:hover{transform:translateY(-6px) rotate(0deg);filter:drop-shadow(0 8px 10px #34261635)}}
-@media(max-width:400px){.pr-memory-grid .pr-polaroid-sheet img{height:142px}}
-
-/* The invitation may remain mounted behind other sections; idle scenes do not animate. */
-.pr-scene[data-pr-active=false] *, .pr-scene[data-pr-active=false] *:before, .pr-scene[data-pr-active=false] *:after { animation-play-state:paused!important; }
-
-
-/* Asymmetry follows the reference: cover is centered; narrative, event, gift and closing are not. */
-.pr-cover-names-long{font-size:clamp(28px,7vw,47px);line-height:1.13}
-.pr-invitation .pr-section[data-invitation-section=greeting]{min-height:420px;padding-top:108px}
-.pr-invitation .pr-section[data-invitation-section=greeting]>div.relative{max-width:390px;margin-left:3%;margin-right:auto;text-align:left}
-.pr-invitation .pr-section[data-invitation-section=greeting] h2{text-align:left}
-.pr-invitation .pr-section[data-invitation-section=greeting] .mx-auto{margin-left:0;margin-right:0}
-.pr-invitation .pr-section[data-invitation-section=greeting] p.whitespace-pre-line{max-width:78%;font-size:14px;line-height:2}
-.pr-invitation .pr-section[data-invitation-section=greeting]>div.relative>span{margin-left:0}
-.pr-invitation .pr-section[data-invitation-section=event]{min-height:450px;padding-top:90px}
-.pr-invitation .pr-section[data-invitation-section=event] .pr-event-story{width:min(88%,360px);margin-left:5%;margin-right:auto;transform:rotate(-1.4deg)}
-.pr-invitation .pr-section[data-invitation-section=dateTime]{min-height:380px}
-.pr-invitation .pr-section[data-invitation-section=dateTime] .pr-date-scrap{margin-left:auto;margin-right:3%;width:81%;max-width:340px}
-.pr-invitation .pr-section[data-invitation-section=gallery]{min-height:840px}
-.pr-invitation .pr-section[data-invitation-section=gift]{min-height:430px}
-.pr-invitation .pr-section[data-invitation-section=gift] .pr-gift-panel{max-width:325px;margin-left:4%;margin-right:auto;transform:rotate(-1deg)}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{margin-left:3%;margin-right:auto;max-width:70%}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-art-note{right:8%;bottom:28px}
-@media(max-width:390px){
-.pr-cover-names-long{font-size:clamp(27px,6.7vw,39px)}
-.pr-invitation .pr-section[data-invitation-section=greeting] p.whitespace-pre-line{max-width:82%}
-.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{max-width:78%}
+ animation:none!important;transition:none!important;scroll-behavior:auto!important}
+.pr-cover-copy,.pr-invitation .pr-section[data-pr-visible=true] h2,
+.pr-invitation .pr-section[data-pr-visible=true] .pr-section-whole-image{opacity:1!important;transform:none!important;translate:none!important}
 }
