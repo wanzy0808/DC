@@ -7,7 +7,7 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type EventChoice = { id: string; title: string; type: "WEDDING" | "ADAT_AKAD" };
 
-export default function StudioEntrySection({ events }: { events: EventChoice[] }) {
+export default function StudioEntrySection({ events, selectedTemplate }: { events: EventChoice[]; selectedTemplate?: string }) {
   const { locale } = useLanguage();
   const copy = locale === "en"
     ? {
@@ -39,7 +39,7 @@ export default function StudioEntrySection({ events }: { events: EventChoice[] }
           <div className="space-y-3">
             {events.map((event) => (
               <Button asChild key={event.id} size="lg" className="min-h-12 w-full justify-between whitespace-normal text-left">
-                <Link href={`/dashboard/editor?invitationId=${encodeURIComponent(event.id)}&type=${event.type}`}>
+                <Link href={`/dashboard/editor?invitationId=${encodeURIComponent(event.id)}&type=${event.type}${selectedTemplate ? `&template=${encodeURIComponent(selectedTemplate)}` : ""}`}>
                   <span className="truncate">{event.title}</span>
                   <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
                 </Link>
