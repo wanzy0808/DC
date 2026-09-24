@@ -49,6 +49,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
   const browser = read("components/InvitationStudio/AssetPanel.tsx");
+  const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
   const route = read("app/api/templates/assets/route.ts");
   assert.match(editor, /<DesignerTool active=\{panel === "assets"\}/);
   assert.match(editor, /<AssetPanel layers=\{design\.layers\}/);
@@ -63,10 +64,12 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /event\.ctrlKey \|\| event\.metaKey/);
   assert.match(editor, /closest\('input, textarea, select,/);
   assert.match(editor, /window\.getSelection\(\)\?\.toString\(\)/);
-  assert.match(editor, /<aside className="dc-studio-layer-side"/);
-  assert.match(editor, /onClick=\{copySelectedAssetLayer\}/);
-  assert.match(editor, /onClick=\{pasteAssetLayer\}/);
+  assert.match(layerInspector, /<aside className="dc-studio-layer-side"/);
+  assert.match(layerInspector, /onClick=\{onCopy\}/);
+  assert.match(layerInspector, /onClick=\{onPaste\}/);
   assert.match(editor, /design\.layers\.length >= MAX_ASSET_LAYERS/);
+  assert.match(editor, /<AssetLayerInspector/);
+  assert.match(layerInspector, /layerCount >= MAX_ASSET_LAYERS/);
 
   assert.match(editor, /findCoverDropTarget\(event\.clientX, event\.clientY\)/);
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);

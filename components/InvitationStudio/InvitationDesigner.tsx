@@ -5,11 +5,6 @@ import {
   FilePenLine,
   ImagePlus,
   Layers3,
-  ArrowUp,
-  ArrowDown,
-  Trash2,
-  Copy,
-  ClipboardPaste,
   LayoutTemplate,
   Music2,
   Palette,
@@ -32,6 +27,7 @@ import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/
 import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
+import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -637,26 +633,19 @@ export default function InvitationDesigner() {
             />
             </div>
           </div>
-          {(selectedAssetLayer || copiedAssetLayer) && <aside className="dc-studio-layer-side" aria-label={locale === "en" ? "Illustration layer tools" : "Alat layer ilustrasi"}>
-            <div className="flex items-center justify-between gap-2">
-              <span className="text-sm font-semibold text-primary">{locale === "en" ? "Layer" : "Layer"} {selectedAssetLayer ? `${selectedAssetIndex + 1}/${design.layers.length}` : ""}</span>
-              {selectedAssetLayer && <button type="button" onClick={() => setSelectedLayerId(null)} aria-label={locale === "en" ? "Deselect layer" : "Batalkan pilihan layer"} className="text-xs text-primary hover:underline">✕</button>}
-            </div>
-            {selectedAssetLayer && <>
-              <label className="mt-3 block space-y-2 text-xs text-foreground">
-                <span className="flex justify-between gap-2"><span>{locale === "en" ? "Opacity" : "Opasitas"}</span><output>{Math.round(selectedAssetLayer.opacity * 100)}%</output></span>
-                <input type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} className="w-full accent-primary" onChange={(event) => updateAssetLayer(selectedAssetLayer.id, { opacity: Number(event.target.value) })} />
-              </label>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                <button type="button" className="dc-studio-layer-action" disabled={selectedAssetIndex === 0} onClick={() => reorderAssetLayer(selectedAssetLayer.id, -1)} title={locale === "en" ? "Send backward" : "Ke belakang"}><ArrowDown size={16} />{locale === "en" ? "Back" : "Belakang"}</button>
-                <button type="button" className="dc-studio-layer-action" disabled={selectedAssetIndex === design.layers.length - 1} onClick={() => reorderAssetLayer(selectedAssetLayer.id, 1)} title={locale === "en" ? "Bring forward" : "Ke depan"}><ArrowUp size={16} />{locale === "en" ? "Front" : "Depan"}</button>
-                <button type="button" className="dc-studio-layer-action" onClick={copySelectedAssetLayer} title="Ctrl/Cmd+C"><Copy size={16} />{locale === "en" ? "Copy" : "Salin"}</button>
-                <button type="button" className="dc-studio-layer-action" onClick={() => removeAssetLayer(selectedAssetLayer.id)} title="Delete / Del"><Trash2 size={16} />{locale === "en" ? "Delete" : "Hapus"}</button>
-              </div>
-            </>}
-            {copiedAssetLayer && <button type="button" className="dc-studio-layer-action mt-2 w-full" disabled={design.layers.length >= MAX_ASSET_LAYERS} onClick={pasteAssetLayer} title="Ctrl/Cmd+V"><ClipboardPaste size={16} />{locale === "en" ? "Paste layer" : "Tempel layer"}</button>}
-            <p className="mt-3 text-[11px] leading-5 text-muted-foreground">{locale === "en" ? "Del: delete · Ctrl/Cmd+C: copy · Ctrl/Cmd+V: paste" : "Del: hapus · Ctrl/Cmd+C: salin · Ctrl/Cmd+V: tempel"}</p>
-          </aside>}
+          <AssetLayerInspector
+            locale={locale}
+            selectedAssetLayer={selectedAssetLayer}
+            selectedAssetIndex={selectedAssetIndex}
+            copiedAssetLayer={copiedAssetLayer}
+            layerCount={design.layers.length}
+            onDeselect={() => setSelectedLayerId(null)}
+            onUpdate={updateAssetLayer}
+            onReorder={reorderAssetLayer}
+            onCopy={copySelectedAssetLayer}
+            onRemove={removeAssetLayer}
+            onPaste={pasteAssetLayer}
+          />
           </div>
           </div>
         </div>
