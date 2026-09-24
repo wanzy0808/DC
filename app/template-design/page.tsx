@@ -74,7 +74,7 @@ export default function TemplateDesignPage() {
         viewImage: "Lihat desain",
         close: "Tutup pratinjau",
         toggle: "Coba tampilkan atau sembunyikan bagian undangan",
-        start: "Buat undangan",
+        start: "Buat Undangan",
         contentLabel: "Koleksi template undangan",
       };
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
