@@ -165,6 +165,7 @@ model Invitation {
   assets             InvitationAsset[]
   tables             WeddingTable[]
   guests             Guest[]
+  guestWishes        GuestWish[]
   waBlastTemplates   WaBlastTemplate[]
 
   @@index([ownerId, type])
@@ -299,6 +300,19 @@ model Guest {
   @@index([invitationId, waBlastSelected])
   @@index([invitationId, personalPublished])
   @@unique([tableId, seatNumber])
+}
+
+// Public wishes belong to an invitation, not to the canonical RSVP/guest roster.
+// Writing a wish must never create or overwrite a Guest or their attendance.
+model GuestWish {
+  id            String     @id @default(cuid())
+  invitationId  String
+  authorName    String     @db.VarChar(80)
+  message       String     @db.VarChar(600)
+  createdAt     DateTime   @default(now())
+  invitation    Invitation @relation(fields: [invitationId], references: [id], onDelete: Cascade)
+
+  @@index([invitationId, createdAt])
 }
 
 model AuditLog {
