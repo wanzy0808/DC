@@ -418,7 +418,7 @@ export default function UniversalInvitationTemplate({
                   <p className="mt-1 text-[10px] opacity-65">{label}</p>
                 </div>
               ))}
-            </div>
+            </div></>
           ) : <p className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
 
           {section("location", (
