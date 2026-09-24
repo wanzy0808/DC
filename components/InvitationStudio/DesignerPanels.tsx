@@ -350,18 +350,20 @@ const narrativeCopyLabels: Record<EditableInvitationCopyField, { id: string; en:
 export function ContentPanel({
   templateKey,
   eventDescription,
+  isWedding,
   copy,
   onChange,
 }: {
   templateKey: string;
   eventDescription?: string | null;
+  isWedding: boolean;
   copy: EditableInvitationCopy;
   onChange: (field: EditableInvitationCopyField, text: string) => void;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
   const defaults = invitationCopyDefaults(templateKey, eventDescription);
-  const fields = availableEditableCopyFields(templateKey);
+  const fields = availableEditableCopyFields(templateKey, isWedding);
   return (
     <div>
       <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
