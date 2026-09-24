@@ -119,7 +119,7 @@ export default function PencilReverieScene({
       <span className="pr-cover-handnote">same hearts,<br/>brighter tomorrows.</span>
       <div className="pr-cover-copy">
         <span className="pr-overline">{isWedding ? "THE WEDDING OF" : "YOU ARE INVITED"}</span>
-        <h1 className="pr-cover-names">{couple.length === 2
+        <h1 className={"pr-cover-names" + (names.length > 29 ? " pr-cover-names-long" : "")}>{couple.length === 2
           ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></>
           : <span>{names}</span>}</h1>
         <p className="pr-cover-date">{date}</p>

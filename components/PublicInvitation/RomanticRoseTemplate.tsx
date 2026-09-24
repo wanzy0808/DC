@@ -7,6 +7,7 @@ import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
+import OurStorySection from "@/components/PublicInvitation/OurStorySection";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
@@ -234,6 +235,8 @@ export default function RomanticRoseTemplate({
               </div>
             </div>
           </section>)}
+
+          {sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme="romantic-rose" />}
 
           {sections.event !== false && (<section data-invitation-section="event" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="Save the date">Detail Acara</RoseHeading>

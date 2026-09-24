@@ -219,3 +219,27 @@
 
 /* The invitation may remain mounted behind other sections; idle scenes do not animate. */
 .pr-scene[data-pr-active=false] *, .pr-scene[data-pr-active=false] *:before, .pr-scene[data-pr-active=false] *:after { animation-play-state:paused!important; }
+
+
+/* Asymmetry follows the reference: cover is centered; narrative, event, gift and closing are not. */
+.pr-cover-names-long{font-size:clamp(28px,7vw,47px);line-height:1.13}
+.pr-invitation .pr-section[data-invitation-section=greeting]{min-height:420px;padding-top:108px}
+.pr-invitation .pr-section[data-invitation-section=greeting]>div.relative{max-width:390px;margin-left:3%;margin-right:auto;text-align:left}
+.pr-invitation .pr-section[data-invitation-section=greeting] h2{text-align:left}
+.pr-invitation .pr-section[data-invitation-section=greeting] .mx-auto{margin-left:0;margin-right:0}
+.pr-invitation .pr-section[data-invitation-section=greeting] p.whitespace-pre-line{max-width:78%;font-size:14px;line-height:2}
+.pr-invitation .pr-section[data-invitation-section=greeting]>div.relative>span{margin-left:0}
+.pr-invitation .pr-section[data-invitation-section=event]{min-height:450px;padding-top:90px}
+.pr-invitation .pr-section[data-invitation-section=event] .pr-event-story{width:min(88%,360px);margin-left:5%;margin-right:auto;transform:rotate(-1.4deg)}
+.pr-invitation .pr-section[data-invitation-section=dateTime]{min-height:380px}
+.pr-invitation .pr-section[data-invitation-section=dateTime] .pr-date-scrap{margin-left:auto;margin-right:3%;width:81%;max-width:340px}
+.pr-invitation .pr-section[data-invitation-section=gallery]{min-height:840px}
+.pr-invitation .pr-section[data-invitation-section=gift]{min-height:430px}
+.pr-invitation .pr-section[data-invitation-section=gift] .pr-gift-panel{max-width:325px;margin-left:4%;margin-right:auto;transform:rotate(-1deg)}
+.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{margin-left:3%;margin-right:auto;max-width:70%}
+.pr-invitation .pr-section[data-invitation-section=closing] .pr-art-note{right:8%;bottom:28px}
+@media(max-width:390px){
+.pr-cover-names-long{font-size:clamp(27px,6.7vw,39px)}
+.pr-invitation .pr-section[data-invitation-section=greeting] p.whitespace-pre-line{max-width:82%}
+.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{max-width:78%}
+}
