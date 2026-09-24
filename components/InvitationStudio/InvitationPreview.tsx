@@ -23,6 +23,9 @@ export function InvitationPreview({
   onEnvelopeOpened,
   designKey,
   musicUrl,
+  selectedAssetLayerId,
+  onSelectAssetLayer,
+  onMoveAssetLayer,
   eventTag,
   dressCode,
 }: {
@@ -40,13 +43,16 @@ export function InvitationPreview({
   onEnvelopeOpened?: () => void;
   designKey?: string;
   musicUrl?: string;
+  selectedAssetLayerId?: string | null;
+  onSelectAssetLayer?: (id: string) => void;
+  onMoveAssetLayer?: (id: string, x: number, y: number) => void;
 }) {
   if (!invitation) {
     return <div className="grid min-h-[560px] place-items-center rounded-2xl border border-border bg-background text-sm text-muted-foreground">Memuat pratinjau undangan…</div>;
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} />;
+    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} />;
   }
   return (
     <UniversalInvitationTemplate
@@ -59,6 +65,9 @@ export function InvitationPreview({
       photoAssignments={photoAssignments}
       onEditPhoto={onEditPhoto}
       onEnvelopeOpened={onEnvelopeOpened}
+      selectedAssetLayerId={selectedAssetLayerId}
+      onSelectAssetLayer={onSelectAssetLayer}
+      onMoveAssetLayer={onMoveAssetLayer}
     />
   );
 }
