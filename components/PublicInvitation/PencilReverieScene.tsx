@@ -86,10 +86,6 @@ export default function PencilReverieScene({
       </header>
       <div className="pr-cover-illustration">
         <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper"/>
-        <Image src={assetRoot+"bycicle.png"} alt="" aria-hidden="true" width={1448} height={1086}
-          sizes="(max-width:640px) 30vw, 175px" className="pr-cover-bicycle-whole"/>
-        <Image src={assetRoot+"couplesitting.png"} alt="" aria-hidden="true" width={1122} height={1402}
-          sizes="(max-width:640px) 42vw, 225px" className="pr-cover-couple-whole"/>
         <div className="pr-cover-copy">
           <h1 className="pr-cover-names">{couple.length === 2
             ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></>
