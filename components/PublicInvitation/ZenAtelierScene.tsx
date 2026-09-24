@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { ArrowDown, MailOpen } from "lucide-react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
-import { BlossomBranch, EnsoSun, InkMountains } from "@/assets/templates/zen-atelier/ZenArtwork";
+import { BlossomBranch, EnsoSun, InkMountains } from "@/components/PublicInvitation/ZenAtelierArtwork";
 import "./zen-atelier.css";
 
 type ZenAtelierSceneProps = {

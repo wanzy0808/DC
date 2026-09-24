@@ -4,7 +4,7 @@ import test from "node:test";
 
 const repoFile = (path) => new URL(`../${path}`, import.meta.url);
 const scene = readFileSync(repoFile("components/PublicInvitation/ZenAtelierScene.tsx"), "utf8");
-const artwork = readFileSync(repoFile("assets/templates/zen-atelier/ZenArtwork.tsx"), "utf8");
+const artwork = readFileSync(repoFile("components/PublicInvitation/ZenAtelierArtwork.tsx"), "utf8");
 const source = scene + artwork;
 
 test("Zen Atelier references only artwork that exists in the public template assets", () => {

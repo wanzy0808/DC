@@ -32,8 +32,8 @@ const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/Pen
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
 const PencilBackwardClock = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilBackwardClock));
 const ZenAtelierGallery = dynamic(() => import("@/components/PublicInvitation/ZenAtelierGallery"));
-const ZenSectionArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenSectionArtwork));
-const ZenMemoryArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenMemoryArtwork));
+const ZenSectionArtwork = dynamic(() => import("@/components/PublicInvitation/ZenAtelierArtwork").then((module) => module.ZenSectionArtwork));
+const ZenMemoryArtwork = dynamic(() => import("@/components/PublicInvitation/ZenAtelierArtwork").then((module) => module.ZenMemoryArtwork));
 
 type InvitationData = {
   slug: string;
