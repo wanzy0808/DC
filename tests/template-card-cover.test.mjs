@@ -74,3 +74,21 @@ test("Studio template panel supports searching, photo filters, sorting and incre
   assert.match(panel, /Tampilkan Lagi/);
   assert.match(panel, /selected === item\.key/);
 });
+
+test("Studio stage tracks opening the real envelope for every renderer", () => {
+  const studio = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
+  const preview = readFileSync(new URL("../components/InvitationStudio/InvitationPreview.tsx", import.meta.url), "utf8");
+  const universal = readFileSync(new URL("../components/PublicInvitation/UniversalInvitationTemplate.tsx", import.meta.url), "utf8");
+  const rose = readFileSync(new URL("../components/PublicInvitation/RomanticRoseTemplate.tsx", import.meta.url), "utf8");
+
+  assert.match(studio, /handleCanvasEnvelopeOpened = useCallback\(\(\) => setCanvasStage\("cover"\), \[\]\)/);
+  assert.match(studio, /onEnvelopeOpened=\{handleCanvasEnvelopeOpened\}/);
+  assert.match(studio, /onClick=\{\(\) => \{ setCanvasStage\("envelope"\); setPreviewVersion/);
+  assert.match(studio, /sections=\{canvasStage === "cover" \? \{ \.\.\.design\.sections, envelope: false \} : design\.sections\}/);
+  assert.match(preview, /<RomanticRoseTemplate[^>]*onEnvelopeOpened=\{onEnvelopeOpened\}/);
+  assert.match(preview, /<UniversalInvitationTemplate[\s\S]*onEnvelopeOpened=\{onEnvelopeOpened\}/);
+  assert.match(universal, /setOpened\(true\);\s*setOpening\(false\);\s*onEnvelopeOpened\?\.\(\)/);
+  assert.match(universal, /else \{\s*setOpened\(true\);\s*onEnvelopeOpened\?\.\(\)/);
+  assert.match(rose, /setOpened\(true\);\s*onEnvelopeOpened\?\.\(\)/);
+  assert.match(studio, /<InvitationPreview[\s\S]*sections=\{design\.sections\}/);
+});
