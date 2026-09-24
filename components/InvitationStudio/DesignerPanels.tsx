@@ -341,6 +341,7 @@ export function FontPanel({
 const narrativeCopyLabels: Record<EditableInvitationCopyField, { id: string; en: string }> = {
   greeting: { id: "Salam & Permohonan Kehadiran", en: "Greeting & Invitation" },
   closing: { id: "Ucapan Penutup", en: "Closing Message" },
+  ourStory: { id: "Our Story / Tentang Kami", en: "Our Story / About Us" },
   zenQuote: { id: "Kutipan Penutup", en: "Closing Quote" },
 };
 
@@ -376,8 +377,9 @@ export function ContentPanel({
             <textarea
               value={copy[field] ?? defaults[field] ?? ""}
               onChange={(event) => onChange(field, event.target.value)}
-              rows={field === "zenQuote" ? 4 : 5}
+              rows={field === "ourStory" ? 8 : field === "zenQuote" ? 4 : 5}
               maxLength={editableCopyMaxLength[field]}
+              placeholder={field === "ourStory" ? (en ? "Tell your story together in your own words…" : "Ceritakan perjalanan kalian dengan kata-kata sendiri…") : undefined}
               className="w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/70 bg-background px-3.5 py-3 text-sm leading-relaxed text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
             />
           </label>
