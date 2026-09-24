@@ -10,8 +10,8 @@ type Drawing = { file: string; width: number; height: number; caption: string };
 const drawings: Record<string, Drawing> = {
   bingkai: { file:"bingkai.png", width:1122, height:1402, caption:"Surat kecil untukmu" },
   riverside: { file:"bungaandlampbg.png", width:1122, height:1402, caption:"Jalan kecil penuh cerita" },
-  magnolia: { file:"bungabg.png", width:1122, height:1402, caption:"Bunga-bunga yang mekar" },
-  blossoms: { file:"bungabg1.png", width:1122, height:1402, caption:"Hari yang penuh harapan" },
+  booksScene: { file:"bungabg.png", width:1122, height:1402, caption:"Halaman-halaman kenangan" },
+  magnolia: { file:"bungabg1.png", width:1122, height:1402, caption:"Bunga-bunga yang mekar" },
   bicycleScene: { file:"sepedabg.png", width:1122, height:1402, caption:"Perjalanan bersama" },
   lamp: { file:"streetlamp.png", width:1086, height:1448, caption:"Lampu jalan vintage" },
   couple: { file:"couplesitting.png", width:1122, height:1402, caption:"Sketsa pasangan" },
@@ -34,8 +34,8 @@ const sectionDrawings: Partial<Record<string, keyof typeof drawings>> = {
   dateTime: "ticket",
   countdown: "cassette",
   location: "lamp",
-  rsvp: "blossoms",
-  wishes: "balloon",
+  rsvp: "magnolia",
+  wishes: "booksScene",
   gift: "bow",
   closing: "bicycleScene",
 };
@@ -62,7 +62,7 @@ export function PencilBackwardClock() {
 const gallery: Drawing[] = [
   drawings.bicycleScene, drawings.couple, drawings.camera, drawings.books,
   drawings.cassette, drawings.bicycle, drawings.balloon, drawings.ticket,
-  drawings.polaroid, drawings.magnolia,
+  drawings.polaroid, drawings.booksScene, drawings.magnolia,
 ];
 
 export function PencilMemoryGallery() {
