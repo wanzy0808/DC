@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, MailOpen } from "lucide-react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
 import "./zen-atelier.css";
 
@@ -36,7 +36,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
           <span className="zen-envelope-rule" aria-hidden="true" />
         </div>
         <button type="button" disabled={opening} className="zen-open" onClick={() => { setOpening(true); onOpen(); }}>
-          <span className="zen-envelope-action-icon" aria-hidden="true"><span>✉</span></span>
+          <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={16} strokeWidth={1.35} /></span>
           <span>Buka Undangan</span>
         </button>
       </> : <>
