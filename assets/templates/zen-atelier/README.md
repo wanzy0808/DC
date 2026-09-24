@@ -1,6 +1,6 @@
 # Zen Atelier — Template artwork
 
-This folder stores reusable, photo-free template artwork as code, NOT private master image binaries.
+This folder stores reusable Zen Atelier illustrations as code, NOT private master image binaries.
 
 - ZenArtwork.tsx: sakura, ink mountains, enso sun and decorative media artwork. Source artwork stays outside Next.js static public serving; rendered art is visible in visitors' browsers.
 - components/PublicInvitation/ZenAtelierScene.tsx: lazy-loaded envelope and cover.
@@ -14,4 +14,4 @@ For future licensed master images use a PRIVATE, non-Git storage volume or priva
 
 Only distribute compressed, resized derivatives to the invitation browser. Private master downloads require server-side owner/entitlement checks. A browser-displayed derivative remains copyable. If files were committed to public Git, deleting or moving them does not remove history or forks.
 
-Customer photo/music uploads continue through the existing authenticated InvitationAsset API and existing database. Do not duplicate RSVP, Gifts, Wishes, payments or guest records for this theme.
+The cover/envelope are illustrated, while the couple portraits and gallery use existing event-owned photo slots. Customer photo/music uploads continue through the existing authenticated InvitationAsset API and existing database. Do not duplicate RSVP, Gifts, Wishes, payments or guest records for this theme.
