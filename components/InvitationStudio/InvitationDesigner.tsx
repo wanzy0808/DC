@@ -42,6 +42,7 @@ import {
 } from "@/components/InvitationStudio/DesignerPanels";
 import { InvitationPreview } from "@/components/InvitationStudio/InvitationPreview";
 import { getInvitationDefaultMusic } from "@/lib/templates/music";
+import { clearTemplateSelection, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
 import {
   invitationDecorOptions,
   invitationTemplatePresets,
@@ -114,7 +115,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     const loadedDesign = invitationDesignStateFromKey(next.templateKey, fallbackDecor);
     // A catalog CTA may select a ready theme for THIS event, but never saves that
     // selection without the owner's explicit Save Design action.
-    const requestedTheme = params.get("template");
+    const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
       ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font }
@@ -179,6 +180,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
       palette: preset.palette,
       font: preset.font,
     });
+    rememberTemplateSelection(templateKey);
     setActivePhotoSlot("cover");
     setCanvasStage("envelope");
   }
@@ -322,6 +324,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
       if (!response.ok) throw new Error(data.error || "Gagal menyimpan.");
       setInvitation(data.invitation);
       setSavedState(currentState);
+      clearTemplateSelection();
       setNotice("Desain tersimpan.");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Gagal menyimpan.");
