@@ -105,7 +105,9 @@ Di Studio, tema pilihan katalog langsung terlihat pada canvas sebagai **perubaha
 
 **Tidak ada kata Pratinjau/Preview, watermark mode, badge demo, atau petunjuk developer DI DALAM renderer undangan**, termasuk amplop, cover, galeri, footer. Pada UI Studio boleh ada label kontrol yang benar-benar perlu untuk mengoperasikan editor, tetapi jangan membuat paragraf abu-abu menjelaskan demo. Nama tombol/section memakai kapitalisasi awal kata yang wajar; paragraf memakai ejaan normal. Jangan membuat seluruh tulisan tampak abu-abu pucat; utamakan kontras dan whitespace. Bahasa aplikasi default Indonesia.
 
-Contoh nama, foto, tanggal, hashtag, alamat, ucapan dan rekening pada moodboard **hanya fixture demo**, bukan konten otomatis untuk undangan pelanggan. Jangan menampilkan fake review atau fake ucapan seolah berasal dari tamu.
+Contoh nama, foto, tanggal, hashtag, alamat, ucapan dan rekening pada moodboard **hanya fixture demo**, bukan konten otomatis untuk undangan pelanggan.
+
+**Nama pasangan baku khusus katalog dan preview contoh semua template:** gunakan **Denny & Christine** (Denny pada `groomName`, Christine pada `brideName`) dari satu fixture `data/templates/preview-invitation.ts`. Jangan membuat nama demo berbeda per tema, termasuk Zen Atelier. Aturan ini hanya berlaku untuk katalog/kartu template dan popup preview berbasis data demo. **Studio milik user, undangan yang disimpan/dipublikasikan, dan undangan personal selalu memakai nama acara asli user**, bukan fixture; jangan mengganti nama melalui fallback yang bisa bocor ke data pengguna. Jangan menampilkan fake review atau fake ucapan seolah berasal dari tamu.
 
 ## 5. Motion: animasi tipografi seluruh template; galeri paling ekspresif
 
