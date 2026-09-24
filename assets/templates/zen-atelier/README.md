@@ -6,6 +6,12 @@ This folder stores reusable Zen Atelier illustrations as code, NOT private maste
 - components/PublicInvitation/ZenAtelierScene.tsx: lazy-loaded envelope and cover, assembled using images in public/templates/ (amplop1, japanroom1, redsun1, inkmountain, bamboo1 and bunga0001).
 - /api/template-preview/zen-atelier: small derivative thumbnail for the public catalog.
 
+## Current digital envelope — Japanese washi (24 September 2026)
+
+The latest **owner-requested envelope** is a hand-built Japanese ceremonial stationery composition in `components/PublicInvitation/ZenAtelierScene.tsx` and `components/PublicInvitation/zen-atelier.css`: an ivory washi paper packet, asymmetrical folded layers, central red/gold `mizuhiki` cord and printed red seal, shoji/slatted shadow and subdued blossom/enso/ink-mountain vectors already defined in `ZenArtwork.tsx`. A guest's actual names/date appear on the inner letter only once it opens. The Japanese label is decorative and changes between wedding/general event context. One **Buka Undangan** action directly starts the existing shared music gesture and stages the fold → letter → Cover animation. Reduced-motion users advance immediately. Studio canvas can show/replay the same envelope; catalog cards/popups continue showing Cover/Hero.
+
+This **replaces use of `amplop1.png` in the live envelope**, because that asset is a Western-style photographic wax-seal envelope and the owner requested a stronger Japanese visual distinct from the rest of the template. The original image stays in `public/templates/Zen Atelier/` untouched as an optional reference; do not remove or rename it. Cover, identity, gallery and remaining invitation sections are unchanged by this envelope-only redesign. Older log entries below document the previous visual implementation and are historical, not instructions to restore it. This code change has not been compared against a real browser screenshot of the latest right-hand visual reference: no pixel-perfect claim.
+
 ## Original user-uploaded images
 
 The shared ChatGPT moodboard is a reference, not a file download. Artwork with Zen/Japanese-style filenames is now present in public/templates/ and used in the theme. This does not prove any individual file is an exact export of the shared ChatGPT moodboard; visual comparison and asset licenses still need owner verification. Do not claim originals were moved or backed up.
@@ -31,7 +37,7 @@ Source: owner-uploaded `Pasted markdown(3).md`, plus universal `template.md`. Th
 
 | File | Dimensions | Alpha channel | Current role |
 | --- | --- | --- | --- |
-| `amplop1.png` | 1122 × 1402 | No | Layered envelope photograph; flap clipped from same image, originals preserved |
+| `amplop1.png` | 1122 × 1402 | No | Preserved historical wax-envelope reference; **not used by the current Japanese envelope** |
 | `bamboo1.png` | 1024 × 1536 | Yes | Available bamboo; omitted from revised gallery |
 | `bunga0001.png` | 1254 × 1254 | Yes | Upper-left cover sakura |
 | `bunga0002.png` | 1254 × 1254 | Yes | Available alternate sakura; not added to cover |
