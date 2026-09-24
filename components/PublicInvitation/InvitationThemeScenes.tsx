@@ -1,7 +1,6 @@
 "use client";
 
 import type { ReactNode } from "react";
-import PencilReverieScene from "@/components/PublicInvitation/PencilReverieScene";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 
@@ -106,6 +105,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps
     </section>
   );
 }
+const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview,isWedding,hashtag}: SceneProps) {
