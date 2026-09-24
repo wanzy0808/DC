@@ -9,6 +9,8 @@ import GuestWishes from "@/components/PublicInvitation/GuestWishes";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import OurStorySection from "@/components/PublicInvitation/OurStorySection";
+import InvitationAssetLayers from "@/components/PublicInvitation/InvitationAssetLayers";
+import { parseAssetLayers } from "@/lib/templates/asset-layers";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
@@ -112,6 +114,9 @@ export default function RomanticRoseTemplate({
   photoAssignments,
   onEditPhoto,
   onEnvelopeOpened,
+  selectedAssetLayerId,
+  onSelectAssetLayer,
+  onMoveAssetLayer,
   personalGuest,
 }: {
   invitation: RoseInvitation;
@@ -125,12 +130,16 @@ export default function RomanticRoseTemplate({
   onEditPhoto?: (slot: PhotoSlot) => void;
   /** Studio canvas only: synchronize the active stage after opening. */
   onEnvelopeOpened?: () => void;
+  selectedAssetLayerId?: string | null;
+  onSelectAssetLayer?: (id: string) => void;
+  onMoveAssetLayer?: (id: string, x: number, y: number) => void;
 }) {
   const [opened, setOpened] = useState(false);
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
+  const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
   const { cover, gallery, assignment } = media;
@@ -208,6 +217,7 @@ export default function RomanticRoseTemplate({
               <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
               {scrollHint}
             </div>
+            <InvitationAssetLayers layers={illustrationLayers} editable={preview && Boolean(onMoveAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer} onMove={onMoveAssetLayer} />
           </section>)}
 
           {sections.greeting !== false && (<section data-invitation-section="greeting" className="bg-[#fffaf8] px-8 py-20 text-center">
