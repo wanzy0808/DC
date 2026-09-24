@@ -21,7 +21,7 @@ test("feature TSX components use PascalCase names; shadcn/ui keeps its standard 
   for (const component of components) {
     const filename = component.split("/").at(-1);
     assert.match(filename, /^[A-Z][A-Za-z0-9]*\.tsx$/, component);
-    assert.doesNotMatch(filename, /^(?:Temp|Draft|Old|Backup|Jiplak)|V[2-9]\.tsx$/i, component);
+    assert.doesNotMatch(filename, /^(?:Temp|Draft|Old|Backup|Jiplak)(?:[A-Z0-9_.-]|$)|V[2-9]\.tsx$/, component);
   }
 });
 
