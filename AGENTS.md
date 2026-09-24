@@ -31,6 +31,8 @@ Do not add generic project-wide prompt/skill documents that duplicate or conflic
 
 Validation must never be described as PASS unless an actual build/CI result is available.
 
+**Designer/Customer Studio scoped rule (24 September 2026):** Before modifying designer template authoring, the invitation canvas, visual properties of shared components, or custom-made workflows, read `studio.md` as the scoped design and authorization rule alongside canonical `prd.md` §7.2.0c and `template.md`. Designer may modify whitelisted visual presentation across sections but must never rewrite or bypass protected component behavior, event data, business APIs, or customer permissions. `studio.md` describes future requirements and must not be mistaken for already implemented functionality.
+
 ## 2. Product Identity & Preservation
 
 - Official product brand: **DC Organizer**.
