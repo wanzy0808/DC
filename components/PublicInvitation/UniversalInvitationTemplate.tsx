@@ -69,6 +69,21 @@ const headings = {
   closing: ["Until we meet", "Terima Kasih"],
 } as const;
 
+const zenHeadings: Record<keyof typeof headings, string> = {
+  cover: "Sampul",
+  greeting: "Sebuah Cerita",
+  identity: "Tentang Kami",
+  event: "Detail Acara",
+  dateTime: "Tanggal & Waktu",
+  gallery: "Galeri Foto",
+  countdown: "Hitung Mundur",
+  location: "Lokasi Acara",
+  rsvp: "Konfirmasi Kehadiran",
+  wishes: "Ucapan & Doa",
+  gift: "Kirim Hadiah",
+  closing: "Terima Kasih",
+};
+
 function displayDate(value: Date | string, timezone: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Tanggal belum ditentukan";
@@ -214,13 +229,15 @@ export default function UniversalInvitationTemplate({
         {key === "golden-art-deco" && <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         {zen && <ZenSectionArtwork section={keyName} />}
         <div className="relative">
-          <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>
-          <h2 className={`mt-3 text-2xl leading-snug ${left ? "uppercase tracking-[.04em]" : ""}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{headings[keyName][1]}</h2>
-          <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
-            <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
-            {key === "zen-atelier" ? <span aria-hidden="true" className="text-sm">花</span> : key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
-            <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
-          </div>
+          {!zen && <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
+          <h2 className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{zen ? zenHeadings[keyName] : headings[keyName][1]}</h2>
+          {zen ? <span aria-hidden="true" className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
+            <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
+              <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
+              {key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
+              <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
+            </div>
+          )}
           {children}
         </div>
       </section>
