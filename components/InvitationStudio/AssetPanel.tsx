@@ -90,8 +90,8 @@ export default function AssetPanel({
           {range(en ? "Opacity" : "Opasitas", selected.opacity, 0, 1, 0.05, "%", (opacity) => onUpdate(selected.id, { opacity }))}
           <p className="text-[11px] text-muted-foreground">{en ? "0% invisible · 100% fully visible" : "0% transparan · 100% terlihat penuh"}</p>
           {range(en ? "Size" : "Ukuran", selected.width, 5, 85, 1, "%", (width) => onUpdate(selected.id, { width }))}
-          {range("X", selected.x, 0, 100, 1, "%", (x) => onUpdate(selected.id, { x })}
-          {range("Y", selected.y, 0, 100, 1, "%", (y) => onUpdate(selected.id, { y })}
+          {range("X", selected.x, 0, 100, 1, "%", (x) => onUpdate(selected.id, { x }))}
+          {range("Y", selected.y, 0, 100, 1, "%", (y) => onUpdate(selected.id, { y }))}
           <div className="flex flex-wrap gap-2">
             <Button size="sm" type="button" disabled={selectedIndex === layers.length - 1} onClick={() => onReorder(selected.id, 1)}><ArrowUp size={15} /> {en ? "Front" : "Ke depan"}</Button>
             <Button size="sm" type="button" disabled={selectedIndex === 0} onClick={() => onReorder(selected.id, -1)}><ArrowDown size={15} /> {en ? "Back" : "Ke belakang"}</Button>
