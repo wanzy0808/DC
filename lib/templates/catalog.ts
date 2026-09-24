@@ -137,7 +137,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: false,
     photoSlots: [],
-    preset: { layout: "botanical", palette: "terracotta", font: "playfairLora" },
+    preset: { layout: "botanical", palette: "zen", font: "playfairInter" },
     name: "Zen Atelier",
     description: "Ilustrasi sakura, matahari ensō, dan pegunungan tinta pada kertas hangat. Tanpa foto.",
     previewImage: "/api/template-preview/zen-atelier",
