@@ -496,7 +496,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} onAdd={addAssetLayer} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
