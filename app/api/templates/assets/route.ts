@@ -1,4 +1,5 @@
 import { readdir } from "node:fs/promises";
+import type { Dirent } from "node:fs";
 import path from "node:path";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
@@ -19,7 +20,7 @@ export async function GET() {
     const publicRoot = path.join(process.cwd(), "public", root);
     async function walk(folder: string, parts: string[], depth: number): Promise<void> {
       if (depth > 4 || assets.length >= MAX_ITEMS) return;
-      let entries;
+      let entries: Dirent[];
       try {
         entries = await readdir(folder, { withFileTypes: true });
       } catch (error) {
