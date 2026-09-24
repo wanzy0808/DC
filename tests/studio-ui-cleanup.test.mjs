@@ -53,3 +53,21 @@ test("Studio custom button states follow DC Organizer light/dark text and sortin
   assert.match(panels, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
   assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
 });
+
+test("landing and Studio share one rounded-rectangle button radius instead of pill controls", () => {
+  const globalStyles = read("app/globals.css");
+  const buttons = read("components/ui/button-variants.ts");
+  const controls = read("components/ui/control-styles.ts");
+  const catalog = read("app/template-design/page.tsx");
+  assert.match(globalStyles, /--dc-control-radius:\s*16px;/);
+  assert.match(globalStyles, /--dc-control-menu-radius:\s*18px;/);
+  assert.doesNotMatch(globalStyles, /--dc-control-radius:\s*9999px;/);
+  assert.match(buttons, /rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(controls, /rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(panels, /photoFilter === key/);
+  assert.match(panels, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(designer, /min-h-9 shrink-0 rounded-\[var\(--dc-control-radius\)\]/);
+  assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
+  assert.match(styles, /\.dc-studio-icon \{[^}]*border-radius: var\(--dc-control-radius\)/);
+  assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--dc-control-radius\)\]/);
+});

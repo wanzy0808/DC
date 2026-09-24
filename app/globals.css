@@ -64,9 +64,9 @@
   --font-dc-serif: var(--font-cinzel), serif;
   --font-dc-heading: var(--font-cinzel), serif;
   --font-dc-mono: var(--font-mono), monospace;
-  /* Global application-control geometry: one source for Button, Input and dropdowns. */
-  --dc-control-radius: 9999px;
-  --dc-control-menu-radius: 32px;
+  /* One DC Organizer control shape: rounded rectangles, like the landing navbar. */
+  --dc-control-radius: 16px;
+  --dc-control-menu-radius: 18px;
   --dc-control-outline: var(--primary);
   --background: #FFFFFF;
   --foreground: #111111;
@@ -137,7 +137,7 @@
 
 @layer base {
   * { border-color: var(--border); outline-color: color-mix(in oklab, var(--ring) 50%, transparent); }
-  /* Plain single-line form controls inherit the app's pill geometry and Rose border.
+  /* Plain single-line form controls inherit the app's rounded-corner geometry and Rose border.
      Utility classes and dedicated invitation/nav geometry can still override this base.
      Native select popup options are browser/OS rendered; custom dropdowns use controlStyles. */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]),

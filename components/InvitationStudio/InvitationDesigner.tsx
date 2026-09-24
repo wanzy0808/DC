@@ -459,13 +459,13 @@ export default function InvitationDesigner() {
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
             {design.sections.envelope !== false && <button type="button"
               aria-pressed={canvasStage === "envelope"}
-              className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
               onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
               title={copy.envelopeHint}
             >{copy.envelope}</button>}
             <button type="button"
               aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
-              className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
               onClick={() => setCanvasStage("cover")}
               title={copy.coverHint}
             >{copy.cover}</button>

@@ -300,7 +300,7 @@ export default function TemplateDesignPage() {
                 <div className="min-w-0">
                   <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-dc-heading)] text-xl text-primary">{selected.name}</h2>
                 </div>
-                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-foreground/70 hover:text-primary">
+                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--dc-control-radius)] border border-primary/50 text-primary hover:bg-primary/10">
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>
