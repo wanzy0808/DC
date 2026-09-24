@@ -9,19 +9,21 @@ type ZenAtelierSceneProps = {
   stage: "envelope" | "cover";
   onOpen: () => void;
   preview?: boolean;
+  isWedding?: boolean;
 };
 
 const root = "/templates/";
-const paper = "radial-gradient(ellipse at 50% 20%, #fffaf0 0%, #f3eddf 55%, #e7dfd0 100%)";
+const paper = "radial-gradient(ellipse at 50% 20%, var(--inv-scene-surface, #fffaf0) 0%, var(--inv-scene-bg, #f3eddf) 75%, var(--inv-scene-soft, #e7dfd0) 100%)";
 
 /**
  * The artwork is the real Zen Atelier set in public/templates, not generated SVG
  * substitutes. The frame is deliberately independent of the shared RSVP/data engine.
  */
-export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false }: ZenAtelierSceneProps) {
+export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true }: ZenAtelierSceneProps) {
   const envelope = stage === "envelope";
   const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
+  const occasion = isWedding ? "The Wedding of" : "Sebuah Undangan";
   const open = () => {
     if (opening) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
@@ -47,7 +49,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
       <div aria-hidden="true" className="pointer-events-none absolute inset-[17px] border border-[#c5bda8]/45 sm:inset-[26px]" />
       <img src={root + "bamboo1.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 z-[1] w-[65%] max-w-[360px] object-contain opacity-70 sm:-right-14" />
       <img src={root + "bunga0001.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute -bottom-10 -left-16 z-[1] w-[46%] max-w-[260px] object-contain opacity-80" />
-      <p className="relative z-10 text-[10px] font-medium uppercase tracking-[.4em] text-[#716c5e]">DC Organizer · Zen Atelier</p>
+      <p className="relative z-10 text-[10px] font-medium uppercase tracking-[.4em] text-[#716c5e]">Zen Atelier</p>
 
       {envelope ? (
         <>
@@ -57,7 +59,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
               <img src={root + "amplop1.png"} alt="Ilustrasi amplop undangan Zen Atelier" className="absolute inset-0 h-full w-full object-contain" fetchPriority="high" />
             </div>
             <div className="relative -mt-5 w-full border border-[#c6b99e] bg-[#faf6ec]/95 px-4 py-8 shadow-[0_18px_40px_rgba(70,58,43,.12)] backdrop-blur-[2px] sm:-mt-8">
-              <p className="text-[10px] uppercase tracking-[.32em] text-[#9b5240]">The Wedding of</p>
+              <p className="text-[10px] uppercase tracking-[.32em] text-[#9b5240]">{occasion}</p>
               <h1 className="mx-auto mt-4 max-w-sm break-words text-[clamp(1.85rem,7vw,2.9rem)] leading-[1.18]" style={{ fontFamily: "var(--inv-heading, Georgia), Georgia, serif" }}>{title}</h1>
               <span aria-hidden="true" className="mx-auto my-5 block h-px w-16 bg-[#a9513b]" />
               <p className="text-[12px] tracking-[.12em]">{date}</p>
@@ -67,7 +69,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
             type="button"
             onClick={open}
             disabled={opening}
-            className="relative z-20 mt-9 min-h-12 border border-[#a9513b] bg-[#a9513b] px-8 py-3 text-[12px] font-semibold tracking-[.18em] text-white shadow-[0_8px_20px_rgba(169,81,59,.17)] transition hover:-translate-y-1 hover:bg-[#873d2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9513b] disabled:cursor-wait disabled:opacity-60"
+            className="relative z-20 mt-9 min-h-12 border border-[var(--inv-scene-accent,#a9513b)] bg-[var(--inv-scene-accent,#a9513b)] px-8 py-3 text-[12px] font-semibold tracking-[.18em] text-white shadow-[0_8px_20px_rgba(169,81,59,.17)] transition hover:-translate-y-1 hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--inv-scene-accent,#a9513b)] disabled:cursor-wait disabled:opacity-60"
           >
             Buka Undangan
           </button>
@@ -75,7 +77,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
         </>
       ) : (
         <>
-          <p className="relative z-10 mt-6 text-[11px] uppercase tracking-[.3em] text-[#9b5240]">The Wedding of</p>
+          <p className="relative z-10 mt-6 text-[11px] uppercase tracking-[.3em] text-[#9b5240]">{occasion}</p>
           <div className="relative mt-8 h-[330px] w-full max-w-[440px] overflow-hidden border border-[#afa48d] bg-[#e7e7d9] shadow-[0_23px_55px_rgba(58,57,47,.12)] sm:h-[390px]">
             <img src={root + "japanroom1.png"} alt="" loading="eager" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-80" />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#f6eee3]/25 via-transparent to-[#f3eddf]/50" />
