@@ -1,6 +1,6 @@
 # Dashboard Redesign — DC Organizer
 
-Status: in progress. Started 23 September 2026. This file tracks **implemented source changes separately from pending work**.
+Status: **jurnal historis implementasi dan review Dashboard**, dimulai 23 September 2026; bukan persyaratan produk baru. Requirement aktif dan bentuk frame terakhir yang disetujui mengikuti `prd.md` §6 dan §15 serta `AGENTS.md`. Klaim implementasi/tes di bawah adalah snapshot bertanggal dan tidak membuktikan HEAD atau browser/produksi terkini.
 
 ## Goal
 Customer dashboard should feel like the approved DC Organizer landing without duplicating the landing's doors, audio, petals or floral effects. Use Cinzel/Fauna One, Rose #C07A84 / #A65E69, neutral white and near-black, consistent shared navbar controls, generous functional workspace and concise Indonesian-first labels. Sidebar navigation is inspired by the supplied curved-outside reference (geometry, not its blue color). Preserve authentication, data/API behavior, event-scoped access, mobile, ID/EN and light/dark.
