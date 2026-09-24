@@ -38,3 +38,37 @@ test("Studio can show and replay the envelope independently of Cover-only catalo
   assert.match(designer, /sections=\{canvasStage === "cover" \? \{ \.\.\.design\.sections, envelope: false \} : design\.sections\}/);
   assert.match(designer, /<InvitationPreview[\s\S]*sections=\{design\.sections\}/);
 });
+
+test("pending template survives login and event creation without an automatic database overwrite", () => {
+  const intent = readFileSync(new URL("../lib/templates/template-intent.ts", import.meta.url), "utf8");
+  const studio = readFileSync(new URL("../app/studio/page.tsx", import.meta.url), "utf8");
+  const entry = readFileSync(new URL("../components/DigitalInvitation/StudioEntrySection.tsx", import.meta.url), "utf8");
+  const dashboard = readFileSync(new URL("../app/dashboard/page.tsx", import.meta.url), "utf8");
+  const events = readFileSync(new URL("../components/Dashboard/EventPanel.tsx", import.meta.url), "utf8");
+  const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
+
+  assert.match(page, /rememberTemplateSelection\(selected\.key\)/);
+  assert.match(intent, /MAX_AGE_MS = 7 \* 24 \* 60 \* 60 \* 1000/);
+  assert.match(intent, /window\.localStorage\.setItem\(STORAGE_KEY/);
+  assert.match(intent, /document\.cookie = `\$\{PENDING_TEMPLATE_COOKIE\}/);
+  assert.match(intent, /isSelectableTemplate\(key\)/);
+  assert.match(studio, /\(await cookies\(\)\)\.get\(PENDING_TEMPLATE_COOKIE\)/);
+  assert.match(entry, /\/dashboard\?tab=events&from=template&template=/);
+  assert.match(dashboard, /params\.get\("from"\) === "template"/);
+  assert.match(dashboard, /selectedTemplate=\{pendingTemplate \|\| undefined\}/);
+  assert.match(events, /onSaved\(creatingNew \? \{ id:/);
+  assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
+  assert.match(designer, /clearTemplateSelection\(\)/);
+});
+
+test("Studio template panel supports searching, photo filters, sorting and incremental cards", () => {
+  const panel = readFileSync(new URL("../components/InvitationStudio/DesignerPanels.tsx", import.meta.url), "utf8");
+  assert.match(panel, /aria-label="Cari template"/);
+  assert.match(panel, /setSearch\(event\.target\.value\)/);
+  assert.match(panel, /aria-label="Filter foto template"/);
+  assert.match(panel, /Nama A–Z/);
+  assert.match(panel, /Nama Z–A/);
+  assert.match(panel, /filtered\.slice\(0, limit\)/);
+  assert.match(panel, /Tampilkan Lagi/);
+  assert.match(panel, /selected === item\.key/);
+});
