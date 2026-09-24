@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import "./pencil-reverie.css";
 
@@ -22,9 +23,9 @@ export function PencilSectionArt({ section }: { section: string }) {
   const art = compositions[section];
   if (!art) return null;
   return <div className="pr-section-art" data-part={section} aria-hidden="true">
-    <img className="pr-art-one" src={base + art.one} alt="" loading="lazy" decoding="async" />
-    {art.two && <img className="pr-art-two" src={base + art.two} alt="" loading="lazy" decoding="async"/>}
-    {art.three && <img className="pr-art-three" src={base + art.three} alt="" loading="lazy" decoding="async"/>}
+    <Image className="pr-art-one" src={base + art.one} width={1254} height={1254} sizes="(max-width: 640px) 38vw, 235px" alt="" loading="lazy" />
+    {art.two && <Image className="pr-art-two" src={base + art.two} width={1254} height={1254} sizes="(max-width: 640px) 38vw, 235px" alt="" loading="lazy"/>}
+    {art.three && <Image className="pr-art-three" src={base + art.three} width={1254} height={1254} sizes="(max-width: 640px) 24vw, 150px" alt="" loading="lazy"/>}
     {art.note && <span className="pr-art-note">{art.note}</span>}
   </div>;
 }
@@ -58,7 +59,7 @@ export function PencilMemoryGallery() {
         <button className="pr-polaroid-button" key={image} type="button" aria-label={"Lihat ilustrasi " + label}
           onClick={() => open(index)}>
           <span className="pr-polaroid-sheet">
-            <img src={base + image} alt="" loading="lazy" decoding="async"/>
+            <Image src={base + image} width={600} height={600} sizes="(max-width: 640px) 42vw, 210px" alt="" loading="lazy"/>
             <span className="pr-polaroid-caption">{label}</span>
           </span>
         </button>)}
@@ -78,7 +79,7 @@ export function PencilMemoryGallery() {
       }}>
       <button className="pr-lightbox-close" type="button" autoFocus aria-label="Tutup" onClick={close}><X size={22}/></button>
       <button type="button" className="pr-lightbox-previous" aria-label="Ilustrasi sebelumnya" onClick={() => setSelected((selected + illustratedMemories.length - 1) % illustratedMemories.length)}><ChevronLeft size={25}/></button>
-      <figure><img src={base + illustratedMemories[selected].image} alt={"Ilustrasi " + illustratedMemories[selected].label}/><figcaption>{illustratedMemories[selected].label}</figcaption></figure>
+      <figure><Image src={base + illustratedMemories[selected].image} width={1024} height={1024} sizes="(max-width: 640px) 90vw, 500px" alt={"Ilustrasi " + illustratedMemories[selected].label}/><figcaption>{illustratedMemories[selected].label}</figcaption></figure>
       <button type="button" className="pr-lightbox-next" aria-label="Ilustrasi berikutnya" onClick={() => setSelected((selected + 1) % illustratedMemories.length)}><ChevronRight size={25}/></button>
     </div>}
   </>;
