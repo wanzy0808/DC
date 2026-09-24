@@ -385,7 +385,15 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 2)}
 
-          {section("event", (
+          {section("event", key === "pencil-reverie" ? (
+            <div className="pr-event-story">
+              <p className="mb-2 text-[10px] uppercase tracking-[.22em] text-[var(--inv-accent)]">{couple ? "Hari kita berdua" : "Hari istimewa"}</p>
+              <h3>{eventTitle}</h3>
+              {invitation.venue && <p className="mt-3">{invitation.venue}</p>}
+              {invitation.address && <p className="mt-1 opacity-75">{invitation.address}</p>}
+              {invitation.dressCode && <p className="mt-3 text-xs">Dress code · {invitation.dressCode}</p>}
+            </div>
+          ) : (
             <div className="mx-auto max-w-md space-y-3 text-sm leading-7">
               {key === "zen-atelier" ? <div className="grid grid-cols-[24px_1fr] gap-4 border-y border-[var(--inv-soft)] py-6 text-left">
                 <CalendarDays size={22} strokeWidth={1.3} className="mt-1 text-[var(--inv-accent)]" aria-hidden="true" />
@@ -397,7 +405,7 @@ export default function UniversalInvitationTemplate({
           ), 3)}
 
           {section("dateTime", (
-            <div className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
+            <div className={key === "pencil-reverie" ? "pr-date-scrap" : `mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
               <CalendarDays className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />
               <p className="mt-4 text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{date}</p>
               {invitation.ceremonyTime && <p className="mt-3 text-sm">Mulai · {invitation.ceremonyTime}</p>}
