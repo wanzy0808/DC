@@ -38,12 +38,12 @@ export function PencilBackwardClock() {
 }
 
 const illustratedMemories = [
-  { image: "polaroidlove.png", label: "Pertemuan pertama" },
-  { image: "bycicle.png", label: "Perjalanan bersama" },
-  { image: "casette.png", label: "Lagu favorit" },
-  { image: "camera1.png", label: "Kenangan kecil" },
-  { image: "bookstack.png", label: "Cerita berikutnya" },
-  { image: "loveballon1.png", label: "Hari-hari bahagia" },
+  { image: "polaroidlove.png", label: "Sketsa Kenangan" },
+  { image: "bycicle.png", label: "Sepeda Vintage" },
+  { image: "casette.png", label: "Kaset Nostalgia" },
+  { image: "camera1.png", label: "Kamera Analog" },
+  { image: "bookstack.png", label: "Buku Kenangan" },
+  { image: "loveballon1.png", label: "Balon Hati" },
 ];
 export function PencilMemoryGallery() {
   const [selected, setSelected] = useState<number | null>(null);
