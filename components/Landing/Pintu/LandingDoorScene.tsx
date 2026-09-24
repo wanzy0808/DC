@@ -418,7 +418,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
   </group>)}</>;
 }
 
-export default function SimpleDoorLab({ fullFrame = false, onDoorOpenChange }: { fullFrame?: boolean; onDoorOpenChange?: (open: boolean) => void }) {
+export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }: { fullFrame?: boolean; onDoorOpenChange?: (open: boolean) => void }) {
   const [opening, setOpening] = useState(PORTALS.map(() => false));
   const [selected, setSelected] = useState<number | null>(null);
   const [entering, setEntering] = useState(false);
