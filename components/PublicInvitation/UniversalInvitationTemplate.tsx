@@ -6,6 +6,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import dynamic from "next/dynamic";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import "./zen-atelier.css";
+import "./pencil-reverie.css";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -251,11 +252,12 @@ export default function UniversalInvitationTemplate({
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
     const zen = key === "zen-atelier";
+    const pencil = key === "pencil-reverie";
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return (
-      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined }}
       >
         {key === "botanical-ivory" && <div aria-hidden className="pointer-events-none absolute -right-10 top-2 rotate-[-24deg] text-[#71826a]/20"><Leaf className="h-36 w-36" strokeWidth={0.6}/></div>}
@@ -264,6 +266,7 @@ export default function UniversalInvitationTemplate({
         {celestial && <div aria-hidden className="pointer-events-none absolute -left-12 -top-10 h-40 w-40 rounded-full border border-[#b5cce4]/35" />}
         {key === "golden-art-deco" && <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         {zen && <ZenSectionArtwork section={keyName} />}
+        {pencil && <img aria-hidden="true" alt="" className="pr-ornament -right-12 top-0 h-36 w-36" src="/templates/pencil-reverie/ribbon.png" />}
         <div className="relative">
           {!zen && <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
           <h2 className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{zen ? zenHeadings[keyName] : headings[keyName][1]}</h2>
@@ -283,7 +286,7 @@ export default function UniversalInvitationTemplate({
   return (
     <main
       ref={rootRef}
-      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : ""}`}
+      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : ""}`}
       style={css}
     >
       <InvitationFonts families={[font.heading, font.body]} />
@@ -318,7 +321,7 @@ export default function UniversalInvitationTemplate({
 
           {section("greeting", <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
 
-          {section("identity", key === "zen-atelier" ? (
+          {section("identity", key === "pencil-reverie" ? (<div><div className="pr-identity-art"><img alt="Ilustrasi pasangan bergaya sketsa" src="/templates/pencil-reverie/couplesitting.png" /></div><p className="text-3xl" style={{fontFamily:"var(--inv-heading)"}}>{names}</p>{(groomParents || brideParents) && <div className="mt-6 grid grid-cols-2 gap-4 text-xs leading-7"><p>{groomParents}</p><p>{brideParents}</p></div>}</div>) : key === "zen-atelier" ? (
             <div>
               {media.cover && <div className="zen-identity-photo">
                 <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={{ objectPosition: `center ${media.assignment.focus.cover}` }} />
@@ -374,7 +377,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", key === "zen-atelier" ? <>
+          {section("gallery", key === "pencil-reverie" ? (<div className="pr-memory-grid">{[["polaroidlove.png","Cerita kita"],["camera1.png","Kenangan"],["bycicle.png","Perjalanan"],["bookstack.png","Halaman baru"]].map(([file,label])=><figure key={file}><img src={`/templates/pencil-reverie/${file}`} alt={`Ilustrasi ${label.toLowerCase()}`} loading="lazy"/><figcaption>{label}</figcaption></figure>)}</div>) : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} />
           </> : (
@@ -407,7 +410,7 @@ export default function UniversalInvitationTemplate({
             )
           ), 5)}
 
-          {section("countdown", countdown ? (
+          {section("countdown", countdown ? (<>{key === "pencil-reverie" && <div className="pr-clock" aria-hidden="true"><span className="hour"/><span className="minute"/><span className="pin"/></div>}
             <div className="grid grid-cols-4 gap-2">
               {countdown.map(([label, value]) => (
                 <div key={label} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
