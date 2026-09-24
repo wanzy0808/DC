@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import PencilReverieScene from "@/components/PublicInvitation/PencilReverieScene";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 
@@ -168,6 +169,8 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,stag
     <p className="mt-3 text-xs uppercase tracking-[.3em] text-[color:var(--inv-scene-text,#e5d5ac)]">{date}</p>
     {isEnvelope ? <Open dark onClick={onOpen}>Buka Undangan ✧</Open> : <Lines className="mt-8"><Star className="h-4 w-4"/></Lines>}
   </section>;
+
+  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} isWedding={isWedding} hashtag={hashtag} />;
 
   if (theme === "botanical-ivory") return <section className={`${center} bg-[var(--inv-scene-bg,#faf7e9)] text-[color:var(--inv-scene-ink,#50634d)]`} data-invitation-section={stage}>
     <BotanicalSprig /><BotanicalSprig mirrored />
