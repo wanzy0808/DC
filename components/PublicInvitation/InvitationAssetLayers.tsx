@@ -139,12 +139,12 @@ function EditableLayer({
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
           onKeyDown={keys}>
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
-            fontFamily: layer.fontRole === "body" ? "var(--inv-body, var(--font-dc-body))" : "var(--inv-heading, var(--font-dc-heading))",
+            fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
             fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
           }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className="pointer-events-none block h-auto w-full select-none" />}
         </button>
       ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
-        fontFamily: layer.fontRole === "body" ? "var(--inv-body, var(--font-dc-body))" : "var(--inv-heading, var(--font-dc-heading))",
+        fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
         fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
       }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className="block h-auto w-full select-none" />}
       {editable && selected && <>
