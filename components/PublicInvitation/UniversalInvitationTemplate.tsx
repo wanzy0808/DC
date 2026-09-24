@@ -1,6 +1,7 @@
 "use client";
 
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { getInvitationCountdown } from "@/lib/invitations/countdown";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import dynamic from "next/dynamic";
@@ -108,18 +109,17 @@ function displayDate(value: Date | string, timezone: string, numeric = false) {
 
 function eventCountdown(value: Date | string, now: number | null) {
   if (now === null) return null;
-  const end = new Date(value).getTime();
-  if (!Number.isFinite(end)) return null;
-  const seconds = Math.max(0, Math.floor((end - now) / 1000));
+  const remaining = getInvitationCountdown(value, now);
+  if (!remaining) return null;
   return [
-    ["Hari", Math.floor(seconds / 86400)],
-    ["Jam", Math.floor((seconds / 3600) % 24)],
-    ["Menit", Math.floor((seconds / 60) % 60)],
-    ["Detik", seconds % 60],
+    ["Hari", remaining.days],
+    ["Jam", remaining.hours],
+    ["Menit", remaining.minutes],
+    ["Detik", remaining.seconds],
   ] as const;
 }
 
-/** One shared feature engine for nine individually art-directed non-Romantic Rose themes.
+/** One shared feature engine for individually art-directed non-Romantic Rose themes.
  * Section logic, media ownership and RSVP are shared; themed envelope, cover and section art remain template-owned.
  */
 export default function UniversalInvitationTemplate({
