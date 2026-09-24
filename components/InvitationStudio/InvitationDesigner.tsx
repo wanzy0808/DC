@@ -302,9 +302,10 @@ export default function InvitationDesigner() {
   }
 
   function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection } = { x: 50, y: 38 }) {
-    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const section = position.section ?? "cover";
+    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
-    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section: position.section ?? "cover", width: 28, opacity: 1 }] });
+    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, width: 28, opacity: 1 }] });
     setSelectedLayerId(id);
     setCanvasStage(position.section === "envelope" ? "envelope" : "cover");
     setInspectorOpen(true);
@@ -349,7 +350,6 @@ export default function InvitationDesigner() {
   function beginAssetDrag(src: string) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     draggedAssetSrc.current = src;
-    if (canvasStage === "envelope") setCanvasStage("cover");
   }
 
   function findSectionDropTarget(clientX: number, clientY: number): HTMLElement | null {
@@ -363,9 +363,16 @@ export default function InvitationDesigner() {
 
   function onAssetDragOver(event: DragEvent<HTMLDivElement>) {
     if (!draggedAssetSrc.current || design.layers.length >= MAX_ASSET_LAYERS) return;
-    const section = findSectionDropTarget(event.clientX, event.clientY);
-    if (!section) { if (assetDropReady) setAssetDropReady(false); return; }
     event.preventDefault();
+    const rect = canvasScrollRef.current?.getBoundingClientRect();
+    if (rect && event.clientY > rect.bottom - 48) canvasScrollRef.current!.scrollTop += 16;
+    else if (rect && event.clientY < rect.top + 48) canvasScrollRef.current!.scrollTop -= 16;
+    const section = findSectionDropTarget(event.clientX, event.clientY);
+    if (!section || design.sections[section.dataset.invitationSection as StudioObjectSection] === false) {
+      event.dataTransfer.dropEffect = "none";
+      if (assetDropReady) setAssetDropReady(false);
+      return;
+    }
     event.dataTransfer.dropEffect = "copy";
     if (!assetDropReady) setAssetDropReady(true);
   }
