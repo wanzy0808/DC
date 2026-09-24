@@ -45,12 +45,9 @@ export default function TemplateDesignPage() {
         nameDesc: "Name Z–A",
         available: "designs available",
         none: "No templates match your search.",
-        ready: "Preview uses the published invitation renderer",
-        studio: "Invitation Studio design preview",
-        designer: "Designer image preview · not yet available in Studio",
+        designer: "Not yet available",
         view: "View invitation",
         viewImage: "View design",
-        note: "Preview names and photos are samples. To add your own photos, create an event and upload them in Invitation Studio.",
         preview: "Preview · demo data",
         close: "Close preview",
         toggle: "Try showing or hiding invitation sections",
@@ -76,12 +73,9 @@ export default function TemplateDesignPage() {
         nameDesc: "Nama Z–A",
         available: "desain tersedia",
         none: "Tidak ada template yang cocok dengan pencarianmu.",
-        ready: "Preview mengikuti renderer undangan publik",
-        studio: "Pratinjau desain Invitation Studio",
-        designer: "Desain designer · pratinjau gambar, belum tersedia di Studio",
+        designer: "Belum Tersedia",
         view: "Lihat undangan",
         viewImage: "Lihat desain",
-        note: "Foto dan nama pada pratinjau merupakan data contoh. Untuk memakai foto sendiri, buat acara lalu unggah foto melalui Invitation Studio.",
         preview: "Pratinjau · data contoh",
         close: "Tutup pratinjau",
         toggle: "Coba tampilkan atau sembunyikan bagian undangan",
@@ -282,7 +276,6 @@ export default function TemplateDesignPage() {
               </div>
               <div className="px-5 pb-5 pt-3">
                 <p className="min-h-12 text-sm leading-6 text-foreground/65">{template.description}</p>
-                <p className="mt-2 text-[11px] text-foreground/50">{!template.ready ? copy.designer : template.previewType === "public" ? copy.ready : copy.studio}</p>
                 <Button onClick={() => openPreview(template.key)} size="sm" className={controlStyles.cta}>
                   {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
@@ -294,9 +287,6 @@ export default function TemplateDesignPage() {
           <div className="rounded-xl border border-dashed border-border px-6 py-20 text-center text-sm text-foreground/60">{copy.none}</div>
         )}
 
-        <p className="mt-8 text-xs leading-6 text-foreground/50">
-          {copy.note}
-        </p>
           </section>
         </main>
         <MarketingFrameFooter />
@@ -317,7 +307,6 @@ export default function TemplateDesignPage() {
             <aside className="shrink-0 border-b border-border p-4 md:w-[310px] md:border-b-0 md:border-r md:p-6">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">{copy.preview}</p>
                   <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-dc-heading)] text-xl text-primary">{selected.name}</h2>
                 </div>
                 <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border text-foreground/70 hover:text-primary">
@@ -338,12 +327,11 @@ export default function TemplateDesignPage() {
                   </label>
                 ))}
               </div>}
-              <p className="mt-3 hidden text-xs leading-6 text-foreground/55 md:block">{selected.ready ? copy.toggleNote : copy.designerNote}</p>
+              {!selected.ready && <p className="mt-3 text-xs font-medium text-foreground">{copy.designer}</p>}
               {selected.ready && <div className="mt-4 flex flex-col gap-2 md:mt-8">
                 <Button asChild size="sm" className="rounded-xl text-xs">
                   <Link href="/dashboard">{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
                 </Button>
-                <p className="text-[11px] leading-5 text-foreground/50">{copy.startNote}</p>
               </div>}
             </aside>
             <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
