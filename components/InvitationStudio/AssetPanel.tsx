@@ -87,7 +87,8 @@ export default function AssetPanel({
         </div>
         {selected && <div className="space-y-4 rounded-[var(--dc-control-radius)] border border-primary/40 bg-primary/5 p-3">
           <h4 className="truncate text-sm font-semibold text-primary">{assetName(selected.src)}</h4>
-          {range(en ? "Transparency / Opacity" : "Transparansi / Opasitas", selected.opacity, 0, 1, 0.05, "%", (opacity) => onUpdate(selected.id, { opacity }))}
+          {range(en ? "Opacity" : "Opasitas", selected.opacity, 0, 1, 0.05, "%", (opacity) => onUpdate(selected.id, { opacity }))}
+          <p className="text-[11px] text-muted-foreground">{en ? "0% invisible · 100% fully visible" : "0% transparan · 100% terlihat penuh"}</p>
           {range(en ? "Size" : "Ukuran", selected.width, 5, 85, 1, "%", (width) => onUpdate(selected.id, { width }))}
           {range("X", selected.x, 0, 100, 1, "%", (x) => onUpdate(selected.id, { x })}
           {range("Y", selected.y, 0, 100, 1, "%", (y) => onUpdate(selected.id, { y })}
