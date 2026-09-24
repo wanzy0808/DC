@@ -10,6 +10,7 @@ import "./zen-atelier.css";
 import "./pencil-reverie.css";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import GuestWishes from "@/components/PublicInvitation/GuestWishes";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import { readableInk, invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
@@ -487,7 +488,7 @@ export default function UniversalInvitationTemplate({
           ) : <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
-            <p className="mx-auto max-w-sm text-sm leading-7 opacity-70">{key === "zen-atelier" ? "Ucapan belum tersedia." : "Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia."}</p>
+            <GuestWishes slug={invitation.slug} preview={preview} initialName={personalGuest?.name} appearance={key === "zen-atelier" ? "zen" : "default"} />
           ), 9)}
 
           {sections.gift && section("gift", hasGift ? (
