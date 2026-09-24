@@ -25,15 +25,15 @@
 }
 .dc-invitation-studio-shell { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--background); }
 .dc-studio-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
-.dc-studio-workspace { display: grid; grid-template-columns: 98px 300px minmax(0, 1fr); flex: 1; min-height: 0; }
+.dc-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-height: 0; }
 .dc-studio-rail { padding: 16px 10px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
-.dc-studio-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 82px; margin-bottom: 6px; padding: 12px 6px; border-radius: 0 16px 16px 0; color: var(--foreground); font-size: 12px; font-weight: 500; line-height: 1.35; transition: background .18s, color .18s; cursor: pointer; }
+.dc-studio-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 74px; margin-bottom: 5px; padding: 10px 6px; border-radius: 0 16px 16px 0; color: var(--foreground); font-size: 12px; font-weight: 500; line-height: 1.35; transition: background .18s, color .18s; cursor: pointer; }
 .dc-studio-tool svg { width: 21px; height: 21px; flex-shrink: 0; color: var(--primary); }
 .dc-studio-tool:hover { color: var(--foreground); background: color-mix(in srgb, var(--primary) 10%, transparent); }
 .dc-studio-tool[aria-pressed=true] { color: var(--foreground); background: color-mix(in srgb, var(--primary) 20%, transparent); box-shadow: inset 3px 0 var(--primary); }
 .dc-studio-tool:focus-visible, .dc-studio-icon:focus-visible, .dc-studio-mobile-view button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 .dc-studio-rail-divider { margin: 12px 10px; border-top: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
-.dc-studio-inspector { min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 20px; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-inspector { min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: 20px 22px; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
 .dc-studio-inspector input:not([type=checkbox]):not([type=file]) { border-color: var(--primary); border-radius: var(--dc-control-radius); min-height: 44px; font-size: 14px; }
 .dc-studio-inspector button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .dc-studio-canvas { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: color-mix(in srgb, var(--primary) 7%, var(--background)); }
@@ -47,7 +47,7 @@
 .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 98px minmax(0, 1fr); }
 .dc-invitation-studio-shell[data-inspector=false] .dc-studio-inspector { display: none; }
 .dc-unlicensed-studio .dc-studio-preview-surface::after { content: "PREVIEW • DC ORGANIZER"; position: absolute; inset-inline: -18%; top: 340px; z-index: 40; transform: rotate(-24deg); padding: 14px 0; border-block: 1px solid currentColor; color: var(--primary); background: color-mix(in srgb, var(--background) 78%, transparent); font-family: var(--font-dc-mono); font-size: 12px; letter-spacing: .22em; text-align: center; pointer-events: none; user-select: none; }
-@media (min-width: 1280px) { .dc-invitation-editor { padding: 24px; } .dc-studio-workspace { grid-template-columns: 108px 330px minmax(0, 1fr); } .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 108px minmax(0, 1fr); } }
+@media (min-width: 1280px) { .dc-invitation-editor { padding: 24px; } .dc-studio-workspace { grid-template-columns: 108px 380px minmax(0, 1fr); } .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 108px minmax(0, 1fr); } }
 @media (max-width: 767px) {
   .dc-invitation-editor { padding: 6px; }
   .dc-studio-frame { border-radius: 14px; }
