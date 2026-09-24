@@ -61,7 +61,7 @@ function CoverLayer({
   if (!editable) return <div className="absolute" style={{ ...style, pointerEvents: "none" }} aria-hidden="true"><img src={layer.src} alt="" draggable={false} className="block h-auto w-full select-none" /></div>;
   return (
     <button type="button" aria-label={`Pilih dan geser ilustrasi ${layer.id}`} aria-pressed={selected}
-      className={`absolute cursor-grab border-2 border-transparent p-0 focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${selected ? "border-[#C07A84] outline outline-1 outline-white" : "hover:border-[#C07A84]/60"}`}
+      className={`pointer-events-auto absolute cursor-grab border-2 border-transparent p-0 focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${selected ? "border-[#C07A84] outline outline-1 outline-white" : "hover:border-[#C07A84]/60"}`}
       style={style} onClick={() => onSelect?.(layer.id)} onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={() => { drag.current = null; setDragPosition(null); }} onKeyDown={keyDown}>
       <img src={layer.src} alt="" draggable={false} className="pointer-events-none block h-auto w-full select-none" />
     </button>
