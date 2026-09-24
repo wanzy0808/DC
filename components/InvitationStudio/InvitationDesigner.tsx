@@ -302,7 +302,7 @@ export default function InvitationDesigner() {
   }
 
   function showDesignSection(section: StudioObjectSection) {
-    showDesignSection(section);
+    setCanvasStage(section === "envelope" ? "envelope" : "cover");
     if (section === "envelope") setPreviewVersion((current) => current + 1);
   }
 
@@ -324,7 +324,7 @@ export default function InvitationDesigner() {
       opacity: 1, fontSize: 24, fontRole: "heading", color: "#C07A84", rotation: 0,
     }] });
     setSelectedLayerId(id);
-    setCanvasStage(section === "envelope" ? "envelope" : "cover");
+    showDesignSection(section);
     setPanel("text");
     setInspectorOpen(true);
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
