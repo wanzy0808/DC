@@ -65,7 +65,7 @@ test("pending template survives login and event creation without an automatic da
 });
 
 test("Studio template panel supports searching, photo filters, sorting and incremental cards", () => {
-  const panel = readFileSync(new URL("../components/InvitationStudio/DesignerPanels.tsx", import.meta.url), "utf8");
+  const panel = readFileSync(new URL("../components/InvitationStudio/TemplatePanel.tsx", import.meta.url), "utf8");
   assert.match(panel, /aria-label=\{en \? "Search templates" : "Cari template"\}/);
   assert.match(panel, /setSearch\(event\.target\.value\)/);
   assert.match(panel, /aria-label=\{en \? "Filter templates by photos" : "Filter foto template"\}/);

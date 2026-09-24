@@ -19,7 +19,7 @@ Customer dashboard should feel like the approved DC Organizer landing without du
 - [x] Stage 2: unify customer dashboard shell and shared page primitives, simplify Beranda's redundant text, prioritize operational metrics, latest events and real RSVP/publication visualizations.
 - [ ] Stage 3: audit and restyle Rangkaian Acara, Undangan Digital, Personal Invitation, WA Blast, RSVP, Manajemen Tamu, and Usher screens using shared primitives; retain current function and event scoping.
 - [ ] Stage 4: validate Next.js build/TypeScript and test desktop/mobile Light/Dark, ID/EN, hover/active, keyboard, zero-data and populated states; fix regressions before marking complete.
-- [ ] Record finishing details in AGENTS.md, prd.md, README.md and prd-tambahan.md when verified.
+- [ ] When verified, update the active Dashboard requirements in `prd.md` and record implementation/QA in its Appendix A; adjust `AGENTS.md` or `README.md` only when their own scope changes. Do not recreate deleted `prd-tambahan.md`.
 
 ## Implemented in this iteration
 - Added `components/Dashboard/DashboardSidebar.tsx` as the single owner of customer sidebar markup for mobile and desktop, with mobile backdrop and keyboard-focusable existing Button controls.

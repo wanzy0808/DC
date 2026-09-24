@@ -1,10 +1,25 @@
 name: Orphan Audit
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths:
       - ".github/workflows/orphan-audit.yml"
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "data/**"
+      - "public/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/orphan-audit.yml"
+      - "app/**"
+      - "components/**"
+      - "lib/**"
+      - "data/**"
+      - "public/**"
 
 permissions:
   contents: read
@@ -72,13 +87,15 @@ jobs:
                   if target:
                       referenced.add(target)
 
-          print('=== ZERO-INBOUND SOURCE CANDIDATES ===')
+          # No inbound static import is a review signal, NOT proof a file is unused.
+          print('=== ZERO-INBOUND SOURCE CANDIDATES (REVIEW BEFORE DELETE) ===')
           for p in sorted(candidates):
               if p not in referenced:
                   print(p.as_posix())
 
           searchable = '\n'.join(text_cache.values())
-          print('=== PUBLIC FILES WITH NO TEXTUAL REFERENCE ===')
+          # URLs may be derived at runtime or stored in existing customer data.
+          print('=== PUBLIC FILES WITH NO TEXTUAL REFERENCE (NOT SAFE TO AUTO-DELETE) ===')
           public = root / 'public'
           if public.exists():
               for p in sorted(x for x in public.rglob('*') if x.is_file()):

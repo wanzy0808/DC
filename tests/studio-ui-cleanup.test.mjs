@@ -6,6 +6,7 @@ const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf
 const studio = read("components/InvitationStudio/InvitationEditorPage.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
+const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
 const styles = read("components/InvitationStudio/studio.css");
 const dashboard = read("components/Dashboard/InvitationWorkspacePanel.tsx");
@@ -39,19 +40,19 @@ test("Studio has a wider inspector, compact side tools and a smaller invitation 
 test("Studio ID/EN switch updates its navigation, template search and photo controls", () => {
   assert.match(designer, /const \{ locale \} = useLanguage\(\)/);
   assert.match(designer, /locale === "en" \?/);
-  assert.match(panels, /aria-label=\{en \? "Search templates" : "Cari template"\}/);
+  assert.match(templatePanel, /aria-label=\{en \? "Search templates" : "Cari template"\}/);
   assert.match(panels, /sectionNamesEnglish/);
   assert.match(photos, /const en = locale === "en"/);
 });
 
 test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
-  assert.match(panels, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
-  assert.doesNotMatch(panels, /photoFilter === key \? "bg-primary text-black"/);
+  assert.match(templatePanel, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
+  assert.doesNotMatch(templatePanel, /photoFilter === key \? "bg-primary text-black"/);
   assert.match(designer, /canvasStage === "envelope" \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
   assert.match(designer, /canvasStage === "cover" \|\| design\.sections\.envelope === false \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
-  assert.match(panels, /w-\[204px\] max-w-\[68%\] shrink-0/);
-  assert.match(panels, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
-  assert.match(panels, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
+  assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
+  assert.match(templatePanel, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
+  assert.match(templatePanel, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
   assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
 });
 
@@ -65,8 +66,8 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   assert.doesNotMatch(globalStyles, /--dc-control-radius:\s*9999px;/);
   assert.match(buttons, /rounded-\[var\(--dc-control-radius\)\]/);
   assert.match(controls, /rounded-\[var\(--dc-control-radius\)\]/);
-  assert.match(panels, /photoFilter === key/);
-  assert.match(panels, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(templatePanel, /photoFilter === key/);
+  assert.match(templatePanel, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
   assert.match(designer, /min-h-9 shrink-0 rounded-\[var\(--dc-control-radius\)\]/);
   assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
   assert.match(styles, /\.dc-studio-icon \{[^}]*border-radius: var\(--dc-control-radius\)/);
