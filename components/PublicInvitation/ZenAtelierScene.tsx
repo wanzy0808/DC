@@ -1,6 +1,7 @@
 "use client";
 
-import { BlossomBranch, EnsoSun, InkMountains } from "@/assets/templates/zen-atelier/ZenArtwork";
+import { useState } from "react";
+import { displayTitleCase } from "@/lib/text/display-title-case";
 
 type ZenAtelierSceneProps = {
   names: string;
@@ -10,66 +11,87 @@ type ZenAtelierSceneProps = {
   preview?: boolean;
 };
 
-/** Deliberately photo-free folded letter and cover, loaded only for zen-atelier. */
+const root = "/templates/";
+const paper = "radial-gradient(ellipse at 50% 20%, #fffaf0 0%, #f3eddf 55%, #e7dfd0 100%)";
+
+/**
+ * The artwork is the real Zen Atelier set in public/templates, not generated SVG
+ * substitutes. The frame is deliberately independent of the shared RSVP/data engine.
+ */
 export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false }: ZenAtelierSceneProps) {
   const envelope = stage === "envelope";
+  const [opening, setOpening] = useState(false);
+  const title = displayTitleCase(names);
+  const open = () => {
+    if (opening) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onOpen();
+      return;
+    }
+    setOpening(true);
+    window.setTimeout(onOpen, 420);
+  };
+
   return (
     <section
       data-invitation-section={stage}
-      className="relative isolate flex min-h-[760px] flex-col items-center justify-center overflow-hidden px-6 py-14 text-center sm:px-10"
+      aria-label={envelope ? "Amplop undangan Zen Atelier" : "Sampul undangan Zen Atelier"}
+      className="relative isolate flex min-h-[760px] flex-col items-center overflow-hidden px-6 pb-16 pt-14 text-center sm:px-12"
       style={{
-        background: "var(--inv-scene-bg, #F4F0E6)",
-        color: "var(--inv-scene-ink, #373C34)",
-        backgroundImage: "radial-gradient(circle at 90% 15%,rgba(132,116,92,.09),transparent 38%),radial-gradient(circle at 10% 85%,rgba(132,116,92,.08),transparent 42%)",
+        background: "var(--inv-scene-bg, #f3eddf)",
+        color: "var(--inv-scene-ink, #343b34)",
+        backgroundImage: paper,
       }}
     >
-      <span aria-hidden="true" className="pointer-events-none absolute inset-[14px] border border-current/15" />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-[21px] border border-current/10" />
-      <BlossomBranch className="pointer-events-none absolute -right-12 -top-12 w-[min(80%,330px)] opacity-90" />
-      <BlossomBranch className="pointer-events-none absolute -bottom-14 -left-24 w-56 rotate-180 opacity-45" />
-      <p className="relative mt-4 text-[10px] uppercase tracking-[.37em] opacity-70">
-        {envelope ? "A letter, just for you" : "Zen Atelier"}
-      </p>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-3 border border-[#a4987b]/50 sm:inset-5" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-[17px] border border-[#c5bda8]/45 sm:inset-[26px]" />
+      <img src={root + "bamboo1.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute -right-24 top-0 z-[1] w-[65%] max-w-[360px] object-contain opacity-70 sm:-right-14" />
+      <img src={root + "bunga0001.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute -bottom-10 -left-16 z-[1] w-[46%] max-w-[260px] object-contain opacity-80" />
+      <p className="relative z-10 text-[10px] font-medium uppercase tracking-[.4em] text-[#716c5e]">DC Organizer · Zen Atelier</p>
 
       {envelope ? (
-        <div className="relative mx-auto mt-14 w-full max-w-[320px]">
-          <div className="absolute -inset-3 border border-current/20" aria-hidden="true" />
-          <div className="relative flex min-h-[310px] flex-col items-center justify-end overflow-hidden border border-[#B7AC96] bg-[var(--inv-scene-surface,#FBF8F0)] px-6 pb-9 pt-28 text-[var(--inv-scene-surface-ink,#373C34)] shadow-[0_24px_58px_rgba(59,49,36,.14)]">
-            <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[154px] origin-top bg-[#DDD5C3] [clip-path:polygon(0_0,100%_0,50%_100%)]" />
-            <span aria-hidden="true" className="absolute left-1/2 top-[95px] grid size-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[#FBF8F0] bg-[#A9513B] text-[#FBF8F0] shadow-sm">
-              <span className="text-lg leading-none">和</span>
-            </span>
-            <p className="relative text-[10px] uppercase tracking-[.28em] opacity-65">Undangan untuk</p>
-            <h1 className="relative mt-4 break-words text-[27px] leading-tight" style={{ fontFamily: "var(--inv-heading, Georgia), Georgia, serif" }}>{names}</h1>
-            <span aria-hidden="true" className="relative my-5 h-px w-16 bg-[#A9513B]/60" />
-            <p className="relative text-xs tracking-[.09em]">{date}</p>
+        <>
+          <p className="relative z-10 mt-8 text-[11px] uppercase tracking-[.28em] text-[#9b5240]">Sebuah undangan untukmu</p>
+          <div className={`relative z-10 mt-8 flex w-full max-w-[450px] flex-col items-center transition duration-500 ${opening ? "-translate-y-8 scale-105 opacity-0" : ""}`}>
+            <div className="relative aspect-[4/5] w-full max-w-[340px] drop-shadow-[0_22px_20px_rgba(70,58,43,.15)]">
+              <img src={root + "amplop1.png"} alt="Ilustrasi amplop undangan Zen Atelier" className="absolute inset-0 h-full w-full object-contain" fetchPriority="high" />
+            </div>
+            <div className="relative -mt-5 w-full border border-[#c6b99e] bg-[#faf6ec]/95 px-4 py-8 shadow-[0_18px_40px_rgba(70,58,43,.12)] backdrop-blur-[2px] sm:-mt-8">
+              <p className="text-[10px] uppercase tracking-[.32em] text-[#9b5240]">The Wedding of</p>
+              <h1 className="mx-auto mt-4 max-w-sm break-words text-[clamp(1.85rem,7vw,2.9rem)] leading-[1.18]" style={{ fontFamily: "var(--inv-heading, Georgia), Georgia, serif" }}>{title}</h1>
+              <span aria-hidden="true" className="mx-auto my-5 block h-px w-16 bg-[#a9513b]" />
+              <p className="text-[12px] tracking-[.12em]">{date}</p>
+            </div>
           </div>
-        </div>
+          <button
+            type="button"
+            onClick={open}
+            disabled={opening}
+            className="relative z-20 mt-9 min-h-12 border border-[#a9513b] bg-[#a9513b] px-8 py-3 text-[12px] font-semibold tracking-[.18em] text-white shadow-[0_8px_20px_rgba(169,81,59,.17)] transition hover:-translate-y-1 hover:bg-[#873d2f] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a9513b] disabled:cursor-wait disabled:opacity-60"
+          >
+            Buka Undangan
+          </button>
+          {preview && <p className="relative z-10 mt-4 text-[11px] text-[#716c5e]">Pratinjau undangan</p>}
+        </>
       ) : (
         <>
-          <div className="relative mt-8 flex h-[270px] w-[min(86vw,390px)] items-center justify-center">
-            <EnsoSun className="absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2" />
-            <InkMountains className="absolute bottom-0 left-1/2 w-[110%] max-w-none -translate-x-1/2" />
+          <p className="relative z-10 mt-6 text-[11px] uppercase tracking-[.3em] text-[#9b5240]">The Wedding of</p>
+          <div className="relative mt-8 h-[330px] w-full max-w-[440px] overflow-hidden border border-[#afa48d] bg-[#e7e7d9] shadow-[0_23px_55px_rgba(58,57,47,.12)] sm:h-[390px]">
+            <img src={root + "japanroom1.png"} alt="" loading="eager" aria-hidden="true" className="absolute inset-0 h-full w-full object-cover opacity-80" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#f6eee3]/25 via-transparent to-[#f3eddf]/50" />
+            <img src={root + "redsun1.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[6%] h-[56%] w-[70%] -translate-x-1/2 object-contain opacity-90" />
+            <img src={root + "inkmountain.png"} alt="" loading="lazy" aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-[58%] w-full object-cover object-bottom opacity-80" />
+            <div aria-hidden="true" className="pointer-events-none absolute inset-3 border border-[#fff8e7]/65" />
           </div>
-          <span className="relative mt-6 text-[10px] uppercase tracking-[.36em] opacity-60">Dengan penuh syukur</span>
-          <h1 className="relative mt-5 max-w-sm break-words text-[clamp(2.2rem,8vw,3.5rem)] leading-[1.14]" style={{ fontFamily: "var(--inv-heading, Georgia), Georgia, serif" }}>
-            {names}
-          </h1>
-          <p className="relative mt-6 text-xs tracking-[.19em]">{date}</p>
-          <span aria-hidden="true" className="relative mt-8 h-10 w-px bg-[#A9513B]/60" />
+          <div className="relative z-10 -mt-8 w-[94%] max-w-[400px] border border-[#bfb49d] bg-[#faf6ed]/95 px-5 py-9 shadow-[0_12px_35px_rgba(58,57,47,.09)] backdrop-blur-[2px]">
+            <p className="text-[10px] uppercase tracking-[.35em] text-[#9b5240]">Dua hati, satu cerita</p>
+            <h1 className="mt-4 break-words text-[clamp(2rem,8vw,3.4rem)] leading-[1.12]" style={{ fontFamily: "var(--inv-heading, Georgia), Georgia, serif" }}>{title}</h1>
+            <p className="mt-5 text-xs tracking-[.19em]">{date}</p>
+          </div>
+          <p className="relative z-10 mt-8 text-[10px] uppercase tracking-[.32em] text-[#827761]">Scroll untuk melihat undangan</p>
+          <span aria-hidden="true" className="relative z-10 mt-5 h-10 w-px bg-[#a9513b]/65" />
         </>
       )}
-
-      {envelope && (
-        <button
-          type="button"
-          onClick={onOpen}
-          className="relative z-10 mt-12 min-h-12 border border-[#A9513B] bg-[#A9513B] px-9 py-3 text-[11px] font-semibold tracking-[.2em] text-white transition duration-300 hover:-translate-y-1 hover:bg-[#8D4231] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#A9513B]"
-        >
-          Buka Undangan
-        </button>
-      )}
-      {envelope && preview && <p className="relative mt-5 text-[11px] opacity-55">Pratinjau</p>}
     </section>
   );
 }
