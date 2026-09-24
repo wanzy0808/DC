@@ -13,6 +13,10 @@
 # package manager
 /package-lock.json
 
+# private artwork (never commit raw licensed master assets to public GitHub)
+/assets/templates/*/originals/
+/private-assets/
+
 # testing
 /coverage
 

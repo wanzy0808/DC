@@ -14,6 +14,7 @@ export const invitationDefaultTracks: Record<string, { title: string; file: stri
   "golden-art-deco": { title: "With You In The Morning", file: "Carl Storm - With You In The Morning.mp3" },
   "paper-cut-botanical": { title: "They Say...", file: "DayFox - They Say....mp3" },
   "celestial-ink": { title: "Fragile", file: "A Himitsu - Fragile.mp3" },
+  "zen-atelier": { title: "White Petals", file: "Keys Of Moon - White Petals.mp3" },
 };
 
 export function getInvitationDefaultMusic(templateKey: string) {

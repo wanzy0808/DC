@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import dynamic from "next/dynamic";
 import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 
 /** Visual-only compositions. Data, action, and section rendering stay in shared invitation engine. */
@@ -102,7 +103,10 @@ function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps
     </section>
   );
 }
+const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
+
 export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview}: SceneProps) {
+  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} stage={stage} onOpen={onOpen} preview={preview} />;
   const isEnvelope = false;
   const content = isEnvelope ? "You're Invited" : "The Celebration";
