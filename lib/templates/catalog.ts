@@ -140,7 +140,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "pencil", font: "playfairQuicksand" },
     name: "Pencil Reverie",
     description: "Romansa sketsa pensil, kolase kenangan vintage, dan animasi waktu, tanpa foto.",
-    previewImage: "/templates/pencil-reverie/couplesitting.png",
+    previewImage: "/templates/pencil-reverie/bungaandlampbg.png",
     assetPath: "/templates/pencil-reverie",
   },
   {
