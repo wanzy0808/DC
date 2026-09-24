@@ -506,6 +506,12 @@ Unggahan musik dibatasi **2 aset AUDIO per undangan, masing-masing maksimal 3 MB
 
 Foto tetap melalui Sharp: decode, orientasi otomatis, resize maksimal 2000×2000 tanpa pembesaran, encode WebP quality 82, simpan event-scoped. Batas foto tetap 30 file dan input maksimal 15 MB. Fitur Wishes masih placeholder tanpa persistence; jangan mengklaim seluruh fungsi selesai hanya karena 15 toggle tersedia.
 
+### 7.2.1c Konsistensi renderer dan kapitalisasi nama (24 September 2026)
+
+Font pilihan pada sembilan tema customizable diteruskan ke nama amplop/sampul melalui token heading; Cinzel/Fauna One memakai CSS family next/font yang benar-benar dimuat. Palet custom memengaruhi permukaan utama, tinta dan aksen amplop/sampul, dengan warna teks terbaca pada permukaan terang/gelap; preset kembali ke artwork asli. Romantic Rose tetap terkunci. Semua nama host/pasangan dan judul acara pada amplop, sampul, identitas, detail dan penutup menggunakan `displayTitleCase` saat render, termasuk data lama. Nama penerima pada password gate juga diformat. Tidak mengubah isi database, pesan, deskripsi, URL, atau hashtag, dan tidak memaksakan uppercase penuh pada nama.
+
+Studio menampilkan retry saat load gagal dan menjelaskan bahwa pengiriman ucapan belum tersedia. Penyimpanan desain mengunci row Invitation yang sama dengan upload/delete musik, memvalidasi bahwa URL upload yang dipilih masih menjadi aset event tersebut, serta tidak menimpa status sudah terbit dengan snapshot lama. Ini bukan implementasi persistence Wishes.
+
 ### 7.2.2 Scalable template architecture
 
 DC Organizer harus mendukung katalog undangan dalam skala besar — puluhan hingga ratusan template — tanpa membuat aplikasi, backend, database flow, atau feature implementation terpisah untuk setiap template.
@@ -4672,3 +4678,14 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 **Commit:** `Add Studio default reset and enforce two 3 MB music uploads` (entry disertakan dalam commit implementasi yang sama).
 
 **Validasi:** `pnpm exec tsc --noEmit`, seluruh 20 tes, production build, dan `git diff --check` lulus. Tiga tes tambahan mencakup batas tepat 3 MiB/1 byte lebih, file kedua/ketiga/slot kembali, empty MIME tidak sesuai. Smoke check Sharp dengan byte PNG nyata 2400×1200 menghasilkan WebP 2000×1000. Build tetap memiliki warning tracing filesystem upload yang sudah ada. Database concurrency, upload/hapus melalui akun nyata, preview audio, dan visual browser belum diuji end-to-end. Wishes tetap belum mempunyai persistence; toggle tersedia tidak berarti semua layanan produk selesai.
+
+
+### 2026-09-24 — Finalisasi renderer Studio dan kapitalisasi nama undangan
+
+**Temuan/perbaikan:** Nama amplop/sampul sebelumnya tetap memakai font UI dan warna pembuka hardcoded, sehingga pilihan Studio terlihat hanya memengaruhi sebagian isi. Sembilan tema customizable kini mengonsumsi selected font dan custom scene palette dengan fallback artwork preset; teks memakai kontras yang terbaca, termasuk token Cinzel/Fauna One yang benar. Nama host/pasangan dan judul acara di seluruh renderer nyata/legacy serta personal password gate memakai kapital awal kata saat render; data asli tidak dimodifikasi. Dua scene tidak lagi memaksakan uppercase pada nama. Studio gagal load menampilkan retry, status belum tersimpan lebih jujur, Wishes diberi keterangan belum tersedia. Save musik memakai transaksi/lock bersama uploader/delete dan menolak URL upload lokal yang sudah hilang.
+
+**Area:** `components/PublicInvitation/{UniversalInvitationTemplate,RomanticRoseTemplate,InvitationThemeScenes,ClassicInvitationTemplate,PublicInvitation,PersonalInvitationPasswordGate}.tsx`, `components/InvitationStudio/{DesignerPanels,InvitationDesigner}.tsx`, `lib/templates/presentation.ts`, `tests/template-presentation.test.mjs`, `app/api/invitations/route.ts`, AGENTS/README/PRD.
+
+**Commit:** `Fix Studio renderer customization and capitalize invitation names` (entry berada pada commit implementasi yang sama).
+
+**Validasi:** 22 unit tests lulus; uji render React menghasilkan 18 amplop/sampul + 9 preset default lulus untuk sembilan tema customizable. Nama lowercase diuji pada amplop/isi seluruh 10 tema dan keluar dengan kapital awal tiap kata. Ini pemeriksaan markup renderer, bukan screenshot/pemuatan font jaringan/interaksi browser. TypeScript dan production build final setelah koreksi kapitalisasi lulus. Warning tracing filesystem uploader yang sudah ada tetap muncul. Browser mobile/desktop, audio playback dan transaksi database nyata masih belum diuji. Tidak ada migrasi.

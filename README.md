@@ -384,3 +384,8 @@ Studio now has a bounded Rose frame, a collapsible settings panel, a separately 
 ## Restore Studio defaults and music limits
 
 `Kembalikan ke Default` resets the current theme’s palette, font and 15 switches, preserving event text, photos and music. Undo is available; Save Design persists the reset. Music supports two uploaded files per invitation, each up to 3 MiB. Select a song or delete an upload to free a slot; built-in music is separate from this quota. Limits are enforced server-side even for simultaneous uploads. New URL-only assets are rejected; existing saved music URLs remain compatible. Photo uploads still use Sharp to create WebP. No database migration is required.
+
+
+## Studio renderer corrections (24 September 2026)
+
+The nine customizable themes now pass selected heading fonts through envelope/cover names and apply custom palette base colors there; their preset artwork remains the default. Cinzel/Fauna One use the loaded next/font family tokens. Romantic Rose keeps its original font/palette lock. All invitation renderers format host/couple names and event titles with display-only initial capitals, including old records. Studio shows a retry action on loading failure, identifies Wishes as not yet accepting submissions, and rejects a saved local music selection if that upload has since been deleted.

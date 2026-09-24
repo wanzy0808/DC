@@ -8,6 +8,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
 import { invitationSectionItems } from "@/lib/templates/sections";
+import { invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { Input } from "@/components/ui/input";
 import type { CatalogTemplate } from "@/lib/templates/use-template-catalog";
@@ -135,7 +136,7 @@ export function SectionsPanel({
       <div className="mt-4 divide-y divide-primary/15">
         {invitationSectionItems.map((item) => (
           <label key={item.key} className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-3">
-            <span className="text-sm">{item.title}</span>
+            <span className="text-sm">{item.title}{item.key === "wishes" && <span className="mt-1 block text-xs text-muted-foreground">Pengiriman ucapan belum tersedia.</span>}</span>
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
               <input type="checkbox" role="switch" className="peer sr-only" checked={sections[item.key] !== false}
                 onChange={(event) => onChange(item.key, event.target.checked)} />
@@ -223,11 +224,11 @@ export function FontPanel({
           >
             <span
               className="mt-1 block text-lg text-foreground"
-              style={{ fontFamily: item.heading }}
+              style={{ fontFamily: invitationFontFamily(item.heading) }}
             >
               {item.heading}
             </span>
-            <span className="mt-1 block text-sm text-muted-foreground" style={{ fontFamily: item.body }}>{item.body}</span>
+            <span className="mt-1 block text-sm text-muted-foreground" style={{ fontFamily: invitationFontFamily(item.body) }}>{item.body}</span>
           </button>
         ))}
       </div>

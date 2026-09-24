@@ -1,10 +1,13 @@
 "use client";
 
+import { displayTitleCase } from "@/lib/text/display-title-case";
+
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
+import { readableInk, invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
@@ -128,13 +131,13 @@ export default function UniversalInvitationTemplate({
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
   const names = couple
-    ? [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ")
+    ? [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ")
     : identity.nameMode === "single"
-      ? invitation.groomName || invitation.title
-      : invitation.title;
+      ? displayTitleCase(invitation.groomName) || displayTitleCase(invitation.title)
+      : displayTitleCase(invitation.title);
   const groomParents = couple ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition) : "";
   const brideParents = couple ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition) : "";
-  const eventTitle = invitation.title || names || "Perayaan";
+  const eventTitle = displayTitleCase(invitation.title) || names || "Perayaan";
   const date = displayDate(invitation.eventDate, invitation.timezone);
   const countdown = eventCountdown(invitation.eventDate, now);
   const maps = invitation.mapUrl && /^https?:\/\//i.test(invitation.mapUrl) ? invitation.mapUrl : null;
@@ -142,7 +145,18 @@ export default function UniversalInvitationTemplate({
   const music = resolveInvitationMusic(key, invitation.musicUrl, invitation.assets);
   const frame = layout === "midnight" ? "rounded-full" : layout === "maroon" ? "rounded-none" : layout === "editorial" ? "rounded-2xl" : "rounded-t-[140px] rounded-b-xl";
   const panel = layout === "midnight" ? "rounded-3xl" : layout === "maroon" ? "rounded-sm" : layout === "editorial" ? "rounded-xl" : "rounded-[28px]";
+  const customPalette = design.palette !== template.preset.palette;
   const css = {
+    "--inv-heading": invitationFontFamily(font.heading),
+    ...(customPalette ? {
+      "--inv-scene-bg": palette.bg,
+      "--inv-scene-text": "currentColor",
+      "--inv-scene-surface": palette.surface,
+      "--inv-scene-ink": readableInk(palette.bg, palette.ink),
+      "--inv-scene-surface-ink": readableInk(palette.surface, palette.ink),
+      "--inv-scene-accent": palette.accent,
+      "--inv-scene-soft": palette.soft,
+    } : {}),
     "--inv-bg": palette.bg,
     "--inv-surface": palette.surface,
     "--inv-ink": palette.ink,
@@ -150,7 +164,7 @@ export default function UniversalInvitationTemplate({
     "--inv-soft": palette.soft,
     color: palette.ink,
     backgroundColor: palette.bg,
-    fontFamily: font.body,
+    fontFamily: invitationFontFamily(font.body),
   } as CSSProperties;
 
   useEffect(() => {
@@ -179,9 +193,9 @@ export default function UniversalInvitationTemplate({
     const left = key === "modern-maroon" || key === "golden-art-deco";
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
-    const contrast = isInkTheme && index % 2 === 0;
+    const contrast = !customPalette && isInkTheme && index % 2 === 0;
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
-    const color = contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
+    const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return (
       <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 py-16 sm:px-9 ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color }}
@@ -193,7 +207,7 @@ export default function UniversalInvitationTemplate({
         {key === "golden-art-deco" && <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         <div className="relative">
           <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>
-          <h2 className={`mt-3 text-2xl leading-snug ${left ? "uppercase tracking-[.04em]" : ""}`} style={{fontFamily:font.heading}}>{headings[keyName][1]}</h2>
+          <h2 className={`mt-3 text-2xl leading-snug ${left ? "uppercase tracking-[.04em]" : ""}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{headings[keyName][1]}</h2>
           <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
             <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
             {key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
@@ -242,27 +256,27 @@ export default function UniversalInvitationTemplate({
             <div className={`mx-auto max-w-lg gap-5 ${couple ? "grid grid-cols-2" : "flex flex-col items-center"}`}>
               {couple ? (
                 <>
-                  {([["personOne", invitation.groomName, media.personOne], ["personTwo", invitation.brideName, media.personTwo]] as const).map(([slot, name, url]) => (
+                  {([["personOne", displayTitleCase(invitation.groomName), media.personOne], ["personTwo", displayTitleCase(invitation.brideName), media.personTwo]] as const).map(([slot, name, url]) => (
                     <div key={slot} className="min-w-0">
                       {usesPhotos && <div className={`relative mx-auto overflow-hidden ${frame}`}>
                         {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={{ objectPosition: `center ${media.assignment.focus[slot]}` }} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
                       </div>}
                       {!usesPhotos && <div aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>}
-                      <p className="mt-4 break-words text-base" style={{ fontFamily: font.heading }}>{name || "Nama belum diisi"}</p>
+                      <p className="mt-4 break-words text-base" style={{ fontFamily: invitationFontFamily(font.heading) }}>{name || "Nama belum diisi"}</p>
                       {(slot === "personOne" ? groomParents : brideParents) && <p className="mx-auto mt-2 max-w-[18rem] text-xs leading-5 opacity-75">{slot === "personOne" ? groomParents : brideParents}</p>}
                     </div>
                   ))}
                 </>
               ) : (
-                <p className="break-words text-lg" style={{ fontFamily: font.heading }}>{names || eventTitle}</p>
+                <p className="break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
               )}
             </div>
           ), 2)}
 
           {section("event", (
             <div className="mx-auto max-w-md space-y-3 text-sm leading-7">
-              <p className="text-lg" style={{ fontFamily: font.heading }}>{eventTitle}</p>
+              <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{eventTitle}</p>
               {invitation.venue && <p className="opacity-80">{invitation.venue}</p>}
               {invitation.dressCode && <p className="text-xs opacity-70">Dress code · {invitation.dressCode}</p>}
             </div>
@@ -271,7 +285,7 @@ export default function UniversalInvitationTemplate({
           {section("dateTime", (
             <div className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
               <CalendarDays className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />
-              <p className="mt-4 text-lg" style={{ fontFamily: font.heading }}>{date}</p>
+              <p className="mt-4 text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{date}</p>
               {invitation.ceremonyTime && <p className="mt-3 text-sm">Mulai · {invitation.ceremonyTime}</p>}
               {invitation.receptionTime && <p className="mt-1 text-sm">Selesai · {invitation.receptionTime === "END" ? "Selesai acara" : invitation.receptionTime}</p>}
               <p className="mt-3 text-xs opacity-65">{invitation.timezone || "Asia/Jakarta"}</p>
@@ -302,7 +316,7 @@ export default function UniversalInvitationTemplate({
             <div className="grid grid-cols-4 gap-2">
               {countdown.map(([label, value]) => (
                 <div key={label} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
-                  <p className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: font.heading }}>{String(value).padStart(2, "0")}</p>
+                  <p className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
                   <p className="mt-1 text-[10px] opacity-65">{label}</p>
                 </div>
               ))}
@@ -312,7 +326,7 @@ export default function UniversalInvitationTemplate({
           {section("location", (
             <div className="mx-auto max-w-sm space-y-4">
               <MapPin aria-hidden className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
-              <p className="text-lg" style={{ fontFamily: font.heading }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
+              <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p className="text-sm leading-7 opacity-75">{invitation.address}</p>}
               {maps && <a href={maps} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--inv-accent)] px-6 text-sm text-[var(--inv-surface)]">Buka Google Maps</a>}
               {!maps && <p className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
@@ -334,7 +348,7 @@ export default function UniversalInvitationTemplate({
               <Gift className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />
               <p className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
-              <p className="mt-2 break-all text-lg" style={{ fontFamily: font.heading }}>{invitation.giftAccountNumber}</p>
+              <p className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
               <button type="button" onClick={() => { if (invitation.giftAccountNumber) void navigator.clipboard?.writeText(invitation.giftAccountNumber); }} className="mt-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin nomor rekening</button>
             </div>
           ) : <p className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
@@ -343,7 +357,7 @@ export default function UniversalInvitationTemplate({
             <div className="mx-auto max-w-sm text-sm leading-8">
               <Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} />
               <p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p>
-              <p className="mt-7 break-words text-lg" style={{ fontFamily: font.heading }}>{names || eventTitle}</p>
+              <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
             </div>
           ), 11)}
 

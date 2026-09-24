@@ -1,3 +1,4 @@
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import Link from "next/link";
 import { CalendarDays, Clock3, LockKeyhole, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
@@ -72,16 +73,16 @@ export default function PublicInvitation({
   const sections = parseInvitationSections(invitation.templateKey);
   const generatedTitle = buildEventTitle(
     eventCategory,
-    invitation.groomName,
-    invitation.brideName,
-    invitation.title,
+    displayTitleCase(invitation.groomName),
+    displayTitleCase(invitation.brideName),
+    displayTitleCase(invitation.title),
   );
-  const title = invitation.title.trim() || generatedTitle || "Undangan Acara";
+  const title = displayTitleCase(invitation.title).trim() || generatedTitle || "Undangan Acara";
   const identity =
     category.nameMode === "couple"
-      ? [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ")
+      ? [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ")
       : category.nameMode === "single"
-        ? invitation.groomName
+        ? displayTitleCase(invitation.groomName)
         : "";
   const showIdentity = Boolean(identity && identity !== title);
   const groomParents =
@@ -134,14 +135,14 @@ export default function PublicInvitation({
             <div className="mx-auto mt-4 grid max-w-2xl gap-2 text-xs leading-5 text-muted-foreground sm:grid-cols-2">
               {groomParents && (
                 <p>
-                  <span className="font-semibold text-foreground">{invitation.groomName}</span>
+                  <span className="font-semibold text-foreground">{displayTitleCase(invitation.groomName)}</span>
                   <br />
                   {groomParents}
                 </p>
               )}
               {brideParents && (
                 <p>
-                  <span className="font-semibold text-foreground">{invitation.brideName}</span>
+                  <span className="font-semibold text-foreground">{displayTitleCase(invitation.brideName)}</span>
                   <br />
                   {brideParents}
                 </p>

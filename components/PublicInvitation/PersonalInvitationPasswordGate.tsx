@@ -1,5 +1,7 @@
 "use client";
 
+import { displayTitleCase } from "@/lib/text/display-title-case";
+
 import { FormEvent, useState } from "react";
 import { LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -48,7 +50,7 @@ export default function PersonalInvitationPasswordGate({
           <LockKeyhole className="h-5 w-5" />
         </div>
         <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.18em] text-primary">Personal Invitation</p>
-        <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Untuk {guestName}</h1>
+        <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Untuk {displayTitleCase(guestName)}</h1>
         <p className="mt-2 text-sm text-muted-foreground">Masukkan password untuk membuka undangan personal ini.</p>
         <Input
           type="password"

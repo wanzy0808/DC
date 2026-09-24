@@ -1,5 +1,7 @@
 "use client";
 
+import { displayTitleCase } from "@/lib/text/display-title-case";
+
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
@@ -135,7 +137,7 @@ export default function RomanticRoseTemplate({
         Ganti foto
       </button>
     ) : null;
-  const displayName = [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ");
+  const displayName = [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ");
   const groomParents = weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition);
   const brideParents = weddingParentLine(invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition);
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
@@ -184,7 +186,7 @@ export default function RomanticRoseTemplate({
             <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
             <div className="relative z-10 flex w-full flex-col items-center">
               <p className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">The wedding of</p>
-              <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || invitation.title}</h1>
+              <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || displayTitleCase(invitation.title)}</h1>
               <div className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
                 <RosePhoto url={cover} alt="Foto sampul pasangan" focus={assignment.focus.cover} className="aspect-[3/4] w-full object-cover" />
                 {editPhoto("cover", "cover utama")}
@@ -207,7 +209,7 @@ export default function RomanticRoseTemplate({
                   <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" focus={assignment.focus.personOne} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                   {editPhoto("personOne", "mempelai pertama")}
                 </div>
-                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.groomName || "Mempelai pertama"}</h3>
+                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.groomName) || "Mempelai pertama"}</h3>
                 {groomParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{groomParents}</p>}
               </div>
               <div className="min-w-0 text-center">
@@ -215,7 +217,7 @@ export default function RomanticRoseTemplate({
                   <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" focus={assignment.focus.personTwo} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                   {editPhoto("personTwo", "mempelai kedua")}
                 </div>
-                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{invitation.brideName || "Mempelai kedua"}</h3>
+                <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.brideName) || "Mempelai kedua"}</h3>
                 {brideParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{brideParents}</p>}
               </div>
             </div>
@@ -223,7 +225,7 @@ export default function RomanticRoseTemplate({
 
           {sections.event !== false && (<section data-invitation-section="event" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="Save the date">Detail Acara</RoseHeading>
-            <p className="text-sm leading-7 text-[#765460]">{invitation.title || "Perayaan Pernikahan"}</p>
+            <p className="text-sm leading-7 text-[#765460]">{displayTitleCase(invitation.title) || "Perayaan Pernikahan"}</p>
             <p className="mt-3 text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</p>
             {invitation.dressCode && <p className="mt-4 text-sm text-[#765460]">Dress code · {invitation.dressCode}</p>}
           </section>)}
@@ -283,7 +285,7 @@ export default function RomanticRoseTemplate({
               {preview ? (
                 <div className="rounded-2xl border border-[#e8cbd3] bg-white/80 p-6 text-center text-sm text-[#765460]">Form RSVP akan tersedia di undangan yang sudah dipublikasikan.</div>
               ) : (
-                <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={invitation.title || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+                <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
               )}
             </section>
           )}

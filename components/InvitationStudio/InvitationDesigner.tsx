@@ -71,6 +71,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   const audioMutation = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const [notice, setNotice] = useState("Memuat undangan...");
   const [history, setHistory] = useState<string[]>([]);
   const [future, setFuture] = useState<string[]>([]);
@@ -118,13 +119,14 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   }
 
   useEffect(() => {
-    load().catch((error) =>
+    load().catch((error) => {
+      setLoadError(true);
       setNotice(
         error instanceof Error
           ? error.message
           : "Undangan belum dapat dimuat.",
-      ),
-    );
+      );
+    });
   }, []);
 
   const template =
@@ -316,12 +318,19 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     }
   }
 
+  if (loadError) return (
+    <section className="flex flex-1 flex-col items-center justify-center gap-5 p-6 text-center" role="alert">
+      <p className="text-sm">{notice}</p>
+      <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
+    </section>
+  );
+
   return (
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
         <div className="min-w-0 flex-1">
           <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitation?.title || "Studio"}</h1>
-          <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? "Desain tersimpan" : notice}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? (invitation.templateKey ? "Desain tersimpan" : "Belum ada desain tersimpan") : notice}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
           <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title="Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.">

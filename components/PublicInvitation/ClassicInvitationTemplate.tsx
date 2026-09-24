@@ -1,3 +1,4 @@
+import { displayTitleCase } from "@/lib/text/display-title-case";
 import { MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import {
@@ -81,20 +82,20 @@ export default function ClassicInvitationTemplate({
   }).format(invitation.eventDate);
   const generatedTitle = buildEventTitle(
     eventCategory,
-    invitation.groomName,
-    invitation.brideName,
-    invitation.title,
+    displayTitleCase(invitation.groomName),
+    displayTitleCase(invitation.brideName),
+    displayTitleCase(invitation.title),
   );
-  const eventTitle = invitation.title.trim() || generatedTitle || category.label;
+  const eventTitle = displayTitleCase(invitation.title).trim() || generatedTitle || category.label;
   const couple = category.nameMode === "couple";
   const single = category.nameMode === "single";
   const identityTitle = couple
-    ? [invitation.groomName, invitation.brideName].filter(Boolean).join(" & ")
+    ? [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ")
     : single
-      ? invitation.groomName
+      ? displayTitleCase(invitation.groomName)
       : eventTitle;
   const monogram = couple
-    ? `${invitation.groomName.slice(0, 1).toUpperCase()}&${invitation.brideName.slice(0, 1).toUpperCase()}`
+    ? `${displayTitleCase(invitation.groomName).slice(0, 1).toUpperCase()}&${displayTitleCase(invitation.brideName).slice(0, 1).toUpperCase()}`
     : initials(identityTitle);
   const firstLabel =
     eventCategory === "WEDDING"
@@ -183,7 +184,7 @@ export default function ClassicInvitationTemplate({
               <>
                 <div className="flex flex-col items-center gap-2">
                   <h2 className="font-[Cormorant_Garamond,serif] text-3xl font-normal">
-                    {invitation.groomName}
+                    {displayTitleCase(invitation.groomName)}
                   </h2>
                   <p className="font-sans text-xs text-stone-400">{firstLabel}</p>
                   {groomParents && (
@@ -195,7 +196,7 @@ export default function ClassicInvitationTemplate({
                 <p className="font-[Cormorant_Garamond,serif] text-2xl text-stone-400">&amp;</p>
                 <div className="flex flex-col items-center gap-2">
                   <h2 className="font-[Cormorant_Garamond,serif] text-3xl font-normal">
-                    {invitation.brideName}
+                    {displayTitleCase(invitation.brideName)}
                   </h2>
                   <p className="font-sans text-xs text-stone-400">{secondLabel}</p>
                   {brideParents && (
@@ -210,7 +211,7 @@ export default function ClassicInvitationTemplate({
             {single && (
               <div className="flex flex-col items-center gap-3">
                 <h2 className="font-[Cormorant_Garamond,serif] text-4xl font-normal">
-                  {invitation.groomName}
+                  {displayTitleCase(invitation.groomName)}
                 </h2>
                 <p className="font-sans text-xs text-stone-400">{firstLabel}</p>
               </div>

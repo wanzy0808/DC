@@ -456,6 +456,8 @@ export async function POST(request: Request) {
   }
 }
 
+class MissingMusicAssetError extends Error {}
+
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
@@ -595,43 +597,53 @@ export async function PUT(request: Request) {
       invitation.slug,
     );
 
-    const updated = await prisma.invitation.update({
-      where: { id: invitation.id },
-      data: {
-        slug,
-        eventCategory,
-        groomName,
-        brideName,
-        groomFatherName,
-        groomMotherName,
-        groomChildOrder: groomChildPosition === "ELDEST" || groomChildPosition === "YOUNGEST" ? null : groomChildOrder,
-        groomChildPosition,
-        brideFatherName,
-        brideMotherName,
-        brideChildOrder: brideChildPosition === "ELDEST" || brideChildPosition === "YOUNGEST" ? null : brideChildOrder,
-        brideChildPosition,
-        venue,
-        address,
-        mapUrl,
-        timezone,
-        eventDate: Number.isNaN(eventDate.getTime()) ? invitation.eventDate : eventDate,
-        eventConfigured,
-        ceremonyTime,
-        receptionTime,
-        title,
-        templateKey,
-        description: String(body.description ?? invitation.description ?? "").trim() || null,
-        weddingHashtag: String(body.weddingHashtag ?? invitation.weddingHashtag ?? "").trim() || null,
-        dressCode: String(body.dressCode ?? invitation.dressCode ?? "").trim() || null,
-        liveStreamUrl: String(body.liveStreamUrl ?? invitation.liveStreamUrl ?? "").trim() || null,
-        eventNotes: String(body.eventNotes ?? invitation.eventNotes ?? "").trim() || null,
-        giftBankName: String(body.giftBankName ?? invitation.giftBankName ?? "").trim() || null,
-        giftAccountName: String(body.giftAccountName ?? invitation.giftAccountName ?? "").trim() || null,
-        giftAccountNumber: String(body.giftAccountNumber ?? invitation.giftAccountNumber ?? "").trim() || null,
-        musicUrl: String(body.musicUrl ?? invitation.musicUrl ?? "").trim() || null,
-        isPublished: wantsPublish,
-      },
-      include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+    const updated = await prisma.$transaction(async (tx) => {
+      // Share the upload/delete lock so an old editor cannot restore a removed file.
+      await tx.$queryRaw`SELECT "id" FROM "Invitation" WHERE "id" = ${invitation.id} FOR UPDATE`;
+      const current = await tx.invitation.findUniqueOrThrow({ where: { id: invitation.id } });
+      const musicUrl = String(body.musicUrl ?? current.musicUrl ?? "").trim() || null;
+      if (musicUrl?.startsWith("/uploads/music/")) {
+        const asset = await tx.invitationAsset.findFirst({ where: { invitationId: invitation.id, ownerId: user.id, type: "AUDIO", url: musicUrl } });
+        if (!asset) throw new MissingMusicAssetError("Musik sudah dihapus. Pilih lagu yang tersedia, lalu simpan lagi.");
+      }
+      return tx.invitation.update({
+        where: { id: invitation.id },
+        data: {
+          slug,
+          eventCategory,
+          groomName,
+          brideName,
+          groomFatherName,
+          groomMotherName,
+          groomChildOrder: groomChildPosition === "ELDEST" || groomChildPosition === "YOUNGEST" ? null : groomChildOrder,
+          groomChildPosition,
+          brideFatherName,
+          brideMotherName,
+          brideChildOrder: brideChildPosition === "ELDEST" || brideChildPosition === "YOUNGEST" ? null : brideChildOrder,
+          brideChildPosition,
+          venue,
+          address,
+          mapUrl,
+          timezone,
+          eventDate: Number.isNaN(eventDate.getTime()) ? invitation.eventDate : eventDate,
+          eventConfigured,
+          ceremonyTime,
+          receptionTime,
+          title,
+          templateKey,
+          description: String(body.description ?? invitation.description ?? "").trim() || null,
+          weddingHashtag: String(body.weddingHashtag ?? invitation.weddingHashtag ?? "").trim() || null,
+          dressCode: String(body.dressCode ?? invitation.dressCode ?? "").trim() || null,
+          liveStreamUrl: String(body.liveStreamUrl ?? invitation.liveStreamUrl ?? "").trim() || null,
+          eventNotes: String(body.eventNotes ?? invitation.eventNotes ?? "").trim() || null,
+          giftBankName: String(body.giftBankName ?? invitation.giftBankName ?? "").trim() || null,
+          giftAccountName: String(body.giftAccountName ?? invitation.giftAccountName ?? "").trim() || null,
+          giftAccountNumber: String(body.giftAccountNumber ?? invitation.giftAccountNumber ?? "").trim() || null,
+          musicUrl,
+          isPublished: wantsPublish || current.isPublished,
+        },
+        include: { assets: { orderBy: { createdAt: "asc" } }, payment: true },
+      });
     });
 
     return NextResponse.json({
@@ -642,6 +654,7 @@ export async function PUT(request: Request) {
       accessPaid: hasPaidDigitalInvitation(updated.payment),
     });
   } catch (error) {
+    if (error instanceof MissingMusicAssetError) return NextResponse.json({ error: error.message }, { status: 409 });
     console.error("PUT /api/invitations failed", error);
     return databaseFailure(error, "Undangan belum dapat disimpan.");
   }
