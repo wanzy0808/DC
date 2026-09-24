@@ -238,6 +238,7 @@ export default function UniversalInvitationTemplate({
         <InvitationThemeScenes
           theme={key}
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
+          hashtag={invitation.weddingHashtag}
           names={names || eventTitle}
           date={date}
           cover={usesPhotos ? media.cover : undefined}
@@ -251,6 +252,7 @@ export default function UniversalInvitationTemplate({
           {sections.cover !== false && (<InvitationThemeScenes
             theme={key}
             isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
+          hashtag={invitation.weddingHashtag}
             names={names || eventTitle}
             date={date}
             cover={usesPhotos ? media.cover : undefined}
