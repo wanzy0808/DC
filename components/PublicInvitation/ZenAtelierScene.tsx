@@ -9,6 +9,7 @@ type ZenAtelierSceneProps = {
   onOpen: () => void;
   preview?: boolean;
   isWedding?: boolean;
+  hashtag?: string | null;
 };
 
 const root = "/templates/";
@@ -23,6 +24,7 @@ export default function ZenAtelierScene({
   onOpen,
   preview = false,
   isWedding = true,
+  hashtag,
 }: ZenAtelierSceneProps) {
   const envelope = stage === "envelope";
   const title = displayTitleCase(names);
@@ -72,6 +74,7 @@ export default function ZenAtelierScene({
             {twoNames ? <>{couple[0]}<span className="my-2 block text-[.55em] leading-none">&amp;</span>{couple[1]}</> : title}
           </h1>
           <p className="relative z-10 mt-8 text-xs tracking-[.2em]">{date}</p>
+          {hashtag?.trim() && <p className="relative z-10 mt-6 max-w-[280px] break-words text-[10px] tracking-[.09em] opacity-75">{hashtag}</p>}
           
           <button
             type="button"
