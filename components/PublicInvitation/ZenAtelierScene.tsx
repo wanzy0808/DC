@@ -12,7 +12,7 @@ type ZenAtelierSceneProps = {
   hashtag?: string | null;
 };
 
-const root = "/templates/";
+const root = "/templates/Zen%20Atelier/";
 const paper = "radial-gradient(ellipse at 45% 20%, var(--inv-scene-surface, #fffaf0) 0%, var(--inv-scene-bg, #f3eddf) 72%, var(--inv-scene-soft, #e7dfd0) 160%)";
 
 /** A paper-and-ink composition based on the Zen Atelier sample mobile screens.
