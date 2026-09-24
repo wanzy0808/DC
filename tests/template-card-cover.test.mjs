@@ -56,7 +56,7 @@ test("pending template survives login and event creation without an automatic da
   assert.match(entry, /\/dashboard\?tab=events&from=template&template=/);
   assert.match(dashboard, /params\.get\("from"\) === "template"/);
   assert.match(dashboard, /selectedTemplate=\{pendingTemplate \|\| undefined\}/);
-  assert.match(events, /onSaved\(creatingNew \? \{ id:/);
+  assert.match(events, /onSaved\(editorMode === "new" \? \{ id:/);
   assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
   assert.match(designer, /clearTemplateSelection\(\)/);
   assert.match(designer, /location\.searchParams\.delete\("template"\)/);
