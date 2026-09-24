@@ -8,6 +8,16 @@
 
 Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
+### Kebebasan komposisi: tidak wajib grid, boxy, atau simetris
+
+Desain undangan adalah karya visual, **bukan dashboard**. Jangan menjadikan grid dua kolom, deretan kartu, kotak berbingkai, teks serba rata tengah, dan pembagian ruang simetris sebagai kerangka wajib atau preset yang terus diulang. Pilih komposisi berdasarkan cerita dan moodboard setiap tema: editorial satu kolom, kolase scrapbook, tipografi di kiri atau kanan saja, split yang tidak sama besar, elemen menyilang, lapisan gambar, objek berputar/diagonal, susunan bebas, atau ruang kosong yang disengaja. Satu template boleh mencampur ritme rapi dan **sedikit chaotic yang terarah**: ukuran, jarak, orientasi, dan penempatan elemen tidak harus seragam selama ada titik fokus dan hirarki yang terasa alami.
+
+**Chaotic bukan berarti berantakan.** Jaga nama, tanggal, venue, CTA, serta form tetap terbaca, bisa disentuh dan dioperasikan; hindari gambar/tulisan bertabrakan tanpa maksud. Komposisi boleh tampak bebas pada desktop dan diatur ulang secara artistik di HP, bukan sekadar diperkecil. Jangan memaksa RSVP atau informasi penting menjadi kolase yang mengganggu fungsi.
+
+**Jika halaman terasa kosong**, jangan otomatis menambah card, outline, ikon stok, paragraf filler, atau ilustrasi yang sama berulang-ulang. Periksa terlebih dahulu skala dan posisi tipografi, ritme whitespace, warna, kontras, serta aset yang ada. Bila memang membutuhkan elemen baru, **boleh membuat aset orisinal khusus template**: background ilustratif, tekstur kertas/kain, sketsa pemandangan, doodle, ornamen, pola, siluet, atau elemen atmosferis yang sesuai art direction. Desain baru boleh berupa SVG/CSS bila sesuai atau aset gambar tersendiri yang disimpan di folder tema; dokumentasikan tujuan, lisensi, ukuran, transparansi, responsivitas, dan optimasinya. Background tidak wajib berupa bunga atau benda dekoratif generik. Jangan membuat aset hanya untuk memenuhi ruang; bisa saja whitespace adalah bagian penting desain.
+
+Prinsipnya: **keunikan komposisi lebih penting daripada keseragaman kotak**, tetapi semua perubahan tetap menghormati 15 komponen/data bersama, keterbacaan, animasi yang dapat dimatikan, serta aturan ilustrasi lengkap/tidak terpotong sembarangan di bawah ini.
+
 Pakai urutan acuan: (1) permintaan spesifik owner, (2) moodboard/gambar referensi yang bisa benar-benar dilihat, (3) aset yang diperiksa secara visual, (4) ide kreatif untuk adaptasi mobile dan desktop. Jika referensi tidak tersedia atau aset tidak cocok, jelaskan bagian yang belum diketahui; jangan menyatakan hasil sudah sama persis.
 
 Sistem pelanggan tetap satu: katalog template, data event, autentikasi, Studio, foto, musik, RSVP/QR, pengaturan section dan rute undangan publik/personal. Template berhak membuat presentasi visual unik, bukan menduplikasi database dan business logic.
