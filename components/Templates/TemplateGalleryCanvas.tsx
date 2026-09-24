@@ -4,12 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import { invitationFonts, invitationPalettes } from "@/lib/templates/design";
-import { defaultInvitationSections, type InvitationSections } from "@/lib/templates/sections";
+import { defaultInvitationSections, invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
 
 const InvitationPreview = dynamic(
   () => import("@/components/InvitationStudio/InvitationPreview").then((module) => module.InvitationPreview),
-  { loading: () => <div className="grid min-h-[550px] place-items-center bg-[#fcf7f6] text-xs text-[#916f7a]">Memuat pratinjau…</div> },
+  { loading: () => <div className="min-h-[550px] bg-[#fcf7f6]" /> },
 );
 
 export function TemplateCanvas({
@@ -46,6 +46,11 @@ export function TemplateCanvas({
   );
 }
 
+/** A catalog card shows the real Cover/Hero, while opening its full preview still starts at the digital envelope. */
+const catalogCoverSections: InvitationSections = Object.fromEntries(
+  invitationSectionItems.map(({ key }) => [key, key === "cover"]),
+) as InvitationSections;
+
 /** Lazily render the actual Studio canvas for each visible card (not a stock-image mockup). */
 export function TemplateCardCanvas({ templateKey, phone = false }: { templateKey: string; phone?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
@@ -80,13 +85,13 @@ export function TemplateCardCanvas({ templateKey, phone = false }: { templateKey
     >
       {visible ? (
         <div
-          className={phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-112px] w-[390px]"}
+          className={phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-90px] w-[390px]"}
           style={{ transform: phone ? "translateX(-50%) scale(0.55)" : "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
         >
-          <TemplateCanvas templateKey={templateKey} />
+          <TemplateCanvas templateKey={templateKey} sections={catalogCoverSections} />
         </div>
       ) : (
-        <div className="grid h-full place-items-center text-xs text-[#916f7a]">Pratinjau template</div>
+        <div className="h-full w-full bg-background" />
       )}
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-8 bg-gradient-to-t from-background/15 to-transparent" />
     </div>
