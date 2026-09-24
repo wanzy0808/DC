@@ -383,7 +383,12 @@ export default function InvitationDesigner() {
 
   function updateAssetLayer(id: string, patch: Partial<InvitationAssetLayer>) {
     if (!design.layers.some((layer) => layer.id === id)) return;
+    if (patch.section && (design.sections[patch.section] === false || !studioObjectSections.includes(patch.section))) return;
     change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...patch } : layer) });
+    if (patch.section) {
+      setCanvasStage(patch.section === "envelope" ? "envelope" : "cover");
+      requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${patch.section}"]`)?.scrollIntoView({ block: "center" }));
+    }
   }
 
   function removeAssetLayer(id: string) {
@@ -647,7 +652,7 @@ export default function InvitationDesigner() {
               designKey={designKey}
               musicUrl={musicUrl}
               selectedAssetLayerId={selectedLayerId}
-              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel("assets"); setInspectorOpen(true); }}
+              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel(design.layers.find((layer) => layer.id === id)?.kind === "text" ? "text" : "assets"); setInspectorOpen(true); }}
               onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
               onUpdateAssetLayer={updateAssetLayer}
               onEditPhoto={editPhotoFromCanvas}
