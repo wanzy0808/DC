@@ -53,6 +53,13 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /<DesignerTool active=\{panel === "assets"\}/);
   assert.match(editor, /<AssetPanel layers=\{design\.layers\}/);
   assert.match(editor, /onMoveAssetLayer=\{\(id, x, y\)/);
+  assert.match(browser, /draggable=\{layers\.length < MAX_ASSET_LAYERS\}/);
+  assert.match(browser, /onDragStart=\{\(event\) =>/);
+  assert.match(editor, /onDragOver=\{onAssetDragOver\}/);
+  assert.match(editor, /onDrop=\{onAssetDrop\}/);
+  assert.match(editor, /findCoverDropTarget\(event\.clientX, event\.clientY\)/);
+  assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
+  assert.match(editor, /x: clamp\(\(event\.clientX - rect\.left\) \/ rect\.width \* 100\)/);
   assert.match(editor, /templateKey: designKey,/);
   assert.match(editor, /font: requestedPreset\.font, copy: \{\}, layers: \[\]/);
   assert.match(route, /entry\.isSymbolicLink\(\)/);
