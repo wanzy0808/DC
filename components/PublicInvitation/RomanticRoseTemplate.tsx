@@ -107,6 +107,7 @@ export default function RomanticRoseTemplate({
   coverUrl,
   photoAssignments,
   onEditPhoto,
+  onEnvelopeOpened,
   personalGuest,
 }: {
   invitation: RoseInvitation;
@@ -116,6 +117,8 @@ export default function RomanticRoseTemplate({
   coverUrl?: string;
   photoAssignments?: PhotoAssignments;
   onEditPhoto?: (slot: PhotoSlot) => void;
+  /** Studio canvas only: synchronize the active stage after opening. */
+  onEnvelopeOpened?: () => void;
 }) {
   const [opened, setOpened] = useState(false);
   const musicRef = useRef<InvitationMusicHandle>(null);
@@ -144,7 +147,11 @@ export default function RomanticRoseTemplate({
   const countdown = daysRemaining(invitation.eventDate, now ?? 0);
   const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
-  const handleOpen = () => { musicRef.current?.playOnOpen(); setOpened(true); };
+  const handleOpen = () => {
+    musicRef.current?.playOnOpen();
+    setOpened(true);
+    onEnvelopeOpened?.();
+  };
   const scrollHint = <ChevronDown className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
 
   useEffect(() => {
