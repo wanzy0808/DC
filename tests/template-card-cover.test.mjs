@@ -36,7 +36,7 @@ test("Studio can show and replay the envelope independently of Cover-only catalo
   assert.match(designer, /setCanvasStage\("envelope"\)/);
   assert.match(designer, /setCanvasStage\("cover"\)/);
   assert.match(designer, /sections=\{canvasStage === "cover" \? \{ \.\.\.design\.sections, envelope: false \} : design\.sections\}/);
-  assert.match(designer, /<InvitationPreview[\\s\\S]*sections=\\{canvasStage === "cover" \\? \\{ \\.\\.\\.design\\.sections, envelope: false \\} : design\\.sections\\}/);
+  assert.ok(designer.includes('sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}'));
   assert.doesNotMatch(designer, /<Dialog open=\\{preview\\}|setPreview\\(true\\)/);
 });
 
@@ -91,6 +91,6 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
   assert.match(universal, /setOpened\(true\);\s*setOpening\(false\);\s*onEnvelopeOpened\?\.\(\)/);
   assert.match(universal, /else \{\s*setOpened\(true\);\s*onEnvelopeOpened\?\.\(\)/);
   assert.match(rose, /setOpened\(true\);\s*onEnvelopeOpened\?\.\(\)/);
-  assert.match(studio, /<InvitationPreview[\\s\\S]*sections=\\{canvasStage === "cover" \\? \\{ \\.\\.\\.design\\.sections, envelope: false \\} : design\\.sections\\}/);
+  assert.ok(studio.includes('sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}'));
   assert.doesNotMatch(studio, /<Dialog open=\\{preview\\}|setPreview\\(true\\)/);
 });
