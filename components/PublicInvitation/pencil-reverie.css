@@ -216,3 +216,6 @@
 .pr-lightbox .pr-lightbox-next{grid-column:3;grid-row:1}
 @media(hover:hover){.pr-memory-grid .pr-polaroid-button:hover{transform:translateY(-6px) rotate(0deg);filter:drop-shadow(0 8px 10px #34261635)}}
 @media(max-width:400px){.pr-memory-grid .pr-polaroid-sheet img{height:142px}}
+
+/* The invitation may remain mounted behind other sections; idle scenes do not animate. */
+.pr-scene[data-pr-active=false] *, .pr-scene[data-pr-active=false] *:before, .pr-scene[data-pr-active=false] *:after { animation-play-state:paused!important; }
