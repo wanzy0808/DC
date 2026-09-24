@@ -4,6 +4,7 @@
 **Brand:** DC Organizer  
 **Repository:** `wanzy0808/DC`  
 **Last Consolidated:** 18 September 2026  
+**Documentation Audit:** 24 September 2026 — tahap 1, pembenahan referensi/konflik; konsolidasi isi menyeluruh belum selesai  
 **Implementation History:** Appendix A (same file)
 
 > Dokumen ini adalah **single source of truth** DC Organizer dan menggantikan requirement yang sebelumnya tersebar di `prd.md`, `prd1.md`, `prdnew.md`, `prd-tambahan.md`, serta PRD legacy lain. Requirement aktif berada di badan utama; histori implementasi disimpan di **Appendix A** pada file yang sama. Jika histori lama bertentangan dengan requirement canonical, **requirement canonical di badan utama yang berlaku**.
@@ -250,10 +251,9 @@ Untuk `WEDDING`:
 - parent identity bersifat opsional;
 - masing-masing pengantin memiliki field nama bapak dan nama ibu sendiri;
 - jika salah satu atau kedua nama orang tua tersedia, Studio preview dan public invitation otomatis menampilkan parent line di bawah nama pengantin;
-- user dapat mengisi `Anak keberapa` secara opsional untuk masing-masing pengantin;
-- format canonical pengantin pria ketika urutan anak tersedia: **`Putra pertama dari Bapak <nama bapak> & Ibu <nama ibu>`**;
-- urutan anak 1–10 menggunakan kata Indonesia (`pertama`, `kedua`, dan seterusnya), sedangkan nilai di atasnya menggunakan bentuk `ke-N`;
-- format canonical pengantin wanita menggunakan **`Putri`** dengan aturan urutan yang sama;
+- untuk masing-masing pengantin tersedia pilihan opsional **Anak Tertua / Anak Termuda / Anak Keberapa**; hanya pilihan Anak Keberapa memerlukan input angka positif (lihat §5.4a);
+- parent line hanya diturunkan oleh fungsi bersama `weddingParentLine` di `lib/events/parents.ts`: Tertua = `Putra/Putri Sulung`, Termuda = `Putra/Putri Bungsu`, Anak Keberapa = `Putra/Putri Kedua` untuk urutan 2 (dan bentuk angka lain menurut formatter); data asli tidak diubah saat render;
+- keterangan keluarga ditampilkan dalam Title Case sesuai §5.4a;
 - jika urutan anak kosong, renderer tetap menampilkan `Putra dari ...` / `Putri dari ...`;
 - jika hanya satu parent yang diisi, renderer hanya menampilkan parent yang tersedia dan tidak membuat placeholder kosong;
 - data parent tidak menjadi syarat `eventConfigured` maupun Publish.
@@ -280,6 +280,13 @@ Optional:
 - Maps URL;
 - description;
 - notes.
+
+### 5.4a Pilihan Urutan Anak & Format Keterangan Orang Tua (23 September 2026)
+
+- Pada form pernikahan, **masing-masing mempelai** memiliki pilihan tunggal berbentuk radio/bullet check: `Anak Tertua`, `Anak Termuda`, atau `Anak Keberapa`. Hanya pilihan ketiga memunculkan input angka urutan anak positif; angka wajib diisi bila dipilih. Pilihan awal boleh kosong agar data pernikahan lama yang tidak memiliki urutan anak tetap opsional. Nilai numerik lama dibuka kembali pada pilihan ketiga, bukan dianggap otomatis Sulung.
+- Urutan anak disimpan tanpa menduplikasi nama/data keluarga: `Invitation.groomChildOrder` / `brideChildOrder` tetap `Int?` numerik; `Invitation.groomChildPosition` / `brideChildPosition` menyimpan pilihan `ELDEST`, `YOUNGEST`, `NUMBER` atau null. Anak termuda tidak bisa disimpulkan dari angka urutan anak tanpa mengetahui jumlah saudara. Saat memilih tertua/termuda, angka urutan sebelumnya dikosongkan; data undangan lama dipertahankan.
+- Format tampilan terpusat di `lib/events/parents.ts`: `Putra/Putri Sulung Dari Bapak Chandra & Ibu Juni`, `Putra/Putri Bungsu Dari Bapak Chandra & Ibu Juni`, atau `Putra/Putri Kedua Dari Bapak Chandra & Ibu Juni` untuk urutan 2. Setiap kata pada keterangan keluarga dan nama orang tua yang ditampilkan diawali huruf kapital di Dashboard preview, Studio preview, dan undangan publik seluruh tema. Data nama asli di DB/API dan isi deskripsi tetap apa adanya. Jika parent kosong, jangan tampilkan placeholder.
+- Perubahan membutuhkan migrasi DB kolom baru dan regenerasi Prisma sebelum build lokal; server tetap memvalidasi pilihan serta angka, dan kebijakan kunci acara terbit tetap berlaku.
 
 ### 5.5 Date/time UX
 
@@ -475,6 +482,10 @@ Studio fokus pada invitation-specific configuration:
 
 Daftar pemilihan tema pada panel kiri Studio menampilkan masing-masing Cover/Hero sebagai kartu portrait **utuh dan proporsional** (satu kolom per tema, dengan nama dan kategori foto di bawah gambar), bukan thumbnail landscape terpotong dua kolom. Pilihan terbaru owner: dua kartu berjajar per baris, masing-masing maksimum 152px (~4 cm dalam ukuran CSS standar) dengan rasio portrait 9:19.5 (tinggi sekitar 329px/~9 cm pada lebar maksimum). Kartu mengecil mengikuti lebar inspector bila dua kolom tidak cukup untuk mencapai 152px; template tetap ditampilkan utuh dengan renderer Cover dan lazy loading. Ukuran renderer asli menyesuaikan lebar panel secara responsif; panel sendiri tetap dapat digulir dan lazy render hanya dilakukan saat kartu mendekati area terlihat. Pratinjau Studio di sebelah kanan tetap renderer undangan interaktif, termasuk Amplop Digital. Katalog publik dan kartu ponsel featured tidak ikut berubah. Pilihan tema yang diklik, penyimpanan desain, filter, dan pemisahan data demo/pelanggan tetap menggunakan alur sebelumnya.
 
+### 7.2.0d Kontrol layer di sisi canvas dan shortcut keyboard (24 September 2026)
+
+Saat ilustrasi Cover dipilih, Studio menampilkan panel kecil di sisi **kanan canvas**, tidak hanya di panel Aset kiri. Panel berisi slider Opasitas, tombol maju/mundur urutan layer, Salin, Hapus, dan Tempel jika ada layer yang tersalin. Pada layar sempit panel jatuh ke bawah preview agar tidak memotong canvas. **Delete/Backspace** menghapus layer ilustrasi terpilih, **Ctrl/Cmd+C** menyalin propertinya ke clipboard internal Studio, **Ctrl/Cmd+V** menambahkan duplikat dengan ID baru serta offset posisi 5% agar terlihat, dan **Escape** membatalkan pilihan. Shortcut berlaku hanya selama Studio dibuka dengan Cover aktif; tidak boleh memotong shortcut native pada input, textarea, select, elemen contenteditable atau ketika pengguna menyeleksi teks. Clipboard internal ini bukan clipboard OS, tidak menyalin foto/gambar ke aplikasi lain dan tidak membaca data clipboard sistem. Batas 12 layer, Undo/Redo dan penyimpanan desain yang sudah ada tetap berlaku; pengguna tetap dapat menghapus/menyalin lewat tombol di samping canvas tanpa keyboard. Panel Aset kiri dan renderer undangan publik tetap mempertahankan perilaku yang sudah ada.
+
 ### 7.2.0b Aset dan lapisan ilustrasi pada Cover Studio (24 September 2026)
 
 Studio menyediakan menu **Aset** di rail kiri, berisi gambar raster publik yang memang ada pada `public/template/` atau `public/templates/` (termasuk subfolder template). File master privat tidak didaftarkan dan tidak boleh disalin ke web root untuk memenuhi menu ini. Aset yang dipilih ditambahkan **sebagai ilustrasi pada Cover** tema terpilih, bukan mengganti foto customer atau menggandakan data event. Pada tahap ini penempatan bebas **hanya Cover**; komposisi Amplop Digital, section lain, dan komponen data/RSVP tidak menjadi canvas bebas atau editor ala aplikasi pihak ketiga.
@@ -482,6 +493,12 @@ Studio menyediakan menu **Aset** di rail kiri, berisi gambar raster publik yang 
 Setiap undangan boleh memiliki maksimal 12 lapisan ilustrasi Cover. Lapisan menyimpan URL gambar publik yang lolos validasi, ID, posisi relatif dalam persen terhadap Cover, lebar relatif, transparansi/opasitas, dan urutan depan-belakang. Studio menyediakan daftar layer, memilih layer pada canvas atau panel, drag/tombol panah keyboard untuk posisi, slider transparansi dan ukuran, kontrol susunan layer, serta hapus. Toolbar canvas menampilkan kontrol ringkas saat layer dipilih. Semua perubahan masuk histori Undo/Redo dan disimpan bersama design key event bersangkutan saat **Simpan Desain**, lalu dibaca oleh renderer yang sama untuk Studio maupun undangan terbit. URL file tidak diunggah ulang, dan tidak ada tabel/kolom database atau pembayaran baru. Posisi relatif menjaga proporsi pada lebar mobile vs desktop; tampilan edit tidak boleh mengubah template bawaan, komponen penting, atau desain publik tema lain.
 
 Daftar aset diambil melalui endpoint Studio yang memerlukan sesi aktif, hanya memindai berkas biasa dalam dua direktori publik, melewati symlink, memuat thumbnail bertahap, dan mengutamakan folder tema yang sedang dipilih. Hanya gambar raster PNG/JPEG/WebP/GIF/AVIF yang tersedia pada tahap pertama; aset SVG dan sumber master rahasia tidak diekspos melalui fitur ini. Folder publik yang hilang menghasilkan daftar kosong, bukan aset dummy. Pindah template melepas lapisan desain sebelumnya dari draf pilihan baru; Undo dapat mengembalikan keadaan sebelum pindah. Preview ilustrasi khusus ini harus tetap berfungsi bila foto tema OFF karena ilustrasi bukan foto pengguna.
+
+### 7.2.0c Designer Studio: protected visual editor untuk template jual dan custom (24 September 2026)
+
+**Tujuan aktif:** desainer berizin dapat login dan membuat/mengedit/menyimpan *master template* di DC Organizer langsung, baik untuk katalog jual maupun pesanan custom event pelanggan, tanpa wajib berpindah ke platform desain lain. **Designer Studio** mengatur komposisi, layer, visual, animasi dan capability lintas section; **Customer Studio** hanya mengganti konten/properti yang diizinkan master. Kedua mode menggunakan renderer/komponen nyata yang sama. Semua komponen bisnis (amplop, identitas/jadwal, RSVP, Ucapan Tamu, hadiah, lokasi, countdown, foto, musik) dilindungi: desain/varian presentasi boleh diubah melalui properti yang di-whitelist, tetapi data wajib, perilaku form, validasi, API, database, aksesibilitas dan otorisasi tetap ditentukan engine bersama. Objek dekoratif boleh diubah bebas jika aman; komponen inti bukan node bebas yang bisa dihancurkan atau diganti dengan kode arbitrer.
+
+**Lifecycle:** simpan master sebagai draft → validasi/review → terbitkan versi render-ready ke katalog. Undangan pelanggan menggunakan versi master yang ditetapkan plus override event-scoped; perubahan master tidak mengubah undangan yang telah terbit diam-diam. Proyek custom hanya untuk event dan desainer yang ditugaskan secara terotorisasi, melalui preview/revisi/persetujuan; tidak otomatis masuk katalog. Desain visual dari ZIP/HTML/JSON unggahan tidak otomatis siap dieksekusi. Model/format proyek versi baru, migrasi kompatibilitas dengan `DesignerTemplate`/`Invitation.templateKey`, UI editor penuh, dan workflow custom **masih merupakan requirement, bukan fitur yang sudah dikirim**. Aturan operasional/acceptance criteria yang spesifik ada dalam `studio.md`, sedangkan `prd.md` ini tetap menjadi sumber persyaratan produk kanonik. Batas Cover-only §7.2.0b menjelaskan implementasi awal **Customer Studio saat ini**, bukan batas desain akhir Designer Studio.
 
 ### 7.2.1 Template-aware canvas & reusable sections
 
@@ -1324,16 +1341,6 @@ User harus menerima warning sebelum permanent deletion. Financial record mengiku
 
 ---
 
-### 15.4.1b — Approved production landing baseline (21 September 2026)
-
-Owner explicitly approved the existing `/pagecontoh` experience as the production landing page at `/`, **without any change to its contents**. `app/page.tsx` re-exports `app/pagecontoh/page.tsx`; `/pagecontoh` remains an accessible visual reference. This approval supersedes earlier instructions prohibiting promotion of the preview to `/` and applies only to this exact approved composition, **not** to the separate `/pintu-lab` GLB experiment.
-
-The approved landing is a continuous botanical/rose-glow/petal scene with a rounded main frame, embedded navbar and footer, four orbiting 3D doors, two transparent cloud-copy regions with a single outer rose outline, puzzle-like in-place cloud assembly and letter-by-letter bilingual copy, audio controls, and Instagram link. The precise existing component code, layout, assets, animations, content, responsive states, light/dark modes, and ID/EN states are the visual/behavioral source of truth. Future related marketing surfaces must follow this established design language using existing components and installed libraries where appropriate; this does not authorize copying landing-specific decoration onto unrelated surfaces.
-
-**Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve both `/` and `/pagecontoh` and prevent duplicate global navbar/footer on either route. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
-
-Canonical references: `app/page.tsx`, `app/pagecontoh/page.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Landing/CloudCopy.tsx`, `components/Landing/LandingFloralGlow.tsx`, `components/Landing/WindRosePetals.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Theme/ThemeToggle.tsx`, `components/I18n/LanguageToggle.tsx`, and `components/ui/button.tsx`. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
-
 ## 15. Design System & UX Rules
 
 ### 15.1 Typography
@@ -1346,13 +1353,6 @@ Application UI hanya memakai:
 **Brand wordmark contract:** seluruh wordmark customer-facing `DC Organizer` menggunakan implementasi canonical `components/Brand/BrandWordmark.tsx` dan token `--font-dc-heading` (Cinzel). Wording, font, tracking, dan Rose treatment wordmark tidak boleh diinterpretasi ulang per halaman tanpa requirement eksplisit. Public navbar boleh menampilkan tagline marketing existing; **header Dashboard tidak menampilkan tagline dan hanya memakai wordmark `DC Organizer`**.
 
 Template typography boleh dinamis bila merupakan konten invitation, bukan shell aplikasi.
-
-### 5.4a Pilihan Urutan Anak & Format Keterangan Orang Tua (23 September 2026)
-
-- Pada form pernikahan, **masing-masing mempelai** memiliki pilihan tunggal berbentuk radio/bullet check: `Anak Tertua`, `Anak Termuda`, atau `Anak Keberapa`. Hanya pilihan ketiga memunculkan input angka urutan anak positif; angka wajib diisi bila dipilih. Pilihan awal boleh kosong agar data pernikahan lama yang tidak memiliki urutan anak tetap opsional. Nilai numerik lama dibuka kembali pada pilihan ketiga, bukan dianggap otomatis Sulung.
-- Urutan anak disimpan tanpa menduplikasi nama/data keluarga: `Invitation.groomChildOrder` / `brideChildOrder` tetap `Int?` numerik; `Invitation.groomChildPosition` / `brideChildPosition` menyimpan pilihan `ELDEST`, `YOUNGEST`, `NUMBER` atau null. Anak termuda tidak bisa disimpulkan dari angka urutan anak tanpa mengetahui jumlah saudara. Saat memilih tertua/termuda, angka urutan sebelumnya dikosongkan; data undangan lama dipertahankan.
-- Format tampilan terpusat di `lib/events/parents.ts`: `Putra/Putri Sulung Dari Bapak Chandra & Ibu Juni`, `Putra/Putri Bungsu Dari Bapak Chandra & Ibu Juni`, atau `Putra/Putri Kedua Dari Bapak Chandra & Ibu Juni` untuk urutan 2. Setiap kata pada keterangan keluarga dan nama orang tua yang ditampilkan diawali huruf kapital di Dashboard preview, Studio preview, dan undangan publik seluruh tema. Data nama asli di DB/API dan isi deskripsi tetap apa adanya. Jika parent kosong, jangan tampilkan placeholder.
-- Perubahan membutuhkan migrasi DB kolom baru dan regenerasi Prisma sebelum build lokal; server tetap memvalidasi pilihan serta angka, dan kebijakan kunci acara terbit tetap berlaku.
 
 ### 15.1a Kapitalisasi Nama & Judul (23 September 2026)
 
@@ -1449,6 +1449,16 @@ Bukan melalui banyak warna/variant berbeda.
 - `/pintu-lab` menjadi tempat rebuild Three.js; eksperimen CSS lama tetap di `/pintu-lab/css` sebagai arsip/pembanding dan `/jiplak` tetap eksperimen terpisah. **Landing utama `/` dan orbital tiga pintu tidak diubah** sebelum Pintu 1 mendapat approval visual. Engine harus lazy-load di route lab, memperhatikan viewport/reduced motion, membersihkan WebGL resources, dan menyediakan fallback saat WebGL tidak tersedia.
 - Pelaksanaan berurutan **15 tahap V2** dalam `pintu3d.md`. Tahap 1 hanya membuktikan volume kusen dan dua daun ber-engsel benar-benar mesh: belum memodelkan crown/ukiran/hardware akhir. Tahap 2–8 menyamakan siluet, panel, sculpt/relief dan material sedekat referensi; Tahap 9–10 interior volumetrik serta cahaya natural; Tahap 11–13 fidelity screenshots, responsive dan performa; Tahap 14 reuse pintu; Tahap 15 integrasi orbital + zoom-in melewati bukaan → navigasi route nyata → zoom-out halaman tujuan ke skala 1 sesuai §15.4.2. **Tahap 1–10 pada tracker V1 bukan bukti approval V2**. Tiap tahap harus menunjukkan perubahan visual dan status CI serta review owner secara terpisah.
 - Referensi interaksi [Hubtown](https://hubtown.co.in/) dipakai hanya untuk rasa **scene/box WebGL utama**: Pintu final harus terbaca sebagai objek spasial dominan dengan perspektif, kedalaman dan gerak kamera, bukan kartu/gambar 2D. Jangan menyalin branding, arsitektur, copy atau asset Hubtown. Catatan ini berlaku pada composition/camera work Tahap 11–15 dan tidak memperluas scope Tahap 2.
+
+### 15.4.1b — Approved production landing baseline (21 September 2026)
+
+Owner explicitly approved the existing `/pagecontoh` experience as the production landing page at `/`, **without any change to its contents**. `app/page.tsx` re-exports `app/pagecontoh/page.tsx`; `/pagecontoh` remains an accessible visual reference. This approval supersedes earlier instructions prohibiting promotion of the preview to `/` and applies only to this exact approved composition, **not** to the separate `/pintu-lab` GLB experiment.
+
+The approved landing is a continuous botanical/rose-glow/petal scene with a rounded main frame, embedded navbar and footer, four orbiting 3D doors, two transparent cloud-copy regions with a single outer rose outline, puzzle-like in-place cloud assembly and letter-by-letter bilingual copy, audio controls, and Instagram link. The precise existing component code, layout, assets, animations, content, responsive states, light/dark modes, and ID/EN states are the visual/behavioral source of truth. Future related marketing surfaces must follow this established design language using existing components and installed libraries where appropriate; this does not authorize copying landing-specific decoration onto unrelated surfaces.
+
+**Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve both `/` and `/pagecontoh` and prevent duplicate global navbar/footer on either route. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
+
+Canonical references: `app/page.tsx`, `app/pagecontoh/page.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Landing/CloudCopy.tsx`, `components/Landing/LandingFloralGlow.tsx`, `components/Landing/WindRosePetals.tsx`, `components/Layout/Navbar/Navbar.tsx`, `components/Layout/Footer.tsx`, `components/Layout/PublicAtmosphere.tsx`, `components/Theme/ThemeToggle.tsx`, `components/I18n/LanguageToggle.tsx`, and `components/ui/button.tsx`. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
 
 ### 15.4.2 Transisi navigasi Pintu — masuk ke halaman tujuan (keputusan 20 September 2026)
 
@@ -1601,7 +1611,7 @@ Sebuah feature dianggap selesai hanya jika, sesuai scope feature tersebut:
 - tidak ada mock production data;
 - accessibility dasar dan responsive behavior tetap terjaga;
 - relevant build/type validation dijalankan/diamati sebelum diklaim PASS;
-- perubahan material dicatat di `prd1.md` dengan affected files, commit, dan validation status.
+- perubahan material dicatat dalam Appendix A di `prd.md` dengan affected files, commit, dan validation status.
 
 ### Critical end-to-end acceptance
 
@@ -1617,18 +1627,38 @@ Untuk deployment yang membawa migration baru, end-to-end persistence baru diangg
 
 ## 21. Documentation Governance
 
-Mulai dari hasil merge ini, **hanya satu dokumen PRD aktif yang digunakan: `prd.md`**.
+**Satu PRD aktif: `prd.md`.** Badan utama (§1–§21) berisi keputusan produk yang berlaku; Appendix A hanya jejak historis dan bukti implementasi, **bukan daftar perintah untuk coding**. Bila keputusan baru mengganti keputusan lama, perbarui satu pasal di badan utama dan pindahkan alasan/perubahannya ke histori. Jangan menumpuk aturan lama dan baru dalam badan utama dengan label "terbaru" tanpa mengganti rumusan lama.
 
-Aturan:
-- `prd.md` adalah single source of truth untuk requirement aktif sekaligus menyimpan implementation history ringkas pada appendix;
-- jangan membuat `prd1.md`, `prdnew.md`, `PRD2.md`, dan file PRD paralel lain untuk requirement baru;
-- apabila owner **secara eksplisit meminta `prd-tambahan.md`**, file tersebut boleh dipakai hanya sebagai supplemental delta log non-canonical; requirement aktif tetap wajib disinkronkan ke body `prd.md` dan histori material tetap masuk Appendix A;
-- jika requirement berubah, edit section canonical di badan utama terlebih dahulu;
-- catat implementasi material pada **Appendix A — Implementation History** di dokumen yang sama;
-- requirement superseded diganti/dihapus dari body canonical, sementara histori perubahan tetap dipertahankan secara ringkas di appendix;
-- draft ide yang belum disetujui dapat dicatat sementara di issue/task/work notes, bukan sebagai PRD kedua;
-- jangan mengklaim build, lint, CI, migration, atau deployment PASS tanpa hasil aktual yang diamati.
+### 21.1 Hierarki sumber dan status dokumen
 
+| Dokumen | Fungsi dan status | Jika ditemukan konflik |
+| --- | --- | --- |
+| `prd.md` §1–§21 | **Satu-satunya persyaratan produk aktif** (termasuk keputusan terbaru yang sudah disepakati). | Perbarui pasal yang benar, bukan tambah PRD baru. |
+| `AGENTS.md` | Aturan kerja dan engineering global; hanya ringkasan prinsip lintas fitur, bukan catatan setiap iterasi UI. | Harus mengikuti `prd.md` untuk keputusan produk. |
+| `template.md`, `studio.md` | Panduan implementasi khusus domain; menjelaskan *cara* memenuhi kontrak PRD. | Persyaratan produk yang berubah wajib diperbarui dahulu di `prd.md`, lalu sinkronkan panduan terkait. |
+| `README.md` | Orientasi repo dan petunjuk menjalankan aplikasi; **bukan** PRD/changelog kedua. | Ringkaskan dan tautkan ke PRD; petunjuk teknis harus cocok dengan source nyata. |
+| `checklist.md` | Daftar pemeriksaan rilis dan hasil QA bertanggal, **bukan** bukti fitur selesai hanya karena checklist tercentang lama. | Revalidasi terhadap source dan lingkungan target; jangan salin checkbox lama sebagai status terbaru. |
+| `pintu3d.md`, `Dashboard-redesign.md` | Jurnal eksperimen/tahapan historis; item yang belum ditutup adalah pekerjaan, bukan instruksi desain yang mengalahkan PRD. | Ambil keputusan aktif dari pasal terkait di PRD; pertahankan jurnal untuk penelusuran. |
+| `prd-tambahan.md`, `prd-landing.md`, `prdpaging.md` | Dokumen legacy/snapshot. **Dibekukan** selama audit konsolidasi: bukan tempat menulis requirement/riwayat baru. Draft yang bertentangan dengan keputusan approved belakangan dianggap superseded. | Migrasikan keputusan unik yang masih disetujui ke pasal PRD yang benar setelah cross-check, lalu arsipkan/hapus dokumen redundan secara terencana. |
+| Appendix A dalam `prd.md` | Riwayat tanggal, keputusan, commit, dan validasi; dapat memuat istilah/versi lama. | Tidak dipakai sebagai rule aktif dan tidak menimpa badan utama. |
+
+Dokumen baru `prd1.md`, `prdnew.md`, `PRD2.md` dan sejenisnya tidak boleh dibuat. Jangan menambahkan delta baru ke `prd-tambahan.md`: permintaan owner untuk konsolidasi berarti perubahan berikutnya langsung ditulis di pasal kanonik PRD dan riwayat yang relevan di Appendix A. Dokumen sumber yang masih mengandung aturan lama boleh tetap ada *sementara* sebagai arsip bertanda nonaktif hingga audit kelengkapan selesai; jangan hapus sebelum materi unik dan referensinya diperiksa.
+
+### 21.2 Urutan saat ada aturan tumpang tindih
+
+1. Periksa keputusan owner paling baru yang **sudah tercatat dan berlaku** pada pasal produk terkait; tandai rumusan sebelumnya sebagai superseded, bukan menggabungkan dua pilihan yang bertolak belakang.
+2. Bedakan target/requirement, implementasi yang benar-benar ada dalam source, dan validasi yang benar-benar telah dijalankan. Klaim historis `PASS` tidak otomatis berlaku bagi commit, database, atau environment terkini.
+3. Spesifikasi template atau Studio membatasi **cara visual/teknis**, tidak boleh melemahkan otorisasi server, kepemilikan event, entitlement, RSVP, dan kontrak komponen bersama.
+4. Perubahan yang berdampak pada banyak fitur harus mencantumkan komponen/source of truth, kompatibilitas data lama, target mobile/desktop, dan penerimaan QA; jangan menduplikasi model/API hanya untuk menyamakan penampilan.
+
+### 21.3 Tahapan pembenahan dokumentasi (audit 24 September 2026)
+
+- **Tahap 1 — Tata kelola dan tautan:** status dokumen, tautan mati, heading ganda, penempatan pasal, dan contoh status usang yang dapat menyesatkan. Audit tahap ini **tidak** mengklaim keseluruhan PRD telah bebas duplikasi.
+- **Tahap 2 — Perbandingan lintas-dokumen per domain:** landing/Pintu, Dashboard, template/Studio, tamu/RSVP, pembayaran/entitlement, security/deployment. Untuk setiap domain: matriks keputusan aktif vs legacy vs implementasi vs pending QA, lalu pindahkan rumusan unik yang masih relevan ke satu pasal PRD.
+- **Tahap 3 — Pemadatan aturan:** ringkas AGENTS menjadi engineering guardrails; README menjadi onboarding; pindahkan rincian historis berulang dari badan utama ke ringkasan Appendix A atau arsip Git (jangan hilangkan bukti commit).
+- **Tahap 4 — Penutupan:** periksa seluruh tautan/heading/rujukan dan source yang relevan, hapus dokumen PRD legacy yang sudah sepenuhnya dimigrasikan melalui commit terpisah, lalu audit ulang perubahan produk dan QA. Jangan tandai selesai sebelum semua tahap dan pemeriksaan tercatat.
+
+**Aturan perubahan berikutnya:** edit pasal produk kanonik terlebih dahulu; perbarui hanya panduan domain yang terdampak; catat perubahan material dan validasi yang benar-benar diamati pada Appendix A. Jangan melaporkan build, CI, migrasi atau browser PASS hanya berdasarkan perubahan Markdown.
 ---
 
 # Appendix A — Implementation History
@@ -4974,3 +5004,17 @@ Owner meminta amplop Zen Atelier lebih kuat karakter Jepangnya mengikuti contoh 
 ### 24 September 2026 — Perbaikan drag & drop gambar dari menu Aset ke Cover
 
 **Laporan owner:** sebelumnya thumbnail gambar di menu Aset hanya dapat diklik untuk menambahkan ilustrasi; menyeret thumbnail dari panel kiri lalu melepas di posisi canvas tidak menghasilkan penempatan layer. **Implementasi:** kartu Aset kini HTML-draggable (`components/InvitationStudio/AssetPanel.tsx`) dan tetap menyediakan klik untuk layar sentuh/keyboard. `components/InvitationStudio/InvitationDesigner.tsx` menyimpan referensi gambar saat drag dimulai, berpindah ke Cover, lalu menerima drag-over/drop hanya pada elemen `data-invitation-section="cover"` di canvas aktif. Koordinat pointer saat drop dihitung relatif terhadap bounding box Cover sebagai persen X/Y (bukan seluruh halaman/canvas scroll), dinormalisasi 0–100, lalu layer baru dibuat pada titik tersebut melalui Undo/Redo dan desain persisten yang sudah ada. Drop di luar Cover tidak menambahkan ilustrasi. `studio.css` menampilkan garis target Rose saat drag tepat di atas Cover; `tests/invitation-asset-layers.test.mjs` ditambah pemeriksaan kontrak handler dan koordinat. Perubahan ini tidak membuat section lain menjadi editable bebas dan tidak mengubah data/event/renderer publik. **Commit:** `a11d6c8f`, `e6526f2c`, `e7d77bc2`, `cfce8098`. **Validasi:** penyimpanan sumber di GitHub terkonfirmasi; menjalankan build, tes otomatis, serta interaksi browser desktop/touch tetap perlu diverifikasi sebelum menyatakan PASS.
+
+
+### 24 September 2026 — Kontrol samping canvas dan shortcut layer
+
+**Permintaan owner:** kontrol layer dapat muncul di kanan canvas dan layer terpilih dapat dihapus dengan tombol Del atau disalin/ditempel menggunakan Ctrl+C/Ctrl+V. **Implementasi:** `components/InvitationStudio/InvitationDesigner.tsx` menyediakan panel kanan Cover berisi Opasitas, urutan depan/belakang, Salin, Hapus, Tempel. Clipboard hanya menyimpan data satu layer di memori Studio untuk event/template aktif; tempel membuat ID baru dan bergeser +5% dari posisi asal, lalu seluruh mutasi menggunakan `change()` dan Undo/Redo/Save lama. Listener keyboard mencakup Delete/Backspace, Ctrl/Cmd+C, Ctrl/Cmd+V dan Escape, mengabaikan form input/contenteditable serta teks yang sedang diseleksi, dan tidak mengklaim integrasi clipboard OS. Pindah tema atau memuat event baru membersihkan clipboard internal. `studio.css` mengikat panel di kanan canvas saat ruang mencukupi atau di bawah preview pada viewport kecil. `tests/invitation-asset-layers.test.mjs` menambah kontrak shortcut dan panel. **Commit:** `5f693961`, `fcac742e`, `f8f82b06`, `c292322c`. **Validasi:** commit kode tersimpan di GitHub; build/CI dan browser keyboard/mobile belum diverifikasi. Tidak ada migrasi DB, perubahan publikasi atau modifikasi font/landing.
+
+### 24 September 2026 — Kontrak Designer Studio berkomponen terlindungi
+
+**Permintaan owner:** DC Organizer harus menyediakan tempat kerja desainer untuk mengedit/menyimpan template yang dijual maupun proyek custom secara internal; desainer lebih bebas dari pelanggan pada properti visual tetapi **tidak dapat merusak fungsi komponen undangan**. **Dokumentasi:** menambahkan `studio.md` sebagai aturan khusus yang dirujuk dari `AGENTS.md`, dan memperbarui persyaratan kanonik §7.2.0c mengenai pemisahan master/instance, capability edit, komponen bisnis terlindungi, versioning, approval dan akses event-scoped. Aturan Cover-only sebelumnya dicatat sebagai batas implementasi awal, bukan batas final Designer Studio. **File:** `studio.md`, `AGENTS.md`, `prd.md`. **Commit dokumentasi:** `43e76b0c66319998c1ca26db3479e5430e311c5e` (pembuatan `studio.md`) serta commit sinkronisasi `prd.md`/`AGENTS.md` berikutnya. **Validasi:** isi dokumen dan konflik aturan diperiksa via source; tidak ada perubahan aplikasi, migrasi, build atau pengujian browser/CI pada pekerjaan dokumentasi ini. Jangan klaim editor master visual, komponen protected secara runtime, atau workflow custom sudah terimplementasi.
+
+
+### 24 September 2026 — Dokumentasi konsolidasi tahap 1: tata kelola dan kontradiksi awal
+
+**Permintaan owner:** lintas-periksa seluruh aturan dokumentasi, satukan persyaratan produk dalam satu PRD aktif, pertahankan keputusan yang masih berlaku, dan benahi bertahap mulai file .md sebelum coding fitur baru. **Audit awal:** `prd.md` terdiri dari badan utama dan Appendix A yang jauh lebih panjang; sejumlah file legacy masih mereferensikan `prd1.md` yang tidak ada. Ditemukan dua heading §7.2.0c, aturan urutan anak salah letak serta redaksi parent-line lama dalam §5.3, approved landing rule salah letak di bawah security, dan sejumlah ringkasan status di README/checklist yang perlu koreksi. **Pembenahan:** §21 menetapkan hierarki/status dokumen dan rencana tahap 1–4; pasal/heading dan keterangan parent-line yang telah diidentifikasi diselaraskan dengan formatter bersama. File Markdown pendukung diselaraskan lewat commit terpisah. **Validasi:** audit dan pemeriksaan teks dokumen melalui GitHub; belum ada build/CI, tes browser, atau verifikasi produksi pada tahap dokumentasi. **Status:** tahap 1 parsial/berjalan, audit duplikasi isi lintas seluruh pasal dan penghapusan file legacy belum selesai.

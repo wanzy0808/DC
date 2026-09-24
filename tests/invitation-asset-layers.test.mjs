@@ -57,6 +57,17 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(browser, /onDragStart=\{\(event\) =>/);
   assert.match(editor, /onDragOver=\{onAssetDragOver\}/);
   assert.match(editor, /onDrop=\{onAssetDrop\}/);
+  assert.match(editor, /event\.key === "Delete" \|\| event\.key === "Backspace"/);
+  assert.match(editor, /event\.key\.toLowerCase\(\) === "c"/);
+  assert.match(editor, /event\.key\.toLowerCase\(\) === "v"/);
+  assert.match(editor, /event\.ctrlKey \|\| event\.metaKey/);
+  assert.match(editor, /closest\('input, textarea, select,/);
+  assert.match(editor, /window\.getSelection\(\)\?\.toString\(\)/);
+  assert.match(editor, /<aside className="dc-studio-layer-side"/);
+  assert.match(editor, /onClick=\{copySelectedAssetLayer\}/);
+  assert.match(editor, /onClick=\{pasteAssetLayer\}/);
+  assert.match(editor, /design\.layers\.length >= MAX_ASSET_LAYERS/);
+
   assert.match(editor, /findCoverDropTarget\(event\.clientX, event\.clientY\)/);
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
   assert.match(editor, /x: clamp\(\(event\.clientX - rect\.left\) \/ rect\.width \* 100\)/);

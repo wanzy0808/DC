@@ -1,10 +1,10 @@
 # DC Organizer — PRD Tambahan
 
-**Status:** Supplemental Delta Log  
+**Status:** ARSIP DELTA HISTORIS — dibekukan sejak audit 24 September 2026; bukan PRD aktif dan tidak menerima persyaratan atau log baru.  
 **Canonical PRD:** `prd.md`  
 **Date:** 18 September 2026
 
-> File ini dibuat atas permintaan eksplisit owner sebagai catatan delta tambahan. Requirement aktif tetap mengikuti `prd.md`; bila ada konflik, `prd.md` yang berlaku.
+> File ini adalah catatan perubahan historis. Keputusan yang masih berlaku berada di badan utama `prd.md`; riwayat implementasi terpusat di Appendix A. Entri lama (misalnya sidebar netral dan percobaan Pintu) tidak boleh dijadikan aturan aktif apabila bertentangan dengan keputusan yang disetujui sesudahnya. Jangan menambah delta baru di sini selama konsolidasi dokumentasi.
 
 ---
 

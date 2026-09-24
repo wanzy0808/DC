@@ -1,10 +1,10 @@
 # DC Organizer — Landing Page Redesign Draft
 
-**Status:** Draft / Pending Owner Approval  
+**Status:** ARSIP RANCANGAN LAMA — tidak aktif; sebagian arah sudah digantikan keputusan landing approved dalam `prd.md` §15.4.1b. Tidak boleh diperlakukan sebagai instruksi coding tanpa persetujuan baru.  
 **Purpose:** Design direction untuk landing page DC Organizer sebelum implementation.  
 **Canonical PRD:** `prd.md` tetap menjadi Single Source of Truth. Dokumen ini tidak aktif/canonical sampai owner menyetujui dan requirement relevan dipindahkan ke dokumen canonical sesuai governance repository.
 
-> Tidak ada source-code landing page yang diubah oleh draft ini. Implementasi dilakukan kemudian saat owner sudah berada di PC dan memberikan approval eksplisit.
+> **Catatan historis:** teks berikut adalah rancangan pada saat dibuat, bukan klaim status source saat ini. Landing yang sudah disetujui dan diterapkan memiliki empat pintu serta komposisi yang dikunci di `prd.md` §15.4.1b. Usulan di bawah yang berbeda bukan perintah untuk mengubah landing aktif.
 
 ---
 
@@ -272,7 +272,7 @@ Pintu harus tetap menjadi focal object.
 
 Saat coding nanti:
 
-- baca `AGENTS.md`, `prd.md`, `README.md`, `prd1.md`, lalu relevant landing files sebelum perubahan;
+- baca `AGENTS.md`, `prd.md`, `README.md`, Appendix A dalam `prd.md`, lalu relevant landing files sebelum perubahan;
 - Extend Over Replace;
 - jangan menghapus Pintu;
 - jangan mengganti brand typography;
@@ -298,7 +298,7 @@ Setelah approval:
 2. `AGENTS.md` harus diperbarui bila protected petal/background rule berubah;
 3. `README.md` diperbarui hanya untuk architecture/setup/behavior yang memang perlu diketahui developer/operator;
 4. implementation dilakukan;
-5. setiap material implementation change dicatat secara kronologis di `prd1.md` beserta rationale, affected files, commit, dan validation status.
+5. setiap material implementation change dicatat secara kronologis di Appendix A dalam `prd.md` beserta rationale, affected files, commit, dan validation status.
 
 Dokumen draft ini tidak boleh diam-diam menjadi PRD kedua yang mengalahkan `prd.md`.
 

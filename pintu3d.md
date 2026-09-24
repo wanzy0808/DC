@@ -1,3 +1,5 @@
+> **Status dokumentasi (24 September 2026):** jurnal eksperimen dan tahap Pintu 3D, bukan PRD produk aktif. Keputusan landing yang sudah disetujui mengikuti `prd.md` §15.4.1b dan aturan perubahan terlingkup di `AGENTS.md`; pekerjaan V2 lab mengikuti §15.4.1a. Catatan tahap, percobaan lama, dan referensi tiga pintu di bawah bersifat historis dan tidak mengizinkan penggantian empat pintu landing aktif tanpa instruksi owner. Hasil PASS historis hanya berlaku pada commit/run yang disebut, bukan HEAD sekarang.
+
 ## 22 September 2026 — Perbaikan transisi landing aktif, tanpa pintu kedua
 
 **Tujuan owner:** Setelah klik `Masuk` dan kamera mendekati Pintu pilihan, transisi tidak boleh memperlihatkan pintu layanan yang lain, pintu kedua di belakang bidang gambar, atau asset gambar pintu berulang sebelum halaman tujuan. Pintu asli untuk memilih layanan, orbital, daun, kusen dan visual yang sudah diterima tetap dipertahankan.

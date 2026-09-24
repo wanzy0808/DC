@@ -1,10 +1,10 @@
 # DC Organizer — Public Page Visual & Component Direction Draft
 
-**Status:** Draft / Pending Owner Approval  
+**Status:** ARSIP RANCANGAN LAMA — bukan spesifikasi aktif; halaman marketing yang sudah diimplementasikan mengikuti `prd.md` §15–§16 dan source yang disetujui.  
 **Purpose:** Menampung arah visual untuk public/service pages di luar landing sebelum implementation.  
-**Canonical PRD:** `prd.md` tetap Single Source of Truth. Dokumen ini tidak menggantikan `prd.md`, `AGENTS.md`, atau `prd1.md`.
+**Canonical PRD:** `prd.md` tetap Single Source of Truth. Dokumen ini tidak menggantikan `prd.md`, `AGENTS.md`, atau Appendix A dalam `prd.md`.
 
-> Belum ada source page/component yang diubah berdasarkan dokumen ini. Coding dilakukan setelah owner memberikan approval eksplisit.
+> **Catatan historis:** pernyataan belum diimplementasikan adalah kondisi saat draft dibuat, bukan klaim untuk source sekarang. Arah baru yang tidak cocok dengan halaman approved harus diputuskan lebih dahulu di pasal kanonik PRD; jangan menggunakan draft ini untuk merombak halaman yang sudah disetujui.
 
 ---
 
@@ -218,7 +218,7 @@ Sebelum coding:
 - baca `AGENTS.md`;
 - baca canonical `prd.md`;
 - baca `README.md`;
-- baca recent `prd1.md`;
+- baca recent Appendix A dalam `prd.md`;
 - audit relevant page/components;
 - periksa current Next.js guidance sesuai `AGENTS.md`.
 
@@ -227,7 +227,7 @@ Jika direction ini disetujui menjadi requirement aktif:
 - update `AGENTS.md` hanya bila protected design/implementation rules memang berubah;
 - update `README.md` hanya bila developer/operator architecture perlu didokumentasikan;
 - jangan membuat generic agent prompt yang menduplikasi `AGENTS.md`; specialized agent instruction hanya dibuat jika benar-benar dibutuhkan dan narrowly scoped;
-- setiap material coding change dicatat di `prd1.md` dengan rationale, affected files, commit, dan validation status;
+- setiap material coding change dicatat di Appendix A dalam `prd.md` dengan rationale, affected files, commit, dan validation status;
 - jangan claim build/CI PASS tanpa observed result.
 
 ---

@@ -5,9 +5,11 @@
 **Scope:** Production readiness for the general-event DC Organizer SaaS.  
 **Canonical product requirements:** `prd.md`  
 **Engineering rules:** `AGENTS.md`  
-**Implementation history:** `prd1.md`
+**Implementation history:** `prd.md` → Appendix A
 
-> This file is a launch checklist, not a parallel PRD. If this file conflicts with `prd.md`, `prd.md` wins. When an item is implemented, follow `AGENTS.md`: update `prd.md` only if requirements changed and append implementation history/validation to `prd1.md`.
+> This file is a launch checklist, not a parallel PRD. If this file conflicts with `prd.md`, `prd.md` wins. When an item is implemented, follow `AGENTS.md`: update `prd.md` only if requirements changed and append implementation history/validation to Appendix A in `prd.md`.
+
+> **Catatan audit dokumentasi (24 September 2026):** ringkasan dan checkbox bertanggal 17 September adalah snapshot historis, **bukan** verifikasi bahwa seluruh status launch masih berlaku pada HEAD atau environment produksi sekarang. Untuk setiap klaim readiness baru, periksa source/CI/migrasi/E2E terbaru dan catat tanggal, commit serta environment. Persyaratan aktif berada di `prd.md` §21; checklist ini hanya alat QA.
 
 ## Status legend
 
@@ -271,7 +273,7 @@ The audited payment endpoint currently accepts a **proof-of-transfer URL**, stor
 
 # 10. BLOCKER — Critical end-to-end launch test
 
-Run this against a production-like environment with a brand-new customer account. Record date, environment, tester, commit SHA, and result in this section or `prd1.md`.
+Run this against a production-like environment with a brand-new customer account. Record date, environment, tester, commit SHA, and result in this section; ringkasan implementasi material dan validasi masuk Appendix A di `prd.md`.
 
 - [ ] **BLOCKER:** Register new account.
 - [ ] **BLOCKER:** Receive verification email.

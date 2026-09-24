@@ -8,6 +8,8 @@ import {
   ArrowUp,
   ArrowDown,
   Trash2,
+  Copy,
+  ClipboardPaste,
   LayoutTemplate,
   Music2,
   Palette,
@@ -94,6 +96,7 @@ export default function InvitationDesigner() {
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+  const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
@@ -160,6 +163,7 @@ export default function InvitationDesigner() {
     setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
     setCanvasStage("envelope");
     setSelectedLayerId(null);
+    setCopiedAssetLayer(null);
     setHistory([]);
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
@@ -227,6 +231,7 @@ export default function InvitationDesigner() {
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
+    setCopiedAssetLayer(null);
     setCanvasStage("envelope");
   }
 
@@ -307,6 +312,20 @@ export default function InvitationDesigner() {
     setInspectorOpen(true);
   }
 
+  function copySelectedAssetLayer() {
+    const selected = design.layers.find((layer) => layer.id === selectedLayerId);
+    if (selected) setCopiedAssetLayer({ ...selected });
+  }
+
+  function pasteAssetLayer() {
+    if (!copiedAssetLayer || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    const next = { ...copiedAssetLayer, id, x: Math.min(100, copiedAssetLayer.x + 5), y: Math.min(100, copiedAssetLayer.y + 5) };
+    change({ layers: [...design.layers, next] });
+    setSelectedLayerId(id);
+    setCanvasStage("cover");
+  }
+
   function beginAssetDrag(src: string) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     draggedAssetSrc.current = src;
@@ -365,6 +384,34 @@ export default function InvitationDesigner() {
     [next[index], next[target]] = [next[target], next[index]];
     change({ layers: next });
   }
+
+  useEffect(() => {
+    function handleLayerShortcut(event: KeyboardEvent) {
+      if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing || canvasStage !== "cover") return;
+      const target = event.target;
+      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+      const activeText = window.getSelection()?.toString();
+      if (activeText) return;
+      const modifier = event.ctrlKey || event.metaKey;
+      if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "c") {
+        if (!selectedAssetLayer) return;
+        event.preventDefault();
+        copySelectedAssetLayer();
+      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "v") {
+        if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
+        event.preventDefault();
+        pasteAssetLayer();
+      } else if (!modifier && !event.altKey && (event.key === "Delete" || event.key === "Backspace")) {
+        if (!selectedAssetLayer) return;
+        event.preventDefault();
+        removeAssetLayer(selectedAssetLayer.id);
+      } else if (!modifier && !event.altKey && event.key === "Escape" && selectedAssetLayer) {
+        setSelectedLayerId(null);
+      }
+    }
+    window.addEventListener("keydown", handleLayerShortcut);
+    return () => window.removeEventListener("keydown", handleLayerShortcut);
+  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, copiedAssetLayer, design.layers]);
 
   function undo() {
     const key = history.at(-1);
@@ -565,18 +612,8 @@ export default function InvitationDesigner() {
             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
             <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
-          {selectedAssetLayer && <div className="dc-studio-layer-toolbar" aria-label={locale === "en" ? "Selected illustration controls" : "Pengaturan ilustrasi terpilih"}>
-            <span className="max-w-36 truncate text-xs font-medium text-primary">{locale === "en" ? "Selected layer" : "Layer terpilih"} {selectedAssetIndex + 1}/{design.layers.length}</span>
-            <label className="flex min-w-[120px] flex-1 items-center gap-2 text-xs text-foreground">
-              <span>{locale === "en" ? "Opacity" : "Opasitas"}</span>
-              <input aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} onChange={(event) => updateAssetLayer(selectedAssetLayer.id, { opacity: Number(event.target.value) })} className="min-w-16 max-w-36 flex-1 accent-primary" />
-              <output>{Math.round(selectedAssetLayer.opacity * 100)}%</output>
-            </label>
-            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Send backward" : "Ke belakang"} aria-label={locale === "en" ? "Send layer backward" : "Pindahkan layer ke belakang"} disabled={selectedAssetIndex === 0} onClick={() => reorderAssetLayer(selectedAssetLayer.id, -1)}><ArrowDown size={16}/></button>
-            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Bring forward" : "Ke depan"} aria-label={locale === "en" ? "Bring layer forward" : "Pindahkan layer ke depan"} disabled={selectedAssetIndex === design.layers.length - 1} onClick={() => reorderAssetLayer(selectedAssetLayer.id, 1)}><ArrowUp size={16}/></button>
-            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Remove layer" : "Hapus layer"} aria-label={locale === "en" ? "Remove selected layer" : "Hapus layer terpilih"} onClick={() => removeAssetLayer(selectedAssetLayer.id)}><Trash2 size={16}/></button>
-          </div>}
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
+          <div className="dc-studio-preview-workspace">
           <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
             <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
 
@@ -599,6 +636,27 @@ export default function InvitationDesigner() {
               onEnvelopeOpened={handleCanvasEnvelopeOpened}
             />
             </div>
+          </div>
+          {(selectedAssetLayer || copiedAssetLayer) && <aside className="dc-studio-layer-side" aria-label={locale === "en" ? "Illustration layer tools" : "Alat layer ilustrasi"}>
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-sm font-semibold text-primary">{locale === "en" ? "Layer" : "Layer"} {selectedAssetLayer ? `${selectedAssetIndex + 1}/${design.layers.length}` : ""}</span>
+              {selectedAssetLayer && <button type="button" onClick={() => setSelectedLayerId(null)} aria-label={locale === "en" ? "Deselect layer" : "Batalkan pilihan layer"} className="text-xs text-primary hover:underline">✕</button>}
+            </div>
+            {selectedAssetLayer && <>
+              <label className="mt-3 block space-y-2 text-xs text-foreground">
+                <span className="flex justify-between gap-2"><span>{locale === "en" ? "Opacity" : "Opasitas"}</span><output>{Math.round(selectedAssetLayer.opacity * 100)}%</output></span>
+                <input type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} className="w-full accent-primary" onChange={(event) => updateAssetLayer(selectedAssetLayer.id, { opacity: Number(event.target.value) })} />
+              </label>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button type="button" className="dc-studio-layer-action" disabled={selectedAssetIndex === 0} onClick={() => reorderAssetLayer(selectedAssetLayer.id, -1)} title={locale === "en" ? "Send backward" : "Ke belakang"}><ArrowDown size={16} />{locale === "en" ? "Back" : "Belakang"}</button>
+                <button type="button" className="dc-studio-layer-action" disabled={selectedAssetIndex === design.layers.length - 1} onClick={() => reorderAssetLayer(selectedAssetLayer.id, 1)} title={locale === "en" ? "Bring forward" : "Ke depan"}><ArrowUp size={16} />{locale === "en" ? "Front" : "Depan"}</button>
+                <button type="button" className="dc-studio-layer-action" onClick={copySelectedAssetLayer} title="Ctrl/Cmd+C"><Copy size={16} />{locale === "en" ? "Copy" : "Salin"}</button>
+                <button type="button" className="dc-studio-layer-action" onClick={() => removeAssetLayer(selectedAssetLayer.id)} title="Delete / Del"><Trash2 size={16} />{locale === "en" ? "Delete" : "Hapus"}</button>
+              </div>
+            </>}
+            {copiedAssetLayer && <button type="button" className="dc-studio-layer-action mt-2 w-full" disabled={design.layers.length >= MAX_ASSET_LAYERS} onClick={pasteAssetLayer} title="Ctrl/Cmd+V"><ClipboardPaste size={16} />{locale === "en" ? "Paste layer" : "Tempel layer"}</button>}
+            <p className="mt-3 text-[11px] leading-5 text-muted-foreground">{locale === "en" ? "Del: delete · Ctrl/Cmd+C: copy · Ctrl/Cmd+V: paste" : "Del: hapus · Ctrl/Cmd+C: salin · Ctrl/Cmd+V: tempel"}</p>
+          </aside>}
           </div>
           </div>
         </div>
