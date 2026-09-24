@@ -5,6 +5,9 @@ import {
   FilePenLine,
   ImagePlus,
   Layers3,
+  ArrowUp,
+  ArrowDown,
+  Trash2,
   LayoutTemplate,
   Music2,
   Palette,
@@ -178,6 +181,8 @@ export default function InvitationDesigner() {
   const palette = invitationPalettes[design.palette];
   const fontPair = invitationFonts[design.font];
   const designKey = makeInvitationDesignStateKey(design);
+  const selectedAssetLayer = design.layers.find((layer) => layer.id === selectedLayerId);
+  const selectedAssetIndex = design.layers.findIndex((layer) => layer.id === selectedLayerId);
   const identity = getInvitationEventIdentity(invitation);
   const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
   const dirty = Boolean(invitation && savedState !== currentState);
@@ -517,6 +522,17 @@ export default function InvitationDesigner() {
             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
             <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
+          {selectedAssetLayer && <div className="dc-studio-layer-toolbar" aria-label={locale === "en" ? "Selected illustration controls" : "Pengaturan ilustrasi terpilih"}>
+            <span className="max-w-36 truncate text-xs font-medium text-primary">{locale === "en" ? "Selected layer" : "Layer terpilih"} {selectedAssetIndex + 1}/{design.layers.length}</span>
+            <label className="flex min-w-[120px] flex-1 items-center gap-2 text-xs text-foreground">
+              <span>{locale === "en" ? "Opacity" : "Transparansi"}</span>
+              <input aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} onChange={(event) => updateAssetLayer(selectedAssetLayer.id, { opacity: Number(event.target.value) })} className="min-w-16 max-w-36 flex-1 accent-primary" />
+              <output>{Math.round(selectedAssetLayer.opacity * 100)}%</output>
+            </label>
+            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Send backward" : "Ke belakang"} aria-label={locale === "en" ? "Send layer backward" : "Pindahkan layer ke belakang"} disabled={selectedAssetIndex === 0} onClick={() => reorderAssetLayer(selectedAssetLayer.id, -1)}><ArrowDown size={16}/></button>
+            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Bring forward" : "Ke depan"} aria-label={locale === "en" ? "Bring layer forward" : "Pindahkan layer ke depan"} disabled={selectedAssetIndex === design.layers.length - 1} onClick={() => reorderAssetLayer(selectedAssetLayer.id, 1)}><ArrowUp size={16}/></button>
+            <button className="dc-studio-icon" type="button" title={locale === "en" ? "Remove layer" : "Hapus layer"} aria-label={locale === "en" ? "Remove selected layer" : "Hapus layer terpilih"} onClick={() => removeAssetLayer(selectedAssetLayer.id)}><Trash2 size={16}/></button>
+          </div>}
           <div className="dc-studio-canvas-scroll">
           <div className="dc-studio-preview-surface">
             <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
