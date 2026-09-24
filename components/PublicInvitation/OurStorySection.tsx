@@ -14,19 +14,20 @@ export default function OurStorySection({
 
   const rose = theme === "romantic-rose";
   const zen = theme === "zen-atelier";
+  const pencil = theme === "pencil-reverie";
   const left = theme === "modern-maroon" || theme === "golden-art-deco";
   return (
     <section
       data-invitation-section="our-story"
       aria-labelledby="invitation-our-story-heading"
-      className={`relative overflow-hidden px-7 py-16 sm:px-10 ${rose
+      className={`relative overflow-hidden px-7 py-16 sm:px-10 ${pencil ? "pr-our-story" : ""} ${rose
         ? "bg-[#f8eef0] text-[#765460]"
         : zen
           ? "zen-section"
           : "text-[var(--inv-scene-surface-ink,var(--inv-ink))]"}`}
       style={rose ? undefined : { backgroundColor: "var(--inv-surface)" }}
     >
-      <div className={`relative mx-auto max-w-md ${left ? "text-left" : "text-center"}`}>
+      <div className={`relative mx-auto max-w-md ${left || pencil ? "text-left" : "text-center"}`}>
         <p className={`text-[10px] uppercase tracking-[.24em] ${rose ? "text-[#a65e69]" : "text-[var(--inv-accent)]"}`}>
           Our Story
         </p>
@@ -39,7 +40,7 @@ export default function OurStorySection({
         </h2>
         <span
           aria-hidden="true"
-          className={`my-6 block h-px w-12 ${left ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
+          className={`my-6 block h-px w-12 ${left || pencil ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
         />
         <p className="whitespace-pre-line break-words text-sm leading-8">{story.trim()}</p>
       </div>
