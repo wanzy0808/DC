@@ -192,3 +192,18 @@
 .pr-cover-copy,.pr-invitation .pr-section[data-pr-visible=true] h2,
 .pr-invitation .pr-section[data-pr-visible=true] .pr-section-whole-image{opacity:1!important;transform:none!important;translate:none!important}
 }
+
+
+/* Optional, real user-authored Our Story remains within Identity, never a 16th toggle. */
+.pr-invitation .pr-our-story{position:relative;padding:68px 29px 75px;
+ background-color:var(--pr-card)!important;color:var(--pr-ink)!important;
+ border-block:1px solid var(--pr-rule);isolation:isolate}
+.pr-invitation .pr-our-story:after{content:"";position:absolute;z-index:-1;right:13px;bottom:12px;
+ width:75px;height:75px;border-right:2px solid var(--pr-rose);
+ border-bottom:2px solid var(--pr-rose);transform:rotate(-8deg);opacity:.5}
+.pr-invitation .pr-our-story h2{font:clamp(27px,6vw,35px)/1.2 var(--inv-heading,Georgia,serif)}
+.pr-invitation .pr-our-story p.whitespace-pre-line{max-width:390px;line-height:2}
+.pr-greeting-copy{max-width:365px;margin:0 auto;text-align:left}
+.pr-greeting-copy p{font-size:14px;line-height:2}
+.pr-greeting-copy p+p{margin-top:25px;padding-left:15px;border-left:2px solid var(--pr-rose)}
+.pr-prayer-copy{margin:22px 0 0;font:italic 16px/1.8 var(--inv-heading,Georgia,serif);color:var(--pr-rose)}
