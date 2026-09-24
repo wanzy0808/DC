@@ -269,7 +269,7 @@ export default function UniversalInvitationTemplate({
           {sections.cover !== false && (<InvitationThemeScenes
             theme={key}
             isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
-          hashtag={invitation.weddingHashtag}
+            hashtag={invitation.weddingHashtag}
             names={names || eventTitle}
             date={date}
             cover={usesPhotos ? media.cover : undefined}
@@ -307,8 +307,35 @@ export default function UniversalInvitationTemplate({
 
           {section("event", (
             <div className="mx-auto max-w-md space-y-3 text-sm leading-7">
-              <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{eventTitle}</p>
-              {invitation.venue && <p className="opacity-80">{invitation.venue}</p>}
+              {key === "zen-atelier" && couple && (invitation.ceremonyTime || (invitation.receptionTime && invitation.receptionTime !== "END")) ? (
+                <div className="mx-auto max-w-sm divide-y divide-[var(--inv-soft)] border-y border-[var(--inv-soft)] text-left">
+                  {invitation.ceremonyTime && (
+                    <div className="grid grid-cols-[28px_1fr] gap-4 py-6">
+                      <CalendarDays aria-hidden="true" className="mt-1 h-5 w-5 text-[var(--inv-accent)]" strokeWidth={1.5} />
+                      <div>
+                        <h3 className="text-[18px]" style={{ fontFamily: invitationFontFamily(font.heading) }}>Upacara Nikah</h3>
+                        <p className="mt-2 text-xs leading-6 opacity-85">{date} · {invitation.ceremonyTime}</p>
+                        <p className="text-xs leading-6 opacity-70">{invitation.venue}</p>
+                      </div>
+                    </div>
+                  )}
+                  {invitation.receptionTime && invitation.receptionTime !== "END" && (
+                    <div className="grid grid-cols-[28px_1fr] gap-4 py-6">
+                      <CalendarDays aria-hidden="true" className="mt-1 h-5 w-5 text-[var(--inv-accent)]" strokeWidth={1.5} />
+                      <div>
+                        <h3 className="text-[18px]" style={{ fontFamily: invitationFontFamily(font.heading) }}>Resepsi</h3>
+                        <p className="mt-2 text-xs leading-6 opacity-85">{date} · {invitation.receptionTime}</p>
+                        <p className="text-xs leading-6 opacity-70">{invitation.venue}</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <>
+                  <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{eventTitle}</p>
+                  {invitation.venue && <p className="opacity-80">{invitation.venue}</p>}
+                </>
+              )}
               {invitation.dressCode && <p className="text-xs opacity-70">Dress code · {invitation.dressCode}</p>}
             </div>
           ), 3)}
@@ -396,8 +423,7 @@ export default function UniversalInvitationTemplate({
 
           {section("closing", (
             <div className="mx-auto max-w-sm text-sm leading-8">
-              <Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} />
-              <p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p>
+              {key === "zen-atelier" ? <p className="mx-auto max-w-xs text-[15px] leading-8">Bersama, setiap langkah menjadi cerita yang berharga. Terima kasih telah menjadi bagian dari hari istimewa ini.</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
             </div>
           ), 11)}
