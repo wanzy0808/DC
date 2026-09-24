@@ -116,7 +116,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     // selection without the owner's explicit Save Design action.
     const requestedTheme = params.get("template");
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
-    const stagedDesign: InvitationDesignState = requestedTheme && requestedPreset
+    const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
       ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font }
       : loadedDesign;
     setDesign(stagedDesign);
