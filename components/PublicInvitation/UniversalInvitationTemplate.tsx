@@ -121,7 +121,9 @@ export default function UniversalInvitationTemplate({
   const [now, setNow] = useState<number | null>(null);
   const key = templateKey || parseDesignKey(invitation.templateKey).template;
   const template = getInvitationTemplate(key);
-  const activeDesignKey = designKey || (parseDesignKey(invitation.templateKey).template === key
+  // A bare theme key is used by public demo cards and legacy saved records.
+  // Resolve its actual theme preset instead of unintentionally using global rose/Cinzel defaults.
+  const activeDesignKey = designKey || (parseDesignKey(invitation.templateKey).template === key && invitation.templateKey.includes("::")
     ? invitation.templateKey
     : `${key}::${template.preset.palette}::${template.preset.font}`);
   const design = parseDesignKey(activeDesignKey);
