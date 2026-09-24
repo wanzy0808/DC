@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { ArrowDown, MailOpen } from "lucide-react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { BlossomBranch, EnsoSun, InkMountains } from "@/assets/templates/zen-atelier/ZenArtwork";
 import "./zen-atelier.css";
 
 type ZenAtelierSceneProps = {
@@ -24,19 +25,41 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
   return (
     <section data-invitation-section={stage} className={`zen-scene zen-${stage}`} data-opening={opening || undefined}>
       {stage === "envelope" ? <>
-        <div className="zen-envelope-object" aria-hidden="true">
-          {/* One original paper-and-wax-seal photograph; identical crops form the movable folds. */}
-          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" fetchPriority="high" className="zen-envelope-back" />
-          <div className="zen-letter"><span>{title}</span><small>{date}</small></div>
-          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" className="zen-envelope-flap" />
-          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" className="zen-envelope-front" />
+        <div className="zen-jp-atmosphere" aria-hidden="true">
+          <div className="zen-jp-shoji" />
+          <EnsoSun className="zen-jp-sun" />
+          <BlossomBranch className="zen-jp-branch" />
+          <InkMountains className="zen-jp-mountains" />
         </div>
-        <div className="zen-envelope-heading">
+        <div className="zen-jp-intro">
+          <span className="zen-jp-kicker" lang="ja">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
           <p className="zen-envelope-greeting">Sebuah undangan<br />untuk orang istimewa</p>
           <span className="zen-envelope-rule" aria-hidden="true" />
         </div>
+        <div className="zen-jp-paper-stage" aria-hidden="true">
+          <div className="zen-jp-envelope-shell" />
+          <div className="zen-jp-letter">
+            <span className="zen-jp-letter-kicker">ZEN ATELIER</span>
+            <span className="zen-jp-letter-names">{title}</span>
+            <span className="zen-jp-letter-rule" />
+            <span className="zen-jp-letter-date">{date}</span>
+          </div>
+          <div className="zen-jp-fold-left" />
+          <div className="zen-jp-fold-right" />
+          <div className="zen-jp-fold-bottom" />
+          <div className="zen-jp-fold-top" />
+          <div className="zen-jp-mizuhiki-band">
+            <svg className="zen-jp-mizuhiki" viewBox="0 0 260 94" fill="none" focusable="false">
+              <path d="M0 49C55 49 83 49 110 45c18-3 34-18 48-22 12-4 28 0 30 13 2 14-19 25-37 21-18-4-40-26-30-39 10-13 34 1 44 14 14 20 32 19 95 19" stroke="#b54f3a" strokeWidth="3" strokeLinecap="round" />
+              <path d="M0 55c58 0 84-2 113-6 22-3 34 26 54 27 21 2 27-14 17-27-12-14-47-9-45 7 2 12 28 17 47 12 23-7 42-12 74-13" stroke="#ad8b53" strokeWidth="2.7" strokeLinecap="round" />
+              <path d="M0 43c56 1 80 4 115 9 22 4 39-30 59-28 17 1 19 15 8 25-14 14-42 10-51-4-10-17 10-26 27-24 24 3 30 24 102 22" stroke="#ce9b8a" strokeWidth="2.3" strokeLinecap="round" />
+              <path d="M0 60c55-2 89-7 114-12 22-6 36 9 51 10 23 2 42-5 95-4" stroke="#dac39a" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+            <span className="zen-jp-seal" lang="ja">{isWedding ? "寿" : "和"}</span>
+          </div>
+        </div>
         <button type="button" disabled={opening} className="zen-open" onClick={() => { setOpening(true); onOpen(); }}>
-          <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={16} strokeWidth={1.35} /></span>
+          <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={17} strokeWidth={1.35} /></span>
           <span>Buka Undangan</span>
         </button>
       </> : <>
