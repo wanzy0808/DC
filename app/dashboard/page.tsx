@@ -22,6 +22,7 @@ import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import FeatureGate from "@/components/Dashboard/FeatureGate";
 import InvitationWorkspacePanel from "@/components/Dashboard/InvitationWorkspacePanel";
 import EventPanelEditor from "@/components/Dashboard/EventPanel";
+import { isSelectableTemplate, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
 import WhatsAppBlastPanel from "@/components/Dashboard/WhatsAppBlastPanel";
 import PersonalInvitationPanel from "@/components/Dashboard/PersonalInvitationPanel";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const { d } = useDashboardI18n();
   const [tab, setTab] = useState<DashboardTab>("overview");
+  const [pendingTemplate, setPendingTemplate] = useState<string | null>(null);
   const [invitationMenuOpen, setInvitationMenuOpen] = useState(true);
   const [guestMenuOpen, setGuestMenuOpen] = useState(false);
   const [ctx, setCtx] = useState<DashboardContext | null>(null);
@@ -120,6 +122,23 @@ export default function DashboardPage() {
 
   useEffect(() => {
     load().catch(() => undefined);
+  }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("tab") === "events") {
+      setTab("events");
+    }
+    // Only resume a locally saved theme during an explicit catalog->event flow:
+    // browsing the Dashboard normally must not overwrite another event's design.
+    if (params.get("from") === "template") {
+      const requested = params.get("template");
+      const selected = isSelectableTemplate(requested) ? requested : readTemplateSelection();
+      if (selected) {
+        setPendingTemplate(selected);
+        rememberTemplateSelection(selected);
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -492,7 +511,16 @@ export default function DashboardPage() {
                 onUpdated={load}
               />
             )}
-            {tab === "events" && <EventPanelEditor onSaved={load} accent={accent} />}
+            {tab === "events" && <EventPanelEditor
+              onSaved={(created) => {
+                void load();
+                if (pendingTemplate && created) {
+                  router.push(`/dashboard/editor?invitationId=${encodeURIComponent(created.id)}&type=${created.type}&template=${encodeURIComponent(pendingTemplate)}`);
+                }
+              }}
+              selectedTemplate={pendingTemplate || undefined}
+              accent={accent}
+            />}
             {tab === "invitation" && (
               <InvitationWorkspacePanel onCreateSequence={() => go("events")} />
             )}
