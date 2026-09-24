@@ -60,6 +60,27 @@ import type {
 
 export default function InvitationDesigner() {
   const { locale } = useLanguage();
+  const copy = locale === "en" ? {
+    unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
+    defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
+    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design",
+    settings: "Settings", invitation: "Invitation", tools: "Design tools",
+    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music",
+    envelope: "Envelope", cover: "Cover", phone: "Mobile",
+    showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
+    envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
+    photoFree: "Photo-free theme", retry: "Try Again",
+  } : {
+    unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
+    defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
+    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain",
+    settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
+    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik",
+    envelope: "Amplop", cover: "Cover", phone: "Ponsel",
+    showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
+    envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
+    photoFree: "Tema tanpa foto", retry: "Coba Lagi",
+  };
   const catalog = useTemplateCatalog();
   const readyTemplates = catalog.filter((item) => item.ready);
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
@@ -346,7 +367,7 @@ export default function InvitationDesigner() {
   if (loadError) return (
     <section className="flex flex-1 flex-col items-center justify-center gap-5 p-6 text-center" role="alert">
       <p className="text-sm">{notice}</p>
-      <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
+      <Button onClick={() => window.location.reload()}>{copy.retry}</Button>
     </section>
   );
 
@@ -355,39 +376,39 @@ export default function InvitationDesigner() {
       <header className="dc-studio-toolbar">
         <div className="min-w-0 flex-1">
           <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitationTitleCase(invitation?.title || "Studio")}</h1>
-          <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? (invitation.templateKey ? "Desain tersimpan" : "Belum ada desain tersimpan") : notice}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{dirty ? copy.unsaved : invitation ? (invitation.templateKey ? copy.saved : copy.empty) : notice}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
-          <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title="Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.">
-            <RotateCcw className="h-4 w-4" /> Kembalikan ke Default
+          <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint}>
+            <RotateCcw className="h-4 w-4" /> {copy.defaults}
           </Button>
-          <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label="Urungkan desain" title="Urungkan desain">
+          <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label={copy.undo} title={copy.undo}>
             <Undo2 className="h-4 w-4" />
           </Button>
-          <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label="Ulangi desain" title="Ulangi desain">
+          <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label={copy.redo} title={copy.redo}>
             <Redo2 className="h-4 w-4" />
           </Button>
           <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
             <Save className="h-4 w-4" />
-            {saving ? "Menyimpan..." : "Simpan desain"}
+            {saving ? copy.saving : copy.save}
           </Button>
         </div>
       </header>
 
-      <div className="dc-studio-mobile-view" aria-label="Tampilan Studio">
-        <button type="button" aria-pressed={!mobileCanvas} onClick={() => setMobileCanvas(false)}>Pengaturan</button>
-        <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>Undangan</button>
+      <div className="dc-studio-mobile-view" aria-label="Studio">
+        <button type="button" aria-pressed={!mobileCanvas} onClick={() => setMobileCanvas(false)}>{copy.settings}</button>
+        <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>{copy.invitation}</button>
       </div>
       <div className="dc-studio-workspace">
-        <nav className="dc-studio-rail" aria-label="Alat desain">
+        <nav className="dc-studio-rail" aria-label={copy.tools}>
           <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
-          <DesignerTool active={panel === "sections"} label="Bagian" icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
-          <DesignerTool active={panel === "color"} label="Warna" icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
+          <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
+          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
-          <DesignerTool active={panel === "content"} label="Isi" icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <DesignerTool active={panel === "decor"} label="Foto" icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
-          <DesignerTool active={panel === "music"} label="Musik" icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
+          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
+          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
         </nav>
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
@@ -409,7 +430,7 @@ export default function InvitationDesigner() {
           )}
           {panel === "decor" && template && !template.usesPhotos ? (
             <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">Tema tanpa foto</h2>
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
               <p className="text-sm leading-7 text-muted-foreground">Desain ini menggunakan tipografi dan ilustrasi, tanpa slot foto. Koleksi foto acara tetap tersimpan jika nanti kamu mengganti tema dengan foto.</p>
               <p className="text-xs text-primary">Pilih tema bertanda “Dengan foto” untuk mengatur cover, foto individu, dan galeri.</p>
             </div>
@@ -432,24 +453,24 @@ export default function InvitationDesigner() {
 
         <div className="dc-studio-canvas">
           <div className="dc-studio-canvas-toolbar">
-            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? "Sembunyikan panel" : "Tampilkan panel"} title={inspectorOpen ? "Sembunyikan panel" : "Tampilkan panel"}>
+            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
-            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Pratinjau"}</span>
+            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
             {design.sections.envelope !== false && <button type="button"
               aria-pressed={canvasStage === "envelope"}
               className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-primary text-black" : "text-primary hover:bg-primary/10"}`}
               onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
-              title="Tampilkan dan coba animasi Amplop Digital di canvas"
-            >Amplop</button>}
+              title={copy.envelopeHint}
+            >{copy.envelope}</button>}
             <button type="button"
               aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
               className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-primary text-black" : "text-primary hover:bg-primary/10"}`}
               onClick={() => setCanvasStage("cover")}
-              title="Lihat Cover tanpa mengubah pengaturan Amplop"
-            >Cover</button>
-            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />Ponsel</span>
-            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label="Ulangi pratinjau dari awal" title="Ulangi dari awal"><RotateCcw size={17} /></button>
+              title={copy.coverHint}
+            >{copy.cover}</button>
+            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
+            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
           <div className="dc-studio-canvas-scroll">
           <div className="dc-studio-preview-surface">
