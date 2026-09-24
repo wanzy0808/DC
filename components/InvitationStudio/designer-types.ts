@@ -3,6 +3,7 @@ import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationSections } from "@/lib/templates/sections";
 import type { PhotoAssignments } from "@/lib/templates/photo-slots";
 import type { EditableInvitationCopy } from "@/lib/templates/editable-copy";
+import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -53,7 +54,8 @@ export type InvitationDesignerPanel =
   | "font"
   | "content"
   | "decor"
-  | "music";
+  | "music"
+  | "assets";
 
 export type InvitationDesignState = {
   template: string;
@@ -64,6 +66,7 @@ export type InvitationDesignState = {
   photos: PhotoAssignments;
   /** Only template-owned narrative copy; never duplicates event identity or schedule. */
   copy: EditableInvitationCopy;
+  layers: InvitationAssetLayer[];
 };
 
 export type InvitationTemplateLayout =
