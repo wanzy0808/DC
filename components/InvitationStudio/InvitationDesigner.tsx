@@ -324,6 +324,14 @@ export default function InvitationDesigner() {
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
   }
 
+  function focusDesignObject(id: string) {
+    const layer = design.layers.find((item) => item.id === id);
+    if (!layer) return;
+    setSelectedLayerId(id);
+    setCanvasStage(layer.section === "envelope" ? "envelope" : "cover");
+    requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
+  }
+
   function copySelectedAssetLayer() {
     const selected = design.layers.find((layer) => layer.id === selectedLayerId);
     if (selected) setCopiedAssetLayer({ ...selected });
@@ -607,8 +615,8 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={(id) => setSelectedLayerId(id)} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
+          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={focusDesignObject} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
