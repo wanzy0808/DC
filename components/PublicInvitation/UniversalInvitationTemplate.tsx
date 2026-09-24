@@ -331,7 +331,7 @@ export default function UniversalInvitationTemplate({
       <InvitationFonts families={[font.heading, font.body]} />
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
-        <InvitationThemeScenes
+        <div className="relative"><InvitationThemeScenes
           theme={key}
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           hashtag={invitation.weddingHashtag}
@@ -342,7 +342,7 @@ export default function UniversalInvitationTemplate({
           stage="envelope"
           onOpen={handleOpen}
           preview={preview}
-        />
+        />{objectOverlay("envelope")}</div>
       ) : (
         <div className={key === "zen-atelier" ? "zen-content" : undefined}>
           {sections.cover !== false && (<div className="relative" data-studio-cover-stage><InvitationThemeScenes
