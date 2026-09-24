@@ -119,6 +119,7 @@ export default function UniversalInvitationTemplate({
   photoAssignments,
   coverUrl,
   onEditPhoto,
+  onEnvelopeOpened,
   templateKey,
   designKey,
   personalGuest,
@@ -130,6 +131,8 @@ export default function UniversalInvitationTemplate({
   photoAssignments?: PhotoAssignments;
   coverUrl?: string;
   onEditPhoto?: (slot: PhotoSlot) => void;
+  /** Optional Studio-only callback; fires after the envelope has finished opening. */
+  onEnvelopeOpened?: () => void;
   templateKey?: string;
   designKey?: string;
 }) {
@@ -202,10 +205,13 @@ export default function UniversalInvitationTemplate({
 
   useEffect(() => {
     if (!opening) return;
-    const timer = window.setTimeout(() => { setOpened(true); setOpening(false); },
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1350);
+    const timer = window.setTimeout(() => {
+      setOpened(true);
+      setOpening(false);
+      onEnvelopeOpened?.();
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1350);
     return () => window.clearTimeout(timer);
-  }, [opening]);
+  }, [opening, onEnvelopeOpened]);
   useEffect(() => {
     if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
     if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -217,7 +223,12 @@ export default function UniversalInvitationTemplate({
   }, [key, opened, sections.envelope, media.gallery.length]);
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
-    if (key === "zen-atelier") setOpening(true); else setOpened(true);
+    if (key === "zen-atelier") {
+      setOpening(true);
+    } else {
+      setOpened(true);
+      onEnvelopeOpened?.();
+    }
   };
 
   const changePhoto = (slot: PhotoSlot, label: string) =>
