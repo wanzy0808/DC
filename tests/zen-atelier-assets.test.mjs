@@ -84,3 +84,13 @@ test("Zen envelope honors Studio palette and font tokens without locking its pap
   assert.match(studio, /<ColorPanel selected=\{design\.palette\} onSelect=\{\(value\) => change\(\{ palette: value \}\)\}/);
   assert.match(studio, /<FontPanel selected=\{design\.font\} onSelect=\{\(value\) => change\(\{ font: value \}\)\}/);
 });
+
+test("Zen artwork is a feature component with preserved lazy loading", () => {
+  const renderer = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  assert.equal(existsSync(repoFile("assets/templates/zen-atelier/ZenArtwork.tsx")), false);
+  assert.ok(existsSync(repoFile("components/PublicInvitation/ZenAtelierArtwork.tsx")));
+  assert.match(scene, /from "@\/components\/PublicInvitation\/ZenAtelierArtwork"/);
+  assert.match(renderer, /dynamic\(\(\) => import\("@\/components\/PublicInvitation\/ZenAtelierArtwork"\)/);
+  assert.match(artwork, /export function ZenSectionArtwork\(/);
+  assert.match(artwork, /export function ZenMemoryArtwork\(/);
+});
