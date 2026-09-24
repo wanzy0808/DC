@@ -48,14 +48,9 @@ export default function TemplateDesignPage() {
         designer: "Not yet available",
         view: "View invitation",
         viewImage: "View design",
-        preview: "Preview · demo data",
         close: "Close preview",
         toggle: "Try showing or hiding invitation sections",
-        toggleNote: "Toggles are for preview only. Changes are not saved.",
-        designerNote: "This designer package is an image preview and cannot yet be used in Invitation Studio.",
         start: "Create an invitation",
-        startNote: "Sign in and create an event first, then choose this design in Studio.",
-        designerPreview: "Designer image preview. Interactive invitation integration is not available yet.",
         contentLabel: "Template gallery",
       }
     : {
@@ -76,14 +71,9 @@ export default function TemplateDesignPage() {
         designer: "Belum Tersedia",
         view: "Lihat undangan",
         viewImage: "Lihat desain",
-        preview: "Pratinjau · data contoh",
         close: "Tutup pratinjau",
         toggle: "Coba tampilkan atau sembunyikan bagian undangan",
-        toggleNote: "Toggle hanya untuk mencoba preview. Perubahan tidak disimpan.",
-        designerNote: "Desain designer ini masih berupa paket preview; belum dapat digunakan dalam Invitation Studio.",
         start: "Buat undangan",
-        startNote: "Login dan buat acara terlebih dahulu, lalu pilih desain ini di Studio.",
-        designerPreview: "Pratinjau gambar dari designer. Belum terintegrasi menjadi template interaktif.",
         contentLabel: "Koleksi template undangan",
       };
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
@@ -339,7 +329,7 @@ export default function TemplateDesignPage() {
                 {selected.ready ? (
                   <TemplateCanvas key={selected.key} templateKey={selected.key} sections={sections} />
                 ) : (
-                  <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /><p className="px-4 py-5 text-center text-xs leading-6 text-[#765460]">{copy.designerPreview}</p></div>
+                  <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /></div>
                 )}
               </div>
             </div>
