@@ -11,10 +11,11 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 type Asset = { src: string; name: string; folder: string };
 
 export default function AssetPanel({
-  layers, selectedId, onAdd, onSelect, onUpdate, onRemove, onReorder,
+  layers, selectedId, templateKey, onAdd, onSelect, onUpdate, onRemove, onReorder,
 }: {
   layers: InvitationAssetLayer[];
   selectedId: string | null;
+  templateKey: string;
   onAdd: (src: string) => void;
   onSelect: (id: string) => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
@@ -25,6 +26,7 @@ export default function AssetPanel({
   const en = locale === "en";
   const [assets, setAssets] = useState<Asset[]>([]);
   const [search, setSearch] = useState("");
+  const [visibleCount, setVisibleCount] = useState(40);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [limited, setLimited] = useState(false);
@@ -43,9 +45,12 @@ export default function AssetPanel({
       .finally(() => { if (!controller.signal.aborted) setLoading(false); });
     return () => controller.abort();
   }, []);
-  const filtered = useMemo(() => assets.filter((asset) =>
-    `${asset.name} ${asset.folder}`.toLocaleLowerCase("id").includes(search.trim().toLocaleLowerCase("id")),
-  ), [assets, search]);
+  const filtered = useMemo(() => {
+    const term = search.trim().toLocaleLowerCase("id");
+    const theme = templateKey.replace(/[-_ ]/g, "").toLocaleLowerCase("id");
+    return assets.filter((asset) => `${asset.name} ${asset.folder}`.toLocaleLowerCase("id").includes(term))
+      .sort((a, b) => Number(b.folder.replace(/[-_ ]/g, "").toLocaleLowerCase("id").includes(theme)) - Number(a.folder.replace(/[-_ ]/g, "").toLocaleLowerCase("id").includes(theme)));
+  }, [assets, search, templateKey]);
   const selected = layers.find((layer) => layer.id === selectedId);
   const selectedIndex = layers.findIndex((layer) => layer.id === selectedId);
   const assetName = (src: string) => {
@@ -95,13 +100,13 @@ export default function AssetPanel({
       </div>
       <div className="space-y-3">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-primary"><ImagePlus size={17} /> {en ? "Template images" : "Gambar Template"}</h3>
-        <div className="relative"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-primary" /><Input className="pl-10" type="search" value={search} onChange={(event) => setSearch(event.target.value)} placeholder={en ? "Search images or folders…" : "Cari gambar atau folder…"} aria-label={en ? "Search template images" : "Cari gambar template"} /></div>
+        <div className="relative"><Search className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-primary" /><Input className="pl-10" type="search" value={search} onChange={(event) => { setSearch(event.target.value); setVisibleCount(40); }} placeholder={en ? "Search images or folders…" : "Cari gambar atau folder…"} aria-label={en ? "Search template images" : "Cari gambar template"} /></div>
         {loading && <p className="text-sm text-muted-foreground">{en ? "Loading images…" : "Memuat gambar…"}</p>}
         {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
         {!loading && !error && filtered.length === 0 && <p className="text-sm text-muted-foreground">{en ? "No images found." : "Gambar tidak ditemukan."}</p>}
         {limited && <p className="text-xs text-muted-foreground">{en ? "Showing the first 500 images; use search for this list." : "Menampilkan 500 gambar pertama dari folder publik."}</p>}
         <div className="grid grid-cols-2 gap-2">
-          {filtered.map((asset) => (
+          {filtered.slice(0, visibleCount).map((asset) => (
             <button key={asset.src} type="button" disabled={layers.length >= MAX_ASSET_LAYERS}
               title={asset.folder + " / " + asset.name}
               onClick={() => onAdd(asset.src)}
@@ -114,6 +119,7 @@ export default function AssetPanel({
             </button>
           ))}
         </div>
+        {visibleCount < filtered.length && <Button type="button" size="sm" className="w-full" onClick={() => setVisibleCount((count) => count + 40)}>{en ? "Show more" : "Tampilkan lagi"} ({filtered.length - visibleCount})</Button>}
       </div>
     </div>
   );
