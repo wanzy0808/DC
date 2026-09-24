@@ -52,9 +52,21 @@ const catalogCoverSections: InvitationSections = Object.fromEntries(
 ) as InvitationSections;
 
 /** Lazily render the actual Studio canvas for each visible card (not a stock-image mockup). */
-export function TemplateCardCanvas({ templateKey, phone = false }: { templateKey: string; phone?: boolean }) {
+export function TemplateCardCanvas({ templateKey, phone = false, studio = false }: { templateKey: string; phone?: boolean; studio?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [studioWidth, setStudioWidth] = useState(240);
+
+  useEffect(() => {
+    if (!studio || !root.current) return;
+    const element = root.current;
+    const resize = () => setStudioWidth(element.getBoundingClientRect().width);
+    resize();
+    if (typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(resize);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [studio]);
 
   useEffect(() => {
     const element = root.current;
@@ -79,14 +91,14 @@ export function TemplateCardCanvas({ templateKey, phone = false }: { templateKey
   return (
     <div
       ref={root}
-      className={phone ? "relative h-full w-full overflow-hidden bg-background" : "relative h-[340px] w-full overflow-hidden bg-background"}
+      className={studio ? "relative aspect-[9/19.5] w-full overflow-hidden bg-background" : phone ? "relative h-full w-full overflow-hidden bg-background" : "relative h-[340px] w-full overflow-hidden bg-background"}
       aria-hidden="true"
       inert
     >
       {visible ? (
         <div
-          className={phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-90px] w-[390px]"}
-          style={{ transform: phone ? "translateX(-50%) scale(0.55)" : "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
+          className={studio || phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-90px] w-[390px]"}
+          style={{ transform: studio ? `translateX(-50%) scale(${studioWidth / 390})` : phone ? "translateX(-50%) scale(0.55)" : "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
         >
           <TemplateCanvas templateKey={templateKey} sections={catalogCoverSections} />
         </div>
