@@ -5,6 +5,7 @@ import { displayTitleCase } from "@/lib/text/display-title-case";
 import { useEffect, useRef, useState } from "react";
 import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
+import GuestWishes from "@/components/PublicInvitation/GuestWishes";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import OurStorySection from "@/components/PublicInvitation/OurStorySection";
@@ -100,7 +101,7 @@ function RosePhoto({ url, alt, className, focus = "center" }: { url?: string; al
 /**
  * One shared presentation template; invitation/event/asset data stays per invitation.
  * Preview uses the same section visibility as the public renderer.
- * Wishes remains an explicit non-submitting placeholder until the shared Wishes API exists.
+ * Shared GuestWishes reads/writes only on a published invitation; previews never submit.
  */
 export default function RomanticRoseTemplate({
   invitation,
@@ -308,7 +309,7 @@ export default function RomanticRoseTemplate({
           {sections.wishes && (
             <section data-invitation-section="wishes" className="bg-[#fffaf8] px-7 py-20 text-center">
               <RoseHeading eyebrow="A little note of love">Ucapan & Doa</RoseHeading>
-              <p className="mx-auto max-w-sm text-sm leading-7 text-[#765460]">Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia.</p>
+              <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} />
             </section>
           )}
 
