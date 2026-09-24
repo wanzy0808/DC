@@ -127,7 +127,8 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(editor, /<TextObjectPanel layers=\{design\.layers\}/);
   assert.match(editor, /onUpdateAssetLayer=\{updateAssetLayer\}/);
   assert.match(editor, /section: section\.dataset\.invitationSection as StudioObjectSection/);
-  assert.match(editor, /setCanvasStage\(patch\.section === "envelope"/);
+  assert.match(editor, /showDesignSection\(patch\.section\)/);
+  assert.match(editor, /if \(section === "envelope"\) setPreviewVersion\(/);
   assert.match(textPanel, /onAdd\(value, selectedSection\)/);
   assert.match(textPanel, /maxLength=\{180\}/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
