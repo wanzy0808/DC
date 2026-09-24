@@ -340,7 +340,12 @@ export default function UniversalInvitationTemplate({
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
           />)}
 
-          {section("greeting", <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
+          {section("greeting", key === "pencil-reverie" ? (
+            <div className="pr-greeting-copy">
+              <p className="whitespace-pre-line">{editableCopy.greeting}</p>
+              <p className="whitespace-pre-line">{editableCopy.attendanceRequest}</p>
+            </div>
+          ) : <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
 
           {section("identity", key === "pencil-reverie" ? (
             <div className="pr-identity-story">
@@ -499,6 +504,7 @@ export default function UniversalInvitationTemplate({
             <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
               {key === "zen-atelier" ? <p className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8">{editableCopy.closing}</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p className="whitespace-pre-line">{editableCopy.closing}</p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
+              {key === "pencil-reverie" && <p className="pr-prayer-copy whitespace-pre-line">{editableCopy.prayerWish}</p>}
               {key === "zen-atelier" && couple && <p className="zen-quote whitespace-pre-line">{editableCopy.zenQuote}</p>}
             </div>
           ), 11)}
