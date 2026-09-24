@@ -59,6 +59,8 @@ test("pending template survives login and event creation without an automatic da
   assert.match(events, /onSaved\(creatingNew \? \{ id:/);
   assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
   assert.match(designer, /clearTemplateSelection\(\)/);
+  assert.match(designer, /location\.searchParams\.delete\("template"\)/);
+  assert.match(designer, /location\.searchParams\.set\("template", templateKey\)/);
 });
 
 test("Studio template panel supports searching, photo filters, sorting and incremental cards", () => {
