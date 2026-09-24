@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Eye,
   FilePenLine,
   ImagePlus,
   LayoutTemplate,
@@ -18,7 +17,6 @@ import {
   PanelLeftOpen,
   Smartphone,
 } from "lucide-react";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
 import { Button } from "@/components/ui/button";
@@ -43,6 +41,8 @@ import {
 import { InvitationPreview } from "@/components/InvitationStudio/InvitationPreview";
 import { getInvitationDefaultMusic } from "@/lib/templates/music";
 import { clearTemplateSelection, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
+import { invitationTitleCase } from "@/lib/events/parents";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import {
   invitationDecorOptions,
   invitationTemplatePresets,
@@ -58,7 +58,8 @@ import type {
   InvitationDesignState,
 } from "@/components/InvitationStudio/designer-types";
 
-export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: (dirty: boolean) => void }) {
+export default function InvitationDesigner() {
+  const { locale } = useLanguage();
   const catalog = useTemplateCatalog();
   const readyTemplates = catalog.filter((item) => item.ready);
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
@@ -71,7 +72,6 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   // A click on the actual envelope advances the Studio stage selector, too.
   const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
   const [savedState, setSavedState] = useState("");
-  const [preview, setPreview] = useState(false);
   const audioMutation = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -152,7 +152,6 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   const identity = getInvitationEventIdentity(invitation);
   const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
   const dirty = Boolean(invitation && savedState !== currentState);
-  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
   useEffect(() => {
     if (!dirty) return;
     const preventExit = (event: BeforeUnloadEvent) => { event.preventDefault(); };
@@ -355,7 +354,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
         <div className="min-w-0 flex-1">
-          <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitation?.title || "Studio"}</h1>
+          <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitationTitleCase(invitation?.title || "Studio")}</h1>
           <p className="mt-1 text-xs text-muted-foreground">{dirty ? "Perubahan belum disimpan" : invitation ? (invitation.templateKey ? "Desain tersimpan" : "Belum ada desain tersimpan") : notice}</p>
         </div>
         <div className="flex flex-wrap items-center gap-1.5">
@@ -367,10 +366,6 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
           </Button>
           <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label="Ulangi desain" title="Ulangi desain">
             <Redo2 className="h-4 w-4" />
-          </Button>
-          <Button onClick={() => setPreview(true)} disabled={!invitation} size="sm">
-            <Eye className="h-4 w-4" />
-            Pratinjau
           </Button>
           <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
             <Save className="h-4 w-4" />
@@ -458,7 +453,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
           </div>
           <div className="dc-studio-canvas-scroll">
           <div className="dc-studio-preview-surface">
-            {!preview && <div key={`${design.template}-${design.sections.envelope !== false}-${canvasStage}-${previewVersion}`}>
+            <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
 
             <InvitationPreview
               invitation={invitation}
@@ -475,25 +470,13 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
               onEditPhoto={editPhotoFromCanvas}
               onEnvelopeOpened={handleCanvasEnvelopeOpened}
             />
-            </div>}
+            </div>
           </div>
           </div>
         </div>
       </div>
 
       <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>
-      <Dialog open={preview} onOpenChange={setPreview}>
-        <DialogContent data-watermark={invitation?.accessPaid === false} className="dc-studio-preview-dialog max-h-[94dvh] overflow-y-auto p-3 pt-14" overlayClassName="z-[100]">
-          <DialogTitle className="sr-only">Pratinjau Undangan</DialogTitle>
-          <div className="dc-studio-preview-surface">
-            <InvitationPreview
-              invitation={invitation} templateKey={design.template} palette={palette} fontPair={fontPair}
-              decorUrl={design.decor} eventTag={eventTag} dressCode={dressCode} sections={design.sections}
-              photoAssignments={design.photos} designKey={designKey} musicUrl={musicUrl}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }
