@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import {
   Check,
   Search,
@@ -44,21 +45,31 @@ export function DesignerTool({
   );
 }
 
-function Heading({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+const studioHeadingEnglish: Record<string, string> = {
+  "Pilih Tema": "Choose a Theme",
+  "Lihat desainnya langsung di sebelah kanan.": " ",
+  "Bagian & Fitur": "Sections & Features",
+  "Sembunyikan bagian tanpa menghapus isinya.": "Hide a section without deleting its content.",
+  "Palet Warna": "Color Palette",
+  "Pilih kombinasi warna untuk tema ini.": "Choose this theme's color combination.",
+  "Pasangan Font": "Font Pair",
+  "Nama huruf ditampilkan dengan font aslinya.": "Font names are displayed in their actual typefaces.",
+  "Isi Undangan": "Invitation Content",
+  "Identitas dan jadwal mengikuti data acara.": "Names and schedules use your event details.",
+  "Musik": "Music",
+  "Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya.": "Up to two files, 3 MB each.",
+};
+
+function Heading({ title, description }: { title: string; description: string }) {
+  const { locale } = useLanguage();
+  const shownTitle = locale === "en" ? studioHeadingEnglish[title] || title : title;
+  const shownDescription = locale === "en" ? studioHeadingEnglish[description] ?? description : description;
   return (
     <div>
       <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
-        {title}
+        {shownTitle}
       </h2>
-      <p className="mt-1 text-sm leading-6 text-muted-foreground">
-        {description}
-      </p>
+      {shownDescription.trim() && <p className="mt-1 text-sm leading-6 text-foreground/75">{shownDescription}</p>}
     </div>
   );
 }
@@ -72,6 +83,8 @@ export function TemplatePanel({
   onSelect: (key: string) => void;
   templates: CatalogTemplate[];
 }) {
+  const { locale } = useLanguage();
+  const en = locale === "en";
   const [search, setSearch] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
   const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
@@ -96,12 +109,12 @@ export function TemplatePanel({
   return (
     <div>
       <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">Pilih Tema</h2>
-      {activeName && <p className="mt-2 text-sm font-medium text-foreground">Dipilih: {activeName}</p>}
+      {activeName && <p className="mt-2 text-sm font-medium text-foreground">{en ? "Selected" : "Dipilih"}: {activeName}</p>}
       <div className="mt-4 space-y-3">
         <div className="relative">
           <button
             type="button"
-            aria-label="Cari template"
+            aria-label={en ? "Search templates" : "Cari template"}
             onClick={() => searchRef.current?.focus()}
             className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
           >
@@ -110,18 +123,18 @@ export function TemplatePanel({
           <Input
             ref={searchRef}
             type="search"
-            aria-label="Cari nama atau tema template"
-            placeholder="Cari nama atau tema…"
+            aria-label={en ? "Search by name or theme" : "Cari nama atau tema template"}
+            placeholder={en ? "Search name or theme…" : "Cari nama atau tema…"}
             className="pl-11"
             value={search}
             onChange={(event) => { setSearch(event.target.value); setLimit(18); }}
           />
         </div>
-        <div role="group" aria-label="Filter foto template" className="flex flex-wrap gap-2">
+        <div role="group" aria-label={en ? "Filter templates by photos" : "Filter foto template"} className="flex flex-wrap gap-2">
           {([
-            ["all", "Semua"],
-            ["photo", "Dengan foto"],
-            ["no-photo", "Tanpa foto"],
+            ["all", en ? "All" : "Semua"],
+            ["photo", en ? "With Photos" : "Dengan foto"],
+            ["no-photo", en ? "Without Photos" : "Tanpa foto"],
           ] as const).map(([key, label]) => (
             <button
               key={key}
@@ -133,16 +146,16 @@ export function TemplatePanel({
           ))}
         </div>
         <div className="flex items-center justify-between gap-3">
-          <span aria-live="polite" className="text-xs text-foreground">{filtered.length} template</span>
+          <span aria-live="polite" className="text-xs text-foreground">{filtered.length} {en ? "templates" : "template"}</span>
           <select
-            aria-label="Urutkan template"
+            aria-label={en ? "Sort templates" : "Urutkan template"}
             value={sort}
             onChange={(event) => { setSort(event.target.value as "selected" | "az" | "za"); setLimit(18); }}
             className="min-h-10 min-w-0 max-w-[170px] rounded-full border border-primary/45 bg-background px-3 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-primary"
           >
-            <option value="selected">Pilihan aktif</option>
-            <option value="az">Nama A–Z</option>
-            <option value="za">Nama Z–A</option>
+            <option value="selected">{en ? "Selected first" : "Pilihan aktif"}</option>
+            <option value="az">{en ? "Name A–Z" : "Nama A–Z"}</option>
+            <option value="za">{en ? "Name Z–A" : "Nama Z–A"}</option>
           </select>
         </div>
       </div>
@@ -164,7 +177,7 @@ export function TemplatePanel({
               ) : (
                 <img src={item.previewImage} alt="" loading="lazy" className="h-36 w-full object-cover" />
               )}
-              {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? "Dengan foto" : "Tanpa foto"}</span>}
+              {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>}
               {selected === item.key && (
                 <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-white dark:text-black">
                   <Check className="h-4 w-4" />
@@ -175,23 +188,23 @@ export function TemplatePanel({
               <span className="block font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">
                 {item.name}
               </span>
-              {!item.ready && <span className="mt-2 block text-[11px] text-primary">Belum tersedia</span>}
+              {!item.ready && <span className="mt-2 block text-[11px] text-primary">{en ? "Not Available" : "Belum tersedia"}</span>}
             </span>
             <button
               type="button"
               onClick={() => onSelect(item.key)}
               disabled={!item.ready}
-              aria-label={item.ready ? item.name : `${item.name} belum tersedia`}
+              aria-label={item.ready ? item.name : `${item.name} ${en ? "unavailable" : "belum tersedia"}`}
               aria-pressed={selected === item.key}
               className="absolute inset-0 z-10 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-65"
             />
           </div>
         ))}
       </div>
-      {filtered.length === 0 && <p role="status" className="py-5 text-sm text-foreground">Template tidak ditemukan.</p>}
+      {filtered.length === 0 && <p role="status" className="py-5 text-sm text-foreground">{en ? "No templates found." : "Template tidak ditemukan."}</p>}
       {limit < filtered.length && (
         <Button size="sm" className="mt-4 w-full" type="button" onClick={() => setLimit((count) => count + 18)}>
-          Tampilkan Lagi
+          {en ? "Show More" : "Tampilkan Lagi"}
         </Button>
       )}
     </div>
