@@ -447,8 +447,8 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-8 text-center">
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[var(--inv-accent)]">Created with DC Organizer</p>
+          {sections.footer !== false && <footer data-invitation-section="footer" className="flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
+            <span aria-hidden="true" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
           </footer>}
         </div>
       )}
