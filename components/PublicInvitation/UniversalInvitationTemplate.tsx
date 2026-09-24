@@ -12,6 +12,7 @@ import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
 import { readableInk, invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
+import OurStorySection from "@/components/PublicInvitation/OurStorySection";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
@@ -384,6 +385,8 @@ export default function UniversalInvitationTemplate({
               )}
             </div>
           ), 2)}
+
+          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} />}
 
           {section("event", key === "pencil-reverie" ? (
             <div className="pr-event-story">
