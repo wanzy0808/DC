@@ -163,11 +163,11 @@ export function TemplatePanel({
           </div>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="mt-5 grid grid-cols-1 gap-5">
         {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
-            className={`relative overflow-hidden rounded-xl border text-left transition ${
+            className={`group relative overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
               selected === item.key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border hover:border-primary/40"
@@ -175,24 +175,21 @@ export function TemplatePanel({
           >
             <span className="relative block">
               {item.ready ? (
-                <span className="block h-36 overflow-hidden">
-                  <TemplateCardCanvas templateKey={item.key} />
+                <span className="block w-full overflow-hidden bg-primary/5">
+                  <TemplateCardCanvas templateKey={item.key} studio />
                 </span>
               ) : (
-                <img src={item.previewImage} alt="" loading="lazy" className="h-36 w-full object-cover" />
+                <img src={item.previewImage} alt="" loading="lazy" className="aspect-[9/19.5] w-full object-contain bg-primary/5" />
               )}
-              {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>}
               {selected === item.key && (
                 <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-white dark:text-black">
                   <Check className="h-4 w-4" />
                 </span>
               )}
             </span>
-            <span className="block bg-background p-3">
-              <span className="block font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">
-                {item.name}
-              </span>
-              {!item.ready && <span className="mt-2 block text-[11px] text-primary">{en ? "Not Available" : "Belum tersedia"}</span>}
+            <span className="flex min-h-16 flex-wrap items-center justify-between gap-2 border-t border-primary/20 bg-background px-3 py-3">
+              <span className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold text-foreground">{item.name}</span>
+              <span className="text-[11px] text-primary">{!item.ready ? (en ? "Not Available" : "Belum tersedia") : item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>
             </span>
             <button
               type="button"
