@@ -29,9 +29,9 @@ test("Studio uses display-only event title capitalization and one live canvas wi
   assert.ok(designer.includes('key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}'));
 });
 
-test("Studio has wider-spaced side tools and a smaller invitation canvas", () => {
-  assert.match(styles, /grid-template-columns: 98px 300px minmax\(0, 1fr\)/);
-  assert.match(styles, /\.dc-studio-tool \{[^}]*gap: 12px;/);
+test("Studio has a wider inspector, compact side tools and a smaller invitation canvas", () => {
+  assert.match(styles, /grid-template-columns: 98px 360px minmax\(0, 1fr\)/);
+  assert.match(styles, /\.dc-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
   assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
 });
 
@@ -41,4 +41,15 @@ test("Studio ID/EN switch updates its navigation, template search and photo cont
   assert.match(panels, /aria-label=\{en \? "Search templates" : "Cari template"\}/);
   assert.match(panels, /sectionNamesEnglish/);
   assert.match(photos, /const en = locale === "en"/);
+});
+
+test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
+  assert.match(panels, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
+  assert.doesNotMatch(panels, /photoFilter === key \? "bg-primary text-black"/);
+  assert.match(designer, /canvasStage === "envelope" \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
+  assert.match(designer, /canvasStage === "cover" \|\| design\.sections\.envelope === false \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
+  assert.match(panels, /w-\[204px\] max-w-\[68%\] shrink-0/);
+  assert.match(panels, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
+  assert.match(panels, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
+  assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
 });
