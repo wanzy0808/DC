@@ -343,6 +343,8 @@ const narrativeCopyLabels: Record<EditableInvitationCopyField, { id: string; en:
   closing: { id: "Ucapan Penutup", en: "Closing Message" },
   ourStory: { id: "Our Story / Tentang Kami", en: "Our Story / About Us" },
   zenQuote: { id: "Kutipan Penutup", en: "Closing Quote" },
+  attendanceRequest: { id: "Permohonan Kehadiran", en: "Invitation Message" },
+  prayerWish: { id: "Doa / Harapan", en: "Prayer / Wish" },
 };
 
 /** Only words rendered as editable narrative slots in the selected theme.
@@ -373,7 +375,9 @@ export function ContentPanel({
       <div className="mt-5 space-y-5">
         {fields.map((field) => (
           <label key={field} className="block space-y-2 text-sm text-foreground">
-            <span className="block font-medium">{narrativeCopyLabels[field][en ? "en" : "id"]}</span>
+            <span className="block font-medium">{field === "greeting" && templateKey === "pencil-reverie"
+              ? (en ? "Greeting / Introduction" : "Salam / Pengantar")
+              : narrativeCopyLabels[field][en ? "en" : "id"]}</span>
             <textarea
               value={copy[field] ?? defaults[field] ?? ""}
               onChange={(event) => onChange(field, event.target.value)}
