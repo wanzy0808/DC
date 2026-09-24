@@ -234,7 +234,7 @@ export function SectionsPanel({
       <div className="mt-4 divide-y divide-primary/15">
         {invitationSectionItems.map((item) => (
           <label key={item.key} className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-3">
-            <span className="text-sm">{locale === "en" ? sectionNamesEnglish[item.key] : item.title}{item.key === "wishes" && <span className="mt-1 block text-xs text-foreground/75">{locale === "en" ? "Sending wishes is not available yet." : "Pengiriman ucapan belum tersedia."}</span>}</span>
+            <span className="text-sm">{locale === "en" ? sectionNamesEnglish[item.key] : item.title}</span>
             <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
               <input type="checkbox" role="switch" className="peer sr-only" checked={sections[item.key] !== false}
                 onChange={(event) => onChange(item.key, event.target.checked)} />
