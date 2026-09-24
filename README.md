@@ -179,24 +179,16 @@ Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible b
 
 ## Repository Structure
 
-The repository uses a feature-first component structure so files remain easy to locate as the product grows.
+- `app/` — Next.js routes, layouts and server API endpoints; retain existing public URLs and event-scoped authorization.
+- `components/Landing/Pintu/`, `components/Layout/`, `components/Brand/`, `components/Marketing/` — landing portals, public shell, shared brand and marketing UI. The production four-door landing uses `components/Landing/Pintu/SimpleDoorLab.tsx`; `/jiplak` and `/pintu-lab` remain experimental routes, not production replacements.
+- `components/Dashboard/` — customer event, invitation, RSVP, personal invitation, WA Blast, seating and other operational workspaces. `DashboardPrimitives.tsx` owns shared large-panel UI; `DashboardSidebar.tsx` and `dashboard-navigation.ts` own navigation. `EventPanel.tsx` uses adjacent `EventFields.tsx`, `event-panel-helpers.ts` and `event-panel-types.ts`; `SeatingChart.tsx` uses `seating-chart-geometry.ts` and `seating-chart-types.ts`.
+- `components/InvitationStudio/` — live event-scoped Studio. `InvitationDesigner.tsx` owns editing state and save operations; `TemplatePanel.tsx`, `AssetPanel.tsx`, `AssetLayerInspector.tsx`, `PhotoPanel.tsx`, `DesignerPanels.tsx` and `InvitationPreview.tsx` handle their existing presentation; `designer-*.ts` define shared state/types/config. `RsvpForm.tsx` is used by public invitation templates; customer Guest Management resides in `components/Dashboard/`, **not** the removed `components/InvitationStudio/GuestManagement.tsx`.
+- `components/PublicInvitation/` — real template scenes, shared RSVP/Wishes/music/asset rendering; `UniversalInvitationTemplate.tsx` and `RomanticRoseTemplate.tsx` retain their visual identity while sharing `lib/invitations/countdown.ts`.
+- `components/Usher/`, `components/Payments/` — operational check-in and package/checkout UI.
+- `data/services/`, `data/templates/preview-invitation.ts` — static marketing service content and **demo-only** invitation fixture. Active template discovery uses `lib/templates/catalog.ts` and `lib/templates/use-template-catalog.ts`; do not restore deleted `data/templates/showcase.ts` or parallel template lists.
+- `lib/` — reusable feature/domain code, authentication, guest identity, invitation parsing, template registry, security and API helpers; `prisma/` — database schema and **retained** ordered migrations; `public/` — browser-accessible media whose old URLs may still be saved by customers; `tests/` — source and domain regression tests; `.github/workflows/` — build and orphan-reference audit.
 
-- `app/` — routes, layouts, and API endpoints; route names follow public/internal URL contracts.
-- `components/DigitalInvitation/` — Digital Invitation marketing/product UI.
-- `components/EventPlanner/` — Event Planner public UI.
-- `components/Guestbook/` — Guestbook public UI.
-- `components/Landing/Pintu/` — landing Pintu navigation components.
-- `components/Dashboard/` — customer dashboard workspaces and shared dashboard primitives. Event editing uses `EventPanel.tsx` for orchestration/API mutations, with adjacent `event-panel-types.ts`, `event-panel-helpers.ts`, and `EventFields.tsx` for contracts, pure helpers, and field controls. Seating remains a cohesive `SeatingChart.tsx` editor with adjacent `seating-chart-types.ts` and `seating-chart-geometry.ts` for contracts and pure canvas geometry. Personal Invitation uses `PersonalInvitationPanel.tsx` for event-scoped orchestration, `PersonalInvitationPanels.tsx` for create/list presentation, and `personal-invitation-types.ts` / `personal-invitation-helpers.ts` for contracts and pure helpers. WA Blast uses `WhatsAppBlastPanel.tsx` for selection, quota and mutations, `WaBlastPanels.tsx` for recipient form/queue display, and `wa-blast-types.ts` for contracts.
-- `components/Usher/` — day-of-event guest check-in feature. `UsherWorkspace.tsx` owns orchestration; `UsherPanels.tsx`, `config.ts`, `types.ts`, and `utils.ts` hold presentation, navigation config, domain types, and QR helpers.
-- `components/InvitationStudio/` — active invitation editor/studio components. `InvitationDesigner.tsx` owns orchestration; `DesignerPanels.tsx` contains controls; `InvitationPreview.tsx` renders the canvas; adjacent `designer-*` modules hold types/config/state helpers. Guest management follows the same pattern with `GuestManagement.tsx` as orchestration and adjacent `GuestManagementPanels.tsx`, `guest-management-types.ts`, and `guest-management-client.ts`. RSVP follows the same boundary with `RsvpForm.tsx`, `RsvpPanels.tsx`, `rsvp-helpers.ts`, and `rsvp-types.ts`.
-- `components/Payments/` — checkout/package-selection UI.
-- `components/Layout/`, `Brand/`, `Theme/`, `I18n/`, `Marketing/`, `ui/` — shared/global presentation concerns. Theme state lives in `ThemeProvider.tsx`, while `ThemeToggle.tsx` is the canonical control.
-- `data/services/` — static service-facing content/catalog copy only.
-- `data/templates/` — static template showcase/presentation data used by template browsing UI.
-- `lib/` — domain logic, server helpers, access rules, parsers, and infrastructure utilities. Focused helpers are grouped by domain, including `lib/auth/`, `lib/invitations/`, `lib/security/`, `lib/usher/`, and `lib/notifications/`. Conventional high-fanout entry points `lib/auth.ts` and `lib/prisma.ts` remain at the root.
-- `prisma/` — schema and migrations.
-
-Naming rule: use semantic names instead of temporary version suffixes. Once a replacement is canonical, keep one active component name such as `InvitationDesigner.tsx` rather than maintaining `V2`/`V3` files.
+Naming rule: prefer existing semantic modules. Refactor only when a genuine boundary improves maintenance; do not create `V2`/`V3` or new database models for existing event/guest information.
 
 ## Getting Started
 
@@ -224,62 +216,18 @@ pnpm db:deploy
 
 ## Documentation Governance
 
-- `prd.md` is the single product-requirement source of truth and contains consolidated implementation history in Appendix A.
-- `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
-- `template.md` and `studio.md` are scoped production/implementation guides; they do not introduce competing product requirements. See `prd.md` §21 for document hierarchy and the staged documentation audit.
-- Legacy `prd-tambahan.md`, `prd-landing.md`, `prdpaging.md`, and `pintu3d.md` were retired from the active branch after consolidation; their full pre-deletion Git permalinks and status are recorded in `prd.md` Appendix A. Do not recreate parallel rulebooks. Historical milestones below are descriptive snapshots, not a second rule source.
+- `prd.md` §§1–21 is the sole active product requirement source; its Appendix A records historical changes and dated validation, **not** new implementation commands.
+- `AGENTS.md` governs engineering and cross-feature constraints; `template.md` and `studio.md` are scoped production/implementation guides; `checklist.md` tracks unfinished work and launch QA. See `prd.md` §21 for precedence.
+- Legacy `prd-tambahan.md`, `prd-landing.md`, `prdpaging.md` and `pintu3d.md` are intentionally retired. Their archive references are preserved in `prd.md` Appendix A; do not recreate them.
+- This README is for project orientation and operating instructions, **not another dated PRD or changelog**. Past landing, dashboard, template and Studio implementation notes have been consolidated into the canonical PRD and Git history. For changes not yet verified in a browser or against the target database, consult `checklist.md`; a successful build is not production sign-off.
 
-## Left-side mini-door navigation
+## Active Feature Pointers
 
-The public marketing routes `/`, `/event-planner`, `/d-invitation`, `/guestbook`, `/undangan-fisik`, and `/template-design` share `components/Layout/MarketingDoorNavigator.tsx` through `app/layout.tsx`. A compact Rose mini-door at the left edge opens a descriptive, bilingual destination picker. The active page is marked, and Escape, outside click, or the close button dismisses the panel. On small screens it opens above the trigger and its list scrolls independently. Normal marketing route links reuse the existing image-free Rose `PortalTransition`. The widget does not render on Dashboard, Studio, customer invitation pages, or the separate `/jiplak` experiment; it does not alter the primary landing doors.
-
-
-## Guestbook & Printed Invitation framed marketing pages
-
-`/guestbook` and `/undangan-fisik` now share the approved public marketing viewport layout: 90vw Rose frame, embedded Navbar/footer, one floral/rose-petal background, fixed audio/Instagram controls in the compact frame footer, and a scrollable middle panel with a responsive centered content column capped at 1100px. Both reuse `EventPlanner/ScrollReveal` and `DigitalInvitation/MarketingTextReveal` with an inner-scroll root for repeatable section/text entrances; reduced-motion disables the reveal. Guestbook retains interactive feature tabs, package, reviews, and FAQ. Printed invitations retain the illustration, steps, in-panel process/consultation anchors and WhatsApp CTA. The global layout suppresses duplicate chrome/ambient effects on both framed routes. No changes were made to the approved landing Pintu or customer invitation renderer.
-
-
-## Music on every invitation template
-
-All ten render-ready invitation themes use a shared default-song registry in `lib/templates/music.ts`, pointing to MP3 files already present in `public/`. Each event's saved music URL or owned AUDIO upload takes precedence. Shared `components/PublicInvitation/InvitationMusic.tsx` mounts one looped audio element independently of the digital envelope and shows an accessible floating play/pause button after opening. On public invitations, opening the envelope is the user gesture that starts playback where the browser allows it; if playback is blocked, the visitor can tap Play. Gallery cards and Studio previews remain silent until the visitor explicitly plays a song. Opening/closing different previews stops other template tracks, and the marketing soundtrack is paused while invitation preview audio plays. The Music panel in Studio shows the current template's default and previews unsaved custom URLs/uploads. This behavior is shared by the Romantic Rose and Universal renderers; no new database field or extra audio upload is required. The bundled tracks' public/commercial usage rights must be confirmed before production distribution.
-
-
-## Login and registration styling
-
-`/login` uses a centered responsive Rose-outlined form matching the public site in both themes, with shared card/header/label/input/password-toggle/separator/link/submit tokens from `components/Auth/auth-styles.ts`, an accessible show/hide password control, and ID/EN labels through LanguageProvider. The navbar's existing Register dialog deliberately mirrors the same card header, spacing rhythm, Google action, fields, password toggles, CTA and secondary links, while retaining a scrollable mobile-friendly modal and Terms/Privacy consent. The marketing/public burger's Masuk and Daftar actions now open the same root-mounted dialog directly, without leaving the page; selecting Masuk ↔ Daftar switches dialog content without stacking modals. `app/login/page.tsx` preserves old `/login`, `/login?register=1`, protected-route redirect and OAuth-error links by redirecting to `/?auth=login|register&next=...` and letting the shared dialog host open the matching mode. Registration success switches to Login with a verification-email notice. The register dialog is vertically centered by removing the accidental `relative` override on the shared card (which previously beat `DialogContent`'s fixed position); compact desktop spacing and internal `dvh`-bounded scrolling keep the full form reachable. The auth backdrop and popup also use scoped higher layering so they cover the floating marketing mini-door while an auth modal is open; unrelated dialogs keep their existing stacking order. Auth APIs, existing Google route, redirect roles and invitation entitlements are unchanged. `PublicContent` only allows full responsive width for the /login route; marketing chrome and approved landing remain untouched.
-
-
-### Burger visual restored, auth dialogs use landing ambience (22 September 2026)
-
-The burger menu's original layout, icon sequence, item spacing, styles and motion are unchanged. Its item labels/icons now explicitly use Rose `text-primary` in both themes; the old `text-foreground`/`dark:text-foreground` classes were hiding this, and Daftar also inherited conflicting dark text from the shared button base. The Login entry keeps the same styled `Link` markup and intercepts activation to show the root login dialog; Daftar retains the shared `Button` component instead of a native button. The popup/dropdown itself and unrelated pages were not redesigned. The two shared auth dialogs use a **white surface in both Light and Dark modes** with only a very subtle Rose radial glow (not theme-dependent `bg-background/90`), plus a translucent Rose-tinted overlay that leaves the existing landing florals/petals visible behind the modal. Body copy, field inputs, helper text and Google button explicitly retain readable dark text on that white surface in Dark Mode. No second petal/flower background is mounted, and dark mode follows existing theme tokens. `components/Auth/auth-styles.ts` and the two auth dialog components own these surfaces; the core burger container in `Navbar.tsx` remains unchanged.
-
-
-## Public privacy policy and approved UI freeze (22 September 2026)
-
-The existing burger menu and Login/Daftar popup visual baseline is frozen at the owner's request. All burger labels/icons remain Rose without changing layout, behavior, or motion; both auth dialogs remain white with a subtle pink glow, dark readable form text, and existing accessibility in Light/Dark. Legal content changes must never accidentally alter `Navbar`, `BurgerMenuContent`, shared auth styles, or the login dialog.
-
-`app/privacy-policy/page.tsx` serves the owner-provided DC Organizer Privacy Policy at `/privacy-policy` (Indonesian plus English translation via existing locale switch). The previous brand name in the supplied copy was replaced with DC Organizer. The Privacy Policy term in the registration consent is now a genuine link opening a new tab, keeping the form and checkbox state intact; existing standard public footer privacy labels link to the same page without redesigning the footer. The Terms & Conditions label now links to `/terms-and-conditions` in a new tab; both legal links preserve the registration form and checkbox state. Before production, confirm this supplied policy's operational and legal representations—including any automatic technical-data collection, data-processing vendors and their contract terms, non-sale/rental statement, and one-day change notice—match DC Organizer's actual systems and obligations. No legal compliance is implied by publication alone.
-
-
-## Public Terms & Conditions (22 September 2026)
-
-`app/terms-and-conditions/page.tsx` publishes an ID/EN DC Organizer terms draft at `/terms-and-conditions`, following the owner-supplied source document's topical sequence: general terms; definitions; account/use; user content; service fees; availability/warranties; liability; intellectual property; privacy; partner commissions where separately offered; and other provisions. The source document described another company's operations, so this is **not** a blind brand substitution. It deliberately excludes that company's identity/address/email/domain, broad perpetual IP and moral-rights waivers, an unverified exact minimum age, and the unconfirmed 1–3-business-day partner commission withdrawal promise. User-owned media remains theirs, with only the operational rights needed to deliver their configured service; paid packages and optional partner terms refer to the actual relevant offering or agreement. The document requires owner/legal review against actual DC Organizer operations before being used as a final commercial contract.
-
-The pre-existing Terms & Conditions label inside the registration consent now opens the actual route in a new tab, matching Privacy Policy and preserving the form, and the existing public footer terms label now points to the route. These changes do not touch the locked burger/login/register styling, auth endpoints or landing doors; the terms page uses the same standalone legal-page layout as `/privacy-policy` and does not introduce duplicate marketing decoration.
-
-
-## Landing image-loading failure guard (23 September 2026)
-
-The four approved 3D marketing doors still reference their original local image assets: `/eventplanner.png`, `/Idigi.png`, `/guestbook.png`, and `/Ufisik.png`. `SimpleDoorLab.PortalWorld` now handles image-load failures without throwing into the Canvas, keeping the existing plain Rose interior as fallback instead of taking down the landing. It restores the original service picture and fade/zoom behavior whenever the PNG loads successfully. Both `flower.png` renderers in `LandingFloralGlow` use explicit Next/Image dimensions with the same full-container positioning to avoid `fill`-parent sizing warnings. Neither change alters the approved door geometry, ambient animation, burger menu, Login, or Daftar.
-
-If a portal image is still unavailable in a local browser, check `Test-Path .\\public\\eventplanner.png` and open `http://localhost:3000/eventplanner.png` (should return the actual image, not an error or HTML). GitHub `main` already contains the PNG; that does not prove it is present/valid in an unsynced local checkout. A `THREE.Clock` deprecation message is nonfatal and may originate from React Three Fiber internals; it is separate from the image-loading error, and no speculative dependency upgrade is included in this fix.
-
-
-## Three.js Canvas warnings (23 September 2026)
-
-The approved landing `components/Landing/Pintu/SimpleDoorLab.tsx` now sets `shadows={{ type: THREE.PCFShadowMap }}` rather than passing the `shadows` boolean to React Three Fiber. The boolean default in Fiber 9 can still select the removed `PCFSoftShadowMap` constant and emit repeated Three.js warnings on Canvas creation; the explicit supported mode leaves shadows enabled without changing the door mesh, lighting parameters, image selection or Rose navigation. The separate `THREE.Clock` deprecation may be emitted by Fiber's internal Canvas initialization, even if application code only reads its `state.clock.elapsedTime` in a `useFrame` callback. Do not suppress warnings globally or upgrade Three/R3F without testing all approved doors; monitor upstream fixes and validate the absence of the soft-shadow warning in the local GPU browser after sync. Successful Next.js route/API HTTP 200 and CI build do not themselves verify browser warnings or visual fidelity.
-
-
+- Public marketing: `app/page.tsx`, `app/d-invitation/page.tsx`, `components/Landing/Pintu/SimpleDoorLab.tsx`, `components/Layout/`. Preserve the approved four-door landing and image-free Rose entry transition. Current visual specifications are in `prd.md` §15.
+- Dashboard: `app/dashboard/page.tsx`, `components/Dashboard/`. Its current one-mainframe, large-section-panel, white/black with Rose accents and ID/EN rules are in `prd.md` §6. `Dashboard-redesign.md` is an implementation journal, not a competing design spec.
+- Invitation themes and customer editor: `lib/templates/catalog.ts`, `components/PublicInvitation/`, `components/InvitationStudio/`, `template.md`, `studio.md`. The live catalog contains the authoritative ready status, photo capabilities and theme keys. Preview names and images belong only to `data/templates/preview-invitation.ts`, never to customer records.
+- Guests and event data: the existing event-scoped `Guest` model is shared by Personal Invitation, RSVP, seating, WA Blast and Usher. Do not introduce duplicate guest tables. `lib/templates/music.ts` owns built-in songs; `GuestWishes` uses its existing per-event model/API.
+- Deployment: after pulling migrations, apply `pnpm db:deploy` to the **target** PostgreSQL instance before relying on schema-dependent features, then generate the Prisma client as needed. A GitHub build does not migrate your local/production database. Verify login, paid/published invitations, RSVP/Wishes, QR and real media storage separately; unresolved launch checks are in `checklist.md`.
 
 ## Google sign-in setup and diagnostics (23 September 2026)
 
@@ -288,100 +236,3 @@ The existing Google action on both Login and Daftar uses a server-side authoriza
 For local development, use an OAuth Client ID/Client Secret for **Web application** in Google Auth Platform and place these in your private `.env.local` along with `APP_URL="http://localhost:3000"`. In that same Google client, add `http://localhost:3000/api/auth/google/callback` exactly as an Authorized redirect URI. Open the app in the browser as `http://localhost:3000` (not its advertised LAN address `http://192.168.x.x:3000` when APP_URL and redirect registration use localhost), and restart `pnpm dev` after changing server env. Keep credentials out of chat, screenshots, logs, NEXT_PUBLIC_* variables, and git commits. Production must register the exact HTTPS callback for its own public domain. The Google token exchange happens on the server, and a real account/session additionally requires the local PostgreSQL database and schema to be ready.
 
 Troubleshooting: `google_config` indicates that client credentials are unavailable on the server; `redirect_uri_mismatch` is Google's own error when its registered redirect URI does not exactly match the authorization request; `google_state` indicates the short-lived CSRF cookie did not survive or did not match (check same browser/site origin, cookie settings, and elapsed time); `google_denied` means the Google authorization was cancelled; `google_token` indicates token exchange failure (check client ID/secret pairing and callback configuration); `google_profile` means the API could not supply a verified email; `google_database` indicates account/session persistence failed (check PostgreSQL/Prisma). The auth callback now uses non-sensitive codes in the existing Login popup rather than treating every failure as the same generic error. A provider-side access restriction may depend on the configured app Audience/publishing state; check the exact Google screen rather than assuming the same cause for every failure. Do not assert end-to-end sign-in until it has been verified with the operator's actual credentials and browser; avoid touching the approved auth/burger appearance while troubleshooting.
-
-
-## Landing cloud copy hierarchy (23 September 2026)
-
-The two existing `CloudCopy` areas on `/` now have a clearer editorial hierarchy without changing their messages or illustration. The top-left opening cloud is slightly wider and has larger primary heading, eyebrow and description. The lower-right continuation remains visually secondary and has been raised away from the footer for better visibility; both clouds retain their original silhouette, Rose outline, letter-by-letter reveal, enter/leave motion, ID/EN strings and theme colors. Only `components/Landing/CloudCopy.tsx` was changed; the approved 3D doors, page frame, navbar/footer, florals, sound and Login/Daftar are untouched. Check the visual balance at real desktop/mobile viewport dimensions in both languages after syncing, particularly any crowding near the orbiting doors.
-
-
-## Unified brand wordmark (23 September 2026)
-
-`components/Brand/BrandWordmark.tsx` is now the only owner of the DC Organizer visual wordmark (brand name, Cinzel heading font, Rose color, tagline text and responsive size tokens). The approved larger `public` default applies in the shared Navbar on **all** public pages, not just the landing: brand 24px mobile, 34px from `sm`, 36px from `lg`; the optional tagline is 8px/9px/10px across those breakpoints. All public Navbar instances share `py-5 sm:py-4` to retain the approximate original header height; navbar background and controls are not redesigned. The standard public footer uses this same component instead of its previously separate manually styled `D C / ORGANIZER` text. Dashboard header and Usher header also import the component, using its `dashboard` or `mobile` size so it fits their tighter header, without marketing tagline. Any later global wordmark typography, wording or color change belongs in this component, not per-page CSS or copy. Existing logo links, auth/burger menus, Pintu, clouds, media/ambient animations and invitation branding remain independent and untouched; verify desktop/mobile fit in the owner's browser.
-
-
-## Landing door hover and front/back scale (23 September 2026)
-
-The active four-door `SimpleDoorLab` marketing landing keeps the same Rose doors, geometry, materials, service pictures, orbit paths/speed, selection, opening, sound and image-free Rose transition. Only unselected orbital scale changes: it now interpolates from `0.62` at the rear to `0.85` at the front, making the back slightly smaller and the foreground slightly more prominent. Hovering one unselected door adds a `1.10` multiplier via the same existing damped scale easing; moving off restores its orbital size. Hover scale is disabled during selection/entry and for reduced-motion users; the existing selected 1.12/other 0.70 scales remain unchanged. No hover highlight or second animation system was introduced. The code change is limited to `components/Landing/Pintu/SimpleDoorLab.tsx` and should be reviewed visually after sync for overlap/clipping at real desktop/mobile resolutions.
-
-
-## Seamless Rose veil during door-to-page navigation (23 September 2026)
-
-The shared `components/Landing/Pintu/PortalTransition.tsx` now uses a single fixed, full-viewport Rose radial-gradient surface (Light/Dark variants) that fades in and out through opacity only. The previous second scaled fullscreen glow and separately expanding circular clip could expose rectangular compositing seams while the camera zoomed into the door. The `dc-marketing-veil-in`/`dc-marketing-veil-out` keyframes in `app/globals.css` therefore only animate opacity; the independently scaled glow keyframes are removed. Cover/reveal timing, audio, route navigation, `dc-marketing-reveal`, reduced-motion handling, the approved landing door model/orbit/hover/opening/camera zoom, and destination puzzle assembly are untouched. Check the actual browser on both themes and both door and regular marketing routes after syncing; CI build does not prove GPU/compositor appearance, and a separate cause of any remaining square artifact should be diagnosed with a screenshot or short recording before altering the approved doors.
-
-
-## Seamless Rose transition: frame body edge (23 September 2026)
-
-A second source of rectangular seams was the existing *page frame itself*: the landing and the five framed marketing destinations use a 90vw translucent background, Rose border, shadow, and backdrop blur that can show through a semi-opaque fullscreen glow. Each route-level frame now has a styling-only `data-dc-marketing-frame` attribute, and shared CSS temporarily fades its decorative background/border/shadow/blur away while `PortalTransition` sets the root `data-dc-marketing-transition` attribute, restoring the approved frame after the veil finishes. Its position, dimensions, radius, overflow, interactive contents, navbar, footer, and route-specific layout stay unchanged; the regular landing and marketing views look the same outside the transition. This complements, rather than replaces, the existing single full-viewport Rose veil: it does not change the 3D door, zoom, hover, music, transition duration, navigation, or destination assembly. After syncing, visually test an entire door-to-page transition in both themes (and normal marketing link navigation); if any box remains, capture the specific video frame where it appears so its actual layer can be isolated rather than changing approved Pintu animation speculatively.
-
-
-## Customer Dashboard — current layout
-
-The active frame, sidebar, color and panel rules are documented once in `prd.md` §6 and §15. `Dashboard-redesign.md` is an implementation journal, not a newer UI baseline; the remaining QA is tracked in `checklist.md`. The Dashboard uses real event/RSVP data and must not alter the approved public landing/Pintu.
-
-### WA Blast message templates (23 September 2026)
-
-Customer Acara → WA Blast includes invitation, RSVP reminder, event-day reminder and thank-you draft templates saved per owned paid Digital Invitation (up to 30/event). Five placeholders personalize the editor preview; copy is enabled only for a real selected recipient and, when a public URL is used, a published invitation. This feature does not send WA messages, schedule deliveries or spend quotas; recipient selection and addon credits remain the existing functionality. After syncing, **run `pnpm db:deploy` against your database** for `20260923110000_add_wa_blast_message_templates`. See `Dashboard-redesign.md` for limitations and QA.
-
-
-## Framed Beranda and account profile (23 September 2026)
-
-The authenticated customer `/dashboard` now has one landing-inspired Rose-outlined mainframe: the shared customer sidebar, navbar controls, and all active panels sit within a continuous responsive shell. The approved public landing/Pintu is untouched. Beranda still reads real event, invitation, guest and RSVP data.
-
-Navbar account menu provides My Profile, Account Settings (password), transactions, packages, FAQ and sign out. `DashboardAccountPanel` edits the existing user name, uploads and displays a separate account avatar through `/api/profile/avatar`, and changes a password via `/api/profile/password` after validating the current password. Uploads are Sharp-decoded to user-specific WebP files and persisted as `User.avatarUrl`. Changing a password revokes previous sessions and issues a fresh current session; email is read-only in this initial iteration. Avatar files use the same local-disk upload pattern as existing invitation media; production storage must be persistent.
-
-**After syncing:** run `pnpm db:deploy` on the intended database to apply `20260923115000_user_avatar_url` (as well as any pending prior migrations), then run `pnpm db:generate` if needed before building. Review GitHub Actions before declaring the build validated. Authenticated browser QA for photos/password and mobile frame remains pending.
-
-
-### Dashboard mainframe correction — inner scrolling and landing palette
-
-The first dashboard frame was allowed to grow with the whole page. The current `/dashboard` shell now matches the framed marketing page's viewport scroll model: a bounded responsive Rose frame (90vw/90dvh mobile, 23–27px inset on larger screens), a fixed-in-frame sidebar and header, and `dc-dashboard-scroll` as the sole vertically scrolling customer content panel. Mobile drawer/scrim stay within the frame, and changing dashboard tabs resets inner scroll position. Light surfaces and sidebar are white; Dark surfaces and sidebar are near-black; Rose is visible in borders, text, focused/selected controls, hero accents and key buttons. Approved public landing/Pintu, actual event/guest/RSVP data and authenticated profile APIs are unchanged. Browser visual/CI confirmation still required.
-
-
-### Dashboard layout baseline (24 September 2026)
-
-The current Dashboard has a solid Rose exterior and one responsive, height-bounded Rose-outlined mainframe with Light white / Dark black workspace surfaces and sidebar, plus an inner scrolling content pane. Each `DashboardPanel` and `DashboardMetricGrid` groups its heading, controls and rows/numbers into **one large panel**; internal records are unframed responsive rows with thin separators. Only top-level panels carry the `0.3cm` left Rose stripe and top-right-only rounding; buttons, inputs and badges retain their shared control shape. Personal Invitation now belongs under Manajemen Tamu, not Acara. See `prd.md` §6 and §15 for active design rules; prior small-card/flat-section milestones remain in Appendix A and Git history, not as competing README instructions. Desktop/mobile Light/Dark browser QA is still pending.
-
-
-### Guest Management sidebar submenu (23 September 2026)
-
-The customer dashboard now exposes **Manajemen Tamu** as an expandable navigation group containing **Undangan Personal** (existing `personalInvitation` workspace, formerly under Acara) and **Pengaturan Meja** (existing `placement` guest/table workspace, formerly a standalone link). RSVP and Usher App remain standalone. Parent expansion, selected submenu and ID/EN page titles are wired without changing IDs, backend permissions, data or endpoints. The large-frame dashboard design and public landing remain untouched. Browser/mobile and CI checks pending.
-
-
-### Personal invitation uses the canonical guest — DB migration required (23 September 2026)
-
-Personal Invitation is now one form for an existing event guest (select from the shared list) or a new guest. The canonical `Guest.id` owns name/WhatsApp, category (Regular/VIP/VVIP), group tags, envelope addressee, recipient type, invitation limit (1–30), optional greeting, unique personal link and manually marked sharing status. RSVP, WA Blast, seating and Usher consume the same Guest record. `invitedPax` is an invitation limit; the existing `plusOnes` remains actual confirmed companions and is **not** written when creating an invitation. Personalized public RSVP now submits its original guest ID + unique token, validates the per-recipient quota, and updates the existing Guest instead of inserting another row. Readouts include saved category/guest group/RSVP/check-in/table, and the real personalized public page displays optional addressee/greeting. Marking a link as shared does not send WhatsApp and is never proof of delivery. The main event must be published before its personal link is publicly available.
-
-**After `git pull`, run `pnpm db:deploy` against the intended PostgreSQL database, then `pnpm db:generate` before starting/building locally.** Migrations: `20260923124000_guest_personal_invitation_details`, `20260923124500_backfill_personal_invitation_quota`. No new guest/recipient table and no duplicate name/phone/category fields. Note: current seating/check-in assigns one Guest record, not individual seats for every invited companion; group seating is a distinct future data model, not an invitation quota override. Browser + database integration still requires testing; GitHub CI generates Prisma automatically.
-
-
-### One Guest record across Personal Invitation, RSVP, WA Blast and Usher (23 September 2026)
-
-All invitation-personalization inputs and guest statuses live on the existing event-scoped `Guest` record, including type, allowance, category, group labels, addressee, greeting, share state, RSVP companions, seating, WA selection and check-in. No extra recipient table. Guest creation, WA Blast and personal invitation use a shared contact-matching guard; WA may select a uniquely matched existing guest rather than creating a duplicate. Generic public RSVP cannot overwrite an existing guest merely by claiming their name/phone; use the valid personal invitation token or organizer assistance. `invitedPax` is the maximum allowance, `plusOnes` counts confirmed attending companions. Dashboard tabs now share one selected event and refresh guest data on return; the standalone Usher app/scanner uses the event ID and rejects a different event's QR. SQL migration files `20260923124000_guest_personal_invitation_details` and `20260923124500_backfill_personal_invitation_quota` are already tracked: **deploy them to the actual database** with the normal migration workflow (`pnpm db:deploy`) if not applied. A GitHub CI build cannot verify the live database migration, end-to-end browser flows or physical seating for every member of an invitation party.
-
-
-## Studio canvas and visibility controls (23 September 2026)
-
-Studio now has a bounded Rose frame, a collapsible settings panel, a separately scrolling invitation canvas, and Pengaturan/Undangan views on mobile. Bagian exposes 15 switches: digital envelope, the 13 content sections, and music. Their state persists with the existing event design key; old designs remain compatible and no database migration is needed. Turning off the envelope opens content directly; music then starts manually. Font choices show the actual heading/body names in their fonts. Romantic Rose correctly explains its locked typography/palette. Unsaved hashtag and dress code reach the same real preview renderer, and publishing requires saving pending edits first. The approved marketing landing remains unchanged.
-
-
-## Restore Studio defaults and music limits
-
-`Kembalikan ke Default` resets the current theme’s palette, font and 15 switches, preserving event text, photos and music. Undo is available; Save Design persists the reset. Music supports two uploaded files per invitation, each up to 3 MiB. Select a song or delete an upload to free a slot; built-in music is separate from this quota. Limits are enforced server-side even for simultaneous uploads. New URL-only assets are rejected; existing saved music URLs remain compatible. Photo uploads still use Sharp to create WebP. No database migration is required.
-
-
-## Studio renderer corrections (24 September 2026)
-
-Ready templates use their declared Studio font/palette capabilities on envelope and Cover; their individual artwork remains the preset default. The live registry, not the former nine-theme milestone, determines current theme count. Cinzel/Fauna One use the loaded next/font family tokens. Romantic Rose keeps its original font/palette lock. All invitation renderers format host/couple names and event titles with display-only initial capitals, including old records. Studio shows a retry action on loading failure and rejects a saved local music selection if that upload has since been deleted. Public Wishes now uses shared `GuestWishes` and the event-scoped API; its target database must have the GuestWish migration deployed before accepting submissions.
-
-
-### RSVP confirmation and guest QR
-
-Public RSVP automatically shows a free on-page confirmation after saving the canonical Guest record. Attending guests see **Unduh QR Code**; declining/tentative guests see status-specific confirmation without a check-in ticket. The PNG is generated locally with `qrcode` through `/api/invite/[slug]/rsvp/qr?token=...`; append `&download=1` for an attachment. The endpoint validates the signed token, matching event, published/paid invitation and current attendance. Keep `QR_SIGNING_SECRET` configured consistently with Usher; no token is sent to an external image provider. If signing is unavailable, RSVP still reports its saved state and explains QR unavailability. The owner's RSVP workspace refreshes every 10 seconds while visible and on focus. No schema migration or WhatsApp credit is required. A real download link is issued only after a real attending RSVP; never publish sample check-in credentials.
-
-Per 24 September 2026, gambar `Zen Atelier Wedding Moodboard UI.png` berhasil diakses dari Library percakapan user. Komposisi cover/amplop, judul section, galeri asimetris, rincian nikah/resepsi dan penutup diselaraskan dengan panel contoh tersebut menggunakan aset `public/templates/`. Aruna & Kaito adalah nama historis dalam referensi Zen; nama standar preview katalog yang berlaku kini **Denny & Christine**, bukan data tetap untuk undangan pelanggan. Kesesuaian visual penuh masih menunggu screenshot browser mobile/desktop; PNG publik besar masih belum dioptimalkan menjadi turunan WebP.
-
-
-### Zen Atelier visual revision (24 September 2026)
-
-Zen now uses a single layered envelope opening, the provided sakura/ink landscape, an editable full-width couple photo, a two-column gallery with keyboard/swipe lightbox, and ivory/charcoal shared RSVP controls. The Zen folder's MP3 is its default; owner uploads override it. Gallery preview submission is disabled, and the inherited 15 Studio switches remain in effect. Actual source inventory and unresolved reference/backend gaps are recorded in `assets/templates/zen-atelier/README.md`. No migration is needed. Build/SSR checks passed; browser/reference-image approval is still outstanding.
