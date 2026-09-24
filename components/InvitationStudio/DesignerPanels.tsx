@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   Check,
   Upload,
@@ -71,14 +71,69 @@ export function TemplatePanel({
   onSelect: (key: string) => void;
   templates: CatalogTemplate[];
 }) {
+  const [search, setSearch] = useState("");
+  const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
+  const [sort, setSort] = useState<"selected" | "az" | "za">("selected");
+  const [limit, setLimit] = useState(18);
+  const activeName = templates.find((item) => item.key === selected)?.name;
+
+  const filtered = useMemo(() => {
+    const term = search.trim().toLocaleLowerCase("id");
+    const matches = templates.filter((item) => {
+      if (term && !`${item.name} ${item.category} ${item.description}`.toLocaleLowerCase("id").includes(term)) return false;
+      if (photoFilter === "photo" && !item.usesPhotos) return false;
+      if (photoFilter === "no-photo" && item.usesPhotos) return false;
+      return true;
+    });
+    if (sort === "az") return matches.sort((a, b) => a.name.localeCompare(b.name, "id"));
+    if (sort === "za") return matches.sort((a, b) => b.name.localeCompare(a.name, "id"));
+    // Keep the current selection within the first visible cards, even with hundreds of themes.
+    return matches.sort((a, b) => Number(b.key === selected) - Number(a.key === selected));
+  }, [templates, selected, search, photoFilter, sort]);
+
   return (
     <div>
-      <Heading
-        title="Pilih Tema"
-        description="Lihat desainnya langsung di sebelah kanan."
-      />
-      <div className="mt-5 grid grid-cols-2 gap-3">
-        {templates.map((item) => (
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">Pilih Tema</h2>
+      {activeName && <p className="mt-2 text-sm font-medium text-foreground">Dipilih: {activeName}</p>}
+      <div className="mt-4 space-y-3">
+        <Input
+          type="search"
+          aria-label="Cari template"
+          placeholder="Cari nama atau tema…"
+          value={search}
+          onChange={(event) => { setSearch(event.target.value); setLimit(18); }}
+        />
+        <div role="group" aria-label="Filter foto template" className="flex flex-wrap gap-2">
+          {([
+            ["all", "Semua"],
+            ["photo", "Dengan foto"],
+            ["no-photo", "Tanpa foto"],
+          ] as const).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              aria-pressed={photoFilter === key}
+              onClick={() => { setPhotoFilter(key); setLimit(18); }}
+              className={`min-h-10 rounded-full border border-primary/45 px-3 text-xs transition-colors ${photoFilter === key ? "bg-primary text-black" : "text-foreground hover:bg-primary/10"}`}
+            >{label}</button>
+          ))}
+        </div>
+        <div className="flex items-center justify-between gap-3">
+          <span aria-live="polite" className="text-xs text-foreground">{filtered.length} template</span>
+          <select
+            aria-label="Urutkan template"
+            value={sort}
+            onChange={(event) => { setSort(event.target.value as "selected" | "az" | "za"); setLimit(18); }}
+            className="min-h-10 min-w-0 max-w-[170px] rounded-full border border-primary/45 bg-background px-3 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-primary"
+          >
+            <option value="selected">Pilihan aktif</option>
+            <option value="az">Nama A–Z</option>
+            <option value="za">Nama Z–A</option>
+          </select>
+        </div>
+      </div>
+      <div className="mt-4 grid grid-cols-2 gap-3">
+        {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
             className={`relative overflow-hidden rounded-xl border text-left transition ${
@@ -106,19 +161,25 @@ export function TemplatePanel({
               <span className="block font-[family-name:var(--font-dc-heading)] text-xs font-semibold text-foreground">
                 {item.name}
               </span>
-              {!item.ready && <span className="mt-2 block text-[11px] text-primary">Preview designer · belum dapat digunakan</span>}
+              {!item.ready && <span className="mt-2 block text-[11px] text-primary">Belum tersedia</span>}
             </span>
             <button
               type="button"
               onClick={() => onSelect(item.key)}
               disabled={!item.ready}
-              aria-label={item.ready ? item.name : `${item.name} · pratinjau saja, belum bisa digunakan`}
+              aria-label={item.ready ? item.name : `${item.name} belum tersedia`}
               aria-pressed={selected === item.key}
               className="absolute inset-0 z-10 rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:cursor-not-allowed disabled:opacity-65"
             />
           </div>
         ))}
       </div>
+      {filtered.length === 0 && <p role="status" className="py-5 text-sm text-foreground">Template tidak ditemukan.</p>}
+      {limit < filtered.length && (
+        <Button size="sm" className="mt-4 w-full" type="button" onClick={() => setLimit((count) => count + 18)}>
+          Tampilkan Lagi
+        </Button>
+      )}
     </div>
   );
 }
