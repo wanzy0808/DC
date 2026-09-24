@@ -64,9 +64,9 @@ export function InkMountains({ className = "", style }: { className?: string; st
 export function ZenMemoryArtwork() {
   return (
     <div aria-hidden="true" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
-      <img src="/templates/japanroom2.png" alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      <img src="/templates/Zen%20Atelier/japanroom2.png" alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
-      <img src="/templates/japancup.png" alt="" loading="lazy" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
+      <img src="/templates/Zen%20Atelier/japancup.png" alt="" loading="lazy" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
       <span className="absolute inset-3 border border-[#f7eee0]/60" />
     </div>
   );
@@ -76,30 +76,30 @@ export function ZenMemoryArtwork() {
  * Zen template mounts this module. Decorative assets are never user photo slots. */
 export function ZenSectionArtwork({ section }: { section: string }) {
   if (section === "closing") {
-    return <img src="/templates/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-[210px] w-full object-cover object-bottom opacity-30" />;
+    return <img src="/templates/Zen%20Atelier/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-[210px] w-full object-cover object-bottom opacity-30" />;
   }
   if (section === "identity") {
     return (
       <>
-        <img src="/templates/bunga0002.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 -top-10 w-[55%] max-w-[280px] object-contain opacity-30" />
-        <img src="/templates/bunga0003.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-16 -left-24 w-[55%] max-w-[280px] rotate-180 object-contain opacity-25" />
+        <img src="/templates/Zen%20Atelier/bunga0002.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 -top-10 w-[55%] max-w-[280px] object-contain opacity-30" />
+        <img src="/templates/Zen%20Atelier/bunga0003.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-16 -left-24 w-[55%] max-w-[280px] rotate-180 object-contain opacity-25" />
       </>
     );
   }
   if (section === "event" || section === "location") {
-    return <img src="/templates/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-48 w-full object-cover object-bottom opacity-[.14]" />;
+    return <img src="/templates/Zen%20Atelier/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-48 w-full object-cover object-bottom opacity-[.14]" />;
   }
   if (section === "dateTime" || section === "countdown") {
-    return <img src="/templates/ensostroke.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-24 top-0 w-[66%] max-w-[330px] object-contain opacity-[.13]" />;
+    return <img src="/templates/Zen%20Atelier/ensostroke.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-24 top-0 w-[66%] max-w-[330px] object-contain opacity-[.13]" />;
   }
   if (section === "gallery") {
-    return <img src="/templates/bamboo1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-24 -top-10 w-[55%] max-w-[290px] object-contain opacity-25" />;
+    return <img src="/templates/Zen%20Atelier/bamboo1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-24 -top-10 w-[55%] max-w-[290px] object-contain opacity-25" />;
   }
   if (section === "greeting" || section === "wishes") {
-    return <img src="/templates/bunga0004.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-20 -top-12 w-[55%] max-w-[260px] object-contain opacity-25" />;
+    return <img src="/templates/Zen%20Atelier/bunga0004.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-20 -top-12 w-[55%] max-w-[260px] object-contain opacity-25" />;
   }
   if (section === "gift" || section === "rsvp") {
-    return <img src="/templates/japancup.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-24 -right-24 w-[55%] max-w-[270px] object-contain opacity-[.12]" />;
+    return <img src="/templates/Zen%20Atelier/japancup.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-24 -right-24 w-[55%] max-w-[270px] object-contain opacity-[.12]" />;
   }
-  return <img src="/templates/redsun1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-20 -top-20 w-[55%] max-w-[240px] object-contain opacity-[.10]" />;
+  return <img src="/templates/Zen%20Atelier/redsun1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-20 -top-20 w-[55%] max-w-[240px] object-contain opacity-[.10]" />;
 }
