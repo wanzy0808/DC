@@ -301,13 +301,18 @@ export default function InvitationDesigner() {
     setMobileCanvas(false);
   }
 
+  function showDesignSection(section: StudioObjectSection) {
+    showDesignSection(section);
+    if (section === "envelope") setPreviewVersion((current) => current + 1);
+  }
+
   function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection } = { x: 50, y: 38 }) {
     const section = position.section ?? "cover";
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, width: 28, opacity: 1 }] });
     setSelectedLayerId(id);
-    setCanvasStage(position.section === "envelope" ? "envelope" : "cover");
+    showDesignSection(section);
     setInspectorOpen(true);
   }
 
@@ -329,7 +334,7 @@ export default function InvitationDesigner() {
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
     setSelectedLayerId(id);
-    setCanvasStage(layer.section === "envelope" ? "envelope" : "cover");
+    showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
   }
 
@@ -344,7 +349,7 @@ export default function InvitationDesigner() {
     const next = { ...copiedAssetLayer, id, x: Math.min(100, copiedAssetLayer.x + 5), y: Math.min(100, copiedAssetLayer.y + 5) };
     change({ layers: [...design.layers, next] });
     setSelectedLayerId(id);
-    setCanvasStage(next.section === "envelope" ? "envelope" : "cover");
+    showDesignSection(next.section ?? "cover");
   }
 
   function beginAssetDrag(src: string) {
@@ -401,7 +406,7 @@ export default function InvitationDesigner() {
     if (patch.section && (design.sections[patch.section] === false || !studioObjectSections.includes(patch.section))) return;
     change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...patch } : layer) });
     if (patch.section) {
-      setCanvasStage(patch.section === "envelope" ? "envelope" : "cover");
+      showDesignSection(patch.section);
       requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${patch.section}"]`)?.scrollIntoView({ block: "center" }));
     }
   }
