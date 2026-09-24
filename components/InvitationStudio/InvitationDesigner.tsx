@@ -66,6 +66,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
+  const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [savedState, setSavedState] = useState("");
   const [preview, setPreview] = useState(false);
   const audioMutation = useRef(false);
@@ -111,11 +112,21 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
     setEventTag(next.weddingHashtag || "");
     setDressCode(next.dressCode || "");
     const loadedDesign = invitationDesignStateFromKey(next.templateKey, fallbackDecor);
-    setDesign(loadedDesign);
+    // A catalog CTA may select a ready theme for THIS event, but never saves that
+    // selection without the owner's explicit Save Design action.
+    const requestedTheme = params.get("template");
+    const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
+    const stagedDesign: InvitationDesignState = requestedTheme && requestedPreset
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font }
+      : loadedDesign;
+    setDesign(stagedDesign);
     setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
+    setCanvasStage("envelope");
     setHistory([]);
     setFuture([]);
-    setNotice("Siap diedit.");
+    setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
+      ? "Template dipilih. Klik Simpan Desain untuk menerapkan."
+      : "Siap diedit.");
   }
 
   useEffect(() => {
@@ -169,6 +180,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
       font: preset.font,
     });
     setActivePhotoSlot("cover");
+    setCanvasStage("envelope");
   }
 
   function restoreDefaults() {
@@ -415,12 +427,24 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Pratinjau"}</span>
+            {design.sections.envelope !== false && <button type="button"
+              aria-pressed={canvasStage === "envelope"}
+              className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-primary text-black" : "text-primary hover:bg-primary/10"}`}
+              onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
+              title="Tampilkan dan coba animasi Amplop Digital di canvas"
+            >Amplop</button>}
+            <button type="button"
+              aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
+              className={`min-h-9 shrink-0 rounded-full border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-primary text-black" : "text-primary hover:bg-primary/10"}`}
+              onClick={() => setCanvasStage("cover")}
+              title="Lihat Cover tanpa mengubah pengaturan Amplop"
+            >Cover</button>
             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />Ponsel</span>
-            <button type="button" className="dc-studio-icon" onClick={() => setPreviewVersion((value) => value + 1)} aria-label="Ulangi pratinjau dari awal" title="Ulangi dari awal"><RotateCcw size={17} /></button>
+            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label="Ulangi pratinjau dari awal" title="Ulangi dari awal"><RotateCcw size={17} /></button>
           </div>
           <div className="dc-studio-canvas-scroll">
           <div className="dc-studio-preview-surface">
-            {!preview && <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
+            {!preview && <div key={`${design.template}-${design.sections.envelope !== false}-${canvasStage}-${previewVersion}`}>
 
             <InvitationPreview
               invitation={invitation}
@@ -430,7 +454,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
               decorUrl={design.decor}
               eventTag={eventTag}
               dressCode={dressCode}
-              sections={design.sections}
+              sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
               photoAssignments={design.photos}
               designKey={designKey}
               musicUrl={musicUrl}
