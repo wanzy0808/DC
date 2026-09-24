@@ -60,23 +60,43 @@ export function InkMountains({ className = "", style }: { className?: string; st
   );
 }
 
-/** Illustration for an empty photo gallery, never presented as a customer photo. */
+/** Artwork-only gallery fallback. Never show demo people as the couple's own photos. */
 export function ZenMemoryArtwork() {
   return (
-    <div aria-hidden="true" className="relative mx-auto h-56 max-w-sm overflow-hidden border border-[#938979]/40 bg-[#E9E7D9]">
-      <EnsoSun className="absolute left-1/2 top-1 h-40 w-40 -translate-x-1/2 opacity-70"/>
-      <InkMountains className="absolute inset-x-0 bottom-0 w-full"/>
-      <BlossomBranch className="absolute -left-12 -top-5 w-48 opacity-70"/>
+    <div aria-hidden="true" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
+      <img src="/templates/japanroom2.png" alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
+      <img src="/templates/japancup.png" alt="" loading="lazy" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
+      <span className="absolute inset-3 border border-[#f7eee0]/60" />
     </div>
   );
 }
 
+/** Every motif is part of the user-supplied public/templates set; only the active
+ * Zen template mounts this module. Decorative assets are never user photo slots. */
 export function ZenSectionArtwork({ section }: { section: string }) {
   if (section === "identity" || section === "closing") {
-    return <BlossomBranch className="pointer-events-none absolute -right-24 -top-12 w-56 opacity-20"/>;
+    return (
+      <>
+        <img src="/templates/bunga0002.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 -top-10 w-[55%] max-w-[280px] object-contain opacity-30" />
+        <img src="/templates/bunga0003.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-16 -left-24 w-[55%] max-w-[280px] rotate-180 object-contain opacity-25" />
+      </>
+    );
   }
-  if (section === "event" || section === "location" || section === "gallery") {
-    return <InkMountains className="pointer-events-none absolute inset-x-0 bottom-0 w-full opacity-20"/>;
+  if (section === "event" || section === "location") {
+    return <img src="/templates/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-48 w-full object-cover object-bottom opacity-[.14]" />;
   }
-  return <EnsoSun className="pointer-events-none absolute -left-20 -top-20 w-44 opacity-[.055]"/>;
+  if (section === "dateTime" || section === "countdown") {
+    return <img src="/templates/ensostroke.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-24 top-0 w-[66%] max-w-[330px] object-contain opacity-[.13]" />;
+  }
+  if (section === "gallery") {
+    return <img src="/templates/bamboo1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-24 -top-10 w-[55%] max-w-[290px] object-contain opacity-25" />;
+  }
+  if (section === "greeting" || section === "wishes") {
+    return <img src="/templates/bunga0004.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-20 -top-12 w-[55%] max-w-[260px] object-contain opacity-25" />;
+  }
+  if (section === "gift" || section === "rsvp") {
+    return <img src="/templates/japancup.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-24 -right-24 w-[55%] max-w-[270px] object-contain opacity-[.12]" />;
+  }
+  return <img src="/templates/redsun1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-20 -top-20 w-[55%] max-w-[240px] object-contain opacity-[.10]" />;
 }
