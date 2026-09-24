@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import type { InvitationAssetLayer, StudioObjectSection } from "@/lib/templates/asset-layers";
+import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 
 /** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
 type LayerPatch = Partial<InvitationAssetLayer>;
@@ -21,6 +21,7 @@ function findSectionAt(x: number, y: number, root: HTMLElement): { section: Stud
   const invitation = root.closest(".dc-studio-preview-surface");
   if (!invitation) return null;
   for (const node of invitation.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
+    if (!studioObjectSections.includes(node.dataset.invitationSection as StudioObjectSection)) continue;
     const rect = node.getBoundingClientRect();
     if (rect.width && rect.height && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
       return { section: node.dataset.invitationSection as StudioObjectSection, rect };
@@ -84,16 +85,24 @@ function EditableLayer({
     const destination = root.current && findSectionAt(event.clientX, event.clientY, root.current);
     const rect = destination?.rect ?? drag.rect;
     return {
-      x: round(clamp(destination ? (event.clientX - rect.left) / rect.width * 100
-        : drag.x + (event.clientX - drag.startX) / rect.width * 100, 0, 100)),
-      y: round(clamp(destination ? (event.clientY - rect.top) / rect.height * 100
-        : drag.y + (event.clientY - drag.startY) / rect.height * 100, 0, 100)),
+      x: round(clamp(destination && destination.section !== section ? (event.clientX - rect.left) / rect.width * 100
+        : drag.x + (event.clientX - drag.startX) / drag.rect.width * 100, 0, 100)),
+      y: round(clamp(destination && destination.section !== section ? (event.clientY - rect.top) / rect.height * 100
+        : drag.y + (event.clientY - drag.startY) / drag.rect.height * 100, 0, 100)),
       ...(destination && destination.section !== section ? { section: destination.section } : {}),
     };
   }
 
   function move(event: PointerEvent<HTMLElement>) {
     if (gesture.current?.pointer !== event.pointerId) return;
+    if (gesture.current.mode === "move") {
+      const scroller = root.current?.closest<HTMLElement>(".dc-studio-canvas-scroll");
+      const viewport = scroller?.getBoundingClientRect();
+      if (scroller && viewport) {
+        if (event.clientY > viewport.bottom - 42) scroller.scrollTop += 14;
+        else if (event.clientY < viewport.top + 42) scroller.scrollTop -= 14;
+      }
+    }
     setLive(calculate(event));
   }
   function end(event: PointerEvent<HTMLElement>) {
