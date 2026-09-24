@@ -2,7 +2,8 @@
 
 import { ArrowDown, ArrowUp, ClipboardPaste, Copy, Trash2 } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
-import { MAX_ASSET_LAYERS } from "@/lib/templates/asset-layers";
+import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 
 type AssetLayerInspectorProps = {
   locale: string;
@@ -10,6 +11,7 @@ type AssetLayerInspectorProps = {
   selectedAssetIndex: number;
   copiedAssetLayer: InvitationAssetLayer | null;
   layerCount: number;
+  sections: InvitationSections;
   onDeselect: () => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   onReorder: (id: string, direction: -1 | 1) => void;
@@ -20,7 +22,7 @@ type AssetLayerInspectorProps = {
 
 /** Contextual Cover illustration controls. All persisted state remains in InvitationDesigner. */
 export default function AssetLayerInspector({
-  locale, selectedAssetLayer, selectedAssetIndex, copiedAssetLayer, layerCount,
+  locale, selectedAssetLayer, selectedAssetIndex, copiedAssetLayer, layerCount, sections,
   onDeselect, onUpdate, onReorder, onCopy, onRemove, onPaste,
 }: AssetLayerInspectorProps) {
   if (!selectedAssetLayer && !copiedAssetLayer) return null;
@@ -32,6 +34,38 @@ export default function AssetLayerInspector({
     {selectedAssetLayer && <button type="button" onClick={() => onDeselect()} aria-label={locale === "en" ? "Deselect layer" : "Batalkan pilihan layer"} className="text-xs text-primary hover:underline">✕</button>}
     </div>
     {selectedAssetLayer && <>
+    <label className="mt-3 block space-y-1.5 text-xs text-foreground">
+      <span>{locale === "en" ? "Section" : "Bagian"}</span>
+      <select className="min-h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/40 bg-background px-1.5 text-xs text-foreground"
+        value={selectedAssetLayer.section ?? "cover"}
+        onChange={(event) => onUpdate(selectedAssetLayer.id, { section: event.target.value as StudioObjectSection })}>
+        {invitationSectionItems.filter((item) => studioObjectSections.includes(item.key as StudioObjectSection) && (sections[item.key] !== false || item.key === (selectedAssetLayer.section ?? "cover"))).map((item) => <option key={item.key} value={item.key}>{item.title}</option>)}
+      </select>
+    </label>
+    {selectedAssetLayer.kind === "text" && <>
+      <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Decorative text" : "Teks dekoratif"}</span>
+        <textarea rows={3} maxLength={180} value={selectedAssetLayer.text ?? ""} onChange={(event) => onUpdate(selectedAssetLayer.id, { text: event.target.value })}
+          className="w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/40 bg-background p-2 text-sm text-foreground" />
+      </label>
+      <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Font role" : "Tipografi"}</span>
+        <select value={selectedAssetLayer.fontRole ?? "heading"} onChange={(event) => onUpdate(selectedAssetLayer.id, { fontRole: event.target.value as "heading" | "body" })}
+          className="min-h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/40 bg-background px-1.5 text-xs text-foreground">
+          <option value="heading">{locale === "en" ? "Theme heading" : "Judul tema"}</option><option value="body">{locale === "en" ? "Theme body" : "Isi tema"}</option>
+        </select>
+      </label>
+      <label className="mt-3 flex items-center justify-between gap-2 text-xs text-foreground"><span>{locale === "en" ? "Text color" : "Warna teks"}</span>
+        <input type="color" aria-label={locale === "en" ? "Text color" : "Warna teks"} value={selectedAssetLayer.color ?? "#C07A84"} onChange={(event) => onUpdate(selectedAssetLayer.id, { color: event.target.value })} />
+      </label>
+      <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Text size" : "Ukuran teks"} · {selectedAssetLayer.fontSize ?? 24}px</span>
+        <input className="w-full accent-primary" type="range" min="10" max="72" value={selectedAssetLayer.fontSize ?? 24} onChange={(event) => onUpdate(selectedAssetLayer.id, { fontSize: Number(event.target.value) })} />
+      </label>
+    </>}
+    <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Object width" : "Lebar objek"} · {selectedAssetLayer.width}%</span>
+      <input className="w-full accent-primary" type="range" min="5" max="85" value={selectedAssetLayer.width} onChange={(event) => onUpdate(selectedAssetLayer.id, { width: Number(event.target.value) })} />
+    </label>
+    <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Rotation" : "Rotasi"} · {selectedAssetLayer.rotation ?? 0}°</span>
+      <input className="w-full accent-primary" type="range" min="-180" max="180" value={selectedAssetLayer.rotation ?? 0} onChange={(event) => onUpdate(selectedAssetLayer.id, { rotation: Number(event.target.value) })} />
+    </label>
     <label className="mt-3 block space-y-2 text-xs text-foreground">
     <span className="flex justify-between gap-2"><span>{locale === "en" ? "Opacity" : "Opasitas"}</span><output>{Math.round(selectedAssetLayer.opacity * 100)}%</output></span>
     <input type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} className="w-full accent-primary" onChange={(event) => onUpdate(selectedAssetLayer.id, { opacity: Number(event.target.value) })} />
