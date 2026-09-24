@@ -72,3 +72,10 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   assert.match(styles, /\.dc-studio-icon \{[^}]*border-radius: var\(--dc-control-radius\)/);
   assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--dc-control-radius\)\]/);
 });
+
+test("Ucapan Tamu section label has no stale unavailable caption", () => {
+  const sections = read("lib/templates/sections.ts");
+  assert.match(sections, /\{ key: "wishes", title: "Ucapan Tamu" \}/);
+  assert.doesNotMatch(panels, /Pengiriman ucapan belum tersedia|Sending wishes is not available yet/);
+  assert.doesNotMatch(panels, /wishes.*text-xs.*unavailable/i);
+});
