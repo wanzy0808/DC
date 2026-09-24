@@ -507,3 +507,22 @@ Use this order for future coding so launch work does not become random feature w
 10. **Only then resume P2 feature expansion.**
 
 The purpose of this file is to keep future implementation focused on reaching a safe, supportable launch instead of continually adding features without production readiness.
+
+
+---
+
+# 22. Repo maintainability — audit 24 September 2026 (bukan sign-off produk)
+
+**Ruang lingkup:** tree GitHub berisi 674 entri sebelum pembersihan; audit referensi dilakukan dengan workflow `.github/workflows/orphan-audit.yml` pada setiap perubahan source/aset dan bisa dijalankan manual. File tanpa static import atau tanpa string URL adalah **kandidat review**, bukan bukti aman dihapus: pertimbangkan route Next.js, `import()`, deklarasi `.d.ts` pendamping JavaScript, aset yang tersedia pada galeri Studio, serta URL file yang telah disimpan di database pelanggan. Aturan produk yang aktif tetap di `prd.md`, `template.md` dan `studio.md` merupakan panduan domain.
+
+- [x] Hapus skrip one-shot lama `.github/scripts/modular-template-studio.py` yang menulis PRD dan source versi lama (commit `563abaf1`).
+- [x] Pisahkan panel pemilihan template dari `DesignerPanels.tsx` dan pertahankan API re-export, dengan tes source disesuaikan (commit `1203d256`; [Build Validation berhasil](https://github.com/wanzy0808/DC/actions/runs/36009224370)).
+- [x] Hapus 10 source orphan tanpa inbound import (commit `08db49b4`; [Build Validation berhasil](https://github.com/wanzy0808/DC/actions/runs/36010088189)).
+- [x] Hapus 6 dependensi yatim berikutnya (commit `c3698273`; [Build Validation berhasil](https://github.com/wanzy0808/DC/actions/runs/36010656879)).
+- [ ] Konfirmasi build dan Orphan Audit pada commit pembersihan helper terakhir, lalu periksa ulang kandidat baru; **jangan auto-delete** deklarasi `reference-door-*.d.ts` dan `components/ui/sheet.tsx` hanya karena audit tidak melihat impor eksplisit.
+- [ ] Audit isolasi route eksperimen `/jiplak` dan `/pintu-lab`: pastikan benar-benar tidak dibutuhkan sebagai referensi visual, tautan/support atau bagian alur lain **sebelum** memutuskan pensiun; jangan menghapus route aktif hanya karena komponen sudah tidak masuk halaman depan.
+- [ ] Refactor `InvitationDesigner.tsx` (koordinasi event/loading/saving vs canvas/layer controls), `UniversalInvitationTemplate.tsx` (bagian presentasi vs feature engine), `app/api/invitations/route.ts` (validasi dan operasi server tanpa mengubah otorisasi), `EventPanel.tsx` dan `SeatingChart.tsx` secara bertahap dengan API/tes regresi yang jelas; jangan pecah sekadar mengurangi jumlah baris atau membuat API/data event ganda.
+- [ ] Rapikan duplikasi aturan yang *benar-benar* terbukti antara `AGENTS.md`, `README.md` dan badan utama `prd.md` per domain; keputusan terbaru menang hanya pada konflik, keputusan lama yang kompatibel tetap ada. Appendix A adalah histori, bukan rulebook aktif.
+- [ ] Audit media `public/` yang besar; hindari penghapusan otomatis. Dua path MP3 Zen Atelier berisi blob yang identik tetapi salah satunya dipakai sebagai default tema dan path lama mungkin telah tersimpan sebagai `musicUrl`. Penghapusan membutuhkan jaminan kompatibilitas URL dan verifikasi penggunaan sebelum dilakukan.
+
+Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan** bukti browser, migrasi, entitlement, ataupun kesiapan produksi penuh. File source yang dihapus tetap dapat diambil melalui Git history bila dibutuhkan.
