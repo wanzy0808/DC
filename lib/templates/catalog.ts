@@ -132,6 +132,18 @@ export const invitationTemplates: InvitationTemplate[] = [
     assetPath: "/templates/paper-cut-botanical",
   },
   {
+    key: "pencil-reverie",
+    category: "Illustration",
+    previewType: "public",
+    usesPhotos: false,
+    photoSlots: [],
+    preset: { layout: "editorial", palette: "pencil", font: "playfairQuicksand" },
+    name: "Pencil Reverie",
+    description: "Romansa sketsa pensil, kolase kenangan vintage, dan animasi waktu, tanpa foto.",
+    previewImage: "/templates/pencil-reverie/couplesitting.png",
+    assetPath: "/templates/pencil-reverie",
+  },
+  {
     key: "zen-atelier",
     category: "Zen",
     previewType: "public",
