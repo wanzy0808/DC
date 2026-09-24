@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
+import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -110,6 +111,7 @@ export default function InvitationDesigner() {
     decor: invitationDecorOptions[0],
     sections: { ...defaultInvitationSections },
     photos: defaultPhotoAssignments(),
+    copy: {},
   });
 
   async function load() {
@@ -141,7 +143,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {} }
       : loadedDesign;
     setDesign(stagedDesign);
     setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
@@ -201,6 +203,7 @@ export default function InvitationDesigner() {
       template: templateKey,
       palette: preset.palette,
       font: preset.font,
+      copy: templateKey === design.template ? design.copy : {},
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -240,6 +243,10 @@ export default function InvitationDesigner() {
       audioMutation.current = false;
       setAudioBusy(false);
     }
+  }
+
+  function setNarrativeCopy(field: EditableInvitationCopyField, text: string) {
+    change({ copy: { ...design.copy, [field]: text } });
   }
 
   function setSection(section: InvitationSectionKey, enabled: boolean) {
@@ -421,11 +428,10 @@ export default function InvitationDesigner() {
           {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
           {panel === "content" && (
             <ContentPanel
-              invitation={invitation}
-              eventTag={eventTag}
-              dressCode={dressCode}
-              setEventTag={setEventTag}
-              setDressCode={setDressCode}
+              templateKey={design.template}
+              eventDescription={invitation?.description}
+              copy={design.copy}
+              onChange={setNarrativeCopy}
             />
           )}
           {panel === "decor" && template && !template.usesPhotos ? (
