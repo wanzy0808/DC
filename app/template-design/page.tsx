@@ -320,14 +320,14 @@ export default function TemplateDesignPage() {
               {!selected.ready && <p className="mt-3 text-xs font-medium text-foreground">{copy.designer}</p>}
               {selected.ready && <div className="mt-4 flex flex-col gap-2 md:mt-8">
                 <Button asChild size="sm" className="rounded-xl text-xs">
-                  <Link href="/dashboard">{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+                  <Link href={`/studio?template=${encodeURIComponent(selected.key)}`}>{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
                 </Button>
               </div>}
             </aside>
             <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
               <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
                 {selected.ready ? (
-                  <TemplateCanvas key={selected.key} templateKey={selected.key} sections={sections} />
+                  <TemplateCanvas key={selected.key} templateKey={selected.key} sections={{ ...sections, envelope: false }} />
                 ) : (
                   <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /></div>
                 )}
