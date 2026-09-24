@@ -13,8 +13,8 @@ export const editableCopyMaxLength: Record<EditableInvitationCopyField, number> 
   zenQuote: 240,
 };
 
-export function availableEditableCopyFields(templateKey: string): EditableInvitationCopyField[] {
-  return templateKey === "zen-atelier"
+export function availableEditableCopyFields(templateKey: string, isWedding = true): EditableInvitationCopyField[] {
+  return templateKey === "zen-atelier" && isWedding
     ? ["greeting", "closing", "zenQuote"]
     : ["greeting", "closing"];
 }
