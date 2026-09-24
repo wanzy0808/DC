@@ -11,6 +11,7 @@ import {
   withInvitationSections,
 } from "@/lib/templates/sections";
 import { parsePhotoAssignments, withPhotoAssignments } from "@/lib/templates/photo-slots";
+import { parseEditableCopy, withEditableCopy } from "@/lib/templates/editable-copy";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import type {
   InvitationDesignerInvitation,
@@ -75,12 +76,15 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withPhotoAssignments(
-    withInvitationSections(
-      makeDesignKey(state.template, state.palette, state.font, state.decor),
-      state.sections,
+  return withEditableCopy(
+    withPhotoAssignments(
+      withInvitationSections(
+        makeDesignKey(state.template, state.palette, state.font, state.decor),
+        state.sections,
+      ),
+      state.photos,
     ),
-    state.photos,
+    state.copy,
   );
 }
 
@@ -100,5 +104,6 @@ export function invitationDesignStateFromKey(
     decor: parsed.decor || fallbackDecor,
     sections: parseInvitationSections(key),
     photos: parsePhotoAssignments(key),
+    copy: parseEditableCopy(key),
   };
 }
