@@ -26,7 +26,7 @@ test("create invitation routes through auth-protected Studio and keeps the selec
   assert.match(page, /href=\{\`\/studio\?template=\$\{encodeURIComponent\(selected\.key\)\}\`\}/);
   assert.match(studio, /if \(!user\) redirect\(\`\/login\?next=\$\{encodeURIComponent\(studioUrl\)\}\`\)/);
   assert.match(studio, /selectedTemplate=\{selectedTemplate\}/);
-  assert.match(entry, /selectedTemplate \? \ `&template=/);
+  assert.ok(entry.includes('selectedTemplate ? `&template='));
   assert.match(designer, /const requestedTheme = params\.get\("template"\)/);
   assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
 });
