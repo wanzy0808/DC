@@ -118,7 +118,7 @@ export function TemplatePanel({
             type="button"
             aria-label={en ? "Search templates" : "Cari template"}
             onClick={() => searchRef.current?.focus()}
-            className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
+            className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-[var(--dc-control-radius)] text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
           >
             <Search size={17} aria-hidden="true" />
           </button>
@@ -184,7 +184,7 @@ export function TemplatePanel({
               )}
               {item.ready && <span className="absolute bottom-2 left-2 rounded-full border border-white/40 bg-black/70 px-2.5 py-1 text-[10px] font-medium text-white">{item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>}
               {selected === item.key && (
-                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-full bg-primary text-white dark:text-black">
+                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-white dark:text-black">
                   <Check className="h-4 w-4" />
                 </span>
               )}
