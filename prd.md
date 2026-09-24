@@ -864,7 +864,7 @@ Renderer harus event-category aware:
 
 Timing public menggunakan generic `Mulai` / `Selesai`, bukan asumsi `Akad` / `Resepsi` untuk semua event.
 
-Mandatory footer: **DC Organizer**.
+Footer undangan tetap memiliki kontrol ON/OFF, tetapi **tidak boleh menampilkan atribusi promosi** seperti `Created with DC Organizer`, `Made with DC Organizer`, atau `Dibuat dengan DC Organizer` pada undangan yang dipublikasikan. Tampilan footer boleh berupa penutup dekoratif ringkas sesuai tema tanpa menambahkan copy filler. Identitas brand DC Organizer pada situs pemasaran, Dashboard, atau alur operasional tidak termasuk dalam perubahan footer undangan ini.
 
 ### 7.7 Public routing & password
 
@@ -4787,3 +4787,10 @@ Saat memeriksa kegagalan GitHub Actions setelah revisi copy katalog, ditemukan u
 **Implementasi:** `components/PublicInvitation/ZenAtelierScene.tsx` menyusun gambar amplop asli `/templates/Zen%20Atelier/amplop1.png` sebagai lapis kertas, lipatan atas/bawah serta surat yang muncul setelah membuka; tulisan pengantar dan tombol bawah dibuat sebagai HTML hidup, tanpa copy teknis / tombol kedua. `components/PublicInvitation/zen-atelier.css` mengatur komposisi amplop memenuhi tinggi viewport mobile, tekstur dari PNG, font/warna tinta, garis pemisah, ikon Lucide, dan transisi lipatan perspektif → surat terangkat → cover melalui mekanisme pembuka bersama yang sudah tersedia. Music tetap dimulai dari klik asli `Buka Undangan`; fallback reduced motion tidak menahan alur. `tests/zen-atelier-assets.test.mjs` mendapat assertion spesifik untuk area amplop, sumber PNG, trigger animasi, caption dan interaksi bersama. Tidak ada aset master yang diubah dan tidak ada library baru.
 
 **Berkas:** `components/PublicInvitation/ZenAtelierScene.tsx`, `components/PublicInvitation/zen-atelier.css`, `tests/zen-atelier-assets.test.mjs`, `prd.md`. **Commit coding:** `ac6a86568df454ed61b67d528dbec1f13c631789`, `cb4a73b3f2b49645b9699d28260816fc143284b4`, `3d945da9ec1ad3fb2606333a5415f6268ed40a7d`, `a23504b98d538f75c578f2b5c716782041109e3f`. **Validasi:** Source, test, dan Actions head diperiksa. Belum ada screenshot browser dari runtime untuk perbandingan pixel/proporsi dengan moodboard: **jangan mengklaim tampilan sama persis sebelum owner meninjau hasil aktual di mobile**. Penggunaan PNG asli yang sudah ada tidak berarti geometri lipatan dari foto datar setara objek amplop tiga dimensi yang benar-benar terpisah.
+
+
+### 24 September 2026 — Hapus atribusi DC Organizer dari footer undangan
+
+**Permintaan owner:** Pada template undangan yang akan dipublikasikan, tulisan `Created with DC Organizer` dihapus. Kontrak canonical §7.6 diperbarui: footer undangan tetap dapat diaktifkan/dinonaktifkan sesuai registry 15 section, namun tidak boleh mewajibkan copy brand atau atribusi promosi. Penghilangan ini juga berlaku untuk konten visual yang sama dalam Studio/katalog, agar hasil contoh mencerminkan undangan yang diterima tamu. Brand pada marketing/dashboard tetap tidak berubah.
+
+**Perubahan kode:** `components/PublicInvitation/UniversalInvitationTemplate.tsx` (termasuk Zen Atelier dan tema lain yang memakai renderer universal) serta `components/PublicInvitation/RomanticRoseTemplate.tsx` menghapus satu-satunya paragraf `Created with DC Organizer` pada footer dan menggantinya dengan garis dekoratif pendek tanpa teks. Tidak mengubah backend, publikasi, pembayaran, URL tamu, musik, maupun data undangan. **Commit:** `fdb33bfff31e246f7714a54a40bf44a1149d221e`, `fa06cd708176707609b1b7f9c4ba20e401ecea8e` dan commit dokumentasi berikutnya. **Validasi:** perubahan source diperiksa; hasil CI/head diperlukan sebelum mengklaim production build lulus.
