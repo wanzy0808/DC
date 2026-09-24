@@ -1,10 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Check, ImagePlus, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import type { PhotoAssignments, PhotoFocus, PhotoSlot } from "@/lib/templates/photo-slots";
+
+const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
+  cover: { title: "Main Cover", description: "Main invitation photo." },
+  personOne: { title: "First Partner", description: "Individual portrait for the first partner." },
+  personTwo: { title: "Second Partner", description: "Individual portrait for the second partner." },
+  gallery: { title: "Gallery", description: "Choose photos from your collection." },
+};
 
 const labels: Record<PhotoSlot, { title: string; description: string }> = {
   cover: { title: "Cover utama", description: "Foto utama yang membuka undangan." },
@@ -34,6 +42,9 @@ export default function PhotoPanel({
   onSetFocus: (slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) => void;
   onUpload: (file: File) => Promise<void>;
 }) {
+  const { locale } = useLanguage();
+  const en = locale === "en";
+  const slotLabels = en ? englishLabels : labels;
   const pictures = photos.filter((asset) => asset.type === "IMAGE");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -59,34 +70,31 @@ export default function PhotoPanel({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-xl text-foreground">Foto undangan</h2>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Unggah sekali, lalu tentukan penggunaan foto untuk template ini. Bingkai dan posisi visual tetap mengikuti desain template.
-        </p>
+        <h2 className="font-[family-name:var(--font-dc-heading)] text-xl text-foreground">{en ? "Invitation Photos" : "Foto Undangan"}</h2>
       </div>
 
-      <section aria-label="Koleksi foto">
+      <section aria-label={en ? "Photo Library" : "Koleksi foto"}>
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="text-sm font-semibold">Koleksi foto</h3>
+          <h3 className="text-sm font-semibold">{en ? "Photo Library" : "Koleksi Foto"}</h3>
           <span className="text-xs text-muted-foreground">{pictures.length}/30</span>
         </div>
         {pictures.length ? (
           <div className="mt-3 grid grid-cols-3 gap-2">
             {pictures.map((photo, index) => (
               <div key={photo.id} className="relative overflow-hidden rounded-xl border border-border bg-muted">
-                <img src={photo.url} alt={`Foto ${index + 1}`} loading="lazy" className="aspect-[3/4] w-full object-cover" />
-                <span className="absolute inset-x-0 bottom-0 bg-black/55 px-1.5 py-1 text-center text-[10px] text-white">{`Foto ${index + 1}`}</span>
+                <img src={photo.url} alt={`${en ? "Photo" : "Foto"} ${index + 1}`} loading="lazy" className="aspect-[3/4] w-full object-cover" />
+                <span className="absolute inset-x-0 bottom-0 bg-black/55 px-1.5 py-1 text-center text-[10px] text-white">{`${en ? "Photo" : "Foto"} ${index + 1}`}</span>
               </div>
             ))}
           </div>
         ) : (
           <div className="mt-3 flex min-h-32 items-center justify-center rounded-xl border border-dashed border-border text-center text-sm text-muted-foreground">
-            Foto belum diunggah.
+            {en ? "No photos uploaded yet." : "Foto belum diunggah."}
           </div>
         )}
         <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
           <Upload className="h-4 w-4" />
-          {uploading ? "Mengunggah foto..." : "Tambah foto"}
+          {uploading ? (en ? "Uploading..." : "Mengunggah foto...") : (en ? "Add Photos" : "Tambah Foto")}
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
@@ -100,14 +108,14 @@ export default function PhotoPanel({
             }}
           />
         </label>
-        <p className="mt-2 text-xs leading-5 text-muted-foreground">JPG, PNG, atau WebP · maksimal 15 MB/foto. File disimpan sebagai WebP otomatis.</p>
+        <p className="mt-2 text-xs leading-5 text-muted-foreground">{en ? "JPG, PNG or WebP · up to 15 MB per photo." : "JPG, PNG atau WebP · maksimal 15 MB per foto."}</p>
         {error && <p role="alert" className="mt-2 text-xs text-destructive">{error}</p>}
       </section>
 
-      <section aria-label="Penempatan foto" className="space-y-3 border-t border-border pt-6">
+      <section aria-label={en ? "Photo Placement" : "Penempatan foto"} className="space-y-3 border-t border-border pt-6">
         <div>
-          <h3 className="text-sm font-semibold">Penempatan foto</h3>
-          <p className="mt-1 text-xs leading-5 text-muted-foreground">Klik foto di canvas atau pilih bagian di bawah. Perubahan baru tersimpan setelah menekan Simpan desain.</p>
+          <h3 className="text-sm font-semibold">{en ? "Photo Placement" : "Penempatan Foto"}</h3>
+          
         </div>
         {slotsAvailable.map((slot) => {
           const current = slot === "gallery"
@@ -125,16 +133,16 @@ export default function PhotoPanel({
                   {current ? <img src={current.url} alt="" className="h-full w-full object-cover" /> : <ImagePlus className="h-5 w-5 text-muted-foreground" />}
                 </div>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-medium">{labels[slot].title}</span>
-                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{labels[slot].description}</span>
-                  <span className="mt-1 block text-[11px] text-primary">{selected(slot) ? "Foto dipilih" : "Gunakan foto bawaan / belum dipilih"}</span>
+                  <span className="block text-sm font-medium">{slotLabels[slot].title}</span>
+                  <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{slotLabels[slot].description}</span>
+                  <span className="mt-1 block text-[11px] text-primary">{selected(slot) ? (en ? "Photo selected" : "Foto dipilih") : (en ? "Default / not selected" : "Bawaan / belum dipilih")}</span>
                 </span>
-                <span className="shrink-0 text-xs font-semibold text-primary">{active === slot ? "Terbuka" : "Atur"}</span>
+                <span className="shrink-0 text-xs font-semibold text-primary">{active === slot ? (en ? "Open" : "Terbuka") : (en ? "Edit" : "Atur")}</span>
               </button>
               {active === slot && (
                 <div className="space-y-4 border-t border-border bg-muted/15 p-3">
                   {!pictures.length ? (
-                    <p className="text-xs leading-6 text-muted-foreground">Unggah foto di Koleksi Foto terlebih dahulu.</p>
+                    <p className="text-xs leading-6 text-muted-foreground">{en ? "Add photos to your library first." : "Unggah foto ke Koleksi Foto terlebih dahulu."}</p>
                   ) : (
                     <div className="grid grid-cols-3 gap-2">
                       {pictures.map((photo, index) => {
@@ -145,7 +153,7 @@ export default function PhotoPanel({
                             key={photo.id}
                             onClick={() => slot === "gallery" ? onToggleGallery(photo.id) : onSetPhoto(slot, photo.id)}
                             aria-pressed={marked}
-                            aria-label={`${slot === "gallery" ? "Pilih galeri" : "Pilih " + labels[slot].title}: foto ${index + 1}`}
+                            aria-label={`${slot === "gallery" ? (en ? "Select Gallery" : "Pilih galeri") : (en ? "Select " : "Pilih ") + slotLabels[slot].title}: ${en ? "photo" : "foto"} ${index + 1}`}
                             className={`relative overflow-hidden rounded-lg border-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${marked ? "border-primary" : "border-transparent"}`}
                           >
                             <img src={photo.url} alt="" className="aspect-[3/4] w-full object-cover" loading="lazy" />
@@ -157,15 +165,15 @@ export default function PhotoPanel({
                   )}
                   {slot === "gallery" ? (
                     <Button type="button" size="xs" onClick={() => onToggleGallery("*")} className="max-w-full whitespace-normal">
-                      {assignments.gallery === null ? "Kosongkan Pilihan Galeri" : "Gunakan Semua Foto"}
+                      {assignments.gallery === null ? (en ? "Clear Gallery Selection" : "Kosongkan Pilihan Galeri") : (en ? "Use All Photos" : "Gunakan Semua Foto")}
                     </Button>
                   ) : (
                     <>
                       <Button type="button" size="xs" onClick={() => onSetPhoto(slot, null)} className="max-w-full whitespace-normal">
-                        Gunakan Pilihan Otomatis
+                        {en ? "Use Automatic Selection" : "Gunakan Pilihan Otomatis"}
                       </Button>
                       <div>
-                        <p className="mb-2 text-xs font-medium">Fokus foto</p>
+                        <p className="mb-2 text-xs font-medium">{en ? "Photo Focus" : "Fokus Foto"}</p>
                         <div className="grid grid-cols-3 gap-1.5">
                           {(["top", "center", "bottom"] as const).map((focus) => (
                             <button
@@ -175,7 +183,7 @@ export default function PhotoPanel({
                               onClick={() => onSetFocus(slot, focus)}
                               className={`min-h-10 rounded-lg border px-2 text-xs ${assignments.focus[slot] === focus ? "border-primary bg-primary text-white dark:text-black" : "border-border hover:border-primary/50"}`}
                             >
-                              {focus === "top" ? "Atas" : focus === "center" ? "Tengah" : "Bawah"}
+                              {focus === "top" ? (en ? "Top" : "Atas") : focus === "center" ? (en ? "Center" : "Tengah") : (en ? "Bottom" : "Bawah")}
                             </button>
                           ))}
                         </div>
