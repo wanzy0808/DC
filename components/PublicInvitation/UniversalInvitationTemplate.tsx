@@ -17,7 +17,7 @@ import { readableInk, invitationFontFamily } from "@/lib/templates/presentation"
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import OurStorySection from "@/components/PublicInvitation/OurStorySection";
 import InvitationAssetLayers from "@/components/PublicInvitation/InvitationAssetLayers";
-import { parseAssetLayers } from "@/lib/templates/asset-layers";
+import { parseAssetLayers, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
@@ -133,6 +133,7 @@ export default function UniversalInvitationTemplate({
   selectedAssetLayerId,
   onSelectAssetLayer,
   onMoveAssetLayer,
+  onUpdateAssetLayer,
   templateKey,
   designKey,
   personalGuest,
@@ -149,6 +150,7 @@ export default function UniversalInvitationTemplate({
   selectedAssetLayerId?: string | null;
   onSelectAssetLayer?: (id: string) => void;
   onMoveAssetLayer?: (id: string, x: number, y: number) => void;
+  onUpdateAssetLayer?: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   templateKey?: string;
   designKey?: string;
 }) {
@@ -278,6 +280,10 @@ export default function UniversalInvitationTemplate({
       </button>
     ) : null;
 
+  const objectOverlay = (target: StudioObjectSection) => <InvitationAssetLayers layers={illustrationLayers} section={target}
+    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer}
+    onUpdate={onUpdateAssetLayer} />;
+
   const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
     if (sections[keyName] === false) return null;
     const left = key === "modern-maroon" || key === "golden-art-deco";
@@ -311,6 +317,7 @@ export default function UniversalInvitationTemplate({
           )}
           {children}
         </div>
+        {objectOverlay(keyName)}
       </section>
     );
   };
@@ -349,7 +356,7 @@ export default function UniversalInvitationTemplate({
             stage="cover"
             onOpen={handleOpen}
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
-          /><InvitationAssetLayers layers={illustrationLayers} editable={preview && Boolean(onMoveAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer} onMove={onMoveAssetLayer} /></div>)}
+          />{objectOverlay("cover")}</div>)}
 
           {section("greeting", key === "pencil-reverie" ? (
             <div className="pr-greeting-copy">
@@ -520,8 +527,9 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" className="flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
+          {sections.footer !== false && <footer data-invitation-section="footer" className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
             <span aria-hidden="true" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
+            {objectOverlay("footer")}
           </footer>}
         </div>
       )}
