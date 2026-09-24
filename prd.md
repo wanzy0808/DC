@@ -589,9 +589,9 @@ Player berada di luar subtree amplop yang di-unmount dan digunakan bersama oleh 
 
 Menu Musik di Studio tetap membolehkan URL atau upload lagu per event, menunjukkan musik bawaan untuk tema yang dipilih, dan preview dapat mendengar lagu yang sedang diedit tanpa menunggu Save. Jangan pasang musik undangan pada halaman Dashboard, landing, guestbook, atau undangan belum terbit. Asset dan lisensi lagu yang digunakan untuk distribusi publik harus dipastikan sesuai hak penggunaan oleh pengelola sebelum rilis komersial.
 
-### 7.2.3b Sepuluh tema berbeda: lima dengan foto, lima tanpa foto (22 September 2026)
+### 7.2.3b Sebelas tema berbeda: enam dengan foto, lima tanpa foto (24 September 2026)
 
-Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Target katalog bawaan saat ini **10 template keseluruhan (7 key lama dipertahankan demi kompatibilitas undangan existing + 3 key baru), 5 dengan foto dan 5 tanpa foto**:
+Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara visual sebelum dan setelah membuka amplop, bukan hanya pergantian palette, font, stock photo dan border radius pada satu layout. Manifest tunggal `lib/templates/catalog.ts` menyatakan `usesPhotos: boolean`, `photoSlots`, nama dan preset. Katalog bawaan sejak 24 September 2026 memiliki **11 template (10 key existing dipertahankan + Zen Atelier), 6 dengan foto dan 5 tanpa foto**:
 
 | Mode | Stable key | Identitas visual, bukan sekadar warna |
 | --- | --- | --- |
@@ -605,10 +605,13 @@ Setiap template READY harus punya komposisi nyata yang dapat dibedakan secara vi
 | Tanpa foto | `golden-art-deco` | Hitam/emas, garis geometri Art Deco dan frame simetris |
 | Tanpa foto | `paper-cut-botanical` | Ilustrasi lapisan kertas/cutout daun berwarna sage |
 | Tanpa foto | `celestial-ink` | Galaksi tinta, orbit concentric dan konstelasi bulan-bintang tanpa portrait |
+| Foto | `zen-atelier` | Amplop/sampul ilustrasi Jepang, potret pasangan editorial dan galeri foto milik event; ensō, sakura, dan pegunungan tinta |
 
-Untuk setiap theme, amplop digital tetap punya lipatan/flap dan aksi "Buka Undangan" riil; visual envelope, Cover dan section decoration mengikuti identitas theme berbeda. Foto preview berbasis aset `public/` yang sudah ada, tanpa mengambil URL Unsplash. Tanpa-foto bukan sekadar menyembunyikan tag `img`: tutup, Hero, Identity, Gallery/Media dan dekorasi mengutamakan tipografi, ornamen/ilustrasi dan data event, tidak merender media customer walaupun sebelumnya pernah mengupload foto untuk theme lain. Studio tidak memunculkan input slot/upload untuk theme tanpa foto (koleksi event tetap tersimpan dan muncul bila customer beralih kembali ke theme foto). Gallery/media tanpa foto tetap section semantik ke-6 tetapi menjadi surface story/illustration tanpa menciptakan foto/memori personal palsu. Image-preview-only designer submissions tidak otomatis dipaksa masuk hitungan 5/5 dan tidak selectable hingga renderer asli tersedia.
+Untuk setiap theme, amplop digital tetap punya lipatan/flap dan aksi "Buka Undangan" riil; visual envelope, Cover dan section decoration mengikuti identitas theme berbeda. Foto preview berbasis aset `public/` yang sudah ada, tanpa mengambil URL Unsplash. Tanpa-foto bukan sekadar menyembunyikan tag `img`: tutup, Hero, Identity, Gallery/Media dan dekorasi mengutamakan tipografi, ornamen/ilustrasi dan data event, tidak merender media customer walaupun sebelumnya pernah mengupload foto untuk theme lain. Studio tidak memunculkan input slot/upload untuk theme tanpa foto (koleksi event tetap tersimpan dan muncul bila customer beralih kembali ke theme foto). Gallery/media tanpa foto tetap section semantik ke-6 tetapi menjadi surface story/illustration tanpa menciptakan foto/memori personal palsu. Image-preview-only designer submissions tidak otomatis dipaksa masuk hitungan 6/5 dan tidak selectable hingga renderer asli tersedia.
 
 Galeri publik dan pemilih template Studio menampilkan thumbnail scene visual yang benar-benar digunakan renderer, bukan image sama untuk sejumlah theme; identifikasi jelas melalui badge/filter "Dengan foto" dan "Tanpa foto". Tetap gunakan satu katalog untuk Studio, `/template-design`, `/d-invitation`, tanpa menggandakan API RSVP, assets/customer media, format penyimpanan atau bypass akses Studio. Semua theme tetap menjalankan kontrak 13 section/amplop di §7.2.3a dan integrasi Sharp WebP untuk media upload customer.
+
+**Zen Atelier — pengelolaan aset (24 September 2026):** Aset PNG Zen/Jepang yang sudah ada di `public/templates/` menjadi ilustrasi utama amplop, sampul, dan ornamen 13 section. Komposisi visual berada pada `components/PublicInvitation/ZenAtelierScene.tsx` dan `assets/templates/zen-atelier/ZenArtwork.tsx` dengan dynamic import khusus tema. Kesesuaian pixel-per-pixel dengan gambar dalam shared chat **belum dapat diverifikasi** tanpa inspeksi visual referensinya; keberadaan nama berkas saja bukan bukti ekspor asli. Semua PNG pada web root bisa diakses publik, dan `.gitignore` tidak melindungi aset yang sudah ada dalam riwayat Git. Simpan master berlisensi privat hanya di storage privat di luar Git/web root dengan otorisasi server. Optimasi PNG yang sekarang masih besar menjadi derivative WebP menjadi tindak lanjut tersendiri; jangan menimpa aset master yang sudah dipakai. Foto customer tetap memakai Sharp/WebP/InvitationAsset; RSVP/Wishes/Gift dan database tidak digandakan.
 
 ### 7.2.4 Template-owned presentation and default order
 
@@ -4700,3 +4703,22 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 - Missing QR signing configuration no longer reports a failed RSVP after database persistence. No schema migration, WA message or credits charged.
 - Added visible-tab 10-second RSVP dashboard refresh with cleanup and preserved snapshot on polling failure.
 - Validation: 24 Node tests, TypeScript and production build pass; SSR checked all three statuses, missing QR and hidden invalid calendar link. Existing upload filesystem tracing warning remains. QR route smoke with a stubbed repository verifies PNG attachment, forged token, cross-event, declined and unpublished-event rejection. Live DB submission/check-in and browser download were not tested in this environment; deployment requires QR_SIGNING_SECRET and existing DB configuration.
+
+
+### 24 September 2026 — Zen Atelier photo-free invitation and asset boundary
+
+- Added ready theme `zen-atelier` as the eleventh built-in (6 photo + 5 no-photo). Existing keys, public routes, shared 15 toggles, real RSVP form, gift, honest Wishes empty-state and music engine retained. The theme supplies its own lazy-loaded envelope/cover, vector sakura/ensō/ink landscapes and editable event-owned couple/gallery photo slots with honest illustrated empty state, new palette/font preset and a lightweight public thumbnail.
+- Area: `assets/templates/zen-atelier/`, `components/PublicInvitation/{ZenAtelierScene,InvitationThemeScenes,UniversalInvitationTemplate}.tsx`, `lib/templates/{catalog,design,music}.ts`, `app/api/template-preview/zen-atelier/route.ts`, `.gitignore`, `AGENTS.md`, `README.md`, `prd.md`. No schema migration. Original linked image binaries could not be identified in public repo main and were NOT moved.
+- Private master image policy: do not store in public Git or public web root; original binaries require separate private storage/authorization. Rendered vectors and web derivatives remain publicly copyable. Existing customer photo/music upload path remains unchanged.
+- Validation: integration committed to feature branch; CI/build/browser screenshot checks pending when this entry was authored. Do not claim original images were installed or secure because artwork source lives outside public.
+
+
+### 24 September 2026 — Zen Atelier: implementasi artwork dari `public/templates/`
+
+**Alasan:** Owner meminta visual Zen Atelier dari shared ChatGPT dan gambar contoh yang telah dimasukkan ke repo. Setelah inspeksi ditemukan `public/templates/` (bukan `public/template/`), sementara renderer Zen sebelumnya masih menampilkan SVG pengganti.
+
+**Implementasi:** Amplop memakai `amplop1.png`; cover mengomposisikan `japanroom1.png`, `redsun1.png`, `inkmountain.png` beserta bambu/bunga; bagian undangan menggunakan bunga, ensō, pegunungan, dan teh/ruang Jepang sebagai ornamen maupun empty state galeri. Label "The Wedding of" hanya dipakai pada kategori WEDDING. Foto mempelai/galeri tetap menggunakan satu library milik event melalui renderer bersama, palet/font/toggle tetap dipilih Studio; musik tetap dipicu secara sinkron saat klik buka, agar kebijakan autoplay tidak memblokir percobaan play. Foto dekoratif tidak menjadi pengganti foto pelanggan.
+
+**Area/commit:** `components/PublicInvitation/{ZenAtelierScene,InvitationThemeScenes,UniversalInvitationTemplate}.tsx`, `assets/templates/zen-atelier/{ZenArtwork.tsx,README.md}`, `tests/zen-atelier-assets.test.mjs`, AGENTS, README, PRD. Commits implementasi: `cf01b632`, `c235afa6`, `879a1c65`, `4002bffc`, `0df4bb81`, `d1370c92`, `e739c74e` (beserta commit dokumentasi). Tidak ada migrasi database dan tidak mengubah landing/Pintu.
+
+**Validasi:** Inspeksi source dan nama berkas repo terkonfirmasi; uji statis path aset ditambahkan tetapi CI/build dan pengecekan visual di browser belum diverifikasi. Link shared ChatGPT hanya mengekspos judul kepada pembaca anonim, bukan gambar referensi; kesamaan persis dengan moodboard belum dapat diklaim. PNG publik yang berukuran besar perlu optimasi display WebP dan tinjauan pemilik sebelum rilis; hak penggunaan aset tetap perlu dipastikan.

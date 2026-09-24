@@ -132,6 +132,18 @@ export const invitationTemplates: InvitationTemplate[] = [
     assetPath: "/templates/paper-cut-botanical",
   },
   {
+    key: "zen-atelier",
+    category: "Zen",
+    previewType: "public",
+    usesPhotos: true,
+    photoSlots: ["personOne", "personTwo", "gallery"],
+    preset: { layout: "botanical", palette: "zen", font: "playfairInter" },
+    name: "Zen Atelier",
+    description: "Sampul ilustrasi sakura dan pegunungan tinta, potret pasangan editorial, dan galeri foto.",
+    previewImage: "/api/template-preview/zen-atelier",
+    assetPath: "assets/templates/zen-atelier",
+  },
+  {
     key: "celestial-ink",
     category: "Celestial",
     previewType: "public",
