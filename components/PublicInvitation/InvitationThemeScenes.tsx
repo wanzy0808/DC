@@ -15,6 +15,7 @@ type SceneProps = {
   onOpen: () => void;
   onEditPhoto?: () => void;
   preview?: boolean;
+  isWedding?: boolean;
 };
 const heading = { color: "inherit", fontFamily: "var(--inv-heading, var(--font-dc-heading)), Georgia, serif" };
 const caption = "text-[10px] uppercase tracking-[.3em]";
@@ -105,8 +106,8 @@ function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps
 }
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview}: SceneProps) {
-  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} />;
+export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview,isWedding}: SceneProps) {
+  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} stage={stage} onOpen={onOpen} preview={preview} />;
   const isEnvelope = false;
   const content = isEnvelope ? "You're Invited" : "The Celebration";
