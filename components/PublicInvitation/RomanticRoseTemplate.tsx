@@ -318,8 +318,8 @@ export default function RomanticRoseTemplate({
             {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
           </section>)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" className="flex flex-col items-center gap-4 border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-8 text-center">
-            <p className="text-[10px] uppercase tracking-[0.22em] text-[#906978]">Created with DC Organizer</p>
+          {sections.footer !== false && <footer data-invitation-section="footer" className="flex items-center justify-center border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-5">
+            <span aria-hidden="true" className="h-px w-10 bg-[#bf8496] opacity-50" />
           </footer>}
         </div>
       )}
