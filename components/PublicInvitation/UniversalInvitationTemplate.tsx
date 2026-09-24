@@ -4,6 +4,7 @@ import { displayTitleCase } from "@/lib/text/display-title-case";
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import "./zen-atelier.css";
 import "./pencil-reverie.css";
@@ -350,7 +351,7 @@ export default function UniversalInvitationTemplate({
           {section("identity", key === "pencil-reverie" ? (
             <div className="pr-identity-story">
               <div className="pr-identity-polaroid"><span className="pr-polaroid-tape" aria-hidden="true"/>
-                <img alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.png" loading="lazy"/>
+                <Image alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.png" width={1122} height={1402} sizes="(max-width: 640px) 70vw, 310px" loading="lazy"/>
               </div>
               <p className="pr-identity-names">{names || eventTitle}</p>
               {couple && <p className="pr-identity-signature">Dua hati, satu cerita yang selalu tumbuh.</p>}
