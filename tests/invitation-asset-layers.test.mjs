@@ -17,7 +17,8 @@ test("only browser-public template illustrations can be placed", () => {
   for (const invalid of [
     "/assets/private.svg", "https://example.com/image.png", "//evil.com/flower.png",
     "/templates/../secret.png", "/templates/%2e%2e/secret.png",
-    "/templates/rose/../../secret.webp", "/templates/rose/file.pdf",
+    "/templates/rose/../../secret.webp", "/templates/rose/%252e%252e/flower.webp",
+    "/templates/rose/file.pdf",
   ]) assert.equal(isTemplateIllustration(invalid), false, invalid);
 });
 
@@ -53,6 +54,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /<AssetPanel layers=\{design\.layers\}/);
   assert.match(editor, /onMoveAssetLayer=\{\(id, x, y\)/);
   assert.match(editor, /templateKey: designKey,/);
+  assert.match(editor, /font: requestedPreset\.font, copy: \{\}, layers: \[\]/);
+  assert.match(route, /entry\.isSymbolicLink\(\)/);
   assert.match(state, /withAssetLayers\(withEditableCopy\(/);
   assert.match(state, /layers: parseAssetLayers\(key\)/);
   assert.match(preview, /selectedAssetLayerId=\{selectedAssetLayerId\}/);
