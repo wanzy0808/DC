@@ -4,6 +4,7 @@ import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import {
   Check,
+  ChevronDown,
   Search,
   Upload,
 } from "lucide-react";
@@ -142,22 +143,25 @@ export function TemplatePanel({
               type="button"
               aria-pressed={photoFilter === key}
               onClick={() => { setPhotoFilter(key); setLimit(18); }}
-              className={`min-h-10 rounded-full border border-primary/45 px-3 text-xs transition-colors ${photoFilter === key ? "bg-primary text-black" : "text-foreground hover:bg-primary/10"}`}
+              className={`min-h-9 rounded-[var(--dc-control-radius)] border border-primary/70 px-3.5 text-xs font-medium transition-colors ${photoFilter === key ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-foreground hover:bg-primary/10"}`}
             >{label}</button>
           ))}
         </div>
         <div className="flex items-center justify-between gap-3">
           <span aria-live="polite" className="text-xs text-foreground">{filtered.length} {en ? "templates" : "template"}</span>
-          <select
-            aria-label={en ? "Sort templates" : "Urutkan template"}
-            value={sort}
-            onChange={(event) => { setSort(event.target.value as "selected" | "az" | "za"); setLimit(18); }}
-            className="min-h-10 min-w-0 max-w-[170px] rounded-full border border-primary/45 bg-background px-3 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-primary"
-          >
-            <option value="selected">{en ? "Selected first" : "Pilihan aktif"}</option>
-            <option value="az">{en ? "Name A–Z" : "Nama A–Z"}</option>
-            <option value="za">{en ? "Name Z–A" : "Nama Z–A"}</option>
-          </select>
+          <div className="relative w-[204px] max-w-[68%] shrink-0">
+            <select
+              aria-label={en ? "Sort templates" : "Urutkan template"}
+              value={sort}
+              onChange={(event) => { setSort(event.target.value as "selected" | "az" | "za"); setLimit(18); }}
+              className="h-9 w-full appearance-none rounded-[var(--dc-control-radius)] border border-primary/70 bg-background py-1 pl-4 pr-11 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            >
+              <option value="selected">{en ? "Selected first" : "Pilihan aktif"}</option>
+              <option value="az">{en ? "Name A–Z" : "Nama A–Z"}</option>
+              <option value="za">{en ? "Name Z–A" : "Nama Z–A"}</option>
+            </select>
+            <ChevronDown size={15} strokeWidth={1.8} aria-hidden="true" className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-primary" />
+          </div>
         </div>
       </div>
       <div className="mt-4 grid grid-cols-2 gap-3">
