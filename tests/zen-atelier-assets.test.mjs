@@ -23,19 +23,28 @@ test("Zen Atelier opens using the direct user gesture and reuses the shared invi
   assert.match(universal, /<RsvpForm slug=\{invitation\.slug\}/);
 });
 
-test("stage-specific Zen envelope uses the supplied paper artwork and opens before advancing", () => {
+test("Zen envelope uses Japanese washi folds, mizuhiki knot and existing Zen artwork", () => {
   const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
-  const sceneEnvelope = scene.split('stage === "envelope" ? <>')[1]?.split("</> : <>")[0];
-  assert.ok(sceneEnvelope, "expected a distinct envelope stage");
-  assert.match(sceneEnvelope, /Sebuah undangan<br \/>untuk orang istimewa/);
-  assert.match(sceneEnvelope, /Buka Undangan<\/span>/);
-  assert.match(sceneEnvelope, /className="zen-envelope-back"/);
-  assert.match(sceneEnvelope, /className="zen-envelope-flap"/);
-  assert.match(sceneEnvelope, /className="zen-envelope-front"/);
-  assert.match(sceneEnvelope, /disabled=\{opening\}/);
-  assert.doesNotMatch(sceneEnvelope, /Lihat Undangan|Pratinjau|Preview/);
-  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-envelope-flap \{ animation:zen-flap/);
-  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-letter \{ animation:zen-letter/);
+  const envelope = scene.split('stage === "envelope" ? <>')[1]?.split("</> : <>")[0];
+  assert.ok(envelope, "expected distinct Zen digital envelope stage");
+  assert.match(envelope, /<BlossomBranch className="zen-jp-branch"/);
+  assert.match(envelope, /<EnsoSun className="zen-jp-sun"/);
+  assert.match(envelope, /<InkMountains className="zen-jp-mountains"/);
+  assert.match(envelope, /<div className="zen-jp-envelope-shell"/);
+  assert.match(envelope, /className="zen-jp-fold-left"/);
+  assert.match(envelope, /className="zen-jp-fold-right"/);
+  assert.match(envelope, /className="zen-jp-fold-top"/);
+  assert.match(envelope, /className="zen-jp-mizuhiki-band"/);
+  assert.match(envelope, /<svg className="zen-jp-mizuhiki"/);
+  assert.match(envelope, /className="zen-jp-seal" lang="ja"/);
+  assert.match(envelope, /<span className="zen-jp-letter-names">\{title\}<\/span>/);
+  assert.match(envelope, /Buka Undangan<\/span>/);
+  assert.match(envelope, /disabled=\{opening\}/);
+  assert.doesNotMatch(envelope, /amplop1\.png|wax|Lihat Undangan|Pratinjau|Preview/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-jp-mizuhiki-band \{ animation:zen-jp-untie/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-jp-fold-top \{ animation:zen-jp-unfold/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-jp-letter \{ animation:zen-jp-letter-rise/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-jp-paper-stage \{ animation:zen-jp-paper-exit/);
   assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
   const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
   assert.match(universal, /musicRef\.current\?\.playOnOpen\(\)/);
