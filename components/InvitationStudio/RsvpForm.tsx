@@ -17,6 +17,8 @@ import type {
 
 export default function RsvpForm({
   slug,
+  appearance,
+  preview = false,
   guestId,
   guestName,
   guestToken,
@@ -56,6 +58,7 @@ export default function RsvpForm({
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (preview) return;
     setSubmitting(true);
     setMessage("");
 
@@ -92,7 +95,7 @@ export default function RsvpForm({
   }
 
   return (
-    <section className="mx-auto max-w-xl border border-[#9b5b51]/20 bg-[#f3ede6] p-6 text-left shadow-sm dark:border-white/10 dark:bg-[#151116]">
+    <section className={appearance === "zen" ? "zen-rsvp mx-auto max-w-sm text-left" : "mx-auto max-w-xl border border-[#9b5b51]/20 bg-[#f3ede6] p-6 text-left shadow-sm dark:border-white/10 dark:bg-[#151116]"}>
       {ticketGuest ? (
         <RsvpSuccessPanel
           ticketGuest={ticketGuest}
@@ -101,6 +104,8 @@ export default function RsvpForm({
         />
       ) : (
         <RsvpInputPanel
+          appearance={appearance}
+          preview={preview}
           guestId={guestId}
           guestName={guestName}
           invitedPax={invitedPax}

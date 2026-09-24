@@ -136,7 +136,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     category: "Zen",
     previewType: "public",
     usesPhotos: true,
-    photoSlots: ["personOne", "personTwo", "gallery"],
+    photoSlots: ["cover", "gallery"],
     preset: { layout: "botanical", palette: "zen", font: "playfairInter" },
     name: "Zen Atelier",
     description: "Sampul ilustrasi sakura dan pegunungan tinta, potret pasangan editorial, dan galeri foto.",

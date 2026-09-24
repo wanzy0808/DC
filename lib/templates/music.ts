@@ -14,13 +14,13 @@ export const invitationDefaultTracks: Record<string, { title: string; file: stri
   "golden-art-deco": { title: "With You In The Morning", file: "Carl Storm - With You In The Morning.mp3" },
   "paper-cut-botanical": { title: "They Say...", file: "DayFox - They Say....mp3" },
   "celestial-ink": { title: "Fragile", file: "A Himitsu - Fragile.mp3" },
-  "zen-atelier": { title: "White Petals", file: "Keys Of Moon - White Petals.mp3" },
+  "zen-atelier": { title: "Jikan Wa Mikata Da", file: "templates/Zen Atelier/audiolibraryinfinite-jikan-wa-mikata-da-314226.mp3" },
 };
 
 export function getInvitationDefaultMusic(templateKey: string) {
   const template = templateKey.split("::")[0];
   const track = invitationDefaultTracks[template] ?? invitationDefaultTracks["romantic-rose"];
-  return { title: track.title, url: `/${encodeURIComponent(track.file)}` };
+  return { title: track.title, url: `/${track.file.split("/").map(encodeURIComponent).join("/")}` };
 }
 
 export function resolveInvitationMusic(

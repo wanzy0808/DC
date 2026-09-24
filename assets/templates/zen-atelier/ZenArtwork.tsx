@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { CSSProperties } from "react";
 
 /**
@@ -75,31 +76,12 @@ export function ZenMemoryArtwork() {
 /** Every motif is part of the user-supplied public/templates set; only the active
  * Zen template mounts this module. Decorative assets are never user photo slots. */
 export function ZenSectionArtwork({ section }: { section: string }) {
-  if (section === "closing") {
-    return <img src="/templates/Zen%20Atelier/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-[210px] w-full object-cover object-bottom opacity-30" />;
+  const root = "/templates/Zen%20Atelier/";
+  if (["closing", "rsvp", "gallery"].includes(section)) {
+    return <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.png"} alt="" aria-hidden="true" loading="lazy" className={`pointer-events-none absolute inset-x-0 h-auto w-full object-contain ${section === "gallery" ? "top-0 opacity-15" : "bottom-0 opacity-30"}`} />;
   }
   if (section === "identity") {
-    return (
-      <>
-        <img src="/templates/Zen%20Atelier/bunga0002.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 -top-10 w-[55%] max-w-[280px] object-contain opacity-30" />
-        <img src="/templates/Zen%20Atelier/bunga0003.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-16 -left-24 w-[55%] max-w-[280px] rotate-180 object-contain opacity-25" />
-      </>
-    );
+    return <Image width={1254} height={1254} sizes="250px" src={root + "bunga0004.png"} alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 bottom-0 h-auto w-[48%] max-w-[250px] object-contain opacity-70" />;
   }
-  if (section === "event" || section === "location") {
-    return <img src="/templates/Zen%20Atelier/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-48 w-full object-cover object-bottom opacity-[.14]" />;
-  }
-  if (section === "dateTime" || section === "countdown") {
-    return <img src="/templates/Zen%20Atelier/ensostroke.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-24 top-0 w-[66%] max-w-[330px] object-contain opacity-[.13]" />;
-  }
-  if (section === "gallery") {
-    return <img src="/templates/Zen%20Atelier/bamboo1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-24 -top-10 w-[55%] max-w-[290px] object-contain opacity-25" />;
-  }
-  if (section === "greeting" || section === "wishes") {
-    return <img src="/templates/Zen%20Atelier/bunga0004.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-20 -top-12 w-[55%] max-w-[260px] object-contain opacity-25" />;
-  }
-  if (section === "gift" || section === "rsvp") {
-    return <img src="/templates/Zen%20Atelier/japancup.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -bottom-24 -right-24 w-[55%] max-w-[270px] object-contain opacity-[.12]" />;
-  }
-  return <img src="/templates/Zen%20Atelier/redsun1.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -left-20 -top-20 w-[55%] max-w-[240px] object-contain opacity-[.10]" />;
+  return null;
 }

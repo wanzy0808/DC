@@ -57,6 +57,8 @@ export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
 }
 
 export function RsvpInputPanel({
+  appearance,
+  preview = false,
   guestId,
   guestName,
   invitedPax,
@@ -66,6 +68,8 @@ export function RsvpInputPanel({
   submitting,
   onSubmit,
 }: {
+  appearance?: "zen";
+  preview?: boolean;
   guestId?: string;
   guestName?: string;
   invitedPax?: number;
@@ -78,9 +82,9 @@ export function RsvpInputPanel({
   return (
     <form onSubmit={onSubmit} className="space-y-4 font-[var(--font-fauna)]">
       <div>
-        <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
+        {appearance !== "zen" && <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
           Konfirmasi Kehadiran
-        </h2>
+        </h2>}
         {guestName && (
           <p className="mt-1 text-sm opacity-70">Untuk: {displayTitleCase(guestName)}</p>
         )}
@@ -119,7 +123,13 @@ export function RsvpInputPanel({
         </div>
       )}
 
-      <select
+      {appearance === "zen" ? <fieldset className="zen-status-options">
+        <legend className="sr-only">Status kehadiran</legend>
+        {([["ATTENDING", "Saya Akan Hadir"], ["TENTATIVE", "Saya Mungkin Hadir"], ["NOT_ATTENDING", "Saya Tidak Dapat Hadir"]] as const).map(([value, label]) => <label key={value}>
+          <input type="radio" name="attendance" value={value} checked={form.status === value} onChange={() => setForm({ ...form, status: value })} />
+          <span>{label}</span>
+        </label>)}
+      </fieldset> : (<select
         aria-label="Status kehadiran"
         value={form.status}
         onChange={(event) =>
@@ -130,7 +140,7 @@ export function RsvpInputPanel({
         <option value="ATTENDING">Saya Akan Hadir</option>
         <option value="NOT_ATTENDING">Saya Tidak Hadir</option>
         <option value="TENTATIVE">Saya Masih Tentatif</option>
-      </select>
+      </select>)}
 
       {form.status === "ATTENDING" && (invitedPax === undefined || invitedPax > 1) && (
       <fieldset className="space-y-2">
@@ -181,10 +191,10 @@ export function RsvpInputPanel({
 
       <Button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || preview}
         className="rounded-xl bg-[#7A1C25] px-5 py-3 font-[var(--font-fauna)] text-xs text-white hover:bg-[#5E141C]"
       >
-        {submitting ? "Menyimpan..." : "Konfirmasi Kehadiran"}
+        {submitting ? "Menyimpan..." : appearance === "zen" ? "Kirim RSVP" : "Konfirmasi Kehadiran"}
       </Button>
 
       {message && (

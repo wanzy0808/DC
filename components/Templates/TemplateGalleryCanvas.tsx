@@ -39,7 +39,7 @@ export function TemplateCanvas({
       palette={invitationPalettes[preset.palette]}
       fontPair={invitationFonts[preset.font]}
       decorUrl={templateDemoPhoto}
-      eventTag=""
+      eventTag={templateKey === "zen-atelier" ? demo.weddingHashtag || "" : ""}
       dressCode=""
       sections={sections}
     />

@@ -6,6 +6,8 @@ export type PersonalRsvpGuest = {
 };
 
 export type RsvpFormProps = {
+  appearance?: "zen";
+  preview?: boolean;
   slug: string;
   guestId?: string;
   guestName?: string;

@@ -5,6 +5,7 @@ import { displayTitleCase } from "@/lib/text/display-title-case";
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
+import "./zen-atelier.css";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -19,6 +20,7 @@ import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 
+const ZenAtelierGallery = dynamic(() => import("@/components/PublicInvitation/ZenAtelierGallery"));
 const ZenSectionArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenSectionArtwork));
 const ZenMemoryArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenMemoryArtwork));
 
@@ -84,13 +86,13 @@ const zenHeadings: Record<keyof typeof headings, string> = {
   closing: "Terima Kasih",
 };
 
-function displayDate(value: Date | string, timezone: string) {
+function displayDate(value: Date | string, timezone: string, numeric = false) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Tanggal belum ditentukan";
   try {
-    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: timezone || "Asia/Jakarta" }).format(date);
+    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: timezone || "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
   } catch {
-    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(date);
+    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
   }
 }
 
@@ -132,6 +134,9 @@ export default function UniversalInvitationTemplate({
   designKey?: string;
 }) {
   const [opened, setOpened] = useState(false);
+  const [opening, setOpening] = useState(false);
+  const rootRef = useRef<HTMLElement>(null);
+  const [copyMessage, setCopyMessage] = useState("");
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const key = templateKey || parseDesignKey(invitation.templateKey).template;
@@ -152,7 +157,7 @@ export default function UniversalInvitationTemplate({
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
   const names = couple
-    ? [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ")
+    ? (key === "zen-atelier" ? [displayTitleCase(invitation.brideName), displayTitleCase(invitation.groomName)] : [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)]).filter(Boolean).join(" & ")
     : identity.nameMode === "single"
       ? displayTitleCase(invitation.groomName) || displayTitleCase(invitation.title)
       : displayTitleCase(invitation.title);
@@ -180,7 +185,7 @@ export default function UniversalInvitationTemplate({
     } : {}),
     "--inv-bg": palette.bg,
     "--inv-surface": palette.surface,
-    "--inv-ink": palette.ink,
+    "--inv-ink": key === "zen-atelier" ? readableInk(palette.bg, palette.ink) : palette.ink,
     "--inv-accent": palette.accent,
     "--inv-soft": palette.soft,
     color: palette.ink,
@@ -195,7 +200,25 @@ export default function UniversalInvitationTemplate({
     return () => window.clearInterval(timer);
   }, [opened, sections.envelope]);
 
-  const handleOpen = () => { musicRef.current?.playOnOpen(); setOpened(true); };
+  useEffect(() => {
+    if (!opening) return;
+    const timer = window.setTimeout(() => { setOpened(true); setOpening(false); },
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1350);
+    return () => window.clearTimeout(timer);
+  }, [opening]);
+  useEffect(() => {
+    if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
+    if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => entry.target.classList.toggle("zen-reveal", entry.isIntersecting));
+    }, { threshold: .12 });
+    rootRef.current?.querySelectorAll(".zen-section h2, .zen-couple-name, .zen-gallery-grid button, .zen-quote").forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [key, opened, sections.envelope, media.gallery.length]);
+  const handleOpen = () => {
+    musicRef.current?.playOnOpen();
+    if (key === "zen-atelier") setOpening(true); else setOpened(true);
+  };
 
   const changePhoto = (slot: PhotoSlot, label: string) =>
     preview && onEditPhoto ? (
@@ -219,7 +242,7 @@ export default function UniversalInvitationTemplate({
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return (
-      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "py-24 sm:py-28" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined }}
       >
         {key === "botanical-ivory" && <div aria-hidden className="pointer-events-none absolute -right-10 top-2 rotate-[-24deg] text-[#71826a]/20"><Leaf className="h-36 w-36" strokeWidth={0.6}/></div>}
@@ -246,7 +269,8 @@ export default function UniversalInvitationTemplate({
 
   return (
     <main
-      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel}`}
+      ref={rootRef}
+      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : ""}`}
       style={css}
     >
       <InvitationFonts families={[font.heading, font.body]} />
@@ -257,7 +281,7 @@ export default function UniversalInvitationTemplate({
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           hashtag={invitation.weddingHashtag}
           names={names || eventTitle}
-          date={date}
+          date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
           cover={usesPhotos ? media.cover : undefined}
           focus={media.assignment.focus.cover}
           stage="envelope"
@@ -265,13 +289,13 @@ export default function UniversalInvitationTemplate({
           preview={preview}
         />
       ) : (
-        <div>
+        <div className={key === "zen-atelier" ? "zen-content" : undefined}>
           {sections.cover !== false && (<InvitationThemeScenes
             theme={key}
             isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
             hashtag={invitation.weddingHashtag}
             names={names || eventTitle}
-            date={date}
+            date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
             cover={usesPhotos ? media.cover : undefined}
             focus={media.assignment.focus.cover}
             stage="cover"
@@ -281,7 +305,18 @@ export default function UniversalInvitationTemplate({
 
           {section("greeting", <p className="mx-auto max-w-md text-sm leading-8 opacity-80">{invitation.description || "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."}</p>, 1)}
 
-          {section("identity", (
+          {section("identity", key === "zen-atelier" ? (
+            <div>
+              {media.cover && <div className="zen-identity-photo">
+                <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={{ objectPosition: `center ${media.assignment.focus.cover}` }} />
+                {changePhoto("cover", "pasangan")}
+              </div>}
+              {!media.cover && preview && onEditPhoto && <button className="zen-action mb-6" type="button" onClick={() => onEditPhoto("cover")}>Pilih Foto Pasangan</button>}
+              <p className="zen-couple-name">{couple ? <>{displayTitleCase(invitation.brideName)}<em>&amp;</em>{displayTitleCase(invitation.groomName)}</> : names || eventTitle}</p>
+              {couple && <p className="zen-quote">Dua jiwa, satu perjalanan, menuju selamanya.</p>}
+              {(groomParents || brideParents) && <div className="zen-parents"><p>{brideParents}</p><p>{groomParents}</p></div>}
+            </div>
+          ) : (
             <div className={`mx-auto max-w-lg gap-5 ${couple ? "grid grid-cols-2" : "flex flex-col items-center"}`}>
               {couple ? (
                 <>
@@ -307,35 +342,11 @@ export default function UniversalInvitationTemplate({
 
           {section("event", (
             <div className="mx-auto max-w-md space-y-3 text-sm leading-7">
-              {key === "zen-atelier" && couple && (invitation.ceremonyTime || (invitation.receptionTime && invitation.receptionTime !== "END")) ? (
-                <div className="mx-auto max-w-sm divide-y divide-[var(--inv-soft)] border-y border-[var(--inv-soft)] text-left">
-                  {invitation.ceremonyTime && (
-                    <div className="grid grid-cols-[28px_1fr] gap-4 py-6">
-                      <CalendarDays aria-hidden="true" className="mt-1 h-5 w-5 text-[var(--inv-accent)]" strokeWidth={1.5} />
-                      <div>
-                        <h3 className="text-[18px]" style={{ fontFamily: invitationFontFamily(font.heading) }}>Upacara Nikah</h3>
-                        <p className="mt-2 text-xs leading-6 opacity-85">{date} · {invitation.ceremonyTime}</p>
-                        <p className="text-xs leading-6 opacity-70">{invitation.venue}</p>
-                      </div>
-                    </div>
-                  )}
-                  {invitation.receptionTime && invitation.receptionTime !== "END" && (
-                    <div className="grid grid-cols-[28px_1fr] gap-4 py-6">
-                      <CalendarDays aria-hidden="true" className="mt-1 h-5 w-5 text-[var(--inv-accent)]" strokeWidth={1.5} />
-                      <div>
-                        <h3 className="text-[18px]" style={{ fontFamily: invitationFontFamily(font.heading) }}>Resepsi</h3>
-                        <p className="mt-2 text-xs leading-6 opacity-85">{date} · {invitation.receptionTime}</p>
-                        <p className="text-xs leading-6 opacity-70">{invitation.venue}</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <>
-                  <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{eventTitle}</p>
-                  {invitation.venue && <p className="opacity-80">{invitation.venue}</p>}
-                </>
-              )}
+              {key === "zen-atelier" ? <div className="grid grid-cols-[24px_1fr] gap-4 border-y border-[var(--inv-soft)] py-6 text-left">
+                <CalendarDays size={22} strokeWidth={1.3} className="mt-1 text-[var(--inv-accent)]" aria-hidden="true" />
+                <div><h3 className="text-xl">{eventTitle}</h3>{invitation.venue && <p className="mt-3">{invitation.venue}</p>}</div>
+              </div> : <><p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{eventTitle}</p>
+              {invitation.venue && <p className="opacity-80">{invitation.venue}</p>}</>}
               {invitation.dressCode && <p className="text-xs opacity-70">Dress code · {invitation.dressCode}</p>}
             </div>
           ), 3)}
@@ -350,7 +361,10 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", (
+          {section("gallery", key === "zen-atelier" ? <>
+            {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
+            <ZenAtelierGallery photos={media.gallery} />
+          </> : (
             usesPhotos ? <>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
               {media.gallery.length ? (
@@ -396,19 +410,22 @@ export default function UniversalInvitationTemplate({
               <MapPin aria-hidden className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
               <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a href={maps} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--inv-accent)] px-6 text-sm text-[var(--inv-surface)]">Buka Google Maps</a>}
+              {maps && <a href={maps} target="_blank" rel="noopener noreferrer" className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--inv-accent)] px-6 text-sm text-[var(--inv-surface)]"}>{key === "zen-atelier" ? "Lihat Lokasi" : "Buka Google Maps"}</a>}
               {!maps && <p className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
             </div>
           ), 7)}
 
-          {sections.rsvp && section("rsvp", preview ? (
+          {sections.rsvp && section("rsvp", key === "zen-atelier" ? <>
+            <p className="mx-auto mb-7 max-w-sm text-sm leading-7">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
+            <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
+          </> : preview ? (
             <div className="mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] p-6 text-sm leading-7">
               Form RSVP tersedia di undangan yang sudah dipublikasikan.
             </div>
           ) : <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
-            <p className="mx-auto max-w-sm text-sm leading-7 opacity-70">Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia.</p>
+            <p className="mx-auto max-w-sm text-sm leading-7 opacity-70">{key === "zen-atelier" ? "Ucapan belum tersedia." : "Kolom ucapan belum aktif. Fitur ini akan memakai layanan Wishes bersama saat tersedia."}</p>
           ), 9)}
 
           {sections.gift && section("gift", hasGift ? (
@@ -417,14 +434,16 @@ export default function UniversalInvitationTemplate({
               <p className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
-              <button type="button" onClick={() => { if (invitation.giftAccountNumber) void navigator.clipboard?.writeText(invitation.giftAccountNumber); }} className="mt-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin nomor rekening</button>
+              <button type="button" onClick={async () => { if (!invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
+              {copyMessage && <p role="status" className="mt-3 text-xs">{copyMessage}</p>}
             </div>
           ) : <p className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
 
           {section("closing", (
-            <div className="mx-auto max-w-sm text-sm leading-8">
-              {key === "zen-atelier" ? <p className="mx-auto max-w-xs text-[15px] leading-8">Bersama, setiap langkah menjadi cerita yang berharga. Terima kasih telah menjadi bagian dari hari istimewa ini.</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p></>}
+            <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
+              {key === "zen-atelier" ? <p className="mx-auto max-w-xs text-[15px] leading-8">Atas doa, restu, dan kehadiran Anda dalam perjalanan istimewa ini.</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
+              {key === "zen-atelier" && couple && <p className="zen-quote">Cinta bukan tentang menemukan seseorang yang sempurna, tetapi tentang berjalan bersama dalam ketidaksempurnaan dengan hati yang tenang.</p>}
             </div>
           ), 11)}
 
