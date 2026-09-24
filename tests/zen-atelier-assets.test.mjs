@@ -51,3 +51,36 @@ test("Zen envelope uses Japanese washi folds, mizuhiki knot and existing Zen art
   assert.match(universal, /window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
   assert.match(universal, /setOpened\(true\);\s*setOpening\(false\);\s*onEnvelopeOpened\?\.\(\)/);
 });
+
+test("Zen envelope honors Studio palette and font tokens without locking its paper to preset colors", () => {
+  const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
+  const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  const studio = readFileSync(repoFile("components/InvitationStudio/InvitationDesigner.tsx"), "utf8");
+  const envelope = css.split(".zen-envelope {")[1]?.split(".zen-envelope[data-opening]")[0];
+  assert.ok(envelope, "expected the envelope's scoped artwork styles");
+  for (const [token, parent] of [
+    ["--jp-washi", "--inv-scene-bg"],
+    ["--jp-paper", "--inv-scene-surface"],
+    ["--jp-ink", "--inv-scene-ink"],
+    ["--jp-paper-ink", "--inv-scene-surface-ink"],
+    ["--jp-accent", "--inv-scene-accent"],
+    ["--jp-soft", "--inv-scene-soft"],
+  ]) {
+    assert.ok(envelope.includes(`${token}:var(${parent},`), `${token} must inherit ${parent} with a Zen preset fallback`);
+    assert.ok(universal.includes(`"${parent}":`), `renderer must supply ${parent} for custom palettes`);
+  }
+  for (const selector of [
+    ".zen-jp-envelope-shell", ".zen-jp-letter", ".zen-jp-fold-left",
+    ".zen-jp-fold-right", ".zen-jp-fold-top", ".zen-jp-mizuhiki-band",
+    ".zen-jp-seal", ".zen-jp-sun circle",
+  ]) {
+    const rule = envelope.split(`${selector} {`)[1]?.split("}")[0] || "";
+    assert.match(rule, /var\(--jp-/, `${selector} must derive visible colors from the active palette`);
+  }
+  assert.match(css, /\.zen-jp-letter-names \{[^}]*var\(--inv-heading\)/);
+  assert.match(scene, /stroke="var\(--jp-accent\)"/);
+  assert.match(scene, /stroke="var\(--jp-soft\)"/);
+  assert.match(universal, /fontFamily: invitationFontFamily\(font\.body\)/);
+  assert.match(studio, /<ColorPanel selected=\{design\.palette\} onSelect=\{\(value\) => change\(\{ palette: value \}\)\}/);
+  assert.match(studio, /<FontPanel selected=\{design\.font\} onSelect=\{\(value\) => change\(\{ font: value \}\)\}/);
+});
