@@ -227,10 +227,8 @@ export default function UniversalInvitationTemplate({
     const observer = new IntersectionObserver((entries) => {
       for (const entry of entries) {
         const node = entry.target as HTMLElement;
-        if (entry.isIntersecting) node.dataset.prVisible = "true";
-        else if (entry.boundingClientRect.bottom < 0 || entry.boundingClientRect.top > window.innerHeight) {
-          delete node.dataset.prVisible;
-        }
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.14) node.dataset.prVisible = "true";
+        else if (!entry.isIntersecting) delete node.dataset.prVisible;
       }
     }, { threshold: 0.14 });
     targets.forEach((node) => observer.observe(node));
