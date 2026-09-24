@@ -1,89 +1,161 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent, type KeyboardEvent } from "react";
-import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
+import type { InvitationAssetLayer, StudioObjectSection } from "@/lib/templates/asset-layers";
 
-/** Coordinates are percentages of the actual Cover, not the Studio viewport. */
-function CoverLayer({
-  layer, selected, editable, onSelect, onMove,
-}: {
-  layer: InvitationAssetLayer;
-  selected: boolean;
-  editable: boolean;
-  onSelect?: (id: string) => void;
-  onMove?: (id: string, x: number, y: number) => void;
-}) {
-  const [dragPosition, setDragPosition] = useState<{ x: number; y: number } | null>(null);
-  const drag = useRef<{ id: number; x: number; y: number; startX: number; startY: number; width: number; height: number } | null>(null);
-  useEffect(() => { setDragPosition(null); }, [layer.x, layer.y]);
-
-  function start(event: PointerEvent<HTMLButtonElement>) {
-    if (!editable || !onMove) return;
-    event.preventDefault();
-    event.stopPropagation();
-    const cover = event.currentTarget.parentElement?.getBoundingClientRect();
-    if (!cover?.width || !cover.height) return;
-    onSelect?.(layer.id);
-    drag.current = { id: event.pointerId, x: layer.x, y: layer.y, startX: event.clientX, startY: event.clientY, width: cover.width, height: cover.height };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  }
-  function move(event: PointerEvent<HTMLButtonElement>) {
-    const current = drag.current;
-    if (!current || current.id !== event.pointerId) return;
-    setDragPosition({
-      x: Math.max(0, Math.min(100, current.x + (event.clientX - current.startX) / current.width * 100)),
-      y: Math.max(0, Math.min(100, current.y + (event.clientY - current.startY) / current.height * 100)),
-    });
-  }
-  function finish(event: PointerEvent<HTMLButtonElement>) {
-    const current = drag.current;
-    if (!current || current.id !== event.pointerId) return;
-    drag.current = null;
-    const x = Math.max(0, Math.min(100, current.x + (event.clientX - current.startX) / current.width * 100));
-    const y = Math.max(0, Math.min(100, current.y + (event.clientY - current.startY) / current.height * 100));
-    setDragPosition(null);
-    if (Math.abs(x - current.x) > 0.1 || Math.abs(y - current.y) > 0.1) onMove?.(layer.id, Math.round(x * 10) / 10, Math.round(y * 10) / 10);
-  }
-  function keyDown(event: KeyboardEvent<HTMLButtonElement>) {
-    if (!editable || !onMove || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
-    event.preventDefault();
-    const delta = event.shiftKey ? 5 : 1;
-    const x = layer.x + (event.key === "ArrowLeft" ? -delta : event.key === "ArrowRight" ? delta : 0);
-    const y = layer.y + (event.key === "ArrowUp" ? -delta : event.key === "ArrowDown" ? delta : 0);
-    onMove(layer.id, Math.min(100, Math.max(0, x)), Math.min(100, Math.max(0, y)));
-  }
-
-  const position = dragPosition ?? layer;
-  const style = {
-    left: `${position.x}%`, top: `${position.y}%`, width: `${layer.width}%`,
-    opacity: layer.opacity, transform: "translate(-50%, -50%)", touchAction: "none" as const,
-  };
-  if (!editable) return <div className="absolute" style={{ ...style, pointerEvents: "none" }} aria-hidden="true"><img src={layer.src} alt="" draggable={false} className="block h-auto w-full select-none" /></div>;
-  return (
-    <button type="button" aria-label={`Pilih dan geser ilustrasi ${layer.id}`} aria-pressed={selected}
-      className="pointer-events-auto absolute cursor-grab border-0 bg-transparent p-0 outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing"
-      style={style} onClick={() => onSelect?.(layer.id)} onPointerDown={start} onPointerMove={move} onPointerUp={finish} onPointerCancel={() => { drag.current = null; setDragPosition(null); }} onKeyDown={keyDown}>
-      <img src={layer.src} alt="" draggable={false} className="pointer-events-none block h-auto w-full select-none" />
-    </button>
-  );
-}
-
-export default function InvitationAssetLayers({
-  layers, editable = false, selectedId, onSelect, onMove,
-}: {
+/** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
+type LayerPatch = Partial<InvitationAssetLayer>;
+type Props = {
   layers: InvitationAssetLayer[];
+  section?: StudioObjectSection;
   editable?: boolean;
   selectedId?: string | null;
   onSelect?: (id: string) => void;
-  onMove?: (id: string, x: number, y: number) => void;
+  onUpdate?: (id: string, patch: LayerPatch) => void;
+};
+
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const round = (value: number) => Math.round(value * 10) / 10;
+
+function findSectionAt(x: number, y: number, root: HTMLElement): { section: StudioObjectSection; rect: DOMRect } | null {
+  const invitation = root.closest(".dc-studio-preview-surface");
+  if (!invitation) return null;
+  for (const node of invitation.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
+    const rect = node.getBoundingClientRect();
+    if (rect.width && rect.height && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+      return { section: node.dataset.invitationSection as StudioObjectSection, rect };
+    }
+  }
+  return null;
+}
+
+function EditableLayer({
+  layer, selected, section, editable, onSelect, onUpdate,
+}: {
+  layer: InvitationAssetLayer;
+  selected: boolean;
+  section: StudioObjectSection;
+  editable: boolean;
+  onSelect?: Props["onSelect"];
+  onUpdate?: Props["onUpdate"];
 }) {
-  if (!layers.length) return null;
+  const root = useRef<HTMLDivElement>(null);
+  const gesture = useRef<{
+    pointer: number; mode: "move" | "resize" | "rotate";
+    startX: number; startY: number; x: number; y: number; width: number; rotation: number;
+    rect: DOMRect; centerX: number; centerY: number; initialAngle: number;
+  } | null>(null);
+  const [live, setLive] = useState<LayerPatch>({});
+  useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.rotation, layer.section]);
+  const displayed = { ...layer, ...live };
+
+  function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate") {
+    if (!editable || !onUpdate || !root.current) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const sectionRect = root.current.parentElement?.getBoundingClientRect();
+    if (!sectionRect?.width || !sectionRect.height) return;
+    const bounds = root.current.getBoundingClientRect();
+    const cx = bounds.left + bounds.width / 2;
+    const cy = bounds.top + bounds.height / 2;
+    gesture.current = {
+      pointer: event.pointerId, mode, startX: event.clientX, startY: event.clientY,
+      x: layer.x, y: layer.y, width: layer.width, rotation: layer.rotation ?? 0,
+      rect: sectionRect, centerX: cx, centerY: cy,
+      initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
+    };
+    onSelect?.(layer.id);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function calculate(event: PointerEvent<HTMLElement>): LayerPatch {
+    const drag = gesture.current;
+    if (!drag) return {};
+    if (drag.mode === "resize") {
+      return { width: round(clamp(drag.width + (event.clientX - drag.startX) / drag.rect.width * 100, 5, 85)) };
+    }
+    if (drag.mode === "rotate") {
+      const angle = Math.atan2(event.clientY - drag.centerY, event.clientX - drag.centerX);
+      let next = drag.rotation + (angle - drag.initialAngle) * 180 / Math.PI;
+      while (next > 180) next -= 360;
+      while (next < -180) next += 360;
+      return { rotation: round(next) };
+    }
+    const destination = root.current && findSectionAt(event.clientX, event.clientY, root.current);
+    const rect = destination?.rect ?? drag.rect;
+    return {
+      x: round(clamp(destination ? (event.clientX - rect.left) / rect.width * 100
+        : drag.x + (event.clientX - drag.startX) / rect.width * 100, 0, 100)),
+      y: round(clamp(destination ? (event.clientY - rect.top) / rect.height * 100
+        : drag.y + (event.clientY - drag.startY) / rect.height * 100, 0, 100)),
+      ...(destination && destination.section !== section ? { section: destination.section } : {}),
+    };
+  }
+
+  function move(event: PointerEvent<HTMLElement>) {
+    if (gesture.current?.pointer !== event.pointerId) return;
+    setLive(calculate(event));
+  }
+  function end(event: PointerEvent<HTMLElement>) {
+    if (gesture.current?.pointer !== event.pointerId) return;
+    const patch = calculate(event);
+    gesture.current = null;
+    setLive({});
+    if (Object.keys(patch).some((key) => patch[key as keyof LayerPatch] !== layer[key as keyof InvitationAssetLayer])) {
+      onUpdate?.(layer.id, patch);
+    }
+  }
+  function keys(event: KeyboardEvent<HTMLButtonElement>) {
+    if (!editable || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+    event.preventDefault();
+    const step = event.shiftKey ? 5 : 1;
+    onUpdate(layer.id, {
+      x: clamp(layer.x + (event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0), 0, 100),
+      y: clamp(layer.y + (event.key === "ArrowUp" ? -step : event.key === "ArrowDown" ? step : 0), 0, 100),
+    });
+  }
+
   return (
-    <div className="absolute inset-0 z-30 overflow-hidden" style={{ pointerEvents: "none" }} aria-label={editable ? "Lapisan ilustrasi cover" : undefined}>
-      {layers.map((layer) =>
-        <div key={layer.id} className="absolute inset-0" style={{ pointerEvents: "none" }}>
-          <CoverLayer layer={layer} selected={selectedId === layer.id} editable={editable} onSelect={onSelect} onMove={onMove} />
-        </div>,
+    <div ref={root} className="pointer-events-none absolute" style={{
+      left: `${displayed.x}%`, top: `${displayed.y}%`, width: `${displayed.width}%`,
+      opacity: displayed.opacity, transform: `translate(-50%, -50%) rotate(${displayed.rotation ?? 0}deg)`,
+      transformOrigin: "center", touchAction: "none",
+    }}>
+      {editable ? (
+        <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
+          aria-pressed={selected}
+          className="pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing"
+          style={{ touchAction: "none" }}
+          onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
+          onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
+          onKeyDown={keys}>
+          {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
+            fontFamily: layer.fontRole === "body" ? "var(--inv-body, var(--font-dc-body))" : "var(--inv-heading, var(--font-dc-heading))",
+            fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
+          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className="pointer-events-none block h-auto w-full select-none" />}
+        </button>
+      ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
+        fontFamily: layer.fontRole === "body" ? "var(--inv-body, var(--font-dc-body))" : "var(--inv-heading, var(--font-dc-heading))",
+        fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
+      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className="block h-auto w-full select-none" />}
+      {editable && selected && <>
+        <button type="button" aria-label="Rotasi objek" title="Putar" className="pointer-events-auto absolute -top-8 left-1/2 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"
+          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}>↻</button>
+        <button type="button" aria-label="Ubah ukuran objek" title="Tarik untuk mengubah ukuran" className="pointer-events-auto absolute -bottom-3 -right-3 grid h-7 w-7 cursor-nwse-resize place-items-center rounded-[var(--dc-control-radius)] border border-primary bg-background text-primary shadow-sm"
+          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}>↘</button>
+      </>}
+    </div>
+  );
+}
+
+export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, onSelect, onUpdate }: Props) {
+  const visible = layers.filter((layer) => (layer.section ?? "cover") === section);
+  if (!visible.length) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
+      {visible.map((layer) =>
+        <EditableLayer key={layer.id} layer={layer} section={section} selected={selectedId === layer.id}
+          editable={editable} onSelect={onSelect} onUpdate={onUpdate} />,
       )}
     </div>
   );
