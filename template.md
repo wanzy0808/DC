@@ -58,6 +58,12 @@ Bandingkan mockup dengan moodboard berdampingan: hierarki tulisan, jarak, posisi
 
 OFF menyembunyikan komponen terkait **tanpa menghapus data**. Fitur yang belum aktif tidak boleh digambarkan seolah-olah dapat menyimpan atau mengirim. Undangan publik dan kanvas Studio memakai komponen visual yang sama; fitur simpan/submit pada mode contoh harus dilindungi.
 
+### Wajah template di katalog: Cover / Hero, bukan Amplop
+
+Saat menampilkan kartu pilihan template (termasuk tiga smartphone pilihan di `/d-invitation` dan katalog lengkap `/template-design`), ambil **tampilan Cover / Hero sebenarnya** dari renderer temanya: nama/judul, foto/ilustrasi, tipografi, dan dekorasi yang mencerminkan desain utama. **Jangan jadikan Amplop Digital sebagai thumbnail utama**, karena semua calon pembeli perlu melihat karakter visual undangannya sebelum memilih.
+
+Ini hanya pengaturan **representasi kartu katalog**: undangan interaktif yang dibuka dari kartu atau dibagikan kepada tamu tetap dimulai dari Amplop Digital ketika toggle-nya ON, lalu Cover dan section selanjutnya. Jangan mengubah urutan buka undangan, 15 kontrol, data pelanggan, atau toggle tersimpan demi thumbnail. Kartu yang menampilkan renderer asli perlu hanya merender cover untuk menghemat performa; saat template belum mempunyai renderer nyata, gunakan gambar contoh cover yang benar dan jangan menampilkan amplop sebagai penggantinya.
+
 ## 4. Aturan teks dan CTA — berlaku untuk SEMUA tema dan katalog
 
 **Hapus tulisan yang tidak membantu pengunjung mengambil tindakan.** Jangan tampilkan teks yang menjelaskan mekanisme internal, identitas data contoh, atau cara kerja pratinjau pada kartu template, bawah katalog, panel pratinjau, amplop, cover, atau isi undangan.
