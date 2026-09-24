@@ -23,37 +23,46 @@
 /* Zen Atelier: Japanese shugi-bukuro-inspired washi stationery. The Mizuhiki
    cord and seal are drawn as real layers, not baked into a Western wax-envelope PNG.
    Scope every rule to Zen's envelope; Cover and the remaining 13 sections stay intact. */
-.zen-envelope { --jp-washi:#f4efe6; --jp-ink:#303630; --jp-vermillion:#a9513b; min-height:min(844px,100svh); justify-content:flex-start; padding:0; color:var(--jp-ink); background:radial-gradient(ellipse at 48% 44%,#fffaf1 0%,#f4efe6 65%,#e8e2d6 100%); }
+/* Custom scene tokens exist only when the chosen palette differs from the theme preset.
+   Fall back to the original Zen colors when Studio's preset is selected. */
+.zen-envelope { --jp-washi:var(--inv-scene-bg,#f4f0e6); --jp-paper:var(--inv-scene-surface,#fbf8f0); --jp-ink:var(--inv-scene-ink,#303630); --jp-paper-ink:var(--inv-scene-surface-ink,#303630); --jp-accent:var(--inv-scene-accent,#a9513b); --jp-soft:var(--inv-scene-soft,#c9bda9); min-height:min(844px,100svh); justify-content:flex-start; padding:0; color:var(--jp-ink); background:radial-gradient(ellipse at 48% 44%,color-mix(in srgb,var(--jp-washi) 78%,var(--jp-paper)) 0%,var(--jp-washi) 65%,color-mix(in srgb,var(--jp-washi) 89%,var(--jp-ink)) 100%); }
 .zen-jp-atmosphere { position:absolute; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
-.zen-jp-shoji { position:absolute; top:4%; right:-2%; width:22%; height:36%; opacity:.35; border-left:3px solid #66513b70; background:repeating-linear-gradient(90deg,transparent 0 11px,#79604850 12px 14px,transparent 15px 24px),linear-gradient(0deg,transparent 0 49%,#79604860 50% 51%,transparent 52% 100%); mask-image:linear-gradient(to bottom,#0008,#000,transparent); }
+.zen-jp-shoji { position:absolute; top:4%; right:-2%; width:22%; height:36%; opacity:.35; border-left:3px solid color-mix(in srgb,var(--jp-ink) 32%,transparent); background:repeating-linear-gradient(90deg,transparent 0 11px,color-mix(in srgb,var(--jp-ink) 24%,transparent) 12px 14px,transparent 15px 24px),linear-gradient(0deg,transparent 0 49%,color-mix(in srgb,var(--jp-ink) 24%,transparent) 50% 51%,transparent 52% 100%); mask-image:linear-gradient(to bottom,#0008,#000,transparent); }
 .zen-jp-sun { position:absolute; top:12%; right:-18%; width:min(63%,270px); height:auto; opacity:.18; filter:saturate(.75); }
+.zen-jp-sun circle { fill:var(--jp-accent); }
+.zen-jp-sun path { stroke:var(--jp-accent); }
 .zen-jp-branch { position:absolute; top:3%; left:-19%; width:min(62%,265px); height:auto; transform:rotate(-12deg); opacity:.76; }
+.zen-jp-branch g:first-child { stroke:var(--jp-ink); }
+.zen-jp-branch g:nth-child(2) { fill:color-mix(in srgb,var(--jp-accent) 46%,var(--jp-paper)); stroke:var(--jp-accent); }
+.zen-jp-branch g:nth-child(3) { fill:var(--jp-soft); }
+.zen-jp-branch g:nth-child(4) { fill:var(--jp-soft); }
 .zen-jp-mountains { position:absolute; bottom:-2%; left:-9%; width:118%; height:auto; opacity:.30; mask-image:linear-gradient(to bottom,transparent,#000 45%); }
+.zen-jp-mountains path { fill:var(--jp-ink); }
 .zen-jp-intro { position:absolute; z-index:4; top:7%; right:12px; left:12px; display:flex; flex-direction:column; align-items:center; gap:10px; pointer-events:none; }
-.zen-jp-kicker { color:#a0513e; font-family:serif; font-size:11px; font-weight:400; letter-spacing:.22em; }
+.zen-jp-kicker { color:var(--jp-accent); font-family:var(--inv-heading),serif; font-size:11px; font-weight:400; letter-spacing:.22em; }
 .zen-envelope-greeting { margin:0; color:var(--jp-ink); font-size:clamp(12px,3.5vw,14px); line-height:1.62; letter-spacing:.025em; font-weight:400; }
-.zen-envelope-rule { width:24px; height:1px; margin-top:3px; background:var(--jp-vermillion); opacity:.75; }
-.zen-jp-paper-stage { position:absolute; z-index:3; top:20%; left:50%; width:min(77%,330px); height:55%; min-height:265px; max-height:475px; transform:translateX(-50%); perspective:1050px; transform-style:preserve-3d; filter:drop-shadow(0 18px 21px #44372a24); }
+.zen-envelope-rule { width:24px; height:1px; margin-top:3px; background:var(--jp-accent); opacity:.75; }
+.zen-jp-paper-stage { position:absolute; z-index:3; top:20%; left:50%; width:min(77%,330px); height:55%; min-height:265px; max-height:475px; transform:translateX(-50%); perspective:1050px; transform-style:preserve-3d; filter:drop-shadow(0 18px 21px color-mix(in srgb,var(--jp-ink) 18%,transparent)); }
 .zen-jp-paper-stage::after { content:""; position:absolute; z-index:9; inset:1%; pointer-events:none; opacity:.08; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23604f3c' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); }
-.zen-jp-envelope-shell { position:absolute; z-index:1; inset:0; border:1px solid #c4b9a7; border-radius:1px; background:linear-gradient(132deg,#fdf9f0 0%,#ece4d6 49%,#f8f3e9 100%); box-shadow:inset 3px 2px 9px #fff7,0 16px 35px #332b2140; }
-.zen-jp-letter { position:absolute; z-index:2; top:8%; right:8%; bottom:11%; left:8%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:24px 15px; border:1px solid #d2c5b1; background:linear-gradient(152deg,#fffdf6,#f5f0e5); box-shadow:0 9px 24px #40392b32; color:#303630; opacity:0; transform:translateY(16%); overflow-wrap:anywhere; }
+.zen-jp-envelope-shell { position:absolute; z-index:1; inset:0; border:1px solid color-mix(in srgb,var(--jp-paper) 73%,var(--jp-ink)); border-radius:1px; background:linear-gradient(132deg,var(--jp-paper) 0%,color-mix(in srgb,var(--jp-paper) 85%,var(--jp-ink)) 49%,color-mix(in srgb,var(--jp-paper) 96%,var(--jp-washi)) 100%); box-shadow:inset 3px 2px 9px color-mix(in srgb,var(--jp-paper) 50%,transparent),0 16px 35px color-mix(in srgb,var(--jp-ink) 23%,transparent); }
+.zen-jp-letter { position:absolute; z-index:2; top:8%; right:8%; bottom:11%; left:8%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px; padding:24px 15px; border:1px solid color-mix(in srgb,var(--jp-paper) 73%,var(--jp-ink)); background:linear-gradient(152deg,var(--jp-paper),color-mix(in srgb,var(--jp-paper) 93%,var(--jp-ink))); box-shadow:0 9px 24px color-mix(in srgb,var(--jp-ink) 20%,transparent); color:var(--jp-paper-ink); opacity:0; transform:translateY(16%); overflow-wrap:anywhere; }
 .zen-jp-letter-kicker { font-size:9px; letter-spacing:.25em; font-weight:500; }
 .zen-jp-letter-names { font:clamp(25px,6.2vw,37px)/1.24 var(--inv-heading); }
-.zen-jp-letter-rule { width:27px; height:1px; background:#a9513b; }
+.zen-jp-letter-rule { width:27px; height:1px; background:var(--jp-accent); }
 .zen-jp-letter-date { font-size:11px; letter-spacing:.08em; }
 .zen-jp-fold-left,.zen-jp-fold-right,.zen-jp-fold-bottom,.zen-jp-fold-top { position:absolute; inset:0; pointer-events:none; backface-visibility:hidden; }
-.zen-jp-fold-left { z-index:3; clip-path:polygon(0 0,59% 12%,52% 91%,0 100%); background:linear-gradient(112deg,#f9f5eb,#e5ddcd); filter:drop-shadow(3px 0 2px #67584627); }
-.zen-jp-fold-right { z-index:4; clip-path:polygon(100% 0,46% 9%,52% 91%,100% 100%); background:linear-gradient(252deg,#f9f5eb,#e8e0d3); }
-.zen-jp-fold-bottom { z-index:5; clip-path:polygon(0 86%,52% 95%,100% 86%,100% 100%,0 100%); background:linear-gradient(#eee5d6,#fcf8ef); }
-.zen-jp-fold-top { z-index:6; clip-path:polygon(0 0,100% 0,100% 26%,54% 40%,0 26%); background:linear-gradient(170deg,#fffaf0 8%,#e5dbc9 96%); transform-origin:50% 0; box-shadow:0 4px 12px #493d2b40; }
-.zen-jp-mizuhiki-band { position:absolute; z-index:7; top:54%; right:-3%; left:-3%; height:69px; display:grid; place-items:center; border-block:1px solid #a28e7045; background:linear-gradient(180deg,#fffdf8dd,#f6ede0e8 48%,#fffdf8cc); box-shadow:0 4px 8px #433a2b1a; }
-.zen-jp-mizuhiki { position:absolute; width:102%; height:90px; overflow:visible; filter:drop-shadow(0 1px 1px #382b2122); }
-.zen-jp-seal { z-index:1; display:grid; width:33px; height:33px; place-items:center; border:2px solid #a9513b; outline:1px solid #a9513b; outline-offset:-5px; background:#f5eee3; color:#a9513b; font:21px/1 serif; box-shadow:0 2px 7px #44372c26; }
+.zen-jp-fold-left { z-index:3; clip-path:polygon(0 0,59% 12%,52% 91%,0 100%); background:linear-gradient(112deg,var(--jp-paper),color-mix(in srgb,var(--jp-paper) 85%,var(--jp-ink))); filter:drop-shadow(3px 0 2px color-mix(in srgb,var(--jp-ink) 15%,transparent)); }
+.zen-jp-fold-right { z-index:4; clip-path:polygon(100% 0,46% 9%,52% 91%,100% 100%); background:linear-gradient(252deg,var(--jp-paper),color-mix(in srgb,var(--jp-paper) 87%,var(--jp-ink))); }
+.zen-jp-fold-bottom { z-index:5; clip-path:polygon(0 86%,52% 95%,100% 86%,100% 100%,0 100%); background:linear-gradient(color-mix(in srgb,var(--jp-paper) 89%,var(--jp-ink)),var(--jp-paper)); }
+.zen-jp-fold-top { z-index:6; clip-path:polygon(0 0,100% 0,100% 26%,54% 40%,0 26%); background:linear-gradient(170deg,var(--jp-paper) 8%,color-mix(in srgb,var(--jp-paper) 84%,var(--jp-ink)) 96%); transform-origin:50% 0; box-shadow:0 4px 12px color-mix(in srgb,var(--jp-ink) 25%,transparent); }
+.zen-jp-mizuhiki-band { position:absolute; z-index:7; top:54%; right:-3%; left:-3%; height:69px; display:grid; place-items:center; border-block:1px solid color-mix(in srgb,var(--jp-soft) 55%,transparent); background:linear-gradient(180deg,var(--jp-paper),color-mix(in srgb,var(--jp-paper) 87%,var(--jp-soft)) 48%,var(--jp-paper)); box-shadow:0 4px 8px color-mix(in srgb,var(--jp-ink) 12%,transparent); }
+.zen-jp-mizuhiki { position:absolute; width:102%; height:90px; overflow:visible; filter:drop-shadow(0 1px 1px color-mix(in srgb,var(--jp-ink) 12%,transparent)); }
+.zen-jp-seal { z-index:1; display:grid; width:33px; height:33px; place-items:center; border:2px solid var(--jp-accent); outline:1px solid var(--jp-accent); outline-offset:-5px; background:var(--jp-paper); color:color-mix(in srgb,var(--jp-accent) 78%,var(--jp-paper-ink)); font:21px/1 serif; box-shadow:0 2px 7px color-mix(in srgb,var(--jp-ink) 15%,transparent); }
 .zen-open { position:absolute; z-index:10; bottom:6%; left:50%; display:flex; min-height:66px; min-width:150px; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:6px 12px; border:0; border-radius:8px; background:transparent; color:var(--jp-ink); font-size:12px; font-weight:500; line-height:1.35; cursor:pointer; transform:translateX(-50%); white-space:nowrap; }
 .zen-open:disabled { cursor:default; }
-.zen-envelope-action-icon { display:grid; width:34px; height:34px; place-items:center; border:1px solid #b57b67; border-radius:50%; color:#a9513b; background:#fffaf13b; transition:background-color .2s ease,transform .2s ease; }
-@media(hover:hover) { .zen-open:hover .zen-envelope-action-icon { background:#fffaf1; transform:translateY(-2px); } }
-.zen-open:focus-visible { outline:2px solid #a9513b; outline-offset:4px; }
+.zen-envelope-action-icon { display:grid; width:34px; height:34px; place-items:center; border:1px solid var(--jp-accent); border-radius:50%; color:color-mix(in srgb,var(--jp-accent) 76%,var(--jp-ink)); background:color-mix(in srgb,var(--jp-paper) 25%,transparent); transition:background-color .2s ease,transform .2s ease; }
+@media(hover:hover) { .zen-open:hover .zen-envelope-action-icon { background:var(--jp-paper); transform:translateY(-2px); } }
+.zen-open:focus-visible { outline:2px solid var(--jp-accent); outline-offset:4px; }
 .zen-envelope[data-opening] .zen-jp-mizuhiki-band { animation:zen-jp-untie .30s cubic-bezier(.25,.6,.2,1) forwards; }
 .zen-envelope[data-opening] .zen-jp-fold-top { animation:zen-jp-unfold .57s .17s cubic-bezier(.25,.6,.2,1) forwards; }
 .zen-envelope[data-opening] .zen-jp-letter { animation:zen-jp-letter-rise .66s .33s cubic-bezier(.2,.7,.3,1) forwards; }
