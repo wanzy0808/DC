@@ -1,0 +1,43 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { join } from "node:path";
+
+const read = (path) => readFileSync(join(process.cwd(), path), "utf8");
+const folder = "public/templates/pencil-reverie";
+const files = ["bookstack.png", "bycicle.png", "camera1.png", "casette.png",
+  "couplesitting.png", "loveballon1.png", "loveticket.png", "polaroidlove.png",
+  "ribbon.png", "streetlamp.png"];
+
+test("Pencil Reverie uses every existing illustration without photo slots", () => {
+  const catalog = read("lib/templates/catalog.ts");
+  assert.match(catalog, /key:\s*"pencil-reverie"[\s\S]*?usesPhotos:\s*false[\s\S]*?photoSlots:\s*\[\]/);
+  assert.match(catalog, /previewImage:\s*"\/templates\/pencil-reverie\/couplesitting.png"/);
+  const source = read("components/PublicInvitation/PencilReverieScene.tsx") +
+    read("components/PublicInvitation/PencilReverieArtwork.tsx");
+  for (const name of files) {
+    assert.ok(existsSync(join(process.cwd(), folder, name)), name + " must exist");
+    assert.ok(source.includes(name), name + " must appear in an illustrated scene or section");
+  }
+});
+
+test("Pencil Reverie uses shared sections and an actual gesture-driven opening", () => {
+  const renderer = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const scene = read("components/PublicInvitation/PencilReverieScene.tsx");
+  assert.match(renderer, /PencilSectionArt section=\{keyName\}/);
+  assert.match(renderer, /PencilMemoryGallery/);
+  assert.match(renderer, /PencilBackwardClock/);
+  assert.match(renderer, /key === "zen-atelier" \|\| key === "pencil-reverie"/);
+  assert.match(scene, /onOpen\(\)/);
+  assert.match(scene, /Buka Undangan/);
+  assert.ok(!scene.includes("setTimeout(onOpen"), "Opening callback must run on the user gesture for audio");
+});
+
+test("Pencil Reverie animation respects reduced motion and avoids silent background loops", () => {
+  const css = read("components/PublicInvitation/pencil-reverie.css");
+  assert.match(css, /prefers-reduced-motion:reduce/);
+  assert.match(css, /data-pr-active=false/);
+  assert.match(css, /pr-clock-back/);
+  const music = read("lib/templates/music.ts");
+  assert.match(music, /"pencil-reverie":\s*\{\s*title:/);
+});
