@@ -525,7 +525,7 @@ export default function InvitationDesigner() {
           {selectedAssetLayer && <div className="dc-studio-layer-toolbar" aria-label={locale === "en" ? "Selected illustration controls" : "Pengaturan ilustrasi terpilih"}>
             <span className="max-w-36 truncate text-xs font-medium text-primary">{locale === "en" ? "Selected layer" : "Layer terpilih"} {selectedAssetIndex + 1}/{design.layers.length}</span>
             <label className="flex min-w-[120px] flex-1 items-center gap-2 text-xs text-foreground">
-              <span>{locale === "en" ? "Opacity" : "Transparansi"}</span>
+              <span>{locale === "en" ? "Opacity" : "Opasitas"}</span>
               <input aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} onChange={(event) => updateAssetLayer(selectedAssetLayer.id, { opacity: Number(event.target.value) })} className="min-w-16 max-w-36 flex-1 accent-primary" />
               <output>{Math.round(selectedAssetLayer.opacity * 100)}%</output>
             </label>
