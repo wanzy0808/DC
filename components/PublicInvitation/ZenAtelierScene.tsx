@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
 
 type ZenAtelierSceneProps = {
@@ -21,18 +20,8 @@ const paper = "radial-gradient(ellipse at 50% 20%, var(--inv-scene-surface, #fff
  */
 export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true }: ZenAtelierSceneProps) {
   const envelope = stage === "envelope";
-  const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
   const occasion = isWedding ? "The Wedding of" : "Sebuah Undangan";
-  const open = () => {
-    if (opening) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onOpen();
-      return;
-    }
-    setOpening(true);
-    window.setTimeout(onOpen, 420);
-  };
 
   return (
     <section
@@ -54,7 +43,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
       {envelope ? (
         <>
           <p className="relative z-10 mt-8 text-[11px] uppercase tracking-[.28em] text-[#9b5240]">Sebuah undangan untukmu</p>
-          <div className={`relative z-10 mt-8 flex w-full max-w-[450px] flex-col items-center transition duration-500 ${opening ? "-translate-y-8 scale-105 opacity-0" : ""}`}>
+          <div className="relative z-10 mt-8 flex w-full max-w-[450px] flex-col items-center">
             <div className="relative aspect-[4/5] w-full max-w-[340px] drop-shadow-[0_22px_20px_rgba(70,58,43,.15)]">
               <img src={root + "amplop1.png"} alt="Ilustrasi amplop undangan Zen Atelier" className="absolute inset-0 h-full w-full object-contain" fetchPriority="high" />
             </div>
@@ -67,9 +56,8 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           </div>
           <button
             type="button"
-            onClick={open}
-            disabled={opening}
-            className="relative z-20 mt-9 min-h-12 border border-[var(--inv-scene-accent,#a9513b)] bg-[var(--inv-scene-accent,#a9513b)] px-8 py-3 text-[12px] font-semibold tracking-[.18em] text-white shadow-[0_8px_20px_rgba(169,81,59,.17)] transition hover:-translate-y-1 hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--inv-scene-accent,#a9513b)] disabled:cursor-wait disabled:opacity-60"
+            onClick={onOpen}
+            className="relative z-20 mt-9 min-h-12 border border-[var(--inv-scene-accent,#a9513b)] bg-[var(--inv-scene-accent,#a9513b)] px-8 py-3 text-[12px] font-semibold tracking-[.18em] text-white shadow-[0_8px_20px_rgba(169,81,59,.17)] transition hover:-translate-y-1 hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--inv-scene-accent,#a9513b)]"
           >
             Buka Undangan
           </button>
