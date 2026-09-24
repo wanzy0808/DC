@@ -29,6 +29,13 @@ export function PencilSectionArt({ section }: { section: string }) {
   </div>;
 }
 
+export function PencilBackwardClock() {
+  return <div className="pr-clock-art" aria-hidden="true">
+    <span className="pr-clock-face"/><span className="pr-clock-hand pr-clock-hour"/>
+    <span className="pr-clock-hand pr-clock-minute"/><span className="pr-clock-dot"/>
+  </div>;
+}
+
 const illustratedMemories = [
   { image: "polaroidlove.png", label: "Pertemuan pertama" },
   { image: "bycicle.png", label: "Perjalanan bersama" },
