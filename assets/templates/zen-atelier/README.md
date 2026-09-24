@@ -19,3 +19,5 @@ The cover/envelope are illustrated, while the couple portraits and gallery use e
 ## 24 September 2026 — public artwork hookup
 
 The existing public/templates PNGs are used AS-IS. They were not renamed, moved, optimized, or migrated to private storage. These files and all displayed derivatives remain publicly downloadable by browsers. Optimize large PNG display derivatives (without deleting/changing their source) in a separate, visually reviewed change before production rollout.
+
+The original `Zen Atelier Wedding Moodboard UI.png` was subsequently retrieved from the user's conversation Library and visually reviewed. The real mobile reference shows an ivory blossom-and-ink-mountain cover, cream wax-seal envelope, couple editorial, wedding schedule, RSVP, asymmetric gallery and illustrated closing. The scene is composed to follow that reference, but a pixel-identical result has NOT been verified through browser screenshots. Existing PNG assets remain public and large; image optimization is a separate reviewed task.
