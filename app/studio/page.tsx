@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import StudioEntrySection from "@/components/DigitalInvitation/StudioEntrySection";
-import { invitationTemplates } from "@/lib/templates/catalog";
+import { PENDING_TEMPLATE_COOKIE, isSelectableTemplate } from "@/lib/templates/template-intent";
 
 /**
  * Marketing CTA gateway. Studio needs an existing, configured event and its ID;
@@ -15,7 +16,8 @@ export default async function StudioEntryPage({
 }) {
   const params = await searchParams;
   const requested = typeof params.template === "string" ? params.template : undefined;
-  const selectedTemplate = invitationTemplates.some((item) => item.key === requested) ? requested : undefined;
+  const stored = (await cookies()).get(PENDING_TEMPLATE_COOKIE)?.value;
+  const selectedTemplate = isSelectableTemplate(requested) ? requested : !requested && isSelectableTemplate(stored) ? stored : undefined;
   const studioUrl = selectedTemplate ? `/studio?template=${encodeURIComponent(selectedTemplate)}` : "/studio";
   const user = await getCurrentUser();
   if (!user) redirect(`/login?next=${encodeURIComponent(studioUrl)}`);
