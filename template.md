@@ -66,6 +66,14 @@ Saat menampilkan kartu pilihan template (termasuk tiga smartphone pilihan di `/d
 
 Ini hanya pengaturan **representasi kartu katalog**: undangan interaktif yang dibuka dari kartu atau dibagikan kepada tamu tetap dimulai dari Amplop Digital ketika toggle-nya ON, lalu Cover dan section selanjutnya. Jangan mengubah urutan buka undangan, 15 kontrol, data pelanggan, atau toggle tersimpan demi thumbnail. Kartu yang menampilkan renderer asli perlu hanya merender cover untuk menghemat performa; saat template belum mempunyai renderer nyata, gunakan gambar contoh cover yang benar dan jangan menampilkan amplop sebagai penggantinya.
 
+### Simpan pilihan tema sampai pengguna siap masuk Studio
+
+Jika pengunjung menekan **Buat Undangan** pada tema di katalog, simpan **hanya key tema** sebagai pilihan sementara pada browser (localStorage + cookie SameSite=Lax dengan masa berlaku tujuh hari), dan bawa key yang sama pada URL selama login → pilih/buat acara → Studio. **Jangan simpan nama/foto/data tamu dalam cookie.** Validasi key terhadap registry template; URL dan browser storage tidak memberi izin Studio atau hak publikasi. Jika pengguna belum login, tampilkan login lalu teruskan tema; jika belum ada acara, arahkan ke input acara dan **setelah acara baru berhasil disimpan** teruskan langsung ke Studio dengan tema tadi. Jika tersedia lebih dari satu acara, pengguna tetap memilih acara tujuan; jangan membuat atau menimpa acara otomatis.
+
+Di Studio, tema pilihan katalog langsung terlihat pada canvas sebagai **perubahan belum tersimpan**. Browser storage bukan pengganti database: desain baru hanya tersimpan untuk acara tersebut setelah **Simpan Desain** berhasil; setelah itu hapus pilihan sementara agar tidak diterapkan diam-diam ke acara lain. Jika pengguna meninggalkan alur sebelum menyimpan, pilihan tema sementara dapat dipulihkan dari browser yang sama selama masa berlakunya. Gagal mengakses cookie/storage tidak boleh memblokir alur URL normal.
+
+**Panel Tema Studio harus siap ratusan template:** menyediakan kolom pencarian dengan tombol/ikon cari yang benar-benar memfokuskan input, filter Semua / Dengan foto / Tanpa foto, urutan Pilihan aktif / Nama A–Z / Nama Z–A, penanda pilihan yang mudah ditemukan, dan tampilan bertahap (mis. 18 kartu + Tampilkan Lagi) agar tidak merender seluruh katalog pada satu waktu. Pencarian bekerja pada nama/kategori/deskripsi dan langsung memperbarui hasil. Tetap pakai Cover/Hero nyata pada setiap kartu, bukan Amplop Digital. Tidak perlu paragraf abu-abu yang menjelaskan hal yang sudah jelas.
+
 ## 4. Aturan teks dan CTA — berlaku untuk SEMUA tema dan katalog
 
 **Hapus tulisan yang tidak membantu pengunjung mengambil tindakan.** Jangan tampilkan teks yang menjelaskan mekanisme internal, identitas data contoh, atau cara kerja pratinjau pada kartu template, bawah katalog, panel pratinjau, amplop, cover, atau isi undangan.
