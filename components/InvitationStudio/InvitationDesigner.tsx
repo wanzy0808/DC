@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Eye,
   FilePenLine,
@@ -68,6 +68,8 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
+  // A click on the actual envelope advances the Studio stage selector, too.
+  const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
   const [savedState, setSavedState] = useState("");
   const [preview, setPreview] = useState(false);
   const audioMutation = useRef(false);
@@ -471,6 +473,7 @@ export default function InvitationDesigner({ onDirtyChange }: { onDirtyChange?: 
               designKey={designKey}
               musicUrl={musicUrl}
               onEditPhoto={editPhotoFromCanvas}
+              onEnvelopeOpened={handleCanvasEnvelopeOpened}
             />
             </div>}
           </div>
