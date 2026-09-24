@@ -74,7 +74,7 @@ test("Zen envelope honors Studio palette and font tokens without locking its pap
     ".zen-jp-fold-right", ".zen-jp-fold-top", ".zen-jp-mizuhiki-band",
     ".zen-jp-seal", ".zen-jp-sun circle",
   ]) {
-    const rule = envelope.split(`${selector} {`)[1]?.split("}")[0] || "";
+    const rule = envelope.split("\n").find((line) => line.startsWith(`${selector} {`)) || "";
     assert.match(rule, /var\(--jp-/, `${selector} must derive visible colors from the active palette`);
   }
   assert.match(css, /\.zen-jp-letter-names \{[^}]*var\(--inv-heading\)/);
