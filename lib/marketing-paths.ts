@@ -1,7 +1,6 @@
 /** Public marketing surfaces share ambient decoration and optional music. */
 const MARKETING_PATHS = new Set([
   "/",
-  "/pagecontoh",
   "/d-invitation",
   "/event-planner",
   "/wedding-planner",

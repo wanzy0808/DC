@@ -15,14 +15,13 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
-  const isJiplak = pathname === "/jiplak";
-  const isLanding = pathname === "/" || isJiplak || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
-  if ((!embedded && (pathname === "/" || pathname === "/pagecontoh" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
+  const isLanding = pathname === "/" || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
+  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/")) return null;
 
   return (
     <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${
       isLanding
-        ? `dc-navbar--landing ${isJiplak ? "dc-navbar--jiplak bg-transparent" : "bg-transparent"}`
+        ? "dc-navbar--landing bg-transparent"
         : "bg-transparent"
     }`}>
       <div className="mx-auto flex w-[calc(100%-28px)] max-w-full items-center justify-between gap-2 py-3 sm:w-[80vw] sm:py-4">

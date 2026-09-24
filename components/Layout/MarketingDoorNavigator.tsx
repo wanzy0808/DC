@@ -77,7 +77,7 @@ export default function MarketingDoorNavigator() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const activePath = pathname === "/pagecontoh" ? "/" : pathname;
+  const activePath = pathname;
   const visible = destinations.some((item) => item.href === activePath);
   const isEnglish = locale === "en";
 
