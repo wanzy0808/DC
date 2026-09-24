@@ -20,6 +20,7 @@ export function InvitationPreview({
   sections,
   photoAssignments,
   onEditPhoto,
+  onEnvelopeOpened,
   designKey,
   musicUrl,
   eventTag,
@@ -35,6 +36,8 @@ export function InvitationPreview({
   sections: InvitationSections;
   photoAssignments?: PhotoAssignments;
   onEditPhoto?: (slot: PhotoSlot) => void;
+  /** Studio canvas only: the guest has finished opening the envelope. */
+  onEnvelopeOpened?: () => void;
   designKey?: string;
   musicUrl?: string;
 }) {
@@ -43,7 +46,7 @@ export function InvitationPreview({
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={previewInvitation} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} />;
+    return <RomanticRoseTemplate invitation={previewInvitation} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} />;
   }
   return (
     <UniversalInvitationTemplate
@@ -55,6 +58,7 @@ export function InvitationPreview({
       coverUrl={decorUrl}
       photoAssignments={photoAssignments}
       onEditPhoto={onEditPhoto}
+      onEnvelopeOpened={onEnvelopeOpened}
     />
   );
 }
