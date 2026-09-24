@@ -25,8 +25,7 @@ import {
   invitationFontOptions,
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
-import { formatInvitationEventDate } from "@/components/InvitationStudio/designer-state";
-import { invitationTitleCase } from "@/lib/events/parents";
+import { availableEditableCopyFields, editableCopyMaxLength, invitationCopyDefaults, type EditableInvitationCopy, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 
 export function DesignerTool({
@@ -339,54 +338,48 @@ export function FontPanel({
   );
 }
 
+const narrativeCopyLabels: Record<EditableInvitationCopyField, { id: string; en: string }> = {
+  greeting: { id: "Salam & Permohonan Kehadiran", en: "Greeting & Invitation" },
+  closing: { id: "Ucapan Penutup", en: "Closing Message" },
+  zenQuote: { id: "Kutipan Penutup", en: "Closing Quote" },
+};
+
+/** Only words rendered as editable narrative slots in the selected theme.
+ * Event/guest/parents/date/venue/RSVP fields belong to Dashboard and shared data.
+ */
 export function ContentPanel({
-  invitation,
-  eventTag,
-  dressCode,
-  setEventTag,
-  setDressCode,
+  templateKey,
+  eventDescription,
+  copy,
+  onChange,
 }: {
-  invitation: InvitationDesignerInvitation | null;
-  eventTag: string;
-  dressCode: string;
-  setEventTag: (value: string) => void;
-  setDressCode: (value: string) => void;
+  templateKey: string;
+  eventDescription?: string | null;
+  copy: EditableInvitationCopy;
+  onChange: (field: EditableInvitationCopyField, text: string) => void;
 }) {
   const { locale } = useLanguage();
+  const en = locale === "en";
+  const defaults = invitationCopyDefaults(templateKey, eventDescription);
+  const fields = availableEditableCopyFields(templateKey);
   return (
     <div>
-      <Heading
-        title="Isi Undangan"
-        description="Identitas dan jadwal mengikuti data acara."
-      />
-      <div className="mt-5 border-y border-primary/20 py-4">
-        <p className="text-xs font-semibold text-foreground">
-          {invitationTitleCase(invitation?.title || (locale === "en" ? "Event" : "Acara"))}
-        </p>
-        <p className="mt-1 text-xs leading-4 text-muted-foreground">
-          {formatInvitationEventDate(invitation)} ·{" "}
-          {invitation?.venue || (locale === "en" ? "Venue not set" : "Lokasi belum diatur")}
-        </p>
-      </div>
-      <div className="mt-4 space-y-3">
-        <label className="block text-[11px] font-semibold">
-          {locale === "en" ? "Event hashtag" : "Tag / hashtag acara"}
-          <input
-            value={eventTag}
-            onChange={(event) => setEventTag(event.target.value)}
-            className="mt-1.5 w-full rounded-[10px] border border-border bg-background px-3 py-2.5 text-xs font-normal outline-none focus:border-primary"
-            placeholder="#AcaraKita"
-          />
-        </label>
-        <label className="block text-[11px] font-semibold">
-          Dress code
-          <input
-            value={dressCode}
-            onChange={(event) => setDressCode(event.target.value)}
-            className="mt-1.5 w-full rounded-[10px] border border-border bg-background px-3 py-2.5 text-xs font-normal outline-none focus:border-primary"
-            placeholder="Formal / Batik / Pastel"
-          />
-        </label>
+      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
+        {en ? "Invitation Wording" : "Isi Undangan"}
+      </h2>
+      <div className="mt-5 space-y-5">
+        {fields.map((field) => (
+          <label key={field} className="block space-y-2 text-sm text-foreground">
+            <span className="block font-medium">{narrativeCopyLabels[field][en ? "en" : "id"]}</span>
+            <textarea
+              value={copy[field] ?? defaults[field] ?? ""}
+              onChange={(event) => onChange(field, event.target.value)}
+              rows={field === "zenQuote" ? 4 : 5}
+              maxLength={editableCopyMaxLength[field]}
+              className="w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/70 bg-background px-3.5 py-3 text-sm leading-relaxed text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
+            />
+          </label>
+        ))}
       </div>
     </div>
   );
