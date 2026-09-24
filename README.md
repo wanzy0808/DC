@@ -227,7 +227,7 @@ pnpm db:deploy
 - `prd.md` is the single product-requirement source of truth and contains consolidated implementation history in Appendix A.
 - `AGENTS.md` contains mandatory engineering/design rules for agent-made changes.
 - `template.md` and `studio.md` are scoped production/implementation guides; they do not introduce competing product requirements. See `prd.md` §21 for document hierarchy and the staged documentation audit.
-- Legacy `prd-tambahan.md`, `prd-landing.md` and `prdpaging.md` are frozen historical/draft sources during consolidation. Do not write active rules or new changelog entries there. Historical milestones below are descriptive snapshots, not a second rule source.
+- Legacy `prd-tambahan.md`, `prd-landing.md`, `prdpaging.md`, and `pintu3d.md` were retired from the active branch after consolidation; their full pre-deletion Git permalinks and status are recorded in `prd.md` Appendix A. Do not recreate parallel rulebooks. Historical milestones below are descriptive snapshots, not a second rule source.
 
 ## Left-side mini-door navigation
 
