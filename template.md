@@ -154,6 +154,19 @@ Foto pelanggan dibaca dari pustaka event yang sama, bukan di-upload ulang untuk 
 
 Pengaturan font/palet hanya untuk properti yang didukung template dan harus tampak di semua bagian relevan tanpa menghilangkan identitas visual atau mengorbankan kontras. Kemampuan animasi per section dinyatakan jelas bila disediakan. Gunakan lazy loading agar membuka satu template tidak mengunduh kode/aset seluruh katalog. Pertahankan rute publik/personal, validasi server, pembayaran dan akses sesuai PRD.
 
+### Amplop Digital wajib benar-benar terintegrasi dengan Studio
+
+Untuk **setiap template baru yang bisa dikustomisasi**, amplop bukan PNG tetap atau halaman demo terpisah. Perlakukan amplop sebagai bagian dari renderer undangan yang sama dengan Cover. Saat user mengganti palet/font di Studio, preview amplop harus langsung berubah **tanpa harus klik Simpan Desain dahulu**, dan setelah disimpan, undangan publik/personal harus memakai nilai yang sama. Integrasi minimum pada template yang mengizinkan kustomisasi:
+
+- **Palet:** warna background, permukaan kertas/lipatan, teks, aksen segel/ornamen dan tombol memakai token renderer bersama (`--inv-scene-bg`, `--inv-scene-surface`, `--inv-scene-ink`, `--inv-scene-surface-ink`, `--inv-scene-accent`, `--inv-scene-soft`), dengan fallback palet asli tema saat preset dipilih. Gunakan warna campuran dari token untuk shading, bukan warna hardcode yang mengabaikan Studio. Kontras teks harus tetap baik termasuk pada palet gelap. Motif/ilustrasi asli boleh mempertahankan identitas, tetapi ornamen yang secara visual diklaim bisa diwarnai harus memiliki layer/tint yang mengikuti token. PNG/JPG utuh **tidak otomatis dapat diubah warna per-bagiannya**; pecah objek menjadi layer nyata bila desain memerlukan recolor.
+- **Font dan isi:** nama/judul pada amplop menggunakan font heading aktif `--inv-heading`, copy lain mewarisi font body; nama/tanggal/penerima diambil dari data acara/tamu yang sudah terhubung, bukan tulisan statis dari mockup. Ikuti aturan kapitalisasi display-only, tanpa memodifikasi database.
+- **Kontrol yang sudah ada:** toggle Amplop ON/OFF, pembuka **Buka Undangan**, musik dari gestur klik, kontrol Amplop/Cover di canvas Studio, animasi yang bisa diulang serta reduced motion harus bekerja pada renderer nyata yang sama. Foto/media hanya muncul pada amplop apabila template secara resmi mendeklarasikan slot dan renderer mendukungnya; jangan memperlihatkan picker palsu atau mengunggah ulang data.
+- **Batas desain:** untuk template yang secara eksplisit mengunci palet/font, jangan tampilkan pilihan yang tidak bekerja; jelaskan capability saat memilih tema, bukan di dalam undangan. Jangan membuat semua amplop identik demi satu sistem; **shared tokens/data/behavior, art direction tetap milik tema**.
+
+**Uji wajib per template sebelum READY:** ubah palet terang→gelap dan font dari Studio sambil berada di canvas Amplop, pastikan permukaan/tulisan/ornamen berubah dan kontras terbaca; coba Buka Undangan dan kontrol Cover; simpan lalu muat ulang dan bandingkan dengan URL publik; uji Amplop OFF, musik OFF, dan reduced motion. Jika satu pengaturan tidak memengaruhi amplop padahal tersedia di Studio, implementasinya belum selesai.
+
+
+
 ## 8. Checklist sebelum menyebut sebuah tema selesai
 
 - [ ] Brief, moodboard, dan aset tema tersebut sudah diperiksa serta disetujui owner; tidak menggunakan visual Zen Atelier pada tema lain tanpa alasan.
