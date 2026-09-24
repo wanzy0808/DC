@@ -8,6 +8,8 @@ import {
   ArrowUp,
   ArrowDown,
   Trash2,
+  Copy,
+  ClipboardPaste,
   LayoutTemplate,
   Music2,
   Palette,
@@ -94,6 +96,7 @@ export default function InvitationDesigner() {
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+  const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
@@ -160,6 +163,7 @@ export default function InvitationDesigner() {
     setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
     setCanvasStage("envelope");
     setSelectedLayerId(null);
+    setCopiedAssetLayer(null);
     setHistory([]);
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
@@ -227,6 +231,7 @@ export default function InvitationDesigner() {
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
+    setCopiedAssetLayer(null);
     setCanvasStage("envelope");
   }
 
@@ -307,6 +312,20 @@ export default function InvitationDesigner() {
     setInspectorOpen(true);
   }
 
+  function copySelectedAssetLayer() {
+    const selected = design.layers.find((layer) => layer.id === selectedLayerId);
+    if (selected) setCopiedAssetLayer({ ...selected });
+  }
+
+  function pasteAssetLayer() {
+    if (!copiedAssetLayer || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    const next = { ...copiedAssetLayer, id, x: Math.min(100, copiedAssetLayer.x + 5), y: Math.min(100, copiedAssetLayer.y + 5) };
+    change({ layers: [...design.layers, next] });
+    setSelectedLayerId(id);
+    setCanvasStage("cover");
+  }
+
   function beginAssetDrag(src: string) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     draggedAssetSrc.current = src;
@@ -365,6 +384,34 @@ export default function InvitationDesigner() {
     [next[index], next[target]] = [next[target], next[index]];
     change({ layers: next });
   }
+
+  useEffect(() => {
+    function handleLayerShortcut(event: KeyboardEvent) {
+      if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing || canvasStage !== "cover") return;
+      const target = event.target;
+      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+      const activeText = window.getSelection()?.toString();
+      if (activeText) return;
+      const modifier = event.ctrlKey || event.metaKey;
+      if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "c") {
+        if (!selectedAssetLayer) return;
+        event.preventDefault();
+        copySelectedAssetLayer();
+      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "v") {
+        if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
+        event.preventDefault();
+        pasteAssetLayer();
+      } else if (!modifier && !event.altKey && (event.key === "Delete" || event.key === "Backspace")) {
+        if (!selectedAssetLayer) return;
+        event.preventDefault();
+        removeAssetLayer(selectedAssetLayer.id);
+      } else if (!modifier && !event.altKey && event.key === "Escape" && selectedAssetLayer) {
+        setSelectedLayerId(null);
+      }
+    }
+    window.addEventListener("keydown", handleLayerShortcut);
+    return () => window.removeEventListener("keydown", handleLayerShortcut);
+  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, copiedAssetLayer, design.layers]);
 
   function undo() {
     const key = history.at(-1);
