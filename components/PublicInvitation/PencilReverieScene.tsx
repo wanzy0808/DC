@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { ArrowDown, Play } from "lucide-react";
 import "./pencil-reverie.css";
 
@@ -52,6 +52,15 @@ export default function PencilReverieScene({
   stage, names, date, onOpen, isWedding = true, hashtag,
 }: Props) {
   const [opening, setOpening] = useState(false);
+  const [active, setActive] = useState(true);
+  const sceneRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const scene = sceneRef.current;
+    if (!scene || !window.IntersectionObserver) return;
+    const observer = new IntersectionObserver(([entry]) => setActive(entry.isIntersecting), { threshold: 0.01 });
+    observer.observe(scene);
+    return () => observer.disconnect();
+  }, []);
 
   const couple = isWedding ? names.split(/\s*&\s*/).filter(Boolean) : [];
   const openInvitation = () => {
@@ -67,7 +76,7 @@ export default function PencilReverieScene({
     });
   };
 
-  return <section data-invitation-section={stage} data-pr-opening={opening || undefined}
+  return <section ref={sceneRef} data-invitation-section={stage} data-pr-opening={opening || undefined} data-pr-active={active}
     className={"pr-scene pr-" + stage}>
     <div className="pr-paper-fibers" aria-hidden="true"/>
     {stage === "envelope" ? <>
