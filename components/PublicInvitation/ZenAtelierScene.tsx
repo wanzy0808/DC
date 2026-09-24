@@ -50,10 +50,10 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
           <div className="zen-jp-fold-top" />
           <div className="zen-jp-mizuhiki-band">
             <svg className="zen-jp-mizuhiki" viewBox="0 0 260 94" fill="none" focusable="false">
-              <path d="M0 49C55 49 83 49 110 45c18-3 34-18 48-22 12-4 28 0 30 13 2 14-19 25-37 21-18-4-40-26-30-39 10-13 34 1 44 14 14 20 32 19 95 19" stroke="#b54f3a" strokeWidth="3" strokeLinecap="round" />
-              <path d="M0 55c58 0 84-2 113-6 22-3 34 26 54 27 21 2 27-14 17-27-12-14-47-9-45 7 2 12 28 17 47 12 23-7 42-12 74-13" stroke="#ad8b53" strokeWidth="2.7" strokeLinecap="round" />
-              <path d="M0 43c56 1 80 4 115 9 22 4 39-30 59-28 17 1 19 15 8 25-14 14-42 10-51-4-10-17 10-26 27-24 24 3 30 24 102 22" stroke="#ce9b8a" strokeWidth="2.3" strokeLinecap="round" />
-              <path d="M0 60c55-2 89-7 114-12 22-6 36 9 51 10 23 2 42-5 95-4" stroke="#dac39a" strokeWidth="1.6" strokeLinecap="round" />
+              <path d="M0 49C55 49 83 49 110 45c18-3 34-18 48-22 12-4 28 0 30 13 2 14-19 25-37 21-18-4-40-26-30-39 10-13 34 1 44 14 14 20 32 19 95 19" stroke="var(--jp-accent)" strokeWidth="3" strokeLinecap="round" />
+              <path d="M0 55c58 0 84-2 113-6 22-3 34 26 54 27 21 2 27-14 17-27-12-14-47-9-45 7 2 12 28 17 47 12 23-7 42-12 74-13" stroke="var(--jp-soft)" strokeWidth="2.7" strokeLinecap="round" />
+              <path d="M0 43c56 1 80 4 115 9 22 4 39-30 59-28 17 1 19 15 8 25-14 14-42 10-51-4-10-17 10-26 27-24 24 3 30 24 102 22" stroke="color-mix(in srgb,var(--jp-accent) 55%,var(--jp-paper))" strokeWidth="2.3" strokeLinecap="round" />
+              <path d="M0 60c55-2 89-7 114-12 22-6 36 9 51 10 23 2 42-5 95-4" stroke="color-mix(in srgb,var(--jp-soft) 80%,var(--jp-paper-ink))" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
             <span className="zen-jp-seal" lang="ja">{isWedding ? "寿" : "和"}</span>
           </div>
