@@ -1,4 +1,4 @@
-# Dashboard Redesign — DC Organizer
+# Dashboard Redesign — Implementation History (DC Organizer)
 
 Status: **jurnal historis implementasi dan review Dashboard**, dimulai 23 September 2026; bukan persyaratan produk baru. Requirement aktif dan bentuk frame terakhir yang disetujui mengikuti `prd.md` §6 dan §15 serta `AGENTS.md`. Klaim implementasi/tes di bawah adalah snapshot bertanggal dan tidak membuktikan HEAD atau browser/produksi terkini.
 
@@ -120,7 +120,7 @@ Deployment/QA:
 
 - Previous implementation's `min-height` frame and document scrolling did **not** match the approved landing frame. The dashboard root now owns a full viewport, a fixed-size responsive frame, sticky-in-composition header/sidebar and one internally scrolling main content panel; navigation resets internal scroll top. Mobile drawer and overlay are frame-local.
 - Previous Rose-full sidebar and pink-tinted dashboard canvas were also not the requested white/black landing-style theme. The new dashboard palette uses white sidebar/background/cards in Light and near-black sidebar/background/cards in Dark, with stronger Rose outlines, typography, hover/selected navigation and landing-style primary CTA. Beranda's hero changes from a dark Rose slab to a light/dark Rose-outlined card; real event/RSVP metrics and operations are unchanged.
-- Files: `app/dashboard/page.tsx`, `components/Dashboard/DashboardSidebar.tsx`, `app/globals.css`, `prd.md`, `README.md`, `AGENTS.md`, `Dashboard-redesign.md`. Commits: `267ae839`, `d09c230f`, `7543b6ef` plus documentation commits.
+- Files: `app/dashboard/page.tsx`, `components/Dashboard/DashboardSidebar.tsx`, `app/globals.css`, `prd.md`, `README.md`, `AGENTS.md`, `dashboard-redesign-history.md`. Commits: `267ae839`, `d09c230f`, `7543b6ef` plus documentation commits.
 - **QA not yet verified:** desktop/mobile long-content scrolling inside the frame, header account dropdown, sidebar overlay, nested Studio/complex table behavior, Light/Dark screenshots and GitHub Actions build. Do not describe this as a visually approved result.
 
 
