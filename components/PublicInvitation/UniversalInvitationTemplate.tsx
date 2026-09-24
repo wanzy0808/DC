@@ -237,6 +237,7 @@ export default function UniversalInvitationTemplate({
       {!opened && sections.envelope !== false ? (
         <InvitationThemeScenes
           theme={key}
+          isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           names={names || eventTitle}
           date={date}
           cover={usesPhotos ? media.cover : undefined}
@@ -249,6 +250,7 @@ export default function UniversalInvitationTemplate({
         <div>
           {sections.cover !== false && (<InvitationThemeScenes
             theme={key}
+            isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
             names={names || eventTitle}
             date={date}
             cover={usesPhotos ? media.cover : undefined}
@@ -308,7 +310,7 @@ export default function UniversalInvitationTemplate({
               {media.gallery.length ? (
                 <div className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : "grid-cols-2"}`}>
                   {media.gallery.map((asset, index) => (
-                    <div key={asset.id} className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
+                    <div key={asset.id} className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] bg-[var(--inv-surface)] p-1" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
                       <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                     </div>
                   ))}
