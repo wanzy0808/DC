@@ -321,7 +321,7 @@ export default function InvitationDesigner() {
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
       id, kind: "text", src: "", text: text.slice(0, 180), section, x: 50, y: 48, width: 55,
-      opacity: 1, fontSize: 24, fontRole: "heading", color: "#C07A84", rotation: 0,
+      opacity: 1, fontSize: 24, fontRole: "heading", color: palette?.accent ?? "#C07A84", rotation: 0,
     }] });
     setSelectedLayerId(id);
     showDesignSection(section);
