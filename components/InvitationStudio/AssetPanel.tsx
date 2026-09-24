@@ -11,12 +11,14 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 type Asset = { src: string; name: string; folder: string };
 
 export default function AssetPanel({
-  layers, selectedId, templateKey, onAdd, onSelect, onUpdate, onRemove, onReorder,
+  layers, selectedId, templateKey, onAdd, onDragAssetStart, onDragAssetEnd, onSelect, onUpdate, onRemove, onReorder,
 }: {
   layers: InvitationAssetLayer[];
   selectedId: string | null;
   templateKey: string;
   onAdd: (src: string) => void;
+  onDragAssetStart: (src: string) => void;
+  onDragAssetEnd: () => void;
   onSelect: (id: string) => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   onRemove: (id: string) => void;
@@ -67,7 +69,7 @@ export default function AssetPanel({
     <div className="space-y-5">
       <div>
         <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
-        <p className="mt-1 text-sm text-foreground/75">{en ? "Choose an illustration for the Cover. Drag it on the canvas." : "Pilih ilustrasi untuk Cover, lalu geser langsung di canvas."}</p>
+        <p className="mt-1 text-sm text-foreground/75">{en ? "Drag an image onto the Cover, or click to add it." : "Seret gambar ke Cover, atau klik untuk menambahkannya."}</p>
       </div>
       <div className="space-y-3 border-b border-primary/25 pb-5">
         <div className="flex items-center justify-between gap-2">
@@ -108,10 +110,16 @@ export default function AssetPanel({
         {limited && <p className="text-xs text-muted-foreground">{en ? "Showing the first 500 images; use search for this list." : "Menampilkan 500 gambar pertama dari folder publik."}</p>}
         <div className="grid grid-cols-2 gap-2">
           {filtered.slice(0, visibleCount).map((asset) => (
-            <button key={asset.src} type="button" disabled={layers.length >= MAX_ASSET_LAYERS}
+            <button key={asset.src} type="button" draggable={layers.length < MAX_ASSET_LAYERS} disabled={layers.length >= MAX_ASSET_LAYERS}
+              onDragStart={(event) => {
+                event.dataTransfer.effectAllowed = "copy";
+                event.dataTransfer.setData("text/plain", asset.src);
+                onDragAssetStart(asset.src);
+              }}
+              onDragEnd={onDragAssetEnd}
               title={asset.folder + " / " + asset.name}
               onClick={() => onAdd(asset.src)}
-              className="min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40">
+              className="min-w-0 cursor-grab rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40">
               <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                 <img src={asset.src} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
               </span>
