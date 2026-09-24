@@ -19,10 +19,10 @@ const universal = read("components/PublicInvitation/UniversalInvitationTemplate.
 const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 
 test("Isi exposes only narrative slots actually rendered by the chosen theme and event", () => {
-  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "zenQuote"]);
+  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
   assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "closing"]);
-  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing"]);
-  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "closing"]);
+  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing", "ourStory"]);
+  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "closing", "ourStory"]);
   const content = panel.split("export function ContentPanel(")[1]?.split("export function MusicPanel(")[0] || "";
   assert.match(content, /availableEditableCopyFields\(templateKey, isWedding\)/);
   assert.match(content, /<textarea/);
@@ -36,13 +36,14 @@ test("copy overrides round-trip within the event-scoped design key without mutat
     greeting: "Kami memohon doa dan kehadiran Anda.",
     closing: "Terima kasih atas restu yang diberikan.",
     zenQuote: "Langkah kita adalah sebuah cerita.",
+    ourStory: "Kami berkenalan di perpustakaan.\\nBeberapa tahun kemudian, kami memutuskan menikah.",
     venue: "INJECTED: never an editable narrative slot",
   };
   const encoded = withEditableCopy(original, text);
   assert.match(encoded, /^zen-atelier::zen::cinzelFauna::sections=/);
   assert.equal(encoded.split("::").filter((part) => part.startsWith("copy=")).length, 1);
   assert.deepEqual(parseEditableCopy(encoded), {
-    greeting: text.greeting, closing: text.closing, zenQuote: text.zenQuote,
+    greeting: text.greeting, closing: text.closing, ourStory: text.ourStory, zenQuote: text.zenQuote,
   });
   assert.equal(withEditableCopy(encoded, { greeting: "Diganti." }).split("::").filter((part) => part.startsWith("copy=")).length, 1);
   assert.deepEqual(parseEditableCopy(original), {});
@@ -72,4 +73,25 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(romantic, /resolveEditableCopy\(designKey \|\| invitation\.templateKey, "romantic-rose", invitation\.description\)/);
   assert.match(romantic, /\{editableCopy\.greeting\}/);
   assert.match(romantic, /\{editableCopy\.closing\}/);
+});
+
+test("Our Story is optional couple-owned text shown in the real Identity flow, not a new global toggle", () => {
+  const story = read("components/PublicInvitation/OurStorySection.tsx");
+  const sectionRegistry = read("lib/templates/sections.ts");
+  assert.match(panel, /ourStory: \{ id: "Our Story \/ Tentang Kami"/);
+  assert.match(panel, /rows=\{field === "ourStory" \? 8/);
+  assert.match(panel, /field === "ourStory" \? \(en \? "Tell your story together/);
+  assert.ok(!sectionRegistry.includes('{ key: "ourStory"'), "do not invent a 16th invitation visibility toggle");
+  assert.match(story, /if \(!story\?\.trim\(\)\) return null;/);
+  assert.match(story, /data-invitation-section="our-story"/);
+  assert.match(story, /Tentang Kami/);
+  assert.match(story, /\{story\.trim\(\)\}/);
+  assert.match(universal, /couple && sections\.identity !== false && <OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} \/>/);
+  assert.match(romantic, /sections\.identity !== false && <OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" \/>/);
+  assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
+    ourStory: "Bermula dari pertemuan sederhana.",
+  });
+  assert.deepEqual(parseEditableCopy(withEditableCopy("zen-atelier", { ourStory: "y".repeat(1601) })), {});
+  assert.equal(withEditableCopy("zen-atelier", {}), "zen-atelier");
+  assert.deepEqual(availableEditableCopyFields("modern-maroon", false), ["greeting", "closing"]);
 });
