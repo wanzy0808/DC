@@ -69,26 +69,26 @@ export default function AssetPanel({
     <div className="space-y-5">
       <div>
         <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
-        <p className="mt-1 text-sm text-foreground/75">{en ? "Drag an image onto the Cover, or click to add it." : "Seret gambar ke Cover, atau klik untuk menambahkannya."}</p>
+        <p className="mt-1 text-sm text-foreground/75">{en ? "Drag an image onto any invitation section, or click to add it to the Cover." : "Seret gambar ke bagian undangan mana pun, atau klik untuk menambahkannya ke Cover."}</p>
       </div>
       <div className="space-y-3 border-b border-primary/25 pb-5">
         <div className="flex items-center justify-between gap-2">
           <h3 className="flex items-center gap-2 text-sm font-semibold text-primary"><Layers3 size={17} /> {en ? "Layers" : "Layer"} ({layers.length}/{MAX_ASSET_LAYERS})</h3>
-          <span className="text-xs text-muted-foreground">{en ? "Cover only" : "Khusus Cover"}</span>
+          <span className="text-xs text-muted-foreground">{en ? "Enabled sections" : "Semua bagian aktif"}</span>
         </div>
         {layers.length === 0 && <p className="text-xs text-muted-foreground">{en ? "No illustrations added yet." : "Belum ada ilustrasi yang ditempel."}</p>}
         <div className="space-y-1.5">
           {[...layers].reverse().map((layer) => (
             <button key={layer.id} type="button" onClick={() => onSelect(layer.id)} aria-pressed={selectedId === layer.id}
               className={`flex w-full items-center gap-2 rounded-[var(--dc-control-radius)] border px-2 py-2 text-left text-xs hover:border-primary ${selectedId === layer.id ? "border-primary bg-primary/10" : "border-primary/20"}`}>
-              <img src={layer.src} alt="" loading="lazy" className="h-10 w-10 shrink-0 object-contain" />
-              <span className="min-w-0 flex-1 truncate">{assetName(layer.src)}</span>
+              {layer.kind === "text" ? <span className="grid h-10 w-10 shrink-0 place-items-center text-lg font-semibold text-primary">T</span> : <img src={layer.src} alt="" loading="lazy" className="h-10 w-10 shrink-0 object-contain" />}
+              <span className="min-w-0 flex-1 truncate">{layer.kind === "text" ? layer.text : assetName(layer.src)}</span>
               <span className="text-muted-foreground">{layers.indexOf(layer) + 1}</span>
             </button>
           ))}
         </div>
         {selected && <div className="space-y-4 rounded-[var(--dc-control-radius)] border border-primary/40 bg-primary/5 p-3">
-          <h4 className="truncate text-sm font-semibold text-primary">{assetName(selected.src)}</h4>
+          <h4 className="truncate text-sm font-semibold text-primary">{selected.kind === "text" ? selected.text : assetName(selected.src)}</h4>
           {range(en ? "Opacity" : "Opasitas", selected.opacity, 0, 1, 0.05, "%", (opacity) => onUpdate(selected.id, { opacity }))}
           <p className="text-[11px] text-muted-foreground">{en ? "0% invisible · 100% fully visible" : "0% transparan · 100% terlihat penuh"}</p>
           {range(en ? "Size" : "Ukuran", selected.width, 5, 85, 1, "%", (width) => onUpdate(selected.id, { width }))}
