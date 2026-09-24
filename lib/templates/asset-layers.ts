@@ -1,11 +1,24 @@
-/** Theme illustration layers on the invitation Cover. Stored with the existing design key. */
+/** Template-safe, invitation-scoped artwork and optional decorative text. */
+export const studioObjectSections = [
+  "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
+  "countdown", "location", "rsvp", "wishes", "gift", "closing", "footer",
+] as const;
+export type StudioObjectSection = (typeof studioObjectSections)[number];
 export type InvitationAssetLayer = {
   id: string;
+  /** Empty for text objects. Images always reference shipped public derivatives. */
   src: string;
+  kind?: "text";
+  text?: string;
+  section?: StudioObjectSection;
   x: number;
   y: number;
   width: number;
   opacity: number;
+  rotation?: number;
+  fontSize?: number;
+  fontRole?: "heading" | "body";
+  color?: string;
 };
 
 export const MAX_ASSET_LAYERS = 12;
@@ -27,16 +40,29 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
   for (const row of value) {
     if (!row || typeof row !== "object" || Array.isArray(row)) continue;
     const entry = row as Record<string, unknown>;
-    if (!isTemplateIllustration(entry.src) || typeof entry.id !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(entry.id) || used.has(entry.id)) continue;
+    const textObject = entry.kind === "text";
+    const text = typeof entry.text === "string" ? entry.text.slice(0, 180) : "";
+    if ((textObject ? !text.trim() : !isTemplateIllustration(entry.src)) ||
+      typeof entry.id !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(entry.id) || used.has(entry.id)) continue;
     used.add(entry.id);
-    output.push({
+    const layer: InvitationAssetLayer = {
       id: entry.id,
-      src: entry.src,
+      src: textObject ? "" : entry.src as string,
       x: numberBetween(entry.x, 0, 100, 50),
       y: numberBetween(entry.y, 0, 100, 50),
       width: numberBetween(entry.width, 5, 85, 28),
       opacity: numberBetween(entry.opacity, 0, 1, 1),
-    });
+    };
+    if (textObject) {
+      layer.kind = "text";
+      layer.text = text;
+      layer.fontSize = numberBetween(entry.fontSize, 10, 72, 24);
+      layer.fontRole = entry.fontRole === "body" ? "body" : "heading";
+      layer.color = typeof entry.color === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.color) ? entry.color : "#C07A84";
+    }
+    if (studioObjectSections.includes(entry.section as StudioObjectSection)) layer.section = entry.section as StudioObjectSection;
+    if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
+    output.push(layer);
     if (output.length === MAX_ASSET_LAYERS) break;
   }
   return output;
@@ -44,7 +70,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
 
 export function parseAssetLayers(designKey: string): InvitationAssetLayer[] {
   const part = designKey.split("::").find((token) => token.startsWith("layers="));
-  if (!part || part.length > 12000) return [];
+  if (!part || part.length > 30000) return [];
   try {
     return sanitizeAssetLayers(JSON.parse(decodeURIComponent(part.slice("layers=".length))));
   } catch {
