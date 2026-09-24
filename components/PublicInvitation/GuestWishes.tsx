@@ -30,7 +30,7 @@ export default function GuestWishes({
   const rose = appearance === "rose";
   const fieldClass = rose
     ? "w-full min-w-0 rounded-[var(--dc-control-radius)] border border-[#d7b5be] bg-white/90 px-4 py-3 text-sm text-[#66394b] outline-none focus-visible:border-[#a65e69] focus-visible:ring-2 focus-visible:ring-[#a65e69]/20 disabled:opacity-65"
-    : "w-full min-w-0 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] bg-[var(--inv-surface)] px-4 py-3 text-sm text-[var(--inv-ink)] outline-none focus-visible:border-[var(--inv-accent)] focus-visible:ring-2 focus-visible:ring-[var(--inv-accent)]/20 disabled:opacity-65";
+    : "w-full min-w-0 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] bg-[var(--inv-surface)] px-4 py-3 text-sm text-[var(--inv-scene-surface-ink,var(--inv-ink))] outline-none focus-visible:border-[var(--inv-accent)] focus-visible:ring-2 focus-visible:ring-[var(--inv-accent)]/20 disabled:opacity-65";
 
   useEffect(() => {
     if (preview || !slug) {
