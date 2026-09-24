@@ -163,7 +163,7 @@ export function TemplatePanel({
           </div>
         </div>
       </div>
-      <div className="mt-5 grid grid-cols-2 justify-items-center gap-3">
+      <div className="mt-5 grid grid-cols-1 justify-items-center gap-4">
         {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
