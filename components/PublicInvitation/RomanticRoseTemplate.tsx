@@ -9,6 +9,7 @@ import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
+import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { weddingParentLine } from "@/lib/events/parents";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
@@ -102,6 +103,7 @@ function RosePhoto({ url, alt, className, focus = "center" }: { url?: string; al
  */
 export default function RomanticRoseTemplate({
   invitation,
+  designKey,
   preview = false,
   sections: sectionOverride,
   coverUrl,
@@ -111,6 +113,8 @@ export default function RomanticRoseTemplate({
   personalGuest,
 }: {
   invitation: RoseInvitation;
+  /** Studio override; the public renderer reads the saved design key. */
+  designKey?: string;
   personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
   sections?: InvitationSections;
@@ -124,6 +128,7 @@ export default function RomanticRoseTemplate({
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
+  const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
   const { cover, gallery, assignment } = media;
@@ -205,7 +210,7 @@ export default function RomanticRoseTemplate({
 
           {sections.greeting !== false && (<section data-invitation-section="greeting" className="bg-[#fffaf8] px-8 py-20 text-center">
             <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
-            <p className="mx-auto max-w-md text-sm leading-8 text-[#765460]">{invitation.description || "Kami mengundang Anda untuk hadir dan berbagi kebahagiaan dalam perayaan pernikahan kami."}</p>
+            <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.greeting}</p>
           </section>)}
 
           {sections.identity !== false && (<section data-invitation-section="identity" className="bg-[#f8eef0] px-7 py-20">
@@ -320,7 +325,7 @@ export default function RomanticRoseTemplate({
           {sections.closing !== false && (<section data-invitation-section="closing" className="bg-[#fffaf8] px-8 py-20 text-center">
             <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
             <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
-            <p className="mx-auto max-w-sm text-sm leading-8 text-[#765460]">Kehadiran dan doa baik Anda berarti bagi kami. Sampai bertemu di hari bahagia!</p>
+            <p className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.closing}</p>
             <p className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
             {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
           </section>)}
