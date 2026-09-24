@@ -25,11 +25,11 @@ Before any material change, inspect in this order:
 
 Every AI-made material change MUST update Appendix A in `prd.md` with rationale, affected files/area, commit(s), and validation status. If a change alters product requirements, update the canonical body section first and then append its implementation/history entry in the same `prd.md`.
 
-Do not create or revive `prd1.md`, `prdnew.md`, `PRD2.md`, `PRD3.md`, or other split PRD files. When the owner **explicitly requests `prd-tambahan.md`**, it may exist only as a supplemental non-canonical delta log; active requirements must still be mirrored to `prd.md`, and `prd-tambahan.md` must never override the canonical body or Appendix A.
+Do not create or revive split PRD files (`prd1.md`, `prdnew.md`, `PRD2.md`, etc.). Under the owner's documentation-consolidation request, `prd-tambahan.md`, `prd-landing.md`, and `prdpaging.md` are frozen historical/draft sources, not active rulebooks or destinations for new changes. Update the relevant canonical section in `prd.md` and (for material changes) Appendix A. Follow the source/status map in `prd.md` §21; do not delete legacy docs until their unique accepted decisions have been cross-checked and migrated.
 
 Do not add generic project-wide prompt/skill documents that duplicate or conflict with `AGENTS.md` and `prd.md`. If specialized instructions are genuinely needed, keep them narrowly scoped and explicitly referenced.
 
-Validation must never be described as PASS unless an actual build/CI result is available.
+Validation must distinguish source inspection, actual build/CI results, database migration, and browser/E2E verification. Never describe build/CI/migration/E2E as PASS without direct observed evidence for the relevant commit and environment.
 
 **Designer/Customer Studio scoped rule (24 September 2026):** Before modifying designer template authoring, the invitation canvas, visual properties of shared components, or custom-made workflows, read `studio.md` as the scoped design and authorization rule alongside canonical `prd.md` §7.2.0c and `template.md`. Designer may modify whitelisted visual presentation across sections but must never rewrite or bypass protected component behavior, event data, business APIs, or customer permissions. `studio.md` describes future requirements and must not be mistaken for already implemented functionality.
 
