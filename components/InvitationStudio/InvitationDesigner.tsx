@@ -5,6 +5,7 @@ import {
   FilePenLine,
   ImagePlus,
   Layers3,
+  TextCursorInput,
   LayoutTemplate,
   Music2,
   Palette,
@@ -27,8 +28,9 @@ import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/
 import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
+import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
-import { isTemplateIllustration, MAX_ASSET_LAYERS, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
   invitationPalettes,
@@ -70,7 +72,7 @@ export default function InvitationDesigner() {
     defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
-    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets",
+    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover", phone: "Mobile",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
     envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
@@ -80,7 +82,7 @@ export default function InvitationDesigner() {
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
-    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset",
+    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover", phone: "Ponsel",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
     envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
@@ -299,13 +301,27 @@ export default function InvitationDesigner() {
     setMobileCanvas(false);
   }
 
-  function addAssetLayer(src: string, position: { x: number; y: number } = { x: 50, y: 38 }) {
+  function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection } = { x: 50, y: 38 }) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     const id = crypto.randomUUID().replace(/-/g, "");
-    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, width: 28, opacity: 1 }] });
+    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section: position.section ?? "cover", width: 28, opacity: 1 }] });
     setSelectedLayerId(id);
-    setCanvasStage("cover");
+    setCanvasStage(position.section === "envelope" ? "envelope" : "cover");
     setInspectorOpen(true);
+  }
+
+  function addTextObject(text: string, section: StudioObjectSection) {
+    if (!text.trim() || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    change({ layers: [...design.layers, {
+      id, kind: "text", src: "", text: text.slice(0, 180), section, x: 50, y: 48, width: 55,
+      opacity: 1, fontSize: 24, fontRole: "heading", color: "#C07A84", rotation: 0,
+    }] });
+    setSelectedLayerId(id);
+    setCanvasStage(section === "envelope" ? "envelope" : "cover");
+    setPanel("text");
+    setInspectorOpen(true);
+    requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
   }
 
   function copySelectedAssetLayer() {
@@ -319,25 +335,27 @@ export default function InvitationDesigner() {
     const next = { ...copiedAssetLayer, id, x: Math.min(100, copiedAssetLayer.x + 5), y: Math.min(100, copiedAssetLayer.y + 5) };
     change({ layers: [...design.layers, next] });
     setSelectedLayerId(id);
-    setCanvasStage("cover");
+    setCanvasStage(next.section === "envelope" ? "envelope" : "cover");
   }
 
   function beginAssetDrag(src: string) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     draggedAssetSrc.current = src;
-    setCanvasStage("cover");
-    canvasScrollRef.current?.scrollTo({ top: 0 });
+    if (canvasStage === "envelope") setCanvasStage("cover");
   }
 
-  function findCoverDropTarget(clientX: number, clientY: number): HTMLElement | null {
-    const element = document.elementFromPoint(clientX, clientY);
-    const section = element?.closest?.('[data-invitation-section="cover"]');
-    return section instanceof HTMLElement && canvasScrollRef.current?.contains(section) ? section : null;
+  function findSectionDropTarget(clientX: number, clientY: number): HTMLElement | null {
+    for (const element of canvasScrollRef.current?.querySelectorAll<HTMLElement>("[data-invitation-section]") ?? []) {
+      if (!studioObjectSections.includes(element.dataset.invitationSection as StudioObjectSection)) continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.width && rect.height && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) return element;
+    }
+    return null;
   }
 
   function onAssetDragOver(event: DragEvent<HTMLDivElement>) {
     if (!draggedAssetSrc.current || design.layers.length >= MAX_ASSET_LAYERS) return;
-    const section = findCoverDropTarget(event.clientX, event.clientY);
+    const section = findSectionDropTarget(event.clientX, event.clientY);
     if (!section) { if (assetDropReady) setAssetDropReady(false); return; }
     event.preventDefault();
     event.dataTransfer.dropEffect = "copy";
@@ -346,7 +364,7 @@ export default function InvitationDesigner() {
 
   function onAssetDrop(event: DragEvent<HTMLDivElement>) {
     const src = draggedAssetSrc.current;
-    const section = src ? findCoverDropTarget(event.clientX, event.clientY) : null;
+    const section = src ? findSectionDropTarget(event.clientX, event.clientY) : null;
     draggedAssetSrc.current = null;
     setAssetDropReady(false);
     if (!src || !section) return;
@@ -357,6 +375,7 @@ export default function InvitationDesigner() {
     addAssetLayer(src, {
       x: clamp((event.clientX - rect.left) / rect.width * 100),
       y: clamp((event.clientY - rect.top) / rect.height * 100),
+      section: section.dataset.invitationSection as StudioObjectSection,
     });
   }
 
@@ -542,7 +561,8 @@ export default function InvitationDesigner() {
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
-          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setCanvasStage("cover"); setPanel("assets"); }} />
+          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
+          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
           <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
         </nav>
 
@@ -582,6 +602,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
+          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={(id) => setSelectedLayerId(id)} />}
           {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
@@ -628,6 +649,7 @@ export default function InvitationDesigner() {
               selectedAssetLayerId={selectedLayerId}
               onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel("assets"); setInspectorOpen(true); }}
               onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
+              onUpdateAssetLayer={updateAssetLayer}
               onEditPhoto={editPhotoFromCanvas}
               onEnvelopeOpened={handleCanvasEnvelopeOpened}
             />
@@ -639,6 +661,7 @@ export default function InvitationDesigner() {
             selectedAssetIndex={selectedAssetIndex}
             copiedAssetLayer={copiedAssetLayer}
             layerCount={design.layers.length}
+            sections={design.sections}
             onDeselect={() => setSelectedLayerId(null)}
             onUpdate={updateAssetLayer}
             onReorder={reorderAssetLayer}
