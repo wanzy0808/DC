@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowDown, Play } from "lucide-react";
+import { Play } from "lucide-react";
 import "./pencil-reverie.css";
 
 const assetRoot = "/templates/pencil-reverie/";
@@ -54,12 +54,7 @@ export default function PencilReverieScene({
     // The shared parent starts user-selected music synchronously with this click.
     onOpen();
   };
-  const scrollNext = (event: MouseEvent<HTMLButtonElement>) => {
-    event.currentTarget.closest("section")?.nextElementSibling?.scrollIntoView({
-      block: "start",
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
-    });
-  };
+
 
   return <section ref={rootRef} data-invitation-section={stage} data-pr-opening={opening || undefined}
     data-pr-active={visible} data-pr-long={longName} className={"pr-scene pr-" + stage}>
@@ -95,11 +90,7 @@ export default function PencilReverieScene({
         </div>
         <HeartDoodle/>
       </div>
-      <div className="pr-cover-end"><span>Every little moment matters.</span>
-        <button className="pr-scroll-down" type="button" aria-label="Ke bagian berikutnya" onClick={scrollNext}>
-          <ArrowDown size={18} aria-hidden="true"/>
-        </button>
-      </div>
+      <p className="pr-cover-end">Every little moment matters.</p>
     </>}
   </section>;
 }
