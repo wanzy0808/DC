@@ -213,9 +213,9 @@ export default function UniversalInvitationTemplate({
       setOpened(true);
       setOpening(false);
       onEnvelopeOpened?.();
-    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1350);
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : key === "pencil-reverie" ? 1050 : 1350);
     return () => window.clearTimeout(timer);
-  }, [opening, onEnvelopeOpened]);
+  }, [opening, onEnvelopeOpened, key]);
   useEffect(() => {
     if (key !== "pencil-reverie" || (!opened && sections.envelope !== false)) return;
     const root = rootRef.current;
@@ -246,7 +246,7 @@ export default function UniversalInvitationTemplate({
   }, [key, opened, sections.envelope, media.gallery.length]);
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
-    if (key === "zen-atelier") {
+    if (key === "zen-atelier" || key === "pencil-reverie") {
       setOpening(true);
     } else {
       setOpened(true);
