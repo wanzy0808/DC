@@ -22,3 +22,23 @@ test("Zen Atelier opens using the direct user gesture and reuses the shared invi
   assert.match(universal, /<InvitationMusic ref=\{musicRef\}/);
   assert.match(universal, /<RsvpForm slug=\{invitation\.slug\}/);
 });
+
+test("stage-specific Zen envelope uses the supplied paper artwork and opens before advancing", () => {
+  const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
+  const sceneEnvelope = scene.split('stage === "envelope" ? <>')[1]?.split("</> : <>")[0];
+  assert.ok(sceneEnvelope, "expected a distinct envelope stage");
+  assert.match(sceneEnvelope, /Sebuah undangan<br \/>untuk orang istimewa/);
+  assert.match(sceneEnvelope, /Buka Undangan<\/span>/);
+  assert.match(sceneEnvelope, /className="zen-envelope-back"/);
+  assert.match(sceneEnvelope, /className="zen-envelope-flap"/);
+  assert.match(sceneEnvelope, /className="zen-envelope-front"/);
+  assert.match(sceneEnvelope, /disabled=\{opening\}/);
+  assert.doesNotMatch(sceneEnvelope, /Lihat Undangan|Pratinjau|Preview/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-envelope-flap \{ animation:zen-flap/);
+  assert.match(css, /\.zen-envelope\[data-opening\] \.zen-letter \{ animation:zen-letter/);
+  assert.match(css, /@media\(prefers-reduced-motion:reduce\)/);
+  const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  assert.match(universal, /musicRef\.current\?\.playOnOpen\(\)/);
+  assert.match(universal, /window\.matchMedia\("\(prefers-reduced-motion: reduce\)"\)/);
+  assert.match(universal, /setOpened\(true\); setOpening\(false\)/);
+});
