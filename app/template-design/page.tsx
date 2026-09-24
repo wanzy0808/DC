@@ -16,6 +16,7 @@ import {
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { TemplateCanvas, TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
 import { controlStyles } from "@/components/ui/control-styles";
+import { rememberTemplateSelection } from "@/lib/templates/template-intent";
 
 const optionalSections: { key: InvitationSectionKey; label: string }[] = [
   { key: "rsvp", label: "RSVP" },
@@ -320,7 +321,7 @@ export default function TemplateDesignPage() {
               {!selected.ready && <p className="mt-3 text-xs font-medium text-foreground">{copy.designer}</p>}
               {selected.ready && <div className="mt-4 flex flex-col gap-2 md:mt-8">
                 <Button asChild size="sm" className="rounded-xl text-xs">
-                  <Link href={`/studio?template=${encodeURIComponent(selected.key)}`}>{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+                  <Link href={`/studio?template=${encodeURIComponent(selected.key)}`} onClick={() => rememberTemplateSelection(selected.key)}>{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
                 </Button>
               </div>}
             </aside>
