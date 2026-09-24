@@ -16,6 +16,7 @@ import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
 import { weddingParentLine } from "@/lib/events/parents";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
+import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
@@ -150,6 +151,7 @@ export default function UniversalInvitationTemplate({
     ? invitation.templateKey
     : `${key}::${template.preset.palette}::${template.preset.font}`);
   const design = parseDesignKey(activeDesignKey);
+  const editableCopy = resolveEditableCopy(activeDesignKey, key, invitation.description);
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
   const font = invitationFonts[design.font] || invitationFonts[template.preset.font];
   const layout = template.preset.layout;
@@ -314,7 +316,7 @@ export default function UniversalInvitationTemplate({
             onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
           />)}
 
-          {section("greeting", <p className="mx-auto max-w-md text-sm leading-8 opacity-80">{invitation.description || "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."}</p>, 1)}
+          {section("greeting", <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
 
           {section("identity", key === "zen-atelier" ? (
             <div>
@@ -452,9 +454,9 @@ export default function UniversalInvitationTemplate({
 
           {section("closing", (
             <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
-              {key === "zen-atelier" ? <p className="mx-auto max-w-xs text-[15px] leading-8">Atas doa, restu, dan kehadiran Anda dalam perjalanan istimewa ini.</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p>Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!</p></>}
+              {key === "zen-atelier" ? <p className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8">{editableCopy.closing}</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p className="whitespace-pre-line">{editableCopy.closing}</p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
-              {key === "zen-atelier" && couple && <p className="zen-quote">Cinta bukan tentang menemukan seseorang yang sempurna, tetapi tentang berjalan bersama dalam ketidaksempurnaan dengan hati yang tenang.</p>}
+              {key === "zen-atelier" && couple && <p className="zen-quote whitespace-pre-line">{editableCopy.zenQuote}</p>}
             </div>
           ), 11)}
 
