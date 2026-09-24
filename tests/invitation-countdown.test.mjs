@@ -26,5 +26,5 @@ test("Universal and Romantic Rose both consume one countdown helper without chan
   assert.match(universal, /const remaining = getInvitationCountdown\(value, now\)/);
   assert.match(romantic, /const countdown = getInvitationCountdown\(invitation\.eventDate, now \?\? 0\)/);
   assert.match(universal, /\{section\("countdown", countdown \?/);
-  assert.match(romantic, /\{countdown &&/);
+  assert.match(romantic, /now !== null && countdown \?/);
 });
