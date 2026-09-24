@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import "./zen-atelier.css";
 import "./pencil-reverie.css";
-import { PencilSectionArt, PencilMemoryGallery, PencilBackwardClock } from "@/components/PublicInvitation/PencilReverieArtwork";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -23,6 +22,9 @@ import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 
+const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
+const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
+const PencilBackwardClock = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilBackwardClock));
 const ZenAtelierGallery = dynamic(() => import("@/components/PublicInvitation/ZenAtelierGallery"));
 const ZenSectionArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenSectionArtwork));
 const ZenMemoryArtwork = dynamic(() => import("@/assets/templates/zen-atelier/ZenArtwork").then((module) => module.ZenMemoryArtwork));
