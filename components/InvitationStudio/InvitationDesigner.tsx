@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type DragEvent } from "react";
 import {
   FilePenLine,
   ImagePlus,
@@ -94,6 +94,9 @@ export default function InvitationDesigner() {
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+  const draggedAssetSrc = useRef<string | null>(null);
+  const [assetDropReady, setAssetDropReady] = useState(false);
+  const canvasScrollRef = useRef<HTMLDivElement>(null);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
@@ -295,14 +298,54 @@ export default function InvitationDesigner() {
     setMobileCanvas(false);
   }
 
-  function addAssetLayer(src: string) {
+  function addAssetLayer(src: string, position: { x: number; y: number } = { x: 50, y: 38 }) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     const id = crypto.randomUUID().replace(/-/g, "");
-    change({ layers: [...design.layers, { id, src, x: 50, y: 38, width: 28, opacity: 1 }] });
+    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, width: 28, opacity: 1 }] });
     setSelectedLayerId(id);
     setCanvasStage("cover");
     setInspectorOpen(true);
   }
+
+  function beginAssetDrag(src: string) {
+    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
+    draggedAssetSrc.current = src;
+    setCanvasStage("cover");
+    canvasScrollRef.current?.scrollTo({ top: 0 });
+  }
+
+  function findCoverDropTarget(clientX: number, clientY: number): HTMLElement | null {
+    const element = document.elementFromPoint(clientX, clientY);
+    const section = element?.closest?.('[data-invitation-section="cover"]');
+    return section instanceof HTMLElement && canvasScrollRef.current?.contains(section) ? section : null;
+  }
+
+  function onAssetDragOver(event: DragEvent<HTMLDivElement>) {
+    if (!draggedAssetSrc.current || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const section = findCoverDropTarget(event.clientX, event.clientY);
+    if (!section) { if (assetDropReady) setAssetDropReady(false); return; }
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "copy";
+    if (!assetDropReady) setAssetDropReady(true);
+  }
+
+  function onAssetDrop(event: DragEvent<HTMLDivElement>) {
+    const src = draggedAssetSrc.current;
+    const section = src ? findCoverDropTarget(event.clientX, event.clientY) : null;
+    draggedAssetSrc.current = null;
+    setAssetDropReady(false);
+    if (!src || !section) return;
+    event.preventDefault();
+    const rect = section.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const clamp = (value: number) => Math.round(Math.max(0, Math.min(100, value)) * 10) / 10;
+    addAssetLayer(src, {
+      x: clamp((event.clientX - rect.left) / rect.width * 100),
+      y: clamp((event.clientY - rect.top) / rect.height * 100),
+    });
+  }
+
+  function endAssetDrag() { draggedAssetSrc.current = null; setAssetDropReady(false); }
 
   function updateAssetLayer(id: string, patch: Partial<InvitationAssetLayer>) {
     if (!design.layers.some((layer) => layer.id === id)) return;
@@ -496,7 +539,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={(id) => { setSelectedLayerId(id); setCanvasStage("cover"); }} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
@@ -533,8 +576,8 @@ export default function InvitationDesigner() {
             <button className="dc-studio-icon" type="button" title={locale === "en" ? "Bring forward" : "Ke depan"} aria-label={locale === "en" ? "Bring layer forward" : "Pindahkan layer ke depan"} disabled={selectedAssetIndex === design.layers.length - 1} onClick={() => reorderAssetLayer(selectedAssetLayer.id, 1)}><ArrowUp size={16}/></button>
             <button className="dc-studio-icon" type="button" title={locale === "en" ? "Remove layer" : "Hapus layer"} aria-label={locale === "en" ? "Remove selected layer" : "Hapus layer terpilih"} onClick={() => removeAssetLayer(selectedAssetLayer.id)}><Trash2 size={16}/></button>
           </div>}
-          <div className="dc-studio-canvas-scroll">
-          <div className="dc-studio-preview-surface">
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
+          <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
             <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
 
             <InvitationPreview
