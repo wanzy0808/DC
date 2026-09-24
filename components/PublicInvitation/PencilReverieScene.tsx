@@ -29,6 +29,18 @@ function Scribble({ className = "" }: { className?: string }) {
   </svg>;
 }
 
+/** Light-weight pencil skyline to anchor illustrations without relying on any user photo. */
+function SketchTown({ className = "" }: { className?: string }) {
+  return <svg className={"pr-sketch-town " + className} viewBox="0 0 600 315" aria-hidden="true" preserveAspectRatio="xMidYMax slice" fill="none">
+    <path d="M0 243 27 238V159h38v-20h28v93h15V115h30v-20h20v137h14V186h25v47h13V144h22v-43l15-20 16 20v43h28v94h14V182h37v55h14V135h35v-28h18V84l15-14 15 14v23h21v135h14V168h27v-36h37v107h21V175h34v66h31" stroke="currentColor" strokeWidth="1.65"/>
+    <path d="M18 245V181h16m14 65v-61h15M110 245V137h23m-12-19v-9m105 135V158h25m-12-62v-42m7 5V38m-28 75h53m-37-15 12-9 13 9m-16 28v100m-14-91h28m-27 20h24m-25 18h28m53 70v-77h25m-18-55V92m-5 7 11-7 11 7m-7-5V80m-11 38h33M416 242v-119h33m-16-54V48m-11 44h22m-11-29-14 23 14 14 14-14-14-23m-12 33h24m-15 50h21m-21 18h21m-21 18h21m-4 18h-11" stroke="currentColor" strokeWidth="1.1"/>
+    <path d="M0 245c86-8 150 0 203 0 55 0 95-7 149-9 66-1 166 8 248-1M0 253h600M0 270c105-13 186-13 288-10 93 3 176-4 312-7M0 289c91-11 182-8 249-9 132-2 190 2 351-8M0 309c104-9 202-8 309-11 120-4 174-6 291-7" stroke="currentColor" strokeWidth="1.2"/>
+    <path d="M0 258q38-22 75-3t75-1q39-26 76 1t75-2q39-26 75-2t75-2q48-26 89 0t60-1M0 279q45-22 90-4t80-3q42-16 82 1t73 0q42-15 80 1t80-2q46-21 115-3" stroke="currentColor" strokeWidth=".9" opacity=".6"/>
+    {Array.from({length:21},(_,i)=><path key={i} d={"M"+(18+i*27)+" "+(182+(i%4)*9)+" v"+(17+(i%3)*5)+" m-4 -8 h8"} stroke="currentColor" strokeWidth="1" opacity=".64"/>)}
+    <path d="M1 241c84-20 138-19 211 0M273 238q38-18 67-5t53 6M471 241q69-22 128-2" stroke="currentColor" strokeDasharray="3 4" opacity=".4"/>
+  </svg>;
+}
+
 function BackwardClock({ className = "" }: { className?: string }) {
   return <span className={"pr-clock-art " + className} aria-hidden="true">
     <span className="pr-clock-face"/><span className="pr-clock-hand pr-clock-hour"/>
@@ -88,6 +100,7 @@ export default function PencilReverieScene({
       </button>
       <p className="pr-open-hint">Ketuk untuk membuka cerita</p>
     </> : <>
+      <SketchTown className="pr-cover-town"/>
       <Art file="streetlamp.png" className="pr-cover-lamp" eager/>
       <Art file="loveballon1.png" className="pr-cover-balloons"/>
       <Art file="polaroidlove.png" className="pr-cover-polaroid"/>
