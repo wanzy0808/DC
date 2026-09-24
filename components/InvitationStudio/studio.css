@@ -2,12 +2,33 @@
 .dc-invitation-editor { height: 100dvh; padding: 12px; background: var(--primary); overflow: hidden; }
 .dc-studio-frame { display: flex; flex-direction: column; height: 100%; min-width: 0; overflow: hidden; border: 1px solid color-mix(in srgb, white 35%, transparent); border-radius: 18px; background: var(--background); }
 .dc-studio-page-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+/* Same outline/hover language as the landing-page navbar, in both themes. */
+.dc-studio-page-header .dc-theme-toggle,
+.dc-studio-page-header .dc-language-toggle button,
+.dc-studio-page-header .dc-studio-back {
+  background: transparent !important;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+}
+.dc-studio-page-header .dc-theme-toggle,
+.dc-studio-page-header .dc-studio-back { border-radius: 16px !important; }
+.dc-studio-page-header .dc-language-toggle button { border-radius: 10px !important; }
+.dc-studio-page-header .dc-theme-toggle:hover,
+.dc-studio-page-header .dc-language-toggle button:hover,
+.dc-studio-page-header .dc-studio-back:hover {
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
+  border-color: var(--primary) !important;
+}
+.dc-studio-page-header .dc-language-toggle button[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
+}
 .dc-invitation-studio-shell { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--background); }
 .dc-studio-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
-.dc-studio-workspace { display: grid; grid-template-columns: 76px 300px minmax(0, 1fr); flex: 1; min-height: 0; }
-.dc-studio-rail { padding: 12px 6px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
-.dc-studio-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 66px; margin-bottom: 4px; border-radius: 0 16px 16px 0; color: var(--muted-foreground); font-size: 11px; transition: background .18s, color .18s; cursor: pointer; }
-.dc-studio-tool svg { width: 19px; height: 19px; color: var(--primary); }
+.dc-studio-workspace { display: grid; grid-template-columns: 98px 300px minmax(0, 1fr); flex: 1; min-height: 0; }
+.dc-studio-rail { padding: 16px 10px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+.dc-studio-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 82px; margin-bottom: 6px; padding: 12px 6px; border-radius: 0 16px 16px 0; color: var(--foreground); font-size: 12px; font-weight: 500; line-height: 1.35; transition: background .18s, color .18s; cursor: pointer; }
+.dc-studio-tool svg { width: 21px; height: 21px; flex-shrink: 0; color: var(--primary); }
 .dc-studio-tool:hover { color: var(--foreground); background: color-mix(in srgb, var(--primary) 10%, transparent); }
 .dc-studio-tool[aria-pressed=true] { color: var(--foreground); background: color-mix(in srgb, var(--primary) 20%, transparent); box-shadow: inset 3px 0 var(--primary); }
 .dc-studio-tool:focus-visible, .dc-studio-icon:focus-visible, .dc-studio-mobile-view button:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
@@ -19,20 +40,23 @@
 .dc-studio-canvas-toolbar { display: flex; align-items: center; gap: 12px; padding: 6px 16px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
 .dc-studio-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; color: var(--primary); cursor: pointer; }
 .dc-studio-icon:hover { background: color-mix(in srgb, var(--primary) 12%, transparent); }
-.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 32px 24px 56px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
-.dc-studio-preview-surface { position: relative; isolation: isolate; width: 390px; max-width: 100%; margin-inline: auto; overflow: hidden; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 24px; background: var(--background); box-shadow: 0 16px 48px rgb(0 0 0 / .12); }
-.dc-studio-preview-dialog { z-index: 101; }
+.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 24px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-preview-surface { position: relative; isolation: isolate; width: 340px; max-width: 100%; margin-inline: auto; overflow: hidden; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 24px; background: var(--background); box-shadow: 0 16px 48px rgb(0 0 0 / .12); }
 .dc-studio-status { padding: 9px 20px; border-top: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); color: var(--muted-foreground); font-size: 12px; }
 .dc-studio-mobile-view { display: none; }
-.dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 76px minmax(0, 1fr); }
+.dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 98px minmax(0, 1fr); }
 .dc-invitation-studio-shell[data-inspector=false] .dc-studio-inspector { display: none; }
-.dc-unlicensed-studio .dc-studio-preview-surface::after, .dc-studio-preview-dialog[data-watermark=true] .dc-studio-preview-surface::after { content: "PREVIEW • DC ORGANIZER"; position: absolute; inset-inline: -18%; top: 340px; z-index: 40; transform: rotate(-24deg); padding: 14px 0; border-block: 1px solid currentColor; color: var(--primary); background: color-mix(in srgb, var(--background) 78%, transparent); font-family: var(--font-dc-mono); font-size: 12px; letter-spacing: .22em; text-align: center; pointer-events: none; user-select: none; }
-@media (min-width: 1280px) { .dc-invitation-editor { padding: 24px; } .dc-studio-workspace { grid-template-columns: 80px 330px minmax(0, 1fr); } }
+.dc-unlicensed-studio .dc-studio-preview-surface::after { content: "PREVIEW • DC ORGANIZER"; position: absolute; inset-inline: -18%; top: 340px; z-index: 40; transform: rotate(-24deg); padding: 14px 0; border-block: 1px solid currentColor; color: var(--primary); background: color-mix(in srgb, var(--background) 78%, transparent); font-family: var(--font-dc-mono); font-size: 12px; letter-spacing: .22em; text-align: center; pointer-events: none; user-select: none; }
+@media (min-width: 1280px) { .dc-invitation-editor { padding: 24px; } .dc-studio-workspace { grid-template-columns: 108px 330px minmax(0, 1fr); } .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: 108px minmax(0, 1fr); } }
 @media (max-width: 767px) {
   .dc-invitation-editor { padding: 6px; }
   .dc-studio-frame { border-radius: 14px; }
   .dc-studio-page-header { padding: 8px 12px; gap: 8px; }
   .dc-studio-page-header > [role=status] { order: 3; width: 100%; font-size: 12px; }
+  .dc-studio-page-header .dc-theme-toggle, .dc-studio-page-header .dc-studio-back { height: 36px; width: 36px; }
+  .dc-studio-page-header .dc-language-toggle { height: 36px; gap: 3px; }
+  .dc-studio-page-header .dc-language-toggle button { height: 32px; min-width: 31px; padding-inline: 5px; }
+
   .dc-studio-toolbar { padding: 12px; gap: 10px; }
   .dc-studio-toolbar > div:first-child { flex-basis: 100%; }
   .dc-studio-toolbar > div:last-child { width: 100%; justify-content: flex-end; }
@@ -42,7 +66,7 @@
   .dc-studio-mobile-view button[aria-pressed=true] { color: var(--primary); box-shadow: inset 0 -2px var(--primary); }
   .dc-studio-workspace, .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
   .dc-studio-rail { display: flex; overflow-x: auto; padding: 4px 8px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
-  .dc-studio-tool { width: 64px; min-width: 64px; min-height: 60px; margin: 0; border-radius: 12px; }
+  .dc-studio-tool { width: 80px; min-width: 80px; min-height: 70px; margin: 0; padding: 8px 6px; gap: 7px; border-radius: 12px; }
   .dc-studio-tool[aria-pressed=true] { box-shadow: none; }
   .dc-studio-rail-divider, .dc-studio-panel-toggle { display: none; }
   .dc-studio-inspector { padding: 20px; border-right: 0; }
