@@ -24,14 +24,21 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
   return (
     <section data-invitation-section={stage} className={`zen-scene zen-${stage}`} data-opening={opening || undefined}>
       {stage === "envelope" ? <>
-        <p className="zen-envelope-greeting">Sebuah undangan<br />untuk orang istimewa</p>
         <div className="zen-envelope-object" aria-hidden="true">
+          {/* One original paper-and-wax-seal photograph; identical crops form the movable folds. */}
+          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" fetchPriority="high" className="zen-envelope-back" />
           <div className="zen-letter"><span>{title}</span><small>{date}</small></div>
-          <Image width={1122} height={1402} sizes="380px" src={root + "amplop1.png"} alt="" fetchPriority="high" className="zen-envelope-back" />
-          <Image width={1122} height={1402} sizes="380px" src={root + "amplop1.png"} alt="" className="zen-envelope-flap" />
-          <Image width={1122} height={1402} sizes="380px" src={root + "amplop1.png"} alt="" className="zen-envelope-front" />
+          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" className="zen-envelope-flap" />
+          <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "amplop1.png"} alt="" className="zen-envelope-front" />
         </div>
-        <button type="button" disabled={opening} className="zen-action zen-open" onClick={() => { setOpening(true); onOpen(); }}>Buka Undangan</button>
+        <div className="zen-envelope-heading">
+          <p className="zen-envelope-greeting">Sebuah undangan<br />untuk orang istimewa</p>
+          <span className="zen-envelope-rule" aria-hidden="true" />
+        </div>
+        <button type="button" disabled={opening} className="zen-open" onClick={() => { setOpening(true); onOpen(); }}>
+          <span className="zen-envelope-action-icon" aria-hidden="true"><span>✉</span></span>
+          <span>Buka Undangan</span>
+        </button>
       </> : <>
         <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.png"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" />
         <div className="zen-cover-copy">
