@@ -23,7 +23,7 @@ export default function OurStorySection({
         ? "bg-[#f8eef0] text-[#765460]"
         : zen
           ? "zen-section"
-          : "text-[var(--inv-ink)]"}`}
+          : "text-[var(--inv-scene-surface-ink,var(--inv-ink))]"}`}
       style={rose ? undefined : { backgroundColor: "var(--inv-surface)" }}
     >
       <div className={`relative mx-auto max-w-md ${left ? "text-left" : "text-center"}`}>
