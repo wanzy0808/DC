@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
 import "./zen-atelier.css";
 import "./pencil-reverie.css";
+import { PencilSectionArt, PencilMemoryGallery, PencilBackwardClock } from "@/components/PublicInvitation/PencilReverieArtwork";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -216,6 +217,25 @@ export default function UniversalInvitationTemplate({
     return () => window.clearTimeout(timer);
   }, [opening, onEnvelopeOpened]);
   useEffect(() => {
+    if (key !== "pencil-reverie" || (!opened && sections.envelope !== false)) return;
+    const root = rootRef.current;
+    const targets = root?.querySelectorAll<HTMLElement>(".pr-section");
+    if (!targets?.length || !window.IntersectionObserver ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const node = entry.target as HTMLElement;
+        if (entry.isIntersecting) node.dataset.prVisible = "true";
+        else if (entry.boundingClientRect.bottom < 0 || entry.boundingClientRect.top > window.innerHeight) {
+          delete node.dataset.prVisible;
+        }
+      }
+    }, { threshold: 0.14 });
+    targets.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [key, opened, sections.envelope]);
+
+  useEffect(() => {
     if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
     if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const observer = new IntersectionObserver((entries) => {
@@ -266,11 +286,11 @@ export default function UniversalInvitationTemplate({
         {celestial && <div aria-hidden className="pointer-events-none absolute -left-12 -top-10 h-40 w-40 rounded-full border border-[#b5cce4]/35" />}
         {key === "golden-art-deco" && <div aria-hidden className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         {zen && <ZenSectionArtwork section={keyName} />}
-        {pencil && <img aria-hidden="true" alt="" className="pr-ornament -right-12 top-0 h-36 w-36" src="/templates/pencil-reverie/ribbon.png" />}
+        {pencil && <PencilSectionArt section={keyName} />}
         <div className="relative">
-          {!zen && <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
-          <h2 className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{zen ? zenHeadings[keyName] : headings[keyName][1]}</h2>
-          {zen ? <span aria-hidden="true" className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
+          {!zen && !pencil && <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
+          <h2 className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{zen ? zenHeadings[keyName] : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1]}</h2>
+          {zen || pencil ? <span aria-hidden="true" className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
             <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
               <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
               {key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
@@ -321,7 +341,16 @@ export default function UniversalInvitationTemplate({
 
           {section("greeting", <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
 
-          {section("identity", key === "pencil-reverie" ? (<div><div className="pr-identity-art"><img alt="Ilustrasi pasangan bergaya sketsa" src="/templates/pencil-reverie/couplesitting.png" /></div><p className="text-3xl" style={{fontFamily:"var(--inv-heading)"}}>{names}</p>{(groomParents || brideParents) && <div className="mt-6 grid grid-cols-2 gap-4 text-xs leading-7"><p>{groomParents}</p><p>{brideParents}</p></div>}</div>) : key === "zen-atelier" ? (
+          {section("identity", key === "pencil-reverie" ? (
+            <div className="pr-identity-story">
+              <div className="pr-identity-polaroid"><span className="pr-polaroid-tape" aria-hidden="true"/>
+                <img alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.png" loading="lazy"/>
+              </div>
+              <p className="pr-identity-names">{names || eventTitle}</p>
+              {couple && <p className="pr-identity-signature">Dua hati, satu cerita yang selalu tumbuh.</p>}
+              {(groomParents || brideParents) && <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--inv-soft)] pt-6 text-xs leading-7"><p>{groomParents}</p><p>{brideParents}</p></div>}
+            </div>
+          ) : key === "zen-atelier" ? (
             <div>
               {media.cover && <div className="zen-identity-photo">
                 <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={{ objectPosition: `center ${media.assignment.focus.cover}` }} />
@@ -377,7 +406,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", key === "pencil-reverie" ? (<div className="pr-memory-grid">{[["polaroidlove.png","Cerita kita"],["camera1.png","Kenangan"],["bycicle.png","Perjalanan"],["bookstack.png","Halaman baru"]].map(([file,label])=><figure key={file}><img src={`/templates/pencil-reverie/${file}`} alt={`Ilustrasi ${label.toLowerCase()}`} loading="lazy"/><figcaption>{label}</figcaption></figure>)}</div>) : key === "zen-atelier" ? <>
+          {section("gallery", key === "pencil-reverie" ? <PencilMemoryGallery /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} />
           </> : (
@@ -410,7 +439,7 @@ export default function UniversalInvitationTemplate({
             )
           ), 5)}
 
-          {section("countdown", countdown ? (<>{key === "pencil-reverie" && <div className="pr-clock" aria-hidden="true"><span className="hour"/><span className="minute"/><span className="pin"/></div>}
+          {section("countdown", countdown ? (<div className={key === "pencil-reverie" ? "pr-countdown-canvas" : ""}>{key === "pencil-reverie" && <PencilBackwardClock />}
             <div className="grid grid-cols-4 gap-2">
               {countdown.map(([label, value]) => (
                 <div key={label} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
@@ -418,7 +447,7 @@ export default function UniversalInvitationTemplate({
                   <p className="mt-1 text-[10px] opacity-65">{label}</p>
                 </div>
               ))}
-            </div></>
+            </div></div>
           ) : <p className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
 
           {section("location", (
@@ -426,12 +455,12 @@ export default function UniversalInvitationTemplate({
               <MapPin aria-hidden className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
               <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a href={maps} target="_blank" rel="noopener noreferrer" className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-full bg-[var(--inv-accent)] px-6 text-sm text-[var(--inv-surface)]"}>{key === "zen-atelier" ? "Lihat Lokasi" : "Buka Google Maps"}</a>}
+              {maps && <a href={maps} target="_blank" rel="noopener noreferrer" className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-lg bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
               {!maps && <p className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
             </div>
           ), 7)}
 
-          {sections.rsvp && section("rsvp", key === "zen-atelier" ? <>
+          {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" ? <>
             <p className="mx-auto mb-7 max-w-sm text-sm leading-7">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
             <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
           </> : preview ? (
@@ -445,7 +474,7 @@ export default function UniversalInvitationTemplate({
           ), 9)}
 
           {sections.gift && section("gift", hasGift ? (
-            <div className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-6 py-7 text-sm ${panel}`}>
+            <div className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-6 py-7 text-sm ${key === "pencil-reverie" ? "pr-gift-panel" : panel}`}>
               <Gift className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />
               <p className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
@@ -456,7 +485,7 @@ export default function UniversalInvitationTemplate({
           ) : <p className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
 
           {section("closing", (
-            <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
+            <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
               {key === "zen-atelier" ? <p className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8">{editableCopy.closing}</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p className="whitespace-pre-line">{editableCopy.closing}</p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
               {key === "zen-atelier" && couple && <p className="zen-quote whitespace-pre-line">{editableCopy.zenQuote}</p>}
