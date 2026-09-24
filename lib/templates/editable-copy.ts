@@ -3,19 +3,22 @@
  * payment and section headings are NOT editable through Studio's Isi panel.
  * Keep this registry aligned with text that the real public renderer actually uses.
  */
-export const editableInvitationCopyFields = ["greeting", "closing", "zenQuote"] as const;
+export const editableInvitationCopyFields = ["greeting", "closing", "ourStory", "zenQuote"] as const;
 export type EditableInvitationCopyField = (typeof editableInvitationCopyFields)[number];
 export type EditableInvitationCopy = Partial<Record<EditableInvitationCopyField, string>>;
 
 export const editableCopyMaxLength: Record<EditableInvitationCopyField, number> = {
   greeting: 360,
   closing: 320,
+  ourStory: 1600,
   zenQuote: 240,
 };
 
 export function availableEditableCopyFields(templateKey: string, isWedding = true): EditableInvitationCopyField[] {
-  return templateKey === "zen-atelier" && isWedding
-    ? ["greeting", "closing", "zenQuote"]
+  return isWedding
+    ? templateKey === "zen-atelier"
+      ? ["greeting", "closing", "ourStory", "zenQuote"]
+      : ["greeting", "closing", "ourStory"]
     : ["greeting", "closing"];
 }
 
