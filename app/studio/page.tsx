@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import StudioEntrySection from "@/components/DigitalInvitation/StudioEntrySection";
+import StudioEntrySection from "@/components/InvitationStudio/StudioEntrySection";
 import { PENDING_TEMPLATE_COOKIE, isSelectableTemplate } from "@/lib/templates/template-intent";
 
 /**

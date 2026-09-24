@@ -21,7 +21,7 @@ test("catalog popup starts at Cover without changing the original invitation ope
 
 test("create invitation routes through auth-protected Studio and keeps the selected theme", () => {
   const studio = readFileSync(new URL("../app/studio/page.tsx", import.meta.url), "utf8");
-  const entry = readFileSync(new URL("../components/DigitalInvitation/StudioEntrySection.tsx", import.meta.url), "utf8");
+  const entry = readFileSync(new URL("../components/InvitationStudio/StudioEntrySection.tsx", import.meta.url), "utf8");
   const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
   assert.match(page, /href=\{\`\/studio\?template=\$\{encodeURIComponent\(selected\.key\)\}\`\}/);
   assert.match(studio, /if \(!user\) redirect\(\`\/login\?next=\$\{encodeURIComponent\(studioUrl\)\}\`\)/);
@@ -43,7 +43,7 @@ test("Studio can show and replay the envelope independently of Cover-only catalo
 test("pending template survives login and event creation without an automatic database overwrite", () => {
   const intent = readFileSync(new URL("../lib/templates/template-intent.ts", import.meta.url), "utf8");
   const studio = readFileSync(new URL("../app/studio/page.tsx", import.meta.url), "utf8");
-  const entry = readFileSync(new URL("../components/DigitalInvitation/StudioEntrySection.tsx", import.meta.url), "utf8");
+  const entry = readFileSync(new URL("../components/InvitationStudio/StudioEntrySection.tsx", import.meta.url), "utf8");
   const dashboard = readFileSync(new URL("../app/dashboard/page.tsx", import.meta.url), "utf8");
   const events = readFileSync(new URL("../components/Dashboard/EventPanel.tsx", import.meta.url), "utf8");
   const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");

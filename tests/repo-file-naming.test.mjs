@@ -34,6 +34,8 @@ test("the homepage uses the actual four-door production scene, not a misleading 
   assert.ok(home.includes("<LandingDoorScene fullFrame onDoorOpenChange={setDoorOpen} />"));
   assert.match(source, /<Canvas shadows=\{\{ type: THREE\.PCFShadowMap \}\}/);
   assert.equal(existsSync(path("components/Landing/Pintu/PortalTransition.tsx")), true);
+  assert.equal(existsSync(path("components/InvitationStudio/StudioEntrySection.tsx")), true);
+  assert.equal(existsSync(path("components/DigitalInvitation/StudioEntrySection.tsx")), false);
   assert.equal(existsSync(path("components/PublicInvitation/ZenAtelierArtwork.tsx")), true);
   assert.equal(existsSync(path("assets/templates/zen-atelier/ZenArtwork.tsx")), false);
   assert.equal(existsSync(path("dashboard-redesign-history.md")), true);
