@@ -430,7 +430,7 @@ export default function InvitationDesigner() {
             <ContentPanel
               templateKey={design.template}
               eventDescription={invitation?.description}
-              isWedding={identity.category === "WEDDING"}
+              isWedding={getEventCategory(identity.category).nameMode === "couple"}
               copy={design.copy}
               onChange={setNarrativeCopy}
             />
