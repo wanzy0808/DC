@@ -75,7 +75,10 @@ export function ZenMemoryArtwork() {
 /** Every motif is part of the user-supplied public/templates set; only the active
  * Zen template mounts this module. Decorative assets are never user photo slots. */
 export function ZenSectionArtwork({ section }: { section: string }) {
-  if (section === "identity" || section === "closing") {
+  if (section === "closing") {
+    return <img src="/templates/inkmountain.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute inset-x-0 bottom-0 h-[210px] w-full object-cover object-bottom opacity-30" />;
+  }
+  if (section === "identity") {
     return (
       <>
         <img src="/templates/bunga0002.png" alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 -top-10 w-[55%] max-w-[280px] object-contain opacity-30" />
