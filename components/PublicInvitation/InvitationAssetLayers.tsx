@@ -7,6 +7,7 @@ import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontFamily } from "@/lib/templates/presentation";
 import { resizeObjectFromHandle, type ObjectResizeHandle } from "@/lib/templates/object-resize";
 import { useInvitationLayerAnimation } from "@/components/PublicInvitation/use-layer-animation";
+import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 
 /** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
 type LayerPatch = Partial<InvitationAssetLayer>;
@@ -246,7 +247,7 @@ function EditableLayer({
               lineHeight: layer.lineHeight ?? 1.2,
               color: layer.color ?? "#C07A84",
               filter: shadowFilter,
-            }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+            }}><InvitationLayerTextContent text={layer.text ?? ""} unit={layer.textAnimationUnit} /></span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
           </span>
         </button>
       ) : (
@@ -262,7 +263,7 @@ function EditableLayer({
             lineHeight: layer.lineHeight ?? 1.2,
             color: layer.color ?? "#C07A84",
             filter: shadowFilter,
-          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+          }}><InvitationLayerTextContent text={layer.text ?? ""} unit={layer.textAnimationUnit} /></span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
         </span>
       )}
       {editable && selected && <>
