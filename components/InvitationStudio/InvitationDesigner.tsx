@@ -610,6 +610,15 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     showDesignSection(next.section ?? "cover");
   }
 
+  function duplicateSelectedAssetLayer() {
+    if (!selectedAssetLayer || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    const next = { ...selectedAssetLayer, id, x: Math.min(100, selectedAssetLayer.x + 5), y: Math.min(100, selectedAssetLayer.y + 5) };
+    change({ layers: [...design.layers, next] });
+    setSelectedLayerId(id);
+    showDesignSection(next.section ?? "cover");
+  }
+
   function beginAssetDrag(src: string) {
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
     draggedAssetSrc.current = src;
@@ -868,6 +877,10 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         pasteAssetLayer();
+      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "d") {
+        if (!selectedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
+        event.preventDefault();
+        duplicateSelectedAssetLayer();
       } else if (!modifier && !event.altKey && (event.key === "Delete" || event.key === "Backspace")) {
         if (!selectedAssetLayer) return;
         event.preventDefault();
