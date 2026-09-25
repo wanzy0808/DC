@@ -34,6 +34,7 @@ import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templat
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
+import { usePremiumSectionTimelines } from "@/components/PublicInvitation/use-premium-section-timelines";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
@@ -210,6 +211,7 @@ export default function UniversalInvitationTemplate({
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
+  usePremiumSectionTimelines(rootRef, sectionStyles, String(opened));
   useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
@@ -294,7 +296,7 @@ export default function UniversalInvitationTemplate({
     }, { threshold: 0.14 });
     targets.forEach((node) => {
       const sectionKey = node.dataset.invitationSection as InvitationSectionKey | undefined;
-      if (sectionKey && sectionStyles[sectionKey]?.animation !== undefined) return;
+      if (sectionKey && (sectionStyles[sectionKey]?.animation !== undefined || sectionStyles[sectionKey]?.timeline)) return;
       observer.observe(node);
     });
     return () => observer.disconnect();
@@ -309,7 +311,7 @@ export default function UniversalInvitationTemplate({
     rootRef.current?.querySelectorAll<HTMLElement>(".zen-section h2, .zen-couple-name, .zen-gallery-grid button, .zen-quote").forEach((node) => {
       const sectionNode = node.closest<HTMLElement>("[data-invitation-section]");
       const sectionKey = sectionNode?.dataset.invitationSection as InvitationSectionKey | undefined;
-      if (sectionKey && sectionStyles[sectionKey]?.animation !== undefined) return;
+      if (sectionKey && (sectionStyles[sectionKey]?.animation !== undefined || sectionStyles[sectionKey]?.timeline)) return;
       observer.observe(node);
     });
     return () => observer.disconnect();
