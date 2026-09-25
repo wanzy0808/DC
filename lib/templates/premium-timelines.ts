@@ -1,3 +1,5 @@
+import type { InvitationSectionKey } from "@/lib/templates/sections";
+
 export const premiumSectionTimelinePresets = [
   {
     key: "romantic-cascade",
@@ -49,7 +51,7 @@ export function getPremiumSectionTimelinePreset(
 }
 
 /** Functional sections keep their interaction path simple; premium timelines focus on storytelling sections. */
-export const premiumTimelineSectionKeys = new Set([
+export const premiumTimelineSectionKeys: ReadonlySet<InvitationSectionKey> = new Set([
   "cover",
   "greeting",
   "identity",
@@ -57,4 +59,4 @@ export const premiumTimelineSectionKeys = new Set([
   "dateTime",
   "gallery",
   "closing",
-] as const);
+]);
