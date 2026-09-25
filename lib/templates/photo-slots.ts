@@ -26,7 +26,7 @@ export type PhotoAssignments = {
   gallery: string[] | null;
   focus: Record<CroppablePhotoSlot, PhotoFocus>;
   crop: Record<CroppablePhotoSlot, PhotoCrop | null>;
-  motion: Partial<Record<PhotoSlot, PhotoMotion>>;
+  motion?: Partial<Record<PhotoSlot, PhotoMotion>>;
 };
 
 export const defaultPhotoAssignments = (): PhotoAssignments => ({
