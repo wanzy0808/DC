@@ -317,3 +317,24 @@ test("Studio supports standard cut and non-destructive photo crop controls", () 
   assert.match(photoSlots, /crop: Record<CroppablePhotoSlot, PhotoCrop \| null>/);
   assert.match(photoSlots, /photoCropStyle/);
 });
+
+
+test("Studio layers can be locked and hidden without removing them from the design", () => {
+  const assetLayers = read("lib/templates/asset-layers.ts");
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const assetInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+
+  assert.match(assetLayers, /locked\?: boolean/);
+  assert.match(assetLayers, /hidden\?: boolean/);
+  assert.match(assetLayers, /entry\.locked === true/);
+  assert.match(assetLayers, /entry\.hidden === true/);
+  assert.match(assetRenderer, /&& !layer\.hidden/);
+  assert.match(assetRenderer, /layer\.locked/);
+  assert.match(assetInspector, /Buka kunci layer|Unlock layer/);
+  assert.match(assetInspector, /Sembunyikan layer|Hide layer/);
+  assert.match(textInspector, /Terkunci/);
+  assert.match(textInspector, /Tersembunyi/);
+  assert.match(designer, /dc-studio-layer-quick/);
+  assert.match(designer, /layerName/);
+});
