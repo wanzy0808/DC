@@ -103,3 +103,43 @@ export async function createStudioTemplate(
     templateNo: data.template.templateNo,
   };
 }
+
+export async function uploadStudioAsset(
+  invitationId: string,
+  assetType: "IMAGE" | "AUDIO",
+  file: File,
+  fetcher: StudioFetcher = fetch,
+): Promise<InvitationDesignerInvitation["assets"][number]> {
+  const formData = new FormData();
+  formData.append("invitationId", invitationId);
+  formData.append("type", assetType);
+  formData.append("file", file);
+
+  const response = await fetcher("/api/invitations/assets/upload", {
+    method: "POST",
+    body: formData,
+  });
+  const data = await response.json();
+
+  if (!response.ok || !data.asset) {
+    throw new Error(data.error || "Upload gagal.");
+  }
+
+  return data.asset as InvitationDesignerInvitation["assets"][number];
+}
+
+export async function deleteStudioAsset(
+  assetId: string,
+  fetcher: StudioFetcher = fetch,
+): Promise<void> {
+  const response = await fetcher(
+    `/api/invitations/assets/${encodeURIComponent(assetId)}`,
+    { method: "DELETE" },
+  );
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.error || "Musik belum dapat dihapus.");
+  }
+}
+
