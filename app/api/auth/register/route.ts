@@ -2,9 +2,19 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createToken } from "@/lib/auth";
+import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
 
 export async function POST(request: Request) {
   try {
+    const ip = getClientIp(request);
+    const limit = checkPublicRateLimit(`auth:register:ip:${ip}`, 5, 60 * 60_000);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: "Terlalu banyak percobaan pendaftaran. Coba lagi nanti." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+      );
+    }
+
     const body = await request.json();
     const email = String(body.email ?? "").trim().toLowerCase();
     const password = String(body.password ?? "");
