@@ -142,8 +142,8 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /"top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"/);
   assert.match(renderer, /absolute inset-0 z-10 border border-primary/);
   assert.match(renderer, /onPointerDown=\{\(event\) => begin\(event, "rotate"\)\}/);
-  assert.match(renderer, /localX = dx \* Math\.cos\(radians\) \+ dy \* Math\.sin\(radians\)/);
-  assert.match(renderer, /localY = -dx \* Math\.sin\(radians\) \+ dy \* Math\.cos\(radians\)/);
+
+
   assert.match(renderer, /"cursor-ns-resize"/);
   assert.match(renderer, /"cursor-ew-resize"/);
 
@@ -151,6 +151,9 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
 
   assert.match(renderer, /aspectRatio: `\$\{displayed\.width\} \/ \$\{displayed\.height\}`/);
   assert.match(renderer, /return resizeObjectFromHandle\(\{/);
+  const geometry = read("lib/templates/object-resize.ts");
+  assert.match(geometry, /const localX = dx \* cos \+ dy \* sin/);
+  assert.match(geometry, /const localY = -dx \* sin \+ dy \* cos/);
   assert.match(inspector, /selectedAssetLayer\.height !== undefined/);
   assert.match(inspector, /height: undefined/);
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
