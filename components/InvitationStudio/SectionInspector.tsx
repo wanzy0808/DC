@@ -3,6 +3,7 @@
 import { RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionAlign, InvitationSectionStyle } from "@/lib/templates/section-styles";
+import { MAX_RSVP_CUSTOM_FIELDS, type InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 
 const functionalNotes: Partial<Record<InvitationSectionKey, string[]>> = {
   gallery: ["Media event", "Focus foto"],
@@ -17,15 +18,27 @@ export default function SectionInspector({
   locale,
   sectionKey,
   style,
+  rsvpConfig,
+  eventCategory,
   onUpdate,
   onReset,
+  onRsvpConfig,
+  onAddRsvpField,
+  onUpdateRsvpField,
+  onRemoveRsvpField,
   onClose,
 }: {
   locale: string;
   sectionKey: InvitationSectionKey;
   style: InvitationSectionStyle | undefined;
+  rsvpConfig: InvitationRsvpConfig;
+  eventCategory: string;
   onUpdate: (patch: Partial<InvitationSectionStyle>) => void;
   onReset: () => void;
+  onRsvpConfig: (patch: Partial<InvitationRsvpConfig>) => void;
+  onAddRsvpField: () => void;
+  onUpdateRsvpField: (id: string, patch: { label?: string; required?: boolean }) => void;
+  onRemoveRsvpField: (id: string) => void;
   onClose: () => void;
 }) {
   const en = locale === "en";
@@ -117,6 +130,69 @@ export default function SectionInspector({
           </button>
         </div>
       </div>
+
+      {sectionKey === "rsvp" && (
+        <div className="dc-studio-rsvp-config">
+          <div className="dc-studio-rsvp-config-title">
+            <span>{en ? "Events" : "Acara RSVP"}</span>
+            {eventCategory !== "WEDDING" && <small>{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</small>}
+          </div>
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
+            <input type="checkbox" checked={rsvpConfig.ceremony} onChange={(event) => onRsvpConfig({ ceremony: event.target.checked })} />
+          </label>
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Reception" : "Resepsi"}</span>
+            <input type="checkbox" checked={rsvpConfig.reception} onChange={(event) => onRsvpConfig({ reception: event.target.checked })} />
+          </label>
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Attend all" : "Hadir Semua Acara"}</span>
+            <input
+              type="checkbox"
+              checked={rsvpConfig.attendAll}
+              disabled={!(rsvpConfig.ceremony && rsvpConfig.reception)}
+              onChange={(event) => onRsvpConfig({ attendAll: event.target.checked })}
+            />
+          </label>
+
+          <div className="dc-studio-rsvp-fields">
+            <div className="dc-studio-rsvp-fields-head">
+              <span>{en ? "Fields" : "Field RSVP"}</span>
+              <small>{rsvpConfig.customFields.length}/{MAX_RSVP_CUSTOM_FIELDS}</small>
+            </div>
+            <div className="dc-studio-rsvp-core-fields">
+              <small>{en ? "Name" : "Nama"}</small>
+              <small>WhatsApp</small>
+              <small>{en ? "Attendance status" : "Status Kehadiran"}</small>
+              <small>{en ? "Companions" : "Jumlah Pendamping"}</small>
+            </div>
+            {rsvpConfig.customFields.map((field) => (
+              <div className="dc-studio-rsvp-custom-field" key={field.id}>
+                <input
+                  type="text"
+                  value={field.label}
+                  maxLength={60}
+                  aria-label={en ? "Custom RSVP field label" : "Label field RSVP tambahan"}
+                  onChange={(event) => onUpdateRsvpField(field.id, { label: event.target.value })}
+                />
+                <label title={en ? "Required field" : "Wajib diisi"}>
+                  <input type="checkbox" checked={field.required} onChange={(event) => onUpdateRsvpField(field.id, { required: event.target.checked })} />
+                  <span>{en ? "Req" : "Wajib"}</span>
+                </label>
+                <button type="button" onClick={() => onRemoveRsvpField(field.id)} aria-label={en ? "Remove custom field" : "Hapus field tambahan"} title={en ? "Remove field" : "Hapus field"}>×</button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="dc-studio-rsvp-add"
+              disabled={rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS}
+              onClick={onAddRsvpField}
+            >
+              + {en ? "Add field" : "Tambah Field"}
+            </button>
+          </div>
+        </div>
+      )}
 
       {notes.length > 0 && (
         <div className="dc-studio-section-functions">
