@@ -1,6 +1,6 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Eye, EyeOff, Lock, Unlock } from "lucide-react";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import {
   MAX_ASSET_LAYERS,
@@ -92,6 +92,28 @@ export default function TextLayerInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close text properties" : "Tutup properti teks"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          aria-pressed={Boolean(layer.locked)}
+          onClick={() => onUpdate(layer.id, { locked: layer.locked ? undefined : true })}
+        >
+          {layer.locked ? <Lock size={14} /> : <Unlock size={14} />}
+          {layer.locked ? (en ? "Locked" : "Terkunci") : (en ? "Lock" : "Kunci")}
+        </button>
+        <button
+          type="button"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          aria-pressed={!layer.hidden}
+          onClick={() => onUpdate(layer.id, { hidden: layer.hidden ? undefined : true })}
+        >
+          {layer.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
+          {layer.hidden ? (en ? "Hidden" : "Tersembunyi") : (en ? "Visible" : "Terlihat")}
+        </button>
+      </div>
+
+      <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
       <label className="dc-studio-layer-field">
         <span>{en ? "Text" : "Teks"}</span>
         <textarea
@@ -201,6 +223,7 @@ export default function TextLayerInspector({
       </div>
 
       <p className="dc-studio-text-counter">{selectedIndex + 1}/{MAX_ASSET_LAYERS}</p>
+      </fieldset>
     </aside>
   );
 }
