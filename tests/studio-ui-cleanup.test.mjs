@@ -86,8 +86,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);
   assert.doesNotMatch(designer, /<header className="dc-studio-toolbar">/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
-  assert.match(rail, /onClick=\{restoreDefaults\}/);
-  assert.doesNotMatch(rail, /onClick=\{undo\}|onClick=\{redo\}|onClick=\{save\}/);
+  assert.doesNotMatch(rail, /onClick=\{restoreDefaults\}|copy\.startOver|onClick=\{undo\}|onClick=\{redo\}|onClick=\{save\}/);
   const canvasToolbar = designer.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
   assert.match(canvasToolbar, /dc-studio-history-actions/);
   assert.match(canvasToolbar, /onClick=\{restoreDefaults\}/);
