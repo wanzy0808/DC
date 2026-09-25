@@ -16,9 +16,10 @@ export function useInvitationPhotoAnimations(
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+    const motion = JSON.parse(motionKey) as PhotoAssignments["motion"];
 
     const targets = slots.flatMap((slot) => {
-      const config = assignments.motion?.[slot];
+      const config = motion[slot];
       if (!config?.animation || config.animation === "none") return [];
       const nodes = Array.from(root.querySelectorAll<HTMLElement>(
         `[data-invitation-photo-slot="${slot}"]`,
