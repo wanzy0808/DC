@@ -16,6 +16,7 @@ const sectionStyles = read("lib/templates/section-styles.ts");
 const photoSlots = read("lib/templates/photo-slots.ts");
 const photoSlotInspector = read("components/InvitationStudio/PhotoSlotInspector.tsx");
 const photoAnimationHook = read("components/PublicInvitation/use-photo-animations.ts");
+const photoParallaxRuntime = read("components/PublicInvitation/photo-parallax-runtime.ts");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romanticTemplate = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
@@ -631,6 +632,7 @@ test("Studio persists photo slot motion inside the existing photos design token"
   assert.match(photoSlots, /source\.animationDuration, 0\.2, 2\.5/);
   assert.match(photoSlots, /source\.animationDelay, 0, 2/);
   assert.match(photoSlots, /source\.animationStagger, 0\.01, 0\.2/);
+  assert.match(photoSlots, /source\.parallax, 0, 20/);
   assert.match(photoSlots, /motion: sanitizePhotoMotions\(value\.motion\)/);
   assert.match(photoSlots, /motion: sanitizePhotoMotions\(assignments\.motion\)/);
 });
@@ -648,10 +650,12 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(photoSlotInspector, /Preview animasi/);
   assert.match(photoSlotInspector, /slot === "gallery"/);
   assert.match(photoSlotInspector, /Jeda antar foto/);
+  assert.match(photoSlotInspector, /value=\{motion\?\.parallax \?\? 0\}/);
+  assert.match(photoSlotInspector, /max="20"/);
 });
 
 test("Photo slots and gallery use the shared entrance runtime without touching crop transforms", () => {
-  assert.match(photoAnimationHook, /observeInvitationEntrances\(targets\)/);
+  assert.match(photoAnimationHook, /observeInvitationEntrances\(entranceTargets\)/);
   assert.match(photoAnimationHook, /slot === "gallery" \? \(config\.animationStagger \?\? 0\.08\) : 0/);
   assert.match(photoAnimationHook, /\(config\.animationDelay \?\? 0\) \+ index \* stagger/);
 
@@ -666,5 +670,10 @@ test("Photo slots and gallery use the shared entrance runtime without touching c
   assert.match(romanticTemplate, /useInvitationPhotoAnimations\(rootRef, media\.assignment/);
   assert.match(zenGallery, /customMotion \|\| !window\.IntersectionObserver/);
   assert.match(zenGallery, /data-invitation-photo-slot="gallery"/);
+  assert.match(photoAnimationHook, /observePhotoParallax\(parallaxTargets\)/);
+  assert.match(photoParallaxRuntime, /requestAnimationFrame\(update\)/);
+  assert.match(photoParallaxRuntime, /prefers-reduced-motion: reduce/);
+  assert.match(photoParallaxRuntime, /node\.style\.translate =/);
+  assert.match(photoParallaxRuntime, /strength \* 10/);
 });
 
