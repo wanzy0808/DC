@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 
 type Template = {
   id: string;
@@ -42,12 +41,7 @@ export default function DesignerDashboard() {
     salesCount: 0,
     orderValue: 0,
   });
-  const [name, setName] = useState("");
-  const [tags, setTags] = useState("");
-  const [preview, setPreview] = useState<File | null>(null);
-  const [template, setTemplate] = useState<File | null>(null);
   const [message, setMessage] = useState("Memuat template...");
-  const [saving, setSaving] = useState(false);
 
   async function load() {
     const response = await fetch("/api/designer/templates", { cache: "no-store" });
@@ -68,38 +62,6 @@ export default function DesignerDashboard() {
 
   useEffect(() => { void load(); }, []);
 
-  async function upload() {
-    if (!name || !preview || !template) return;
-    setSaving(true);
-    setMessage("");
-
-    const form = new FormData();
-    form.set("name", name);
-    form.set("tags", tags);
-    form.set("preview", preview);
-    form.set("template", template);
-
-    const response = await fetch("/api/designer/templates", { method: "POST", body: form });
-    const data = await response.json();
-    setSaving(false);
-
-    if (!response.ok) {
-      setMessage(data.error ?? "Upload gagal.");
-      return;
-    }
-
-    setMessage(`Template ${data.template.templateNo} berhasil diupload.`);
-    setName("");
-    setTags("");
-    setPreview(null);
-    setTemplate(null);
-
-    const previewInput = document.getElementById("designer-preview") as HTMLInputElement | null;
-    const templateInput = document.getElementById("designer-template") as HTMLInputElement | null;
-    if (previewInput) previewInput.value = "";
-    if (templateInput) templateInput.value = "";
-    await load();
-  }
 
   return (
     <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
@@ -131,39 +93,7 @@ export default function DesignerDashboard() {
         </section>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
-        <section className="rounded-2xl border border-border bg-background p-5">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Upload template</h2>
-          <div className="mt-4 space-y-3">
-            <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama template" />
-            <Input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="Tag, contoh: minimal, floral, modern" />
-            <label className="block text-xs">
-              <span className="mb-1 block text-muted-foreground">Preview JPG/PNG/WEBP · max 5 MB</span>
-              <input
-                id="designer-preview"
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                onChange={(event) => setPreview(event.target.files?.[0] ?? null)}
-                className="block w-full text-xs"
-              />
-            </label>
-            <label className="block text-xs">
-              <span className="mb-1 block text-muted-foreground">Template ZIP/HTML/JSON · max 25 MB</span>
-              <input
-                id="designer-template"
-                type="file"
-                accept=".zip,.html,.json,application/zip,text/html,application/json"
-                onChange={(event) => setTemplate(event.target.files?.[0] ?? null)}
-                className="block w-full text-xs"
-              />
-            </label>
-            <Button disabled={saving || !name || !preview || !template} className="w-full" onClick={upload}>
-              {saving ? "Uploading..." : "Upload ke server"}
-            </Button>
-          </div>
-          {message && <p className="mt-4 rounded-xl bg-primary/10 p-3 text-xs">{message}</p>}
-        </section>
-
+      <div className="grid gap-6">
         <section className="rounded-2xl border border-border bg-background p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Template saya</h2>
