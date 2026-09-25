@@ -301,3 +301,17 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.match(styles, /\.dc-studio-section-side-head strong \{[^}]*font-size: 15px;[^}]*font-weight: 700/);
   assert.match(styles, /\.dc-studio-section-field \{[^}]*font-size: 12px;[^}]*font-weight: 600/);
 });
+
+
+test("Studio supports standard cut and non-destructive photo crop controls", () => {
+  const photoSlots = read("lib/templates/photo-slots.ts");
+  assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
+  assert.match(designer, /setCopiedAssetLayer\(\{ \.\.\.selectedAssetLayer \}\)/);
+  assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
+  assert.match(photos, /Crop & posisi/);
+  assert.match(photos, /onSetCrop/);
+  assert.match(photos, /onResetCrop/);
+  assert.match(photoSlots, /export type PhotoCrop = \{ x: number; y: number; zoom: number \}/);
+  assert.match(photoSlots, /crop: Record<CroppablePhotoSlot, PhotoCrop \| null>/);
+  assert.match(photoSlots, /photoCropStyle/);
+});
