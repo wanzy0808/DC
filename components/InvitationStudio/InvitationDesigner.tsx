@@ -552,11 +552,8 @@ export default function InvitationDesigner() {
   return (
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
-        <div className="min-w-0 flex-1">
-          <h1 className="truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitationTitleCase(invitation?.title || "Studio")}</h1>
-          <p className="mt-1 text-xs text-muted-foreground">{dirty ? copy.unsaved : invitation ? (invitation.templateKey ? copy.saved : copy.empty) : notice}</p>
-        </div>
-        <div className="flex flex-wrap items-center gap-1.5">
+        <h1 className="dc-studio-document-title truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitationTitleCase(invitation?.title || "Studio")}</h1>
+        <div className="dc-studio-toolbar-actions flex flex-wrap items-center gap-1.5">
           <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint}>
             <RotateCcw className="h-4 w-4" /> {copy.defaults}
           </Button>
