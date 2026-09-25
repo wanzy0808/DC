@@ -696,7 +696,7 @@ export default function InvitationDesigner() {
         </aside>
 
         <div className="dc-studio-canvas" onKeyDown={(event) => {
-          if (!invitation || saving || audioBusy || !(event.ctrlKey || event.metaKey) || event.altKey || event.isComposing) return;
+          if (!invitation || saving || audioBusy || !(event.ctrlKey || event.metaKey) || event.altKey || event.nativeEvent.isComposing) return;
           const target = event.target;
           if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
           const key = event.key.toLowerCase();
@@ -727,13 +727,13 @@ export default function InvitationDesigner() {
           <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
             {design.sections.envelope !== false && <button type="button"
               aria-pressed={canvasStage === "envelope"}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
               onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
               title={copy.envelopeHint}
             >{copy.envelope}</button>}
             <button type="button"
               aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
               onClick={() => setCanvasStage("cover")}
               title={copy.coverHint}
             >{copy.cover}</button>
