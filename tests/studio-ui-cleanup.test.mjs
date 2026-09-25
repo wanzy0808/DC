@@ -110,7 +110,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(reset, /photos: defaultPhotoAssignments\(\)/);
   assert.match(reset, /copy: \{\}/);
   assert.match(reset, /sections: \{ \.\.\.defaultInvitationSections \}/);
-  assert.match(reset, /setMusicUrl\("")/);
+  assert.match(reset, /setMusicUrl\(""\)/);
   assert.match(reset, /setCanvasStage\("envelope"\)/);
   assert.match(reset, /setPreviewVersion/);
   assert.match(reset, /setSelectedLayerId\(null\)/);
@@ -125,4 +125,25 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(styles, /\.dc-studio-history-actions \{[^}]*display: flex;[^}]*align-items: center/);
   assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
   assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
+});
+
+
+test("selected assets use a compact left list and right-side properties panel", () => {
+  const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
+  const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  assert.match(designer, /className="dc-studio-canvas-layout"/);
+  assert.match(designer, /className="dc-studio-layer-list"/);
+  assert.match(designer, /Asset \{assetNumber\}\/\{MAX_ASSET_LAYERS\}/);
+  assert.match(designer, /onPosition=\{positionAssetLayer\}/);
+  assert.match(layerInspector, /numberInput\("X"/);
+  assert.match(layerInspector, /numberInput\("Y"/);
+  assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
+  assert.match(layerInspector, /numberInput\(en \? "Rotation" : "Rotasi"/);
+  assert.match(layerInspector, /type="range"/);
+  assert.match(layerInspector, /<option value="front">/);
+  assert.match(layerInspector, /<option value="back">/);
+  assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
+  assert.doesNotMatch(assetPanel, /selectedId|onReorder|onRemove|selected\.opacity/);
+  assert.match(styles, /\.dc-studio-layer-list \{[^}]*width: 104px/);
+  assert.match(styles, /\.dc-studio-layer-side \{[^}]*position: sticky;[^}]*width: 184px;[^}]*justify-self: end/);
 });
