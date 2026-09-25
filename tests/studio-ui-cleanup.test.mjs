@@ -13,6 +13,13 @@ const entranceAnimationRuntime = read("components/PublicInvitation/entrance-anim
 const layerTextContent = read("components/PublicInvitation/InvitationLayerTextContent.tsx");
 const assetLayerModel = read("lib/templates/asset-layers.ts");
 const sectionStyles = read("lib/templates/section-styles.ts");
+const photoSlots = read("lib/templates/photo-slots.ts");
+const photoSlotInspector = read("components/InvitationStudio/PhotoSlotInspector.tsx");
+const photoAnimationHook = read("components/PublicInvitation/use-photo-animations.ts");
+const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+const romanticTemplate = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+const zenGallery = read("components/PublicInvitation/ZenAtelierGallery.tsx");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
 const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
@@ -615,5 +622,49 @@ test("Studio decorative text supports staggered whole word character and line ch
   assert.match(layerAnimationHook, /querySelectorAll<HTMLElement>\("\[data-invitation-text-motion-part\]"\)/);
   assert.match(layerAnimationHook, /index \* stagger/);
   assert.match(layerAnimationHook, /unit === "character" \? 0\.025/);
+});
+
+test("Studio persists photo slot motion inside the existing photos design token", () => {
+  assert.match(photoSlots, /export type PhotoMotion = \{/);
+  assert.match(photoSlots, /motion\?: PhotoMotionMap/);
+  assert.match(photoSlots, /isInvitationSectionAnimation\(source\.animation\)/);
+  assert.match(photoSlots, /source\.animationDuration, 0\.2, 2\.5/);
+  assert.match(photoSlots, /source\.animationDelay, 0, 2/);
+  assert.match(photoSlots, /source\.animationStagger, 0\.01, 0\.2/);
+  assert.match(photoSlots, /motion: sanitizePhotoMotions\(value\.motion\)/);
+  assert.match(photoSlots, /motion: sanitizePhotoMotions\(assignments\.motion\)/);
+});
+
+test("Studio photo selection opens a visual-only right inspector", () => {
+  assert.match(designer, /const \[selectedPhotoSlot, setSelectedPhotoSlot\] = useState<PhotoSlot \| null>\(null\)/);
+  assert.match(designer, /function selectPhotoVisual\(slot: PhotoSlot\)/);
+  assert.match(designer, /target\.closest<HTMLElement>\("\[data-invitation-photo-slot\]"\)/);
+  assert.match(designer, /<PhotoSlotInspector/);
+  assert.match(designer, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
+  assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
+  assert.match(designer, /data\.studioPhotoSelected = "true"/);
+  assert.match(styles, /data-studio-photo-selected="true"/);
+  assert.match(photoSlotInspector, /sectionAnimationPresets/);
+  assert.match(photoSlotInspector, /Preview animasi/);
+  assert.match(photoSlotInspector, /slot === "gallery"/);
+  assert.match(photoSlotInspector, /Jeda antar foto/);
+});
+
+test("Photo slots and gallery use the shared entrance runtime without touching crop transforms", () => {
+  assert.match(photoAnimationHook, /observeInvitationEntrances\(targets\)/);
+  assert.match(photoAnimationHook, /slot === "gallery" \? \(config\.animationStagger \?\? 0\.08\) : 0/);
+  assert.match(photoAnimationHook, /\(config\.animationDelay \?\? 0\) \+ index \* stagger/);
+
+  assert.match(themeScenes, /data-invitation-photo-slot="cover"/);
+  assert.match(universalTemplate, /data-invitation-photo-slot=\{slot\}/);
+  assert.match(universalTemplate, /data-invitation-photo-slot="gallery"/);
+  assert.match(romanticTemplate, /data-invitation-photo-slot="personOne"/);
+  assert.match(romanticTemplate, /data-invitation-photo-slot="personTwo"/);
+  assert.match(romanticTemplate, /data-invitation-photo-slot="gallery"/);
+
+  assert.match(universalTemplate, /useInvitationPhotoAnimations\(rootRef, media\.assignment/);
+  assert.match(romanticTemplate, /useInvitationPhotoAnimations\(rootRef, media\.assignment/);
+  assert.match(zenGallery, /customMotion \|\| !window\.IntersectionObserver/);
+  assert.match(zenGallery, /data-invitation-photo-slot="gallery"/);
 });
 
