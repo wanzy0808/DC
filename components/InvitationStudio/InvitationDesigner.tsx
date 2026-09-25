@@ -647,6 +647,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, width: 28, opacity: 1 }] });
+    setSelectedPhotoSlot(null);
     setSelectedLayerId(id);
     showDesignSection(section);
     setInspectorOpen(true);
@@ -677,6 +678,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       radius: shape === "circle" ? 100 : 0,
       name: shape === "rectangle" ? "Rectangle" : shape === "circle" ? "Circle" : "Line",
     }] });
+    setSelectedPhotoSlot(null);
     setSelectedLayerIds([id]);
     setSelectedLayerId(id);
     showDesignSection(section);
@@ -692,6 +694,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       opacity: 1, fontSize: 24, fontRole: "heading", fontWeight: 400, textAlign: "center",
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
     }] });
+    setSelectedPhotoSlot(null);
     setSelectedLayerId(id);
     showDesignSection(section);
     setPanel("text");
@@ -1192,8 +1195,13 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
   useEffect(() => {
     function handleLayerShortcut(event: KeyboardEvent) {
-      if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing || canvasStage !== "cover") return;
+      if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing) return;
       const target = event.target;
+      if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key === "Escape" && selectedPhotoSlot) {
+        setSelectedPhotoSlot(null);
+        return;
+      }
+      if (canvasStage !== "cover") return;
       if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
       const activeText = window.getSelection()?.toString();
       if (activeText) return;
@@ -1254,7 +1262,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     }
     window.addEventListener("keydown", handleLayerShortcut);
     return () => window.removeEventListener("keydown", handleLayerShortcut);
-  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, copiedAssetLayers, design.layers]);
+  }, [invitation, saving, audioBusy, canvasStage, selectedPhotoSlot, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, copiedAssetLayers, design.layers]);
 
   function undo() {
     const key = history.at(-1);
@@ -1487,6 +1495,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
             if (rsvpElement?.dataset.studioRsvpElement) {
               setSelectedLayerId(null);
+              setSelectedPhotoSlot(null);
               setSelectedSectionKey(null);
               setSelectedSectionInstanceId(null);
               setSelectedCopyField(null);
@@ -1500,6 +1509,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               const [section, kind] = sectionElement.dataset.studioSectionElement.split(":");
               if ((kind === "input" || kind === "button") && section) {
                 setSelectedLayerId(null);
+                setSelectedPhotoSlot(null);
                 setSelectedSectionKey(null);
                 setSelectedSectionInstanceId(null);
                 setSelectedRsvpElementKey(null);
@@ -1512,11 +1522,19 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             const copyElement = target.closest<HTMLElement>("[data-studio-copy-field]");
             if (copyElement?.dataset.studioCopyField) {
               setSelectedLayerId(null);
+              setSelectedPhotoSlot(null);
               setSelectedSectionKey(null);
               setSelectedSectionInstanceId(null);
               setSelectedRsvpElementKey(null);
               setSelectedSectionElement(null);
               setSelectedCopyField(copyElement.dataset.studioCopyField as EditableInvitationCopyField);
+              return;
+            }
+
+            const photoElement = target.closest<HTMLElement>("[data-invitation-photo-slot]");
+            const photoSlot = photoElement?.dataset.invitationPhotoSlot as PhotoSlot | undefined;
+            if (photoSlot && (["cover", "personOne", "personTwo", "gallery"] as PhotoSlot[]).includes(photoSlot)) {
+              selectPhotoVisual(photoSlot);
               return;
             }
 
@@ -1539,6 +1557,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
             if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) {
               setSelectedLayerId(null);
+              setSelectedPhotoSlot(null);
               setSelectedSectionKey(null);
               setSelectedSectionInstanceId(null);
               setSelectedRsvpElementKey(null);
@@ -1700,6 +1719,15 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                 onDeselect={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
                 onUpdate={updateAssetLayer}
                 onPosition={positionAssetLayer}
+              />
+            ) : selectedPhotoSlot ? (
+              <PhotoSlotInspector
+                locale={locale}
+                slot={selectedPhotoSlot}
+                motion={design.photos.motion?.[selectedPhotoSlot]}
+                onUpdate={(patch) => updatePhotoMotion(selectedPhotoSlot, patch)}
+                onReset={() => resetPhotoMotion(selectedPhotoSlot)}
+                onClose={() => setSelectedPhotoSlot(null)}
               />
             ) : selectedRsvpElementKey ? (
               <RsvpElementInspector
