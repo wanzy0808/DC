@@ -21,6 +21,10 @@ const copyMotionModel = read("lib/templates/editable-copy-motion.ts");
 const copyMotionControls = read("components/InvitationStudio/CopyMotionControls.tsx");
 const copyAnimationHook = read("components/PublicInvitation/use-copy-animations.ts");
 const ourStorySection = read("components/PublicInvitation/OurStorySection.tsx");
+const premiumTimelineModel = read("lib/templates/premium-timelines.ts");
+const premiumTimelineHook = read("components/PublicInvitation/use-premium-section-timelines.ts");
+const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
+const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romanticTemplate = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
@@ -729,5 +733,42 @@ test("Built-in editable copy uses shared whole word character and line choreogra
 
   assert.match(ourStorySection, /motionUnit\?: EditableCopyMotionUnit/);
   assert.match(ourStorySection, /<InvitationLayerTextContent text=\{storyText\} unit=\{motionUnit\}/);
+});
+
+test("Premium section timelines lazy-load GSAP only for supported storytelling sections", () => {
+  const packageJson = read("package.json");
+
+  assert.match(packageJson, /"gsap": "\^3\.15\.0"/);
+  assert.match(premiumTimelineModel, /key: "romantic-cascade"/);
+  assert.match(premiumTimelineModel, /key: "editorial-sequence"/);
+  assert.match(premiumTimelineModel, /key: "luxe-cinematic"/);
+  assert.match(premiumTimelineModel, /key: "paper-story"/);
+  assert.match(premiumTimelineModel, /"cover"/);
+  assert.match(premiumTimelineModel, /"gallery"/);
+  assert.doesNotMatch(premiumTimelineModel, /"rsvp"/);
+  assert.doesNotMatch(premiumTimelineModel, /"wishes"/);
+
+  assert.match(sectionStyles, /timeline\?: InvitationPremiumTimeline/);
+  assert.match(sectionStyles, /isInvitationPremiumTimeline\(source\.timeline\)/);
+  assert.match(sectionStyles, /premiumTimelineSectionKeys\.has\(key as InvitationSectionKey\)/);
+
+  assert.match(sectionInspector, /Timeline premium/);
+  assert.match(sectionInspector, /premiumSectionTimelinePresets/);
+  assert.match(sectionInspector, /animation: undefined/);
+  assert.match(sectionInspector, /GSAP dimuat hanya saat section ini memakainya/);
+
+  const reducedMotionIndex = premiumTimelineHook.indexOf('prefers-reduced-motion: reduce');
+  const importIndex = premiumTimelineHook.indexOf('await import("gsap")');
+  assert.ok(reducedMotionIndex >= 0 && importIndex > reducedMotionIndex);
+  assert.doesNotMatch(premiumTimelineHook, /from "gsap"/);
+  assert.match(premiumTimelineHook, /IntersectionObserver/);
+  assert.match(premiumTimelineHook, /storyItems\(section\)/);
+  assert.match(premiumTimelineHook, /clearProps: "opacity,transform,filter,clipPath"/);
+  assert.match(premiumTimelineHook, /revision/);
+
+  assert.match(sectionAnimationHook, /config\?\.timeline \|\| !config\?\.animation/);
+  assert.match(universalTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
+  assert.match(romanticTemplate, /usePremiumSectionTimelines\(rootRef, sectionStyles, String\(opened\)\)/);
+  assert.match(universalTemplate, /sectionStyles\[sectionKey\]\?\.timeline/);
 });
 
