@@ -562,6 +562,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Improve overlapping-object selection and layer list naming so stacked objects are easy to target.
 - [x] Add keyboard nudge with Arrow keys and larger Shift+Arrow movement for movable design layers.
 - [x] Add snapping/alignment guides for center, section bounds, and nearby objects.
+- [x] Add multi-select align/distribute controls (left/center/right, top/middle/bottom, horizontal/vertical distribution).
 - [x] Add local Studio canvas zoom controls without changing saved invitation geometry.
 - [x] Add image layer flip horizontal/vertical and quick center positioning.
 - [x] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
