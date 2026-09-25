@@ -107,6 +107,10 @@ test("decorative text and section-targeted artwork survive the shared design-key
   const key = withAssetLayers(original, [image, text]);
   assert.deepEqual(parseAssetLayers(key), [image, text]);
   assert.equal(parseAssetLayers(withAssetLayers(key, [] )).length, 0);
+  const stretched = { ...image, width: 48, height: 72 };
+  assert.deepEqual(parseAssetLayers(withAssetLayers(original, [stretched])), [stretched]);
+  assert.deepEqual(parseAssetLayers(withAssetLayers(original, [image])), [image]);
+  assert.equal(sanitizeAssetLayers([{ ...stretched, height: 999 }])[0].height, 200);
   assert.deepEqual(sanitizeAssetLayers([{ ...text, text: "<script>ignored</script>", color: "url(javascript:evil)" }])[0], {
     ...text, text: "<script>ignored</script>", color: "#C07A84",
   });
@@ -141,6 +145,12 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /localY = -dx \* Math\.sin\(radians\) \+ dy \* Math\.cos\(radians\)/);
   assert.match(renderer, /"cursor-ns-resize"/);
   assert.match(renderer, /"cursor-ew-resize"/);
+  assert.match(renderer, /if \(xWeight && !yWeight\) return/);
+  assert.match(renderer, /if \(yWeight && !xWeight\) return/);
+  assert.match(renderer, /height: round\(clamp\(drag\.height \+ yWeight \* localY/);
+  assert.match(renderer, /aspectRatio: `\$\{displayed\.width\} \/ \$\{displayed\.height\}`/);
+  assert.match(inspector, /selectedAssetLayer\.height !== undefined/);
+  assert.match(inspector, /height: undefined/);
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
   assert.match(inspector, /type="number" min="-180" max="180" step="1"/);
   assert.match(inspector, /Math\.min\(180, Math\.max\(-180, angle\)\)/);
