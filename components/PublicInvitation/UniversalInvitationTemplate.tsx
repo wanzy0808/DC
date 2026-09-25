@@ -499,11 +499,7 @@ export default function UniversalInvitationTemplate({
           {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" ? <>
             <p className="mx-auto mb-7 max-w-sm text-sm leading-7">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
             <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
-          </> : preview ? (
-            <div className="mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] p-6 text-sm leading-7">
-              Form RSVP tersedia di undangan yang sudah dipublikasikan.
-            </div>
-          ) : <RsvpForm slug={invitation.slug} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
+          </> : <RsvpForm slug={invitation.slug} preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
             <GuestWishes slug={invitation.slug} preview={preview} initialName={personalGuest?.name} appearance={key === "zen-atelier" ? "zen" : "default"} />
