@@ -275,3 +275,28 @@ test("native shape layers round-trip safely and render through the shared object
   assert.match(inspector, /Corner radius|Radius sudut/);
   assert.match(editor, /function addShapeObject\(shape: InvitationShapeKind\)/);
 });
+
+
+test("layer radius and shadow styling survive the codec and shared renderer", () => {
+  const styled = {
+    ...asset("shadowed"),
+    radius: 18,
+    shadowX: 2,
+    shadowY: 9,
+    shadowBlur: 21,
+    shadowColor: "#112233",
+    shadowOpacity: 0.35,
+  };
+  const key = withAssetLayers("classic-pearl::pearl::cinzelFauna", [styled]);
+  assert.deepEqual(parseAssetLayers(key), [styled]);
+
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const assetInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+  assert.match(renderer, /function layerShadowFilter/);
+  assert.match(renderer, /drop-shadow/);
+  assert.match(renderer, /borderRadius:/);
+  assert.match(assetInspector, /Tambah bayangan|Add shadow/);
+  assert.match(assetInspector, /Radius sudut|Corner radius/);
+  assert.match(textInspector, /Bayangan aktif|Shadow on/);
+});
