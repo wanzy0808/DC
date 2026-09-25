@@ -145,17 +145,17 @@
 .dc-studio-section-number { display: flex; min-width: 0; align-items: center; gap: 3px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; padding-right: 6px; background: var(--background); }
 .dc-studio-section-number input { width: 100%; min-width: 0; height: 31px; border: 0; outline: 0; background: transparent; padding: 0 4px 0 7px; color: var(--foreground); font-size: 11px; }
 .dc-studio-section-number small { color: var(--muted-foreground); font-size: 9px; }
-.dc-studio-section-color { display: flex; align-items: center; gap: 6px; }
-.dc-studio-section-color input[type="color"] { width: 34px; height: 30px; border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); border-radius: 9px; background: var(--background); padding: 2px; }
-.dc-studio-section-color button, .dc-studio-section-reset { min-height: 31px; border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent); border-radius: 10px; background: var(--background); color: var(--primary); font-size: 10px; }
-.dc-studio-section-color button { flex: 1; }
+.dc-studio-section-color { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 7px; }
+.dc-studio-section-color input[type="color"] { width: 100%; height: 34px; border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); border-radius: 9px; background: var(--background); padding: 2px; cursor: pointer; }
+.dc-studio-section-color output { min-width: 52px; color: var(--muted-foreground); font-size: 9px; text-align: right; }
+.dc-studio-section-reset { min-height: 31px; border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent); border-radius: 10px; background: var(--background); color: var(--primary); font-size: 10px; }
 .dc-studio-section-functions { display: grid; gap: 7px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); }
 .dc-studio-section-functions > span { color: var(--muted-foreground); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
 .dc-studio-section-functions > div { display: flex; flex-wrap: wrap; gap: 4px; }
 .dc-studio-section-functions small { border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent); border-radius: 8px; padding: 3px 5px; color: var(--foreground); font-size: 9px; }
 .dc-studio-section-functions p { color: var(--muted-foreground); font-size: 9px; line-height: 1.5; }
 .dc-studio-section-reset { display: flex; width: 100%; align-items: center; justify-content: center; gap: 5px; margin-top: 11px; }
-.dc-studio-section-color button:hover, .dc-studio-section-reset:hover { background: color-mix(in srgb, var(--primary) 8%, transparent); }
+.dc-studio-section-reset:hover { background: color-mix(in srgb, var(--primary) 8%, transparent); }
 .dc-studio-section-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 .dc-studio-rsvp-text-input { width: 100%; min-height: 32px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; background: var(--background); padding: 0 7px; color: var(--foreground); font-size: 11px; }
 .dc-studio-preview-surface [data-studio-rsvp-selected="true"] { position: relative; z-index: 40; outline: 2px solid var(--primary) !important; outline-offset: 2px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--background) 75%, transparent); }

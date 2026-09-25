@@ -45,6 +45,17 @@ test("Studio ID/EN switch updates its navigation, template search and photo cont
   assert.match(photos, /const en = locale === "en"/);
 });
 
+
+test("Studio merges Bagian and Isi into one left-rail menu", () => {
+  assert.match(designer, /sections: "Bagian & Isi"/);
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.match(rail, /label=\{copy\.sections\}/);
+  assert.doesNotMatch(rail, /panel === "content"|copy\.content|FilePenLine/);
+  const mergedPanel = designer.split('{panel === "sections" && (')[1]?.split('{panel === "color"')[0] || "";
+  assert.match(mergedPanel, /<SectionsPanel sections=\{design\.sections\} onChange=\{setSection\} \/>/);
+  assert.match(mergedPanel, /<ContentPanel/);
+});
+
 test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
   assert.match(templatePanel, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
   assert.doesNotMatch(templatePanel, /photoFilter === key \? "bg-primary text-black"/);

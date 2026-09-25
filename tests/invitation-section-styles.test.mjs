@@ -37,7 +37,7 @@ test("section CSS helper only emits explicit visual overrides", () => {
     paddingBottom: 48,
     opacity: 0.7,
     textAlign: "right",
-    backgroundColor: "#112233",
+    background: "#112233",
   });
 });
 
@@ -59,6 +59,8 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(inspector, /Ruang vertikal/);
   assert.match(inspector, /Opasitas/);
   assert.match(inspector, /Warna latar section/);
+  assert.doesNotMatch(inspector, />\s*Default\s*</);
+  assert.match(inspector, /dc-studio-section-reset/);
   assert.match(inspector, /Komponen/);
   assert.match(state, /withInvitationSectionStyles/);
   assert.match(state, /parseInvitationSectionStyles/);

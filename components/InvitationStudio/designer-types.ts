@@ -55,7 +55,6 @@ export type InvitationDesignerPanel =
   | "sections"
   | "color"
   | "font"
-  | "content"
   | "decor"
   | "music"
   | "assets"

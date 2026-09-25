@@ -121,11 +121,10 @@ export default function SectionInspector({
             type="color"
             value={style?.background ?? "#ffffff"}
             aria-label={en ? "Section background color" : "Warna latar section"}
+            title={en ? "Choose section background" : "Pilih warna latar section"}
             onChange={(event) => onUpdate({ background: event.target.value })}
           />
-          <button type="button" onClick={() => onUpdate({ background: undefined })}>
-            Default
-          </button>
+          <output>{style?.background?.toUpperCase() ?? (en ? "Theme" : "Tema")}</output>
         </div>
       </div>
 

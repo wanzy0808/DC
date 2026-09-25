@@ -69,6 +69,7 @@ export function invitationSectionStyleCss(style?: InvitationSectionStyle): CSSPr
     ...(style.paddingY !== undefined ? { paddingTop: style.paddingY, paddingBottom: style.paddingY } : {}),
     ...(style.opacity !== undefined ? { opacity: style.opacity } : {}),
     ...(style.align ? { textAlign: style.align } : {}),
-    ...(style.background ? { backgroundColor: style.background } : {}),
+    // Background is authoritative: shorthand also clears a template gradient/image on the section root.
+    ...(style.background ? { background: style.background } : {}),
   };
 }

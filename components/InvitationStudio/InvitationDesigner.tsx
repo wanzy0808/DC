@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState, type DragEvent } from "react";
 import {
-  FilePenLine,
   ImagePlus,
   Layers3,
   TextCursorInput,
@@ -76,7 +75,7 @@ export default function InvitationDesigner() {
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
-    sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
+    sections: "Sections & Content", colors: "Colors", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
     envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
@@ -86,7 +85,7 @@ export default function InvitationDesigner() {
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
-    sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
+    sections: "Bagian & Isi", colors: "Warna", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
     envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
@@ -801,7 +800,6 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
-          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
@@ -811,20 +809,24 @@ export default function InvitationDesigner() {
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
           {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
-          {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
+          {panel === "sections" && (
+            <div className="space-y-8">
+              <SectionsPanel sections={design.sections} onChange={setSection} />
+              <div className="border-t border-primary/20 pt-7">
+                <ContentPanel
+                  templateKey={design.template}
+                  eventDescription={invitation?.description}
+                  isWedding={getEventCategory(identity.category).nameMode === "couple"}
+                  copy={design.copy}
+                  onChange={setNarrativeCopy}
+                />
+              </div>
+            </div>
+          )}
           {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
           {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
           {panel === "font" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Font Romantic Rose mengikuti desain asli tema.</p>}
           {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
-          {panel === "content" && (
-            <ContentPanel
-              templateKey={design.template}
-              eventDescription={invitation?.description}
-              isWedding={getEventCategory(identity.category).nameMode === "couple"}
-              copy={design.copy}
-              onChange={setNarrativeCopy}
-            />
-          )}
           {panel === "decor" && template && !template.usesPhotos ? (
             <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
