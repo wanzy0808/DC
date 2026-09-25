@@ -15,7 +15,8 @@ type Props = {
   section?: StudioObjectSection;
   editable?: boolean;
   selectedId?: string | null;
-  onSelect?: (id: string) => void;
+  selectedIds?: string[];
+  onSelect?: (id: string, additive?: boolean) => void;
   onUpdate?: (id: string, patch: LayerPatch) => void;
 };
 
@@ -74,7 +75,7 @@ function EditableLayer({
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
       moved: false,
     };
-    onSelect?.(layer.id);
+    onSelect?.(layer.id, event.shiftKey);
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
@@ -193,7 +194,7 @@ function EditableLayer({
           aria-pressed={selected}
           className={`pointer-events-auto block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
-          onClick={(event) => { event.stopPropagation(); onSelect?.(layer.id); }} onPointerDown={(event) => begin(event, "move")}
+          onClick={(event) => { event.stopPropagation(); onSelect?.(layer.id, event.shiftKey); }} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
           onKeyDown={keys}>
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
@@ -234,7 +235,7 @@ function EditableLayer({
   );
 }
 
-export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, onSelect, onUpdate }: Props) {
+export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, selectedIds, onSelect, onUpdate }: Props) {
   const visible = layers.filter((layer) => (layer.section ?? "cover") === section && !layer.hidden);
   const [guides, setGuides] = useState<GuideState>({});
 
@@ -248,7 +249,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
     if (hits.length < 2) return;
     const currentIndex = hits.findIndex((layer) => layer.id === currentId);
     const nextIndex = currentIndex <= 0 ? hits.length - 1 : currentIndex - 1;
-    onSelect(hits[nextIndex]!.id);
+    onSelect(hits[nextIndex]!.id, false);
   }
 
   if (!visible.length) return null;
@@ -260,7 +261,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
       {editable && guides.x !== undefined && <span aria-hidden="true" className="absolute inset-y-0 z-[60] w-px bg-primary/70" style={{ left: `${guides.x}%` }} />}
       {editable && guides.y !== undefined && <span aria-hidden="true" className="absolute inset-x-0 z-[60] h-px bg-primary/70" style={{ top: `${guides.y}%` }} />}
       {visible.map((layer) =>
-        <EditableLayer key={layer.id} layer={layer} section={section} selected={selectedId === layer.id}
+        <EditableLayer key={layer.id} layer={layer} section={section} selected={(selectedIds?.includes(layer.id) ?? false) || selectedId === layer.id}
           editable={editable} siblings={visible}
           onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} onGuides={setGuides} />,
       )}
