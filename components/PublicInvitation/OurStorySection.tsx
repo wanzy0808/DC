@@ -1,3 +1,6 @@
+import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
+import type { EditableCopyMotionUnit } from "@/lib/templates/editable-copy-motion";
+
 /**
  * A couple's own words, not fabricated template copy or duplicate event data.
  * Rendered within the existing Identity/Host capability (no 16th visibility flag).
@@ -7,10 +10,12 @@ export default function OurStorySection({
   story,
   theme,
   preview = false,
+  motionUnit,
 }: {
   story?: string | null;
   theme: string;
   preview?: boolean;
+  motionUnit?: EditableCopyMotionUnit;
 }) {
   if (!story?.trim() && !preview) return null;
 
@@ -18,6 +23,7 @@ export default function OurStorySection({
   const zen = theme === "zen-atelier";
   const pencil = theme === "pencil-reverie";
   const left = theme === "modern-maroon" || theme === "golden-art-deco";
+  const storyText = story?.trim() || (preview ? "Klik untuk menulis Our Story" : "");
   return (
     <section
       data-invitation-section="our-story"
@@ -44,7 +50,7 @@ export default function OurStorySection({
           aria-hidden="true"
           className={`my-6 block h-px w-12 ${left || pencil ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
         />
-        <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8">{story?.trim() || (preview ? "Klik untuk menulis Our Story" : "")}</p>
+        <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8"><InvitationLayerTextContent text={storyText} unit={motionUnit} /></p>
       </div>
     </section>
   );
