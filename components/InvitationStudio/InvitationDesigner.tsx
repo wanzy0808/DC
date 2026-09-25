@@ -893,6 +893,14 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         if (!selectedAssetLayer || selectedAssetLayer.locked || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
+      } else if (!modifier && !event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+        if (!selectedAssetLayer || selectedAssetLayer.locked) return;
+        event.preventDefault();
+        const step = event.shiftKey ? 5 : 1;
+        updateAssetLayer(selectedAssetLayer.id, {
+          x: Math.min(100, Math.max(0, selectedAssetLayer.x + (event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0))),
+          y: Math.min(100, Math.max(0, selectedAssetLayer.y + (event.key === "ArrowUp" ? -step : event.key === "ArrowDown" ? step : 0))),
+        });
       } else if (!modifier && !event.altKey && (event.key === "Delete" || event.key === "Backspace")) {
         if (!selectedAssetLayer || selectedAssetLayer.locked) return;
         event.preventDefault();
