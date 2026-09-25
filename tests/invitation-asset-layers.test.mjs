@@ -236,3 +236,15 @@ test("Restart lives only in the canvas toolbar, not in the left rail", () => {
   assert.match(toolbar, /<Button size="icon-sm" onClick=\{restoreDefaults\}/);
   assert.match(toolbar, /title=\{copy.defaultsHint\}/);
 });
+
+
+test("asset layer groups persist without affecting public-safe layer validation", () => {
+  const grouped = [
+    { ...asset("one"), groupId: "group-alpha" },
+    { ...asset("two"), groupId: "group-alpha", locked: true },
+  ];
+  const key = withAssetLayers("pencil-reverie::pencil::cinzelFauna", grouped);
+  assert.deepEqual(parseAssetLayers(key), grouped);
+  const invalid = sanitizeAssetLayers([{ ...asset("bad-group"), groupId: "bad group id!" }])[0];
+  assert.equal(invalid.groupId, undefined);
+});
