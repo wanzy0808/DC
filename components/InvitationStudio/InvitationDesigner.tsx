@@ -105,6 +105,7 @@ export default function InvitationDesigner() {
   // A click on the actual envelope advances the Studio stage selector, too.
   const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
   const [savedState, setSavedState] = useState("");
+  const [serverRevision, setServerRevision] = useState("");
   const audioMutation = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -157,7 +158,9 @@ export default function InvitationDesigner() {
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
       ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [] }
       : loadedDesign;
-    const serverBaseline = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
+    // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
+    const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
+    const canonicalSavedState = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
     // Restore only after a true browser refresh of this same invitation and saved revision.
     // A fresh visit, event switch, Back/Forward navigation or logout never reopens this draft.
     const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
@@ -173,7 +176,8 @@ export default function InvitationDesigner() {
       setEventTag(refreshed[2]);
       setDressCode(refreshed[3]);
     }
-    setSavedState(serverBaseline);
+    setSavedState(canonicalSavedState);
+    setServerRevision(serverBaseline);
     setCanvasStage("envelope");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
@@ -208,13 +212,13 @@ export default function InvitationDesigner() {
   const dirty = Boolean(invitation && savedState !== currentState);
   useEffect(() => {
     // Do not auto-save to the API: this snapshot is only for Ctrl/Cmd+R in this tab.
-    if (!invitation || !savedState) return;
+    if (!invitation || !savedState || !serverRevision) return;
     try {
       if (dirty) window.sessionStorage.setItem(STUDIO_REFRESH_DRAFT_KEY,
-        JSON.stringify(makeStudioRefreshDraft(invitation.id, savedState, currentState)));
+        JSON.stringify(makeStudioRefreshDraft(invitation.id, serverRevision, currentState)));
       else window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
     } catch { /* Private mode, storage quota, or disabled storage must not break editing. */ }
-  }, [invitation?.id, savedState, currentState, dirty]);
+  }, [invitation?.id, savedState, serverRevision, currentState, dirty]);
   useEffect(() => {
     const clearDraft = () => {
       try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
@@ -583,6 +587,7 @@ export default function InvitationDesigner() {
       if (!response.ok) throw new Error(data.error || "Gagal menyimpan.");
       setInvitation(data.invitation);
       setSavedState(currentState);
+      setServerRevision(JSON.stringify([data.invitation.templateKey || "", data.invitation.musicUrl || "", data.invitation.weddingHashtag || "", data.invitation.dressCode || ""]));
       try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
       clearTemplateSelection();
       // After saving, stale catalog URL parameters must not reapply an old theme.
