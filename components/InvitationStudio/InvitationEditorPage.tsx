@@ -10,11 +10,13 @@ import "./studio.css";
 import InvitationDesigner from "@/components/InvitationStudio/InvitationDesigner";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
+import { invitationTitleCase } from "@/lib/events/parents";
 
 /** Publishing and package checkout live in Dashboard > Undangan Digital. */
 export default function InvitationEditorPage() {
   const { locale } = useLanguage();
   const [accessPaid, setAccessPaid] = useState<boolean | null>(null);
+  const [documentTitle, setDocumentTitle] = useState("Studio");
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -36,6 +38,7 @@ export default function InvitationEditorPage() {
           throw new Error(data?.error || "Undangan belum dapat dimuat.");
         }
         setAccessPaid(Boolean(data.invitation.accessPaid));
+        setDocumentTitle(invitationTitleCase(data.invitation.title || "Studio"));
       })
       .catch((reason: unknown) => {
         if (!controller.signal.aborted) {
@@ -55,15 +58,15 @@ export default function InvitationEditorPage() {
     >
       <div className="dc-studio-frame">
         <header className="dc-studio-page-header">
-          <div className="flex min-w-0 flex-1 items-center gap-3">
+          <div className="dc-studio-header-brand flex min-w-0 items-center gap-3">
             <Button asChild size="icon" variant="outline" className="dc-studio-back shrink-0">
               <Link href="/dashboard" aria-label={backLabel} title={backLabel}>
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <Link href="/" className="min-w-0"><BrandWordmark size="mobile" /></Link>
-            <span className="hidden border-l border-primary/25 pl-3 text-sm text-primary sm:block">Studio</span>
           </div>
+          <h1 className="dc-studio-document-title truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg" title={documentTitle}>{documentTitle}</h1>
           <div className="dc-studio-header-actions flex shrink-0 items-center gap-1 sm:gap-2">
             <ThemeToggle />
             <LanguageToggle />
