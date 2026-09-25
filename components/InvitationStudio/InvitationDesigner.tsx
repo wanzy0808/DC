@@ -174,6 +174,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     sections: { ...defaultInvitationSections },
     photos: defaultPhotoAssignments(),
     copy: {},
+    copyMotion: {},
     layers: [],
     sectionStyles: {},
     rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
@@ -245,7 +246,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {} }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, copyMotion: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = makeStudioServerRevision(next);
@@ -415,6 +416,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         palette: preset.palette,
         font: preset.font,
         copy: templateKey === design.template ? design.copy : {},
+        copyMotion: templateKey === design.template ? design.copyMotion : {},
         layers: templateKey === design.template ? design.layers : [],
         sectionStyles: templateKey === design.template ? design.sectionStyles : {},
         rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
@@ -451,6 +453,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       sections: { ...defaultInvitationSections },
       photos: defaultPhotoAssignments(),
       copy: {},
+      copyMotion: {},
       layers: [],
       sectionStyles: {},
       rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
