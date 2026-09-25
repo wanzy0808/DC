@@ -983,12 +983,6 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ sectionElementStyles: styles });
   }
 
-  function resetNarrativeCopy(field: EditableInvitationCopyField) {
-    const next = { ...design.copy };
-    delete next[field];
-    change({ copy: next });
-  }
-
   function updateCopyMotion(field: EditableInvitationCopyField, patch: Partial<EditableCopyMotion>) {
     const current = design.copyMotion[field] ?? {};
     const next: EditableCopyMotion = { ...current, ...patch };
@@ -998,13 +992,6 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     const copyMotion = { ...design.copyMotion };
     if (next.animation && next.animation !== "none") copyMotion[field] = next;
     else delete copyMotion[field];
-    change({ copyMotion });
-  }
-
-  function resetCopyMotion(field: EditableInvitationCopyField) {
-    if (!design.copyMotion[field]) return;
-    const copyMotion = { ...design.copyMotion };
-    delete copyMotion[field];
     change({ copyMotion });
   }
 
