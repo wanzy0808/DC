@@ -220,7 +220,7 @@ test("asset clicks cannot bubble into section selection", () => {
   const sectionInstance = read("components/PublicInvitation/EditableSectionInstance.tsx");
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
   assert.match(sectionInstance, /target\.closest\([\s\S]*\[data-studio-design-object\]/);
-  assert.match(assetLayers, /event\.stopPropagation\(\); onSelect\?\.\(layer\.id\)/);
+  assert.match(assetLayers, /event\.stopPropagation\(\); if \(event\.detail === 0\) onSelect\?\.\(layer\.id, event\.shiftKey\)/);
 });
 
 test("overlapping Studio assets use left-click selection and cycle to the layer underneath", () => {
