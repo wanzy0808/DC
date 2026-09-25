@@ -581,6 +581,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 
 - [ ] Expand from section animation to **element animation**: text, photo, asset and ornament presets.
   - [x] Fase awal: teks dekoratif, asset gambar/ornamen, dan shape layer memakai katalog 35 preset section yang sama, termasuk durasi/jeda, persistence di designKey, preview/public renderer, IntersectionObserver, dan reduced-motion. Foto slot/gallery tetap tahap berikutnya. (26 September 2026)
+  - [x] Section dan object layer sekarang memakai satu `entrance-animation-runtime.ts`; efek selesai tetap bisa di-cleanup saat preset berubah, dan inspector layer punya tombol **Preview animasi** tanpa mereset desain. (26 September 2026)
 - [ ] Add text choreography such as per-word/per-character stagger where it improves premium templates.
   - [x] Fase awal decorative text layer: mode satu kotak/per kata/per huruf/per baris + stagger 0.01–0.15s, memakai semua preset entrance bersama; teks >96 karakter otomatis turun dari per-huruf ke per-kata untuk menjaga performa. Built-in template copy masih tahap berikutnya. (26 September 2026)
 - [ ] Add photo/gallery choreography, mask reveals and lightweight parallax.
