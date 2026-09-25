@@ -8,6 +8,8 @@ export type CatalogTemplate = Omit<InvitationTemplate, "preset" | "previewType">
   previewType: InvitationTemplate["previewType"] | "image";
   source: "built-in" | "designer";
   ready: boolean;
+  designKey?: string;
+  musicUrl?: string | null;
 };
 
 const localCatalog: CatalogTemplate[] = invitationTemplates.map((item) => ({
