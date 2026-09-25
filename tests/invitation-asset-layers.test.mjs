@@ -212,7 +212,7 @@ test("desktop Studio docks the entire tool rail and property inspector at the fa
   assert.ok(canvas >= 0 && canvas < inspector && inspector < rail,
     "DOM reading and grid order should be canvas → inspector → far-right tool rail");
   assert.match(css, /\.dc-studio-workspace \{[^}]*grid-template-columns: minmax\(0, 1fr\) 360px 98px/);
-  assert.match(css, /min-width: 1280px[^}]*grid-template-columns: minmax\(0, 1fr\) 380px 108px/);
+  assert.match(css, /@media \(min-width: 1280px\)[^\n]*\.dc-studio-workspace \{ grid-template-columns: minmax\(0, 1fr\) 380px 108px/);
   assert.match(css, /data-inspector=false\] \.dc-studio-workspace \{ grid-template-columns: minmax\(0, 1fr\) 98px/);
   assert.match(css, /\.dc-studio-inspector > \.dc-studio-layer-side \{ position: static; width: 100%/);
   assert.ok(editor.indexOf("<AssetLayerInspector", inspector) < rail,
