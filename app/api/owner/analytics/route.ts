@@ -47,7 +47,12 @@ export async function GET() {
   const owner = await requireOwner();
   if (!owner) return NextResponse.json({ error: "Akses Owner diperlukan." }, { status: 403 });
 
-  const [templates, paidOrders, partners, vouchers, attributionLogs] = await Promise.all([
+  const [designerUsers, templates, paidOrders, partners, vouchers, attributionLogs] = await Promise.all([
+    prisma.user.findMany({
+      where: { role: { in: ["DESIGNER", "EDITOR"] } },
+      select: { id: true, email: true, firstName: true },
+      orderBy: { createdAt: "asc" },
+    }),
     prisma.designerTemplate.findMany({
       where: { status: "PUBLISHED" },
       select: {
@@ -114,6 +119,17 @@ export async function GET() {
     saleEvents: Set<string>;
     orderValue: number;
   }>();
+
+  for (const designer of designerUsers) {
+    designerMap.set(designer.id, {
+      id: designer.id,
+      name: designer.firstName || designer.email,
+      email: designer.email,
+      templates: [],
+      saleEvents: new Set<string>(),
+      orderValue: 0,
+    });
+  }
 
   for (const template of templates) {
     const stats = templateStats.get(template.templateNo);
