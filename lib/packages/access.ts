@@ -9,6 +9,7 @@ export type PackageEntitlement = {
 
 export const digitalInvitationPackages = new Set([
   "INVITATION_BASIC",
+  "GUESTBOOK_DIGITAL",
   "INVITATION_GUESTBOOK",
 ]);
 
