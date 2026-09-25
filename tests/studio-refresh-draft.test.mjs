@@ -42,7 +42,8 @@ test("Studio keeps drafts only in tab sessionStorage and discards them on save o
   assert.match(code, /window\.history\.replaceState\(\{ \.\.\.historyState, __dcStudioDraftEntry: next\.id \}/);
   assert.match(code, /const serverBaseline = JSON\.stringify\(\[next\.templateKey \|\| ""/);
   assert.match(code, /else window\.sessionStorage\.removeItem\(STUDIO_REFRESH_DRAFT_KEY\)/);
-  assert.match(code, /setSavedState\(currentState\);\s*try \{ window\.sessionStorage\.removeItem\(STUDIO_REFRESH_DRAFT_KEY\)/);
+  assert.match(code, /setSavedState\(currentState\);\s*setServerRevision\(/);
+  assert.match(code, /try \{ window\.sessionStorage\.removeItem\(STUDIO_REFRESH_DRAFT_KEY\); \} catch/);
   assert.match(code, /document\.addEventListener\("click", onLinkClick, true\)/);
   assert.match(code, /window\.addEventListener\("popstate", clearDraft\)/);
   assert.match(code, /window\.addEventListener\("pageshow", onPageShow\)/);
