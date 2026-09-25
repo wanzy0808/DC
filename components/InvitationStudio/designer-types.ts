@@ -4,6 +4,7 @@ import type { InvitationSections } from "@/lib/templates/sections";
 import type { PhotoAssignments } from "@/lib/templates/photo-slots";
 import type { EditableInvitationCopy } from "@/lib/templates/editable-copy";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -68,6 +69,7 @@ export type InvitationDesignState = {
   /** Only template-owned narrative copy; never duplicates event identity or schedule. */
   copy: EditableInvitationCopy;
   layers: InvitationAssetLayer[];
+  sectionStyles: InvitationSectionStyles;
 };
 
 export type InvitationTemplateLayout =
