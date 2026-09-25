@@ -632,14 +632,6 @@ export default function InvitationDesigner() {
 
   return (
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
-      <header className="dc-studio-toolbar">
-        <div className="dc-studio-toolbar-actions flex flex-wrap items-center gap-1.5">
-          <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
-            <Save className="h-4 w-4" />
-            {saving ? copy.saving : copy.save}
-          </Button>
-        </div>
-      </header>
 
       <div className="dc-studio-mobile-view" aria-label="Studio">
         <button type="button" aria-pressed={!mobileCanvas} onClick={() => setMobileCanvas(false)}>{copy.settings}</button>
@@ -717,6 +709,7 @@ export default function InvitationDesigner() {
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
+            <button type="button" className="dc-studio-icon" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}><RotateCcw size={17} /></button>
             <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
               <Button size="icon-sm" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
                 <Undo2 className="h-4 w-4" />
@@ -725,7 +718,10 @@ export default function InvitationDesigner() {
                 <Redo2 className="h-4 w-4" />
               </Button>
             </div>
-            <button type="button" className="dc-studio-icon" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}><RotateCcw size={17} /></button>
+            <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
+              <Save className="h-4 w-4" />
+              {saving ? copy.saving : copy.save}
+            </Button>
           </div>
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
             const target = event.target;
