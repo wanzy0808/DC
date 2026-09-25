@@ -91,8 +91,10 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(rail, /Sembunyikan section/);
   assert.match(rail, /Duplikat section/);
   assert.match(rail, /Hapus section/);
-  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: -42px;[\s\S]*?flex-direction: column/);
+  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: -52px;[\s\S]*?flex-direction: column[\s\S]*?border: 0;[\s\S]*?background: transparent/);
   assert.match(css, /\.dc-studio-preview-surface \{[\s\S]*?overflow: visible/);
+  assert.match(css, /\.dc-studio-preview-workspace \{[^}]*overflow: visible/);
+  assert.match(css, /\.dc-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(118px, 1fr\)[^}]*overflow: visible/);
   assert.match(css, /\.dc-section-instance-content \{ overflow: hidden; \}/);
   assert.match(css, /\.dc-section-instance-hidden \{[\s\S]*?max-height: 72px/);
 
