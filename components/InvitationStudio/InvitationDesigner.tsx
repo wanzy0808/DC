@@ -1197,12 +1197,12 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     function handleLayerShortcut(event: KeyboardEvent) {
       if (!invitation || saving || audioBusy || event.defaultPrevented || event.isComposing) return;
       const target = event.target;
+      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
       if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key === "Escape" && selectedPhotoSlot) {
         setSelectedPhotoSlot(null);
         return;
       }
-      if (canvasStage !== "cover") return;
-      if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+      if (canvasStage !== "cover" || selectedPhotoSlot) return;
       const activeText = window.getSelection()?.toString();
       if (activeText) return;
       const modifier = event.ctrlKey || event.metaKey;
@@ -1543,6 +1543,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             if (section?.dataset.invitationSection) {
               if (section.dataset.invitationSection === "rsvp" && target.closest("img")) {
                 setSelectedLayerId(null);
+                setSelectedPhotoSlot(null);
                 setSelectedSectionKey(null);
                 setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
