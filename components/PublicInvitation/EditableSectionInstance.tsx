@@ -45,7 +45,7 @@ export default function EditableSectionInstance({
       style={{ order }}
       onClick={() => actions?.onSelect?.(instance.id, instance.key)}
     >
-      <div className={hidden && preview ? "dc-section-instance-hidden" : undefined}>
+      <div className={`dc-section-instance-content${hidden && preview ? " dc-section-instance-hidden" : ""}`}>
         {children}
       </div>
       {showActions && (
