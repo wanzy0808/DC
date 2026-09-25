@@ -33,6 +33,7 @@ import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templat
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
+import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
@@ -217,6 +218,7 @@ export default function UniversalInvitationTemplate({
     onDelete: onDeleteSectionInstance,
   } : undefined;
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
+  useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
   const names = couple
@@ -474,7 +476,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : key === "zen-atelier" ? (
             <div>
-              {media.cover && <div className="zen-identity-photo relative">
+              {media.cover && <div data-invitation-photo-slot="cover" className="zen-identity-photo relative">
                 <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={photoCropStyle(media.assignment, "cover")} />
                 {changePhoto("cover", "pasangan")}
                 {cropOverlay("cover")}
@@ -490,7 +492,7 @@ export default function UniversalInvitationTemplate({
                 <>
                   {([["personOne", displayTitleCase(invitation.groomName), media.personOne], ["personTwo", displayTitleCase(invitation.brideName), media.personTwo]] as const).map(([slot, name, url]) => (
                     <div key={slot} className="min-w-0">
-                      {usesPhotos && <div className={`relative mx-auto overflow-hidden ${frame}`}>
+                      {usesPhotos && <div data-invitation-photo-slot={slot} className={`relative mx-auto overflow-hidden ${frame}`}>
                         {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={photoCropStyle(media.assignment, slot)} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
                         {cropOverlay(slot)}
@@ -542,14 +544,14 @@ export default function UniversalInvitationTemplate({
 
           {section("gallery", key === "pencil-reverie" ? <PencilMemoryGallery /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
-            <ZenAtelierGallery photos={media.gallery} />
+            <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion.gallery?.animation)} />
           </> : (
             usesPhotos ? <>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
               {media.gallery.length ? (
                 <div className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : key === "zen-atelier" ? "grid-cols-2 auto-rows-[125px] sm:auto-rows-[155px]" : "grid-cols-2"}`}>
                   {media.gallery.map((asset, index) => (
-                    <div key={asset.id} className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] bg-[var(--inv-surface)] p-1" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key === "zen-atelier" && media.gallery.length > 1 ? "row-span-2" : index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
+                    <div key={asset.id} data-invitation-photo-slot="gallery" className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] bg-[var(--inv-surface)] p-1" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key === "zen-atelier" && media.gallery.length > 1 ? "row-span-2" : index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
                       <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" className={key === "zen-atelier" ? "h-full w-full object-cover" : index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                     </div>
                   ))}
