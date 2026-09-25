@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 async function getMainInvitation(userId: string) {
   return prisma.invitation.findFirst({
@@ -31,6 +32,7 @@ export async function GET() {
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
