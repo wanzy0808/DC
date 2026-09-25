@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidGuestbook } from "@/lib/packages/access";
+import { hasAccountGuestbook } from "@/lib/packages/server-access";
 import { verifyGuestQrToken } from "@/lib/usher/qr";
 
 // Legacy Usher endpoint: resolve the event from the canonical Guest.id, never
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
 
     const guest = await resolveGuest(user.id, value, params.get("invitationId") ?? "");
     if (!guest) return NextResponse.json({ error: "QR/tamu tidak ditemukan pada acara ini." }, { status: 404 });
-    if (!hasPaidGuestbook(guest.invitation.payment)) {
+    if (!(await hasAccountGuestbook(user.id, guest.invitation.payment))) {
       return NextResponse.json({ error: "Usher App belum aktif untuk acara tamu ini." }, { status: 402 });
     }
 
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
 
     const guest = await resolveGuest(user.id, value, String(body.invitationId ?? "").trim());
     if (!guest) return NextResponse.json({ error: "QR/tamu tidak ditemukan pada acara ini." }, { status: 404 });
-    if (!hasPaidGuestbook(guest.invitation.payment)) {
+    if (!(await hasAccountGuestbook(user.id, guest.invitation.payment))) {
       return NextResponse.json({ error: "Usher App belum aktif untuk acara tamu ini." }, { status: 402 });
     }
 
