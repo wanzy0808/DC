@@ -16,7 +16,7 @@ export function useInvitationSectionAnimations(
     const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-invitation-section]")).flatMap((node) => {
       const key = node.dataset.invitationSection as InvitationSectionKey | undefined;
       const config = key ? styles[key] : undefined;
-      if (!config?.animation || config.animation === "none") return [];
+      if (config?.timeline || !config?.animation || config.animation === "none") return [];
       return [{
         node,
         animation: config.animation,
