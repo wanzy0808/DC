@@ -115,6 +115,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [selectedCopyField, setSelectedCopyField] = useState<EditableInvitationCopyField | null>(null);
   const [selectedSectionElement, setSelectedSectionElement] = useState<{ section: InvitationSectionKey; kind: StudioSectionElementKind } | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
+  const [copiedAssetLayers, setCopiedAssetLayers] = useState<InvitationAssetLayer[]>([]);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
@@ -193,6 +194,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       setCanvasStage("envelope");
       setSelectedLayerId(null);
       setCopiedAssetLayer(null);
+      setCopiedAssetLayers([]);
       setHistory([]);
       setFuture([]);
       setNotice("");
@@ -257,6 +259,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setCanvasStage("envelope");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
+      setCopiedAssetLayers([]);
     setHistory([]);
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
@@ -417,6 +420,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
     setCopiedAssetLayer(null);
+      setCopiedAssetLayers([]);
     setCanvasStage("envelope");
   }
 
@@ -444,6 +448,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
     setCopiedAssetLayer(null);
+      setCopiedAssetLayers([]);
     draggedAssetSrc.current = null;
     setAssetDropReady(false);
     setCanvasStage("envelope");
@@ -753,27 +758,71 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     });
   }
 
+  function currentClipboardSelection(includeLocked = true) {
+    const ids = selectedLayerIds.length > 1
+      ? new Set(selectedLayerIds)
+      : selectedAssetLayer ? new Set([selectedAssetLayer.id]) : new Set<string>();
+    return design.layers.filter((layer) => ids.has(layer.id) && (includeLocked || !layer.locked));
+  }
+
   function copySelectedAssetLayer() {
-    const selected = design.layers.find((layer) => layer.id === selectedLayerId);
-    if (selected) setCopiedAssetLayer({ ...selected });
+    const selected = currentClipboardSelection(true);
+    if (!selected.length) return;
+    const copies = selected.map((layer) => ({ ...layer }));
+    setCopiedAssetLayers(copies);
+    setCopiedAssetLayer(copies.at(-1) ?? null);
+  }
+
+  function cloneAssetLayers(sourceLayers: InvitationAssetLayer[]) {
+    const available = MAX_ASSET_LAYERS - design.layers.length;
+    if (!sourceLayers.length || sourceLayers.length > available) {
+      if (sourceLayers.length > available) {
+        setNotice(locale === "en" ? "Not enough layer slots to paste all selected objects." : "Slot layer tidak cukup untuk menempel semua objek terpilih.");
+      }
+      return [] as InvitationAssetLayer[];
+    }
+    const groupIds = new Map<string, string>();
+    return sourceLayers.map((source) => {
+      const id = crypto.randomUUID().replace(/-/g, "");
+      let groupId = source.groupId;
+      if (groupId) {
+        if (!groupIds.has(groupId)) groupIds.set(groupId, `group-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`);
+        groupId = groupIds.get(groupId);
+      }
+      return {
+        ...source,
+        id,
+        ...(groupId ? { groupId } : { groupId: undefined }),
+        x: Math.min(100, source.x + 5),
+        y: Math.min(100, source.y + 5),
+      };
+    });
   }
 
   function pasteAssetLayer() {
-    if (!copiedAssetLayer || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
-    const id = crypto.randomUUID().replace(/-/g, "");
-    const next = { ...copiedAssetLayer, id, x: Math.min(100, copiedAssetLayer.x + 5), y: Math.min(100, copiedAssetLayer.y + 5) };
-    change({ layers: [...design.layers, next] });
-    setSelectedLayerId(id);
-    showDesignSection(next.section ?? "cover");
+    if (!invitation || saving) return;
+    const source = copiedAssetLayers.length
+      ? copiedAssetLayers
+      : copiedAssetLayer ? [copiedAssetLayer] : [];
+    const next = cloneAssetLayers(source);
+    if (!next.length) return;
+    change({ layers: [...design.layers, ...next] });
+    const ids = next.map((layer) => layer.id);
+    setSelectedLayerIds(ids);
+    setSelectedLayerId(ids.at(-1) ?? null);
+    showDesignSection(next[0]?.section ?? "cover");
   }
 
   function duplicateSelectedAssetLayer() {
-    if (!selectedAssetLayer || selectedAssetLayer.locked || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
-    const id = crypto.randomUUID().replace(/-/g, "");
-    const next = { ...selectedAssetLayer, id, x: Math.min(100, selectedAssetLayer.x + 5), y: Math.min(100, selectedAssetLayer.y + 5) };
-    change({ layers: [...design.layers, next] });
-    setSelectedLayerId(id);
-    showDesignSection(next.section ?? "cover");
+    if (!invitation || saving) return;
+    const source = currentClipboardSelection(false);
+    const next = cloneAssetLayers(source);
+    if (!next.length) return;
+    change({ layers: [...design.layers, ...next] });
+    const ids = next.map((layer) => layer.id);
+    setSelectedLayerIds(ids);
+    setSelectedLayerId(ids.at(-1) ?? null);
+    showDesignSection(next[0]?.section ?? "cover");
   }
 
   function beginAssetDrag(src: string) {
@@ -1077,16 +1126,19 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         event.preventDefault();
         copySelectedAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "x") {
-        if (!selectedAssetLayer || selectedAssetLayer.locked || selectedLayerIds.length > 1) return;
+        const cuttable = currentClipboardSelection(false);
+        if (!cuttable.length) return;
         event.preventDefault();
-        setCopiedAssetLayer({ ...selectedAssetLayer });
-        removeAssetLayer(selectedAssetLayer.id);
+        const copies = cuttable.map((layer) => ({ ...layer }));
+        setCopiedAssetLayers(copies);
+        setCopiedAssetLayer(copies.at(-1) ?? null);
+        removeAssetLayer(cuttable.at(-1)!.id);
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "v") {
-        if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
+        if ((!copiedAssetLayers.length && !copiedAssetLayer) || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         pasteAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "d") {
-        if (!selectedAssetLayer || selectedAssetLayer.locked || design.layers.length >= MAX_ASSET_LAYERS) return;
+        if (!currentClipboardSelection(false).length || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
       } else if (!modifier && !event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
@@ -1108,7 +1160,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     }
     window.addEventListener("keydown", handleLayerShortcut);
     return () => window.removeEventListener("keydown", handleLayerShortcut);
-  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, design.layers]);
+  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, copiedAssetLayers, design.layers]);
 
   function undo() {
     const key = history.at(-1);
