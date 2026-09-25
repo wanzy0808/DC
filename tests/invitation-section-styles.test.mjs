@@ -108,13 +108,14 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(css, /background-position:[\s\S]*?calc\(100% - 15px\)/);
 });
 
-test("section toolbar visibility shares one state with the Bagian panel", () => {
+test("section toolbar visibility shares one state with the Isi panel", () => {
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const panels = read("components/InvitationStudio/DesignerPanels.tsx");
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 
-  assert.match(panels, /checked=\{sections\[item\.key\] !== false\}/);
+  assert.match(panels, /const enabled = sections\[item\.key\] !== false/);
+  assert.match(panels, /checked=\{enabled\}/);
   assert.match(panels, /onChange\(item\.key, event\.target\.checked\)/);
   assert.match(editor, /function toggleSectionInstance\(id: string\)[\s\S]*?setSection\(instance\.key, design\.sections\[instance\.key\] === false\)/);
   assert.match(editor, /function setSection\(section: InvitationSectionKey, enabled: boolean\)[\s\S]*?sectionLayout: next/);
@@ -133,4 +134,31 @@ test("functional section inspector stays visual-only and names protected functio
   assert.match(inspector, /wishes: \["Nama tamu", "Ucapan", "Kirim ucapan"\]/);
   assert.match(inspector, /gift: \["Bank", "Nama rekening", "Nomor rekening", "Salin rekening"\]/);
   assert.doesNotMatch(inspector, /fetch\(|\/api\/invite|onSubmit/);
+});
+
+
+test("Isi only exposes real Input and Button child components", () => {
+  const panels = read("components/InvitationStudio/DesignerPanels.tsx");
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  const wishes = read("components/PublicInvitation/GuestWishes.tsx");
+  const state = read("components/InvitationStudio/designer-state.ts");
+
+  assert.match(panels, /rsvp: \["input", "button"\]/);
+  assert.match(panels, /wishes: \["input", "button"\]/);
+  assert.match(panels, /location: \["button"\]/);
+  assert.match(panels, /gift: \["button"\]/);
+  assert.doesNotMatch(panels, /envelope: \["button"\]/);
+  assert.match(editor, /selectedSectionElement/);
+  assert.match(editor, /<SectionElementInspector/);
+  assert.match(editor, /target\.closest<HTMLElement>\("\[data-studio-section-element\]"\)/);
+  assert.match(wishes, /data-studio-section-element="wishes:input"/);
+  assert.match(wishes, /data-studio-section-element="wishes:button"/);
+  assert.match(universal, /data-studio-section-element="location:button"/);
+  assert.match(universal, /data-studio-section-element="gift:button"/);
+  assert.match(romantic, /data-studio-section-element="location:button"/);
+  assert.match(romantic, /data-studio-section-element="gift:button"/);
+  assert.match(state, /withSectionElementStyles/);
+  assert.match(state, /parseSectionElementStyles/);
 });
