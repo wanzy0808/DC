@@ -18,6 +18,7 @@ export type PhotoMotion = {
   /** Used by gallery only; other slots ignore stagger. */
   animationStagger?: number;
 };
+export type PhotoMotionMap = Partial<Record<PhotoSlot, PhotoMotion>>;
 
 export type PhotoAssignments = {
   cover: string | null;
@@ -26,7 +27,7 @@ export type PhotoAssignments = {
   gallery: string[] | null;
   focus: Record<CroppablePhotoSlot, PhotoFocus>;
   crop: Record<CroppablePhotoSlot, PhotoCrop | null>;
-  motion?: Partial<Record<PhotoSlot, PhotoMotion>>;
+  motion?: PhotoMotionMap;
 };
 
 export const defaultPhotoAssignments = (): PhotoAssignments => ({
@@ -73,10 +74,10 @@ function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | und
   return motion;
 }
 
-function sanitizePhotoMotions(value: unknown): PhotoAssignments["motion"] {
+function sanitizePhotoMotions(value: unknown): PhotoMotionMap {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   const source = value as Record<string, unknown>;
-  const motion: PhotoAssignments["motion"] = {};
+  const motion: PhotoMotionMap = {};
   const slots: PhotoSlot[] = ["cover", "personOne", "personTwo", "gallery"];
   for (const slot of slots) {
     const next = sanitizePhotoMotion(source[slot], slot === "gallery");
