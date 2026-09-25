@@ -2,6 +2,8 @@
 
 import { RotateCcw } from "lucide-react";
 import { editableCopyMaxLength, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
+import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
+import CopyMotionControls from "@/components/InvitationStudio/CopyMotionControls";
 
 const labels: Record<EditableInvitationCopyField, { id: string; en: string }> = {
   greeting: { id: "Salam / Pengantar", en: "Greeting / Introduction" },
@@ -17,7 +19,9 @@ export default function CopyTextInspector({
   field,
   value,
   defaultValue,
+  motion,
   onChange,
+  onMotion,
   onReset,
   onClose,
 }: {
@@ -25,7 +29,9 @@ export default function CopyTextInspector({
   field: EditableInvitationCopyField;
   value: string;
   defaultValue: string;
+  motion: EditableCopyMotion | undefined;
   onChange: (value: string) => void;
+  onMotion: (patch: Partial<EditableCopyMotion>) => void;
   onReset: () => void;
   onClose: () => void;
 }) {
@@ -51,6 +57,8 @@ export default function CopyTextInspector({
           className="min-h-28 w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/35 bg-background px-3 py-2.5 text-sm leading-6 text-foreground outline-none focus:border-primary focus:ring-2 focus:ring-primary/15"
         />
       </label>
+
+      <CopyMotionControls locale={locale} field={field} motion={motion} onUpdate={onMotion} />
 
       <button type="button" className="dc-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
