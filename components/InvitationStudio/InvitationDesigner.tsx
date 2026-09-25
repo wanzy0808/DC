@@ -581,7 +581,7 @@ export default function InvitationDesigner() {
         <div className="dc-studio-canvas">
           <div className="dc-studio-canvas-toolbar">
             <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
-              {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+              {inspectorOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
             {design.sections.envelope !== false && <button type="button"
