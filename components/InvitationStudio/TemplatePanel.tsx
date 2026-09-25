@@ -112,7 +112,7 @@ export function TemplatePanel({
             <span className="relative block">
               {item.ready ? (
                 <span className="block w-full overflow-hidden bg-primary/5">
-                  <TemplateCardCanvas templateKey={item.key} studio />
+                  <TemplateCardCanvas templateKey={item.key} designKey={item.designKey} studio />
                 </span>
               ) : (
                 <img src={item.previewImage} alt="" loading="lazy" className="aspect-[9/19.5] w-full object-contain bg-primary/5" />
