@@ -149,7 +149,7 @@ export function RsvpInputPanel({
             <option value="">Pilih acara</option>
             {rsvpConfig.ceremony && <option value="ceremony">Upacara Nikah</option>}
             {rsvpConfig.reception && <option value="reception">Resepsi</option>}
-            {rsvpConfig.attendAll && rsvpConfig.ceremony && rsvpConfig.reception && <option value="all">Hadir Semua Acara</option>}
+            {rsvpConfig.attendAll && rsvpConfig.ceremony && rsvpConfig.reception && <option value="all">Hadiri Semua Acara</option>}
           </select>
         </label>
       )}
