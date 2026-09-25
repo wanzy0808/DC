@@ -16,7 +16,7 @@ import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { weddingParentLine } from "@/lib/events/parents";
-import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -85,9 +85,9 @@ function RoseHeading({ eyebrow, children, studioElement, style }: { eyebrow: str
   );
 }
 
-function RosePhoto({ url, alt, className, focus = "center" }: { url?: string; alt: string; className: string; focus?: "top" | "center" | "bottom" }) {
+function RosePhoto({ url, alt, className, cropStyle }: { url?: string; alt: string; className: string; cropStyle?: React.CSSProperties }) {
   return url ? (
-    <img src={url} alt={alt} className={className} style={{ objectPosition: `center ${focus}` }} loading="lazy" />
+    <img src={url} alt={alt} className={className} style={cropStyle} loading="lazy" />
   ) : (
     <div role="img" aria-label={alt} className={className + " flex items-center justify-center bg-gradient-to-br from-[#f6dbe1] via-[#fdf7f4] to-[#deb4c1]"}>
       <Heart className="h-10 w-10 text-[#c58a9c]/70" strokeWidth={1} />
@@ -252,13 +252,13 @@ export default function RomanticRoseTemplate({
         <div className="mx-auto flex max-w-2xl flex-col">
           {renderSectionInstances("cover", () => (
             <section data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)} className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
-                        <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" focus={assignment.focus.cover} className="h-full w-full object-cover" /></div>
+                        <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" cropStyle={photoCropStyle(assignment, "cover")} className="h-full w-full object-cover" /></div>
                         <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
                         <div className="relative z-10 flex w-full flex-col items-center">
                           <p className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">The wedding of</p>
                           <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || displayTitleCase(invitation.title)}</h1>
                           <div className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
-                            <RosePhoto url={cover} alt="Foto sampul pasangan" focus={assignment.focus.cover} className="aspect-[3/4] w-full object-cover" />
+                            <RosePhoto url={cover} alt="Foto sampul pasangan" cropStyle={photoCropStyle(assignment, "cover")} className="aspect-[3/4] w-full object-cover" />
                             {editPhoto("cover", "cover utama")}
                           </div>
                           <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
@@ -283,7 +283,7 @@ export default function RomanticRoseTemplate({
                         <div className="grid grid-cols-2 gap-4">
                           <div className="min-w-0 text-center">
                             <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
-                              <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" focus={assignment.focus.personOne} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
+                              <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" cropStyle={photoCropStyle(assignment, "personOne")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personOne", "mempelai pertama")}
                             </div>
                             <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.groomName) || "Mempelai pertama"}</h3>
@@ -291,7 +291,7 @@ export default function RomanticRoseTemplate({
                           </div>
                           <div className="min-w-0 text-center">
                             <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
-                              <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" focus={assignment.focus.personTwo} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
+                              <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" cropStyle={photoCropStyle(assignment, "personTwo")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personTwo", "mempelai kedua")}
                             </div>
                             <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.brideName) || "Mempelai kedua"}</h3>
