@@ -4,6 +4,7 @@ import { useEffect, type RefObject } from "react";
 import type { PhotoAssignments, PhotoMotionMap, PhotoSlot } from "@/lib/templates/photo-slots";
 import { observeInvitationEntrances } from "@/components/PublicInvitation/entrance-animation-runtime";
 import { observePhotoParallax } from "@/components/PublicInvitation/photo-parallax-runtime";
+import { MAX_PHOTO_PARALLAX_TARGETS } from "@/lib/templates/motion-performance";
 
 const slots: PhotoSlot[] = ["cover", "personOne", "personTwo", "gallery"];
 
@@ -40,7 +41,7 @@ export function useInvitationPhotoAnimations(
       return Array.from(root.querySelectorAll<HTMLElement>(
         `[data-invitation-photo-slot="${slot}"]`,
       )).map((node) => ({ node, strength }));
-    });
+    }).slice(0, MAX_PHOTO_PARALLAX_TARGETS);
 
     const stopEntrance = observeInvitationEntrances(entranceTargets);
     const stopParallax = observePhotoParallax(parallaxTargets);
