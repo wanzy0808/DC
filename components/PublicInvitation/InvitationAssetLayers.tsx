@@ -53,7 +53,7 @@ function EditableLayer({
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
-    rect: DOMRect; centerX: number; centerY: number; initialAngle: number; moved: boolean;
+    rect: DOMRect; centerX: number; centerY: number; initialAngle: number; moved: boolean; additive: boolean;
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
@@ -73,7 +73,7 @@ function EditableLayer({
       x: layer.x, y: layer.y, width: layer.width, height: layer.height ?? root.current.offsetHeight / sectionRect.width * 100, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
-      moved: false,
+      moved: false, additive: event.shiftKey,
     };
     onSelect?.(layer.id, event.shiftKey);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -163,7 +163,7 @@ function EditableLayer({
     gesture.current = null;
     setLive({});
     onGuides?.({});
-    if (currentGesture.mode === "move" && !currentGesture.moved && selected) {
+    if (currentGesture.mode === "move" && !currentGesture.moved && selected && !currentGesture.additive) {
       onCycleSelect?.(layer.id, event.clientX, event.clientY);
       return;
     }
