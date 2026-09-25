@@ -290,6 +290,7 @@ export default function InvitationDesigner() {
     const location = new URL(window.location.href);
     location.searchParams.set("template", templateKey);
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
+    setMusicUrl("");
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
@@ -315,7 +316,7 @@ export default function InvitationDesigner() {
     setCanvasStage("envelope");
     setPreviewVersion((value) => value + 1);
     requestAnimationFrame(() => canvasScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }));
-    setNotice("Desain kembali ke kondisi awal template. Aset yang dipasang di canvas, posisi/ukuran/rotasi, teks dekoratif, foto slot, isi template, warna, font, dan toggle bagian sudah direset. File upload tetap tersimpan di koleksi media. Klik Simpan untuk menerapkan.");
+    setNotice("Desain kembali ke kondisi awal template. Aset yang dipasang di canvas, posisi/ukuran/rotasi, teks dekoratif, foto slot, pilihan musik, isi template, warna, font, dan toggle bagian sudah direset. File upload tetap tersimpan di koleksi media. Klik Simpan untuk menerapkan.");
   }
 
   async function deleteMusic(id: string) {
