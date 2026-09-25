@@ -37,6 +37,7 @@ import {
 } from "@/lib/templates/design";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
+import { defaultInvitationRsvpConfig, MAX_RSVP_CUSTOM_FIELDS } from "@/lib/templates/rsvp-config";
 import {
   ColorPanel,
   ContentPanel,
@@ -128,6 +129,7 @@ export default function InvitationDesigner() {
     copy: {},
     layers: [],
     sectionStyles: {},
+    rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] },
   });
 
   async function load() {
@@ -159,7 +161,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {} }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] } }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
@@ -289,6 +291,7 @@ export default function InvitationDesigner() {
       copy: templateKey === design.template ? design.copy : {},
       layers: templateKey === design.template ? design.layers : [],
       sectionStyles: templateKey === design.template ? design.sectionStyles : {},
+      rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [] },
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -313,6 +316,7 @@ export default function InvitationDesigner() {
       copy: {},
       layers: [],
       sectionStyles: {},
+      rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] },
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
@@ -488,6 +492,34 @@ export default function InvitationDesigner() {
   }
 
   function endAssetDrag() { draggedAssetSrc.current = null; setAssetDropReady(false); }
+
+  function updateRsvpConfig(patch: Partial<InvitationDesignState["rsvpConfig"]>) {
+    change({ rsvpConfig: { ...design.rsvpConfig, ...patch } });
+  }
+
+  function addRsvpCustomField() {
+    if (design.rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS) return;
+    const id = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
+    updateRsvpConfig({
+      customFields: [...design.rsvpConfig.customFields, {
+        id,
+        label: `Field ${design.rsvpConfig.customFields.length + 1}`,
+        required: false,
+      }],
+    });
+  }
+
+  function updateRsvpCustomField(id: string, patch: { label?: string; required?: boolean }) {
+    updateRsvpConfig({
+      customFields: design.rsvpConfig.customFields.map((field) => field.id === id ? { ...field, ...patch } : field),
+    });
+  }
+
+  function removeRsvpCustomField(id: string) {
+    updateRsvpConfig({
+      customFields: design.rsvpConfig.customFields.filter((field) => field.id !== id),
+    });
+  }
 
   function updateSectionStyle(key: InvitationSectionKey, patch: Partial<InvitationSectionStyle>) {
     const current = design.sectionStyles[key] ?? {};
@@ -860,8 +892,14 @@ export default function InvitationDesigner() {
                 locale={locale}
                 sectionKey={selectedSectionKey}
                 style={design.sectionStyles[selectedSectionKey]}
+                rsvpConfig={design.rsvpConfig}
+                eventCategory={invitation?.eventCategory ?? ""}
                 onUpdate={(patch) => updateSectionStyle(selectedSectionKey, patch)}
                 onReset={() => resetSectionStyle(selectedSectionKey)}
+                onRsvpConfig={updateRsvpConfig}
+                onAddRsvpField={addRsvpCustomField}
+                onUpdateRsvpField={updateRsvpCustomField}
+                onRemoveRsvpField={removeRsvpCustomField}
                 onClose={() => setSelectedSectionKey(null)}
               />
             ) : null}
