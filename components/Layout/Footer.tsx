@@ -47,7 +47,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/")) {
+  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/") || pathname === "/partner" || pathname.startsWith("/partner/")) {
     return null;
   }
 
