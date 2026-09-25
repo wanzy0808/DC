@@ -114,6 +114,7 @@ export default function RomanticRoseTemplate({
   onEditPhoto,
   onEnvelopeOpened,
   selectedAssetLayerId,
+  selectedAssetLayerIds,
   onSelectAssetLayer,
   onMoveAssetLayer,
   onUpdateAssetLayer,
@@ -140,7 +141,8 @@ export default function RomanticRoseTemplate({
   /** Studio canvas only: synchronize the active stage after opening. */
   onEnvelopeOpened?: () => void;
   selectedAssetLayerId?: string | null;
-  onSelectAssetLayer?: (id: string) => void;
+  selectedAssetLayerIds?: string[];
+  onSelectAssetLayer?: (id: string, additive?: boolean) => void;
   onMoveAssetLayer?: (id: string, x: number, y: number) => void;
   onUpdateAssetLayer?: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   selectedSectionInstanceId?: string | null;
@@ -217,7 +219,7 @@ export default function RomanticRoseTemplate({
   }, [opened, sections.envelope]);
 
   const objectOverlay = (target: StudioObjectSection) => <InvitationAssetLayers layers={illustrationLayers} section={target}
-    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer} onUpdate={onUpdateAssetLayer} />;
+    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer} onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (key: InvitationSectionKey, render: () => React.ReactNode) => {
     const hidden = sections[key] === false;
