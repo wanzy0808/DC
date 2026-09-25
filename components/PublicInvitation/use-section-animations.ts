@@ -2,27 +2,8 @@
 
 import { useEffect, type RefObject } from "react";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
-import type {
-  InvitationSectionAnimation,
-  InvitationSectionStyles,
-} from "@/lib/templates/section-styles";
-
-function keyframesFor(animation: InvitationSectionAnimation): Keyframe[] | null {
-  switch (animation) {
-    case "fade":
-      return [{ opacity: 0 }, { opacity: 1 }];
-    case "rise":
-      return [{ opacity: 0, transform: "translateY(28px)" }, { opacity: 1, transform: "translateY(0)" }];
-    case "slide-left":
-      return [{ opacity: 0, transform: "translateX(-32px)" }, { opacity: 1, transform: "translateX(0)" }];
-    case "slide-right":
-      return [{ opacity: 0, transform: "translateX(32px)" }, { opacity: 1, transform: "translateX(0)" }];
-    case "zoom":
-      return [{ opacity: 0, transform: "scale(.96)" }, { opacity: 1, transform: "scale(1)" }];
-    case "none":
-      return null;
-  }
-}
+import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
+import { getSectionAnimationPreset, sectionAnimationKeyframes } from "@/lib/templates/section-animations";
 
 export function useInvitationSectionAnimations(
   rootRef: RefObject<HTMLElement | null>,
@@ -49,14 +30,15 @@ export function useInvitationSectionAnimations(
       if (!key) return;
       const config = styles[key];
       if (!config?.animation || config.animation === "none") return;
-      const frames = keyframesFor(config.animation);
-      if (!frames) return;
+      const preset = getSectionAnimationPreset(config.animation);
+      const frames = sectionAnimationKeyframes(config.animation);
+      if (!preset || !frames) return;
 
       played.add(node);
       const animation = node.animate(frames, {
-        duration: Math.round((config.animationDuration ?? 0.7) * 1000),
+        duration: Math.round((config.animationDuration ?? preset.duration) * 1000),
         delay: Math.round((config.animationDelay ?? 0) * 1000),
-        easing: "cubic-bezier(.2,.7,.2,1)",
+        easing: preset.easing,
         fill: "both",
       });
       animations.add(animation);
