@@ -25,7 +25,7 @@ import { weddingParentLine } from "@/lib/events/parents";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
-import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -409,6 +409,7 @@ export default function UniversalInvitationTemplate({
           date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
           cover={usesPhotos ? media.cover : undefined}
           focus={media.assignment.focus.cover}
+          crop={media.assignment.crop?.cover ?? null}
           stage="envelope"
           onOpen={handleOpen}
           preview={preview}
@@ -424,6 +425,7 @@ export default function UniversalInvitationTemplate({
               date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
               cover={usesPhotos ? media.cover : undefined}
               focus={media.assignment.focus.cover}
+          crop={media.assignment.crop?.cover ?? null}
               stage="cover"
               onOpen={handleOpen}
               onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
@@ -449,7 +451,7 @@ export default function UniversalInvitationTemplate({
           ) : key === "zen-atelier" ? (
             <div>
               {media.cover && <div className="zen-identity-photo">
-                <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={{ objectPosition: `center ${media.assignment.focus.cover}` }} />
+                <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={photoCropStyle(media.assignment, "cover")} />
                 {changePhoto("cover", "pasangan")}
               </div>}
               {!media.cover && preview && onEditPhoto && <button className="zen-action mb-6" type="button" onClick={() => onEditPhoto("cover")}>Pilih Foto Pasangan</button>}
@@ -464,7 +466,7 @@ export default function UniversalInvitationTemplate({
                   {([["personOne", displayTitleCase(invitation.groomName), media.personOne], ["personTwo", displayTitleCase(invitation.brideName), media.personTwo]] as const).map(([slot, name, url]) => (
                     <div key={slot} className="min-w-0">
                       {usesPhotos && <div className={`relative mx-auto overflow-hidden ${frame}`}>
-                        {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={{ objectPosition: `center ${media.assignment.focus[slot]}` }} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
+                        {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={photoCropStyle(media.assignment, slot)} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
                       </div>}
                       {!usesPhotos && (key === "zen-atelier"
