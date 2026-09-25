@@ -306,10 +306,10 @@ test("selected assets use a compact left list and right-side properties panel", 
 
 test("Studio supports standard cut and non-destructive photo crop controls", () => {
   const photoSlots = read("lib/templates/photo-slots.ts");
-  assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
+  assert.match(designer, /shortcutKey === "x"/);
   assert.match(designer, /setCopiedAssetLayer\(\{ \.\.\.selectedAssetLayer \}\)/);
   assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
-  assert.match(designer, /event\.key\.toLowerCase\(\) === "d"/);
+  assert.match(designer, /shortcutKey === "d"/);
   assert.match(designer, /duplicateSelectedAssetLayer\(\)/);
   assert.match(photos, /Crop & posisi/);
   assert.match(photos, /onSetCrop/);
@@ -402,9 +402,9 @@ test("Studio clipboard shortcuts never hijack text editing", () => {
   assert.match(designer, /closest\('input, textarea, select, \[contenteditable="true"\], \[role="textbox"\]'\)/);
   assert.match(designer, /window\.getSelection\(\)\?\.toString\(\)/);
   assert.match(designer, /event\.isComposing/);
-  assert.match(designer, /event\.key\.toLowerCase\(\) === "c"/);
-  assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
-  assert.match(designer, /event\.key\.toLowerCase\(\) === "v"/);
+  assert.match(designer, /shortcutKey === "c"/);
+  assert.match(designer, /shortcutKey === "x"/);
+  assert.match(designer, /shortcutKey === "v"/);
 });
 
 
@@ -423,4 +423,13 @@ test("Studio supports shift multi-select and persistent group controls", () => {
   assert.match(assetRenderer, /selectedIds\?: string\[\]/);
   assert.match(assetRenderer, /onSelect\?: \(id: string, additive\?: boolean\)/);
   assert.match(preview, /selectedAssetLayerIds\?: string\[\]/);
+});
+
+
+test("Studio has standard multi-select keyboard shortcuts", () => {
+  assert.match(designer, /shortcutKey === "a"/);
+  assert.match(designer, /shortcutKey === "g"/);
+  assert.match(designer, /event\.shiftKey && shortcutKey === "g"/);
+  assert.match(designer, /groupSelectedAssetLayers\(\)/);
+  assert.match(designer, /ungroupSelectedAssetLayers\(\)/);
 });
