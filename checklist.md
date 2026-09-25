@@ -590,6 +590,8 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
   - [x] Empat timeline storytelling opt-in (Romantic Cascade, Editorial Sequence, Luxe Cinematic, Paper Story) memakai GSAP lewat dynamic import hanya saat section naratif memilihnya. Section biasa tetap memakai WAAPI shared entrance runtime; reduced-motion diperiksa sebelum GSAP di-load dan native Zen/Pencil reveal tidak berjalan ganda. (26 September 2026)
 - [ ] Keep Three/R3F effects opt-in for selected premium templates only; do not make standard invitation pages depend on heavy 3D.
-- [ ] Preserve reduced-motion behavior and mobile performance budgets for every animation preset.
+  - [x] Bundle-boundary regression test memastikan Universal, Romantic Rose, asset-layer renderer, dan Our Story tidak punya eager import `@react-three/fiber`, Drei, `three`, atau GSAP. Premium 3D template sendiri belum diaktifkan, jadi parent item tetap terbuka. (26 September 2026)
+- [x] Preserve reduced-motion behavior and mobile performance budgets for every animation preset.
+  - [x] Shared runtimes mematikan entrance/parallax/premium timeline pada `prefers-reduced-motion`; budget terpusat membatasi choreography teks 96 motion parts, premium timeline 10 item, dan parallax 12 target. Gallery assignment sendiri tetap dibatasi maksimal 30 foto. Ini code-level guard; profiling device nyata tetap bagian QA/E2E. (26 September 2026)
 
 **Priority rule:** baseline Studio editing (crop/cut/selection/layers/locking/snapping) wins over adding more animation presets until the editor feels dependable for normal designer work.
