@@ -112,7 +112,7 @@ export default function TemplateCollection() {
               <div className="relative h-full overflow-hidden rounded-[39px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
                 <div className="pointer-events-none absolute inset-[7px] z-20 rounded-[33px] border border-white/10" aria-hidden="true" />
                 <div className="relative h-full overflow-hidden rounded-[32px] bg-[#f8f4f1] dark:bg-[#111111]">
-                  <TemplateCardCanvas templateKey={template.key} phone />
+                  <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} phone />
                 </div>
                 <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 z-30 h-5 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]">
                   <span className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#151515]" />
