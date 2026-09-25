@@ -368,3 +368,13 @@ test("Studio crop mode edits the photo inside its fixed canvas frame", () => {
   assert.match(universal, /StudioPhotoCropOverlay/);
   assert.match(rose, /StudioPhotoCropOverlay/);
 });
+
+
+test("Studio canvas has local zoom controls that do not alter saved invitation geometry", () => {
+  assert.match(designer, /canvasZoom/);
+  assert.match(designer, /<ZoomOut size=\{14\}/);
+  assert.match(designer, /<ZoomIn size=\{14\}/);
+  assert.match(designer, /style=\{\{ zoom: canvasZoom \}\}/);
+  assert.match(designer, /Math\.max\(0\.7/);
+  assert.match(designer, /Math\.min\(1\.3/);
+});
