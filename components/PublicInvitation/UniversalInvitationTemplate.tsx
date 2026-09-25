@@ -210,7 +210,7 @@ export default function UniversalInvitationTemplate({
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
-  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy);
+  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
