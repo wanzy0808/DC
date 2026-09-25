@@ -19,6 +19,7 @@ import { weddingParentLine } from "@/lib/events/parents";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
+import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -130,7 +131,9 @@ export default function RomanticRoseTemplate({
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
-  const sectionStyles = parseInvitationSectionStyles(designKey || invitation.templateKey);
+  const activeDesignKey = designKey || invitation.templateKey;
+  const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
@@ -313,7 +316,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="rsvp" style={invitationSectionStyleCss(sectionStyles.rsvp)} className="relative bg-[#f8eef0] px-5 py-20">
             {objectOverlay("rsvp")}
               <RoseHeading eyebrow="Your presence means so much">Konfirmasi Kehadiran</RoseHeading>
-              <RsvpForm slug={invitation.slug} preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
+              <RsvpForm slug={invitation.slug} preview={preview} eventCategory="WEDDING" rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
             </section>
           )}
 
