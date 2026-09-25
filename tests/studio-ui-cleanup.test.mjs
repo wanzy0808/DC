@@ -141,6 +141,16 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
 });
 
 
+test("overlapping Studio assets use left-click selection and cycle to the layer underneath", () => {
+  const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(assetLayers, /event\.button !== 0/);
+  assert.match(assetLayers, /moved: boolean/);
+  assert.match(assetLayers, /Math\.hypot\([^)]*\) > 3/);
+  assert.match(assetLayers, /onCycleSelect\?\.\(layer\.id, event\.clientX, event\.clientY\)/);
+  assert.match(assetLayers, /interactionEnabled=\{!selectedId \|\| selectedId === layer\.id\}/);
+  assert.match(assetLayers, /currentIndex <= 0 \? hits\.length - 1 : currentIndex - 1/);
+});
+
 test("selected assets use a compact left list and right-side properties panel", () => {
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");

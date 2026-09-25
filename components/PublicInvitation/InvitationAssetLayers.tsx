@@ -32,27 +32,29 @@ function findSectionAt(x: number, y: number, root: HTMLElement): { section: Stud
 }
 
 function EditableLayer({
-  layer, selected, section, editable, onSelect, onUpdate,
+  layer, selected, section, editable, interactionEnabled, onSelect, onUpdate, onCycleSelect,
 }: {
   layer: InvitationAssetLayer;
   selected: boolean;
   section: StudioObjectSection;
   editable: boolean;
+  interactionEnabled: boolean;
   onSelect?: Props["onSelect"];
   onUpdate?: Props["onUpdate"];
+  onCycleSelect?: (id: string, clientX: number, clientY: number) => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
-    rect: DOMRect; centerX: number; centerY: number; initialAngle: number;
+    rect: DOMRect; centerX: number; centerY: number; initialAngle: number; moved: boolean;
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
-    if (!editable || !onUpdate || !root.current) return;
+    if (!editable || !interactionEnabled || !onUpdate || !root.current || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     const sectionRect = root.current.parentElement?.getBoundingClientRect();
@@ -65,6 +67,7 @@ function EditableLayer({
       x: layer.x, y: layer.y, width: layer.width, height: layer.height ?? root.current.offsetHeight / sectionRect.width * 100, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
+      moved: false,
     };
     onSelect?.(layer.id);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -102,6 +105,9 @@ function EditableLayer({
 
   function move(event: PointerEvent<HTMLElement>) {
     if (gesture.current?.pointer !== event.pointerId) return;
+    if (Math.hypot(event.clientX - gesture.current.startX, event.clientY - gesture.current.startY) > 3) {
+      gesture.current.moved = true;
+    }
     if (gesture.current.mode === "move") {
       const scroller = root.current?.closest<HTMLElement>(".dc-studio-canvas-scroll");
       const viewport = scroller?.getBoundingClientRect();
@@ -114,9 +120,14 @@ function EditableLayer({
   }
   function end(event: PointerEvent<HTMLElement>) {
     if (gesture.current?.pointer !== event.pointerId) return;
+    const currentGesture = gesture.current;
     const patch = calculate(event);
     gesture.current = null;
     setLive({});
+    if (currentGesture.mode === "move" && !currentGesture.moved && selected) {
+      onCycleSelect?.(layer.id, event.clientX, event.clientY);
+      return;
+    }
     if (Object.keys(patch).some((key) => patch[key as keyof LayerPatch] !== layer[key as keyof InvitationAssetLayer])) {
       onUpdate?.(layer.id, patch);
     }
@@ -141,7 +152,7 @@ function EditableLayer({
       {editable ? (
         <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
-          className={`pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
+          className={`${interactionEnabled ? "pointer-events-auto" : "pointer-events-none"} block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
           onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
@@ -172,12 +183,27 @@ function EditableLayer({
 
 export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, onSelect, onUpdate }: Props) {
   const visible = layers.filter((layer) => (layer.section ?? "cover") === section);
+
+  function cycleSelection(currentId: string, clientX: number, clientY: number) {
+    if (!onSelect) return;
+    const hits = visible.filter((layer) => {
+      const node = document.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
+      const rect = node?.getBoundingClientRect();
+      return Boolean(rect?.width && rect.height && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom);
+    });
+    if (hits.length < 2) return;
+    const currentIndex = hits.findIndex((layer) => layer.id === currentId);
+    const nextIndex = currentIndex <= 0 ? hits.length - 1 : currentIndex - 1;
+    onSelect(hits[nextIndex]!.id);
+  }
+
   if (!visible.length) return null;
   return (
     <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {visible.map((layer) =>
         <EditableLayer key={layer.id} layer={layer} section={section} selected={selectedId === layer.id}
-          editable={editable} onSelect={onSelect} onUpdate={onUpdate} />,
+          editable={editable} interactionEnabled={!selectedId || selectedId === layer.id}
+          onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} />,
       )}
     </div>
   );
