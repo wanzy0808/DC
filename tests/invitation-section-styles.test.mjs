@@ -65,7 +65,8 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(universal, /parseInvitationSectionStyles\(activeDesignKey\)/);
   assert.match(universal, /data-invitation-section="envelope"/);
   assert.match(universal, /data-invitation-section="cover"/);
-  assert.match(romantic, /parseInvitationSectionStyles\(designKey \|\| invitation\.templateKey\)/);
+  assert.match(romantic, /const activeDesignKey = designKey \|\| invitation\.templateKey/);
+  assert.match(romantic, /parseInvitationSectionStyles\(activeDesignKey\)/);
   assert.match(universal, /<RsvpForm slug=\{invitation\.slug\} preview=\{preview\}/);
   assert.match(romantic, /<RsvpForm slug=\{invitation\.slug\} preview=\{preview\}/);
   assert.doesNotMatch(universal, /Form RSVP tersedia di undangan yang sudah dipublikasikan/);
