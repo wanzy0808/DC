@@ -4,6 +4,7 @@ import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { createGuestQrToken } from "@/lib/usher/qr";
 import { findGuestsByContact } from "@/lib/guests/identity";
 import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
+import { normalizeRsvpEvents, parseInvitationRsvpConfig, sanitizeRsvpAnswers } from "@/lib/templates/rsvp-config";
 
 export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   try {
@@ -52,6 +53,24 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
       return NextResponse.json({ error: "Jumlah pendamping tidak valid." }, { status: 400 });
     }
 
+    const rsvpConfig = parseInvitationRsvpConfig(invitation.templateKey);
+    const rsvpEvents = normalizeRsvpEvents(body.rsvpEvents, rsvpConfig);
+    const rsvpAnswers = sanitizeRsvpAnswers(body.rsvpAnswers, rsvpConfig);
+    if (
+      status === "ATTENDING" &&
+      invitation.eventCategory === "WEDDING" &&
+      (rsvpConfig.ceremony || rsvpConfig.reception) &&
+      rsvpEvents.length === 0
+    ) {
+      return NextResponse.json({ error: "Pilih acara yang akan dihadiri." }, { status: 400 });
+    }
+    if (status === "ATTENDING") {
+      const missingRequired = rsvpConfig.customFields.find((field) => field.required && !rsvpAnswers[field.id]);
+      if (missingRequired) {
+        return NextResponse.json({ error: `${missingRequired.label} wajib diisi.` }, { status: 400 });
+      }
+    }
+
     // RSVP attendance is separate from the invitation allowance. A decline or
     // tentative reply must never leave phantom companions in attendee counts.
     const confirmedPlusOnes = status === "ATTENDING" ? plusOnes : 0;
@@ -83,6 +102,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
           source: "RSVP",
           rsvpStatus,
           plusOnes: confirmedPlusOnes,
+          rsvpEvents: status === "ATTENDING" ? rsvpEvents : [],
+          rsvpAnswers,
         },
       });
     } else {
@@ -118,6 +139,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
           source: "RSVP",
           rsvpStatus,
           plusOnes: confirmedPlusOnes,
+          rsvpEvents: status === "ATTENDING" ? rsvpEvents : [],
+          rsvpAnswers,
           invitedPax: Math.max(1, confirmedPlusOnes + 1),
         },
       });
@@ -137,6 +160,8 @@ export async function POST(request: Request, { params }: { params: Promise<{ slu
           phone: guest.phone,
           plusOnes: guest.plusOnes,
           rsvpStatus: guest.rsvpStatus,
+          rsvpEvents: guest.rsvpEvents,
+          rsvpAnswers: guest.rsvpAnswers,
           invitedPax: guest.invitedPax,
         },
         qrToken,
