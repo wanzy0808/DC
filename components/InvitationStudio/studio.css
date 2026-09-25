@@ -28,9 +28,7 @@
   background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
 }
 .dc-invitation-studio-shell { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--background); }
-.dc-studio-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
 .dc-studio-document-title { width: 100%; text-align: center; }
-.dc-studio-toolbar-actions { align-self: flex-end; justify-content: flex-end; }
 .dc-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-height: 0; }
 .dc-studio-rail { padding: 16px 10px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
 .dc-studio-history-actions { display: flex; align-items: center; gap: 4px; }
@@ -96,14 +94,13 @@
   .dc-studio-page-header .dc-language-toggle { height: 36px; gap: 3px; }
   .dc-studio-page-header .dc-language-toggle button { height: 32px; min-width: 31px; padding-inline: 5px; }
 
-  .dc-studio-toolbar { padding: 12px; gap: 10px; }
-  .dc-studio-toolbar-actions { width: 100%; justify-content: flex-end; }
-  .dc-studio-toolbar button { min-height: 44px; }
   .dc-studio-mobile-view { display: flex; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
   .dc-studio-mobile-view button { flex: 1; min-height: 44px; color: var(--muted-foreground); font-size: 13px; }
   .dc-studio-mobile-view button[aria-pressed=true] { color: var(--primary); box-shadow: inset 0 -2px var(--primary); }
   .dc-studio-workspace, .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
   .dc-studio-rail { display: flex; overflow-x: auto; padding: 4px 8px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
+  .dc-studio-canvas-toolbar { gap: 6px; padding-inline: 8px; }
+  .dc-studio-canvas-toolbar .dc-studio-history-actions { gap: 2px; }
   .dc-studio-tool { width: 80px; min-width: 80px; min-height: 70px; margin: 0; padding: 8px 6px; gap: 7px; border-radius: 12px; }
   .dc-studio-tool[aria-pressed=true] { box-shadow: none; }
   .dc-studio-rail-divider, .dc-studio-panel-toggle { display: none; }
