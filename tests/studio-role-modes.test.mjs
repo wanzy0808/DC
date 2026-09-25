@@ -22,11 +22,15 @@ test("staff Save creates a sellable catalog template while customer Save stays e
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const templateApi = read("app/api/designer/templates/route.ts");
   const invitationApi = read("app/api/invitations/route.ts");
+  const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
-  assert.match(editor, /if \(templateMode\) \{[\s\S]*?fetch\("\/api\/designer\/templates"/);
-  assert.match(editor, /method: "POST"/);
+  assert.match(editor, /if \(templateMode\)/);
+  assert.match(editor, /createStudioTemplate\(/);
+  assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
+  assert.match(persistence, /method: "POST"/);
   assert.match(editor, /Simpan Template/);
-  assert.match(editor, /fetch\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
+  assert.match(editor, /saveStudioInvitation\(/);
+  assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
   assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
   assert.match(templateApi, /designKey,/);
   assert.match(templateApi, /status: "PUBLISHED"/);
