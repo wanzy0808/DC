@@ -564,6 +564,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Add snapping/alignment guides for center, section bounds, and nearby objects.
 - [x] Add multi-select align/distribute controls (left/center/right, top/middle/bottom, horizontal/vertical distribution).
 - [x] Add local Studio canvas zoom controls without changing saved invitation geometry.
+- [x] Add zoom reset 100% and Fit-to-workspace controls; zoom remains editor-local only.
 - [x] Add image layer flip horizontal/vertical and quick center positioning.
 - [x] Add native basic shapes (rectangle, circle, line) with fill, border, thickness, corner radius and normal layer transforms.
 - [x] Add image corner radius plus generic layer shadow controls for image, shape and text objects.
