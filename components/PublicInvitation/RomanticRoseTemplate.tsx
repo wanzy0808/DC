@@ -3,7 +3,7 @@
 import { displayTitleCase } from "@/lib/text/display-title-case";
 import { getInvitationCountdown } from "@/lib/invitations/countdown";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import GuestWishes from "@/components/PublicInvitation/GuestWishes";
@@ -149,7 +149,7 @@ export default function RomanticRoseTemplate({
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
   const activeDesignKey = designKey || invitation.templateKey;
-  const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
