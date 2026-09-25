@@ -1,41 +1,43 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
-import type {
-  InvitationRsvpConfig,
-  RsvpElementAlign,
-  RsvpElementStyle,
+import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
+import {
+  MAX_RSVP_CUSTOM_FIELDS,
+  type InvitationRsvpConfig,
+  type RsvpElementAlign,
+  type RsvpElementStyle,
 } from "@/lib/templates/rsvp-config";
 
-const coreNames: Record<string, { id: string; en: string }> = {
+const names = {
   title: { id: "Judul RSVP", en: "RSVP title" },
-  name: { id: "Input Nama", en: "Name input" },
-  phone: { id: "Input WhatsApp", en: "WhatsApp input" },
-  events: { id: "Pilihan Acara", en: "Event choice" },
-  status: { id: "Status Kehadiran", en: "Attendance status" },
-  companions: { id: "Jumlah Pendamping", en: "Companions" },
-  submit: { id: "Tombol Submit", en: "Submit button" },
-};
+  inputs: { id: "Input RSVP", en: "RSVP inputs" },
+} as const;
 
 export default function RsvpElementInspector({
   locale,
   elementKey,
   config,
+  eventCategory,
   onConfig,
-  onUpdateField,
+  onAddRsvpField,
+  onUpdateRsvpField,
+  onRemoveRsvpField,
   onClose,
 }: {
   locale: string;
   elementKey: string;
   config: InvitationRsvpConfig;
+  eventCategory: string;
   onConfig: (patch: Partial<InvitationRsvpConfig>) => void;
-  onUpdateField: (id: string, patch: { label?: string; required?: boolean }) => void;
+  onAddRsvpField: () => void;
+  onUpdateRsvpField: (id: string, patch: { label?: string; required?: boolean }) => void;
+  onRemoveRsvpField: (id: string) => void;
   onClose: () => void;
 }) {
   const en = locale === "en";
-  const customId = elementKey.startsWith("custom:") ? elementKey.slice(7) : "";
-  const customField = customId ? config.customFields.find((field) => field.id === customId) : undefined;
-  const displayName = customField?.label || (en ? coreNames[elementKey]?.en : coreNames[elementKey]?.id) || elementKey;
+  const displayName = elementKey === "inputs"
+    ? (en ? names.inputs.en : names.inputs.id)
+    : (en ? names.title.en : names.title.id);
   const style = config.elementStyles[elementKey] ?? {};
 
   function updateStyle(patch: Partial<RsvpElementStyle>) {
@@ -87,7 +89,12 @@ export default function RsvpElementInspector({
     </label>
   );
 
-  const colorControl = (label: string, value: string | undefined, property: "background" | "color" | "borderColor", fallback: string) => (
+  const colorControl = (
+    label: string,
+    value: string | undefined,
+    property: "background" | "color" | "borderColor",
+    fallback: string,
+  ) => (
     <div className="dc-studio-section-field">
       <span>{label}</span>
       <div className="dc-studio-section-color">
@@ -98,11 +105,17 @@ export default function RsvpElementInspector({
           onChange={(event) => updateStyle({ [property]: event.target.value })}
         />
         <button type="button" onClick={() => updateStyle({ [property]: undefined })}>
-          {en ? "Default" : "Default"}
+          Default
         </button>
       </div>
     </div>
   );
+
+  const alignments: { value: RsvpElementAlign; label: string; Icon: typeof AlignLeft }[] = [
+    { value: "left", label: en ? "Align left" : "Rata kiri", Icon: AlignLeft },
+    { value: "center", label: en ? "Align center" : "Rata tengah", Icon: AlignCenter },
+    { value: "right", label: en ? "Align right" : "Rata kanan", Icon: AlignRight },
+  ];
 
   return (
     <aside className="dc-studio-section-side dc-studio-rsvp-element-side" aria-label={en ? "RSVP component properties" : "Properti komponen RSVP"}>
@@ -126,33 +139,26 @@ export default function RsvpElementInspector({
         </label>
       )}
 
-      {customField && (
-        <label className="dc-studio-section-field">
-          <span>{en ? "Field label" : "Label field"}</span>
-          <input
-            className="dc-studio-rsvp-text-input"
-            value={customField.label}
-            maxLength={60}
-            onChange={(event) => onUpdateField(customField.id, { label: event.target.value })}
-          />
-        </label>
-      )}
-
       {numeric(en ? "Width" : "Lebar", style.width, "100", 30, 100, "%", "width")}
       {numeric(en ? "Text size" : "Ukuran teks", style.fontSize, en ? "Template" : "Template", 10, 72, "px", "fontSize")}
 
-      <label className="dc-studio-section-field">
+      <div className="dc-studio-section-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
-        <select
-          value={style.align ?? ""}
-          onChange={(event) => updateStyle({ align: (event.target.value || undefined) as RsvpElementAlign | undefined })}
-        >
-          <option value="">{en ? "Template default" : "Default template"}</option>
-          <option value="left">{en ? "Left" : "Kiri"}</option>
-          <option value="center">{en ? "Center" : "Tengah"}</option>
-          <option value="right">{en ? "Right" : "Kanan"}</option>
-        </select>
-      </label>
+        <div className="dc-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
+          {alignments.map(({ value, label, Icon }) => (
+            <button
+              key={value}
+              type="button"
+              aria-pressed={style.align === value}
+              aria-label={label}
+              title={label}
+              onClick={() => updateStyle({ align: value })}
+            >
+              <Icon size={15} />
+            </button>
+          ))}
+        </div>
+      </div>
 
       <label className="dc-studio-section-field">
         <span className="flex items-center justify-between gap-2">
@@ -172,6 +178,70 @@ export default function RsvpElementInspector({
       {colorControl(en ? "Background" : "Latar", style.background, "background", "#ffffff")}
       {colorControl(en ? "Text" : "Teks", style.color, "color", "#222222")}
       {colorControl(en ? "Border" : "Garis", style.borderColor, "borderColor", "#c07a84")}
+
+      {elementKey === "inputs" && (
+        <div className="dc-studio-rsvp-config">
+          <div className="dc-studio-rsvp-config-title">
+            <span>{en ? "RSVP fields" : "Field RSVP"}</span>
+            {eventCategory !== "WEDDING" && <small>{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</small>}
+          </div>
+
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
+            <input type="checkbox" checked={config.ceremony} onChange={(event) => onConfig({ ceremony: event.target.checked })} />
+          </label>
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Reception" : "Resepsi"}</span>
+            <input type="checkbox" checked={config.reception} onChange={(event) => onConfig({ reception: event.target.checked })} />
+          </label>
+          <label className="dc-studio-rsvp-switch">
+            <span>{en ? "Attend all" : "Hadir Semua Acara"}</span>
+            <input
+              type="checkbox"
+              checked={config.attendAll}
+              disabled={!(config.ceremony && config.reception)}
+              onChange={(event) => onConfig({ attendAll: event.target.checked })}
+            />
+          </label>
+
+          <div className="dc-studio-rsvp-fields">
+            <div className="dc-studio-rsvp-fields-head">
+              <span>{en ? "Columns" : "Kolom"}</span>
+              <small>{config.customFields.length}/{MAX_RSVP_CUSTOM_FIELDS}</small>
+            </div>
+            <div className="dc-studio-rsvp-core-fields">
+              <small>{en ? "Name" : "Nama"}</small>
+              <small>WhatsApp</small>
+              <small>{en ? "Attendance" : "Kehadiran"}</small>
+              <small>{en ? "Companions" : "Pendamping"}</small>
+            </div>
+            {config.customFields.map((field) => (
+              <div className="dc-studio-rsvp-custom-field" key={field.id}>
+                <input
+                  type="text"
+                  value={field.label}
+                  maxLength={60}
+                  aria-label={en ? "Custom RSVP field label" : "Label field RSVP tambahan"}
+                  onChange={(event) => onUpdateRsvpField(field.id, { label: event.target.value })}
+                />
+                <label title={en ? "Required field" : "Wajib diisi"}>
+                  <input type="checkbox" checked={field.required} onChange={(event) => onUpdateRsvpField(field.id, { required: event.target.checked })} />
+                  <span>{en ? "Req" : "Wajib"}</span>
+                </label>
+                <button type="button" onClick={() => onRemoveRsvpField(field.id)} aria-label={en ? "Remove custom field" : "Hapus field tambahan"} title={en ? "Remove field" : "Hapus field"}>×</button>
+              </div>
+            ))}
+            <button
+              type="button"
+              className="dc-studio-rsvp-add"
+              disabled={config.customFields.length >= MAX_RSVP_CUSTOM_FIELDS}
+              onClick={onAddRsvpField}
+            >
+              + {en ? "Add column" : "Tambah Kolom"}
+            </button>
+          </div>
+        </div>
+      )}
 
       <button type="button" className="dc-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
