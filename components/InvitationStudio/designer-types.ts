@@ -6,6 +6,7 @@ import type { EditableInvitationCopy } from "@/lib/templates/editable-copy";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import type { InvitationSectionInstance } from "@/lib/templates/section-layout";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -72,6 +73,7 @@ export type InvitationDesignState = {
   layers: InvitationAssetLayer[];
   sectionStyles: InvitationSectionStyles;
   rsvpConfig: InvitationRsvpConfig;
+  sectionLayout: InvitationSectionInstance[];
 };
 
 export type InvitationTemplateLayout =
