@@ -1,0 +1,7 @@
+ALTER TABLE "DesignerTemplate"
+ALTER COLUMN "templateFile" DROP NOT NULL,
+ADD COLUMN "designKey" TEXT,
+ADD COLUMN "category" TEXT NOT NULL DEFAULT 'Designer',
+ADD COLUMN "description" TEXT NOT NULL DEFAULT '',
+ADD COLUMN "usesPhotos" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN "musicUrl" TEXT;
