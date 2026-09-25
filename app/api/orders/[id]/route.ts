@@ -40,7 +40,8 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
         metadata: { invoiceNumber: order.invoiceNumber, packageKey: order.packageKey },
       },
     });
-    return NextResponse.json({ order: { ...order, reportedAt: report.createdAt } });
+    const updated = await prisma.paymentOrder.update({ where: { id: order.id }, data: { updatedAt: new Date() } });
+    return NextResponse.json({ order: { ...updated, reportedAt: report.createdAt } });
   }
 
   const proofUrl = String(body.proofUrl ?? "").trim();
