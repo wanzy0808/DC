@@ -222,7 +222,9 @@ test("overlapping Studio assets use left-click selection and cycle to the layer 
   assert.match(assetLayers, /moved: boolean/);
   assert.match(assetLayers, /Math\.hypot\([^)]*\) > 3/);
   assert.match(assetLayers, /onCycleSelect\?\.\(layer\.id, event\.clientX, event\.clientY\)/);
-  assert.match(assetLayers, /interactionEnabled=\{!selectedId \|\| selectedId === layer\.id\}/);
+  assert.match(assetLayers, /zIndex: editable && selected \? 40 : undefined/);
+  assert.match(assetLayers, /className=\{\`pointer-events-auto block w-full cursor-grab/);
+  assert.doesNotMatch(assetLayers, /interactionEnabled/);
   assert.match(assetLayers, /currentIndex <= 0 \? hits\.length - 1 : currentIndex - 1/);
 });
 

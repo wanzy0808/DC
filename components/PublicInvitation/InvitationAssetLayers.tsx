@@ -35,13 +35,12 @@ function findSectionAt(x: number, y: number, root: HTMLElement): { section: Stud
 }
 
 function EditableLayer({
-  layer, selected, section, editable, interactionEnabled, onSelect, onUpdate, onCycleSelect,
+  layer, selected, section, editable, onSelect, onUpdate, onCycleSelect,
 }: {
   layer: InvitationAssetLayer;
   selected: boolean;
   section: StudioObjectSection;
   editable: boolean;
-  interactionEnabled: boolean;
   onSelect?: Props["onSelect"];
   onUpdate?: Props["onUpdate"];
   onCycleSelect?: (id: string, clientX: number, clientY: number) => void;
@@ -57,7 +56,7 @@ function EditableLayer({
   const displayed = { ...layer, ...live };
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
-    if (!editable || !interactionEnabled || !onUpdate || !root.current || event.button !== 0) return;
+    if (!editable || !onUpdate || !root.current || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     const sectionRect = root.current.parentElement?.getBoundingClientRect();
@@ -150,12 +149,13 @@ function EditableLayer({
       left: `${displayed.x}%`, top: `${displayed.y}%`, width: `${displayed.width}%`,
       ...(displayed.height === undefined ? {} : { aspectRatio: `${displayed.width} / ${displayed.height}` }),
       opacity: displayed.opacity, transform: `translate(-50%, -50%) rotate(${displayed.rotation ?? 0}deg)`,
+      zIndex: editable && selected ? 40 : undefined,
       transformOrigin: "center", touchAction: "none",
     }}>
       {editable ? (
         <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
-          className={`${interactionEnabled ? "pointer-events-auto" : "pointer-events-none"} block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
+          className={`pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
           onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
@@ -221,7 +221,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
       <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {visible.map((layer) =>
         <EditableLayer key={layer.id} layer={layer} section={section} selected={selectedId === layer.id}
-          editable={editable} interactionEnabled={!selectedId || selectedId === layer.id}
+          editable={editable}
           onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} />,
       )}
       </div>
