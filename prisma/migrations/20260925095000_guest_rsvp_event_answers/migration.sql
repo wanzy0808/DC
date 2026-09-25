@@ -1,0 +1,3 @@
+ALTER TABLE "Guest"
+ADD COLUMN "rsvpEvents" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
+ADD COLUMN "rsvpAnswers" JSONB;
