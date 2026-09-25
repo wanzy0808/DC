@@ -86,7 +86,8 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
 
   assert.match(studio, /handleCanvasEnvelopeOpened = useCallback\(\(\) => setCanvasStage\("cover"\), \[\]\)/);
   assert.match(studio, /onEnvelopeOpened=\{handleCanvasEnvelopeOpened\}/);
-  assert.match(studio, /onClick=\{\(\) => \{ setCanvasStage\("envelope"\); setPreviewVersion/);
+  assert.match(studio, /onClick=\{restoreDefaults\} disabled=\{!invitation \|\| saving \|\| audioBusy\}/);
+  assert.match(studio, /function restoreDefaults\(\)[\s\S]*setCanvasStage\("envelope"\);[\s\S]*setPreviewVersion/);
   assert.match(studio, /sections=\{canvasStage === "cover" \? \{ \.\.\.design\.sections, envelope: false \} : design\.sections\}/);
   assert.match(preview, /<RomanticRoseTemplate[^>]*onEnvelopeOpened=\{onEnvelopeOpened\}/);
   assert.match(preview, /<UniversalInvitationTemplate[\s\S]*onEnvelopeOpened=\{onEnvelopeOpened\}/);
