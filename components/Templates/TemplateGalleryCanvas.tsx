@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
-import { invitationFonts, invitationPalettes } from "@/lib/templates/design";
+import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { defaultInvitationSections, invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
 
@@ -14,22 +14,27 @@ const InvitationPreview = dynamic(
 
 export function TemplateCanvas({
   templateKey,
+  designKey,
   sections = defaultInvitationSections,
 }: {
   templateKey: string;
+  designKey?: string;
   sections?: InvitationSections;
 }) {
-  const preset = invitationTemplatePresets[templateKey] ?? invitationTemplatePresets["botanical-ivory"];
+  const parsed = parseDesignKey(designKey || templateKey);
+  const rendererKey = parsed.template;
+  const preset = invitationTemplatePresets[rendererKey] ?? invitationTemplatePresets["botanical-ivory"];
   // Sample names and copy are gallery-only; Studio and published events always use owner data.
   // A single isolated fixture powers every catalog and full template preview.
   // Do not replace or save actual customer invitation names in Studio.
   const demo = templateDemoInvitation;
   return (
     <InvitationPreview
-      invitation={{ ...demo, templateKey }}
-      templateKey={templateKey}
-      palette={invitationPalettes[preset.palette]}
-      fontPair={invitationFonts[preset.font]}
+      invitation={{ ...demo, templateKey: designKey || templateKey }}
+      templateKey={rendererKey}
+      designKey={designKey}
+      palette={invitationPalettes[designKey ? parsed.palette : preset.palette]}
+      fontPair={invitationFonts[designKey ? parsed.font : preset.font]}
       decorUrl={templateDemoPhoto}
       eventTag={demo.weddingHashtag || ""}
       dressCode=""
@@ -44,7 +49,7 @@ const catalogCoverSections: InvitationSections = Object.fromEntries(
 ) as InvitationSections;
 
 /** Lazily render the actual Studio canvas for each visible card (not a stock-image mockup). */
-export function TemplateCardCanvas({ templateKey, phone = false, studio = false }: { templateKey: string; phone?: boolean; studio?: boolean }) {
+export function TemplateCardCanvas({ templateKey, designKey, phone = false, studio = false }: { templateKey: string; designKey?: string; phone?: boolean; studio?: boolean }) {
   const root = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [studioWidth, setStudioWidth] = useState(240);
@@ -92,7 +97,7 @@ export function TemplateCardCanvas({ templateKey, phone = false, studio = false 
           className={studio || phone ? "pointer-events-none absolute left-1/2 top-0 w-[390px]" : "pointer-events-none absolute left-1/2 top-[-90px] w-[390px]"}
           style={{ transform: studio ? `translateX(-50%) scale(${studioWidth / 390})` : phone ? "translateX(-50%) scale(0.55)" : "translateX(-50%) scale(0.77)", transformOrigin: "top center" }}
         >
-          <TemplateCanvas templateKey={templateKey} sections={catalogCoverSections} />
+          <TemplateCanvas templateKey={templateKey} designKey={designKey} sections={catalogCoverSections} />
         </div>
       ) : (
         <div className="h-full w-full bg-background" />
