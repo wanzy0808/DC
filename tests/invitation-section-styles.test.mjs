@@ -66,6 +66,10 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(universal, /data-invitation-section="envelope"/);
   assert.match(universal, /data-invitation-section="cover"/);
   assert.match(romantic, /parseInvitationSectionStyles\(designKey \|\| invitation\.templateKey\)/);
+  assert.match(universal, /<RsvpForm slug=\{invitation\.slug\} preview=\{preview\}/);
+  assert.match(romantic, /<RsvpForm slug=\{invitation\.slug\} preview=\{preview\}/);
+  assert.doesNotMatch(universal, /Form RSVP tersedia di undangan yang sudah dipublikasikan/);
+  assert.doesNotMatch(romantic, /Form RSVP akan tersedia di undangan yang sudah dipublikasikan/);
   assert.match(css, /\.dc-studio-section-side \{[^}]*justify-self: end/);
   assert.match(css, /\[data-studio-section-selected="true"\]/);
 });
