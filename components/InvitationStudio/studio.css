@@ -61,7 +61,7 @@
 .dc-section-instance-content { overflow: hidden; }
 .dc-section-instance:first-child > .dc-section-instance-content { border-radius: 23px 23px 0 0; }
 .dc-section-instance:last-child > .dc-section-instance-content { border-radius: 0 0 23px 23px; }
-.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(118px, 1fr) minmax(0, 340px) minmax(184px, 1fr); align-items: start; gap: 16px; width: 100%; min-width: 0; overflow: visible; }
+.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(118px, 1fr) minmax(0, 340px) minmax(230px, 1fr); align-items: start; gap: 18px; width: 100%; min-width: 0; overflow: visible; }
 .dc-studio-preview-workspace { position: relative; width: 340px; max-width: 100%; margin-inline: auto; overflow: visible; }
 .dc-studio-stage-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 12px; }
 .dc-studio-stage-controls button { flex: 1 1 0; min-width: 0; min-height: 44px; border-radius: var(--dc-control-radius); font-size: 12px; font-weight: 500; }
@@ -77,40 +77,40 @@
 .dc-studio-layer-list-items button[aria-pressed="true"] { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 13%, transparent); color: var(--primary); }
 .dc-studio-layer-list-items button:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 
-.dc-studio-layer-side { position: sticky; top: 0; width: 184px; justify-self: end; padding: 10px; border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
-.dc-studio-layer-side-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.dc-studio-layer-side-head strong { color: var(--primary); font-size: 12px; font-weight: 600; }
-.dc-studio-layer-side-head button { display: grid; width: 26px; height: 26px; place-items: center; border-radius: 8px; color: var(--muted-foreground); font-size: 18px; line-height: 1; }
+.dc-studio-layer-side { position: sticky; top: 0; width: 230px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.dc-studio-layer-side-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.dc-studio-layer-side-head strong { color: var(--primary); font-size: 14px; font-weight: 700; }
+.dc-studio-layer-side-head button { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; color: var(--muted-foreground); font-size: 20px; line-height: 1; }
 .dc-studio-layer-side-head button:hover { background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
 .dc-studio-layer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-.dc-studio-layer-field, .dc-studio-layer-select, .dc-studio-layer-opacity { display: grid; gap: 5px; margin-top: 8px; color: var(--muted-foreground); font-size: 10px; }
+.dc-studio-layer-field, .dc-studio-layer-select, .dc-studio-layer-opacity { display: grid; gap: 6px; margin-top: 11px; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .dc-studio-layer-number { display: flex; min-width: 0; align-items: center; gap: 3px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; padding-right: 6px; background: var(--background); }
-.dc-studio-layer-number input { width: 100%; min-width: 0; height: 31px; border: 0; outline: 0; background: transparent; padding: 0 4px 0 7px; color: var(--foreground); font-size: 11px; }
-.dc-studio-layer-number small { color: var(--muted-foreground); font-size: 9px; }
-.dc-studio-layer-select select { width: 100%; min-height: 32px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; background: var(--background); padding: 0 26px 0 7px; color: var(--foreground); font-size: 11px; }
+.dc-studio-layer-number input { width: 100%; min-width: 0; height: 36px; border: 0; outline: 0; background: transparent; padding: 0 6px 0 9px; color: var(--foreground); font-size: 13px; font-weight: 600; }
+.dc-studio-layer-number small { color: var(--muted-foreground); font-size: 10px; font-weight: 500; }
+.dc-studio-layer-select select { width: 100%; min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); padding: 0 30px 0 9px; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .dc-studio-layer-opacity > span { display: flex; justify-content: space-between; gap: 8px; }
 .dc-studio-layer-opacity input { width: 100%; accent-color: var(--primary); }
 .dc-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
-.dc-studio-section-side { position: sticky; top: 0; width: 196px; justify-self: end; padding: 10px; border: 1px solid color-mix(in srgb, var(--primary) 32%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
-.dc-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-.dc-studio-section-side-head > div { display: grid; min-width: 0; gap: 2px; }
-.dc-studio-section-side-head span { color: var(--muted-foreground); font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
-.dc-studio-section-side-head strong { overflow: hidden; color: var(--primary); font-size: 12px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
-.dc-studio-section-side-head > button { display: grid; width: 26px; height: 26px; flex: 0 0 auto; place-items: center; border-radius: 8px; color: var(--muted-foreground); font-size: 18px; line-height: 1; }
+.dc-studio-section-side { position: sticky; top: 0; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.dc-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
+.dc-studio-section-side-head > div { display: grid; min-width: 0; gap: 3px; }
+.dc-studio-section-side-head span { color: var(--muted-foreground); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
+.dc-studio-section-side-head strong { overflow: hidden; color: var(--primary); font-size: 15px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.dc-studio-section-side-head > button { display: grid; width: 30px; height: 30px; flex: 0 0 auto; place-items: center; border-radius: 9px; color: var(--muted-foreground); font-size: 20px; line-height: 1; }
 .dc-studio-section-side-head > button:hover { background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
-.dc-studio-section-field { display: grid; gap: 5px; margin-top: 9px; color: var(--muted-foreground); font-size: 10px; }
-.dc-studio-section-field select { width: 100%; min-height: 32px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; background: var(--background); padding: 0 24px 0 7px; color: var(--foreground); font-size: 11px; }
+.dc-studio-section-field { display: grid; gap: 6px; margin-top: 12px; color: var(--foreground); font-size: 12px; font-weight: 600; }
+.dc-studio-section-field select { width: 100%; min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); padding: 0 30px 0 9px; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .dc-studio-section-field > input[type="range"] { width: 100%; accent-color: var(--primary); }
 .dc-studio-align-icons {
   display: grid;
-  grid-template-columns: repeat(3, 34px);
+  grid-template-columns: repeat(3, 38px);
   align-items: center;
   gap: 5px;
 }
 .dc-studio-align-icons button {
   display: grid;
-  width: 34px;
-  height: 32px;
+  width: 38px;
+  height: 36px;
   place-items: center;
   border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
   border-radius: 10px;
@@ -143,27 +143,27 @@
   background-repeat: no-repeat;
 }
 .dc-studio-section-number { display: flex; min-width: 0; align-items: center; gap: 3px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; padding-right: 6px; background: var(--background); }
-.dc-studio-section-number input { width: 100%; min-width: 0; height: 31px; border: 0; outline: 0; background: transparent; padding: 0 4px 0 7px; color: var(--foreground); font-size: 11px; }
-.dc-studio-section-number small { color: var(--muted-foreground); font-size: 9px; }
+.dc-studio-section-number input { width: 100%; min-width: 0; height: 36px; border: 0; outline: 0; background: transparent; padding: 0 6px 0 9px; color: var(--foreground); font-size: 13px; font-weight: 600; }
+.dc-studio-section-number small { color: var(--muted-foreground); font-size: 10px; font-weight: 500; }
 .dc-studio-section-color { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 7px; }
-.dc-studio-section-color input[type="color"] { width: 100%; height: 34px; border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent); border-radius: 9px; background: var(--background); padding: 2px; cursor: pointer; }
-.dc-studio-section-color output { min-width: 52px; color: var(--muted-foreground); font-size: 9px; text-align: right; }
-.dc-studio-section-reset { min-height: 31px; border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent); border-radius: 10px; background: var(--background); color: var(--primary); font-size: 10px; }
+.dc-studio-section-color input[type="color"] { width: 100%; height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: 10px; background: var(--background); padding: 2px; cursor: pointer; }
+.dc-studio-section-color output { min-width: 58px; color: var(--foreground); font-size: 11px; font-weight: 600; text-align: right; }
+.dc-studio-section-reset { min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); color: var(--primary); font-size: 12px; font-weight: 700; }
 .dc-studio-section-functions { display: grid; gap: 7px; margin-top: 11px; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); }
-.dc-studio-section-functions > span { color: var(--muted-foreground); font-size: 9px; text-transform: uppercase; letter-spacing: .06em; }
-.dc-studio-section-functions > div { display: flex; flex-wrap: wrap; gap: 4px; }
-.dc-studio-section-functions small { border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent); border-radius: 8px; padding: 3px 5px; color: var(--foreground); font-size: 9px; }
-.dc-studio-section-functions p { color: var(--muted-foreground); font-size: 9px; line-height: 1.5; }
+.dc-studio-section-functions > span { color: var(--foreground); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+.dc-studio-section-functions > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.dc-studio-section-functions small { border: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); border-radius: 8px; padding: 4px 6px; color: var(--foreground); font-size: 10px; font-weight: 600; }
+.dc-studio-section-functions p { color: var(--muted-foreground); font-size: 10px; font-weight: 500; line-height: 1.55; }
 .dc-studio-section-reset { display: flex; width: 100%; align-items: center; justify-content: center; gap: 5px; margin-top: 11px; }
 .dc-studio-section-reset:hover { background: color-mix(in srgb, var(--primary) 8%, transparent); }
 .dc-studio-section-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
-.dc-studio-rsvp-text-input { width: 100%; min-height: 32px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 10px; background: var(--background); padding: 0 7px; color: var(--foreground); font-size: 11px; }
+.dc-studio-rsvp-text-input { width: 100%; min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); padding: 0 9px; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .dc-studio-preview-surface [data-studio-rsvp-selected="true"] { position: relative; z-index: 40; outline: 2px solid var(--primary) !important; outline-offset: 2px; box-shadow: 0 0 0 1px color-mix(in srgb, var(--background) 75%, transparent); }
 .dc-studio-rsvp-config { display: grid; gap: 7px; margin-top: 12px; padding-top: 11px; border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); }
 .dc-studio-rsvp-config-title { display: grid; gap: 2px; }
-.dc-studio-rsvp-config-title > span, .dc-studio-rsvp-fields-head > span { color: var(--primary); font-size: 10px; font-weight: 600; }
-.dc-studio-rsvp-config-title small { color: var(--muted-foreground); font-size: 9px; line-height: 1.4; }
-.dc-studio-rsvp-switch { display: flex; min-height: 30px; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); border-radius: 10px; padding: 5px 7px; color: var(--foreground); font-size: 10px; }
+.dc-studio-rsvp-config-title > span, .dc-studio-rsvp-fields-head > span { color: var(--primary); font-size: 12px; font-weight: 700; }
+.dc-studio-rsvp-config-title small { color: var(--muted-foreground); font-size: 10px; font-weight: 500; line-height: 1.45; }
+.dc-studio-rsvp-switch { display: flex; min-height: 36px; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent); border-radius: 10px; padding: 7px 9px; color: var(--foreground); font-size: 11px; font-weight: 600; }
 .dc-studio-rsvp-switch input { width: 15px; height: 15px; flex: 0 0 auto; accent-color: var(--primary); }
 .dc-studio-rsvp-switch input:disabled { opacity: .4; }
 .dc-studio-rsvp-fields { display: grid; gap: 6px; margin-top: 4px; }

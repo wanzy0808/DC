@@ -156,5 +156,8 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.doesNotMatch(assetPanel, /selectedId|onReorder|onRemove|selected\.opacity/);
   assert.match(styles, /\.dc-studio-layer-list \{[^}]*width: 104px/);
-  assert.match(styles, /\.dc-studio-layer-side \{[^}]*position: sticky;[^}]*width: 184px;[^}]*justify-self: end/);
+  assert.match(styles, /\.dc-studio-layer-side \{[^}]*position: sticky;[^}]*width: 230px;[^}]*justify-self: end/);
+  assert.match(styles, /\.dc-studio-section-side \{[^}]*width: 236px;[^}]*padding: 14px/);
+  assert.match(styles, /\.dc-studio-section-side-head strong \{[^}]*font-size: 15px;[^}]*font-weight: 700/);
+  assert.match(styles, /\.dc-studio-section-field \{[^}]*font-size: 12px;[^}]*font-weight: 600/);
 });
