@@ -96,7 +96,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(romantic, /parseAssetLayers\(designKey \|\| invitation\.templateKey\)/);
   assert.match(universal, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
   assert.match(romantic, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
-  assert.match(layerInspector, /onUpdate\(selectedAssetLayer\.id, \{ rotation:/);
+  assert.match(layerInspector, /onUpdate\(selectedAssetLayer\.id, \{ rotation \}\)/);
   assert.match(route, /getCurrentUser\(\)/);
   assert.match(route, /"template", "templates"/);
 });
