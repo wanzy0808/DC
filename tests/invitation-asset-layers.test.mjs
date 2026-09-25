@@ -218,3 +218,21 @@ test("Studio displays its document name in the real page header, never above the
   assert.match(css, /\.dc-studio-header-actions \{ grid-column: 3; justify-self: end; \}/);
   assert.match(css, /\.dc-studio-page-header > \.dc-studio-document-title \{ grid-column: 1 \/ -1; grid-row: 2; \}/);
 });
+
+
+test("theme reset is a rail tool directly under Isi, not a duplicate toolbar action", () => {
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const panels = read("components/InvitationStudio/DesignerPanels.tsx");
+  const css = read("components/InvitationStudio/studio.css");
+  const contentTool = editor.indexOf('label={copy.content} icon={<FilePenLine');
+  const resetTool = editor.indexOf('label={copy.startOver} icon={<RotateCcw');
+  const photoTool = editor.indexOf('label={copy.photos} icon={<ImagePlus');
+  assert.ok(contentTool >= 0 && contentTool < resetTool && resetTool < photoTool);
+  assert.match(editor, /startOver: "Ulang dari awal"/);
+  assert.match(editor, /label=\{copy.startOver\} icon=\{<RotateCcw[^>]*>\}/);
+  assert.match(editor, /onClick=\{restoreDefaults\} disabled=\{!invitation \|\| saving \|\| audioBusy\} title=\{copy.defaultsHint\}/);
+  assert.doesNotMatch(editor, /<Button size="sm" onClick=\{restoreDefaults\}/);
+  assert.match(panels, /disabled\?: boolean;/);
+  assert.match(panels, /title\?: string;/);
+  assert.match(css, /\.dc-studio-tool:disabled \{/);
+});
