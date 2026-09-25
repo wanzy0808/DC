@@ -1,3 +1,5 @@
+import { isInvitationSectionAnimation, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
+
 /** Template-safe, invitation-scoped artwork and optional decorative text. */
 export const studioObjectSections = [
   "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
@@ -47,6 +49,10 @@ export type InvitationAssetLayer = {
   name?: string;
   /** Optional Studio group. Group IDs never affect public rendering by themselves. */
   groupId?: string;
+  /** Optional entrance animation for this visual object. */
+  animation?: InvitationSectionAnimation;
+  animationDuration?: number;
+  animationDelay?: number;
 };
 
 export const MAX_ASSET_LAYERS = 10;
@@ -121,6 +127,9 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       if (name) layer.name = name;
     }
     if (typeof entry.groupId === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(entry.groupId)) layer.groupId = entry.groupId;
+    if (isInvitationSectionAnimation(entry.animation)) layer.animation = entry.animation;
+    if (entry.animationDuration !== undefined) layer.animationDuration = numberBetween(entry.animationDuration, 0.2, 2.5, 0.7);
+    if (entry.animationDelay !== undefined) layer.animationDelay = numberBetween(entry.animationDelay, 0, 2, 0);
     output.push(layer);
     if (output.length === MAX_ASSET_LAYERS) break;
   }
