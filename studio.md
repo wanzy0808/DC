@@ -9,6 +9,12 @@ DC Organizer harus menjadi tempat kerja desainer undangan digital **di dalam apl
 
 Bedakan **Designer Studio**, tempat membuat dan mengelola *master template/proyek custom*, dari **Customer Studio**, tempat pemilik acara menerapkan template dan mengganti konten/properti yang diizinkan. Jangan menyamakan editor master dengan editor undangan event-scoped saat ini. Keduanya harus memakai satu format desain tervalidasi dan renderer undangan nyata, bukan dua versi visual yang bisa berbeda.
 
+### Siklus draft edit pelanggan (25 September 2026)
+
+Editor undangan pelanggan harus memulihkan perubahan yang **belum disimpan** setelah refresh tab Studio yang sama. Snapshot sementara hanya berada di `sessionStorage` tab tersebut dan dipakai **hanya pada navigasi browser bertipe reload**, setelah undangan terautentikasi dimuat dan ID undangan serta baseline desain server masih cocok. Semua perubahan visual yang berada di `InvitationDesignState` (termasuk pemilihan template, section, foto, narasi template dan objek dekoratif), pilihan musik, hashtag, dan dress code termasuk snapshot ini; bukan autosave server.
+
+Jika pengguna keluar Studio ke halaman lain, logout, berganti undangan, menutup tab, atau kembali melalui Back/Forward, editor harus memuat versi terakhir yang disimpan melalui tombol Simpan Desain—**jangan pulihkan draft sementara**. Setelah Simpan Desain berhasil, hapus snapshot. Browser yang menolak sessionStorage boleh kehilangan pemulihan refresh tanpa menghalangi pengeditan dan penyimpanan manual. Jangan menyimpan token, sesi login, dokumen pengguna lain, atau data terproteksi ke cache ini; server tetap sumber kebenaran dan tidak boleh ditimpa bila baseline berubah.
+
 ## 2. Aturan inti: bebas secara visual, terkunci secara fungsional
 
 **Protected component dengan editable design properties.** Desainer boleh mengatur penempatan, ukuran, susunan, tipografi, palet, frame, border, spacing, dekorasi, foto, animasi, dan varian tata letak melalui properti yang dinyatakan di *capability/manifest* komponen. Editor hanya memperlihatkan kontrol yang benar-benar didukung renderer; jangan membuka source code, HTML/JavaScript/CSS arbitrer, endpoint, skema database, atau logika bisnis melalui inspector.
