@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Check, ImagePlus, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
-import { photoCropStyle, type PhotoAssignments, type PhotoCrop, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, type PhotoAssignments, type PhotoCrop, type PhotoCropAspect, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
 
 const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
   cover: { title: "Main Cover", description: "Main invitation photo." },
@@ -203,6 +203,33 @@ export default function PhotoPanel({
                           <Button type="button" size="xs" variant="outline" onClick={() => onResetCrop(slot)}>
                             {en ? "Reset crop" : "Reset crop"}
                           </Button>
+                        </div>
+                        <div>
+                          <p className="mb-2 text-[11px] font-medium text-muted-foreground">{en ? "Aspect ratio" : "Rasio crop"}</p>
+                          <div className="grid grid-cols-3 gap-1.5">
+                            {([
+                              ["template", en ? "Template" : "Template"],
+                              ["original", en ? "Original" : "Original"],
+                              ["1:1", "1:1"],
+                              ["4:5", "4:5"],
+                              ["3:4", "3:4"],
+                              ["16:9", "16:9"],
+                            ] as const).map(([aspect, label]) => {
+                              const crop = cropValue(slot);
+                              const activeAspect = crop.aspect ?? "template";
+                              return (
+                                <button
+                                  key={aspect}
+                                  type="button"
+                                  aria-pressed={activeAspect === aspect}
+                                  onClick={() => onSetCrop(slot, { ...crop, aspect: aspect as PhotoCropAspect })}
+                                  className={`min-h-9 rounded-[var(--dc-control-radius)] border px-2 text-[11px] ${activeAspect === aspect ? "border-primary bg-primary text-white dark:text-black" : "border-border hover:border-primary/50"}`}
+                                >
+                                  {label}
+                                </button>
+                              );
+                            })}
+                          </div>
                         </div>
                         {([
                           ["x", en ? "Horizontal" : "Horizontal", 0, 100, 1, "%"],
