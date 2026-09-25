@@ -21,6 +21,7 @@ export default async function DashboardLayout({
   if (user.role === "OWNER") redirect("/owner");
   if (user.role === "ADMIN" || user.role === "FINANCE") redirect("/admin");
   if (user.role === "DESIGNER" || user.role === "EDITOR") redirect("/designer");
+  if (user.role === "SUPPORT") redirect("/partner");
 
   return (
     <DashboardGate>
