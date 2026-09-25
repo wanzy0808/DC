@@ -63,9 +63,10 @@ export default function AssetLayerInspector({
     <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Object width" : "Lebar objek"} · {selectedAssetLayer.width}%</span>
       <input className="w-full accent-primary" type="range" min="5" max="85" value={selectedAssetLayer.width} onChange={(event) => onUpdate(selectedAssetLayer.id, { width: Number(event.target.value) })} />
     </label>
-    <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Rotation" : "Rotasi"} · {selectedAssetLayer.rotation ?? 0}°</span>
-      <input className="w-full accent-primary" type="range" min="-180" max="180" value={selectedAssetLayer.rotation ?? 0} onChange={(event) => onUpdate(selectedAssetLayer.id, { rotation: Number(event.target.value) })} />
-    </label>
+    <div className="mt-3 space-y-2 text-xs text-foreground">
+      <label className="flex items-center justify-between gap-2" htmlFor="dc-studio-rotation-degrees"><span>{locale === "en" ? "Rotation" : "Rotasi"}</span><span className="flex items-center gap-1"><input id="dc-studio-rotation-degrees" type="number" min="-180" max="180" step="1" value={selectedAssetLayer.rotation ?? 0} onFocus={(event) => event.currentTarget.select()} onChange={(event) => { const angle = event.currentTarget.valueAsNumber; if (Number.isFinite(angle)) onUpdate(selectedAssetLayer.id, { rotation: Math.min(180, Math.max(-180, angle)) }); }} aria-label={locale === "en" ? "Exact rotation in degrees" : "Rotasi tepat dalam derajat"} className="w-16 rounded-[var(--dc-control-radius)] border border-primary/50 bg-background px-2 py-1 text-right text-xs text-foreground" />°</span></label>
+      <input aria-label={locale === "en" ? "Rotation slider" : "Slider rotasi"} className="w-full accent-primary" type="range" min="-180" max="180" value={selectedAssetLayer.rotation ?? 0} onChange={(event) => onUpdate(selectedAssetLayer.id, { rotation: Number(event.target.value) })} />
+    </div>
     <label className="mt-3 block space-y-2 text-xs text-foreground">
     <span className="flex justify-between gap-2"><span>{locale === "en" ? "Opacity" : "Opasitas"}</span><output>{Math.round(selectedAssetLayer.opacity * 100)}%</output></span>
     <input type="range" min="0" max="1" step="0.05" value={selectedAssetLayer.opacity} aria-label={locale === "en" ? "Layer opacity" : "Opasitas layer"} className="w-full accent-primary" onChange={(event) => onUpdate(selectedAssetLayer.id, { opacity: Number(event.target.value) })} />
