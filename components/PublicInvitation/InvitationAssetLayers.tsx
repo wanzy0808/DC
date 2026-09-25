@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import { resizeObjectFromHandle, type ObjectResizeHandle } from "@/lib/templates/object-resize";
 
 /** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
 type LayerPatch = Partial<InvitationAssetLayer>;
@@ -42,7 +43,7 @@ function EditableLayer({
 }) {
   const root = useRef<HTMLDivElement>(null);
   const gesture = useRef<{
-    pointer: number; mode: "move" | "resize" | "rotate"; handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left"; objectWidth: number; objectHeight: number;
+    pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
     rect: DOMRect; centerX: number; centerY: number; initialAngle: number;
   } | null>(null);
@@ -50,7 +51,7 @@ function EditableLayer({
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
 
-  function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left") {
+  function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
     if (!editable || !onUpdate || !root.current) return;
     event.preventDefault();
     event.stopPropagation();
@@ -73,31 +74,13 @@ function EditableLayer({
     const drag = gesture.current;
     if (!drag) return {};
     if (drag.mode === "resize") {
-      // Selection frame stays centred; project pointer movement into the rotated object X axis.
-      const radians = drag.rotation * Math.PI / 180;
-      const dx = event.clientX - drag.startX;
-      const dy = event.clientY - drag.startY;
-      const localX = dx * Math.cos(radians) + dy * Math.sin(radians);
-      const localY = -dx * Math.sin(radians) + dy * Math.cos(radians);
-      const handle = drag.handle ?? "bottom-right";
-      // Side grips change ONE dimension. Corner grips scale both dimensions together.
-      // Height and width use the same section-width basis for consistent responsive geometry.
-      const xWeight = handle.includes("left") ? -1 : handle.includes("right") ? 1 : 0;
-      const yWeight = handle.includes("top") ? -1 : handle.includes("bottom") ? 1 : 0;
-      if (xWeight && !yWeight) return {
-        width: round(clamp(drag.width + xWeight * localX / drag.rect.width * 200, 5, 85)),
-        height: round(clamp(drag.height, 3, 200)),
-      };
-      if (yWeight && !xWeight) return {
-        width: drag.width,
-        height: round(clamp(drag.height + yWeight * localY / drag.rect.width * 200, 3, 200)),
-      };
-      const delta = (xWeight * localX / drag.objectWidth + yWeight * localY / drag.objectHeight) / 2;
-      const scale = 1 + 2 * delta;
-      return {
-        width: round(clamp(drag.width * scale, 5, 85)),
-        height: round(clamp(drag.height * scale, 3, 200)),
-      };
+      return resizeObjectFromHandle({
+        handle: drag.handle ?? "bottom-right",
+        x: drag.x, y: drag.y, width: drag.width, height: drag.height,
+        rotation: drag.rotation, sectionWidth: drag.rect.width,
+        sectionHeight: drag.rect.height, objectWidth: drag.objectWidth,
+        objectHeight: drag.objectHeight,
+      }, event.clientX - drag.startX, event.clientY - drag.startY);
     }
     if (drag.mode === "rotate") {
       const angle = Math.atan2(event.clientY - drag.centerY, event.clientX - drag.centerX);
