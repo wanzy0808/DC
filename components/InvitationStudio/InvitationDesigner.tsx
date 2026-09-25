@@ -30,6 +30,7 @@ import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
+import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -97,6 +98,7 @@ export default function InvitationDesigner() {
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
+  const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
@@ -129,7 +131,7 @@ export default function InvitationDesigner() {
     copy: {},
     layers: [],
     sectionStyles: {},
-    rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] },
+    rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
   });
 
   async function load() {
@@ -161,7 +163,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] } }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} } }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
@@ -291,7 +293,7 @@ export default function InvitationDesigner() {
       copy: templateKey === design.template ? design.copy : {},
       layers: templateKey === design.template ? design.layers : [],
       sectionStyles: templateKey === design.template ? design.sectionStyles : {},
-      rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [] },
+      rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -301,6 +303,7 @@ export default function InvitationDesigner() {
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
+    setSelectedRsvpElementKey(null);
     setCopiedAssetLayer(null);
     setCanvasStage("envelope");
   }
@@ -316,7 +319,7 @@ export default function InvitationDesigner() {
       copy: {},
       layers: [],
       sectionStyles: {},
-      rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [] },
+      rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
@@ -425,6 +428,7 @@ export default function InvitationDesigner() {
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
     setSelectedSectionKey(null);
+    setSelectedRsvpElementKey(null);
     setSelectedLayerId(id);
     showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
@@ -516,9 +520,13 @@ export default function InvitationDesigner() {
   }
 
   function removeRsvpCustomField(id: string) {
+    const elementStyles = { ...design.rsvpConfig.elementStyles };
+    delete elementStyles[`custom:${id}`];
     updateRsvpConfig({
       customFields: design.rsvpConfig.customFields.filter((field) => field.id !== id),
+      elementStyles,
     });
+    if (selectedRsvpElementKey === `custom:${id}`) setSelectedRsvpElementKey(null);
   }
 
   function updateSectionStyle(key: InvitationSectionKey, patch: Partial<InvitationSectionStyle>) {
@@ -575,6 +583,15 @@ export default function InvitationDesigner() {
       else delete node.dataset.studioSectionSelected;
     }
   }, [selectedSectionKey, designKey, canvasStage, previewVersion]);
+
+  useEffect(() => {
+    const root = canvasScrollRef.current;
+    if (!root) return;
+    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-rsvp-element]")) {
+      if (node.dataset.studioRsvpElement === selectedRsvpElementKey) node.dataset.studioRsvpSelected = "true";
+      else delete node.dataset.studioRsvpSelected;
+    }
+  }, [selectedRsvpElementKey, designKey, canvasStage, previewVersion]);
 
   useEffect(() => {
     function handleLayerShortcut(event: KeyboardEvent) {
@@ -802,10 +819,19 @@ export default function InvitationDesigner() {
           }} onClick={(event) => {
             const target = event.target;
             if (!(target instanceof Element)) return;
+            const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
+            if (rsvpElement?.dataset.studioRsvpElement) {
+              setSelectedLayerId(null);
+              setSelectedSectionKey(null);
+              setSelectedRsvpElementKey(rsvpElement.dataset.studioRsvpElement);
+              return;
+            }
             if (target.closest("[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
             const section = target.closest<HTMLElement>("[data-invitation-section]");
             if (section?.dataset.invitationSection) {
+              if (section.dataset.invitationSection === "rsvp" && target.closest("img")) return;
               setSelectedLayerId(null);
+              setSelectedRsvpElementKey(null);
               setSelectedSectionKey(section.dataset.invitationSection as InvitationSectionKey);
               return;
             }
@@ -813,6 +839,7 @@ export default function InvitationDesigner() {
             if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) {
               setSelectedLayerId(null);
               setSelectedSectionKey(null);
+              setSelectedRsvpElementKey(null);
             }
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
@@ -866,7 +893,7 @@ export default function InvitationDesigner() {
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
-                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedLayerId(id); }}
+                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedRsvpElementKey(null); setSelectedLayerId(id); }}
                     onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
@@ -886,6 +913,15 @@ export default function InvitationDesigner() {
                 onDeselect={() => setSelectedLayerId(null)}
                 onUpdate={updateAssetLayer}
                 onPosition={positionAssetLayer}
+              />
+            ) : selectedRsvpElementKey ? (
+              <RsvpElementInspector
+                locale={locale}
+                elementKey={selectedRsvpElementKey}
+                config={design.rsvpConfig}
+                onConfig={updateRsvpConfig}
+                onUpdateField={updateRsvpCustomField}
+                onClose={() => setSelectedRsvpElementKey(null)}
               />
             ) : selectedSectionKey ? (
               <SectionInspector
