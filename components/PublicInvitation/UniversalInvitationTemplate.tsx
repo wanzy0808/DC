@@ -28,7 +28,7 @@ import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
-import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -311,7 +311,19 @@ export default function UniversalInvitationTemplate({
         {pencil && <PencilSectionArt section={keyName} />}
         <div className="relative">
           {!zen && !pencil && <p className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
-          <h2 className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`} style={{fontFamily:invitationFontFamily(font.heading), color:"inherit"}}>{zen ? zenHeadings[keyName] : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1]}</h2>
+          <h2
+            data-studio-rsvp-element={keyName === "rsvp" ? "title" : undefined}
+            className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`}
+            style={{
+              fontFamily: invitationFontFamily(font.heading),
+              color: "inherit",
+              ...(keyName === "rsvp" ? rsvpElementStyleCss(rsvpConfig, "title") : {}),
+            }}
+          >
+            {keyName === "rsvp"
+              ? (rsvpConfig.title || (zen ? zenHeadings.rsvp : headings.rsvp[1]))
+              : zen ? zenHeadings[keyName] : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1]}
+          </h2>
           {zen || pencil ? <span aria-hidden="true" className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
             <div className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
               <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
