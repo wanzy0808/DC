@@ -6,6 +6,7 @@ import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSecti
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontFamily } from "@/lib/templates/presentation";
 import { resizeObjectFromHandle, type ObjectResizeHandle } from "@/lib/templates/object-resize";
+import { useInvitationLayerAnimation } from "@/components/PublicInvitation/use-layer-animation";
 
 /** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
 type LayerPatch = Partial<InvitationAssetLayer>;
@@ -60,6 +61,7 @@ function EditableLayer({
   onGuides?: (guides: GuideState) => void;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const motion = useRef<HTMLSpanElement>(null);
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
@@ -69,6 +71,7 @@ function EditableLayer({
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
   const shadowFilter = layerShadowFilter(layer);
+  useInvitationLayerAnimation(motion, layer);
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
     if (event.currentTarget.closest<HTMLElement>('.dc-studio-canvas-scroll[data-space-pan="true"]')) return;
@@ -231,6 +234,23 @@ function EditableLayer({
           onClick={(event) => { event.stopPropagation(); if (event.detail === 0) onSelect?.(layer.id, event.shiftKey); }} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
           onKeyDown={keys}>
+          <span ref={motion} data-studio-layer-motion className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
+            {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
+              fontFamily: layer.fontFamily
+                ? invitationFontFamily(layer.fontFamily)
+                : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+              fontSize: layer.fontSize ?? 24,
+              fontWeight: layer.fontWeight ?? 400,
+              textAlign: layer.textAlign ?? "center",
+              letterSpacing: layer.letterSpacing ?? 0,
+              lineHeight: layer.lineHeight ?? 1.2,
+              color: layer.color ?? "#C07A84",
+              filter: shadowFilter,
+            }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+          </span>
+        </button>
+      ) : (
+        <span ref={motion} data-invitation-layer-motion aria-hidden="true" className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
             fontFamily: layer.fontFamily
               ? invitationFontFamily(layer.fontFamily)
@@ -242,19 +262,9 @@ function EditableLayer({
             lineHeight: layer.lineHeight ?? 1.2,
             color: layer.color ?? "#C07A84",
             filter: shadowFilter,
-          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
-        </button>
-      ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words" style={{
-        fontFamily: layer.fontFamily
-          ? invitationFontFamily(layer.fontFamily)
-          : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
-        fontSize: layer.fontSize ?? 24,
-        fontWeight: layer.fontWeight ?? 400,
-        textAlign: layer.textAlign ?? "center",
-        letterSpacing: layer.letterSpacing ?? 0,
-        lineHeight: layer.lineHeight ?? 1.2,
-        color: layer.color ?? "#C07A84",
-      }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+        </span>
+      )}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
