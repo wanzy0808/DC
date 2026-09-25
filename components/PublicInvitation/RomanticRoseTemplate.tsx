@@ -25,6 +25,7 @@ import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templat
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
+import { usePremiumSectionTimelines } from "@/components/PublicInvitation/use-premium-section-timelines";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
@@ -164,6 +165,7 @@ export default function RomanticRoseTemplate({
   const activeDesignKey = designKey || invitation.templateKey;
   const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
+  usePremiumSectionTimelines(rootRef, sectionStyles, String(opened));
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
