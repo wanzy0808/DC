@@ -12,6 +12,7 @@ import {
 } from "@/lib/templates/sections";
 import { parsePhotoAssignments, withPhotoAssignments } from "@/lib/templates/photo-slots";
 import { parseEditableCopy, withEditableCopy } from "@/lib/templates/editable-copy";
+import { parseEditableCopyMotions, withEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import { parseAssetLayers, withAssetLayers } from "@/lib/templates/asset-layers";
 import { parseInvitationSectionStyles, withInvitationSectionStyles } from "@/lib/templates/section-styles";
@@ -81,7 +82,7 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopy(
+  return withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopyMotions(withEditableCopy(
     withPhotoAssignments(
       withInvitationSections(
         makeDesignKey(state.template, state.palette, state.font, state.decor),
@@ -90,7 +91,7 @@ export function makeInvitationDesignStateKey(state: InvitationDesignState) {
       state.photos,
     ),
     state.copy,
-  ), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles);
+  ), state.copyMotion), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles);
 }
 
 export function invitationDesignStateFromKey(
@@ -110,6 +111,7 @@ export function invitationDesignStateFromKey(
     sections: parseInvitationSections(key),
     photos: parsePhotoAssignments(key),
     copy: parseEditableCopy(key),
+    copyMotion: parseEditableCopyMotions(key),
     layers: parseAssetLayers(key),
     sectionStyles: parseInvitationSectionStyles(key),
     rsvpConfig: parseInvitationRsvpConfig(key),
