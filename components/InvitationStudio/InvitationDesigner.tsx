@@ -69,6 +69,11 @@ import {
   invitationDesignStateFromKey,
   makeInvitationDesignStateKey,
 } from "@/components/InvitationStudio/designer-state";
+import {
+  positionAssetLayers,
+  reorderAssetLayers,
+  type AssetLayerPosition,
+} from "@/components/InvitationStudio/designer-layer-order";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -1121,44 +1126,16 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function reorderAssetLayer(sourceId: string, targetId: string) {
-    if (sourceId === targetId || design.layers.find((layer) => layer.id === sourceId)?.locked) return;
-    const sourceIndex = design.layers.findIndex((layer) => layer.id === sourceId);
-    const targetIndex = design.layers.findIndex((layer) => layer.id === targetId);
-    if (sourceIndex < 0 || targetIndex < 0) return;
-    const next = [...design.layers];
-    const [source] = next.splice(sourceIndex, 1);
-    if (!source) return;
-    const targetAfterRemoval = next.findIndex((layer) => layer.id === targetId);
-    if (targetAfterRemoval < 0) return;
-    const insertAt = sourceIndex < targetIndex ? targetAfterRemoval + 1 : targetAfterRemoval;
-    next.splice(insertAt, 0, source);
+    const next = reorderAssetLayers(design.layers, sourceId, targetId);
+    if (next === design.layers) return;
     change({ layers: next });
     setSelectedLayerIds([sourceId]);
     setSelectedLayerId(sourceId);
   }
 
-  function positionAssetLayer(id: string, position: "front" | "forward" | "backward" | "back") {
-    if (design.layers.find((layer) => layer.id === id)?.locked) return;
-    const index = design.layers.findIndex((layer) => layer.id === id);
-    if (index < 0) return;
-
-    const lastIndex = design.layers.length - 1;
-    if (
-      ((position === "front" || position === "forward") && index === lastIndex) ||
-      ((position === "back" || position === "backward") && index === 0)
-    ) return;
-
-    const next = [...design.layers];
-    if (position === "forward") {
-      [next[index], next[index + 1]] = [next[index + 1], next[index]];
-    } else if (position === "backward") {
-      [next[index], next[index - 1]] = [next[index - 1], next[index]];
-    } else {
-      const [layer] = next.splice(index, 1);
-      if (!layer) return;
-      if (position === "front") next.push(layer);
-      else next.unshift(layer);
-    }
+  function positionAssetLayer(id: string, position: AssetLayerPosition) {
+    const next = positionAssetLayers(design.layers, id, position);
+    if (next === design.layers) return;
     change({ layers: next });
   }
 
