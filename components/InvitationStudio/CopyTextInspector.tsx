@@ -54,7 +54,7 @@ export default function CopyTextInspector({
 
       <button type="button" className="dc-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
-        {en ? "Reset text" : "Reset teks"}
+        Reset
       </button>
     </aside>
   );

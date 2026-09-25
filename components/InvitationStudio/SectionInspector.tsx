@@ -4,15 +4,6 @@ import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionAlign, InvitationSectionStyle } from "@/lib/templates/section-styles";
 
-const functionalNotes: Partial<Record<InvitationSectionKey, string[]>> = {
-  gallery: ["Media event", "Focus foto"],
-  countdown: ["Tanggal acara", "Timer otomatis"],
-  location: ["Venue", "Alamat", "Tautan maps"],
-  rsvp: ["Judul", "Input RSVP", "Asset / image"],
-  wishes: ["Nama tamu", "Ucapan", "Kirim ucapan"],
-  gift: ["Bank", "Nama rekening", "Nomor rekening", "Salin rekening"],
-};
-
 export default function SectionInspector({
   locale,
   sectionKey,
@@ -30,8 +21,6 @@ export default function SectionInspector({
 }) {
   const en = locale === "en";
   const title = invitationSectionItems.find((item) => item.key === sectionKey)?.title ?? sectionKey;
-  const notes = functionalNotes[sectionKey] ?? [];
-
   const optionalNumber = (
     label: string,
     value: number | undefined,
@@ -128,19 +117,9 @@ export default function SectionInspector({
         </div>
       </div>
 
-      {notes.length > 0 && (
-        <div className="dc-studio-section-functions">
-          <span>{en ? "Components" : "Komponen"}</span>
-          <div>
-            {notes.map((note) => <small key={note}>{note}</small>)}
-          </div>
-          <p>{en ? "Visual properties can change; protected data and actions stay connected to DC Organizer." : "Visual boleh diubah; data dan fungsi terlindungi tetap memakai engine DC Organizer."}</p>
-        </div>
-      )}
-
       <button type="button" className="dc-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
-        {en ? "Reset section" : "Reset section"}
+        Reset
       </button>
     </aside>
   );

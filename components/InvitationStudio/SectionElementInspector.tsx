@@ -107,7 +107,6 @@ export default function SectionElementInspector({
     <aside className="dc-studio-section-side" aria-label={en ? "Component properties" : "Properti komponen"}>
       <div className="dc-studio-section-side-head">
         <div className="min-w-0">
-          <span>{en ? "Component" : "Komponen"}</span>
           <strong title={title}>{title}</strong>
         </div>
         <button type="button" onClick={onClose} aria-label={en ? "Close component properties" : "Tutup properti komponen"} title={en ? "Close" : "Tutup"}>×</button>
@@ -141,7 +140,7 @@ export default function SectionElementInspector({
 
       <button type="button" className="dc-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
-        {en ? "Reset component" : "Reset komponen"}
+        Reset
       </button>
     </aside>
   );

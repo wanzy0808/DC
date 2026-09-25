@@ -151,6 +151,25 @@ test("overlapping Studio assets use left-click selection and cycle to the layer 
   assert.match(assetLayers, /currentIndex <= 0 \? hits\.length - 1 : currentIndex - 1/);
 });
 
+test("right-side Studio inspectors avoid redundant component labels and use one Reset label", () => {
+  const rsvpInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
+  const sectionElementInspector = read("components/InvitationStudio/SectionElementInspector.tsx");
+  const copyInspector = read("components/InvitationStudio/CopyTextInspector.tsx");
+  const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
+
+  assert.doesNotMatch(rsvpInspector, />Komponen RSVP<|>RSVP component</);
+  assert.doesNotMatch(sectionElementInspector, />Komponen<|>Component</);
+  assert.doesNotMatch(sectionInspector, /functionalNotes|>Komponen<|>Components</);
+  assert.doesNotMatch(rsvpInspector, /Reset komponen|Reset component/);
+  assert.doesNotMatch(sectionElementInspector, /Reset komponen|Reset component/);
+  assert.doesNotMatch(copyInspector, /Reset teks|Reset text/);
+  assert.doesNotMatch(sectionInspector, /Reset section/);
+  assert.match(rsvpInspector, />\s*Reset\s*</);
+  assert.match(sectionElementInspector, />\s*Reset\s*</);
+  assert.match(copyInspector, />\s*Reset\s*</);
+  assert.match(sectionInspector, />\s*Reset\s*</);
+});
+
 test("selected assets use a compact left list and right-side properties panel", () => {
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");

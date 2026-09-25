@@ -115,7 +115,6 @@ export default function RsvpElementInspector({
     <aside className="dc-studio-section-side dc-studio-rsvp-element-side" aria-label={en ? "RSVP component properties" : "Properti komponen RSVP"}>
       <div className="dc-studio-section-side-head">
         <div className="min-w-0">
-          <span>{en ? "RSVP component" : "Komponen RSVP"}</span>
           <strong title={displayName}>{displayName}</strong>
         </div>
         <button type="button" onClick={onClose} aria-label={en ? "Close component properties" : "Tutup properti komponen"} title={en ? "Close" : "Tutup"}>×</button>
@@ -177,7 +176,7 @@ export default function RsvpElementInspector({
 
       <button type="button" className="dc-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
-        {en ? "Reset component" : "Reset komponen"}
+        Reset
       </button>
     </aside>
   );
