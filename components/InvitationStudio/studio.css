@@ -95,6 +95,40 @@
 .dc-studio-layer-order button:hover:not(:disabled) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
 .dc-studio-layer-order button:disabled { cursor: not-allowed; opacity: .32; }
 .dc-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.dc-studio-font-choice {
+  display: grid;
+  width: 100%;
+  gap: 2px;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  border-radius: var(--dc-control-radius);
+  background: transparent;
+  padding: 10px 12px;
+  text-align: left;
+}
+.dc-studio-font-choice > span {
+  overflow: hidden;
+  color: var(--foreground);
+  font-size: 17px;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-studio-font-choice > small {
+  overflow: hidden;
+  color: var(--muted-foreground);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dc-studio-font-choice:hover,
+.dc-studio-font-choice[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+.dc-studio-font-choice[aria-pressed="true"] {
+  box-shadow: inset 0 -2px var(--primary);
+}
+
 .dc-studio-text-list-item {
   display: flex;
   width: 100%;
