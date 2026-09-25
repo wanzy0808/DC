@@ -269,7 +269,8 @@ test("selected assets use a compact left list and right-side properties panel", 
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
   assert.match(designer, /className="dc-studio-canvas-layout"/);
   assert.match(designer, /className="dc-studio-layer-list"/);
-  assert.match(designer, /const layerName = layer\.kind === "text"/);
+  assert.match(designer, /const automaticLayerName = layer\.kind === "text"/);
+  assert.match(designer, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
   assert.match(designer, /dc-studio-layer-select-button/);
   assert.match(designer, /onPosition=\{positionAssetLayer\}/);
   assert.match(layerInspector, /numberInput\("X"/);
@@ -314,7 +315,7 @@ test("Studio supports standard cut and non-destructive photo crop controls", () 
   assert.match(photos, /Crop & posisi/);
   assert.match(photos, /onSetCrop/);
   assert.match(photos, /onResetCrop/);
-  assert.match(photoSlots, /export type PhotoCrop = \{ x: number; y: number; zoom: number \}/);
+  assert.match(photoSlots, /export type PhotoCrop = \{ x: number; y: number; zoom: number; aspect\?: PhotoCropAspect \}/);
   assert.match(photoSlots, /crop: Record<CroppablePhotoSlot, PhotoCrop \| null>/);
   assert.match(photoSlots, /photoCropStyle/);
 });
