@@ -312,7 +312,8 @@ export default function UniversalInvitationTemplate({
     onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (keyName: InvitationSectionKey, render: (instanceId: string) => ReactNode) => {
-    if (sections[keyName] === false) return null;
+    const hidden = sections[keyName] === false;
+    if (hidden && !preview) return null;
     return instancesForSection(sectionLayout, keyName).map((instance) => (
       <EditableSectionInstance
         key={instance.id}
@@ -320,6 +321,7 @@ export default function UniversalInvitationTemplate({
         order={instance.order}
         total={sectionLayout.length}
         preview={preview}
+        hidden={hidden}
         actions={sectionEditorActions}
       >
         {render(instance.id)}
