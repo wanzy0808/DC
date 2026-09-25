@@ -164,11 +164,16 @@ export default function InvitationDesigner() {
     // Restore only after a true browser refresh of this same invitation and saved revision.
     // A fresh visit, event switch, Back/Forward navigation or logout never reopens this draft.
     const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
+    // PerformanceNavigationTiming describes the whole document, not each Next.js SPA route.
+    // An entry marker distinguishes a real refresh of Studio from opening Studio after another page was refreshed.
+    const historyState = window.history.state as Record<string, unknown> | null;
+    const sameStudioEntry = historyState?.__dcStudioDraftEntry === next.id;
     let refreshed: [string, string, string, string] | null = null;
     try {
       const raw = window.sessionStorage.getItem(STUDIO_REFRESH_DRAFT_KEY);
-      refreshed = recoverStudioRefreshDraft(raw, navigationType, next.id, serverBaseline);
+      refreshed = recoverStudioRefreshDraft(raw, sameStudioEntry ? navigationType : "navigate", next.id, serverBaseline);
       if (!refreshed) window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
+      if (!sameStudioEntry) window.history.replaceState({ ...historyState, __dcStudioDraftEntry: next.id }, "", window.location.href);
     } catch { /* Session storage may be disabled: ordinary editing still works. */ }
     setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], fallbackDecor) : stagedDesign);
     if (refreshed) {
