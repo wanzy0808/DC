@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { findGuestsByContact } from "@/lib/guests/identity";
 
 async function getOwnedInvitation(userId: string, invitationId: string) {
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Pilih acara untuk membuka WA Blast." }, { status: 400 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
     }
 
@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const invitationId = String(body.invitationId ?? "").trim();
     const invitation = await getOwnedInvitation(user.id, invitationId);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
+    if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
     }
     if (invitation.waBlastQuota <= 0) {
@@ -148,7 +148,7 @@ export async function DELETE(request: Request) {
     const invitationId = url.searchParams.get("invitationId")?.trim() || "";
     const guestId = url.searchParams.get("guestId")?.trim() || "";
     const invitation = await getOwnedInvitation(user.id, invitationId);
-    if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) {
+    if (!invitation || !(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json({ error: "Undangan Digital untuk acara ini belum aktif." }, { status: 402 });
     }
     if (!guestId) return NextResponse.json({ error: "Tamu wajib dipilih." }, { status: 400 });
