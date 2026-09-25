@@ -29,12 +29,14 @@ import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
+import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
   invitationPalettes,
 } from "@/lib/templates/design";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
+import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
 import {
   ColorPanel,
   ContentPanel,
@@ -93,6 +95,7 @@ export default function InvitationDesigner() {
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+  const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
@@ -124,6 +127,7 @@ export default function InvitationDesigner() {
     photos: defaultPhotoAssignments(),
     copy: {},
     layers: [],
+    sectionStyles: {},
   });
 
   async function load() {
@@ -155,7 +159,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [] }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
@@ -284,6 +288,7 @@ export default function InvitationDesigner() {
       font: preset.font,
       copy: templateKey === design.template ? design.copy : {},
       layers: templateKey === design.template ? design.layers : [],
+      sectionStyles: templateKey === design.template ? design.sectionStyles : {},
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -292,6 +297,7 @@ export default function InvitationDesigner() {
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
+    setSelectedSectionKey(null);
     setCopiedAssetLayer(null);
     setCanvasStage("envelope");
   }
@@ -306,10 +312,12 @@ export default function InvitationDesigner() {
       photos: defaultPhotoAssignments(),
       copy: {},
       layers: [],
+      sectionStyles: {},
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
+    setSelectedSectionKey(null);
     setCopiedAssetLayer(null);
     draggedAssetSrc.current = null;
     setAssetDropReady(false);
@@ -412,6 +420,7 @@ export default function InvitationDesigner() {
   function focusDesignObject(id: string) {
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
+    setSelectedSectionKey(null);
     setSelectedLayerId(id);
     showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
@@ -480,6 +489,25 @@ export default function InvitationDesigner() {
 
   function endAssetDrag() { draggedAssetSrc.current = null; setAssetDropReady(false); }
 
+  function updateSectionStyle(key: InvitationSectionKey, patch: Partial<InvitationSectionStyle>) {
+    const current = design.sectionStyles[key] ?? {};
+    const next = { ...current, ...patch };
+    for (const [property, value] of Object.entries(next)) {
+      if (value === undefined) delete (next as Record<string, unknown>)[property];
+    }
+    const sectionStyles = { ...design.sectionStyles };
+    if (Object.keys(next).length) sectionStyles[key] = next;
+    else delete sectionStyles[key];
+    change({ sectionStyles });
+  }
+
+  function resetSectionStyle(key: InvitationSectionKey) {
+    if (!design.sectionStyles[key]) return;
+    const sectionStyles = { ...design.sectionStyles };
+    delete sectionStyles[key];
+    change({ sectionStyles });
+  }
+
   function updateAssetLayer(id: string, patch: Partial<InvitationAssetLayer>) {
     if (!design.layers.some((layer) => layer.id === id)) return;
     if (patch.section && (design.sections[patch.section] === false || !studioObjectSections.includes(patch.section))) return;
@@ -506,6 +534,15 @@ export default function InvitationDesigner() {
     else next.unshift(layer);
     change({ layers: next });
   }
+
+  useEffect(() => {
+    const root = canvasScrollRef.current;
+    if (!root) return;
+    for (const node of root.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
+      if (node.dataset.invitationSection === selectedSectionKey) node.dataset.studioSectionSelected = "true";
+      else delete node.dataset.studioSectionSelected;
+    }
+  }, [selectedSectionKey, designKey, canvasStage, previewVersion]);
 
   useEffect(() => {
     function handleLayerShortcut(event: KeyboardEvent) {
@@ -733,9 +770,18 @@ export default function InvitationDesigner() {
           }} onClick={(event) => {
             const target = event.target;
             if (!(target instanceof Element)) return;
-            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
+            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
+            const section = target.closest<HTMLElement>("[data-invitation-section]");
+            if (section?.dataset.invitationSection) {
+              setSelectedLayerId(null);
+              setSelectedSectionKey(section.dataset.invitationSection as InvitationSectionKey);
+              return;
+            }
             // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
-            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
+            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) {
+              setSelectedLayerId(null);
+              setSelectedSectionKey(null);
+            }
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
             <aside className="dc-studio-layer-list" aria-label={locale === "en" ? "Asset list" : "Daftar aset"}>
@@ -788,7 +834,7 @@ export default function InvitationDesigner() {
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
-                    onSelectAssetLayer={(id) => setSelectedLayerId(id)}
+                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedLayerId(id); }}
                     onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
@@ -798,16 +844,27 @@ export default function InvitationDesigner() {
               </div>
             </div>
 
-            <AssetLayerInspector
-              locale={locale}
-              selectedAssetLayer={selectedAssetLayer}
-              selectedAssetIndex={selectedAssetIndex}
-              layerCount={design.layers.length}
-              sections={design.sections}
-              onDeselect={() => setSelectedLayerId(null)}
-              onUpdate={updateAssetLayer}
-              onPosition={positionAssetLayer}
-            />
+            {selectedAssetLayer ? (
+              <AssetLayerInspector
+                locale={locale}
+                selectedAssetLayer={selectedAssetLayer}
+                selectedAssetIndex={selectedAssetIndex}
+                layerCount={design.layers.length}
+                sections={design.sections}
+                onDeselect={() => setSelectedLayerId(null)}
+                onUpdate={updateAssetLayer}
+                onPosition={positionAssetLayer}
+              />
+            ) : selectedSectionKey ? (
+              <SectionInspector
+                locale={locale}
+                sectionKey={selectedSectionKey}
+                style={design.sectionStyles[selectedSectionKey]}
+                onUpdate={(patch) => updateSectionStyle(selectedSectionKey, patch)}
+                onReset={() => resetSectionStyle(selectedSectionKey)}
+                onClose={() => setSelectedSectionKey(null)}
+              />
+            ) : null}
           </div>
           </div>
         </div>
