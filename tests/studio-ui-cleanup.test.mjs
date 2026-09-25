@@ -207,6 +207,15 @@ test("asset library inserts images by drag-and-drop only", () => {
   assert.doesNotMatch(designer, /<AssetPanel[^>]*onAdd=\{addAssetLayer\}/);
 });
 
+test("selected Studio objects use an icon rotate handle without a connector line", () => {
+  const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(assetLayers, /import \{ RotateCw \} from "lucide-react"/);
+  assert.match(assetLayers, /<RotateCw aria-hidden="true" size=\{15\}/);
+  assert.match(assetLayers, /aria-label="Putar objek"/);
+  assert.doesNotMatch(assetLayers, /top-full left-1\/2 h-6 w-px/);
+  assert.doesNotMatch(assetLayers, /h-1\.5 w-1\.5 rounded-full bg-primary/);
+});
+
 test("overlapping Studio assets use left-click selection and cycle to the layer underneath", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
   assert.match(assetLayers, /event\.button !== 0/);
