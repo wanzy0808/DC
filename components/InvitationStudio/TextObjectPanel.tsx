@@ -1,7 +1,6 @@
 "use client";
 
 import { Type } from "lucide-react";
-import { invitationSectionItems } from "@/lib/templates/sections";
 import { MAX_ASSET_LAYERS, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,6 @@ export default function TextObjectPanel({
   const { locale } = useLanguage();
   const en = locale === "en";
   const texts = layers.filter((layer) => layer.kind === "text");
-  const targetLabel = invitationSectionItems.find((item) => item.key === targetSection)?.title ?? targetSection;
 
   return (
     <div className="space-y-5">
@@ -43,10 +41,6 @@ export default function TextObjectPanel({
         <Type size={18} />
         <span>{en ? "Add text box" : "Tambah kotak teks"}</span>
       </Button>
-
-      <p className="text-xs text-muted-foreground">
-        {en ? "Added to " + targetLabel + ". Select a section first to change the target." : "Ditambahkan ke " + targetLabel + ". Pilih section dulu untuk mengganti target."}
-      </p>
 
       {texts.length > 0 && (
         <div className="space-y-2 border-t border-primary/20 pt-4">
