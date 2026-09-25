@@ -897,12 +897,11 @@ export default function InvitationDesigner() {
         <nav className="dc-studio-rail" aria-label={copy.tools}>
           <DesignerTool active={panel === "template"} label={locale === "en" ? "Catalog" : "Katalog"} icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
           <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
-          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
-          <div className="dc-studio-rail-divider" />
+          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
-          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
           <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
+          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
         </nav>
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
