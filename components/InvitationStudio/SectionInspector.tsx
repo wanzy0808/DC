@@ -2,7 +2,7 @@
 
 import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSectionKey } from "@/lib/templates/sections";
-import type { InvitationSectionAlign, InvitationSectionStyle } from "@/lib/templates/section-styles";
+import type { InvitationSectionAlign, InvitationSectionAnimation, InvitationSectionStyle } from "@/lib/templates/section-styles";
 
 export default function SectionInspector({
   locale,
@@ -102,6 +102,64 @@ export default function SectionInspector({
           onChange={(event) => onUpdate({ opacity: Number(event.target.value) })}
         />
       </label>
+
+      <div className="dc-studio-section-field">
+        <span>{en ? "Animation" : "Animasi"}</span>
+        <select
+          value={style?.animation ?? ""}
+          onChange={(event) => {
+            const value = event.target.value as InvitationSectionAnimation | "";
+            onUpdate({ animation: value || undefined });
+          }}
+        >
+          <option value="">{en ? "Follow template" : "Ikuti template"}</option>
+          <option value="none">{en ? "Off" : "Mati"}</option>
+          <option value="fade">Fade</option>
+          <option value="rise">{en ? "Rise" : "Naik"}</option>
+          <option value="slide-left">{en ? "Slide from left" : "Geser dari kiri"}</option>
+          <option value="slide-right">{en ? "Slide from right" : "Geser dari kanan"}</option>
+          <option value="zoom">Zoom</option>
+        </select>
+      </div>
+
+      {style?.animation && style.animation !== "none" ? (
+        <div className="dc-studio-layer-grid">
+          <label className="dc-studio-section-field">
+            <span>{en ? "Duration" : "Durasi"}</span>
+            <span className="dc-studio-section-number">
+              <input
+                type="number"
+                min="0.2"
+                max="2.5"
+                step="0.1"
+                value={style.animationDuration ?? 0.7}
+                onChange={(event) => {
+                  const next = event.currentTarget.valueAsNumber;
+                  if (Number.isFinite(next)) onUpdate({ animationDuration: Math.min(2.5, Math.max(0.2, next)) });
+                }}
+              />
+              <small>s</small>
+            </span>
+          </label>
+          <label className="dc-studio-section-field">
+            <span>{en ? "Delay" : "Jeda"}</span>
+            <span className="dc-studio-section-number">
+              <input
+                type="number"
+                min="0"
+                max="2"
+                step="0.1"
+                value={style.animationDelay ?? 0}
+                onChange={(event) => {
+                  const next = event.currentTarget.valueAsNumber;
+                  if (Number.isFinite(next)) onUpdate({ animationDelay: Math.min(2, Math.max(0, next)) });
+                }}
+              />
+              <small>s</small>
+            </span>
+          </label>
+        </div>
+      ) : null}
 
       <div className="dc-studio-section-field">
         <span>{en ? "Background" : "Latar"}</span>
