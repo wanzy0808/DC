@@ -6,7 +6,7 @@ type InvoiceEmailInput = {
   invoiceUrl: string;
 };
 
-async function sendEmail(input: { to: string; subject: string; html: string }) {
+export async function sendEmail(input: { to: string; subject: string; html: string }) {
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.RESEND_FROM_EMAIL;
   if (!apiKey || !from) return { sent: false, reason: "email_not_configured" as const };
