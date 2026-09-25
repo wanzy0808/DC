@@ -39,6 +39,7 @@ import {
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
 import { defaultInvitationRsvpConfig, MAX_RSVP_CUSTOM_FIELDS } from "@/lib/templates/rsvp-config";
+import { defaultInvitationSectionLayout } from "@/lib/templates/section-layout";
 import {
   ColorPanel,
   ContentPanel,
@@ -98,6 +99,7 @@ export default function InvitationDesigner() {
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
+  const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
@@ -132,6 +134,7 @@ export default function InvitationDesigner() {
     layers: [],
     sectionStyles: {},
     rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
+    sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
   });
 
   async function load() {
@@ -163,7 +166,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} } }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })) }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
@@ -294,6 +297,7 @@ export default function InvitationDesigner() {
       layers: templateKey === design.template ? design.layers : [],
       sectionStyles: templateKey === design.template ? design.sectionStyles : {},
       rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
+      sectionLayout: templateKey === design.template ? design.sectionLayout : defaultInvitationSectionLayout.map((item) => ({ ...item })),
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -303,6 +307,7 @@ export default function InvitationDesigner() {
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
     setCopiedAssetLayer(null);
     setCanvasStage("envelope");
@@ -320,11 +325,13 @@ export default function InvitationDesigner() {
       layers: [],
       sectionStyles: {},
       rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
+      sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
     setCopiedAssetLayer(null);
     draggedAssetSrc.current = null;
@@ -429,6 +436,7 @@ export default function InvitationDesigner() {
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
     setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
     setSelectedLayerId(id);
     showDesignSection(layer.section ?? "cover");
@@ -528,6 +536,52 @@ export default function InvitationDesigner() {
       elementStyles,
     });
     if (selectedRsvpElementKey === `custom:${id}`) setSelectedRsvpElementKey(null);
+  }
+
+  function selectSectionInstance(id: string, key: InvitationSectionKey) {
+    setSelectedLayerId(null);
+    setSelectedRsvpElementKey(null);
+    setSelectedSectionKey(key);
+    setSelectedSectionInstanceId(id);
+  }
+
+  function moveSectionInstance(id: string, direction: -1 | 1) {
+    const index = design.sectionLayout.findIndex((item) => item.id === id);
+    const target = index + direction;
+    if (index < 0 || target < 0 || target >= design.sectionLayout.length) return;
+    const next = [...design.sectionLayout];
+    [next[index], next[target]] = [next[target], next[index]];
+    change({ sectionLayout: next });
+  }
+
+  function toggleSectionInstance(id: string) {
+    change({
+      sectionLayout: design.sectionLayout.map((item) =>
+        item.id === id ? { ...item, hidden: item.hidden !== true } : item,
+      ),
+    });
+  }
+
+  function duplicateSectionInstance(id: string) {
+    const index = design.sectionLayout.findIndex((item) => item.id === id);
+    const source = design.sectionLayout[index];
+    if (!source || design.sectionLayout.length >= 36) return;
+    const copyId = `${source.key}-copy-${crypto.randomUUID().replace(/-/g, "").slice(0, 8)}`;
+    const next = [...design.sectionLayout];
+    next.splice(index + 1, 0, { id: copyId, key: source.key });
+    change({ sectionLayout: next });
+    setSelectedSectionKey(source.key);
+    setSelectedSectionInstanceId(copyId);
+  }
+
+  function deleteSectionInstance(id: string) {
+    const next = design.sectionLayout.filter((item) => item.id !== id);
+    if (next.length === design.sectionLayout.length) return;
+    change({ sectionLayout: next });
+    if (selectedSectionInstanceId === id) {
+      setSelectedSectionKey(null);
+      setSelectedSectionInstanceId(null);
+    }
   }
 
   function updateSectionStyle(key: InvitationSectionKey, patch: Partial<InvitationSectionStyle>) {
@@ -824,6 +878,7 @@ export default function InvitationDesigner() {
             if (rsvpElement?.dataset.studioRsvpElement) {
               setSelectedLayerId(null);
               setSelectedSectionKey(null);
+              setSelectedSectionInstanceId(null);
               setSelectedRsvpElementKey(rsvpElement.dataset.studioRsvpElement);
               return;
             }
@@ -836,15 +891,16 @@ export default function InvitationDesigner() {
                 setSelectedRsvpElementKey(null);
                 return;
               }
-              setSelectedLayerId(null);
-              setSelectedRsvpElementKey(null);
-              setSelectedSectionKey(section.dataset.invitationSection as InvitationSectionKey);
+              const instance = target.closest<HTMLElement>("[data-section-instance-id]");
+              const sectionKey = section.dataset.invitationSection as InvitationSectionKey;
+              selectSectionInstance(instance?.dataset.sectionInstanceId || sectionKey, sectionKey);
               return;
             }
             // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
             if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) {
               setSelectedLayerId(null);
               setSelectedSectionKey(null);
+              setSelectedSectionInstanceId(null);
               setSelectedRsvpElementKey(null);
             }
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
@@ -904,6 +960,12 @@ export default function InvitationDesigner() {
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
                     onEnvelopeOpened={handleCanvasEnvelopeOpened}
+                    selectedSectionInstanceId={selectedSectionInstanceId}
+                    onSelectSectionInstance={selectSectionInstance}
+                    onMoveSectionInstance={moveSectionInstance}
+                    onToggleSectionInstance={toggleSectionInstance}
+                    onDuplicateSectionInstance={duplicateSectionInstance}
+                    onDeleteSectionInstance={deleteSectionInstance}
                   />
                 </div>
               </div>
