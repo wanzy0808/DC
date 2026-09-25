@@ -5,11 +5,202 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-type Template={id:string;templateNo:string;name:string;tags:string[];previewUrl:string;templateFile:string|null;designKey?:string|null;status:string;salesCount:number;createdAt:string};
-export default function DesignerDashboard(){
- const [templates,setTemplates]=useState<Template[]>([]),[name,setName]=useState(""),[tags,setTags]=useState(""),[preview,setPreview]=useState<File|null>(null),[template,setTemplate]=useState<File|null>(null),[message,setMessage]=useState("Memuat template..."),[saving,setSaving]=useState(false);
- async function load(){const r=await fetch("/api/designer/templates",{cache:"no-store"});const d=await r.json();if(r.ok){setTemplates(d.templates??[]);setMessage("")}else setMessage(d.error??"Template belum dapat dimuat.")}
- useEffect(()=>{void load()},[]);
- async function upload(){if(!name||!preview||!template)return;setSaving(true);setMessage("");const form=new FormData();form.set("name",name);form.set("tags",tags);form.set("preview",preview);form.set("template",template);const r=await fetch("/api/designer/templates",{method:"POST",body:form});const d=await r.json();setSaving(false);if(!r.ok){setMessage(d.error??"Upload gagal.");return}setMessage(`Template ${d.template.templateNo} berhasil diupload.`);setName("");setTags("");setPreview(null);setTemplate(null);const previewInput=document.getElementById("designer-preview") as HTMLInputElement|null;const templateInput=document.getElementById("designer-template") as HTMLInputElement|null;if(previewInput)previewInput.value="";if(templateInput)templateInput.value="";await load()}
- return <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]"><header className="flex flex-wrap items-start justify-between gap-4"><div><p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p><h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Template Studio</h1><p className="mt-2 max-w-2xl text-sm text-muted-foreground">Buat template langsung di Studio atau kelola upload template lama.</p></div><Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button></header><div className="grid gap-6 lg:grid-cols-[360px_1fr]"><section className="rounded-2xl border border-border bg-background p-5"><h2 className="font-[family-name:var(--font-cinzel)] text-xl">Upload template</h2><div className="mt-4 space-y-3"><Input value={name} onChange={e=>setName(e.target.value)} placeholder="Nama template"/><Input value={tags} onChange={e=>setTags(e.target.value)} placeholder="Tag, contoh: minimal, floral, modern"/><label className="block text-xs"><span className="mb-1 block text-muted-foreground">Preview JPG/PNG/WEBP · max 5 MB</span><input id="designer-preview" type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>setPreview(e.target.files?.[0]??null)} className="block w-full text-xs"/></label><label className="block text-xs"><span className="mb-1 block text-muted-foreground">Template ZIP/HTML/JSON · max 25 MB</span><input id="designer-template" type="file" accept=".zip,.html,.json,application/zip,text/html,application/json" onChange={e=>setTemplate(e.target.files?.[0]??null)} className="block w-full text-xs"/></label><Button disabled={saving||!name||!preview||!template} className="w-full" onClick={upload}>{saving?"Uploading...":"Upload ke server"}</Button></div>{message&&<p className="mt-4 rounded-xl bg-primary/10 p-3 text-xs">{message}</p>}</section><section className="rounded-2xl border border-border bg-background p-5"><div className="flex items-center justify-between"><h2 className="font-[family-name:var(--font-cinzel)] text-xl">Template saya</h2><p className="font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{templates.length} template</p></div>{!templates.length?<p className="mt-6 text-sm text-muted-foreground">Belum ada template.</p>:<div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">{templates.map(t=><article key={t.id} className="overflow-hidden rounded-2xl border border-border"><img src={t.previewUrl} alt={t.name} className="aspect-[4/3] w-full object-cover"/><div className="p-4"><div className="flex items-center justify-between gap-3"><p className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{t.templateNo}</p><p className="text-xs text-muted-foreground">{t.salesCount} terjual</p></div><h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg">{t.name}</h3><div className="mt-2 flex flex-wrap gap-1">{t.tags.map(tag=><span key={tag} className="rounded-md border border-border px-2 py-1 text-[10px] text-muted-foreground">{tag}</span>)}</div>{t.templateFile?<a className="mt-3 inline-block text-xs text-primary underline" href={t.templateFile} target="_blank" rel="noreferrer">Buka file template</a>:<p className="mt-3 text-xs text-primary">Template Studio · siap katalog</p>}</div></article>)}</div>}</section></div></main>
+type Template = {
+  id: string;
+  templateNo: string;
+  name: string;
+  tags: string[];
+  previewUrl: string;
+  templateFile: string | null;
+  designKey?: string | null;
+  status: string;
+  salesCount: number;
+  orderValue: number;
+  createdAt: string;
+};
+
+type Summary = {
+  templateCount: number;
+  templatesWithSales: number;
+  salesCount: number;
+  orderValue: number;
+};
+
+function rupiah(value: number) {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+export default function DesignerDashboard() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [summary, setSummary] = useState<Summary>({
+    templateCount: 0,
+    templatesWithSales: 0,
+    salesCount: 0,
+    orderValue: 0,
+  });
+  const [name, setName] = useState("");
+  const [tags, setTags] = useState("");
+  const [preview, setPreview] = useState<File | null>(null);
+  const [template, setTemplate] = useState<File | null>(null);
+  const [message, setMessage] = useState("Memuat template...");
+  const [saving, setSaving] = useState(false);
+
+  async function load() {
+    const response = await fetch("/api/designer/templates", { cache: "no-store" });
+    const data = await response.json();
+    if (response.ok) {
+      setTemplates(data.templates ?? []);
+      setSummary(data.summary ?? {
+        templateCount: data.templates?.length ?? 0,
+        templatesWithSales: 0,
+        salesCount: 0,
+        orderValue: 0,
+      });
+      setMessage("");
+    } else {
+      setMessage(data.error ?? "Template belum dapat dimuat.");
+    }
+  }
+
+  useEffect(() => { void load(); }, []);
+
+  async function upload() {
+    if (!name || !preview || !template) return;
+    setSaving(true);
+    setMessage("");
+
+    const form = new FormData();
+    form.set("name", name);
+    form.set("tags", tags);
+    form.set("preview", preview);
+    form.set("template", template);
+
+    const response = await fetch("/api/designer/templates", { method: "POST", body: form });
+    const data = await response.json();
+    setSaving(false);
+
+    if (!response.ok) {
+      setMessage(data.error ?? "Upload gagal.");
+      return;
+    }
+
+    setMessage(`Template ${data.template.templateNo} berhasil diupload.`);
+    setName("");
+    setTags("");
+    setPreview(null);
+    setTemplate(null);
+
+    const previewInput = document.getElementById("designer-preview") as HTMLInputElement | null;
+    const templateInput = document.getElementById("designer-template") as HTMLInputElement | null;
+    if (previewInput) previewInput.value = "";
+    if (templateInput) templateInput.value = "";
+    await load();
+  }
+
+  return (
+    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
+      <header className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p>
+          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Template Studio</h1>
+          <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Kelola template dan lihat berapa banyak template kamu dipakai pada transaksi yang sudah PAID.</p>
+        </div>
+        <Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button>
+      </header>
+
+      <div className="grid gap-4 sm:grid-cols-4">
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <p className="text-sm text-muted-foreground">Template saya</p>
+          <p className="mt-2 text-3xl font-semibold">{summary.templateCount}</p>
+        </section>
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <p className="text-sm text-muted-foreground">Pernah terjual</p>
+          <p className="mt-2 text-3xl font-semibold">{summary.templatesWithSales}</p>
+        </section>
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <p className="text-sm text-muted-foreground">Total terjual</p>
+          <p className="mt-2 text-3xl font-semibold">{summary.salesCount}</p>
+        </section>
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <p className="text-sm text-muted-foreground">Nilai order terkait</p>
+          <p className="mt-2 text-xl font-semibold">{rupiah(summary.orderValue)}</p>
+        </section>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[360px_1fr]">
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Upload template</h2>
+          <div className="mt-4 space-y-3">
+            <Input value={name} onChange={(event) => setName(event.target.value)} placeholder="Nama template" />
+            <Input value={tags} onChange={(event) => setTags(event.target.value)} placeholder="Tag, contoh: minimal, floral, modern" />
+            <label className="block text-xs">
+              <span className="mb-1 block text-muted-foreground">Preview JPG/PNG/WEBP · max 5 MB</span>
+              <input
+                id="designer-preview"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(event) => setPreview(event.target.files?.[0] ?? null)}
+                className="block w-full text-xs"
+              />
+            </label>
+            <label className="block text-xs">
+              <span className="mb-1 block text-muted-foreground">Template ZIP/HTML/JSON · max 25 MB</span>
+              <input
+                id="designer-template"
+                type="file"
+                accept=".zip,.html,.json,application/zip,text/html,application/json"
+                onChange={(event) => setTemplate(event.target.files?.[0] ?? null)}
+                className="block w-full text-xs"
+              />
+            </label>
+            <Button disabled={saving || !name || !preview || !template} className="w-full" onClick={upload}>
+              {saving ? "Uploading..." : "Upload ke server"}
+            </Button>
+          </div>
+          {message && <p className="mt-4 rounded-xl bg-primary/10 p-3 text-xs">{message}</p>}
+        </section>
+
+        <section className="rounded-2xl border border-border bg-background p-5">
+          <div className="flex items-center justify-between">
+            <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Template saya</h2>
+            <p className="font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{templates.length} template</p>
+          </div>
+
+          {!templates.length ? (
+            <p className="mt-6 text-sm text-muted-foreground">Belum ada template.</p>
+          ) : (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {templates.map((item) => (
+                <article key={item.id} className="overflow-hidden rounded-2xl border border-border">
+                  <img src={item.previewUrl} alt={item.name} className="aspect-[4/3] w-full object-cover" />
+                  <div className="p-4">
+                    <div className="flex items-center justify-between gap-3">
+                      <p className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{item.templateNo}</p>
+                      <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
+                    </div>
+                    <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg">{item.name}</h3>
+                    <p className="mt-1 text-xs text-muted-foreground">Nilai order terkait: {rupiah(item.orderValue)}</p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {item.tags.map((tag) => (
+                        <span key={tag} className="rounded-md border border-border px-2 py-1 text-[10px] text-muted-foreground">{tag}</span>
+                      ))}
+                    </div>
+                    {item.templateFile ? (
+                      <a className="mt-3 inline-block text-xs text-primary underline" href={item.templateFile} target="_blank" rel="noreferrer">Buka file template</a>
+                    ) : (
+                      <p className="mt-3 text-xs text-primary">Template Studio · siap katalog</p>
+                    )}
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+  );
 }
