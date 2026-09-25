@@ -76,10 +76,12 @@ import {
 } from "@/components/InvitationStudio/designer-layer-order";
 import {
   createStudioTemplate,
+  deleteStudioAsset,
   loadStudioInvitation,
   makeStudioSavedState,
   makeStudioServerRevision,
   saveStudioInvitation,
+  uploadStudioAsset,
 } from "@/components/InvitationStudio/designer-persistence";
 import type {
   InvitationDesignerInvitation,
@@ -471,9 +473,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     audioMutation.current = true;
     setAudioBusy(true);
     try {
-      const response = await fetch(`/api/invitations/assets/${encodeURIComponent(id)}`, { method: "DELETE" });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Musik belum dapat dihapus.");
+      await deleteStudioAsset(id);
       setInvitation((current) => current ? {
         ...current, assets: current.assets.filter((item) => item.id !== id),
         musicUrl: current.musicUrl === asset.url ? null : current.musicUrl,
@@ -1266,23 +1266,14 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     }
     setNotice(assetType === "IMAGE" ? "Mengunggah foto..." : "Mengunggah musik...");
     try {
-      const formData = new FormData();
-      formData.append("invitationId", invitation.id);
-      formData.append("type", assetType);
-      formData.append("file", file);
-      const response = await fetch("/api/invitations/assets/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Upload gagal.");
+      const uploadedAsset = await uploadStudioAsset(invitation.id, assetType, file);
 
       setInvitation((current) =>
         current
-          ? { ...current, assets: [...current.assets, data.asset] }
+          ? { ...current, assets: [...current.assets, uploadedAsset] }
           : current,
       );
-      if (assetType === "AUDIO") setMusicUrl(data.asset.url);
+      if (assetType === "AUDIO") setMusicUrl(uploadedAsset.url);
       setNotice(assetType === "IMAGE" ? "Foto berhasil diunggah." : "Musik berhasil diunggah.");
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "Upload gagal.");
