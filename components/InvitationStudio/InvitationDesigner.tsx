@@ -74,6 +74,13 @@ import {
   reorderAssetLayers,
   type AssetLayerPosition,
 } from "@/components/InvitationStudio/designer-layer-order";
+import {
+  createStudioTemplate,
+  loadStudioInvitation,
+  makeStudioSavedState,
+  makeStudioServerRevision,
+  saveStudioInvitation,
+} from "@/components/InvitationStudio/designer-persistence";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -215,17 +222,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     const legacyType =
       params.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
     if (!invitationId) throw new Error("Pilih acara dari Dashboard untuk membuka Studio.");
-    const query = invitationId
-      ? `?id=${encodeURIComponent(invitationId)}&type=${legacyType}`
-      : `?type=${legacyType}`;
-
-    const response = await fetch(`/api/invitations${query}`, { cache: "no-store" });
-    const data = await response.json();
-    if (!response.ok || !data.invitation) {
-      throw new Error(data.error || "Undangan belum dapat dimuat.");
-    }
-
-    const next = data.invitation as InvitationDesignerInvitation;
+    const next = await loadStudioInvitation(invitationId, legacyType);
     const fallbackDecor =
       next.assets.find((asset) => asset.type === "IMAGE")?.url || invitationDecorOptions[0];
     setInvitation(next);
@@ -241,8 +238,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
-    const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
-    const canonicalSavedState = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
+    const serverBaseline = makeStudioServerRevision(next);
+    const canonicalSavedState = makeStudioSavedState(makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || "");
     // Restore only after a true browser refresh of this same invitation and saved revision.
     // A fresh visit, event switch, Back/Forward navigation or logout never reopens this draft.
     const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
@@ -313,7 +310,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       ? selectedSectionKey as StudioObjectSection
       : selectedAssetLayer?.section ?? "cover";
   const identity = getInvitationEventIdentity(invitation);
-  const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
+  const currentState = makeStudioSavedState(designKey, musicUrl, eventTag, dressCode);
   const dirty = Boolean(invitation && savedState !== currentState);
   useEffect(() => {
     if (!selectedLayerId) {
@@ -1314,45 +1311,32 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
           },
         };
         const templateDesignKey = makeInvitationDesignStateKey(cleanTemplateDesign);
-        const response = await fetch("/api/designer/templates", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            designKey: templateDesignKey,
-            name: `${selectedCatalog?.name || template?.name || "Template"} Studio`,
-            tags: [selectedCatalog?.category || template?.category || "Designer", "studio"],
-            previewUrl: selectedCatalog?.previewImage || template?.previewImage,
-            category: selectedCatalog?.category || template?.category || "Designer",
-            description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain DC Organizer"}.`,
-            usesPhotos: selectedCatalog?.usesPhotos ?? template?.usesPhotos ?? false,
-            musicUrl,
-          }),
+        const createdTemplate = await createStudioTemplate({
+          designKey: templateDesignKey,
+          name: `${selectedCatalog?.name || template?.name || "Template"} Studio`,
+          tags: [selectedCatalog?.category || template?.category || "Designer", "studio"],
+          previewUrl: selectedCatalog?.previewImage || template?.previewImage,
+          category: selectedCatalog?.category || template?.category || "Designer",
+          description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain DC Organizer"}.`,
+          usesPhotos: selectedCatalog?.usesPhotos ?? template?.usesPhotos ?? false,
+          musicUrl,
         });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Template belum dapat disimpan.");
         setSavedState(currentState);
         try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
-        setNotice(`Template #${data.template.templateNo} ditambahkan ke katalog dan siap dijual.`);
+        setNotice(`Template #${createdTemplate.templateNo} ditambahkan ke katalog dan siap dijual.`);
         return;
       }
 
-      const response = await fetch("/api/invitations", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: invitation.id,
-          eventCategory: invitation.eventCategory,
-          templateKey: designKey,
-          musicUrl,
-          weddingHashtag: eventTag,
-          dressCode,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "Gagal menyimpan.");
-      setInvitation(data.invitation);
+      const savedInvitation = await saveStudioInvitation(
+        invitation,
+        designKey,
+        musicUrl,
+        eventTag,
+        dressCode,
+      );
+      setInvitation(savedInvitation);
       setSavedState(currentState);
-      setServerRevision(JSON.stringify([data.invitation.templateKey || "", data.invitation.musicUrl || "", data.invitation.weddingHashtag || "", data.invitation.dressCode || ""]));
+      setServerRevision(makeStudioServerRevision(savedInvitation));
       try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
       clearTemplateSelection();
       const location = new URL(window.location.href);
