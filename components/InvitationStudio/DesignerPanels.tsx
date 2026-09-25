@@ -161,6 +161,11 @@ export function ContentPanel({
 
                       {item.key === "rsvp" && element === "input" && activeElement === "rsvp:input" && (
                         <div className="mt-2 space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
+                          <p className="text-[10px] leading-4 text-muted-foreground">
+                            {en
+                              ? "Check the event options guests may choose from in the RSVP dropdown."
+                              : "Centang opsi acara yang boleh dipilih tamu di dropdown RSVP."}
+                          </p>
                           {eventCategory !== "WEDDING" && <p className="text-[10px] leading-4 text-muted-foreground">{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</p>}
                           <label className="dc-studio-rsvp-switch">
                             <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
@@ -171,7 +176,7 @@ export function ContentPanel({
                             <input type="checkbox" checked={rsvpConfig.reception} onChange={(event) => onRsvpConfig({ reception: event.target.checked })} />
                           </label>
                           <label className="dc-studio-rsvp-switch">
-                            <span>{en ? "Attend all" : "Hadir Semua Acara"}</span>
+                            <span>{en ? "Attend all events" : "Hadiri Semua Acara"}</span>
                             <input type="checkbox" checked={rsvpConfig.attendAll} disabled={!(rsvpConfig.ceremony && rsvpConfig.reception)} onChange={(event) => onRsvpConfig({ attendAll: event.target.checked })} />
                           </label>
 
