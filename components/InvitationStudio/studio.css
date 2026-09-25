@@ -95,24 +95,6 @@
 .dc-studio-layer-order button:hover:not(:disabled) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
 .dc-studio-layer-order button:disabled { cursor: not-allowed; opacity: .32; }
 .dc-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
-.dc-studio-add-text-box {
-  display: flex;
-  width: 100%;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  border: 1px solid color-mix(in srgb, var(--primary) 48%, transparent);
-  border-radius: var(--dc-control-radius);
-  background: var(--primary);
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-}
-.dark .dc-studio-add-text-box { color: black; }
-.dc-studio-add-text-box:hover:not(:disabled) { filter: brightness(.96); }
-.dc-studio-add-text-box:disabled { cursor: not-allowed; opacity: .4; }
-
 .dc-studio-text-list-item {
   display: flex;
   width: 100%;
