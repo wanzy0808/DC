@@ -68,9 +68,11 @@ import type {
   InvitationDesignerPanel,
   InvitationDesignState,
 } from "@/components/InvitationStudio/designer-types";
+import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
 
-export default function InvitationDesigner() {
+export default function InvitationDesigner({ mode = "invitation" }: { mode?: "invitation" | "template" }) {
   const { locale } = useLanguage();
+  const templateMode = mode === "template";
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
@@ -94,6 +96,7 @@ export default function InvitationDesigner() {
   };
   const catalog = useTemplateCatalog();
   const readyTemplates = catalog.filter((item) => item.ready);
+  const [selectedCatalogKey, setSelectedCatalogKey] = useState("botanical-ivory");
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
@@ -142,6 +145,50 @@ export default function InvitationDesigner() {
 
   async function load() {
     const params = new URLSearchParams(window.location.search);
+
+    if (templateMode) {
+      const requested = params.get("template")?.trim() || "botanical-ivory";
+      const baseKey = invitationTemplatePresets[requested] ? requested : "botanical-ivory";
+      const preset = invitationTemplatePresets[baseKey] || invitationTemplatePresets["botanical-ivory"];
+      const initialKey = `${baseKey}::${preset.palette}::${preset.font}`;
+      const loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
+      const defaultMusic = getInvitationDefaultMusic(baseKey).url;
+      const demoInvitation: InvitationDesignerInvitation = {
+        ...templateDemoInvitation,
+        id: "template-studio-draft",
+        templateKey: initialKey,
+        accessPaid: true,
+      };
+      const serverBaseline = JSON.stringify(["template-studio", initialKey, defaultMusic]);
+      const canonicalSavedState = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), defaultMusic, "", ""]);
+      const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
+      const historyState = window.history.state as Record<string, unknown> | null;
+      const sameStudioEntry = historyState?.__dcStudioDraftEntry === demoInvitation.id;
+      let refreshed: [string, string, string, string] | null = null;
+      try {
+        const raw = window.sessionStorage.getItem(STUDIO_REFRESH_DRAFT_KEY);
+        refreshed = recoverStudioRefreshDraft(raw, sameStudioEntry ? navigationType : "navigate", demoInvitation.id, serverBaseline);
+        if (!refreshed) window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
+        if (!sameStudioEntry) window.history.replaceState({ ...historyState, __dcStudioDraftEntry: demoInvitation.id }, "", window.location.href);
+      } catch { /* Optional refresh draft. */ }
+
+      setInvitation(demoInvitation);
+      setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], templateDemoPhoto) : loadedDesign);
+      setMusicUrl(refreshed ? refreshed[1] : defaultMusic);
+      setEventTag("");
+      setDressCode("");
+      setSavedState(canonicalSavedState);
+      setServerRevision(serverBaseline);
+      setSelectedCatalogKey(baseKey);
+      setCanvasStage("envelope");
+      setSelectedLayerId(null);
+      setCopiedAssetLayer(null);
+      setHistory([]);
+      setFuture([]);
+      setNotice("");
+      return;
+    }
+
     const invitationId = params.get("invitationId")?.trim() || "";
     const legacyType =
       params.get("type") === "ADAT_AKAD" ? "ADAT_AKAD" : "WEDDING";
@@ -189,6 +236,7 @@ export default function InvitationDesigner() {
       if (!sameStudioEntry) window.history.replaceState({ ...historyState, __dcStudioDraftEntry: next.id }, "", window.location.href);
     } catch { /* Session storage may be disabled: ordinary editing still works. */ }
     setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], fallbackDecor) : stagedDesign);
+    setSelectedCatalogKey(requestedTheme && requestedPreset ? requestedTheme : loadedDesign.template);
     if (refreshed) {
       setMusicUrl(refreshed[1]);
       setEventTag(refreshed[2]);
@@ -291,24 +339,43 @@ export default function InvitationDesigner() {
   }
 
   function selectTemplate(templateKey: string) {
-    if (!readyTemplates.some((item) => item.key === templateKey)) {
+    const catalogTemplate = readyTemplates.find((item) => item.key === templateKey);
+    if (!catalogTemplate) {
       setNotice("Template ini masih menunggu integrasi renderer.");
       return;
     }
-    const preset = invitationTemplatePresets[templateKey] || invitationTemplatePresets["botanical-ivory"];
-    change({
-      template: templateKey,
-      palette: preset.palette,
-      font: preset.font,
-      copy: templateKey === design.template ? design.copy : {},
-      layers: templateKey === design.template ? design.layers : [],
-      sectionStyles: templateKey === design.template ? design.sectionStyles : {},
-      rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
-      sectionLayout: templateKey === design.template ? design.sectionLayout : defaultInvitationSectionLayout.map((item) => ({ ...item })),
-      sectionElementStyles: templateKey === design.template ? design.sectionElementStyles : {},
-    });
+
+    if (catalogTemplate.designKey) {
+      const imported = invitationDesignStateFromKey(catalogTemplate.designKey, invitationDecorOptions[0]);
+      change({
+        ...imported,
+        photos: {
+          ...imported.photos,
+          cover: null,
+          personOne: null,
+          personTwo: null,
+          gallery: null,
+        },
+      });
+      setMusicUrl(catalogTemplate.musicUrl || getInvitationDefaultMusic(imported.template).url);
+    } else {
+      const preset = invitationTemplatePresets[templateKey] || invitationTemplatePresets["botanical-ivory"];
+      change({
+        template: templateKey,
+        palette: preset.palette,
+        font: preset.font,
+        copy: templateKey === design.template ? design.copy : {},
+        layers: templateKey === design.template ? design.layers : [],
+        sectionStyles: templateKey === design.template ? design.sectionStyles : {},
+        rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
+        sectionLayout: templateKey === design.template ? design.sectionLayout : defaultInvitationSectionLayout.map((item) => ({ ...item })),
+        sectionElementStyles: templateKey === design.template ? design.sectionElementStyles : {},
+      });
+      setMusicUrl(getInvitationDefaultMusic(templateKey).url);
+    }
+
+    setSelectedCatalogKey(templateKey);
     rememberTemplateSelection(templateKey);
-    // Keep the browser URL aligned with an unsaved theme choice on refresh.
     const location = new URL(window.location.href);
     location.searchParams.set("template", templateKey);
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
@@ -845,8 +912,43 @@ export default function InvitationDesigner() {
     if (!invitation) return;
     if (saving || audioMutation.current) return;
     setSaving(true);
-    setNotice("Menyimpan...");
+    setNotice(templateMode ? "Menyimpan template..." : "Menyimpan...");
     try {
+      if (templateMode) {
+        const selectedCatalog = catalog.find((item) => item.key === selectedCatalogKey);
+        const cleanTemplateDesign: InvitationDesignState = {
+          ...design,
+          photos: {
+            ...design.photos,
+            cover: null,
+            personOne: null,
+            personTwo: null,
+            gallery: null,
+          },
+        };
+        const templateDesignKey = makeInvitationDesignStateKey(cleanTemplateDesign);
+        const response = await fetch("/api/designer/templates", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            designKey: templateDesignKey,
+            name: `${selectedCatalog?.name || template?.name || "Template"} Studio`,
+            tags: [selectedCatalog?.category || template?.category || "Designer", "studio"],
+            previewUrl: selectedCatalog?.previewImage || template?.previewImage,
+            category: selectedCatalog?.category || template?.category || "Designer",
+            description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain DC Organizer"}.`,
+            usesPhotos: selectedCatalog?.usesPhotos ?? template?.usesPhotos ?? false,
+            musicUrl,
+          }),
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || "Template belum dapat disimpan.");
+        setSavedState(currentState);
+        try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
+        setNotice(`Template #${data.template.templateNo} ditambahkan ke katalog dan siap dijual.`);
+        return;
+      }
+
       const response = await fetch("/api/invitations", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -866,14 +968,13 @@ export default function InvitationDesigner() {
       setServerRevision(JSON.stringify([data.invitation.templateKey || "", data.invitation.musicUrl || "", data.invitation.weddingHashtag || "", data.invitation.dressCode || ""]));
       try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
       clearTemplateSelection();
-      // After saving, stale catalog URL parameters must not reapply an old theme.
       const location = new URL(window.location.href);
       location.searchParams.delete("template");
       location.searchParams.delete("from");
       window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
       setNotice("Desain tersimpan.");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Gagal menyimpan.");
+      setNotice(error instanceof Error ? error.message : templateMode ? "Template belum dapat disimpan." : "Gagal menyimpan.");
     } finally {
       setSaving(false);
     }
@@ -906,7 +1007,7 @@ export default function InvitationDesigner() {
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
-          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
+          {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} />}
           {panel === "sections" && (
             <ContentPanel
               sections={design.sections}
@@ -974,9 +1075,9 @@ export default function InvitationDesigner() {
                 <Redo2 className="h-4 w-4" />
               </Button>
             </div>
-            <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
+            <Button onClick={save} disabled={saving || audioBusy || !invitation || (templateMode && !dirty)} size="sm">
               <Save className="h-4 w-4" />
-              {saving ? copy.saving : copy.save}
+              {saving ? copy.saving : templateMode ? (locale === "en" ? "Save Template" : "Simpan Template") : copy.save}
             </Button>
           </div>
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
