@@ -37,6 +37,12 @@ test("Studio has a wider inspector, compact side tools and a smaller invitation 
   assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
 });
 
+test("Studio left rail names the template browser Katalog", () => {
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.match(rail, /label=\{locale === "en" \? "Catalog" : "Katalog"\}/);
+  assert.doesNotMatch(rail, /label="Template"/);
+});
+
 test("Studio ID/EN switch updates its navigation, template search and photo controls", () => {
   assert.match(designer, /const \{ locale \} = useLanguage\(\)/);
   assert.match(designer, /locale === "en" \?/);

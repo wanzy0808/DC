@@ -62,6 +62,8 @@ Naik/Turun mengubah urutan instance section pada undangan user. Duplicate membua
 
 ### Arsitektur menu kiri vs panel kanan — aturan final
 
+**Penamaan menu:** browser/pemilih template di rail kiri memakai label **Katalog** (EN: **Catalog**). Istilah internal `template`, template key, registry, route, dan data model tidak perlu diganti; ini hanya nama navigasi pengguna.
+
 **Menu kiri adalah tempat untuk isi, struktur, fitur, dan penambahan. Panel kanan hanya untuk styling/properti visual dari objek atau section yang sedang dipilih.** Jangan menaruh kontrol fungsional baru di panel kanan.
 
 - **Kiri:** memilih template; show/hide section; mengubah isi/narasi; menambah foto, aset, teks atau komponen; upload/pemilihan media; konfigurasi field/input/button; RSVP seperti Upacara Nikah, Resepsi, Hadir Semua Acara dan Tambah Kolom; serta pengaturan lain yang menentukan **apa yang ada atau bagaimana fungsi bekerja**.
