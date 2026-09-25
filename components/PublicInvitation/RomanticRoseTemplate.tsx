@@ -15,6 +15,7 @@ import { parseAssetLayers, type InvitationAssetLayer, type StudioObjectSection }
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
+import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { weddingParentLine } from "@/lib/events/parents";
 import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
@@ -25,6 +26,8 @@ import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templat
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
+import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
+import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 export const romanticRoseManifest = {
@@ -173,6 +176,8 @@ export default function RomanticRoseTemplate({
     onDelete: onDeleteSectionInstance,
   } : undefined;
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
+  const copyMotions = parseEditableCopyMotions(activeDesignKey);
+  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy);
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
@@ -292,7 +297,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="greeting" style={invitationSectionStyleCss(sectionStyles.greeting)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("greeting")}
                         <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
-                        <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.greeting}</p>
+                        <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
                       </section>
           ))}
 
@@ -325,7 +330,7 @@ export default function RomanticRoseTemplate({
 
 
 
-          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} /></div>}
+          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} motionUnit={copyMotions.ourStory?.unit} /></div>}
 
           {renderSectionInstances("event", () => (
             <section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
@@ -433,7 +438,7 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("closing")}
                         <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
                         <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
-                        <p data-studio-copy-field="closing" className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.closing}</p>
+                        <p data-studio-copy-field="closing" className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p>
                         <p className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
                         {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
                       </section>
