@@ -160,6 +160,10 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(inspector, /type="number" min="-180" max="180" step="1"/);
   assert.match(inspector, /Math\.min\(180, Math\.max\(-180, angle\)\)/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
+  assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
+  assert.match(editor, /target\.closest\("\[data-studio-design-object\], \.dc-studio-layer-side, button, a, input, select, textarea, \[contenteditable\], \[role=button\]"\)/);
+  assert.match(editor, /setSelectedLayerId\(null\);/);
+  assert.match(editor, /target\.closest\("\.dc-studio-preview-surface"\)/);
   assert.match(renderer, /layer\.kind === "text"/);
   assert.match(universal, /objectOverlay\(keyName\)/);
   assert.match(universal, /objectOverlay\("cover"\)/);
