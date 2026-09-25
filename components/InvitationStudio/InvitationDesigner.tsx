@@ -69,7 +69,7 @@ export default function InvitationDesigner() {
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
-    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save", startOver: "Start Over",
+    undo: "Undo design", redo: "Redo design", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Saving...", save: "Save", startOver: "Start Over",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover",
@@ -79,7 +79,7 @@ export default function InvitationDesigner() {
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
-    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
+    undo: "Urungkan desain", redo: "Ulangi desain", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover",
@@ -709,13 +709,18 @@ export default function InvitationDesigner() {
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
-            <button type="button" className="dc-studio-icon" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}><RotateCcw size={17} /></button>
+            <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}>
+              <RotateCcw className="h-4 w-4" />
+              {copy.restartShort}
+            </Button>
             <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
-              <Button size="icon-sm" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
+              <Button size="sm" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
                 <Undo2 className="h-4 w-4" />
+                {copy.undoShort}
               </Button>
-              <Button size="icon-sm" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
+              <Button size="sm" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
                 <Redo2 className="h-4 w-4" />
+                {copy.redoShort}
               </Button>
             </div>
             <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
