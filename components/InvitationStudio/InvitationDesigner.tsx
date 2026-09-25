@@ -1409,11 +1409,25 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             <aside className="dc-studio-layer-list" aria-label={locale === "en" ? "Asset list" : "Daftar aset"}>
               <div className="dc-studio-layer-list-head">{locale === "en" ? "Assets" : "Asset"} {design.layers.length}/{MAX_ASSET_LAYERS}</div>
               {(selectedLayerIds.length > 1 || selectedAssetLayers.some((layer) => layer.groupId)) && (
-                <div className="dc-studio-layer-group-actions" role="group" aria-label={locale === "en" ? "Layer grouping" : "Pengelompokan layer"}>
+                <div className="dc-studio-layer-group-actions" role="group" aria-label={locale === "en" ? "Layer grouping and alignment" : "Pengelompokan dan alignment layer"}>
                   {selectedLayerIds.length > 1 && (
-                    <button type="button" onClick={groupSelectedAssetLayers}>
-                      {locale === "en" ? "Group" : "Group"}
-                    </button>
+                    <>
+                      <button type="button" onClick={groupSelectedAssetLayers}>
+                        {locale === "en" ? "Group" : "Group"}
+                      </button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("left")} title={locale === "en" ? "Align left" : "Rata kiri"} aria-label={locale === "en" ? "Align left" : "Rata kiri"}>↤</button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("center-x")} title={locale === "en" ? "Align horizontal center" : "Rata tengah horizontal"} aria-label={locale === "en" ? "Align horizontal center" : "Rata tengah horizontal"}>↔</button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("right")} title={locale === "en" ? "Align right" : "Rata kanan"} aria-label={locale === "en" ? "Align right" : "Rata kanan"}>↦</button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("top")} title={locale === "en" ? "Align top" : "Rata atas"} aria-label={locale === "en" ? "Align top" : "Rata atas"}>↥</button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("center-y")} title={locale === "en" ? "Align vertical center" : "Rata tengah vertikal"} aria-label={locale === "en" ? "Align vertical center" : "Rata tengah vertikal"}>↕</button>
+                      <button type="button" onClick={() => alignSelectedAssetLayers("bottom")} title={locale === "en" ? "Align bottom" : "Rata bawah"} aria-label={locale === "en" ? "Align bottom" : "Rata bawah"}>↧</button>
+                      {selectedLayerIds.length > 2 && (
+                        <>
+                          <button type="button" onClick={() => distributeSelectedAssetLayers("horizontal")} title={locale === "en" ? "Distribute horizontally" : "Sebar horizontal"} aria-label={locale === "en" ? "Distribute horizontally" : "Sebar horizontal"}>H</button>
+                          <button type="button" onClick={() => distributeSelectedAssetLayers("vertical")} title={locale === "en" ? "Distribute vertically" : "Sebar vertikal"} aria-label={locale === "en" ? "Distribute vertically" : "Sebar vertikal"}>V</button>
+                        </>
+                      )}
+                    </>
                   )}
                   {selectedAssetLayers.some((layer) => layer.groupId) && (
                     <button type="button" onClick={ungroupSelectedAssetLayers}>
