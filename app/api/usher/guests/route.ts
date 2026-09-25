@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidGuestbook } from "@/lib/packages/access";
+import { hasAccountGuestbook } from "@/lib/packages/server-access";
 
 export async function GET(request: Request) {
   try {
@@ -16,13 +16,23 @@ export async function GET(request: Request) {
     });
     // Legacy URLs without an ID open the first eligible event. A selected
     // event NEVER falls back to another event's guest list.
-    const invitation = requestedId
+    let invitation = requestedId
       ? invitations.find((item) => item.id === requestedId)
-      : invitations.find((item) => hasPaidGuestbook(item.payment));
+      : undefined;
+
+    if (!requestedId) {
+      for (const item of invitations) {
+        if (await hasAccountGuestbook(user.id, item.payment)) {
+          invitation = item;
+          break;
+        }
+      }
+    }
+
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan pada akun ini." }, { status: 404 });
     }
-    if (!hasPaidGuestbook(invitation.payment)) {
+    if (!(await hasAccountGuestbook(user.id, invitation.payment))) {
       return NextResponse.json({ error: "Usher App belum aktif untuk acara ini." }, { status: 402 });
     }
     const guests = await prisma.guest.findMany({
