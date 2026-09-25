@@ -1332,9 +1332,10 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               <div className="dc-studio-layer-list-items">
                 {[...design.layers].reverse().map((layer) => {
                   const assetNumber = design.layers.indexOf(layer) + 1;
-                  const layerName = layer.kind === "text"
+                  const automaticLayerName = layer.kind === "text"
                     ? `${locale === "en" ? "Text" : "Teks"} · ${(layer.text || "").trim().slice(0, 18) || assetNumber}`
                     : `${locale === "en" ? "Image" : "Gambar"} ${assetNumber}`;
+                  const layerName = layer.name?.trim() || automaticLayerName;
                   return (
                     <div key={layer.id} className="dc-studio-layer-list-row">
                       <button
