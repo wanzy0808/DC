@@ -308,7 +308,8 @@ test("selected assets use a compact left list and right-side properties panel", 
 test("Studio supports standard cut and non-destructive photo crop controls", () => {
   const photoSlots = read("lib/templates/photo-slots.ts");
   assert.match(designer, /shortcutKey === "x"/);
-  assert.match(designer, /setCopiedAssetLayer\(\{ \.\.\.selectedAssetLayer \}\)/);
+  assert.match(designer, /setCopiedAssetLayers\(copies\)/);
+  assert.match(designer, /setCopiedAssetLayer\(copies\.at\(-1\) \?\? null\)/);
   assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
   assert.match(designer, /shortcutKey === "d"/);
   assert.match(designer, /duplicateSelectedAssetLayer\(\)/);
