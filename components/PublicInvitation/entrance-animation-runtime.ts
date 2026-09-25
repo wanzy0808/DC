@@ -38,10 +38,9 @@ export function observeInvitationEntrances(
       easing: preset.easing,
       fill: "both",
     });
+    // Keep finished fill-mode animations until effect cleanup so changing a preset
+    // can cancel the previous visual effect before the next one starts.
     animations.add(animation);
-    const clear = () => animations.delete(animation);
-    animation.addEventListener("finish", clear, { once: true });
-    animation.addEventListener("cancel", clear, { once: true });
   };
 
   if (!("IntersectionObserver" in window)) {
