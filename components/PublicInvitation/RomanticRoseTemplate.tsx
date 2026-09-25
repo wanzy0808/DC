@@ -19,7 +19,7 @@ import { weddingParentLine } from "@/lib/events/parents";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
-import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -71,11 +71,11 @@ function readableDate(value: Date | string, timezone: string) {
   return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: timezone }).format(date);
 }
 
-function RoseHeading({ eyebrow, children }: { eyebrow: string; children: React.ReactNode }) {
+function RoseHeading({ eyebrow, children, studioElement, style }: { eyebrow: string; children: React.ReactNode; studioElement?: string; style?: React.CSSProperties }) {
   return (
     <div className="mb-7 text-center">
       <p className="mb-3 text-[10px] uppercase tracking-[0.32em] text-[#ad6b7e]">{eyebrow}</p>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
+      <h2 data-studio-rsvp-element={studioElement} style={style} className="font-[family-name:var(--font-dc-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
       <span className="mx-auto mt-4 block h-px w-16 bg-[#d8a7b3]" />
     </div>
   );
@@ -315,7 +315,7 @@ export default function RomanticRoseTemplate({
           {sections.rsvp && (
             <section data-invitation-section="rsvp" style={invitationSectionStyleCss(sectionStyles.rsvp)} className="relative bg-[#f8eef0] px-5 py-20">
             {objectOverlay("rsvp")}
-              <RoseHeading eyebrow="Your presence means so much">Konfirmasi Kehadiran</RoseHeading>
+              <RoseHeading eyebrow="Your presence means so much" studioElement="title" style={rsvpElementStyleCss(rsvpConfig, "title")}>{rsvpConfig.title || "Konfirmasi Kehadiran"}</RoseHeading>
               <RsvpForm slug={invitation.slug} preview={preview} eventCategory="WEDDING" rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={displayTitleCase(invitation.title) || displayName} start={invitation.ceremonyTime} description={invitation.description} />
             </section>
           )}
