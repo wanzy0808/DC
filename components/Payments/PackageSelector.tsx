@@ -30,6 +30,7 @@ export default function PackageSelector({
     : visiblePackages[0]?.key || "INVITATION_BASIC";
   const [selected, setSelected] = useState(initial);
   const [message, setMessage] = useState("");
+  const [voucherCode, setVoucherCode] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => setSelected(initial), [initial]);
@@ -46,6 +47,8 @@ export default function PackageSelector({
           preparing: "Preparing invoice…",
           fallbackError: "This product could not be selected yet.",
           eventContext: "Event-specific purchase",
+          voucher: "Partner voucher code",
+          voucherHint: "Optional. Used to attribute this sale to a DC Organizer partner.",
         }
       : {
           eyebrow: "DC Services",
@@ -57,6 +60,8 @@ export default function PackageSelector({
           preparing: "Menyiapkan invoice…",
           fallbackError: "Produk belum dapat dipilih.",
           eventContext: "Pembelian khusus acara",
+          voucher: "Kode voucher mitra",
+          voucherHint: "Opsional. Dipakai untuk mencatat penjualan ke mitra DC Organizer.",
         };
 
   async function choosePackage() {
@@ -66,7 +71,7 @@ export default function PackageSelector({
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageKey: selected, invitationId }),
+        body: JSON.stringify({ packageKey: selected, invitationId, voucherCode: voucherCode.trim() || undefined }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -152,6 +157,17 @@ export default function PackageSelector({
         </div>
 
         <div className="mx-auto max-w-xl rounded-2xl border border-border bg-foreground/[0.018] p-6">
+          <label className="mb-4 block text-sm">
+            <span className="font-medium">{copy.voucher}</span>
+            <input
+              type="text"
+              value={voucherCode}
+              onChange={(event) => setVoucherCode(event.target.value.toUpperCase())}
+              placeholder="MITRA-XXXXXXXX"
+              className="mt-2 h-11 w-full rounded-[var(--dc-control-radius)] border border-border bg-background px-4 font-mono text-sm uppercase outline-none focus:border-primary"
+            />
+            <span className="mt-1 block text-xs text-muted-foreground">{copy.voucherHint}</span>
+          </label>
           {selected === "WA_BLAST_50" && (
             <p className="mb-4 rounded-xl border border-primary/10 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground">
               Add-on ini menambah 50 quota pada acara yang dipilih dan dapat dibeli kembali kapan pun dibutuhkan.
