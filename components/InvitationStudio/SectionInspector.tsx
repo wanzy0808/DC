@@ -9,6 +9,11 @@ import {
   sectionAnimationPresets,
   type InvitationSectionAnimation,
 } from "@/lib/templates/section-animations";
+import {
+  premiumSectionTimelinePresets,
+  premiumTimelineSectionKeys,
+  type InvitationPremiumTimeline,
+} from "@/lib/templates/premium-timelines";
 
 export default function SectionInspector({
   locale,
@@ -28,6 +33,7 @@ export default function SectionInspector({
   const en = locale === "en";
   const title = invitationSectionItems.find((item) => item.key === sectionKey)?.title ?? sectionKey;
   const selectedAnimationPreset = getSectionAnimationPreset(style?.animation);
+  const supportsPremiumTimeline = premiumTimelineSectionKeys.has(sectionKey);
   const optionalNumber = (
     label: string,
     value: number | undefined,
@@ -110,6 +116,37 @@ export default function SectionInspector({
         />
       </label>
 
+      {supportsPremiumTimeline ? (
+        <div className="dc-studio-section-field">
+          <span>{en ? "Premium timeline" : "Timeline premium"}</span>
+          <select
+            value={style?.timeline ?? ""}
+            onChange={(event) => {
+              const timeline = event.target.value as InvitationPremiumTimeline | "";
+              onUpdate(timeline
+                ? {
+                    timeline,
+                    animation: undefined,
+                    animationDuration: undefined,
+                    animationDelay: undefined,
+                  }
+                : { timeline: undefined });
+            }}
+          >
+            <option value="">{en ? "Off" : "Mati"}</option>
+            {premiumSectionTimelinePresets.map((preset) => (
+              <option key={preset.key} value={preset.key}>
+                {en ? preset.labelEn : preset.labelId}
+              </option>
+            ))}
+          </select>
+          <small className="text-[10px] leading-4 text-muted-foreground">
+            {en ? "Loaded only when this section uses it." : "GSAP dimuat hanya saat section ini memakainya."}
+          </small>
+        </div>
+      ) : null}
+
+      {!style?.timeline ? (
       <div className="dc-studio-section-field">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
@@ -172,6 +209,7 @@ export default function SectionInspector({
             </span>
           </label>
         </div>
+      ) : null}
       ) : null}
 
       <div className="dc-studio-section-field">
