@@ -79,7 +79,7 @@ test("RSVP title and controls support independent persisted styling", () => {
   assert.equal(config.title, "Konfirmasi Tamu");
   assert.deepEqual(config.elementStyles.title, { fontSize: 34, color: "#112233", align: "left" });
   assert.deepEqual(config.elementStyles.name, { width: 74, opacity: 0.7, background: "#ffffff", borderColor: "#c07a84" });
-  assert.deepEqual(config.elementStyles.bad, { width: 100, opacity: 0.2 });
+  assert.deepEqual(config.elementStyles.bad, { opacity: 0.2 });
   assert.deepEqual(rsvpElementStyleCss(config, "name"), {
     width: "74%",
     maxWidth: "100%",
