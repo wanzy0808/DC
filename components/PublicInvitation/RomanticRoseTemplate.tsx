@@ -16,7 +16,7 @@ import { resolveInvitationMusic } from "@/lib/templates/music";
 import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { weddingParentLine } from "@/lib/events/parents";
-import { photoCropStyle, resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -24,6 +24,7 @@ import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templat
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
+import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -107,6 +108,9 @@ export default function RomanticRoseTemplate({
   sections: sectionOverride,
   coverUrl,
   photoAssignments,
+  activeCropSlot,
+  onCropPhoto,
+  onFinishCrop,
   onEditPhoto,
   onEnvelopeOpened,
   selectedAssetLayerId,
@@ -129,6 +133,9 @@ export default function RomanticRoseTemplate({
   sections?: InvitationSections;
   coverUrl?: string;
   photoAssignments?: PhotoAssignments;
+  activeCropSlot?: CroppablePhotoSlot | null;
+  onCropPhoto?: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
+  onFinishCrop?: () => void;
   onEditPhoto?: (slot: PhotoSlot) => void;
   /** Studio canvas only: synchronize the active stage after opening. */
   onEnvelopeOpened?: () => void;
@@ -170,7 +177,7 @@ export default function RomanticRoseTemplate({
   const groomPhoto = media.personOne;
   const bridePhoto = media.personTwo;
   const editPhoto = (slot: PhotoSlot, label: string) =>
-    preview && onEditPhoto ? (
+    preview && onEditPhoto && activeCropSlot !== slot ? (
       <button
         type="button"
         onClick={() => onEditPhoto(slot)}
@@ -179,6 +186,14 @@ export default function RomanticRoseTemplate({
       >
         Ganti foto
       </button>
+    ) : null;
+  const cropOverlay = (slot: CroppablePhotoSlot) =>
+    preview && activeCropSlot === slot && onCropPhoto && onFinishCrop ? (
+      <StudioPhotoCropOverlay
+        crop={resolvePhotoCrop(assignment, slot)}
+        onChange={(crop) => onCropPhoto(slot, crop)}
+        onDone={onFinishCrop}
+      />
     ) : null;
   const displayName = [displayTitleCase(invitation.groomName), displayTitleCase(invitation.brideName)].filter(Boolean).join(" & ");
   const groomParents = weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition);
@@ -260,6 +275,7 @@ export default function RomanticRoseTemplate({
                           <div className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
                             <RosePhoto url={cover} alt="Foto sampul pasangan" cropStyle={photoCropStyle(assignment, "cover")} className="aspect-[3/4] w-full object-cover" />
                             {editPhoto("cover", "cover utama")}
+                            {cropOverlay("cover")}
                           </div>
                           <p className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
                           {scrollHint}
@@ -285,6 +301,7 @@ export default function RomanticRoseTemplate({
                             <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" cropStyle={photoCropStyle(assignment, "personOne")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personOne", "mempelai pertama")}
+                              {cropOverlay("personOne")}
                             </div>
                             <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.groomName) || "Mempelai pertama"}</h3>
                             {groomParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{groomParents}</p>}
@@ -293,6 +310,7 @@ export default function RomanticRoseTemplate({
                             <div className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" cropStyle={photoCropStyle(assignment, "personTwo")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personTwo", "mempelai kedua")}
+                              {cropOverlay("personTwo")}
                             </div>
                             <h3 className="mt-5 break-words font-[family-name:var(--font-dc-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.brideName) || "Mempelai kedua"}</h3>
                             {brideParents && <p className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{brideParents}</p>}
