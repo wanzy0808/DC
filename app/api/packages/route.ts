@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getServicePackage } from "@/lib/packages/catalog";
+import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 
 const invitationKey = "INVITATION_BASIC";
 const guestbookKey = "GUESTBOOK_DIGITAL";
@@ -12,6 +13,7 @@ export async function POST(request: Request) {
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
 
   try {
+    const ownerGrant = await getOwnerPackageGrant(user.id);
     const body = await request.json();
     const requestedKey = String(body.packageKey ?? "");
     const selected = getServicePackage(requestedKey);
@@ -38,6 +40,13 @@ export async function POST(request: Request) {
     }
 
     const currentPaidKey = invitation.payment?.status === "PAID" ? invitation.payment.packageKey : null;
+
+    if (ownerGrant.guestbook) {
+      return NextResponse.json({ error: "Paket Guest Book sudah diaktifkan oleh Owner untuk akun ini." }, { status: 409 });
+    }
+    if (requestedKey === invitationKey && ownerGrant.digital) {
+      return NextResponse.json({ error: "Undangan Digital sudah diaktifkan oleh Owner untuk akun ini." }, { status: 409 });
+    }
 
     // Guest Book already includes every Digital Invitation entitlement,
     // so it is a terminal paid package rather than a package to downgrade.
