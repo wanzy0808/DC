@@ -56,17 +56,41 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
-  const usedInvitations = await prisma.invitation.findMany({
-    where: { templateKey: { not: "" }, payment: { status: "PAID" } },
-    select: { templateKey: true },
+  const paidOrders = await prisma.paymentOrder.findMany({
+    where: {
+      status: "PAID",
+      packageKey: { in: ["INVITATION_BASIC", "GUESTBOOK_DIGITAL"] },
+      invitation: { templateKey: { not: "" } },
+    },
+    select: {
+      invitationId: true,
+      amount: true,
+      invitation: { select: { templateKey: true } },
+    },
+  });
+
+  const saleEvents = new Set<string>();
+  const templateRows = templates.map((template) => {
+    const matching = paidOrders.filter((order) =>
+      order.invitation.templateKey.includes(`designer:${template.templateNo}`),
+    );
+    const invitationIds = new Set(matching.map((order) => order.invitationId));
+    invitationIds.forEach((id) => saleEvents.add(id));
+    return {
+      ...template,
+      salesCount: invitationIds.size,
+      orderValue: matching.reduce((sum, order) => sum + order.amount, 0),
+    };
   });
 
   return NextResponse.json({
-    templates: templates.map((template) => ({
-      ...template,
-      // Existing invitations do not yet retain catalog attribution separately.
-      salesCount: usedInvitations.filter((item) => item.templateKey.includes(`designer:${template.templateNo}`)).length,
-    })),
+    templates: templateRows,
+    summary: {
+      templateCount: templates.length,
+      templatesWithSales: templateRows.filter((template) => template.salesCount > 0).length,
+      salesCount: saleEvents.size,
+      orderValue: templateRows.reduce((sum, template) => sum + template.orderValue, 0),
+    },
   });
 }
 
