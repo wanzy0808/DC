@@ -74,6 +74,8 @@ Bandingkan mockup dengan moodboard berdampingan: hierarki tulisan, jarak, posisi
 
 OFF menyembunyikan komponen terkait **tanpa menghapus data**. Fitur yang belum aktif tidak boleh digambarkan seolah-olah dapat menyimpan atau mengirim. Undangan publik dan kanvas Studio memakai komponen visual yang sama; fitur simpan/submit pada mode contoh harus dilindungi.
 
+**Master template selalu lengkap.** Setiap master wajib tetap mendefinisikan seluruh 13 section isi di atas (ditambah Amplop dan Musik sebagai kontrol khusus). Aksi Studio user seperti reorder, hide/show, duplicate, atau delete bekerja pada **instance section milik undangan user**, bukan menghapus kontrak section dari master template. Restart atau ganti template harus dapat mengembalikan susunan master lengkap. Duplicate instance boleh membuat section yang sama tampil lebih dari sekali pada satu undangan, tetapi renderer/backend fungsionalnya tetap memakai komponen bersama yang aman.
+
 ### Wajah template di katalog: Cover / Hero, bukan Amplop
 
 Saat menampilkan kartu pilihan template (termasuk tiga smartphone pilihan di `/d-invitation` dan katalog lengkap `/template-design`), ambil **tampilan Cover / Hero sebenarnya** dari renderer temanya: nama/judul, foto/ilustrasi, tipografi, dan dekorasi yang mencerminkan desain utama. **Jangan jadikan Amplop Digital sebagai thumbnail utama**, karena semua calon pembeli perlu melihat karakter visual undangannya sebelum memilih.
