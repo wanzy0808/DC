@@ -21,7 +21,7 @@ import { defaultInvitationSections } from "@/lib/templates/sections";
 import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
-import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { defaultPhotoAssignments, type PhotoCrop, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
@@ -522,7 +522,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function setPhoto(slot: "cover" | "personOne" | "personTwo", id: string | null) {
-    change({ photos: { ...design.photos, [slot]: id } });
+    change({ photos: { ...design.photos, [slot]: id, crop: { ...design.photos.crop, [slot]: null } } });
   }
 
   function toggleGalleryPhoto(id: string) {
@@ -535,7 +535,15 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function setPhotoFocus(slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) {
-    change({ photos: { ...design.photos, focus: { ...design.photos.focus, [slot]: focus } } });
+    change({ photos: { ...design.photos, focus: { ...design.photos.focus, [slot]: focus }, crop: { ...design.photos.crop, [slot]: null } } });
+  }
+
+  function setPhotoCrop(slot: "cover" | "personOne" | "personTwo", crop: PhotoCrop) {
+    change({ photos: { ...design.photos, crop: { ...design.photos.crop, [slot]: crop } } });
+  }
+
+  function resetPhotoCrop(slot: "cover" | "personOne" | "personTwo") {
+    change({ photos: { ...design.photos, crop: { ...design.photos.crop, [slot]: null } } });
   }
 
   function editPhotoFromCanvas(slot: PhotoSlot) {
@@ -851,6 +859,11 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         if (!selectedAssetLayer) return;
         event.preventDefault();
         copySelectedAssetLayer();
+      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "x") {
+        if (!selectedAssetLayer) return;
+        event.preventDefault();
+        setCopiedAssetLayer({ ...selectedAssetLayer });
+        removeAssetLayer(selectedAssetLayer.id);
       } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "v") {
         if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
@@ -1052,6 +1065,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               onSetPhoto={setPhoto}
               onToggleGallery={toggleGalleryPhoto}
               onSetFocus={setPhotoFocus}
+              onSetCrop={setPhotoCrop}
+              onResetCrop={resetPhotoCrop}
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
