@@ -495,12 +495,14 @@ export default function InvitationDesigner() {
     setSelectedLayerId(null);
   }
 
-  function reorderAssetLayer(id: string, direction: -1 | 1) {
+  function positionAssetLayer(id: string, position: "front" | "back") {
     const index = design.layers.findIndex((layer) => layer.id === id);
-    const target = index + direction;
-    if (index < 0 || target < 0 || target >= design.layers.length) return;
+    if (index < 0) return;
+    if ((position === "front" && index === design.layers.length - 1) || (position === "back" && index === 0)) return;
     const next = [...design.layers];
-    [next[index], next[target]] = [next[target], next[index]];
+    const [layer] = next.splice(index, 1);
+    if (position === "front") next.push(layer);
+    else next.unshift(layer);
     change({ layers: next });
   }
 
@@ -688,7 +690,7 @@ export default function InvitationDesigner() {
             />
           )}
           {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={focusDesignObject} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
@@ -734,59 +736,77 @@ export default function InvitationDesigner() {
             // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
             if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
-          <div className="dc-studio-preview-workspace">
-          <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
-            {design.sections.envelope !== false && <button type="button"
-              aria-pressed={canvasStage === "envelope"}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
-              onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
-              title={copy.envelopeHint}
-            >{copy.envelope}</button>}
-            <button type="button"
-              aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
-              onClick={() => setCanvasStage("cover")}
-              title={copy.coverHint}
-            >{copy.cover}</button>
-          </div>
-          <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
-            <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
+          <div className="dc-studio-canvas-layout">
+            <aside className="dc-studio-layer-list" aria-label={locale === "en" ? "Asset list" : "Daftar aset"}>
+              <div className="dc-studio-layer-list-head">{locale === "en" ? "Assets" : "Asset"} {design.layers.length}/{MAX_ASSET_LAYERS}</div>
+              <div className="dc-studio-layer-list-items">
+                {[...design.layers].reverse().map((layer) => {
+                  const assetNumber = design.layers.indexOf(layer) + 1;
+                  return (
+                    <button
+                      key={layer.id}
+                      type="button"
+                      aria-pressed={selectedLayerId === layer.id}
+                      onClick={() => focusDesignObject(layer.id)}
+                      title={`Asset ${assetNumber}/${MAX_ASSET_LAYERS}`}
+                    >
+                      Asset {assetNumber}/{MAX_ASSET_LAYERS}
+                    </button>
+                  );
+                })}
+              </div>
+            </aside>
 
-            <InvitationPreview
-              invitation={invitation}
-              templateKey={design.template}
-              palette={palette}
-              fontPair={fontPair}
-              decorUrl={design.decor}
-              eventTag={eventTag}
-              dressCode={dressCode}
-              sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
-              photoAssignments={design.photos}
-              designKey={designKey}
-              musicUrl={musicUrl}
-              selectedAssetLayerId={selectedLayerId}
-              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel(design.layers.find((layer) => layer.id === id)?.kind === "text" ? "text" : "assets"); setInspectorOpen(true); }}
-              onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
-              onUpdateAssetLayer={updateAssetLayer}
-              onEditPhoto={editPhotoFromCanvas}
-              onEnvelopeOpened={handleCanvasEnvelopeOpened}
-            />
+            <div className="dc-studio-preview-workspace">
+              <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
+                {design.sections.envelope !== false && <button type="button"
+                  aria-pressed={canvasStage === "envelope"}
+                  className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
+                  onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
+                  title={copy.envelopeHint}
+                >{copy.envelope}</button>}
+                <button type="button"
+                  aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
+                  className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
+                  onClick={() => setCanvasStage("cover")}
+                  title={copy.coverHint}
+                >{copy.cover}</button>
+              </div>
+              <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
+                <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
+                  <InvitationPreview
+                    invitation={invitation}
+                    templateKey={design.template}
+                    palette={palette}
+                    fontPair={fontPair}
+                    decorUrl={design.decor}
+                    eventTag={eventTag}
+                    dressCode={dressCode}
+                    sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
+                    photoAssignments={design.photos}
+                    designKey={designKey}
+                    musicUrl={musicUrl}
+                    selectedAssetLayerId={selectedLayerId}
+                    onSelectAssetLayer={(id) => setSelectedLayerId(id)}
+                    onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
+                    onUpdateAssetLayer={updateAssetLayer}
+                    onEditPhoto={editPhotoFromCanvas}
+                    onEnvelopeOpened={handleCanvasEnvelopeOpened}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <AssetLayerInspector
-            locale={locale}
-            selectedAssetLayer={selectedAssetLayer}
-            selectedAssetIndex={selectedAssetIndex}
-            copiedAssetLayer={copiedAssetLayer}
-            layerCount={design.layers.length}
-            sections={design.sections}
-            onDeselect={() => setSelectedLayerId(null)}
-            onUpdate={updateAssetLayer}
-            onReorder={reorderAssetLayer}
-            onCopy={copySelectedAssetLayer}
-            onRemove={removeAssetLayer}
-            onPaste={pasteAssetLayer}
-          />
+
+            <AssetLayerInspector
+              locale={locale}
+              selectedAssetLayer={selectedAssetLayer}
+              selectedAssetIndex={selectedAssetIndex}
+              layerCount={design.layers.length}
+              sections={design.sections}
+              onDeselect={() => setSelectedLayerId(null)}
+              onUpdate={updateAssetLayer}
+              onPosition={positionAssetLayer}
+            />
           </div>
           </div>
         </div>
