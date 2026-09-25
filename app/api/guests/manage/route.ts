@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@/generated/prisma/client";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { findGuestsByContact } from "@/lib/guests/identity";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 
@@ -24,7 +24,7 @@ export async function PATCH(request: Request) {
     if (!id) return NextResponse.json({ error: "ID tamu wajib diisi." }, { status: 400 });
     const guest = await ownedGuest(user.id, id);
     if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan pada akun ini." }, { status: 404 });
-    if (!hasPaidDigitalInvitation(guest.invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, guest.invitation.payment))) {
       return NextResponse.json({ error: "Pengelolaan tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     }
 
@@ -133,7 +133,7 @@ export async function DELETE(request: Request) {
     if (!id) return NextResponse.json({ error: "ID tamu wajib diisi." }, { status: 400 });
     const guest = await ownedGuest(user.id, id);
     if (!guest) return NextResponse.json({ error: "Tamu tidak ditemukan pada akun ini." }, { status: 404 });
-    if (!hasPaidDigitalInvitation(guest.invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, guest.invitation.payment))) {
       return NextResponse.json({ error: "Pengelolaan tamu membutuhkan paket Digital Invitation." }, { status: 402 });
     }
     if (guest.personalToken || guest.checkedIn) {
