@@ -5,12 +5,12 @@ import { invitationSectionItems, type InvitationSections } from "@/lib/templates
 import {
   MAX_ASSET_LAYERS,
   studioObjectSections,
-  studioTextFontFamilies,
   type InvitationAssetLayer,
   type StudioObjectSection,
 } from "@/lib/templates/asset-layers";
 import { invitationFontFamily } from "@/lib/templates/presentation";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
+import { invitationFontOptions } from "@/components/InvitationStudio/designer-config";
 
 type Props = {
   locale: string;
@@ -24,6 +24,7 @@ type Props = {
 };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const studioTextFontFamilies = [...new Set(invitationFontOptions.flatMap(([, item]) => [item.heading, item.body]))].sort((a, b) => a.localeCompare(b));
 
 function LayerStackIcon({ action }: { action: "front" | "forward" | "backward" | "back" }) {
   const up = action === "front" || action === "forward";
