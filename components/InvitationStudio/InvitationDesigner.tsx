@@ -15,8 +15,8 @@ import {
   Type,
   Undo2,
   RotateCcw,
-  PanelRightClose,
-  PanelRightOpen,
+  PanelLeftClose,
+  PanelLeftOpen,
   Smartphone,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
@@ -578,79 +578,20 @@ export default function InvitationDesigner() {
         <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>{copy.invitation}</button>
       </div>
       <div className="dc-studio-workspace">
-        <div className="dc-studio-canvas">
-          <div className="dc-studio-canvas-toolbar">
-            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
-            {design.sections.envelope !== false && <button type="button"
-              aria-pressed={canvasStage === "envelope"}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
-              onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
-              title={copy.envelopeHint}
-            >{copy.envelope}</button>}
-            <button type="button"
-              aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
-              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
-              onClick={() => setCanvasStage("cover")}
-              title={copy.coverHint}
-            >{copy.cover}</button>
-            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
-            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
-            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
-              {inspectorOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
-            </button>
-          </div>
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onClick={(event) => {
-            const target = event.target;
-            if (!(target instanceof Element)) return;
-            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
-            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
-            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
-          }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
-          <div className="dc-studio-preview-workspace">
-          <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
-            <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
-
-            <InvitationPreview
-              invitation={invitation}
-              templateKey={design.template}
-              palette={palette}
-              fontPair={fontPair}
-              decorUrl={design.decor}
-              eventTag={eventTag}
-              dressCode={dressCode}
-              sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
-              photoAssignments={design.photos}
-              designKey={designKey}
-              musicUrl={musicUrl}
-              selectedAssetLayerId={selectedLayerId}
-              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel(design.layers.find((layer) => layer.id === id)?.kind === "text" ? "text" : "assets"); setInspectorOpen(true); }}
-              onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
-              onUpdateAssetLayer={updateAssetLayer}
-              onEditPhoto={editPhotoFromCanvas}
-              onEnvelopeOpened={handleCanvasEnvelopeOpened}
-            />
-            </div>
-          </div>
-          </div>
-          </div>
-        </div>
+        <nav className="dc-studio-rail" aria-label={copy.tools}>
+          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
+          <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
+          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
+          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
+          <div className="dc-studio-rail-divider" />
+          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
+          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
+          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
+          <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
+        </nav>
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
-          <AssetLayerInspector
-            locale={locale}
-            selectedAssetLayer={selectedAssetLayer}
-            selectedAssetIndex={selectedAssetIndex}
-            copiedAssetLayer={copiedAssetLayer}
-            layerCount={design.layers.length}
-            sections={design.sections}
-            onDeselect={() => setSelectedLayerId(null)}
-            onUpdate={updateAssetLayer}
-            onReorder={reorderAssetLayer}
-            onCopy={copySelectedAssetLayer}
-            onRemove={removeAssetLayer}
-            onPaste={pasteAssetLayer}
-          />
-
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
           {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
           {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
@@ -692,19 +633,76 @@ export default function InvitationDesigner() {
           </fieldset>
         </aside>
 
+        <div className="dc-studio-canvas">
+          <div className="dc-studio-canvas-toolbar">
+            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
+              {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+            </button>
+            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
+            {design.sections.envelope !== false && <button type="button"
+              aria-pressed={canvasStage === "envelope"}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
+              title={copy.envelopeHint}
+            >{copy.envelope}</button>}
+            <button type="button"
+              aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
+              className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
+              onClick={() => setCanvasStage("cover")}
+              title={copy.coverHint}
+            >{copy.cover}</button>
+            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
+            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
+          </div>
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onClick={(event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
+            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
+            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
+          }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
+          <div className="dc-studio-preview-workspace">
+          <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
+            <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
 
-        <nav className="dc-studio-rail" aria-label={copy.tools}>
-          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
-          <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
-          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
-          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
-          <div className="dc-studio-rail-divider" />
-          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
-          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
-          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
-          <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
-        </nav>
+            <InvitationPreview
+              invitation={invitation}
+              templateKey={design.template}
+              palette={palette}
+              fontPair={fontPair}
+              decorUrl={design.decor}
+              eventTag={eventTag}
+              dressCode={dressCode}
+              sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
+              photoAssignments={design.photos}
+              designKey={designKey}
+              musicUrl={musicUrl}
+              selectedAssetLayerId={selectedLayerId}
+              onSelectAssetLayer={(id) => { setSelectedLayerId(id); setPanel(design.layers.find((layer) => layer.id === id)?.kind === "text" ? "text" : "assets"); setInspectorOpen(true); }}
+              onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
+              onUpdateAssetLayer={updateAssetLayer}
+              onEditPhoto={editPhotoFromCanvas}
+              onEnvelopeOpened={handleCanvasEnvelopeOpened}
+            />
+            </div>
+          </div>
+          <AssetLayerInspector
+            locale={locale}
+            selectedAssetLayer={selectedAssetLayer}
+            selectedAssetIndex={selectedAssetIndex}
+            copiedAssetLayer={copiedAssetLayer}
+            layerCount={design.layers.length}
+            sections={design.sections}
+            onDeselect={() => setSelectedLayerId(null)}
+            onUpdate={updateAssetLayer}
+            onReorder={reorderAssetLayer}
+            onCopy={copySelectedAssetLayer}
+            onRemove={removeAssetLayer}
+            onPaste={pasteAssetLayer}
+          />
+          </div>
+          </div>
+        </div>
       </div>
 
       <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>
