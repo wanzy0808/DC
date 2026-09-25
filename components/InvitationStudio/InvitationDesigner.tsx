@@ -501,6 +501,7 @@ export default function InvitationDesigner() {
     if ((position === "front" && index === design.layers.length - 1) || (position === "back" && index === 0)) return;
     const next = [...design.layers];
     const [layer] = next.splice(index, 1);
+    if (!layer) return;
     if (position === "front") next.push(layer);
     else next.unshift(layer);
     change({ layers: next });
