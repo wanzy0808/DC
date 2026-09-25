@@ -7,6 +7,7 @@ import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import type { InvitationSectionInstance } from "@/lib/templates/section-layout";
+import type { StudioSectionElementStyles } from "@/lib/templates/section-element-styles";
 
 export type InvitationDesignerInvitation = {
   id: string;
@@ -73,6 +74,7 @@ export type InvitationDesignState = {
   sectionStyles: InvitationSectionStyles;
   rsvpConfig: InvitationRsvpConfig;
   sectionLayout: InvitationSectionInstance[];
+  sectionElementStyles: StudioSectionElementStyles;
 };
 
 export type InvitationTemplateLayout =
