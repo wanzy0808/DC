@@ -5,7 +5,7 @@ import { completeGoogleSignIn, GoogleOAuthError } from "@/lib/auth/google";
 const stateCookie = "google_oauth_state";
 const nextCookie = "google_auth_next";
 function loginUrl(error:string){return new URL(`/login?error=${encodeURIComponent(error)}`,process.env.APP_URL??"http://localhost:3000")}
-function destinationForRole(role:string,next:string){if(role==="OWNER")return "/owner";if(role==="ADMIN"||role==="FINANCE")return "/admin";if(role==="DESIGNER"||role==="EDITOR")return "/designer";return next}
+function destinationForRole(role:string,next:string){if(role==="OWNER")return "/owner";if(role==="ADMIN"||role==="FINANCE")return "/admin";if(role==="DESIGNER"||role==="EDITOR")return "/designer";if(role==="SUPPORT")return "/partner";return next}
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
