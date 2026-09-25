@@ -278,6 +278,8 @@ model Guest {
   source                    GuestSource   @default(MANUAL)
   rsvpStatus                RsvpStatus    @default(PENDING)
   plusOnes                  Int           @default(0)
+  rsvpEvents                String[]      @default([])
+  rsvpAnswers               Json?
   checkedIn                 Boolean       @default(false)
   checkedInAt               DateTime?
   checkedInById             String?
