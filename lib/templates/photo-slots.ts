@@ -8,7 +8,8 @@ import type { CSSProperties } from "react";
 export type PhotoSlot = "cover" | "personOne" | "personTwo" | "gallery";
 export type PhotoFocus = "top" | "center" | "bottom";
 export type CroppablePhotoSlot = Exclude<PhotoSlot, "gallery">;
-export type PhotoCrop = { x: number; y: number; zoom: number };
+export type PhotoCropAspect = "template" | "original" | "1:1" | "4:5" | "3:4" | "16:9";
+export type PhotoCrop = { x: number; y: number; zoom: number; aspect?: PhotoCropAspect };
 
 export type PhotoAssignments = {
   cover: string | null;
@@ -29,6 +30,7 @@ export const defaultPhotoAssignments = (): PhotoAssignments => ({
 });
 
 const focusValues = new Set<PhotoFocus>(["top", "center", "bottom"]);
+const cropAspectValues = new Set<PhotoCropAspect>(["template", "original", "1:1", "4:5", "3:4", "16:9"]);
 const sanitizeId = (id: unknown) =>
   typeof id === "string" && id.length > 0 && id.length <= 100 && /^[a-zA-Z0-9_-]+$/.test(id)
     ? id
@@ -41,12 +43,13 @@ const bounded = (value: unknown, min: number, max: number, fallback: number) =>
 function sanitizeCrop(value: unknown): PhotoCrop | null {
   if (!value || typeof value !== "object" || Array.isArray(value)) return null;
   const source = value as Record<string, unknown>;
-  const crop = {
+  const crop: PhotoCrop = {
     x: bounded(source.x, 0, 100, 50),
     y: bounded(source.y, 0, 100, 50),
     zoom: bounded(source.zoom, 1, 3, 1),
   };
-  return crop.x === 50 && crop.y === 50 && crop.zoom === 1 ? null : crop;
+  if (cropAspectValues.has(source.aspect as PhotoCropAspect) && source.aspect !== "template") crop.aspect = source.aspect as PhotoCropAspect;
+  return crop.x === 50 && crop.y === 50 && crop.zoom === 1 && !crop.aspect ? null : crop;
 }
 
 export function parsePhotoAssignments(designKey: string): PhotoAssignments {
@@ -103,6 +106,7 @@ export function resolvePhotoCrop(
     x: 50,
     y: assignments.focus[slot] === "top" ? 0 : assignments.focus[slot] === "bottom" ? 100 : 50,
     zoom: 1,
+    aspect: "template",
   };
 }
 
@@ -112,10 +116,16 @@ export function photoCropStyle(
 ): CSSProperties {
   const crop = assignments.crop?.[slot] ?? null;
   if (crop) {
+    const aspectRatio = crop.aspect === "original"
+      ? "auto"
+      : crop.aspect && crop.aspect !== "template"
+        ? crop.aspect.replace(":", " / ")
+        : undefined;
     return {
       objectPosition: `${crop.x}% ${crop.y}%`,
       transform: crop.zoom === 1 ? undefined : `scale(${crop.zoom})`,
       transformOrigin: `${crop.x}% ${crop.y}%`,
+      aspectRatio,
     };
   }
   const focusY = assignments.focus[slot] === "top" ? 0 : assignments.focus[slot] === "bottom" ? 100 : 50;
