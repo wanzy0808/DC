@@ -15,6 +15,10 @@ import {
   RotateCcw,
   PanelLeftClose,
   PanelLeftOpen,
+  Eye,
+  EyeOff,
+  Lock,
+  Unlock,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
@@ -1194,16 +1198,39 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               <div className="dc-studio-layer-list-items">
                 {[...design.layers].reverse().map((layer) => {
                   const assetNumber = design.layers.indexOf(layer) + 1;
+                  const layerName = layer.kind === "text"
+                    ? `${locale === "en" ? "Text" : "Teks"} · ${(layer.text || "").trim().slice(0, 18) || assetNumber}`
+                    : `${locale === "en" ? "Image" : "Gambar"} ${assetNumber}`;
                   return (
-                    <button
-                      key={layer.id}
-                      type="button"
-                      aria-pressed={selectedLayerId === layer.id}
-                      onClick={() => focusDesignObject(layer.id)}
-                      title={`Asset ${assetNumber}/${MAX_ASSET_LAYERS}`}
-                    >
-                      Asset {assetNumber}/{MAX_ASSET_LAYERS}
-                    </button>
+                    <div key={layer.id} className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        className="min-w-0 flex-1 truncate text-left"
+                        aria-pressed={selectedLayerId === layer.id}
+                        onClick={() => focusDesignObject(layer.id)}
+                        title={layerName}
+                      >
+                        {layerName}
+                      </button>
+                      <button
+                        type="button"
+                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                        aria-label={layer.hidden ? (locale === "en" ? "Show layer" : "Tampilkan layer") : (locale === "en" ? "Hide layer" : "Sembunyikan layer")}
+                        title={layer.hidden ? (locale === "en" ? "Show" : "Tampilkan") : (locale === "en" ? "Hide" : "Sembunyikan")}
+                        onClick={() => updateAssetLayer(layer.id, { hidden: layer.hidden ? undefined : true })}
+                      >
+                        {layer.hidden ? <EyeOff size={13} /> : <Eye size={13} />}
+                      </button>
+                      <button
+                        type="button"
+                        className="grid h-7 w-7 shrink-0 place-items-center rounded-md text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                        aria-label={layer.locked ? (locale === "en" ? "Unlock layer" : "Buka kunci layer") : (locale === "en" ? "Lock layer" : "Kunci layer")}
+                        title={layer.locked ? (locale === "en" ? "Unlock" : "Buka kunci") : (locale === "en" ? "Lock" : "Kunci")}
+                        onClick={() => updateAssetLayer(layer.id, { locked: layer.locked ? undefined : true })}
+                      >
+                        {layer.locked ? <Lock size={13} /> : <Unlock size={13} />}
+                      </button>
+                    </div>
                   );
                 })}
               </div>
