@@ -70,6 +70,6 @@ test("Pencil Reverie exposes actual independent editable narrative slots", () =>
   assert.match(fields,/attendanceRequest/);
   assert.match(fields,/prayerWish/);
   assert.match(studio,/CopyTextInspector/);
-  assert.match(live,/\{editableCopy\.attendanceRequest\}/);
-  assert.match(live,/\{editableCopy\.prayerWish\}/);
+  assert.match(live,/text=\{editableCopy\.attendanceRequest \?\? ""\}/);
+  assert.match(live,/text=\{editableCopy\.prayerWish \?\? ""\}/);
 });
