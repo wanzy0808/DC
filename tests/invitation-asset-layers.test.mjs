@@ -202,3 +202,13 @@ test("each side grip moves only the dragged edge, not the opposite edge", () => 
   const rotated = resizeObjectFromHandle({ ...start, handle: "right", rotation: 90 }, 0, 40);
   assert.deepEqual(rotated, { x: 50, y: 52.5, width: 40, height: 20 });
 });
+
+
+test("Studio uses a centered document title without redundant saved-state subtitle", () => {
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const css = read("components/InvitationStudio/studio.css");
+  assert.match(editor, /<h1 className="dc-studio-document-title/);
+  assert.doesNotMatch(editor, /\{dirty \? copy\.unsaved : invitation \? \(invitation\.templateKey \? copy\.saved/);
+  assert.match(css, /\.dc-studio-document-title \{ width: 100%; text-align: center; \}/);
+  assert.match(css, /\.dc-studio-toolbar-actions \{ align-self: flex-end; justify-content: flex-end; \}/);
+});
