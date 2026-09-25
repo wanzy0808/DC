@@ -75,6 +75,32 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(css, /\[data-studio-section-selected="true"\]/);
 });
 
+test("every Studio section keeps an always-visible vertical action rail on its left edge", () => {
+  const wrapper = read("components/PublicInvitation/EditableSectionInstance.tsx");
+  const rail = read("components/InvitationStudio/SectionActionRail.tsx");
+  const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
+  const rsvpInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
+  const css = read("components/InvitationStudio/studio.css");
+
+  assert.match(wrapper, /const showActions = Boolean\(preview && actions\?\.onMove/);
+  assert.match(wrapper, /\{showActions && \(/);
+  assert.doesNotMatch(wrapper, /\{selected && actions\?\.onMove/);
+  assert.match(rail, /aria-orientation="vertical"/);
+  assert.match(rail, /Geser section ke atas/);
+  assert.match(rail, /Geser section ke bawah/);
+  assert.match(rail, /Sembunyikan section/);
+  assert.match(rail, /Duplikat section/);
+  assert.match(rail, /Hapus section/);
+  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: 6px;[\s\S]*?flex-direction: column/);
+  assert.match(css, /\.dc-section-instance-hidden \{[\s\S]*?max-height: 72px/);
+
+  assert.match(sectionInspector, /dc-studio-align-icons/);
+  assert.match(rsvpInspector, /dc-studio-align-icons/);
+  assert.doesNotMatch(sectionInspector, /<select[\s\S]*?Perataan/);
+  assert.match(css, /\.dc-studio-layer-select select,[\s\S]*?appearance: none/);
+  assert.match(css, /background-position:[\s\S]*?calc\(100% - 15px\)/);
+});
+
 test("functional section inspector stays visual-only and names protected functions", () => {
   const inspector = read("components/InvitationStudio/SectionInspector.tsx");
   assert.match(inspector, /rsvp: \["Judul", "Input RSVP", "Asset \/ image"\]/);
