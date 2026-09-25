@@ -91,7 +91,9 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(rail, /Sembunyikan section/);
   assert.match(rail, /Duplikat section/);
   assert.match(rail, /Hapus section/);
-  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: 6px;[\s\S]*?flex-direction: column/);
+  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: -42px;[\s\S]*?flex-direction: column/);
+  assert.match(css, /\.dc-studio-preview-surface \{[\s\S]*?overflow: visible/);
+  assert.match(css, /\.dc-section-instance-content \{ overflow: hidden; \}/);
   assert.match(css, /\.dc-section-instance-hidden \{[\s\S]*?max-height: 72px/);
 
   assert.match(sectionInspector, /dc-studio-align-icons/);
@@ -99,6 +101,21 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.doesNotMatch(sectionInspector, /<select[\s\S]*?Perataan/);
   assert.match(css, /\.dc-studio-layer-select select,[\s\S]*?appearance: none/);
   assert.match(css, /background-position:[\s\S]*?calc\(100% - 15px\)/);
+});
+
+test("section toolbar visibility shares one state with the Bagian panel", () => {
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const panels = read("components/InvitationStudio/DesignerPanels.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  assert.match(panels, /checked=\{sections\[item\.key\] !== false\}/);
+  assert.match(panels, /onChange\(item\.key, event\.target\.checked\)/);
+  assert.match(editor, /function toggleSectionInstance\(id: string\)[\s\S]*?setSection\(instance\.key, design\.sections\[instance\.key\] === false\)/);
+  assert.match(editor, /function setSection\(section: InvitationSectionKey, enabled: boolean\)[\s\S]*?sectionLayout: next/);
+  assert.match(editor, /!hasSameSection \? \{ sections: \{ \.\.\.design\.sections, \[source\.key\]: false \} \} : \{\}/);
+  assert.match(universal, /const hidden = sections\[keyName\] === false;[\s\S]*?if \(hidden && !preview\) return null/);
+  assert.match(romantic, /const hidden = sections\[key\] === false;[\s\S]*?if \(hidden && !preview\) return null/);
 });
 
 test("functional section inspector stays visual-only and names protected functions", () => {
