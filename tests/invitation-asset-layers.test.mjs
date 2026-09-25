@@ -143,8 +143,9 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(editor, /section: section\.dataset\.invitationSection as StudioObjectSection/);
   assert.match(editor, /showDesignSection\(patch\.section\)/);
   assert.match(editor, /if \(section === "envelope"\) setPreviewVersion\(/);
-  assert.match(textPanel, /onAdd\(value, selectedSection\)/);
-  assert.match(textPanel, /maxLength=\{180\}/);
+  assert.match(textPanel, /onClick=\{\(\) => onAdd\(en \? "Add your text" : "Tambahkan teks", targetSection\)\}/);
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+  assert.match(textInspector, /maxLength=\{180\}/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
   assert.match(renderer, /begin\(event, "resize", handle\)/);
   assert.match(renderer, /"top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"/);
