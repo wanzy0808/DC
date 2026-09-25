@@ -9,7 +9,7 @@ import {
   normalizeEventCategory,
 } from "@/lib/events/catalog";
 import { parseInvitationSections } from "@/lib/templates/sections";
-import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 import { weddingParentLine } from "@/lib/events/parents";
 
 export { weddingParentLine };
@@ -189,6 +189,7 @@ export default function PublicInvitation({
 
         {sections.rsvp && (
           <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
+            <h2 style={rsvpElementStyleCss(rsvpConfig, "title")} className="mb-5 font-[family-name:var(--font-cinzel)] text-2xl">{rsvpConfig.title || "Konfirmasi Kehadiran"}</h2>
             <RsvpForm
               slug={invitation.slug}
               eventCategory={invitation.eventCategory}
