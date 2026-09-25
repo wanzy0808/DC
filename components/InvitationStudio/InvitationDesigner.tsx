@@ -17,7 +17,6 @@ import {
   RotateCcw,
   PanelLeftClose,
   PanelLeftOpen,
-  Smartphone,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
@@ -73,7 +72,7 @@ export default function InvitationDesigner() {
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save", startOver: "Start Over",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
-    envelope: "Envelope", cover: "Cover", phone: "Mobile",
+    envelope: "Envelope", cover: "Cover",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
     envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
     photoFree: "Photo-free theme", retry: "Try Again",
@@ -83,7 +82,7 @@ export default function InvitationDesigner() {
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
-    envelope: "Amplop", cover: "Cover", phone: "Ponsel",
+    envelope: "Amplop", cover: "Cover",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
     envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
     photoFree: "Tema tanpa foto", retry: "Coba Lagi",
@@ -638,17 +637,7 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <div className="dc-studio-reset-history-row" role="group" aria-label={locale === "en" ? "Reset and design history" : "Ulang dari awal dan riwayat desain"}>
-            <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
-            <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
-              <Button size="icon-lg" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
-                <Undo2 className="h-4 w-4" />
-              </Button>
-              <Button size="icon-lg" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
-                <Redo2 className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
+          <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
@@ -712,7 +701,14 @@ export default function InvitationDesigner() {
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
-            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
+            <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
+              <Button size="icon-sm" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
+                <Undo2 className="h-4 w-4" />
+              </Button>
+              <Button size="icon-sm" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
+                <Redo2 className="h-4 w-4" />
+              </Button>
+            </div>
             <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
