@@ -580,6 +580,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 ### Deferred — richer animation system
 
 - [ ] Expand from section animation to **element animation**: text, photo, asset and ornament presets.
+  - [x] Fase awal: teks dekoratif, asset gambar/ornamen, dan shape layer memakai katalog 35 preset section yang sama, termasuk durasi/jeda, persistence di designKey, preview/public renderer, IntersectionObserver, dan reduced-motion. Foto slot/gallery tetap tahap berikutnya. (26 September 2026)
 - [ ] Add text choreography such as per-word/per-character stagger where it improves premium templates.
 - [ ] Add photo/gallery choreography, mask reveals and lightweight parallax.
 - [ ] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
