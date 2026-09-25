@@ -87,7 +87,7 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   assert.match(story, /Tentang Kami/);
   assert.match(story, /\{story\.trim\(\)\}/);
   assert.match(universal, /couple && sections\.identity !== false && <OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} \/>/);
-  assert.match(romantic, /sections\.identity !== false && <OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" \/>/);
+  assert.match(romantic, /sections\.identity !== false && <div style=\{\{ order: Math\.max\(0, sectionLayout\.findIndex\(\(item\) => item\.key === "identity"\)\) \+ 0\.1 \}\}><OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" \/><\/div>/);
   assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
     ourStory: "Bermula dari pertemuan sederhana.",
   });
