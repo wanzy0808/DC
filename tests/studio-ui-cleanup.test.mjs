@@ -446,3 +446,17 @@ test("Studio photo crop includes persisted aspect-ratio presets without destruct
   assert.match(photoSlots, /export type PhotoCropAspect = "template" \| "original" \| "1:1" \| "4:5" \| "3:4" \| "16:9"/);
   assert.match(photoSlots, /aspectRatio/);
 });
+
+
+test("Studio multi-select exposes align and distribute controls", () => {
+  assert.match(designer, /function alignSelectedAssetLayers\(mode:/);
+  assert.match(designer, /function distributeSelectedAssetLayers\(axis:/);
+  assert.match(designer, /alignSelectedAssetLayers\("left"\)/);
+  assert.match(designer, /alignSelectedAssetLayers\("center-x"\)/);
+  assert.match(designer, /alignSelectedAssetLayers\("right"\)/);
+  assert.match(designer, /alignSelectedAssetLayers\("top"\)/);
+  assert.match(designer, /alignSelectedAssetLayers\("center-y"\)/);
+  assert.match(designer, /alignSelectedAssetLayers\("bottom"\)/);
+  assert.match(designer, /distributeSelectedAssetLayers\("horizontal"\)/);
+  assert.match(designer, /distributeSelectedAssetLayers\("vertical"\)/);
+});
