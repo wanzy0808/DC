@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
-import type { PhotoAssignments, PhotoSlot } from "@/lib/templates/photo-slots";
+import type { PhotoAssignments, PhotoMotionMap, PhotoSlot } from "@/lib/templates/photo-slots";
 import { observeInvitationEntrances } from "@/components/PublicInvitation/entrance-animation-runtime";
 
 const slots: PhotoSlot[] = ["cover", "personOne", "personTwo", "gallery"];
@@ -16,7 +16,7 @@ export function useInvitationPhotoAnimations(
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const motion = JSON.parse(motionKey) as PhotoAssignments["motion"];
+    const motion = JSON.parse(motionKey) as PhotoMotionMap;
 
     const targets = slots.flatMap((slot) => {
       const config = motion[slot];
