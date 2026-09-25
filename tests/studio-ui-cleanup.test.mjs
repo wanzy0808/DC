@@ -6,6 +6,7 @@ const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf
 const studio = read("components/InvitationStudio/InvitationEditorPage.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
 const layerOrder = read("components/InvitationStudio/designer-layer-order.ts");
+const persistence = read("components/InvitationStudio/designer-persistence.ts");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
 const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
@@ -519,5 +520,19 @@ test("Studio keeps layer ordering rules in a pure helper module", () => {
   assert.match(layerOrder, /position === "backward"/);
   assert.match(layerOrder, /position === "front"/);
   assert.match(layerOrder, /next\.unshift\(layer\)/);
+});
+
+test("Studio keeps invitation and template persistence outside the canvas component", () => {
+  assert.match(designer, /from "@\/components\/InvitationStudio\/designer-persistence"/);
+  assert.match(designer, /await loadStudioInvitation\(invitationId, legacyType\)/);
+  assert.match(designer, /await saveStudioInvitation\(/);
+  assert.match(designer, /await createStudioTemplate\(/);
+  assert.match(designer, /makeStudioServerRevision\(savedInvitation\)/);
+  assert.match(persistence, /export async function loadStudioInvitation\(/);
+  assert.match(persistence, /fetcher\(\`\/api\/invitations\$\{query\}\`/);
+  assert.match(persistence, /export async function saveStudioInvitation\(/);
+  assert.match(persistence, /fetcher\("\/api\/invitations"/);
+  assert.match(persistence, /export async function createStudioTemplate\(/);
+  assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
 });
 
