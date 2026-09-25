@@ -1,6 +1,5 @@
 import type { CSSProperties } from "react";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
-import { isInvitationSectionAnimation, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
 
 const visualSectionKeys = [
   "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
@@ -8,6 +7,9 @@ const visualSectionKeys = [
 ] as const satisfies readonly InvitationSectionKey[];
 
 export type InvitationSectionAlign = "left" | "center" | "right";
+const invitationSectionAnimationValues = ["none","fade","rise","blur-in","cinematic","reveal-up","veil","focus-rise","soft-scale","slide-left","slide-right","reveal-left","drift-up","wipe-up","wipe-down","glide-left","glide-right","paper-cut","zoom","zoom-out","flip-up","tilt-in","perspective-rise","drop-in","rotate-in","depth-in","float-in","soft-bounce","swing-in","pop","elastic-rise","gentle-wobble","silk-reveal","luxe-sweep","spotlight","curtain"] as const;
+export type InvitationSectionAnimation = (typeof invitationSectionAnimationValues)[number];
+const animationValues = new Set<InvitationSectionAnimation>(invitationSectionAnimationValues);
 
 export type InvitationSectionStyle = {
   paddingY?: number;
@@ -47,7 +49,7 @@ export function sanitizeInvitationSectionStyles(value: unknown): InvitationSecti
     if (opacity !== undefined && opacity !== 1) style.opacity = opacity;
     if (alignValues.has(source.align as InvitationSectionAlign)) style.align = source.align as InvitationSectionAlign;
     if (background) style.background = background;
-    if (isInvitationSectionAnimation(source.animation)) style.animation = source.animation;
+    if (animationValues.has(source.animation as InvitationSectionAnimation)) style.animation = source.animation as InvitationSectionAnimation;
     if (animationDuration !== undefined) style.animationDuration = animationDuration;
     if (animationDelay !== undefined) style.animationDelay = animationDelay;
     if (Object.keys(style).length) output[key as InvitationSectionKey] = style;
