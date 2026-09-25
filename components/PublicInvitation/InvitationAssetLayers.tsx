@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
 import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
+import { invitationFontFamily } from "@/lib/templates/presentation";
 import { resizeObjectFromHandle, type ObjectResizeHandle } from "@/lib/templates/object-resize";
 
 /** Overlay geometry is relative to its owning invitation section, not the Studio viewport. */
@@ -157,14 +159,28 @@ function EditableLayer({
           onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
           onKeyDown={keys}>
-          {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
-            fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
-            fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
+          {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
+            fontFamily: layer.fontFamily
+              ? invitationFontFamily(layer.fontFamily)
+              : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+            fontSize: layer.fontSize ?? 24,
+            fontWeight: layer.fontWeight ?? 400,
+            textAlign: layer.textAlign ?? "center",
+            letterSpacing: layer.letterSpacing ?? 0,
+            lineHeight: layer.lineHeight ?? 1.2,
+            color: layer.color ?? "#C07A84",
           }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
         </button>
-      ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
-        fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
-        fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
+      ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words" style={{
+        fontFamily: layer.fontFamily
+          ? invitationFontFamily(layer.fontFamily)
+          : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+        fontSize: layer.fontSize ?? 24,
+        fontWeight: layer.fontWeight ?? 400,
+        textAlign: layer.textAlign ?? "center",
+        letterSpacing: layer.letterSpacing ?? 0,
+        lineHeight: layer.lineHeight ?? 1.2,
+        color: layer.color ?? "#C07A84",
       }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
@@ -198,13 +214,17 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
   }
 
   if (!visible.length) return null;
+  const textFamilies = visible.flatMap((layer) => layer.kind === "text" && layer.fontFamily ? [layer.fontFamily] : []);
   return (
-    <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
+    <>
+      {textFamilies.length > 0 && <InvitationFonts families={textFamilies} />}
+      <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {visible.map((layer) =>
         <EditableLayer key={layer.id} layer={layer} section={section} selected={selectedId === layer.id}
           editable={editable} interactionEnabled={!selectedId || selectedId === layer.id}
           onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} />,
       )}
-    </div>
+      </div>
+    </>
   );
 }
