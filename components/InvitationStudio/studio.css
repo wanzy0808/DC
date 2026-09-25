@@ -1,7 +1,11 @@
 /* Studio owns its shell only; invitation artwork keeps each template's styles. */
 .dc-invitation-editor { height: 100dvh; padding: 12px; background: var(--primary); overflow: hidden; }
 .dc-studio-frame { display: flex; flex-direction: column; height: 100%; min-width: 0; overflow: hidden; border: 1px solid color-mix(in srgb, white 35%, transparent); border-radius: 18px; background: var(--background); }
-.dc-studio-page-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+.dc-studio-page-header { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr); align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+.dc-studio-header-brand { grid-column: 1; }
+.dc-studio-page-header > .dc-studio-document-title { grid-column: 2; min-width: 0; margin: 0; }
+.dc-studio-header-actions { grid-column: 3; justify-self: end; }
+.dc-studio-page-header > [role="alert"] { grid-column: 1 / -1; }
 /* Same outline/hover language as the landing-page navbar, in both themes. */
 .dc-studio-page-header .dc-theme-toggle,
 .dc-studio-page-header .dc-language-toggle button,
@@ -24,7 +28,7 @@
   background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
 }
 .dc-invitation-studio-shell { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--background); }
-.dc-studio-toolbar { display: flex; flex-direction: column; align-items: stretch; gap: 8px; padding: 10px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+.dc-studio-toolbar { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding: 8px 20px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
 .dc-studio-document-title { width: 100%; text-align: center; }
 .dc-studio-toolbar-actions { align-self: flex-end; justify-content: flex-end; }
 .dc-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-height: 0; }
@@ -72,8 +76,11 @@
 @media (max-width: 767px) {
   .dc-invitation-editor { padding: 6px; }
   .dc-studio-frame { border-radius: 14px; }
-  .dc-studio-page-header { padding: 8px 12px; gap: 8px; }
-  .dc-studio-page-header > [role=status] { order: 3; width: 100%; font-size: 12px; }
+  .dc-studio-page-header { grid-template-columns: minmax(0, 1fr) auto; padding: 8px 12px; gap: 8px; }
+  .dc-studio-header-brand { grid-column: 1; grid-row: 1; }
+  .dc-studio-header-actions { grid-column: 2; grid-row: 1; }
+  .dc-studio-page-header > .dc-studio-document-title { grid-column: 1 / -1; grid-row: 2; }
+  .dc-studio-page-header > [role="alert"] { grid-column: 1 / -1; }
   .dc-studio-page-header .dc-theme-toggle, .dc-studio-page-header .dc-studio-back { height: 36px; width: 36px; }
   .dc-studio-page-header .dc-language-toggle { height: 36px; gap: 3px; }
   .dc-studio-page-header .dc-language-toggle button { height: 32px; min-width: 31px; padding-inline: 5px; }
