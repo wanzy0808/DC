@@ -15,6 +15,7 @@ import { parseEditableCopy, withEditableCopy } from "@/lib/templates/editable-co
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import { parseAssetLayers, withAssetLayers } from "@/lib/templates/asset-layers";
 import { parseInvitationSectionStyles, withInvitationSectionStyles } from "@/lib/templates/section-styles";
+import { parseInvitationRsvpConfig, withInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignState,
@@ -78,7 +79,7 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withInvitationSectionStyles(withAssetLayers(withEditableCopy(
+  return withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopy(
     withPhotoAssignments(
       withInvitationSections(
         makeDesignKey(state.template, state.palette, state.font, state.decor),
@@ -87,7 +88,7 @@ export function makeInvitationDesignStateKey(state: InvitationDesignState) {
       state.photos,
     ),
     state.copy,
-  ), state.layers), state.sectionStyles);
+  ), state.layers), state.sectionStyles), state.rsvpConfig);
 }
 
 export function invitationDesignStateFromKey(
@@ -109,5 +110,6 @@ export function invitationDesignStateFromKey(
     copy: parseEditableCopy(key),
     layers: parseAssetLayers(key),
     sectionStyles: parseInvitationSectionStyles(key),
+    rsvpConfig: parseInvitationRsvpConfig(key),
   };
 }
