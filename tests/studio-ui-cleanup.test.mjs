@@ -482,3 +482,17 @@ test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", ()
   assert.match(designer, /onClick=\{fitCanvasZoom\}/);
   assert.match(designer, />Fit<\/button>/);
 });
+
+
+test("Studio canvas supports Space-drag panning at zoomed sizes", () => {
+  const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(designer, /function beginCanvasPan\(/);
+  assert.match(designer, /function moveCanvasPan\(/);
+  assert.match(designer, /function endCanvasPan\(/);
+  assert.match(designer, /data-space-pan=\{canvasPanReady \? "true" : undefined\}/);
+  assert.match(designer, /event\.code !== "Space"/);
+  assert.match(designer, /onPointerMove=\{moveCanvasPan\}/);
+  assert.match(assetLayers, /data-space-pan="true"/);
+  assert.match(styles, /\.dc-studio-canvas-scroll \{[^}]*overflow: auto;/);
+  assert.match(styles, /data-panning="true"/);
+});
