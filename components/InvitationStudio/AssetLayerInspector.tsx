@@ -84,7 +84,7 @@ export default function AssetLayerInspector({
   return (
     <aside className="dc-studio-layer-side" aria-label={en ? "Asset properties" : "Properti aset"}>
       <div className="dc-studio-layer-side-head">
-        <strong>{en ? "Asset" : "Asset"} {selectedAssetIndex + 1}/{MAX_ASSET_LAYERS}</strong>
+        <strong>{selectedAssetLayer.kind === "shape" ? (en ? "Shape" : "Bentuk") : (en ? "Asset" : "Asset")} {selectedAssetIndex + 1}/{MAX_ASSET_LAYERS}</strong>
         <button type="button" onClick={onDeselect} aria-label={en ? "Close asset properties" : "Tutup properti aset"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
@@ -157,6 +157,81 @@ export default function AssetLayerInspector({
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" aria-pressed={Boolean(selectedAssetLayer.flipY)} onClick={() => onUpdate(selectedAssetLayer.id, { flipY: selectedAssetLayer.flipY ? undefined : true })}>{en ? "Vertical" : "Vertikal"}</button>
         </div>
       </div>
+
+      {selectedAssetLayer.kind === "shape" && (
+        <div className="space-y-3 border-t border-border pt-3">
+          <label className="dc-studio-layer-select">
+            <span>{en ? "Shape" : "Bentuk"}</span>
+            <select
+              value={selectedAssetLayer.shape ?? "rectangle"}
+              onChange={(event) => {
+                const shape = event.target.value as "rectangle" | "circle" | "line";
+                onUpdate(selectedAssetLayer.id, {
+                  shape,
+                  radius: shape === "circle" ? 100 : selectedAssetLayer.radius ?? 0,
+                  strokeWidth: shape === "line" ? Math.max(1, selectedAssetLayer.strokeWidth ?? 2) : selectedAssetLayer.strokeWidth ?? 0,
+                });
+              }}
+            >
+              <option value="rectangle">{en ? "Rectangle" : "Kotak"}</option>
+              <option value="circle">{en ? "Circle" : "Lingkaran"}</option>
+              <option value="line">{en ? "Line" : "Garis"}</option>
+            </select>
+          </label>
+
+          {selectedAssetLayer.shape !== "line" ? (
+            <div className="dc-studio-layer-grid">
+              <label className="dc-studio-layer-field">
+                <span>{en ? "Fill" : "Isi"}</span>
+                <input
+                  type="color"
+                  value={selectedAssetLayer.fill ?? "#C07A84"}
+                  onChange={(event) => onUpdate(selectedAssetLayer.id, { fill: event.target.value })}
+                  className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+                />
+              </label>
+              <label className="dc-studio-layer-field">
+                <span>{en ? "Border" : "Garis tepi"}</span>
+                <input
+                  type="color"
+                  value={selectedAssetLayer.stroke ?? "#C07A84"}
+                  onChange={(event) => onUpdate(selectedAssetLayer.id, { stroke: event.target.value })}
+                  className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+                />
+              </label>
+            </div>
+          ) : (
+            <label className="dc-studio-layer-field">
+              <span>{en ? "Line color" : "Warna garis"}</span>
+              <input
+                type="color"
+                value={selectedAssetLayer.stroke ?? "#C07A84"}
+                onChange={(event) => onUpdate(selectedAssetLayer.id, { stroke: event.target.value })}
+                className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+              />
+            </label>
+          )}
+
+          {numberInput(
+            selectedAssetLayer.shape === "line" ? (en ? "Thickness" : "Ketebalan") : (en ? "Border width" : "Tebal garis"),
+            selectedAssetLayer.strokeWidth ?? (selectedAssetLayer.shape === "line" ? 2 : 0),
+            0,
+            12,
+            0.5,
+            "px",
+            (strokeWidth) => onUpdate(selectedAssetLayer.id, { strokeWidth }),
+          )}
+          {selectedAssetLayer.shape === "rectangle" && numberInput(
+            en ? "Corner radius" : "Radius sudut",
+            selectedAssetLayer.radius ?? 0,
+            0,
+            100,
+            1,
+            "px",
+            (radius) => onUpdate(selectedAssetLayer.id, { radius }),
+          )}
+        </div>
+      )}
 
       {numberInput(en ? "Size" : "Size", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
       {numberInput(en ? "Rotation" : "Rotasi", selectedAssetLayer.rotation ?? 0, -180, 180, 1, "°", (rotation) => onUpdate(selectedAssetLayer.id, { rotation }))}
