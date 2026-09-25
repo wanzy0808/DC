@@ -15,8 +15,8 @@ import {
   Type,
   Undo2,
   RotateCcw,
-  PanelLeftClose,
-  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
   Smartphone,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
@@ -578,61 +578,6 @@ export default function InvitationDesigner() {
         <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>{copy.invitation}</button>
       </div>
       <div className="dc-studio-workspace">
-        <nav className="dc-studio-rail" aria-label={copy.tools}>
-          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
-          <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
-          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
-          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
-          <div className="dc-studio-rail-divider" />
-          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
-          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
-          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
-          <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
-        </nav>
-
-        <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
-          <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
-          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
-          {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
-          {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
-          {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
-          {panel === "font" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Font Romantic Rose mengikuti desain asli tema.</p>}
-          {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
-          {panel === "content" && (
-            <ContentPanel
-              templateKey={design.template}
-              eventDescription={invitation?.description}
-              isWedding={getEventCategory(identity.category).nameMode === "couple"}
-              copy={design.copy}
-              onChange={setNarrativeCopy}
-            />
-          )}
-          {panel === "decor" && template && !template.usesPhotos ? (
-            <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
-              <p className="text-sm leading-7 text-muted-foreground">Desain ini menggunakan tipografi dan ilustrasi, tanpa slot foto. Koleksi foto acara tetap tersimpan jika nanti kamu mengganti tema dengan foto.</p>
-              <p className="text-xs text-primary">Pilih tema bertanda “Dengan foto” untuk mengatur cover, foto individu, dan galeri.</p>
-            </div>
-          ) : panel === "decor" && (
-            <PhotoPanel
-              photos={invitation?.assets ?? []}
-              slots={photoSlots}
-              assignments={design.photos}
-              activeSlot={activePhotoSlot}
-              onActiveSlotChange={setActivePhotoSlot}
-              onSetPhoto={setPhoto}
-              onToggleGallery={toggleGalleryPhoto}
-              onSetFocus={setPhotoFocus}
-              onUpload={(file) => uploadAsset(file, "IMAGE")}
-            />
-          )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={focusDesignObject} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
-          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
-          </fieldset>
-        </aside>
-
         <div className="dc-studio-canvas">
           <div className="dc-studio-canvas-toolbar">
             <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
@@ -686,6 +631,11 @@ export default function InvitationDesigner() {
             />
             </div>
           </div>
+          </div>
+          </div>
+        </div>
+
+        <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
           <AssetLayerInspector
             locale={locale}
             selectedAssetLayer={selectedAssetLayer}
@@ -700,9 +650,61 @@ export default function InvitationDesigner() {
             onRemove={removeAssetLayer}
             onPaste={pasteAssetLayer}
           />
-          </div>
-          </div>
-        </div>
+
+          <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
+          {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
+          {panel === "sections" && <SectionsPanel sections={design.sections} onChange={setSection} />}
+          {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
+          {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
+          {panel === "font" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Font Romantic Rose mengikuti desain asli tema.</p>}
+          {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
+          {panel === "content" && (
+            <ContentPanel
+              templateKey={design.template}
+              eventDescription={invitation?.description}
+              isWedding={getEventCategory(identity.category).nameMode === "couple"}
+              copy={design.copy}
+              onChange={setNarrativeCopy}
+            />
+          )}
+          {panel === "decor" && template && !template.usesPhotos ? (
+            <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
+              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
+              <p className="text-sm leading-7 text-muted-foreground">Desain ini menggunakan tipografi dan ilustrasi, tanpa slot foto. Koleksi foto acara tetap tersimpan jika nanti kamu mengganti tema dengan foto.</p>
+              <p className="text-xs text-primary">Pilih tema bertanda “Dengan foto” untuk mengatur cover, foto individu, dan galeri.</p>
+            </div>
+          ) : panel === "decor" && (
+            <PhotoPanel
+              photos={invitation?.assets ?? []}
+              slots={photoSlots}
+              assignments={design.photos}
+              activeSlot={activePhotoSlot}
+              onActiveSlotChange={setActivePhotoSlot}
+              onSetPhoto={setPhoto}
+              onToggleGallery={toggleGalleryPhoto}
+              onSetFocus={setPhotoFocus}
+              onUpload={(file) => uploadAsset(file, "IMAGE")}
+            />
+          )}
+          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} selectedId={selectedLayerId} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onSelect={focusDesignObject} onUpdate={updateAssetLayer} onRemove={removeAssetLayer} onReorder={reorderAssetLayer} />}
+          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
+          </fieldset>
+        </aside>
+
+
+        <nav className="dc-studio-rail" aria-label={copy.tools}>
+          <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
+          <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
+          <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
+          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
+          <div className="dc-studio-rail-divider" />
+          <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
+          <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
+          <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
+          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
+          <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />
+        </nav>
       </div>
 
       <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>
