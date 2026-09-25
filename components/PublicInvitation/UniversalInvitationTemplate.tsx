@@ -25,7 +25,7 @@ import { weddingParentLine } from "@/lib/events/parents";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
-import { photoCropStyle, resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -33,6 +33,7 @@ import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templat
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
+import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -133,6 +134,9 @@ export default function UniversalInvitationTemplate({
   preview = false,
   sections: sectionOverride,
   photoAssignments,
+  activeCropSlot,
+  onCropPhoto,
+  onFinishCrop,
   coverUrl,
   onEditPhoto,
   onEnvelopeOpened,
@@ -155,6 +159,9 @@ export default function UniversalInvitationTemplate({
   preview?: boolean;
   sections?: InvitationSections;
   photoAssignments?: PhotoAssignments;
+  activeCropSlot?: CroppablePhotoSlot | null;
+  onCropPhoto?: (slot: CroppablePhotoSlot, crop: PhotoCrop) => void;
+  onFinishCrop?: () => void;
   coverUrl?: string;
   onEditPhoto?: (slot: PhotoSlot) => void;
   /** Optional Studio-only callback; fires after the envelope has finished opening. */
@@ -309,7 +316,7 @@ export default function UniversalInvitationTemplate({
   };
 
   const changePhoto = (slot: PhotoSlot, label: string) =>
-    preview && onEditPhoto ? (
+    preview && onEditPhoto && activeCropSlot !== slot ? (
       <button
         type="button"
         className="absolute inset-0 z-10 flex items-end justify-center bg-transparent pb-3 text-xs font-medium text-transparent transition hover:bg-black/25 hover:text-white focus-visible:bg-black/25 focus-visible:text-white focus-visible:outline-2 focus-visible:outline-[var(--inv-accent)]"
@@ -318,6 +325,15 @@ export default function UniversalInvitationTemplate({
       >
         Atur foto
       </button>
+    ) : null;
+
+  const cropOverlay = (slot: CroppablePhotoSlot) =>
+    preview && activeCropSlot === slot && onCropPhoto && onFinishCrop ? (
+      <StudioPhotoCropOverlay
+        crop={resolvePhotoCrop(media.assignment, slot)}
+        onChange={(crop) => onCropPhoto(slot, crop)}
+        onDone={onFinishCrop}
+      />
     ) : null;
 
   const objectOverlay = (target: StudioObjectSection) => <InvitationAssetLayers layers={illustrationLayers} section={target}
@@ -409,7 +425,10 @@ export default function UniversalInvitationTemplate({
           date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
           cover={usesPhotos ? media.cover : undefined}
           focus={media.assignment.focus.cover}
-          crop={media.assignment.crop?.cover ?? null}
+          crop={resolvePhotoCrop(media.assignment, "cover")}
+          cropEditing={preview && activeCropSlot === "cover"}
+          onCropChange={onCropPhoto ? (crop) => onCropPhoto("cover", crop) : undefined}
+          onFinishCrop={onFinishCrop}
           stage="envelope"
           onOpen={handleOpen}
           preview={preview}
@@ -425,7 +444,10 @@ export default function UniversalInvitationTemplate({
               date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
               cover={usesPhotos ? media.cover : undefined}
               focus={media.assignment.focus.cover}
-          crop={media.assignment.crop?.cover ?? null}
+          crop={resolvePhotoCrop(media.assignment, "cover")}
+          cropEditing={preview && activeCropSlot === "cover"}
+          onCropChange={onCropPhoto ? (crop) => onCropPhoto("cover", crop) : undefined}
+          onFinishCrop={onFinishCrop}
               stage="cover"
               onOpen={handleOpen}
               onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
@@ -450,9 +472,10 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : key === "zen-atelier" ? (
             <div>
-              {media.cover && <div className="zen-identity-photo">
+              {media.cover && <div className="zen-identity-photo relative">
                 <img src={media.cover} alt={`Foto ${names || eventTitle}`} loading="lazy" style={photoCropStyle(media.assignment, "cover")} />
                 {changePhoto("cover", "pasangan")}
+                {cropOverlay("cover")}
               </div>}
               {!media.cover && preview && onEditPhoto && <button className="zen-action mb-6" type="button" onClick={() => onEditPhoto("cover")}>Pilih Foto Pasangan</button>}
               <p className="zen-couple-name">{couple ? <>{displayTitleCase(invitation.brideName)}<em>&amp;</em>{displayTitleCase(invitation.groomName)}</> : names || eventTitle}</p>
@@ -468,6 +491,7 @@ export default function UniversalInvitationTemplate({
                       {usesPhotos && <div className={`relative mx-auto overflow-hidden ${frame}`}>
                         {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={photoCropStyle(media.assignment, slot)} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
+                        {cropOverlay(slot)}
                       </div>}
                       {!usesPhotos && (key === "zen-atelier"
                         ? <span aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border-b border-[var(--inv-accent)] text-xl text-[var(--inv-accent)]">{slot === "personOne" ? "花" : "和"}</span>
