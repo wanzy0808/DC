@@ -8,6 +8,7 @@ import {
   parseInvitationRsvpConfig,
   sanitizeInvitationRsvpConfig,
   sanitizeRsvpAnswers,
+  rsvpElementStyleCss,
   withInvitationRsvpConfig,
 } from "../lib/templates/rsvp-config.ts";
 
@@ -19,6 +20,7 @@ test("legacy RSVP stays unchanged until event options or custom fields are enabl
     reception: false,
     attendAll: false,
     customFields: [],
+    elementStyles: {},
   });
   const base = "romantic-rose::rose::cinzelFauna";
   assert.equal(withInvitationRsvpConfig(base, defaultInvitationRsvpConfig), base);
@@ -35,6 +37,11 @@ test("RSVP config round-trips event options and bounded custom fields", () => {
       { id: "meal", label: "Pilihan makanan", required: true },
       { id: "note", label: "Catatan", required: false },
     ],
+    title: "RSVP Kehadiran",
+    elementStyles: {
+      title: { fontSize: 30, align: "center" },
+      name: { width: 80, opacity: 0.8, background: "#ffffff" },
+    },
   };
   const key = withInvitationRsvpConfig(base, config);
   assert.deepEqual(parseInvitationRsvpConfig(key), config);
@@ -54,9 +61,32 @@ test("RSVP answers and event choices accept only configured values", () => {
     reception: false,
     attendAll: false,
     customFields: [{ id: "meal", label: "Makanan", required: true }],
+    elementStyles: {},
   };
   assert.deepEqual(normalizeRsvpEvents(["ceremony", "reception", "bad", "ceremony"], config), ["ceremony"]);
   assert.deepEqual(sanitizeRsvpAnswers({ meal: " Vegetarian ", unknown: "no" }, config), { meal: "Vegetarian" });
+});
+
+test("RSVP title and controls support independent persisted styling", () => {
+  const config = sanitizeInvitationRsvpConfig({
+    title: "Konfirmasi Tamu",
+    elementStyles: {
+      title: { fontSize: 34, align: "left", color: "#112233" },
+      name: { width: 74, opacity: 0.7, background: "#ffffff", borderColor: "#c07a84" },
+      bad: { width: 999, opacity: 0, background: "red" },
+    },
+  });
+  assert.equal(config.title, "Konfirmasi Tamu");
+  assert.deepEqual(config.elementStyles.title, { fontSize: 34, color: "#112233", align: "left" });
+  assert.deepEqual(config.elementStyles.name, { width: 74, opacity: 0.7, background: "#ffffff", borderColor: "#c07a84" });
+  assert.deepEqual(config.elementStyles.bad, { width: 100, opacity: 0.2 });
+  assert.deepEqual(rsvpElementStyleCss(config, "name"), {
+    width: "74%",
+    maxWidth: "100%",
+    opacity: 0.7,
+    backgroundColor: "#ffffff",
+    borderColor: "#c07a84",
+  });
 });
 
 test("Studio exposes Attend All and Add Column and the live RSVP renders them", () => {
@@ -73,6 +103,17 @@ test("Studio exposes Attend All and Add Column and the live RSVP renders them", 
   assert.match(panels, /Resepsi/);
   assert.match(panels, /Hadir Semua Acara/);
   assert.match(panels, /rsvpConfig\.customFields\.map/);
+  assert.match(panels, /data-studio-rsvp-element="name"/);
+  assert.match(panels, /data-studio-rsvp-element="phone"/);
+  assert.match(panels, /data-studio-rsvp-element="status"/);
+  assert.match(panels, /data-studio-rsvp-element="companions"/);
+  assert.match(panels, /data-studio-rsvp-element="submit"/);
+  assert.doesNotMatch(panels, /appearance !== "zen" && <h2/);
+  const componentInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
+  assert.match(designer, /selectedRsvpElementKey/);
+  assert.match(designer, /target\.closest<HTMLElement>\("\[data-studio-rsvp-element\]"\)/);
+  assert.match(designer, /<RsvpElementInspector/);
+  assert.match(componentInspector, /Reset komponen/);
 });
 
 test("RSVP API persists event selection and custom answers on the same Guest record", () => {
