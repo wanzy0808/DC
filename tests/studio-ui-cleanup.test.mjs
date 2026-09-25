@@ -5,6 +5,7 @@ import test from "node:test";
 const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
 const studio = read("components/InvitationStudio/InvitationEditorPage.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+const layerList = read("components/InvitationStudio/StudioLayerList.tsx");
 const layerOrder = read("components/InvitationStudio/designer-layer-order.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 const layerAnimationControls = read("components/InvitationStudio/LayerAnimationControls.tsx");
@@ -294,10 +295,11 @@ test("selected assets use a compact left list and right-side properties panel", 
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
   assert.match(designer, /className="dc-studio-canvas-layout"/);
-  assert.match(designer, /className="dc-studio-layer-list"/);
-  assert.match(designer, /const automaticLayerName = layer\.kind === "text"/);
-  assert.match(designer, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
-  assert.match(designer, /dc-studio-layer-select-button/);
+  assert.match(designer, /<StudioLayerList/);
+  assert.match(layerList, /className="dc-studio-layer-list"/);
+  assert.match(layerList, /const automaticLayerName = layer\.kind === "text"/);
+  assert.match(layerList, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
+  assert.match(layerList, /dc-studio-layer-select-button/);
   assert.match(designer, /onPosition=\{positionAssetLayer\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
@@ -317,9 +319,9 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.match(layerInspector, /<LayerStackIcon action="backward" \/>/);
   assert.match(layerInspector, /<LayerStackIcon action="back" \/>/);
   assert.doesNotMatch(layerInspector, /ChevronDown|ChevronUp|ChevronsDown|ChevronsUp/);
-  assert.match(designer, /position: "front" \| "forward" \| "backward" \| "back"/);
-  assert.match(designer, /position === "forward"/);
-  assert.match(designer, /position === "backward"/);
+  assert.match(designer, /position: AssetLayerPosition/);
+  assert.match(layerOrder, /position === "forward"/);
+  assert.match(layerOrder, /position === "backward"/);
   assert.match(styles, /\.dc-studio-layer-order \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.doesNotMatch(assetPanel, /selectedId|onReorder|onRemove|selected\.opacity/);
@@ -364,8 +366,8 @@ test("Studio layers can be locked and hidden without removing them from the desi
   assert.match(assetInspector, /Sembunyikan layer|Hide layer/);
   assert.match(textInspector, /Terkunci/);
   assert.match(textInspector, /Tersembunyi/);
-  assert.match(designer, /dc-studio-layer-quick/);
-  assert.match(designer, /layerName/);
+  assert.match(layerList, /dc-studio-layer-quick/);
+  assert.match(layerList, /layerName/);
 });
 
 
@@ -445,9 +447,9 @@ test("Studio supports shift multi-select and persistent group controls", () => {
   assert.match(designer, /selectedLayerIds/);
   assert.match(designer, /function groupSelectedAssetLayers\(\)/);
   assert.match(designer, /function ungroupSelectedAssetLayers\(\)/);
-  assert.match(designer, /event\.shiftKey/);
+  assert.match(layerList, /event\.shiftKey/);
   assert.match(designer, /selectedAssetLayerIds=\{selectedLayerIds\}/);
-  assert.match(designer, /dc-studio-layer-group-actions/);
+  assert.match(layerList, /dc-studio-layer-group-actions/);
   assert.match(assetRenderer, /selectedIds\?: string\[\]/);
   assert.match(assetRenderer, /onSelect\?: \(id: string, additive\?: boolean\)/);
   assert.match(preview, /selectedAssetLayerIds\?: string\[\]/);
@@ -479,14 +481,14 @@ test("Studio photo crop includes persisted aspect-ratio presets without destruct
 test("Studio multi-select exposes align and distribute controls", () => {
   assert.match(designer, /function alignSelectedAssetLayers\(mode:/);
   assert.match(designer, /function distributeSelectedAssetLayers\(axis:/);
-  assert.match(designer, /alignSelectedAssetLayers\("left"\)/);
-  assert.match(designer, /alignSelectedAssetLayers\("center-x"\)/);
-  assert.match(designer, /alignSelectedAssetLayers\("right"\)/);
-  assert.match(designer, /alignSelectedAssetLayers\("top"\)/);
-  assert.match(designer, /alignSelectedAssetLayers\("center-y"\)/);
-  assert.match(designer, /alignSelectedAssetLayers\("bottom"\)/);
-  assert.match(designer, /distributeSelectedAssetLayers\("horizontal"\)/);
-  assert.match(designer, /distributeSelectedAssetLayers\("vertical"\)/);
+  assert.match(layerList, /onAlign\("left"\)/);
+  assert.match(layerList, /onAlign\("center-x"\)/);
+  assert.match(layerList, /onAlign\("right"\)/);
+  assert.match(layerList, /onAlign\("top"\)/);
+  assert.match(layerList, /onAlign\("center-y"\)/);
+  assert.match(layerList, /onAlign\("bottom"\)/);
+  assert.match(layerList, /onDistribute\("horizontal"\)/);
+  assert.match(layerList, /onDistribute\("vertical"\)/);
 });
 
 
@@ -530,10 +532,10 @@ test("Studio canvas supports Space-drag panning at zoomed sizes", () => {
 
 test("Studio layer list supports direct drag reordering while locked layers stay fixed", () => {
   assert.match(designer, /function reorderAssetLayer\(sourceId: string, targetId: string\)/);
-  assert.match(designer, /draggable=\{!layer\.locked\}/);
-  assert.match(designer, /application\/x-dc-layer/);
-  assert.match(designer, /reorderAssetLayer\(sourceId, layer\.id\)/);
-  assert.match(designer, /data-layer-drag-over/);
+  assert.match(layerList, /draggable=\{!layer\.locked\}/);
+  assert.match(layerList, /application\/x-dc-layer/);
+  assert.match(layerList, /onReorder\(sourceId, layer\.id\)/);
+  assert.match(layerList, /data-layer-drag-over/);
   assert.match(styles, /data-layer-drag-over="true"/);
 });
 
