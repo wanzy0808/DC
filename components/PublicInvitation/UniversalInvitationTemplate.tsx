@@ -32,6 +32,7 @@ import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
+import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -194,6 +195,7 @@ export default function UniversalInvitationTemplate({
   const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  useInvitationSectionAnimations(rootRef, sectionStyles);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
@@ -274,9 +276,13 @@ export default function UniversalInvitationTemplate({
         else if (!entry.isIntersecting) delete node.dataset.prVisible;
       }
     }, { threshold: 0.14 });
-    targets.forEach((node) => observer.observe(node));
+    targets.forEach((node) => {
+      const sectionKey = node.dataset.invitationSection as InvitationSectionKey | undefined;
+      if (sectionKey && sectionStyles[sectionKey]?.animation !== undefined) return;
+      observer.observe(node);
+    });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope]);
+  }, [key, opened, sections.envelope, sectionStyles]);
 
   useEffect(() => {
     if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
@@ -284,9 +290,14 @@ export default function UniversalInvitationTemplate({
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => entry.target.classList.toggle("zen-reveal", entry.isIntersecting));
     }, { threshold: .12 });
-    rootRef.current?.querySelectorAll(".zen-section h2, .zen-couple-name, .zen-gallery-grid button, .zen-quote").forEach((node) => observer.observe(node));
+    rootRef.current?.querySelectorAll<HTMLElement>(".zen-section h2, .zen-couple-name, .zen-gallery-grid button, .zen-quote").forEach((node) => {
+      const sectionNode = node.closest<HTMLElement>("[data-invitation-section]");
+      const sectionKey = sectionNode?.dataset.invitationSection as InvitationSectionKey | undefined;
+      if (sectionKey && sectionStyles[sectionKey]?.animation !== undefined) return;
+      observer.observe(node);
+    });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope, media.gallery.length]);
+  }, [key, opened, sections.envelope, media.gallery.length, sectionStyles]);
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
     if (key === "zen-atelier" || key === "pencil-reverie") {
