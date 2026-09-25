@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 import { hashInvitationPassword } from "@/lib/invitations/password";
 import { parsePersonalGuestFields } from "@/lib/guests/personal-profile";
 import { findGuestsByContact } from "@/lib/guests/identity";
@@ -54,7 +54,7 @@ export async function GET(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json(
         { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
         { status: 402 },
@@ -98,7 +98,7 @@ export async function POST(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json(
         { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
         { status: 402 },
@@ -204,7 +204,7 @@ export async function PATCH(request: Request) {
     if (!invitation) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
-    if (!hasPaidDigitalInvitation(invitation.payment)) {
+    if (!(await hasAccountDigitalInvitation(user.id, invitation.payment))) {
       return NextResponse.json(
         { error: "Personal Invitation membutuhkan Undangan Digital aktif untuk acara ini." },
         { status: 402 },
