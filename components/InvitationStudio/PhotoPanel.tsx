@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Check, ImagePlus, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
-import type { PhotoAssignments, PhotoFocus, PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, type PhotoAssignments, type PhotoCrop, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
 
 const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
   cover: { title: "Main Cover", description: "Main invitation photo." },
@@ -30,6 +30,8 @@ export default function PhotoPanel({
   onSetPhoto,
   onToggleGallery,
   onSetFocus,
+  onSetCrop,
+  onResetCrop,
   onUpload,
 }: {
   photos: InvitationDesignerInvitation["assets"];
@@ -40,6 +42,8 @@ export default function PhotoPanel({
   onSetPhoto: (slot: "cover" | "personOne" | "personTwo", id: string | null) => void;
   onToggleGallery: (id: string) => void;
   onSetFocus: (slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) => void;
+  onSetCrop: (slot: "cover" | "personOne" | "personTwo", crop: PhotoCrop) => void;
+  onResetCrop: (slot: "cover" | "personOne" | "personTwo") => void;
   onUpload: (file: File) => Promise<void>;
 }) {
   const { locale } = useLanguage();
@@ -53,6 +57,11 @@ export default function PhotoPanel({
   const selected = (slot: PhotoSlot) =>
     slot === "gallery" ? selectedGallery.length > 0 : Boolean(assignments[slot] && pictures.some((photo) => photo.id === assignments[slot]));
   const active = slotsAvailable.includes(activeSlot) ? activeSlot : slotsAvailable[0];
+  const cropValue = (slot: "cover" | "personOne" | "personTwo"): PhotoCrop => {
+    const crop = assignments.crop?.[slot];
+    if (crop) return crop;
+    return { x: 50, y: assignments.focus[slot] === "top" ? 0 : assignments.focus[slot] === "bottom" ? 100 : 50, zoom: 1 };
+  };
 
   async function uploadFiles(files: File[]) {
     if (!files.length) return;
@@ -130,7 +139,7 @@ export default function PhotoPanel({
                 className="flex w-full items-center gap-3 p-3 text-left hover:bg-muted/30"
               >
                 <div className="flex h-16 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-muted">
-                  {current ? <img src={current.url} alt="" className="h-full w-full object-cover" /> : <ImagePlus className="h-5 w-5 text-muted-foreground" />}
+                  {current ? <img src={current.url} alt="" className="h-full w-full object-cover" style={slot === "gallery" ? undefined : photoCropStyle(assignments, slot)} /> : <ImagePlus className="h-5 w-5 text-muted-foreground" />}
                 </div>
                 <span className="min-w-0 flex-1">
                   <span className="block text-sm font-medium">{slotLabels[slot].title}</span>
@@ -187,6 +196,41 @@ export default function PhotoPanel({
                             </button>
                           ))}
                         </div>
+                      </div>
+                      <div className="space-y-3 border-t border-border pt-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-medium">{en ? "Crop & position" : "Crop & posisi"}</p>
+                          <Button type="button" size="xs" variant="outline" onClick={() => onResetCrop(slot)}>
+                            {en ? "Reset crop" : "Reset crop"}
+                          </Button>
+                        </div>
+                        {([
+                          ["x", en ? "Horizontal" : "Horizontal", 0, 100, 1, "%"],
+                          ["y", en ? "Vertical" : "Vertikal", 0, 100, 1, "%"],
+                          ["zoom", "Zoom", 1, 3, 0.05, "×"],
+                        ] as const).map(([key, label, min, max, step, suffix]) => {
+                          const crop = cropValue(slot);
+                          return (
+                            <label key={key} className="block">
+                              <span className="mb-1 flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
+                                <span>{label}</span>
+                                <output>{key === "zoom" ? crop.zoom.toFixed(2) : Math.round(crop[key])}{suffix}</output>
+                              </span>
+                              <input
+                                type="range"
+                                min={min}
+                                max={max}
+                                step={step}
+                                value={crop[key]}
+                                onChange={(event) => onSetCrop(slot, { ...crop, [key]: Number(event.target.value) })}
+                                className="w-full"
+                              />
+                            </label>
+                          );
+                        })}
+                        <p className="text-[11px] leading-5 text-muted-foreground">
+                          {en ? "Cropping is non-destructive. The original uploaded photo is kept." : "Crop tidak merusak foto asli. File upload tetap utuh."}
+                        </p>
                       </div>
                     </>
                   )}
