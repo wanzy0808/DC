@@ -577,6 +577,18 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setMobileCanvas(false);
   }
 
+  function fitCanvasZoom() {
+    const scroller = canvasScrollRef.current;
+    const surface = scroller?.querySelector<HTMLElement>(".dc-studio-preview-surface");
+    if (!scroller || !surface) return;
+    const rect = surface.getBoundingClientRect();
+    const naturalWidth = rect.width / Math.max(canvasZoom, 0.01);
+    if (!naturalWidth) return;
+    const availableWidth = Math.max(1, scroller.clientWidth - 32);
+    const next = Math.min(1.3, Math.max(0.7, availableWidth / naturalWidth));
+    setCanvasZoom(Math.round(next * 10) / 10);
+  }
+
   function showDesignSection(section: StudioObjectSection) {
     setCanvasStage(section === "envelope" ? "envelope" : "cover");
     if (section === "envelope") setPreviewVersion((current) => current + 1);
