@@ -572,6 +572,16 @@ export default function InvitationDesigner() {
     change({ rsvpConfig: { ...design.rsvpConfig, ...patch } });
   }
 
+  function updateSectionElementStyles(styles: InvitationDesignState["sectionElementStyles"]) {
+    change({ sectionElementStyles: styles });
+  }
+
+  function resetNarrativeCopy(field: EditableInvitationCopyField) {
+    const next = { ...design.copy };
+    delete next[field];
+    change({ copy: next });
+  }
+
   function addRsvpCustomField() {
     if (design.rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS) return;
     const id = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
@@ -714,6 +724,25 @@ export default function InvitationDesigner() {
       else delete node.dataset.studioRsvpSelected;
     }
   }, [selectedRsvpElementKey, designKey, canvasStage, previewVersion]);
+
+  useEffect(() => {
+    const root = canvasScrollRef.current;
+    if (!root) return;
+    const selectedKey = selectedSectionElement ? `${selectedSectionElement.section}:${selectedSectionElement.kind}` : "";
+    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-section-element]")) {
+      if (node.dataset.studioSectionElement === selectedKey) node.dataset.studioSectionElementSelected = "true";
+      else delete node.dataset.studioSectionElementSelected;
+    }
+  }, [selectedSectionElement, designKey, canvasStage, previewVersion]);
+
+  useEffect(() => {
+    const root = canvasScrollRef.current;
+    if (!root) return;
+    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-copy-field]")) {
+      if (node.dataset.studioCopyField === selectedCopyField) node.dataset.studioCopySelected = "true";
+      else delete node.dataset.studioCopySelected;
+    }
+  }, [selectedCopyField, designKey, canvasStage, previewVersion]);
 
   useEffect(() => {
     function handleLayerShortcut(event: KeyboardEvent) {
@@ -943,9 +972,37 @@ export default function InvitationDesigner() {
               setSelectedLayerId(null);
               setSelectedSectionKey(null);
               setSelectedSectionInstanceId(null);
+              setSelectedCopyField(null);
+              setSelectedSectionElement(null);
               setSelectedRsvpElementKey(rsvpElement.dataset.studioRsvpElement);
               return;
             }
+
+            const sectionElement = target.closest<HTMLElement>("[data-studio-section-element]");
+            if (sectionElement?.dataset.studioSectionElement) {
+              const [section, kind] = sectionElement.dataset.studioSectionElement.split(":");
+              if ((kind === "input" || kind === "button") && section) {
+                setSelectedLayerId(null);
+                setSelectedSectionKey(null);
+                setSelectedSectionInstanceId(null);
+                setSelectedRsvpElementKey(null);
+                setSelectedCopyField(null);
+                setSelectedSectionElement({ section: section as InvitationSectionKey, kind });
+                return;
+              }
+            }
+
+            const copyElement = target.closest<HTMLElement>("[data-studio-copy-field]");
+            if (copyElement?.dataset.studioCopyField) {
+              setSelectedLayerId(null);
+              setSelectedSectionKey(null);
+              setSelectedSectionInstanceId(null);
+              setSelectedRsvpElementKey(null);
+              setSelectedSectionElement(null);
+              setSelectedCopyField(copyElement.dataset.studioCopyField as EditableInvitationCopyField);
+              return;
+            }
+
             if (target.closest("[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
             const section = target.closest<HTMLElement>("[data-invitation-section]");
             if (section?.dataset.invitationSection) {
@@ -1023,7 +1080,7 @@ export default function InvitationDesigner() {
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
-                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedRsvpElementKey(null); setSelectedLayerId(id); }}
+                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedRsvpElementKey(null); setSelectedCopyField(null); setSelectedSectionElement(null); setSelectedLayerId(id); }}
                     onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
@@ -1061,6 +1118,25 @@ export default function InvitationDesigner() {
                 onUpdateRsvpField={updateRsvpCustomField}
                 onRemoveRsvpField={removeRsvpCustomField}
                 onClose={() => setSelectedRsvpElementKey(null)}
+              />
+            ) : selectedSectionElement ? (
+              <SectionElementInspector
+                locale={locale}
+                section={selectedSectionElement.section}
+                kind={selectedSectionElement.kind}
+                styles={design.sectionElementStyles}
+                onChange={updateSectionElementStyles}
+                onClose={() => setSelectedSectionElement(null)}
+              />
+            ) : selectedCopyField ? (
+              <CopyTextInspector
+                locale={locale}
+                field={selectedCopyField}
+                value={design.copy[selectedCopyField] ?? invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
+                defaultValue={invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
+                onChange={(value) => setNarrativeCopy(selectedCopyField, value)}
+                onReset={() => resetNarrativeCopy(selectedCopyField)}
+                onClose={() => setSelectedCopyField(null)}
               />
             ) : selectedSectionKey ? (
               <SectionInspector
