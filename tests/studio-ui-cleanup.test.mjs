@@ -80,3 +80,23 @@ test("Ucapan Tamu section label has no stale unavailable caption", () => {
   assert.doesNotMatch(panels, /Pengiriman ucapan belum tersedia|Sending wishes is not available yet/);
   assert.doesNotMatch(panels, /wishes.*text-xs.*unavailable/i);
 });
+
+test("Studio keeps Save in the header, history beside Default and stages directly above the invitation", () => {
+  assert.match(designer, /save: "Simpan"/);
+  assert.doesNotMatch(designer, /save: "Simpan Desain"/);
+  const toolbar = designer.split('<header className="dc-studio-toolbar">')[1]?.split("</header>")[0] || "";
+  assert.match(toolbar, /onClick=\{save\}/);
+  assert.doesNotMatch(toolbar, /onClick=\{undo\}|onClick=\{redo\}/);
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.ok(rail.indexOf("dc-studio-history-actions") > rail.indexOf("onClick={restoreDefaults}"));
+  assert.match(rail, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
+  assert.match(rail, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
+  const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
+  assert.ok(canvas.indexOf("dc-studio-stage-controls") >= 0 && canvas.indexOf("dc-studio-stage-controls") < canvas.indexOf('className="dc-studio-preview-surface"'));
+  assert.match(designer, /isUndo && history.length/);
+  assert.match(designer, /isRedo && future.length/);
+  assert.match(designer, /event\.nativeEvent\.isComposing/);
+  assert.match(styles, /\.dc-studio-history-actions \{[^}]*grid-template-columns: repeat\(2, 44px\)/);
+  assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
+  assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
+});
