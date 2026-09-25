@@ -49,6 +49,7 @@ import { InvitationPreview } from "@/components/InvitationStudio/InvitationPrevi
 import { getInvitationDefaultMusic } from "@/lib/templates/music";
 import { clearTemplateSelection, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { STUDIO_REFRESH_DRAFT_KEY, makeStudioRefreshDraft, recoverStudioRefreshDraft } from "@/lib/templates/studio-refresh-draft";
 import {
   invitationDecorOptions,
   invitationTemplatePresets,
@@ -156,8 +157,23 @@ export default function InvitationDesigner() {
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
       ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [] }
       : loadedDesign;
-    setDesign(stagedDesign);
-    setSavedState(JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]));
+    const serverBaseline = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
+    // Restore only after a true browser refresh of this same invitation and saved revision.
+    // A fresh visit, event switch, Back/Forward navigation or logout never reopens this draft.
+    const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
+    let refreshed: [string, string, string, string] | null = null;
+    try {
+      const raw = window.sessionStorage.getItem(STUDIO_REFRESH_DRAFT_KEY);
+      refreshed = recoverStudioRefreshDraft(raw, navigationType, next.id, serverBaseline);
+      if (!refreshed) window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
+    } catch { /* Session storage may be disabled: ordinary editing still works. */ }
+    setDesign(refreshed ? invitationDesignStateFromKey(refreshed[0], fallbackDecor) : stagedDesign);
+    if (refreshed) {
+      setMusicUrl(refreshed[1]);
+      setEventTag(refreshed[2]);
+      setDressCode(refreshed[3]);
+    }
+    setSavedState(serverBaseline);
     setCanvasStage("envelope");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
@@ -190,6 +206,45 @@ export default function InvitationDesigner() {
   const identity = getInvitationEventIdentity(invitation);
   const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
   const dirty = Boolean(invitation && savedState !== currentState);
+  useEffect(() => {
+    // Do not auto-save to the API: this snapshot is only for Ctrl/Cmd+R in this tab.
+    if (!invitation || !savedState) return;
+    try {
+      if (dirty) window.sessionStorage.setItem(STUDIO_REFRESH_DRAFT_KEY,
+        JSON.stringify(makeStudioRefreshDraft(invitation.id, savedState, currentState)));
+      else window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY);
+    } catch { /* Private mode, storage quota, or disabled storage must not break editing. */ }
+  }, [invitation?.id, savedState, currentState, dirty]);
+  useEffect(() => {
+    const clearDraft = () => {
+      try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
+    };
+    // A normal navigation (including logout links) ends this editing session.
+    const onLinkClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      const link = target.closest<HTMLAnchorElement>("a[href]");
+      if (!link || link.target === "_blank" || event.defaultPrevented) return;
+      const destination = new URL(link.href, window.location.href);
+      if (destination.origin !== window.location.origin ||
+        destination.pathname !== window.location.pathname || destination.search !== window.location.search) clearDraft();
+    };
+    const onPageHide = (event: PageTransitionEvent) => { if (event.persisted) clearDraft(); };
+    const onPageShow = (event: PageTransitionEvent) => {
+      // A browser BFCache restore must not revive in-memory, unsaved Studio edits.
+      if (event.persisted) { clearDraft(); window.location.reload(); }
+    };
+    document.addEventListener("click", onLinkClick, true);
+    window.addEventListener("popstate", clearDraft);
+    window.addEventListener("pagehide", onPageHide);
+    window.addEventListener("pageshow", onPageShow);
+    return () => {
+      document.removeEventListener("click", onLinkClick, true);
+      window.removeEventListener("popstate", clearDraft);
+      window.removeEventListener("pagehide", onPageHide);
+      window.removeEventListener("pageshow", onPageShow);
+    };
+  }, []);
   useEffect(() => {
     if (!dirty) return;
     const preventExit = (event: BeforeUnloadEvent) => { event.preventDefault(); };
@@ -527,6 +582,7 @@ export default function InvitationDesigner() {
       if (!response.ok) throw new Error(data.error || "Gagal menyimpan.");
       setInvitation(data.invitation);
       setSavedState(currentState);
+      try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
       clearTemplateSelection();
       // After saving, stale catalog URL parameters must not reapply an old theme.
       const location = new URL(window.location.href);
