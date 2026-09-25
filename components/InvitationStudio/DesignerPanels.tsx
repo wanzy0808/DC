@@ -18,7 +18,6 @@ import {
   invitationFontOptions,
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
-import { availableEditableCopyFields, editableCopyMaxLength, invitationCopyDefaults, type EditableInvitationCopy, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 
 export function DesignerTool({
@@ -46,14 +45,11 @@ export function DesignerTool({
 const studioHeadingEnglish: Record<string, string> = {
   "Pilih Tema": "Choose a Theme",
   "Lihat desainnya langsung di sebelah kanan.": " ",
-  "Bagian & Fitur": "Sections & Features",
-  "Sembunyikan bagian tanpa menghapus isinya.": "Hide a section without deleting its content.",
+  "Isi": "Content",
   "Palet Warna": "Color Palette",
   "Pilih kombinasi warna untuk tema ini.": "Choose this theme's color combination.",
   "Pasangan Font": "Font Pair",
   "Nama huruf ditampilkan dengan font aslinya.": "Font names are displayed in their actual typefaces.",
-  "Isi Undangan": "Invitation Content",
-  "Identitas dan jadwal mengikuti data acara.": "Names and schedules use your event details.",
   "Musik": "Music",
   "Maksimal 2 file, masing-masing 3 MB. Hapus file untuk menggantinya.": "Up to two files, 3 MB each.",
 };
@@ -82,29 +78,78 @@ const sectionNamesEnglish: Record<InvitationSectionKey, string> = {
   closing: "Closing", footer: "Footer", music: "Music",
 };
 
-export function SectionsPanel({
+export type StudioContentElementKind = "input" | "button";
+
+const sectionFunctionalElements: Partial<Record<InvitationSectionKey, StudioContentElementKind[]>> = {
+  envelope: ["button"],
+  location: ["button"],
+  rsvp: ["input", "button"],
+  wishes: ["input", "button"],
+  gift: ["button"],
+};
+
+export function ContentPanel({
   sections,
   onChange,
+  onSelectSection,
+  onSelectElement,
 }: {
   sections: InvitationSections;
   onChange: (section: InvitationSectionKey, enabled: boolean) => void;
+  onSelectSection: (section: InvitationSectionKey) => void;
+  onSelectElement: (section: InvitationSectionKey, element: StudioContentElementKind) => void;
 }) {
   const { locale } = useLanguage();
+  const en = locale === "en";
+
   return (
     <div>
-      <Heading title="Bagian & Fitur" description="Sembunyikan bagian tanpa menghapus isinya." />
+      <Heading title="Isi" description="" />
       <div className="mt-4 divide-y divide-primary/15">
-        {invitationSectionItems.map((item) => (
-          <label key={item.key} className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-3">
-            <span className="text-sm">{locale === "en" ? sectionNamesEnglish[item.key] : item.title}</span>
-            <span className="relative inline-flex h-6 w-11 shrink-0 items-center">
-              <input type="checkbox" role="switch" className="peer sr-only" checked={sections[item.key] !== false}
-                onChange={(event) => onChange(item.key, event.target.checked)} />
-              <span className="absolute inset-0 rounded-full bg-foreground/20 transition peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary" />
-              <span className="absolute left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
-            </span>
-          </label>
-        ))}
+        {invitationSectionItems.map((item) => {
+          const enabled = sections[item.key] !== false;
+          const elements = sectionFunctionalElements[item.key] ?? [];
+          return (
+            <div key={item.key} className="py-2">
+              <div className="flex min-h-12 items-center gap-2">
+                <button
+                  type="button"
+                  className="min-w-0 flex-1 truncate rounded-[10px] px-2 py-2 text-left text-sm text-foreground hover:bg-primary/5 hover:text-primary"
+                  onClick={() => onSelectSection(item.key)}
+                  title={en ? sectionNamesEnglish[item.key] : item.title}
+                >
+                  {en ? sectionNamesEnglish[item.key] : item.title}
+                </button>
+                <label className="relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center" title={enabled ? (en ? "Hide section" : "Sembunyikan section") : (en ? "Show section" : "Tampilkan section")}>
+                  <input
+                    type="checkbox"
+                    role="switch"
+                    className="peer sr-only"
+                    checked={enabled}
+                    onChange={(event) => onChange(item.key, event.target.checked)}
+                  />
+                  <span className="absolute inset-0 rounded-full bg-foreground/20 transition peer-checked:bg-primary peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary" />
+                  <span className="absolute left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
+                </label>
+              </div>
+
+              {enabled && elements.length > 0 && (
+                <div className="ml-3 mt-1 grid gap-1 border-l border-primary/20 pl-3">
+                  {elements.map((element) => (
+                    <button
+                      key={element}
+                      type="button"
+                      className="min-h-9 rounded-[10px] px-2.5 text-left text-xs text-muted-foreground hover:bg-primary/5 hover:text-primary"
+                      onClick={() => onSelectElement(item.key, element)}
+                    >
+                      {element === "input" ? (en ? "Input" : "Input") : (en ? "Button" : "Button")}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -191,61 +236,6 @@ export function FontPanel({
             </span>
             <span className="mt-1 block text-sm text-muted-foreground" style={{ fontFamily: invitationFontFamily(item.body) }}>{item.body}</span>
           </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-const narrativeCopyLabels: Record<EditableInvitationCopyField, { id: string; en: string }> = {
-  greeting: { id: "Salam & Permohonan Kehadiran", en: "Greeting & Invitation" },
-  closing: { id: "Ucapan Penutup", en: "Closing Message" },
-  ourStory: { id: "Our Story / Tentang Kami", en: "Our Story / About Us" },
-  zenQuote: { id: "Kutipan Penutup", en: "Closing Quote" },
-  attendanceRequest: { id: "Permohonan Kehadiran", en: "Invitation Message" },
-  prayerWish: { id: "Doa / Harapan", en: "Prayer / Wish" },
-};
-
-/** Only words rendered as editable narrative slots in the selected theme.
- * Event/guest/parents/date/venue/RSVP fields belong to Dashboard and shared data.
- */
-export function ContentPanel({
-  templateKey,
-  eventDescription,
-  isWedding,
-  copy,
-  onChange,
-}: {
-  templateKey: string;
-  eventDescription?: string | null;
-  isWedding: boolean;
-  copy: EditableInvitationCopy;
-  onChange: (field: EditableInvitationCopyField, text: string) => void;
-}) {
-  const { locale } = useLanguage();
-  const en = locale === "en";
-  const defaults = invitationCopyDefaults(templateKey, eventDescription);
-  const fields = availableEditableCopyFields(templateKey, isWedding);
-  return (
-    <div>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
-        {en ? "Invitation Wording" : "Isi Undangan"}
-      </h2>
-      <div className="mt-5 space-y-5">
-        {fields.map((field) => (
-          <label key={field} className="block space-y-2 text-sm text-foreground">
-            <span className="block font-medium">{field === "greeting" && templateKey === "pencil-reverie"
-              ? (en ? "Greeting / Introduction" : "Salam / Pengantar")
-              : narrativeCopyLabels[field][en ? "en" : "id"]}</span>
-            <textarea
-              value={copy[field] ?? defaults[field] ?? ""}
-              onChange={(event) => onChange(field, event.target.value)}
-              rows={field === "ourStory" ? 8 : field === "zenQuote" ? 4 : 5}
-              maxLength={editableCopyMaxLength[field]}
-              placeholder={field === "ourStory" ? (en ? "Tell your story together in your own words…" : "Ceritakan perjalanan kalian dengan kata-kata sendiri…") : undefined}
-              className="w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/70 bg-background px-3.5 py-3 text-sm leading-relaxed text-foreground outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/20"
-            />
-          </label>
         ))}
       </div>
     </div>
