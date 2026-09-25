@@ -154,7 +154,7 @@ function EditableLayer({
         fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
       }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className="block h-auto w-full select-none" />}
       {editable && selected && <>
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary shadow-[0_0_0_1px_rgba(255,255,255,.45)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-full left-1/2 h-6 w-px -translate-x-1/2 bg-primary" />
         <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -top-10 left-1/2 z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"
           style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}>↻</button>
