@@ -61,7 +61,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(inspector, /Warna latar section/);
   assert.doesNotMatch(inspector, />\s*Default\s*</);
   assert.match(inspector, /dc-studio-section-reset/);
-  assert.match(inspector, /Komponen/);
+  assert.doesNotMatch(inspector, /functionalNotes|>Komponen<|>Components</);
   assert.match(state, /withInvitationSectionStyles/);
   assert.match(state, /parseInvitationSectionStyles/);
   assert.match(universal, /parseInvitationSectionStyles\(activeDesignKey\)/);
@@ -128,12 +128,12 @@ test("section toolbar visibility shares one state with the Isi panel", () => {
   assert.match(romantic, /\$\{preview \? "overflow-visible" : "overflow-hidden"\}/);
 });
 
-test("functional section inspector stays visual-only and names protected functions", () => {
+test("section inspector stays visual-only without duplicating function lists", () => {
   const inspector = read("components/InvitationStudio/SectionInspector.tsx");
-  assert.match(inspector, /rsvp: \["Judul", "Input RSVP", "Asset \/ image"\]/);
-  assert.match(inspector, /wishes: \["Nama tamu", "Ucapan", "Kirim ucapan"\]/);
-  assert.match(inspector, /gift: \["Bank", "Nama rekening", "Nomor rekening", "Salin rekening"\]/);
+  assert.doesNotMatch(inspector, /functionalNotes|Nama tamu|Kirim ucapan|Nomor rekening|Salin rekening/);
   assert.doesNotMatch(inspector, /fetch\(|\/api\/invite|onSubmit/);
+  assert.match(inspector, /dc-studio-align-icons/);
+  assert.match(inspector, /Ruang vertikal/);
 });
 
 
