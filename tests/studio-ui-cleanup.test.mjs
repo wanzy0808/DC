@@ -378,3 +378,20 @@ test("Studio canvas has local zoom controls that do not alter saved invitation g
   assert.match(designer, /Math\.max\(0\.7/);
   assert.match(designer, /Math\.min\(1\.3/);
 });
+
+
+test("Studio image layers support flip transforms and quick centering", () => {
+  const assetLayers = read("lib/templates/asset-layers.ts");
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const assetInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+
+  assert.match(assetLayers, /flipX\?: boolean/);
+  assert.match(assetLayers, /flipY\?: boolean/);
+  assert.match(assetRenderer, /scaleX\(\$\{layer\.flipX \? -1 : 1\}\)/);
+  assert.match(assetRenderer, /scaleY\(\$\{layer\.flipY \? -1 : 1\}\)/);
+  assert.match(assetInspector, /Posisi cepat/);
+  assert.match(assetInspector, /flipX/);
+  assert.match(assetInspector, /flipY/);
+  assert.match(textInspector, /Posisi cepat/);
+});
