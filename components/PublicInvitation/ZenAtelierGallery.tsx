@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 type Photo = { id: string; url: string; title: string | null };
-export default function ZenAtelierGallery({ photos }: { photos: Photo[] }) {
+export default function ZenAtelierGallery({ photos, customMotion = false }: { photos: Photo[]; customMotion?: boolean }) {
   const [selected, setSelected] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const grid = useRef<HTMLDivElement>(null);
@@ -15,17 +15,17 @@ export default function ZenAtelierGallery({ photos }: { photos: Photo[] }) {
     if (selected >= photos.length) { dialog.current?.close(); setSelected(0); }
   }, [photos.length, selected]);
   useEffect(() => {
-    if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (customMotion || !window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => entry.target.classList.toggle("zen-reveal", entry.isIntersecting));
     }, { threshold: .1 });
     grid.current?.querySelectorAll("button").forEach((node) => observer.observe(node));
     return () => observer.disconnect();
-  }, [photos]);
+  }, [photos, customMotion]);
   if (!photos.length) return <p className="text-sm">Foto belum ditambahkan.</p>;
   return <>
     <div ref={grid} className="zen-gallery-grid">
-      {photos.map((photo, index) => <button type="button" key={photo.id} aria-label={`Buka foto ${index + 1}`} onClick={(event) => {
+      {photos.map((photo, index) => <button type="button" key={photo.id} data-invitation-photo-slot="gallery" aria-label={`Buka foto ${index + 1}`} onClick={(event) => {
         opener.current = event.currentTarget; setSelected(index); dialog.current?.showModal();
       }}><img src={photo.url} alt={photo.title || `Momen ${index + 1}`} loading="lazy" decoding="async" /></button>)}
     </div>
