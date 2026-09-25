@@ -94,14 +94,11 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(canvasToolbar, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
   assert.match(canvasToolbar, /onClick=\{save\}/);
   assert.match(canvasToolbar, /aria-label=\{copy\.replay\}/);
-  assert.match(canvasToolbar, /<Button size="sm" onClick=\{restoreDefaults\}/);
-  assert.match(canvasToolbar, /<Button size="sm" onClick=\{undo\}/);
-  assert.match(canvasToolbar, /<Button size="sm" onClick=\{redo\}/);
+  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{restoreDefaults\}[^>]*title=\{copy\.defaultsHint\}/);
+  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{undo\}[^>]*title=\{copy\.undo\}/);
+  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{redo\}[^>]*title=\{copy\.redo\}/);
   assert.match(canvasToolbar, /<Button onClick=\{save\}[^>]*size="sm"/);
-  assert.match(canvasToolbar, /\{copy\.restartShort\}/);
-  assert.match(canvasToolbar, /\{copy\.undoShort\}/);
-  assert.match(canvasToolbar, /\{copy\.redoShort\}/);
-  assert.doesNotMatch(canvasToolbar, /size="icon-sm"/);
+  assert.doesNotMatch(designer, /undoShort|redoShort|restartShort/);
   assert.ok(
     canvasToolbar.indexOf("template?.name") < canvasToolbar.indexOf("onClick={restoreDefaults}") &&
     canvasToolbar.indexOf("onClick={restoreDefaults}") < canvasToolbar.indexOf("onClick={undo}") &&
