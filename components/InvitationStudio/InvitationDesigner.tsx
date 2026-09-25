@@ -430,6 +430,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     location.searchParams.set("template", templateKey);
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
     setActivePhotoSlot("cover");
+    setSelectedPhotoSlot(null);
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
