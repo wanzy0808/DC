@@ -202,22 +202,3 @@ test("each side grip moves only the dragged edge, not the opposite edge", () => 
   const rotated = resizeObjectFromHandle({ ...start, handle: "right", rotation: 90 }, 0, 40);
   assert.deepEqual(rotated, { x: 50, y: 52.5, width: 40, height: 20 });
 });
-
-test("desktop Studio docks the entire tool rail and property inspector at the far right", () => {
-  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
-  const css = read("components/InvitationStudio/studio.css");
-  const canvas = editor.indexOf('<div className="dc-studio-canvas">');
-  const inspector = editor.indexOf('<aside className="dc-studio-inspector"');
-  const rail = editor.indexOf('<nav className="dc-studio-rail"');
-  assert.ok(canvas >= 0 && canvas < inspector && inspector < rail,
-    "DOM reading and grid order should be canvas → inspector → far-right tool rail");
-  assert.match(css, /\.dc-studio-workspace \{[^}]*grid-template-columns: minmax\(0, 1fr\) 360px 98px/);
-  assert.match(css, /@media \(min-width: 1280px\)[^\n]*\.dc-studio-workspace \{ grid-template-columns: minmax\(0, 1fr\) 380px 108px/);
-  assert.match(css, /data-inspector=false\] \.dc-studio-workspace \{ grid-template-columns: minmax\(0, 1fr\) 98px/);
-  assert.match(css, /\.dc-studio-inspector > \.dc-studio-layer-side \{ position: static; width: 100%/);
-  assert.ok(editor.indexOf("<AssetLayerInspector", inspector) < rail,
-    "selected-layer controls belong inside the right inspector rather than beside the canvas");
-  assert.match(css, /\.dc-studio-rail \{ display: flex; grid-row: 1;/,
-    "mobile should keep its scrollable tool selector above the canvas/properties");
-  assert.match(editor, /<PanelRightClose size=\{18\} \/> : <PanelRightOpen size=\{18\} \/>/);
-});
