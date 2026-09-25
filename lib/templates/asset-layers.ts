@@ -23,7 +23,7 @@ export type InvitationAssetLayer = {
   color?: string;
 };
 
-export const MAX_ASSET_LAYERS = 12;
+export const MAX_ASSET_LAYERS = 10;
 const assetRoots = ["/template/", "/templates/"];
 const numberBetween = (input: unknown, min: number, max: number, fallback: number) =>
   typeof input === "number" && Number.isFinite(input) ? Math.min(max, Math.max(min, input)) : fallback;
