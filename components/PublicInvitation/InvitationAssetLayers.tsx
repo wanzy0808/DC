@@ -156,12 +156,12 @@ function EditableLayer({
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         <div aria-hidden="true" className="pointer-events-none absolute bottom-full left-1/2 h-6 w-px -translate-x-1/2 bg-primary" />
-        <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -top-10 left-1/2 z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"
-          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}>↻</button>
+        <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -top-10 left-1/2 z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-2 border-primary bg-background shadow-sm cursor-grab active:cursor-grabbing"
+          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" /></button>
         {(["top-left", "top-right", "bottom-left", "bottom-right"] as const).map((corner) => (
           <button key={corner} type="button" aria-label={`Ubah ukuran dari ${corner}`} title="Tarik titik sudut untuk resize"
-            className={`pointer-events-auto absolute z-20 h-4 w-4 rounded-[3px] border-2 border-primary bg-background shadow-sm ${corner.startsWith("top") ? "-top-2" : "-bottom-2"} ${corner.endsWith("left") ? "-left-2" : "-right-2"} ${corner === "top-left" || corner === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
-            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", corner)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }} />
+            className={`pointer-events-auto absolute z-20 grid h-5 w-5 place-items-center border-0 bg-transparent p-0 ${corner.startsWith("top") ? "-top-2.5" : "-bottom-2.5"} ${corner.endsWith("left") ? "-left-2.5" : "-right-2.5"} ${corner === "top-left" || corner === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
+            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", corner)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
         ))}
       </>}
     </div>
