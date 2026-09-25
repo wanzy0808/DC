@@ -93,6 +93,7 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(rail, /Hapus section/);
   assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: -52px;[\s\S]*?flex-direction: column[\s\S]*?border: 0;[\s\S]*?background: transparent/);
   assert.match(css, /\.dc-studio-preview-surface \{[\s\S]*?overflow: visible/);
+  assert.match(css, /\.dc-studio-preview-surface \[data-studio-preview-root="true"\] \{[^}]*overflow: visible !important/);
   assert.match(css, /\.dc-studio-preview-workspace \{[^}]*overflow: visible/);
   assert.match(css, /\.dc-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(118px, 1fr\)[^}]*overflow: visible/);
   assert.match(css, /\.dc-section-instance-content \{ overflow: hidden; \}/);
@@ -118,6 +119,10 @@ test("section toolbar visibility shares one state with the Bagian panel", () => 
   assert.match(editor, /!hasSameSection \? \{ sections: \{ \.\.\.design\.sections, \[source\.key\]: false \} \} : \{\}/);
   assert.match(universal, /const hidden = sections\[keyName\] === false;[\s\S]*?if \(hidden && !preview\) return null/);
   assert.match(romantic, /const hidden = sections\[key\] === false;[\s\S]*?if \(hidden && !preview\) return null/);
+  assert.match(universal, /data-studio-preview-root=\{preview \? "true" : undefined\}/);
+  assert.match(universal, /\$\{preview \? "overflow-visible" : "overflow-hidden"\}/);
+  assert.match(romantic, /data-studio-preview-root=\{preview \? "true" : undefined\}/);
+  assert.match(romantic, /\$\{preview \? "overflow-visible" : "overflow-hidden"\}/);
 });
 
 test("functional section inspector stays visual-only and names protected functions", () => {
