@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
-import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
+import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -30,6 +30,8 @@ import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
+import CopyTextInspector from "@/components/InvitationStudio/CopyTextInspector";
+import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -39,13 +41,13 @@ import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
 import { defaultInvitationRsvpConfig, MAX_RSVP_CUSTOM_FIELDS } from "@/lib/templates/rsvp-config";
 import { defaultInvitationSectionLayout, invitationContentSectionKeys } from "@/lib/templates/section-layout";
+import type { StudioSectionElementKind } from "@/lib/templates/section-element-styles";
 import {
   ColorPanel,
   ContentPanel,
   DesignerTool,
   FontPanel,
   MusicPanel,
-  SectionsPanel,
   TemplatePanel,
 } from "@/components/InvitationStudio/DesignerPanels";
 import { InvitationPreview } from "@/components/InvitationStudio/InvitationPreview";
@@ -75,7 +77,7 @@ export default function InvitationDesigner() {
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
-    sections: "Sections & Content", colors: "Colors", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
+    sections: "Content", colors: "Colors", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
     envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
@@ -85,7 +87,7 @@ export default function InvitationDesigner() {
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
-    sections: "Bagian & Isi", colors: "Warna", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
+    sections: "Isi", colors: "Warna", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
     envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
@@ -100,6 +102,8 @@ export default function InvitationDesigner() {
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
+  const [selectedCopyField, setSelectedCopyField] = useState<EditableInvitationCopyField | null>(null);
+  const [selectedSectionElement, setSelectedSectionElement] = useState<{ section: InvitationSectionKey; kind: StudioSectionElementKind } | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
@@ -134,6 +138,7 @@ export default function InvitationDesigner() {
     sectionStyles: {},
     rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
     sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
+    sectionElementStyles: {},
   });
 
   async function load() {
@@ -165,7 +170,7 @@ export default function InvitationDesigner() {
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })) }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = JSON.stringify([next.templateKey || "", next.musicUrl || "", next.weddingHashtag || "", next.dressCode || ""]);
@@ -297,6 +302,7 @@ export default function InvitationDesigner() {
       sectionStyles: templateKey === design.template ? design.sectionStyles : {},
       rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
       sectionLayout: templateKey === design.template ? design.sectionLayout : defaultInvitationSectionLayout.map((item) => ({ ...item })),
+      sectionElementStyles: templateKey === design.template ? design.sectionElementStyles : {},
     });
     rememberTemplateSelection(templateKey);
     // Keep the browser URL aligned with an unsaved theme choice on refresh.
@@ -308,6 +314,8 @@ export default function InvitationDesigner() {
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
     setCopiedAssetLayer(null);
     setCanvasStage("envelope");
   }
@@ -325,6 +333,7 @@ export default function InvitationDesigner() {
       sectionStyles: {},
       rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
       sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
+      sectionElementStyles: {},
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
@@ -332,6 +341,8 @@ export default function InvitationDesigner() {
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
     setCopiedAssetLayer(null);
     draggedAssetSrc.current = null;
     setAssetDropReady(false);
@@ -367,6 +378,46 @@ export default function InvitationDesigner() {
 
   function setNarrativeCopy(field: EditableInvitationCopyField, text: string) {
     change({ copy: { ...design.copy, [field]: text } });
+  }
+
+  function focusContentSection(section: InvitationSectionKey) {
+    if (section === "music") {
+      setPanel("music");
+      return;
+    }
+    setSelectedLayerId(null);
+    setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
+    setSelectedSectionKey(section);
+    const instance = design.sectionLayout.find((item) => item.key === section);
+    setSelectedSectionInstanceId(instance?.id ?? null);
+    if (section === "envelope") {
+      setCanvasStage("envelope");
+      setPreviewVersion((value) => value + 1);
+    } else {
+      setCanvasStage("cover");
+      requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
+    }
+  }
+
+  function focusContentElement(section: InvitationSectionKey, kind: StudioSectionElementKind) {
+    setSelectedLayerId(null);
+    setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
+    setSelectedCopyField(null);
+    setCanvasStage(section === "envelope" ? "envelope" : "cover");
+
+    if (section === "rsvp") {
+      setSelectedSectionElement(null);
+      setSelectedRsvpElementKey(kind === "input" ? "inputs" : "button");
+      requestAnimationFrame(() => canvasScrollRef.current?.querySelector('[data-invitation-section="rsvp"]')?.scrollIntoView({ block: "center" }));
+      return;
+    }
+
+    setSelectedRsvpElementKey(null);
+    setSelectedSectionElement({ section, kind });
+    requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-studio-section-element="${section}:${kind}"]`)?.scrollIntoView({ block: "center" }));
   }
 
   function setSection(section: InvitationSectionKey, enabled: boolean) {
@@ -447,6 +498,8 @@ export default function InvitationDesigner() {
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
     setSelectedLayerId(id);
     showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
@@ -550,6 +603,8 @@ export default function InvitationDesigner() {
   function selectSectionInstance(id: string, key: InvitationSectionKey) {
     setSelectedLayerId(null);
     setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
     setSelectedSectionKey(key);
     setSelectedSectionInstanceId(id);
   }
@@ -810,18 +865,12 @@ export default function InvitationDesigner() {
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
           {panel === "template" && <TemplatePanel selected={design.template} onSelect={selectTemplate} templates={catalog} />}
           {panel === "sections" && (
-            <div className="space-y-8">
-              <SectionsPanel sections={design.sections} onChange={setSection} />
-              <div className="border-t border-primary/20 pt-7">
-                <ContentPanel
-                  templateKey={design.template}
-                  eventDescription={invitation?.description}
-                  isWedding={getEventCategory(identity.category).nameMode === "couple"}
-                  copy={design.copy}
-                  onChange={setNarrativeCopy}
-                />
-              </div>
-            </div>
+            <ContentPanel
+              sections={design.sections}
+              onChange={setSection}
+              onSelectSection={focusContentSection}
+              onSelectElement={focusContentElement}
+            />
           )}
           {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
           {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
@@ -904,6 +953,8 @@ export default function InvitationDesigner() {
                 setSelectedLayerId(null);
                 setSelectedSectionKey(null);
                 setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
                 return;
               }
               const instance = target.closest<HTMLElement>("[data-section-instance-id]");
@@ -917,6 +968,8 @@ export default function InvitationDesigner() {
               setSelectedSectionKey(null);
               setSelectedSectionInstanceId(null);
               setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
             }
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
