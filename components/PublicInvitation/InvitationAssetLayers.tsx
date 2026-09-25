@@ -186,12 +186,18 @@ function EditableLayer({
       aria-hidden="true"
       className="pointer-events-none block h-full w-full select-none"
       style={{
+        position: layer.shape === "line" ? "absolute" : undefined,
+        left: layer.shape === "line" ? 0 : undefined,
+        top: layer.shape === "line" ? "50%" : undefined,
+        height: layer.shape === "line" ? `${Math.max(1, layer.strokeWidth ?? 2)}px` : "100%",
         background: layer.shape === "line" ? (layer.stroke ?? "#C07A84") : (layer.fill ?? "#C07A84"),
         border: layer.shape !== "line" && (layer.strokeWidth ?? 0) > 0
           ? `${layer.strokeWidth}px solid ${layer.stroke ?? "#C07A84"}`
           : undefined,
         borderRadius: layer.shape === "circle" ? "9999px" : `${layer.radius ?? 0}px`,
-        transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`,
+        transform: layer.shape === "line"
+          ? `translateY(-50%) scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`
+          : `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`,
       }}
     />
   ) : null;
@@ -207,7 +213,7 @@ function EditableLayer({
       {editable ? (
         <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : layer.kind === "shape" ? "Pilih dan geser bentuk" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
-          className={`pointer-events-auto block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
+          className={`pointer-events-auto relative block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
           onClick={(event) => { event.stopPropagation(); if (event.detail === 0) onSelect?.(layer.id, event.shiftKey); }} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
