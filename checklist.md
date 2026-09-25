@@ -552,8 +552,8 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Copy/paste selected design layer with keyboard shortcut.
 - [x] Delete selected design layer with Delete/Backspace.
 - [x] Undo/redo design changes.
-- [ ] **Add Cut (`Ctrl/Cmd+X`) for selected design layers.**
-- [ ] **Add proper photo crop controls:** free X/Y crop position, zoom, reset crop; persist per photo slot without modifying the original uploaded asset.
+- [x] **Add Cut (`Ctrl/Cmd+X`) for selected design layers.**
+- [x] **Add proper photo crop controls:** free X/Y crop position, zoom, reset crop; persist per photo slot without modifying the original uploaded asset.
 - [ ] Add crop mode directly on-canvas so the frame stays fixed while the photo can be repositioned/zoomed inside it.
 - [ ] Add common aspect-ratio crop presets where appropriate (Original, 1:1, 4:5, 3:4, 16:9) without forcing every template frame to the same ratio.
 - [ ] Add duplicate shortcut (`Ctrl/Cmd+D`) for selected layers.
