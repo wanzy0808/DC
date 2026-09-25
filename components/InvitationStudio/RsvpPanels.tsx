@@ -236,7 +236,11 @@ export function RsvpInputPanel({
         </div>
       )}
 
+      </div>
+
       <Button
+        data-studio-rsvp-element="button"
+        style={rsvpElementStyleCss(rsvpConfig, "button")}
         type="submit"
         disabled={submitting}
         aria-disabled={submitting || preview}
@@ -244,7 +248,6 @@ export function RsvpInputPanel({
       >
         {submitting ? "Menyimpan..." : appearance === "zen" ? "Kirim RSVP" : "Konfirmasi Kehadiran"}
       </Button>
-      </div>
 
       {message && (
         <p
