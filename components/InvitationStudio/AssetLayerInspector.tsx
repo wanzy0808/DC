@@ -233,6 +233,64 @@ export default function AssetLayerInspector({
         </div>
       )}
 
+      {selectedAssetLayer.kind !== "shape" && selectedAssetLayer.kind !== "text" && numberInput(
+        en ? "Corner radius" : "Radius sudut",
+        selectedAssetLayer.radius ?? 0,
+        0,
+        100,
+        1,
+        "px",
+        (radius) => onUpdate(selectedAssetLayer.id, { radius }),
+      )}
+
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Shadow" : "Bayangan"}</span>
+        <button
+          type="button"
+          className="min-h-9 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
+          aria-pressed={(selectedAssetLayer.shadowOpacity ?? 0) > 0}
+          onClick={() => onUpdate(selectedAssetLayer.id, {
+            shadowOpacity: (selectedAssetLayer.shadowOpacity ?? 0) > 0 ? 0 : 0.22,
+            shadowColor: selectedAssetLayer.shadowColor ?? "#000000",
+            shadowX: selectedAssetLayer.shadowX ?? 0,
+            shadowY: selectedAssetLayer.shadowY ?? 8,
+            shadowBlur: selectedAssetLayer.shadowBlur ?? 18,
+          })}
+        >
+          {(selectedAssetLayer.shadowOpacity ?? 0) > 0 ? (en ? "Shadow on" : "Bayangan aktif") : (en ? "Add shadow" : "Tambah bayangan")}
+        </button>
+      </div>
+
+      {(selectedAssetLayer.shadowOpacity ?? 0) > 0 && (
+        <div className="space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 p-2">
+          <label className="dc-studio-layer-field">
+            <span>{en ? "Shadow color" : "Warna bayangan"}</span>
+            <input
+              type="color"
+              value={selectedAssetLayer.shadowColor ?? "#000000"}
+              onChange={(event) => onUpdate(selectedAssetLayer.id, { shadowColor: event.target.value })}
+              className="h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+            />
+          </label>
+          <div className="dc-studio-layer-grid">
+            {numberInput("X", selectedAssetLayer.shadowX ?? 0, -50, 50, 1, "px", (shadowX) => onUpdate(selectedAssetLayer.id, { shadowX }))}
+            {numberInput("Y", selectedAssetLayer.shadowY ?? 8, -50, 50, 1, "px", (shadowY) => onUpdate(selectedAssetLayer.id, { shadowY }))}
+          </div>
+          {numberInput(en ? "Blur" : "Blur", selectedAssetLayer.shadowBlur ?? 18, 0, 60, 1, "px", (shadowBlur) => onUpdate(selectedAssetLayer.id, { shadowBlur }))}
+          <label className="dc-studio-layer-opacity">
+            <span>{en ? "Shadow opacity" : "Opasitas bayangan"} <output>{Math.round((selectedAssetLayer.shadowOpacity ?? 0.22) * 100)}%</output></span>
+            <input
+              type="range"
+              min="0.05"
+              max="1"
+              step="0.05"
+              value={selectedAssetLayer.shadowOpacity ?? 0.22}
+              onChange={(event) => onUpdate(selectedAssetLayer.id, { shadowOpacity: Number(event.target.value) })}
+            />
+          </label>
+        </div>
+      )}
+
       {numberInput(en ? "Size" : "Size", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
       {numberInput(en ? "Rotation" : "Rotasi", selectedAssetLayer.rotation ?? 0, -180, 180, 1, "°", (rotation) => onUpdate(selectedAssetLayer.id, { rotation }))}
 
