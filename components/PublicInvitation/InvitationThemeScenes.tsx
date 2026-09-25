@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
+import type { PhotoCrop } from "@/lib/templates/photo-slots";
 
 /** Visual-only compositions. Data, action, and section rendering stay in shared invitation engine. */
 type SceneProps = {
@@ -11,6 +12,7 @@ type SceneProps = {
   date: string;
   cover?: string;
   focus: "top" | "center" | "bottom";
+  crop?: PhotoCrop | null;
   stage: "envelope" | "cover";
   onOpen: () => void;
   onEditPhoto?: () => void;
@@ -22,9 +24,12 @@ const heading = { color: "inherit", fontFamily: "var(--inv-heading, var(--font-d
 const caption = "text-[10px] uppercase tracking-[.3em]";
 const center = "relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden px-6 py-12 text-center";
 const photoClass = "h-full w-full object-cover";
-function Portrait({ src, alt, focus, className = "" }: { src?: string; alt: string; focus: SceneProps["focus"]; className?: string }) {
+function Portrait({ src, alt, focus, crop, className = "" }: { src?: string; alt: string; focus: SceneProps["focus"]; crop?: PhotoCrop | null; className?: string }) {
+  const style = crop
+    ? { objectPosition: `${crop.x}% ${crop.y}%`, transform: crop.zoom === 1 ? undefined : `scale(${crop.zoom})`, transformOrigin: `${crop.x}% ${crop.y}%` }
+    : { objectPosition: `center ${focus}` };
   return src
-    ? <img src={src} alt={alt} loading="lazy" className={`${photoClass} ${className}`} style={{ objectPosition: `center ${focus}` }} />
+    ? <img src={src} alt={alt} loading="lazy" className={`${photoClass} ${className}`} style={style} />
     : <div className={`flex h-full w-full items-center justify-center bg-black/10 ${className}`} role="img" aria-label="Foto belum ditambahkan"><Heart className="h-8 w-8 opacity-40" strokeWidth={1} /></div>;
 }
 function Open({ onClick, dark = false, children }: { onClick: () => void; dark?: boolean; children?: ReactNode }) {
@@ -66,7 +71,7 @@ const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
-function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps) {
+function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: SceneProps) {
   const original = envelopeVisuals[theme] || envelopeVisuals["botanical-ivory"];
   const style = { ...original,
     backdrop: `var(--inv-scene-bg, ${original.backdrop})`,
@@ -88,7 +93,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps
       <p className={`${caption} relative mb-9 opacity-80`}>{theme === "modern-maroon" ? "Private / 01" : "A personal invitation"}</p>
       <div className="relative w-[min(74vw,310px)] pt-11">
         {usesPhoto && <div className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
-          <Portrait src={cover} focus={focus} alt="Foto utama pada kartu undangan" />
+          <Portrait src={cover} focus={focus} crop={crop} alt="Foto utama pada kartu undangan" />
         </div>}
         <div className={`relative mt-12 flex min-h-[275px] flex-col items-center justify-end overflow-hidden border px-6 pb-10 pt-20 shadow-[0_22px_44px_#0002] ${style.effect}`} style={{backgroundColor:style.surface,borderColor:style.border,color:`var(--inv-scene-surface-ink, ${original.ink})`}}>
           <div aria-hidden className="absolute inset-x-0 top-0 z-10 h-44 origin-top opacity-95 [clip-path:polygon(0_0,100%_0,50%_100%)]" style={{backgroundColor:style.flap}}/>
@@ -108,10 +113,10 @@ function ThemeEnvelope({theme,names,date,cover,focus,onOpen,preview}: SceneProps
 const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,stage,onOpen,onEditPhoto,preview,isWedding,hashtag}: SceneProps) {
+export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,stage,onOpen,onEditPhoto,preview,isWedding,hashtag}: SceneProps) {
   if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} isWedding={isWedding} hashtag={hashtag} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
-  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} stage={stage} onOpen={onOpen} preview={preview} />;
+  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} />;
   const isEnvelope = false;
   const content = isEnvelope ? "You're Invited" : "The Celebration";
   if (theme === "eternal-blossom") return <section className={`${center} bg-[var(--inv-scene-bg,#ffedf0)] text-[color:var(--inv-scene-ink,#622a43)]`} data-invitation-section={stage}>
@@ -120,7 +125,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,stag
     <Flower2 aria-hidden className="absolute -right-12 bottom-24 h-52 w-52 rotate-[20deg] text-[color:var(--inv-scene-text,#c45c7e)]/40" strokeWidth={0.6} />
     <p className={`${caption} relative mb-6 text-[color:var(--inv-scene-text,#a45c75)]`}>{isEnvelope ? "A love letter" : "Eternal Blossom"}</p>
     <div className="relative w-[min(70vw,290px)] rotate-[-4deg] rounded-t-full rounded-b-[100px] border-8 border-white bg-white p-2 shadow-[20px_20px_0_#dd9caf]">
-      <div className="relative h-[320px] overflow-hidden rounded-t-full rounded-b-[95px]"><Portrait src={cover} focus={focus} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
+      <div className="relative h-[320px] overflow-hidden rounded-t-full rounded-b-[95px]"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
       {isEnvelope && <span aria-hidden className="absolute -bottom-7 -right-7 grid h-20 w-20 place-items-center rounded-full border-4 border-white bg-[var(--inv-scene-soft,#a8486c)] text-white shadow-xl"><Heart className="h-8 w-8" fill="currentColor" /></span>}
     </div>
     <Names className="z-10 mt-9 text-3xl">{names}</Names>
@@ -135,7 +140,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,stag
     <span aria-hidden className="absolute left-[13%] top-6 text-[110px] font-black leading-none text-[color:var(--inv-scene-text,#f9b6a3)]/20">M.</span>
     <p className={`${caption} relative mb-7 self-start text-[color:var(--inv-scene-text,#f8af99)]`}>{isEnvelope ? "Private invitation / 01" : content}</p>
     <div className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
-      <div className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><Portrait src={cover} focus={focus} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
+      <div className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
       <p className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">DC Organizer — Selected events</p>
     </div>
     <div className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
@@ -150,7 +155,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,stag
     <BotanicalSprig /><BotanicalSprig mirrored />
     <p className={`${caption} relative mt-6 text-[color:var(--inv-scene-text,#68855d)]`}>{isEnvelope ? "A garden invitation" : "In full bloom"}</p>
     <div className="relative mt-9 w-[min(73vw,290px)] rounded-t-[180px] rounded-b-[16px] border-[12px] border-[var(--inv-scene-accent,#f8faed)] bg-[var(--inv-scene-soft,#e1ebd9)] p-1 shadow-[0_20px_48px_#41593733]">
-      <div className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><Portrait src={cover} focus={focus} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
+      <div className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
       <span aria-hidden className="absolute -bottom-7 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--inv-scene-accent,#ecf0de)] bg-[var(--inv-scene-soft,#607c52)] text-white"><Leaf className="h-6 w-6" /></span>
     </div>
     <Names className="relative mt-14 text-3xl italic">{names}</Names>
@@ -163,7 +168,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,stag
     <Moon aria-hidden className="absolute right-7 top-14 h-20 w-20 text-[color:var(--inv-scene-text,#e5d09e)]/45" strokeWidth={0.6} />
     <p className={`${caption} relative mb-7 text-[color:var(--inv-scene-text,#e6cda0)]`}>{isEnvelope ? "Under the stars" : "Midnight Romance"}</p>
     <div className="relative h-[310px] w-[min(75vw,310px)] rounded-full border border-[var(--inv-scene-accent,#e1ca8f)] p-2 shadow-[0_0_0_7px_#e1ca8f20,0_0_0_20px_#e1ca8f0a]">
-      <div className="relative h-full w-full overflow-hidden rounded-full"><Portrait src={cover} focus={focus} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
+      <div className="relative h-full w-full overflow-hidden rounded-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={!isEnvelope?onEditPhoto:undefined}/></div>
       <Star aria-hidden className="absolute -right-5 top-8 h-9 w-9 text-[color:var(--inv-scene-text,#e6cda0)]" strokeWidth={0.7} />
     </div>
     <Names className="relative mt-10 text-3xl">{names}</Names>
