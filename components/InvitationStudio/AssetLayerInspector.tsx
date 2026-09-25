@@ -63,6 +63,11 @@ export default function AssetLayerInspector({
     <label className="mt-3 block space-y-1.5 text-xs text-foreground"><span>{locale === "en" ? "Object width" : "Lebar objek"} · {selectedAssetLayer.width}%</span>
       <input className="w-full accent-primary" type="range" min="5" max="85" value={selectedAssetLayer.width} onChange={(event) => onUpdate(selectedAssetLayer.id, { width: Number(event.target.value) })} />
     </label>
+    {selectedAssetLayer.height !== undefined && <label className="mt-3 block space-y-1.5 text-xs text-foreground">
+      <span>{locale === "en" ? "Object height" : "Tinggi objek"} · {selectedAssetLayer.height}%</span>
+      <input className="w-full accent-primary" type="range" min="3" max="200" step="0.1" value={selectedAssetLayer.height} onChange={(event) => onUpdate(selectedAssetLayer.id, { height: Number(event.target.value) })} />
+    </label>}
+    {selectedAssetLayer.height !== undefined && <button className="mt-2 text-xs text-primary underline-offset-2 hover:underline" type="button" onClick={() => onUpdate(selectedAssetLayer.id, { height: undefined })}>{locale === "en" ? "Restore original image proportions" : "Kembalikan proporsi asli"}</button>}
     <div className="mt-3 space-y-2 text-xs text-foreground">
       <label className="flex items-center justify-between gap-2" htmlFor="dc-studio-rotation-degrees"><span>{locale === "en" ? "Rotation" : "Rotasi"}</span><span className="flex items-center gap-1"><input id="dc-studio-rotation-degrees" type="number" min="-180" max="180" step="1" value={selectedAssetLayer.rotation ?? 0} onFocus={(event) => event.currentTarget.select()} onChange={(event) => { const angle = event.currentTarget.valueAsNumber; if (Number.isFinite(angle)) onUpdate(selectedAssetLayer.id, { rotation: Math.min(180, Math.max(-180, angle)) }); }} aria-label={locale === "en" ? "Exact rotation in degrees" : "Rotasi tepat dalam derajat"} className="w-16 rounded-[var(--dc-control-radius)] border border-primary/50 bg-background px-2 py-1 text-right text-xs text-foreground" />°</span></label>
       <input aria-label={locale === "en" ? "Rotation slider" : "Slider rotasi"} className="w-full accent-primary" type="range" min="-180" max="180" value={selectedAssetLayer.rotation ?? 0} onChange={(event) => onUpdate(selectedAssetLayer.id, { rotation: Number(event.target.value) })} />
