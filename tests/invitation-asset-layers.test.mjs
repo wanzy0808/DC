@@ -133,8 +133,11 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(textPanel, /maxLength=\{180\}/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ fontRole:/);
-  assert.match(renderer, /onPointerDown=\{\(event\) => begin\(event, "resize"\)\}/);
+  assert.match(renderer, /begin\(event, "resize", corner\)/);
+  assert.match(renderer, /"top-left", "top-right", "bottom-left", "bottom-right"/);
+  assert.match(renderer, /absolute inset-0 z-10 border border-primary/);
   assert.match(renderer, /onPointerDown=\{\(event\) => begin\(event, "rotate"\)\}/);
+  assert.match(renderer, /localX = dx \* Math\.cos\(radians\) \+ dy \* Math\.sin\(radians\)/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
   assert.match(renderer, /layer\.kind === "text"/);
   assert.match(universal, /objectOverlay\(keyName\)/);
