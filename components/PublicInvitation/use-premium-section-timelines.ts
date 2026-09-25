@@ -8,6 +8,7 @@ import {
   premiumTimelineSectionKeys,
   type InvitationPremiumTimeline,
 } from "@/lib/templates/premium-timelines";
+import { MAX_PREMIUM_TIMELINE_ITEMS } from "@/lib/templates/motion-performance";
 
 type TimelineTarget = {
   section: HTMLElement;
@@ -25,7 +26,7 @@ function storyItems(section: HTMLElement) {
       !node.closest("form") &&
       !node.closest('[data-studio-rsvp-element="inputs"]'),
     )
-    .slice(0, 10);
+    .slice(0, MAX_PREMIUM_TIMELINE_ITEMS);
 }
 
 function rootFrom(timeline: InvitationPremiumTimeline) {
