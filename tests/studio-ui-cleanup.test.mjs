@@ -161,6 +161,16 @@ test("overlapping Studio assets use left-click selection and cycle to the layer 
   assert.match(assetLayers, /currentIndex <= 0 \? hits\.length - 1 : currentIndex - 1/);
 });
 
+test("right-side text size styling reaches nested RSVP and wishes fields", () => {
+  const rsvpPanels = read("components/InvitationStudio/RsvpPanels.tsx");
+  const wishes = read("components/PublicInvitation/GuestWishes.tsx");
+  assert.match(rsvpPanels, /const inputFontSize = rsvpConfig\.elementStyles\.inputs\?\.fontSize/);
+  assert.match(rsvpPanels, /const inputTextStyle = inputFontSize !== undefined/);
+  assert.match(rsvpPanels, /style=\{inputTextStyle\}/);
+  assert.match(wishes, /const inputTextStyle = inputStyle\?\.fontSize !== undefined/);
+  assert.match(wishes, /style=\{inputTextStyle\}/);
+});
+
 test("right-side Studio inspectors avoid redundant component labels and use one Reset label", () => {
   const rsvpInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   const sectionElementInspector = read("components/InvitationStudio/SectionElementInspector.tsx");

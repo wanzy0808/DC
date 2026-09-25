@@ -32,6 +32,7 @@ export default function GuestWishes({
   const [reloadKey, setReloadKey] = useState(0);
   const endpoint = `/api/invite/${encodeURIComponent(slug)}/wishes`;
   const rose = appearance === "rose";
+  const inputTextStyle = inputStyle?.fontSize !== undefined ? { fontSize: inputStyle.fontSize } : undefined;
   const fieldClass = rose
     ? "w-full min-w-0 rounded-[var(--dc-control-radius)] border border-[#d7b5be] bg-white/90 px-4 py-3 text-sm text-[#66394b] outline-none focus-visible:border-[#a65e69] focus-visible:ring-2 focus-visible:ring-[#a65e69]/20 disabled:opacity-65"
     : "w-full min-w-0 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] bg-[var(--inv-surface)] px-4 py-3 text-sm text-[var(--inv-scene-surface-ink,var(--inv-ink))] outline-none focus-visible:border-[var(--inv-accent)] focus-visible:ring-2 focus-visible:ring-[var(--inv-accent)]/20 disabled:opacity-65";
@@ -94,7 +95,7 @@ export default function GuestWishes({
       <form onSubmit={submit} className="space-y-4">
         <fieldset data-studio-section-element="wishes:input" style={inputStyle} disabled={submitting} aria-disabled={preview || submitting} className="min-w-0 space-y-4 border-0 p-0">
           <div>
-            <label htmlFor={inputId} className="mb-2 block text-sm font-medium">Nama</label>
+            <label htmlFor={inputId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>Nama</label>
             <input
               id={inputId}
               name="name"
@@ -105,10 +106,11 @@ export default function GuestWishes({
               maxLength={80}
               required
               className={fieldClass}
+              style={inputTextStyle}
             />
           </div>
           <div>
-            <label htmlFor={messageId} className="mb-2 block text-sm font-medium">Ucapan & Doa</label>
+            <label htmlFor={messageId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>Ucapan & Doa</label>
             <textarea
               id={messageId}
               name="wish"
@@ -119,6 +121,7 @@ export default function GuestWishes({
               maxLength={600}
               required
               className={`${fieldClass} resize-y`}
+              style={inputTextStyle}
             />
           </div>
           <Button data-studio-section-element="wishes:button" style={buttonStyle} type="submit" disabled={submitting} aria-disabled={preview || submitting} size="sm" className="min-h-10">

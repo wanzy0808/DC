@@ -84,6 +84,9 @@ export function RsvpInputPanel({
   submitting: boolean;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
+  const inputFontSize = rsvpConfig.elementStyles.inputs?.fontSize;
+  const inputTextStyle = inputFontSize !== undefined ? { fontSize: `${inputFontSize}px` } : undefined;
+
   return (
     <form onSubmit={onSubmit} className="space-y-4 font-[var(--font-fauna)]">
       {(guestName || invitedPax !== undefined) && (
@@ -104,27 +107,27 @@ export function RsvpInputPanel({
       >
       {!guestId && (
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="text-xs font-medium">
+          <label className="text-xs font-medium" style={inputTextStyle}>
             Nama
             <Input
               value={form.name}
               onChange={(event) =>
                 setForm({ ...form, name: event.target.value })
               }
-              className="mt-1.5"
+              className="mt-1.5" style={inputTextStyle}
               placeholder="Nama lengkap"
               required
             />
           </label>
 
-          <label className="text-xs font-medium">
+          <label className="text-xs font-medium" style={inputTextStyle}>
             No. WhatsApp
             <Input
               value={form.phone}
               onChange={(event) =>
                 setForm({ ...form, phone: event.target.value })
               }
-              className="mt-1.5"
+              className="mt-1.5" style={inputTextStyle}
               placeholder="08xxxxxxxxxx"
               required
             />
@@ -133,13 +136,14 @@ export function RsvpInputPanel({
       )}
 
       {eventCategory === "WEDDING" && form.status === "ATTENDING" && (rsvpConfig.ceremony || rsvpConfig.reception) && (
-        <label className="block text-xs font-medium">
+        <label className="block text-xs font-medium" style={inputTextStyle}>
           Acara yang akan dihadiri
           <select
             aria-label="Acara yang akan dihadiri"
             value={form.eventChoice}
             onChange={(event) => setForm({ ...form, eventChoice: event.target.value as RsvpFormState["eventChoice"] })}
             className="mt-1.5 w-full rounded-md border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10"
+            style={inputTextStyle}
             required
           >
             <option value="">Pilih acara</option>
@@ -163,6 +167,7 @@ export function RsvpInputPanel({
           setForm({ ...form, status: event.target.value })
         }
         className="w-full rounded-md border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10"
+        style={inputTextStyle}
       >
         <option value="ATTENDING">Saya Akan Hadir</option>
         <option value="NOT_ATTENDING">Saya Tidak Hadir</option>
@@ -171,7 +176,7 @@ export function RsvpInputPanel({
 
       {form.status === "ATTENDING" && (invitedPax === undefined || invitedPax > 1) && (
       <fieldset className="space-y-2">
-        <legend className="text-sm font-medium">Jumlah pendamping</legend>
+        <legend className="text-sm font-medium" style={inputTextStyle}>Jumlah pendamping</legend>
         {invitedPax !== undefined && invitedPax > 2 ? (
           <Input
             type="number"
@@ -181,11 +186,12 @@ export function RsvpInputPanel({
             value={form.plusOnes}
             onChange={(event) => setForm({ ...form, plusOnes: event.target.value })}
             className="max-w-28"
+            style={inputTextStyle}
             aria-label="Jumlah pendamping"
           />
         ) : (
         <>
-        <div className="flex gap-5 text-sm">
+        <div className="flex gap-5 text-sm" style={inputTextStyle}>
           <label className="flex items-center gap-2">
             <input
               type="radio"
@@ -219,7 +225,7 @@ export function RsvpInputPanel({
       {rsvpConfig.customFields.length > 0 && (
         <div className="space-y-3">
           {rsvpConfig.customFields.map((field) => (
-            <label key={field.id} className="block text-xs font-medium">
+            <label key={field.id} className="block text-xs font-medium" style={inputTextStyle}>
               {field.label}
               <Input
                 value={form.customAnswers[field.id] ?? ""}
@@ -227,7 +233,7 @@ export function RsvpInputPanel({
                   ...form,
                   customAnswers: { ...form.customAnswers, [field.id]: event.target.value },
                 })}
-                className="mt-1.5"
+                className="mt-1.5" style={inputTextStyle}
                 maxLength={200}
                 required={field.required && form.status === "ATTENDING"}
               />
