@@ -54,7 +54,10 @@
 .dc-studio-layer-toolbar .dc-studio-icon { width: 34px; height: 34px; }
 .dc-studio-layer-toolbar input[type="range"] { accent-color: var(--primary); }
 
-.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-canvas-scroll[data-space-pan="true"] { cursor: grab; user-select: none; }
+.dc-studio-canvas-scroll[data-panning="true"] { cursor: grabbing; }
+.dc-studio-canvas-scroll[data-panning="true"] * { cursor: grabbing !important; }
 .dc-studio-canvas-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 .dc-studio-preview-surface { position: relative; isolation: isolate; width: 340px; max-width: 100%; margin-inline: auto; overflow: visible; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 24px; background: var(--background); box-shadow: 0 16px 48px rgb(0 0 0 / .12); }
 .dc-studio-preview-surface [data-studio-preview-root="true"] { overflow: visible !important; border-radius: inherit; }
