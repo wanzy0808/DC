@@ -1,5 +1,6 @@
 "use client";
 
+import { Play } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import {
   getSectionAnimationPreset,
@@ -50,6 +51,21 @@ export default function LayerAnimationControls({
 
       {layer.animation && layer.animation !== "none" ? (
         <>
+          <button
+            type="button"
+            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
+            onClick={() => {
+              const root = document.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
+              root?.getAnimations({ subtree: true }).forEach((animation) => {
+                animation.cancel();
+                animation.play();
+              });
+            }}
+          >
+            <Play size={13} aria-hidden="true" />
+            {en ? "Preview animation" : "Preview animasi"}
+          </button>
+
           <div className="dc-studio-layer-grid">
             <label className="dc-studio-layer-field">
               <span>{en ? "Duration" : "Durasi"}</span>
