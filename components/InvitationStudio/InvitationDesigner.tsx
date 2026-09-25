@@ -594,7 +594,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       if (value === undefined) delete (next as Record<string, unknown>)[key];
     }
     const motion = { ...(design.photos.motion ?? {}) };
-    if (next.animation && next.animation !== "none") motion[slot] = next;
+    if ((next.animation && next.animation !== "none") || (next.parallax ?? 0) > 0) motion[slot] = next;
     else delete motion[slot];
     change({ photos: { ...design.photos, motion } });
   }
