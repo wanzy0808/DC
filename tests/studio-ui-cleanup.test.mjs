@@ -64,6 +64,27 @@ test("Studio uses one left-rail Isi menu for sections and functional components"
   assert.match(panels, /sectionFunctionalElements/);
 });
 
+test("Studio left rail follows Catalog Isi Teks Foto Aset Musik Warna order", () => {
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const order = [
+    'panel === "template"',
+    'panel === "sections"',
+    'panel === "text"',
+    'panel === "decor"',
+    'panel === "assets"',
+    'panel === "music"',
+    'panel === "color"',
+  ];
+  let previous = -1;
+  for (const token of order) {
+    const index = rail.indexOf(token);
+    assert.ok(index > previous, `expected ${token} after previous Studio rail item`);
+    previous = index;
+  }
+  assert.match(rail, /label=\{locale === "en" \? "Catalog" : "Katalog"\}/);
+  assert.doesNotMatch(rail, /dc-studio-rail-divider/);
+});
+
 test("Studio folds Font into Text with four quick font pairs and See more", () => {
   const textPanel = read("components/InvitationStudio/TextObjectPanel.tsx");
   const types = read("components/InvitationStudio/designer-types.ts");
