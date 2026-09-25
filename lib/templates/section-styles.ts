@@ -1,5 +1,10 @@
 import type { CSSProperties } from "react";
-import { invitationSectionItems, type InvitationSectionKey } from "@/lib/templates/sections";
+import type { InvitationSectionKey } from "@/lib/templates/sections";
+
+const visualSectionKeys = [
+  "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
+  "countdown", "location", "rsvp", "wishes", "gift", "closing", "footer", "music",
+] as const satisfies readonly InvitationSectionKey[];
 
 export type InvitationSectionAlign = "left" | "center" | "right";
 
@@ -12,7 +17,7 @@ export type InvitationSectionStyle = {
 
 export type InvitationSectionStyles = Partial<Record<InvitationSectionKey, InvitationSectionStyle>>;
 
-const sectionKeys = new Set<InvitationSectionKey>(invitationSectionItems.map(({ key }) => key));
+const sectionKeys = new Set<InvitationSectionKey>(visualSectionKeys);
 const alignValues = new Set<InvitationSectionAlign>(["left", "center", "right"]);
 const numberBetween = (value: unknown, min: number, max: number) =>
   typeof value === "number" && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : undefined;
