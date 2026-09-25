@@ -461,3 +461,14 @@ test("Studio multi-select exposes align and distribute controls", () => {
   assert.match(designer, /distributeSelectedAssetLayers\("horizontal"\)/);
   assert.match(designer, /distributeSelectedAssetLayers\("vertical"\)/);
 });
+
+
+test("Studio clipboard operations preserve multi-selection and copied groups", () => {
+  assert.match(designer, /const \[copiedAssetLayers, setCopiedAssetLayers\] = useState<InvitationAssetLayer\[]>\(\[\]\)/);
+  assert.match(designer, /function currentClipboardSelection\(/);
+  assert.match(designer, /function cloneAssetLayers\(/);
+  assert.match(designer, /setCopiedAssetLayers\(copies\)/);
+  assert.match(designer, /groupIds = new Map<string, string>\(\)/);
+  assert.match(designer, /setSelectedLayerIds\(ids\)/);
+  assert.match(designer, /const cuttable = currentClipboardSelection\(false\)/);
+});
