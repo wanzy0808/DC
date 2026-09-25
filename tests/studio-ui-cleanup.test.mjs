@@ -32,7 +32,7 @@ test("Studio uses display-only event title capitalization and one live canvas wi
 });
 
 test("Studio has a wider inspector, compact side tools and a smaller invitation canvas", () => {
-  assert.match(styles, /grid-template-columns: 168px 360px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 98px 360px minmax\(0, 1fr\)/);
   assert.match(styles, /\.dc-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
   assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
 });
@@ -53,7 +53,7 @@ test("Studio custom button states follow DC Organizer light/dark text and sortin
   assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
   assert.match(templatePanel, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
   assert.match(templatePanel, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
-  assert.match(styles, /grid-template-columns: 168px 380px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
 });
 
 test("landing and Studio share one rounded-rectangle button radius instead of pill controls", () => {
@@ -81,26 +81,27 @@ test("Ucapan Tamu section label has no stale unavailable caption", () => {
   assert.doesNotMatch(panels, /wishes.*text-xs.*unavailable/i);
 });
 
-test("Studio keeps Save in the header, history beside Default and stages directly above the invitation", () => {
+test("Studio keeps Save above canvas history, removes phone label and keeps stages above the invitation", () => {
   assert.match(designer, /save: "Simpan"/);
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);
   const toolbar = designer.split('<header className="dc-studio-toolbar">')[1]?.split("</header>")[0] || "";
   assert.match(toolbar, /onClick=\{save\}/);
   assert.doesNotMatch(toolbar, /onClick=\{undo\}|onClick=\{redo\}/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
-  const row = rail.split('<div className="dc-studio-reset-history-row"')[1]?.split('</div>\n          </div>')[0] || "";
-  assert.match(row, /onClick=\{restoreDefaults\}/);
-  assert.match(row, /dc-studio-history-actions/);
-  assert.ok(row.indexOf("onClick={restoreDefaults}") < row.indexOf("onClick={undo}") && row.indexOf("onClick={undo}") < row.indexOf("onClick={redo}"));
-  assert.match(rail, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
-  assert.match(rail, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
+  assert.match(rail, /onClick=\{restoreDefaults\}/);
+  assert.doesNotMatch(rail, /onClick=\{undo\}|onClick=\{redo\}/);
+  const canvasToolbar = designer.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
+  assert.match(canvasToolbar, /dc-studio-history-actions/);
+  assert.match(canvasToolbar, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
+  assert.match(canvasToolbar, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
+  assert.match(canvasToolbar, /aria-label=\{copy\.replay\}/);
+  assert.doesNotMatch(designer, /Smartphone|copy\.phone|phone: "Ponsel"|phone: "Mobile"/);
   const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
   assert.ok(canvas.indexOf("dc-studio-stage-controls") >= 0 && canvas.indexOf("dc-studio-stage-controls") < canvas.indexOf('className="dc-studio-preview-surface"'));
   assert.match(designer, /isUndo && history.length/);
   assert.match(designer, /isRedo && future.length/);
   assert.match(designer, /event\.nativeEvent\.isComposing/);
-  assert.match(styles, /\.dc-studio-reset-history-row \{[^}]*display: flex;[^}]*align-items: center/);
-  assert.match(styles, /\.dc-studio-reset-history-row \.dc-studio-history-actions button \{[^}]*width: 44px; height: 44px/);
+  assert.match(styles, /\.dc-studio-history-actions \{[^}]*display: flex;[^}]*align-items: center/);
   assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
   assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
 });
