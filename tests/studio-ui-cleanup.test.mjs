@@ -603,6 +603,10 @@ test("Studio decorative text supports staggered whole word character and line ch
   assert.match(layerAnimationControls, /value="character"/);
   assert.match(layerAnimationControls, /value="line"/);
   assert.match(layerAnimationControls, /animationStagger/);
+  assert.match(layerAnimationControls, /Preview animasi/);
+  assert.match(layerAnimationControls, /getAnimations\(\{ subtree: true \}\)/);
+  assert.match(layerAnimationControls, /animation\.cancel\(\)/);
+  assert.match(layerAnimationControls, /animation\.play\(\)/);
 
   assert.match(layerTextContent, /data-invitation-text-motion-part/);
   assert.match(layerTextContent, /characterCount > 96 \? "word" : unit/);
