@@ -772,3 +772,14 @@ test("Premium section timelines lazy-load GSAP only for supported storytelling s
   assert.match(universalTemplate, /sectionStyles\[sectionKey\]\?\.timeline/);
 });
 
+test("Standard invitation renderers stay free of eager Three R3F and GSAP imports", () => {
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const standardSources = [universalTemplate, romanticTemplate, assetRenderer, ourStorySection];
+  for (const source of standardSources) {
+    assert.doesNotMatch(source, /@react-three\/fiber|@react-three\/drei/);
+    assert.doesNotMatch(source, /from "three"|import\("three"\)/);
+    assert.doesNotMatch(source, /from "gsap"/);
+  }
+  assert.match(premiumTimelineHook, /await import\("gsap"\)/);
+});
+
