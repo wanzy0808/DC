@@ -5,6 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getOwnerPackageGrant, setOwnerPackageGrant, type ManualPackageAccess } from "@/lib/packages/owner-grants";
 import { sendOwnerAccountActionEmail } from "@/lib/notifications/email";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 const roles = ["USER", "DESIGNER", "ADMIN", "SUPPORT"] as const;
 const digitalKeys = new Set(["INVITATION_BASIC", "GUESTBOOK_DIGITAL", "INVITATION_GUESTBOOK"]);
@@ -79,6 +80,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const owner = await requireOwner();
   if (!owner) return NextResponse.json({ error: "Akses Owner diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -131,6 +133,7 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   const owner = await requireOwner();
   if (!owner) return NextResponse.json({ error: "Akses Owner diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -151,6 +154,7 @@ export async function PATCH(request: Request) {
       const token = randomBytes(32).toString("hex");
       const tokenHash = createHash("sha256").update(token).digest("hex");
       const passwordHash = await bcrypt.hash(password, 12);
+      await prisma.accountActionToken.deleteMany({ where: { userId: target.id, action: "PASSWORD_CHANGE" } });
       await prisma.accountActionToken.create({
         data: {
           tokenHash,
