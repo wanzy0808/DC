@@ -554,7 +554,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Undo/redo design changes.
 - [x] **Add Cut (`Ctrl/Cmd+X`) for selected design layers.**
 - [x] **Add proper photo crop controls:** free X/Y crop position, zoom, reset crop; persist per photo slot without modifying the original uploaded asset.
-- [ ] Add crop mode directly on-canvas so the frame stays fixed while the photo can be repositioned/zoomed inside it.
+- [x] Add crop mode directly on-canvas so the frame stays fixed while the photo can be repositioned/zoomed inside it.
 - [ ] Add common aspect-ratio crop presets where appropriate (Original, 1:1, 4:5, 3:4, 16:9) without forcing every template frame to the same ratio.
 - [x] Add duplicate shortcut (`Ctrl/Cmd+D`) for selected layers.
 - [x] Add lock/unlock layer.
