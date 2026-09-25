@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState, type FormEvent } from "react";
+import { useEffect, useId, useState, type CSSProperties, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 
 type Wish = { id: string; authorName: string; message: string; createdAt: string };
@@ -10,11 +10,15 @@ export default function GuestWishes({
   preview = false,
   appearance = "default",
   initialName = "",
+  inputStyle,
+  buttonStyle,
 }: {
   slug: string;
   preview?: boolean;
   appearance?: "default" | "zen" | "rose";
   initialName?: string;
+  inputStyle?: CSSProperties;
+  buttonStyle?: CSSProperties;
 }) {
   const inputId = useId();
   const messageId = useId();
@@ -88,7 +92,7 @@ export default function GuestWishes({
   return (
     <div className={`mx-auto max-w-md text-left ${rose ? "text-[#765460]" : ""}`}>
       <form onSubmit={submit} className="space-y-4">
-        <fieldset disabled={preview || submitting} className="min-w-0 space-y-4 border-0 p-0">
+        <fieldset data-studio-section-element="wishes:input" style={inputStyle} disabled={submitting} aria-disabled={preview || submitting} className="min-w-0 space-y-4 border-0 p-0">
           <div>
             <label htmlFor={inputId} className="mb-2 block text-sm font-medium">Nama</label>
             <input
@@ -117,7 +121,7 @@ export default function GuestWishes({
               className={`${fieldClass} resize-y`}
             />
           </div>
-          <Button type="submit" disabled={preview || submitting} size="sm" className="min-h-10">
+          <Button data-studio-section-element="wishes:button" style={buttonStyle} type="submit" disabled={submitting} aria-disabled={preview || submitting} size="sm" className="min-h-10">
             {submitting ? "Mengirim…" : "Kirim Ucapan"}
           </Button>
         </fieldset>
