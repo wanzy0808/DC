@@ -16,6 +16,11 @@ export type InvitationAssetLayer = {
   stroke?: string;
   strokeWidth?: number;
   radius?: number;
+  shadowX?: number;
+  shadowY?: number;
+  shadowBlur?: number;
+  shadowColor?: string;
+  shadowOpacity?: number;
   section?: StudioObjectSection;
   x: number;
   y: number;
@@ -99,6 +104,12 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       layer.color = typeof entry.color === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.color) ? entry.color : "#C07A84";
     }
     if (entry.height !== undefined) layer.height = numberBetween(entry.height, 3, 200, layer.width);
+    if (!shapeObject && entry.radius !== undefined) layer.radius = numberBetween(entry.radius, 0, 100, 0);
+    if (entry.shadowX !== undefined) layer.shadowX = numberBetween(entry.shadowX, -50, 50, 0);
+    if (entry.shadowY !== undefined) layer.shadowY = numberBetween(entry.shadowY, -50, 50, 8);
+    if (entry.shadowBlur !== undefined) layer.shadowBlur = numberBetween(entry.shadowBlur, 0, 60, 18);
+    if (typeof entry.shadowColor === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.shadowColor)) layer.shadowColor = entry.shadowColor;
+    if (entry.shadowOpacity !== undefined) layer.shadowOpacity = numberBetween(entry.shadowOpacity, 0, 1, 0.2);
     if (studioObjectSections.includes(entry.section as StudioObjectSection)) layer.section = entry.section as StudioObjectSection;
     if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
     if (entry.locked === true) layer.locked = true;
