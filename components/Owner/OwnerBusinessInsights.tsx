@@ -76,10 +76,13 @@ export default function OwnerBusinessInsights() {
 
   return (
     <section className="space-y-6 rounded-2xl border border-border bg-background p-5 sm:p-6">
-      <div>
-        <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.18em] text-primary">Performa bisnis</p>
-        <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Designer & Mitra</h2>
-        <p className="mt-2 text-sm text-muted-foreground">Penjualan hanya menghitung order yang sudah terverifikasi PAID. Grant Owner tidak dihitung sebagai penjualan.</p>
+      <div className="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.18em] text-primary">Performa bisnis</p>
+          <h2 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl">Designer & Mitra</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Penjualan hanya menghitung order yang sudah terverifikasi PAID. Grant Owner tidak dihitung sebagai penjualan.</p>
+        </div>
+        <Button type="button" size="sm" onClick={() => void load()}>Muat ulang</Button>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">
