@@ -7,6 +7,10 @@ const studio = read("components/InvitationStudio/InvitationEditorPage.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
 const layerOrder = read("components/InvitationStudio/designer-layer-order.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
+const layerAnimationControls = read("components/InvitationStudio/LayerAnimationControls.tsx");
+const layerAnimationHook = read("components/PublicInvitation/use-layer-animation.ts");
+const assetLayerModel = read("lib/templates/asset-layers.ts");
+const sectionStyles = read("lib/templates/section-styles.ts");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
 const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
@@ -543,5 +547,33 @@ test("Studio keeps invitation and template persistence outside the canvas compon
   assert.match(persistence, /export async function uploadStudioAsset\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations\/assets\/upload"/);
   assert.match(persistence, /export async function deleteStudioAsset\(/);
+});
+
+test("Studio element layers reuse the shared animation catalog and persist timing safely", () => {
+  const assetInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+
+  assert.match(assetLayerModel, /animation\?: InvitationSectionAnimation/);
+  assert.match(assetLayerModel, /isInvitationSectionAnimation\(entry\.animation\)/);
+  assert.match(assetLayerModel, /entry\.animationDuration, 0\.2, 2\.5/);
+  assert.match(assetLayerModel, /entry\.animationDelay, 0, 2/);
+
+  assert.match(layerAnimationControls, /sectionAnimationGroups/);
+  assert.match(layerAnimationControls, /sectionAnimationPresets/);
+  assert.match(layerAnimationControls, /getSectionAnimationPreset\(layer\.animation\)/);
+  assert.match(assetInspector, /<LayerAnimationControls locale=\{locale\} layer=\{selectedAssetLayer\}/);
+  assert.match(textInspector, /<LayerAnimationControls locale=\{locale\} layer=\{layer\}/);
+
+  assert.match(assetRenderer, /useInvitationLayerAnimation\(motion, layer\)/);
+  assert.match(assetRenderer, /data-studio-layer-motion/);
+  assert.match(assetRenderer, /data-invitation-layer-motion/);
+  assert.match(layerAnimationHook, /prefers-reduced-motion: reduce/);
+  assert.match(layerAnimationHook, /sectionAnimationKeyframes\(layer\.animation\)/);
+  assert.match(layerAnimationHook, /getSectionAnimationPreset\(layer\.animation\)/);
+  assert.match(layerAnimationHook, /IntersectionObserver/);
+
+  assert.match(sectionStyles, /isInvitationSectionAnimation\(source\.animation\)/);
+  assert.doesNotMatch(sectionStyles, /invitationSectionAnimationValues/);
 });
 
