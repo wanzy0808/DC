@@ -58,6 +58,22 @@ test("Studio uses one left-rail Isi menu for sections and functional components"
   assert.match(panels, /sectionFunctionalElements/);
 });
 
+test("Studio folds Font into Text with four quick font pairs and See more", () => {
+  const textPanel = read("components/InvitationStudio/TextObjectPanel.tsx");
+  const types = read("components/InvitationStudio/designer-types.ts");
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.doesNotMatch(rail, /label="Font"|panel === "font"|setPanel\("font"\)/);
+  assert.match(rail, /label=\{copy\.text\}/);
+  assert.doesNotMatch(designer, /<FontPanel|panel === "font"/);
+  assert.doesNotMatch(types, /\| "font"/);
+  assert.match(textPanel, /orderedFonts\.slice\(0, 4\)/);
+  assert.match(textPanel, /Kombinasi font/);
+  assert.match(textPanel, /Lihat lebih banyak/);
+  assert.match(textPanel, /setShowMoreFonts\(\(value\) => !value\)/);
+  assert.match(textPanel, /onFontSelect\(key\)/);
+  assert.match(textPanel, /<Button[\s\S]*variant="outline"[\s\S]*See more/);
+});
+
 test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
   assert.match(templatePanel, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
   assert.doesNotMatch(templatePanel, /photoFilter === key \? "bg-primary text-black"/);
