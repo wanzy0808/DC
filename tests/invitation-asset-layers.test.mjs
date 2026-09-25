@@ -126,7 +126,7 @@ test("decorative text and section-targeted artwork survive the shared design-key
   });
   assert.deepEqual(sanitizeAssetLayers([{ ...text, text: "   " }]), []);
   assert.deepEqual(sanitizeAssetLayers([{ ...text, section: "not-a-section", rotation: 9999, fontSize: 1000 }])[0], {
-    ...(() => { const { section: _section, ...rest } = text; return rest; })(), rotation: 180, fontSize: 72,
+    ...(() => { const { section: _section, ...rest } = text; return rest; })(), rotation: 180, fontSize: 144,
   });
 });
 
