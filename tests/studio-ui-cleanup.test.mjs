@@ -308,6 +308,8 @@ test("Studio supports standard cut and non-destructive photo crop controls", () 
   assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
   assert.match(designer, /setCopiedAssetLayer\(\{ \.\.\.selectedAssetLayer \}\)/);
   assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
+  assert.match(designer, /event\.key\.toLowerCase\(\) === "d"/);
+  assert.match(designer, /duplicateSelectedAssetLayer\(\)/);
   assert.match(photos, /Crop & posisi/);
   assert.match(photos, /onSetCrop/);
   assert.match(photos, /onResetCrop/);
