@@ -48,7 +48,6 @@ import {
 import { InvitationPreview } from "@/components/InvitationStudio/InvitationPreview";
 import { getInvitationDefaultMusic } from "@/lib/templates/music";
 import { clearTemplateSelection, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
-import { invitationTitleCase } from "@/lib/events/parents";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import {
   invitationDecorOptions,
@@ -552,7 +551,6 @@ export default function InvitationDesigner() {
   return (
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
-        <h1 className="dc-studio-document-title truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg">{invitationTitleCase(invitation?.title || "Studio")}</h1>
         <div className="dc-studio-toolbar-actions flex flex-wrap items-center gap-1.5">
           <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint}>
             <RotateCcw className="h-4 w-4" /> {copy.defaults}
