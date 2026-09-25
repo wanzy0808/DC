@@ -236,7 +236,12 @@ model DesignerTemplate {
   name          String
   tags          String[]
   previewUrl    String
-  templateFile  String
+  templateFile  String?
+  designKey     String?        @db.Text
+  category      String         @default("Designer")
+  description   String         @default("")
+  usesPhotos    Boolean        @default(false)
+  musicUrl      String?
   status        TemplateStatus @default(PUBLISHED)
   designerId    String
   createdAt     DateTime       @default(now())
