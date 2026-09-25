@@ -27,6 +27,7 @@ import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
+import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
 import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
@@ -226,6 +227,10 @@ export default function InvitationDesigner() {
   const designKey = makeInvitationDesignStateKey(design);
   const selectedAssetLayer = design.layers.find((layer) => layer.id === selectedLayerId);
   const selectedAssetIndex = design.layers.findIndex((layer) => layer.id === selectedLayerId);
+  const textTargetSection: StudioObjectSection =
+    selectedSectionKey && studioObjectSections.includes(selectedSectionKey as StudioObjectSection) && design.sections[selectedSectionKey] !== false
+      ? selectedSectionKey as StudioObjectSection
+      : selectedAssetLayer?.section ?? "cover";
   const identity = getInvitationEventIdentity(invitation);
   const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
   const dirty = Boolean(invitation && savedState !== currentState);
@@ -483,7 +488,8 @@ export default function InvitationDesigner() {
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
       id, kind: "text", src: "", text: text.slice(0, 180), section, x: 50, y: 48, width: 55,
-      opacity: 1, fontSize: 24, fontRole: "heading", color: palette?.accent ?? "#C07A84", rotation: 0,
+      opacity: 1, fontSize: 24, fontRole: "heading", fontWeight: 400, textAlign: "center",
+      letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
     }] });
     setSelectedLayerId(id);
     showDesignSection(section);
@@ -942,7 +948,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
+          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} onAdd={addTextObject} onSelect={focusDesignObject} />}
           {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
@@ -1114,7 +1120,18 @@ export default function InvitationDesigner() {
               </div>
             </div>
 
-            {selectedAssetLayer ? (
+            {selectedAssetLayer?.kind === "text" ? (
+              <TextLayerInspector
+                locale={locale}
+                layer={selectedAssetLayer}
+                selectedIndex={selectedAssetIndex}
+                layerCount={design.layers.length}
+                sections={design.sections}
+                onClose={() => setSelectedLayerId(null)}
+                onUpdate={updateAssetLayer}
+                onPosition={positionAssetLayer}
+              />
+            ) : selectedAssetLayer ? (
               <AssetLayerInspector
                 locale={locale}
                 selectedAssetLayer={selectedAssetLayer}
