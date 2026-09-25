@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent } from "react";
-import { RotateCw } from "lucide-react";
+import { Lock, RotateCw } from "lucide-react";
 import { studioObjectSections, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontFamily } from "@/lib/templates/presentation";
@@ -56,7 +56,7 @@ function EditableLayer({
   const displayed = { ...layer, ...live };
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
-    if (!editable || !onUpdate || !root.current || event.button !== 0) return;
+    if (!editable || layer.locked || !onUpdate || !root.current || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
     const sectionRect = root.current.parentElement?.getBoundingClientRect();
@@ -135,7 +135,7 @@ function EditableLayer({
     }
   }
   function keys(event: KeyboardEvent<HTMLButtonElement>) {
-    if (!editable || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+    if (!editable || layer.locked || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
     event.preventDefault();
     const step = event.shiftKey ? 5 : 1;
     onUpdate(layer.id, {
@@ -155,7 +155,7 @@ function EditableLayer({
       {editable ? (
         <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
-          className={`pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
+          className={`pointer-events-auto block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
           onClick={(event) => { event.stopPropagation(); onSelect?.(layer.id); }} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
@@ -185,9 +185,10 @@ function EditableLayer({
       }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
-        <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-9 left-1/2 z-20 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
-          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><RotateCw aria-hidden="true" size={15} strokeWidth={2} /></button>
-        {(["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const).map((handle) => (
+        {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
+        {!layer.locked && <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-9 left-1/2 z-20 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
+          style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><RotateCw aria-hidden="true" size={15} strokeWidth={2} /></button>}
+        {!layer.locked && (["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const).map((handle) => (
           <button key={handle} type="button" aria-label={`Ubah ukuran dari ${handle}`} title="Tarik untuk mengubah ukuran"
             className={`pointer-events-auto absolute z-20 grid h-5 w-5 place-items-center border-0 bg-transparent p-0 ${handle.includes("top") ? "-top-2.5" : handle.includes("bottom") ? "-bottom-2.5" : "top-1/2 -translate-y-1/2"} ${handle.includes("left") ? "-left-2.5" : handle.includes("right") ? "-right-2.5" : "left-1/2 -translate-x-1/2"} ${handle === "top" || handle === "bottom" ? "cursor-ns-resize" : handle === "left" || handle === "right" ? "cursor-ew-resize" : handle === "top-left" || handle === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
             style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", handle)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
@@ -198,7 +199,7 @@ function EditableLayer({
 }
 
 export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, onSelect, onUpdate }: Props) {
-  const visible = layers.filter((layer) => (layer.section ?? "cover") === section);
+  const visible = layers.filter((layer) => (layer.section ?? "cover") === section && !layer.hidden);
 
   function cycleSelection(currentId: string, clientX: number, clientY: number) {
     if (!onSelect) return;
