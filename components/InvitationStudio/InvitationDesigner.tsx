@@ -224,7 +224,8 @@ export default function InvitationDesigner() {
       const target = event.target;
       if (!(target instanceof Element)) return;
       const link = target.closest<HTMLAnchorElement>("a[href]");
-      if (!link || link.target === "_blank" || event.defaultPrevented) return;
+      if (!link || link.target === "_blank" || link.hasAttribute("download") ||
+        event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.defaultPrevented) return;
       const destination = new URL(link.href, window.location.href);
       if (destination.origin !== window.location.origin ||
         destination.pathname !== window.location.pathname || destination.search !== window.location.search) clearDraft();
