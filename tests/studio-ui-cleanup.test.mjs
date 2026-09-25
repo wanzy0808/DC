@@ -32,7 +32,7 @@ test("Studio uses display-only event title capitalization and one live canvas wi
 });
 
 test("Studio has a wider inspector, compact side tools and a smaller invitation canvas", () => {
-  assert.match(styles, /grid-template-columns: 98px 360px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 168px 360px minmax\(0, 1fr\)/);
   assert.match(styles, /\.dc-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
   assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
 });
@@ -53,7 +53,7 @@ test("Studio custom button states follow DC Organizer light/dark text and sortin
   assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
   assert.match(templatePanel, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
   assert.match(templatePanel, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
-  assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 168px 380px minmax\(0, 1fr\)/);
 });
 
 test("landing and Studio share one rounded-rectangle button radius instead of pill controls", () => {
@@ -88,7 +88,10 @@ test("Studio keeps Save in the header, history beside Default and stages directl
   assert.match(toolbar, /onClick=\{save\}/);
   assert.doesNotMatch(toolbar, /onClick=\{undo\}|onClick=\{redo\}/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
-  assert.ok(rail.indexOf("dc-studio-history-actions") > rail.indexOf("onClick={restoreDefaults}"));
+  const row = rail.split('<div className="dc-studio-reset-history-row"')[1]?.split('</div>\n          </div>')[0] || "";
+  assert.match(row, /onClick=\{restoreDefaults\}/);
+  assert.match(row, /dc-studio-history-actions/);
+  assert.ok(row.indexOf("onClick={restoreDefaults}") < row.indexOf("onClick={undo}") && row.indexOf("onClick={undo}") < row.indexOf("onClick={redo}"));
   assert.match(rail, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
   assert.match(rail, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
   const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
@@ -96,7 +99,8 @@ test("Studio keeps Save in the header, history beside Default and stages directl
   assert.match(designer, /isUndo && history.length/);
   assert.match(designer, /isRedo && future.length/);
   assert.match(designer, /event\.nativeEvent\.isComposing/);
-  assert.match(styles, /\.dc-studio-history-actions \{[^}]*grid-template-columns: repeat\(2, 44px\)/);
+  assert.match(styles, /\.dc-studio-reset-history-row \{[^}]*display: flex;[^}]*align-items: center/);
+  assert.match(styles, /\.dc-studio-reset-history-row \.dc-studio-history-actions button \{[^}]*width: 44px; height: 44px/);
   assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
   assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
 });
