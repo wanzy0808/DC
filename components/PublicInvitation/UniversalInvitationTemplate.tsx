@@ -141,6 +141,7 @@ export default function UniversalInvitationTemplate({
   onEditPhoto,
   onEnvelopeOpened,
   selectedAssetLayerId,
+  selectedAssetLayerIds,
   onSelectAssetLayer,
   onMoveAssetLayer,
   onUpdateAssetLayer,
@@ -167,7 +168,8 @@ export default function UniversalInvitationTemplate({
   /** Optional Studio-only callback; fires after the envelope has finished opening. */
   onEnvelopeOpened?: () => void;
   selectedAssetLayerId?: string | null;
-  onSelectAssetLayer?: (id: string) => void;
+  selectedAssetLayerIds?: string[];
+  onSelectAssetLayer?: (id: string, additive?: boolean) => void;
   onMoveAssetLayer?: (id: string, x: number, y: number) => void;
   onUpdateAssetLayer?: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   selectedSectionInstanceId?: string | null;
@@ -337,7 +339,7 @@ export default function UniversalInvitationTemplate({
     ) : null;
 
   const objectOverlay = (target: StudioObjectSection) => <InvitationAssetLayers layers={illustrationLayers} section={target}
-    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer}
+    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer}
     onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (keyName: InvitationSectionKey, render: (instanceId: string) => ReactNode) => {
