@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 async function requireStaff() {
   const user = await getCurrentUser();
@@ -29,12 +30,14 @@ export async function GET() {
 
 export async function POST(request:Request){
  const staff=await requireStaff();if(!staff)return NextResponse.json({error:"Akses Admin diperlukan."},{status:403});
+ if(!isTrustedMutationOrigin(request))return NextResponse.json({error:"Origin permintaan tidak valid."},{status:403});
  try{const body=await request.json();const invitationId=String(body.invitationId??"");const amount=Number(body.amount);if(!invitationId||!Number.isInteger(amount)||amount<=0)return NextResponse.json({error:"Undangan dan nominal custom wajib diisi."},{status:400});const invitation=await prisma.invitation.findUnique({where:{id:invitationId},include:{owner:true}});if(!invitation)return NextResponse.json({error:"Undangan tidak ditemukan."},{status:404});const order=await prisma.paymentOrder.create({data:{invoiceNumber:invoiceNumber(),userId:invitation.ownerId,invitationId,packageKey:"CUSTOM_DESIGN",amount,note:String(body.note??"").trim()||"Custom design invitation dibuat oleh Admin."}});const invoiceUrl=`${process.env.APP_URL??"http://localhost:3000"}/checkout/${order.id}`;const email=await sendInvoiceEmail({to:invitation.owner.email,invoiceNumber:order.invoiceNumber,packageName:"Custom Design Invitation",amount,invoiceUrl});await prisma.auditLog.create({data:{actorId:staff.id,action:"CUSTOM_DESIGN_ORDER_CREATED",entity:"PaymentOrder",entityId:order.id,metadata:{invitationId,amount,invoiceNumber:order.invoiceNumber}}});return NextResponse.json({order,email,invoiceUrl},{status:201})}catch{return NextResponse.json({error:"Order custom design belum dapat dibuat."},{status:500})}
 }
 
 export async function PATCH(request: Request) {
   const staff = await requireStaff();
   if (!staff) return NextResponse.json({ error: "Akses Admin diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
   try {
     const body = await request.json();
     const invitationId = String(body.invitationId ?? "");
