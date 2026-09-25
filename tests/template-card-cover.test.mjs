@@ -8,7 +8,7 @@ const featured = readFileSync(new URL("../components/DigitalInvitation/TemplateS
 
 test("every live template catalog card renders the Cover/Hero rather than the envelope", () => {
   assert.match(gallery, /invitationSectionItems\.map\(\(\{ key \}\) => \[key, key === "cover"\]\)/);
-  assert.match(gallery, /<TemplateCanvas templateKey=\{templateKey\} sections=\{catalogCoverSections\} \/>/);
+  assert.match(gallery, /<TemplateCanvas templateKey=\{templateKey\} designKey=\{designKey\} sections=\{catalogCoverSections\} \/>/);
   assert.match(page, /<TemplateCardCanvas templateKey=\{template\.key\} \/>/);
   assert.match(featured, /<TemplateCardCanvas templateKey=\{template\.key\} phone \/>/);
 });
