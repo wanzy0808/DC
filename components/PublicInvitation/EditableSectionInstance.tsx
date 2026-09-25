@@ -31,6 +31,7 @@ export default function EditableSectionInstance({
 }) {
   if (instance.hidden && !preview) return null;
   const selected = Boolean(preview && actions?.selectedId === instance.id);
+  const showActions = Boolean(preview && actions?.onMove && actions.onToggle && actions.onDuplicate && actions.onDelete);
 
   return (
     <div
@@ -38,22 +39,23 @@ export default function EditableSectionInstance({
       data-section-instance-key={instance.key}
       data-section-instance-hidden={instance.hidden === true ? "true" : undefined}
       className="dc-section-instance relative"
+      data-section-instance-selected={selected ? "true" : undefined}
       style={{ order }}
       onClick={() => actions?.onSelect?.(instance.id, instance.key)}
     >
       <div className={instance.hidden && preview ? "dc-section-instance-hidden" : undefined}>
         {children}
       </div>
-      {selected && actions?.onMove && actions.onToggle && actions.onDuplicate && actions.onDelete && (
+      {showActions && (
         <SectionActionRail
           hidden={instance.hidden === true}
           canMoveUp={order > 0}
           canMoveDown={order < total - 1}
-          onMoveUp={() => actions.onMove?.(instance.id, -1)}
-          onMoveDown={() => actions.onMove?.(instance.id, 1)}
-          onToggle={() => actions.onToggle?.(instance.id)}
-          onDuplicate={() => actions.onDuplicate?.(instance.id)}
-          onDelete={() => actions.onDelete?.(instance.id)}
+          onMoveUp={() => actions?.onMove?.(instance.id, -1)}
+          onMoveDown={() => actions?.onMove?.(instance.id, 1)}
+          onToggle={() => actions?.onToggle?.(instance.id)}
+          onDuplicate={() => actions?.onDuplicate?.(instance.id)}
+          onDelete={() => actions?.onDelete?.(instance.id)}
         />
       )}
     </div>
