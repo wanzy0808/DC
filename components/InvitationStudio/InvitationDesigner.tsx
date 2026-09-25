@@ -987,8 +987,11 @@ export default function InvitationDesigner() {
                 locale={locale}
                 elementKey={selectedRsvpElementKey}
                 config={design.rsvpConfig}
+                eventCategory={invitation?.eventCategory ?? ""}
                 onConfig={updateRsvpConfig}
-                onUpdateField={updateRsvpCustomField}
+                onAddRsvpField={addRsvpCustomField}
+                onUpdateRsvpField={updateRsvpCustomField}
+                onRemoveRsvpField={removeRsvpCustomField}
                 onClose={() => setSelectedRsvpElementKey(null)}
               />
             ) : selectedSectionKey ? (
