@@ -309,6 +309,13 @@
   outline-offset: 2px;
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--background) 75%, transparent);
 }
+.dc-studio-preview-surface [data-studio-photo-selected="true"] {
+  position: relative;
+  z-index: 41;
+  outline: 2px solid var(--primary) !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--background) 78%, transparent);
+}
 .dc-studio-rsvp-config { display: grid; gap: 7px; margin-top: 12px; padding-top: 11px; border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent); }
 .dc-studio-rsvp-config-title { display: grid; gap: 2px; }
 .dc-studio-rsvp-config-title > span, .dc-studio-rsvp-fields-head > span { color: var(--primary); font-size: 12px; font-weight: 700; }
