@@ -15,10 +15,6 @@ import {
   RotateCcw,
   PanelLeftClose,
   PanelLeftOpen,
-  Eye,
-  EyeOff,
-  Lock,
-  Unlock,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -40,6 +36,7 @@ import PhotoSlotInspector from "@/components/InvitationStudio/PhotoSlotInspector
 import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
 import CopyTextInspector from "@/components/InvitationStudio/CopyTextInspector";
 import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
+import StudioLayerList from "@/components/InvitationStudio/StudioLayerList";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -1553,77 +1550,21 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             }
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
-            <aside className="dc-studio-layer-list" aria-label={locale === "en" ? "Asset list" : "Daftar aset"}>
-              <div className="dc-studio-layer-list-head">{locale === "en" ? "Assets" : "Asset"} {design.layers.length}/{MAX_ASSET_LAYERS}</div>
-              {(selectedLayerIds.length > 1 || selectedAssetLayers.some((layer) => layer.groupId)) && (
-                <div className="dc-studio-layer-group-actions" role="group" aria-label={locale === "en" ? "Layer grouping and alignment" : "Pengelompokan dan alignment layer"}>
-                  {selectedLayerIds.length > 1 && (
-                    <>
-                      <button type="button" onClick={groupSelectedAssetLayers}>
-                        {locale === "en" ? "Group" : "Group"}
-                      </button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("left")} title={locale === "en" ? "Align left" : "Rata kiri"} aria-label={locale === "en" ? "Align left" : "Rata kiri"}>↤</button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("center-x")} title={locale === "en" ? "Align horizontal center" : "Rata tengah horizontal"} aria-label={locale === "en" ? "Align horizontal center" : "Rata tengah horizontal"}>↔</button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("right")} title={locale === "en" ? "Align right" : "Rata kanan"} aria-label={locale === "en" ? "Align right" : "Rata kanan"}>↦</button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("top")} title={locale === "en" ? "Align top" : "Rata atas"} aria-label={locale === "en" ? "Align top" : "Rata atas"}>↥</button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("center-y")} title={locale === "en" ? "Align vertical center" : "Rata tengah vertikal"} aria-label={locale === "en" ? "Align vertical center" : "Rata tengah vertikal"}>↕</button>
-                      <button type="button" onClick={() => alignSelectedAssetLayers("bottom")} title={locale === "en" ? "Align bottom" : "Rata bawah"} aria-label={locale === "en" ? "Align bottom" : "Rata bawah"}>↧</button>
-                      {selectedLayerIds.length > 2 && (
-                        <>
-                          <button type="button" onClick={() => distributeSelectedAssetLayers("horizontal")} title={locale === "en" ? "Distribute horizontally" : "Sebar horizontal"} aria-label={locale === "en" ? "Distribute horizontally" : "Sebar horizontal"}>H</button>
-                          <button type="button" onClick={() => distributeSelectedAssetLayers("vertical")} title={locale === "en" ? "Distribute vertically" : "Sebar vertikal"} aria-label={locale === "en" ? "Distribute vertically" : "Sebar vertikal"}>V</button>
-                        </>
-                      )}
-                    </>
-                  )}
-                  {selectedAssetLayers.some((layer) => layer.groupId) && (
-                    <button type="button" onClick={ungroupSelectedAssetLayers}>
-                      {locale === "en" ? "Ungroup" : "Ungroup"}
-                    </button>
-                  )}
-                </div>
-              )}
-              <div className="dc-studio-layer-list-items">
-                {[...design.layers].reverse().map((layer) => {
-                  const assetNumber = design.layers.indexOf(layer) + 1;
-                  const automaticLayerName = layer.kind === "text"
-                    ? `${locale === "en" ? "Text" : "Teks"} · ${(layer.text || "").trim().slice(0, 18) || assetNumber}`
-                    : `${locale === "en" ? "Image" : "Gambar"} ${assetNumber}`;
-                  const layerName = layer.name?.trim() || automaticLayerName;
-                  return (
-                    <div key={layer.id} className="dc-studio-layer-list-row" draggable={!layer.locked} onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("application/x-dc-layer", layer.id); }} onDragEnter={() => setLayerDragOverId(layer.id)} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); event.stopPropagation(); const sourceId = event.dataTransfer.getData("application/x-dc-layer"); if (sourceId) reorderAssetLayer(sourceId, layer.id); setLayerDragOverId(null); }} onDragEnd={() => setLayerDragOverId(null)} data-layer-drag-over={layerDragOverId === layer.id ? "true" : undefined}>
-                      <button
-                        type="button"
-                        className="dc-studio-layer-select-button"
-                        aria-pressed={selectedLayerIds.includes(layer.id) || selectedLayerId === layer.id}
-                        onClick={(event) => focusDesignObject(layer.id, event.shiftKey)}
-                        title={layerName}
-                      >
-                        {layerName}
-                      </button>
-                      <button
-                        type="button"
-                        className="dc-studio-layer-quick"
-                        aria-label={layer.hidden ? (locale === "en" ? "Show layer" : "Tampilkan layer") : (locale === "en" ? "Hide layer" : "Sembunyikan layer")}
-                        title={layer.hidden ? (locale === "en" ? "Show" : "Tampilkan") : (locale === "en" ? "Hide" : "Sembunyikan")}
-                        onClick={() => updateAssetLayer(layer.id, { hidden: layer.hidden ? undefined : true })}
-                      >
-                        {layer.hidden ? <EyeOff size={13} /> : <Eye size={13} />}
-                      </button>
-                      <button
-                        type="button"
-                        className="dc-studio-layer-quick"
-                        aria-label={layer.locked ? (locale === "en" ? "Unlock layer" : "Buka kunci layer") : (locale === "en" ? "Lock layer" : "Kunci layer")}
-                        title={layer.locked ? (locale === "en" ? "Unlock" : "Buka kunci") : (locale === "en" ? "Lock" : "Kunci")}
-                        onClick={() => updateAssetLayer(layer.id, { locked: layer.locked ? undefined : true })}
-                      >
-                        {layer.locked ? <Lock size={13} /> : <Unlock size={13} />}
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </aside>
+            <StudioLayerList
+              locale={locale}
+              layers={design.layers}
+              selectedId={selectedLayerId}
+              selectedIds={selectedLayerIds}
+              dragOverId={layerDragOverId}
+              onDragOverId={setLayerDragOverId}
+              onSelect={(id, additive) => focusDesignObject(id, additive)}
+              onUpdate={updateAssetLayer}
+              onReorder={reorderAssetLayer}
+              onGroup={groupSelectedAssetLayers}
+              onUngroup={ungroupSelectedAssetLayers}
+              onAlign={alignSelectedAssetLayers}
+              onDistribute={distributeSelectedAssetLayers}
+            />
 
             <div className="dc-studio-preview-workspace">
               <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
