@@ -17,9 +17,32 @@ export async function GET() {
       user: { select: { email: true, firstName: true } },
       invitation: { select: { title: true, groomName: true, brideName: true } },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
-  return NextResponse.json({ orders });
+
+  const orderIds = orders.map((order) => order.id);
+  const reportLogs = orderIds.length
+    ? await prisma.auditLog.findMany({
+        where: {
+          entity: "PaymentOrder",
+          entityId: { in: orderIds },
+          action: { in: ["PAYMENT_REPORTED", "PAYMENT_PROOF_SUBMITTED"] },
+        },
+        select: { entityId: true, createdAt: true },
+        orderBy: { createdAt: "desc" },
+      })
+    : [];
+  const reportedAtByOrder = new Map<string, Date>();
+  for (const log of reportLogs) {
+    if (log.entityId && !reportedAtByOrder.has(log.entityId)) reportedAtByOrder.set(log.entityId, log.createdAt);
+  }
+
+  return NextResponse.json({
+    orders: orders.map((order) => ({
+      ...order,
+      reportedAt: reportedAtByOrder.get(order.id) ?? (order.proofUrl ? order.updatedAt : null),
+    })),
+  });
 }
 
 export async function PATCH(request: Request) {
