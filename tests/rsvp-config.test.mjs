@@ -103,11 +103,12 @@ test("Studio exposes Attend All and Add Column and the live RSVP renders them", 
   assert.match(panels, /Resepsi/);
   assert.match(panels, /Hadir Semua Acara/);
   assert.match(panels, /rsvpConfig\.customFields\.map/);
-  assert.match(panels, /data-studio-rsvp-element="name"/);
-  assert.match(panels, /data-studio-rsvp-element="phone"/);
-  assert.match(panels, /data-studio-rsvp-element="status"/);
-  assert.match(panels, /data-studio-rsvp-element="companions"/);
-  assert.match(panels, /data-studio-rsvp-element="submit"/);
+  assert.match(panels, /data-studio-rsvp-element="inputs"/);
+  assert.doesNotMatch(panels, /data-studio-rsvp-element="name"/);
+  assert.doesNotMatch(panels, /data-studio-rsvp-element="phone"/);
+  assert.doesNotMatch(panels, /data-studio-rsvp-element="status"/);
+  assert.doesNotMatch(panels, /data-studio-rsvp-element="companions"/);
+  assert.doesNotMatch(panels, /data-studio-rsvp-element="submit"/);
   assert.doesNotMatch(panels, /appearance !== "zen" && <h2/);
   const componentInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   assert.match(designer, /selectedRsvpElementKey/);
