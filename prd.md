@@ -5141,3 +5141,8 @@ Audit nama/lokasi kode menemukan `assets/templates/zen-atelier/ZenArtwork.tsx` b
 ### 25 September 2026 — Pembatalan perubahan posisi menu Studio
 
 Atas instruksi owner, perubahan layout yang memindahkan rail menu dan inspector seluruhnya ke pinggir kanan **dibatalkan**. Susunan Studio dikembalikan ke sebelum perubahan: rail menu kiri → inspector kiri → canvas kanan; kontrol layer kembali berada di samping preview. Perubahan ini hanya membatalkan pemindahan menu, tidak membatalkan fitur drag/drop, resize, rotasi, teks, shortcut, atau klik canvas untuk melepas seleksi yang sudah ada sebelumnya. `studio.md` dan tes layout disesuaikan ke susunan lama. **Validasi:** sumber GitHub diperbarui; build dan QA visual belum diverifikasi.
+
+
+### 25 September 2026 — Judul dokumen Studio di tengah tanpa subjudul status simpan
+
+**Permintaan owner:** nama event/undangan di toolbar atas Studio (contoh: Pernikahan Hendra & Reni) ditata di **tengah bagian atas seperti nama file**, bukan terletak kiri, dan subjudul `Desain tersimpan` dihilangkan karena berulang/tidak penting. **Implementasi:** `InvitationDesigner.tsx` memindahkan judul menjadi elemen `h1` mandiri di tengah header, menghapus baris subtitle status tersebut, dan mempertahankan tombol pulihkan default, Undo/Redo, dan Simpan Desain. `studio.css` menyusun title di baris pertama dengan rata tengah secara konsisten serta tombol aksi di baris berikutnya rata kanan (desktop/mobile), agar judul tidak tergeser oleh jumlah/lebar tombol. Kontrol penyimpanan dan notifikasi hasil simpan di footer tetap ada. Uji kontrak layout ditambahkan pada `tests/invitation-asset-layers.test.mjs`. **Validasi:** source GitHub tersimpan; build Next.js dan QA visual browser belum diverifikasi.
