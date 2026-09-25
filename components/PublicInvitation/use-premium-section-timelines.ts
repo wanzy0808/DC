@@ -57,6 +57,7 @@ function itemFrom(timeline: InvitationPremiumTimeline) {
 export function usePremiumSectionTimelines(
   rootRef: RefObject<HTMLElement | null>,
   styles: InvitationSectionStyles,
+  revision = "",
 ) {
   const timelineKey = JSON.stringify(
     Object.fromEntries(
@@ -76,7 +77,7 @@ export function usePremiumSectionTimelines(
 
     for (const [rawKey, timeline] of Object.entries(configured)) {
       const key = rawKey as InvitationSectionKey;
-      if (!timeline || !premiumTimelineSectionKeys.has(key as never)) continue;
+      if (!timeline || !premiumTimelineSectionKeys.has(key)) continue;
       const candidates = Array.from(
         root.querySelectorAll<HTMLElement>(`[data-invitation-section="${key}"]`),
       );
@@ -166,5 +167,5 @@ export function usePremiumSectionTimelines(
       alive = false;
       dispose();
     };
-  }, [rootRef, timelineKey]);
+  }, [rootRef, timelineKey, revision]);
 }
