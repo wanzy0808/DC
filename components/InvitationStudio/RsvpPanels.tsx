@@ -245,7 +245,8 @@ export function RsvpInputPanel({
         data-studio-rsvp-element="submit"
         style={rsvpElementStyleCss(rsvpConfig, "submit")}
         type="submit"
-        disabled={submitting || preview}
+        disabled={submitting}
+        aria-disabled={submitting || preview}
         className="rounded-xl bg-[#7A1C25] px-5 py-3 font-[var(--font-fauna)] text-xs text-white hover:bg-[#5E141C]"
       >
         {submitting ? "Menyimpan..." : appearance === "zen" ? "Kirim RSVP" : "Konfirmasi Kehadiran"}
