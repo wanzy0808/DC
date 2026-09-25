@@ -159,10 +159,12 @@ export async function GET() {
   const partnerRows = partners.map((partner) => {
     const partnerVouchers = vouchers.filter((voucher) => voucher.partnerId === partner.id);
     const partnerCodes = new Set(partnerVouchers.map((voucher) => voucher.code));
-    const orders = [...latestAttribution.entries()]
-      .filter(([, value]) => value.partnerId === partner.id || partnerCodes.has(value.code))
-      .map(([orderId, value]) => ({ order: orderById.get(orderId), code: value.code }))
-      .filter((item): item is { order: NonNullable<typeof item.order>; code: string } => Boolean(item.order));
+    const orders: Array<{ order: NonNullable<ReturnType<typeof orderById.get>>; code: string }> = [];
+    for (const [orderId, value] of latestAttribution.entries()) {
+      if (value.partnerId !== partner.id && !partnerCodes.has(value.code)) continue;
+      const order = orderById.get(orderId);
+      if (order) orders.push({ order, code: value.code });
+    }
     const paid = orders.filter((item) => item.order.status === "PAID");
 
     return {
