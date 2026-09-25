@@ -147,6 +147,7 @@ export default function SectionInspector({
       ) : null}
 
       {!style?.timeline ? (
+        <>
       <div className="dc-studio-section-field">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
@@ -210,6 +211,7 @@ export default function SectionInspector({
           </label>
         </div>
       ) : null}
+        </>
       ) : null}
 
       <div className="dc-studio-section-field">
