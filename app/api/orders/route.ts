@@ -7,6 +7,7 @@ import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
 import { attributeOrderToPartner, getActivePartnerVoucher } from "@/lib/partners/vouchers";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 const allowedPackages = ["INVITATION_BASIC", "GUESTBOOK_DIGITAL", "WA_BLAST_50"] as const;
 type AllowedPackage = (typeof allowedPackages)[number];
@@ -64,6 +65,7 @@ async function createDraftEvent(user: { id: string; firstName: string }) {
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Silakan daftar atau login terlebih dahulu." }, { status: 401 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
