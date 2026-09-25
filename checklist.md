@@ -587,7 +587,8 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
   - [x] Built-in editable template copy (Greeting/Closing/Our Story serta copy khusus Zen/Pencil) memakai token visual terpisah `copyMotion=`, shared entrance runtime, whole/per-kata/per-huruf/per-baris, durasi/jeda/stagger, stage replay setelah Amplop terbuka, dan satu Reset atomik untuk isi + motion. (26 September 2026)
 - [x] Add photo/gallery choreography, mask reveals and lightweight parallax.
   - [x] Foto Cover/Mempelai/Galeri memakai katalog entrance yang sama; preset reveal/wipe/curtain berfungsi sebagai mask reveal, Galeri punya stagger, dan parallax 0–20 px memakai runtime rAF terpisah dari crop transform. Selection foto membuka inspector kanan, sedangkan ganti foto/crop tetap di menu Foto kiri. Reduced-motion tetap mematikan motion publik/preview. (26 September 2026)
-- [ ] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
+- [x] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
+  - [x] Empat timeline storytelling opt-in (Romantic Cascade, Editorial Sequence, Luxe Cinematic, Paper Story) memakai GSAP lewat dynamic import hanya saat section naratif memilihnya. Section biasa tetap memakai WAAPI shared entrance runtime; reduced-motion diperiksa sebelum GSAP di-load dan native Zen/Pencil reveal tidak berjalan ganda. (26 September 2026)
 - [ ] Keep Three/R3F effects opt-in for selected premium templates only; do not make standard invitation pages depend on heavy 3D.
 - [ ] Preserve reduced-motion behavior and mobile performance budgets for every animation preset.
 
