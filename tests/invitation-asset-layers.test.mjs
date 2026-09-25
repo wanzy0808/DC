@@ -40,6 +40,7 @@ test("asset layer codec keeps bounded coordinates, transparency, IDs and stackin
   assert.equal(withAssetLayers(value, []), original);
   assert.equal(parseAssetLayers(original).length, 0);
   assert.deepEqual(parseAssetLayers("rose::layers=%BAD"), []);
+  assert.equal(MAX_ASSET_LAYERS, 10);
   assert.equal(sanitizeAssetLayers(Array.from({ length: 20 }, (_, index) => asset(String(index)))).length, MAX_ASSET_LAYERS);
 });
 
@@ -66,11 +67,20 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /closest\('input, textarea, select,/);
   assert.match(editor, /window\.getSelection\(\)\?\.toString\(\)/);
   assert.match(layerInspector, /<aside className="dc-studio-layer-side"/);
-  assert.match(layerInspector, /onClick=\{onCopy\}/);
-  assert.match(layerInspector, /onClick=\{onPaste\}/);
+  assert.match(editor, /className="dc-studio-layer-list"/);
+  assert.match(editor, /Asset \{assetNumber\}\/\{MAX_ASSET_LAYERS\}/);
+  assert.match(editor, /function positionAssetLayer\(id: string, position: "front" \| "back"\)/);
+  assert.match(editor, /onPosition=\{positionAssetLayer\}/);
+  assert.match(layerInspector, /numberInput\("X"/);
+  assert.match(layerInspector, /numberInput\("Y"/);
+  assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
+  assert.match(layerInspector, /numberInput\(en \? "Rotation" : "Rotasi"/);
+  assert.match(layerInspector, /type="range"/);
+  assert.match(layerInspector, /<option value="front">/);
+  assert.match(layerInspector, /<option value="back">/);
+  assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.match(editor, /design\.layers\.length >= MAX_ASSET_LAYERS/);
   assert.match(editor, /<AssetLayerInspector/);
-  assert.match(layerInspector, /layerCount >= MAX_ASSET_LAYERS/);
 
   assert.match(editor, /findSectionDropTarget\(event\.clientX, event\.clientY\)/);
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
@@ -86,10 +96,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(romantic, /parseAssetLayers\(designKey \|\| invitation\.templateKey\)/);
   assert.match(universal, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
   assert.match(romantic, /<InvitationAssetLayers layers=\{illustrationLayers\}/);
-  assert.match(browser, /onReorder\(selected\.id, 1\)/);
-  assert.match(browser, /selected\.opacity/);
   assert.match(layerInspector, /onUpdate\(selectedAssetLayer\.id, \{ rotation:/);
-  assert.match(layerInspector, /selectedAssetLayer\.kind === "text"/);
   assert.match(route, /getCurrentUser\(\)/);
   assert.match(route, /"template", "templates"/);
 });
@@ -137,7 +144,6 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(textPanel, /onAdd\(value, selectedSection\)/);
   assert.match(textPanel, /maxLength=\{180\}/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
-  assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ fontRole:/);
   assert.match(renderer, /begin\(event, "resize", handle\)/);
   assert.match(renderer, /"top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"/);
   assert.match(renderer, /absolute inset-0 z-10 border border-primary/);
@@ -154,11 +160,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   const geometry = read("lib/templates/object-resize.ts");
   assert.match(geometry, /const localX = dx \* cos \+ dy \* sin/);
   assert.match(geometry, /const localY = -dx \* sin \+ dy \* cos/);
-  assert.match(inspector, /selectedAssetLayer\.height !== undefined/);
-  assert.match(inspector, /height: undefined/);
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
-  assert.match(inspector, /type="number" min="-180" max="180" step="1"/);
-  assert.match(inspector, /Math\.min\(180, Math\.max\(-180, angle\)\)/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
   assert.match(editor, /target\.closest\("\[data-studio-design-object\], \.dc-studio-layer-side, button, a, input, select, textarea, \[contenteditable\], \[role=button\]"\)/);
@@ -220,19 +222,11 @@ test("Studio displays its document name in the real page header, never above the
 });
 
 
-test("theme reset is a rail tool directly under Isi, not a duplicate toolbar action", () => {
+test("Restart lives only in the canvas toolbar, not in the left rail", () => {
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
-  const panels = read("components/InvitationStudio/DesignerPanels.tsx");
-  const css = read("components/InvitationStudio/studio.css");
-  const contentTool = editor.indexOf('label={copy.content} icon={<FilePenLine');
-  const resetTool = editor.indexOf('label={copy.startOver} icon={<RotateCcw');
-  const photoTool = editor.indexOf('label={copy.photos} icon={<ImagePlus');
-  assert.ok(contentTool >= 0 && contentTool < resetTool && resetTool < photoTool);
-  assert.match(editor, /startOver: "Ulang dari awal"/);
-  assert.match(editor, /label=\{copy.startOver\} icon=\{<RotateCcw[^>]*>\}/);
-  assert.match(editor, /onClick=\{restoreDefaults\} disabled=\{!invitation \|\| saving \|\| audioBusy\} title=\{copy.defaultsHint\}/);
-  assert.doesNotMatch(editor, /<Button size="sm" onClick=\{restoreDefaults\}/);
-  assert.match(panels, /disabled\?: boolean;/);
-  assert.match(panels, /title\?: string;/);
-  assert.match(css, /\.dc-studio-tool:disabled \{/);
+  const rail = editor.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const toolbar = editor.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
+  assert.doesNotMatch(rail, /restoreDefaults|startOver/);
+  assert.match(toolbar, /<Button size="icon-sm" onClick=\{restoreDefaults\}/);
+  assert.match(toolbar, /title=\{copy.defaultsHint\}/);
 });
