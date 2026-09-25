@@ -535,3 +535,43 @@ The purpose of this file is to keep future implementation focused on reaching a 
 - [ ] Audit media `public/` yang besar; hindari penghapusan otomatis. Dua path MP3 Zen Atelier berisi blob yang identik tetapi salah satunya dipakai sebagai default tema dan path lama mungkin telah tersimpan sebagai `musicUrl`. Penghapusan membutuhkan jaminan kompatibilitas URL dan verifikasi penggunaan sebelum dilakukan.
 
 Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan** bukti browser, migrasi, entitlement, ataupun kesiapan produksi penuh. File source yang dihapus tetap dapat diambil melalui Git history bila dibutuhkan.
+
+---
+
+# 23. Studio core editor priority — 25 September 2026
+
+**Current product decision:** pause further animation-library expansion until the Studio has the expected baseline editing tools. The existing curated section-animation catalog stays available; richer element/scene animation work is deferred, not removed.
+
+### P1 — Standard canvas editing before advanced animation
+
+- [x] Select/deselect design objects from the canvas.
+- [x] Move objects by drag.
+- [x] Resize from edge and corner handles.
+- [x] Rotate from a dedicated handle below the object.
+- [x] Layer ordering: bring to front, forward one, backward one, send to back.
+- [x] Copy/paste selected design layer with keyboard shortcut.
+- [x] Delete selected design layer with Delete/Backspace.
+- [x] Undo/redo design changes.
+- [ ] **Add Cut (`Ctrl/Cmd+X`) for selected design layers.**
+- [ ] **Add proper photo crop controls:** free X/Y crop position, zoom, reset crop; persist per photo slot without modifying the original uploaded asset.
+- [ ] Add crop mode directly on-canvas so the frame stays fixed while the photo can be repositioned/zoomed inside it.
+- [ ] Add common aspect-ratio crop presets where appropriate (Original, 1:1, 4:5, 3:4, 16:9) without forcing every template frame to the same ratio.
+- [ ] Add duplicate shortcut (`Ctrl/Cmd+D`) for selected layers.
+- [ ] Add lock/unlock layer.
+- [ ] Add show/hide layer.
+- [ ] Improve overlapping-object selection and layer list naming so stacked objects are easy to target.
+- [ ] Add keyboard nudge with Arrow keys and larger Shift+Arrow movement consistently for all movable objects.
+- [ ] Add snapping/alignment guides for center, section bounds, and nearby objects.
+- [ ] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
+- [ ] Audit clipboard behavior for text vs image layers and prevent browser text-edit shortcuts from being hijacked while typing.
+
+### Deferred — richer animation system
+
+- [ ] Expand from section animation to **element animation**: text, photo, asset and ornament presets.
+- [ ] Add text choreography such as per-word/per-character stagger where it improves premium templates.
+- [ ] Add photo/gallery choreography, mask reveals and lightweight parallax.
+- [ ] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
+- [ ] Keep Three/R3F effects opt-in for selected premium templates only; do not make standard invitation pages depend on heavy 3D.
+- [ ] Preserve reduced-motion behavior and mobile performance budgets for every animation preset.
+
+**Priority rule:** baseline Studio editing (crop/cut/selection/layers/locking/snapping) wins over adding more animation presets until the editor feels dependable for normal designer work.
