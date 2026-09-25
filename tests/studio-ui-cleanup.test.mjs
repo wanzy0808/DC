@@ -141,6 +141,16 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
 });
 
 
+test("asset library inserts images by drag-and-drop only", () => {
+  const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
+  assert.doesNotMatch(assetPanel, /onAdd:\s*\(src: string\)/);
+  assert.doesNotMatch(assetPanel, /onClick=\{\(\) => onAdd\(asset\.src\)\}/);
+  assert.match(assetPanel, /draggable=\{layers\.length < MAX_ASSET_LAYERS\}/);
+  assert.match(assetPanel, /onDragAssetStart\(asset\.src\)/);
+  assert.match(assetPanel, /Seret gambar ke section undangan/);
+  assert.doesNotMatch(designer, /<AssetPanel[^>]*onAdd=\{addAssetLayer\}/);
+});
+
 test("overlapping Studio assets use left-click selection and cycle to the layer underneath", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
   assert.match(assetLayers, /event\.button !== 0/);

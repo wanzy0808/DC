@@ -943,7 +943,7 @@ export default function InvitationDesigner() {
             />
           )}
           {panel === "text" && <TextObjectPanel layers={design.layers} sections={design.sections} selectedId={selectedLayerId} onAdd={addTextObject} onSelect={focusDesignObject} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onAdd={addAssetLayer} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>

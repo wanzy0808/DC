@@ -13,13 +13,11 @@ type Asset = { src: string; name: string; folder: string };
 export default function AssetPanel({
   layers,
   templateKey,
-  onAdd,
   onDragAssetStart,
   onDragAssetEnd,
 }: {
   layers: InvitationAssetLayer[];
   templateKey: string;
-  onAdd: (src: string) => void;
   onDragAssetStart: (src: string) => void;
   onDragAssetEnd: () => void;
 }) {
@@ -61,7 +59,7 @@ export default function AssetPanel({
       <div>
         <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
         <p className="mt-1 text-sm text-foreground/75">
-          {en ? "Drag an image onto the invitation, or click to add it to the Cover." : "Seret gambar ke undangan, atau klik untuk menambahkannya ke Cover."}
+          {en ? "Drag an image onto the invitation section where you want to place it." : "Seret gambar ke section undangan tempat kamu ingin meletakkannya."}
         </p>
         <p className="mt-2 text-xs text-muted-foreground">{en ? `${layers.length}/${MAX_ASSET_LAYERS} assets used` : `${layers.length}/${MAX_ASSET_LAYERS} asset digunakan`}</p>
       </div>
@@ -87,11 +85,10 @@ export default function AssetPanel({
 
         <div className="grid grid-cols-2 gap-2">
           {filtered.slice(0, visibleCount).map((asset) => (
-            <button
+            <div
               key={asset.src}
-              type="button"
               draggable={layers.length < MAX_ASSET_LAYERS}
-              disabled={layers.length >= MAX_ASSET_LAYERS}
+              aria-disabled={layers.length >= MAX_ASSET_LAYERS}
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "copy";
                 event.dataTransfer.setData("text/plain", asset.src);
@@ -99,15 +96,14 @@ export default function AssetPanel({
               }}
               onDragEnd={onDragAssetEnd}
               title={asset.folder + " / " + asset.name}
-              onClick={() => onAdd(asset.src)}
-              className="min-w-0 cursor-grab rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
+              className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= MAX_ASSET_LAYERS ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
             >
               <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                 <img src={asset.src} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
               </span>
               <span className="mt-2 block truncate text-xs text-foreground">{asset.name}</span>
               <span className="mt-1 block truncate text-[10px] text-muted-foreground">{asset.folder}</span>
-            </button>
+            </div>
           ))}
         </div>
 
