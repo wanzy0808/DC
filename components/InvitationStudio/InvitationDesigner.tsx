@@ -118,6 +118,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [copiedAssetLayers, setCopiedAssetLayers] = useState<InvitationAssetLayer[]>([]);
   const draggedAssetSrc = useRef<string | null>(null);
   const [assetDropReady, setAssetDropReady] = useState(false);
+  const [layerDragOverId, setLayerDragOverId] = useState<string | null>(null);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
@@ -1119,6 +1120,23 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setSelectedLayerId(null);
   }
 
+  function reorderAssetLayer(sourceId: string, targetId: string) {
+    if (sourceId === targetId) return;
+    const sourceIndex = design.layers.findIndex((layer) => layer.id === sourceId);
+    const targetIndex = design.layers.findIndex((layer) => layer.id === targetId);
+    if (sourceIndex < 0 || targetIndex < 0) return;
+    const next = [...design.layers];
+    const [source] = next.splice(sourceIndex, 1);
+    if (!source) return;
+    const targetAfterRemoval = next.findIndex((layer) => layer.id === targetId);
+    if (targetAfterRemoval < 0) return;
+    const insertAt = sourceIndex < targetIndex ? targetAfterRemoval + 1 : targetAfterRemoval;
+    next.splice(insertAt, 0, source);
+    change({ layers: next });
+    setSelectedLayerIds([sourceId]);
+    setSelectedLayerId(sourceId);
+  }
+
   function positionAssetLayer(id: string, position: "front" | "forward" | "backward" | "back") {
     const index = design.layers.findIndex((layer) => layer.id === id);
     if (index < 0) return;
@@ -1597,7 +1615,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                     : `${locale === "en" ? "Image" : "Gambar"} ${assetNumber}`;
                   const layerName = layer.name?.trim() || automaticLayerName;
                   return (
-                    <div key={layer.id} className="dc-studio-layer-list-row">
+                    <div key={layer.id} className="dc-studio-layer-list-row" draggable onDragStart={(event) => { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("application/x-dc-layer", layer.id); }} onDragEnter={() => setLayerDragOverId(layer.id)} onDragOver={(event) => { event.preventDefault(); event.dataTransfer.dropEffect = "move"; }} onDrop={(event) => { event.preventDefault(); event.stopPropagation(); const sourceId = event.dataTransfer.getData("application/x-dc-layer"); if (sourceId) reorderAssetLayer(sourceId, layer.id); setLayerDragOverId(null); }} onDragEnd={() => setLayerDragOverId(null)} data-layer-drag-over={layerDragOverId === layer.id ? "true" : undefined}>
                       <button
                         type="button"
                         className="dc-studio-layer-select-button"
