@@ -1,3 +1,5 @@
+import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+
 export type PersonalRsvpGuest = {
   id: string;
   name: string;
@@ -19,6 +21,8 @@ export type RsvpFormProps = {
   start?: string | null;
   end?: string | null;
   description?: string | null;
+  eventCategory?: string | null;
+  rsvpConfig?: InvitationRsvpConfig;
 };
 
 export type RsvpFormState = {
@@ -26,6 +30,8 @@ export type RsvpFormState = {
   phone: string;
   status: string;
   plusOnes: string;
+  eventChoice: "" | "ceremony" | "reception" | "all";
+  customAnswers: Record<string, string>;
 };
 
 export type RsvpTicketGuest = {
@@ -34,4 +40,6 @@ export type RsvpTicketGuest = {
   name: string;
   phone?: string | null;
   plusOnes: number;
+  rsvpEvents?: string[];
+  rsvpAnswers?: Record<string, string> | null;
 };
