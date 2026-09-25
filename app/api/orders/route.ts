@@ -4,6 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getServicePackage } from "@/lib/packages/catalog";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
 import { attributeOrderToPartner, getActivePartnerVoucher } from "@/lib/partners/vouchers";
 
@@ -66,6 +67,7 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
+    const ownerGrant = await getOwnerPackageGrant(user.id);
     const packageKey = String(body.packageKey ?? "") as AllowedPackage;
     const requestedInvitationId = String(body.invitationId ?? "").trim();
     const voucherCode = String(body.voucherCode ?? "").trim();
@@ -91,7 +93,7 @@ export async function POST(request: Request) {
       if (!invitation) {
         return NextResponse.json({ error: "Pilih acara sebelum membeli add-on WA Blast." }, { status: 400 });
       }
-      if (!hasPaidDigitalInvitation(invitation.payment)) {
+      if (!(ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment))) {
         return NextResponse.json({ error: "Aktifkan Undangan Digital untuk acara ini sebelum membeli WA Blast." }, { status: 409 });
       }
     } else if (!invitation) {
@@ -102,11 +104,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Acara tidak ditemukan." }, { status: 404 });
     }
 
-    if (packageKey === "INVITATION_BASIC" && hasPaidDigitalInvitation(invitation.payment)) {
+    if (packageKey === "INVITATION_BASIC" && (ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment))) {
       return NextResponse.json({ error: "Undangan Digital untuk acara ini sudah aktif." }, { status: 409 });
     }
 
-    if (packageKey === "GUESTBOOK_DIGITAL" && invitation.payment?.status === "PAID" && invitation.payment.packageKey === "GUESTBOOK_DIGITAL") {
+    if (packageKey === "GUESTBOOK_DIGITAL" && (ownerGrant.guestbook || (invitation.payment?.status === "PAID" && invitation.payment.packageKey === "GUESTBOOK_DIGITAL"))) {
       return NextResponse.json({ error: "Guest Book Digital untuk acara ini sudah aktif." }, { status: 409 });
     }
 
