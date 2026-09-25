@@ -81,21 +81,26 @@ test("Ucapan Tamu section label has no stale unavailable caption", () => {
   assert.doesNotMatch(panels, /wishes.*text-xs.*unavailable/i);
 });
 
-test("Studio keeps Save above canvas history, removes phone label and keeps stages above the invitation", () => {
+test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", () => {
   assert.match(designer, /save: "Simpan"/);
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);
-  const toolbar = designer.split('<header className="dc-studio-toolbar">')[1]?.split("</header>")[0] || "";
-  assert.match(toolbar, /onClick=\{save\}/);
-  assert.doesNotMatch(toolbar, /onClick=\{undo\}|onClick=\{redo\}/);
+  assert.doesNotMatch(designer, /<header className="dc-studio-toolbar">/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /onClick=\{restoreDefaults\}/);
-  assert.doesNotMatch(rail, /onClick=\{undo\}|onClick=\{redo\}/);
+  assert.doesNotMatch(rail, /onClick=\{undo\}|onClick=\{redo\}|onClick=\{save\}/);
   const canvasToolbar = designer.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
   assert.match(canvasToolbar, /dc-studio-history-actions/);
+  assert.match(canvasToolbar, /onClick=\{restoreDefaults\}/);
   assert.match(canvasToolbar, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
   assert.match(canvasToolbar, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
+  assert.match(canvasToolbar, /onClick=\{save\}/);
   assert.match(canvasToolbar, /aria-label=\{copy\.replay\}/);
-  assert.match(canvasToolbar, /onClick=\{restoreDefaults\}/);
+  assert.ok(
+    canvasToolbar.indexOf("template?.name") < canvasToolbar.indexOf("onClick={restoreDefaults}") &&
+    canvasToolbar.indexOf("onClick={restoreDefaults}") < canvasToolbar.indexOf("onClick={undo}") &&
+    canvasToolbar.indexOf("onClick={undo}") < canvasToolbar.indexOf("onClick={redo}") &&
+    canvasToolbar.indexOf("onClick={redo}") < canvasToolbar.indexOf("onClick={save}"),
+  );
   const reset = designer.split("function restoreDefaults()")[1]?.split("async function deleteMusic")[0] || "";
   assert.match(reset, /layers: \[\]/);
   assert.match(reset, /photos: defaultPhotoAssignments\(\)/);
