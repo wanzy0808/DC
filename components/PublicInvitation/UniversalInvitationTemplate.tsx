@@ -24,6 +24,7 @@ import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
 import { weddingParentLine } from "@/lib/events/parents";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
+import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
@@ -34,6 +35,8 @@ import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templat
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
+import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
+import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
@@ -197,6 +200,7 @@ export default function UniversalInvitationTemplate({
     : `${key}::${template.preset.palette}::${template.preset.font}`);
   const design = parseDesignKey(activeDesignKey);
   const editableCopy = resolveEditableCopy(activeDesignKey, key, invitation.description);
+  const copyMotions = parseEditableCopyMotions(activeDesignKey);
   const illustrationLayers = parseAssetLayers(activeDesignKey);
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
   const font = invitationFonts[design.font] || invitationFonts[template.preset.font];
@@ -206,6 +210,7 @@ export default function UniversalInvitationTemplate({
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
+  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
@@ -460,10 +465,10 @@ export default function UniversalInvitationTemplate({
 
           {section("greeting", key === "pencil-reverie" ? (
             <div className="pr-greeting-copy">
-              <p data-studio-copy-field="greeting" className="whitespace-pre-line">{editableCopy.greeting}</p>
-              <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line">{editableCopy.attendanceRequest}</p>
+              <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+              <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
             </div>
-          ) : <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80">{editableCopy.greeting}</p>, 1)}
+          ) : <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>, 1)}
 
           {section("identity", key === "pencil-reverie" ? (
             <div className="pr-identity-story">
@@ -511,7 +516,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 2)}
 
-          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} preview={preview} />}
+          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} preview={preview} motionUnit={copyMotions.ourStory?.unit} />}
 
           {section("event", key === "pencil-reverie" ? (
             <div className="pr-event-story">
@@ -618,10 +623,10 @@ export default function UniversalInvitationTemplate({
 
           {section("closing", (
             <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
-              {key === "zen-atelier" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8">{editableCopy.closing}</p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line">{editableCopy.closing}</p></>}
+              {key === "zen-atelier" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p> : <><Heart aria-hidden className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p></>}
               <p className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
-              {key === "pencil-reverie" && <p data-studio-copy-field="prayerWish" className="pr-prayer-copy whitespace-pre-line">{editableCopy.prayerWish}</p>}
-              {key === "zen-atelier" && couple && <p data-studio-copy-field="zenQuote" className="zen-quote whitespace-pre-line">{editableCopy.zenQuote}</p>}
+              {key === "pencil-reverie" && <p data-studio-copy-field="prayerWish" className="pr-prayer-copy whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>}
+              {key === "zen-atelier" && couple && <p data-studio-copy-field="zenQuote" className="zen-quote whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.zenQuote ?? ""} unit={copyMotions.zenQuote?.unit} /></p>}
             </div>
           ), 11)}
 
