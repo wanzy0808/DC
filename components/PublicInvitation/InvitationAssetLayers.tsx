@@ -206,7 +206,7 @@ function EditableLayer({
             letterSpacing: layer.letterSpacing ?? 0,
             lineHeight: layer.lineHeight ?? 1.2,
             color: layer.color ?? "#C07A84",
-          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
+          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
         </button>
       ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words" style={{
         fontFamily: layer.fontFamily
@@ -218,7 +218,7 @@ function EditableLayer({
         letterSpacing: layer.letterSpacing ?? 0,
         lineHeight: layer.lineHeight ?? 1.2,
         color: layer.color ?? "#C07A84",
-      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
+      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
