@@ -4,6 +4,7 @@ import { Type } from "lucide-react";
 import { invitationSectionItems } from "@/lib/templates/sections";
 import { MAX_ASSET_LAYERS, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { Button } from "@/components/ui/button";
 
 export default function TextObjectPanel({
   layers,
@@ -32,15 +33,16 @@ export default function TextObjectPanel({
         </h2>
       </div>
 
-      <button
+      <Button
         type="button"
+        size="lg"
         disabled={layers.length >= MAX_ASSET_LAYERS}
         onClick={() => onAdd(en ? "Add your text" : "Tambahkan teks", targetSection)}
-        className="dc-studio-add-text-box"
+        className="w-full justify-center"
       >
         <Type size={18} />
         <span>{en ? "Add text box" : "Tambah kotak teks"}</span>
-      </button>
+      </Button>
 
       <p className="text-xs text-muted-foreground">
         {en ? "Added to " + targetLabel + ". Select a section first to change the target." : "Ditambahkan ke " + targetLabel + ". Pilih section dulu untuk mengganti target."}
