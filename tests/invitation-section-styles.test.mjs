@@ -59,7 +59,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(inspector, /Ruang vertikal/);
   assert.match(inspector, /Opasitas/);
   assert.match(inspector, /Warna latar section/);
-  assert.match(inspector, /Fungsi terlindungi/);
+  assert.match(inspector, /Komponen/);
   assert.match(state, /withInvitationSectionStyles/);
   assert.match(state, /parseInvitationSectionStyles/);
   assert.match(universal, /parseInvitationSectionStyles\(activeDesignKey\)/);
@@ -77,7 +77,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
 
 test("functional section inspector stays visual-only and names protected functions", () => {
   const inspector = read("components/InvitationStudio/SectionInspector.tsx");
-  assert.match(inspector, /rsvp: \["Nama tamu", "WhatsApp", "Status hadir", "Jumlah pendamping", "Submit RSVP"\]/);
+  assert.match(inspector, /rsvp: \["Judul", "Input RSVP", "Asset \/ image"\]/);
   assert.match(inspector, /wishes: \["Nama tamu", "Ucapan", "Kirim ucapan"\]/);
   assert.match(inspector, /gift: \["Bank", "Nama rekening", "Nomor rekening", "Salin rekening"\]/);
   assert.doesNotMatch(inspector, /fetch\(|\/api\/invite|onSubmit/);
