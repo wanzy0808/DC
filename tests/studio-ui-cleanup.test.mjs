@@ -406,3 +406,21 @@ test("Studio clipboard shortcuts never hijack text editing", () => {
   assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
   assert.match(designer, /event\.key\.toLowerCase\(\) === "v"/);
 });
+
+
+test("Studio supports shift multi-select and persistent group controls", () => {
+  const assetLayers = read("lib/templates/asset-layers.ts");
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const preview = read("components/InvitationStudio/InvitationPreview.tsx");
+
+  assert.match(assetLayers, /groupId\?: string/);
+  assert.match(designer, /selectedLayerIds/);
+  assert.match(designer, /function groupSelectedAssetLayers\(\)/);
+  assert.match(designer, /function ungroupSelectedAssetLayers\(\)/);
+  assert.match(designer, /event\.shiftKey/);
+  assert.match(designer, /selectedAssetLayerIds=\{selectedLayerIds\}/);
+  assert.match(designer, /dc-studio-layer-group-actions/);
+  assert.match(assetRenderer, /selectedIds\?: string\[\]/);
+  assert.match(assetRenderer, /onSelect\?: \(id: string, additive\?: boolean\)/);
+  assert.match(preview, /selectedAssetLayerIds\?: string\[\]/);
+});
