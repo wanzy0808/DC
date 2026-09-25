@@ -13,7 +13,7 @@ import type {
   RsvpFormState,
   RsvpTicketGuest,
 } from "@/components/InvitationStudio/rsvp-types";
-import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import { rsvpElementStyleCss, type InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 
 export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
   ticketGuest: RsvpTicketGuest;
@@ -86,23 +86,24 @@ export function RsvpInputPanel({
 }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4 font-[var(--font-fauna)]">
-      <div>
-        {appearance !== "zen" && <h2 className="mt-2 font-[var(--font-cinzel)] text-2xl">
-          Konfirmasi Kehadiran
-        </h2>}
-        {guestName && (
-          <p className="mt-1 text-sm opacity-70">Untuk: {displayTitleCase(guestName)}</p>
-        )}
-        {invitedPax !== undefined && (
-          <p className="mt-1 text-sm opacity-70">Kuota undangan: {invitedPax} orang, termasuk penerima.</p>
-        )}
-      </div>
+      {(guestName || invitedPax !== undefined) && (
+        <div>
+          {guestName && (
+            <p className="mt-1 text-sm opacity-70">Untuk: {displayTitleCase(guestName)}</p>
+          )}
+          {invitedPax !== undefined && (
+            <p className="mt-1 text-sm opacity-70">Kuota undangan: {invitedPax} orang, termasuk penerima.</p>
+          )}
+        </div>
+      )}
 
       {!guestId && (
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-xs font-medium">
             Nama
             <Input
+              data-studio-rsvp-element="name"
+              style={rsvpElementStyleCss(rsvpConfig, "name")}
               value={form.name}
               onChange={(event) =>
                 setForm({ ...form, name: event.target.value })
@@ -116,6 +117,8 @@ export function RsvpInputPanel({
           <label className="text-xs font-medium">
             No. WhatsApp
             <Input
+              data-studio-rsvp-element="phone"
+              style={rsvpElementStyleCss(rsvpConfig, "phone")}
               value={form.phone}
               onChange={(event) =>
                 setForm({ ...form, phone: event.target.value })
@@ -132,6 +135,8 @@ export function RsvpInputPanel({
         <label className="block text-xs font-medium">
           Acara yang akan dihadiri
           <select
+            data-studio-rsvp-element="events"
+            style={rsvpElementStyleCss(rsvpConfig, "events")}
             aria-label="Acara yang akan dihadiri"
             value={form.eventChoice}
             onChange={(event) => setForm({ ...form, eventChoice: event.target.value as RsvpFormState["eventChoice"] })}
@@ -146,13 +151,15 @@ export function RsvpInputPanel({
         </label>
       )}
 
-      {appearance === "zen" ? <fieldset className="zen-status-options">
+      {appearance === "zen" ? <fieldset data-studio-rsvp-element="status" style={rsvpElementStyleCss(rsvpConfig, "status")} className="zen-status-options">
         <legend className="sr-only">Status kehadiran</legend>
         {([["ATTENDING", "Saya Akan Hadir"], ["TENTATIVE", "Saya Mungkin Hadir"], ["NOT_ATTENDING", "Saya Tidak Dapat Hadir"]] as const).map(([value, label]) => <label key={value}>
           <input type="radio" name="attendance" value={value} checked={form.status === value} onChange={() => setForm({ ...form, status: value })} />
           <span>{label}</span>
         </label>)}
       </fieldset> : (<select
+        data-studio-rsvp-element="status"
+        style={rsvpElementStyleCss(rsvpConfig, "status")}
         aria-label="Status kehadiran"
         value={form.status}
         onChange={(event) =>
@@ -166,7 +173,7 @@ export function RsvpInputPanel({
       </select>)}
 
       {form.status === "ATTENDING" && (invitedPax === undefined || invitedPax > 1) && (
-      <fieldset className="space-y-2">
+      <fieldset data-studio-rsvp-element="companions" style={rsvpElementStyleCss(rsvpConfig, "companions")} className="space-y-2">
         <legend className="text-sm font-medium">Jumlah pendamping</legend>
         {invitedPax !== undefined && invitedPax > 2 ? (
           <Input
@@ -218,6 +225,8 @@ export function RsvpInputPanel({
             <label key={field.id} className="block text-xs font-medium">
               {field.label}
               <Input
+                data-studio-rsvp-element={`custom:${field.id}`}
+                style={rsvpElementStyleCss(rsvpConfig, `custom:${field.id}`)}
                 value={form.customAnswers[field.id] ?? ""}
                 onChange={(event) => setForm({
                   ...form,
@@ -233,6 +242,8 @@ export function RsvpInputPanel({
       )}
 
       <Button
+        data-studio-rsvp-element="submit"
+        style={rsvpElementStyleCss(rsvpConfig, "submit")}
         type="submit"
         disabled={submitting || preview}
         className="rounded-xl bg-[#7A1C25] px-5 py-3 font-[var(--font-fauna)] text-xs text-white hover:bg-[#5E141C]"
