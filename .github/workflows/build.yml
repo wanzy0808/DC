@@ -33,8 +33,8 @@ jobs:
         env:
           DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
 
-      - name: Wedding family formatter and guest-filter tests
-        run: node --test tests/*.test.mjs
+      - name: Source regression tests
+        run: pnpm test
 
       - name: Build
         run: pnpm build
