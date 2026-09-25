@@ -143,6 +143,13 @@ test("Ucapan Tamu section label has no stale unavailable caption", () => {
   assert.doesNotMatch(panels, /wishes.*text-xs.*unavailable/i);
 });
 
+test("Studio stage labels use Amplop and Isi while keeping internal cover state", () => {
+  assert.match(designer, /envelope: "Amplop", cover: "Isi"/);
+  assert.match(designer, /envelope: "Envelope", cover: "Content"/);
+  assert.match(designer, /canvasStage === "cover"/);
+  assert.match(designer, /setCanvasStage\("cover"\)/);
+});
+
 test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", () => {
   assert.match(designer, /save: "Simpan"/);
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);

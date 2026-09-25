@@ -62,6 +62,8 @@ Naik/Turun mengubah urutan instance section pada undangan user. Duplicate membua
 
 ### Arsitektur menu kiri vs panel kanan — aturan final
 
+**Label stage canvas:** toggle di atas canvas memakai **Amplop / Isi** (EN: **Envelope / Content**). 
+
 **Urutan rail kiri Customer Studio:** **Katalog → Isi → Teks → Foto → Aset → Musik → Warna**. Jangan memecah urutan ini dengan divider visual dan jangan menambahkan kembali menu Font terpisah.
 
 **Penamaan menu:** browser/pemilih template di rail kiri memakai label **Katalog** (EN: **Catalog**). Istilah internal `template`, template key, registry, route, dan data model tidak perlu diganti; ini hanya nama navigasi pengguna.

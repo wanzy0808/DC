@@ -77,9 +77,9 @@ export default function InvitationDesigner() {
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Content", colors: "Colors", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
-    envelope: "Envelope", cover: "Cover",
+    envelope: "Envelope", cover: "Content",
     showPanel: "Show panel", hidePanel: "Hide panel", replay: "Restart from the beginning",
-    envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show Cover without changing the saved envelope setting",
+    envelopeHint: "Open the digital envelope in the canvas", coverHint: "Show invitation content without changing the saved envelope setting",
     photoFree: "Photo-free theme", retry: "Try Again",
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
@@ -87,9 +87,9 @@ export default function InvitationDesigner() {
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Isi", colors: "Warna", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
-    envelope: "Amplop", cover: "Cover",
+    envelope: "Amplop", cover: "Isi",
     showPanel: "Tampilkan panel", hidePanel: "Sembunyikan panel", replay: "Ulangi dari awal",
-    envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat Cover tanpa mengubah pengaturan Amplop",
+    envelopeHint: "Tampilkan dan coba animasi Amplop Digital di canvas", coverHint: "Lihat isi undangan tanpa mengubah pengaturan Amplop",
     photoFree: "Tema tanpa foto", retry: "Coba Lagi",
   };
   const catalog = useTemplateCatalog();
