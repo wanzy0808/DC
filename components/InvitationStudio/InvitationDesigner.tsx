@@ -68,7 +68,7 @@ export default function InvitationDesigner() {
   const { locale } = useLanguage();
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
-    defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
+    defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
     undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save", startOver: "Start Over",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
@@ -78,7 +78,7 @@ export default function InvitationDesigner() {
     photoFree: "Photo-free theme", retry: "Try Again",
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
-    defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
+    defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
     undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
@@ -298,9 +298,24 @@ export default function InvitationDesigner() {
 
   function restoreDefaults() {
     const preset = invitationTemplatePresets[design.template];
-    if (!preset) return;
-    change({ palette: preset.palette, font: preset.font, sections: { ...defaultInvitationSections } });
-    setNotice("Warna, font, dan bagian kembali ke default. Foto, musik, dan isi tetap tersimpan. Klik Simpan untuk menerapkan.");
+    if (!preset || !invitation || saving || audioMutation.current) return;
+    change({
+      palette: preset.palette,
+      font: preset.font,
+      sections: { ...defaultInvitationSections },
+      photos: defaultPhotoAssignments(),
+      copy: {},
+      layers: [],
+    });
+    setActivePhotoSlot("cover");
+    setSelectedLayerId(null);
+    setCopiedAssetLayer(null);
+    draggedAssetSrc.current = null;
+    setAssetDropReady(false);
+    setCanvasStage("envelope");
+    setPreviewVersion((value) => value + 1);
+    requestAnimationFrame(() => canvasScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" }));
+    setNotice("Desain kembali ke kondisi awal template. Aset yang dipasang di canvas, posisi/ukuran/rotasi, teks dekoratif, foto slot, isi template, warna, font, dan toggle bagian sudah direset. File upload tetap tersimpan di koleksi media. Klik Simpan untuk menerapkan.");
   }
 
   async function deleteMusic(id: string) {
@@ -709,7 +724,7 @@ export default function InvitationDesigner() {
                 <Redo2 className="h-4 w-4" />
               </Button>
             </div>
-            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
+            <button type="button" className="dc-studio-icon" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}><RotateCcw size={17} /></button>
           </div>
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
             const target = event.target;
