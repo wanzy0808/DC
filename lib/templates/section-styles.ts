@@ -7,18 +7,24 @@ const visualSectionKeys = [
 ] as const satisfies readonly InvitationSectionKey[];
 
 export type InvitationSectionAlign = "left" | "center" | "right";
+export type InvitationSectionAnimation = "none" | "fade" | "rise" | "slide-left" | "slide-right" | "zoom";
 
 export type InvitationSectionStyle = {
   paddingY?: number;
   opacity?: number;
   align?: InvitationSectionAlign;
   background?: string;
+  /** undefined follows the template motion; "none" explicitly disables it. */
+  animation?: InvitationSectionAnimation;
+  animationDuration?: number;
+  animationDelay?: number;
 };
 
 export type InvitationSectionStyles = Partial<Record<InvitationSectionKey, InvitationSectionStyle>>;
 
 const sectionKeys = new Set<InvitationSectionKey>(visualSectionKeys);
 const alignValues = new Set<InvitationSectionAlign>(["left", "center", "right"]);
+const animationValues = new Set<InvitationSectionAnimation>(["none", "fade", "rise", "slide-left", "slide-right", "zoom"]);
 const numberBetween = (value: unknown, min: number, max: number) =>
   typeof value === "number" && Number.isFinite(value) ? Math.min(max, Math.max(min, value)) : undefined;
 
@@ -36,10 +42,15 @@ export function sanitizeInvitationSectionStyles(value: unknown): InvitationSecti
     const paddingY = numberBetween(source.paddingY, 0, 160);
     const opacity = numberBetween(source.opacity, 0.2, 1);
     const background = sanitizeColor(source.background);
+    const animationDuration = numberBetween(source.animationDuration, 0.2, 2.5);
+    const animationDelay = numberBetween(source.animationDelay, 0, 2);
     if (paddingY !== undefined) style.paddingY = paddingY;
     if (opacity !== undefined && opacity !== 1) style.opacity = opacity;
     if (alignValues.has(source.align as InvitationSectionAlign)) style.align = source.align as InvitationSectionAlign;
     if (background) style.background = background;
+    if (animationValues.has(source.animation as InvitationSectionAnimation)) style.animation = source.animation as InvitationSectionAnimation;
+    if (animationDuration !== undefined) style.animationDuration = animationDuration;
+    if (animationDelay !== undefined) style.animationDelay = animationDelay;
     if (Object.keys(style).length) output[key as InvitationSectionKey] = style;
   }
   return output;
