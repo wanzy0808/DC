@@ -61,8 +61,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /onDragOver=\{onAssetDragOver\}/);
   assert.match(editor, /onDrop=\{onAssetDrop\}/);
   assert.match(editor, /event\.key === "Delete" \|\| event\.key === "Backspace"/);
-  assert.match(editor, /event\.key\.toLowerCase\(\) === "c"/);
-  assert.match(editor, /event\.key\.toLowerCase\(\) === "v"/);
+  assert.match(editor, /shortcutKey === "c"/);
+  assert.match(editor, /shortcutKey === "v"/);
   assert.match(editor, /event\.ctrlKey \|\| event\.metaKey/);
   assert.match(editor, /closest\('input, textarea, select,/);
   assert.match(editor, /window\.getSelection\(\)\?\.toString\(\)/);
