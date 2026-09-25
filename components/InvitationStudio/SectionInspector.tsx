@@ -188,7 +188,7 @@ export default function SectionInspector({
               disabled={rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS}
               onClick={onAddRsvpField}
             >
-              + {en ? "Add field" : "Tambah Field"}
+              + {en ? "Add column" : "Tambah Kolom"}
             </button>
           </div>
         </div>
