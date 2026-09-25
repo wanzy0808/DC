@@ -3,5 +3,6 @@ export function dashboardRouteForRole(role: string | null | undefined): string {
   if (role === "OWNER") return "/owner";
   if (role === "ADMIN" || role === "FINANCE") return "/admin";
   if (role === "DESIGNER" || role === "EDITOR") return "/designer";
+  if (role === "SUPPORT") return "/partner";
   return "/dashboard";
 }
