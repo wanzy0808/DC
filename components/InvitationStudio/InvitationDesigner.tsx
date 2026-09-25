@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type DragEvent, type PointerEvent as ReactPointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type DragEvent } from "react";
 import {
   ImagePlus,
   Layers3,
@@ -83,6 +83,7 @@ import {
   saveStudioInvitation,
   uploadStudioAsset,
 } from "@/components/InvitationStudio/designer-persistence";
+import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -139,10 +140,15 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [previewVersion, setPreviewVersion] = useState(0);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [canvasZoom, setCanvasZoom] = useState(1);
-  const [canvasPanReady, setCanvasPanReady] = useState(false);
-  const [canvasPanning, setCanvasPanning] = useState(false);
-  const canvasPan = useRef<{ pointerId: number; startX: number; startY: number; scrollLeft: number; scrollTop: number; moved: boolean } | null>(null);
-  const suppressCanvasClick = useRef(false);
+  const {
+    canvasPanReady,
+    canvasPanning,
+    setCanvasPanReady,
+    beginCanvasPan,
+    moveCanvasPan,
+    endCanvasPan,
+    consumeSuppressedCanvasClick,
+  } = useStudioCanvasPan();
   // A click on the actual envelope advances the Studio stage selector, too.
   const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
   const [savedState, setSavedState] = useState("");
@@ -582,42 +588,6 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setPanel("decor");
     setInspectorOpen(true);
     setMobileCanvas(false);
-  }
-
-  function beginCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
-    if (!canvasPanReady || event.button !== 0) return false;
-    event.preventDefault();
-    const node = event.currentTarget;
-    canvasPan.current = {
-      pointerId: event.pointerId,
-      startX: event.clientX,
-      startY: event.clientY,
-      scrollLeft: node.scrollLeft,
-      scrollTop: node.scrollTop,
-      moved: false,
-    };
-    node.setPointerCapture(event.pointerId);
-    setCanvasPanning(true);
-    return true;
-  }
-
-  function moveCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
-    const pan = canvasPan.current;
-    if (!pan || pan.pointerId !== event.pointerId) return;
-    const dx = event.clientX - pan.startX;
-    const dy = event.clientY - pan.startY;
-    if (Math.hypot(dx, dy) > 3) pan.moved = true;
-    event.currentTarget.scrollLeft = pan.scrollLeft - dx;
-    event.currentTarget.scrollTop = pan.scrollTop - dy;
-  }
-
-  function endCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
-    const pan = canvasPan.current;
-    if (!pan || pan.pointerId !== event.pointerId) return;
-    suppressCanvasClick.current = pan.moved;
-    canvasPan.current = null;
-    setCanvasPanning(false);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   }
 
   function fitCanvasZoom() {
@@ -1464,7 +1434,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
           onPointerUp={endCanvasPan}
           onPointerCancel={(event) => { endCanvasPan(event); setCanvasPanReady(false); }}
           onClick={(event) => {
-            if (suppressCanvasClick.current) { suppressCanvasClick.current = false; return; }
+            if (consumeSuppressedCanvasClick()) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
             const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
