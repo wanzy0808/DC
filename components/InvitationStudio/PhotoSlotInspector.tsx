@@ -146,6 +146,24 @@ export default function PhotoSlotInspector({
         </>
       ) : null}
 
+      <label className="dc-studio-layer-opacity">
+        <span className="flex items-center justify-between gap-2">
+          <span>{en ? "Parallax" : "Parallax"}</span>
+          <output>{Math.round(motion?.parallax ?? 0)}px</output>
+        </span>
+        <input
+          type="range"
+          min="0"
+          max="20"
+          step="1"
+          value={motion?.parallax ?? 0}
+          onChange={(event) => {
+            const parallax = Number(event.target.value);
+            onUpdate({ parallax: parallax > 0 ? parallax : undefined });
+          }}
+        />
+      </label>
+
       <button type="button" className="dc-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
         Reset
