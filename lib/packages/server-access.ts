@@ -1,18 +1,20 @@
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation, hasPaidGuestbook } from "@/lib/packages/access";
+import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 
 type PaymentLike = { packageKey: string; status: string } | null | undefined;
 
 /**
- * Digital Invitation entitlement is invitation-scoped.
- * Buying one event must never unlock another event owned by the same account.
- * Keep this helper name for compatibility with existing API callers.
+ * Payment entitlements remain event-scoped.
+ * Owner grants are explicit account-level overrides and never count as sales.
  */
 export async function hasAccountDigitalInvitation(
-  _userId: string,
+  userId: string,
   directPayment?: PaymentLike,
 ) {
-  return hasPaidDigitalInvitation(directPayment);
+  if (hasPaidDigitalInvitation(directPayment)) return true;
+  const grant = await getOwnerPackageGrant(userId);
+  return grant.digital;
 }
 
 export async function hasAccountGuestbook(
@@ -20,6 +22,9 @@ export async function hasAccountGuestbook(
   directPayment?: PaymentLike,
 ) {
   if (hasPaidGuestbook(directPayment)) return true;
+
+  const grant = await getOwnerPackageGrant(userId);
+  if (grant.guestbook) return true;
 
   const payment = await prisma.payment.findFirst({
     where: {
