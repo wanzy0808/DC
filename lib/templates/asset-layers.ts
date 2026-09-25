@@ -1,5 +1,3 @@
-import { invitationFonts } from "@/lib/templates/design";
-
 /** Template-safe, invitation-scoped artwork and optional decorative text. */
 export const studioObjectSections = [
   "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
@@ -31,11 +29,6 @@ export type InvitationAssetLayer = {
 };
 
 export const MAX_ASSET_LAYERS = 10;
-export const studioTextFontFamilies = [...new Set(
-  Object.values(invitationFonts).flatMap((item) => [item.heading, item.body]),
-)].sort((a, b) => a.localeCompare(b));
-
-const studioTextFontSet = new Set(studioTextFontFamilies);
 const assetRoots = ["/template/", "/templates/"];
 const numberBetween = (input: unknown, min: number, max: number, fallback: number) =>
   typeof input === "number" && Number.isFinite(input) ? Math.min(max, Math.max(min, input)) : fallback;
@@ -72,7 +65,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       layer.text = text;
       layer.fontSize = numberBetween(entry.fontSize, 10, 144, 24);
       layer.fontRole = entry.fontRole === "body" ? "body" : "heading";
-      if (typeof entry.fontFamily === "string" && studioTextFontSet.has(entry.fontFamily)) layer.fontFamily = entry.fontFamily;
+      if (typeof entry.fontFamily === "string" && /^[A-Za-z0-9 .+_-]{1,64}$/.test(entry.fontFamily)) layer.fontFamily = entry.fontFamily;
       layer.fontWeight = numberBetween(entry.fontWeight, 300, 900, 400);
       if (entry.textAlign === "left" || entry.textAlign === "center" || entry.textAlign === "right") layer.textAlign = entry.textAlign;
       layer.letterSpacing = numberBetween(entry.letterSpacing, -2, 12, 0);
