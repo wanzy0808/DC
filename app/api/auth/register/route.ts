@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 import { createToken } from "@/lib/auth";
 import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
+import { sendEmail } from "@/lib/notifications/email";
 
 export async function POST(request: Request) {
   try {
@@ -40,7 +41,13 @@ export async function POST(request: Request) {
       data: { userId: user.id, tokenHash, expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) },
     });
 
-    console.info(`[DEV] Verify ${email}: ${process.env.APP_URL ?? "http://localhost:3000"}/api/auth/verify-email?token=${token}`);
+    const verifyUrl = `${process.env.APP_URL ?? "http://localhost:3000"}/api/auth/verify-email?token=${token}`;
+    const mail = await sendEmail({
+      to: email,
+      subject: "Verifikasi email — DC Organizer",
+      html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#21191c;line-height:1.6"><h2>DC Organizer</h2><p>Selamat datang. Verifikasi email untuk mengaktifkan akunmu.</p><p><a href="${verifyUrl}">Verifikasi email</a></p><p>Link berlaku 24 jam dan hanya dapat digunakan sekali.</p></body></html>`,
+    });
+    if (!mail.sent && process.env.NODE_ENV !== "production") console.info(`[DEV] Verify ${email}: ${verifyUrl}`);
     return NextResponse.json({ message: "Akun dibuat. Cek email untuk verifikasi." }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Tidak dapat membuat akun." }, { status: 500 });
