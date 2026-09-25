@@ -30,6 +30,8 @@ export type InvitationAssetLayer = {
   locked?: boolean;
   /** Hidden layers remain in the design/layer list but are omitted from public rendering. */
   hidden?: boolean;
+  flipX?: boolean;
+  flipY?: boolean;
 };
 
 export const MAX_ASSET_LAYERS = 10;
@@ -81,6 +83,8 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
     if (entry.locked === true) layer.locked = true;
     if (entry.hidden === true) layer.hidden = true;
+    if (entry.flipX === true) layer.flipX = true;
+    if (entry.flipY === true) layer.flipY = true;
     output.push(layer);
     if (output.length === MAX_ASSET_LAYERS) break;
   }
