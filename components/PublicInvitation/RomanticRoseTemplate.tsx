@@ -20,6 +20,7 @@ import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
+import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 
@@ -148,6 +149,7 @@ export default function RomanticRoseTemplate({
   const activeDesignKey = designKey || invitation.templateKey;
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
+  const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
   const sectionEditorActions: SectionInstanceEditorActions | undefined = preview ? {
     selectedId: selectedSectionInstanceId,
@@ -364,7 +366,7 @@ export default function RomanticRoseTemplate({
                         <h3 className="text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</h3>
                         {invitation.address && <p className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#765460]">{invitation.address}</p>}
                         {invitation.mapUrl && (
-                          <a href={invitation.mapUrl} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-[#a65e69] px-6 py-3 text-sm text-white hover:bg-[#8e4d5d]">
+                          <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={invitation.mapUrl} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-[var(--dc-control-radius)] bg-[#a65e69] px-6 py-3 text-sm text-white hover:bg-[#8e4d5d]">
                             <MapPin className="h-4 w-4" /> Buka Google Maps
                           </a>
                         )}
@@ -383,7 +385,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="wishes" style={invitationSectionStyleCss(sectionStyles.wishes)} className="relative bg-[#fffaf8] px-7 py-20 text-center">
                         {objectOverlay("wishes")}
                           <RoseHeading eyebrow="A little note of love">Ucapan & Doa</RoseHeading>
-                          <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} />
+                          <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} inputStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "input")} buttonStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "button")} />
                         </section>
           ))}
 
@@ -396,7 +398,7 @@ export default function RomanticRoseTemplate({
                             <p className="text-sm text-[#916f7a]">{invitation.giftBankName}</p>
                             <p className="mt-2 text-sm font-semibold">{invitation.giftAccountName}</p>
                             <p className="mt-2 break-all font-[family-name:var(--font-dc-heading)] text-lg">{invitation.giftAccountNumber}</p>
-                            {invitation.giftAccountNumber && <button type="button" onClick={() => navigator.clipboard?.writeText(invitation.giftAccountNumber || "")} className="mt-5 min-h-10 rounded-full border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
+                            {invitation.giftAccountNumber && <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={() => navigator.clipboard?.writeText(invitation.giftAccountNumber || "")} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
                           </div> : <p className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
                         </section>
           ))}
