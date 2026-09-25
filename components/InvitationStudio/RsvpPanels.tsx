@@ -13,6 +13,7 @@ import type {
   RsvpFormState,
   RsvpTicketGuest,
 } from "@/components/InvitationStudio/rsvp-types";
+import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 
 export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
   ticketGuest: RsvpTicketGuest;
@@ -62,6 +63,8 @@ export function RsvpInputPanel({
   guestId,
   guestName,
   invitedPax,
+  eventCategory,
+  rsvpConfig,
   form,
   setForm,
   message,
@@ -73,6 +76,8 @@ export function RsvpInputPanel({
   guestId?: string;
   guestName?: string;
   invitedPax?: number;
+  eventCategory?: string | null;
+  rsvpConfig: InvitationRsvpConfig;
   form: RsvpFormState;
   setForm: (next: RsvpFormState) => void;
   message: string;
@@ -121,6 +126,24 @@ export function RsvpInputPanel({
             />
           </label>
         </div>
+      )}
+
+      {eventCategory === "WEDDING" && form.status === "ATTENDING" && (rsvpConfig.ceremony || rsvpConfig.reception) && (
+        <label className="block text-xs font-medium">
+          Acara yang akan dihadiri
+          <select
+            aria-label="Acara yang akan dihadiri"
+            value={form.eventChoice}
+            onChange={(event) => setForm({ ...form, eventChoice: event.target.value as RsvpFormState["eventChoice"] })}
+            className="mt-1.5 w-full rounded-md border border-black/10 bg-transparent px-3 py-2.5 text-sm dark:border-white/10"
+            required
+          >
+            <option value="">Pilih acara</option>
+            {rsvpConfig.ceremony && <option value="ceremony">Upacara Nikah</option>}
+            {rsvpConfig.reception && <option value="reception">Resepsi</option>}
+            {rsvpConfig.attendAll && rsvpConfig.ceremony && rsvpConfig.reception && <option value="all">Hadir Semua Acara</option>}
+          </select>
+        </label>
       )}
 
       {appearance === "zen" ? <fieldset className="zen-status-options">
@@ -187,6 +210,26 @@ export function RsvpInputPanel({
         </>
         )}
       </fieldset>
+      )}
+
+      {rsvpConfig.customFields.length > 0 && (
+        <div className="space-y-3">
+          {rsvpConfig.customFields.map((field) => (
+            <label key={field.id} className="block text-xs font-medium">
+              {field.label}
+              <Input
+                value={form.customAnswers[field.id] ?? ""}
+                onChange={(event) => setForm({
+                  ...form,
+                  customAnswers: { ...form.customAnswers, [field.id]: event.target.value },
+                })}
+                className="mt-1.5"
+                maxLength={200}
+                required={field.required}
+              />
+            </label>
+          ))}
+        </div>
       )}
 
       <Button
