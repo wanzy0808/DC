@@ -18,6 +18,7 @@ import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { weddingParentLine } from "@/lib/events/parents";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
+import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -129,6 +130,7 @@ export default function RomanticRoseTemplate({
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
+  const sectionStyles = parseInvitationSectionStyles(designKey || invitation.templateKey);
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
@@ -175,7 +177,7 @@ export default function RomanticRoseTemplate({
     <main className="relative isolate min-h-[760px] overflow-hidden bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]">
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
-        <section data-invitation-section="envelope" className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
+        <section data-invitation-section="envelope" style={invitationSectionStyleCss(sectionStyles.envelope)} className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
             {objectOverlay("envelope")}
           <div className="pointer-events-none absolute -left-20 top-10 h-56 w-56 rounded-full border border-white/60" />
           <div className="pointer-events-none absolute -right-20 bottom-10 h-64 w-64 rounded-full border border-white/70" />
@@ -199,7 +201,7 @@ export default function RomanticRoseTemplate({
         </section>
       ) : (
         <div className="mx-auto max-w-2xl">
-          {sections.cover !== false && (<section data-invitation-section="cover" className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
+          {sections.cover !== false && (<section data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)} className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
             <div className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" focus={assignment.focus.cover} className="h-full w-full object-cover" /></div>
             <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
             <div className="relative z-10 flex w-full flex-col items-center">
@@ -215,13 +217,13 @@ export default function RomanticRoseTemplate({
             {objectOverlay("cover")}
           </section>)}
 
-          {sections.greeting !== false && (<section data-invitation-section="greeting" className="relative bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.greeting !== false && (<section data-invitation-section="greeting" style={invitationSectionStyleCss(sectionStyles.greeting)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
             {objectOverlay("greeting")}
             <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
             <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.greeting}</p>
           </section>)}
 
-          {sections.identity !== false && (<section data-invitation-section="identity" className="relative bg-[#f8eef0] px-7 py-20">
+          {sections.identity !== false && (<section data-invitation-section="identity" style={invitationSectionStyleCss(sectionStyles.identity)} className="relative bg-[#f8eef0] px-7 py-20">
             {objectOverlay("identity")}
             <RoseHeading eyebrow="The two of us">Mempelai</RoseHeading>
             <div className="grid grid-cols-2 gap-4">
@@ -246,7 +248,7 @@ export default function RomanticRoseTemplate({
 
           {sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme="romantic-rose" />}
 
-          {sections.event !== false && (<section data-invitation-section="event" className="relative bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.event !== false && (<section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
             {objectOverlay("event")}
             <RoseHeading eyebrow="Save the date">Detail Acara</RoseHeading>
             <p className="text-sm leading-7 text-[#765460]">{displayTitleCase(invitation.title) || "Perayaan Pernikahan"}</p>
@@ -254,7 +256,7 @@ export default function RomanticRoseTemplate({
             {invitation.dressCode && <p className="mt-4 text-sm text-[#765460]">Dress code · {invitation.dressCode}</p>}
           </section>)}
 
-          {sections.dateTime !== false && (<section data-invitation-section="dateTime" className="relative bg-[#f8eef0] px-8 py-20 text-center">
+          {sections.dateTime !== false && (<section data-invitation-section="dateTime" style={invitationSectionStyleCss(sectionStyles.dateTime)} className="relative bg-[#f8eef0] px-8 py-20 text-center">
             {objectOverlay("dateTime")}
             <RoseHeading eyebrow="A day to remember">Tanggal & Waktu</RoseHeading>
             <div className="mx-auto flex max-w-sm flex-col items-center gap-3 rounded-3xl border border-[#e7cbd3] bg-white/70 px-6 py-9">
@@ -266,7 +268,7 @@ export default function RomanticRoseTemplate({
             </div>
           </section>)}
 
-          {sections.gallery !== false && (<section data-invitation-section="gallery" className="relative bg-[#fffaf8] px-6 py-20">
+          {sections.gallery !== false && (<section data-invitation-section="gallery" style={invitationSectionStyleCss(sectionStyles.gallery)} className="relative bg-[#fffaf8] px-6 py-20">
             {objectOverlay("gallery")}
               <RoseHeading eyebrow="Our memories">Galeri Foto</RoseHeading>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
@@ -279,7 +281,7 @@ export default function RomanticRoseTemplate({
               </div> : <p className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
             </section>)}
 
-          {sections.countdown !== false && (<section data-invitation-section="countdown" className="relative bg-[#f8eef0] px-8 py-20 text-center">
+          {sections.countdown !== false && (<section data-invitation-section="countdown" style={invitationSectionStyleCss(sectionStyles.countdown)} className="relative bg-[#f8eef0] px-8 py-20 text-center">
             {objectOverlay("countdown")}
             <RoseHeading eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
             {now !== null && countdown ? (
@@ -294,7 +296,7 @@ export default function RomanticRoseTemplate({
             ) : <p className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
           </section>)}
 
-          {sections.location !== false && (<section data-invitation-section="location" className="relative bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.location !== false && (<section data-invitation-section="location" style={invitationSectionStyleCss(sectionStyles.location)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
             {objectOverlay("location")}
             <RoseHeading eyebrow="Find your way">Lokasi</RoseHeading>
             <MapPin className="mx-auto mb-3 h-6 w-6 text-[#a65e69]" />
@@ -308,7 +310,7 @@ export default function RomanticRoseTemplate({
           </section>)}
 
           {sections.rsvp && (
-            <section data-invitation-section="rsvp" className="relative bg-[#f8eef0] px-5 py-20">
+            <section data-invitation-section="rsvp" style={invitationSectionStyleCss(sectionStyles.rsvp)} className="relative bg-[#f8eef0] px-5 py-20">
             {objectOverlay("rsvp")}
               <RoseHeading eyebrow="Your presence means so much">Konfirmasi Kehadiran</RoseHeading>
               {preview ? (
@@ -320,7 +322,7 @@ export default function RomanticRoseTemplate({
           )}
 
           {sections.wishes && (
-            <section data-invitation-section="wishes" className="relative bg-[#fffaf8] px-7 py-20 text-center">
+            <section data-invitation-section="wishes" style={invitationSectionStyleCss(sectionStyles.wishes)} className="relative bg-[#fffaf8] px-7 py-20 text-center">
             {objectOverlay("wishes")}
               <RoseHeading eyebrow="A little note of love">Ucapan & Doa</RoseHeading>
               <GuestWishes slug={invitation.slug} preview={preview} appearance="rose" initialName={personalGuest?.name} />
@@ -328,7 +330,7 @@ export default function RomanticRoseTemplate({
           )}
 
           {sections.gift && (
-            <section data-invitation-section="gift" className="relative bg-[#f8eef0] px-7 py-20 text-center">
+            <section data-invitation-section="gift" style={invitationSectionStyleCss(sectionStyles.gift)} className="relative bg-[#f8eef0] px-7 py-20 text-center">
             {objectOverlay("gift")}
               <RoseHeading eyebrow="With gratitude">Tanda Kasih</RoseHeading>
               <Gift className="mx-auto h-6 w-6 text-[#a65e69]" />
@@ -341,7 +343,7 @@ export default function RomanticRoseTemplate({
             </section>
           )}
 
-          {sections.closing !== false && (<section data-invitation-section="closing" className="relative bg-[#fffaf8] px-8 py-20 text-center">
+          {sections.closing !== false && (<section data-invitation-section="closing" style={invitationSectionStyleCss(sectionStyles.closing)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
             {objectOverlay("closing")}
             <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
             <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
@@ -350,7 +352,7 @@ export default function RomanticRoseTemplate({
             {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
           </section>)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" className="relative flex items-center justify-center border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-5">
+          {sections.footer !== false && <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center border-t border-[#e7cbd3] bg-[#f8eef0] px-6 py-5">
             {objectOverlay("footer")}
             <span aria-hidden="true" className="h-px w-10 bg-[#bf8496] opacity-50" />
           </footer>}
