@@ -11,7 +11,6 @@ import {
   Redo2,
   Save,
   SlidersHorizontal,
-  Type,
   Undo2,
   RotateCcw,
   PanelLeftClose,
@@ -47,7 +46,6 @@ import {
   ColorPanel,
   ContentPanel,
   DesignerTool,
-  FontPanel,
   MusicPanel,
   TemplatePanel,
 } from "@/components/InvitationStudio/DesignerPanels";
@@ -900,7 +898,6 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "template"} label="Template" icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
           <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
           <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
-          <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
@@ -927,8 +924,6 @@ export default function InvitationDesigner() {
           )}
           {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
           {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
-          {panel === "font" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Font Romantic Rose mengikuti desain asli tema.</p>}
-          {panel === "font" && design.template !== "romantic-rose" && <FontPanel selected={design.font} onSelect={(value) => change({ font: value })} />}
           {panel === "decor" && template && !template.usesPhotos ? (
             <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
               <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
@@ -948,7 +943,7 @@ export default function InvitationDesigner() {
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} onAdd={addTextObject} onSelect={focusDesignObject} />}
+          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
           {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
