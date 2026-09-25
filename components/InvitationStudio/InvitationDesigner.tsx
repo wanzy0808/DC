@@ -86,6 +86,7 @@ import {
   uploadStudioAsset,
 } from "@/components/InvitationStudio/designer-persistence";
 import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
+import { useStudioCanvasSelectionMarkers } from "@/components/InvitationStudio/useStudioCanvasSelectionMarkers";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -1165,52 +1166,17 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ layers: next });
   }
 
-  useEffect(() => {
-    const root = canvasScrollRef.current;
-    if (!root) return;
-    for (const node of root.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
-      if (selectedSectionKey !== "rsvp" && node.dataset.invitationSection === selectedSectionKey) node.dataset.studioSectionSelected = "true";
-      else delete node.dataset.studioSectionSelected;
-    }
-  }, [selectedSectionKey, designKey, canvasStage, previewVersion]);
-
-  useEffect(() => {
-    const root = canvasScrollRef.current;
-    if (!root) return;
-    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-rsvp-element]")) {
-      if (node.dataset.studioRsvpElement === selectedRsvpElementKey) node.dataset.studioRsvpSelected = "true";
-      else delete node.dataset.studioRsvpSelected;
-    }
-  }, [selectedRsvpElementKey, designKey, canvasStage, previewVersion]);
-
-  useEffect(() => {
-    const root = canvasScrollRef.current;
-    if (!root) return;
-    const selectedKey = selectedSectionElement ? `${selectedSectionElement.section}:${selectedSectionElement.kind}` : "";
-    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-section-element]")) {
-      if (node.dataset.studioSectionElement === selectedKey) node.dataset.studioSectionElementSelected = "true";
-      else delete node.dataset.studioSectionElementSelected;
-    }
-  }, [selectedSectionElement, designKey, canvasStage, previewVersion]);
-
-  useEffect(() => {
-    const root = canvasScrollRef.current;
-    if (!root) return;
-    for (const node of root.querySelectorAll<HTMLElement>("[data-studio-copy-field]")) {
-      if (node.dataset.studioCopyField === selectedCopyField) node.dataset.studioCopySelected = "true";
-      else delete node.dataset.studioCopySelected;
-    }
-  }, [selectedCopyField, designKey, canvasStage, previewVersion]);
-
-  useEffect(() => {
-    const root = canvasScrollRef.current;
-    if (!root) return;
-    for (const node of root.querySelectorAll<HTMLElement>("[data-invitation-photo-slot]")) {
-      if (node.dataset.invitationPhotoSlot === selectedPhotoSlot) node.dataset.studioPhotoSelected = "true";
-      else delete node.dataset.studioPhotoSelected;
-    }
-  }, [selectedPhotoSlot, designKey, canvasStage, previewVersion]);
-
+  useStudioCanvasSelectionMarkers(
+    canvasScrollRef,
+    {
+      section: selectedSectionKey,
+      rsvpElement: selectedRsvpElementKey,
+      sectionElement: selectedSectionElement ? `${selectedSectionElement.section}:${selectedSectionElement.kind}` : null,
+      copyField: selectedCopyField,
+      photoSlot: selectedPhotoSlot,
+    },
+    `${designKey}|${canvasStage}|${previewVersion}`,
+  );
 
   useEffect(() => {
     function handleLayerShortcut(event: KeyboardEvent) {
