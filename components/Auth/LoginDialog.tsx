@@ -36,6 +36,8 @@ const copy = {
     separator: "atau dengan email",
     email: "Email",
     password: "Kata sandi",
+    forgot: "Lupa kata sandi?",
+    forgotSent: "Jika email terdaftar, tautan reset akan dikirim.",
     submit: "Masuk",
     loading: "Memproses...",
     noAccount: "Belum punya akun?",
@@ -61,6 +63,8 @@ const copy = {
     separator: "or with email",
     email: "Email",
     password: "Password",
+    forgot: "Forgot password?",
+    forgotSent: "If the email is registered, a reset link will be sent.",
     submit: "Sign in",
     loading: "Signing in...",
     noAccount: "New here?",
@@ -100,6 +104,8 @@ export default function LoginDialog({
   const [error, setError] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [notice, setNotice] = useState("");
 
   useEffect(() => {
     const messages: Record<string, string> = {
@@ -131,6 +137,30 @@ export default function LoginDialog({
       .catch(() => undefined);
     return () => { active = false; };
   }, [next]);
+
+  async function forgotPassword() {
+    setError("");
+    setNotice("");
+    if (!email.trim()) {
+      setError(locale === "id" ? "Isi email terlebih dahulu." : "Enter your email first.");
+      return;
+    }
+    setForgotLoading(true);
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json() as { error?: string; message?: string };
+      if (!response.ok) setError(data.error ?? t.connectionFailed);
+      else setNotice(t.forgotSent);
+    } catch {
+      setError(t.connectionFailed);
+    } finally {
+      setForgotLoading(false);
+    }
+  }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -220,9 +250,13 @@ export default function LoginDialog({
                 {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
               </button>
             </div>
+            <button type="button" disabled={forgotLoading} onClick={forgotPassword} className={`${authSecondaryLinkClass} mt-2 text-sm disabled:opacity-60`}>
+              {forgotLoading ? t.loading : t.forgot}
+            </button>
           </div>
         </div>
 
+        {notice && !error && <p role="status" className="rounded-[20px] border border-primary/35 bg-primary/10 px-4 py-3 text-sm leading-6 text-[#21191c]">{notice}</p>}
         {registrationComplete && !error && (
           <p role="status" className="rounded-[20px] border border-primary/35 bg-primary/10 px-4 py-3 text-sm leading-6 text-[#21191c] dark:text-[#21191c]">{t.registered}</p>
         )}
