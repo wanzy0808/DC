@@ -43,11 +43,11 @@ function EditableLayer({
   const root = useRef<HTMLDivElement>(null);
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left"; objectWidth: number; objectHeight: number;
-    startX: number; startY: number; x: number; y: number; width: number; rotation: number;
+    startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
     rect: DOMRect; centerX: number; centerY: number; initialAngle: number;
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
-  useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.rotation, layer.section]);
+  useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left") {
@@ -61,7 +61,7 @@ function EditableLayer({
     const cy = bounds.top + bounds.height / 2;
     gesture.current = {
       pointer: event.pointerId, mode, handle, objectWidth: Math.max(1, root.current.offsetWidth), objectHeight: Math.max(1, root.current.offsetHeight), startX: event.clientX, startY: event.clientY,
-      x: layer.x, y: layer.y, width: layer.width, rotation: layer.rotation ?? 0,
+      x: layer.x, y: layer.y, width: layer.width, height: layer.height ?? root.current.offsetHeight / sectionRect.width * 100, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
     };
@@ -80,14 +80,24 @@ function EditableLayer({
       const localX = dx * Math.cos(radians) + dy * Math.sin(radians);
       const localY = -dx * Math.sin(radians) + dy * Math.cos(radians);
       const handle = drag.handle ?? "bottom-right";
-      // Width is the canonical dimension: all eight grips scale the artwork proportionally.
-      // Midpoint top/bottom handles follow vertical movement; side handles follow horizontal movement.
+      // Side grips change ONE dimension. Corner grips scale both dimensions together.
+      // Height and width use the same section-width basis for consistent responsive geometry.
       const xWeight = handle.includes("left") ? -1 : handle.includes("right") ? 1 : 0;
       const yWeight = handle.includes("top") ? -1 : handle.includes("bottom") ? 1 : 0;
-      const delta = xWeight && yWeight
-        ? (xWeight * localX / drag.objectWidth + yWeight * localY / drag.objectHeight) / 2
-        : xWeight ? xWeight * localX / drag.objectWidth : yWeight * localY / drag.objectHeight;
-      return { width: round(clamp(drag.width * (1 + 2 * delta), 5, 85)) };
+      if (xWeight && !yWeight) return {
+        width: round(clamp(drag.width + xWeight * localX / drag.rect.width * 200, 5, 85)),
+        height: round(clamp(drag.height, 3, 200)),
+      };
+      if (yWeight && !xWeight) return {
+        width: drag.width,
+        height: round(clamp(drag.height + yWeight * localY / drag.rect.width * 200, 3, 200)),
+      };
+      const delta = (xWeight * localX / drag.objectWidth + yWeight * localY / drag.objectHeight) / 2;
+      const scale = 1 + 2 * delta;
+      return {
+        width: round(clamp(drag.width * scale, 5, 85)),
+        height: round(clamp(drag.height * scale, 3, 200)),
+      };
     }
     if (drag.mode === "rotate") {
       const angle = Math.atan2(event.clientY - drag.centerY, event.clientX - drag.centerX);
@@ -141,13 +151,14 @@ function EditableLayer({
   return (
     <div ref={root} className="pointer-events-none absolute" style={{
       left: `${displayed.x}%`, top: `${displayed.y}%`, width: `${displayed.width}%`,
+      ...(displayed.height === undefined ? {} : { aspectRatio: `${displayed.width} / ${displayed.height}` }),
       opacity: displayed.opacity, transform: `translate(-50%, -50%) rotate(${displayed.rotation ?? 0}deg)`,
       transformOrigin: "center", touchAction: "none",
     }}>
       {editable ? (
         <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
-          className="pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing"
+          className={`pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
           onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
@@ -155,12 +166,12 @@ function EditableLayer({
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
             fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
             fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
-          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className="pointer-events-none block h-auto w-full select-none" />}
+          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
         </button>
       ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words text-center leading-snug" style={{
         fontFamily: layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
         fontSize: layer.fontSize ?? 24, color: layer.color ?? "#C07A84",
-      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className="block h-auto w-full select-none" />}
+      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         <div aria-hidden="true" className="pointer-events-none absolute top-full left-1/2 h-6 w-px -translate-x-1/2 bg-primary" />
