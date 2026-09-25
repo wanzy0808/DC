@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, EyeOff, Lock, Unlock } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
@@ -87,6 +88,30 @@ export default function AssetLayerInspector({
         <button type="button" onClick={onDeselect} aria-label={en ? "Close asset properties" : "Tutup properti aset"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
+      <div className="grid grid-cols-2 gap-2">
+        <button
+          type="button"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          aria-pressed={Boolean(selectedAssetLayer.locked)}
+          onClick={() => onUpdate(selectedAssetLayer.id, { locked: selectedAssetLayer.locked ? undefined : true })}
+          title={selectedAssetLayer.locked ? (en ? "Unlock layer" : "Buka kunci layer") : (en ? "Lock layer" : "Kunci layer")}
+        >
+          {selectedAssetLayer.locked ? <Lock size={14} /> : <Unlock size={14} />}
+          {selectedAssetLayer.locked ? (en ? "Locked" : "Terkunci") : (en ? "Lock" : "Kunci")}
+        </button>
+        <button
+          type="button"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          aria-pressed={!selectedAssetLayer.hidden}
+          onClick={() => onUpdate(selectedAssetLayer.id, { hidden: selectedAssetLayer.hidden ? undefined : true })}
+          title={selectedAssetLayer.hidden ? (en ? "Show layer" : "Tampilkan layer") : (en ? "Hide layer" : "Sembunyikan layer")}
+        >
+          {selectedAssetLayer.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
+          {selectedAssetLayer.hidden ? (en ? "Hidden" : "Tersembunyi") : (en ? "Visible" : "Terlihat")}
+        </button>
+      </div>
+
+      <fieldset disabled={Boolean(selectedAssetLayer.locked)} className="contents disabled:opacity-55">
       <label className="dc-studio-layer-select">
         <span>{en ? "Section" : "Bagian"}</span>
         <select
@@ -161,6 +186,7 @@ export default function AssetLayerInspector({
           </button>
         </div>
       </div>
+      </fieldset>
     </aside>
   );
 }
