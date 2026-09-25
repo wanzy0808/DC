@@ -157,7 +157,7 @@ function EditableLayer({
           aria-pressed={selected}
           className={`pointer-events-auto block w-full cursor-grab border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary active:cursor-grabbing ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
-          onClick={() => onSelect?.(layer.id)} onPointerDown={(event) => begin(event, "move")}
+          onClick={(event) => { event.stopPropagation(); onSelect?.(layer.id); }} onPointerDown={(event) => begin(event, "move")}
           onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}
           onKeyDown={keys}>
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{

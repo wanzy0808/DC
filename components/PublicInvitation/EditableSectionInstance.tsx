@@ -43,7 +43,13 @@ export default function EditableSectionInstance({
       className="dc-section-instance relative"
       data-section-instance-selected={selected ? "true" : undefined}
       style={{ order }}
-      onClick={() => actions?.onSelect?.(instance.id, instance.key)}
+      onClick={(event) => {
+        const target = event.target;
+        if (target instanceof Element && target.closest(
+          "[data-studio-design-object], [data-studio-rsvp-element], [data-studio-section-element], [data-studio-copy-field], button, a, input, select, textarea, [contenteditable='true'], [role='button']",
+        )) return;
+        actions?.onSelect?.(instance.id, instance.key);
+      }}
     >
       <div className={`dc-section-instance-content${hidden && preview ? " dc-section-instance-hidden" : ""}`}>
         {children}

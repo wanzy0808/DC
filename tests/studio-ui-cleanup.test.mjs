@@ -216,6 +216,13 @@ test("selected Studio objects use an icon rotate handle without a connector line
   assert.doesNotMatch(assetLayers, /h-1\.5 w-1\.5 rounded-full bg-primary/);
 });
 
+test("asset clicks cannot bubble into section selection", () => {
+  const sectionInstance = read("components/PublicInvitation/EditableSectionInstance.tsx");
+  const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(sectionInstance, /target\.closest\([\s\S]*\[data-studio-design-object\]/);
+  assert.match(assetLayers, /event\.stopPropagation\(\); onSelect\?\.\(layer\.id\)/);
+});
+
 test("overlapping Studio assets use left-click selection and cycle to the layer underneath", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
   assert.match(assetLayers, /event\.button !== 0/);
