@@ -25,7 +25,7 @@ import { defaultInvitationSections } from "@/lib/templates/sections";
 import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
-import { defaultPhotoAssignments, type PhotoCrop, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { defaultPhotoAssignments, type CroppablePhotoSlot, type PhotoCrop, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
@@ -104,6 +104,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
+  const [cropModeSlot, setCropModeSlot] = useState<CroppablePhotoSlot | null>(null);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
@@ -552,6 +553,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
   function editPhotoFromCanvas(slot: PhotoSlot) {
     setActivePhotoSlot(slot);
+    setCropModeSlot(slot === "gallery" ? null : slot);
     setPanel("decor");
     setInspectorOpen(true);
     setMobileCanvas(false);
@@ -595,6 +597,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
+    setCropModeSlot(null);
     setSelectedLayerId(id);
     showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
@@ -715,6 +718,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function selectSectionInstance(id: string, key: InvitationSectionKey) {
+    setCropModeSlot(null);
     setSelectedLayerId(null);
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
@@ -1264,6 +1268,9 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                     dressCode={dressCode}
                     sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}
                     photoAssignments={design.photos}
+                    activeCropSlot={cropModeSlot}
+                    onCropPhoto={setPhotoCrop}
+                    onFinishCrop={() => setCropModeSlot(null)}
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
