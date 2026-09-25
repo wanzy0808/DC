@@ -48,13 +48,15 @@ test("Studio section selection opens a right-side inspector and renderers consum
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
   const css = read("components/InvitationStudio/studio.css");
+  const selectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
 
   assert.match(editor, /selectedSectionKey/);
   assert.match(editor, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
   assert.match(editor, /<SectionInspector/);
   assert.match(editor, /updateSectionStyle/);
   assert.match(editor, /resetSectionStyle/);
-  assert.match(editor, /dataset\.studioSectionSelected = "true"/);
+  assert.match(editor, /useStudioCanvasSelectionMarkers\(/);
+  assert.match(selectionMarkers, /"invitationSection", section, "studioSectionSelected"/);
   assert.match(inspector, /Perataan/);
   assert.match(inspector, /Ruang vertikal/);
   assert.match(inspector, /Opasitas/);
