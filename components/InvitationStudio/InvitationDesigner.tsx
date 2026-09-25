@@ -830,7 +830,12 @@ export default function InvitationDesigner() {
             if (target.closest("[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
             const section = target.closest<HTMLElement>("[data-invitation-section]");
             if (section?.dataset.invitationSection) {
-              if (section.dataset.invitationSection === "rsvp" && target.closest("img")) return;
+              if (section.dataset.invitationSection === "rsvp" && target.closest("img")) {
+                setSelectedLayerId(null);
+                setSelectedSectionKey(null);
+                setSelectedRsvpElementKey(null);
+                return;
+              }
               setSelectedLayerId(null);
               setSelectedRsvpElementKey(null);
               setSelectedSectionKey(section.dataset.invitationSection as InvitationSectionKey);
