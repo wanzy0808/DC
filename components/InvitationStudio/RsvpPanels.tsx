@@ -225,7 +225,7 @@ export function RsvpInputPanel({
                 })}
                 className="mt-1.5"
                 maxLength={200}
-                required={field.required}
+                required={field.required && form.status === "ATTENDING"}
               />
             </label>
           ))}
