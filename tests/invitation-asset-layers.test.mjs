@@ -5,6 +5,7 @@ import {
   isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
   sanitizeAssetLayers, withAssetLayers,
 } from "../lib/templates/asset-layers.ts";
+import { resizeObjectFromHandle } from "../lib/templates/object-resize.ts";
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
 const asset = (id, src = "/templates/pencil-reverie/flower.webp") => ({
@@ -145,10 +146,11 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /localY = -dx \* Math\.sin\(radians\) \+ dy \* Math\.cos\(radians\)/);
   assert.match(renderer, /"cursor-ns-resize"/);
   assert.match(renderer, /"cursor-ew-resize"/);
-  assert.match(renderer, /if \(xWeight && !yWeight\) return/);
-  assert.match(renderer, /if \(yWeight && !xWeight\) return/);
-  assert.match(renderer, /height: round\(clamp\(drag\.height \+ yWeight \* localY/);
+
+
+
   assert.match(renderer, /aspectRatio: `\$\{displayed\.width\} \/ \$\{displayed\.height\}`/);
+  assert.match(renderer, /return resizeObjectFromHandle\(\{/);
   assert.match(inspector, /selectedAssetLayer\.height !== undefined/);
   assert.match(inspector, /height: undefined/);
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
@@ -160,4 +162,36 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(universal, /objectOverlay\("cover"\)/);
   assert.match(romantic, /objectOverlay\("greeting"\)/);
   assert.match(romantic, /objectOverlay\("closing"\)/);
+});
+
+test("each side grip moves only the dragged edge, not the opposite edge", () => {
+  const start = {
+    handle: "right", x: 50, y: 50, width: 30, height: 20,
+    rotation: 0, sectionWidth: 400, sectionHeight: 800,
+    objectWidth: 120, objectHeight: 80,
+  };
+  const right = resizeObjectFromHandle(start, 40, 0);
+  assert.deepEqual(right, { x: 55, y: 50, width: 40, height: 20 });
+  assert.equal(right.x - right.width / 2, start.x - start.width / 2, "left edge stays still");
+
+  const left = resizeObjectFromHandle({ ...start, handle: "left" }, -40, 0);
+  assert.deepEqual(left, { x: 45, y: 50, width: 40, height: 20 });
+  assert.equal(left.x + left.width / 2, start.x + start.width / 2, "right edge stays still");
+
+  const top = resizeObjectFromHandle({ ...start, handle: "top" }, 0, -40);
+  assert.deepEqual(top, { x: 50, y: 47.5, width: 30, height: 30 });
+  assert.equal(top.y + top.height * start.sectionWidth / start.sectionHeight / 2,
+    start.y + start.height * start.sectionWidth / start.sectionHeight / 2, "bottom edge stays still");
+
+  const bottom = resizeObjectFromHandle({ ...start, handle: "bottom" }, 0, 40);
+  assert.deepEqual(bottom, { x: 50, y: 52.5, width: 30, height: 30 });
+  assert.equal(bottom.y - bottom.height * start.sectionWidth / start.sectionHeight / 2,
+    start.y - start.height * start.sectionWidth / start.sectionHeight / 2, "top edge stays still");
+
+  const corner = resizeObjectFromHandle({ ...start, handle: "bottom-right" }, 24, 16);
+  assert.deepEqual(corner, { x: 53, y: 51, width: 36, height: 24 });
+  assert.equal(corner.x - corner.width / 2, start.x - start.width / 2, "diagonal resize keeps left edge");
+
+  const rotated = resizeObjectFromHandle({ ...start, handle: "right", rotation: 90 }, 0, 40);
+  assert.deepEqual(rotated, { x: 50, y: 52.5, width: 40, height: 20 });
 });
