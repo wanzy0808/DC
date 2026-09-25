@@ -77,6 +77,13 @@ Pisahkan **master template** dari **instance undangan pelanggan**:
 
 **Custom made:** pesanan/brief pelanggan → admin menugaskan desainer dan event yang tepat → desainer mulai dari kosong/duplikasi master → simpan draft dan berikan preview aman kepada pemilik → revisi/persetujuan → tetapkan desain hanya pada event terkait → undangan pelanggan dipublikasikan lewat alur normal. Tidak otomatis mengubah master katalog, tidak membuka data pelanggan lain, dan tidak dapat dijual ulang tanpa izin eksplisit yang sesuai.
 
+### Kontrol Customer Studio — 25 September 2026
+
+- Tombol utama di toolbar atas bernama **Simpan** (EN: **Save**); simpan hanya desain event terkait, bukan publikasi undangan.
+- **Urungkan/Undo** dan **Ulangi/Redo** diletakkan berdampingan dalam kelompok kontrol di bawah **Ulang dari awal/Kembalikan ke Default** pada rail kiri, bukan di toolbar atas. Tombol aktif bila ada langkah historis yang dapat dibatalkan/diulang, nonaktif bila riwayat kosong atau editor sedang menyimpan/mengolah audio; perubahan baru mengosongkan daftar Redo. Shortcut Ctrl/Cmd+Z, Ctrl/Cmd+Y dan Ctrl/Cmd+Shift+Z bekerja saat fokus berada pada canvas, tidak saat mengetik dalam input/textarea.
+- Pemilih tahap **Amplop** dan **Cover** berada tepat **di atas preview undangan di dalam area canvas** (mengikuti lebar preview), bukan di toolbar global. Ini hanya mengubah tahap pratinjau dan tidak mengubah toggle section/data yang disimpan. Jika Amplop dinonaktifkan, tombol Amplop disembunyikan dan Cover tetap tersedia.
+- Kontrol aksi Studio memakai keluarga tombol DC Organizer yang sama: bentuk **rounded rectangle** dengan `--dc-control-radius` 16px, bukan pill. Jangan menambah varian bentuk/warna tombol yang berbeda untuk setiap halaman.
+
 ## 7. Validasi sebelum menyatakan template siap
 
 Sebuah template/proyek belum boleh ditandai *ready* hanya karena desainnya tampak benar di canvas. Uji bahwa:
