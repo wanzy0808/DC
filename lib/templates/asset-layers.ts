@@ -14,6 +14,8 @@ export type InvitationAssetLayer = {
   x: number;
   y: number;
   width: number;
+  /** Optional height relative to section width; absent preserves original image proportions. */
+  height?: number;
   opacity: number;
   rotation?: number;
   fontSize?: number;
@@ -60,6 +62,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       layer.fontRole = entry.fontRole === "body" ? "body" : "heading";
       layer.color = typeof entry.color === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.color) ? entry.color : "#C07A84";
     }
+    if (entry.height !== undefined) layer.height = numberBetween(entry.height, 3, 200, layer.width);
     if (studioObjectSections.includes(entry.section as StudioObjectSection)) layer.section = entry.section as StudioObjectSection;
     if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
     output.push(layer);
