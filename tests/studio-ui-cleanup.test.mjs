@@ -24,6 +24,7 @@ const ourStorySection = read("components/PublicInvitation/OurStorySection.tsx");
 const premiumTimelineModel = read("lib/templates/premium-timelines.ts");
 const premiumTimelineHook = read("components/PublicInvitation/use-premium-section-timelines.ts");
 const motionPerformance = read("lib/templates/motion-performance.ts");
+const canvasSelectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
 const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
@@ -654,7 +655,9 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(designer, /<PhotoSlotInspector/);
   assert.match(designer, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
   assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
-  assert.match(designer, /dataset\.studioPhotoSelected = "true"/);
+  assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
+  assert.match(canvasSelectionMarkers, /node\.dataset\[markerKey\] = "true"/);
+  assert.match(canvasSelectionMarkers, /"invitationPhotoSlot", markers\.photoSlot, "studioPhotoSelected"/);
   assert.match(styles, /data-studio-photo-selected="true"/);
   assert.match(photoSlotInspector, /sectionAnimationPresets/);
   assert.match(photoSlotInspector, /Preview animasi/);
@@ -796,5 +799,17 @@ test("Invitation motion runtimes enforce shared mobile-oriented budgets", () => 
   assert.match(entranceAnimationRuntime, /prefers-reduced-motion: reduce/);
   assert.match(photoParallaxRuntime, /prefers-reduced-motion: reduce/);
   assert.match(premiumTimelineHook, /prefers-reduced-motion: reduce/);
+});
+
+test("Studio canvas selection DOM markers are synchronized by one hook", () => {
+  assert.match(designer, /from "@\/components\/InvitationStudio\/useStudioCanvasSelectionMarkers"/);
+  assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
+  assert.match(canvasSelectionMarkers, /function syncMarker\(/);
+  assert.match(canvasSelectionMarkers, /"invitationSection", section, "studioSectionSelected"/);
+  assert.match(canvasSelectionMarkers, /"studioRsvpElement", markers\.rsvpElement, "studioRsvpSelected"/);
+  assert.match(canvasSelectionMarkers, /"studioSectionElement", sectionElement, "studioSectionElementSelected"/);
+  assert.match(canvasSelectionMarkers, /"studioCopyField", markers\.copyField, "studioCopySelected"/);
+  assert.match(canvasSelectionMarkers, /"invitationPhotoSlot", markers\.photoSlot, "studioPhotoSelected"/);
+  assert.match(canvasSelectionMarkers, /markers\.section === "rsvp" \? null : markers\.section/);
 });
 
