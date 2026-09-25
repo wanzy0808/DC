@@ -9,6 +9,7 @@ const layerOrder = read("components/InvitationStudio/designer-layer-order.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 const layerAnimationControls = read("components/InvitationStudio/LayerAnimationControls.tsx");
 const layerAnimationHook = read("components/PublicInvitation/use-layer-animation.ts");
+const entranceAnimationRuntime = read("components/PublicInvitation/entrance-animation-runtime.ts");
 const assetLayerModel = read("lib/templates/asset-layers.ts");
 const sectionStyles = read("lib/templates/section-styles.ts");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
@@ -568,12 +569,23 @@ test("Studio element layers reuse the shared animation catalog and persist timin
   assert.match(assetRenderer, /useInvitationLayerAnimation\(motion, layer\)/);
   assert.match(assetRenderer, /data-studio-layer-motion/);
   assert.match(assetRenderer, /data-invitation-layer-motion/);
-  assert.match(layerAnimationHook, /prefers-reduced-motion: reduce/);
-  assert.match(layerAnimationHook, /sectionAnimationKeyframes\(layer\.animation\)/);
-  assert.match(layerAnimationHook, /getSectionAnimationPreset\(layer\.animation\)/);
-  assert.match(layerAnimationHook, /IntersectionObserver/);
+  assert.match(layerAnimationHook, /observeInvitationEntrances/);
+  assert.match(entranceAnimationRuntime, /prefers-reduced-motion: reduce/);
+  assert.match(entranceAnimationRuntime, /sectionAnimationKeyframes\(config\.animation\)/);
+  assert.match(entranceAnimationRuntime, /getSectionAnimationPreset\(config\.animation\)/);
+  assert.match(entranceAnimationRuntime, /IntersectionObserver/);
 
   assert.match(sectionStyles, /isInvitationSectionAnimation\(source\.animation\)/);
   assert.doesNotMatch(sectionStyles, /invitationSectionAnimationValues/);
+});
+
+test("Section and element entrance animations share one playback runtime", () => {
+  const sectionHook = read("components/PublicInvitation/use-section-animations.ts");
+  assert.match(sectionHook, /observeInvitationEntrances\(targets\)/);
+  assert.match(layerAnimationHook, /observeInvitationEntrances\(\[\{/);
+  assert.match(entranceAnimationRuntime, /const animations = new Set<Animation>\(\)/);
+  assert.match(entranceAnimationRuntime, /duration: Math\.round\(\(config\.duration \?\? preset\.duration\) \* 1000\)/);
+  assert.match(entranceAnimationRuntime, /easing: preset\.easing/);
+  assert.match(entranceAnimationRuntime, /observer\.unobserve\(node\)/);
 });
 
