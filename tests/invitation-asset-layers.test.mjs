@@ -163,7 +163,9 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
-  assert.match(editor, /target\.closest\("\[data-studio-design-object\], \.dc-studio-layer-side, button, a, input, select, textarea, \[contenteditable\], \[role=button\]"\)/);
+  assert.match(editor, /target\.closest\("\[data-studio-design-object\], \.dc-studio-layer-side, \.dc-studio-section-side, button, a, input, select, textarea, \[contenteditable\], \[role=button\]"\)/);
+  assert.match(editor, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
+  assert.match(editor, /setSelectedSectionKey\(section\.dataset\.invitationSection as InvitationSectionKey\)/);
   assert.match(editor, /setSelectedLayerId\(null\);/);
   assert.match(editor, /target\.closest\("\.dc-studio-preview-surface"\)/);
   assert.match(renderer, /layer\.kind === "text"/);
