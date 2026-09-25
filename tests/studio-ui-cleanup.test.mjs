@@ -22,7 +22,7 @@ test("Studio header has landing-style ID/EN and dark/light toggles without its o
 });
 
 test("Studio uses display-only event title capitalization and one live canvas without preview dialog", () => {
-  assert.match(designer, /invitationTitleCase\(invitation\?\.title \|\| "Studio"\)/);
+  assert.match(studio, /setDocumentTitle\(invitationTitleCase\(data\.invitation\.title \|\| "Studio"\)\)/);
   assert.match(panels, /export function ContentPanel\(/);
   assert.doesNotMatch(panels.split("export function ContentPanel(")[1]?.split("export function MusicPanel(")[0] || "", /invitationTitleCase|formatInvitationEventDate|setEventTag|setDressCode/);
   assert.match(designer, /<InvitationPreview\s/);
