@@ -642,7 +642,7 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(designer, /<PhotoSlotInspector/);
   assert.match(designer, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
   assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
-  assert.match(designer, /data\.studioPhotoSelected = "true"/);
+  assert.match(designer, /dataset\.studioPhotoSelected = "true"/);
   assert.match(styles, /data-studio-photo-selected="true"/);
   assert.match(photoSlotInspector, /sectionAnimationPresets/);
   assert.match(photoSlotInspector, /Preview animasi/);
