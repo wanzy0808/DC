@@ -25,6 +25,7 @@ type Transaction = {
   amount: number;
   provider: string;
   proofUrl: string | null;
+  reportedAt: string | null;
   paidAt: string | null;
   createdAt: string;
   invitation: { title: string; groomName: string; brideName: string };
@@ -81,7 +82,10 @@ export default function TransactionsPage() {
             <div className="divide-y divide-border">
               {transactions.map((transaction) => {
                 const packageName = packageNames[transaction.packageKey] ?? transaction.packageKey.replaceAll("_", " ");
-                return <article key={transaction.id} className="px-5 py-5 sm:px-6"><div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold">{packageName}</h3><span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary"><StatusIcon status={transaction.status} />{statusLabel[transaction.status] ?? transaction.status}</span></div><p className="mt-2 font-mono text-[10px] text-muted-foreground">{transaction.invoiceNumber}</p><p className="mt-2 text-sm text-muted-foreground">{transaction.invitation.groomName} & {transaction.invitation.brideName}</p><p className="mt-1 text-xs text-muted-foreground">Dibuat {formatDate(transaction.createdAt)}</p>{transaction.paidAt && <p className="mt-1 text-xs text-muted-foreground">Diverifikasi {formatDate(transaction.paidAt)}</p>}</div><div className="shrink-0 sm:text-right"><p className="text-lg font-medium">{formatRupiah(transaction.amount)}</p><div className="mt-3 flex flex-wrap gap-2 sm:justify-end"><Button asChild size="sm"><Link href={`/checkout/${transaction.id}`}>Buka invoice</Link></Button>{transaction.proofUrl && <Button asChild size="sm"><a href={transaction.proofUrl} target="_blank" rel="noreferrer">Bukti <ExternalLink className="h-3.5 w-3.5" /></a></Button>}</div></div></div></article>;
+                const transactionStatus = transaction.status === "PENDING" && (transaction.reportedAt || transaction.proofUrl)
+                  ? "Menunggu verifikasi"
+                  : statusLabel[transaction.status] ?? transaction.status;
+                return <article key={transaction.id} className="px-5 py-5 sm:px-6"><div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between"><div className="min-w-0"><div className="flex flex-wrap items-center gap-2"><h3 className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold">{packageName}</h3><span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-1 text-[10px] font-semibold text-primary"><StatusIcon status={transaction.status} />{transactionStatus}</span></div><p className="mt-2 font-mono text-[10px] text-muted-foreground">{transaction.invoiceNumber}</p><p className="mt-2 text-sm text-muted-foreground">{transaction.invitation.groomName} & {transaction.invitation.brideName}</p><p className="mt-1 text-xs text-muted-foreground">Dibuat {formatDate(transaction.createdAt)}</p>{transaction.reportedAt && transaction.status === "PENDING" && <p className="mt-1 text-xs text-muted-foreground">Dilaporkan {formatDate(transaction.reportedAt)}</p>}{transaction.paidAt && <p className="mt-1 text-xs text-muted-foreground">Diverifikasi {formatDate(transaction.paidAt)}</p>}</div><div className="shrink-0 sm:text-right"><p className="text-lg font-medium">{formatRupiah(transaction.amount)}</p><div className="mt-3 flex flex-wrap gap-2 sm:justify-end"><Button asChild size="sm"><Link href={`/checkout/${transaction.id}`}>Buka invoice</Link></Button>{transaction.proofUrl && <Button asChild size="sm"><a href={transaction.proofUrl} target="_blank" rel="noreferrer">Bukti <ExternalLink className="h-3.5 w-3.5" /></a></Button>}</div></div></div></article>;
               })}
             </div>
           )}
