@@ -565,6 +565,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Add multi-select align/distribute controls (left/center/right, top/middle/bottom, horizontal/vertical distribution).
 - [x] Add local Studio canvas zoom controls without changing saved invitation geometry.
 - [x] Add image layer flip horizontal/vertical and quick center positioning.
+- [x] Add native basic shapes (rectangle, circle, line) with fill, border, thickness, corner radius and normal layer transforms.
 - [x] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
 - [x] Audit clipboard behavior for text vs image layers and prevent browser text-edit shortcuts from being hijacked while typing.
 - [x] Extend copy/cut/paste/duplicate to multi-selected layers while preserving relative placement and group isolation.
