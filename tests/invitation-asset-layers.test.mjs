@@ -249,3 +249,29 @@ test("asset layer groups persist without affecting public-safe layer validation"
   const invalid = sanitizeAssetLayers([{ ...asset("bad-group"), groupId: "bad group id!" }])[0];
   assert.equal(invalid.groupId, undefined);
 });
+
+
+test("native shape layers round-trip safely and render through the shared object engine", () => {
+  const shape = {
+    id: "shape-one", kind: "shape", src: "", shape: "rectangle", x: 50, y: 45,
+    width: 40, height: 22, opacity: 1, fill: "#C07A84", stroke: "#713B50",
+    strokeWidth: 2, radius: 14,
+  };
+  const key = withAssetLayers("botanical-ivory::pearl::cinzelFauna", [shape]);
+  assert.deepEqual(parseAssetLayers(key), [shape]);
+
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const browser = read("components/InvitationStudio/AssetPanel.tsx");
+  const inspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+
+  assert.match(renderer, /layer\.kind === "shape"/);
+  assert.match(renderer, /layer\.shape === "line"/);
+  assert.match(browser, /Bentuk Dasar|Basic shapes/);
+  assert.match(browser, /"rectangle"/);
+  assert.match(browser, /"circle"/);
+  assert.match(browser, /"line"/);
+  assert.match(inspector, /selectedAssetLayer\.kind === "shape"/);
+  assert.match(inspector, /Corner radius|Radius sudut/);
+  assert.match(editor, /function addShapeObject\(shape: InvitationShapeKind\)/);
+});
