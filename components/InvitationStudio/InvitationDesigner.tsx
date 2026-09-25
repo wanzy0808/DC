@@ -999,15 +999,9 @@ export default function InvitationDesigner() {
                 locale={locale}
                 sectionKey={selectedSectionKey}
                 style={design.sectionStyles[selectedSectionKey]}
-                rsvpConfig={design.rsvpConfig}
-                eventCategory={invitation?.eventCategory ?? ""}
                 onUpdate={(patch) => updateSectionStyle(selectedSectionKey, patch)}
                 onReset={() => resetSectionStyle(selectedSectionKey)}
-                onRsvpConfig={updateRsvpConfig}
-                onAddRsvpField={addRsvpCustomField}
-                onUpdateRsvpField={updateRsvpCustomField}
-                onRemoveRsvpField={removeRsvpCustomField}
-                onClose={() => setSelectedSectionKey(null)}
+                onClose={() => { setSelectedSectionKey(null); setSelectedSectionInstanceId(null); }}
               />
             ) : null}
           </div>
