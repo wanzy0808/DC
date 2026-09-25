@@ -4,12 +4,18 @@ export const studioObjectSections = [
   "countdown", "location", "rsvp", "wishes", "gift", "closing", "footer",
 ] as const;
 export type StudioObjectSection = (typeof studioObjectSections)[number];
+export type InvitationShapeKind = "rectangle" | "circle" | "line";
 export type InvitationAssetLayer = {
   id: string;
   /** Empty for text objects. Images always reference shipped public derivatives. */
   src: string;
-  kind?: "text";
+  kind?: "text" | "shape";
   text?: string;
+  shape?: InvitationShapeKind;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  radius?: number;
   section?: StudioObjectSection;
   x: number;
   y: number;
@@ -58,18 +64,28 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (!row || typeof row !== "object" || Array.isArray(row)) continue;
     const entry = row as Record<string, unknown>;
     const textObject = entry.kind === "text";
+    const shapeObject = entry.kind === "shape";
+    const shape = entry.shape === "circle" || entry.shape === "line" ? entry.shape : "rectangle";
     const text = typeof entry.text === "string" ? entry.text.slice(0, 180) : "";
-    if ((textObject ? !text.trim() : !isTemplateIllustration(entry.src)) ||
+    if ((textObject ? !text.trim() : shapeObject ? false : !isTemplateIllustration(entry.src)) ||
       typeof entry.id !== "string" || !/^[a-zA-Z0-9_-]{1,64}$/.test(entry.id) || used.has(entry.id)) continue;
     used.add(entry.id);
     const layer: InvitationAssetLayer = {
       id: entry.id,
-      src: textObject ? "" : entry.src as string,
+      src: textObject || shapeObject ? "" : entry.src as string,
       x: numberBetween(entry.x, 0, 100, 50),
       y: numberBetween(entry.y, 0, 100, 50),
       width: numberBetween(entry.width, 5, 85, 28),
       opacity: numberBetween(entry.opacity, 0, 1, 1),
     };
+    if (shapeObject) {
+      layer.kind = "shape";
+      layer.shape = shape;
+      layer.fill = typeof entry.fill === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.fill) ? entry.fill : "#C07A84";
+      layer.stroke = typeof entry.stroke === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.stroke) ? entry.stroke : "#C07A84";
+      layer.strokeWidth = numberBetween(entry.strokeWidth, 0, 12, shape === "line" ? 2 : 0);
+      layer.radius = numberBetween(entry.radius, 0, 100, shape === "circle" ? 100 : 0);
+    }
     if (textObject) {
       layer.kind = "text";
       layer.text = text;
