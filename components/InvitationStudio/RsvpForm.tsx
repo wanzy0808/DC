@@ -1,6 +1,7 @@
 "use client";
 
 import { type FormEvent, useMemo, useState } from "react";
+import { defaultInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import {
   RsvpInputPanel,
   RsvpSuccessPanel,
@@ -29,12 +30,16 @@ export default function RsvpForm({
   start,
   end,
   description,
+  eventCategory,
+  rsvpConfig = defaultInvitationRsvpConfig,
 }: RsvpFormProps) {
   const [form, setForm] = useState<RsvpFormState>({
     name: guestName ?? "",
     phone: "",
     status: "ATTENDING",
     plusOnes: "0",
+    eventChoice: "",
+    customAnswers: {},
   });
   const [message, setMessage] = useState("");
   const [ticketGuest, setTicketGuest] = useState<RsvpTicketGuest | null>(null);
@@ -71,6 +76,10 @@ export default function RsvpForm({
           guestId,
           guestToken,
           plusOnes: Number(form.plusOnes),
+          rsvpEvents: form.eventChoice === "all"
+            ? ["ceremony", "reception"]
+            : form.eventChoice ? [form.eventChoice] : [],
+          rsvpAnswers: form.customAnswers,
         }),
       });
       const data = await response.json();
@@ -109,6 +118,8 @@ export default function RsvpForm({
           guestId={guestId}
           guestName={guestName}
           invitedPax={invitedPax}
+          eventCategory={eventCategory}
+          rsvpConfig={rsvpConfig}
           form={form}
           setForm={setForm}
           message={message}
