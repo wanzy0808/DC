@@ -81,7 +81,6 @@ const sectionNamesEnglish: Record<InvitationSectionKey, string> = {
 export type StudioContentElementKind = "input" | "button";
 
 const sectionFunctionalElements: Partial<Record<InvitationSectionKey, StudioContentElementKind[]>> = {
-  envelope: ["button"],
   location: ["button"],
   rsvp: ["input", "button"],
   wishes: ["input", "button"],
