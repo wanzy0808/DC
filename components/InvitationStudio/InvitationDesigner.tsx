@@ -19,6 +19,8 @@ import {
   EyeOff,
   Lock,
   Unlock,
+  ZoomIn,
+  ZoomOut,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
@@ -119,6 +121,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
+  const [canvasZoom, setCanvasZoom] = useState(1);
   // A click on the actual envelope advances the Studio stage selector, too.
   const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
   const [savedState, setSavedState] = useState("");
@@ -1255,8 +1258,17 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                   onClick={() => setCanvasStage("cover")}
                   title={copy.coverHint}
                 >{copy.cover}</button>
+                <div className="ml-auto flex items-center gap-1 rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1">
+                  <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))} disabled={canvasZoom <= 0.7} aria-label={locale === "en" ? "Zoom out canvas" : "Perkecil kanvas"} title={locale === "en" ? "Zoom out" : "Perkecil"}>
+                    <ZoomOut size={14} />
+                  </button>
+                  <output className="min-w-10 text-center text-[10px] font-semibold text-muted-foreground">{Math.round(canvasZoom * 100)}%</output>
+                  <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))} disabled={canvasZoom >= 1.3} aria-label={locale === "en" ? "Zoom in canvas" : "Perbesar kanvas"} title={locale === "en" ? "Zoom in" : "Perbesar"}>
+                    <ZoomIn size={14} />
+                  </button>
+                </div>
               </div>
-              <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
+              <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ zoom: canvasZoom }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
                     invitation={invitation}
