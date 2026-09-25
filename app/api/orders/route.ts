@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getServicePackage } from "@/lib/packages/catalog";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
+import { attributeOrderToPartner, getActivePartnerVoucher } from "@/lib/partners/vouchers";
 
 const allowedPackages = ["INVITATION_BASIC", "GUESTBOOK_DIGITAL", "WA_BLAST_50"] as const;
 type AllowedPackage = (typeof allowedPackages)[number];
@@ -67,6 +68,12 @@ export async function POST(request: Request) {
     const body = await request.json();
     const packageKey = String(body.packageKey ?? "") as AllowedPackage;
     const requestedInvitationId = String(body.invitationId ?? "").trim();
+    const voucherCode = String(body.voucherCode ?? "").trim();
+    const partnerVoucher = voucherCode ? await getActivePartnerVoucher(voucherCode) : null;
+
+    if (voucherCode && !partnerVoucher) {
+      return NextResponse.json({ error: "Kode voucher mitra tidak valid atau sudah tidak aktif." }, { status: 400 });
+    }
 
     if (!allowedPackages.includes(packageKey)) {
       return NextResponse.json({ error: "Produk tidak ditemukan." }, { status: 400 });
@@ -135,6 +142,10 @@ export async function POST(request: Request) {
           },
         });
 
+    if (partnerVoucher) {
+      await attributeOrderToPartner(user.id, order.id, partnerVoucher);
+    }
+
     const invoiceUrl = `${process.env.APP_URL ?? "http://localhost:3000"}/checkout/${order.id}`;
     const email = await sendInvoiceEmail({
       to: user.email,
@@ -144,7 +155,13 @@ export async function POST(request: Request) {
       invoiceUrl,
     });
 
-    return NextResponse.json({ order, email, invoiceUrl, invitationId: invitation.id });
+    return NextResponse.json({
+      order,
+      email,
+      invoiceUrl,
+      invitationId: invitation.id,
+      voucher: partnerVoucher ? { code: partnerVoucher.code, partner: partnerVoucher.partner.email } : null,
+    });
   } catch (error) {
     console.error("POST /api/orders failed", error);
     return NextResponse.json({ error: "Order pembayaran belum dapat dibuat." }, { status: 500 });
