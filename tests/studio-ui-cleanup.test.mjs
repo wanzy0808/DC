@@ -46,14 +46,16 @@ test("Studio ID/EN switch updates its navigation, template search and photo cont
 });
 
 
-test("Studio merges Bagian and Isi into one left-rail menu", () => {
-  assert.match(designer, /sections: "Bagian & Isi"/);
+test("Studio uses one left-rail Isi menu for sections and functional components", () => {
+  assert.match(designer, /sections: "Isi"/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /label=\{copy\.sections\}/);
   assert.doesNotMatch(rail, /panel === "content"|copy\.content|FilePenLine/);
   const mergedPanel = designer.split('{panel === "sections" && (')[1]?.split('{panel === "color"')[0] || "";
-  assert.match(mergedPanel, /<SectionsPanel sections=\{design\.sections\} onChange=\{setSection\} \/>/);
   assert.match(mergedPanel, /<ContentPanel/);
+  assert.doesNotMatch(mergedPanel, /<SectionsPanel/);
+  assert.match(panels, /<Heading title="Isi" description="" \/>/);
+  assert.match(panels, /sectionFunctionalElements/);
 });
 
 test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
