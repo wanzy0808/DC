@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ImagePlus, Search } from "lucide-react";
+import { Circle, ImagePlus, Minus, Search, Square } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import type { InvitationAssetLayer, InvitationShapeKind } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS } from "@/lib/templates/asset-layers";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -15,11 +15,13 @@ export default function AssetPanel({
   templateKey,
   onDragAssetStart,
   onDragAssetEnd,
+  onAddShape,
 }: {
   layers: InvitationAssetLayer[];
   templateKey: string;
   onDragAssetStart: (src: string) => void;
   onDragAssetEnd: () => void;
+  onAddShape: (shape: InvitationShapeKind) => void;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
@@ -63,6 +65,31 @@ export default function AssetPanel({
         </p>
         <p className="mt-2 text-xs text-muted-foreground">{en ? `${layers.length}/${MAX_ASSET_LAYERS} assets used` : `${layers.length}/${MAX_ASSET_LAYERS} asset digunakan`}</p>
       </div>
+
+      <section className="space-y-3">
+        <h3 className="text-sm font-semibold text-primary">{en ? "Basic shapes" : "Bentuk Dasar"}</h3>
+        <div className="grid grid-cols-3 gap-2">
+          {([
+            ["rectangle", en ? "Rectangle" : "Kotak", Square],
+            ["circle", en ? "Circle" : "Lingkaran", Circle],
+            ["line", en ? "Line" : "Garis", Minus],
+          ] as const).map(([shape, label, Icon]) => {
+            const ShapeIcon = Icon as typeof Square;
+            return (
+              <button
+                key={shape}
+                type="button"
+                disabled={layers.length >= MAX_ASSET_LAYERS}
+                onClick={() => onAddShape(shape as InvitationShapeKind)}
+                className="grid min-h-20 place-items-center gap-1 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background px-2 py-3 text-xs text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ShapeIcon size={24} strokeWidth={1.5} />
+                <span>{label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
 
       <div className="space-y-3">
         <h3 className="flex items-center gap-2 text-sm font-semibold text-primary"><ImagePlus size={17} /> {en ? "Template images" : "Gambar Template"}</h3>
