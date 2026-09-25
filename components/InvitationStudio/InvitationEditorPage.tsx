@@ -13,13 +13,19 @@ import { Button } from "@/components/ui/button";
 import { invitationTitleCase } from "@/lib/events/parents";
 
 /** Publishing and package checkout live in Dashboard > Undangan Digital. */
-export default function InvitationEditorPage() {
+export default function InvitationEditorPage({ mode = "invitation", backHref = "/dashboard" }: { mode?: "invitation" | "template"; backHref?: string }) {
   const { locale } = useLanguage();
   const [accessPaid, setAccessPaid] = useState<boolean | null>(null);
   const [documentTitle, setDocumentTitle] = useState("Studio");
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (mode === "template") {
+      setAccessPaid(true);
+      setDocumentTitle("Template Studio");
+      setError("");
+      return;
+    }
     const params = new URLSearchParams(window.location.search);
     const invitationId = params.get("invitationId")?.trim();
     if (!invitationId) {
@@ -46,10 +52,10 @@ export default function InvitationEditorPage() {
         }
       });
     return () => controller.abort();
-  }, []);
+  }, [mode]);
 
   const previewOnly = accessPaid === false;
-  const backLabel = locale === "en" ? "Back to dashboard" : "Kembali ke dashboard";
+  const backLabel = locale === "en" ? "Back" : "Kembali";
 
   return (
     <main
@@ -60,7 +66,7 @@ export default function InvitationEditorPage() {
         <header className="dc-studio-page-header">
           <div className="dc-studio-header-brand flex min-w-0 items-center gap-3">
             <Button asChild size="icon" variant="outline" className="dc-studio-back shrink-0">
-              <Link href="/dashboard" aria-label={backLabel} title={backLabel}>
+              <Link href={backHref} aria-label={backLabel} title={backLabel}>
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
@@ -73,7 +79,7 @@ export default function InvitationEditorPage() {
           </div>
           {error && <span className="w-full text-sm text-destructive" role="alert">{error}</span>}
         </header>
-        <InvitationDesigner />
+        <InvitationDesigner mode={mode} />
       </div>
     </main>
   );
