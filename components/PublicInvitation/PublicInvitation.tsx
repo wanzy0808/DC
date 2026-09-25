@@ -9,6 +9,7 @@ import {
   normalizeEventCategory,
 } from "@/lib/events/catalog";
 import { parseInvitationSections } from "@/lib/templates/sections";
+import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import { weddingParentLine } from "@/lib/events/parents";
 
 export { weddingParentLine };
@@ -71,6 +72,7 @@ export default function PublicInvitation({
   const category = getEventCategory(eventCategory);
   const timezone = getIndonesiaTimezone(invitation.timezone);
   const sections = parseInvitationSections(invitation.templateKey);
+  const rsvpConfig = parseInvitationRsvpConfig(invitation.templateKey);
   const generatedTitle = buildEventTitle(
     eventCategory,
     displayTitleCase(invitation.groomName),
@@ -189,6 +191,8 @@ export default function PublicInvitation({
           <section className="mt-8 rounded-2xl border border-border bg-background p-6 shadow-sm md:p-10">
             <RsvpForm
               slug={invitation.slug}
+              eventCategory={invitation.eventCategory}
+              rsvpConfig={rsvpConfig}
               eventDate={invitation.eventDate}
               venue={invitation.venue}
               title={title}
