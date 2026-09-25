@@ -564,7 +564,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Add snapping/alignment guides for center, section bounds, and nearby objects.
 - [x] Add local Studio canvas zoom controls without changing saved invitation geometry.
 - [x] Add image layer flip horizontal/vertical and quick center positioning.
-- [ ] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
+- [x] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
 - [x] Audit clipboard behavior for text vs image layers and prevent browser text-edit shortcuts from being hijacked while typing.
 
 ### Deferred — richer animation system
