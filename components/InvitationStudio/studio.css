@@ -90,6 +90,10 @@
 .dc-studio-layer-select select { width: 100%; min-height: 38px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 10px; background: var(--background); padding: 0 30px 0 9px; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .dc-studio-layer-opacity > span { display: flex; justify-content: space-between; gap: 8px; }
 .dc-studio-layer-opacity input { width: 100%; accent-color: var(--primary); }
+.dc-studio-layer-order { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+.dc-studio-layer-order button { display: grid; min-width: 0; height: 38px; place-items: center; border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent); border-radius: 10px; background: var(--background); color: var(--foreground); }
+.dc-studio-layer-order button:hover:not(:disabled) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
+.dc-studio-layer-order button:disabled { cursor: not-allowed; opacity: .32; }
 .dc-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 .dc-studio-section-side { position: sticky; top: 0; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .dc-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }

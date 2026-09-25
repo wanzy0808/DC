@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
@@ -12,7 +13,7 @@ type AssetLayerInspectorProps = {
   sections: InvitationSections;
   onDeselect: () => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
-  onPosition: (id: string, position: "front" | "back") => void;
+  onPosition: (id: string, position: "front" | "forward" | "backward" | "back") => void;
 };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
@@ -100,17 +101,47 @@ export default function AssetLayerInspector({
         />
       </label>
 
-      <label className="dc-studio-layer-select">
-        <span>{en ? "Layer" : "Layer"}</span>
-        <select
-          value={selectedAssetIndex === 0 ? "back" : selectedAssetIndex === layerCount - 1 ? "front" : ""}
-          onChange={(event) => onPosition(selectedAssetLayer.id, event.target.value as "front" | "back")}
-        >
-          <option value="" disabled>{en ? "Choose" : "Pilih"}</option>
-          <option value="front">{en ? "Front" : "Depan"}</option>
-          <option value="back">{en ? "Back" : "Belakang"}</option>
-        </select>
-      </label>
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Layer order" : "Urutan layer"}</span>
+        <div className="dc-studio-layer-order" role="group" aria-label={en ? "Layer order" : "Urutan layer"}>
+          <button
+            type="button"
+            onClick={() => onPosition(selectedAssetLayer.id, "front")}
+            disabled={selectedAssetIndex === layerCount - 1}
+            aria-label={en ? "Bring to front" : "Paling depan"}
+            title={en ? "Bring to Front" : "Paling depan"}
+          >
+            <ChevronsUp size={17} />
+          </button>
+          <button
+            type="button"
+            onClick={() => onPosition(selectedAssetLayer.id, "forward")}
+            disabled={selectedAssetIndex === layerCount - 1}
+            aria-label={en ? "Bring forward one layer" : "Naik 1 layer"}
+            title={en ? "Bring Forward" : "Naik 1 layer"}
+          >
+            <ChevronUp size={17} />
+          </button>
+          <button
+            type="button"
+            onClick={() => onPosition(selectedAssetLayer.id, "backward")}
+            disabled={selectedAssetIndex === 0}
+            aria-label={en ? "Send backward one layer" : "Turun 1 layer"}
+            title={en ? "Send Backward" : "Turun 1 layer"}
+          >
+            <ChevronDown size={17} />
+          </button>
+          <button
+            type="button"
+            onClick={() => onPosition(selectedAssetLayer.id, "back")}
+            disabled={selectedAssetIndex === 0}
+            aria-label={en ? "Send to back" : "Paling belakang"}
+            title={en ? "Send to Back" : "Paling belakang"}
+          >
+            <ChevronsDown size={17} />
+          </button>
+        </div>
+      </div>
     </aside>
   );
 }

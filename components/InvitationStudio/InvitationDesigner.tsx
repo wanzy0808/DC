@@ -695,15 +695,27 @@ export default function InvitationDesigner() {
     setSelectedLayerId(null);
   }
 
-  function positionAssetLayer(id: string, position: "front" | "back") {
+  function positionAssetLayer(id: string, position: "front" | "forward" | "backward" | "back") {
     const index = design.layers.findIndex((layer) => layer.id === id);
     if (index < 0) return;
-    if ((position === "front" && index === design.layers.length - 1) || (position === "back" && index === 0)) return;
+
+    const lastIndex = design.layers.length - 1;
+    if (
+      ((position === "front" || position === "forward") && index === lastIndex) ||
+      ((position === "back" || position === "backward") && index === 0)
+    ) return;
+
     const next = [...design.layers];
-    const [layer] = next.splice(index, 1);
-    if (!layer) return;
-    if (position === "front") next.push(layer);
-    else next.unshift(layer);
+    if (position === "forward") {
+      [next[index], next[index + 1]] = [next[index + 1], next[index]];
+    } else if (position === "backward") {
+      [next[index], next[index - 1]] = [next[index - 1], next[index]];
+    } else {
+      const [layer] = next.splice(index, 1);
+      if (!layer) return;
+      if (position === "front") next.push(layer);
+      else next.unshift(layer);
+    }
     change({ layers: next });
   }
 
