@@ -23,6 +23,7 @@ const copyAnimationHook = read("components/PublicInvitation/use-copy-animations.
 const ourStorySection = read("components/PublicInvitation/OurStorySection.tsx");
 const premiumTimelineModel = read("lib/templates/premium-timelines.ts");
 const premiumTimelineHook = read("components/PublicInvitation/use-premium-section-timelines.ts");
+const motionPerformance = read("lib/templates/motion-performance.ts");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
 const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
@@ -625,7 +626,8 @@ test("Studio decorative text supports staggered whole word character and line ch
   assert.match(layerAnimationControls, /animation\.play\(\)/);
 
   assert.match(layerTextContent, /data-invitation-text-motion-part/);
-  assert.match(layerTextContent, /characterCount > 96 \? "word" : unit/);
+  assert.match(layerTextContent, /characterCount > MAX_TEXT_MOTION_PARTS \? "word" : unit/);
+  assert.match(layerTextContent, /motionPartCount > MAX_TEXT_MOTION_PARTS/);
   assert.match(assetRenderer, /<InvitationLayerTextContent text=\{layer\.text \?\? ""\} unit=\{layer\.textAnimationUnit\}/);
 
   assert.match(layerAnimationHook, /querySelectorAll<HTMLElement>\("\[data-invitation-text-motion-part\]"\)/);
@@ -781,5 +783,18 @@ test("Standard invitation renderers stay free of eager Three R3F and GSAP import
     assert.doesNotMatch(source, /from "gsap"/);
   }
   assert.match(premiumTimelineHook, /await import\("gsap"\)/);
+});
+
+test("Invitation motion runtimes enforce shared mobile-oriented budgets", () => {
+  assert.match(motionPerformance, /MAX_TEXT_MOTION_PARTS = 96/);
+  assert.match(motionPerformance, /MAX_PREMIUM_TIMELINE_ITEMS = 10/);
+  assert.match(motionPerformance, /MAX_PHOTO_PARALLAX_TARGETS = 12/);
+  assert.match(premiumTimelineHook, /slice\(0, MAX_PREMIUM_TIMELINE_ITEMS\)/);
+  assert.match(photoAnimationHook, /slice\(0, MAX_PHOTO_PARALLAX_TARGETS\)/);
+  assert.match(layerTextContent, /motionPartCount > MAX_TEXT_MOTION_PARTS/);
+  assert.match(layerTextContent, /lines\.length > MAX_TEXT_MOTION_PARTS/);
+  assert.match(entranceAnimationRuntime, /prefers-reduced-motion: reduce/);
+  assert.match(photoParallaxRuntime, /prefers-reduced-motion: reduce/);
+  assert.match(premiumTimelineHook, /prefers-reduced-motion: reduce/);
 });
 
