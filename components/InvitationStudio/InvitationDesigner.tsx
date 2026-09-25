@@ -69,7 +69,7 @@ export default function InvitationDesigner() {
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
-    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design",
+    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design", startOver: "Start Over",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover", phone: "Mobile",
@@ -79,7 +79,7 @@ export default function InvitationDesigner() {
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
-    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain",
+    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain", startOver: "Ulang dari awal",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover", phone: "Ponsel",
@@ -552,9 +552,6 @@ export default function InvitationDesigner() {
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
         <div className="dc-studio-toolbar-actions flex flex-wrap items-center gap-1.5">
-          <Button size="sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint}>
-            <RotateCcw className="h-4 w-4" /> {copy.defaults}
-          </Button>
           <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label={copy.undo} title={copy.undo}>
             <Undo2 className="h-4 w-4" />
           </Button>
@@ -580,6 +577,7 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
+          <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
