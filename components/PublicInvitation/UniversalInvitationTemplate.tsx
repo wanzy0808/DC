@@ -26,9 +26,11 @@ import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templ
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
-import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
+import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
+import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
+import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -136,6 +138,12 @@ export default function UniversalInvitationTemplate({
   onSelectAssetLayer,
   onMoveAssetLayer,
   onUpdateAssetLayer,
+  selectedSectionInstanceId,
+  onSelectSectionInstance,
+  onMoveSectionInstance,
+  onToggleSectionInstance,
+  onDuplicateSectionInstance,
+  onDeleteSectionInstance,
   templateKey,
   designKey,
   personalGuest,
@@ -153,6 +161,12 @@ export default function UniversalInvitationTemplate({
   onSelectAssetLayer?: (id: string) => void;
   onMoveAssetLayer?: (id: string, x: number, y: number) => void;
   onUpdateAssetLayer?: (id: string, patch: Partial<InvitationAssetLayer>) => void;
+  selectedSectionInstanceId?: string | null;
+  onSelectSectionInstance?: (id: string, key: InvitationSectionKey) => void;
+  onMoveSectionInstance?: (id: string, direction: -1 | 1) => void;
+  onToggleSectionInstance?: (id: string) => void;
+  onDuplicateSectionInstance?: (id: string) => void;
+  onDeleteSectionInstance?: (id: string) => void;
   templateKey?: string;
   designKey?: string;
 }) {
@@ -180,6 +194,15 @@ export default function UniversalInvitationTemplate({
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
+  const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
+  const sectionEditorActions: SectionInstanceEditorActions | undefined = preview ? {
+    selectedId: selectedSectionInstanceId,
+    onSelect: onSelectSectionInstance,
+    onMove: onMoveSectionInstance,
+    onToggle: onToggleSectionInstance,
+    onDuplicate: onDuplicateSectionInstance,
+    onDelete: onDeleteSectionInstance,
+  } : undefined;
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
@@ -288,8 +311,23 @@ export default function UniversalInvitationTemplate({
     editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer}
     onUpdate={onUpdateAssetLayer} />;
 
-  const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
+  const renderSectionInstances = (keyName: InvitationSectionKey, render: (instanceId: string) => ReactNode) => {
     if (sections[keyName] === false) return null;
+    return instancesForSection(sectionLayout, keyName).map((instance) => (
+      <EditableSectionInstance
+        key={instance.id}
+        instance={instance}
+        order={instance.order}
+        total={sectionLayout.length}
+        preview={preview}
+        actions={sectionEditorActions}
+      >
+        {render(instance.id)}
+      </EditableSectionInstance>
+    ));
+  };
+
+  const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
     const left = key === "modern-maroon" || key === "golden-art-deco";
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
@@ -298,8 +336,8 @@ export default function UniversalInvitationTemplate({
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
-    return (
-      <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+    return renderSectionInstances(keyName, () => (
+      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
         {key === "botanical-ivory" && <div aria-hidden className="pointer-events-none absolute -right-10 top-2 rotate-[-24deg] text-[#71826a]/20"><Leaf className="h-36 w-36" strokeWidth={0.6}/></div>}
@@ -335,7 +373,7 @@ export default function UniversalInvitationTemplate({
         </div>
         {objectOverlay(keyName)}
       </section>
-    );
+    ));
   };
 
   return (
@@ -360,19 +398,21 @@ export default function UniversalInvitationTemplate({
           preview={preview}
         />{objectOverlay("envelope")}</div>
       ) : (
-        <div className={key === "zen-atelier" ? "zen-content" : undefined}>
-          {sections.cover !== false && (<div className="relative" data-studio-cover-stage data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
-            theme={key}
-            isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
-            hashtag={invitation.weddingHashtag}
-            names={names || eventTitle}
-            date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
-            cover={usesPhotos ? media.cover : undefined}
-            focus={media.assignment.focus.cover}
-            stage="cover"
-            onOpen={handleOpen}
-            onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
-          />{objectOverlay("cover")}</div>)}
+        <div className={`${key === "zen-atelier" ? "zen-content " : ""}flex flex-col`}>
+          {renderSectionInstances("cover", () => (
+            <div className="relative" data-studio-cover-stage data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
+              theme={key}
+              isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
+              hashtag={invitation.weddingHashtag}
+              names={names || eventTitle}
+              date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
+              cover={usesPhotos ? media.cover : undefined}
+              focus={media.assignment.focus.cover}
+              stage="cover"
+              onOpen={handleOpen}
+              onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
+            />{objectOverlay("cover")}</div>
+          ))}
 
           {section("greeting", key === "pencil-reverie" ? (
             <div className="pr-greeting-copy">
@@ -539,10 +579,12 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
-            <span aria-hidden="true" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
-            {objectOverlay("footer")}
-          </footer>}
+          {renderSectionInstances("footer", () => (
+            <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
+              <span aria-hidden="true" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
+              {objectOverlay("footer")}
+            </footer>
+          ))}
         </div>
       )}
     </main>
