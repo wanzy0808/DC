@@ -1,11 +1,14 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getPackageEntitlements } from "@/lib/packages/access";
+import { getPackageEntitlements, hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+
+  const ownerGrant = await getOwnerPackageGrant(user.id);
 
   const [firstInvitation, latestPayment, invitations, guestCount, rsvpCount] =
     await Promise.all([
@@ -39,10 +42,21 @@ export async function GET() {
       }),
     ]);
 
-  const entitlements = getPackageEntitlements(latestPayment);
+  const paidEntitlements = getPackageEntitlements(latestPayment);
+  const hasDigitalInvitation = ownerGrant.digital || paidEntitlements.hasDigitalInvitation;
+  const hasGuestbook = ownerGrant.guestbook || paidEntitlements.hasGuestbook;
+  const entitlements = {
+    ...paidEntitlements,
+    hasDigitalInvitation,
+    hasGuestbook,
+    canPublishInvitation: hasDigitalInvitation,
+    canUploadInvitationAssets: hasDigitalInvitation,
+    canUseGuestPlacement: hasDigitalInvitation,
+    canUseUsherApp: hasGuestbook,
+  };
   const invitationsCreated = invitations.length;
   const activeInvitations = invitations.filter(
-    (item) => item.payment?.status === "PAID" && item.payment.packageKey === "INVITATION_BASIC",
+    (item) => ownerGrant.digital || hasPaidDigitalInvitation(item.payment),
   ).length;
   const invitationsShared = invitations.reduce(
     (sum, item) => sum + (item.viewCount ?? 0),
@@ -83,7 +97,11 @@ export async function GET() {
         },
     package: latestPayment
       ? { key: latestPayment.packageKey, status: latestPayment.status }
-      : { key: null, status: "UNPAID" },
+      : ownerGrant.guestbook
+        ? { key: "GUESTBOOK_DIGITAL", status: "OWNER_GRANTED" }
+        : ownerGrant.digital
+          ? { key: "INVITATION_BASIC", status: "OWNER_GRANTED" }
+          : { key: null, status: "UNPAID" },
     entitlements,
     overview: {
       invitationsCreated,
