@@ -2,7 +2,6 @@
 
 import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
 import {
-  MAX_RSVP_CUSTOM_FIELDS,
   type InvitationRsvpConfig,
   type RsvpElementAlign,
   type RsvpElementStyle,
@@ -18,21 +17,13 @@ export default function RsvpElementInspector({
   locale,
   elementKey,
   config,
-  eventCategory,
   onConfig,
-  onAddRsvpField,
-  onUpdateRsvpField,
-  onRemoveRsvpField,
   onClose,
 }: {
   locale: string;
   elementKey: string;
   config: InvitationRsvpConfig;
-  eventCategory: string;
   onConfig: (patch: Partial<InvitationRsvpConfig>) => void;
-  onAddRsvpField: () => void;
-  onUpdateRsvpField: (id: string, patch: { label?: string; required?: boolean }) => void;
-  onRemoveRsvpField: (id: string) => void;
   onClose: () => void;
 }) {
   const en = locale === "en";
@@ -182,69 +173,7 @@ export default function RsvpElementInspector({
       {colorControl(en ? "Text" : "Teks", style.color, "color", "#222222")}
       {colorControl(en ? "Border" : "Garis", style.borderColor, "borderColor", "#c07a84")}
 
-      {elementKey === "inputs" && (
-        <div className="dc-studio-rsvp-config">
-          <div className="dc-studio-rsvp-config-title">
-            <span>{en ? "RSVP fields" : "Field RSVP"}</span>
-            {eventCategory !== "WEDDING" && <small>{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</small>}
-          </div>
 
-          <label className="dc-studio-rsvp-switch">
-            <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
-            <input type="checkbox" checked={config.ceremony} onChange={(event) => onConfig({ ceremony: event.target.checked })} />
-          </label>
-          <label className="dc-studio-rsvp-switch">
-            <span>{en ? "Reception" : "Resepsi"}</span>
-            <input type="checkbox" checked={config.reception} onChange={(event) => onConfig({ reception: event.target.checked })} />
-          </label>
-          <label className="dc-studio-rsvp-switch">
-            <span>{en ? "Attend all" : "Hadir Semua Acara"}</span>
-            <input
-              type="checkbox"
-              checked={config.attendAll}
-              disabled={!(config.ceremony && config.reception)}
-              onChange={(event) => onConfig({ attendAll: event.target.checked })}
-            />
-          </label>
-
-          <div className="dc-studio-rsvp-fields">
-            <div className="dc-studio-rsvp-fields-head">
-              <span>{en ? "Columns" : "Kolom"}</span>
-              <small>{config.customFields.length}/{MAX_RSVP_CUSTOM_FIELDS}</small>
-            </div>
-            <div className="dc-studio-rsvp-core-fields">
-              <small>{en ? "Name" : "Nama"}</small>
-              <small>WhatsApp</small>
-              <small>{en ? "Attendance" : "Kehadiran"}</small>
-              <small>{en ? "Companions" : "Pendamping"}</small>
-            </div>
-            {config.customFields.map((field) => (
-              <div className="dc-studio-rsvp-custom-field" key={field.id}>
-                <input
-                  type="text"
-                  value={field.label}
-                  maxLength={60}
-                  aria-label={en ? "Custom RSVP field label" : "Label field RSVP tambahan"}
-                  onChange={(event) => onUpdateRsvpField(field.id, { label: event.target.value })}
-                />
-                <label title={en ? "Required field" : "Wajib diisi"}>
-                  <input type="checkbox" checked={field.required} onChange={(event) => onUpdateRsvpField(field.id, { required: event.target.checked })} />
-                  <span>{en ? "Req" : "Wajib"}</span>
-                </label>
-                <button type="button" onClick={() => onRemoveRsvpField(field.id)} aria-label={en ? "Remove custom field" : "Hapus field tambahan"} title={en ? "Remove field" : "Hapus field"}>×</button>
-              </div>
-            ))}
-            <button
-              type="button"
-              className="dc-studio-rsvp-add"
-              disabled={config.customFields.length >= MAX_RSVP_CUSTOM_FIELDS}
-              onClick={onAddRsvpField}
-            >
-              + {en ? "Add column" : "Tambah Kolom"}
-            </button>
-          </div>
-        </div>
-      )}
 
       <button type="button" className="dc-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
