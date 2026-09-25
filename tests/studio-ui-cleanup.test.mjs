@@ -350,3 +350,21 @@ test("Studio design layers snap to section and nearby alignment guides", () => {
   assert.match(assetRenderer, /guides\.y !== undefined/);
   assert.match(assetRenderer, /event\.shiftKey \? 5 : 1/);
 });
+
+
+test("Studio crop mode edits the photo inside its fixed canvas frame", () => {
+  const cropOverlay = read("components/InvitationStudio/StudioPhotoCropOverlay.tsx");
+  const preview = read("components/InvitationStudio/InvitationPreview.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  assert.match(designer, /cropModeSlot/);
+  assert.match(designer, /activeCropSlot=\{cropModeSlot\}/);
+  assert.match(cropOverlay, /data-studio-photo-crop/);
+  assert.match(cropOverlay, /setPointerCapture/);
+  assert.match(cropOverlay, /onChange\(liveRef\.current\)/);
+  assert.match(cropOverlay, /Geser untuk atur posisi/);
+  assert.match(preview, /activeCropSlot/);
+  assert.match(universal, /StudioPhotoCropOverlay/);
+  assert.match(rose, /StudioPhotoCropOverlay/);
+});
