@@ -551,7 +551,7 @@ export default function UniversalInvitationTemplate({
 
           {section("gallery", key === "pencil-reverie" ? <PencilMemoryGallery /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
-            <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion.gallery?.animation)} />
+            <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} />
           </> : (
             usesPhotos ? <>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-full border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
