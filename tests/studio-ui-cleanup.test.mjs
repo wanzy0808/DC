@@ -209,7 +209,7 @@ test("asset library inserts images by drag-and-drop only", () => {
 
 test("selected Studio objects use an icon rotate handle without a connector line", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
-  assert.match(assetLayers, /import \{ RotateCw \} from "lucide-react"/);
+  assert.match(assetLayers, /import \{ Lock, RotateCw \} from "lucide-react"/);
   assert.match(assetLayers, /<RotateCw aria-hidden="true" size=\{15\}/);
   assert.match(assetLayers, /aria-label="Putar objek"/);
   assert.doesNotMatch(assetLayers, /top-full left-1\/2 h-6 w-px/);
@@ -230,7 +230,7 @@ test("overlapping Studio assets use left-click selection and cycle to the layer 
   assert.match(assetLayers, /Math\.hypot\([^)]*\) > 3/);
   assert.match(assetLayers, /onCycleSelect\?\.\(layer\.id, event\.clientX, event\.clientY\)/);
   assert.match(assetLayers, /zIndex: editable && selected \? 40 : undefined/);
-  assert.match(assetLayers, /className=\{\`pointer-events-auto block w-full cursor-grab/);
+  assert.match(assetLayers, /layer\.locked \? "cursor-default" : "cursor-grab active:cursor-grabbing"/);
   assert.doesNotMatch(assetLayers, /interactionEnabled/);
   assert.match(assetLayers, /currentIndex <= 0 \? hits\.length - 1 : currentIndex - 1/);
 });
@@ -269,7 +269,8 @@ test("selected assets use a compact left list and right-side properties panel", 
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
   assert.match(designer, /className="dc-studio-canvas-layout"/);
   assert.match(designer, /className="dc-studio-layer-list"/);
-  assert.match(designer, /Asset \{assetNumber\}\/\{MAX_ASSET_LAYERS\}/);
+  assert.match(designer, /const layerName = layer\.kind === "text"/);
+  assert.match(designer, /dc-studio-layer-select-button/);
   assert.match(designer, /onPosition=\{positionAssetLayer\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
