@@ -8,6 +8,7 @@ type AssetLayerInspectorProps = {
   locale: string;
   selectedAssetLayer: InvitationAssetLayer | undefined;
   selectedAssetIndex: number;
+  layerCount: number;
   sections: InvitationSections;
   onDeselect: () => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
@@ -20,6 +21,7 @@ export default function AssetLayerInspector({
   locale,
   selectedAssetLayer,
   selectedAssetIndex,
+  layerCount,
   sections,
   onDeselect,
   onUpdate,
@@ -101,9 +103,10 @@ export default function AssetLayerInspector({
       <label className="dc-studio-layer-select">
         <span>{en ? "Layer" : "Layer"}</span>
         <select
-          value={selectedAssetIndex === 0 ? "back" : "front"}
+          value={selectedAssetIndex === 0 ? "back" : selectedAssetIndex === layerCount - 1 ? "front" : ""}
           onChange={(event) => onPosition(selectedAssetLayer.id, event.target.value as "front" | "back")}
         >
+          <option value="" disabled>{en ? "Choose" : "Pilih"}</option>
           <option value="front">{en ? "Front" : "Depan"}</option>
           <option value="back">{en ? "Back" : "Belakang"}</option>
         </select>
