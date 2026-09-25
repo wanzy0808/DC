@@ -496,3 +496,13 @@ test("Studio canvas supports Space-drag panning at zoomed sizes", () => {
   assert.match(styles, /\.dc-studio-canvas-scroll \{[^}]*overflow: auto;/);
   assert.match(styles, /data-panning="true"/);
 });
+
+
+test("Studio layer list supports direct drag reordering while locked layers stay fixed", () => {
+  assert.match(designer, /function reorderAssetLayer\(sourceId: string, targetId: string\)/);
+  assert.match(designer, /draggable=\{!layer\.locked\}/);
+  assert.match(designer, /application\/x-dc-layer/);
+  assert.match(designer, /reorderAssetLayer\(sourceId, layer\.id\)/);
+  assert.match(designer, /data-layer-drag-over/);
+  assert.match(styles, /data-layer-drag-over="true"/);
+});
