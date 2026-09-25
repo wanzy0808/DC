@@ -71,6 +71,7 @@ function EditableLayer({
   const shadowFilter = layerShadowFilter(layer);
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
+    if (event.currentTarget.closest<HTMLElement>('.dc-studio-canvas-scroll[data-space-pan="true"]')) return;
     if (!editable || layer.locked || !onUpdate || !root.current || event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
