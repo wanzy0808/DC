@@ -267,7 +267,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="greeting" style={invitationSectionStyleCss(sectionStyles.greeting)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("greeting")}
                         <RoseHeading eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
-                        <p className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.greeting}</p>
+                        <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.greeting}</p>
                       </section>
           ))}
 
@@ -406,7 +406,7 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("closing")}
                         <Heart className="mx-auto h-7 w-7 text-[#bf8496]" />
                         <RoseHeading eyebrow="Forever begins here">Terima Kasih</RoseHeading>
-                        <p className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.closing}</p>
+                        <p data-studio-copy-field="closing" className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]">{editableCopy.closing}</p>
                         <p className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
                         {invitation.weddingHashtag && <p className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
                       </section>
