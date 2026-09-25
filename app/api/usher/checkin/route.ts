@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidGuestbook } from "@/lib/packages/access";
+import { hasAccountGuestbook } from "@/lib/packages/server-access";
 import { verifyGuestQrToken } from "@/lib/usher/qr";
 
 export async function POST(request: Request) {
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         { status: 409 },
       );
     }
-    if (!hasPaidGuestbook(guest.invitation.payment)) {
+    if (!(await hasAccountGuestbook(user.id, guest.invitation.payment))) {
       return NextResponse.json({ error: "Usher App belum aktif untuk acara tamu ini." }, { status: 402 });
     }
 
