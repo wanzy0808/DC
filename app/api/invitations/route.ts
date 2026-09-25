@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 import {
   buildEventTitle,
   getEventCategory,
@@ -56,6 +57,7 @@ function databaseFailure(error: unknown, fallback: string) {
 export async function GET(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  const ownerGrant = await getOwnerPackageGrant(user.id);
 
   try {
     const url = new URL(request.url);
@@ -69,7 +71,7 @@ export async function GET(request: Request) {
       return NextResponse.json({
         invitations: invitations.map((invitation) => ({
           ...sanitizeInvitation(invitation),
-          accessPaid: hasPaidDigitalInvitation(invitation.payment),
+          accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment),
         })),
         unlimited: true,
       });
@@ -87,7 +89,7 @@ export async function GET(request: Request) {
       return NextResponse.json({
         invitation: {
           ...sanitizeInvitation(invitation),
-          accessPaid: hasPaidDigitalInvitation(invitation.payment),
+          accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment),
         },
       });
     }
@@ -96,7 +98,7 @@ export async function GET(request: Request) {
     return NextResponse.json({
       invitation: {
         ...sanitizeInvitation(invitation),
-        accessPaid: hasPaidDigitalInvitation(invitation.payment),
+        accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment),
       },
     });
   } catch (error) {
@@ -108,6 +110,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  const ownerGrant = await getOwnerPackageGrant(user.id);
 
   try {
     const body = await request.json().catch(() => null);
@@ -235,7 +238,7 @@ export async function POST(request: Request) {
         {
           invitation: {
             ...sanitizeInvitation(invitation),
-            accessPaid: hasPaidDigitalInvitation(invitation.payment),
+            accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment),
           },
           unlimited: true,
           reused: Boolean(reusableDraft),
@@ -248,7 +251,7 @@ export async function POST(request: Request) {
       return NextResponse.json({
         invitation: {
           ...sanitizeInvitation(reusableDraft),
-          accessPaid: hasPaidDigitalInvitation(reusableDraft.payment),
+          accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(reusableDraft.payment),
         },
         unlimited: true,
         reused: true,
@@ -290,6 +293,7 @@ class MissingMusicAssetError extends Error {}
 export async function PUT(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+  const ownerGrant = await getOwnerPackageGrant(user.id);
 
   try {
     const body = await request.json();
@@ -355,7 +359,7 @@ export async function PUT(request: Request) {
     const requestedTitle = String(body.title ?? invitation.title).trim();
     const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
     const wantsPublish = body.isPublished === undefined ? invitation.isPublished : Boolean(body.isPublished);
-    const canPublish = hasPaidDigitalInvitation(invitation.payment);
+    const canPublish = ownerGrant.digital || hasPaidDigitalInvitation(invitation.payment);
     const eventConfigured = body.eventConfigured === true ? Boolean(title) : invitation.eventConfigured;
 
     if (body.eventConfigured === true) {
@@ -478,9 +482,9 @@ export async function PUT(request: Request) {
     return NextResponse.json({
       invitation: {
         ...sanitizeInvitation(updated),
-        accessPaid: hasPaidDigitalInvitation(updated.payment),
+        accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(updated.payment),
       },
-      accessPaid: hasPaidDigitalInvitation(updated.payment),
+      accessPaid: ownerGrant.digital || hasPaidDigitalInvitation(updated.payment),
     });
   } catch (error) {
     if (error instanceof MissingMusicAssetError) return NextResponse.json({ error: error.message }, { status: 409 });
