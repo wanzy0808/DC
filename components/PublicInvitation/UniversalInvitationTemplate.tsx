@@ -381,7 +381,8 @@ export default function UniversalInvitationTemplate({
   return (
     <main
       ref={rootRef}
-      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl overflow-hidden border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : ""}`}
+      data-studio-preview-root={preview ? "true" : undefined}
+      className={`relative isolate mx-auto min-h-[760px] w-full max-w-2xl ${preview ? "overflow-visible" : "overflow-hidden"} border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : ""}`}
       style={css}
     >
       <InvitationFonts families={[font.heading, font.body]} />
