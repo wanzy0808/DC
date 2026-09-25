@@ -42,7 +42,7 @@ function EditableLayer({
 }) {
   const root = useRef<HTMLDivElement>(null);
   const gesture = useRef<{
-    pointer: number; mode: "move" | "resize" | "rotate"; corner?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+    pointer: number; mode: "move" | "resize" | "rotate"; handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left"; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; rotation: number;
     rect: DOMRect; centerX: number; centerY: number; initialAngle: number;
   } | null>(null);
@@ -50,7 +50,7 @@ function EditableLayer({
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
 
-  function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", corner?: "top-left" | "top-right" | "bottom-left" | "bottom-right") {
+  function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: "top-left" | "top" | "top-right" | "right" | "bottom-right" | "bottom" | "bottom-left" | "left") {
     if (!editable || !onUpdate || !root.current) return;
     event.preventDefault();
     event.stopPropagation();
@@ -60,7 +60,7 @@ function EditableLayer({
     const cx = bounds.left + bounds.width / 2;
     const cy = bounds.top + bounds.height / 2;
     gesture.current = {
-      pointer: event.pointerId, mode, corner, startX: event.clientX, startY: event.clientY,
+      pointer: event.pointerId, mode, handle, objectWidth: Math.max(1, root.current.offsetWidth), objectHeight: Math.max(1, root.current.offsetHeight), startX: event.clientX, startY: event.clientY,
       x: layer.x, y: layer.y, width: layer.width, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
@@ -78,8 +78,16 @@ function EditableLayer({
       const dx = event.clientX - drag.startX;
       const dy = event.clientY - drag.startY;
       const localX = dx * Math.cos(radians) + dy * Math.sin(radians);
-      const sign = drag.corner?.endsWith("left") ? -1 : 1;
-      return { width: round(clamp(drag.width + sign * localX / drag.rect.width * 200, 5, 85)) };
+      const localY = -dx * Math.sin(radians) + dy * Math.cos(radians);
+      const handle = drag.handle ?? "bottom-right";
+      // Width is the canonical dimension: all eight grips scale the artwork proportionally.
+      // Midpoint top/bottom handles follow vertical movement; side handles follow horizontal movement.
+      const xWeight = handle.includes("left") ? -1 : handle.includes("right") ? 1 : 0;
+      const yWeight = handle.includes("top") ? -1 : handle.includes("bottom") ? 1 : 0;
+      const delta = xWeight && yWeight
+        ? (xWeight * localX / drag.objectWidth + yWeight * localY / drag.objectHeight) / 2
+        : xWeight ? xWeight * localX / drag.objectWidth : yWeight * localY / drag.objectHeight;
+      return { width: round(clamp(drag.width * (1 + 2 * delta), 5, 85)) };
     }
     if (drag.mode === "rotate") {
       const angle = Math.atan2(event.clientY - drag.centerY, event.clientX - drag.centerX);
@@ -155,13 +163,13 @@ function EditableLayer({
       }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className="block h-auto w-full select-none" />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-full left-1/2 h-6 w-px -translate-x-1/2 bg-primary" />
-        <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -top-10 left-1/2 z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-2 border-primary bg-background shadow-sm cursor-grab active:cursor-grabbing"
+        <div aria-hidden="true" className="pointer-events-none absolute top-full left-1/2 h-6 w-px -translate-x-1/2 bg-primary" />
+        <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-10 left-1/2 z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border-2 border-primary bg-background shadow-sm cursor-grab active:cursor-grabbing"
           style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-primary" /></button>
-        {(["top-left", "top-right", "bottom-left", "bottom-right"] as const).map((corner) => (
-          <button key={corner} type="button" aria-label={`Ubah ukuran dari ${corner}`} title="Tarik titik sudut untuk resize"
-            className={`pointer-events-auto absolute z-20 grid h-5 w-5 place-items-center border-0 bg-transparent p-0 ${corner.startsWith("top") ? "-top-2.5" : "-bottom-2.5"} ${corner.endsWith("left") ? "-left-2.5" : "-right-2.5"} ${corner === "top-left" || corner === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
-            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", corner)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
+        {(["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const).map((handle) => (
+          <button key={handle} type="button" aria-label={`Ubah ukuran dari ${handle}`} title="Tarik untuk mengubah ukuran"
+            className={`pointer-events-auto absolute z-20 grid h-5 w-5 place-items-center border-0 bg-transparent p-0 ${handle.includes("top") ? "-top-2.5" : handle.includes("bottom") ? "-bottom-2.5" : "top-1/2 -translate-y-1/2"} ${handle.includes("left") ? "-left-2.5" : handle.includes("right") ? "-right-2.5" : "left-1/2 -translate-x-1/2"} ${handle === "top" || handle === "bottom" ? "cursor-ns-resize" : handle === "left" || handle === "right" ? "cursor-ew-resize" : handle === "top-left" || handle === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
+            style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", handle)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
         ))}
       </>}
     </div>
