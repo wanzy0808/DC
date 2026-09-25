@@ -204,11 +204,17 @@ test("each side grip moves only the dragged edge, not the opposite edge", () => 
 });
 
 
-test("Studio uses a centered document title without redundant saved-state subtitle", () => {
+test("Studio displays its document name in the real page header, never above the editing toolbar", () => {
+  const page = read("components/InvitationStudio/InvitationEditorPage.tsx");
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const css = read("components/InvitationStudio/studio.css");
-  assert.match(editor, /<h1 className="dc-studio-document-title/);
+  assert.match(page, /setDocumentTitle\(invitationTitleCase\(data\.invitation\.title \|\| "Studio"\)\)/);
+  assert.match(page, /<h1 className="dc-studio-document-title/);
+  assert.ok(page.indexOf('<header className="dc-studio-page-header">') < page.indexOf('<h1 className="dc-studio-document-title'));
+  assert.doesNotMatch(editor, /<h1 className="dc-studio-document-title/);
   assert.doesNotMatch(editor, /\{dirty \? copy\.unsaved : invitation \? \(invitation\.templateKey \? copy\.saved/);
-  assert.match(css, /\.dc-studio-document-title \{ width: 100%; text-align: center; \}/);
-  assert.match(css, /\.dc-studio-toolbar-actions \{ align-self: flex-end; justify-content: flex-end; \}/);
+  assert.match(css, /\.dc-studio-page-header \{ display: grid; grid-template-columns: minmax\(0, 1fr\) minmax\(0, 2fr\) minmax\(0, 1fr\)/);
+  assert.match(css, /\.dc-studio-page-header > \.dc-studio-document-title \{ grid-column: 2; min-width: 0; margin: 0; \}/);
+  assert.match(css, /\.dc-studio-header-actions \{ grid-column: 3; justify-self: end; \}/);
+  assert.match(css, /\.dc-studio-page-header > \.dc-studio-document-title \{ grid-column: 1 \/ -1; grid-row: 2; \}/);
 });
