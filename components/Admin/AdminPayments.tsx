@@ -27,10 +27,10 @@ const packageNames: Record<string, string> = {
 };
 
 const statusLabels: Record<OrderStatus, string> = {
-  PENDING: "Pending",
-  PAID: "Paid",
-  FAILED: "Rejected",
-  CANCELLED: "Cancelled",
+  PENDING: "Menunggu",
+  PAID: "Terverifikasi",
+  FAILED: "Ditolak",
+  CANCELLED: "Dibatalkan",
 };
 
 function rupiah(value: number) {
@@ -109,7 +109,7 @@ export default function AdminPayments() {
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Finance</p>
           <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-2xl">Pembayaran & aktivasi paket</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Verifikasi bukti transfer sebelum entitlement paket diaktifkan.</p>
+          <p className="mt-1 text-sm text-muted-foreground">Periksa laporan transfer atau bukti pembayaran sebelum paket diaktifkan.</p>
         </div>
         <Button type="button" size="sm" onClick={() => void load()}>Muat ulang</Button>
       </div>
@@ -137,7 +137,7 @@ export default function AdminPayments() {
                   {order.proofUrl && <span className="rounded-full border border-primary/30 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">Bukti masuk</span>}
                 </div>
                 <p className="text-sm">{packageNames[order.packageKey] ?? order.packageKey} · {rupiah(order.amount)}</p>
-                <p className="text-xs text-muted-foreground">{order.user.firstName} · {order.user.email}</p>
+                <p className="text-xs text-muted-foreground">{order.user.email}</p>
                 <p className="text-xs text-muted-foreground">{order.invitation.groomName} & {order.invitation.brideName}</p>
                 <p className="font-mono text-[10px] text-muted-foreground">Dibuat {formatDate(order.createdAt)}</p>
               </div>
@@ -171,7 +171,7 @@ export default function AdminPayments() {
             <dl className="mt-6 grid gap-4 sm:grid-cols-2">
               <div><dt className="text-xs text-muted-foreground">Paket</dt><dd className="mt-1 text-sm">{packageNames[selectedOrder.packageKey] ?? selectedOrder.packageKey}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Nominal</dt><dd className="mt-1 text-sm">{rupiah(selectedOrder.amount)}</dd></div>
-              <div><dt className="text-xs text-muted-foreground">Pemesan</dt><dd className="mt-1 text-sm">{selectedOrder.user.firstName} · {selectedOrder.user.email}</dd></div>
+              <div><dt className="text-xs text-muted-foreground">Pemesan</dt><dd className="mt-1 text-sm">{selectedOrder.user.email}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Status</dt><dd className="mt-1 text-sm">{statusLabels[selectedOrder.status]}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Dibuat</dt><dd className="mt-1 text-sm">{formatDate(selectedOrder.createdAt)}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Dilaporkan bayar</dt><dd className="mt-1 text-sm">{formatDate(selectedOrder.reportedAt)}</dd></div>
