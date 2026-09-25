@@ -28,6 +28,8 @@ export function useInvitationSectionAnimations(
   rootRef: RefObject<HTMLElement | null>,
   styles: InvitationSectionStyles,
 ) {
+  const signature = JSON.stringify(styles);
+
   useEffect(() => {
     const root = rootRef.current;
     if (!root || typeof window === "undefined") return;
@@ -86,5 +88,5 @@ export function useInvitationSectionAnimations(
       observer.disconnect();
       animations.forEach((animation) => animation.cancel());
     };
-  }, [rootRef, styles]);
+  }, [rootRef, signature]);
 }
