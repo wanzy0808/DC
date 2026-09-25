@@ -89,13 +89,15 @@ test("RSVP title and controls support independent persisted styling", () => {
   });
 });
 
-test("Studio exposes Attend All and Add Column and the live RSVP renders them", () => {
+test("Studio keeps RSVP function controls in Isi while the right inspector stays visual-only", () => {
   const inspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
+  const contentPanel = read("components/InvitationStudio/DesignerPanels.tsx");
   const panels = read("components/InvitationStudio/RsvpPanels.tsx");
   const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
-  assert.match(inspector, /Hadir Semua Acara/);
-  assert.match(inspector, /Tambah Kolom/);
-  assert.match(inspector, /MAX_RSVP_CUSTOM_FIELDS/);
+  assert.match(contentPanel, /Hadir Semua Acara/);
+  assert.match(contentPanel, /Tambah Kolom/);
+  assert.match(contentPanel, /MAX_RSVP_CUSTOM_FIELDS/);
+  assert.doesNotMatch(inspector, /Hadir Semua Acara|Tambah Kolom|MAX_RSVP_CUSTOM_FIELDS/);
   assert.match(designer, /addRsvpCustomField/);
   assert.match(designer, /updateRsvpCustomField/);
   assert.match(designer, /removeRsvpCustomField/);
@@ -104,6 +106,7 @@ test("Studio exposes Attend All and Add Column and the live RSVP renders them", 
   assert.match(panels, /Hadir Semua Acara/);
   assert.match(panels, /rsvpConfig\.customFields\.map/);
   assert.match(panels, /data-studio-rsvp-element="inputs"/);
+  assert.match(panels, /data-studio-rsvp-element="button"/);
   assert.doesNotMatch(panels, /data-studio-rsvp-element="name"/);
   assert.doesNotMatch(panels, /data-studio-rsvp-element="phone"/);
   assert.doesNotMatch(panels, /data-studio-rsvp-element="status"/);
