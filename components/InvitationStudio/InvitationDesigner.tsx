@@ -290,7 +290,6 @@ export default function InvitationDesigner() {
     const location = new URL(window.location.href);
     location.searchParams.set("template", templateKey);
     window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
-    setMusicUrl("");
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
@@ -308,6 +307,7 @@ export default function InvitationDesigner() {
       copy: {},
       layers: [],
     });
+    setMusicUrl("");
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setCopiedAssetLayer(null);
