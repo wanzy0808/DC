@@ -17,6 +17,8 @@ export type PhotoMotion = {
   animationDelay?: number;
   /** Used by gallery only; other slots ignore stagger. */
   animationStagger?: number;
+  /** Subtle viewport-relative movement in pixels; zero/undefined disables it. */
+  parallax?: number;
 };
 export type PhotoMotionMap = Partial<Record<PhotoSlot, PhotoMotion>>;
 
@@ -66,12 +68,18 @@ function sanitizeCrop(value: unknown): PhotoCrop | null {
 function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | undefined {
   if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
   const source = value as Record<string, unknown>;
-  if (!isInvitationSectionAnimation(source.animation) || source.animation === "none") return undefined;
-  const motion: PhotoMotion = { animation: source.animation };
-  if (source.animationDuration !== undefined) motion.animationDuration = bounded(source.animationDuration, 0.2, 2.5, 0.7);
-  if (source.animationDelay !== undefined) motion.animationDelay = bounded(source.animationDelay, 0, 2, 0);
-  if (gallery && source.animationStagger !== undefined) motion.animationStagger = bounded(source.animationStagger, 0.01, 0.2, 0.08);
-  return motion;
+  const motion: PhotoMotion = {};
+  if (isInvitationSectionAnimation(source.animation) && source.animation !== "none") {
+    motion.animation = source.animation;
+    if (source.animationDuration !== undefined) motion.animationDuration = bounded(source.animationDuration, 0.2, 2.5, 0.7);
+    if (source.animationDelay !== undefined) motion.animationDelay = bounded(source.animationDelay, 0, 2, 0);
+    if (gallery && source.animationStagger !== undefined) motion.animationStagger = bounded(source.animationStagger, 0.01, 0.2, 0.08);
+  }
+  if (source.parallax !== undefined) {
+    const parallax = bounded(source.parallax, 0, 20, 0);
+    if (parallax > 0) motion.parallax = parallax;
+  }
+  return Object.keys(motion).length ? motion : undefined;
 }
 
 function sanitizePhotoMotions(value: unknown): PhotoMotionMap {
