@@ -13,7 +13,7 @@ const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 
 test("Studio shows one legible Ucapan Tamu label without the stale unavailable message", () => {
   assert.match(studio, /wishes: "Guest Wishes"/);
-  assert.match(studio, /\{locale === "en" \? sectionNamesEnglish\[item\.key\] : item\.title\}<\/span>/);
+  assert.match(studio, /\{en \? sectionNamesEnglish\[item\.key\] : item\.title\}/);
   assert.doesNotMatch(studio, /Pengiriman ucapan belum tersedia|Sending wishes is not available yet/);
 });
 
@@ -26,7 +26,8 @@ test("all invitation renderers use one shared live wishes engine and previews ca
   assert.doesNotMatch(rose, /Kolom ucapan belum aktif/);
   assert.match(component, /if \(preview \|\| submitting \|\| !slug\) return;/);
   assert.match(component, /if \(preview \|\| !slug\) \{/);
-  assert.match(component, /<fieldset disabled=\{preview \|\| submitting\}/);
+  assert.match(component, /<fieldset data-studio-section-element="wishes:input"[\s\S]*?disabled=\{submitting\}[\s\S]*?aria-disabled=\{preview \|\| submitting\}/);
+  assert.match(component, /data-studio-section-element="wishes:button"/);
   assert.match(component, /\{!preview && \(/);
   assert.match(component, /maxLength=\{80\}/);
   assert.match(component, /maxLength=\{600\}/);
