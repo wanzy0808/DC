@@ -16,6 +16,7 @@ type Order = {
   createdAt: string;
   paidAt: string | null;
   confirmedAt: string | null;
+  reportedAt: string | null;
   user: { email: string; firstName: string };
   invitation: { title: string; groomName: string; brideName: string };
 };
@@ -47,7 +48,7 @@ function isImageProof(value: string | null) {
 
 export default function AdminPayments() {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [filter, setFilter] = useState<"ALL" | OrderStatus>("PENDING");
+  const [filter, setFilter] = useState<"REPORTED" | "ALL" | OrderStatus>("REPORTED");
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [message, setMessage] = useState("Memuat pembayaran...");
   const [busy, setBusy] = useState<string | null>(null);
@@ -84,6 +85,7 @@ export default function AdminPayments() {
   }
 
   const counts = useMemo(() => ({
+    REPORTED: orders.filter((order) => order.status === "PENDING" && Boolean(order.reportedAt || order.proofUrl)).length,
     ALL: orders.length,
     PENDING: orders.filter((order) => order.status === "PENDING").length,
     PAID: orders.filter((order) => order.status === "PAID").length,
@@ -92,7 +94,11 @@ export default function AdminPayments() {
   }), [orders]);
 
   const filteredOrders = useMemo(
-    () => filter === "ALL" ? orders : orders.filter((order) => order.status === filter),
+    () => filter === "ALL"
+      ? orders
+      : filter === "REPORTED"
+        ? orders.filter((order) => order.status === "PENDING" && Boolean(order.reportedAt || order.proofUrl))
+        : orders.filter((order) => order.status === filter),
     [filter, orders],
   );
   const selectedOrder = orders.find((order) => order.id === selectedOrderId) ?? null;
@@ -109,9 +115,9 @@ export default function AdminPayments() {
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {(["PENDING", "PAID", "FAILED", "ALL"] as const).map((status) => (
+        {(["REPORTED", "PENDING", "PAID", "ALL"] as const).map((status) => (
           <button key={status} type="button" onClick={() => setFilter(status)} className={`rounded-xl border p-4 text-left transition-transform hover:-translate-y-0.5 ${filter === status ? "border-primary bg-primary/5" : "border-border"}`}>
-            <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{status === "ALL" ? "Semua order" : statusLabels[status]}</p>
+            <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{status === "REPORTED" ? "Lapor bayar" : status === "ALL" ? "Semua order" : statusLabels[status]}</p>
             <p className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">{counts[status]}</p>
           </button>
         ))}
@@ -127,7 +133,8 @@ export default function AdminPayments() {
               <div className="min-w-0 space-y-1">
                 <div className="flex flex-wrap items-center gap-2">
                   <p className="font-mono text-sm font-semibold">{order.invoiceNumber}</p>
-                  <span className="rounded-full bg-primary/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">{statusLabels[order.status]}</span>
+                  <span className="rounded-full bg-primary/10 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">{order.status === "PENDING" && (order.reportedAt || order.proofUrl) ? "Lapor bayar" : statusLabels[order.status]}</span>
+                  {order.proofUrl && <span className="rounded-full border border-primary/30 px-2 py-1 font-mono text-[10px] uppercase tracking-wider text-primary">Bukti masuk</span>}
                 </div>
                 <p className="text-sm">{packageNames[order.packageKey] ?? order.packageKey} · {rupiah(order.amount)}</p>
                 <p className="text-xs text-muted-foreground">{order.user.firstName} · {order.user.email}</p>
@@ -139,7 +146,7 @@ export default function AdminPayments() {
                 {order.status === "PENDING" && (
                   <>
                     <Button type="button" size="sm" disabled={busy === order.id} onClick={() => updateOrder(order.id, "REJECT")}>Tolak</Button>
-                    <Button type="button" size="sm" disabled={busy === order.id || !order.proofUrl} onClick={() => updateOrder(order.id, "ACTIVATE")}>
+                    <Button type="button" size="sm" disabled={busy === order.id || !(order.reportedAt || order.proofUrl)} onClick={() => updateOrder(order.id, "ACTIVATE")}>
                       {busy === order.id ? "Memproses..." : "Aktifkan paket"}
                     </Button>
                   </>
@@ -167,6 +174,7 @@ export default function AdminPayments() {
               <div><dt className="text-xs text-muted-foreground">Pemesan</dt><dd className="mt-1 text-sm">{selectedOrder.user.firstName} · {selectedOrder.user.email}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Status</dt><dd className="mt-1 text-sm">{statusLabels[selectedOrder.status]}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Dibuat</dt><dd className="mt-1 text-sm">{formatDate(selectedOrder.createdAt)}</dd></div>
+              <div><dt className="text-xs text-muted-foreground">Dilaporkan bayar</dt><dd className="mt-1 text-sm">{formatDate(selectedOrder.reportedAt)}</dd></div>
               <div><dt className="text-xs text-muted-foreground">Diverifikasi</dt><dd className="mt-1 text-sm">{formatDate(selectedOrder.confirmedAt)}</dd></div>
             </dl>
 
@@ -190,7 +198,7 @@ export default function AdminPayments() {
             {selectedOrder.status === "PENDING" && (
               <div className="mt-6 flex flex-wrap gap-2">
                 <Button type="button" disabled={busy === selectedOrder.id} onClick={() => updateOrder(selectedOrder.id, "REJECT")}>Tolak pembayaran</Button>
-                <Button type="button" disabled={busy === selectedOrder.id || !selectedOrder.proofUrl} onClick={() => updateOrder(selectedOrder.id, "ACTIVATE")}>
+                <Button type="button" disabled={busy === selectedOrder.id || !(selectedOrder.reportedAt || selectedOrder.proofUrl)} onClick={() => updateOrder(selectedOrder.id, "ACTIVATE")}>
                   {busy === selectedOrder.id ? "Memproses..." : "Aktifkan paket"}
                 </Button>
               </div>
