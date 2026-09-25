@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { hasPaidDigitalInvitation } from "@/lib/packages/access";
+import { hasAccountDigitalInvitation } from "@/lib/packages/server-access";
 
 async function getInvitation(userId: string) {
   return prisma.invitation.findFirst({
@@ -13,7 +13,7 @@ async function getInvitation(userId: string) {
 
 async function authorize(userId: string) {
   const invitation = await getInvitation(userId);
-  if (!invitation || !hasPaidDigitalInvitation(invitation.payment)) return null;
+  if (!invitation || !(await hasAccountDigitalInvitation(userId, invitation.payment))) return null;
   return invitation;
 }
 
