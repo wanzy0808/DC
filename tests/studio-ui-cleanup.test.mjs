@@ -396,3 +396,13 @@ test("Studio image layers support flip transforms and quick centering", () => {
   assert.match(assetInspector, /flipY/);
   assert.match(textInspector, /Posisi cepat/);
 });
+
+
+test("Studio clipboard shortcuts never hijack text editing", () => {
+  assert.match(designer, /closest\('input, textarea, select, \[contenteditable="true"\], \[role="textbox"\]'\)/);
+  assert.match(designer, /window\.getSelection\(\)\?\.toString\(\)/);
+  assert.match(designer, /event\.isComposing/);
+  assert.match(designer, /event\.key\.toLowerCase\(\) === "c"/);
+  assert.match(designer, /event\.key\.toLowerCase\(\) === "x"/);
+  assert.match(designer, /event\.key\.toLowerCase\(\) === "v"/);
+});
