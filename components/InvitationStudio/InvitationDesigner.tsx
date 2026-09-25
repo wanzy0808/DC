@@ -70,7 +70,7 @@ export default function InvitationDesigner() {
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Restore this theme's colors, fonts, and sections without deleting photos or content.",
-    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save Design", startOver: "Start Over",
+    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save", startOver: "Start Over",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover", phone: "Mobile",
@@ -80,7 +80,7 @@ export default function InvitationDesigner() {
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan warna, font, dan bagian tema. Foto, musik, dan isi tidak dihapus.",
-    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan Desain", startOver: "Ulang dari awal",
+    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover", phone: "Ponsel",
@@ -189,7 +189,7 @@ export default function InvitationDesigner() {
     setHistory([]);
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? "Template dipilih. Klik Simpan Desain untuk menerapkan."
+      ? "Template dipilih. Klik Simpan untuk menerapkan."
       : "");
   }
 
@@ -301,7 +301,7 @@ export default function InvitationDesigner() {
     const preset = invitationTemplatePresets[design.template];
     if (!preset) return;
     change({ palette: preset.palette, font: preset.font, sections: { ...defaultInvitationSections } });
-    setNotice("Warna, font, dan bagian kembali ke default. Foto, musik, dan isi tetap tersimpan. Klik Simpan Desain untuk menerapkan.");
+    setNotice("Warna, font, dan bagian kembali ke default. Foto, musik, dan isi tetap tersimpan. Klik Simpan untuk menerapkan.");
   }
 
   async function deleteMusic(id: string) {
@@ -574,7 +574,7 @@ export default function InvitationDesigner() {
     if (!invitation) return;
     if (saving || audioMutation.current) return;
     setSaving(true);
-    setNotice("Menyimpan desain...");
+    setNotice("Menyimpan...");
     try {
       const response = await fetch("/api/invitations", {
         method: "PUT",
@@ -619,12 +619,6 @@ export default function InvitationDesigner() {
     <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
       <header className="dc-studio-toolbar">
         <div className="dc-studio-toolbar-actions flex flex-wrap items-center gap-1.5">
-          <Button size="icon-sm" onClick={undo} disabled={!history.length} aria-label={copy.undo} title={copy.undo}>
-            <Undo2 className="h-4 w-4" />
-          </Button>
-          <Button size="icon-sm" onClick={redo} disabled={!future.length} aria-label={copy.redo} title={copy.redo}>
-            <Redo2 className="h-4 w-4" />
-          </Button>
           <Button onClick={save} disabled={saving || audioBusy || !invitation} size="sm">
             <Save className="h-4 w-4" />
             {saving ? copy.saving : copy.save}
@@ -645,6 +639,14 @@ export default function InvitationDesigner() {
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
           <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
+          <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
+            <Button size="icon-lg" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
+              <Undo2 className="h-4 w-4" />
+            </Button>
+            <Button size="icon-lg" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
+              <Redo2 className="h-4 w-4" />
+            </Button>
+          </div>
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
@@ -693,12 +695,36 @@ export default function InvitationDesigner() {
           </fieldset>
         </aside>
 
-        <div className="dc-studio-canvas">
+        <div className="dc-studio-canvas" onKeyDown={(event) => {
+          if (!invitation || saving || audioBusy || !(event.ctrlKey || event.metaKey) || event.altKey || event.isComposing) return;
+          const target = event.target;
+          if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+          const key = event.key.toLowerCase();
+          const isUndo = key === "z" && !event.shiftKey;
+          const isRedo = (key === "z" && event.shiftKey) || (key === "y" && !event.shiftKey);
+          if (isUndo && history.length) { event.preventDefault(); undo(); }
+          if (isRedo && future.length) { event.preventDefault(); redo(); }
+        }}>
           <div className="dc-studio-canvas-toolbar">
             <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
               {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
             </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
+            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
+            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
+          </div>
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
+            const target = event.target;
+            if (target instanceof Element && !target.closest('input, textarea, select, button, a, [contenteditable="true"], [role="textbox"]')) event.currentTarget.focus({ preventScroll: true });
+          }} onClick={(event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
+            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
+            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
+          }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
+          <div className="dc-studio-preview-workspace">
+          <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
             {design.sections.envelope !== false && <button type="button"
               aria-pressed={canvasStage === "envelope"}
               className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-primary hover:bg-primary/10"}`}
@@ -711,17 +737,7 @@ export default function InvitationDesigner() {
               onClick={() => setCanvasStage("cover")}
               title={copy.coverHint}
             >{copy.cover}</button>
-            <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
-            <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onClick={(event) => {
-            const target = event.target;
-            if (!(target instanceof Element)) return;
-            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
-            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
-            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
-          }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
-          <div className="dc-studio-preview-workspace">
           <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
             <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
 
