@@ -54,15 +54,15 @@
 .dc-studio-layer-toolbar .dc-studio-icon { width: 34px; height: 34px; }
 .dc-studio-layer-toolbar input[type="range"] { accent-color: var(--primary); }
 
-.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
 .dc-studio-canvas-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 .dc-studio-preview-surface { position: relative; isolation: isolate; width: 340px; max-width: 100%; margin-inline: auto; overflow: visible; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 24px; background: var(--background); box-shadow: 0 16px 48px rgb(0 0 0 / .12); }
 .dc-studio-preview-surface > main { overflow: visible !important; border-radius: inherit; }
 .dc-section-instance-content { overflow: hidden; }
 .dc-section-instance:first-child > .dc-section-instance-content { border-radius: 23px 23px 0 0; }
 .dc-section-instance:last-child > .dc-section-instance-content { border-radius: 0 0 23px 23px; }
-.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(104px, 1fr) minmax(0, 340px) minmax(184px, 1fr); align-items: start; gap: 16px; width: 100%; min-width: 0; }
-.dc-studio-preview-workspace { position: relative; width: 340px; max-width: 100%; margin-inline: auto; }
+.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(118px, 1fr) minmax(0, 340px) minmax(184px, 1fr); align-items: start; gap: 16px; width: 100%; min-width: 0; overflow: visible; }
+.dc-studio-preview-workspace { position: relative; width: 340px; max-width: 100%; margin-inline: auto; overflow: visible; }
 .dc-studio-stage-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 12px; }
 .dc-studio-stage-controls button { flex: 1 1 0; min-width: 0; min-height: 44px; border-radius: var(--dc-control-radius); font-size: 12px; font-weight: 500; }
 .dc-studio-stage-controls button[aria-pressed="true"] { box-shadow: inset 0 -3px var(--foreground); }
@@ -186,26 +186,26 @@
 .dc-studio-section-actions {
   position: absolute;
   top: 10px;
-  left: -42px;
-  z-index: 95;
+  left: -52px;
+  z-index: 120;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  padding: 4px;
-  border: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--background) 88%, transparent);
-  box-shadow: 0 6px 16px rgb(0 0 0 / .08);
-  backdrop-filter: blur(8px);
+  gap: 7px;
+  width: 30px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
 }
 .dc-studio-section-actions button {
   display: grid;
-  width: 27px;
-  height: 27px;
+  width: 28px;
+  height: 28px;
   place-items: center;
+  border: 0;
   border-radius: 8px;
-  color: var(--muted-foreground);
+  color: color-mix(in srgb, var(--foreground) 68%, transparent);
   background: transparent;
 }
 .dc-studio-section-actions button:hover:not(:disabled),
@@ -214,6 +214,7 @@
 }
 .dc-studio-section-actions button:hover:not(:disabled) {
   background: color-mix(in srgb, var(--primary) 10%, transparent);
+  color: var(--primary);
 }
 .dc-studio-section-actions button:disabled {
   cursor: default;
