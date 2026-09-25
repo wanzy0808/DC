@@ -325,6 +325,7 @@ export default function InvitationDesigner() {
     setActivePhotoSlot("cover");
     setSelectedLayerId(null);
     setSelectedSectionKey(null);
+    setSelectedRsvpElementKey(null);
     setCopiedAssetLayer(null);
     draggedAssetSrc.current = null;
     setAssetDropReady(false);
@@ -579,7 +580,7 @@ export default function InvitationDesigner() {
     const root = canvasScrollRef.current;
     if (!root) return;
     for (const node of root.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
-      if (node.dataset.invitationSection === selectedSectionKey) node.dataset.studioSectionSelected = "true";
+      if (selectedSectionKey !== "rsvp" && node.dataset.invitationSection === selectedSectionKey) node.dataset.studioSectionSelected = "true";
       else delete node.dataset.studioSectionSelected;
     }
   }, [selectedSectionKey, designKey, canvasStage, previewVersion]);
