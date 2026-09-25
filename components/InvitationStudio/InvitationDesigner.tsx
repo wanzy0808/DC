@@ -119,6 +119,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [savedState, setSavedState] = useState("");
   const [serverRevision, setServerRevision] = useState("");
   const audioMutation = useRef(false);
+  const requestedCatalogApplied = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
   const [saving, setSaving] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -264,6 +265,17 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       );
     });
   }, []);
+  useEffect(() => {
+    if (templateMode || !invitation || requestedCatalogApplied.current) return;
+    const requested = new URLSearchParams(window.location.search).get("template")?.trim() || "";
+    if (!requested.startsWith("designer:")) return;
+    const available = readyTemplates.find((item) => item.key === requested && item.designKey);
+    if (!available) return;
+    requestedCatalogApplied.current = true;
+    selectTemplate(requested);
+    setNotice("Template dipilih. Klik Simpan untuk menerapkan.");
+  }, [catalog, invitation, templateMode]);
+
 
   const template =
     readyTemplates.find((item) => item.key === design.template) ||
