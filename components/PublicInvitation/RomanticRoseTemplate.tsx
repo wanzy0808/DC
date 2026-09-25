@@ -177,7 +177,7 @@ export default function RomanticRoseTemplate({
   } : undefined;
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
   const copyMotions = parseEditableCopyMotions(activeDesignKey);
-  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy);
+  useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
