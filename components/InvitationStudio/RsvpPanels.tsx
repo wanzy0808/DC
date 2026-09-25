@@ -97,13 +97,16 @@ export function RsvpInputPanel({
         </div>
       )}
 
+      <div
+        data-studio-rsvp-element="inputs"
+        style={rsvpElementStyleCss(rsvpConfig, "inputs")}
+        className="space-y-4"
+      >
       {!guestId && (
         <div className="grid gap-3 sm:grid-cols-2">
           <label className="text-xs font-medium">
             Nama
             <Input
-              data-studio-rsvp-element="name"
-              style={rsvpElementStyleCss(rsvpConfig, "name")}
               value={form.name}
               onChange={(event) =>
                 setForm({ ...form, name: event.target.value })
@@ -117,8 +120,6 @@ export function RsvpInputPanel({
           <label className="text-xs font-medium">
             No. WhatsApp
             <Input
-              data-studio-rsvp-element="phone"
-              style={rsvpElementStyleCss(rsvpConfig, "phone")}
               value={form.phone}
               onChange={(event) =>
                 setForm({ ...form, phone: event.target.value })
@@ -135,8 +136,6 @@ export function RsvpInputPanel({
         <label className="block text-xs font-medium">
           Acara yang akan dihadiri
           <select
-            data-studio-rsvp-element="events"
-            style={rsvpElementStyleCss(rsvpConfig, "events")}
             aria-label="Acara yang akan dihadiri"
             value={form.eventChoice}
             onChange={(event) => setForm({ ...form, eventChoice: event.target.value as RsvpFormState["eventChoice"] })}
@@ -151,15 +150,13 @@ export function RsvpInputPanel({
         </label>
       )}
 
-      {appearance === "zen" ? <fieldset data-studio-rsvp-element="status" style={rsvpElementStyleCss(rsvpConfig, "status")} className="zen-status-options">
+      {appearance === "zen" ? <fieldset className="zen-status-options">
         <legend className="sr-only">Status kehadiran</legend>
         {([["ATTENDING", "Saya Akan Hadir"], ["TENTATIVE", "Saya Mungkin Hadir"], ["NOT_ATTENDING", "Saya Tidak Dapat Hadir"]] as const).map(([value, label]) => <label key={value}>
           <input type="radio" name="attendance" value={value} checked={form.status === value} onChange={() => setForm({ ...form, status: value })} />
           <span>{label}</span>
         </label>)}
       </fieldset> : (<select
-        data-studio-rsvp-element="status"
-        style={rsvpElementStyleCss(rsvpConfig, "status")}
         aria-label="Status kehadiran"
         value={form.status}
         onChange={(event) =>
@@ -173,7 +170,7 @@ export function RsvpInputPanel({
       </select>)}
 
       {form.status === "ATTENDING" && (invitedPax === undefined || invitedPax > 1) && (
-      <fieldset data-studio-rsvp-element="companions" style={rsvpElementStyleCss(rsvpConfig, "companions")} className="space-y-2">
+      <fieldset className="space-y-2">
         <legend className="text-sm font-medium">Jumlah pendamping</legend>
         {invitedPax !== undefined && invitedPax > 2 ? (
           <Input
@@ -225,8 +222,6 @@ export function RsvpInputPanel({
             <label key={field.id} className="block text-xs font-medium">
               {field.label}
               <Input
-                data-studio-rsvp-element={`custom:${field.id}`}
-                style={rsvpElementStyleCss(rsvpConfig, `custom:${field.id}`)}
                 value={form.customAnswers[field.id] ?? ""}
                 onChange={(event) => setForm({
                   ...form,
@@ -242,8 +237,6 @@ export function RsvpInputPanel({
       )}
 
       <Button
-        data-studio-rsvp-element="submit"
-        style={rsvpElementStyleCss(rsvpConfig, "submit")}
         type="submit"
         disabled={submitting}
         aria-disabled={submitting || preview}
@@ -251,6 +244,7 @@ export function RsvpInputPanel({
       >
         {submitting ? "Menyimpan..." : appearance === "zen" ? "Kirim RSVP" : "Konfirmasi Kehadiran"}
       </Button>
+      </div>
 
       {message && (
         <p
