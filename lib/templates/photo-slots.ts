@@ -93,6 +93,19 @@ export function withPhotoAssignments(designKey: string, assignments: PhotoAssign
   return `${parts.join("::")}::photos=${encodeURIComponent(JSON.stringify(normalized))}`;
 }
 
+export function resolvePhotoCrop(
+  assignments: PhotoAssignments,
+  slot: CroppablePhotoSlot,
+): PhotoCrop {
+  const crop = assignments.crop?.[slot];
+  if (crop) return crop;
+  return {
+    x: 50,
+    y: assignments.focus[slot] === "top" ? 0 : assignments.focus[slot] === "bottom" ? 100 : 50,
+    zoom: 1,
+  };
+}
+
 export function photoCropStyle(
   assignments: PhotoAssignments,
   slot: CroppablePhotoSlot,
