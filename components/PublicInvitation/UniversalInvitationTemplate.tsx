@@ -27,6 +27,7 @@ import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
+import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -176,6 +177,7 @@ export default function UniversalInvitationTemplate({
   const usesPhotos = template.usesPhotos;
   const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
+  const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
@@ -296,7 +298,7 @@ export default function UniversalInvitationTemplate({
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return (
       <section key={keyName} data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
-        style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined }}
+        style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
         {key === "botanical-ivory" && <div aria-hidden className="pointer-events-none absolute -right-10 top-2 rotate-[-24deg] text-[#71826a]/20"><Leaf className="h-36 w-36" strokeWidth={0.6}/></div>}
         {key === "classic-pearl" && <div aria-hidden className="pointer-events-none absolute inset-3 border border-[#b4a88c]/35" />}
@@ -331,7 +333,7 @@ export default function UniversalInvitationTemplate({
       <InvitationFonts families={[font.heading, font.body]} />
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
-        <div className="relative"><InvitationThemeScenes
+        <div data-invitation-section="envelope" className="relative" style={invitationSectionStyleCss(sectionStyles.envelope)}><InvitationThemeScenes
           theme={key}
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           hashtag={invitation.weddingHashtag}
@@ -345,7 +347,7 @@ export default function UniversalInvitationTemplate({
         />{objectOverlay("envelope")}</div>
       ) : (
         <div className={key === "zen-atelier" ? "zen-content" : undefined}>
-          {sections.cover !== false && (<div className="relative" data-studio-cover-stage><InvitationThemeScenes
+          {sections.cover !== false && (<div className="relative" data-studio-cover-stage data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
             theme={key}
             isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
             hashtag={invitation.weddingHashtag}
@@ -527,7 +529,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          {sections.footer !== false && <footer data-invitation-section="footer" className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
+          {sections.footer !== false && <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
             <span aria-hidden="true" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
             {objectOverlay("footer")}
           </footer>}
