@@ -1592,7 +1592,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                   <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))} disabled={canvasZoom <= 0.7} aria-label={locale === "en" ? "Zoom out canvas" : "Perkecil kanvas"} title={locale === "en" ? "Zoom out" : "Perkecil"}>
                     <ZoomOut size={14} />
                   </button>
-                  <output className="min-w-10 text-center text-[10px] font-semibold text-muted-foreground">{Math.round(canvasZoom * 100)}%</output>
+                  <button type="button" className="min-h-7 min-w-11 rounded-lg px-1.5 text-[10px] font-semibold text-muted-foreground hover:bg-primary/10 hover:text-primary" onClick={() => setCanvasZoom(1)} aria-label={locale === "en" ? "Reset canvas zoom to 100 percent" : "Reset zoom kanvas ke 100 persen"} title={locale === "en" ? "Reset to 100%" : "Kembali ke 100%"}>{Math.round(canvasZoom * 100)}%</button>
+                  <button type="button" className="min-h-7 rounded-lg px-2 text-[10px] font-semibold text-primary hover:bg-primary/10" onClick={fitCanvasZoom} aria-label={locale === "en" ? "Fit canvas to workspace" : "Sesuaikan kanvas ke area kerja"} title={locale === "en" ? "Fit canvas" : "Sesuaikan kanvas"}>Fit</button>
                   <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))} disabled={canvasZoom >= 1.3} aria-label={locale === "en" ? "Zoom in canvas" : "Perbesar kanvas"} title={locale === "en" ? "Zoom in" : "Perbesar"}>
                     <ZoomIn size={14} />
                   </button>
