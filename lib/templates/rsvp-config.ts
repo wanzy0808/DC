@@ -16,9 +16,9 @@ export type InvitationRsvpConfig = {
 export const MAX_RSVP_CUSTOM_FIELDS = 5;
 
 export const defaultInvitationRsvpConfig: InvitationRsvpConfig = {
-  ceremony: true,
-  reception: true,
-  attendAll: true,
+  ceremony: false,
+  reception: false,
+  attendAll: false,
   customFields: [],
 };
 
@@ -43,9 +43,9 @@ export function sanitizeInvitationRsvpConfig(value: unknown): InvitationRsvpConf
     : [];
   const unique = customFields.filter((field, index) => customFields.findIndex((item) => item.id === field.id) === index);
   return {
-    ceremony: source.ceremony !== false,
-    reception: source.reception !== false,
-    attendAll: source.attendAll !== false,
+    ceremony: source.ceremony === true,
+    reception: source.reception === true,
+    attendAll: source.attendAll === true,
     customFields: unique,
   };
 }
@@ -63,7 +63,7 @@ export function parseInvitationRsvpConfig(designKey: string): InvitationRsvpConf
 export function withInvitationRsvpConfig(designKey: string, config: InvitationRsvpConfig) {
   const base = designKey.split("::").filter((part) => !part.startsWith("rsvpConfig=")).join("::");
   const normalized = sanitizeInvitationRsvpConfig(config);
-  const isDefault = normalized.ceremony && normalized.reception && normalized.attendAll && normalized.customFields.length === 0;
+  const isDefault = !normalized.ceremony && !normalized.reception && !normalized.attendAll && normalized.customFields.length === 0;
   return isDefault
     ? base
     : `${base}::rsvpConfig=${encodeURIComponent(JSON.stringify(normalized))}`;
