@@ -108,6 +108,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [cropModeSlot, setCropModeSlot] = useState<CroppablePhotoSlot | null>(null);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
+  const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
@@ -293,6 +294,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const designKey = makeInvitationDesignStateKey(design);
   const selectedAssetLayer = design.layers.find((layer) => layer.id === selectedLayerId);
   const selectedAssetIndex = design.layers.findIndex((layer) => layer.id === selectedLayerId);
+  const selectedAssetLayers = design.layers.filter((layer) => selectedLayerIds.includes(layer.id));
   const textTargetSection: StudioObjectSection =
     selectedSectionKey && studioObjectSections.includes(selectedSectionKey as StudioObjectSection) && design.sections[selectedSectionKey] !== false
       ? selectedSectionKey as StudioObjectSection
@@ -300,6 +302,14 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const identity = getInvitationEventIdentity(invitation);
   const currentState = JSON.stringify([designKey, musicUrl, eventTag, dressCode]);
   const dirty = Boolean(invitation && savedState !== currentState);
+  useEffect(() => {
+    if (!selectedLayerId) {
+      if (selectedLayerIds.length) setSelectedLayerIds([]);
+      return;
+    }
+    if (!selectedLayerIds.includes(selectedLayerId)) setSelectedLayerIds([selectedLayerId]);
+  }, [selectedLayerId, selectedLayerIds]);
+
   useEffect(() => {
     // Do not auto-save to the API: this snapshot is only for Ctrl/Cmd+R in this tab.
     if (!invitation || !savedState || !serverRevision) return;
@@ -592,18 +602,56 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
   }
 
-  function focusDesignObject(id: string) {
+  function focusDesignObject(id: string, additive = false) {
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
+    const targetIds = layer.groupId
+      ? design.layers.filter((item) => item.groupId === layer.groupId).map((item) => item.id)
+      : [id];
+    const allSelected = targetIds.every((targetId) => selectedLayerIds.includes(targetId));
+    const nextIds = additive
+      ? allSelected
+        ? selectedLayerIds.filter((targetId) => !targetIds.includes(targetId))
+        : [...new Set([...selectedLayerIds, ...targetIds])]
+      : targetIds;
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
     setCropModeSlot(null);
-    setSelectedLayerId(id);
+    setSelectedLayerIds(nextIds);
+    setSelectedLayerId(nextIds.includes(id) ? id : nextIds.at(-1) ?? null);
     showDesignSection(layer.section ?? "cover");
     requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
+  }
+
+  function groupSelectedAssetLayers() {
+    const candidates = selectedAssetLayers.filter((layer) => !layer.locked);
+    if (candidates.length < 2) return;
+    const section = candidates[0]?.section ?? "cover";
+    if (candidates.some((layer) => (layer.section ?? "cover") !== section)) {
+      setNotice(locale === "en" ? "Group layers inside the same section." : "Group hanya untuk layer dalam section yang sama.");
+      return;
+    }
+    const groupId = `group-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;
+    const ids = new Set(candidates.map((layer) => layer.id));
+    change({ layers: design.layers.map((layer) => ids.has(layer.id) ? { ...layer, groupId } : layer) });
+    setSelectedLayerIds(candidates.map((layer) => layer.id));
+    setSelectedLayerId(candidates.at(-1)?.id ?? null);
+  }
+
+  function ungroupSelectedAssetLayers() {
+    const groupIds = new Set(selectedAssetLayers.map((layer) => layer.groupId).filter((value): value is string => Boolean(value)));
+    if (!groupIds.size) return;
+    change({
+      layers: design.layers.map((layer) => {
+        if (!layer.groupId || !groupIds.has(layer.groupId) || layer.locked) return layer;
+        const next = { ...layer };
+        delete next.groupId;
+        return next;
+      }),
+    });
   }
 
   function copySelectedAssetLayer() {
@@ -792,8 +840,35 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function updateAssetLayer(id: string, patch: Partial<InvitationAssetLayer>) {
-    if (!design.layers.some((layer) => layer.id === id)) return;
+    const source = design.layers.find((layer) => layer.id === id);
+    if (!source) return;
     if (patch.section && (design.sections[patch.section] === false || !studioObjectSections.includes(patch.section))) return;
+
+    const patchKeys = Object.keys(patch);
+    const movingSelection = selectedLayerIds.length > 1
+      && selectedLayerIds.includes(id)
+      && patchKeys.length > 0
+      && patchKeys.every((key) => key === "x" || key === "y")
+      && !source.locked;
+
+    if (movingSelection) {
+      const dx = patch.x === undefined ? 0 : patch.x - source.x;
+      const dy = patch.y === undefined ? 0 : patch.y - source.y;
+      const sourceSection = source.section ?? "cover";
+      const selected = new Set(selectedLayerIds);
+      change({
+        layers: design.layers.map((layer) => {
+          if (!selected.has(layer.id) || layer.locked || (layer.section ?? "cover") !== sourceSection) return layer;
+          return {
+            ...layer,
+            x: Math.min(100, Math.max(0, layer.x + dx)),
+            y: Math.min(100, Math.max(0, layer.y + dy)),
+          };
+        }),
+      });
+      return;
+    }
+
     change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...patch } : layer) });
     if (patch.section) {
       showDesignSection(patch.section);
@@ -802,8 +877,13 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function removeAssetLayer(id: string) {
-    if (design.layers.find((layer) => layer.id === id)?.locked) return;
-    change({ layers: design.layers.filter((layer) => layer.id !== id) });
+    const selected = selectedLayerIds.includes(id) && selectedLayerIds.length > 1
+      ? selectedLayerIds
+      : [id];
+    const removable = new Set(selected.filter((layerId) => !design.layers.find((layer) => layer.id === layerId)?.locked));
+    if (!removable.size) return;
+    change({ layers: design.layers.filter((layer) => !removable.has(layer.id)) });
+    setSelectedLayerIds([]);
     setSelectedLayerId(null);
   }
 
@@ -881,7 +961,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         event.preventDefault();
         copySelectedAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "x") {
-        if (!selectedAssetLayer || selectedAssetLayer.locked) return;
+        if (!selectedAssetLayer || selectedAssetLayer.locked || selectedLayerIds.length > 1) return;
         event.preventDefault();
         setCopiedAssetLayer({ ...selectedAssetLayer });
         removeAssetLayer(selectedAssetLayer.id);
@@ -1211,6 +1291,20 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
           <div className="dc-studio-canvas-layout">
             <aside className="dc-studio-layer-list" aria-label={locale === "en" ? "Asset list" : "Daftar aset"}>
               <div className="dc-studio-layer-list-head">{locale === "en" ? "Assets" : "Asset"} {design.layers.length}/{MAX_ASSET_LAYERS}</div>
+              {(selectedLayerIds.length > 1 || selectedAssetLayers.some((layer) => layer.groupId)) && (
+                <div className="dc-studio-layer-group-actions" role="group" aria-label={locale === "en" ? "Layer grouping" : "Pengelompokan layer"}>
+                  {selectedLayerIds.length > 1 && (
+                    <button type="button" onClick={groupSelectedAssetLayers}>
+                      {locale === "en" ? "Group" : "Group"}
+                    </button>
+                  )}
+                  {selectedAssetLayers.some((layer) => layer.groupId) && (
+                    <button type="button" onClick={ungroupSelectedAssetLayers}>
+                      {locale === "en" ? "Ungroup" : "Ungroup"}
+                    </button>
+                  )}
+                </div>
+              )}
               <div className="dc-studio-layer-list-items">
                 {[...design.layers].reverse().map((layer) => {
                   const assetNumber = design.layers.indexOf(layer) + 1;
@@ -1222,8 +1316,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                       <button
                         type="button"
                         className="dc-studio-layer-select-button"
-                        aria-pressed={selectedLayerId === layer.id}
-                        onClick={() => focusDesignObject(layer.id)}
+                        aria-pressed={selectedLayerIds.includes(layer.id) || selectedLayerId === layer.id}
+                        onClick={(event) => focusDesignObject(layer.id, event.shiftKey)}
                         title={layerName}
                       >
                         {layerName}
@@ -1294,7 +1388,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                     designKey={designKey}
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
-                    onSelectAssetLayer={(id) => { setSelectedSectionKey(null); setSelectedRsvpElementKey(null); setSelectedCopyField(null); setSelectedSectionElement(null); setSelectedLayerId(id); }}
+                    selectedAssetLayerIds={selectedLayerIds}
+                    onSelectAssetLayer={(id, additive) => focusDesignObject(id, Boolean(additive))}
                     onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
@@ -1317,7 +1412,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                 selectedIndex={selectedAssetIndex}
                 layerCount={design.layers.length}
                 sections={design.sections}
-                onClose={() => setSelectedLayerId(null)}
+                onClose={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
                 onUpdate={updateAssetLayer}
                 onPosition={positionAssetLayer}
               />
@@ -1328,7 +1423,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                 selectedAssetIndex={selectedAssetIndex}
                 layerCount={design.layers.length}
                 sections={design.sections}
-                onDeselect={() => setSelectedLayerId(null)}
+                onDeselect={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
                 onUpdate={updateAssetLayer}
                 onPosition={positionAssetLayer}
               />
