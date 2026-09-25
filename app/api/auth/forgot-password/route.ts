@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createToken } from "@/lib/auth";
 import { checkPublicRateLimit, getClientIp } from "@/lib/security/public-rate-limit";
+import { sendEmail } from "@/lib/notifications/email";
 
 const action = "PASSWORD_RESET";
 
@@ -34,7 +35,14 @@ export async function POST(request: Request) {
         },
       });
       const resetUrl = `${process.env.APP_URL ?? "http://localhost:3000"}/reset-password?token=${token}`;
-      console.info(`[DEV] Reset password ${email}: ${resetUrl}`);
+      const mail = await sendEmail({
+        to: email,
+        subject: "Reset kata sandi — DC Organizer",
+        html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#21191c;line-height:1.6"><h2>DC Organizer</h2><p>Kami menerima permintaan untuk mengganti kata sandi akunmu.</p><p><a href="${resetUrl}">Buat kata sandi baru</a></p><p>Link berlaku 30 menit dan hanya dapat digunakan sekali. Jika kamu tidak meminta ini, abaikan email ini.</p></body></html>`,
+      });
+      if (!mail.sent && process.env.NODE_ENV !== "production") {
+        console.info(`[DEV] Reset password ${email}: ${resetUrl}`);
+      }
     }
 
     // Deliberately identical for known/unknown email to avoid account enumeration.
