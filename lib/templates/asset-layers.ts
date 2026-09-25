@@ -1,3 +1,5 @@
+import { invitationFonts } from "@/lib/templates/design";
+
 /** Template-safe, invitation-scoped artwork and optional decorative text. */
 export const studioObjectSections = [
   "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
@@ -20,10 +22,20 @@ export type InvitationAssetLayer = {
   rotation?: number;
   fontSize?: number;
   fontRole?: "heading" | "body";
+  fontFamily?: string;
+  fontWeight?: number;
+  textAlign?: "left" | "center" | "right";
+  letterSpacing?: number;
+  lineHeight?: number;
   color?: string;
 };
 
 export const MAX_ASSET_LAYERS = 10;
+export const studioTextFontFamilies = [...new Set(
+  Object.values(invitationFonts).flatMap((item) => [item.heading, item.body]),
+)].sort((a, b) => a.localeCompare(b));
+
+const studioTextFontSet = new Set(studioTextFontFamilies);
 const assetRoots = ["/template/", "/templates/"];
 const numberBetween = (input: unknown, min: number, max: number, fallback: number) =>
   typeof input === "number" && Number.isFinite(input) ? Math.min(max, Math.max(min, input)) : fallback;
@@ -58,8 +70,13 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (textObject) {
       layer.kind = "text";
       layer.text = text;
-      layer.fontSize = numberBetween(entry.fontSize, 10, 72, 24);
+      layer.fontSize = numberBetween(entry.fontSize, 10, 144, 24);
       layer.fontRole = entry.fontRole === "body" ? "body" : "heading";
+      if (typeof entry.fontFamily === "string" && studioTextFontSet.has(entry.fontFamily)) layer.fontFamily = entry.fontFamily;
+      layer.fontWeight = numberBetween(entry.fontWeight, 300, 900, 400);
+      if (entry.textAlign === "left" || entry.textAlign === "center" || entry.textAlign === "right") layer.textAlign = entry.textAlign;
+      layer.letterSpacing = numberBetween(entry.letterSpacing, -2, 12, 0);
+      layer.lineHeight = numberBetween(entry.lineHeight, 0.8, 2.5, 1.2);
       layer.color = typeof entry.color === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.color) ? entry.color : "#C07A84";
     }
     if (entry.height !== undefined) layer.height = numberBetween(entry.height, 3, 200, layer.width);
