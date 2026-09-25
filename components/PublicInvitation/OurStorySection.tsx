@@ -6,11 +6,13 @@
 export default function OurStorySection({
   story,
   theme,
+  preview = false,
 }: {
   story?: string | null;
   theme: string;
+  preview?: boolean;
 }) {
-  if (!story?.trim()) return null;
+  if (!story?.trim() && !preview) return null;
 
   const rose = theme === "romantic-rose";
   const zen = theme === "zen-atelier";
@@ -42,7 +44,7 @@ export default function OurStorySection({
           aria-hidden="true"
           className={`my-6 block h-px w-12 ${left || pencil ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
         />
-        <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8">{story.trim()}</p>
+        <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8">{story?.trim() || (preview ? "Klik untuk menulis Our Story" : "")}</p>
       </div>
     </section>
   );
