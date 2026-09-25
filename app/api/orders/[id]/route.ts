@@ -24,10 +24,45 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (order.status !== "PENDING") return NextResponse.json({ error: "Invoice ini sudah tidak menunggu pembayaran." }, { status: 409 });
 
   const body = await request.json();
+  const action = String(body.action ?? "");
+
+  if (action === "REPORT_PAID") {
+    const existing = await prisma.auditLog.findFirst({
+      where: { actorId: user.id, action: "PAYMENT_REPORTED", entity: "PaymentOrder", entityId: order.id },
+      orderBy: { createdAt: "desc" },
+    });
+    const report = existing ?? await prisma.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: "PAYMENT_REPORTED",
+        entity: "PaymentOrder",
+        entityId: order.id,
+        metadata: { invoiceNumber: order.invoiceNumber, packageKey: order.packageKey },
+      },
+    });
+    return NextResponse.json({ order: { ...order, reportedAt: report.createdAt } });
+  }
+
   const proofUrl = String(body.proofUrl ?? "").trim();
   if (!proofUrl || !validProof(proofUrl)) return NextResponse.json({ error: "Upload bukti transfer berupa JPG, PNG, WEBP, PDF, atau masukkan URL file." }, { status: 400 });
   if (proofUrl.startsWith("data:") && proofUrl.length > 4_200_000) return NextResponse.json({ error: "File terlalu besar. Maksimal sekitar 3 MB." }, { status: 400 });
 
-  const updated = await prisma.paymentOrder.update({ where: { id }, data: { proofUrl, note: String(body.note ?? "").trim() || null } });
-  return NextResponse.json({ order: updated });
+  const result = await prisma.$transaction(async (tx) => {
+    const updated = await tx.paymentOrder.update({
+      where: { id },
+      data: { proofUrl, note: String(body.note ?? "").trim() || null },
+    });
+    const report = await tx.auditLog.create({
+      data: {
+        actorId: user.id,
+        action: "PAYMENT_PROOF_SUBMITTED",
+        entity: "PaymentOrder",
+        entityId: order.id,
+        metadata: { invoiceNumber: order.invoiceNumber, packageKey: order.packageKey },
+      },
+    });
+    return { updated, reportedAt: report.createdAt };
+  });
+
+  return NextResponse.json({ order: { ...result.updated, reportedAt: result.reportedAt } });
 }
