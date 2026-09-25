@@ -200,7 +200,8 @@ export default function RomanticRoseTemplate({
     editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} onSelect={onSelectAssetLayer} onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (key: InvitationSectionKey, render: () => React.ReactNode) => {
-    if (sections[key] === false) return null;
+    const hidden = sections[key] === false;
+    if (hidden && !preview) return null;
     return instancesForSection(sectionLayout, key).map((instance) => (
       <EditableSectionInstance
         key={instance.id}
@@ -208,6 +209,7 @@ export default function RomanticRoseTemplate({
         order={instance.order}
         total={sectionLayout.length}
         preview={preview}
+        hidden={hidden}
         actions={sectionEditorActions}
       >
         {render()}
