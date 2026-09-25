@@ -2,7 +2,13 @@
 
 import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSectionKey } from "@/lib/templates/sections";
-import type { InvitationSectionAlign, InvitationSectionAnimation, InvitationSectionStyle } from "@/lib/templates/section-styles";
+import type { InvitationSectionAlign, InvitationSectionStyle } from "@/lib/templates/section-styles";
+import {
+  getSectionAnimationPreset,
+  sectionAnimationGroups,
+  sectionAnimationPresets,
+  type InvitationSectionAnimation,
+} from "@/lib/templates/section-animations";
 
 export default function SectionInspector({
   locale,
@@ -21,6 +27,7 @@ export default function SectionInspector({
 }) {
   const en = locale === "en";
   const title = invitationSectionItems.find((item) => item.key === sectionKey)?.title ?? sectionKey;
+  const selectedAnimationPreset = getSectionAnimationPreset(style?.animation);
   const optionalNumber = (
     label: string,
     value: number | undefined,
@@ -109,16 +116,22 @@ export default function SectionInspector({
           value={style?.animation ?? ""}
           onChange={(event) => {
             const value = event.target.value as InvitationSectionAnimation | "";
-            onUpdate({ animation: value || undefined });
+            onUpdate({ animation: value || undefined, animationDuration: undefined });
           }}
         >
           <option value="">{en ? "Follow template" : "Ikuti template"}</option>
           <option value="none">{en ? "Off" : "Mati"}</option>
-          <option value="fade">Fade</option>
-          <option value="rise">{en ? "Rise" : "Naik"}</option>
-          <option value="slide-left">{en ? "Slide from left" : "Geser dari kiri"}</option>
-          <option value="slide-right">{en ? "Slide from right" : "Geser dari kanan"}</option>
-          <option value="zoom">Zoom</option>
+          {sectionAnimationGroups.map((group) => (
+            <optgroup key={group.key} label={en ? group.labelEn : group.labelId}>
+              {sectionAnimationPresets
+                .filter((preset) => preset.group === group.key)
+                .map((preset) => (
+                  <option key={preset.key} value={preset.key}>
+                    {en ? preset.labelEn : preset.labelId}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
         </select>
       </div>
 
@@ -132,7 +145,7 @@ export default function SectionInspector({
                 min="0.2"
                 max="2.5"
                 step="0.1"
-                value={style.animationDuration ?? 0.7}
+                value={style.animationDuration ?? selectedAnimationPreset?.duration ?? 0.7}
                 onChange={(event) => {
                   const next = event.currentTarget.valueAsNumber;
                   if (Number.isFinite(next)) onUpdate({ animationDuration: Math.min(2.5, Math.max(0.2, next)) });
