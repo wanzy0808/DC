@@ -17,6 +17,10 @@ const photoSlots = read("lib/templates/photo-slots.ts");
 const photoSlotInspector = read("components/InvitationStudio/PhotoSlotInspector.tsx");
 const photoAnimationHook = read("components/PublicInvitation/use-photo-animations.ts");
 const photoParallaxRuntime = read("components/PublicInvitation/photo-parallax-runtime.ts");
+const copyMotionModel = read("lib/templates/editable-copy-motion.ts");
+const copyMotionControls = read("components/InvitationStudio/CopyMotionControls.tsx");
+const copyAnimationHook = read("components/PublicInvitation/use-copy-animations.ts");
+const ourStorySection = read("components/PublicInvitation/OurStorySection.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romanticTemplate = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
@@ -675,5 +679,55 @@ test("Photo slots and gallery use the shared entrance runtime without touching c
   assert.match(photoParallaxRuntime, /prefers-reduced-motion: reduce/);
   assert.match(photoParallaxRuntime, /node\.style\.translate =/);
   assert.match(photoParallaxRuntime, /strength \* 10/);
+});
+
+test("Editable template copy motion is a separate visual design token", () => {
+  const designerState = read("components/InvitationStudio/designer-state.ts");
+  const designerTypes = read("components/InvitationStudio/designer-types.ts");
+  const copyInspector = read("components/InvitationStudio/CopyTextInspector.tsx");
+
+  assert.match(copyMotionModel, /export type EditableCopyMotionUnit = "whole" \| "word" \| "character" \| "line"/);
+  assert.match(copyMotionModel, /part\.startsWith\("copyMotion="\)/);
+  assert.match(copyMotionModel, /isInvitationSectionAnimation\(source\.animation\)/);
+  assert.match(copyMotionModel, /source\.animationDuration, 0\.2, 2\.5/);
+  assert.match(copyMotionModel, /source\.animationDelay, 0, 2/);
+  assert.match(copyMotionModel, /source\.stagger, 0\.01, 0\.15/);
+
+  assert.match(designerTypes, /copyMotion: EditableCopyMotions/);
+  assert.match(designerState, /withEditableCopyMotions\(withEditableCopy\(/);
+  assert.match(designerState, /copyMotion: parseEditableCopyMotions\(key\)/);
+  assert.match(designer, /copyMotion: \{\}/);
+  assert.match(designer, /copyMotion: templateKey === design\.template \? design\.copyMotion : \{\}/);
+  assert.match(designer, /function updateCopyMotion\(/);
+  assert.match(designer, /function resetNarrativeCopyAndMotion\(/);
+  assert.match(designer, /change\(\{ copy, copyMotion \}\)/);
+
+  assert.match(copyInspector, /<CopyMotionControls/);
+  assert.match(copyMotionControls, /sectionAnimationPresets/);
+  assert.match(copyMotionControls, /value=\{motion\.unit \?\? "whole"\}/);
+  assert.match(copyMotionControls, /Preview animasi/);
+});
+
+test("Built-in editable copy uses shared whole word character and line choreography", () => {
+  assert.match(copyAnimationHook, /observeInvitationEntrances\(targets\)/);
+  assert.match(copyAnimationHook, /data-invitation-text-motion-part/);
+  assert.match(copyAnimationHook, /index \* stagger/);
+  assert.match(copyAnimationHook, /revision/);
+
+  assert.match(universalTemplate, /parseEditableCopyMotions\(activeDesignKey\)/);
+  assert.match(universalTemplate, /useInvitationCopyAnimations\(rootRef, copyMotions, editableCopy, String\(opened\)\)/);
+  assert.match(universalTemplate, /copyMotions\.greeting\?\.unit/);
+  assert.match(universalTemplate, /copyMotions\.closing\?\.unit/);
+  assert.match(universalTemplate, /copyMotions\.attendanceRequest\?\.unit/);
+  assert.match(universalTemplate, /copyMotions\.prayerWish\?\.unit/);
+  assert.match(universalTemplate, /copyMotions\.zenQuote\?\.unit/);
+
+  assert.match(romanticTemplate, /parseEditableCopyMotions\(activeDesignKey\)/);
+  assert.match(romanticTemplate, /useInvitationCopyAnimations\(rootRef, copyMotions, editableCopy, String\(opened\)\)/);
+  assert.match(romanticTemplate, /copyMotions\.greeting\?\.unit/);
+  assert.match(romanticTemplate, /copyMotions\.closing\?\.unit/);
+
+  assert.match(ourStorySection, /motionUnit\?: EditableCopyMotionUnit/);
+  assert.match(ourStorySection, /<InvitationLayerTextContent text=\{storyText\} unit=\{motionUnit\}/);
 });
 
