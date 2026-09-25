@@ -25,6 +25,7 @@ import {
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
 import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
+import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type CroppablePhotoSlot, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -988,6 +989,25 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ copy: next });
   }
 
+  function updateCopyMotion(field: EditableInvitationCopyField, patch: Partial<EditableCopyMotion>) {
+    const current = design.copyMotion[field] ?? {};
+    const next: EditableCopyMotion = { ...current, ...patch };
+    for (const [key, value] of Object.entries(next)) {
+      if (value === undefined) delete (next as Record<string, unknown>)[key];
+    }
+    const copyMotion = { ...design.copyMotion };
+    if (next.animation && next.animation !== "none") copyMotion[field] = next;
+    else delete copyMotion[field];
+    change({ copyMotion });
+  }
+
+  function resetCopyMotion(field: EditableInvitationCopyField) {
+    if (!design.copyMotion[field]) return;
+    const copyMotion = { ...design.copyMotion };
+    delete copyMotion[field];
+    change({ copyMotion });
+  }
+
   function addRsvpCustomField() {
     if (design.rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS) return;
     const id = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
@@ -1758,8 +1778,13 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                 field={selectedCopyField}
                 value={design.copy[selectedCopyField] ?? invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
                 defaultValue={invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
+                motion={design.copyMotion[selectedCopyField]}
                 onChange={(value) => setNarrativeCopy(selectedCopyField, value)}
-                onReset={() => resetNarrativeCopy(selectedCopyField)}
+                onMotion={(patch) => updateCopyMotion(selectedCopyField, patch)}
+                onReset={() => {
+                  resetNarrativeCopy(selectedCopyField);
+                  resetCopyMotion(selectedCopyField);
+                }}
                 onClose={() => setSelectedCopyField(null)}
               />
             ) : selectedSectionKey ? (
