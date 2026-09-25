@@ -39,7 +39,7 @@ import {
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { InvitationSectionStyle } from "@/lib/templates/section-styles";
 import { defaultInvitationRsvpConfig, MAX_RSVP_CUSTOM_FIELDS } from "@/lib/templates/rsvp-config";
-import { defaultInvitationSectionLayout } from "@/lib/templates/section-layout";
+import { defaultInvitationSectionLayout, invitationContentSectionKeys } from "@/lib/templates/section-layout";
 import {
   ColorPanel,
   ContentPanel,
@@ -371,12 +371,22 @@ export default function InvitationDesigner() {
   }
 
   function setSection(section: InvitationSectionKey, enabled: boolean) {
-    change({
-      sections: {
-        ...design.sections,
-        [section]: enabled,
-      },
-    });
+    const sections = {
+      ...design.sections,
+      [section]: enabled,
+    };
+    if (!enabled || section === "envelope" || section === "music" || design.sectionLayout.some((item) => item.key === section)) {
+      change({ sections });
+      return;
+    }
+
+    const canonicalIndex = invitationContentSectionKeys.indexOf(section);
+    const next = [...design.sectionLayout];
+    const insertAt = next.findIndex((item) => invitationContentSectionKeys.indexOf(item.key) > canonicalIndex);
+    const instance = { id: section, key: section };
+    if (insertAt < 0) next.push(instance);
+    else next.splice(insertAt, 0, instance);
+    change({ sections, sectionLayout: next });
   }
 
   function setPhoto(slot: "cover" | "personOne" | "personTwo", id: string | null) {
@@ -555,11 +565,9 @@ export default function InvitationDesigner() {
   }
 
   function toggleSectionInstance(id: string) {
-    change({
-      sectionLayout: design.sectionLayout.map((item) =>
-        item.id === id ? { ...item, hidden: item.hidden !== true } : item,
-      ),
-    });
+    const instance = design.sectionLayout.find((item) => item.id === id);
+    if (!instance) return;
+    setSection(instance.key, design.sections[instance.key] === false);
   }
 
   function duplicateSectionInstance(id: string) {
@@ -575,9 +583,14 @@ export default function InvitationDesigner() {
   }
 
   function deleteSectionInstance(id: string) {
+    const source = design.sectionLayout.find((item) => item.id === id);
+    if (!source) return;
     const next = design.sectionLayout.filter((item) => item.id !== id);
-    if (next.length === design.sectionLayout.length) return;
-    change({ sectionLayout: next });
+    const hasSameSection = next.some((item) => item.key === source.key);
+    change({
+      sectionLayout: next,
+      ...(!hasSameSection ? { sections: { ...design.sections, [source.key]: false } } : {}),
+    });
     if (selectedSectionInstanceId === id) {
       setSelectedSectionKey(null);
       setSelectedSectionInstanceId(null);
