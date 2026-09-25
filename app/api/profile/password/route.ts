@@ -2,10 +2,19 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { createSession, getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { checkPublicRateLimit } from "@/lib/security/public-rate-limit";
 
 export async function POST(request: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "Belum login." }, { status: 401 });
+
+  const limit = checkPublicRateLimit("profile-password:" + user.id, 5, 15 * 60_000);
+  if (!limit.allowed) {
+    return NextResponse.json(
+      { error: "Terlalu banyak percobaan perubahan password. Coba lagi nanti." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSeconds) } },
+    );
+  }
 
   try {
     const body = await request.json();
@@ -24,7 +33,6 @@ export async function POST(request: Request) {
       prisma.user.update({ where: { id: user.id }, data: { passwordHash: await bcrypt.hash(newPassword, 12) } }),
       prisma.session.deleteMany({ where: { userId: user.id } }),
     ]);
-    // Rotate the active session so other signed-in devices are logged out.
     await createSession(user.id);
     return NextResponse.json({ message: "Password diperbarui." });
   } catch {
