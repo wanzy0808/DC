@@ -615,7 +615,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function duplicateSelectedAssetLayer() {
-    if (!selectedAssetLayer || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
+    if (!selectedAssetLayer || selectedAssetLayer.locked || !invitation || saving || design.layers.length >= MAX_ASSET_LAYERS) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     const next = { ...selectedAssetLayer, id, x: Math.min(100, selectedAssetLayer.x + 5), y: Math.min(100, selectedAssetLayer.y + 5) };
     change({ layers: [...design.layers, next] });
@@ -795,6 +795,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function removeAssetLayer(id: string) {
+    if (design.layers.find((layer) => layer.id === id)?.locked) return;
     change({ layers: design.layers.filter((layer) => layer.id !== id) });
     setSelectedLayerId(null);
   }
@@ -873,7 +874,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         event.preventDefault();
         copySelectedAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "x") {
-        if (!selectedAssetLayer) return;
+        if (!selectedAssetLayer || selectedAssetLayer.locked) return;
         event.preventDefault();
         setCopiedAssetLayer({ ...selectedAssetLayer });
         removeAssetLayer(selectedAssetLayer.id);
@@ -882,11 +883,11 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         event.preventDefault();
         pasteAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "d") {
-        if (!selectedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
+        if (!selectedAssetLayer || selectedAssetLayer.locked || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
       } else if (!modifier && !event.altKey && (event.key === "Delete" || event.key === "Backspace")) {
-        if (!selectedAssetLayer) return;
+        if (!selectedAssetLayer || selectedAssetLayer.locked) return;
         event.preventDefault();
         removeAssetLayer(selectedAssetLayer.id);
       } else if (!modifier && !event.altKey && event.key === "Escape" && selectedAssetLayer) {
