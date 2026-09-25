@@ -28,11 +28,11 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const email = String(body.email ?? "").trim().toLowerCase();
-    const firstName = String(body.firstName ?? "").trim();
-    const lastName = String(body.lastName ?? "").trim() || null;
+    const firstName = email.split("@")[0]?.trim() || "User";
+    const lastName = null;
     const role = roles.includes(body.role) ? body.role : "USER";
     const password = String(body.password ?? "");
-    if (!email || !firstName || password.length < 8) return NextResponse.json({ error: "Email, nama, dan password minimal 8 karakter wajib diisi." }, { status: 400 });
+    if (!email || password.length < 8) return NextResponse.json({ error: "Email dan password minimal 8 karakter wajib diisi." }, { status: 400 });
     const exists = await prisma.user.findUnique({ where: { email } });
     if (exists) return NextResponse.json({ error: "Email sudah terdaftar." }, { status: 409 });
     const user = await prisma.user.create({ data: { email, firstName, lastName, role, passwordHash: await bcrypt.hash(password, 12) }, select: { id: true, email: true, firstName: true, lastName: true, role: true } });
