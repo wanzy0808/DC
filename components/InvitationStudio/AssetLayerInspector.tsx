@@ -129,6 +129,23 @@ export default function AssetLayerInspector({
         {numberInput("Y", selectedAssetLayer.y, 0, 100, 0.1, "%", (y) => onUpdate(selectedAssetLayer.id, { y }))}
       </div>
 
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Quick position" : "Posisi cepat"}</span>
+        <div className="grid grid-cols-3 gap-1.5">
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(selectedAssetLayer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(selectedAssetLayer.id, { y: 50 })}>{en ? "Center Y" : "Tengah Y"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(selectedAssetLayer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
+        </div>
+      </div>
+
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Flip" : "Balik"}</span>
+        <div className="grid grid-cols-2 gap-1.5">
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" aria-pressed={Boolean(selectedAssetLayer.flipX)} onClick={() => onUpdate(selectedAssetLayer.id, { flipX: selectedAssetLayer.flipX ? undefined : true })}>{en ? "Horizontal" : "Horizontal"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" aria-pressed={Boolean(selectedAssetLayer.flipY)} onClick={() => onUpdate(selectedAssetLayer.id, { flipY: selectedAssetLayer.flipY ? undefined : true })}>{en ? "Vertical" : "Vertikal"}</button>
+        </div>
+      </div>
+
       {numberInput(en ? "Size" : "Size", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
       {numberInput(en ? "Rotation" : "Rotasi", selectedAssetLayer.rotation ?? 0, -180, 180, 1, "°", (rotation) => onUpdate(selectedAssetLayer.id, { rotation }))}
 
