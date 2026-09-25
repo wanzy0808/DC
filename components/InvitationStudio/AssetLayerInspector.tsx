@@ -1,6 +1,5 @@
 "use client";
 
-import { ChevronDown, ChevronUp, ChevronsDown, ChevronsUp } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
@@ -17,6 +16,26 @@ type AssetLayerInspectorProps = {
 };
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+
+function LayerStackIcon({ action }: { action: "front" | "forward" | "backward" | "back" }) {
+  const up = action === "front" || action === "forward";
+  const edge = action === "front" || action === "back";
+  return (
+    <svg viewBox="0 0 24 24" width="19" height="19" fill="none" aria-hidden="true">
+      <rect x="3.5" y="8.5" width="10" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" opacity={action === "back" ? 1 : 0.38} />
+      <rect x="6.5" y="5.5" width="10" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" opacity={action === "forward" || action === "backward" ? 1 : 0.58} />
+      <rect x="9.5" y="2.5" width="10" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.5" opacity={action === "front" ? 1 : 0.78} />
+      <path
+        d={up ? "M18.5 18.5v-5m0 0-2 2m2-2 2 2" : "M18.5 13.5v5m0 0-2-2m2 2 2-2"}
+        stroke="currentColor"
+        strokeWidth={edge ? 1.8 : 1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {edge && <path d={up ? "M16 11.5h5" : "M16 20.5h5"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />}
+    </svg>
+  );
+}
 
 export default function AssetLayerInspector({
   locale,
@@ -111,7 +130,7 @@ export default function AssetLayerInspector({
             aria-label={en ? "Bring to front" : "Paling depan"}
             title={en ? "Bring to Front" : "Paling depan"}
           >
-            <ChevronsUp size={17} />
+            <LayerStackIcon action="front" />
           </button>
           <button
             type="button"
@@ -120,7 +139,7 @@ export default function AssetLayerInspector({
             aria-label={en ? "Bring forward one layer" : "Naik 1 layer"}
             title={en ? "Bring Forward" : "Naik 1 layer"}
           >
-            <ChevronUp size={17} />
+            <LayerStackIcon action="forward" />
           </button>
           <button
             type="button"
@@ -129,7 +148,7 @@ export default function AssetLayerInspector({
             aria-label={en ? "Send backward one layer" : "Turun 1 layer"}
             title={en ? "Send Backward" : "Turun 1 layer"}
           >
-            <ChevronDown size={17} />
+            <LayerStackIcon action="backward" />
           </button>
           <button
             type="button"
@@ -138,7 +157,7 @@ export default function AssetLayerInspector({
             aria-label={en ? "Send to back" : "Paling belakang"}
             title={en ? "Send to Back" : "Paling belakang"}
           >
-            <ChevronsDown size={17} />
+            <LayerStackIcon action="back" />
           </button>
         </div>
       </div>
