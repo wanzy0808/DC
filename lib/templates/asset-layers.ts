@@ -32,6 +32,8 @@ export type InvitationAssetLayer = {
   hidden?: boolean;
   flipX?: boolean;
   flipY?: boolean;
+  /** Optional Studio group. Group IDs never affect public rendering by themselves. */
+  groupId?: string;
 };
 
 export const MAX_ASSET_LAYERS = 10;
@@ -85,6 +87,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (entry.hidden === true) layer.hidden = true;
     if (entry.flipX === true) layer.flipX = true;
     if (entry.flipY === true) layer.flipY = true;
+    if (typeof entry.groupId === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(entry.groupId)) layer.groupId = entry.groupId;
     output.push(layer);
     if (output.length === MAX_ASSET_LAYERS) break;
   }
