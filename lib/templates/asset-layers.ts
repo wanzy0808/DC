@@ -26,6 +26,10 @@ export type InvitationAssetLayer = {
   letterSpacing?: number;
   lineHeight?: number;
   color?: string;
+  /** Locked layers stay visible/selectable in Studio but cannot be transformed. */
+  locked?: boolean;
+  /** Hidden layers remain in the design/layer list but are omitted from public rendering. */
+  hidden?: boolean;
 };
 
 export const MAX_ASSET_LAYERS = 10;
@@ -75,6 +79,8 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (entry.height !== undefined) layer.height = numberBetween(entry.height, 3, 200, layer.width);
     if (studioObjectSections.includes(entry.section as StudioObjectSection)) layer.section = entry.section as StudioObjectSection;
     if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
+    if (entry.locked === true) layer.locked = true;
+    if (entry.hidden === true) layer.hidden = true;
     output.push(layer);
     if (output.length === MAX_ASSET_LAYERS) break;
   }
