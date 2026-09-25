@@ -95,6 +95,113 @@
 .dc-studio-layer-order button:hover:not(:disabled) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
 .dc-studio-layer-order button:disabled { cursor: not-allowed; opacity: .32; }
 .dc-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
+.dc-studio-add-text-box {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--primary) 48%, transparent);
+  border-radius: var(--dc-control-radius);
+  background: var(--primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+}
+.dark .dc-studio-add-text-box { color: black; }
+.dc-studio-add-text-box:hover:not(:disabled) { filter: brightness(.96); }
+.dc-studio-add-text-box:disabled { cursor: not-allowed; opacity: .4; }
+
+.dc-studio-text-list-item {
+  display: flex;
+  width: 100%;
+  min-height: 46px;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  border-radius: 12px;
+  background: transparent;
+  padding: 8px 10px;
+  text-align: left;
+}
+.dc-studio-text-list-item:hover,
+.dc-studio-text-list-item[aria-pressed="true"] {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+.dc-studio-text-list-item strong {
+  display: block;
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 700;
+}
+.dc-studio-text-list-item small {
+  display: block;
+  overflow: hidden;
+  margin-top: 2px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dc-studio-text-side {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+.dc-studio-text-content {
+  width: 100%;
+  min-height: 96px;
+  resize: vertical;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
+  border-radius: var(--dc-control-radius);
+  background: var(--background);
+  padding: 9px 10px;
+  color: var(--foreground);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  outline: none;
+}
+.dc-studio-text-content:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 14%, transparent);
+}
+.dc-studio-text-font select {
+  min-height: 42px;
+  font-size: 13px;
+}
+.dc-studio-text-color {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+.dc-studio-text-color input[type="color"] {
+  width: 44px;
+  height: 38px;
+  border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent);
+  border-radius: 10px;
+  background: var(--background);
+  padding: 2px;
+  cursor: pointer;
+}
+.dc-studio-text-color output {
+  min-width: 0;
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 700;
+}
+.dc-studio-text-counter {
+  margin-top: 10px;
+  color: var(--muted-foreground);
+  font-size: 10px;
+  text-align: right;
+}
 .dc-studio-section-side { position: sticky; top: 0; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .dc-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .dc-studio-section-side-head > div { display: grid; min-width: 0; gap: 3px; }
