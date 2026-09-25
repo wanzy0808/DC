@@ -88,6 +88,18 @@ export default function AssetLayerInspector({
         <button type="button" onClick={onDeselect} aria-label={en ? "Close asset properties" : "Tutup properti aset"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
+      <label className="dc-studio-layer-field">
+        <span>{en ? "Layer name" : "Nama layer"}</span>
+        <input
+          type="text"
+          maxLength={60}
+          value={selectedAssetLayer.name ?? ""}
+          placeholder={en ? "Optional" : "Opsional"}
+          onChange={(event) => onUpdate(selectedAssetLayer.id, { name: event.target.value || undefined })}
+          className="h-10 rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
+        />
+      </label>
+
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
