@@ -252,7 +252,7 @@ export default function TemplateDesignPage() {
           {filteredTemplates.map((template) => (
             <article key={template.key} className="group min-w-0 overflow-hidden rounded-[24px] border border-primary/25 bg-background/80 shadow-[0_8px_28px_rgba(80,45,58,0.06)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-primary/55 hover:shadow-[0_16px_38px_rgba(80,45,58,0.13)]">
               <div className="relative w-full overflow-hidden text-left">
-                {template.ready ? <TemplateCardCanvas templateKey={template.key} /> : (
+                {template.ready ? <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} /> : (
                   <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
                 )}
                 {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
@@ -328,7 +328,7 @@ export default function TemplateDesignPage() {
             <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
               <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
                 {selected.ready ? (
-                  <TemplateCanvas key={selected.key} templateKey={selected.key} sections={{ ...sections, envelope: false }} />
+                  <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...sections, envelope: false }} />
                 ) : (
                   <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /></div>
                 )}
