@@ -38,7 +38,7 @@ import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
 import CopyTextInspector from "@/components/InvitationStudio/CopyTextInspector";
 import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
-import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
   invitationPalettes,
@@ -589,6 +589,38 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, width: 28, opacity: 1 }] });
     setSelectedLayerId(id);
     showDesignSection(section);
+    setInspectorOpen(true);
+  }
+
+  function addShapeObject(shape: InvitationShapeKind) {
+    const section = textTargetSection;
+    if (design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
+    const id = crypto.randomUUID().replace(/-/g, "");
+    const accent = palette?.accent ?? "#C07A84";
+    const size = shape === "circle" ? 28 : shape === "line" ? 42 : 38;
+    const height = shape === "circle" ? 28 : shape === "line" ? 3 : 22;
+    change({ layers: [...design.layers, {
+      id,
+      kind: "shape",
+      shape,
+      src: "",
+      section,
+      x: 50,
+      y: 42,
+      width: size,
+      height,
+      opacity: 1,
+      rotation: 0,
+      fill: accent,
+      stroke: accent,
+      strokeWidth: shape === "line" ? 2 : 0,
+      radius: shape === "circle" ? 100 : 0,
+      name: shape === "rectangle" ? "Rectangle" : shape === "circle" ? "Circle" : "Line",
+    }] });
+    setSelectedLayerIds([id]);
+    setSelectedLayerId(id);
+    showDesignSection(section);
+    setPanel("assets");
     setInspectorOpen(true);
   }
 
@@ -1353,7 +1385,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             />
           )}
           {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} />}
+          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onAddShape={addShapeObject} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
