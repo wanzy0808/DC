@@ -579,11 +579,12 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 
 ### Deferred — richer animation system
 
-- [ ] Expand from section animation to **element animation**: text, photo, asset and ornament presets.
+- [x] Expand from section animation to **element animation**: text, photo, asset and ornament presets.
   - [x] Fase awal: teks dekoratif, asset gambar/ornamen, dan shape layer memakai katalog 35 preset section yang sama, termasuk durasi/jeda, persistence di designKey, preview/public renderer, IntersectionObserver, dan reduced-motion. Foto slot/gallery tetap tahap berikutnya. (26 September 2026)
   - [x] Section dan object layer sekarang memakai satu `entrance-animation-runtime.ts`; efek selesai tetap bisa di-cleanup saat preset berubah, dan inspector layer punya tombol **Preview animasi** tanpa mereset desain. (26 September 2026)
-- [ ] Add text choreography such as per-word/per-character stagger where it improves premium templates.
-  - [x] Fase awal decorative text layer: mode satu kotak/per kata/per huruf/per baris + stagger 0.01–0.15s, memakai semua preset entrance bersama; teks >96 karakter otomatis turun dari per-huruf ke per-kata untuk menjaga performa. Built-in template copy masih tahap berikutnya. (26 September 2026)
+- [x] Add text choreography such as per-word/per-character stagger where it improves premium templates.
+  - [x] Decorative text layer: mode satu kotak/per kata/per huruf/per baris + stagger 0.01–0.15s, memakai semua preset entrance bersama; teks >96 karakter otomatis turun dari per-huruf ke per-kata untuk menjaga performa. (26 September 2026)
+  - [x] Built-in editable template copy (Greeting/Closing/Our Story serta copy khusus Zen/Pencil) memakai token visual terpisah `copyMotion=`, shared entrance runtime, whole/per-kata/per-huruf/per-baris, durasi/jeda/stagger, stage replay setelah Amplop terbuka, dan satu Reset atomik untuk isi + motion. (26 September 2026)
 - [x] Add photo/gallery choreography, mask reveals and lightweight parallax.
   - [x] Foto Cover/Mempelai/Galeri memakai katalog entrance yang sama; preset reveal/wipe/curtain berfungsi sebagai mask reveal, Galeri punya stagger, dan parallax 0–20 px memakai runtime rAF terpisah dari crop transform. Selection foto membuka inspector kanan, sedangkan ganti foto/crop tetap di menu Foto kiri. Reduced-motion tetap mematikan motion publik/preview. (26 September 2026)
 - [ ] Use Motion/GSAP selectively for premium timelines; keep simple section entrances on the lightweight shared engine.
