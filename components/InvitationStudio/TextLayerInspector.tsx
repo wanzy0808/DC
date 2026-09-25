@@ -225,6 +225,54 @@ export default function TextLayerInspector({
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
         </div>
       </div>
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Shadow" : "Bayangan"}</span>
+        <button
+          type="button"
+          className="min-h-9 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
+          aria-pressed={(layer.shadowOpacity ?? 0) > 0}
+          onClick={() => onUpdate(layer.id, {
+            shadowOpacity: (layer.shadowOpacity ?? 0) > 0 ? 0 : 0.22,
+            shadowColor: layer.shadowColor ?? "#000000",
+            shadowX: layer.shadowX ?? 0,
+            shadowY: layer.shadowY ?? 6,
+            shadowBlur: layer.shadowBlur ?? 12,
+          })}
+        >
+          {(layer.shadowOpacity ?? 0) > 0 ? (en ? "Shadow on" : "Bayangan aktif") : (en ? "Add shadow" : "Tambah bayangan")}
+        </button>
+      </div>
+
+      {(layer.shadowOpacity ?? 0) > 0 && (
+        <div className="space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 p-2">
+          <label className="dc-studio-layer-field">
+            <span>{en ? "Shadow color" : "Warna bayangan"}</span>
+            <input
+              type="color"
+              value={layer.shadowColor ?? "#000000"}
+              onChange={(event) => onUpdate(layer.id, { shadowColor: event.target.value })}
+              className="h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+            />
+          </label>
+          <div className="dc-studio-layer-grid">
+            {numberInput("X", layer.shadowX ?? 0, -50, 50, 1, "px", (shadowX) => ({ shadowX }))}
+            {numberInput("Y", layer.shadowY ?? 6, -50, 50, 1, "px", (shadowY) => ({ shadowY }))}
+          </div>
+          {numberInput(en ? "Blur" : "Blur", layer.shadowBlur ?? 12, 0, 60, 1, "px", (shadowBlur) => ({ shadowBlur }))}
+          <label className="dc-studio-layer-opacity">
+            <span>{en ? "Shadow opacity" : "Opasitas bayangan"} <output>{Math.round((layer.shadowOpacity ?? 0.22) * 100)}%</output></span>
+            <input
+              type="range"
+              min="0.05"
+              max="1"
+              step="0.05"
+              value={layer.shadowOpacity ?? 0.22}
+              onChange={(event) => onUpdate(layer.id, { shadowOpacity: Number(event.target.value) })}
+            />
+          </label>
+        </div>
+      )}
+
       {numberInput(en ? "Box width" : "Lebar kotak", layer.width, 5, 85, 0.1, "%", (width) => ({ width }))}
       {numberInput(en ? "Rotation" : "Rotasi", layer.rotation ?? 0, -180, 180, 1, "°", (rotation) => ({ rotation }))}
 
