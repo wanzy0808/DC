@@ -67,7 +67,8 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => setNarrativeCopy\(selectedCopyField, value\)\}/);
   assert.match(studio, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
-  assert.doesNotMatch(studio.split("async function save()")[1]?.split("if (loadError)")[0] || "", /description:\s*|eventNotes:\s*|groomName:\s*|brideName:\s*|venue:\s*|eventDate:\s*/);
+  const customerSave = studio.split('fetch("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
+  assert.doesNotMatch(customerSave, /description:\s*|eventNotes:\s*|groomName:\s*|brideName:\s*|venue:\s*|eventDate:\s*/);
   assert.match(preview, /<RomanticRoseTemplate invitation=\{previewInvitation\} designKey=\{designKey\}/);
   assert.match(universal, /resolveEditableCopy\(activeDesignKey, key, invitation\.description\)/);
   assert.match(universal, /\{editableCopy\.greeting\}/);
