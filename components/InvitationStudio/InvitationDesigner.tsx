@@ -609,11 +609,17 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       ? design.layers.filter((item) => item.groupId === layer.groupId).map((item) => item.id)
       : [id];
     const allSelected = targetIds.every((targetId) => selectedLayerIds.includes(targetId));
-    const nextIds = additive
-      ? allSelected
-        ? selectedLayerIds.filter((targetId) => !targetIds.includes(targetId))
-        : [...new Set([...selectedLayerIds, ...targetIds])]
-      : targetIds;
+    const keepExistingMultiSelection = !additive
+      && !layer.groupId
+      && selectedLayerIds.length > 1
+      && selectedLayerIds.includes(id);
+    const nextIds = keepExistingMultiSelection
+      ? selectedLayerIds
+      : additive
+        ? allSelected
+          ? selectedLayerIds.filter((targetId) => !targetIds.includes(targetId))
+          : [...new Set([...selectedLayerIds, ...targetIds])]
+        : targetIds;
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedRsvpElementKey(null);
