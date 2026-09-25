@@ -470,7 +470,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 2)}
 
-          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} />}
+          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} preview={preview} />}
 
           {section("event", key === "pencil-reverie" ? (
             <div className="pr-event-story">
