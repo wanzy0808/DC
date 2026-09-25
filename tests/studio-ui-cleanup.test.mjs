@@ -338,3 +338,15 @@ test("Studio layers can be locked and hidden without removing them from the desi
   assert.match(designer, /dc-studio-layer-quick/);
   assert.match(designer, /layerName/);
 });
+
+
+test("Studio design layers snap to section and nearby alignment guides", () => {
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(assetRenderer, /const xCandidates = \[/);
+  assert.match(assetRenderer, /target: 50, guide: 50/);
+  assert.match(assetRenderer, /siblings\.filter/);
+  assert.match(assetRenderer, /distance: 1\.4/);
+  assert.match(assetRenderer, /guides\.x !== undefined/);
+  assert.match(assetRenderer, /guides\.y !== undefined/);
+  assert.match(assetRenderer, /event\.shiftKey \? 5 : 1/);
+});
