@@ -1,6 +1,11 @@
 import type { CSSProperties } from "react";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import { isInvitationSectionAnimation, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
+import {
+  isInvitationPremiumTimeline,
+  premiumTimelineSectionKeys,
+  type InvitationPremiumTimeline,
+} from "@/lib/templates/premium-timelines";
 
 const visualSectionKeys = [
   "envelope", "cover", "greeting", "identity", "event", "dateTime", "gallery",
@@ -18,6 +23,8 @@ export type InvitationSectionStyle = {
   animation?: InvitationSectionAnimation;
   animationDuration?: number;
   animationDelay?: number;
+  /** Opt-in GSAP storytelling sequence; mutually exclusive with simple entrance animation. */
+  timeline?: InvitationPremiumTimeline;
 };
 
 export type InvitationSectionStyles = Partial<Record<InvitationSectionKey, InvitationSectionStyle>>;
@@ -47,9 +54,13 @@ export function sanitizeInvitationSectionStyles(value: unknown): InvitationSecti
     if (opacity !== undefined && opacity !== 1) style.opacity = opacity;
     if (alignValues.has(source.align as InvitationSectionAlign)) style.align = source.align as InvitationSectionAlign;
     if (background) style.background = background;
-    if (isInvitationSectionAnimation(source.animation)) style.animation = source.animation;
-    if (animationDuration !== undefined) style.animationDuration = animationDuration;
-    if (animationDelay !== undefined) style.animationDelay = animationDelay;
+    if (isInvitationPremiumTimeline(source.timeline) && premiumTimelineSectionKeys.has(key as InvitationSectionKey)) {
+      style.timeline = source.timeline;
+    } else {
+      if (isInvitationSectionAnimation(source.animation)) style.animation = source.animation;
+      if (animationDuration !== undefined) style.animationDuration = animationDuration;
+      if (animationDelay !== undefined) style.animationDelay = animationDelay;
+    }
     if (Object.keys(style).length) output[key as InvitationSectionKey] = style;
   }
   return output;
