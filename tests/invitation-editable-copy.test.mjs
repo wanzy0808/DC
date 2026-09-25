@@ -17,6 +17,7 @@ const state = read("components/InvitationStudio/designer-state.ts");
 const preview = read("components/InvitationStudio/InvitationPreview.tsx");
 const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
 test("Isi keeps narrative slots in the renderer and edits them directly from canvas", () => {
   assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
@@ -65,18 +66,18 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /function setNarrativeCopy\(/);
   assert.match(studio, /change\(\{ copy: \{ \.\.\.design\.copy, \[field\]: text \} \}\)/);
   assert.match(studio, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => setNarrativeCopy\(selectedCopyField, value\)\}/);
-  assert.match(studio, /templateKey: designKey,/);
+  assert.match(persistence, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
-  const customerSave = studio.split('fetch("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
+  const customerSave = persistence.split('fetcher("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
   assert.doesNotMatch(customerSave, /description:\s*|eventNotes:\s*|groomName:\s*|brideName:\s*|venue:\s*|eventDate:\s*/);
   assert.match(preview, /<RomanticRoseTemplate invitation=\{previewInvitation\} designKey=\{designKey\}/);
   assert.match(universal, /resolveEditableCopy\(activeDesignKey, key, invitation\.description\)/);
-  assert.match(universal, /\{editableCopy\.greeting\}/);
-  assert.match(universal, /\{editableCopy\.closing\}/);
-  assert.match(universal, /\{editableCopy\.zenQuote\}/);
+  assert.match(universal, /text=\{editableCopy\.greeting \?\? ""\}/);
+  assert.match(universal, /text=\{editableCopy\.closing \?\? ""\}/);
+  assert.match(universal, /text=\{editableCopy\.zenQuote \?\? ""\}/);
   assert.match(romantic, /resolveEditableCopy\(designKey \|\| invitation\.templateKey, "romantic-rose", invitation\.description\)/);
-  assert.match(romantic, /\{editableCopy\.greeting\}/);
-  assert.match(romantic, /\{editableCopy\.closing\}/);
+  assert.match(romantic, /text=\{editableCopy\.greeting \?\? ""\}/);
+  assert.match(romantic, /text=\{editableCopy\.closing \?\? ""\}/);
 });
 
 test("Our Story is optional couple-owned text shown in the real Identity flow, not a new global toggle", () => {
@@ -88,8 +89,8 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   assert.match(story, /data-studio-copy-field="ourStory"/);
   assert.match(story, /Klik untuk menulis Our Story/);
   assert.match(story, /Tentang Kami/);
-  assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} \/>/);
-  assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} \/>/);
+  assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
+  assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
   assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
     ourStory: "Bermula dari pertemuan sederhana.",
   });
