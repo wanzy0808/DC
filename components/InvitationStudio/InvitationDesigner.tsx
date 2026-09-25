@@ -69,7 +69,7 @@ export default function InvitationDesigner() {
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
-    undo: "Undo design", redo: "Redo design", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Saving...", save: "Save", startOver: "Start Over",
+    undo: "Undo design", redo: "Redo design", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Saving...", save: "Save",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Sections", colors: "Colors", content: "Content", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Cover",
@@ -79,7 +79,7 @@ export default function InvitationDesigner() {
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
-    undo: "Urungkan desain", redo: "Ulangi desain", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Menyimpan...", save: "Simpan", startOver: "Ulang dari awal",
+    undo: "Urungkan desain", redo: "Ulangi desain", undoShort: "Undo", redoShort: "Redo", restartShort: "Restart", saving: "Menyimpan...", save: "Simpan",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Bagian", colors: "Warna", content: "Isi", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Cover",
@@ -645,7 +645,6 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
