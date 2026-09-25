@@ -165,7 +165,7 @@ export default function InvitationDesigner() {
     setFuture([]);
     setNotice(requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
       ? "Template dipilih. Klik Simpan Desain untuk menerapkan."
-      : "Siap diedit.");
+      : "");
   }
 
   useEffect(() => {
@@ -700,7 +700,7 @@ export default function InvitationDesigner() {
         </div>
       </div>
 
-      <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>
+      {notice && <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>}
     </section>
   );
 }
