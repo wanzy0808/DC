@@ -95,6 +95,18 @@ test("Studio keeps Save above canvas history, removes phone label and keeps stag
   assert.match(canvasToolbar, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
   assert.match(canvasToolbar, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
   assert.match(canvasToolbar, /aria-label=\{copy\.replay\}/);
+  assert.match(canvasToolbar, /onClick=\{restoreDefaults\}/);
+  const reset = designer.split("function restoreDefaults()")[1]?.split("async function deleteMusic")[0] || "";
+  assert.match(reset, /layers: \[\]/);
+  assert.match(reset, /photos: defaultPhotoAssignments\(\)/);
+  assert.match(reset, /copy: \{\}/);
+  assert.match(reset, /sections: \{ \.\.\.defaultInvitationSections \}/);
+  assert.match(reset, /setMusicUrl\("")/);
+  assert.match(reset, /setCanvasStage\("envelope"\)/);
+  assert.match(reset, /setPreviewVersion/);
+  assert.match(reset, /setSelectedLayerId\(null\)/);
+  assert.match(reset, /setCopiedAssetLayer\(null\)/);
+  assert.match(reset, /File upload tetap tersimpan di koleksi media/);
   assert.doesNotMatch(designer, /Smartphone|copy\.phone|phone: "Ponsel"|phone: "Mobile"/);
   const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
   assert.ok(canvas.indexOf("dc-studio-stage-controls") >= 0 && canvas.indexOf("dc-studio-stage-controls") < canvas.indexOf('className="dc-studio-preview-surface"'));
