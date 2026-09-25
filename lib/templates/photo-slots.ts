@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { isInvitationSectionAnimation, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
 
 /**
  * Shared, event-scoped media assignment. Stable asset IDs are persisted as part of
@@ -10,6 +11,13 @@ export type PhotoFocus = "top" | "center" | "bottom";
 export type CroppablePhotoSlot = Exclude<PhotoSlot, "gallery">;
 export type PhotoCropAspect = "template" | "original" | "1:1" | "4:5" | "3:4" | "16:9";
 export type PhotoCrop = { x: number; y: number; zoom: number; aspect?: PhotoCropAspect };
+export type PhotoMotion = {
+  animation?: InvitationSectionAnimation;
+  animationDuration?: number;
+  animationDelay?: number;
+  /** Used by gallery only; other slots ignore stagger. */
+  animationStagger?: number;
+};
 
 export type PhotoAssignments = {
   cover: string | null;
@@ -18,6 +26,7 @@ export type PhotoAssignments = {
   gallery: string[] | null;
   focus: Record<CroppablePhotoSlot, PhotoFocus>;
   crop: Record<CroppablePhotoSlot, PhotoCrop | null>;
+  motion: Partial<Record<PhotoSlot, PhotoMotion>>;
 };
 
 export const defaultPhotoAssignments = (): PhotoAssignments => ({
@@ -27,6 +36,7 @@ export const defaultPhotoAssignments = (): PhotoAssignments => ({
   gallery: null,
   focus: { cover: "center", personOne: "center", personTwo: "center" },
   crop: { cover: null, personOne: null, personTwo: null },
+  motion: {},
 });
 
 const focusValues = new Set<PhotoFocus>(["top", "center", "bottom"]);
@@ -50,6 +60,29 @@ function sanitizeCrop(value: unknown): PhotoCrop | null {
   };
   if (cropAspectValues.has(source.aspect as PhotoCropAspect) && source.aspect !== "template") crop.aspect = source.aspect as PhotoCropAspect;
   return crop.x === 50 && crop.y === 50 && crop.zoom === 1 && !crop.aspect ? null : crop;
+}
+
+function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | undefined {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
+  const source = value as Record<string, unknown>;
+  if (!isInvitationSectionAnimation(source.animation) || source.animation === "none") return undefined;
+  const motion: PhotoMotion = { animation: source.animation };
+  if (source.animationDuration !== undefined) motion.animationDuration = bounded(source.animationDuration, 0.2, 2.5, 0.7);
+  if (source.animationDelay !== undefined) motion.animationDelay = bounded(source.animationDelay, 0, 2, 0);
+  if (gallery && source.animationStagger !== undefined) motion.animationStagger = bounded(source.animationStagger, 0.01, 0.2, 0.08);
+  return motion;
+}
+
+function sanitizePhotoMotions(value: unknown): PhotoAssignments["motion"] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+  const source = value as Record<string, unknown>;
+  const motion: PhotoAssignments["motion"] = {};
+  const slots: PhotoSlot[] = ["cover", "personOne", "personTwo", "gallery"];
+  for (const slot of slots) {
+    const next = sanitizePhotoMotion(source[slot], slot === "gallery");
+    if (next) motion[slot] = next;
+  }
+  return motion;
 }
 
 export function parsePhotoAssignments(designKey: string): PhotoAssignments {
@@ -80,6 +113,7 @@ export function parsePhotoAssignments(designKey: string): PhotoAssignments {
         personOne: sanitizeCrop(c.personOne),
         personTwo: sanitizeCrop(c.personTwo),
       },
+      motion: sanitizePhotoMotions(value.motion),
     };
   } catch {
     return defaultPhotoAssignments();
@@ -91,6 +125,7 @@ export function withPhotoAssignments(designKey: string, assignments: PhotoAssign
   const normalized: PhotoAssignments = {
     ...assignments,
     crop: assignments.crop ?? { cover: null, personOne: null, personTwo: null },
+    motion: sanitizePhotoMotions(assignments.motion),
   };
   if (JSON.stringify(normalized) === JSON.stringify(defaultPhotoAssignments())) return parts.join("::");
   return `${parts.join("::")}::photos=${encodeURIComponent(JSON.stringify(normalized))}`;
