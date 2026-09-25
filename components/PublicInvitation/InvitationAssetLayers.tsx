@@ -22,6 +22,16 @@ type Props = {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const round = (value: number) => Math.round(value * 10) / 10;
+function layerShadowFilter(layer: InvitationAssetLayer) {
+  const opacity = layer.shadowOpacity ?? 0;
+  if (opacity <= 0) return undefined;
+  const hex = (layer.shadowColor ?? "#000000").replace("#", "");
+  const value = Number.parseInt(hex, 16);
+  const red = (value >> 16) & 255;
+  const green = (value >> 8) & 255;
+  const blue = value & 255;
+  return `drop-shadow(${layer.shadowX ?? 0}px ${layer.shadowY ?? 8}px ${layer.shadowBlur ?? 18}px rgba(${red}, ${green}, ${blue}, ${opacity}))`;
+}
 
 function findSectionAt(x: number, y: number, root: HTMLElement): { section: StudioObjectSection; rect: DOMRect } | null {
   const invitation = root.closest(".dc-studio-preview-surface");
@@ -58,6 +68,7 @@ function EditableLayer({
   const [live, setLive] = useState<LayerPatch>({});
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
   const displayed = { ...layer, ...live };
+  const shadowFilter = layerShadowFilter(layer);
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
     if (!editable || layer.locked || !onUpdate || !root.current || event.button !== 0) return;
@@ -198,6 +209,7 @@ function EditableLayer({
         transform: layer.shape === "line"
           ? `translateY(-50%) scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`
           : `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`,
+        filter: shadowFilter,
       }}
     />
   ) : null;
@@ -228,7 +240,8 @@ function EditableLayer({
             letterSpacing: layer.letterSpacing ?? 0,
             lineHeight: layer.lineHeight ?? 1.2,
             color: layer.color ?? "#C07A84",
-          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
+            filter: shadowFilter,
+          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
         </button>
       ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words" style={{
         fontFamily: layer.fontFamily
@@ -240,7 +253,7 @@ function EditableLayer({
         letterSpacing: layer.letterSpacing ?? 0,
         lineHeight: layer.lineHeight ?? 1.2,
         color: layer.color ?? "#C07A84",
-      }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
+      }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
