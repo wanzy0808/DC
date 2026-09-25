@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 async function requireAdmin() {
   const user = await getCurrentUser();
@@ -48,6 +49,7 @@ export async function GET() {
 export async function PATCH(request: Request) {
   const admin = await requireAdmin();
   if (!admin) return NextResponse.json({ error: "Akses admin diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
