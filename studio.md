@@ -34,10 +34,6 @@ Tidak semua section harus berbentuk card atau grid, dan tidak semua desain harus
 
 Perbedaan izin tidak boleh hanya berupa tombol yang disembunyikan: seluruh operasi baca/tulis harus memeriksa sesi, role, kepemilikan master, penugasan custom, dan event ID di server.
 
-### Penempatan navigasi Studio (25 September 2026)
-
-Pada viewport desktop, tempatkan canvas undangan sebagai bidang kerja paling kiri dan selebar ruang yang tersedia. Semua menu yang sebelumnya berada di kiri (Template, Bagian, Warna, Font, Isi, Foto, Aset, Teks, Musik) **dipindahkan ke pinggir kanan frame Studio**, bukan ke sisi kanan tengah canvas: inspector/properti berada persis di kiri rail alat yang menempel tepi kanan. Kontrol layer terpilih menyatu di inspector kanan, tidak lagi melayang di samping preview atau membuat panel ketiga di tengah. Ketika inspector ditutup, rail tetap di pinggir kanan; tombol buka/tutup panel mengarah ke kanan. Pada HP, rail tetap berupa menu horizontal yang mudah di-scroll di atas panel pengaturan, sedangkan tab Undangan menampilkan canvas penuh. Pertahankan tombol, desain template, isi event, gestur canvas, dan mode gelap/terang yang sudah ada.
-
 ## 4. Perilaku kanvas Designer Studio
 
 Kanvas utama harus merender undangan **asli** (amplop + 13 section + kontrol musik sesuai `template.md`), termasuk state non-submitting untuk form di mode desain. Desainer dapat memilih section, memilih objek, drag-and-drop, resize, rotate, menyusun layer, lock/hide objek dekoratif, duplicate, delete objek yang diizinkan, undo/redo, zoom/pan, snap/guides opsional, dan mengedit properti kontekstual dari inspector. Perintah Delete/Backspace, Ctrl/Cmd+C/V, Ctrl/Cmd+Z/Shift+Z harus hanya bekerja saat fokus berada pada kanvas dan tidak sedang mengetik di input/textarea/contenteditable atau mengganggu shortcut browser.
