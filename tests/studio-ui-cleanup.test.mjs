@@ -433,3 +433,16 @@ test("Studio has standard multi-select keyboard shortcuts", () => {
   assert.match(designer, /groupSelectedAssetLayers\(\)/);
   assert.match(designer, /ungroupSelectedAssetLayers\(\)/);
 });
+
+
+test("Studio photo crop includes persisted aspect-ratio presets without destructive image edits", () => {
+  const photoSlots = read("lib/templates/photo-slots.ts");
+  assert.match(photos, /Rasio crop|Aspect ratio/);
+  assert.match(photos, /"original"/);
+  assert.match(photos, /"1:1"/);
+  assert.match(photos, /"4:5"/);
+  assert.match(photos, /"3:4"/);
+  assert.match(photos, /"16:9"/);
+  assert.match(photoSlots, /export type PhotoCropAspect = "template" \| "original" \| "1:1" \| "4:5" \| "3:4" \| "16:9"/);
+  assert.match(photoSlots, /aspectRatio/);
+});
