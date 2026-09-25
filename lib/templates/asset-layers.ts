@@ -66,10 +66,10 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       layer.fontSize = numberBetween(entry.fontSize, 10, 144, 24);
       layer.fontRole = entry.fontRole === "body" ? "body" : "heading";
       if (typeof entry.fontFamily === "string" && /^[A-Za-z0-9 .+_-]{1,64}$/.test(entry.fontFamily)) layer.fontFamily = entry.fontFamily;
-      layer.fontWeight = numberBetween(entry.fontWeight, 300, 900, 400);
+      if (typeof entry.fontWeight === "number" && Number.isFinite(entry.fontWeight)) layer.fontWeight = numberBetween(entry.fontWeight, 300, 900, 400);
       if (entry.textAlign === "left" || entry.textAlign === "center" || entry.textAlign === "right") layer.textAlign = entry.textAlign;
-      layer.letterSpacing = numberBetween(entry.letterSpacing, -2, 12, 0);
-      layer.lineHeight = numberBetween(entry.lineHeight, 0.8, 2.5, 1.2);
+      if (typeof entry.letterSpacing === "number" && Number.isFinite(entry.letterSpacing)) layer.letterSpacing = numberBetween(entry.letterSpacing, -2, 12, 0);
+      if (typeof entry.lineHeight === "number" && Number.isFinite(entry.lineHeight)) layer.lineHeight = numberBetween(entry.lineHeight, 0.8, 2.5, 1.2);
       layer.color = typeof entry.color === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.color) ? entry.color : "#C07A84";
     }
     if (entry.height !== undefined) layer.height = numberBetween(entry.height, 3, 200, layer.width);
