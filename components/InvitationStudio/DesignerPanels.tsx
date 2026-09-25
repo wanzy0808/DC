@@ -26,14 +26,18 @@ export function DesignerTool({
   label,
   icon,
   onClick,
+  disabled = false,
+  title,
 }: {
   active: boolean;
   label: string;
   icon: ReactNode;
   onClick: () => void;
+  disabled?: boolean;
+  title?: string;
 }) {
   return (
-    <button type="button" onClick={onClick} className="dc-studio-tool" aria-pressed={active}>
+    <button type="button" onClick={onClick} disabled={disabled} title={title} className="dc-studio-tool" aria-pressed={active}>
       {icon}<span>{label}</span>
     </button>
   );
