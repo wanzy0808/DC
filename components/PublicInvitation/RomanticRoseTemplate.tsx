@@ -300,7 +300,7 @@ export default function RomanticRoseTemplate({
 
 
 
-          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" /></div>}
+          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} /></div>}
 
           {renderSectionInstances("event", () => (
             <section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
