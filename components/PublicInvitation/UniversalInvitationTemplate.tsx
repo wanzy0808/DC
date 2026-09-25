@@ -28,6 +28,7 @@ import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { resolveInvitationPhotos, type PhotoAssignments, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
+import { parseInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -178,6 +179,7 @@ export default function UniversalInvitationTemplate({
   const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
@@ -498,8 +500,8 @@ export default function UniversalInvitationTemplate({
 
           {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" ? <>
             <p className="mx-auto mb-7 max-w-sm text-sm leading-7">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
-            <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
-          </> : <RsvpForm slug={invitation.slug} preview={preview} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
+            <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
+          </> : <RsvpForm slug={invitation.slug} preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
             <GuestWishes slug={invitation.slug} preview={preview} initialName={personalGuest?.name} appearance={key === "zen-atelier" ? "zen" : "default"} />
