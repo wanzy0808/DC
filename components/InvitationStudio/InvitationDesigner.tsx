@@ -1532,6 +1532,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               return;
             }
 
+            if (target.closest("[data-studio-photo-crop]")) return;
             const photoElement = target.closest<HTMLElement>("[data-invitation-photo-slot]");
             const photoSlot = photoElement?.dataset.invitationPhotoSlot as PhotoSlot | undefined;
             if (photoSlot && (["cover", "personOne", "personTwo", "gallery"] as PhotoSlot[]).includes(photoSlot)) {
