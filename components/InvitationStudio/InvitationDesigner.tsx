@@ -962,20 +962,37 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
       const activeText = window.getSelection()?.toString();
       if (activeText) return;
       const modifier = event.ctrlKey || event.metaKey;
-      if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "c") {
+      const shortcutKey = event.key.toLowerCase();
+      if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "a") {
+        event.preventDefault();
+        const targetSection = selectedAssetLayer?.section ?? "cover";
+        const ids = design.layers
+          .filter((layer) => (layer.section ?? "cover") === targetSection && !layer.hidden)
+          .map((layer) => layer.id);
+        setSelectedLayerIds(ids);
+        setSelectedLayerId(ids.at(-1) ?? null);
+      } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "g") {
+        if (selectedLayerIds.length < 2) return;
+        event.preventDefault();
+        groupSelectedAssetLayers();
+      } else if (modifier && !event.altKey && event.shiftKey && shortcutKey === "g") {
+        if (!selectedAssetLayers.some((layer) => layer.groupId)) return;
+        event.preventDefault();
+        ungroupSelectedAssetLayers();
+      } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "c") {
         if (!selectedAssetLayer) return;
         event.preventDefault();
         copySelectedAssetLayer();
-      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "x") {
+      } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "x") {
         if (!selectedAssetLayer || selectedAssetLayer.locked || selectedLayerIds.length > 1) return;
         event.preventDefault();
         setCopiedAssetLayer({ ...selectedAssetLayer });
         removeAssetLayer(selectedAssetLayer.id);
-      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "v") {
+      } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "v") {
         if (!copiedAssetLayer || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         pasteAssetLayer();
-      } else if (modifier && !event.altKey && !event.shiftKey && event.key.toLowerCase() === "d") {
+      } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "d") {
         if (!selectedAssetLayer || selectedAssetLayer.locked || design.layers.length >= MAX_ASSET_LAYERS) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
@@ -992,12 +1009,13 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
         event.preventDefault();
         removeAssetLayer(selectedAssetLayer.id);
       } else if (!modifier && !event.altKey && event.key === "Escape" && selectedAssetLayer) {
+        setSelectedLayerIds([]);
         setSelectedLayerId(null);
       }
     }
     window.addEventListener("keydown", handleLayerShortcut);
     return () => window.removeEventListener("keydown", handleLayerShortcut);
-  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, copiedAssetLayer, design.layers]);
+  }, [invitation, saving, audioBusy, canvasStage, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, design.layers]);
 
   function undo() {
     const key = history.at(-1);
