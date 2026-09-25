@@ -117,7 +117,8 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   assert.match(designer, /selectedRsvpElementKey/);
   assert.match(designer, /target\.closest<HTMLElement>\("\[data-studio-rsvp-element\]"\)/);
   assert.match(designer, /<RsvpElementInspector/);
-  assert.match(componentInspector, /Reset komponen/);
+  assert.match(componentInspector, />\s*Reset\s*</);
+  assert.doesNotMatch(componentInspector, /Reset komponen|Reset component/);
 });
 
 test("RSVP API persists event selection and custom answers on the same Guest record", () => {
