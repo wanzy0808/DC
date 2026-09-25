@@ -23,6 +23,7 @@ import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
+import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
 
 export const romanticRoseManifest = {
   key: "romantic-rose",
@@ -143,11 +144,13 @@ export default function RomanticRoseTemplate({
   onDeleteSectionInstance?: (id: string) => void;
 }) {
   const [opened, setOpened] = useState(false);
+  const rootRef = useRef<HTMLElement>(null);
   const musicRef = useRef<InvitationMusicHandle>(null);
   const [now, setNow] = useState<number | null>(null);
   const sections = sectionOverride ?? parseInvitationSections(invitation.templateKey);
   const activeDesignKey = designKey || invitation.templateKey;
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  useInvitationSectionAnimations(rootRef, sectionStyles);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
@@ -220,7 +223,7 @@ export default function RomanticRoseTemplate({
   };
 
   return (
-    <main data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
+    <main ref={rootRef} data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
         <section data-invitation-section="envelope" style={invitationSectionStyleCss(sectionStyles.envelope)} className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
