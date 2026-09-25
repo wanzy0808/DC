@@ -5,6 +5,7 @@ import test from "node:test";
 const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
 const studio = read("components/InvitationStudio/InvitationEditorPage.tsx");
 const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+const layerOrder = read("components/InvitationStudio/designer-layer-order.ts");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
 const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
@@ -506,3 +507,17 @@ test("Studio layer list supports direct drag reordering while locked layers stay
   assert.match(designer, /data-layer-drag-over/);
   assert.match(styles, /data-layer-drag-over="true"/);
 });
+
+test("Studio keeps layer ordering rules in a pure helper module", () => {
+  assert.match(designer, /from "@\/components\/InvitationStudio\/designer-layer-order"/);
+  assert.match(designer, /reorderAssetLayers\(design\.layers, sourceId, targetId\)/);
+  assert.match(designer, /positionAssetLayers\(design\.layers, id, position\)/);
+  assert.match(layerOrder, /export function reorderAssetLayers\(/);
+  assert.match(layerOrder, /source\.locked/);
+  assert.match(layerOrder, /export function positionAssetLayers\(/);
+  assert.match(layerOrder, /position === "forward"/);
+  assert.match(layerOrder, /position === "backward"/);
+  assert.match(layerOrder, /position === "front"/);
+  assert.match(layerOrder, /next\.unshift\(layer\)/);
+});
+
