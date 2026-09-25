@@ -42,7 +42,7 @@ export default function OurStorySection({
           aria-hidden="true"
           className={`my-6 block h-px w-12 ${left || pencil ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
         />
-        <p className="whitespace-pre-line break-words text-sm leading-8">{story.trim()}</p>
+        <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8">{story.trim()}</p>
       </div>
     </section>
   );
