@@ -181,6 +181,21 @@ function EditableLayer({
     });
   }
 
+  const shapeVisual = layer.kind === "shape" ? (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none block h-full w-full select-none"
+      style={{
+        background: layer.shape === "line" ? (layer.stroke ?? "#C07A84") : (layer.fill ?? "#C07A84"),
+        border: layer.shape !== "line" && (layer.strokeWidth ?? 0) > 0
+          ? `${layer.strokeWidth}px solid ${layer.stroke ?? "#C07A84"}`
+          : undefined,
+        borderRadius: layer.shape === "circle" ? "9999px" : `${layer.radius ?? 0}px`,
+        transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`,
+      }}
+    />
+  ) : null;
+
   return (
     <div ref={root} data-studio-design-object={layer.id} className="pointer-events-none absolute" style={{
       left: `${displayed.x}%`, top: `${displayed.y}%`, width: `${displayed.width}%`,
@@ -190,7 +205,7 @@ function EditableLayer({
       transformOrigin: "center", touchAction: "none",
     }}>
       {editable ? (
-        <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : "Pilih dan geser ilustrasi"}
+        <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : layer.kind === "shape" ? "Pilih dan geser bentuk" : "Pilih dan geser ilustrasi"}
           aria-pressed={selected}
           className={`pointer-events-auto block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
           style={{ touchAction: "none" }}
@@ -207,7 +222,7 @@ function EditableLayer({
             letterSpacing: layer.letterSpacing ?? 0,
             lineHeight: layer.lineHeight ?? 1.2,
             color: layer.color ?? "#C07A84",
-          }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
+          }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
         </button>
       ) : layer.kind === "text" ? <span aria-hidden="true" className="block w-full whitespace-pre-wrap break-words" style={{
         fontFamily: layer.fontFamily
@@ -219,7 +234,7 @@ function EditableLayer({
         letterSpacing: layer.letterSpacing ?? 0,
         lineHeight: layer.lineHeight ?? 1.2,
         color: layer.color ?? "#C07A84",
-      }}>{layer.text}</span> : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
+      }}>{layer.text}</span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} aria-hidden="true" className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})` }} />}
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
