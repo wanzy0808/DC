@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState, type DragEvent } from "react"
 import {
   ImagePlus,
   Layers3,
-  TextCursorInput,
+  Type,
   LayoutTemplate,
   Music2,
   Palette,
@@ -897,7 +897,7 @@ export default function InvitationDesigner() {
         <nav className="dc-studio-rail" aria-label={copy.tools}>
           <DesignerTool active={panel === "template"} label={locale === "en" ? "Catalog" : "Katalog"} icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
           <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
-          <DesignerTool active={panel === "text"} label={copy.text} icon={<TextCursorInput className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
+          <DesignerTool active={panel === "text"} label={copy.text} icon={<Type className="h-4 w-4" strokeWidth={2.2} />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
           <DesignerTool active={panel === "music"} label={copy.music} icon={<Music2 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("music"); }} />

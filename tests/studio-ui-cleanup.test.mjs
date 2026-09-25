@@ -37,6 +37,12 @@ test("Studio has a wider inspector, compact side tools and a smaller invitation 
   assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
 });
 
+test("Studio text tool uses a simple Type icon instead of a text cursor icon", () => {
+  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.match(rail, /label=\{copy\.text\} icon=\{<Type/);
+  assert.doesNotMatch(designer, /TextCursorInput/);
+});
+
 test("Studio left rail names the template browser Katalog", () => {
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /label=\{locale === "en" \? "Catalog" : "Katalog"\}/);
