@@ -1008,6 +1008,14 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ copyMotion });
   }
 
+  function resetNarrativeCopyAndMotion(field: EditableInvitationCopyField) {
+    const copy = { ...design.copy };
+    const copyMotion = { ...design.copyMotion };
+    delete copy[field];
+    delete copyMotion[field];
+    change({ copy, copyMotion });
+  }
+
   function addRsvpCustomField() {
     if (design.rsvpConfig.customFields.length >= MAX_RSVP_CUSTOM_FIELDS) return;
     const id = crypto.randomUUID().replace(/-/g, "").slice(0, 16);
@@ -1781,10 +1789,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
                 motion={design.copyMotion[selectedCopyField]}
                 onChange={(value) => setNarrativeCopy(selectedCopyField, value)}
                 onMotion={(patch) => updateCopyMotion(selectedCopyField, patch)}
-                onReset={() => {
-                  resetNarrativeCopy(selectedCopyField);
-                  resetCopyMotion(selectedCopyField);
-                }}
+                onReset={() => resetNarrativeCopyAndMotion(selectedCopyField)}
                 onClose={() => setSelectedCopyField(null)}
               />
             ) : selectedSectionKey ? (
