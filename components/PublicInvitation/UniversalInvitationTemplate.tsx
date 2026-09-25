@@ -195,6 +195,7 @@ export default function UniversalInvitationTemplate({
   const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
   const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
+  const sectionStylesSignature = JSON.stringify(sectionStyles);
   useInvitationSectionAnimations(rootRef, sectionStyles);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
@@ -282,7 +283,7 @@ export default function UniversalInvitationTemplate({
       observer.observe(node);
     });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope, sectionStyles]);
+  }, [key, opened, sections.envelope, sectionStylesSignature]);
 
   useEffect(() => {
     if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
@@ -297,7 +298,7 @@ export default function UniversalInvitationTemplate({
       observer.observe(node);
     });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope, media.gallery.length, sectionStyles]);
+  }, [key, opened, sections.envelope, media.gallery.length, sectionStylesSignature]);
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
     if (key === "zen-atelier" || key === "pencil-reverie") {
