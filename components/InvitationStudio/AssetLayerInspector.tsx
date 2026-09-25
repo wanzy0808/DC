@@ -4,6 +4,7 @@ import { Eye, EyeOff, Lock, Unlock } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
+import LayerAnimationControls from "@/components/InvitationStudio/LayerAnimationControls";
 
 type AssetLayerInspectorProps = {
   locale: string;
@@ -306,6 +307,8 @@ export default function AssetLayerInspector({
           onChange={(event) => onUpdate(selectedAssetLayer.id, { opacity: Number(event.target.value) })}
         />
       </label>
+
+      <LayerAnimationControls locale={locale} layer={selectedAssetLayer} onUpdate={onUpdate} />
 
       <div className="dc-studio-layer-field">
         <span>{en ? "Layer order" : "Urutan layer"}</span>
