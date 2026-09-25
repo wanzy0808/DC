@@ -132,7 +132,7 @@ function EditableLayer({
   }
 
   return (
-    <div ref={root} className="pointer-events-none absolute" style={{
+    <div ref={root} data-studio-design-object={layer.id} className="pointer-events-none absolute" style={{
       left: `${displayed.x}%`, top: `${displayed.y}%`, width: `${displayed.width}%`,
       ...(displayed.height === undefined ? {} : { aspectRatio: `${displayed.width} / ${displayed.height}` }),
       opacity: displayed.opacity, transform: `translate(-50%, -50%) rotate(${displayed.rotation ?? 0}deg)`,
