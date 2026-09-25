@@ -1473,10 +1473,27 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               {saving ? copy.saving : templateMode ? (locale === "en" ? "Save Template" : "Simpan Template") : copy.save}
             </Button>
           </div>
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} onPointerDown={(event) => {
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-panning={canvasPanning ? "true" : undefined}
+          onKeyDown={(event) => {
+            if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
+            const target = event.target;
+            if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+            event.preventDefault();
+            setCanvasPanReady(true);
+          }}
+          onKeyUp={(event) => {
+            if (event.code === "Space") setCanvasPanReady(false);
+          }}
+          onPointerDown={(event) => {
+            if (beginCanvasPan(event)) return;
             const target = event.target;
             if (target instanceof Element && !target.closest('input, textarea, select, button, a, [contenteditable="true"], [role="textbox"]')) event.currentTarget.focus({ preventScroll: true });
-          }} onClick={(event) => {
+          }}
+          onPointerMove={moveCanvasPan}
+          onPointerUp={endCanvasPan}
+          onPointerCancel={(event) => { endCanvasPan(event); setCanvasPanReady(false); }}
+          onClick={(event) => {
+            if (suppressCanvasClick.current) { suppressCanvasClick.current = false; return; }
             const target = event.target;
             if (!(target instanceof Element)) return;
             const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
