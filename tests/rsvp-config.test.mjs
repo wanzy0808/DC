@@ -90,7 +90,7 @@ test("RSVP title and controls support independent persisted styling", () => {
 });
 
 test("Studio exposes Attend All and Add Column and the live RSVP renders them", () => {
-  const inspector = read("components/InvitationStudio/SectionInspector.tsx");
+  const inspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   const panels = read("components/InvitationStudio/RsvpPanels.tsx");
   const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
   assert.match(inspector, /Hadir Semua Acara/);
