@@ -28,7 +28,8 @@ test("create invitation routes through auth-protected Studio and keeps the selec
   assert.match(studio, /selectedTemplate=\{selectedTemplate\}/);
   assert.ok(entry.includes('selectedTemplate ? `&template='));
   assert.match(designer, /const requestedTheme = params\.get\("template"\)/);
-  assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
+  assert.match(designer, /const canonicalSavedState = JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
+  assert.match(designer, /setSavedState\(canonicalSavedState\)/);
 });
 
 test("Studio can show and replay the envelope independently of Cover-only catalog popup", () => {
@@ -58,7 +59,8 @@ test("pending template survives login and event creation without an automatic da
   assert.match(dashboard, /params\.get\("from"\) === "template"/);
   assert.match(dashboard, /selectedTemplate=\{pendingTemplate \|\| undefined\}/);
   assert.match(events, /onSaved\(editorMode === "new" \? \{ id:/);
-  assert.match(designer, /setSavedState\(JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
+  assert.match(designer, /const canonicalSavedState = JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
+  assert.match(designer, /setSavedState\(canonicalSavedState\)/);
   assert.match(designer, /clearTemplateSelection\(\)/);
   assert.match(designer, /location\.searchParams\.delete\("template"\)/);
   assert.match(designer, /location\.searchParams\.set\("template", templateKey\)/);
