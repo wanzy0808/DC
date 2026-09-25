@@ -638,14 +638,16 @@ export default function InvitationDesigner() {
           <DesignerTool active={panel === "font"} label="Font" icon={<Type className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("font"); }} />
           <div className="dc-studio-rail-divider" />
           <DesignerTool active={panel === "content"} label={copy.content} icon={<FilePenLine className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("content"); }} />
-          <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
-          <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
-            <Button size="icon-lg" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
-              <Undo2 className="h-4 w-4" />
-            </Button>
-            <Button size="icon-lg" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
-              <Redo2 className="h-4 w-4" />
-            </Button>
+          <div className="dc-studio-reset-history-row" role="group" aria-label={locale === "en" ? "Reset and design history" : "Ulang dari awal dan riwayat desain"}>
+            <DesignerTool active={false} label={copy.startOver} icon={<RotateCcw className="h-4 w-4" />} onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} title={copy.defaultsHint} />
+            <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
+              <Button size="icon-lg" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
+                <Undo2 className="h-4 w-4" />
+              </Button>
+              <Button size="icon-lg" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
+                <Redo2 className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           <DesignerTool active={panel === "decor"} label={copy.photos} icon={<ImagePlus className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("decor"); }} />
           <DesignerTool active={panel === "assets"} label={copy.assets} icon={<Layers3 className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("assets"); }} />
