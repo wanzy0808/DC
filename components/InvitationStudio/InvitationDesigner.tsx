@@ -660,6 +660,99 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     });
   }
 
+  function selectedLayerGeometry(minimum: number) {
+    const candidates = selectedAssetLayers.filter((layer) => !layer.locked && !layer.hidden);
+    if (candidates.length < minimum) return null;
+    const section = candidates[0]?.section ?? "cover";
+    if (candidates.some((layer) => (layer.section ?? "cover") !== section)) {
+      setNotice(locale === "en" ? "Align layers inside the same section." : "Align hanya untuk layer dalam section yang sama.");
+      return null;
+    }
+    const sectionNode = canvasScrollRef.current?.querySelector<HTMLElement>(`[data-invitation-section="${section}"]`);
+    const sectionRect = sectionNode?.getBoundingClientRect();
+    if (!sectionRect?.width || !sectionRect.height) return null;
+    const items = candidates.flatMap((layer) => {
+      const node = canvasScrollRef.current?.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
+      const rect = node?.getBoundingClientRect();
+      return rect?.width && rect.height ? [{ layer, rect }] : [];
+    });
+    return items.length >= minimum ? { items, sectionRect } : null;
+  }
+
+  function alignSelectedAssetLayers(mode: "left" | "center-x" | "right" | "top" | "center-y" | "bottom") {
+    const geometry = selectedLayerGeometry(2);
+    if (!geometry) return;
+    const { items, sectionRect } = geometry;
+    const left = Math.min(...items.map(({ rect }) => rect.left));
+    const right = Math.max(...items.map(({ rect }) => rect.right));
+    const top = Math.min(...items.map(({ rect }) => rect.top));
+    const bottom = Math.max(...items.map(({ rect }) => rect.bottom));
+    const centerX = (left + right) / 2;
+    const centerY = (top + bottom) / 2;
+    const updates = new Map<string, { x?: number; y?: number }>();
+
+    for (const { layer, rect } of items) {
+      if (mode === "left") updates.set(layer.id, { x: layer.x + (left - rect.left) / sectionRect.width * 100 });
+      else if (mode === "center-x") updates.set(layer.id, { x: layer.x + (centerX - (rect.left + rect.width / 2)) / sectionRect.width * 100 });
+      else if (mode === "right") updates.set(layer.id, { x: layer.x + (right - rect.right) / sectionRect.width * 100 });
+      else if (mode === "top") updates.set(layer.id, { y: layer.y + (top - rect.top) / sectionRect.height * 100 });
+      else if (mode === "center-y") updates.set(layer.id, { y: layer.y + (centerY - (rect.top + rect.height / 2)) / sectionRect.height * 100 });
+      else updates.set(layer.id, { y: layer.y + (bottom - rect.bottom) / sectionRect.height * 100 });
+    }
+
+    change({
+      layers: design.layers.map((layer) => {
+        const patch = updates.get(layer.id);
+        if (!patch) return layer;
+        return {
+          ...layer,
+          ...(patch.x === undefined ? {} : { x: Math.min(100, Math.max(0, patch.x)) }),
+          ...(patch.y === undefined ? {} : { y: Math.min(100, Math.max(0, patch.y)) }),
+        };
+      }),
+    });
+  }
+
+  function distributeSelectedAssetLayers(axis: "horizontal" | "vertical") {
+    const geometry = selectedLayerGeometry(3);
+    if (!geometry) return;
+    const { items, sectionRect } = geometry;
+    const sorted = [...items].sort((a, b) => axis === "horizontal"
+      ? (a.rect.left + a.rect.width / 2) - (b.rect.left + b.rect.width / 2)
+      : (a.rect.top + a.rect.height / 2) - (b.rect.top + b.rect.height / 2));
+    const firstCenter = axis === "horizontal"
+      ? sorted[0]!.rect.left + sorted[0]!.rect.width / 2
+      : sorted[0]!.rect.top + sorted[0]!.rect.height / 2;
+    const last = sorted.at(-1)!;
+    const lastCenter = axis === "horizontal"
+      ? last.rect.left + last.rect.width / 2
+      : last.rect.top + last.rect.height / 2;
+    const gap = (lastCenter - firstCenter) / (sorted.length - 1);
+    const updates = new Map<string, { x?: number; y?: number }>();
+
+    sorted.forEach(({ layer, rect }, index) => {
+      const currentCenter = axis === "horizontal"
+        ? rect.left + rect.width / 2
+        : rect.top + rect.height / 2;
+      const delta = firstCenter + gap * index - currentCenter;
+      updates.set(layer.id, axis === "horizontal"
+        ? { x: layer.x + delta / sectionRect.width * 100 }
+        : { y: layer.y + delta / sectionRect.height * 100 });
+    });
+
+    change({
+      layers: design.layers.map((layer) => {
+        const patch = updates.get(layer.id);
+        if (!patch) return layer;
+        return {
+          ...layer,
+          ...(patch.x === undefined ? {} : { x: Math.min(100, Math.max(0, patch.x)) }),
+          ...(patch.y === undefined ? {} : { y: Math.min(100, Math.max(0, patch.y)) }),
+        };
+      }),
+    });
+  }
+
   function copySelectedAssetLayer() {
     const selected = design.layers.find((layer) => layer.id === selectedLayerId);
     if (selected) setCopiedAssetLayer({ ...selected });
