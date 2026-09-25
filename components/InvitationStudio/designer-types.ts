@@ -3,6 +3,7 @@ import type { FontKey, PaletteKey } from "@/lib/templates/design";
 import type { InvitationSections } from "@/lib/templates/sections";
 import type { PhotoAssignments } from "@/lib/templates/photo-slots";
 import type { EditableInvitationCopy } from "@/lib/templates/editable-copy";
+import type { EditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 import type { InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
@@ -69,6 +70,8 @@ export type InvitationDesignState = {
   photos: PhotoAssignments;
   /** Only template-owned narrative copy; never duplicates event identity or schedule. */
   copy: EditableInvitationCopy;
+  /** Visual-only entrance choreography for editable template-owned copy. */
+  copyMotion: EditableCopyMotions;
   layers: InvitationAssetLayer[];
   sectionStyles: InvitationSectionStyles;
   rsvpConfig: InvitationRsvpConfig;
