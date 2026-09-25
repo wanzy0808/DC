@@ -218,7 +218,7 @@ export default function RomanticRoseTemplate({
   };
 
   return (
-    <main className="relative isolate min-h-[760px] overflow-hidden bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]">
+    <main data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
         <section data-invitation-section="envelope" style={invitationSectionStyleCss(sectionStyles.envelope)} className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
