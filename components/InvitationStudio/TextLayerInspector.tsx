@@ -2,6 +2,7 @@
 
 import { AlignCenter, AlignLeft, AlignRight, Eye, EyeOff, Lock, Unlock } from "lucide-react";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
+import LayerAnimationControls from "@/components/InvitationStudio/LayerAnimationControls";
 import {
   MAX_ASSET_LAYERS,
   studioObjectSections,
@@ -280,6 +281,8 @@ export default function TextLayerInspector({
         <span>{en ? "Opacity" : "Opasitas"} <output>{Math.round(layer.opacity * 100)}%</output></span>
         <input type="range" min="0" max="1" step="0.05" value={layer.opacity} onChange={(event) => onUpdate(layer.id, { opacity: Number(event.target.value) })} />
       </label>
+
+      <LayerAnimationControls locale={locale} layer={layer} onUpdate={onUpdate} />
 
       <div className="dc-studio-layer-field">
         <span>{en ? "Layer order" : "Urutan layer"}</span>
