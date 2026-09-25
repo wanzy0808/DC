@@ -580,9 +580,6 @@ export default function InvitationDesigner() {
       <div className="dc-studio-workspace">
         <div className="dc-studio-canvas">
           <div className="dc-studio-canvas-toolbar">
-            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
-              {inspectorOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
-            </button>
             <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
             {design.sections.envelope !== false && <button type="button"
               aria-pressed={canvasStage === "envelope"}
@@ -598,6 +595,9 @@ export default function InvitationDesigner() {
             >{copy.cover}</button>
             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
             <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
+            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
+              {inspectorOpen ? <PanelRightClose size={18} /> : <PanelRightOpen size={18} />}
+            </button>
           </div>
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onClick={(event) => {
             const target = event.target;
