@@ -6,16 +6,12 @@ import { Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
 import { invitationSectionItems } from "@/lib/templates/sections";
-import { invitationFontFamily } from "@/lib/templates/presentation";
-import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
-import { Input } from "@/components/ui/input";
-import type { FontKey, PaletteKey } from "@/lib/templates/design";
+import type { PaletteKey } from "@/lib/templates/design";
 import type {
   InvitationSectionKey,
   InvitationSections,
 } from "@/lib/templates/sections";
 import {
-  invitationFontOptions,
   invitationPaletteOptions,
 } from "@/components/InvitationStudio/designer-config";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
@@ -251,52 +247,6 @@ export function ColorPanel({
             <span className="text-xs font-semibold text-foreground">
               {item.name}
             </span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-export function FontPanel({
-  selected,
-  onSelect,
-}: {
-  selected: FontKey;
-  onSelect: (key: FontKey) => void;
-}) {
-  const { locale } = useLanguage();
-  const [search, setSearch] = useState("");
-  const options = invitationFontOptions.filter(([, item]) => item.name.toLowerCase().includes(search.toLowerCase()));
-  return (
-    <div>
-      <Heading
-        title="Pasangan Font"
-        description="Nama huruf ditampilkan dengan font aslinya."
-      />
-      <InvitationFonts families={invitationFontOptions.flatMap(([, item]) => [item.heading, item.body])} />
-      <Input className="mt-4" aria-label={locale === "en" ? "Search fonts" : "Cari font"} placeholder={locale === "en" ? "Search fonts…" : "Cari nama font…"} value={search} onChange={(event) => setSearch(event.target.value)} />
-      <div className="mt-4 space-y-2">
-        {options.length === 0 && <p className="py-4 text-sm text-foreground">{locale === "en" ? "No fonts found." : "Font tidak ditemukan."}</p>}
-        {options.map(([key, item]) => (
-          <button
-            type="button"
-            key={key}
-            onClick={() => onSelect(key)}
-            aria-pressed={selected === key}
-            className={`w-full rounded-xl border px-3 py-3 text-left ${
-              selected === key
-                ? "border-primary ring-2 ring-primary/20"
-                : "border-border"
-            }`}
-          >
-            <span
-              className="mt-1 block text-lg text-foreground"
-              style={{ fontFamily: invitationFontFamily(item.heading) }}
-            >
-              {item.heading}
-            </span>
-            <span className="mt-1 block text-sm text-muted-foreground" style={{ fontFamily: invitationFontFamily(item.body) }}>{item.body}</span>
           </button>
         ))}
       </div>
