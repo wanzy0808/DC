@@ -54,7 +54,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(editor, /<SectionInspector/);
   assert.match(editor, /updateSectionStyle/);
   assert.match(editor, /resetSectionStyle/);
-  assert.match(editor, /data\.studioSectionSelected = "true"/);
+  assert.match(editor, /dataset\.studioSectionSelected = "true"/);
   assert.match(inspector, /Perataan/);
   assert.match(inspector, /Ruang vertikal/);
   assert.match(inspector, /Opasitas/);
