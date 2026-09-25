@@ -654,7 +654,13 @@ export default function InvitationDesigner() {
             <span className="hidden items-center gap-2 text-xs text-muted-foreground sm:flex"><Smartphone size={15} />{copy.phone}</span>
             <button type="button" className="dc-studio-icon" onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }} aria-label={copy.replay} title={copy.replay}><RotateCcw size={17} /></button>
           </div>
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onClick={(event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
+            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
+            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) setSelectedLayerId(null);
+          }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-preview-workspace">
           <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady}>
             <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
