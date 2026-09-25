@@ -12,7 +12,7 @@ import {
   normalizeEventCategory,
 } from "@/lib/events/catalog";
 import { parseInvitationSections } from "@/lib/templates/sections";
-import { resolveInvitationPhotos } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveInvitationPhotos } from "@/lib/templates/photo-slots";
 
 function Divider() {
   return (
@@ -153,7 +153,7 @@ export default function ClassicInvitationTemplate({
                   src={image}
                   alt=""
                   className="h-full w-full rounded-t-[118px] object-cover"
-                  style={{ objectPosition: `center ${photo.assignment.focus.cover}` }}
+                  style={photoCropStyle(photo.assignment, "cover")}
                 />
               ) : (
                 <div className="h-full w-full rounded-t-[118px] bg-stone-200" />
