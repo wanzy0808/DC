@@ -18,16 +18,19 @@ const preview = read("components/InvitationStudio/InvitationPreview.tsx");
 const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 
-test("Isi exposes only narrative slots actually rendered by the chosen theme and event", () => {
+test("Isi keeps narrative slots in the renderer and edits them directly from canvas", () => {
   assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
   assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "closing"]);
   assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing", "ourStory"]);
   assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "closing", "ourStory"]);
-  const content = panel.split("export function ContentPanel(")[1]?.split("export function MusicPanel(")[0] || "";
-  assert.match(content, /availableEditableCopyFields\(templateKey, isWedding\)/);
-  assert.match(content, /<textarea/);
-  assert.match(content, /maxLength=\{editableCopyMaxLength\[field\]\}/);
-  assert.doesNotMatch(content, /setEventTag|setDressCode|weddingHashtag|invitation\?\.venue|invitation\?\.title|eventDate/);
+  const content = panel.split("export function ContentPanel(")[1]?.split("export function ColorPanel(")[0] || "";
+  assert.match(content, /<Heading title="Isi" description="" \/>/);
+  assert.match(content, /sectionFunctionalElements/);
+  assert.doesNotMatch(content, /<textarea/);
+  assert.match(studio, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
+  assert.match(studio, /<CopyTextInspector/);
+  assert.match(universal, /data-studio-copy-field="greeting"/);
+  assert.match(universal, /data-studio-copy-field="closing"/);
 });
 
 test("copy overrides round-trip within the event-scoped design key without mutating event data", () => {
@@ -61,7 +64,7 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /copy: \{\},/);
   assert.match(studio, /function setNarrativeCopy\(/);
   assert.match(studio, /change\(\{ copy: \{ \.\.\.design\.copy, \[field\]: text \} \}\)/);
-  assert.match(studio, /<ContentPanel[\s\S]*copy=\{design\.copy\}[\s\S]*onChange=\{setNarrativeCopy\}/);
+  assert.match(studio, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => setNarrativeCopy\(selectedCopyField, value\)\}/);
   assert.match(studio, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
   assert.doesNotMatch(studio.split("async function save()")[1]?.split("if (loadError)")[0] || "", /description:\s*|eventNotes:\s*|groomName:\s*|brideName:\s*|venue:\s*|eventDate:\s*/);
@@ -78,16 +81,14 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
 test("Our Story is optional couple-owned text shown in the real Identity flow, not a new global toggle", () => {
   const story = read("components/PublicInvitation/OurStorySection.tsx");
   const sectionRegistry = read("lib/templates/sections.ts");
-  assert.match(panel, /ourStory: \{ id: "Our Story \/ Tentang Kami"/);
-  assert.match(panel, /rows=\{field === "ourStory" \? 8/);
-  assert.match(panel, /field === "ourStory" \? \(en \? "Tell your story together/);
   assert.ok(!sectionRegistry.includes('{ key: "ourStory"'), "do not invent a 16th invitation visibility toggle");
-  assert.match(story, /if \(!story\?\.trim\(\)\) return null;/);
+  assert.match(story, /if \(!story\?\.trim\(\) && !preview\) return null;/);
   assert.match(story, /data-invitation-section="our-story"/);
+  assert.match(story, /data-studio-copy-field="ourStory"/);
+  assert.match(story, /Klik untuk menulis Our Story/);
   assert.match(story, /Tentang Kami/);
-  assert.match(story, /\{story\.trim\(\)\}/);
-  assert.match(universal, /couple && sections\.identity !== false && <OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} \/>/);
-  assert.match(romantic, /sections\.identity !== false && <div style=\{\{ order: Math\.max\(0, sectionLayout\.findIndex\(\(item\) => item\.key === "identity"\)\) \+ 0\.1 \}\}><OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" \/><\/div>/);
+  assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} \/>/);
+  assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} \/>/);
   assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
     ourStory: "Bermula dari pertemuan sederhana.",
   });
