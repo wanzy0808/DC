@@ -33,6 +33,9 @@
 .dc-studio-toolbar-actions { align-self: flex-end; justify-content: flex-end; }
 .dc-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-height: 0; }
 .dc-studio-rail { padding: 16px 10px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
+.dc-studio-history-actions { display: grid; grid-template-columns: repeat(2, 44px); justify-content: center; align-items: center; gap: 2px; width: 90px; margin: 0 -6px 8px; }
+.dc-studio-history-actions button:disabled { opacity: .45; }
+.dc-studio-history-actions button:focus-visible, .dc-studio-stage-controls button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .dc-studio-tool { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 74px; margin-bottom: 5px; padding: 10px 6px; border-radius: 0 16px 16px 0; color: var(--foreground); font-size: 12px; font-weight: 500; line-height: 1.35; transition: background .18s, color .18s; cursor: pointer; }
 .dc-studio-tool svg { width: 21px; height: 21px; flex-shrink: 0; color: var(--primary); }
 .dc-studio-tool:hover { color: var(--foreground); background: color-mix(in srgb, var(--primary) 10%, transparent); }
@@ -54,8 +57,14 @@
 .dc-studio-layer-toolbar input[type="range"] { accent-color: var(--primary); }
 
 .dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 24px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.dc-studio-canvas-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
 .dc-studio-preview-surface { position: relative; isolation: isolate; width: 340px; max-width: 100%; margin-inline: auto; overflow: hidden; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: 24px; background: var(--background); box-shadow: 0 16px 48px rgb(0 0 0 / .12); }
 .dc-studio-preview-workspace { position: relative; width: 340px; max-width: 100%; margin-inline: auto; }
+.dc-studio-stage-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-bottom: 12px; }
+.dc-studio-stage-controls button { flex: 1 1 0; min-width: 0; min-height: 44px; border-radius: var(--dc-control-radius); font-size: 12px; font-weight: 500; }
+.dc-studio-stage-controls button[aria-pressed="true"] { box-shadow: inset 0 -3px var(--foreground); }
+.dc-studio-stage-controls button[aria-pressed="false"] { opacity: .7; }
+.dc-studio-stage-controls button[aria-pressed="false"]:hover { opacity: 1; }
 .dc-studio-preview-workspace > .dc-studio-preview-surface { width: 100%; }
 .dc-studio-layer-side { position: absolute; top: 0; left: calc(100% + 16px); width: 168px; padding: 14px 12px; border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent); border-radius: 0 16px 16px 0; background: var(--background); box-shadow: 0 8px 26px rgb(0 0 0 / .08); }
 .dc-studio-layer-action { display: flex; min-height: 39px; align-items: center; justify-content: center; gap: 5px; border: 1px solid color-mix(in srgb, var(--primary) 52%, transparent); border-radius: var(--dc-control-radius); padding: 7px 5px; background: var(--background); color: var(--primary); font-size: 11px; cursor: pointer; }
@@ -95,6 +104,7 @@
   .dc-studio-mobile-view button[aria-pressed=true] { color: var(--primary); box-shadow: inset 0 -2px var(--primary); }
   .dc-studio-workspace, .dc-invitation-studio-shell[data-inspector=false] .dc-studio-workspace { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); }
   .dc-studio-rail { display: flex; overflow-x: auto; padding: 4px 8px; border-right: 0; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
+  .dc-studio-history-actions { flex: 0 0 90px; margin: 0 4px; }
   .dc-studio-tool { width: 80px; min-width: 80px; min-height: 70px; margin: 0; padding: 8px 6px; gap: 7px; border-radius: 12px; }
   .dc-studio-tool[aria-pressed=true] { box-shadow: none; }
   .dc-studio-rail-divider, .dc-studio-panel-toggle { display: none; }
