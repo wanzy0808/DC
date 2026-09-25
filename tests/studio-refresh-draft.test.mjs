@@ -37,7 +37,10 @@ test("saved, invalid and oversized snapshots are not resurrected", () => {
 test("Studio keeps drafts only in tab sessionStorage and discards them on save or navigation", () => {
   const code = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
   assert.match(code, /window\.sessionStorage\.setItem\(STUDIO_REFRESH_DRAFT_KEY/);
-  assert.match(code, /recoverStudioRefreshDraft\(raw, navigationType, next\.id, serverBaseline\)/);
+  assert.match(code, /recoverStudioRefreshDraft\(raw, sameStudioEntry \? navigationType : "navigate", next\.id, serverBaseline\)/);
+  assert.match(code, /historyState\?\.__dcStudioDraftEntry === next\.id/);
+  assert.match(code, /window\.history\.replaceState\(\{ \.\.\.historyState, __dcStudioDraftEntry: next\.id \}/);
+  assert.match(code, /const serverBaseline = JSON\.stringify\(\[next\.templateKey \|\| ""/);
   assert.match(code, /else window\.sessionStorage\.removeItem\(STUDIO_REFRESH_DRAFT_KEY\)/);
   assert.match(code, /setSavedState\(currentState\);\s*try \{ window\.sessionStorage\.removeItem\(STUDIO_REFRESH_DRAFT_KEY\)/);
   assert.match(code, /document\.addEventListener\("click", onLinkClick, true\)/);
