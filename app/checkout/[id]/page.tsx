@@ -14,6 +14,16 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
   });
   if (!order) redirect("/transactions");
 
+  const reportLog = await prisma.auditLog.findFirst({
+    where: {
+      entity: "PaymentOrder",
+      entityId: order.id,
+      action: { in: ["PAYMENT_REPORTED", "PAYMENT_PROOF_SUBMITTED"] },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  const reportedAt = reportLog?.createdAt ?? (order.proofUrl ? order.updatedAt : null);
+
   const packageData = getServicePackage(order.packageKey);
   return (
     <CheckoutClient
@@ -26,6 +36,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         status: order.status,
         proofUrl: order.proofUrl,
         note: order.note,
+        reportedAt: reportedAt?.toISOString() ?? null,
         createdAt: order.createdAt.toISOString(),
         invitation: order.invitation,
       }}
