@@ -10,6 +10,7 @@ const persistence = read("components/InvitationStudio/designer-persistence.ts");
 const layerAnimationControls = read("components/InvitationStudio/LayerAnimationControls.tsx");
 const layerAnimationHook = read("components/PublicInvitation/use-layer-animation.ts");
 const entranceAnimationRuntime = read("components/PublicInvitation/entrance-animation-runtime.ts");
+const layerTextContent = read("components/PublicInvitation/InvitationLayerTextContent.tsx");
 const assetLayerModel = read("lib/templates/asset-layers.ts");
 const sectionStyles = read("lib/templates/section-styles.ts");
 const panels = read("components/InvitationStudio/DesignerPanels.tsx");
@@ -587,5 +588,28 @@ test("Section and element entrance animations share one playback runtime", () =>
   assert.match(entranceAnimationRuntime, /duration: Math\.round\(\(config\.duration \?\? preset\.duration\) \* 1000\)/);
   assert.match(entranceAnimationRuntime, /easing: preset\.easing/);
   assert.match(entranceAnimationRuntime, /observer\.unobserve\(node\)/);
+});
+
+test("Studio decorative text supports staggered whole word character and line choreography", () => {
+  const assetRenderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+
+  assert.match(assetLayerModel, /export type InvitationTextAnimationUnit = "whole" \| "word" \| "character" \| "line"/);
+  assert.match(assetLayerModel, /textAnimationUnit\?: InvitationTextAnimationUnit/);
+  assert.match(assetLayerModel, /animationStagger\?: number/);
+  assert.match(assetLayerModel, /entry\.animationStagger, 0\.01, 0\.15/);
+
+  assert.match(layerAnimationControls, /value=\{layer\.textAnimationUnit \?\? "whole"\}/);
+  assert.match(layerAnimationControls, /value="word"/);
+  assert.match(layerAnimationControls, /value="character"/);
+  assert.match(layerAnimationControls, /value="line"/);
+  assert.match(layerAnimationControls, /animationStagger/);
+
+  assert.match(layerTextContent, /data-invitation-text-motion-part/);
+  assert.match(layerTextContent, /characterCount > 96 \? "word" : unit/);
+  assert.match(assetRenderer, /<InvitationLayerTextContent text=\{layer\.text \?\? ""\} unit=\{layer\.textAnimationUnit\}/);
+
+  assert.match(layerAnimationHook, /querySelectorAll<HTMLElement>\("\[data-invitation-text-motion-part\]"\)/);
+  assert.match(layerAnimationHook, /index \* stagger/);
+  assert.match(layerAnimationHook, /unit === "character" \? 0\.025/);
 });
 
