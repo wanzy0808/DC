@@ -567,6 +567,7 @@ Pemeriksaan CI pada satu commit memvalidasi source pada commit tersebut, **bukan
 - [x] Add image layer flip horizontal/vertical and quick center positioning.
 - [x] Add multi-select/group only after single-layer selection/crop/lock behavior is stable.
 - [x] Audit clipboard behavior for text vs image layers and prevent browser text-edit shortcuts from being hijacked while typing.
+- [x] Extend copy/cut/paste/duplicate to multi-selected layers while preserving relative placement and group isolation.
 
 ### Deferred — richer animation system
 
