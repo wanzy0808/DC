@@ -18,6 +18,7 @@ export function useInvitationCopyAnimations(
   rootRef: RefObject<HTMLElement | null>,
   motions: EditableCopyMotions,
   copy: EditableInvitationCopy,
+  revision = "",
 ) {
   const motionKey = JSON.stringify(motions);
   const copyKey = JSON.stringify(copy);
@@ -60,5 +61,5 @@ export function useInvitationCopyAnimations(
     });
 
     return observeInvitationEntrances(targets);
-  }, [rootRef, motionKey, copyKey]);
+  }, [rootRef, motionKey, copyKey, revision]);
 }
