@@ -204,6 +204,15 @@ export default function TextLayerInspector({
         {numberInput("X", layer.x, 0, 100, 0.1, "%", (x) => ({ x }))}
         {numberInput("Y", layer.y, 0, 100, 0.1, "%", (y) => ({ y }))}
       </div>
+
+      <div className="dc-studio-layer-field">
+        <span>{en ? "Quick position" : "Posisi cepat"}</span>
+        <div className="grid grid-cols-3 gap-1.5">
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { y: 50 })}>{en ? "Center Y" : "Tengah Y"}</button>
+          <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
+        </div>
+      </div>
       {numberInput(en ? "Box width" : "Lebar kotak", layer.width, 5, 85, 0.1, "%", (width) => ({ width }))}
       {numberInput(en ? "Rotation" : "Rotasi", layer.rotation ?? 0, -180, 180, 1, "°", (rotation) => ({ rotation }))}
 
