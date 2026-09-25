@@ -11,6 +11,7 @@ import {
 const names = {
   title: { id: "Judul RSVP", en: "RSVP title" },
   inputs: { id: "Input RSVP", en: "RSVP inputs" },
+  button: { id: "Button RSVP", en: "RSVP button" },
 } as const;
 
 export default function RsvpElementInspector({
@@ -37,7 +38,9 @@ export default function RsvpElementInspector({
   const en = locale === "en";
   const displayName = elementKey === "inputs"
     ? (en ? names.inputs.en : names.inputs.id)
-    : (en ? names.title.en : names.title.id);
+    : elementKey === "button"
+      ? (en ? names.button.en : names.button.id)
+      : (en ? names.title.en : names.title.id);
   const style = config.elementStyles[elementKey] ?? {};
 
   function updateStyle(patch: Partial<RsvpElementStyle>) {
