@@ -30,7 +30,7 @@ export default function SectionActionRail({
   ];
 
   return (
-    <div className="dc-studio-section-actions" role="toolbar" aria-label="Aksi section" onClick={(event) => event.stopPropagation()}>
+    <div className="dc-studio-section-actions" role="toolbar" aria-orientation="vertical" aria-label="Aksi section" onClick={(event) => event.stopPropagation()}>
       {actions.map(({ label, icon: Icon, onClick, disabled }) => (
         <button key={label} type="button" onClick={onClick} disabled={disabled} aria-label={label} title={label}>
           <Icon size={15} />
