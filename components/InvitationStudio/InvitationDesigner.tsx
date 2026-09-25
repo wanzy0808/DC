@@ -896,9 +896,15 @@ export default function InvitationDesigner() {
           {panel === "sections" && (
             <ContentPanel
               sections={design.sections}
+              rsvpConfig={design.rsvpConfig}
+              eventCategory={invitation?.eventCategory ?? ""}
               onChange={setSection}
               onSelectSection={focusContentSection}
               onSelectElement={focusContentElement}
+              onRsvpConfig={updateRsvpConfig}
+              onAddRsvpField={addRsvpCustomField}
+              onUpdateRsvpField={updateRsvpCustomField}
+              onRemoveRsvpField={removeRsvpCustomField}
             />
           )}
           {panel === "color" && design.template === "romantic-rose" && <p className="text-sm leading-7 text-muted-foreground">Warna Romantic Rose mengikuti desain asli tema.</p>}
@@ -1112,11 +1118,7 @@ export default function InvitationDesigner() {
                 locale={locale}
                 elementKey={selectedRsvpElementKey}
                 config={design.rsvpConfig}
-                eventCategory={invitation?.eventCategory ?? ""}
                 onConfig={updateRsvpConfig}
-                onAddRsvpField={addRsvpCustomField}
-                onUpdateRsvpField={updateRsvpCustomField}
-                onRemoveRsvpField={removeRsvpCustomField}
                 onClose={() => setSelectedRsvpElementKey(null)}
               />
             ) : selectedSectionElement ? (
