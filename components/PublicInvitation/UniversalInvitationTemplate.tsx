@@ -3,7 +3,7 @@
 import { displayTitleCase } from "@/lib/text/display-title-case";
 import { getInvitationCountdown } from "@/lib/invitations/countdown";
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { CalendarDays, Gift, Heart, Leaf, MapPin, Moon, Sparkles, Star } from "lucide-react";
@@ -194,8 +194,7 @@ export default function UniversalInvitationTemplate({
   const usesPhotos = template.usesPhotos;
   const isInkTheme = key === "midnight-romance" || key === "celestial-ink" || key === "golden-art-deco";
   const sections = sectionOverride ?? parseInvitationSections(activeDesignKey);
-  const sectionStyles = parseInvitationSectionStyles(activeDesignKey);
-  const sectionStylesSignature = JSON.stringify(sectionStyles);
+  const sectionStyles = useMemo(() => parseInvitationSectionStyles(activeDesignKey), [activeDesignKey]);
   useInvitationSectionAnimations(rootRef, sectionStyles);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
@@ -283,7 +282,7 @@ export default function UniversalInvitationTemplate({
       observer.observe(node);
     });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope, sectionStylesSignature]);
+  }, [key, opened, sections.envelope, sectionStyles]);
 
   useEffect(() => {
     if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
@@ -298,7 +297,7 @@ export default function UniversalInvitationTemplate({
       observer.observe(node);
     });
     return () => observer.disconnect();
-  }, [key, opened, sections.envelope, media.gallery.length, sectionStylesSignature]);
+  }, [key, opened, sections.envelope, media.gallery.length, sectionStyles]);
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
     if (key === "zen-atelier" || key === "pencil-reverie") {
