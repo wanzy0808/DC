@@ -28,6 +28,8 @@ const motionPerformance = read("lib/templates/motion-performance.ts");
 const canvasSelectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
 const canvasSelectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
+const canvasToolbarSource = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
+const stageControlsSource = read("components/InvitationStudio/StudioStageControls.tsx");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
 const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
@@ -139,8 +141,9 @@ test("Studio folds Font into Text with four quick font pairs and See more", () =
 test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
   assert.match(templatePanel, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
   assert.doesNotMatch(templatePanel, /photoFilter === key \? "bg-primary text-black"/);
-  assert.match(designer, /canvasStage === "envelope" \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
-  assert.match(designer, /canvasStage === "cover" \|\| design\.sections\.envelope === false \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
+  assert.match(stageControlsSource, /bg-\[#C07A84\][^"]*text-white[^"]*dark:text-black/);
+  assert.match(stageControlsSource, /aria-pressed=\{stage === "envelope"\}/);
+  assert.match(stageControlsSource, /aria-pressed=\{stage === "cover" \|\| !envelopeEnabled\}/);
   assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
   assert.match(templatePanel, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
   assert.match(templatePanel, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
@@ -159,8 +162,8 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   assert.match(controls, /rounded-\[var\(--dc-control-radius\)\]/);
   assert.match(templatePanel, /photoFilter === key/);
   assert.match(templatePanel, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
-  assert.match(designer, /min-h-9 shrink-0 rounded-\[var\(--dc-control-radius\)\]/);
-  assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
+  assert.match(stageControlsSource, /min-h-9 shrink-0 rounded-\[var\(--dc-control-radius\)\]/);
+  assert.doesNotMatch(stageControlsSource, /min-h-9 shrink-0 rounded-full/);
   assert.match(styles, /\.dc-studio-icon \{[^}]*border-radius: var\(--dc-control-radius\)/);
   assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--dc-control-radius\)\]/);
 });
@@ -175,8 +178,8 @@ test("Ucapan Tamu section label has no stale unavailable caption", () => {
 test("Studio stage labels use Amplop and Isi while keeping internal cover state", () => {
   assert.match(designer, /envelope: "Amplop", cover: "Isi"/);
   assert.match(designer, /envelope: "Envelope", cover: "Content"/);
-  assert.match(designer, /canvasStage === "cover"/);
-  assert.match(designer, /setCanvasStage\("cover"\)/);
+  assert.match(designer, /stage=\{canvasStage\}/);
+  assert.match(designer, /onContent=\{\(\) => setCanvasStage\("cover"\)\}/);
 });
 
 test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", () => {
@@ -185,23 +188,26 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.doesNotMatch(designer, /<header className="dc-studio-toolbar">/);
   const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.doesNotMatch(rail, /onClick=\{restoreDefaults\}|copy\.startOver|onClick=\{undo\}|onClick=\{redo\}|onClick=\{save\}/);
-  const canvasToolbar = designer.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
-  assert.match(canvasToolbar, /dc-studio-history-actions/);
-  assert.match(canvasToolbar, /onClick=\{restoreDefaults\}/);
-  assert.match(canvasToolbar, /onClick=\{undo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !history.length\}/);
-  assert.match(canvasToolbar, /onClick=\{redo\} disabled=\{!invitation \|\| saving \|\| audioBusy \|\| !future.length\}/);
-  assert.match(canvasToolbar, /onClick=\{save\}/);
-  assert.match(canvasToolbar, /aria-label=\{copy\.replay\}/);
-  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{restoreDefaults\}[^>]*title=\{copy\.defaultsHint\}/);
-  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{undo\}[^>]*title=\{copy\.undo\}/);
-  assert.match(canvasToolbar, /<Button size="icon-sm" onClick=\{redo\}[^>]*title=\{copy\.redo\}/);
-  assert.match(canvasToolbar, /<Button onClick=\{save\}[^>]*size="sm"/);
+  assert.match(designer, /<StudioCanvasToolbar/);
+  assert.match(designer, /onRestore=\{restoreDefaults\}/);
+  assert.match(designer, /onUndo=\{undo\}/);
+  assert.match(designer, /onRedo=\{redo\}/);
+  assert.match(designer, /onSave=\{save\}/);
+  assert.match(designer, /canUndo=\{history\.length > 0\}/);
+  assert.match(designer, /canRedo=\{future\.length > 0\}/);
+  assert.match(canvasToolbarSource, /className="dc-studio-canvas-toolbar"/);
+  assert.match(canvasToolbarSource, /dc-studio-history-actions/);
+  assert.match(canvasToolbarSource, /onClick=\{onRestore\}/);
+  assert.match(canvasToolbarSource, /onClick=\{onUndo\}/);
+  assert.match(canvasToolbarSource, /onClick=\{onRedo\}/);
+  assert.match(canvasToolbarSource, /onClick=\{onSave\}/);
+  assert.match(canvasToolbarSource, /aria-label=\{labels\.replay\}/);
   assert.doesNotMatch(designer, /undoShort|redoShort|restartShort/);
   assert.ok(
-    canvasToolbar.indexOf("template?.name") < canvasToolbar.indexOf("onClick={restoreDefaults}") &&
-    canvasToolbar.indexOf("onClick={restoreDefaults}") < canvasToolbar.indexOf("onClick={undo}") &&
-    canvasToolbar.indexOf("onClick={undo}") < canvasToolbar.indexOf("onClick={redo}") &&
-    canvasToolbar.indexOf("onClick={redo}") < canvasToolbar.indexOf("onClick={save}"),
+    canvasToolbarSource.indexOf("templateName") < canvasToolbarSource.indexOf("onClick={onRestore}") &&
+    canvasToolbarSource.indexOf("onClick={onRestore}") < canvasToolbarSource.indexOf("onClick={onUndo}") &&
+    canvasToolbarSource.indexOf("onClick={onUndo}") < canvasToolbarSource.indexOf("onClick={onRedo}") &&
+    canvasToolbarSource.indexOf("onClick={onRedo}") < canvasToolbarSource.indexOf("onClick={onSave}"),
   );
   const reset = designer.split("function restoreDefaults()")[1]?.split("async function deleteMusic")[0] || "";
   assert.match(reset, /layers: \[\]/);
@@ -216,13 +222,14 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(reset, /File upload tetap tersimpan di koleksi media/);
   assert.doesNotMatch(designer, /Smartphone|copy\.phone|phone: "Ponsel"|phone: "Mobile"/);
   const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
-  assert.ok(canvas.indexOf("dc-studio-stage-controls") >= 0 && canvas.indexOf("dc-studio-stage-controls") < canvas.indexOf('className="dc-studio-preview-surface"'));
+  assert.ok(canvas.indexOf("<StudioStageControls") >= 0 && canvas.indexOf("<StudioStageControls") < canvas.indexOf('className="dc-studio-preview-surface"'));
+  assert.match(stageControlsSource, /className="dc-studio-stage-controls"/);
   assert.match(designer, /isUndo && history.length/);
   assert.match(designer, /isRedo && future.length/);
   assert.match(designer, /event\.nativeEvent\.isComposing/);
   assert.match(styles, /\.dc-studio-history-actions \{[^}]*display: flex;[^}]*align-items: center/);
   assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
-  assert.doesNotMatch(designer, /min-h-9 shrink-0 rounded-full/);
+  assert.doesNotMatch(stageControlsSource, /min-h-9 shrink-0 rounded-full/);
 });
 
 
@@ -406,8 +413,8 @@ test("Studio crop mode edits the photo inside its fixed canvas frame", () => {
 
 test("Studio canvas has local zoom controls that do not alter saved invitation geometry", () => {
   assert.match(designer, /canvasZoom/);
-  assert.match(designer, /<ZoomOut size=\{14\}/);
-  assert.match(designer, /<ZoomIn size=\{14\}/);
+  assert.match(stageControlsSource, /<ZoomOut size=\{14\}/);
+  assert.match(stageControlsSource, /<ZoomIn size=\{14\}/);
   assert.match(designer, /style=\{\{ zoom: canvasZoom \}\}/);
   assert.match(designer, /Math\.max\(0\.7/);
   assert.match(designer, /Math\.min\(1\.3/);
