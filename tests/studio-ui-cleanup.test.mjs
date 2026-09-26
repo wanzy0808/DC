@@ -302,7 +302,8 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.match(layerList, /const automaticLayerName = layer\.kind === "text"/);
   assert.match(layerList, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
   assert.match(layerList, /dc-studio-layer-select-button/);
-  assert.match(designer, /onPosition=\{positionAssetLayer\}/);
+  assert.match(designer, /onPositionAsset=\{positionAssetLayer\}/);
+  assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
   assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
@@ -658,7 +659,7 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(canvasSelectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-photo-slot\]"\)/);
   assert.match(designer, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<PhotoSlotInspector/);
-  assert.match(designer, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
+  assert.match(selectionInspector, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
   assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
   assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
   assert.match(canvasSelectionMarkers, /node\.dataset\[markerKey\] = "true"/);
