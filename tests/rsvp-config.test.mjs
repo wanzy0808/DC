@@ -13,6 +13,7 @@ import {
 } from "../lib/templates/rsvp-config.ts";
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
+const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 
 test("legacy RSVP stays unchanged until event options or custom fields are enabled", () => {
   assert.deepEqual(defaultInvitationRsvpConfig, {
