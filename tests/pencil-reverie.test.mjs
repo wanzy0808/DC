@@ -65,11 +65,13 @@ test("illustrations are full-aspect sheets and the complete lantern is retained"
 test("Pencil Reverie exposes actual independent editable narrative slots", () => {
   const fields=read("lib/templates/editable-copy.ts");
   const studio=read("components/InvitationStudio/InvitationDesigner.tsx");
+  const selectionInspector=read("components/InvitationStudio/StudioSelectionInspector.tsx");
   const live=read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   assert.match(fields,/templateKey === "pencil-reverie"/);
   assert.match(fields,/attendanceRequest/);
   assert.match(fields,/prayerWish/);
-  assert.match(studio,/CopyTextInspector/);
+  assert.match(studio,/StudioSelectionInspector/);
+  assert.match(selectionInspector,/CopyTextInspector/);
   assert.match(live,/text=\{editableCopy\.attendanceRequest \?\? ""\}/);
   assert.match(live,/text=\{editableCopy\.prayerWish \?\? ""\}/);
 });
