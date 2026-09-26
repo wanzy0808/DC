@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Type } from "lucide-react";
-import { MAX_ASSET_LAYERS, type InvitationAssetLayer } from "@/lib/templates/asset-layers";
+import { MAX_ASSET_LAYERS, type InvitationAssetLayer, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
@@ -22,13 +22,17 @@ function stableFontRank(value: string) {
 export default function TextObjectPanel({
   layers,
   selectedId,
+  targetSection,
   selectedFont,
+  onAdd,
   onSelect,
   onFontSelect,
 }: {
   layers: InvitationAssetLayer[];
   selectedId: string | null;
+  targetSection: StudioObjectSection;
   selectedFont: FontKey;
+  onAdd: (text: string, section: StudioObjectSection) => void;
   onSelect: (id: string) => void;
   onFontSelect: (font: FontKey) => void;
 }) {
@@ -56,8 +60,19 @@ export default function TextObjectPanel({
         </h2>
       </div>
 
+      <Button
+        type="button"
+        size="lg"
+        disabled={layers.length >= MAX_ASSET_LAYERS}
+        onClick={() => onAdd(en ? "Add your text" : "Tambahkan teks", targetSection)}
+        className="w-full justify-center"
+      >
+        <Type size={18} />
+        <span>{en ? "Add text box" : "Tambah kotak teks"}</span>
+      </Button>
+
       <p className="text-xs leading-5 text-muted-foreground">
-        {en ? "Click the canvas, then type to create text directly." : "Klik canvas, lalu langsung ketik untuk membuat teks."}
+        {en ? "Or click the canvas, then type to create text directly." : "Atau klik canvas, lalu langsung ketik untuk membuat teks."}
       </p>
 
       <div className="space-y-2 border-t border-primary/20 pt-4">
