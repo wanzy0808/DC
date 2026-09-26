@@ -11,7 +11,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
-import { defaultInvitationSections } from "@/lib/templates/sections";
+import { defaultInvitationSections, invitationSectionItems } from "@/lib/templates/sections";
 import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ import StudioLayerList from "@/components/InvitationStudio/StudioLayerList";
 import StudioSelectionInspector from "@/components/InvitationStudio/StudioSelectionInspector";
 import StudioCanvasToolbar from "@/components/InvitationStudio/StudioCanvasToolbar";
 import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
+import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -157,6 +158,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [previewVersion, setPreviewVersion] = useState(0);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [canvasZoom, setCanvasZoom] = useState(1);
+  const [activeCanvasSectionId, setActiveCanvasSectionId] = useState("envelope");
   const {
     canvasPanReady,
     canvasPanning,
@@ -1420,6 +1422,48 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     }
   }
 
+  const canvasNavigationItems: CanvasNavigationItem[] = [
+    ...(design.sections.envelope !== false ? [{ id: "envelope", key: "envelope" as const, title: "Amplop Digital" }] : []),
+    ...design.sectionLayout
+      .filter((item) => design.sections[item.key] !== false && !item.hidden)
+      .map((item) => ({
+        id: item.id,
+        key: item.key,
+        title: invitationSectionItems.find((section) => section.key === item.key)?.title ?? item.key,
+      })),
+  ];
+
+  function navigateCanvasSection(id: string) {
+    setActiveCanvasSectionId(id);
+    if (id === "envelope") {
+      setCanvasStage("envelope");
+      setPreviewVersion((value) => value + 1);
+      canvasScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    setCanvasStage("cover");
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      const root = canvasScrollRef.current;
+      const target = Array.from(root?.querySelectorAll<HTMLElement>("[data-section-instance-id]") ?? [])
+        .find((node) => node.dataset.sectionInstanceId === id);
+      target?.scrollIntoView({ block: "center", behavior: "smooth" });
+    }));
+  }
+
+  function syncCanvasSectionOnScroll() {
+    if (canvasStage === "envelope") return;
+    const root = canvasScrollRef.current;
+    if (!root) return;
+    const ids = new Set(canvasNavigationItems.map((item) => item.id));
+    const anchor = root.getBoundingClientRect().top + Math.min(root.clientHeight * 0.35, 180);
+    const sections = Array.from(root.querySelectorAll<HTMLElement>("[data-section-instance-id]"))
+      .filter((node) => ids.has(node.dataset.sectionInstanceId ?? ""));
+    if (!sections.length) return;
+    const closest = sections.reduce((best, node) =>
+      Math.abs(node.getBoundingClientRect().top - anchor) < Math.abs(best.getBoundingClientRect().top - anchor) ? node : best);
+    setActiveCanvasSectionId(closest.dataset.sectionInstanceId!);
+  }
+
   if (loadError) return (
     <section className="flex flex-1 flex-col items-center justify-center gap-5 p-6 text-center" role="alert">
       <p className="text-sm">{notice}</p>
@@ -1583,7 +1627,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             onRedo={redo}
             onSave={save}
           />
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-panning={canvasPanning ? "true" : undefined}
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-panning={canvasPanning ? "true" : undefined}
           onKeyDown={(event) => {
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
@@ -1655,7 +1699,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 locale={locale}
                 envelopeEnabled={design.sections.envelope !== false}
                 stage={canvasStage}
-                zoom={canvasZoom}
                 labels={{
                   envelope: copy.envelope,
                   cover: copy.cover,
@@ -1667,10 +1710,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                   setPreviewVersion((value) => value + 1);
                 }}
                 onContent={() => setCanvasStage("cover")}
-                onZoomOut={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))}
-                onResetZoom={() => setCanvasZoom(1)}
-                onFit={fitCanvasZoom}
-                onZoomIn={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))}
               />
               <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ zoom: canvasZoom }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
@@ -1738,6 +1777,17 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             />
           </div>
           </div>
+          <StudioCanvasFooter
+            locale={locale}
+            items={canvasNavigationItems}
+            activeId={canvasStage === "envelope" && design.sections.envelope !== false ? "envelope" : activeCanvasSectionId}
+            zoom={canvasZoom}
+            onNavigate={navigateCanvasSection}
+            onZoomOut={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))}
+            onResetZoom={() => setCanvasZoom(1)}
+            onFit={fitCanvasZoom}
+            onZoomIn={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))}
+          />
         </div>
       </div>
 
