@@ -83,10 +83,12 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
   const preview = readFileSync(new URL("../components/InvitationStudio/InvitationPreview.tsx", import.meta.url), "utf8");
   const universal = readFileSync(new URL("../components/PublicInvitation/UniversalInvitationTemplate.tsx", import.meta.url), "utf8");
   const rose = readFileSync(new URL("../components/PublicInvitation/RomanticRoseTemplate.tsx", import.meta.url), "utf8");
+  const toolbar = readFileSync(new URL("../components/InvitationStudio/StudioCanvasToolbar.tsx", import.meta.url), "utf8");
 
   assert.match(studio, /handleCanvasEnvelopeOpened = useCallback\(\(\) => setCanvasStage\("cover"\), \[\]\)/);
   assert.match(studio, /onEnvelopeOpened=\{handleCanvasEnvelopeOpened\}/);
-  assert.match(studio, /onClick=\{restoreDefaults\} disabled=\{!invitation \|\| saving \|\| audioBusy\}/);
+  assert.match(studio, /onRestore=\{restoreDefaults\}/);
+  assert.match(toolbar, /disabled=\{!invitationReady \|\| busy\}/);
   assert.match(studio, /function restoreDefaults\(\)[\s\S]*setCanvasStage\("envelope"\);[\s\S]*setPreviewVersion/);
   assert.match(studio, /sections=\{canvasStage === "cover" \? \{ \.\.\.design\.sections, envelope: false \} : design\.sections\}/);
   assert.match(preview, /<RomanticRoseTemplate[^>]*onEnvelopeOpened=\{onEnvelopeOpened\}/);
