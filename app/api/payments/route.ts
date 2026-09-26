@@ -18,12 +18,33 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Masukkan URL bukti transfer." }, { status: 400 });
     }
 
-    const payment = await prisma.payment.upsert({
-      where: { invitationId: invitation.id },
-      update: { proofUrl, note: String(body.note ?? "").trim() || null, status: "PENDING", confirmedAt: null, confirmedById: null },
-      create: { userId: user.id, invitationId: invitation.id, proofUrl, note: String(body.note ?? "").trim() || null },
+    // Payment is the server-owned entitlement. Customer proofs belong to an unpaid order.
+    const order = await prisma.paymentOrder.findFirst({
+      where: { invitationId: invitation.id, userId: user.id, status: "PENDING" },
+      orderBy: { createdAt: "desc" },
+      select: { id: true },
     });
-    return NextResponse.json({ payment });
+    if (!order) return NextResponse.json({ error: "Buat invoice pembayaran terlebih dahulu." }, { status: 409 });
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const pending = await tx.paymentOrder.updateMany({
+        where: { id: order.id, userId: user.id, status: "PENDING" },
+        data: { proofUrl, note: String(body.note ?? "").trim() || null },
+      });
+      if (pending.count !== 1) return null;
+      await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: "PAYMENT_PROOF_SUBMITTED",
+          entity: "PaymentOrder",
+          entityId: order.id,
+          metadata: { invitationId: invitation.id },
+        },
+      });
+      return tx.paymentOrder.findUniqueOrThrow({ where: { id: order.id } });
+    });
+    if (!updated) return NextResponse.json({ error: "Invoice ini sudah diproses." }, { status: 409 });
+    return NextResponse.json({ order: updated });
   } catch {
     return NextResponse.json({ error: "Bukti transfer belum dapat disimpan." }, { status: 500 });
   }
