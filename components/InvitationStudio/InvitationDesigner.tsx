@@ -84,6 +84,7 @@ import {
 } from "@/components/InvitationStudio/designer-persistence";
 import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
 import { useStudioCanvasSelectionMarkers } from "@/components/InvitationStudio/useStudioCanvasSelectionMarkers";
+import { resolveStudioCanvasSelection } from "@/components/InvitationStudio/studio-canvas-selection";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignerPanel,
@@ -503,11 +504,56 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({ copy: { ...design.copy, [field]: text } });
   }
 
+  function clearCanvasSelection() {
+    setSelectedLayerIds([]);
+    setSelectedLayerId(null);
+    setSelectedPhotoSlot(null);
+    setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
+    setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
+  }
+
+  function handleCanvasSelection(target: Element, canvasRoot: HTMLElement) {
+    const selection = resolveStudioCanvasSelection(target, canvasRoot);
+
+    switch (selection.kind) {
+      case "rsvp-element":
+        clearCanvasSelection();
+        setSelectedRsvpElementKey(selection.key);
+        return;
+      case "section-element":
+        clearCanvasSelection();
+        setSelectedSectionElement({
+          section: selection.section,
+          kind: selection.elementKind,
+        });
+        return;
+      case "copy":
+        clearCanvasSelection();
+        setSelectedCopyField(selection.field);
+        return;
+      case "photo":
+        selectPhotoVisual(selection.slot);
+        return;
+      case "section":
+        selectSectionInstance(selection.instanceId, selection.section);
+        return;
+      case "clear":
+        clearCanvasSelection();
+        return;
+      case "ignore":
+        return;
+    }
+  }
+
   function focusContentSection(section: InvitationSectionKey) {
     if (section === "music") {
       setPanel("music");
       return;
     }
+    setSelectedLayerIds([]);
     setSelectedLayerId(null);
     setSelectedPhotoSlot(null);
     setSelectedRsvpElementKey(null);
@@ -526,6 +572,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function focusContentElement(section: InvitationSectionKey, kind: StudioSectionElementKind) {
+    setSelectedLayerIds([]);
     setSelectedLayerId(null);
     setSelectedPhotoSlot(null);
     setSelectedSectionKey(null);
@@ -1031,6 +1078,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
   function selectSectionInstance(id: string, key: InvitationSectionKey) {
     setCropModeSlot(null);
+    setSelectedLayerIds([]);
     setSelectedLayerId(null);
     setSelectedPhotoSlot(null);
     setSelectedRsvpElementKey(null);
@@ -1474,80 +1522,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             if (consumeSuppressedCanvasClick()) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
-            const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
-            if (rsvpElement?.dataset.studioRsvpElement) {
-              setSelectedLayerId(null);
-              setSelectedPhotoSlot(null);
-              setSelectedSectionKey(null);
-              setSelectedSectionInstanceId(null);
-              setSelectedCopyField(null);
-              setSelectedSectionElement(null);
-              setSelectedRsvpElementKey(rsvpElement.dataset.studioRsvpElement);
-              return;
-            }
-
-            const sectionElement = target.closest<HTMLElement>("[data-studio-section-element]");
-            if (sectionElement?.dataset.studioSectionElement) {
-              const [section, kind] = sectionElement.dataset.studioSectionElement.split(":");
-              if ((kind === "input" || kind === "button") && section) {
-                setSelectedLayerId(null);
-                setSelectedPhotoSlot(null);
-                setSelectedSectionKey(null);
-                setSelectedSectionInstanceId(null);
-                setSelectedRsvpElementKey(null);
-                setSelectedCopyField(null);
-                setSelectedSectionElement({ section: section as InvitationSectionKey, kind });
-                return;
-              }
-            }
-
-            const copyElement = target.closest<HTMLElement>("[data-studio-copy-field]");
-            if (copyElement?.dataset.studioCopyField) {
-              setSelectedLayerId(null);
-              setSelectedPhotoSlot(null);
-              setSelectedSectionKey(null);
-              setSelectedSectionInstanceId(null);
-              setSelectedRsvpElementKey(null);
-              setSelectedSectionElement(null);
-              setSelectedCopyField(copyElement.dataset.studioCopyField as EditableInvitationCopyField);
-              return;
-            }
-
-            if (target.closest("[data-studio-photo-crop]")) return;
-            const photoElement = target.closest<HTMLElement>("[data-invitation-photo-slot]");
-            const photoSlot = photoElement?.dataset.invitationPhotoSlot as PhotoSlot | undefined;
-            if (photoSlot && (["cover", "personOne", "personTwo", "gallery"] as PhotoSlot[]).includes(photoSlot)) {
-              selectPhotoVisual(photoSlot);
-              return;
-            }
-
-            if (target.closest("[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]")) return;
-            const section = target.closest<HTMLElement>("[data-invitation-section]");
-            if (section?.dataset.invitationSection) {
-              if (section.dataset.invitationSection === "rsvp" && target.closest("img")) {
-                setSelectedLayerId(null);
-                setSelectedPhotoSlot(null);
-                setSelectedSectionKey(null);
-                setSelectedRsvpElementKey(null);
-    setSelectedCopyField(null);
-    setSelectedSectionElement(null);
-                return;
-              }
-              const instance = target.closest<HTMLElement>("[data-section-instance-id]");
-              const sectionKey = section.dataset.invitationSection as InvitationSectionKey;
-              selectSectionInstance(instance?.dataset.sectionInstanceId || sectionKey, sectionKey);
-              return;
-            }
-            // Empty canvas/preview space is a deselect target; do not touch content or persisted layers.
-            if (target.closest(".dc-studio-preview-surface") || target === event.currentTarget || target.closest(".dc-studio-preview-workspace")) {
-              setSelectedLayerId(null);
-              setSelectedPhotoSlot(null);
-              setSelectedSectionKey(null);
-              setSelectedSectionInstanceId(null);
-              setSelectedRsvpElementKey(null);
-    setSelectedCopyField(null);
-    setSelectedSectionElement(null);
-            }
+            handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
             <StudioLayerList
