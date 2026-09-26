@@ -660,7 +660,8 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(designer, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<PhotoSlotInspector/);
   assert.match(selectionInspector, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
-  assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
+  assert.match(designer, /onUpdatePhotoMotion=\{updatePhotoMotion\}/);
+  assert.match(selectionInspector, /onUpdate=\{\(patch\) => onUpdatePhotoMotion\(selectedPhotoSlot, patch\)\}/);
   assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
   assert.match(canvasSelectionMarkers, /node\.dataset\[markerKey\] = "true"/);
   assert.match(canvasSelectionMarkers, /"invitationPhotoSlot", markers\.photoSlot, "studioPhotoSelected"/);
