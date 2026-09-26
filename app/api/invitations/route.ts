@@ -356,6 +356,9 @@ export async function PUT(request: Request) {
     const ceremonyTime = String(body.ceremonyTime ?? invitation.ceremonyTime ?? "").trim() || null;
     const receptionTime = String(body.receptionTime ?? invitation.receptionTime ?? "").trim() || null;
     const templateKey = String(body.templateKey ?? invitation.templateKey).trim();
+    if (templateKey.split("::", 1)[0] === "blank-canvas") {
+      return NextResponse.json({ error: "Canvas kosong hanya tersedia di Studio Owner dan Designer." }, { status: 403 });
+    }
     const requestedTitle = String(body.title ?? invitation.title).trim();
     const title = buildEventTitle(eventCategory, groomName, brideName, requestedTitle);
     const wantsPublish = body.isPublished === undefined ? invitation.isPublished : Boolean(body.isPublished);
