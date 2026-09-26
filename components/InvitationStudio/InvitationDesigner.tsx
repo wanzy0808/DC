@@ -8,15 +8,7 @@ import {
   LayoutTemplate,
   Music2,
   Palette,
-  Redo2,
-  Save,
   SlidersHorizontal,
-  Undo2,
-  RotateCcw,
-  PanelLeftClose,
-  PanelLeftOpen,
-  ZoomIn,
-  ZoomOut,
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
@@ -31,6 +23,8 @@ import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import StudioLayerList from "@/components/InvitationStudio/StudioLayerList";
 import StudioSelectionInspector from "@/components/InvitationStudio/StudioSelectionInspector";
+import StudioCanvasToolbar from "@/components/InvitationStudio/StudioCanvasToolbar";
+import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -1472,27 +1466,33 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
           if (isUndo && history.length) { event.preventDefault(); undo(); }
           if (isRedo && future.length) { event.preventDefault(); redo(); }
         }}>
-          <div className="dc-studio-canvas-toolbar">
-            <button type="button" className="dc-studio-icon dc-studio-panel-toggle" onClick={() => setInspectorOpen(!inspectorOpen)} aria-label={inspectorOpen ? copy.hidePanel : copy.showPanel} title={inspectorOpen ? copy.hidePanel : copy.showPanel}>
-              {inspectorOpen ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
-            </button>
-            <span className="min-w-0 flex-1 truncate text-sm">{template?.name || "Studio"}</span>
-            <Button size="icon-sm" onClick={restoreDefaults} disabled={!invitation || saving || audioBusy} aria-label={copy.replay} title={copy.defaultsHint}>
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-            <div className="dc-studio-history-actions" role="group" aria-label={locale === "en" ? "Design history" : "Riwayat desain"}>
-              <Button size="icon-sm" onClick={undo} disabled={!invitation || saving || audioBusy || !history.length} aria-label={copy.undo} title={copy.undo}>
-                <Undo2 className="h-4 w-4" />
-              </Button>
-              <Button size="icon-sm" onClick={redo} disabled={!invitation || saving || audioBusy || !future.length} aria-label={copy.redo} title={copy.redo}>
-                <Redo2 className="h-4 w-4" />
-              </Button>
-            </div>
-            <Button onClick={save} disabled={saving || audioBusy || !invitation || (templateMode && !dirty)} size="sm">
-              <Save className="h-4 w-4" />
-              {saving ? copy.saving : templateMode ? (locale === "en" ? "Save Template" : "Simpan Template") : copy.save}
-            </Button>
-          </div>
+          <StudioCanvasToolbar
+            locale={locale}
+            inspectorOpen={inspectorOpen}
+            templateName={template?.name || "Studio"}
+            invitationReady={Boolean(invitation)}
+            saving={saving}
+            audioBusy={audioBusy}
+            canUndo={history.length > 0}
+            canRedo={future.length > 0}
+            templateMode={templateMode}
+            dirty={dirty}
+            labels={{
+              hidePanel: copy.hidePanel,
+              showPanel: copy.showPanel,
+              replay: copy.replay,
+              defaultsHint: copy.defaultsHint,
+              undo: copy.undo,
+              redo: copy.redo,
+              saving: copy.saving,
+              save: copy.save,
+            }}
+            onToggleInspector={() => setInspectorOpen(!inspectorOpen)}
+            onRestore={restoreDefaults}
+            onUndo={undo}
+            onRedo={redo}
+            onSave={save}
+          />
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-panning={canvasPanning ? "true" : undefined}
           onKeyDown={(event) => {
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
@@ -1536,30 +1536,27 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             />
 
             <div className="dc-studio-preview-workspace">
-              <div className="dc-studio-stage-controls" role="group" aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}>
-                {design.sections.envelope !== false && <button type="button"
-                  aria-pressed={canvasStage === "envelope"}
-                  className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "envelope" ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
-                  onClick={() => { setCanvasStage("envelope"); setPreviewVersion((value) => value + 1); }}
-                  title={copy.envelopeHint}
-                >{copy.envelope}</button>}
-                <button type="button"
-                  aria-pressed={canvasStage === "cover" || design.sections.envelope === false}
-                  className={`min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 px-2.5 text-[11px] ${canvasStage === "cover" || design.sections.envelope === false ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]"}`}
-                  onClick={() => setCanvasStage("cover")}
-                  title={copy.coverHint}
-                >{copy.cover}</button>
-                <div className="ml-auto flex items-center gap-1 rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1">
-                  <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))} disabled={canvasZoom <= 0.7} aria-label={locale === "en" ? "Zoom out canvas" : "Perkecil kanvas"} title={locale === "en" ? "Zoom out" : "Perkecil"}>
-                    <ZoomOut size={14} />
-                  </button>
-                  <button type="button" className="min-h-7 min-w-11 rounded-lg px-1.5 text-[10px] font-semibold text-muted-foreground hover:bg-primary/10 hover:text-primary" onClick={() => setCanvasZoom(1)} aria-label={locale === "en" ? "Reset canvas zoom to 100 percent" : "Reset zoom kanvas ke 100 persen"} title={locale === "en" ? "Reset to 100%" : "Kembali ke 100%"}>{Math.round(canvasZoom * 100)}%</button>
-                  <button type="button" className="min-h-7 rounded-lg px-2 text-[10px] font-semibold text-primary hover:bg-primary/10" onClick={fitCanvasZoom} aria-label={locale === "en" ? "Fit canvas to workspace" : "Sesuaikan kanvas ke area kerja"} title={locale === "en" ? "Fit canvas" : "Sesuaikan kanvas"}>Fit</button>
-                  <button type="button" className="grid h-7 w-7 place-items-center rounded-lg text-primary hover:bg-primary/10" onClick={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))} disabled={canvasZoom >= 1.3} aria-label={locale === "en" ? "Zoom in canvas" : "Perbesar kanvas"} title={locale === "en" ? "Zoom in" : "Perbesar"}>
-                    <ZoomIn size={14} />
-                  </button>
-                </div>
-              </div>
+              <StudioStageControls
+                locale={locale}
+                envelopeEnabled={design.sections.envelope !== false}
+                stage={canvasStage}
+                zoom={canvasZoom}
+                labels={{
+                  envelope: copy.envelope,
+                  cover: copy.cover,
+                  envelopeHint: copy.envelopeHint,
+                  coverHint: copy.coverHint,
+                }}
+                onEnvelope={() => {
+                  setCanvasStage("envelope");
+                  setPreviewVersion((value) => value + 1);
+                }}
+                onContent={() => setCanvasStage("cover")}
+                onZoomOut={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))}
+                onResetZoom={() => setCanvasZoom(1)}
+                onFit={fitCanvasZoom}
+                onZoomIn={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))}
+              />
               <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ zoom: canvasZoom }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
