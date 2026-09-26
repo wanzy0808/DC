@@ -120,6 +120,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [selectedPhotoSlot, setSelectedPhotoSlot] = useState<PhotoSlot | null>(null);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
+  const textInsertPoint = useRef<{ section: StudioObjectSection; x: number; y: number } | null>(null);
+  const textTypingLayer = useRef<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
@@ -730,23 +732,39 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setInspectorOpen(true);
   }
 
-  function addTextObject(text: string, section: StudioObjectSection) {
-    if (!text.trim() || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
+  function addTextObject(
+    text: string,
+    section: StudioObjectSection,
+    position: { x: number; y: number } = { x: 50, y: 48 },
+  ) {
+    if (!text.trim() || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return null;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
-      id, kind: "text", src: "", text: text.slice(0, 180), section, x: 50, y: 48, width: 55,
+      id, kind: "text", src: "", text: text.slice(0, 180), section, x: position.x, y: position.y, width: 55,
       opacity: 1, fontSize: 24, fontRole: "heading", fontWeight: 400, textAlign: "center",
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
     }] });
+    textTypingLayer.current = id;
     setSelectedPhotoSlot(null);
+    setSelectedLayerIds([id]);
     setSelectedLayerId(id);
     showDesignSection(section);
     setPanel("text");
     setInspectorOpen(true);
-    requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`)?.scrollIntoView({ block: "center" }));
+    requestAnimationFrame(() => canvasScrollRef.current?.focus({ preventScroll: true }));
+    return id;
+  }
+
+  function updateCanvasTypedText(id: string, text: string) {
+    setDesign((current) => ({
+      ...current,
+      layers: current.layers.map((layer) => layer.id === id ? { ...layer, text: text.slice(0, 180) } : layer),
+    }));
   }
 
   function focusDesignObject(id: string, additive = false) {
+    textTypingLayer.current = null;
+    textInsertPoint.current = null;
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
     const targetIds = layer.groupId
@@ -1398,21 +1416,76 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               onUpload={(file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
+          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} selectedFont={design.font} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
           {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onAddShape={addShapeObject} />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
 
         <div className="dc-studio-canvas" onKeyDown={(event) => {
-          if (!invitation || saving || audioBusy || !(event.ctrlKey || event.metaKey) || event.altKey || event.nativeEvent.isComposing) return;
+          if (!invitation || saving || audioBusy || event.altKey || event.nativeEvent.isComposing) return;
           const target = event.target;
           if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
-          const key = event.key.toLowerCase();
-          const isUndo = key === "z" && !event.shiftKey;
-          const isRedo = (key === "z" && event.shiftKey) || (key === "y" && !event.shiftKey);
-          if (isUndo && history.length) { event.preventDefault(); undo(); }
-          if (isRedo && future.length) { event.preventDefault(); redo(); }
+
+          if (event.ctrlKey || event.metaKey) {
+            const key = event.key.toLowerCase();
+            const isUndo = key === "z" && !event.shiftKey;
+            const isRedo = (key === "z" && event.shiftKey) || (key === "y" && !event.shiftKey);
+            if (isUndo && history.length) { event.preventDefault(); undo(); }
+            if (isRedo && future.length) { event.preventDefault(); redo(); }
+            return;
+          }
+
+          if (panel !== "text") return;
+          if (event.key === "Escape") {
+            textTypingLayer.current = null;
+            return;
+          }
+
+          const selectedText = design.layers.find(
+            (layer) => layer.id === selectedLayerId && layer.kind === "text" && !layer.locked,
+          );
+          const printable = event.key.length === 1;
+          const textEditKey = printable || event.key === "Backspace" || event.key === "Enter";
+          if (!textEditKey) return;
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          if (selectedText) {
+            if (textTypingLayer.current !== selectedText.id) {
+              setHistory((current) => [...current.slice(-14), designKey]);
+              setFuture([]);
+              textTypingLayer.current = selectedText.id;
+            }
+
+            let nextText = selectedText.text ?? "";
+            if (event.key === "Backspace") nextText = nextText.slice(0, -1);
+            else if (event.key === "Enter" && nextText.length < 180) nextText += "\n";
+            else if (printable && nextText.length < 180) nextText += event.key;
+
+            if (!nextText.trim() && event.key === "Backspace") {
+              setDesign((current) => ({
+                ...current,
+                layers: current.layers.filter((layer) => layer.id !== selectedText.id),
+              }));
+              setSelectedLayerIds([]);
+              setSelectedLayerId(null);
+              textTypingLayer.current = null;
+              return;
+            }
+
+            updateCanvasTypedText(selectedText.id, nextText);
+            return;
+          }
+
+          if (!printable || !event.key.trim()) return;
+          const insert = textInsertPoint.current ?? {
+            section: textTargetSection,
+            x: 50,
+            y: 48,
+          };
+          addTextObject(event.key, insert.section, { x: insert.x, y: insert.y });
         }}>
           <StudioCanvasToolbar
             locale={locale}
@@ -1464,6 +1537,29 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             if (consumeSuppressedCanvasClick()) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
+
+            if (
+              panel === "text" &&
+              !target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object]')
+            ) {
+              const sectionNode = target.closest<HTMLElement>("[data-invitation-section]");
+              const section = sectionNode?.dataset.invitationSection as StudioObjectSection | undefined;
+              if (sectionNode && section && studioObjectSections.includes(section) && design.sections[section] !== false) {
+                const rect = sectionNode.getBoundingClientRect();
+                if (rect.width && rect.height) {
+                  textInsertPoint.current = {
+                    section,
+                    x: Math.min(100, Math.max(0, (event.clientX - rect.left) / rect.width * 100)),
+                    y: Math.min(100, Math.max(0, (event.clientY - rect.top) / rect.height * 100)),
+                  };
+                  textTypingLayer.current = null;
+                  setSelectedLayerIds([]);
+                  setSelectedLayerId(null);
+                  event.currentTarget.focus({ preventScroll: true });
+                }
+              }
+            }
+
             handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
           <div className="dc-studio-canvas-layout">
