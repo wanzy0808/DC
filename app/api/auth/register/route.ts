@@ -47,7 +47,16 @@ export async function POST(request: Request) {
       subject: "Verifikasi email — DC Organizer",
       html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#21191c;line-height:1.6"><h2>DC Organizer</h2><p>Selamat datang. Verifikasi email untuk mengaktifkan akunmu.</p><p><a href="${verifyUrl}">Verifikasi email</a></p><p>Link berlaku 24 jam dan hanya dapat digunakan sekali.</p></body></html>`,
     });
-    if (!mail.sent && process.env.NODE_ENV !== "production") console.info(`[DEV] Verify ${email}: ${verifyUrl}`);
+    if (!mail.sent) {
+      if (process.env.NODE_ENV !== "production") {
+        console.info(`[DEV] Verify ${email}: ${verifyUrl}`);
+      } else {
+        return NextResponse.json(
+          { error: "Akun dibuat, tetapi email verifikasi belum terkirim. Buka Masuk lalu pilih Kirim ulang verifikasi." },
+          { status: 503 },
+        );
+      }
+    }
     return NextResponse.json({ message: "Akun dibuat. Cek email untuk verifikasi." }, { status: 201 });
   } catch {
     return NextResponse.json({ error: "Tidak dapat membuat akun." }, { status: 500 });
