@@ -169,7 +169,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     consumeSuppressedCanvasClick,
   } = useStudioCanvasPan();
   // A click on the actual envelope advances the Studio stage selector, too.
-  const handleCanvasEnvelopeOpened = useCallback(() => setCanvasStage("cover"), []);
+  const handleCanvasEnvelopeOpened = useCallback(() => {
+    setCanvasStage("cover");
+    setActiveCanvasSectionId("cover");
+  }, []);
   const [savedState, setSavedState] = useState("");
   const [serverRevision, setServerRevision] = useState("");
   const audioMutation = useRef(false);
@@ -1709,7 +1712,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                   setCanvasStage("envelope");
                   setPreviewVersion((value) => value + 1);
                 }}
-                onContent={() => setCanvasStage("cover")}
+                onContent={() => { setCanvasStage("cover"); setActiveCanvasSectionId((current) => current === "envelope" ? canvasNavigationItems.find((item) => item.id !== "envelope")?.id ?? current : current); }}
               />
               <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ zoom: canvasZoom }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
