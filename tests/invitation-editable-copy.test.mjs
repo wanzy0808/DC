@@ -17,6 +17,7 @@ const state = read("components/InvitationStudio/designer-state.ts");
 const preview = read("components/InvitationStudio/InvitationPreview.tsx");
 const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
 test("Isi keeps narrative slots in the renderer and edits them directly from canvas", () => {
@@ -28,7 +29,7 @@ test("Isi keeps narrative slots in the renderer and edits them directly from can
   assert.match(content, /<Heading title="Isi" description="" \/>/);
   assert.match(content, /sectionFunctionalElements/);
   assert.doesNotMatch(content, /<textarea/);
-  assert.match(studio, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
+  assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
   assert.match(studio, /<CopyTextInspector/);
   assert.match(universal, /data-studio-copy-field="greeting"/);
   assert.match(universal, /data-studio-copy-field="closing"/);
