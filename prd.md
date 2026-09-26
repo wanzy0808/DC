@@ -5184,3 +5184,12 @@ Atas instruksi owner, perubahan layout yang memindahkan rail menu dan inspector 
 **Perubahan:** `components/PublicInvitation/InvitationAssetLayers.tsx` kini memilih objek lebih dahulu pada pointer kiri, lalu tetap menolak drag/resize bila layer terkunci. Pencarian posisi untuk siklus overlap dibatasi ke overlay section canvas tempat objek dirender. Hak edit, urutan layer, renderer publik, desain tersimpan, dan schema database tidak berubah. Commit source: `ab1a9de0`.
 
 **Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36226526942) dan [Orphan Audit](https://github.com/wanzy0808/DC/actions/runs/36226527108) untuk commit source berhasil. Interaksi pointer pada browser desktop/mobile dan gambar PNG transparan yang bertumpuk masih memerlukan QA visual; CI tidak membuktikan pengalaman klik seluruh susunan layer.
+
+
+### 26 September 2026 — Klaim pembayaran sekali dan pemisahan bukti dari entitlement
+
+**Masalah:** pemeriksaan status `PENDING` sebelum transaksi admin dapat dilewati dua request serentak; untuk `WA_BLAST_50`, keduanya berpotensi menambah 50 kuota. Endpoint `/api/payments` lama mengizinkan customer menulis langsung ke `Payment` melalui upsert, termasuk mengembalikan pembayaran `PAID` ke `PENDING`. Bukti pada endpoint invoice juga bisa ditulis setelah admin mulai memproses order bila pemeriksaan awal menjadi usang.
+
+**Perubahan:** `app/api/admin/payments/route.ts` memakai update bersyarat `id + status=PENDING` di transaksi sebelum aktivasi/penolakan; request yang kalah mendapat 409 dan tidak menambah entitlement/kuota. `app/api/payments/route.ts` hanya memperbarui `PaymentOrder` menunggu yang dimiliki user, bukan `Payment`; tanpa invoice menunggu mendapat 409. `app/api/orders/[id]/route.ts` menjaga laporan bayar dan bukti dengan pemeriksaan status bersyarat dalam transaksi, termasuk audit log. Tidak ada migrasi atau perubahan harga/role. Commit source: `e4b64ea9`, `acdf578c`, `da8e1c25`.
+
+**Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36227064525) dan [Orphan Audit](https://github.com/wanzy0808/DC/actions/runs/36227064452) pada commit `da8e1c25` berhasil. Uji konkurensi pada PostgreSQL sungguhan dan alur pembayaran browser/admin di environment produksi masih diperlukan; CI build tidak menggantikannya.
