@@ -5,15 +5,10 @@ import {
   MAX_ASSET_LAYERS,
   type InvitationAssetLayer,
 } from "@/lib/templates/asset-layers";
-
-type LayerAlign =
-  | "left"
-  | "center-x"
-  | "right"
-  | "top"
-  | "center-y"
-  | "bottom";
-type LayerDistribution = "horizontal" | "vertical";
+import type {
+  AssetLayerAlignment,
+  AssetLayerDistribution,
+} from "@/components/InvitationStudio/designer-layer-geometry";
 
 export default function StudioLayerList({
   locale,
@@ -41,8 +36,8 @@ export default function StudioLayerList({
   onReorder: (sourceId: string, targetId: string) => void;
   onGroup: () => void;
   onUngroup: () => void;
-  onAlign: (alignment: LayerAlign) => void;
-  onDistribute: (direction: LayerDistribution) => void;
+  onAlign: (alignment: AssetLayerAlignment) => void;
+  onDistribute: (direction: AssetLayerDistribution) => void;
 }) {
   const en = locale === "en";
   const selectedLayers = layers.filter((layer) => selectedIds.includes(layer.id));
