@@ -9,6 +9,7 @@ import {
 } from "../lib/templates/section-styles.ts";
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
+const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 
 test("section style overrides round-trip safely in the invitation design key", () => {
   const base = "romantic-rose::rose::cinzelFauna";
@@ -49,7 +50,6 @@ test("Studio section selection opens a right-side inspector and renderers consum
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
   const css = read("components/InvitationStudio/studio.css");
   const selectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
-  const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 
   assert.match(editor, /selectedSectionKey/);
   assert.match(editor, /resolveStudioCanvasSelection/);
