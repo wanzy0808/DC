@@ -162,6 +162,12 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   const [musicUrl, setMusicUrl] = useState("");
   const [eventTag, setEventTag] = useState("");
   const [dressCode, setDressCode] = useState("");
+  useEffect(() => {
+    if (panel === "text") return;
+    textInsertPoint.current = null;
+    textTypingLayer.current = null;
+  }, [panel]);
+
   const [design, setDesign] = useState<InvitationDesignState>({
     template: "botanical-ivory",
     palette: "pearl",
