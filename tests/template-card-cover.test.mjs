@@ -85,7 +85,7 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
   const rose = readFileSync(new URL("../components/PublicInvitation/RomanticRoseTemplate.tsx", import.meta.url), "utf8");
   const toolbar = readFileSync(new URL("../components/InvitationStudio/StudioCanvasToolbar.tsx", import.meta.url), "utf8");
 
-  assert.match(studio, /handleCanvasEnvelopeOpened = useCallback\(\(\) => setCanvasStage\("cover"\), \[\]\)/);
+  assert.match(studio, /handleCanvasEnvelopeOpened = useCallback\(\(\) => \{\s*setCanvasStage\("cover"\);\s*setActiveCanvasSectionId\("cover"\);/);
   assert.match(studio, /onEnvelopeOpened=\{handleCanvasEnvelopeOpened\}/);
   assert.match(studio, /onRestore=\{restoreDefaults\}/);
   assert.match(toolbar, /disabled=\{!invitationReady \|\| busy\}/);
