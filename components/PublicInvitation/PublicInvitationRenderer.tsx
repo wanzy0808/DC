@@ -9,6 +9,9 @@ import { parseDesignKey } from "@/lib/templates/design";
 export default function PublicInvitationRenderer({ invitation, personalGuest }: { invitation: PublicInvitationData; personalGuest?: PersonalRsvpGuest }) {
   const key = parseDesignKey(invitation.templateKey).template;
   if (key === "romantic-rose") return <RomanticRoseTemplate invitation={invitation} personalGuest={personalGuest} />;
+  if (key === "blank-canvas") {
+    return <UniversalInvitationTemplate invitation={invitation} templateKey={key} personalGuest={personalGuest} />;
+  }
   // Studio only offers render-ready built-ins; reject unknown/unintegrated keys at the route.
   if (invitationTemplates.some((template) => template.key === key)) {
     return <UniversalInvitationTemplate invitation={invitation} templateKey={key} personalGuest={personalGuest} />;
