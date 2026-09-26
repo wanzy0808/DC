@@ -13,7 +13,7 @@ export async function GET(request: Request) {
 
   await prisma.$transaction([
     prisma.user.update({ where: { id: record.userId }, data: { emailVerifiedAt: new Date() } }),
-    prisma.emailVerificationToken.delete({ where: { id: record.id } }),
+    prisma.emailVerificationToken.deleteMany({ where: { userId: record.userId } }),
   ]);
   return NextResponse.json({ message: "Email berhasil diverifikasi. Silakan login." });
 }
