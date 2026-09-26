@@ -89,6 +89,7 @@ import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/prev
 
 const blankCanvasSections = {
   ...defaultInvitationSections,
+  envelope: false,
   greeting: false,
   identity: false,
   event: false,
@@ -104,7 +105,7 @@ const blankCanvasSections = {
   music: false,
 };
 
-export default function InvitationDesigner({ mode = "invitation" }: { mode?: "invitation" | "template" }) {
+export default function InvitationDesigner({ mode = "invitation", allowBlankCanvas = false }: { mode?: "invitation" | "template"; allowBlankCanvas?: boolean }) {
   const { locale } = useLanguage();
   const templateMode = mode === "template";
   const copy = locale === "en" ? {
@@ -410,6 +411,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
   }
 
   function startBlankCanvas() {
+    if (!templateMode || !allowBlankCanvas) return;
     change({
       template: "blank-canvas",
       palette: "pearl",
@@ -1445,7 +1447,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
-          {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} onBlankCanvas={startBlankCanvas} />}
+          {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} onBlankCanvas={templateMode && allowBlankCanvas ? startBlankCanvas : undefined} />}
           {panel === "sections" && (
             <ContentPanel
               sections={design.sections}
