@@ -15,10 +15,12 @@ export function TemplatePanel({
   selected,
   onSelect,
   templates,
+  onBlankCanvas,
 }: {
   selected: string;
   onSelect: (key: string) => void;
   templates: CatalogTemplate[];
+  onBlankCanvas: () => void;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
@@ -27,7 +29,9 @@ export function TemplatePanel({
   const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
   const [sort, setSort] = useState<"selected" | "az" | "za">("selected");
   const [limit, setLimit] = useState(18);
-  const activeName = templates.find((item) => item.key === selected)?.name;
+  const activeName = selected === "blank-canvas"
+    ? (en ? "Blank Canvas" : "Canvas Kosong")
+    : templates.find((item) => item.key === selected)?.name;
 
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase("id");
@@ -100,6 +104,37 @@ export function TemplatePanel({
         </div>
       </div>
       <div className="mt-5 grid grid-cols-2 items-start gap-2">
+        <div
+          className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
+            selected === "blank-canvas"
+              ? "border-primary ring-2 ring-primary/20"
+              : "border-border hover:border-primary/40"
+          }`}
+        >
+          <span className="relative block aspect-[9/19.5] w-full overflow-hidden bg-background">
+            <span
+              aria-hidden="true"
+              className="absolute inset-3 rounded-[12px] border border-dashed border-primary/30 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px)] bg-[size:20px_20px]"
+            />
+            {selected === "blank-canvas" && (
+              <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-white dark:text-black">
+                <Check className="h-4 w-4" />
+              </span>
+            )}
+          </span>
+          <span className="flex min-h-14 min-w-0 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2 py-2">
+            <span className="break-words font-[family-name:var(--font-dc-heading)] text-xs font-semibold leading-snug text-foreground">{en ? "Blank Canvas" : "Canvas Kosong"}</span>
+            <span className="text-[11px] text-primary">{en ? "Start from scratch" : "Mulai dari nol"}</span>
+          </span>
+          <button
+            type="button"
+            onClick={onBlankCanvas}
+            aria-label={en ? "Start with a blank canvas" : "Mulai dari canvas kosong"}
+            aria-pressed={selected === "blank-canvas"}
+            className="absolute inset-0 z-10 rounded-[var(--dc-control-radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+          />
+        </div>
+
         {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
