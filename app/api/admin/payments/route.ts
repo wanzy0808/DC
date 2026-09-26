@@ -3,6 +3,8 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
+class ProcessedOrderError extends Error {}
+
 async function requireAdmin() {
   const user = await getCurrentUser();
   if (!user || !["ADMIN", "OWNER", "FINANCE"].includes(user.role)) return null;
@@ -60,19 +62,25 @@ export async function PATCH(request: Request) {
     if (order.status !== "PENDING") return NextResponse.json({ error: "Order ini sudah diproses." }, { status: 409 });
 
     if (action === "REJECT") {
-      const updated = await prisma.paymentOrder.update({
-        where: { id: order.id },
-        data: { status: "FAILED", confirmedAt: new Date(), confirmedById: admin.id },
+      const updated = await prisma.$transaction(async (tx) => {
+        const claimed = await tx.paymentOrder.updateMany({
+          where: { id: order.id, status: "PENDING" },
+          data: { status: "FAILED", confirmedAt: new Date(), confirmedById: admin.id },
+        });
+        if (claimed.count !== 1) throw new ProcessedOrderError();
+        return tx.paymentOrder.findUniqueOrThrow({ where: { id: order.id } });
       });
       return NextResponse.json({ order: updated });
     }
 
     const now = new Date();
     const updated = await prisma.$transaction(async (tx) => {
-      const paidOrder = await tx.paymentOrder.update({
-        where: { id: order.id },
+      const claimed = await tx.paymentOrder.updateMany({
+        where: { id: order.id, status: "PENDING" },
         data: { status: "PAID", paidAt: now, confirmedAt: now, confirmedById: admin.id },
       });
+      if (claimed.count !== 1) throw new ProcessedOrderError();
+      const paidOrder = await tx.paymentOrder.findUniqueOrThrow({ where: { id: order.id } });
 
       if (order.packageKey === "WA_BLAST_50") {
         await tx.invitation.update({
@@ -144,6 +152,9 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ order: updated });
   } catch (error) {
+    if (error instanceof ProcessedOrderError) {
+      return NextResponse.json({ error: "Order ini sudah diproses." }, { status: 409 });
+    }
     console.error("PATCH /api/admin/payments failed", error);
     return NextResponse.json({ error: "Status pembayaran belum dapat diubah." }, { status: 500 });
   }
