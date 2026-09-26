@@ -8,6 +8,7 @@ import {
 import { resizeObjectFromHandle } from "../lib/templates/object-resize.ts";
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
+const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 const asset = (id, src = "/templates/pencil-reverie/flower.webp") => ({
   id, src, x: 50, y: 35, width: 28, opacity: 0.8,
 });
@@ -87,7 +88,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "back"\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.match(editor, /design\.layers\.length >= MAX_ASSET_LAYERS/);
-  assert.match(editor, /<AssetLayerInspector/);
+  assert.match(editor, /<StudioSelectionInspector/);
+  assert.match(selectionInspector, /<AssetLayerInspector/);
 
   assert.match(editor, /findSectionDropTarget\(event\.clientX, event\.clientY\)/);
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
