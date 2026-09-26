@@ -49,9 +49,11 @@ test("Studio section selection opens a right-side inspector and renderers consum
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
   const css = read("components/InvitationStudio/studio.css");
   const selectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
+  const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 
   assert.match(editor, /selectedSectionKey/);
-  assert.match(editor, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
+  assert.match(editor, /resolveStudioCanvasSelection/);
+  assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
   assert.match(editor, /<SectionInspector/);
   assert.match(editor, /updateSectionStyle/);
   assert.match(editor, /resetSectionStyle/);
@@ -154,7 +156,7 @@ test("Isi only exposes real Input and Button child components", () => {
   assert.doesNotMatch(panels, /envelope: \["button"\]/);
   assert.match(editor, /selectedSectionElement/);
   assert.match(editor, /<SectionElementInspector/);
-  assert.match(editor, /target\.closest<HTMLElement>\("\[data-studio-section-element\]"\)/);
+  assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-section-element\]"\)/);
   assert.match(wishes, /data-studio-section-element="wishes:input"/);
   assert.match(wishes, /data-studio-section-element="wishes:button"/);
   assert.match(universal, /data-studio-section-element="location:button"/);
