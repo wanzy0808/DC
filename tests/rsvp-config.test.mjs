@@ -121,7 +121,7 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   assert.doesNotMatch(panels, /appearance !== "zen" && <h2/);
   const componentInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   assert.match(designer, /selectedRsvpElementKey/);
-  assert.match(designer, /target\.closest<HTMLElement>\("\[data-studio-rsvp-element\]"\)/);
+  assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-rsvp-element\]"\)/);
   assert.match(designer, /<RsvpElementInspector/);
   assert.match(componentInspector, />\s*Reset\s*</);
   assert.doesNotMatch(componentInspector, /Reset komponen|Reset component/);
