@@ -240,10 +240,11 @@ test("Studio displays its document name in the real page header, never above the
 test("Restart lives only in the canvas toolbar, not in the left rail", () => {
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const rail = editor.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
-  const toolbar = editor.split('<div className="dc-studio-canvas-toolbar">')[1]?.split("</div>\n          <div ref={canvasScrollRef}")[0] || "";
+  const toolbar = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
   assert.doesNotMatch(rail, /restoreDefaults|startOver/);
-  assert.match(toolbar, /<Button size="icon-sm" onClick=\{restoreDefaults\}/);
-  assert.match(toolbar, /title=\{copy.defaultsHint\}/);
+  assert.match(editor, /onRestore=\{restoreDefaults\}/);
+  assert.match(toolbar, /<Button[\s\S]*onClick=\{onRestore\}/);
+  assert.match(toolbar, /title=\{labels\.defaultsHint\}/);
 });
 
 
