@@ -174,9 +174,10 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
   assert.match(selectionResolver, /data-studio-design-object/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
-  assert.match(editor, /selectSectionInstance\(instance\?\.dataset\.sectionInstanceId \|\| sectionKey, sectionKey\)/);
+  assert.match(selectionResolver, /instanceId: instance\?\.dataset\.sectionInstanceId \|\| sectionKey/);
+  assert.match(editor, /selectSectionInstance\(selection\.instanceId, selection\.section\)/);
   assert.match(editor, /setSelectedLayerId\(null\);/);
-  assert.match(editor, /target\.closest\("\.dc-studio-preview-surface"\)/);
+  assert.match(selectionResolver, /target\.closest\("\.dc-studio-preview-surface"\)/);
   assert.match(renderer, /layer\.kind === "text"/);
   assert.match(universal, /objectOverlay\(keyName\)/);
   assert.match(universal, /objectOverlay\("cover"\)/);
