@@ -1,4 +1,4 @@
-import { invitationTemplates } from "@/lib/templates/catalog";
+import { blankCanvasTemplate, invitationTemplates } from "@/lib/templates/catalog";
 import { invitationFonts, invitationPalettes, type FontKey, type PaletteKey } from "@/lib/templates/design";
 import type { InvitationTemplatePreset } from "@/components/InvitationStudio/designer-types";
 
@@ -8,9 +8,10 @@ export const invitationDecorOptions = [
   "/couple3.jpg",
 ];
 
-export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = Object.fromEntries(
-  invitationTemplates.map((template) => [template.key, template.preset]),
-);
+export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = {
+  ...Object.fromEntries(invitationTemplates.map((template) => [template.key, template.preset])),
+  [blankCanvasTemplate.key]: blankCanvasTemplate.preset,
+};
 
 export const invitationPaletteOptions = Object.entries(invitationPalettes) as [
   PaletteKey,
