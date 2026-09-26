@@ -180,7 +180,7 @@ test("Studio stage labels use Amplop and Isi while keeping internal cover state"
   assert.match(designer, /envelope: "Amplop", cover: "Isi"/);
   assert.match(designer, /envelope: "Envelope", cover: "Content"/);
   assert.match(designer, /stage=\{canvasStage\}/);
-  assert.match(designer, /onContent=\{\(\) => setCanvasStage\("cover"\)\}/);
+  assert.match(designer, /onContent=\{\(\) => \{ setCanvasStage\("cover"\); setActiveCanvasSectionId/);
 });
 
 test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", () => {
