@@ -353,7 +353,7 @@ export default function UniversalInvitationTemplate({
 
   const renderSectionInstances = (keyName: InvitationSectionKey, render: (instanceId: string) => ReactNode) => {
     const hidden = sections[keyName] === false;
-    if (hidden && !preview) return null;
+    if (hidden && (!preview || key === "blank-canvas")) return null;
     return instancesForSection(sectionLayout, keyName).map((instance) => (
       <EditableSectionInstance
         key={instance.id}
