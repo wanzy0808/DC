@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import { audioUploadError } from "@/lib/invitations/audio-limits";
 import { defaultInvitationSections } from "@/lib/templates/sections";
-import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
+import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
@@ -29,14 +29,8 @@ import { getEventCategory } from "@/lib/events/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
-import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
-import AssetLayerInspector from "@/components/InvitationStudio/AssetLayerInspector";
-import SectionInspector from "@/components/InvitationStudio/SectionInspector";
-import PhotoSlotInspector from "@/components/InvitationStudio/PhotoSlotInspector";
-import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
-import CopyTextInspector from "@/components/InvitationStudio/CopyTextInspector";
-import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
 import StudioLayerList from "@/components/InvitationStudio/StudioLayerList";
+import StudioSelectionInspector from "@/components/InvitationStudio/StudioSelectionInspector";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -1601,76 +1595,35 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
               </div>
             </div>
 
-            {selectedAssetLayer?.kind === "text" ? (
-              <TextLayerInspector
-                locale={locale}
-                layer={selectedAssetLayer}
-                selectedIndex={selectedAssetIndex}
-                layerCount={design.layers.length}
-                sections={design.sections}
-                onClose={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
-                onUpdate={updateAssetLayer}
-                onPosition={positionAssetLayer}
-              />
-            ) : selectedAssetLayer ? (
-              <AssetLayerInspector
-                locale={locale}
-                selectedAssetLayer={selectedAssetLayer}
-                selectedAssetIndex={selectedAssetIndex}
-                layerCount={design.layers.length}
-                sections={design.sections}
-                onDeselect={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
-                onUpdate={updateAssetLayer}
-                onPosition={positionAssetLayer}
-              />
-            ) : selectedPhotoSlot ? (
-              <PhotoSlotInspector
-                locale={locale}
-                slot={selectedPhotoSlot}
-                motion={design.photos.motion?.[selectedPhotoSlot]}
-                onUpdate={(patch) => updatePhotoMotion(selectedPhotoSlot, patch)}
-                onReset={() => resetPhotoMotion(selectedPhotoSlot)}
-                onClose={() => setSelectedPhotoSlot(null)}
-              />
-            ) : selectedRsvpElementKey ? (
-              <RsvpElementInspector
-                locale={locale}
-                elementKey={selectedRsvpElementKey}
-                config={design.rsvpConfig}
-                onConfig={updateRsvpConfig}
-                onClose={() => setSelectedRsvpElementKey(null)}
-              />
-            ) : selectedSectionElement ? (
-              <SectionElementInspector
-                locale={locale}
-                section={selectedSectionElement.section}
-                kind={selectedSectionElement.kind}
-                styles={design.sectionElementStyles}
-                onChange={updateSectionElementStyles}
-                onClose={() => setSelectedSectionElement(null)}
-              />
-            ) : selectedCopyField ? (
-              <CopyTextInspector
-                locale={locale}
-                field={selectedCopyField}
-                value={design.copy[selectedCopyField] ?? invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
-                defaultValue={invitationCopyDefaults(design.template, invitation?.description)[selectedCopyField] ?? ""}
-                motion={design.copyMotion[selectedCopyField]}
-                onChange={(value) => setNarrativeCopy(selectedCopyField, value)}
-                onMotion={(patch) => updateCopyMotion(selectedCopyField, patch)}
-                onReset={() => resetNarrativeCopyAndMotion(selectedCopyField)}
-                onClose={() => setSelectedCopyField(null)}
-              />
-            ) : selectedSectionKey ? (
-              <SectionInspector
-                locale={locale}
-                sectionKey={selectedSectionKey}
-                style={design.sectionStyles[selectedSectionKey]}
-                onUpdate={(patch) => updateSectionStyle(selectedSectionKey, patch)}
-                onReset={() => resetSectionStyle(selectedSectionKey)}
-                onClose={() => { setSelectedSectionKey(null); setSelectedSectionInstanceId(null); }}
-              />
-            ) : null}
+            <StudioSelectionInspector
+              locale={locale}
+              design={design}
+              invitationDescription={invitation?.description}
+              selectedAssetLayer={selectedAssetLayer}
+              selectedAssetIndex={selectedAssetIndex}
+              selectedPhotoSlot={selectedPhotoSlot}
+              selectedRsvpElementKey={selectedRsvpElementKey}
+              selectedSectionElement={selectedSectionElement}
+              selectedCopyField={selectedCopyField}
+              selectedSectionKey={selectedSectionKey}
+              onCloseAsset={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
+              onUpdateAsset={updateAssetLayer}
+              onPositionAsset={positionAssetLayer}
+              onUpdatePhotoMotion={updatePhotoMotion}
+              onResetPhotoMotion={resetPhotoMotion}
+              onClosePhoto={() => setSelectedPhotoSlot(null)}
+              onUpdateRsvpConfig={updateRsvpConfig}
+              onCloseRsvp={() => setSelectedRsvpElementKey(null)}
+              onUpdateSectionElementStyles={updateSectionElementStyles}
+              onCloseSectionElement={() => setSelectedSectionElement(null)}
+              onSetNarrativeCopy={setNarrativeCopy}
+              onUpdateCopyMotion={updateCopyMotion}
+              onResetNarrativeCopyAndMotion={resetNarrativeCopyAndMotion}
+              onCloseCopy={() => setSelectedCopyField(null)}
+              onUpdateSectionStyle={updateSectionStyle}
+              onResetSectionStyle={resetSectionStyle}
+              onCloseSection={() => { setSelectedSectionKey(null); setSelectedSectionInstanceId(null); }}
+            />
           </div>
           </div>
         </div>
