@@ -54,7 +54,7 @@ export default function StudioSelectionInspector({
   locale: string;
   design: InvitationDesignState;
   invitationDescription?: string | null;
-  selectedAssetLayer: InvitationAssetLayer | null;
+  selectedAssetLayer: InvitationAssetLayer | null | undefined;
   selectedAssetIndex: number;
   selectedPhotoSlot: PhotoSlot | null;
   selectedRsvpElementKey: string | null;
