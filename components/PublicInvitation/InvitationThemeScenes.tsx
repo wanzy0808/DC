@@ -141,7 +141,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       />
     );
   }
-  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} isWedding={isWedding} hashtag={hashtag} />;
+  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} />;
   const isEnvelope = false;
