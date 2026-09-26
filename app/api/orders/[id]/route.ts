@@ -29,21 +29,30 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   const action = String(body.action ?? "");
 
   if (action === "REPORT_PAID") {
-    const existing = await prisma.auditLog.findFirst({
-      where: { actorId: user.id, action: "PAYMENT_REPORTED", entity: "PaymentOrder", entityId: order.id },
-      orderBy: { createdAt: "desc" },
+    const result = await prisma.$transaction(async (tx) => {
+      const pending = await tx.paymentOrder.updateMany({
+        where: { id: order.id, userId: user.id, status: "PENDING" },
+        data: { updatedAt: new Date() },
+      });
+      if (pending.count !== 1) return null;
+      const existing = await tx.auditLog.findFirst({
+        where: { actorId: user.id, action: "PAYMENT_REPORTED", entity: "PaymentOrder", entityId: order.id },
+        orderBy: { createdAt: "desc" },
+      });
+      const report = existing ?? await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: "PAYMENT_REPORTED",
+          entity: "PaymentOrder",
+          entityId: order.id,
+          metadata: { invoiceNumber: order.invoiceNumber, packageKey: order.packageKey },
+        },
+      });
+      const updated = await tx.paymentOrder.findUniqueOrThrow({ where: { id: order.id } });
+      return { updated, reportedAt: report.createdAt };
     });
-    const report = existing ?? await prisma.auditLog.create({
-      data: {
-        actorId: user.id,
-        action: "PAYMENT_REPORTED",
-        entity: "PaymentOrder",
-        entityId: order.id,
-        metadata: { invoiceNumber: order.invoiceNumber, packageKey: order.packageKey },
-      },
-    });
-    const updated = await prisma.paymentOrder.update({ where: { id: order.id }, data: { updatedAt: new Date() } });
-    return NextResponse.json({ order: { ...updated, reportedAt: report.createdAt } });
+    if (!result) return NextResponse.json({ error: "Invoice ini sudah diproses." }, { status: 409 });
+    return NextResponse.json({ order: { ...result.updated, reportedAt: result.reportedAt } });
   }
 
   const proofUrl = String(body.proofUrl ?? "").trim();
@@ -51,10 +60,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (proofUrl.startsWith("data:") && proofUrl.length > 4_200_000) return NextResponse.json({ error: "File terlalu besar. Maksimal sekitar 3 MB." }, { status: 400 });
 
   const result = await prisma.$transaction(async (tx) => {
-    const updated = await tx.paymentOrder.update({
-      where: { id },
+    const pending = await tx.paymentOrder.updateMany({
+      where: { id, userId: user.id, status: "PENDING" },
       data: { proofUrl, note: String(body.note ?? "").trim() || null },
     });
+    if (pending.count !== 1) return null;
+    const updated = await tx.paymentOrder.findUniqueOrThrow({ where: { id } });
     const report = await tx.auditLog.create({
       data: {
         actorId: user.id,
@@ -67,5 +78,6 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return { updated, reportedAt: report.createdAt };
   });
 
+  if (!result) return NextResponse.json({ error: "Invoice ini sudah diproses." }, { status: 409 });
   return NextResponse.json({ order: { ...result.updated, reportedAt: result.reportedAt } });
 }
