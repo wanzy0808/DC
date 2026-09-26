@@ -14,6 +14,7 @@ type SceneProps = {
   onOpen: () => void;
   isWedding?: boolean;
   hashtag?: string | null;
+  preview?: boolean;
 };
 
 /**
@@ -34,7 +35,7 @@ function HeartDoodle() {
 }
 
 export default function PencilReverieScene({
-  stage, names, date, onOpen, isWedding = true, hashtag,
+  stage, names, date, onOpen, isWedding = true, hashtag, preview = false,
 }: SceneProps) {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -49,7 +50,7 @@ export default function PencilReverieScene({
   const couple = isWedding ? names.split(/\s*&\s*/).filter(Boolean) : [];
   const longName = names.length > 29 || couple.some((name) => name.length > 17);
   const handleOpen = () => {
-    if (opening) return;
+    if (preview || opening) return;
     setOpening(true);
     // The shared parent starts user-selected music synchronously with this click.
     onOpen();
@@ -72,7 +73,7 @@ export default function PencilReverieScene({
         </div>
         <HeartDoodle/>
       </div>
-      <button className="pr-open-button" type="button" onClick={handleOpen} disabled={opening}>
+      <button className="pr-open-button" type="button" onClick={handleOpen} disabled={opening} data-studio-system-action={preview ? "open-invitation" : undefined}>
         <Play size={15} aria-hidden="true" fill="currentColor"/> Buka Undangan
       </button>
     </> : <>
