@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { invitationTitleCase } from "@/lib/events/parents";
 
 /** Publishing and package checkout live in Dashboard > Undangan Digital. */
-export default function InvitationEditorPage({ mode = "invitation", backHref = "/dashboard" }: { mode?: "invitation" | "template"; backHref?: string }) {
+export default function InvitationEditorPage({ mode = "invitation", backHref = "/dashboard", allowBlankCanvas = false }: { mode?: "invitation" | "template"; backHref?: string; allowBlankCanvas?: boolean }) {
   const { locale } = useLanguage();
   const [accessPaid, setAccessPaid] = useState<boolean | null>(null);
   const [documentTitle, setDocumentTitle] = useState("Studio");
@@ -79,7 +79,7 @@ export default function InvitationEditorPage({ mode = "invitation", backHref = "
           </div>
           {error && <span className="w-full text-sm text-destructive" role="alert">{error}</span>}
         </header>
-        <InvitationDesigner mode={mode} />
+        <InvitationDesigner mode={mode} allowBlankCanvas={allowBlankCanvas} />
       </div>
     </main>
   );
