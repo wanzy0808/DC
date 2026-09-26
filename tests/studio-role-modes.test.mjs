@@ -23,12 +23,13 @@ test("staff Save creates a sellable catalog template while customer Save stays e
   const templateApi = read("app/api/designer/templates/route.ts");
   const invitationApi = read("app/api/invitations/route.ts");
   const persistence = read("components/InvitationStudio/designer-persistence.ts");
+  const toolbar = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
 
   assert.match(editor, /if \(templateMode\)/);
   assert.match(editor, /createStudioTemplate\(/);
   assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
   assert.match(persistence, /method: "POST"/);
-  assert.match(editor, /Simpan Template/);
+  assert.match(toolbar, /Simpan Template/);
   assert.match(editor, /saveStudioInvitation\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
   assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
