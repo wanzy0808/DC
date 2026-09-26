@@ -1519,6 +1519,8 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
             if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
+            const selectedTextLayer = design.layers.find((layer) => layer.id === selectedLayerId && layer.kind === "text");
+            if (panel === "text" && (selectedTextLayer || textInsertPoint.current)) return;
             event.preventDefault();
             setCanvasPanReady(true);
           }}
