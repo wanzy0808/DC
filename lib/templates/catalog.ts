@@ -15,6 +15,19 @@ export type InvitationTemplate = {
   preset: { layout: InvitationTemplateLayout; palette: PaletteKey; font: FontKey };
 };
 
+export const blankCanvasTemplate: InvitationTemplate = {
+  key: "blank-canvas",
+  category: "Studio",
+  previewType: "studio",
+  usesPhotos: false,
+  photoSlots: [],
+  preset: { layout: "editorial", palette: "pearl", font: "cinzelFauna" },
+  name: "Canvas Kosong",
+  description: "Canvas kosong untuk membangun desain dari nol di Studio.",
+  previewImage: "/flower.png",
+  assetPath: "",
+};
+
 export const invitationTemplates: InvitationTemplate[] = [
   {
     key: "romantic-rose",
@@ -171,6 +184,7 @@ export const invitationTemplates: InvitationTemplate[] = [
 
 export function getInvitationTemplate(key: string) {
   const baseKey = key.split("::")[0];
+  if (baseKey === blankCanvasTemplate.key) return blankCanvasTemplate;
   return (
     invitationTemplates.find((template) => template.key === baseKey) ??
     invitationTemplates[0]
