@@ -20,7 +20,7 @@ export function TemplatePanel({
   selected: string;
   onSelect: (key: string) => void;
   templates: CatalogTemplate[];
-  onBlankCanvas: () => void;
+  onBlankCanvas?: () => void;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
@@ -104,7 +104,7 @@ export function TemplatePanel({
         </div>
       </div>
       <div className="mt-5 grid grid-cols-2 items-start gap-2">
-        <div
+        {onBlankCanvas && <div
           className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
             selected === "blank-canvas"
               ? "border-primary ring-2 ring-primary/20"
@@ -133,7 +133,7 @@ export function TemplatePanel({
             aria-pressed={selected === "blank-canvas"}
             className="absolute inset-0 z-10 rounded-[var(--dc-control-radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           />
-        </div>
+        </div>}
 
         {filtered.slice(0, limit).map((item) => (
           <div
