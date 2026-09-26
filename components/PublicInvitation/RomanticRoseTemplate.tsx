@@ -214,6 +214,7 @@ export default function RomanticRoseTemplate({
   const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
   const handleOpen = () => {
+    if (preview) return;
     musicRef.current?.playOnOpen();
     setOpened(true);
     onEnvelopeOpened?.();
@@ -269,7 +270,7 @@ export default function RomanticRoseTemplate({
             <span className="absolute bottom-6 left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-4 border-[#edc6d0] bg-[#b7798d] text-white shadow-md"><Heart className="h-5 w-5" fill="currentColor" /></span>
           </div>
           <p className="mt-8 text-xs leading-6 text-[#815768]">Dengan hangat kami mengundang Anda<br />untuk merayakan hari istimewa kami.</p>
-          <button type="button" onClick={handleOpen} className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
+          <button type="button" onClick={handleOpen} data-studio-system-action={preview ? "open-invitation" : undefined} className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
             Buka Undangan
           </button>
           {preview && <p className="mt-4 text-[11px] text-[#8e586d]">Preview · foto dan isi mengikuti undangan ini</p>}
