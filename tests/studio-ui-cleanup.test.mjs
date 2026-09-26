@@ -213,7 +213,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(reset, /layers: \[\]/);
   assert.match(reset, /photos: defaultPhotoAssignments\(\)/);
   assert.match(reset, /copy: \{\}/);
-  assert.match(reset, /sections: \{ \.\.\.defaultInvitationSections \}/);
+  assert.match(reset, /sections: design\.template === "blank-canvas" \? \{ \.\.\.blankCanvasSections \} : \{ \.\.\.defaultInvitationSections \}/);
   assert.match(reset, /setMusicUrl\(""\)/);
   assert.match(reset, /setCanvasStage\("envelope"\)/);
   assert.match(reset, /setPreviewVersion/);
