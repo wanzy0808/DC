@@ -5202,3 +5202,12 @@ Atas instruksi owner, perubahan layout yang memindahkan rail menu dan inspector 
 **Perubahan:** `lib/notifications/email.ts` membatasi waktu request Resend 10 detik dan mengembalikan kegagalan terkendali. `app/api/auth/register/route.ts` menolak pembuatan akun produksi bila `APP_URL` belum diisi dan memberi respons 503 yang jujur jika akun terbuat tetapi email gagal dikirim. Endpoint `app/api/auth/resend-verification/route.ts` membuat tautan baru untuk akun belum terverifikasi, membatasi permintaan per IP/email, dan menghapus token baru bila pengiriman produksi gagal. `components/Auth/LoginDialog.tsx` menyediakan tombol **Kirim ulang verifikasi**; `app/api/auth/verify-email/route.ts` menghapus seluruh token verifikasi akun setelah satu tautan berhasil dipakai. Tidak ada migrasi. Commit source: `b76ccba5`, `efb929f6`, `21720ed1`, `b275dd13`, `e48b16a2`, `7356c351`.
 
 **Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36227249251) dan [Orphan Audit](https://github.com/wanzy0808/DC/actions/runs/36227249292) pada commit `7356c351` berhasil. Pengiriman Resend nyata, konfigurasi `APP_URL`, deliverability, serta alur klik email/login di environment target belum diuji. Rate limiter saat ini memakai memori proses; penyimpanan terdistribusi masih diperlukan bila aplikasi dijalankan pada lebih dari satu instance.
+
+
+### 26 September 2026 — Pemeriksaan header unggahan musik
+
+**Masalah:** pengunggah musik memeriksa ukuran dan MIME dari browser, tetapi byte file belum diperiksa. File non-audio dapat diberi label `audio/mpeg` lalu ditulis ke `public/uploads/music`.
+
+**Perubahan:** `lib/invitations/audio-limits.ts` menambahkan pemeriksaan signature dasar untuk MP3/ID3, WAV/RIFF, OGG, AAC/ADTS dan M4A/MP4. `app/api/invitations/assets/upload/route.ts` menolak byte yang tidak cocok sebelum membuat file/database record. `tests/audio-limits.test.mjs` menguji header valid, file HTML berlabel audio, format yang tidak cocok, serta header terlalu pendek. Commit source: `55870ce4`, `c3ff8624`, `dc0d3679`.
+
+**Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36227385843) berhasil, termasuk source regression tests dan production build. Ini deteksi header dasar, bukan decoding/pemutaran penuh setiap codec. Upload dan playback browser, ketahanan storage `public/uploads`, serta backup media di lingkungan produksi masih belum diverifikasi.
