@@ -27,6 +27,7 @@ const premiumTimelineHook = read("components/PublicInvitation/use-premium-sectio
 const motionPerformance = read("lib/templates/motion-performance.ts");
 const canvasSelectionMarkers = read("components/InvitationStudio/useStudioCanvasSelectionMarkers.ts");
 const canvasSelectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
+const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
 const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
@@ -655,7 +656,8 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(designer, /const \[selectedPhotoSlot, setSelectedPhotoSlot\] = useState<PhotoSlot \| null>\(null\)/);
   assert.match(designer, /function selectPhotoVisual\(slot: PhotoSlot\)/);
   assert.match(canvasSelectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-photo-slot\]"\)/);
-  assert.match(designer, /<PhotoSlotInspector/);
+  assert.match(designer, /<StudioSelectionInspector/);
+  assert.match(selectionInspector, /<PhotoSlotInspector/);
   assert.match(designer, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
   assert.match(designer, /updatePhotoMotion\(selectedPhotoSlot, patch\)/);
   assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
