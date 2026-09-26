@@ -38,6 +38,8 @@ const copy = {
     password: "Kata sandi",
     forgot: "Lupa kata sandi?",
     forgotSent: "Jika email terdaftar, tautan reset akan dikirim.",
+    resend: "Kirim ulang verifikasi",
+    resendSent: "Jika akun belum diverifikasi, tautan baru telah dikirim.",
     submit: "Masuk",
     loading: "Memproses...",
     noAccount: "Belum punya akun?",
@@ -65,6 +67,8 @@ const copy = {
     password: "Password",
     forgot: "Forgot password?",
     forgotSent: "If the email is registered, a reset link will be sent.",
+    resend: "Resend verification",
+    resendSent: "If the account is unverified, a new link has been sent.",
     submit: "Sign in",
     loading: "Signing in...",
     noAccount: "New here?",
@@ -105,6 +109,7 @@ export default function LoginDialog({
 
   const [loading, setLoading] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [resendLoading, setResendLoading] = useState(false);
   const [notice, setNotice] = useState("");
 
   useEffect(() => {
@@ -159,6 +164,30 @@ export default function LoginDialog({
       setError(t.connectionFailed);
     } finally {
       setForgotLoading(false);
+    }
+  }
+
+  async function resendVerification() {
+    setError("");
+    setNotice("");
+    if (!email.trim()) {
+      setError(locale === "id" ? "Isi email terlebih dahulu." : "Enter your email first.");
+      return;
+    }
+    setResendLoading(true);
+    try {
+      const response = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json() as { error?: string };
+      if (!response.ok) setError(data.error ?? t.connectionFailed);
+      else setNotice(t.resendSent);
+    } catch {
+      setError(t.connectionFailed);
+    } finally {
+      setResendLoading(false);
     }
   }
 
@@ -250,9 +279,14 @@ export default function LoginDialog({
                 {showPassword ? <EyeOff className="size-4" aria-hidden="true" /> : <Eye className="size-4" aria-hidden="true" />}
               </button>
             </div>
-            <button type="button" disabled={forgotLoading} onClick={forgotPassword} className={`${authSecondaryLinkClass} mt-2 text-sm disabled:opacity-60`}>
-              {forgotLoading ? t.loading : t.forgot}
-            </button>
+            <div className="mt-2 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+              <button type="button" disabled={forgotLoading} onClick={forgotPassword} className={`${authSecondaryLinkClass} text-sm disabled:opacity-60`}>
+                {forgotLoading ? t.loading : t.forgot}
+              </button>
+              <button type="button" disabled={resendLoading} onClick={resendVerification} className={`${authSecondaryLinkClass} text-sm disabled:opacity-60`}>
+                {resendLoading ? t.loading : t.resend}
+              </button>
+            </div>
           </div>
         </div>
 
