@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type CroppablePhotoSlot, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
+import { getInvitationTemplate } from "@/lib/templates/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
 import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
@@ -85,6 +86,23 @@ import type {
   InvitationDesignState,
 } from "@/components/InvitationStudio/designer-types";
 import { templateDemoInvitation, templateDemoPhoto } from "@/data/templates/preview-invitation";
+
+const blankCanvasSections = {
+  ...defaultInvitationSections,
+  greeting: false,
+  identity: false,
+  event: false,
+  dateTime: false,
+  gallery: false,
+  countdown: false,
+  location: false,
+  rsvp: false,
+  wishes: false,
+  gift: false,
+  closing: false,
+  footer: false,
+  music: false,
+};
 
 export default function InvitationDesigner({ mode = "invitation" }: { mode?: "invitation" | "template" }) {
   const { locale } = useLanguage();
@@ -311,7 +329,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
   const template =
     readyTemplates.find((item) => item.key === design.template) ||
-    readyTemplates[0];
+    (design.template === "blank-canvas" ? getInvitationTemplate("blank-canvas") : readyTemplates[0]);
   const palette = invitationPalettes[design.palette];
   const fontPair = invitationFonts[design.font];
   const designKey = makeInvitationDesignStateKey(design);
@@ -391,6 +409,49 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     setDesign((current) => ({ ...current, ...next }));
   }
 
+  function startBlankCanvas() {
+    change({
+      template: "blank-canvas",
+      palette: "pearl",
+      font: "cinzelFauna",
+      decor: invitationDecorOptions[0],
+      sections: { ...blankCanvasSections },
+      photos: defaultPhotoAssignments(),
+      copy: {},
+      copyMotion: {},
+      layers: [],
+      sectionStyles: {},
+      rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
+      sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
+      sectionElementStyles: {},
+    });
+    setMusicUrl("");
+    setSelectedCatalogKey("blank-canvas");
+    clearTemplateSelection();
+    const location = new URL(window.location.href);
+    location.searchParams.set("template", "blank-canvas");
+    window.history.replaceState(window.history.state, "", location.pathname + location.search + location.hash);
+    setActivePhotoSlot("cover");
+    setSelectedPhotoSlot(null);
+    setSelectedLayerIds([]);
+    setSelectedLayerId(null);
+    setSelectedSectionKey(null);
+    setSelectedSectionInstanceId(null);
+    setSelectedRsvpElementKey(null);
+    setSelectedCopyField(null);
+    setSelectedSectionElement(null);
+    setCopiedAssetLayer(null);
+    setCopiedAssetLayers([]);
+    draggedAssetSrc.current = null;
+    setAssetDropReady(false);
+    setCanvasStage("cover");
+    setPanel("assets");
+    setInspectorOpen(true);
+    setNotice(locale === "en"
+      ? "Blank canvas ready. Add text, assets, shapes, or enable content sections."
+      : "Canvas kosong siap. Tambahkan teks, aset, bentuk, atau aktifkan section Isi.");
+  }
+
   function selectTemplate(templateKey: string) {
     const catalogTemplate = readyTemplates.find((item) => item.key === templateKey);
     if (!catalogTemplate) {
@@ -452,7 +513,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
     change({
       palette: preset.palette,
       font: preset.font,
-      sections: { ...defaultInvitationSections },
+      sections: design.template === "blank-canvas" ? { ...blankCanvasSections } : { ...defaultInvitationSections },
       photos: defaultPhotoAssignments(),
       copy: {},
       copyMotion: {},
@@ -1384,7 +1445,7 @@ export default function InvitationDesigner({ mode = "invitation" }: { mode?: "in
 
         <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
-          {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} />}
+          {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} onBlankCanvas={startBlankCanvas} />}
           {panel === "sections" && (
             <ContentPanel
               sections={design.sections}
