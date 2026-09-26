@@ -27,6 +27,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Email sudah terdaftar." }, { status: 409 });
     }
 
+    if (process.env.NODE_ENV === "production" && !process.env.APP_URL) {
+      return NextResponse.json({ error: "Pendaftaran belum tersedia. Konfigurasi email perlu diperbaiki." }, { status: 503 });
+    }
+
     const user = await prisma.user.create({
       data: {
         firstName: "",
