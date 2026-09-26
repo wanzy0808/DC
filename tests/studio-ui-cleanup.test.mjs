@@ -30,6 +30,7 @@ const canvasSelectionResolver = read("components/InvitationStudio/studio-canvas-
 const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 const canvasToolbarSource = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
 const stageControlsSource = read("components/InvitationStudio/StudioStageControls.tsx");
+const canvasFooterSource = read("components/InvitationStudio/StudioCanvasFooter.tsx");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
 const sectionInspector = read("components/InvitationStudio/SectionInspector.tsx");
 const universalTemplate = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
@@ -413,8 +414,8 @@ test("Studio crop mode edits the photo inside its fixed canvas frame", () => {
 
 test("Studio canvas has local zoom controls that do not alter saved invitation geometry", () => {
   assert.match(designer, /canvasZoom/);
-  assert.match(stageControlsSource, /<ZoomOut size=\{14\}/);
-  assert.match(stageControlsSource, /<ZoomIn size=\{14\}/);
+  assert.match(canvasFooterSource, /<ZoomOut size=\{15\}/);
+  assert.match(canvasFooterSource, /<ZoomIn size=\{15\}/);
   assert.match(designer, /style=\{\{ zoom: canvasZoom \}\}/);
   assert.match(designer, /Math\.max\(0\.7/);
   assert.match(designer, /Math\.min\(1\.3/);
@@ -518,8 +519,8 @@ test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", ()
   assert.match(designer, /querySelector<HTMLElement>\("\.dc-studio-preview-surface"\)/);
   assert.match(designer, /onResetZoom=\{\(\) => setCanvasZoom\(1\)\}/);
   assert.match(designer, /onFit=\{fitCanvasZoom\}/);
-  assert.match(stageControlsSource, /onClick=\{onFit\}/);
-  assert.match(stageControlsSource, />\s*Fit\s*<\/button>/);
+  assert.match(canvasFooterSource, /onClick=\{onFit\}/);
+  assert.match(canvasFooterSource, />\s*Fit\s*<\/button>/);
 });
 
 
