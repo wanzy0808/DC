@@ -17,6 +17,7 @@ const state = read("components/InvitationStudio/designer-state.ts");
 const preview = read("components/InvitationStudio/InvitationPreview.tsx");
 const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
 const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
@@ -30,7 +31,8 @@ test("Isi keeps narrative slots in the renderer and edits them directly from can
   assert.match(content, /sectionFunctionalElements/);
   assert.doesNotMatch(content, /<textarea/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
-  assert.match(studio, /<CopyTextInspector/);
+  assert.match(studio, /<StudioSelectionInspector/);
+  assert.match(selectionInspector, /<CopyTextInspector/);
   assert.match(universal, /data-studio-copy-field="greeting"/);
   assert.match(universal, /data-studio-copy-field="closing"/);
 });
@@ -66,7 +68,7 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /copy: \{\},/);
   assert.match(studio, /function setNarrativeCopy\(/);
   assert.match(studio, /change\(\{ copy: \{ \.\.\.design\.copy, \[field\]: text \} \}\)/);
-  assert.match(studio, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => setNarrativeCopy\(selectedCopyField, value\)\}/);
+  assert.match(selectionInspector, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => onSetNarrativeCopy\(selectedCopyField, value\)\}/);
   assert.match(persistence, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
   const customerSave = persistence.split('fetcher("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
