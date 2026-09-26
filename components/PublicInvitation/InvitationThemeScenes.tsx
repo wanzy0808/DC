@@ -37,8 +37,21 @@ function Portrait({ src, alt, focus, crop, className = "" }: { src?: string; alt
     ? <img src={src} alt={alt} loading="lazy" className={`${photoClass} ${className}`} style={style} />
     : <div className={`flex h-full w-full items-center justify-center bg-black/10 ${className}`} role="img" aria-label="Foto belum ditambahkan"><Heart className="h-8 w-8 opacity-40" strokeWidth={1} /></div>;
 }
-function Open({ onClick, dark = false, children }: { onClick: () => void; dark?: boolean; children?: ReactNode }) {
-  return <button type="button" onClick={onClick} className={`relative z-20 mt-7 min-h-12 rounded-full border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}>{children || "Buka Undangan"}</button>;
+function Open({ onClick, dark = false, children, preview = false }: { onClick: () => void; dark?: boolean; children?: ReactNode; preview?: boolean }) {
+  return <button
+    type="button"
+    onClick={(event) => {
+      if (preview) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      onClick();
+    }}
+    data-studio-system-action={preview ? "open-invitation" : undefined}
+    aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
+    className={`relative z-20 mt-7 min-h-12 rounded-full border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
+  >{children || "Buka Undangan"}</button>;
 }
 function Edit({ onClick }: { onClick?: () => void }) {
   return onClick ? <button type="button" onClick={onClick} aria-label="Atur foto cover" className="absolute inset-0 z-10 flex items-end justify-center bg-transparent pb-3 text-xs font-medium text-transparent transition hover:bg-black/30 hover:text-white focus-visible:bg-black/30 focus-visible:text-white">Atur foto</button> : null;
@@ -110,7 +123,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
           </div>
         </div>
       </div>
-      <Open onClick={onOpen} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
+      <Open onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
       {preview && <p className="relative mt-4 text-[11px] opacity-60">Pratinjau</p>}
     </section>
   );
@@ -119,6 +132,15 @@ const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/P
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,hashtag}: SceneProps) {
+  if (theme === "blank-canvas") {
+    return (
+      <section
+        data-invitation-section={stage}
+        data-studio-blank-canvas={preview ? "true" : undefined}
+        className="relative min-h-[760px] overflow-hidden bg-[var(--inv-bg,#ffffff)]"
+      />
+    );
+  }
   if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} isWedding={isWedding} hashtag={hashtag} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} />;
@@ -138,7 +160,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     </div>
     <Names className="z-10 mt-9 text-3xl">{names}</Names>
     <p className="relative mt-3 text-xs tracking-[.25em]">{date}</p>
-    {isEnvelope ? <Open onClick={onOpen}>Buka Surat Cinta</Open> : <Lines className="mt-8"><Flower2 className="h-5 w-5"/></Lines>}
+    {isEnvelope ? <Open onClick={onOpen} preview={preview}>Buka Surat Cinta</Open> : <Lines className="mt-8"><Flower2 className="h-5 w-5"/></Lines>}
     {isEnvelope && preview && <p className="mt-5 text-xs opacity-60">Pratinjau</p>}
   </section>;
 
@@ -154,7 +176,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
       <Names className="text-3xl">{names}</Names><p className="mt-3 text-xs tracking-[.2em]">{date}</p>
     </div>
-    {isEnvelope ? <Open dark onClick={onOpen}>OPEN INVITATION ↗</Open> : <Lines className="mt-9" />}
+    {isEnvelope ? <Open dark onClick={onOpen} preview={preview}>OPEN INVITATION ↗</Open> : <Lines className="mt-9" />}
   </section>;
 
   if (theme === "garden-light") return <section className={`${center} bg-[var(--inv-scene-bg,#ecf0de)] text-[color:var(--inv-scene-ink,#465c3a)]`} data-invitation-section={stage}>
@@ -168,7 +190,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     </div>
     <Names className="relative mt-14 text-3xl italic">{names}</Names>
     <p className="mt-3 text-xs tracking-[.2em]">{date}</p>
-    {isEnvelope ? <Open onClick={onOpen}>Masuk ke Taman</Open> : <Lines className="mt-7"><Leaf className="h-5 w-5"/></Lines>}
+    {isEnvelope ? <Open onClick={onOpen} preview={preview}>Masuk ke Taman</Open> : <Lines className="mt-7"><Leaf className="h-5 w-5"/></Lines>}
   </section>;
 
   if (theme === "midnight-romance") return <section className={`${center} bg-[var(--inv-scene-bg,#080d20)] text-[color:var(--inv-scene-ink,#f4e7d0)]`} data-invitation-section={stage}>
@@ -181,7 +203,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     </div>
     <Names className="relative mt-10 text-3xl">{names}</Names>
     <p className="mt-3 text-xs uppercase tracking-[.3em] text-[color:var(--inv-scene-text,#e5d5ac)]">{date}</p>
-    {isEnvelope ? <Open dark onClick={onOpen}>Buka Undangan ✧</Open> : <Lines className="mt-8"><Star className="h-4 w-4"/></Lines>}
+    {isEnvelope ? <Open dark onClick={onOpen} preview={preview}>Buka Undangan ✧</Open> : <Lines className="mt-8"><Star className="h-4 w-4"/></Lines>}
   </section>;
 
   if (theme === "botanical-ivory") return <section className={`${center} bg-[var(--inv-scene-bg,#faf7e9)] text-[color:var(--inv-scene-ink,#50634d)]`} data-invitation-section={stage}>
@@ -196,7 +218,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       <Lines className="relative mt-7"><Leaf className="h-4 w-4"/></Lines>
       <p className="relative mt-7 text-xs tracking-[.2em]">{date}</p>
     </div>
-    {isEnvelope ? <Open onClick={onOpen}>Buka Undangan</Open> : <p className="relative mt-12 max-w-xs text-sm leading-7">Kehadiran Anda adalah bagian dari cerita kami.</p>}
+    {isEnvelope ? <Open onClick={onOpen} preview={preview}>Buka Undangan</Open> : <p className="relative mt-12 max-w-xs text-sm leading-7">Kehadiran Anda adalah bagian dari cerita kami.</p>}
   </section>;
 
   if (theme === "classic-pearl") return <section className={`${center} bg-[var(--inv-scene-bg,#f8f6ef)] text-[color:var(--inv-scene-ink,#37352f)]`} data-invitation-section={stage}>
@@ -210,7 +232,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     </div>
     <Lines className="relative mt-10"><Gem className="h-4 w-4"/></Lines>
     <p className="relative mt-7 text-xs uppercase tracking-[.22em]">{date}</p>
-    {isEnvelope ? <Open onClick={onOpen}>Buka Undangan</Open> : <p className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">WITH LOVE AND GRATITUDE</p>}
+    {isEnvelope ? <Open onClick={onOpen} preview={preview}>Buka Undangan</Open> : <p className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">WITH LOVE AND GRATITUDE</p>}
   </section>;
 
   if (theme === "golden-art-deco") return <section className={`${center} bg-[var(--inv-scene-bg,#191b17)] text-[color:var(--inv-scene-ink,#e4c888)]`} data-invitation-section={stage}>
@@ -224,7 +246,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <Names className="relative mt-14 max-w-xs text-3xl tracking-[.09em]">{names}</Names>
     <div aria-hidden className="relative mt-10 flex gap-3"><span className="h-14 w-px -rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/><Gem className="h-7 w-7"/><span className="h-14 w-px rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/></div>
     <p className="relative mt-5 text-xs tracking-[.23em]">{date}</p>
-    {isEnvelope ? <Open dark onClick={onOpen}>ENTER THE CELEBRATION</Open> : <Lines className="mt-8"><Gem className="h-4 w-4"/></Lines>}
+    {isEnvelope ? <Open dark onClick={onOpen} preview={preview}>ENTER THE CELEBRATION</Open> : <Lines className="mt-8"><Gem className="h-4 w-4"/></Lines>}
   </section>;
 
   if (theme === "paper-cut-botanical") return <section className={`${center} bg-[var(--inv-scene-bg,#e9ead7)] text-[color:var(--inv-scene-ink,#435e45)]`} data-invitation-section={stage}>
@@ -239,7 +261,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       <Names className="mt-6 text-3xl italic">{names}</Names>
       <p className="mt-7 text-xs">{date}</p>
     </div>
-    {isEnvelope ? <Open onClick={onOpen}>Buka Kartu Undangan</Open> : <Lines className="mt-12"><Leaf className="h-5 w-5"/></Lines>}
+    {isEnvelope ? <Open onClick={onOpen} preview={preview}>Buka Kartu Undangan</Open> : <Lines className="mt-12"><Leaf className="h-5 w-5"/></Lines>}
   </section>;
 
   if (theme === "celestial-ink") return <section className={`${center} bg-[var(--inv-scene-bg,#101b32)] text-[color:var(--inv-scene-ink,#c9e2f0)]`} data-invitation-section={stage}>
@@ -252,7 +274,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <Names className="relative mt-12 max-w-xs text-3xl">{names}</Names>
     <div aria-hidden className="relative mt-12 flex items-center gap-4"><Star className="h-4 w-4"/><Sparkles className="h-6 w-6"/><Star className="h-4 w-4"/></div>
     <p className="relative mt-9 text-xs uppercase tracking-[.23em]">{date}</p>
-    {isEnvelope ? <Open dark onClick={onOpen}>Buka Undangan ✧</Open> : <Lines className="mt-9"><Moon className="h-4 w-4"/></Lines>}
+    {isEnvelope ? <Open dark onClick={onOpen} preview={preview}>Buka Undangan ✧</Open> : <Lines className="mt-9"><Moon className="h-4 w-4"/></Lines>}
   </section>;
 
   return <section className={center} data-invitation-section={stage}>
