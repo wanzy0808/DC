@@ -83,6 +83,9 @@ async function createStudioTemplate(request: Request, author: NonNullable<Awaite
   }
 
   const parsed = parseDesignKey(designKey);
+  if (parsed.template === "blank-canvas" && !["OWNER", "DESIGNER"].includes(author.role)) {
+    return NextResponse.json({ error: "Canvas kosong hanya untuk Owner dan Designer." }, { status: 403 });
+  }
   const baseTemplate = getInvitationTemplate(parsed.template);
   if (!baseTemplate || baseTemplate.key !== parsed.template) {
     return NextResponse.json({ error: "Base template tidak tersedia." }, { status: 400 });
