@@ -11,6 +11,21 @@
 
 > **Catatan audit dokumentasi (24 September 2026):** ringkasan dan checkbox bertanggal 17 September adalah snapshot historis, **bukan** verifikasi bahwa seluruh status launch masih berlaku pada HEAD atau environment produksi sekarang. Untuk setiap klaim readiness baru, periksa source/CI/migrasi/E2E terbaru dan catat tanggal, commit serta environment. Persyaratan aktif berada di `prd.md` §21; checklist ini hanya alat QA.
 
+## Pemeriksaan terbaru — 26 September 2026
+
+Ringkasan ini memperbarui pembacaan snapshot 17 September di bawah; checkbox lama tetap sebagai catatan audit historis. **Belum ada sign-off produksi.**
+
+| Area | Sudah ada pada source/CI | Masih perlu dibuktikan |
+| --- | --- | --- |
+| Akun | Resend email verifikasi, reset password, invalidasi sesi reset, pembatasan request per proses; Build Validation `7356c351` lulus. | Konfigurasi `APP_URL`/Resend, pengiriman email nyata, alur klik dan rate limit terdistribusi pada multi-instance. |
+| Pembayaran | Invoice `PaymentOrder`, aktivasi server, klaim `PENDING` atomik untuk mencegah aktivasi/kuota ganda; Build Validation `da8e1c25` lulus. | Uji konkurensi PostgreSQL nyata, rekonsiliasi dan pemeriksaan manual end-to-end; bukti transfer masih URL/data di database. |
+| Media | Gambar ditranscode WebP; musik kini memeriksa header byte dasar dan tes lulus pada `dc0d3679`. | Penyimpanan tahan deploy/backup, validasi codec penuh dan playback browser. |
+| Studio | Perbaikan seleksi layer terkunci/overlap `ab1a9de0`; Build Validation lulus. | QA gestur pointer/touch, gambar transparan bertumpuk dan kesetaraan renderer publik. |
+
+Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, pindahkan media ke penyimpanan persisten, lakukan audit otorisasi lintas akun, lalu E2E serta backup/restore sebelum sign-off.
+
+---
+
 ## Status legend
 
 - [x] **Audited present** — implementation evidence exists in the repository. This does **not** automatically mean production/E2E verified.
