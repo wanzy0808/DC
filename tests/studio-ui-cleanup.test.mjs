@@ -516,9 +516,10 @@ test("Studio clipboard operations preserve multi-selection and copied groups", (
 test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", () => {
   assert.match(designer, /function fitCanvasZoom\(\)/);
   assert.match(designer, /querySelector<HTMLElement>\("\.dc-studio-preview-surface"\)/);
-  assert.match(designer, /setCanvasZoom\(1\)/);
-  assert.match(designer, /onClick=\{fitCanvasZoom\}/);
-  assert.match(designer, />Fit<\/button>/);
+  assert.match(designer, /onResetZoom=\{\(\) => setCanvasZoom\(1\)\}/);
+  assert.match(designer, /onFit=\{fitCanvasZoom\}/);
+  assert.match(stageControlsSource, /onClick=\{onFit\}/);
+  assert.match(stageControlsSource, />\s*Fit\s*<\/button>/);
 });
 
 
