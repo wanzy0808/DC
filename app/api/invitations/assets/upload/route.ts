@@ -6,7 +6,7 @@ import sharp from "sharp";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-import { audioUploadError, MAX_AUDIO_FILES } from "@/lib/invitations/audio-limits";
+import { audioUploadError, hasAudioSignature, MAX_AUDIO_FILES } from "@/lib/invitations/audio-limits";
 
 class AssetLimitError extends Error {}
 const maxImageSize = 15 * 1024 * 1024;
@@ -58,6 +58,9 @@ export async function POST(request: Request) {
     }
 
     const originalBuffer = Buffer.from(await file.arrayBuffer());
+    if (type === "AUDIO" && !hasAudioSignature(originalBuffer, file.type)) {
+      return NextResponse.json({ error: "Isi file musik tidak sesuai format MP3, WAV, OGG, AAC, atau M4A." }, { status: 400 });
+    }
     let outputBuffer: Buffer;
     let fileName: string;
     let uploadDirectory: string;
