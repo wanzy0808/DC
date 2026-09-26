@@ -76,9 +76,11 @@ function EditableLayer({
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
     if (event.currentTarget.closest<HTMLElement>('.dc-studio-canvas-scroll[data-space-pan="true"]')) return;
-    if (!editable || layer.locked || !onUpdate || !root.current || event.button !== 0) return;
-    event.preventDefault();
+    if (!editable || !root.current || event.button !== 0) return;
     event.stopPropagation();
+    onSelect?.(layer.id, event.shiftKey);
+    if (layer.locked || !onUpdate) return;
+    event.preventDefault();
     const sectionRect = root.current.parentElement?.getBoundingClientRect();
     if (!sectionRect?.width || !sectionRect.height) return;
     const bounds = root.current.getBoundingClientRect();
@@ -91,7 +93,6 @@ function EditableLayer({
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
       moved: false, additive: event.shiftKey,
     };
-    onSelect?.(layer.id, event.shiftKey);
     event.currentTarget.setPointerCapture(event.pointerId);
   }
 
@@ -284,11 +285,12 @@ function EditableLayer({
 export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, selectedIds, onSelect, onUpdate }: Props) {
   const visible = layers.filter((layer) => (layer.section ?? "cover") === section && !layer.hidden);
   const [guides, setGuides] = useState<GuideState>({});
+  const overlay = useRef<HTMLDivElement>(null);
 
   function cycleSelection(currentId: string, clientX: number, clientY: number) {
     if (!onSelect) return;
     const hits = visible.filter((layer) => {
-      const node = document.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
+      const node = overlay.current?.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
       const rect = node?.getBoundingClientRect();
       return Boolean(rect?.width && rect.height && clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom);
     });
@@ -303,7 +305,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
   return (
     <>
       {textFamilies.length > 0 && <InvitationFonts families={textFamilies} />}
-      <div className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
+      <div ref={overlay} className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {editable && guides.x !== undefined && <span aria-hidden="true" className="absolute inset-y-0 z-[60] w-px bg-primary/70" style={{ left: `${guides.x}%` }} />}
       {editable && guides.y !== undefined && <span aria-hidden="true" className="absolute inset-x-0 z-[60] h-px bg-primary/70" style={{ top: `${guides.y}%` }} />}
       {visible.map((layer) =>
