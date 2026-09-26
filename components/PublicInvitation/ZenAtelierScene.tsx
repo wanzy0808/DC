@@ -18,7 +18,7 @@ type ZenAtelierSceneProps = {
 };
 const root = "/templates/Zen%20Atelier/";
 
-export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding = true, hashtag }: ZenAtelierSceneProps) {
+export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true, hashtag }: ZenAtelierSceneProps) {
   const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
   const couple = isWedding ? title.split(/\s*&\s*/).filter(Boolean) : [];
@@ -58,7 +58,11 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
             <span className="zen-jp-seal" lang="ja">{isWedding ? "寿" : "和"}</span>
           </div>
         </div>
-        <button type="button" disabled={opening} className="zen-open" onClick={() => { setOpening(true); onOpen(); }}>
+        <button type="button" disabled={opening} className="zen-open" data-studio-system-action={preview ? "open-invitation" : undefined} onClick={() => {
+          if (preview) return;
+          setOpening(true);
+          onOpen();
+        }}>
           <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={17} strokeWidth={1.35} /></span>
           <span>Buka Undangan</span>
         </button>
@@ -71,7 +75,8 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, isWedding 
           {hashtag?.trim() && <p className="zen-hashtag">{hashtag}</p>}
         </div>
         <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.png"} alt="" aria-hidden="true" className="zen-cover-mountain" />
-        <button type="button" aria-label="Ke bagian berikutnya" className="zen-scroll" onClick={(event) => {
+        <button type="button" aria-label="Ke bagian berikutnya" className="zen-scroll" data-studio-system-action={preview ? "next-section" : undefined} onClick={(event) => {
+          if (preview) return;
           event.currentTarget.closest('section')?.nextElementSibling?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
         }}><ArrowDown size={19} aria-hidden="true" /></button>
       </>}
