@@ -142,6 +142,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   const romantic = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
   const textPanel = read("components/InvitationStudio/TextObjectPanel.tsx");
   const inspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
   assert.match(editor, /<DesignerTool active=\{panel === "text"\}/);
   assert.match(editor, /<TextObjectPanel layers=\{design\.layers\}/);
   assert.match(editor, /onUpdateAssetLayer=\{updateAssetLayer\}/);
@@ -172,7 +173,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
   assert.match(editor, /target\.closest\("\[data-studio-design-object\], \.dc-studio-layer-side, \.dc-studio-section-side, button, a, input, select, textarea, \[contenteditable\], \[role=button\]"\)/);
-  assert.match(editor, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
+  assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
   assert.match(editor, /selectSectionInstance\(instance\?\.dataset\.sectionInstanceId \|\| sectionKey, sectionKey\)/);
   assert.match(editor, /setSelectedLayerId\(null\);/);
   assert.match(editor, /target\.closest\("\.dc-studio-preview-surface"\)/);
