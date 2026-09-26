@@ -10,6 +10,7 @@ import {
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
 const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
+const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 
 test("section style overrides round-trip safely in the invitation design key", () => {
   const base = "romantic-rose::rose::cinzelFauna";
@@ -54,7 +55,8 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(editor, /selectedSectionKey/);
   assert.match(editor, /resolveStudioCanvasSelection/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
-  assert.match(editor, /<SectionInspector/);
+  assert.match(editor, /<StudioSelectionInspector/);
+  assert.match(selectionInspector, /<SectionInspector/);
   assert.match(editor, /updateSectionStyle/);
   assert.match(editor, /resetSectionStyle/);
   assert.match(editor, /useStudioCanvasSelectionMarkers\(/);
@@ -155,7 +157,7 @@ test("Isi only exposes real Input and Button child components", () => {
   assert.match(panels, /gift: \["button"\]/);
   assert.doesNotMatch(panels, /envelope: \["button"\]/);
   assert.match(editor, /selectedSectionElement/);
-  assert.match(editor, /<SectionElementInspector/);
+  assert.match(selectionInspector, /<SectionElementInspector/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-section-element\]"\)/);
   assert.match(wishes, /data-studio-section-element="wishes:input"/);
   assert.match(wishes, /data-studio-section-element="wishes:button"/);
