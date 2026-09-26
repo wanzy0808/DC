@@ -76,7 +76,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerList, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
   assert.match(layerList, /dc-studio-layer-select-button/);
   assert.match(editor, /function positionAssetLayer\(id: string, position: AssetLayerPosition\)/);
-  assert.match(editor, /onPosition=\{positionAssetLayer\}/);
+  assert.match(editor, /onPositionAsset=\{positionAssetLayer\}/);
+  assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
   assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
