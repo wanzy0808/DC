@@ -42,6 +42,17 @@ Perbedaan izin tidak boleh hanya berupa tombol yang disembunyikan: seluruh opera
 
 ## 4. Perilaku kanvas Designer Studio
 
+### Aturan canvas-first — Amplop, Isi, dan Canvas Kosong (27 September 2026)
+
+Studio adalah **editor desain**, bukan preview undangan yang diberi beberapa kontrol edit. Seluruh area tengah mengikuti satu mental model seperti Canva:
+
+- Switch **Amplop / Isi** hanya mengganti halaman/stage yang sedang dikerjakan. Keduanya tetap canvas editable penuh; Amplop tidak boleh berubah menjadi mode preview yang mematikan drag, resize, rotate, selection, layer, snap, atau drop aset.
+- Aksi yang pada undangan publik menjalankan navigasi—misalnya **Buka Undangan**, scroll ke section berikutnya, submit RSVP, atau aksi tamu lain—tidak boleh mengambil alih pointer saat Studio berada dalam mode desain. Navigasi stage Studio dilakukan oleh kontrol editor. Public renderer tetap menjalankan aksi aslinya.
+- **Canvas Kosong** tersedia sebagai starter Studio untuk desain dari nol dan tidak otomatis menjadi kartu template marketing. Starter kosong memakai renderer yang sama dan tetap dapat disimpan; elemen/section fungsional yang diaktifkan kemudian tetap memakai engine DC Organizer.
+- Semua objek visual yang terlihat pada canvas harus menuju satu model interaksi: dapat dipilih dari canvas, memiliki bounding/selection state yang jelas, dan—bila capability mengizinkan—dapat dipindah, resize, rotate, diatur layer/style/animasi seperti objek Canva. Ini berlaku untuk objek tambahan dan elemen visual bawaan template.
+- Komponen terlindungi seperti RSVP, Maps, Gift, Wishes, foto data-bound, dan tombol sistem dipilih sebagai **protected design object/component**. Visual wrapper/slot-nya boleh diubah, tetapi logika bisnis, sumber data, validasi, endpoint, dan aksi publik tidak boleh dipecah menjadi objek bebas atau dihapus lewat transform tool.
+- Jangan membangun engine transform khusus hanya untuk Amplop atau hanya untuk Cover. Satu engine selection/transform harus dapat digunakan lintas `envelope`, `cover`, dan seluruh section Isi. Perbedaan stage hanya target penyimpanan koordinat/section.
+- Elemen yang belum dimigrasikan ke model objek editable tidak boleh dianggap “selesai” hanya karena tampil di preview. Migrasi dilakukan ke engine objek bersama; jangan menambah kontrol styling palsu yang tidak memengaruhi elemen sebenarnya.
 Kanvas utama harus merender undangan **asli** (amplop + 13 section + kontrol musik sesuai `template.md`), termasuk state non-submitting untuk form di mode desain. Desainer dapat memilih section, memilih objek, drag-and-drop, resize, rotate, menyusun layer, lock/hide objek dekoratif, duplicate, delete objek yang diizinkan, undo/redo, zoom/pan, snap/guides opsional, dan mengedit properti kontekstual dari inspector. Perintah Delete/Backspace, Ctrl/Cmd+C/V, Ctrl/Cmd+Z/Shift+Z harus hanya bekerja saat fokus berada pada kanvas dan tidak sedang mengetik di input/textarea/contenteditable atau mengganggu shortcut browser.
 
 Drag dari pustaka aset harus mempertahankan titik drop relatif terhadap section target, bukan selalu menambahkan objek di titik default atau membatasi seluruh pekerjaan desainer pada Cover. Simpan koordinat per section/layer dalam sistem yang tahan zoom; penyimpanan satu gerakan drag dihitung sebagai **satu** langkah Undo. Objek hanya dapat dipindahkan/diubah jika capability mengizinkan; elemen sistem atau data wajib tidak boleh dihapus atau tergeser hingga tidak berfungsi.
