@@ -14,6 +14,7 @@ import {
 
 const read = (name) => readFileSync(new URL(`../${name}`, import.meta.url), "utf8");
 const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
+const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 
 test("legacy RSVP stays unchanged until event options or custom fields are enabled", () => {
   assert.deepEqual(defaultInvitationRsvpConfig, {
@@ -122,7 +123,8 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   const componentInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   assert.match(designer, /selectedRsvpElementKey/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-rsvp-element\]"\)/);
-  assert.match(designer, /<RsvpElementInspector/);
+  assert.match(designer, /<StudioSelectionInspector/);
+  assert.match(selectionInspector, /<RsvpElementInspector/);
   assert.match(componentInspector, />\s*Reset\s*</);
   assert.doesNotMatch(componentInspector, /Reset komponen|Reset component/);
 });
