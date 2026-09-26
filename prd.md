@@ -5175,3 +5175,12 @@ Atas instruksi owner, perubahan layout yang memindahkan rail menu dan inspector 
 
 
 **Catatan penyempurnaan refresh draft (25 September 2026):** untuk menghindari pemulihan keliru setelah navigasi client-side Next.js dari dokumen yang awalnya dibuka melalui refresh, Studio menandai entri history saat pertama kali membuka editor dan mensyaratkan penanda yang sama ketika dipulihkan. Baseline snapshot menggunakan field data undangan yang benar-benar tersimpan di server, bukan designKey hasil fallback foto; unggahan aset melalui API dapat mengubah daftar foto tanpa membuat editan visual sesi menjadi tidak dapat dipulihkan. Implementasi tambahan: `components/InvitationStudio/InvitationDesigner.tsx` (`be008e0b`, `d00404bc`) dan kontrak `tests/studio-refresh-draft.test.mjs` (`91c45304`). Status build/QA browser masih belum diverifikasi.
+
+
+### 26 September 2026 — Pemilihan layer terkunci dan overlap di Studio
+
+**Masalah:** objek dekoratif yang dikunci tidak dapat dipilih dengan klik biasa pada canvas karena handler pointer berhenti sebelum menjalankan seleksi. Siklus klik untuk layer bertumpuk mencari elemen ke seluruh `document`, sehingga preview lain dengan ID layer sama dapat memengaruhi penentuan hit.
+
+**Perubahan:** `components/PublicInvitation/InvitationAssetLayers.tsx` kini memilih objek lebih dahulu pada pointer kiri, lalu tetap menolak drag/resize bila layer terkunci. Pencarian posisi untuk siklus overlap dibatasi ke overlay section canvas tempat objek dirender. Hak edit, urutan layer, renderer publik, desain tersimpan, dan schema database tidak berubah. Commit source: `ab1a9de0`.
+
+**Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36226526942) dan [Orphan Audit](https://github.com/wanzy0808/DC/actions/runs/36226527108) untuk commit source berhasil. Interaksi pointer pada browser desktop/mobile dan gambar PNG transparan yang bertumpuk masih memerlukan QA visual; CI tidak membuktikan pengalaman klik seluruh susunan layer.
