@@ -783,8 +783,9 @@ test("Editable template copy motion is a separate visual design token", () => {
   assert.match(designer, /copyMotion: \{\}/);
   assert.match(designer, /copyMotion: templateKey === design\.template \? design\.copyMotion : \{\}/);
   assert.match(designer, /function updateCopyMotion\(/);
-  assert.match(designer, /function resetNarrativeCopyAndMotion\(/);
-  assert.match(designer, /change\(\{ copy, copyMotion \}\)/);
+  assert.match(designer, /function resetNarrativeCopy\(/);
+  assert.match(designer, /function resetCopyMotion\(/);
+  assert.match(designer, /change\(\{ copyMotion \}\)/);
 
   assert.match(copyInspector, /<CopyMotionControls/);
   assert.match(copyMotionControls, /sectionAnimationPresets/);
