@@ -1214,10 +1214,43 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const index = design.sectionLayout.findIndex((item) => item.id === id);
     const source = design.sectionLayout[index];
     if (!source || design.sectionLayout.length >= 36) return;
+
+    const sourceLayers = design.layers.filter((layer) =>
+      (layer.section ?? "cover") === source.key
+      && (layer.sectionInstanceId ?? (layer.section ?? "cover")) === source.id);
+    if (design.layers.length + sourceLayers.length > MAX_ASSET_LAYERS) {
+      setNotice(locale === "en"
+        ? "Not enough object slots to duplicate this section."
+        : "Slot objek tidak cukup untuk menduplikasi section ini.");
+      return;
+    }
+
     const copyId = `${source.key}-copy-${crypto.randomUUID().replace(/-/g, "").slice(0, 8)}`;
     const next = [...design.sectionLayout];
     next.splice(index + 1, 0, { id: copyId, key: source.key });
-    change({ sectionLayout: next });
+
+    const groupIds = new Map<string, string>();
+    const clonedLayers = sourceLayers.map((layer) => {
+      let groupId = layer.groupId;
+      if (groupId) {
+        if (!groupIds.has(groupId)) groupIds.set(groupId, `group-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`);
+        groupId = groupIds.get(groupId);
+      }
+      return {
+        ...layer,
+        id: crypto.randomUUID().replace(/-/g, ""),
+        sectionInstanceId: copyId,
+        ...(groupId ? { groupId } : { groupId: undefined }),
+      };
+    });
+
+    const nativeVisuals = { ...design.nativeVisuals };
+    for (const [key, value] of Object.entries(design.nativeVisuals)) {
+      if (!key.endsWith(`:${source.id}`)) continue;
+      nativeVisuals[`${key.slice(0, -source.id.length)}${copyId}`] = { ...value };
+    }
+
+    change({ sectionLayout: next, layers: [...design.layers, ...clonedLayers], nativeVisuals });
     setSelectedSectionKey(source.key);
     setSelectedSectionInstanceId(copyId);
   }
