@@ -27,6 +27,8 @@ import StudioSelectionInspector from "@/components/InvitationStudio/StudioSelect
 import StudioCanvasToolbar from "@/components/InvitationStudio/StudioCanvasToolbar";
 import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
 import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
+import StudioNativeTransformHandles from "@/components/InvitationStudio/StudioNativeTransformHandles";
+import { defaultNativeVisualTransform, isNativeVisualKey, type NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -146,6 +148,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
   const [selectedCopyField, setSelectedCopyField] = useState<EditableInvitationCopyField | null>(null);
+  const [selectedNativeKey, setSelectedNativeKey] = useState<string | null>(null);
   const [selectedSectionElement, setSelectedSectionElement] = useState<{ section: InvitationSectionKey; kind: StudioSectionElementKind } | null>(null);
   const [copiedAssetLayer, setCopiedAssetLayer] = useState<InvitationAssetLayer | null>(null);
   const [copiedAssetLayers, setCopiedAssetLayers] = useState<InvitationAssetLayer[]>([]);
@@ -615,6 +618,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
+    setSelectedNativeKey(null);
   }
 
   function handleCanvasSelection(target: Element, canvasRoot: HTMLElement) {
@@ -635,6 +639,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       case "copy":
         clearCanvasSelection();
         setSelectedCopyField(selection.field);
+        return;
+      case "native":
+        clearCanvasSelection();
+        setSelectedNativeKey(selection.key);
         return;
       case "photo":
         selectPhotoVisual(selection.slot);
@@ -661,6 +669,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
+    setSelectedNativeKey(null);
     setSelectedSectionKey(section);
     const instance = design.sectionLayout.find((item) => item.key === section);
     setSelectedSectionInstanceId(instance?.id ?? null);
@@ -680,6 +689,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedSectionKey(null);
     setSelectedSectionInstanceId(null);
     setSelectedCopyField(null);
+    setSelectedNativeKey(null);
     setCanvasStage(section === "envelope" ? "envelope" : "cover");
 
     if (section === "rsvp") {
@@ -766,6 +776,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
+    setSelectedNativeKey(null);
     setSelectedPhotoSlot(slot);
   }
 
@@ -895,6 +906,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedRsvpElementKey(null);
     setSelectedCopyField(null);
     setSelectedSectionElement(null);
+    setSelectedNativeKey(null);
     setSelectedPhotoSlot(null);
     setCropModeSlot(null);
     setSelectedLayerIds(nextIds);
@@ -1271,6 +1283,24 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const next = positionAssetLayers(design.layers, id, position);
     if (next === design.layers) return;
     change({ layers: next });
+  }
+
+  const activeNativeKey = selectedLayerId || selectedPhotoSlot || selectedSectionKey ? null
+    : selectedSectionElement ? `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`
+    : selectedRsvpElementKey ? `rsvp:${selectedRsvpElementKey}`
+    : selectedCopyField ? `copy:${selectedCopyField}`
+    : selectedNativeKey;
+
+  function commitNativeVisual(key: string, value: NativeVisualTransform) {
+    if (!isNativeVisualKey(key)) return;
+    const next = { ...design.nativeVisuals };
+    if (Object.keys(defaultNativeVisualTransform).every((property) =>
+      value[property as keyof NativeVisualTransform] === defaultNativeVisualTransform[property as keyof NativeVisualTransform])) {
+      delete next[key];
+    } else {
+      next[key] = value;
+    }
+    change({ nativeVisuals: next });
   }
 
   useStudioCanvasSelectionMarkers(
@@ -1815,6 +1845,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onCloseSection={() => { setSelectedSectionKey(null); setSelectedSectionInstanceId(null); }}
             />
           </div>
+          <StudioNativeTransformHandles
+            canvasRef={canvasScrollRef}
+            targetKey={activeNativeKey}
+            transform={activeNativeKey ? design.nativeVisuals[activeNativeKey] : undefined}
+            zoom={canvasZoom}
+            revision={`${designKey}|${canvasStage}|${previewVersion}`}
+            onCommit={commitNativeVisual}
+          />
           </div>
           <StudioCanvasFooter
             locale={locale}
