@@ -74,7 +74,7 @@
 }
 
 .dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
-.dc-studio-canvas-scroll[data-space-pan="true"], .dc-studio-canvas-scroll[data-pan-zoomed="true"] { cursor: grab; }
+.dc-studio-canvas-scroll[data-space-pan="true"], .dc-studio-canvas-scroll[data-pan-enabled="true"] { cursor: grab; }
 .dc-studio-canvas-scroll[data-space-pan="true"] { user-select: none; }
 .dc-studio-canvas-scroll[data-panning="true"] { cursor: grabbing; }
 .dc-studio-canvas-scroll[data-panning="true"] * { cursor: grabbing !important; }
@@ -85,7 +85,7 @@
 .dc-section-instance-content { overflow: hidden; }
 .dc-section-instance:first-child > .dc-section-instance-content { border-radius: 23px 23px 0 0; }
 .dc-section-instance:last-child > .dc-section-instance-content { border-radius: 0 0 23px 23px; }
-.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(118px, 1fr) minmax(0, var(--dc-zoomed-stage-width, 340px)) minmax(230px, 1fr); align-items: start; gap: 18px; width: 100%; min-width: calc(var(--dc-zoomed-stage-width, 340px) + 384px); overflow: visible; }
+.dc-studio-canvas-layout { display: grid; grid-template-columns: minmax(118px, 1fr) minmax(0, var(--dc-zoomed-stage-width, 340px)) minmax(230px, 1fr); align-items: start; gap: 18px; width: 100%; min-width: max(calc(100% + 400px), calc(var(--dc-zoomed-stage-width, 340px) + 384px)); overflow: visible; }
 .dc-studio-preview-workspace { position: relative; width: var(--dc-zoomed-stage-width, 340px); max-width: none; margin-inline: auto; overflow: visible; }
 .dc-studio-stage-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 340px; margin: 0 auto 12px; }
 .dc-studio-stage-controls button { flex: 1 1 0; min-width: 0; min-height: 44px; border-radius: var(--dc-control-radius); font-size: 12px; font-weight: 500; }
@@ -416,7 +416,7 @@
 
 
 @media (max-width: 1100px) {
-  .dc-studio-canvas-layout { grid-template-columns: 80px minmax(0, var(--dc-zoomed-stage-width, 340px)); min-width: calc(98px + var(--dc-zoomed-stage-width, 340px)); justify-content: center; }
+  .dc-studio-canvas-layout { grid-template-columns: 80px minmax(0, var(--dc-zoomed-stage-width, 340px)); min-width: max(calc(100% + 400px), calc(98px + var(--dc-zoomed-stage-width, 340px))); justify-content: center; }
   .dc-studio-layer-list { width: 80px; }
   .dc-studio-layer-side, .dc-studio-section-side { position: static; grid-column: 1 / -1; width: min(340px, 100%); justify-self: end; margin-top: 2px; }
 }
