@@ -66,7 +66,7 @@ export default function PencilReverieScene({
       </div>
       <div className="pr-letter-illustration">
         <PaperIllustration file="bingkai.png" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
-        <div className="pr-letter-copy">
+        <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
           <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
           <h1 data-studio-native-heading="">{names}</h1>
           <span data-studio-native-object="object:envelope:date">{date}</span>
@@ -82,7 +82,7 @@ export default function PencilReverieScene({
       </header>
       <div className="pr-cover-illustration">
         <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
-        <div className="pr-cover-copy">
+        <div className="pr-cover-copy" data-studio-native-object="object:cover:copy-panel">
           <h1 className="pr-cover-names" data-studio-native-heading="">{couple.length === 2
             ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></>
             : <span>{names}</span>}</h1>
