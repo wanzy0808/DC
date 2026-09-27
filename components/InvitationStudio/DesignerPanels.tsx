@@ -161,6 +161,15 @@ export function ContentPanel({
 
                       {item.key === "rsvp" && element === "input" && activeElement === "rsvp:input" && (
                         <div className="mt-2 space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
+                          <label className="block text-[10px] text-foreground">
+                            <span className="mb-1 block font-semibold text-primary">{en ? "RSVP title" : "Judul RSVP"}</span>
+                            <input
+                              className="h-8 w-full rounded-[9px] border border-primary/25 bg-background px-2 text-[10px]"
+                              value={rsvpConfig.title ?? "Konfirmasi Kehadiran"}
+                              maxLength={80}
+                              onChange={(event) => onRsvpConfig({ title: event.target.value })}
+                            />
+                          </label>
                           <p className="text-[10px] leading-4 text-muted-foreground">
                             {en
                               ? "Check the event options guests may choose from in the RSVP dropdown."
