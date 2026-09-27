@@ -51,7 +51,7 @@ function Open({ onClick, dark = false, children, preview = false, studioObject }
     }}
     data-studio-system-action={preview ? "open-invitation" : undefined}
     aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
-    className={`relative z-20 mt-7 min-h-12 rounded-full border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
+    className={`relative z-20 mt-7 min-h-12 rounded-[var(--dc-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
   >{children || "Buka Undangan"}</button>;
 }
 function Edit({ onClick }: { onClick?: () => void }) {
@@ -125,7 +125,6 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
         </div>
       </div>
       <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
-      {preview && <p className="relative mt-4 text-[11px] opacity-60">Pratinjau</p>}
     </section>
   );
 }
