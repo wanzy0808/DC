@@ -156,6 +156,23 @@ test("theme-authored decorations and special cover headings are selectable in St
 });
 
 
+test("complex template compositions expose selectable group targets without replacing child targets", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const pencil = read("components/PublicInvitation/PencilReverieScene.tsx");
+  const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
+
+  assert.match(pencil, /object:envelope:illustration-group/);
+  assert.match(pencil, /object:cover:illustration-group/);
+  assert.match(zen, /object:envelope:atmosphere-group/);
+  assert.match(zen, /object:envelope:intro-group/);
+  assert.match(zen, /object:cover:copy-group/);
+  assert.match(scenes, /object:envelope:card-stage/);
+  assert.match(scenes, /object:envelope:copy-panel/);
+  assert.match(scenes, /object:cover:media-group/);
+  assert.match(scenes, /object:cover:copy-panel/);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:copy-group"), false);
+});
+
 test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
