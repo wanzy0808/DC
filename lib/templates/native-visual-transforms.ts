@@ -48,7 +48,7 @@ const clamp = (value: unknown, min: number, max: number, fallback: number) =>
 export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTransforms {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   const result: NativeVisualTransforms = {};
-  for (const [key, raw] of Object.entries(value).slice(0, 40)) {
+  for (const [key, raw] of Object.entries(value).slice(0, 96)) {
     if (!isNativeVisualKey(key) || !raw || typeof raw !== "object" || Array.isArray(raw)) continue;
     const source = raw as Record<string, unknown>;
     const transform = {
@@ -68,7 +68,7 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
 
 export function parseNativeVisualTransforms(designKey: string): NativeVisualTransforms {
   const token = designKey.split("::").find((part) => part.startsWith("nativeVisuals="));
-  if (!token || token.length > 12000) return {};
+  if (!token || token.length > 24000) return {};
   try {
     return sanitizeNativeVisualTransforms(JSON.parse(decodeURIComponent(token.slice(14))));
   } catch {
