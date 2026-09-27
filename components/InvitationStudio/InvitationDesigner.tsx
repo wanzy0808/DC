@@ -73,12 +73,13 @@ import {
   type AssetLayerDistribution,
 } from "@/components/InvitationStudio/designer-layer-geometry";
 import {
-  createStudioTemplate,
   deleteStudioAsset,
   loadStudioInvitation,
+  loadStudioTemplateDraft,
   makeStudioSavedState,
   makeStudioServerRevision,
   saveStudioInvitation,
+  saveStudioTemplateDraft,
   uploadStudioAsset,
 } from "@/components/InvitationStudio/designer-persistence";
 import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
@@ -217,6 +218,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }, []);
   const [savedState, setSavedState] = useState("");
   const [serverRevision, setServerRevision] = useState("");
+  const [templateDraftId, setTemplateDraftId] = useState<string | null>(null);
   const audioMutation = useRef(false);
   const requestedCatalogApplied = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
@@ -255,19 +257,42 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const params = new URLSearchParams(window.location.search);
 
     if (templateMode) {
+      const requestedDraftId = params.get("draft")?.trim() || "";
+      const savedDraft = requestedDraftId ? await loadStudioTemplateDraft(requestedDraftId) : null;
       const requested = params.get("template")?.trim() || "botanical-ivory";
-      const baseKey = invitationTemplatePresets[requested] ? requested : "botanical-ivory";
-      const preset = invitationTemplatePresets[baseKey] || invitationTemplatePresets["botanical-ivory"];
-      const initialKey = `${baseKey}::${preset.palette}::${preset.font}`;
-      const loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
-      const defaultMusic = getInvitationDefaultMusic(baseKey).url;
+
+      let initialKey: string;
+      let loadedDesign: InvitationDesignState;
+      let defaultMusic: string;
+
+      if (savedDraft) {
+        if (savedDraft.status !== "DRAFT") throw new Error("Template ini bukan draft yang dapat diedit.");
+        if (!savedDraft.designKey) throw new Error("Draft template belum memiliki design yang dapat diedit.");
+        initialKey = savedDraft.designKey;
+        loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
+        defaultMusic = savedDraft.musicUrl || getInvitationDefaultMusic(loadedDesign.template).url;
+      } else {
+        const baseKey = invitationTemplatePresets[requested] ? requested : "botanical-ivory";
+        const preset = invitationTemplatePresets[baseKey] || invitationTemplatePresets["botanical-ivory"];
+        initialKey = `${baseKey}::${preset.palette}::${preset.font}`;
+        loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
+        defaultMusic = getInvitationDefaultMusic(baseKey).url;
+      }
+
+      const studioEntryId = savedDraft ? `template-studio-draft:${savedDraft.id}` : "template-studio-draft";
       const demoInvitation: InvitationDesignerInvitation = {
         ...templateDemoInvitation,
-        id: "template-studio-draft",
+        id: studioEntryId,
         templateKey: initialKey,
         accessPaid: true,
       };
-      const serverBaseline = JSON.stringify(["template-studio", initialKey, defaultMusic]);
+      const serverBaseline = JSON.stringify([
+        "template-studio",
+        savedDraft?.id || "new",
+        initialKey,
+        defaultMusic,
+        savedDraft?.updatedAt || "",
+      ]);
       const canonicalSavedState = JSON.stringify([makeInvitationDesignStateKey(loadedDesign), defaultMusic, "", ""]);
       const navigationType = (window.performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined)?.type ?? "navigate";
       const historyState = window.history.state as Record<string, unknown> | null;
@@ -287,14 +312,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setDressCode("");
       setSavedState(canonicalSavedState);
       setServerRevision(serverBaseline);
-      setSelectedCatalogKey(baseKey);
+      setTemplateDraftId(savedDraft?.id || null);
+      setSelectedCatalogKey(loadedDesign.template);
       setCanvasStage("envelope");
       setSelectedLayerId(null);
       setCopiedAssetLayer(null);
       setCopiedAssetLayers([]);
       setHistory([]);
       setFuture([]);
-      setNotice("");
+      setNotice(savedDraft ? `Draft Template #${savedDraft.templateNo} dimuat.` : "");
       return;
     }
 
@@ -1572,7 +1598,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           },
         };
         const templateDesignKey = makeInvitationDesignStateKey(cleanTemplateDesign);
-        const createdTemplate = await createStudioTemplate({
+        const savedTemplate = await saveStudioTemplateDraft({
           designKey: templateDesignKey,
           name: `${selectedCatalog?.name || template?.name || "Template"} Studio`,
           tags: [selectedCatalog?.category || template?.category || "Designer", "studio"],
@@ -1581,10 +1607,22 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain DC Organizer"}.`,
           usesPhotos: selectedCatalog?.usesPhotos ?? template?.usesPhotos ?? false,
           musicUrl,
-        });
+        }, templateDraftId);
+        setTemplateDraftId(savedTemplate.id);
         setSavedState(currentState);
         try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
-        setNotice(`Draft Template #${createdTemplate.templateNo} tersimpan. Draft belum tampil di katalog sebelum dipublikasikan.`);
+        const studioEntryId = `template-studio-draft:${savedTemplate.id}`;
+        setInvitation((current) => current ? { ...current, id: studioEntryId, templateKey: templateDesignKey } : current);
+        setServerRevision(JSON.stringify(["template-studio", savedTemplate.id, templateDesignKey, musicUrl]));
+        const location = new URL(window.location.href);
+        location.searchParams.set("draft", savedTemplate.id);
+        location.searchParams.delete("template");
+        window.history.replaceState(
+          { ...(window.history.state as Record<string, unknown> | null), __dcStudioDraftEntry: studioEntryId },
+          "",
+          location.pathname + location.search + location.hash,
+        );
+        setNotice(`Draft Template #${savedTemplate.templateNo} tersimpan. Draft belum tampil di katalog sebelum dipublikasikan.`);
         return;
       }
 
