@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
-  nativeVisualCapabilities, nativeVisualFontFamilies,
+  nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -316,4 +316,60 @@ test("native font overrides use the invitation font catalog and load in public r
   assert.match(inspector, /nativeFontFamilies/);
   assert.match(inspector, /current\.fontFamily/);
   assert.match(inspector, /<InvitationFonts families=\{current\.fontFamily/);
+});
+
+
+test("native objects reuse the shared entrance animation catalog safely", () => {
+  const values = sanitizeNativeVisualTransforms({
+    "object:cover:kicker": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      animation: "rise", animationDuration: 9, animationDelay: -2,
+    },
+    "heading:identity": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      animation: "silk-reveal", animationDuration: 1.1, animationDelay: 0.2,
+    },
+    "copy:greeting": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      animation: "zoom",
+    },
+    "photo:cover": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      animation: "fade",
+    },
+  });
+  assert.equal(values["object:cover:kicker"].animation, "rise");
+  assert.equal(values["object:cover:kicker"].animationDuration, 2.5);
+  assert.equal(values["object:cover:kicker"].animationDelay, 0);
+  assert.equal(values["heading:identity"].animation, "silk-reveal");
+  assert.equal(values["copy:greeting"], undefined);
+  assert.equal(values["photo:cover"], undefined);
+  assert.equal(nativeVisualSupportsAnimation("object:cover:kicker"), true);
+  assert.equal(nativeVisualSupportsAnimation("heading:identity"), true);
+  assert.equal(nativeVisualSupportsAnimation("element:gift:button"), true);
+  assert.equal(nativeVisualSupportsAnimation("rsvp:button"), true);
+  assert.equal(nativeVisualSupportsAnimation("copy:greeting"), false);
+  assert.equal(nativeVisualSupportsAnimation("photo:cover"), false);
+});
+
+test("native animation runtime uses validated selectors and shared reduced-motion-aware entrances", () => {
+  const hook = read("components/PublicInvitation/use-native-visual-animations.ts");
+  const runtime = read("components/PublicInvitation/entrance-animation-runtime.ts");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  assert.match(hook, /parseNativeVisualTransforms\(designKey\)/);
+  assert.match(hook, /nativeVisualSelector\(key\)/);
+  assert.match(hook, /nativeVisualSupportsAnimation\(key\)/);
+  assert.match(hook, /observeInvitationEntrances\(targets\)/);
+  assert.match(hook, /finalOpacity: config\.opacity/);
+  assert.match(runtime, /finalOpacity\?: number/);
+  assert.match(runtime, /frame\.opacity \* config\.finalOpacity/);
+  assert.match(universal, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\)\)/);
+  assert.match(rose, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\)\)/);
+  assert.match(inspector, /sectionAnimationGroups/);
+  assert.match(inspector, /sectionAnimationPresets/);
+  assert.match(inspector, /Preview animasi/);
+  assert.match(inspector, /animationDuration/);
+  assert.match(inspector, /animationDelay/);
 });
