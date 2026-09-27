@@ -142,7 +142,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [selectedPhotoSlot, setSelectedPhotoSlot] = useState<PhotoSlot | null>(null);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
-  const textInsertPoint = useRef<{ section: StudioObjectSection; x: number; y: number } | null>(null);
+  const textInsertPoint = useRef<{ section: StudioObjectSection; sectionInstanceId?: string; x: number; y: number } | null>(null);
   const textTypingLayer = useRef<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
@@ -814,11 +814,17 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     }
   }
 
-  function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection } = { x: 50, y: 38 }) {
+  function sectionInstanceFor(section: StudioObjectSection) {
+    if (section === "envelope") return "envelope";
+    return design.sectionLayout.find((item) => item.key === section)?.id ?? section;
+  }
+
+  function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection; sectionInstanceId?: string } = { x: 50, y: 38 }) {
     const section = position.section ?? "cover";
+    const sectionInstanceId = position.sectionInstanceId ?? sectionInstanceFor(section);
     if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
-    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, width: 28, opacity: 1 }] });
+    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, sectionInstanceId, width: 28, opacity: 1 }] });
     setSelectedPhotoSlot(null);
     setSelectedLayerId(id);
     showDesignSection(section);
@@ -838,6 +844,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       shape,
       src: "",
       section,
+      sectionInstanceId: selectedSectionKey === section && selectedSectionInstanceId
+        ? selectedSectionInstanceId
+        : selectedAssetLayer?.section === section
+          ? selectedAssetLayer.sectionInstanceId ?? sectionInstanceFor(section)
+          : sectionInstanceFor(section),
       x: 50,
       y: 42,
       width: size,
@@ -861,12 +872,17 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function addTextObject(
     text: string,
     section: StudioObjectSection,
-    position: { x: number; y: number } = { x: 50, y: 48 },
+    position: { x: number; y: number; sectionInstanceId?: string } = { x: 50, y: 48 },
   ) {
     if (!text.trim() || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return null;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
-      id, kind: "text", src: "", text: text.slice(0, 180), section, x: position.x, y: position.y, width: 55,
+      id, kind: "text", src: "", text: text.slice(0, 180), section,
+      sectionInstanceId: position.sectionInstanceId
+        ?? (selectedSectionKey === section ? selectedSectionInstanceId ?? undefined : undefined)
+        ?? (selectedAssetLayer?.section === section ? selectedAssetLayer.sectionInstanceId : undefined)
+        ?? sectionInstanceFor(section),
+      x: position.x, y: position.y, width: 55,
       opacity: 1, fontSize: 24, fontRole: "heading", fontWeight: 400, textAlign: "center",
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
     }] });
