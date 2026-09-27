@@ -352,10 +352,12 @@ test("system-backed invitation content stays content-locked while native styling
   assert.equal(nativeVisualUsesSystemContent("object:cover:kicker"), false);
 
   const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
-  const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const selection = read("components/InvitationStudio/studio-canvas-selection.ts");
   assert.match(inspector, /nativeVisualUsesSystemContent/);
   assert.match(inspector, /Isi berasal dari data acara dan terkunci di sini/);
-  assert.match(designer, /\[data-studio-native-object\].*\[data-studio-native-heading\].*\[data-invitation-photo-slot\]/);
+  assert.match(selection, /\[data-studio-native-heading\]/);
+  assert.match(selection, /\[data-invitation-photo-slot\]/);
+  assert.match(selection, /\[data-studio-native-object\]/);
 });
 
 test("native inspector exposes visual styling without adding functional controls", () => {
