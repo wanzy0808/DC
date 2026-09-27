@@ -21,7 +21,7 @@ const selectionInspector = read("components/InvitationStudio/StudioSelectionInsp
 const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
-test("Isi keeps narrative slots in the renderer and edits them directly from canvas", () => {
+test("Isi owns narrative wording while canvas selection opens styling-only controls", () => {
   assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
   assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "closing"]);
   assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing", "ourStory"]);
@@ -29,7 +29,10 @@ test("Isi keeps narrative slots in the renderer and edits them directly from can
   const content = panel.split("export function ContentPanel(")[1]?.split("export function ColorPanel(")[0] || "";
   assert.match(content, /<Heading title="Isi" description="" \/>/);
   assert.match(content, /sectionFunctionalElements/);
-  assert.doesNotMatch(content, /<textarea/);
+  assert.match(content, /copyFieldsBySection/);
+  assert.match(content, /<textarea/);
+  assert.match(content, /onNarrativeCopy\(field, event\.target\.value\)/);
+  assert.match(content, /onResetNarrativeCopy\(field\)/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
   assert.match(studio, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<CopyTextInspector/);
@@ -68,7 +71,9 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /copy: \{\},/);
   assert.match(studio, /function setNarrativeCopy\(/);
   assert.match(studio, /change\(\{ copy: \{ \.\.\.design\.copy, \[field\]: text \} \}\)/);
-  assert.match(selectionInspector, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => onSetNarrativeCopy\(selectedCopyField, value\)\}/);
+  assert.match(studio, /<ContentPanel[\s\S]*onNarrativeCopy=\{setNarrativeCopy\}/);
+  assert.match(selectionInspector, /<CopyTextInspector[\s\S]*onMotion=\{\(patch\) => onUpdateCopyMotion\(selectedCopyField, patch\)\}/);
+  assert.doesNotMatch(selectionInspector, /onSetNarrativeCopy/);
   assert.match(persistence, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
   const customerSave = persistence.split('fetcher("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
