@@ -11,7 +11,7 @@ import type { NativeVisualTransform } from "@/lib/templates/native-visual-transf
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
 import type { AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
 import type { InvitationDesignState } from "@/components/InvitationStudio/designer-types";
-import { invitationCopyDefaults, type EditableInvitationCopyField } from "@/lib/templates/editable-copy";
+import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { PhotoMotion, PhotoSlot } from "@/lib/templates/photo-slots";
@@ -27,7 +27,6 @@ type SelectedSectionElement = {
 export default function StudioSelectionInspector({
   locale,
   design,
-  invitationDescription,
   selectedAssetLayer,
   selectedAssetIndex,
   selectedPhotoSlot,
@@ -48,9 +47,8 @@ export default function StudioSelectionInspector({
   onCloseRsvp,
   onUpdateSectionElementStyles,
   onCloseSectionElement,
-  onSetNarrativeCopy,
   onUpdateCopyMotion,
-  onResetNarrativeCopyAndMotion,
+  onResetCopyMotion,
   onCloseCopy,
   onUpdateSectionStyle,
   onResetSectionStyle,
@@ -58,7 +56,6 @@ export default function StudioSelectionInspector({
 }: {
   locale: string;
   design: InvitationDesignState;
-  invitationDescription?: string | null;
   selectedAssetLayer: InvitationAssetLayer | null | undefined;
   selectedAssetIndex: number;
   selectedPhotoSlot: PhotoSlot | null;
@@ -79,9 +76,8 @@ export default function StudioSelectionInspector({
   onCloseRsvp: () => void;
   onUpdateSectionElementStyles: (styles: InvitationDesignState["sectionElementStyles"]) => void;
   onCloseSectionElement: () => void;
-  onSetNarrativeCopy: (field: EditableInvitationCopyField, value: string) => void;
   onUpdateCopyMotion: (field: EditableInvitationCopyField, patch: Partial<EditableCopyMotion>) => void;
-  onResetNarrativeCopyAndMotion: (field: EditableInvitationCopyField) => void;
+  onResetCopyMotion: (field: EditableInvitationCopyField) => void;
   onCloseCopy: () => void;
   onUpdateSectionStyle: (key: InvitationSectionKey, patch: Partial<InvitationSectionStyle>) => void;
   onResetSectionStyle: (key: InvitationSectionKey) => void;
@@ -172,18 +168,14 @@ export default function StudioSelectionInspector({
   }
 
   if (selectedCopyField) {
-    const defaults = invitationCopyDefaults(design.template, invitationDescription);
     return (
       <div className="dc-studio-selection-stack">
       <CopyTextInspector
         locale={locale}
         field={selectedCopyField}
-        value={design.copy[selectedCopyField] ?? defaults[selectedCopyField] ?? ""}
-        defaultValue={defaults[selectedCopyField] ?? ""}
         motion={design.copyMotion[selectedCopyField]}
-        onChange={(value) => onSetNarrativeCopy(selectedCopyField, value)}
         onMotion={(patch) => onUpdateCopyMotion(selectedCopyField, patch)}
-        onReset={() => onResetNarrativeCopyAndMotion(selectedCopyField)}
+        onReset={() => onResetCopyMotion(selectedCopyField)}
         onClose={onCloseCopy}
       />
       {nativeControls}
