@@ -1956,7 +1956,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
             if (
               panel === "text" &&
-              !target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object]')
+              !target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object], [data-studio-native-object], [data-studio-native-heading], [data-invitation-photo-slot], [data-studio-rsvp-element], [data-studio-section-element], [data-studio-copy-field]')
             ) {
               const sectionNode = target.closest<HTMLElement>("[data-invitation-section]");
               const section = sectionNode?.dataset.invitationSection as StudioObjectSection | undefined;
