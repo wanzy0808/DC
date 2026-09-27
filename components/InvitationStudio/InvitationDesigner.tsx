@@ -1269,13 +1269,25 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     if (!source) return;
     const next = design.sectionLayout.filter((item) => item.id !== id);
     const hasSameSection = next.some((item) => item.key === source.key);
+    const layers = design.layers.filter((layer) =>
+      !((layer.section ?? "cover") === source.key
+        && (layer.sectionInstanceId ?? (layer.section ?? "cover")) === id));
+    const nativeVisuals = Object.fromEntries(
+      Object.entries(design.nativeVisuals).filter(([key]) => nativeVisualInstanceId(key) !== id),
+    );
     change({
       sectionLayout: next,
+      layers,
+      nativeVisuals,
       ...(!hasSameSection ? { sections: { ...design.sections, [source.key]: false } } : {}),
     });
     if (selectedSectionInstanceId === id) {
       setSelectedSectionKey(null);
       setSelectedSectionInstanceId(null);
+    }
+    if (selectedAssetLayer && !layers.some((layer) => layer.id === selectedAssetLayer.id)) {
+      setSelectedLayerIds([]);
+      setSelectedLayerId(null);
     }
   }
 
