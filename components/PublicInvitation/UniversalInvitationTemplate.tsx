@@ -601,7 +601,7 @@ export default function UniversalInvitationTemplate({
               <MapPin aria-hidden className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
               <p className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--dc-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
+              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--dc-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
               {!maps && <p className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
             </div>
           ), 7)}
@@ -621,7 +621,7 @@ export default function UniversalInvitationTemplate({
               <p className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
-              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (!invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
+              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
               {copyMessage && <p role="status" className="mt-3 text-xs">{copyMessage}</p>}
             </div>
           ) : <p className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
