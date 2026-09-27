@@ -37,7 +37,7 @@ test("Zen envelope uses Japanese washi folds, mizuhiki knot and existing Zen art
   assert.match(envelope, /className="zen-jp-mizuhiki-band"/);
   assert.match(envelope, /<svg className="zen-jp-mizuhiki"/);
   assert.match(envelope, /className="zen-jp-seal" lang="ja"/);
-  assert.match(envelope, /<span className="zen-jp-letter-names">\{title\}<\/span>/);
+  assert.match(envelope, /<span className="zen-jp-letter-names"[^>]*>\{title\}<\/span>/);
   assert.match(envelope, /Buka Undangan<\/span>/);
   assert.match(envelope, /disabled=\{opening\}/);
   assert.doesNotMatch(envelope, /amplop1\.png|wax|Lihat Undangan|Pratinjau|Preview/);
