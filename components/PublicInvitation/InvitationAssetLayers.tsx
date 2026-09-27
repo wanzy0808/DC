@@ -66,7 +66,8 @@ function EditableLayer({
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
-    rect: DOMRect; centerX: number; centerY: number; initialAngle: number; moved: boolean; additive: boolean;
+    rect: DOMRect; centerX: number; centerY: number; grabOffsetX: number; grabOffsetY: number;
+    initialAngle: number; moved: boolean; additive: boolean;
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
@@ -95,6 +96,7 @@ function EditableLayer({
       startX: event.clientX, startY: event.clientY,
       x: layer.x, y: layer.y, width: layer.width, height, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
+      grabOffsetX: event.clientX - cx, grabOffsetY: event.clientY - cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
       moved: false, additive: event.shiftKey,
     };
@@ -123,13 +125,12 @@ function EditableLayer({
       return { rotation: round(next) };
     }
     const destination = root.current && findSectionAt(event.clientX, event.clientY, root.current);
-    const rect = destination?.rect ?? drag.rect;
-    const rawX = clamp(destination && destination.section !== section
-      ? (event.clientX - rect.left) / rect.width * 100
-      : drag.x + (event.clientX - drag.startX) / drag.rect.width * 100, 0, 100);
-    const rawY = clamp(destination && destination.section !== section
-      ? (event.clientY - rect.top) / rect.height * 100
-      : drag.y + (event.clientY - drag.startY) / drag.rect.height * 100, 0, 100);
+    // The section can move underneath the pointer while Studio auto-scrolls. Always read
+    // fresh bounds instead of reusing the rectangle captured at pointer-down.
+    const owningSection = root.current?.closest<HTMLElement>("[data-invitation-section]");
+    const rect = destination?.rect ?? owningSection?.getBoundingClientRect() ?? drag.rect;
+    const rawX = clamp((event.clientX - drag.grabOffsetX - rect.left) / rect.width * 100, 0, 100);
+    const rawY = clamp((event.clientY - drag.grabOffsetY - rect.top) / rect.height * 100, 0, 100);
 
     const bounds = root.current?.getBoundingClientRect();
     const halfX = bounds?.width && rect.width ? bounds.width / rect.width * 50 : 0;
@@ -174,6 +175,8 @@ function EditableLayer({
       if (scroller && viewport) {
         if (event.clientY > viewport.bottom - 42) scroller.scrollTop += 14;
         else if (event.clientY < viewport.top + 42) scroller.scrollTop -= 14;
+        if (event.clientX > viewport.right - 42) scroller.scrollLeft += 14;
+        else if (event.clientX < viewport.left + 42) scroller.scrollLeft -= 14;
       }
     }
     setLive(calculate(event));
