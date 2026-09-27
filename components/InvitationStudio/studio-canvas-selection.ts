@@ -2,11 +2,13 @@ import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy"
 import type { PhotoSlot } from "@/lib/templates/photo-slots";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
 import type { StudioSectionElementKind } from "@/lib/templates/section-element-styles";
+import { isNativeVisualKey } from "@/lib/templates/native-visual-transforms";
 
 export type StudioCanvasSelectionTarget =
   | { kind: "rsvp-element"; key: string }
   | { kind: "section-element"; section: InvitationSectionKey; elementKind: StudioSectionElementKind }
   | { kind: "copy"; field: EditableInvitationCopyField }
+  | { kind: "native"; key: string }
   | { kind: "photo"; slot: PhotoSlot }
   | { kind: "section"; section: InvitationSectionKey; instanceId: string }
   | { kind: "clear" }
@@ -41,6 +43,13 @@ export function resolveStudioCanvasSelection(
       kind: "copy",
       field: copyElement.dataset.studioCopyField as EditableInvitationCopyField,
     };
+  }
+
+  const heading = target.closest<HTMLElement>("[data-studio-native-heading], h1");
+  const headingSection = heading?.closest<HTMLElement>("[data-invitation-section]")?.dataset.invitationSection;
+  if (headingSection && (heading?.hasAttribute("data-studio-native-heading") || headingSection === "envelope")) {
+    const key = `heading:${headingSection}`;
+    if (isNativeVisualKey(key)) return { kind: "native", key };
   }
 
   if (target.closest("[data-studio-photo-crop]")) return { kind: "ignore" };
