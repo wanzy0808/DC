@@ -110,7 +110,12 @@ export default function DesignerDashboard() {
                   <div className="p-4">
                     <div className="flex items-center justify-between gap-3">
                       <p className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{item.templateNo}</p>
-                      <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
+                      <div className="flex items-center gap-2">
+                        <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">
+                          {item.status === "PUBLISHED" ? "Published" : "Draft"}
+                        </span>
+                        <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
+                      </div>
                     </div>
                     <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg">{item.name}</h3>
                     <p className="mt-1 text-xs text-muted-foreground">Nilai order terkait: {rupiah(item.orderValue)}</p>
@@ -122,7 +127,11 @@ export default function DesignerDashboard() {
                     {item.templateFile ? (
                       <a className="mt-3 inline-block text-xs text-primary underline" href={item.templateFile} target="_blank" rel="noreferrer">Buka file template</a>
                     ) : (
-                      <p className="mt-3 text-xs text-primary">Template Studio · siap katalog</p>
+                      <p className="mt-3 text-xs text-primary">
+                        {item.status === "PUBLISHED"
+                          ? "Template Studio · tampil di katalog"
+                          : "Template Studio · draft belum tampil di katalog"}
+                      </p>
                     )}
                   </div>
                 </article>
