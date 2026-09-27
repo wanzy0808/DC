@@ -100,7 +100,7 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   assert.match(story, /data-invitation-subsection="our-story"/);
   assert.doesNotMatch(story, /data-invitation-section="our-story"/);
   assert.match(story, /data-studio-copy-field="ourStory"/);
-  assert.match(story, /Klik untuk menulis Our Story/);
+  assert.match(story, /Our Story belum diisi/);
   assert.match(story, /Tentang Kami/);
   assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
   assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
