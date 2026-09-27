@@ -115,6 +115,12 @@ Editor undangan event-scoped `/dashboard/editor` kini mempunyai jalur **Aset** d
 
 Ini **belum** mengimplementasikan editor master bebas milik Designer berizin, kemampuan master yang dipublikasikan, custom made, sistem versi, atau JSON project storage yang dibahas di §5; jalur baru ini masih memakai token `::layers=` event-scoped yang sudah ada sebagai langkah kompatibilitas, **bukan** format proyek master yang disarankan. Sebelum membuat editor master dan menyebarkan kemampuan ini ke pelanggan produksi, audit izin per template/role, benturan objek dengan tombol dan form, panjang design key, serta pengujian interaksi desktop/touch dan public renderer. Jangan menyatakan seluruh acceptance criteria Studio sudah lulus tanpa QA tersebut.
 
+### Implementasi transform elemen bawaan (27 September 2026)
+
+Tahap pertama menghubungkan judul utama Amplop/Sampul, heading section, copy naratif yang sudah berpenanda, tombol visual Location/Gift, elemen RSVP yang berpenanda, dan frame foto Cover/Identitas ke satu codec transform visual. Seleksi di canvas memperlihatkan handle pindah, delapan arah resize, rotasi, dan reset per elemen. Posisi/skala/rotasi disanitasi dan disimpan di design key, lalu dipakai renderer Studio dan publik yang sama. Transform hanya memakai properti presentasi pada node/wrapper; event data dan aksi komponen tetap milik engine. Cover foto pada Amplop dan Isi memiliki target transform berbeda; mode crop tetap terpisah.
+
+Ini **belum** berarti setiap node template bebas diedit. Galeri yang memiliki banyak foto harus diidentifikasi per item, dekorasi scene tiap tema dan komponen bawaan lain masih perlu manifest/capability serta integrasi objek bersama. Jangan menyalin satu transform ke semua instance yang berulang atau menjadikan tombol sistem/form sebagai objek yang bisa dihapus. Uji pointer desktop/touch, fungsi publik, dan batas peran tetap wajib sebelum menyebut editor penuh selesai.
+
 ## 5. Struktur proyek, penyimpanan, dan versi
 
 Pisahkan **master template** dari **instance undangan pelanggan**:
