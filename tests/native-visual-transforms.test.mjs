@@ -373,3 +373,12 @@ test("native animation runtime uses validated selectors and shared reduced-motio
   assert.match(inspector, /animationDuration/);
   assert.match(inspector, /animationDelay/);
 });
+
+
+test("theme scene cover branches do not keep unreachable envelope controls", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  assert.doesNotMatch(scenes, /const isEnvelope = false/);
+  assert.match(scenes, /if \(stage === "envelope"\) return <ThemeEnvelope/);
+  assert.match(scenes, /object:envelope:open-button/);
+  assert.doesNotMatch(scenes, /object:cover:open-button/);
+});
