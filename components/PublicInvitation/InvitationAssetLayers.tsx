@@ -15,6 +15,7 @@ type GuideState = { x?: number; y?: number };
 type Props = {
   layers: InvitationAssetLayer[];
   section?: StudioObjectSection;
+  sectionInstanceId?: string;
   editable?: boolean;
   selectedId?: string | null;
   selectedIds?: string[];
@@ -35,25 +36,28 @@ function layerShadowFilter(layer: InvitationAssetLayer) {
   return `drop-shadow(${layer.shadowX ?? 0}px ${layer.shadowY ?? 8}px ${layer.shadowBlur ?? 18}px rgba(${red}, ${green}, ${blue}, ${opacity}))`;
 }
 
-function findSectionAt(x: number, y: number, root: HTMLElement): { section: StudioObjectSection; rect: DOMRect } | null {
+function findSectionAt(x: number, y: number, root: HTMLElement): { section: StudioObjectSection; instanceId: string; rect: DOMRect } | null {
   const invitation = root.closest(".dc-studio-preview-surface");
   if (!invitation) return null;
   for (const node of invitation.querySelectorAll<HTMLElement>("[data-invitation-section]")) {
     if (!studioObjectSections.includes(node.dataset.invitationSection as StudioObjectSection)) continue;
     const rect = node.getBoundingClientRect();
     if (rect.width && rect.height && x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
-      return { section: node.dataset.invitationSection as StudioObjectSection, rect };
+      const instanceId = node.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId
+        || node.dataset.invitationSection as StudioObjectSection;
+      return { section: node.dataset.invitationSection as StudioObjectSection, instanceId, rect };
     }
   }
   return null;
 }
 
 function EditableLayer({
-  layer, selected, section, editable, siblings, onSelect, onUpdate, onCycleSelect, onGuides,
+  layer, selected, section, sectionInstanceId, editable, siblings, onSelect, onUpdate, onCycleSelect, onGuides,
 }: {
   layer: InvitationAssetLayer;
   selected: boolean;
   section: StudioObjectSection;
+  sectionInstanceId: string;
   editable: boolean;
   siblings: InvitationAssetLayer[];
   onSelect?: Props["onSelect"];
@@ -70,7 +74,7 @@ function EditableLayer({
     initialAngle: number; moved: boolean; additive: boolean;
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
-  useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section]);
+  useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section, layer.sectionInstanceId]);
   const displayed = { ...layer, ...live };
   const shadowFilter = layerShadowFilter(layer);
   useInvitationLayerAnimation(motion, layer);
@@ -135,7 +139,7 @@ function EditableLayer({
     const bounds = root.current?.getBoundingClientRect();
     const halfX = bounds?.width && rect.width ? bounds.width / rect.width * 50 : 0;
     const halfY = bounds?.height && rect.height ? bounds.height / rect.height * 50 : 0;
-    const sameSection = !destination || destination.section === section;
+    const sameSection = !destination || (destination.section === section && destination.instanceId === sectionInstanceId);
     const xCandidates = [
       ...(halfX ? [{ target: halfX, guide: 0 }, { target: 100 - halfX, guide: 100 }] : []),
       { target: 50, guide: 50 },
@@ -160,7 +164,8 @@ function EditableLayer({
     return {
       x: round(clamp(snappedX.value, 0, 100)),
       y: round(clamp(snappedY.value, 0, 100)),
-      ...(destination && destination.section !== section ? { section: destination.section } : {}),
+      ...(destination && (destination.section !== section || destination.instanceId !== sectionInstanceId)
+        ? { section: destination.section, sectionInstanceId: destination.instanceId } : {}),
     };
   }
 
@@ -290,8 +295,12 @@ function EditableLayer({
   );
 }
 
-export default function InvitationAssetLayers({ layers, section = "cover", editable = false, selectedId, selectedIds, onSelect, onUpdate }: Props) {
-  const visible = layers.filter((layer) => (layer.section ?? "cover") === section && !layer.hidden);
+export default function InvitationAssetLayers({ layers, section = "cover", sectionInstanceId = section, editable = false, selectedId, selectedIds, onSelect, onUpdate }: Props) {
+  const visible = layers.filter((layer) => {
+    if ((layer.section ?? "cover") !== section || layer.hidden) return false;
+    const owner = layer.sectionInstanceId ?? section;
+    return owner === sectionInstanceId;
+  });
   const [guides, setGuides] = useState<GuideState>({});
   const overlay = useRef<HTMLDivElement>(null);
 
@@ -318,7 +327,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
       {editable && guides.y !== undefined && <span aria-hidden="true" className="absolute inset-x-0 z-[60] h-px bg-primary/70" style={{ top: `${guides.y}%` }} />}
       {visible.map((layer) =>
         <EditableLayer key={layer.id} layer={layer} section={section} selected={(selectedIds?.includes(layer.id) ?? false) || selectedId === layer.id}
-          editable={editable} siblings={visible}
+          editable={editable} sectionInstanceId={sectionInstanceId} siblings={visible}
           onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} onGuides={setGuides} />,
       )}
       </div>
