@@ -21,8 +21,8 @@ export default function StudioNativeVisualInspector({
     ? (en ? `${section} heading` : `Judul ${section}`)
     : (en ? "Visual element" : "Elemen visual");
   const fields = [
-    { key: "x", label: "X", unit: "%", min: -150, max: 150, factor: 1 },
-    { key: "y", label: "Y", unit: "%", min: -150, max: 150, factor: 1 },
+    { key: "x", label: "X", unit: "%", min: -2000, max: 2000, factor: 1 },
+    { key: "y", label: "Y", unit: "%", min: -2000, max: 2000, factor: 1 },
     { key: "scaleX", label: en ? "Width" : "Lebar", unit: "%", min: 25, max: 300, factor: 100 },
     { key: "scaleY", label: en ? "Height" : "Tinggi", unit: "%", min: 25, max: 300, factor: 100 },
     { key: "rotation", label: en ? "Rotation" : "Rotasi", unit: "°", min: -180, max: 180, factor: 1 },
