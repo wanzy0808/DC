@@ -38,6 +38,7 @@ import { useInvitationSectionAnimations } from "@/components/PublicInvitation/us
 import { usePremiumSectionTimelines } from "@/components/PublicInvitation/use-premium-section-timelines";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
+import { useInvitationNativeVisualAnimations } from "@/components/PublicInvitation/use-native-visual-animations";
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
@@ -214,6 +215,7 @@ export default function UniversalInvitationTemplate({
   useInvitationSectionAnimations(rootRef, sectionStyles);
   usePremiumSectionTimelines(rootRef, sectionStyles, String(opened));
   useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
+  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened));
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
