@@ -31,6 +31,8 @@ Do not add generic project-wide prompt/skill documents that duplicate or conflic
 
 Validation must distinguish source inspection, actual build/CI results, database migration, and browser/E2E verification. Never describe build/CI/migration/E2E as PASS without direct observed evidence for the relevant commit and environment.
 
+**Web-invitation-first Studio rule (27 September 2026):** Canva/Figma-like behavior applies to the **authoring interaction only**. DC Organizer output remains a responsive web invitation with section ownership, normal document/scroll flow, mobile/desktop behavior, semantic interactive DOM, and the shared RSVP/Maps/Countdown/Music/Wishes/Gift/data engines. Never turn invitation rendering into one global fixed-size poster/artboard or blanket absolute-position all content. Free transforms must remain section/component-scoped, editor zoom/pan/handles must not leak into public layout, and Designer/Owner freedom must preserve responsive usability and protected web functionality.
+
 **Designer/Customer Studio scoped rule (24 September 2026):** Before modifying designer template authoring, the invitation canvas, visual properties of shared components, or custom-made workflows, read `studio.md` as the scoped design and authorization rule alongside canonical `prd.md` §7.2.0c and `template.md`. Designer may modify whitelisted visual presentation across sections but must never rewrite or bypass protected component behavior, event data, business APIs, or customer permissions. `studio.md` describes future requirements and must not be mistaken for already implemented functionality.
 
 ## 2. Product Identity & Preservation
