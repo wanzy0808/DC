@@ -1112,6 +1112,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       x: clamp((event.clientX - rect.left) / rect.width * 100),
       y: clamp((event.clientY - rect.top) / rect.height * 100),
       section: section.dataset.invitationSection as StudioObjectSection,
+      sectionInstanceId: section.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId
+        ?? section.dataset.invitationSection,
     });
   }
 
@@ -1689,7 +1691,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             x: 50,
             y: 48,
           };
-          addTextObject(event.key, insert.section, { x: insert.x, y: insert.y });
+          addTextObject(event.key, insert.section, { x: insert.x, y: insert.y, sectionInstanceId: insert.sectionInstanceId });
         }}>
           <StudioCanvasToolbar
             locale={locale}
@@ -1755,6 +1757,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 if (rect.width && rect.height) {
                   textInsertPoint.current = {
                     section,
+                    sectionInstanceId: sectionNode.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId
+                      ?? section,
                     x: Math.min(100, Math.max(0, (event.clientX - rect.left) / rect.width * 100)),
                     y: Math.min(100, Math.max(0, (event.clientY - rect.top) / rect.height * 100)),
                   };
