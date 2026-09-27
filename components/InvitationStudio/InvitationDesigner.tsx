@@ -698,7 +698,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       case "rsvp-element":
         clearCanvasSelection();
         setSelectedRsvpElementKey(selection.key);
-        if (selection.instanceId) setSelectedNativeKey(`rsvp:${selection.key}:${selection.instanceId}`);
+        if (templateMode && selection.instanceId) setSelectedNativeKey(`rsvp:${selection.key}:${selection.instanceId}`);
         return;
       case "section-element":
         clearCanvasSelection();
@@ -706,22 +706,22 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           section: selection.section,
           kind: selection.elementKind,
         });
-        if (selection.instanceId) setSelectedNativeKey(`element:${selection.section}:${selection.elementKind}:${selection.instanceId}`);
+        if (templateMode && selection.instanceId) setSelectedNativeKey(`element:${selection.section}:${selection.elementKind}:${selection.instanceId}`);
         return;
       case "copy":
         clearCanvasSelection();
         setSelectedCopyField(selection.field);
-        if (selection.instanceId) setSelectedNativeKey(`copy:${selection.field}:${selection.instanceId}`);
+        if (templateMode && selection.instanceId) setSelectedNativeKey(`copy:${selection.field}:${selection.instanceId}`);
         return;
       case "native":
         clearCanvasSelection();
-        setSelectedNativeKey(selection.key);
+        if (templateMode) setSelectedNativeKey(selection.key);
         return;
       case "photo":
         selectPhotoVisual(selection.slot);
         if (selection.slot === "gallery" && selection.assetId) {
           const key = `photo:gallery:${selection.assetId}${selection.instanceId ? `:${selection.instanceId}` : ""}`;
-          if (isNativeVisualKey(key)) setSelectedNativeKey(key);
+          if (templateMode && isNativeVisualKey(key)) setSelectedNativeKey(key);
         }
         return;
       case "section":
@@ -1984,6 +1984,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             <StudioLayerList
               locale={locale}
               layers={design.layers}
+              editorMode={templateMode ? "template" : "customer"}
+              maxLayers={maxAssetLayers}
               selectedId={selectedLayerId}
               selectedIds={selectedLayerIds}
               dragOverId={layerDragOverId}
@@ -2039,12 +2041,13 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
                     onEnvelopeOpened={handleCanvasEnvelopeOpened}
+                    editorMode={templateMode ? "template" : "customer"}
                     selectedSectionInstanceId={selectedSectionInstanceId}
                     onSelectSectionInstance={selectSectionInstance}
-                    onMoveSectionInstance={moveSectionInstance}
-                    onToggleSectionInstance={toggleSectionInstance}
-                    onDuplicateSectionInstance={duplicateSectionInstance}
-                    onDeleteSectionInstance={deleteSectionInstance}
+                    onMoveSectionInstance={templateMode ? moveSectionInstance : undefined}
+                    onToggleSectionInstance={templateMode ? toggleSectionInstance : undefined}
+                    onDuplicateSectionInstance={templateMode ? duplicateSectionInstance : undefined}
+                    onDeleteSectionInstance={templateMode ? deleteSectionInstance : undefined}
                   />
                 </div>
               </div>
