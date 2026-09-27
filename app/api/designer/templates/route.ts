@@ -116,11 +116,11 @@ async function createStudioTemplate(request: Request, author: NonNullable<Awaite
           description,
           usesPhotos,
           musicUrl,
-          status: "PUBLISHED",
+          status: "DRAFT",
           designerId: author.id,
         },
       });
-      return NextResponse.json({ template: created, ready: true }, { status: 201 });
+      return NextResponse.json({ template: created, ready: false }, { status: 201 });
     } catch (error) {
       const code = typeof error === "object" && error !== null && "code" in error
         ? (error as { code?: string }).code
