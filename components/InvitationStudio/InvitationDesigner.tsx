@@ -1792,7 +1792,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onSetFocus={setPhotoFocus}
               onSetCrop={setPhotoCrop}
               onResetCrop={resetPhotoCrop}
-              onUpload={(file) => uploadAsset(file, "IMAGE")}
+              onUpload={templateMode ? undefined : (file) => uploadAsset(file, "IMAGE")}
             />
           )}
           {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
