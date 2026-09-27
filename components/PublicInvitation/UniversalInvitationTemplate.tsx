@@ -348,7 +348,7 @@ export default function UniversalInvitationTemplate({
       />
     ) : null;
 
-  const objectOverlay = (target: StudioObjectSection) => <InvitationAssetLayers layers={illustrationLayers} section={target}
+  const objectOverlay = (target: StudioObjectSection, instanceId = target) => <InvitationAssetLayers layers={illustrationLayers} section={target} sectionInstanceId={instanceId}
     editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer}
     onUpdate={onUpdateAssetLayer} />;
 
@@ -379,7 +379,7 @@ export default function UniversalInvitationTemplate({
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
-    return renderSectionInstances(keyName, () => (
+    return renderSectionInstances(keyName, (instanceId) => (
       <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
@@ -415,7 +415,7 @@ export default function UniversalInvitationTemplate({
           )}
           {children}
         </div>
-        {objectOverlay(keyName)}
+        {objectOverlay(keyName, instanceId)}
       </section>
     ));
   };
@@ -449,7 +449,7 @@ export default function UniversalInvitationTemplate({
         />{objectOverlay("envelope")}</div>
       ) : (
         <div className={`${key === "zen-atelier" ? "zen-content " : ""}flex flex-col`}>
-          {renderSectionInstances("cover", () => (
+          {renderSectionInstances("cover", (instanceId) => (
             <div className="relative" data-studio-cover-stage data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)}><InvitationThemeScenes
               theme={key}
               isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
@@ -465,7 +465,7 @@ export default function UniversalInvitationTemplate({
               stage="cover"
               onOpen={handleOpen}
               onEditPhoto={usesPhotos && preview ? () => onEditPhoto?.("cover") : undefined}
-            />{objectOverlay("cover")}</div>
+            />{objectOverlay("cover", instanceId)}</div>
           ))}
 
           {section("greeting", key === "pencil-reverie" ? (
@@ -635,10 +635,10 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 11)}
 
-          {renderSectionInstances("footer", () => (
+          {renderSectionInstances("footer", (instanceId) => (
             <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className="relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5">
               <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />
-              {objectOverlay("footer")}
+              {objectOverlay("footer", instanceId)}
             </footer>
           ))}
         </div>
