@@ -480,7 +480,12 @@ export default function UniversalInvitationTemplate({
               <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
               <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
             </div>
-          ) : <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 opacity-80"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>, 1)}
+          ) : (
+            <div data-studio-native-object="object:greeting:copy-group" className="mx-auto max-w-md space-y-4 text-sm leading-8 opacity-80">
+              <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+              <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
+            </div>
+          ), 1)}
 
           {section("identity", key === "pencil-reverie" ? (
             <div className="pr-identity-story">
@@ -635,7 +640,7 @@ export default function UniversalInvitationTemplate({
             <div data-studio-native-object="object:closing:copy-group" className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
               {key === "zen-atelier" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p> : <><Heart aria-hidden data-studio-native-object="object:closing:heart" className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p></>}
               <p data-studio-native-object="object:closing:names" className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
-              {key === "pencil-reverie" && <p data-studio-copy-field="prayerWish" className="pr-prayer-copy whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>}
+              <p data-studio-copy-field="prayerWish" className={`whitespace-pre-line ${key === "pencil-reverie" ? "pr-prayer-copy" : key === "zen-atelier" ? "zen-quote mt-5" : "mt-5 opacity-80"}`}><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
               {key === "zen-atelier" && couple && <p data-studio-copy-field="zenQuote" className="zen-quote whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.zenQuote ?? ""} unit={copyMotions.zenQuote?.unit} /></p>}
             </div>
           ), 11)}
