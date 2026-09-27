@@ -32,9 +32,10 @@ export function observeInvitationEntrances(
     const preset = getSectionAnimationPreset(config.animation);
     const baseFrames = sectionAnimationKeyframes(config.animation);
     if (!preset || !baseFrames) return;
-    const frames = config.finalOpacity === undefined ? baseFrames : baseFrames.map((frame) =>
+    const finalOpacity = config.finalOpacity;
+    const frames = finalOpacity === undefined ? baseFrames : baseFrames.map((frame) =>
       typeof frame.opacity === "number"
-        ? { ...frame, opacity: frame.opacity * config.finalOpacity }
+        ? { ...frame, opacity: frame.opacity * finalOpacity }
         : frame,
     );
 
