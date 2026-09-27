@@ -21,6 +21,7 @@ const keys = new Set<string>([
   "heading:envelope",
   "element:location:button", "element:gift:button",
   "rsvp:title", "rsvp:button", "rsvp:inputs",
+  "photo:cover", "photo:personOne", "photo:personTwo",
 ]);
 
 export function isNativeVisualKey(key: string) {
@@ -79,6 +80,7 @@ export function nativeVisualSelector(key: string) {
     : `[data-invitation-section="${section}"] [data-studio-native-heading]`;
   if (kind === "element") return `[data-studio-section-element="${section}:${element}"]`;
   if (kind === "rsvp") return `[data-invitation-section="rsvp"] [data-studio-rsvp-element="${section}"]`;
+  if (kind === "photo") return `[data-invitation-photo-slot="${section}"]`;
   return null;
 }
 
