@@ -22,6 +22,7 @@ import { parseInvitationSections, type InvitationSectionKey, type InvitationSect
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
+import { nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
@@ -85,7 +86,7 @@ function RoseHeading({ eyebrow, children, studioElement, style }: { eyebrow: str
   return (
     <div className="mb-7 text-center">
       <p className="mb-3 text-[10px] uppercase tracking-[0.32em] text-[#ad6b7e]">{eyebrow}</p>
-      <h2 data-studio-rsvp-element={studioElement} style={style} className="font-[family-name:var(--font-dc-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
+      <h2 data-studio-native-heading="" data-studio-rsvp-element={studioElement} style={style} className="font-[family-name:var(--font-dc-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
       <span className="mx-auto mt-4 block h-px w-16 bg-[#d8a7b3]" />
     </div>
   );
@@ -250,7 +251,8 @@ export default function RomanticRoseTemplate({
   };
 
   return (
-    <main ref={rootRef} data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
+    <main ref={rootRef} data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
+      <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
         <section data-invitation-section="envelope" style={invitationSectionStyleCss(sectionStyles.envelope)} className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
