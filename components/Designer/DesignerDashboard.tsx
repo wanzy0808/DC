@@ -127,11 +127,18 @@ export default function DesignerDashboard() {
                     {item.templateFile ? (
                       <a className="mt-3 inline-block text-xs text-primary underline" href={item.templateFile} target="_blank" rel="noreferrer">Buka file template</a>
                     ) : (
-                      <p className="mt-3 text-xs text-primary">
-                        {item.status === "PUBLISHED"
-                          ? "Template Studio · tampil di katalog"
-                          : "Template Studio · draft belum tampil di katalog"}
-                      </p>
+                      <div className="mt-3 flex flex-wrap items-center gap-2">
+                        <p className="text-xs text-primary">
+                          {item.status === "PUBLISHED"
+                            ? "Template Studio · tampil di katalog"
+                            : "Template Studio · draft belum tampil di katalog"}
+                        </p>
+                        {item.status === "DRAFT" && (
+                          <Button asChild size="sm" variant="outline">
+                            <Link href={`/designer/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link>
+                          </Button>
+                        )}
+                      </div>
                     )}
                   </div>
                 </article>
