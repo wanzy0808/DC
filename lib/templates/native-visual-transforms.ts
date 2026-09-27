@@ -33,7 +33,7 @@ export const defaultNativeVisualTransform: NativeVisualTransform = {
 const nativeObjectKey = /^object:(?:envelope|cover|greeting|identity|event|dateTime|gallery|countdown|location|rsvp|wishes|gift|closing|footer):[a-zA-Z0-9_-]{1,64}(?::[a-zA-Z0-9_-]{1,64})?$/;
 const nativeTextObjectId = /(?:^|[-_])(?:kicker|date|name|names|venue|address|title|heading|subtitle|signature|quote|hashtag|copy|greeting|timezone|start|end|bank-name|account-name|account-number|dress-code|side-label|ending|parents)(?:$|[-_])/i;
 const hexColor = /^#[0-9a-fA-F]{6}$/;
-const nativeFontFamilies = new Set(
+const nativeFontFamilies: ReadonlySet<string> = new Set<string>(
   Object.values(invitationFonts).flatMap((item) => [item.heading, item.body]),
 );
 
