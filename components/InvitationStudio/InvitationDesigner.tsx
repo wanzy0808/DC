@@ -108,6 +108,15 @@ const blankCanvasSections = {
   music: false,
 };
 
+function nativeVisualInstanceId(key: string) {
+  const parts = key.split(":");
+  if (parts[0] === "object" && parts.length === 4) return parts[3] ?? null;
+  if ((parts[0] === "copy" || parts[0] === "heading" || parts[0] === "rsvp") && parts.length === 3) return parts[2] ?? null;
+  if (parts[0] === "element" && parts.length === 4) return parts[3] ?? null;
+  if (parts[0] === "photo" && parts[1] === "gallery" && parts.length === 4) return parts[3] ?? null;
+  return null;
+}
+
 export default function InvitationDesigner({ mode = "invitation", allowBlankCanvas = false }: { mode?: "invitation" | "template"; allowBlankCanvas?: boolean }) {
   const { locale } = useLanguage();
   const templateMode = mode === "template";
