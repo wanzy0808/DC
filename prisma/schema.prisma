@@ -243,7 +243,7 @@ model DesignerTemplate {
   description   String         @default("")
   usesPhotos    Boolean        @default(false)
   musicUrl      String?
-  status        TemplateStatus @default(PUBLISHED)
+  status        TemplateStatus @default(DRAFT)
   designerId    String
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
