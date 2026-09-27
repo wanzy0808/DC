@@ -29,7 +29,7 @@ test("staff Save creates a draft template while customer Save stays event-scoped
   assert.match(editor, /createStudioTemplate\(/);
   assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
   assert.match(persistence, /method: "POST"/);
-  assert.match(toolbar, /Simpan Template/);
+  assert.match(toolbar, /Simpan Draft/);
   assert.match(editor, /saveStudioInvitation\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
   assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
