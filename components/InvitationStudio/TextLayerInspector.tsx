@@ -128,7 +128,7 @@ export default function TextLayerInspector({
 
       <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
         <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
-        <span>{en ? "Edit wording from Text on the left or type directly on the canvas. This panel controls styling." : "Ubah isi dari menu Teks di kiri atau ketik langsung di canvas. Panel ini hanya mengatur styling."}</span>
+        <span>{en ? "Double-click the text box on the canvas to edit its wording. This panel controls styling only." : "Double-click kotak teks di canvas untuk mengubah isinya. Panel ini hanya mengatur styling."}</span>
       </div>
 
       <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
