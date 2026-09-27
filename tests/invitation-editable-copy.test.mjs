@@ -88,12 +88,15 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   const sectionRegistry = read("lib/templates/sections.ts");
   assert.ok(!sectionRegistry.includes('{ key: "ourStory"'), "do not invent a 16th invitation visibility toggle");
   assert.match(story, /if \(!story\?\.trim\(\) && !preview\) return null;/);
-  assert.match(story, /data-invitation-section="our-story"/);
+  assert.match(story, /data-invitation-subsection="our-story"/);
+  assert.doesNotMatch(story, /data-invitation-section="our-story"/);
   assert.match(story, /data-studio-copy-field="ourStory"/);
   assert.match(story, /Klik untuk menulis Our Story/);
   assert.match(story, /Tentang Kami/);
   assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
   assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
+  assert.match(universal, /after\?\.\(instanceId\)/);
+  assert.doesNotMatch(romantic, /sectionLayout\.findIndex\(\(item\) => item\.key === "identity"\)\) \+ 0\.1/);
   assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
     ourStory: "Bermula dari pertemuan sederhana.",
   });
