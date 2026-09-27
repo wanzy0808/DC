@@ -368,7 +368,7 @@ export default function RomanticRoseTemplate({
                           {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
                           {gallery.length ? <div className="grid grid-cols-2 gap-3">
                             {gallery.map((photo, index) => (
-                              <div key={photo.id} data-invitation-photo-slot="gallery" className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
+                              <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
                                 <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                               </div>
                             ))}
