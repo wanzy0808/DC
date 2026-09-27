@@ -81,12 +81,16 @@ Sediakan preview desktop dan mobile dengan kemungkinan override tata letak yang 
 
 Naik/Turun mengubah urutan instance section pada undangan user. Duplicate membuat instance kedua dari section yang sama. Delete menghapus instance itu dari **instance undangan user**, bukan dari master template. Master template **selalu mempertahankan seluruh 13 section inti** sesuai `template.md`; Restart atau mengganti template mengembalikan instance ke susunan master lengkap. Amplop Digital tetap gerbang khusus dan Musik tetap kontrol global, bukan bagian dari rail urutan isi.
 
+### Preview final mobile-first sebelum Save (27 September 2026)
+
+Canvas edit tetap menjadi workspace utama, tetapi Studio juga menyediakan **Preview hasil undangan** terpisah yang memakai **state draft saat ini termasuk perubahan yang belum disimpan**. Preview ini memakai renderer undangan yang sama tanpa selection box, rail section, guide, inspector atau kontrol transform. Default viewport Preview adalah HP karena undangan terutama dikonsumsi lewat ponsel; opsi Desktop hanya untuk memastikan layout tetap layak dan tidak berantakan, bukan membuat desain desktop kedua. Preview tidak menyimpan apa pun dan tidak menjadi renderer alternatif.
+
 ### Mode Studio berdasarkan role
 
 Studio memakai **satu editor yang sama**, tetapi semantics Save wajib dibedakan berdasarkan role:
 
 - **USER / customer — Invitation Mode:** Studio selalu terikat ke satu `Invitation` milik user. Tombol **Simpan** menyimpan desain ke undangan tersebut melalui `/api/invitations`. Save **bukan publish otomatis**; setelah desain tersimpan, Publish tetap mengikuti flow Undangan Digital dan rule pembayaran/publish yang berlaku.
-- **OWNER / DESIGNER / EDITOR — Template Mode:** masuk dari Owner Panel atau Designer Panel ke Studio dengan data demo DC Organizer, bukan event customer. Tombol berubah menjadi **Simpan Template**. Save membuat **DesignerTemplate baru** melalui `/api/designer/templates`, status `PUBLISHED`, membawa `designKey` hasil Studio, dan langsung menjadi template katalog yang `ready` karena menggunakan renderer bersama.
+- **OWNER / DESIGNER / EDITOR — Template Mode:** masuk dari Owner Panel atau Designer Panel ke Studio dengan data demo DC Organizer, bukan event customer. Tombol berubah menjadi **Simpan Draft**. Save membuat **DesignerTemplate draft** melalui `/api/designer/templates`, membawa `designKey` hasil Studio, dan **belum** tampil di katalog publik. Publish adalah langkah terpisah setelah review/approval; hanya status `PUBLISHED` yang boleh masuk katalog.
 - Role staff tidak boleh jatuh ke customer editor. URL `/dashboard/editor` harus mengarahkan Owner ke `/owner/studio`, Designer/Editor ke `/designer/studio`.
 - Template Mode **tidak boleh melakukan PUT ke Invitation customer**. Sebaliknya customer tidak memiliki aksi untuk membuat template katalog.
 - Master template Studio yang disimpan staff harus tetap memakai kontrak section lengkap dan seluruh guardrail `template.md`. Data demo Denny & Christine hanya preview/template authoring dan tidak boleh masuk sebagai data event customer.
