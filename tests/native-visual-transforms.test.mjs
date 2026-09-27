@@ -60,3 +60,16 @@ test("envelope and content photo transforms have separate targets", () => {
     '[data-invitation-section="cover"] [data-studio-native-heading]');
   assert.equal(nativeVisualSelector("script:arbitrary"), null);
 });
+
+
+test("gallery visuals are keyed by one safe photo ID", () => {
+  assert.equal(nativeVisualSelector("photo:gallery:photo_123"),
+    '[data-invitation-photo-slot="gallery"][data-studio-photo-id="photo_123"]');
+  assert.equal(nativeVisualSelector('photo:gallery:x"]{color:red}'), null);
+  const design = withNativeVisualTransforms("botanical-ivory", {
+    "photo:gallery:photo_123": { x: 8, y: 4, scaleX: 1.2, scaleY: 1, rotation: 3 },
+  });
+  assert.equal(parseNativeVisualTransforms(design)["photo:gallery:photo_123"].x, 8);
+  assert.match(read("components/PublicInvitation/UniversalInvitationTemplate.tsx"), /data-studio-photo-id=\{asset\.id\}/);
+  assert.match(read("components/PublicInvitation/RomanticRoseTemplate.tsx"), /data-studio-photo-id=\{photo\.id\}/);
+});
