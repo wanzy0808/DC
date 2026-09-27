@@ -92,7 +92,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "back"\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.match(editor, /const maxAssetLayers = templateMode \? MAX_TEMPLATE_ASSET_LAYERS : MAX_ASSET_LAYERS/);
-  assert.match(editor, /design\.layers\.length >= maxAssetLayers/);
+  assert.match(editor, /assetLayerUsage >= maxAssetLayers/);
   assert.match(editor, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<AssetLayerInspector/);
 
