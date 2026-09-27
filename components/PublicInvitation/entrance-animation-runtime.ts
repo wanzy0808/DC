@@ -9,6 +9,8 @@ export type InvitationEntranceTarget = {
   animation: InvitationSectionAnimation;
   duration?: number;
   delay?: number;
+  /** Preserve a persisted object opacity when an entrance preset animates opacity. */
+  finalOpacity?: number;
 };
 
 export function observeInvitationEntrances(
@@ -28,8 +30,13 @@ export function observeInvitationEntrances(
     if (!config || config.animation === "none") return;
 
     const preset = getSectionAnimationPreset(config.animation);
-    const frames = sectionAnimationKeyframes(config.animation);
-    if (!preset || !frames) return;
+    const baseFrames = sectionAnimationKeyframes(config.animation);
+    if (!preset || !baseFrames) return;
+    const frames = config.finalOpacity === undefined ? baseFrames : baseFrames.map((frame) =>
+      typeof frame.opacity === "number"
+        ? { ...frame, opacity: frame.opacity * config.finalOpacity }
+        : frame,
+    );
 
     played.add(node);
     const animation = node.animate(frames, {
