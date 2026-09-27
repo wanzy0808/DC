@@ -270,11 +270,11 @@ function EditableLayer({
       {editable && selected && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
-        {!layer.locked && <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-9 left-1/2 z-20 grid h-7 w-7 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
+        {!layer.locked && <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-10 left-1/2 z-20 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
           style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "rotate")} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}><RotateCw aria-hidden="true" size={15} strokeWidth={2} /></button>}
         {!layer.locked && (["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const).map((handle) => (
           <button key={handle} type="button" aria-label={`Ubah ukuran dari ${handle}`} title="Tarik untuk mengubah ukuran"
-            className={`pointer-events-auto absolute z-20 grid h-5 w-5 place-items-center border-0 bg-transparent p-0 ${handle.includes("top") ? "-top-2.5" : handle.includes("bottom") ? "-bottom-2.5" : "top-1/2 -translate-y-1/2"} ${handle.includes("left") ? "-left-2.5" : handle.includes("right") ? "-right-2.5" : "left-1/2 -translate-x-1/2"} ${handle === "top" || handle === "bottom" ? "cursor-ns-resize" : handle === "left" || handle === "right" ? "cursor-ew-resize" : handle === "top-left" || handle === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
+            className={`pointer-events-auto absolute z-20 grid h-8 w-8 place-items-center border-0 bg-transparent p-0 ${handle.includes("top") ? "-top-4" : handle.includes("bottom") ? "-bottom-4" : "top-1/2 -translate-y-1/2"} ${handle.includes("left") ? "-left-4" : handle.includes("right") ? "-right-4" : "left-1/2 -translate-x-1/2"} ${handle === "top" || handle === "bottom" ? "cursor-ns-resize" : handle === "left" || handle === "right" ? "cursor-ew-resize" : handle === "top-left" || handle === "bottom-right" ? "cursor-nwse-resize" : "cursor-nesw-resize"}`}
             style={{ touchAction: "none" }} onPointerDown={(event) => begin(event, "resize", handle)} onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}><span aria-hidden="true" className="pointer-events-none h-2.5 w-2.5 rounded-[2px] border border-primary bg-background" /></button>
         ))}
       </>}
@@ -305,7 +305,7 @@ export default function InvitationAssetLayers({ layers, section = "cover", edita
   return (
     <>
       {textFamilies.length > 0 && <InvitationFonts families={textFamilies} />}
-      <div ref={overlay} className="pointer-events-none absolute inset-0 z-30 overflow-hidden" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
+      <div ref={overlay} className="pointer-events-none absolute inset-0 z-30 overflow-visible" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {editable && guides.x !== undefined && <span aria-hidden="true" className="absolute inset-y-0 z-[60] w-px bg-primary/70" style={{ left: `${guides.x}%` }} />}
       {editable && guides.y !== undefined && <span aria-hidden="true" className="absolute inset-x-0 z-[60] h-px bg-primary/70" style={{ top: `${guides.y}%` }} />}
       {visible.map((layer) =>
