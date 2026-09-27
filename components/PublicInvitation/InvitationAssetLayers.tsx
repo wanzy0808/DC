@@ -17,6 +17,7 @@ type Props = {
   section?: StudioObjectSection;
   sectionInstanceId?: string;
   editable?: boolean;
+  editorMode?: "template" | "customer";
   selectedId?: string | null;
   selectedIds?: string[];
   onSelect?: (id: string, additive?: boolean) => void;
@@ -295,7 +296,7 @@ function EditableLayer({
   );
 }
 
-export default function InvitationAssetLayers({ layers, section = "cover", sectionInstanceId = section, editable = false, selectedId, selectedIds, onSelect, onUpdate }: Props) {
+export default function InvitationAssetLayers({ layers, section = "cover", sectionInstanceId = section, editable = false, editorMode = "customer", selectedId, selectedIds, onSelect, onUpdate }: Props) {
   const visible = layers.filter((layer) => {
     if ((layer.section ?? "cover") !== section || layer.hidden) return false;
     const owner = layer.sectionInstanceId ?? section;
@@ -325,11 +326,12 @@ export default function InvitationAssetLayers({ layers, section = "cover", secti
       <div ref={overlay} className="pointer-events-none absolute inset-0 z-30 overflow-visible" aria-label={editable ? "Objek desain bagian undangan" : undefined}>
       {editable && guides.x !== undefined && <span aria-hidden="true" className="absolute inset-y-0 z-[60] w-px bg-primary/70" style={{ left: `${guides.x}%` }} />}
       {editable && guides.y !== undefined && <span aria-hidden="true" className="absolute inset-x-0 z-[60] h-px bg-primary/70" style={{ top: `${guides.y}%` }} />}
-      {visible.map((layer) =>
-        <EditableLayer key={layer.id} layer={layer} section={section} selected={(selectedIds?.includes(layer.id) ?? false) || selectedId === layer.id}
-          editable={editable} sectionInstanceId={sectionInstanceId} siblings={visible}
-          onSelect={onSelect} onUpdate={onUpdate} onCycleSelect={cycleSelection} onGuides={setGuides} />,
-      )}
+      {visible.map((layer) => {
+        const layerEditable = editable && (editorMode === "template" || (layer.customerAccess !== "locked" && layer.customerAccess !== "content"));
+        return <EditableLayer key={layer.id} layer={layer} section={section} selected={layerEditable && ((selectedIds?.includes(layer.id) ?? false) || selectedId === layer.id)}
+          editable={layerEditable} sectionInstanceId={sectionInstanceId} siblings={visible}
+          onSelect={layerEditable ? onSelect : undefined} onUpdate={layerEditable ? onUpdate : undefined} onCycleSelect={layerEditable ? cycleSelection : undefined} onGuides={setGuides} />;
+      })}
       </div>
     </>
   );
