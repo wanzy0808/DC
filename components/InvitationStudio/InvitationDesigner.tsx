@@ -1618,7 +1618,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         location.searchParams.set("draft", savedTemplate.id);
         location.searchParams.delete("template");
         window.history.replaceState(
-          { ...(window.history.state as Record<string, unknown> | null), __dcStudioDraftEntry: studioEntryId },
+          { ...((window.history.state as Record<string, unknown> | null) ?? {}), __dcStudioDraftEntry: studioEntryId },
           "",
           location.pathname + location.search + location.hash,
         );
