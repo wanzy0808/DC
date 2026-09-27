@@ -18,7 +18,7 @@
 .zen-hashtag { font-size:11px; margin-top:20px; animation:zen-reveal 1s .65s both; overflow-wrap:anywhere; }
 .zen-cover-mountain { position:absolute; bottom:0; left:0; width:100%; height:260px; object-fit:cover; object-position:50% 63%; mask-image:linear-gradient(transparent,black 55%); pointer-events:none; opacity:.75; }
 .zen-scroll { position:absolute; z-index:3; bottom:34px; display:grid; place-items:center; width:44px; height:44px; border-radius:50%; color:white; background:var(--inv-accent); animation:zen-reveal 1s .8s both; }
-.zen-action { display:inline-flex; min-height:46px; align-items:center; justify-content:center; gap:10px; padding:12px 27px; border-radius:999px; background:var(--zen-ink); color:var(--zen-paper); font-size:13px; cursor:pointer; }
+.zen-action { display:inline-flex; min-height:46px; align-items:center; justify-content:center; gap:10px; padding:12px 27px; border-radius:var(--dc-control-radius); background:var(--zen-ink); color:var(--zen-paper); font-size:13px; cursor:pointer; }
 .zen-action:disabled { opacity:.6; cursor:default; }
 /* Zen Atelier: Japanese shugi-bukuro-inspired washi stationery. The Mizuhiki
    cord and seal are drawn as real layers, not baked into a Western wax-envelope PNG.
