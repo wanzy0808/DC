@@ -6,6 +6,8 @@ import PhotoSlotInspector from "@/components/InvitationStudio/PhotoSlotInspector
 import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspector";
 import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
+import StudioNativeVisualInspector from "@/components/InvitationStudio/StudioNativeVisualInspector";
+import type { NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
 import type { AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
 import type { InvitationDesignState } from "@/components/InvitationStudio/designer-types";
@@ -33,6 +35,9 @@ export default function StudioSelectionInspector({
   selectedSectionElement,
   selectedCopyField,
   selectedSectionKey,
+  selectedNativeKey,
+  onUpdateNative,
+  onCloseNative,
   onCloseAsset,
   onUpdateAsset,
   onPositionAsset,
@@ -61,6 +66,9 @@ export default function StudioSelectionInspector({
   selectedSectionElement: SelectedSectionElement;
   selectedCopyField: EditableInvitationCopyField | null;
   selectedSectionKey: InvitationSectionKey | null;
+  selectedNativeKey: string | null;
+  onUpdateNative: (key: string, value: NativeVisualTransform) => void;
+  onCloseNative: () => void;
   onCloseAsset: () => void;
   onUpdateAsset: (id: string, patch: Partial<InvitationAssetLayer>) => void;
   onPositionAsset: (id: string, position: AssetLayerPosition) => void;
@@ -175,6 +183,13 @@ export default function StudioSelectionInspector({
         onClose={onCloseSection}
       />
     );
+  }
+
+  if (selectedNativeKey) {
+    return <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
+      value={design.nativeVisuals[selectedNativeKey]}
+      onChange={(value) => onUpdateNative(selectedNativeKey, value)}
+      onClose={onCloseNative} />;
   }
 
   return null;
