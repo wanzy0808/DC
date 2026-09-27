@@ -55,7 +55,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
               <path d="M0 43c56 1 80 4 115 9 22 4 39-30 59-28 17 1 19 15 8 25-14 14-42 10-51-4-10-17 10-26 27-24 24 3 30 24 102 22" stroke="color-mix(in srgb,var(--jp-accent) 55%,var(--jp-paper))" strokeWidth="2.3" strokeLinecap="round" />
               <path d="M0 60c55-2 89-7 114-12 22-6 36 9 51 10 23 2 42-5 95-4" stroke="color-mix(in srgb,var(--jp-soft) 80%,var(--jp-paper-ink))" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
-            <span className="zen-jp-seal" lang="ja">{isWedding ? "寿" : "和"}</span>
+            <span className="zen-jp-seal" lang="ja" data-studio-native-object="object:envelope:seal">{isWedding ? "寿" : "和"}</span>
           </div>
         </div>
         <button type="button" disabled={opening} className="zen-open" data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" onClick={() => {

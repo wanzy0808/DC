@@ -163,3 +163,28 @@ test("shared built-in display nodes expose Studio native-object markers without 
   assert.match(rose, /object:envelope:top-fold/);
   assert.match(rose, /section="rsvp"/);
 });
+
+
+test("generic theme envelope and cover artwork expose transform targets for visual parts", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  for (const marker of [
+    "object:envelope:frame-border",
+    "object:envelope:card",
+    "object:envelope:flap",
+    "object:envelope:seal",
+    "object:envelope:letter-kicker",
+    "object:envelope:date",
+    "object:cover:photo-frame",
+    "object:cover:kicker",
+    "object:cover:date",
+    "object:cover:starfield",
+    "object:cover:card",
+  ]) assert.ok(scenes.includes(marker), `missing Studio marker ${marker}`);
+  assert.doesNotMatch(scenes, /<BotanicalSprig /><BotanicalSprig mirrored />/);
+  assert.doesNotMatch(scenes, /<Lines className="mt-9" />/);
+});
+
+test("Zen envelope seal participates in native visual transforms", () => {
+  const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
+  assert.match(zen, /zen-jp-seal" lang="ja" data-studio-native-object="object:envelope:seal"/);
+});
