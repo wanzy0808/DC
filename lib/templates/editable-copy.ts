@@ -17,14 +17,11 @@ export const editableCopyMaxLength: Record<EditableInvitationCopyField, number> 
 };
 
 export function availableEditableCopyFields(templateKey: string, isWedding = true): EditableInvitationCopyField[] {
-  if (templateKey === "pencil-reverie") return isWedding
-    ? ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]
-    : ["greeting", "attendanceRequest", "prayerWish", "closing"];
-  return isWedding
-    ? templateKey === "zen-atelier"
-      ? ["greeting", "closing", "ourStory", "zenQuote"]
-      : ["greeting", "closing", "ourStory"]
-    : ["greeting", "closing"];
+  const common: EditableInvitationCopyField[] = ["greeting", "attendanceRequest", "prayerWish", "closing"];
+  if (!isWedding) return common;
+  return templateKey === "zen-atelier"
+    ? [...common, "ourStory", "zenQuote"]
+    : [...common, "ourStory"];
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
@@ -33,8 +30,22 @@ export function invitationCopyDefaults(templateKey: string, eventDescription?: s
       (templateKey === "pencil-reverie"
         ? "Sebuah cerita kecil membawa kami menuju hari yang istimewa ini."
         : templateKey === "romantic-rose"
-        ? "Kami mengundang Anda untuk hadir dan berbagi kebahagiaan dalam perayaan pernikahan kami."
-        : "Dengan penuh sukacita, kami mengundang Anda untuk berbagi kebahagiaan bersama kami."),
+        ? "Dengan penuh sukacita, kami berbagi kabar bahagia ini bersama Anda."
+        : templateKey === "zen-atelier"
+          ? "Dengan hati yang tenang, kami berbagi satu langkah penting dalam perjalanan kami."
+          : "Dengan penuh sukacita, kami berbagi kabar bahagia ini bersama Anda."),
+    attendanceRequest: templateKey === "pencil-reverie"
+      ? "Dengan senang hati, kami mengundang Anda untuk hadir dan merayakan hari istimewa ini bersama kami."
+      : templateKey === "romantic-rose"
+        ? "Kami berharap Anda berkenan hadir dan menjadi bagian dari perayaan kami."
+        : templateKey === "zen-atelier"
+          ? "Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir pada hari istimewa ini."
+          : "Kehadiran Anda akan menjadi bagian berarti dari perayaan ini.",
+    prayerWish: templateKey === "pencil-reverie"
+      ? "Semoga hari ini menjadi awal dari perjalanan yang penuh kasih dan kebaikan."
+      : templateKey === "zen-atelier"
+        ? "Doa dan harapan baik Anda kami terima dengan penuh syukur."
+        : "Doa dan harapan baik Anda menjadi hadiah yang kami syukuri.",
     closing: templateKey === "pencil-reverie"
       ? "Terima kasih telah menjadi bagian dari cerita kami. Sampai bertemu!"
       : templateKey === "zen-atelier"
@@ -42,10 +53,6 @@ export function invitationCopyDefaults(templateKey: string, eventDescription?: s
       : templateKey === "romantic-rose"
         ? "Kehadiran dan doa baik Anda berarti bagi kami. Sampai bertemu di hari bahagia!"
         : "Kehadiran dan doa baik Anda sangat berarti. Sampai bertemu!",
-    ...(templateKey === "pencil-reverie" ? {
-      attendanceRequest: "Dengan senang hati, kami mengundang Anda untuk hadir dan merayakan hari istimewa ini bersama kami.",
-      prayerWish: "Semoga hari ini menjadi awal dari perjalanan yang penuh kasih dan kebaikan.",
-    } : {}),
     ...(templateKey === "zen-atelier" ? {
       zenQuote: "Cinta bukan tentang menemukan seseorang yang sempurna, tetapi tentang berjalan bersama dalam ketidaksempurnaan dengan hati yang tenang.",
     } : {}),
