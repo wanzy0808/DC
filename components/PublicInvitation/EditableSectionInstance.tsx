@@ -46,7 +46,7 @@ export default function EditableSectionInstance({
       onClick={(event) => {
         const target = event.target;
         if (target instanceof Element && target.closest(
-          "[data-studio-design-object], [data-studio-rsvp-element], [data-studio-section-element], [data-studio-copy-field], button, a, input, select, textarea, [contenteditable='true'], [role='button']",
+          "[data-studio-design-object], [data-studio-native-object], [data-studio-native-heading], [data-invitation-photo-slot], [data-studio-rsvp-element], [data-studio-section-element], [data-studio-copy-field], button, a, input, select, textarea, [contenteditable='true'], [role='button']",
         )) return;
         actions?.onSelect?.(instance.id, instance.key);
       }}
