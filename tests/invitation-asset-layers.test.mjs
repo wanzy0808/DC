@@ -309,3 +309,20 @@ test("layer radius and shadow styling survive the codec and shared renderer", ()
   assert.match(assetInspector, /Radius sudut|Corner radius/);
   assert.match(textInspector, /Bayangan aktif|Shadow on/);
 });
+
+
+test("corner and side resize keep the same stored geometry at different viewport zoom", () => {
+  const source = { x: 45, y: 40, width: 30, height: 20, rotation: 25,
+    sectionWidth: 340, sectionHeight: 680, objectWidth: 102, objectHeight: 68 };
+  for (const handle of ["left", "right", "top", "bottom", "top-left", "bottom-right"]) {
+    const natural = resizeObjectFromHandle({ ...source, handle }, 24, -12);
+    const magnified = resizeObjectFromHandle({
+      ...source, handle, sectionWidth: 1700, sectionHeight: 3400,
+      objectWidth: 510, objectHeight: 340,
+    }, 120, -60);
+    assert.deepEqual(magnified, natural, handle);
+  }
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  assert.match(renderer, /objectWidth: Math\.max\(1, sectionRect\.width \* layer\.width \/ 100\)/);
+  assert.match(renderer, /naturalSectionWidth/);
+});
