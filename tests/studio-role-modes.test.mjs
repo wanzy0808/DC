@@ -18,7 +18,7 @@ test("Owner and Designer use the shared Studio in Template Mode", () => {
   assert.match(editor, /templateDemoInvitation/);
 });
 
-test("staff Save creates a sellable catalog template while customer Save stays event-scoped", () => {
+test("staff Save creates a draft template while customer Save stays event-scoped", () => {
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const templateApi = read("app/api/designer/templates/route.ts");
   const invitationApi = read("app/api/invitations/route.ts");
@@ -34,12 +34,13 @@ test("staff Save creates a sellable catalog template while customer Save stays e
   assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
   assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
   assert.match(templateApi, /designKey,/);
-  assert.match(templateApi, /status: "PUBLISHED"/);
+  assert.match(templateApi, /status: "DRAFT"/);
+  assert.match(templateApi, /ready: false/);
   assert.doesNotMatch(templateApi, /prisma\.invitation\.update/);
   assert.match(invitationApi, /isPublished: wantsPublish \|\| current\.isPublished/);
 });
 
-test("Studio-authored templates are ready in the public catalog", () => {
+test("only published Studio-authored templates appear in the public catalog", () => {
   const schema = read("prisma/schema.prisma");
   const migration = read("prisma/migrations/20260925152000_designer_template_studio_preset/migration.sql");
   const catalog = read("app/api/templates/route.ts");
@@ -49,6 +50,7 @@ test("Studio-authored templates are ready in the public catalog", () => {
   assert.match(schema, /designKey\s+String\?\s+@db\.Text/);
   assert.match(schema, /templateFile\s+String\?/);
   assert.match(migration, /ADD COLUMN "designKey" TEXT/);
+  assert.match(catalog, /where: \{ status: "PUBLISHED" \}/);
   assert.match(catalog, /const ready = Boolean\(item\.designKey/);
   assert.match(catalog, /designKey: item\.designKey \?\? undefined/);
   assert.match(card, /designKey\?: string/);
