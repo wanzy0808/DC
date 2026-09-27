@@ -313,6 +313,7 @@ export default function RomanticRoseTemplate({
           ))}
 
           {renderSectionInstances("identity", (instanceId) => (
+            <>
             <section data-invitation-section="identity" style={invitationSectionStyleCss(sectionStyles.identity)} className="relative bg-[#f8eef0] px-7 py-20">
                         {objectOverlay("identity", instanceId)}
                         <RoseHeading section="identity" eyebrow="The two of us">Mempelai</RoseHeading>
@@ -337,11 +338,9 @@ export default function RomanticRoseTemplate({
                           </div>
                         </div>
                       </section>
+            <OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} motionUnit={copyMotions.ourStory?.unit} />
+            </>
           ))}
-
-
-
-          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} motionUnit={copyMotions.ourStory?.unit} /></div>}
 
           {renderSectionInstances("event", (instanceId) => (
             <section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
