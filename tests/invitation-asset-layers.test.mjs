@@ -174,6 +174,10 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(geometry, /const localY = -dx \* sin \+ dy \* cos/);
   assert.match(renderer, /absolute -bottom-10 left-1\/2/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
+  assert.match(renderer, /grabOffsetX: event\.clientX - cx/);
+  assert.match(renderer, /closest<HTMLElement>\("\[data-invitation-section\]"\)/);
+  assert.match(renderer, /scroller\.scrollTop \+= 14/);
+  assert.match(renderer, /scroller\.scrollLeft \+= 14/);
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
   assert.match(selectionResolver, /data-studio-design-object/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-section\]"\)/);
