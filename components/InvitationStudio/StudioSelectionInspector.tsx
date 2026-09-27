@@ -87,6 +87,13 @@ export default function StudioSelectionInspector({
   onResetSectionStyle: (key: InvitationSectionKey) => void;
   onCloseSection: () => void;
 }) {
+  const nativeControls = selectedNativeKey ? (
+    <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
+      value={design.nativeVisuals[selectedNativeKey]}
+      onChange={(value) => onUpdateNative(selectedNativeKey, value)}
+      onClose={onCloseNative} />
+  ) : null;
+
   if (selectedAssetLayer?.kind === "text") {
     return (
       <TextLayerInspector
@@ -119,6 +126,7 @@ export default function StudioSelectionInspector({
 
   if (selectedPhotoSlot) {
     return (
+      <div className="dc-studio-selection-stack">
       <PhotoSlotInspector
         locale={locale}
         slot={selectedPhotoSlot}
@@ -127,11 +135,14 @@ export default function StudioSelectionInspector({
         onReset={() => onResetPhotoMotion(selectedPhotoSlot)}
         onClose={onClosePhoto}
       />
+      {nativeControls}
+      </div>
     );
   }
 
   if (selectedRsvpElementKey) {
     return (
+      <div className="dc-studio-selection-stack">
       <RsvpElementInspector
         locale={locale}
         elementKey={selectedRsvpElementKey}
@@ -139,11 +150,14 @@ export default function StudioSelectionInspector({
         onConfig={onUpdateRsvpConfig}
         onClose={onCloseRsvp}
       />
+      {nativeControls}
+      </div>
     );
   }
 
   if (selectedSectionElement) {
     return (
+      <div className="dc-studio-selection-stack">
       <SectionElementInspector
         locale={locale}
         section={selectedSectionElement.section}
@@ -152,12 +166,15 @@ export default function StudioSelectionInspector({
         onChange={onUpdateSectionElementStyles}
         onClose={onCloseSectionElement}
       />
+      {nativeControls}
+      </div>
     );
   }
 
   if (selectedCopyField) {
     const defaults = invitationCopyDefaults(design.template, invitationDescription);
     return (
+      <div className="dc-studio-selection-stack">
       <CopyTextInspector
         locale={locale}
         field={selectedCopyField}
@@ -169,6 +186,8 @@ export default function StudioSelectionInspector({
         onReset={() => onResetNarrativeCopyAndMotion(selectedCopyField)}
         onClose={onCloseCopy}
       />
+      {nativeControls}
+      </div>
     );
   }
 
@@ -185,12 +204,7 @@ export default function StudioSelectionInspector({
     );
   }
 
-  if (selectedNativeKey) {
-    return <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
-      value={design.nativeVisuals[selectedNativeKey]}
-      onChange={(value) => onUpdateNative(selectedNativeKey, value)}
-      onClose={onCloseNative} />;
-  }
+  if (selectedNativeKey) return nativeControls;
 
   return null;
 }
