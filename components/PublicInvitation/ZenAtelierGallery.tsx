@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 type Photo = { id: string; url: string; title: string | null };
-export default function ZenAtelierGallery({ photos, customMotion = false }: { photos: Photo[]; customMotion?: boolean }) {
+export default function ZenAtelierGallery({ photos, customMotion = false, preview = false }: { photos: Photo[]; customMotion?: boolean; preview?: boolean }) {
   const [selected, setSelected] = useState(0);
   const dialog = useRef<HTMLDialogElement>(null);
   const grid = useRef<HTMLDivElement>(null);
@@ -25,12 +25,13 @@ export default function ZenAtelierGallery({ photos, customMotion = false }: { ph
   if (!photos.length) return <p className="text-sm">Foto belum ditambahkan.</p>;
   return <>
     <div ref={grid} className="zen-gallery-grid">
-      {photos.map((photo, index) => <button type="button" key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} aria-label={`Buka foto ${index + 1}`} onClick={(event) => {
+      {photos.map((photo, index) => <button type="button" key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} aria-label={preview ? `Pilih foto ${index + 1}` : `Buka foto ${index + 1}`} onClick={(event) => {
+        if (preview) { event.preventDefault(); return; }
         opener.current = event.currentTarget; setSelected(index); dialog.current?.showModal();
       }}><img src={photo.url} alt={photo.title || `Momen ${index + 1}`} loading="lazy" decoding="async" /></button>)}
     </div>
     <p data-studio-native-object="object:gallery:quote" className="zen-quote">Setiap foto menyimpan cerita tentang kita.</p>
-    <dialog ref={dialog} className="zen-lightbox" aria-label="Galeri foto" onClose={() => opener.current?.focus()} onKeyDown={(event) => {
+    {!preview && <dialog ref={dialog} className="zen-lightbox" aria-label="Galeri foto" onClose={() => opener.current?.focus()} onKeyDown={(event) => {
       if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
       if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
     }} onTouchStart={(event) => { touch.current = event.touches[0].clientX; }} onTouchEnd={(event) => {
@@ -47,6 +48,6 @@ export default function ZenAtelierGallery({ photos, customMotion = false }: { ph
         <button type="button" className="zen-next" aria-label="Foto berikutnya" onClick={() => move(1)}><ChevronRight /></button>
       </>}
       <p aria-live="polite">{selected + 1} / {photos.length}</p>
-    </dialog>
+    </dialog>}
   </>;
 }
