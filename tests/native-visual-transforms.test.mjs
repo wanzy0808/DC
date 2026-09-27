@@ -73,3 +73,15 @@ test("gallery visuals are keyed by one safe photo ID", () => {
   assert.match(read("components/PublicInvitation/UniversalInvitationTemplate.tsx"), /data-studio-photo-id=\{asset\.id\}/);
   assert.match(read("components/PublicInvitation/RomanticRoseTemplate.tsx"), /data-studio-photo-id=\{photo\.id\}/);
 });
+
+
+test("protected link and gift buttons remain inert in Studio preview", () => {
+  for (const path of [
+    "components/PublicInvitation/UniversalInvitationTemplate.tsx",
+    "components/PublicInvitation/RomanticRoseTemplate.tsx",
+  ]) {
+    const renderer = read(path);
+    assert.match(renderer, /onClick=\{preview \? \(event\) => event\.preventDefault\(\) : undefined\}/);
+    assert.match(renderer, /if \(preview/);
+  }
+});
