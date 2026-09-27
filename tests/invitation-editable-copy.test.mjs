@@ -22,10 +22,10 @@ const selectionResolver = read("components/InvitationStudio/studio-canvas-select
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
 test("Isi owns narrative wording while canvas selection opens styling-only controls", () => {
-  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
-  assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "closing"]);
-  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing", "ourStory"]);
-  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "closing", "ourStory"]);
+  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory", "zenQuote"]);
+  assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "attendanceRequest", "prayerWish", "closing"]);
+  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
+  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
   const content = panel.split("export function ContentPanel(")[1]?.split("export function ColorPanel(")[0] || "";
   assert.match(content, /<Heading title="Isi" description="" \/>/);
   assert.match(content, /sectionFunctionalElements/);
@@ -37,7 +37,11 @@ test("Isi owns narrative wording while canvas selection opens styling-only contr
   assert.match(studio, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<CopyTextInspector/);
   assert.match(universal, /data-studio-copy-field="greeting"/);
+  assert.match(universal, /data-studio-copy-field="attendanceRequest"/);
+  assert.match(universal, /data-studio-copy-field="prayerWish"/);
   assert.match(universal, /data-studio-copy-field="closing"/);
+  assert.match(romantic, /data-studio-copy-field="attendanceRequest"/);
+  assert.match(romantic, /data-studio-copy-field="prayerWish"/);
 });
 
 test("copy overrides round-trip within the event-scoped design key without mutating event data", () => {
