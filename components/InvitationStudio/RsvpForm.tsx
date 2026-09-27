@@ -104,7 +104,7 @@ export default function RsvpForm({
   }
 
   return (
-    <section className={appearance === "zen" ? "zen-rsvp mx-auto max-w-sm text-left" : "mx-auto max-w-xl border border-[#9b5b51]/20 bg-[#f3ede6] p-6 text-left shadow-sm dark:border-white/10 dark:bg-[#151116]"}>
+    <section data-studio-native-object="object:rsvp:form-group" className={appearance === "zen" ? "zen-rsvp mx-auto max-w-sm text-left" : "mx-auto max-w-xl border border-[#9b5b51]/20 bg-[#f3ede6] p-6 text-left shadow-sm dark:border-white/10 dark:bg-[#151116]"}>
       {ticketGuest ? (
         <RsvpSuccessPanel
           ticketGuest={ticketGuest}
