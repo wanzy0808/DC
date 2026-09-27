@@ -260,6 +260,26 @@ test("protected fallback messages are selectable visual objects without becoming
   assert.match(universal, /object:location:empty-copy/);
 });
 
+test("shared section internals expose group and child targets without unlocking business values", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /object:gallery:grid/);
+    assert.match(renderer, /object:countdown:grid/);
+    assert.match(renderer, /object:countdown:\$\{label\.toLowerCase\(\)\}-value/);
+    assert.match(renderer, /object:countdown:\$\{label\.toLowerCase\(\)\}-label/);
+    assert.match(renderer, /object:location:details-group/);
+  }
+  assert.match(universal, /object:event:details-group/);
+  assert.match(universal, /object:closing:copy-group/);
+  assert.match(rose, /object:identity:couple-group/);
+  assert.equal(nativeVisualCapabilities("object:countdown:hari-value").typography, true);
+  assert.equal(nativeVisualCapabilities("object:countdown:hari-label").typography, true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari-value"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari-label"), false);
+});
+
 test("native visual styling stays inside the validated nativeVisuals contract", () => {
   const values = sanitizeNativeVisualTransforms({
     "object:cover:kicker": {
