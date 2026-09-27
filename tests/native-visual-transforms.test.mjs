@@ -141,3 +141,21 @@ test("theme-authored decorations and special cover headings are selectable in St
   assert.match(pencilArt, /object:\$\{section\}:theme-art/);
   assert.match(zenArt, /object:\$\{section\}:theme-art/);
 });
+
+
+test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /object:dateTime:panel/);
+    assert.match(renderer, /object:location:venue/);
+    assert.match(renderer, /object:gift:account-number/);
+    assert.match(renderer, /object:closing:names/);
+    assert.match(renderer, /object:footer:rule/);
+    assert.match(renderer, /data-studio-section-element="location:button"/);
+    assert.match(renderer, /data-studio-section-element="gift:button"/);
+  }
+  assert.match(universal, /object:\$\{keyName\}:divider/);
+  assert.match(rose, /object:envelope:top-fold/);
+  assert.match(rose, /section="rsvp"/);
+});
