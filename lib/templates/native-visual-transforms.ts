@@ -25,7 +25,7 @@ const keys = new Set<string>([
 ]);
 
 export function isNativeVisualKey(key: string) {
-  if (keys.has(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}$/.test(key)) return true;
+  if (keys.has(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}(?::[a-zA-Z0-9_-]{1,64})?$/.test(key)) return true;
   const parts = key.split(":");
   const instanceId = parts.at(-1);
   if (!instanceId || !/^[a-zA-Z0-9_-]{1,64}$/.test(instanceId)) return false;
@@ -88,7 +88,10 @@ export function nativeVisualSelector(key: string) {
   if (!isNativeVisualKey(key)) return null;
   const parts = key.split(":");
   const [kind, section, element] = parts;
-  if (kind === "photo" && section === "gallery" && element) return `[data-invitation-photo-slot="gallery"][data-studio-photo-id="${element}"]`;
+  if (kind === "photo" && section === "gallery" && element) {
+    const prefix = parts[3] ? `[data-section-instance-id="${parts[3]}"] ` : "";
+    return `${prefix}[data-invitation-photo-slot="gallery"][data-studio-photo-id="${element}"]`;
+  }
   if (kind === "photo") {
     const stage = section === "envelope" ? "envelope" : section === "cover" ? "cover" : "identity";
     const slot = section === "envelope" ? element : section;
