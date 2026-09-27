@@ -150,7 +150,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(editor, /<TextObjectPanel layers=\{design\.layers\}/);
   assert.match(editor, /onUpdateAssetLayer=\{updateAssetLayer\}/);
   assert.match(editor, /section: section\.dataset\.invitationSection as StudioObjectSection/);
-  assert.match(editor, /showDesignSection\(patch\.section\)/);
+  assert.match(editor, /showDesignSection\(nextPatch\.section\)/);
   assert.match(editor, /if \(canvasStage !== "envelope"\) \{\s*setCanvasStage\("envelope"\);\s*setPreviewVersion\(/);
   assert.match(textPanel, /onClick=\{\(\) => onAdd\(en \? "Add your text" : "Tambahkan teks", targetSection\)\}/);
   const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
