@@ -82,6 +82,8 @@ export async function POST(request: Request) {
 
     try {
       const asset = await prisma.$transaction(async (tx) => {
+        // Serialize library writes per owner so simultaneous uploads cannot exceed the quota.
+        await tx.$queryRaw`SELECT "id" FROM "User" WHERE "id" = ${author.id} FOR UPDATE`;
         const current = await tx.designerAsset.count({ where: { ownerId: author.id } });
         if (current >= MAX_DESIGNER_ASSETS) throw new Error("ASSET_LIMIT");
         return tx.designerAsset.create({
