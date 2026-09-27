@@ -23,7 +23,7 @@ export default function OurStorySection({
   const zen = theme === "zen-atelier";
   const pencil = theme === "pencil-reverie";
   const left = theme === "modern-maroon" || theme === "golden-art-deco";
-  const storyText = story?.trim() || (preview ? "Klik untuk menulis Our Story" : "");
+  const storyText = story?.trim() || (preview ? "Our Story belum diisi" : "");
   return (
     <section
       data-invitation-subsection="our-story"
