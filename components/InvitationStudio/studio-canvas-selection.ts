@@ -5,9 +5,9 @@ import type { StudioSectionElementKind } from "@/lib/templates/section-element-s
 import { isNativeVisualKey } from "@/lib/templates/native-visual-transforms";
 
 export type StudioCanvasSelectionTarget =
-  | { kind: "rsvp-element"; key: string }
-  | { kind: "section-element"; section: InvitationSectionKey; elementKind: StudioSectionElementKind }
-  | { kind: "copy"; field: EditableInvitationCopyField }
+  | { kind: "rsvp-element"; key: string; instanceId?: string }
+  | { kind: "section-element"; section: InvitationSectionKey; elementKind: StudioSectionElementKind; instanceId?: string }
+  | { kind: "copy"; field: EditableInvitationCopyField; instanceId?: string }
   | { kind: "native"; key: string }
   | { kind: "photo"; slot: PhotoSlot; assetId?: string }
   | { kind: "section"; section: InvitationSectionKey; instanceId: string }
@@ -20,9 +20,10 @@ export function resolveStudioCanvasSelection(
   target: Element,
   canvasRoot: HTMLElement,
 ): StudioCanvasSelectionTarget {
+  const instanceId = target.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId;
   const rsvpElement = target.closest<HTMLElement>("[data-studio-rsvp-element]");
   if (rsvpElement?.dataset.studioRsvpElement) {
-    return { kind: "rsvp-element", key: rsvpElement.dataset.studioRsvpElement };
+    return { kind: "rsvp-element", key: rsvpElement.dataset.studioRsvpElement, instanceId };
   }
 
   const sectionElement = target.closest<HTMLElement>("[data-studio-section-element]");
@@ -33,6 +34,7 @@ export function resolveStudioCanvasSelection(
         kind: "section-element",
         section: section as InvitationSectionKey,
         elementKind,
+        instanceId,
       };
     }
   }
@@ -42,13 +44,14 @@ export function resolveStudioCanvasSelection(
     return {
       kind: "copy",
       field: copyElement.dataset.studioCopyField as EditableInvitationCopyField,
+      instanceId,
     };
   }
 
   const heading = target.closest<HTMLElement>("[data-studio-native-heading], h1");
   const headingSection = heading?.closest<HTMLElement>("[data-invitation-section]")?.dataset.invitationSection;
   if (headingSection && (heading?.hasAttribute("data-studio-native-heading") || headingSection === "envelope")) {
-    const key = `heading:${headingSection}`;
+    const key = `heading:${headingSection}${instanceId ? `:${instanceId}` : ""}`;
     if (isNativeVisualKey(key)) return { kind: "native", key };
   }
 
