@@ -31,6 +31,7 @@ const selectionInspector = read("components/InvitationStudio/StudioSelectionInsp
 const canvasToolbarSource = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
 const finalPreviewDialog = read("components/InvitationStudio/StudioFinalPreviewDialog.tsx");
 const assetUploadRoute = read("app/api/invitations/assets/upload/route.ts");
+const designerAssetRoute = read("app/api/designer/assets/route.ts");
 const stageControlsSource = read("components/InvitationStudio/StudioStageControls.tsx");
 const canvasFooterSource = read("components/InvitationStudio/StudioCanvasFooter.tsx");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
@@ -251,7 +252,7 @@ test("asset library inserts images by drag-and-drop only", () => {
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   assert.doesNotMatch(assetPanel, /onAdd:\s*\(src: string\)/);
   assert.doesNotMatch(assetPanel, /onClick=\{\(\) => onAdd\(asset\.src\)\}/);
-  assert.match(assetPanel, /draggable=\{layers\.length < MAX_ASSET_LAYERS\}/);
+  assert.match(assetPanel, /draggable=\{layers\.length < maxLayers\}/);
   assert.match(assetPanel, /onDragAssetStart\(asset\.src\)/);
   assert.match(assetPanel, /Seret gambar ke section undangan/);
   assert.doesNotMatch(designer, /<AssetPanel[^>]*onAdd=\{addAssetLayer\}/);
@@ -600,9 +601,37 @@ test("Studio keeps invitation and template persistence outside the canvas compon
   assert.match(persistence, /export async function saveStudioTemplateDraft\(/);
   assert.match(persistence, /method: templateId \? "PATCH" : "POST"/);
   assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
+  assert.match(persistence, /export async function loadDesignerLibraryAssets\(/);
+  assert.match(persistence, /export async function uploadDesignerLibraryAsset\(/);
+  assert.match(persistence, /fetcher\("\/api\/designer\/assets"/);
   assert.match(persistence, /export async function uploadStudioAsset\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations\/assets\/upload"/);
   assert.match(persistence, /export async function deleteStudioAsset\(/);
+});
+
+test("Template Mode uses a reusable Designer artwork library with WebP storage", () => {
+  const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
+  const schema = read("prisma/schema.prisma");
+  const migration = read("prisma/migrations/20260927123000_designer_asset_library/migration.sql");
+
+  assert.match(schema, /model DesignerAsset \{/);
+  assert.match(schema, /designerAssets\s+DesignerAsset\[\]/);
+  assert.match(migration, /CREATE TABLE "DesignerAsset"/);
+  assert.match(designerAssetRoute, /\["OWNER", "ADMIN", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
+  assert.match(designerAssetRoute, /MAX_DESIGNER_ASSETS = 200/);
+  assert.match(designerAssetRoute, /sharp\(originalBuffer/);
+  assert.match(designerAssetRoute, /\.webp\(\{ quality: 82, effort: 4 \}\)/);
+  assert.match(designerAssetRoute, /\/uploads\/designer-assets\//);
+  assert.match(designerAssetRoute, /FOR UPDATE/);
+  assert.match(assetPanel, /Library Saya|My library/);
+  assert.match(assetPanel, /accept="image\/jpeg,image\/png,image\/webp"/);
+  assert.match(assetPanel, /onUploadLibraryAsset\(file\)/);
+  assert.match(designer, /loadDesignerLibraryAssets\(\)/);
+  assert.match(designer, /uploadDesignerLibraryAsset\(file\)/);
+  assert.match(designer, /onUploadLibraryAsset=\{templateMode \? uploadDesignerArtwork : undefined\}/);
+  assert.match(designer, /maxLayers=\{maxAssetLayers\}/);
+  assert.match(designer, /onUpload=\{templateMode \? undefined : \(file\) => uploadAsset\(file, "IMAGE"\)\}/);
+  assert.match(photos, /onUpload\?: \(file: File\) => Promise<void>/);
 });
 
 test("Studio raster uploads are decoded and stored as optimized WebP", () => {
