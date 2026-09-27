@@ -25,6 +25,8 @@ export type InvitationAssetLayer = {
   shadowColor?: string;
   shadowOpacity?: number;
   section?: StudioObjectSection;
+  /** Optional section-instance owner. Legacy layers without it belong to the canonical instance. */
+  sectionInstanceId?: string;
   x: number;
   y: number;
   width: number;
@@ -121,6 +123,9 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
     if (typeof entry.shadowColor === "string" && /^#[a-fA-F0-9]{6}$/.test(entry.shadowColor)) layer.shadowColor = entry.shadowColor;
     if (entry.shadowOpacity !== undefined) layer.shadowOpacity = numberBetween(entry.shadowOpacity, 0, 1, 0.2);
     if (studioObjectSections.includes(entry.section as StudioObjectSection)) layer.section = entry.section as StudioObjectSection;
+    if (typeof entry.sectionInstanceId === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(entry.sectionInstanceId)) {
+      layer.sectionInstanceId = entry.sectionInstanceId;
+    }
     if (entry.rotation !== undefined) layer.rotation = numberBetween(entry.rotation, -180, 180, 0);
     if (entry.locked === true) layer.locked = true;
     if (entry.hidden === true) layer.hidden = true;
