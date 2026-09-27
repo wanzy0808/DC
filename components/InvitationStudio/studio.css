@@ -132,6 +132,8 @@
 .dc-studio-layer-quick:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); }
 .dc-studio-layer-list-items button:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 
+.dc-studio-selection-stack { display: grid; align-content: start; justify-self: end; gap: 10px; width: 236px; }
+.dc-studio-selection-stack > :is(.dc-studio-layer-side, .dc-studio-section-side) { position: static; width: 100%; }
 .dc-studio-layer-side { position: sticky; top: 0; width: 230px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--dc-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .dc-studio-layer-side-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .dc-studio-layer-side-head strong { color: var(--primary); font-size: 14px; font-weight: 700; }
