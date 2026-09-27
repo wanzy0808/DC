@@ -29,6 +29,7 @@ import { useInvitationSectionAnimations } from "@/components/PublicInvitation/us
 import { usePremiumSectionTimelines } from "@/components/PublicInvitation/use-premium-section-timelines";
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
+import { useInvitationNativeVisualAnimations } from "@/components/PublicInvitation/use-native-visual-animations";
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
@@ -182,6 +183,7 @@ export default function RomanticRoseTemplate({
   const editableCopy = resolveEditableCopy(designKey || invitation.templateKey, "romantic-rose", invitation.description);
   const copyMotions = parseEditableCopyMotions(activeDesignKey);
   useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
+  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened));
   const illustrationLayers = parseAssetLayers(designKey || invitation.templateKey);
   const configuredCover = coverUrl ?? parseDesignKey(invitation.templateKey).decor ?? undefined;
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
