@@ -17,6 +17,16 @@ Jika pengguna keluar Studio ke halaman lain, logout, berganti undangan, menutup 
 
 ## 2. Aturan inti: bebas secara visual, terkunci secara fungsional
 
+### Web invitation first — Canva-like hanya pengalaman authoring (27 September 2026)
+
+DC Organizer **tetap membangun website undangan digital**, bukan aplikasi poster, slide, atau kanvas gambar bebas. Kemiripan dengan Canva hanya pada pengalaman mengedit—pilih objek langsung, drag, resize, rotate, layer, snap, zoom/pan, dan styling visual. Hasil yang disimpan dan dipublikasikan tetap renderer web responsif dengan alur Amplop → section Isi, scroll halaman, breakpoint mobile/desktop, animasi web, musik, RSVP, Maps, Countdown, Wishes, Gift, data tamu, aksesibilitas, dan endpoint DC Organizer.
+
+- Objek visual selalu mempunyai **kepemilikan section**. Posisi bebas dihitung relatif terhadap section target; memindahkan objek tambahan ke section lain harus memindahkan ownership-nya, bukan mengubah undangan menjadi satu artboard absolut global.
+- Elemen bawaan template boleh dibuat sangat fleksibel secara visual oleh Designer/Owner, tetapi tetap terikat pada komponen/section semantiknya. Kebebasan transform tidak boleh memutus data acara, DOM responsif, urutan dokumen, form, link, timer, musik, atau perilaku publik.
+- Canvas Studio adalah **viewport authoring** dari website asli. Zoom/pan, bounding box, guides, layer panel, dan handle transform tidak boleh ikut tampil atau mengubah ukuran/layout publik.
+- Desain desktop tidak boleh disimpan sebagai koordinat layar statis yang hanya benar pada satu resolusi. Setiap template harus tetap mempunyai perilaku responsif yang layak di HP; transform yang bebas perlu dibatasi/diadaptasikan bila pada breakpoint lain membuat data penting tidak terbaca atau aksi tidak dapat disentuh.
+- Edge bleed/dekorasi boleh melewati area konten visual bila art direction membutuhkan, tetapi section tetap menjadi unit layout/scroll dan clipping/overflow harus disengaja. Jangan memakai kebebasan Canva-like sebagai alasan membuat seluruh undangan position:absolute atau fixed-height poster panjang.
+
 **Protected component dengan editable design properties.** Desainer boleh mengatur penempatan, ukuran, susunan, tipografi, palet, frame, border, spacing, dekorasi, foto, animasi, dan varian tata letak melalui properti yang dinyatakan di *capability/manifest* komponen. Editor hanya memperlihatkan kontrol yang benar-benar didukung renderer; jangan membuka source code, HTML/JavaScript/CSS arbitrer, endpoint, skema database, atau logika bisnis melalui inspector.
 
 Komponen fungsional tetap milik engine DC Organizer:
