@@ -57,7 +57,7 @@ function Edit({ onClick }: { onClick?: () => void }) {
   return onClick ? <button type="button" onClick={onClick} aria-label="Atur foto cover" className="absolute inset-0 z-10 flex items-end justify-center bg-transparent pb-3 text-xs font-medium text-transparent transition hover:bg-black/30 hover:text-white focus-visible:bg-black/30 focus-visible:text-white">Atur foto</button> : null;
 }
 function Names({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <h1 className={`relative break-words leading-[1.28] ${className}`} style={heading}>{children}</h1>;
+  return <h1 data-studio-native-heading="" className={`relative break-words leading-[1.28] ${className}`} style={heading}>{children}</h1>;
 }
 function Lines({ children, className = "" }: { children?: ReactNode; className?: string }) {
   return <div aria-hidden className={`flex items-center justify-center gap-3 ${className}`}><span className="h-px w-12 bg-current opacity-40" />{children || <span className="text-lg">✧</span>}<span className="h-px w-12 bg-current opacity-40" /></div>;
