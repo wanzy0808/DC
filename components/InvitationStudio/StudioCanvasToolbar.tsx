@@ -129,7 +129,7 @@ export default function StudioCanvasToolbar({
         {saving
           ? labels.saving
           : templateMode
-            ? (locale === "en" ? "Save Template" : "Simpan Template")
+            ? (locale === "en" ? "Save Draft" : "Simpan Draft")
             : labels.save}
       </Button>
     </div>
