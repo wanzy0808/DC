@@ -22,7 +22,7 @@ import { parseInvitationSections, type InvitationSectionKey, type InvitationSect
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
-import { nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
+import { nativeVisualFontFamilies, nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
@@ -30,6 +30,7 @@ import { usePremiumSectionTimelines } from "@/components/PublicInvitation/use-pr
 import { useInvitationPhotoAnimations } from "@/components/PublicInvitation/use-photo-animations";
 import { useInvitationCopyAnimations } from "@/components/PublicInvitation/use-copy-animations";
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
+import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 
 export const romanticRoseManifest = {
@@ -253,6 +254,7 @@ export default function RomanticRoseTemplate({
   return (
     <main ref={rootRef} data-studio-preview-root={preview ? "true" : undefined} className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} min-h-[760px] ${preview ? "overflow-visible" : "overflow-hidden"} bg-[#fff9f7] text-[#583844] [font-family:var(--font-dc-body)]`}>
       <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
+      <InvitationFonts families={nativeVisualFontFamilies(activeDesignKey)} />
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
         <section data-invitation-section="envelope" style={invitationSectionStyleCss(sectionStyles.envelope)} className="relative relative flex min-h-[760px] flex-col items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_50%_40%,#fffefb_0%,#f7e2e6_55%,#eac8d2_100%)] px-6 py-16 text-center">
