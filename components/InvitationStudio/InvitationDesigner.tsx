@@ -271,6 +271,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     sectionElementStyles: {},
     nativeVisuals: {},
   });
+  const assetLayerUsage = templateMode
+    ? design.layers.length
+    : design.layers.filter((layer) => layer.customerAccess !== "locked").length;
+  const canCustomerEditLayer = (layer: InvitationAssetLayer | undefined) =>
+    Boolean(layer) && (templateMode || (layer!.customerAccess !== "locked" && layer!.customerAccess !== "content"));
 
   async function load() {
     const params = new URLSearchParams(window.location.search);
@@ -564,6 +569,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       const imported = invitationDesignStateFromKey(catalogTemplate.designKey, invitationDecorOptions[0]);
       change({
         ...imported,
+        layers: imported.layers.map((layer) => ({
+          ...layer,
+          customerAccess: layer.customerAccess ?? "locked",
+        })),
         photos: {
           ...imported.photos,
           cover: null,
@@ -883,9 +892,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection; sectionInstanceId?: string } = { x: 50, y: 38 }) {
     const section = position.section ?? "cover";
     const sectionInstanceId = position.sectionInstanceId ?? sectionInstanceFor(section);
-    if (!isTemplateIllustration(src) || design.layers.length >= maxAssetLayers || design.sections[section] === false) return;
+    if (!isTemplateIllustration(src) || assetLayerUsage >= maxAssetLayers || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
-    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, sectionInstanceId, width: 28, opacity: 1 }] });
+    change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, sectionInstanceId, width: 28, opacity: 1, customerAccess: templateMode ? "locked" : "customizable" }] });
     setSelectedPhotoSlot(null);
     setSelectedLayerId(id);
     showDesignSection(section);
@@ -894,7 +903,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function addShapeObject(shape: InvitationShapeKind) {
     const section = textTargetSection;
-    if (design.layers.length >= maxAssetLayers || design.sections[section] === false) return;
+    if (assetLayerUsage >= maxAssetLayers || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     const accent = palette?.accent ?? "#C07A84";
     const size = shape === "circle" ? 28 : shape === "line" ? 42 : 38;
@@ -921,6 +930,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       strokeWidth: shape === "line" ? 2 : 0,
       radius: shape === "circle" ? 100 : 0,
       name: shape === "rectangle" ? "Rectangle" : shape === "circle" ? "Circle" : "Line",
+      customerAccess: templateMode ? "locked" : "customizable",
     }] });
     setSelectedPhotoSlot(null);
     setSelectedLayerIds([id]);
@@ -935,7 +945,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     section: StudioObjectSection,
     position: { x: number; y: number; sectionInstanceId?: string } = { x: 50, y: 48 },
   ) {
-    if (!text.trim() || design.layers.length >= maxAssetLayers || design.sections[section] === false) return null;
+    if (!text.trim() || assetLayerUsage >= maxAssetLayers || design.sections[section] === false) return null;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
       id, kind: "text", src: "", text: text.slice(0, 180), section,
@@ -946,6 +956,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       x: position.x, y: position.y, width: 55,
       opacity: 1, fontSize: 24, fontRole: "heading", fontWeight: 400, textAlign: "center",
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
+      customerAccess: templateMode ? "locked" : "customizable",
     }] });
     textTypingLayer.current = id;
     setSelectedPhotoSlot(null);
@@ -970,6 +981,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     textInsertPoint.current = null;
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
+    if (!canCustomerEditLayer(layer)) {
+      clearCanvasSelection();
+      return;
+    }
     const targetIds = layer.groupId
       ? design.layers.filter((item) => item.groupId === layer.groupId).map((item) => item.id)
       : [id];
@@ -1095,7 +1110,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function cloneAssetLayers(sourceLayers: InvitationAssetLayer[]) {
-    const available = maxAssetLayers - design.layers.length;
+    const available = maxAssetLayers - assetLayerUsage;
     if (!sourceLayers.length || sourceLayers.length > available) {
       if (sourceLayers.length > available) {
         setNotice(locale === "en" ? "Not enough layer slots to paste all selected objects." : "Slot layer tidak cukup untuk menempel semua objek terpilih.");
@@ -1147,7 +1162,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function beginAssetDrag(src: string) {
-    if (!isTemplateIllustration(src) || design.layers.length >= maxAssetLayers) return;
+    if (!isTemplateIllustration(src) || assetLayerUsage >= maxAssetLayers) return;
     draggedAssetSrc.current = src;
   }
 
@@ -1161,7 +1176,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function onAssetDragOver(event: DragEvent<HTMLDivElement>) {
-    if (!draggedAssetSrc.current || design.layers.length >= maxAssetLayers) return;
+    if (!draggedAssetSrc.current || assetLayerUsage >= maxAssetLayers) return;
     event.preventDefault();
     const rect = canvasScrollRef.current?.getBoundingClientRect();
     if (rect && event.clientY > rect.bottom - 48) canvasScrollRef.current!.scrollTop += 16;
@@ -1288,7 +1303,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const sourceLayers = design.layers.filter((layer) =>
       (layer.section ?? "cover") === source.key
       && (layer.sectionInstanceId ?? (layer.section ?? "cover")) === source.id);
-    if (design.layers.length + sourceLayers.length > maxAssetLayers) {
+    if (assetLayerUsage + sourceLayers.length > maxAssetLayers) {
       setNotice(locale === "en"
         ? "Not enough object slots to duplicate this section."
         : "Slot objek tidak cukup untuk menduplikasi section ini.");
@@ -1531,11 +1546,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         setCopiedAssetLayer(copies.at(-1) ?? null);
         removeAssetLayer(cuttable.at(-1)!.id);
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "v") {
-        if ((!copiedAssetLayers.length && !copiedAssetLayer) || design.layers.length >= maxAssetLayers) return;
+        if ((!copiedAssetLayers.length && !copiedAssetLayer) || assetLayerUsage >= maxAssetLayers) return;
         event.preventDefault();
         pasteAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "d") {
-        if (!currentClipboardSelection(false).length || design.layers.length >= maxAssetLayers) return;
+        if (!currentClipboardSelection(false).length || assetLayerUsage >= maxAssetLayers) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
       } else if (!modifier && !event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
