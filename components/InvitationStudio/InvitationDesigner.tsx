@@ -1819,7 +1819,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onUpload={templateMode ? undefined : (file) => uploadAsset(file, "IMAGE")}
             />
           )}
-          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
+          {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onUpdateText={(id, text) => updateAssetLayer(id, { text })} onFontSelect={(value) => change({ font: value })} />}
           {panel === "assets" && <AssetPanel
             layers={design.layers}
             templateKey={design.template}
