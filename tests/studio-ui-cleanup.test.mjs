@@ -29,6 +29,8 @@ const canvasSelectionMarkers = read("components/InvitationStudio/useStudioCanvas
 const canvasSelectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const selectionInspector = read("components/InvitationStudio/StudioSelectionInspector.tsx");
 const canvasToolbarSource = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
+const finalPreviewDialog = read("components/InvitationStudio/StudioFinalPreviewDialog.tsx");
+const assetUploadRoute = read("app/api/invitations/assets/upload/route.ts");
 const stageControlsSource = read("components/InvitationStudio/StudioStageControls.tsx");
 const canvasFooterSource = read("components/InvitationStudio/StudioCanvasFooter.tsx");
 const sectionAnimationHook = read("components/PublicInvitation/use-section-animations.ts");
@@ -53,12 +55,20 @@ test("Studio header has landing-style ID/EN and dark/light toggles without its o
   assert.match(dashboard, /async function publishInvitation\(/);
 });
 
-test("Studio uses display-only event title capitalization and one live canvas without preview dialog", () => {
+test("Studio keeps the live edit canvas and adds a separate final preview from the unsaved draft", () => {
   assert.match(studio, /setDocumentTitle\(invitationTitleCase\(data\.invitation\.title \|\| "Studio"\)\)/);
   assert.match(panels, /export function ContentPanel\(/);
   assert.doesNotMatch(panels.split("export function ContentPanel(")[1]?.split("export function MusicPanel(")[0] || "", /invitationTitleCase|formatInvitationEventDate|setEventTag|setDressCode/);
   assert.match(designer, /<InvitationPreview\s/);
-  assert.doesNotMatch(designer, /setPreview\(true\)|<Dialog open=\{preview\}|\bPratinjau\s*<\/Button>/);
+  assert.match(designer, /<StudioFinalPreviewDialog/);
+  assert.match(designer, /open=\{finalPreviewOpen\}/);
+  assert.match(designer, /designKey=\{designKey\}/);
+  assert.match(finalPreviewDialog, /Menggunakan draft saat ini, termasuk yang belum disimpan/);
+  assert.match(finalPreviewDialog, /device === "mobile"/);
+  assert.match(finalPreviewDialog, /w-\[390px\]/);
+  assert.match(finalPreviewDialog, /w-\[760px\]/);
+  assert.match(finalPreviewDialog, /<InvitationPreview/);
+  assert.doesNotMatch(finalPreviewDialog, /onUpdateAssetLayer|onSelectSectionInstance|onEditPhoto/);
   assert.match(designer, /<LanguageToggle|useLanguage\(\)/);
   assert.ok(designer.includes('key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}'));
 });
@@ -183,7 +193,7 @@ test("Studio stage labels use Amplop and Isi while keeping internal cover state"
   assert.match(designer, /onContent=\{\(\) => \{ setCanvasStage\("cover"\); setActiveCanvasSectionId/);
 });
 
-test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", () => {
+test("Studio keeps Template Restart Undo Redo Preview Save in one canvas toolbar row", () => {
   assert.match(designer, /save: "Simpan"/);
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);
   assert.doesNotMatch(designer, /<header className="dc-studio-toolbar">/);
@@ -193,6 +203,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(designer, /onRestore=\{restoreDefaults\}/);
   assert.match(designer, /onUndo=\{undo\}/);
   assert.match(designer, /onRedo=\{redo\}/);
+  assert.match(designer, /onPreview=\{\(\) => setFinalPreviewOpen\(true\)\}/);
   assert.match(designer, /onSave=\{save\}/);
   assert.match(designer, /canUndo=\{history\.length > 0\}/);
   assert.match(designer, /canRedo=\{future\.length > 0\}/);
@@ -201,6 +212,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(canvasToolbarSource, /onClick=\{onRestore\}/);
   assert.match(canvasToolbarSource, /onClick=\{onUndo\}/);
   assert.match(canvasToolbarSource, /onClick=\{onRedo\}/);
+  assert.match(canvasToolbarSource, /onClick=\{onPreview\}/);
   assert.match(canvasToolbarSource, /onClick=\{onSave\}/);
   assert.match(canvasToolbarSource, /aria-label=\{labels\.replay\}/);
   assert.doesNotMatch(designer, /undoShort|redoShort|restartShort/);
@@ -208,7 +220,8 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
     canvasToolbarSource.indexOf("templateName") < canvasToolbarSource.indexOf("onClick={onRestore}") &&
     canvasToolbarSource.indexOf("onClick={onRestore}") < canvasToolbarSource.indexOf("onClick={onUndo}") &&
     canvasToolbarSource.indexOf("onClick={onUndo}") < canvasToolbarSource.indexOf("onClick={onRedo}") &&
-    canvasToolbarSource.indexOf("onClick={onRedo}") < canvasToolbarSource.indexOf("onClick={onSave}"),
+    canvasToolbarSource.indexOf("onClick={onRedo}") < canvasToolbarSource.indexOf("onClick={onPreview}") &&
+    canvasToolbarSource.indexOf("onClick={onPreview}") < canvasToolbarSource.indexOf("onClick={onSave}"),
   );
   const reset = designer.split("function restoreDefaults()")[1]?.split("async function deleteMusic")[0] || "";
   assert.match(reset, /layers: \[\]/);
@@ -588,6 +601,14 @@ test("Studio keeps invitation and template persistence outside the canvas compon
   assert.match(persistence, /export async function uploadStudioAsset\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations\/assets\/upload"/);
   assert.match(persistence, /export async function deleteStudioAsset\(/);
+});
+
+test("Studio raster uploads are decoded and stored as optimized WebP", () => {
+  assert.match(assetUploadRoute, /import sharp from "sharp"/);
+  assert.match(assetUploadRoute, /sharp\(originalBuffer/);
+  assert.match(assetUploadRoute, /\.webp\(\{ quality: 82, effort: 4 \}\)/);
+  assert.match(assetUploadRoute, /fileName = `\$\{randomUUID\(\)\}\.webp`/);
+  assert.match(assetUploadRoute, /title = path\.basename\(file\.name, path\.extname\(file\.name\)\) \+ "\.webp"/);
 });
 
 test("Studio element layers reuse the shared animation catalog and persist timing safely", () => {
