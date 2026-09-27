@@ -4,7 +4,7 @@ import { displayTitleCase } from "@/lib/text/display-title-case";
 import { getInvitationCountdown } from "@/lib/invitations/countdown";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
+import { CalendarDays, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import GuestWishes from "@/components/PublicInvitation/GuestWishes";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -225,7 +225,6 @@ export default function RomanticRoseTemplate({
     setOpened(true);
     onEnvelopeOpened?.();
   };
-  const scrollHint = <ChevronDown data-studio-native-object="object:cover:scroll-hint" className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
 
   useEffect(() => {
     if (!opened && sections.envelope !== false) return;
@@ -297,7 +296,6 @@ export default function RomanticRoseTemplate({
                             {cropOverlay("cover")}
                           </div>
                           <p data-studio-native-object="object:cover:date" className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
-                          {scrollHint}
                         </div>
                         {objectOverlay("cover", instanceId)}
                       </section>
