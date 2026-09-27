@@ -316,7 +316,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="identity" style={invitationSectionStyleCss(sectionStyles.identity)} className="relative bg-[#f8eef0] px-7 py-20">
                         {objectOverlay("identity", instanceId)}
                         <RoseHeading section="identity" eyebrow="The two of us">Mempelai</RoseHeading>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div data-studio-native-object="object:identity:couple-group" className="grid grid-cols-2 gap-4">
                           <div className="min-w-0 text-center">
                             <div data-invitation-photo-slot="personOne" className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" cropStyle={photoCropStyle(assignment, "personOne")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
@@ -370,7 +370,7 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("gallery", instanceId)}
                           <RoseHeading section="gallery" eyebrow="Our memories">Galeri Foto</RoseHeading>
                           {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-[var(--dc-control-radius)] border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
-                          {gallery.length ? <div className="grid grid-cols-2 gap-3">
+                          {gallery.length ? <div data-studio-native-object="object:gallery:grid" className="grid grid-cols-2 gap-3">
                             {gallery.map((photo, index) => (
                               <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
                                 <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
@@ -385,11 +385,11 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("countdown", instanceId)}
                         <RoseHeading section="countdown" eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
                         {now !== null && countdown ? (
-                          <div className="grid grid-cols-4 gap-2">
+                          <div data-studio-native-object="object:countdown:grid" className="grid grid-cols-4 gap-2">
                             {([["Hari", countdown.days], ["Jam", countdown.hours], ["Menit", countdown.minutes], ["Detik", countdown.seconds]] as const).map(([label, value]) => (
                               <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className="rounded-xl border border-[#e8cbd3] bg-white/85 p-2">
-                                <p className="font-[family-name:var(--font-dc-heading)] text-xl text-[#7b465a]">{String(value).padStart(2, "0")}</p>
-                                <p className="mt-1 text-[10px] text-[#906978]">{label}</p>
+                                <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="font-[family-name:var(--font-dc-heading)] text-xl text-[#7b465a]">{String(value).padStart(2, "0")}</p>
+                                <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] text-[#906978]">{label}</p>
                               </div>
                             ))}
                           </div>
@@ -401,6 +401,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="location" style={invitationSectionStyleCss(sectionStyles.location)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("location", instanceId)}
                         <RoseHeading section="location" eyebrow="Find your way">Lokasi</RoseHeading>
+                        <div data-studio-native-object="object:location:details-group">
                         <MapPin data-studio-native-object="object:location:map-icon" className="mx-auto mb-3 h-6 w-6 text-[#a65e69]" />
                         <h3 data-studio-native-object="object:location:venue" className="text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</h3>
                         {invitation.address && <p data-studio-native-object="object:location:address" className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#765460]">{invitation.address}</p>}
@@ -409,6 +410,7 @@ export default function RomanticRoseTemplate({
                             <MapPin className="h-4 w-4" /> Buka Google Maps
                           </a>
                         )}
+                        </div>
                       </section>
           ))}
 
