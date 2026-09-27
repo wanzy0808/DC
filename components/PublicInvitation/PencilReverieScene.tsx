@@ -64,7 +64,7 @@ export default function PencilReverieScene({
         <span className="pr-overline" data-studio-native-object="object:envelope:kicker">A LITTLE STORY OF US</span>
         <p data-studio-native-object="object:envelope:intro-copy">Setiap cerita punya awalnya.</p>
       </div>
-      <div className="pr-letter-illustration">
+      <div className="pr-letter-illustration" data-studio-native-object="object:envelope:illustration-group">
         <PaperIllustration file="bingkai.png" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
           <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
@@ -80,7 +80,7 @@ export default function PencilReverieScene({
       <header className="pr-cover-heading">
         <span className="pr-overline" data-studio-native-object="object:cover:kicker">{isWedding ? "THE WEDDING OF" : "SEBUAH UNDANGAN"}</span>
       </header>
-      <div className="pr-cover-illustration">
+      <div className="pr-cover-illustration" data-studio-native-object="object:cover:illustration-group">
         <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
         <div className="pr-cover-copy" data-studio-native-object="object:cover:copy-panel">
           <h1 className="pr-cover-names" data-studio-native-heading="">{couple.length === 2
