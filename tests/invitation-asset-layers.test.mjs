@@ -187,9 +187,9 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(selectionResolver, /target\.closest\("\.dc-studio-preview-surface"\)/);
   assert.match(renderer, /layer\.kind === "text"/);
   assert.match(universal, /objectOverlay\(keyName, instanceId\)/);
-  assert.match(universal, /objectOverlay\("cover"\)/);
-  assert.match(romantic, /objectOverlay\("greeting"\)/);
-  assert.match(romantic, /objectOverlay\("closing"\)/);
+  assert.match(universal, /objectOverlay\("cover", instanceId\)/);
+  assert.match(romantic, /objectOverlay\("greeting", instanceId\)/);
+  assert.match(romantic, /objectOverlay\("closing", instanceId\)/);
 });
 
 test("each side grip moves only the dragged edge, not the opposite edge", () => {
