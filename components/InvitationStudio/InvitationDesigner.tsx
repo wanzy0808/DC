@@ -301,7 +301,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, copyMotion: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {} }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, copyMotion: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {}, nativeVisuals: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = makeStudioServerRevision(next);
