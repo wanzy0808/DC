@@ -8,6 +8,7 @@ export const studioObjectSections = [
 export type StudioObjectSection = (typeof studioObjectSections)[number];
 export type InvitationShapeKind = "rectangle" | "circle" | "line";
 export type InvitationTextAnimationUnit = "whole" | "word" | "character" | "line";
+export type CustomerAssetAccess = "locked" | "content" | "customizable";
 export type InvitationAssetLayer = {
   id: string;
   /** Empty for text objects. Images always reference shipped public derivatives. */
@@ -50,6 +51,8 @@ export type InvitationAssetLayer = {
   flipY?: boolean;
   /** Optional Studio label for easier layer management. */
   name?: string;
+  /** Template-authored customer capability. Staff authoring always remains unrestricted. */
+  customerAccess?: CustomerAssetAccess;
   /** Optional Studio group. Group IDs never affect public rendering by themselves. */
   groupId?: string;
   /** Optional entrance animation for this visual object. */
@@ -64,6 +67,8 @@ export type InvitationAssetLayer = {
 /** Customer Studio stays intentionally simple; Template Mode may author richer compositions. */
 export const MAX_CUSTOMER_ASSET_LAYERS = 10;
 export const MAX_TEMPLATE_ASSET_LAYERS = 120;
+/** Allows a rich template plus a small customer-owned overlay budget in one saved design. */
+export const MAX_PERSISTED_ASSET_LAYERS = 140;
 /** Backwards-compatible UI default for customer-scoped callers. */
 export const MAX_ASSET_LAYERS = MAX_CUSTOMER_ASSET_LAYERS;
 const assetRoots = ["/template/", "/templates/", "/uploads/designer-assets/"];
@@ -152,7 +157,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       }
     }
     output.push(layer);
-    if (output.length === MAX_TEMPLATE_ASSET_LAYERS) break;
+    if (output.length === MAX_PERSISTED_ASSET_LAYERS) break;
   }
   return output;
 }
