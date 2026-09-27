@@ -111,5 +111,5 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   });
   assert.deepEqual(parseEditableCopy(withEditableCopy("zen-atelier", { ourStory: "y".repeat(1601) })), {});
   assert.equal(withEditableCopy("zen-atelier", {}), "zen-atelier");
-  assert.deepEqual(availableEditableCopyFields("modern-maroon", false), ["greeting", "closing"]);
+  assert.deepEqual(availableEditableCopyFields("modern-maroon", false), ["greeting", "attendanceRequest", "prayerWish", "closing"]);
 });
