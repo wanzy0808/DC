@@ -91,7 +91,7 @@ export default function GuestWishes({
   }
 
   return (
-    <div className={`mx-auto max-w-md text-left ${rose ? "text-[#765460]" : ""}`}>
+    <div data-studio-native-object="object:wishes:form-group" className={`mx-auto max-w-md text-left ${rose ? "text-[#765460]" : ""}`}>
       <form onSubmit={submit} className="space-y-4">
         <fieldset data-studio-section-element="wishes:input" style={inputStyle} disabled={submitting} aria-disabled={preview || submitting} className="min-w-0 space-y-4 border-0 p-0">
           <div>
