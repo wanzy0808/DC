@@ -25,7 +25,20 @@ const keys = new Set<string>([
 ]);
 
 export function isNativeVisualKey(key: string) {
-  return keys.has(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}$/.test(key);
+  if (keys.has(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}$/.test(key)) return true;
+  const parts = key.split(":");
+  const instanceId = parts.at(-1);
+  if (!instanceId || !/^[a-zA-Z0-9_-]{1,64}$/.test(instanceId)) return false;
+  if (parts.length === 3 && (parts[0] === "copy" || parts[0] === "heading")) {
+    return keys.has(`${parts[0]}:${parts[1]}`);
+  }
+  if (parts.length === 4 && parts[0] === "element") {
+    return keys.has(`element:${parts[1]}:${parts[2]}`);
+  }
+  if (parts.length === 3 && parts[0] === "rsvp") {
+    return keys.has(`rsvp:${parts[1]}`);
+  }
+  return false;
 }
 
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
@@ -73,19 +86,22 @@ export function withNativeVisualTransforms(designKey: string, transforms: Native
 
 export function nativeVisualSelector(key: string) {
   if (!isNativeVisualKey(key)) return null;
-  const [kind, section, element] = key.split(":");
-  if (kind === "copy") return `[data-studio-copy-field="${section}"]`;
-  if (kind === "heading") return section === "envelope"
-    ? `[data-invitation-section="envelope"] h1`
-    : `[data-invitation-section="${section}"] [data-studio-native-heading]`;
-  if (kind === "element") return `[data-studio-section-element="${section}:${element}"]`;
-  if (kind === "rsvp") return `[data-invitation-section="rsvp"] [data-studio-rsvp-element="${section}"]`;
+  const parts = key.split(":");
+  const [kind, section, element] = parts;
   if (kind === "photo" && section === "gallery" && element) return `[data-invitation-photo-slot="gallery"][data-studio-photo-id="${element}"]`;
   if (kind === "photo") {
     const stage = section === "envelope" ? "envelope" : section === "cover" ? "cover" : "identity";
     const slot = section === "envelope" ? element : section;
     return `[data-invitation-section="${stage}"] [data-invitation-photo-slot="${slot}"]`;
   }
+  const instanceId = kind === "element" ? parts[3] : parts[2];
+  const prefix = instanceId ? `[data-section-instance-id="${instanceId}"] ` : "";
+  if (kind === "copy") return `${prefix}[data-studio-copy-field="${section}"]`;
+  if (kind === "heading") return section === "envelope"
+    ? '[data-invitation-section="envelope"] h1'
+    : `${prefix}[data-invitation-section="${section}"] [data-studio-native-heading]`;
+  if (kind === "element") return `${prefix}[data-studio-section-element="${section}:${element}"]`;
+  if (kind === "rsvp") return `${prefix}[data-invitation-section="rsvp"] [data-studio-rsvp-element="${section}"]`;
   return null;
 }
 
