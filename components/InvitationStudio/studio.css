@@ -74,7 +74,8 @@
 }
 
 .dc-studio-canvas-scroll { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding: 24px 18px 40px; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
-.dc-studio-canvas-scroll[data-space-pan="true"] { cursor: grab; user-select: none; }
+.dc-studio-canvas-scroll[data-space-pan="true"], .dc-studio-canvas-scroll[data-pan-zoomed="true"] { cursor: grab; }
+.dc-studio-canvas-scroll[data-space-pan="true"] { user-select: none; }
 .dc-studio-canvas-scroll[data-panning="true"] { cursor: grabbing; }
 .dc-studio-canvas-scroll[data-panning="true"] * { cursor: grabbing !important; }
 .dc-studio-canvas-scroll:focus-visible { outline: 2px solid var(--primary); outline-offset: -2px; }
