@@ -105,6 +105,20 @@ test("public template artwork does not leak Studio preview labels and primary CT
   assert.match(zenCss, /\.zen-action \{[^}]*border-radius:var\(--dc-control-radius\)/);
 });
 
+test("all active templates expose the shared narrative wording contract", () => {
+  const editableCopy = read("lib/templates/editable-copy.ts");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  assert.match(editableCopy, /\["greeting", "attendanceRequest", "prayerWish", "closing"\]/);
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /data-studio-copy-field="greeting"/);
+    assert.match(renderer, /data-studio-copy-field="attendanceRequest"/);
+    assert.match(renderer, /data-studio-copy-field="prayerWish"/);
+    assert.match(renderer, /data-studio-copy-field="closing"/);
+  }
+});
+
 test("Our Story remains an Identity subsection across shared and Romantic Rose renderers", () => {
   const story = read("components/PublicInvitation/OurStorySection.tsx");
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
