@@ -154,7 +154,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [layerDragOverId, setLayerDragOverId] = useState<string | null>(null);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
   const previewSurfaceRef = useRef<HTMLDivElement>(null);
-  const previewWorkspaceRef = useRef<HTMLDivElement>(null);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
@@ -163,21 +162,30 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [canvasNaturalSize, setCanvasNaturalSize] = useState({ width: 340, height: 760 });
   useEffect(() => {
     const surface = previewSurfaceRef.current;
-    const workspace = previewWorkspaceRef.current;
-    if (!surface || !workspace) return;
+    if (!surface) return;
     const measure = () => {
-      const width = workspace.clientWidth;
       const height = surface.offsetHeight;
-      if (!width || !height) return;
+      if (!height) return;
       setCanvasNaturalSize((previous) =>
-        previous.width === width && previous.height === height ? previous : { width, height });
+        previous.height === height ? previous : { ...previous, height });
     };
     const observer = new ResizeObserver(measure);
     observer.observe(surface);
-    observer.observe(workspace);
     measure();
     return () => observer.disconnect();
   }, []);
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      const scroller = canvasScrollRef.current;
+      const viewport = scroller?.querySelector<HTMLElement>(".dc-studio-preview-viewport");
+      if (!scroller || !viewport) return;
+      const viewportRect = viewport.getBoundingClientRect();
+      const scrollRect = scroller.getBoundingClientRect();
+      scroller.scrollLeft += viewportRect.left + viewportRect.width / 2
+        - (scrollRect.left + scroller.clientWidth / 2);
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [canvasZoom]);
   const [activeCanvasSectionId, setActiveCanvasSectionId] = useState("envelope");
   const {
     canvasPanReady,
@@ -1702,7 +1710,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
             handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
-          <div className="dc-studio-canvas-layout">
+          <div className="dc-studio-canvas-layout" style={{ "--dc-zoomed-stage-width": `${Math.max(340, canvasNaturalSize.width * canvasZoom)}px` } as React.CSSProperties}>
             <StudioLayerList
               locale={locale}
               layers={design.layers}
@@ -1719,7 +1727,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onDistribute={distributeSelectedAssetLayers}
             />
 
-            <div ref={previewWorkspaceRef} className="dc-studio-preview-workspace">
+            <div className="dc-studio-preview-workspace">
               <StudioStageControls
                 locale={locale}
                 envelopeEnabled={design.sections.envelope !== false}
