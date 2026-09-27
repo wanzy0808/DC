@@ -66,6 +66,8 @@ test("gallery visuals are keyed by one safe photo ID", () => {
   assert.equal(nativeVisualSelector("photo:gallery:photo_123"),
     '[data-invitation-photo-slot="gallery"][data-studio-photo-id="photo_123"]');
   assert.equal(nativeVisualSelector('photo:gallery:x"]{color:red}'), null);
+  assert.equal(nativeVisualSelector("photo:gallery:photo_123:gallery_copy2"),
+    '[data-section-instance-id="gallery_copy2"] [data-invitation-photo-slot="gallery"][data-studio-photo-id="photo_123"]');
   const design = withNativeVisualTransforms("botanical-ivory", {
     "photo:gallery:photo_123": { x: 8, y: 4, scaleX: 1.2, scaleY: 1, rotation: 3 },
   });
