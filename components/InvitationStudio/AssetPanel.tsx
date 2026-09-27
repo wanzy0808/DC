@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Circle, ImagePlus, Minus, Search, Square } from "lucide-react";
+import { Circle, ImagePlus, Minus, Search, Square, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { InvitationAssetLayer, InvitationShapeKind } from "@/lib/templates/asset-layers";
 import { MAX_ASSET_LAYERS } from "@/lib/templates/asset-layers";
+import type { DesignerLibraryAsset } from "@/components/InvitationStudio/designer-persistence";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type Asset = { src: string; name: string; folder: string };
@@ -16,12 +17,18 @@ export default function AssetPanel({
   onDragAssetStart,
   onDragAssetEnd,
   onAddShape,
+  libraryAssets = [],
+  onUploadLibraryAsset,
+  maxLayers = MAX_ASSET_LAYERS,
 }: {
   layers: InvitationAssetLayer[];
   templateKey: string;
   onDragAssetStart: (src: string) => void;
   onDragAssetEnd: () => void;
   onAddShape: (shape: InvitationShapeKind) => void;
+  libraryAssets?: DesignerLibraryAsset[];
+  onUploadLibraryAsset?: (file: File) => Promise<void>;
+  maxLayers?: number;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
@@ -31,6 +38,8 @@ export default function AssetPanel({
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [limited, setLimited] = useState(false);
+  const [uploadingLibrary, setUploadingLibrary] = useState(false);
+  const [libraryError, setLibraryError] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
@@ -63,8 +72,69 @@ export default function AssetPanel({
         <p className="mt-1 text-sm text-foreground/75">
           {en ? "Drag an image onto the invitation section where you want to place it." : "Seret gambar ke section undangan tempat kamu ingin meletakkannya."}
         </p>
-        <p className="mt-2 text-xs text-muted-foreground">{en ? `${layers.length}/${MAX_ASSET_LAYERS} assets used` : `${layers.length}/${MAX_ASSET_LAYERS} asset digunakan`}</p>
+        <p className="mt-2 text-xs text-muted-foreground">{en ? `${layers.length}/${maxLayers} assets used` : `${layers.length}/${maxLayers} asset digunakan`}</p>
       </div>
+
+      {onUploadLibraryAsset && (
+        <section className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-primary">{en ? "My library" : "Library Saya"}</h3>
+              <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                {en ? "Reusable artwork for future template drafts. Raster uploads are stored as WebP." : "Artwork reusable untuk draft template berikutnya. Upload raster disimpan sebagai WebP."}
+              </p>
+            </div>
+          </div>
+          <label className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/35 px-3 text-xs font-semibold text-primary transition hover:bg-primary/5 ${uploadingLibrary ? "pointer-events-none opacity-50" : ""}`}>
+            <Upload size={15} />
+            {uploadingLibrary ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Upload artwork" : "Upload artwork")}
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              className="sr-only"
+              disabled={uploadingLibrary}
+              onChange={(event) => {
+                const file = event.currentTarget.files?.[0];
+                event.currentTarget.value = "";
+                if (!file) return;
+                setLibraryError("");
+                setUploadingLibrary(true);
+                void onUploadLibraryAsset(file)
+                  .catch((reason: unknown) => setLibraryError(reason instanceof Error ? reason.message : (en ? "Upload failed." : "Upload gagal.")))
+                  .finally(() => setUploadingLibrary(false));
+              }}
+            />
+          </label>
+          {libraryError && <p role="alert" className="text-xs text-destructive">{libraryError}</p>}
+          {libraryAssets.length === 0 ? (
+            <p className="text-xs text-muted-foreground">{en ? "No reusable artwork yet." : "Belum ada artwork reusable."}</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-2">
+              {libraryAssets.map((asset) => (
+                <div
+                  key={asset.id}
+                  draggable={layers.length < maxLayers}
+                  aria-disabled={layers.length >= maxLayers}
+                  onDragStart={(event) => {
+                    event.dataTransfer.effectAllowed = "copy";
+                    event.dataTransfer.setData("text/plain", asset.url);
+                    onDragAssetStart(asset.url);
+                  }}
+                  onDragEnd={onDragAssetEnd}
+                  title={asset.title}
+                  className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
+                >
+                  <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
+                    <img src={asset.url} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
+                  </span>
+                  <span className="mt-2 block truncate text-xs text-foreground">{asset.title.replace(/\.webp$/i, "")}</span>
+                  <span className="mt-1 block text-[10px] text-muted-foreground">WebP · {en ? "Reusable" : "Reusable"}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+      )}
 
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-primary">{en ? "Basic shapes" : "Bentuk Dasar"}</h3>
@@ -79,7 +149,7 @@ export default function AssetPanel({
               <button
                 key={shape}
                 type="button"
-                disabled={layers.length >= MAX_ASSET_LAYERS}
+                disabled={layers.length >= maxLayers}
                 onClick={() => onAddShape(shape as InvitationShapeKind)}
                 className="grid min-h-20 place-items-center gap-1 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background px-2 py-3 text-xs text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
               >
@@ -114,8 +184,8 @@ export default function AssetPanel({
           {filtered.slice(0, visibleCount).map((asset) => (
             <div
               key={asset.src}
-              draggable={layers.length < MAX_ASSET_LAYERS}
-              aria-disabled={layers.length >= MAX_ASSET_LAYERS}
+              draggable={layers.length < maxLayers}
+              aria-disabled={layers.length >= maxLayers}
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "copy";
                 event.dataTransfer.setData("text/plain", asset.src);
@@ -123,7 +193,7 @@ export default function AssetPanel({
               }}
               onDragEnd={onDragAssetEnd}
               title={asset.folder + " / " + asset.name}
-              className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= MAX_ASSET_LAYERS ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
+              className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
             >
               <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                 <img src={asset.src} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
