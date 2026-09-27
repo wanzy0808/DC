@@ -537,7 +537,7 @@ export default function UniversalInvitationTemplate({
               {invitation.dressCode && <p data-studio-native-object="object:event:dress-code" className="mt-3 text-xs">Dress code · {invitation.dressCode}</p>}
             </div>
           ) : (
-            <div className="mx-auto max-w-md space-y-3 text-sm leading-7">
+            <div data-studio-native-object="object:event:details-group" className="mx-auto max-w-md space-y-3 text-sm leading-7">
               {key === "zen-atelier" ? <div className="grid grid-cols-[24px_1fr] gap-4 border-y border-[var(--inv-soft)] py-6 text-left">
                 <CalendarDays size={22} strokeWidth={1.3} data-studio-native-object="object:event:calendar-icon" className="mt-1 text-[var(--inv-accent)]" aria-hidden="true" />
                 <div><h3 data-studio-native-object="object:event:event-title" className="text-xl">{eventTitle}</h3>{invitation.venue && <p data-studio-native-object="object:event:venue" className="mt-3">{invitation.venue}</p>}</div>
@@ -564,7 +564,7 @@ export default function UniversalInvitationTemplate({
             usesPhotos ? <>
               {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
               {media.gallery.length ? (
-                <div className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : key === "zen-atelier" ? "grid-cols-2 auto-rows-[125px] sm:auto-rows-[155px]" : "grid-cols-2"}`}>
+                <div data-studio-native-object="object:gallery:grid" className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : key === "zen-atelier" ? "grid-cols-2 auto-rows-[125px] sm:auto-rows-[155px]" : "grid-cols-2"}`}>
                   {media.gallery.map((asset, index) => (
                     <div key={asset.id} data-invitation-photo-slot="gallery" data-studio-photo-id={asset.id} className={`relative overflow-hidden ${key === "modern-maroon" ? "rounded-none" : key === "midnight-romance" ? "rounded-t-full rounded-b-lg" : key === "eternal-blossom" ? "rounded-t-full rounded-b-3xl" : key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] bg-[var(--inv-surface)] p-1" : "rounded-[35%_35%_12px_12px]"} ${index === 0 && key === "zen-atelier" && media.gallery.length > 1 ? "row-span-2" : index === 0 && key !== "modern-maroon" ? "col-span-2" : ""}`}>
                       <img src={asset.url} alt={`Galeri foto ${index + 1}`} loading="lazy" className={key === "zen-atelier" ? "h-full w-full object-cover" : index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
@@ -590,19 +590,19 @@ export default function UniversalInvitationTemplate({
             )
           ), 5)}
 
-          {section("countdown", countdown ? (<div className={key === "pencil-reverie" ? "pr-countdown-canvas" : ""}>{key === "pencil-reverie" && <PencilBackwardClock />}
-            <div className="grid grid-cols-4 gap-2">
+          {section("countdown", countdown ? (<div data-studio-native-object="object:countdown:group" className={key === "pencil-reverie" ? "pr-countdown-canvas" : ""}>{key === "pencil-reverie" && <PencilBackwardClock />}
+            <div data-studio-native-object="object:countdown:grid" className="grid grid-cols-4 gap-2">
               {countdown.map(([label, value]) => (
                 <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
-                  <p className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
-                  <p className="mt-1 text-[10px] opacity-65">{label}</p>
+                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
+                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] opacity-65">{label}</p>
                 </div>
               ))}
             </div></div>
           ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
 
           {section("location", (
-            <div className="mx-auto max-w-sm space-y-4">
+            <div data-studio-native-object="object:location:details-group" className="mx-auto max-w-sm space-y-4">
               <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
               <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
@@ -632,7 +632,7 @@ export default function UniversalInvitationTemplate({
           ) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
 
           {section("closing", (
-            <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
+            <div data-studio-native-object="object:closing:copy-group" className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
               {key === "zen-atelier" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p> : <><Heart aria-hidden data-studio-native-object="object:closing:heart" className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p></>}
               <p data-studio-native-object="object:closing:names" className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
               {key === "pencil-reverie" && <p data-studio-copy-field="prayerWish" className="pr-prayer-copy whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>}
