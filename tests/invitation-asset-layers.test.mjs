@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-  isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
+  isTemplateIllustration, MAX_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
   sanitizeAssetLayers, withAssetLayers,
 } from "../lib/templates/asset-layers.ts";
 import { resizeObjectFromHandle } from "../lib/templates/object-resize.ts";
@@ -16,11 +16,12 @@ const asset = (id, src = "/templates/pencil-reverie/flower.webp") => ({
 test("only browser-public template illustrations can be placed", () => {
   assert.ok(isTemplateIllustration("/template/rose/branch.png"));
   assert.ok(isTemplateIllustration("/templates/Zen%20Atelier/ornament.webp"));
+  assert.ok(isTemplateIllustration("/uploads/designer-assets/user123/asset.webp"));
   for (const invalid of [
     "/assets/private.svg", "https://example.com/image.png", "//evil.com/flower.png",
     "/templates/../secret.png", "/templates/%2e%2e/secret.png",
     "/templates/rose/../../secret.webp", "/templates/rose/%252e%252e/flower.webp",
-    "/templates/rose/file.pdf",
+    "/templates/rose/file.pdf", "/uploads/designer-assets/../secret.webp",
   ]) assert.equal(isTemplateIllustration(invalid), false, invalid);
 });
 
@@ -42,7 +43,8 @@ test("asset layer codec keeps bounded coordinates, transparency, IDs and stackin
   assert.equal(parseAssetLayers(original).length, 0);
   assert.deepEqual(parseAssetLayers("rose::layers=%BAD"), []);
   assert.equal(MAX_ASSET_LAYERS, 10);
-  assert.equal(sanitizeAssetLayers(Array.from({ length: 20 }, (_, index) => asset(String(index)))).length, MAX_ASSET_LAYERS);
+  assert.equal(MAX_TEMPLATE_ASSET_LAYERS, 120);
+  assert.equal(sanitizeAssetLayers(Array.from({ length: 140 }, (_, index) => asset(String(index)))).length, MAX_TEMPLATE_ASSET_LAYERS);
 });
 
 test("Studio saves, previews and reopens the same per-invitation cover artwork", () => {
@@ -59,7 +61,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /<DesignerTool active=\{panel === "assets"\}/);
   assert.match(editor, /<AssetPanel layers=\{design\.layers\}/);
   assert.match(editor, /onMoveAssetLayer=\{\(id, x, y\)/);
-  assert.match(browser, /draggable=\{layers\.length < MAX_ASSET_LAYERS\}/);
+  assert.match(browser, /draggable=\{layers\.length < maxLayers\}/);
   assert.match(browser, /onDragStart=\{\(event\) =>/);
   assert.match(editor, /onDragOver=\{onAssetDragOver\}/);
   assert.match(editor, /onDrop=\{onAssetDrop\}/);
@@ -88,7 +90,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "backward"\)/);
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "back"\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
-  assert.match(editor, /design\.layers\.length >= MAX_ASSET_LAYERS/);
+  assert.match(editor, /const maxAssetLayers = templateMode \? MAX_TEMPLATE_ASSET_LAYERS : MAX_ASSET_LAYERS/);
+  assert.match(editor, /design\.layers\.length >= maxAssetLayers/);
   assert.match(editor, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<AssetLayerInspector/);
 
