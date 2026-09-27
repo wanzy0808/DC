@@ -96,6 +96,12 @@ Studio memakai **satu editor yang sama**, tetapi semantics Save wajib dibedakan 
 - Template Mode **tidak boleh melakukan PUT ke Invitation customer**. Sebaliknya customer tidak memiliki aksi untuk membuat template katalog.
 - Master template Studio yang disimpan staff harus tetap memakai kontrak section lengkap dan seluruh guardrail `template.md`. Data demo Denny & Christine hanya preview/template authoring dan tidak boleh masuk sebagai data event customer.
 
+### Library artwork Designer/Owner (27 September 2026)
+
+Template Mode mempunyai **Library Saya** untuk artwork/sticker reusable lintas draft. OWNER/DESIGNER/EDITOR/ADMIN yang berwenang dapat mengunggah JPG, PNG, atau WebP; server wajib decode dengan Sharp, auto-orient, resize maksimum 2000×2000 tanpa upscaling, lalu menyimpan derivative **WebP quality 82** dengan nama UUID di folder user `/uploads/designer-assets/<userId>/`. Record metadata memakai `DesignerAsset` milik akun staff, bukan `InvitationAsset` milik event customer. Library ini tidak muncul pada Customer Studio. File library adalah derivative web untuk renderer; master berlisensi/private tetap tidak boleh dianggap privat bila diletakkan di web root.
+
+Artwork dari Library Saya masuk canvas melalui drag-and-drop yang sama dengan aset template bawaan dan dapat dipakai ulang pada draft berikutnya. Template Mode mempunyai budget authoring lebih besar (maksimum 120 layer visual terserialisasi) agar Designer/Owner dapat menyusun komposisi kaya; Customer Studio tetap dibatasi 10 objek tambahan. Batas ini adalah guardrail performa, bukan perubahan menjadi website builder umum. Foto customer tetap `InvitationAsset` event-scoped, dan Template Mode memakai foto demo untuk menguji slot foto—jangan mengunggah foto demo ke event palsu. Upload audio customer juga tetap event-scoped; Template Mode memakai musik tema/default sampai library audio khusus benar-benar dirancang.
+
 ### Arsitektur menu kiri vs panel kanan — aturan final
 
 **Label stage canvas:** toggle di atas canvas memakai **Amplop / Isi** (EN: **Envelope / Content**). 
