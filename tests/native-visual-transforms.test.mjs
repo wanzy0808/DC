@@ -85,3 +85,15 @@ test("protected link and gift buttons remain inert in Studio preview", () => {
     assert.match(renderer, /if \(preview/);
   }
 });
+
+
+test("context inspector edits native transforms without replacing copy or component settings", () => {
+  const selection = read("components/InvitationStudio/StudioSelectionInspector.tsx");
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  assert.match(selection, /dc-studio-selection-stack/);
+  assert.match(selection, /\{nativeControls\}/);
+  assert.match(inspector, /scaleX/);
+  assert.match(inspector, /scaleY/);
+  assert.match(inspector, /rotation/);
+  assert.match(inspector, /onChange\(defaultNativeVisualTransform\)/);
+});
