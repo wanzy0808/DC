@@ -232,6 +232,17 @@ test("template-authored supporting visuals remain directly selectable without se
 
 
 
+test("protected fallback messages are selectable visual objects without becoming editable content", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /object:gallery:empty-copy/);
+    assert.match(renderer, /object:countdown:empty-copy/);
+    assert.match(renderer, /object:gift:empty-copy/);
+  }
+  assert.match(universal, /object:location:empty-copy/);
+});
+
 test("native visual styling stays inside the validated nativeVisuals contract", () => {
   const values = sanitizeNativeVisualTransforms({
     "object:cover:kicker": {
@@ -280,6 +291,7 @@ test("system-backed invitation content stays content-locked while native styling
   assert.equal(nativeVisualUsesSystemContent("object:event:venue"), true);
   assert.equal(nativeVisualUsesSystemContent("object:gift:account-number"), true);
   assert.equal(nativeVisualUsesSystemContent("object:countdown:hari"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:gift:empty-copy"), true);
   assert.equal(nativeVisualUsesSystemContent("heading:cover"), true);
   assert.equal(nativeVisualUsesSystemContent("object:cover:flower-left"), false);
   assert.equal(nativeVisualUsesSystemContent("object:cover:kicker"), false);
