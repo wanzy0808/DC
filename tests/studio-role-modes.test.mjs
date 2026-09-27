@@ -83,6 +83,7 @@ test("template catalog publication is gated by review and Owner/Admin approval",
   const ownerReview = read("components/Owner/OwnerTemplateReview.tsx");
 
   assert.match(schema, /enum TemplateStatus \{[\s\S]*DRAFT[\s\S]*REVIEW[\s\S]*PUBLISHED/);
+  assert.match(schema, /status\s+TemplateStatus\s+@default\(DRAFT\)/);
   assert.match(migration, /ALTER TYPE "TemplateStatus" ADD VALUE IF NOT EXISTS 'REVIEW'/);
   assert.match(templateApi, /action === "SUBMIT_REVIEW"/);
   assert.match(templateApi, /data: \{ status: "REVIEW" \}/);
@@ -91,6 +92,7 @@ test("template catalog publication is gated by review and Owner/Admin approval",
   assert.match(templateApi, /data: \{ status: "PUBLISHED" \}/);
   assert.match(templateApi, /action === "RETURN_DRAFT"/);
   assert.match(designerDashboard, /Kirim Review/);
+  assert.match(read("components/InvitationStudio/InvitationDesigner.tsx"), /templateDraftStatus === "REVIEW" \? false : dirty/);
   assert.match(designerDashboard, /action: "SUBMIT_REVIEW"/);
   assert.match(ownerDashboard, /<OwnerTemplateReview \/>/);
   assert.match(ownerReview, /scope=review/);
