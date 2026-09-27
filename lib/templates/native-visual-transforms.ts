@@ -2,6 +2,10 @@ import type { CSSProperties } from "react";
 import { editableInvitationCopyFields } from "@/lib/templates/editable-copy";
 import { invitationFonts } from "@/lib/templates/design";
 import { invitationFontFamily } from "@/lib/templates/presentation";
+import {
+  isInvitationSectionAnimation,
+  type InvitationSectionAnimation,
+} from "@/lib/templates/section-animations";
 import { invitationContentSectionKeys } from "@/lib/templates/section-layout";
 
 export type NativeVisualTextAlign = "left" | "center" | "right";
@@ -23,6 +27,9 @@ export type NativeVisualTransform = {
   letterSpacing?: number;
   lineHeight?: number;
   fontFamily?: string;
+  animation?: InvitationSectionAnimation;
+  animationDuration?: number;
+  animationDelay?: number;
 };
 export type NativeVisualTransforms = Record<string, NativeVisualTransform>;
 
@@ -57,6 +64,11 @@ export function nativeVisualCapabilities(key: string) {
     return { opacity: true, colors: true, typography: nativeTextObjectId.test(objectId) };
   }
   return { opacity: false, colors: false, typography: false };
+}
+
+export function nativeVisualSupportsAnimation(key: string) {
+  const kind = key.split(":")[0];
+  return kind === "heading" || kind === "object" || kind === "element" || kind === "rsvp";
 }
 
 export function isNativeVisualKey(key: string) {
@@ -117,6 +129,11 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       transform.letterSpacing = optionalNumber(source.letterSpacing, -5, 20);
       transform.lineHeight = optionalNumber(source.lineHeight, 0.7, 3);
       transform.fontFamily = optionalFontFamily(source.fontFamily);
+    }
+    if (nativeVisualSupportsAnimation(key) && isInvitationSectionAnimation(source.animation) && source.animation !== "none") {
+      transform.animation = source.animation;
+      transform.animationDuration = optionalNumber(source.animationDuration, 0.2, 2.5);
+      transform.animationDelay = optionalNumber(source.animationDelay, 0, 2);
     }
     for (const [property, propertyValue] of Object.entries(transform)) {
       if (propertyValue === undefined) delete (transform as Record<string, unknown>)[property];
