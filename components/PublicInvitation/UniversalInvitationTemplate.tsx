@@ -31,7 +31,7 @@ import { parseInvitationSections, type InvitationSectionKey, type InvitationSect
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
 import { parseSectionElementStyles, sectionElementStyleCss } from "@/lib/templates/section-element-styles";
-import { nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
+import { nativeVisualFontFamilies, nativeVisualScopeClass, nativeVisualStyleSheet } from "@/lib/templates/native-visual-transforms";
 import { instancesForSection, parseInvitationSectionLayout } from "@/lib/templates/section-layout";
 import EditableSectionInstance, { type SectionInstanceEditorActions } from "@/components/PublicInvitation/EditableSectionInstance";
 import { useInvitationSectionAnimations } from "@/components/PublicInvitation/use-section-animations";
@@ -428,7 +428,7 @@ export default function UniversalInvitationTemplate({
       style={css}
     >
       <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
-      <InvitationFonts families={[font.heading, font.body]} />
+      <InvitationFonts families={[font.heading, font.body, ...nativeVisualFontFamilies(activeDesignKey)]} />
       {sections.music !== false && <InvitationMusic ref={musicRef} source={music} opened={opened || sections.envelope === false} preview={preview} />}
       {!opened && sections.envelope !== false ? (
         <div data-invitation-section="envelope" className="relative" style={invitationSectionStyleCss(sectionStyles.envelope)}><InvitationThemeScenes
