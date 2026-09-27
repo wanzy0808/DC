@@ -1,15 +1,23 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight, RotateCcw, X } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Play, RotateCcw, X } from "lucide-react";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontOptions } from "@/components/InvitationStudio/designer-config";
 import { invitationFontFamily } from "@/lib/templates/presentation";
 import {
   defaultNativeVisualTransform,
   nativeVisualCapabilities,
+  nativeVisualSelector,
+  nativeVisualSupportsAnimation,
   type NativeVisualTextAlign,
   type NativeVisualTransform,
 } from "@/lib/templates/native-visual-transforms";
+import {
+  getSectionAnimationPreset,
+  sectionAnimationGroups,
+  sectionAnimationPresets,
+  type InvitationSectionAnimation,
+} from "@/lib/templates/section-animations";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 const nativeFontFamilies = [...new Set(
@@ -28,6 +36,7 @@ export default function StudioNativeVisualInspector({
   const en = locale === "en";
   const current: NativeVisualTransform = { ...defaultNativeVisualTransform, ...value };
   const capabilities = nativeVisualCapabilities(targetKey);
+  const animationCapable = nativeVisualSupportsAnimation(targetKey);
   const section = targetKey.split(":")[1] ?? "";
   const title = targetKey.startsWith("heading:")
     ? (en ? `${section} heading` : `Judul ${section}`)
@@ -53,6 +62,19 @@ export default function StudioNativeVisualInspector({
   function patch(patchValue: Partial<NativeVisualTransform>) {
     onChange({ ...current, ...patchValue });
   }
+
+  function previewAnimation() {
+    const selector = nativeVisualSelector(targetKey);
+    const node = selector
+      ? document.querySelector<HTMLElement>(`.dc-studio-preview-surface ${selector}`)
+      : null;
+    node?.getAnimations({ subtree: true }).forEach((animation) => {
+      animation.cancel();
+      animation.play();
+    });
+  }
+
+  const animationPreset = getSectionAnimationPreset(current.animation);
 
   return (
     <aside className="dc-studio-layer-side dc-studio-native-inspector" aria-label={en ? "Visual properties" : "Properti visual"}>
@@ -186,6 +208,73 @@ export default function StudioNativeVisualInspector({
               </span>
             </label>
           </div>
+        </div>
+      )}
+
+      {animationCapable && (
+        <div className="mt-4 space-y-3 border-t border-primary/20 pt-4">
+          <label className="block text-xs text-foreground">
+            <span className="mb-1 block">{en ? "Animation" : "Animasi"}</span>
+            <select
+              value={current.animation && current.animation !== "none" ? current.animation : ""}
+              onChange={(event) => {
+                const animation = event.currentTarget.value as InvitationSectionAnimation | "";
+                patch(animation
+                  ? { animation, animationDuration: undefined }
+                  : { animation: undefined, animationDuration: undefined, animationDelay: undefined });
+              }}
+              className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none"
+            >
+              <option value="">{en ? "No animation" : "Tanpa animasi"}</option>
+              {sectionAnimationGroups.map((group) => (
+                <optgroup key={group.key} label={en ? group.labelEn : group.labelId}>
+                  {sectionAnimationPresets
+                    .filter((item) => item.group === group.key)
+                    .map((item) => (
+                      <option key={item.key} value={item.key}>{en ? item.labelEn : item.labelId}</option>
+                    ))}
+                </optgroup>
+              ))}
+            </select>
+          </label>
+
+          {current.animation && current.animation !== "none" && (
+            <>
+              <button type="button" onClick={previewAnimation}
+                className="flex min-h-9 w-full items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10">
+                <Play size={13} aria-hidden="true" />
+                {en ? "Preview animation" : "Preview animasi"}
+              </button>
+              <div className="grid grid-cols-2 gap-3">
+                <label className="text-xs text-foreground">
+                  <span className="mb-1 block">{en ? "Duration" : "Durasi"}</span>
+                  <span className="flex items-center rounded-lg border border-primary/30 px-2">
+                    <input type="number" min={0.2} max={2.5} step={0.1}
+                      value={current.animationDuration ?? animationPreset?.duration ?? 0.7}
+                      onChange={(event) => {
+                        const value = event.currentTarget.valueAsNumber;
+                        if (Number.isFinite(value)) patch({ animationDuration: clamp(value, 0.2, 2.5) });
+                      }}
+                      className="h-9 min-w-0 w-full bg-transparent text-sm outline-none" />
+                    <span className="text-xs text-muted-foreground">s</span>
+                  </span>
+                </label>
+                <label className="text-xs text-foreground">
+                  <span className="mb-1 block">{en ? "Delay" : "Jeda"}</span>
+                  <span className="flex items-center rounded-lg border border-primary/30 px-2">
+                    <input type="number" min={0} max={2} step={0.1}
+                      value={current.animationDelay ?? 0}
+                      onChange={(event) => {
+                        const value = event.currentTarget.valueAsNumber;
+                        if (Number.isFinite(value)) patch({ animationDelay: clamp(value, 0, 2) });
+                      }}
+                      className="h-9 min-w-0 w-full bg-transparent text-sm outline-none" />
+                    <span className="text-xs text-muted-foreground">s</span>
+                  </span>
+                </label>
+              </div>
+            </>
+          )}
         </div>
       )}
 
