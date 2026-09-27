@@ -74,7 +74,9 @@ export function nativeVisualSelector(key: string) {
   if (!keys.has(key)) return null;
   const [kind, section, element] = key.split(":");
   if (kind === "copy") return `[data-studio-copy-field="${section}"]`;
-  if (kind === "heading") return `[data-invitation-section="${section}"] [data-studio-native-heading]`;
+  if (kind === "heading") return section === "envelope"
+    ? `[data-invitation-section="envelope"] h1`
+    : `[data-invitation-section="${section}"] [data-studio-native-heading]`;
   if (kind === "element") return `[data-studio-section-element="${section}:${element}"]`;
   if (kind === "rsvp") return `[data-invitation-section="rsvp"] [data-studio-rsvp-element="${section}"]`;
   return null;
