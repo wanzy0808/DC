@@ -942,8 +942,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const candidates = selectedAssetLayers.filter((layer) => !layer.locked);
     if (candidates.length < 2) return;
     const section = candidates[0]?.section ?? "cover";
-    if (candidates.some((layer) => (layer.section ?? "cover") !== section)) {
-      setNotice(locale === "en" ? "Group layers inside the same section." : "Group hanya untuk layer dalam section yang sama.");
+    const instanceId = candidates[0]?.sectionInstanceId ?? section;
+    if (candidates.some((layer) =>
+      (layer.section ?? "cover") !== section || (layer.sectionInstanceId ?? (layer.section ?? "cover")) !== instanceId)) {
+      setNotice(locale === "en" ? "Group layers inside the same section instance." : "Group hanya untuk layer dalam instance section yang sama.");
       return;
     }
     const groupId = `group-${crypto.randomUUID().replace(/-/g, "").slice(0, 12)}`;
@@ -970,11 +972,17 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const candidates = selectedAssetLayers.filter((layer) => !layer.locked && !layer.hidden);
     if (candidates.length < minimum) return null;
     const section = candidates[0]?.section ?? "cover";
-    if (candidates.some((layer) => (layer.section ?? "cover") !== section)) {
-      setNotice(locale === "en" ? "Align layers inside the same section." : "Align hanya untuk layer dalam section yang sama.");
+    const instanceId = candidates[0]?.sectionInstanceId ?? section;
+    if (candidates.some((layer) =>
+      (layer.section ?? "cover") !== section || (layer.sectionInstanceId ?? (layer.section ?? "cover")) !== instanceId)) {
+      setNotice(locale === "en" ? "Align layers inside the same section instance." : "Align hanya untuk layer dalam instance section yang sama.");
       return null;
     }
-    const sectionNode = canvasScrollRef.current?.querySelector<HTMLElement>(`[data-invitation-section="${section}"]`);
+    const instanceNode = instanceId === "envelope"
+      ? null
+      : canvasScrollRef.current?.querySelector<HTMLElement>(`[data-section-instance-id="${CSS.escape(instanceId)}"]`);
+    const sectionNode = instanceNode?.querySelector<HTMLElement>(`[data-invitation-section="${section}"]`)
+      ?? canvasScrollRef.current?.querySelector<HTMLElement>(`[data-invitation-section="${section}"]`);
     const sectionRect = sectionNode?.getBoundingClientRect();
     if (!sectionRect?.width || !sectionRect.height) return null;
     const items = candidates.flatMap((layer) => {
@@ -1358,8 +1366,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "a") {
         event.preventDefault();
         const targetSection = selectedAssetLayer?.section ?? "cover";
+        const targetInstanceId = selectedAssetLayer?.sectionInstanceId ?? targetSection;
         const ids = design.layers
-          .filter((layer) => (layer.section ?? "cover") === targetSection && !layer.hidden)
+          .filter((layer) => (layer.section ?? "cover") === targetSection
+            && (layer.sectionInstanceId ?? (layer.section ?? "cover")) === targetInstanceId
+            && !layer.hidden)
           .map((layer) => layer.id);
         setSelectedLayerIds(ids);
         setSelectedLayerId(ids.at(-1) ?? null);
