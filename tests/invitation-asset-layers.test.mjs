@@ -330,3 +330,31 @@ test("corner and side resize keep the same stored geometry at different viewport
   assert.match(renderer, /objectWidth: Math\.max\(1, sectionRect\.width \* layer\.width \/ 100\)/);
   assert.match(renderer, /naturalSectionWidth/);
 });
+
+
+test("Studio design objects can belong to one duplicated section instance without becoming global artwork", () => {
+  const scoped = {
+    ...asset("scoped"),
+    section: "gallery",
+    sectionInstanceId: "gallery-copy-a1",
+  };
+  assert.deepEqual(sanitizeAssetLayers([scoped]), [scoped]);
+  assert.equal(sanitizeAssetLayers([{ ...scoped, sectionInstanceId: "bad instance!" }])[0].sectionInstanceId, undefined);
+
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  assert.match(renderer, /sectionInstanceId = section/);
+  assert.match(renderer, /const owner = layer\.sectionInstanceId \?\? section/);
+  assert.match(renderer, /destination\.instanceId !== sectionInstanceId/);
+  assert.match(renderer, /sectionInstanceId: destination\.instanceId/);
+  assert.match(editor, /sectionInstanceId: section\.closest<HTMLElement>\("\[data-section-instance-id\]"\)/);
+  assert.match(editor, /function sectionInstanceFor\(section: StudioObjectSection\)/);
+  assert.match(editor, /sectionInstanceId: copyId/);
+  assert.match(editor, /nativeVisualInstanceId\(key\) !== source\.id/);
+  assert.match(editor, /nativeVisualInstanceId\(key\) !== id/);
+  assert.match(universal, /sectionInstanceId=\{instanceId\}/);
+  assert.match(rose, /sectionInstanceId=\{instanceId\}/);
+});
