@@ -9,7 +9,7 @@ export type StudioCanvasSelectionTarget =
   | { kind: "section-element"; section: InvitationSectionKey; elementKind: StudioSectionElementKind }
   | { kind: "copy"; field: EditableInvitationCopyField }
   | { kind: "native"; key: string }
-  | { kind: "photo"; slot: PhotoSlot }
+  | { kind: "photo"; slot: PhotoSlot; assetId?: string }
   | { kind: "section"; section: InvitationSectionKey; instanceId: string }
   | { kind: "clear" }
   | { kind: "ignore" };
@@ -57,7 +57,8 @@ export function resolveStudioCanvasSelection(
   const photoElement = target.closest<HTMLElement>("[data-invitation-photo-slot]");
   const photoSlot = photoElement?.dataset.invitationPhotoSlot as PhotoSlot | undefined;
   if (photoSlot && photoSlots.has(photoSlot)) {
-    return { kind: "photo", slot: photoSlot };
+    return { kind: "photo", slot: photoSlot, ...(photoSlot === "gallery" && photoElement?.dataset.studioPhotoId
+      ? { assetId: photoElement.dataset.studioPhotoId } : {}) };
   }
 
   if (target.closest(
