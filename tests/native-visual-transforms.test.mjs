@@ -283,6 +283,21 @@ test("shared section internals expose group and child targets without unlocking 
   assert.equal(nativeVisualUsesSystemContent("object:countdown:hari-label"), false);
 });
 
+test("protected RSVP and Wishes forms expose whole-block visual targets while internals keep semantic controls", () => {
+  const rsvp = read("components/InvitationStudio/RsvpForm.tsx");
+  const rsvpPanels = read("components/InvitationStudio/RsvpPanels.tsx");
+  const wishes = read("components/PublicInvitation/GuestWishes.tsx");
+
+  assert.match(rsvp, /object:rsvp:form-group/);
+  assert.match(rsvpPanels, /data-studio-rsvp-element="inputs"/);
+  assert.match(rsvpPanels, /data-studio-rsvp-element="button"/);
+  assert.match(wishes, /object:wishes:form-group/);
+  assert.match(wishes, /data-studio-section-element="wishes:input"/);
+  assert.match(wishes, /data-studio-section-element="wishes:button"/);
+  assert.equal(nativeVisualCapabilities("object:rsvp:form-group").typography, false);
+  assert.equal(nativeVisualCapabilities("object:wishes:form-group").typography, false);
+});
+
 test("native visual styling stays inside the validated nativeVisuals contract", () => {
   const values = sanitizeNativeVisualTransforms({
     "object:cover:kicker": {
