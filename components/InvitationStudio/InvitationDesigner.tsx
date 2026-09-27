@@ -628,6 +628,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       case "rsvp-element":
         clearCanvasSelection();
         setSelectedRsvpElementKey(selection.key);
+        if (selection.instanceId) setSelectedNativeKey(`rsvp:${selection.key}:${selection.instanceId}`);
         return;
       case "section-element":
         clearCanvasSelection();
@@ -635,10 +636,12 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           section: selection.section,
           kind: selection.elementKind,
         });
+        if (selection.instanceId) setSelectedNativeKey(`element:${selection.section}:${selection.elementKind}:${selection.instanceId}`);
         return;
       case "copy":
         clearCanvasSelection();
         setSelectedCopyField(selection.field);
+        if (selection.instanceId) setSelectedNativeKey(`copy:${selection.field}:${selection.instanceId}`);
         return;
       case "native":
         clearCanvasSelection();
@@ -1291,9 +1294,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   const activeNativeKey = selectedLayerId || selectedSectionKey ? null
     : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? selectedNativeKey : canvasStage === "envelope" && selectedPhotoSlot === "cover" ? "photo:envelope:cover" : `photo:${selectedPhotoSlot}`)
-    : selectedSectionElement ? `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`
-    : selectedRsvpElementKey ? `rsvp:${selectedRsvpElementKey}`
-    : selectedCopyField ? `copy:${selectedCopyField}`
+    : selectedSectionElement ? (selectedNativeKey?.startsWith(`element:${selectedSectionElement.section}:${selectedSectionElement.kind}:`) ? selectedNativeKey : `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`)
+    : selectedRsvpElementKey ? (selectedNativeKey?.startsWith(`rsvp:${selectedRsvpElementKey}:`) ? selectedNativeKey : `rsvp:${selectedRsvpElementKey}`)
+    : selectedCopyField ? (selectedNativeKey?.startsWith(`copy:${selectedCopyField}:`) ? selectedNativeKey : `copy:${selectedCopyField}`)
     : selectedNativeKey;
 
   function commitNativeVisual(key: string, value: NativeVisualTransform) {
