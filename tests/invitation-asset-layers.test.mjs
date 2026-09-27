@@ -59,7 +59,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   const persistence = read("components/InvitationStudio/designer-persistence.ts");
   const route = read("app/api/templates/assets/route.ts");
   assert.match(editor, /<DesignerTool active=\{panel === "assets"\}/);
-  assert.match(editor, /<AssetPanel layers=\{design\.layers\}/);
+  assert.match(editor, /<AssetPanel\s+layers=\{design\.layers\}/);
   assert.match(editor, /onMoveAssetLayer=\{\(id, x, y\)/);
   assert.match(browser, /draggable=\{layers\.length < maxLayers\}/);
   assert.match(browser, /onDragStart=\{\(event\) =>/);
