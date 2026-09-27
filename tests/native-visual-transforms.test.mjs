@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
-  nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation,
+  nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation, nativeVisualUsesSystemContent,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -274,6 +274,21 @@ test("native visual capabilities avoid duplicating protected component styling",
   assert.deepEqual(nativeVisualCapabilities("photo:cover"), { opacity: true, colors: false, typography: false });
   assert.deepEqual(nativeVisualCapabilities("element:gift:button"), { opacity: false, colors: false, typography: false });
   assert.deepEqual(nativeVisualCapabilities("rsvp:button"), { opacity: false, colors: false, typography: false });
+});
+
+test("system-backed invitation content stays content-locked while native styling remains available", () => {
+  assert.equal(nativeVisualUsesSystemContent("object:event:venue"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:gift:account-number"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari"), true);
+  assert.equal(nativeVisualUsesSystemContent("heading:cover"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:flower-left"), false);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:kicker"), false);
+
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+  assert.match(inspector, /nativeVisualUsesSystemContent/);
+  assert.match(inspector, /Isi berasal dari data acara dan terkunci di sini/);
+  assert.match(designer, /\[data-studio-native-object\].*\[data-studio-native-heading\].*\[data-invitation-photo-slot\]/);
 });
 
 test("native inspector exposes visual styling without adding functional controls", () => {
