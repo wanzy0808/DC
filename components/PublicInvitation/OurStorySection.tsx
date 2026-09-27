@@ -36,11 +36,12 @@ export default function OurStorySection({
       style={rose ? undefined : { backgroundColor: "var(--inv-surface)" }}
     >
       <div className={`relative mx-auto max-w-md ${left || pencil ? "text-left" : "text-center"}`}>
-        <p className={`text-[10px] uppercase tracking-[.24em] ${rose ? "text-[#a65e69]" : "text-[var(--inv-accent)]"}`}>
+        <p data-studio-native-object="object:identity:our-story-kicker" className={`text-[10px] uppercase tracking-[.24em] ${rose ? "text-[#a65e69]" : "text-[var(--inv-accent)]"}`}>
           Our Story
         </p>
         <h2
           id="invitation-our-story-heading"
+          data-studio-native-object="object:identity:our-story-heading"
           className={`mt-3 text-2xl leading-snug ${rose ? "text-[#713b50]" : ""}`}
           style={{ fontFamily: "var(--inv-heading, var(--font-dc-heading))" }}
         >
@@ -48,6 +49,7 @@ export default function OurStorySection({
         </h2>
         <span
           aria-hidden="true"
+          data-studio-native-object="object:identity:our-story-divider"
           className={`my-6 block h-px w-12 ${left || pencil ? "" : "mx-auto"} ${rose ? "bg-[#bf8496]" : "bg-[var(--inv-accent)]"}`}
         />
         <p data-studio-copy-field="ourStory" className="whitespace-pre-line break-words text-sm leading-8"><InvitationLayerTextContent text={storyText} unit={motionUnit} /></p>
