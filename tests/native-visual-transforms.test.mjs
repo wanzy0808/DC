@@ -29,7 +29,7 @@ test("built-in transform codec rejects arbitrary CSS keys and bounds geometry", 
     "element:gift:button": { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0 },
   });
   assert.deepEqual(values, {
-    "copy:greeting": { x: 150, y: -150, scaleX: 3, scaleY: 0.25, rotation: 180 },
+    "copy:greeting": { x: 2000, y: -2000, scaleX: 3, scaleY: 0.25, rotation: 180 },
   });
   assert.doesNotMatch(nativeVisualStyleSheet(withNativeVisualTransforms("rose", values)), /color:red/);
   assert.deepEqual(parseNativeVisualTransforms("rose::nativeVisuals=%BAD"), {});
@@ -48,6 +48,10 @@ test("Studio and public renderers share the built-in transform contract", () => 
   }
   assert.match(handles, /onPointerDown=\{\(event\) => begin\(event, "rotate"\)\}/);
   assert.match(handles, /onPointerDown=\{\(event\) => begin\(event, handle\)\}/);
+  assert.match(handles, /canvas\.scrollTop \+= 14/);
+  assert.match(handles, /canvas\.scrollLeft \+= 14/);
+  assert.match(handles, /drag\.scrollTop/);
+  assert.match(handles, /-2000, 2000/);
 });
 
 
