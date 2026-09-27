@@ -31,6 +31,13 @@ export type StudioTemplateSaveResult = {
   status: string;
 };
 
+export type DesignerLibraryAsset = {
+  id: string;
+  url: string;
+  title: string;
+  createdAt?: string;
+};
+
 export function makeStudioSavedState(
   designKey: string,
   musicUrl: string,
@@ -129,6 +136,34 @@ export async function saveStudioTemplateDraft(
     templateNo: data.template.templateNo,
     status: data.template.status,
   };
+}
+
+export async function loadDesignerLibraryAssets(
+  fetcher: StudioFetcher = fetch,
+): Promise<DesignerLibraryAsset[]> {
+  const response = await fetcher("/api/designer/assets", { cache: "no-store" });
+  const data = await response.json();
+  if (!response.ok || !Array.isArray(data.assets)) {
+    throw new Error(data.error || "Library Designer belum dapat dimuat.");
+  }
+  return data.assets as DesignerLibraryAsset[];
+}
+
+export async function uploadDesignerLibraryAsset(
+  file: File,
+  fetcher: StudioFetcher = fetch,
+): Promise<DesignerLibraryAsset> {
+  const formData = new FormData();
+  formData.append("file", file);
+  const response = await fetcher("/api/designer/assets", {
+    method: "POST",
+    body: formData,
+  });
+  const data = await response.json();
+  if (!response.ok || !data.asset) {
+    throw new Error(data.error || "Aset Designer belum dapat diunggah.");
+  }
+  return data.asset as DesignerLibraryAsset;
 }
 
 export async function uploadStudioAsset(
