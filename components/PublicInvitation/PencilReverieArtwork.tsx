@@ -65,7 +65,7 @@ const gallery: Drawing[] = [
   drawings.polaroid, drawings.booksScene, drawings.magnolia,
 ];
 
-export function PencilMemoryGallery() {
+export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) {
   const [index, setIndex] = useState<number | null>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -85,7 +85,9 @@ export function PencilMemoryGallery() {
   return <>
     <div className="pr-memory-grid">
       {gallery.map((item,i)=><button className="pr-polaroid-button" key={item.file}
-        type="button" aria-label={"Perbesar: "+item.caption} onClick={e=>open(i,e.currentTarget)}>
+        type="button" data-studio-native-object={`object:gallery:memory-${i + 1}`}
+        aria-label={preview ? `Pilih ilustrasi ${i + 1}` : "Perbesar: "+item.caption}
+        onClick={e=>{ if (preview) { e.preventDefault(); return; } open(i,e.currentTarget); }}>
         <span className="pr-polaroid-sheet">
           <Image src={root+item.file} width={item.width} height={item.height}
             sizes="(max-width: 640px) 42vw, 225px" loading="lazy" alt="" className="pr-polaroid-image"/>
@@ -93,7 +95,7 @@ export function PencilMemoryGallery() {
         </span>
       </button>)}
     </div>
-    {index!==null && <div className="pr-lightbox" role="dialog" aria-label="Lihat ilustrasi" aria-modal="true"
+    {!preview && index!==null && <div className="pr-lightbox" role="dialog" aria-label="Lihat ilustrasi" aria-modal="true"
       onTouchStart={e=>{beginTouch.current=e.touches[0]?.clientX??null;}}
       onTouchEnd={e=>{if(beginTouch.current===null)return;const dx=e.changedTouches[0].clientX-beginTouch.current;beginTouch.current=null;if(Math.abs(dx)>65)shift(dx<0?1:-1);}}
       onKeyDown={e=>{
