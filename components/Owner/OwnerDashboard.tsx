@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import SessionLogoutButton from "@/components/Auth/SessionLogoutButton";
 import AdminPayments from "@/components/Admin/AdminPayments";
 import OwnerBusinessInsights from "@/components/Owner/OwnerBusinessInsights";
+import OwnerTemplateReview from "@/components/Owner/OwnerTemplateReview";
 
 type PackageAccess = {
   digital: boolean;
@@ -177,6 +178,7 @@ export default function OwnerDashboard() {
       </div>
 
       <OwnerBusinessInsights />
+      <OwnerTemplateReview />
       <AdminPayments />
 
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
