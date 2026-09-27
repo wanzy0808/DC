@@ -30,7 +30,7 @@ import StudioStageControls from "@/components/InvitationStudio/StudioStageContro
 import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
 import StudioNativeTransformHandles from "@/components/InvitationStudio/StudioNativeTransformHandles";
 import { defaultNativeVisualTransform, isNativeVisualKey, type NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
-import { isTemplateIllustration, MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
+import { isTemplateIllustration, MAX_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
   invitationPalettes,
@@ -74,13 +74,16 @@ import {
 } from "@/components/InvitationStudio/designer-layer-geometry";
 import {
   deleteStudioAsset,
+  loadDesignerLibraryAssets,
   loadStudioInvitation,
   loadStudioTemplateDraft,
   makeStudioSavedState,
   makeStudioServerRevision,
   saveStudioInvitation,
   saveStudioTemplateDraft,
+  uploadDesignerLibraryAsset,
   uploadStudioAsset,
+  type DesignerLibraryAsset,
 } from "@/components/InvitationStudio/designer-persistence";
 import { useStudioCanvasPan } from "@/components/InvitationStudio/useStudioCanvasPan";
 import { useStudioCanvasSelectionMarkers } from "@/components/InvitationStudio/useStudioCanvasSelectionMarkers";
@@ -145,8 +148,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   };
   const catalog = useTemplateCatalog();
   const readyTemplates = catalog.filter((item) => item.ready);
+  const maxAssetLayers = templateMode ? MAX_TEMPLATE_ASSET_LAYERS : MAX_ASSET_LAYERS;
   const [selectedCatalogKey, setSelectedCatalogKey] = useState("botanical-ivory");
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
+  const [designerLibraryAssets, setDesignerLibraryAssets] = useState<DesignerLibraryAsset[]>([]);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [cropModeSlot, setCropModeSlot] = useState<CroppablePhotoSlot | null>(null);
@@ -236,6 +241,19 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     textInsertPoint.current = null;
     textTypingLayer.current = null;
   }, [panel]);
+  useEffect(() => {
+    if (!templateMode) {
+      setDesignerLibraryAssets([]);
+      return;
+    }
+    let active = true;
+    loadDesignerLibraryAssets()
+      .then((assets) => { if (active) setDesignerLibraryAssets(assets); })
+      .catch((error) => {
+        if (active) setNotice(error instanceof Error ? error.message : "Library Designer belum dapat dimuat.");
+      });
+    return () => { active = false; };
+  }, [templateMode]);
 
   const [design, setDesign] = useState<InvitationDesignState>({
     template: "botanical-ivory",
@@ -865,7 +883,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection; sectionInstanceId?: string } = { x: 50, y: 38 }) {
     const section = position.section ?? "cover";
     const sectionInstanceId = position.sectionInstanceId ?? sectionInstanceFor(section);
-    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
+    if (!isTemplateIllustration(src) || design.layers.length >= maxAssetLayers || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, { id, src, x: position.x, y: position.y, section, sectionInstanceId, width: 28, opacity: 1 }] });
     setSelectedPhotoSlot(null);
@@ -876,7 +894,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function addShapeObject(shape: InvitationShapeKind) {
     const section = textTargetSection;
-    if (design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return;
+    if (design.layers.length >= maxAssetLayers || design.sections[section] === false) return;
     const id = crypto.randomUUID().replace(/-/g, "");
     const accent = palette?.accent ?? "#C07A84";
     const size = shape === "circle" ? 28 : shape === "line" ? 42 : 38;
@@ -917,7 +935,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     section: StudioObjectSection,
     position: { x: number; y: number; sectionInstanceId?: string } = { x: 50, y: 48 },
   ) {
-    if (!text.trim() || design.layers.length >= MAX_ASSET_LAYERS || design.sections[section] === false) return null;
+    if (!text.trim() || design.layers.length >= maxAssetLayers || design.sections[section] === false) return null;
     const id = crypto.randomUUID().replace(/-/g, "");
     change({ layers: [...design.layers, {
       id, kind: "text", src: "", text: text.slice(0, 180), section,
@@ -1077,7 +1095,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function cloneAssetLayers(sourceLayers: InvitationAssetLayer[]) {
-    const available = MAX_ASSET_LAYERS - design.layers.length;
+    const available = maxAssetLayers - design.layers.length;
     if (!sourceLayers.length || sourceLayers.length > available) {
       if (sourceLayers.length > available) {
         setNotice(locale === "en" ? "Not enough layer slots to paste all selected objects." : "Slot layer tidak cukup untuk menempel semua objek terpilih.");
@@ -1129,7 +1147,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function beginAssetDrag(src: string) {
-    if (!isTemplateIllustration(src) || design.layers.length >= MAX_ASSET_LAYERS) return;
+    if (!isTemplateIllustration(src) || design.layers.length >= maxAssetLayers) return;
     draggedAssetSrc.current = src;
   }
 
@@ -1143,7 +1161,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function onAssetDragOver(event: DragEvent<HTMLDivElement>) {
-    if (!draggedAssetSrc.current || design.layers.length >= MAX_ASSET_LAYERS) return;
+    if (!draggedAssetSrc.current || design.layers.length >= maxAssetLayers) return;
     event.preventDefault();
     const rect = canvasScrollRef.current?.getBoundingClientRect();
     if (rect && event.clientY > rect.bottom - 48) canvasScrollRef.current!.scrollTop += 16;
@@ -1270,7 +1288,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const sourceLayers = design.layers.filter((layer) =>
       (layer.section ?? "cover") === source.key
       && (layer.sectionInstanceId ?? (layer.section ?? "cover")) === source.id);
-    if (design.layers.length + sourceLayers.length > MAX_ASSET_LAYERS) {
+    if (design.layers.length + sourceLayers.length > maxAssetLayers) {
       setNotice(locale === "en"
         ? "Not enough object slots to duplicate this section."
         : "Slot objek tidak cukup untuk menduplikasi section ini.");
@@ -1513,11 +1531,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         setCopiedAssetLayer(copies.at(-1) ?? null);
         removeAssetLayer(cuttable.at(-1)!.id);
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "v") {
-        if ((!copiedAssetLayers.length && !copiedAssetLayer) || design.layers.length >= MAX_ASSET_LAYERS) return;
+        if ((!copiedAssetLayers.length && !copiedAssetLayer) || design.layers.length >= maxAssetLayers) return;
         event.preventDefault();
         pasteAssetLayer();
       } else if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "d") {
-        if (!currentClipboardSelection(false).length || design.layers.length >= MAX_ASSET_LAYERS) return;
+        if (!currentClipboardSelection(false).length || design.layers.length >= maxAssetLayers) return;
         event.preventDefault();
         duplicateSelectedAssetLayer();
       } else if (!modifier && !event.altKey && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
@@ -1555,6 +1573,19 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setHistory((current) => [...current, designKey]);
     setDesign(invitationDesignStateFromKey(key, design.decor));
     setFuture((current) => current.slice(0, -1));
+  }
+
+  async function uploadDesignerArtwork(file: File) {
+    if (!templateMode) return;
+    setNotice("Mengunggah artwork dan mengoptimasi ke WebP...");
+    try {
+      const uploaded = await uploadDesignerLibraryAsset(file);
+      setDesignerLibraryAssets((current) => [uploaded, ...current.filter((item) => item.id !== uploaded.id)]);
+      setNotice("Artwork WebP ditambahkan ke Library Saya. Seret ke canvas untuk memakainya.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Artwork belum dapat diunggah.");
+      throw error;
+    }
   }
 
   async function uploadAsset(file: File, assetType: "IMAGE" | "AUDIO") {
@@ -1765,7 +1796,16 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             />
           )}
           {panel === "text" && <TextObjectPanel layers={design.layers} selectedId={selectedLayerId} targetSection={textTargetSection} selectedFont={design.font} onAdd={addTextObject} onSelect={focusDesignObject} onFontSelect={(value) => change({ font: value })} />}
-          {panel === "assets" && <AssetPanel layers={design.layers} templateKey={design.template} onDragAssetStart={beginAssetDrag} onDragAssetEnd={endAssetDrag} onAddShape={addShapeObject} />}
+          {panel === "assets" && <AssetPanel
+            layers={design.layers}
+            templateKey={design.template}
+            onDragAssetStart={beginAssetDrag}
+            onDragAssetEnd={endAssetDrag}
+            onAddShape={addShapeObject}
+            libraryAssets={templateMode ? designerLibraryAssets : []}
+            onUploadLibraryAsset={templateMode ? uploadDesignerArtwork : undefined}
+            maxLayers={maxAssetLayers}
+          />}
           {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
           </fieldset>
         </aside>
