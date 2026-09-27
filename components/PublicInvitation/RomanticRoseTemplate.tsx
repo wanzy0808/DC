@@ -378,7 +378,7 @@ export default function RomanticRoseTemplate({
                                 <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                               </div>
                             ))}
-                          </div> : <p className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
+                          </div> : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
                         </section>
           ))}
 
@@ -395,7 +395,7 @@ export default function RomanticRoseTemplate({
                               </div>
                             ))}
                           </div>
-                        ) : <p className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
+                        ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
                       </section>
           ))}
 
@@ -440,7 +440,7 @@ export default function RomanticRoseTemplate({
                             <p data-studio-native-object="object:gift:account-name" className="mt-2 text-sm font-semibold">{invitation.giftAccountName}</p>
                             <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all font-[family-name:var(--font-dc-heading)] text-lg">{invitation.giftAccountNumber}</p>
                             {invitation.giftAccountNumber && <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={() => { if (!preview) navigator.clipboard?.writeText(invitation.giftAccountNumber || ""); }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
-                          </div> : <p className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
+                          </div> : <p data-studio-native-object="object:gift:empty-copy" className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
                         </section>
           ))}
 
