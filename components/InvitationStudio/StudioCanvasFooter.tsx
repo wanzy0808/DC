@@ -13,7 +13,7 @@ const englishTitles: Partial<Record<InvitationSectionKey, string>> = {
 };
 
 export default function StudioCanvasFooter({
-  locale, items, activeId, zoom, onNavigate, onZoomOut, onResetZoom, onFit, onZoomIn,
+  locale, items, activeId, zoom, onNavigate, onZoomOut, onZoomChange, onResetZoom, onFit, onZoomIn,
 }: {
   locale: string;
   items: CanvasNavigationItem[];
@@ -21,6 +21,7 @@ export default function StudioCanvasFooter({
   zoom: number;
   onNavigate: (id: string) => void;
   onZoomOut: () => void;
+  onZoomChange: (zoom: number) => void;
   onResetZoom: () => void;
   onFit: () => void;
   onZoomIn: () => void;
@@ -46,10 +47,16 @@ export default function StudioCanvasFooter({
         </button>
       </div>
       <div className="dc-studio-canvas-zoom" role="group" aria-label={en ? "Canvas zoom" : "Zoom kanvas"}>
-        <button type="button" onClick={onZoomOut} disabled={zoom <= 0.7} aria-label={en ? "Zoom out canvas" : "Perkecil kanvas"}><ZoomOut size={15} /></button>
-        <button type="button" onClick={onResetZoom} aria-label={en ? "Reset canvas zoom to 100 percent" : "Reset zoom kanvas ke 100 persen"}>{Math.round(zoom * 100)}%</button>
+        <button type="button" onClick={onZoomOut} disabled={zoom <= 0.1} aria-label={en ? "Zoom out canvas" : "Perkecil kanvas"}><ZoomOut size={15} /></button>
+        <input type="range" min={10} max={500} step={1} value={Math.round(zoom * 100)}
+          onChange={(event) => onZoomChange(Number(event.currentTarget.value) / 100)}
+          aria-label={en ? "Canvas zoom percentage" : "Persentase zoom kanvas"}
+          aria-valuetext={`${Math.round(zoom * 100)}%`} />
+        <button type="button" className="dc-studio-canvas-zoom-value" onClick={onResetZoom}
+          aria-label={en ? "Reset canvas zoom to 100 percent" : "Reset zoom kanvas ke 100 persen"}
+          title={en ? "Reset to 100%" : "Kembali ke 100%"}>{Math.round(zoom * 100)}%</button>
         <button type="button" onClick={onFit} aria-label={en ? "Fit canvas to workspace" : "Sesuaikan kanvas ke area kerja"}>Fit</button>
-        <button type="button" onClick={onZoomIn} disabled={zoom >= 1.3} aria-label={en ? "Zoom in canvas" : "Perbesar kanvas"}><ZoomIn size={15} /></button>
+        <button type="button" onClick={onZoomIn} disabled={zoom >= 5} aria-label={en ? "Zoom in canvas" : "Perbesar kanvas"}><ZoomIn size={15} /></button>
       </div>
     </div>
   );
