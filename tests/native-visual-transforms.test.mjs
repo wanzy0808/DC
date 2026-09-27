@@ -141,10 +141,18 @@ test("theme-authored decorations and special cover headings are selectable in St
   assert.match(themeScenes, /object:envelope:open-button/);
   assert.match(pencil, /data-studio-native-heading/);
   assert.match(pencil, /object:cover:main-art/);
+  assert.match(pencil, /object:envelope:copy-panel/);
+  assert.match(pencil, /object:cover:copy-panel/);
   assert.match(zen, /data-studio-native-heading/);
   assert.match(zen, /object:envelope:mizuhiki/);
+  assert.match(zen, /object:envelope:paper-stage/);
+  assert.match(zen, /object:envelope:letter/);
   assert.match(pencilArt, /object:\$\{section\}:theme-art/);
   assert.match(zenArt, /object:\$\{section\}:theme-art/);
+  assert.match(zenArt, /object:gallery:memory-room/);
+  assert.match(zenArt, /object:gallery:memory-gradient/);
+  assert.match(zenArt, /object:gallery:memory-cup/);
+  assert.match(zenArt, /object:gallery:memory-frame/);
 });
 
 
