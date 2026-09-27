@@ -944,7 +944,16 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedLayerIds(nextIds);
     setSelectedLayerId(nextIds.includes(id) ? id : nextIds.at(-1) ?? null);
     showDesignSection(layer.section ?? "cover");
-    if (!fromCanvas) requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
+    if (!fromCanvas) requestAnimationFrame(() => {
+      const section = layer.section ?? "cover";
+      const instanceId = layer.sectionInstanceId ?? section;
+      const instance = instanceId === "envelope"
+        ? null
+        : canvasScrollRef.current?.querySelector<HTMLElement>(`[data-section-instance-id="${CSS.escape(instanceId)}"]`);
+      (instance?.querySelector(`[data-invitation-section="${section}"]`)
+        ?? canvasScrollRef.current?.querySelector(`[data-invitation-section="${section}"]`))
+        ?.scrollIntoView({ block: "center" });
+    });
   }
 
   function groupSelectedAssetLayers() {
