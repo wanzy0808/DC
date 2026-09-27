@@ -24,7 +24,7 @@ test("built-in transforms round-trip without changing invitation data", () => {
 
 test("built-in transform codec rejects arbitrary CSS keys and bounds geometry", () => {
   const values = sanitizeNativeVisualTransforms({
-    "copy:greeting": { x: 900, y: -900, scaleX: 99, scaleY: 0, rotation: 500 },
+    "copy:greeting": { x: 9000, y: -9000, scaleX: 99, scaleY: 0, rotation: 500 },
     "copy:greeting\"}{color:red}": { x: 10, y: 10, scaleX: 1, scaleY: 1, rotation: 0 },
     "element:gift:button": { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0 },
   });
