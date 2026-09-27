@@ -348,7 +348,7 @@ export default function UniversalInvitationTemplate({
       />
     ) : null;
 
-  const objectOverlay = (target: StudioObjectSection, instanceId = target) => <InvitationAssetLayers layers={illustrationLayers} section={target} sectionInstanceId={instanceId}
+  const objectOverlay = (target: StudioObjectSection, instanceId: string = target) => <InvitationAssetLayers layers={illustrationLayers} section={target} sectionInstanceId={instanceId}
     editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer}
     onUpdate={onUpdateAssetLayer} />;
 
