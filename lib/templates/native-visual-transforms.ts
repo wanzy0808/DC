@@ -54,8 +54,10 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
     if (!isNativeVisualKey(key) || !raw || typeof raw !== "object" || Array.isArray(raw)) continue;
     const source = raw as Record<string, unknown>;
     const transform = {
-      x: clamp(source.x, -150, 150, 0),
-      y: clamp(source.y, -150, 150, 0),
+      // Native template objects use translate percentages relative to their own box.
+      // A wider bound is required so small ornaments can still travel across a full section.
+      x: clamp(source.x, -2000, 2000, 0),
+      y: clamp(source.y, -2000, 2000, 0),
       scaleX: clamp(source.scaleX, 0.25, 3, 1),
       scaleY: clamp(source.scaleY, 0.25, 3, 1),
       rotation: clamp(source.rotation, -180, 180, 0),
