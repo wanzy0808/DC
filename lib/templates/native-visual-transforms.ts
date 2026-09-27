@@ -2,12 +2,24 @@ import type { CSSProperties } from "react";
 import { editableInvitationCopyFields } from "@/lib/templates/editable-copy";
 import { invitationContentSectionKeys } from "@/lib/templates/section-layout";
 
+export type NativeVisualTextAlign = "left" | "center" | "right";
+
 export type NativeVisualTransform = {
   x: number;
   y: number;
   scaleX: number;
   scaleY: number;
   rotation: number;
+  /** Optional visual overrides share the same persisted nativeVisuals token. */
+  opacity?: number;
+  color?: string;
+  background?: string;
+  borderColor?: string;
+  fontSize?: number;
+  fontWeight?: number;
+  textAlign?: NativeVisualTextAlign;
+  letterSpacing?: number;
+  lineHeight?: number;
 };
 export type NativeVisualTransforms = Record<string, NativeVisualTransform>;
 
@@ -16,6 +28,8 @@ export const defaultNativeVisualTransform: NativeVisualTransform = {
 };
 
 const nativeObjectKey = /^object:(?:envelope|cover|greeting|identity|event|dateTime|gallery|countdown|location|rsvp|wishes|gift|closing|footer):[a-zA-Z0-9_-]{1,64}(?::[a-zA-Z0-9_-]{1,64})?$/;
+const nativeTextObjectId = /(?:^|[-_])(?:kicker|date|name|names|venue|address|title|heading|subtitle|signature|quote|hashtag|copy|greeting|timezone|start|end|bank-name|account-name|account-number|dress-code|side-label|ending|parents)(?:$|[-_])/i;
+const hexColor = /^#[0-9a-fA-F]{6}$/;
 
 const keys = new Set<string>([
   ...editableInvitationCopyFields.map((field) => `copy:${field}`),
@@ -25,6 +39,19 @@ const keys = new Set<string>([
   "rsvp:title", "rsvp:button", "rsvp:inputs",
   "photo:cover", "photo:envelope:cover", "photo:personOne", "photo:personTwo",
 ]);
+
+export function nativeVisualCapabilities(key: string) {
+  const parts = key.split(":");
+  const kind = parts[0];
+  if (kind === "photo") return { opacity: true, colors: false, typography: false };
+  if (kind === "element" || kind === "rsvp") return { opacity: false, colors: false, typography: false };
+  if (kind === "heading" || kind === "copy") return { opacity: true, colors: true, typography: true };
+  if (kind === "object") {
+    const objectId = parts[2] ?? "";
+    return { opacity: true, colors: true, typography: nativeTextObjectId.test(objectId) };
+  }
+  return { opacity: false, colors: false, typography: false };
+}
 
 export function isNativeVisualKey(key: string) {
   if (keys.has(key) || nativeObjectKey.test(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}(?::[a-zA-Z0-9_-]{1,64})?$/.test(key)) return true;
@@ -46,6 +73,13 @@ export function isNativeVisualKey(key: string) {
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
   typeof value === "number" && Number.isFinite(value)
     ? Math.round(Math.min(max, Math.max(min, value)) * 100) / 100 : fallback;
+const optionalNumber = (value: unknown, min: number, max: number) =>
+  typeof value === "number" && Number.isFinite(value)
+    ? Math.round(Math.min(max, Math.max(min, value)) * 100) / 100 : undefined;
+const optionalColor = (value: unknown) =>
+  typeof value === "string" && hexColor.test(value) ? value.toLowerCase() : undefined;
+const optionalAlign = (value: unknown): NativeVisualTextAlign | undefined =>
+  value === "left" || value === "center" || value === "right" ? value : undefined;
 
 export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTransforms {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
@@ -53,19 +87,36 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
   for (const [key, raw] of Object.entries(value).slice(0, 96)) {
     if (!isNativeVisualKey(key) || !raw || typeof raw !== "object" || Array.isArray(raw)) continue;
     const source = raw as Record<string, unknown>;
-    const transform = {
-      // Native template objects use translate percentages relative to their own box.
-      // A wider bound is required so small ornaments can still travel across a full section.
+    const capabilities = nativeVisualCapabilities(key);
+    const transform: NativeVisualTransform = {
       x: clamp(source.x, -2000, 2000, 0),
       y: clamp(source.y, -2000, 2000, 0),
       scaleX: clamp(source.scaleX, 0.25, 3, 1),
       scaleY: clamp(source.scaleY, 0.25, 3, 1),
       rotation: clamp(source.rotation, -180, 180, 0),
     };
-    if (Object.keys(transform).some((name) =>
-      transform[name as keyof NativeVisualTransform] !== defaultNativeVisualTransform[name as keyof NativeVisualTransform])) {
-      result[key] = transform;
+    if (capabilities.opacity) transform.opacity = optionalNumber(source.opacity, 0.2, 1);
+    if (capabilities.colors) {
+      transform.color = optionalColor(source.color);
+      transform.background = optionalColor(source.background);
+      transform.borderColor = optionalColor(source.borderColor);
     }
+    if (capabilities.typography) {
+      transform.fontSize = optionalNumber(source.fontSize, 8, 160);
+      const weight = optionalNumber(source.fontWeight, 100, 900);
+      transform.fontWeight = weight === undefined ? undefined : Math.round(weight / 100) * 100;
+      transform.textAlign = optionalAlign(source.textAlign);
+      transform.letterSpacing = optionalNumber(source.letterSpacing, -5, 20);
+      transform.lineHeight = optionalNumber(source.lineHeight, 0.7, 3);
+    }
+    for (const [property, propertyValue] of Object.entries(transform)) {
+      if (propertyValue === undefined) delete (transform as Record<string, unknown>)[property];
+    }
+    const hasTransform = transform.x !== 0 || transform.y !== 0 || transform.scaleX !== 1 ||
+      transform.scaleY !== 1 || transform.rotation !== 0;
+    const hasVisualOverride = Object.keys(transform).some((name) =>
+      !["x", "y", "scaleX", "scaleY", "rotation"].includes(name));
+    if (hasTransform || hasVisualOverride) result[key] = transform;
   }
   return result;
 }
@@ -122,6 +173,15 @@ export function nativeVisualStyle(transform: NativeVisualTransform): CSSProperti
     rotate: `${transform.rotation}deg`,
     scale: `${transform.scaleX} ${transform.scaleY}`,
     transformOrigin: "center",
+    opacity: transform.opacity,
+    color: transform.color,
+    backgroundColor: transform.background,
+    borderColor: transform.borderColor,
+    fontSize: transform.fontSize,
+    fontWeight: transform.fontWeight,
+    textAlign: transform.textAlign,
+    letterSpacing: transform.letterSpacing,
+    lineHeight: transform.lineHeight,
   };
 }
 
@@ -140,6 +200,21 @@ export function nativeVisualStyleSheet(designKey: string) {
   return Object.entries(transforms).map(([key, transform]) => {
     const selector = nativeVisualSelector(key);
     if (!selector) return "";
-    return `.${scope} ${selector}{translate:${transform.x}% ${transform.y}%;rotate:${transform.rotation}deg;scale:${transform.scaleX} ${transform.scaleY};transform-origin:center;}`;
+    const declarations = [
+      `translate:${transform.x}% ${transform.y}%`,
+      `rotate:${transform.rotation}deg`,
+      `scale:${transform.scaleX} ${transform.scaleY}`,
+      "transform-origin:center",
+      transform.opacity !== undefined ? `opacity:${transform.opacity}` : "",
+      transform.color ? `color:${transform.color}` : "",
+      transform.background ? `background-color:${transform.background}` : "",
+      transform.borderColor ? `border-color:${transform.borderColor}` : "",
+      transform.fontSize !== undefined ? `font-size:${transform.fontSize}px` : "",
+      transform.fontWeight !== undefined ? `font-weight:${transform.fontWeight}` : "",
+      transform.textAlign ? `text-align:${transform.textAlign}` : "",
+      transform.letterSpacing !== undefined ? `letter-spacing:${transform.letterSpacing}px` : "",
+      transform.lineHeight !== undefined ? `line-height:${transform.lineHeight}` : "",
+    ].filter(Boolean).join(";");
+    return `.${scope} ${selector}{${declarations};}`;
   }).join("\n");
 }

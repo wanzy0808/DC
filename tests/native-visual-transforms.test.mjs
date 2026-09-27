@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
+  nativeVisualCapabilities,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -221,3 +222,60 @@ test("template-authored supporting visuals remain directly selectable without se
   assert.match(selection, /studioObjectSections\.includes\(sectionName\)/);
 });
 
+
+
+test("native visual styling stays inside the validated nativeVisuals contract", () => {
+  const values = sanitizeNativeVisualTransforms({
+    "object:cover:kicker": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      opacity: 9,
+      color: "#ABCDEF",
+      background: "red",
+      borderColor: "#123456",
+      fontSize: 999,
+      fontWeight: 557,
+      textAlign: "justify",
+      letterSpacing: 99,
+      lineHeight: 0,
+    },
+  });
+  assert.deepEqual(values["object:cover:kicker"], {
+    x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+    opacity: 1,
+    color: "#abcdef",
+    borderColor: "#123456",
+    fontSize: 160,
+    fontWeight: 600,
+    letterSpacing: 20,
+    lineHeight: 0.7,
+  });
+  const css = nativeVisualStyleSheet(withNativeVisualTransforms("botanical-ivory", values));
+  assert.match(css, /opacity:1/);
+  assert.match(css, /color:#abcdef/);
+  assert.match(css, /border-color:#123456/);
+  assert.match(css, /font-size:160px/);
+  assert.doesNotMatch(css, /background-color:red|text-align:justify/);
+});
+
+test("native visual capabilities avoid duplicating protected component styling", () => {
+  assert.deepEqual(nativeVisualCapabilities("heading:cover"), { opacity: true, colors: true, typography: true });
+  assert.deepEqual(nativeVisualCapabilities("copy:greeting"), { opacity: true, colors: true, typography: true });
+  assert.deepEqual(nativeVisualCapabilities("object:location:venue"), { opacity: true, colors: true, typography: true });
+  assert.deepEqual(nativeVisualCapabilities("object:identity:our-story-heading"), { opacity: true, colors: true, typography: true });
+  assert.deepEqual(nativeVisualCapabilities("object:cover:flower-left"), { opacity: true, colors: true, typography: false });
+  assert.deepEqual(nativeVisualCapabilities("photo:cover"), { opacity: true, colors: false, typography: false });
+  assert.deepEqual(nativeVisualCapabilities("element:gift:button"), { opacity: false, colors: false, typography: false });
+  assert.deepEqual(nativeVisualCapabilities("rsvp:button"), { opacity: false, colors: false, typography: false });
+});
+
+test("native inspector exposes visual styling without adding functional controls", () => {
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  assert.match(inspector, /nativeVisualCapabilities/);
+  assert.match(inspector, /current\.opacity/);
+  assert.match(inspector, /current\.fontSize/);
+  assert.match(inspector, /current\.fontWeight/);
+  assert.match(inspector, /current\.textAlign/);
+  assert.match(inspector, /current\.letterSpacing/);
+  assert.match(inspector, /current\.lineHeight/);
+  assert.doesNotMatch(inspector, /href|endpoint|required|capacity/i);
+});
