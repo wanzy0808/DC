@@ -68,6 +68,9 @@ function EditableLayer({
 }) {
   const root = useRef<HTMLDivElement>(null);
   const motion = useRef<HTMLSpanElement>(null);
+  const textEditor = useRef<HTMLSpanElement>(null);
+  const textDraft = useRef(layer.text ?? "");
+  const [editingText, setEditingText] = useState(false);
   const gesture = useRef<{
     pointer: number; mode: "move" | "resize" | "rotate"; handle?: ObjectResizeHandle; objectWidth: number; objectHeight: number;
     startX: number; startY: number; x: number; y: number; width: number; height: number; rotation: number;
@@ -76,11 +79,28 @@ function EditableLayer({
   } | null>(null);
   const [live, setLive] = useState<LayerPatch>({});
   useEffect(() => { setLive({}); }, [layer.x, layer.y, layer.width, layer.height, layer.rotation, layer.section, layer.sectionInstanceId]);
+  useEffect(() => {
+    if (!editingText) textDraft.current = layer.text ?? "";
+  }, [editingText, layer.text]);
+  useEffect(() => {
+    if (!editingText || !textEditor.current) return;
+    const node = textEditor.current;
+    node.focus({ preventScroll: true });
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }, [editingText]);
+  useEffect(() => {
+    if (!selected && editingText) setEditingText(false);
+  }, [selected, editingText]);
   const displayed = { ...layer, ...live };
   const shadowFilter = layerShadowFilter(layer);
   useInvitationLayerAnimation(motion, layer);
 
   function begin(event: PointerEvent<HTMLElement>, mode: "move" | "resize" | "rotate", handle?: ObjectResizeHandle) {
+    if (editingText) return;
     if (event.currentTarget.closest<HTMLElement>('.dc-studio-canvas-scroll[data-space-pan="true"]')) return;
     if (!editable || !root.current || event.button !== 0) return;
     event.stopPropagation();
@@ -202,14 +222,42 @@ function EditableLayer({
       onUpdate?.(layer.id, patch);
     }
   }
-  function keys(event: KeyboardEvent<HTMLButtonElement>) {
-    if (!editable || layer.locked || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
+  function keys(event: KeyboardEvent<HTMLElement>) {
+    if (!editable || editingText || layer.locked || !onUpdate || !["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) return;
     event.preventDefault();
     const step = event.shiftKey ? 5 : 1;
     onUpdate(layer.id, {
       x: clamp(layer.x + (event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0), 0, 100),
       y: clamp(layer.y + (event.key === "ArrowUp" ? -step : event.key === "ArrowDown" ? step : 0), 0, 100),
     });
+  }
+
+  function beginTextEditing() {
+    if (!editable || layer.kind !== "text" || layer.locked || !onUpdate) return;
+    onSelect?.(layer.id, false);
+    textDraft.current = layer.text ?? "";
+    setEditingText(true);
+  }
+
+  function normalizeEditableText(node: HTMLElement) {
+    return node.innerText.replace(/\r\n?/g, "\n").slice(0, 180);
+  }
+
+  function keepCaretAtEnd(node: HTMLElement) {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  }
+
+  function commitTextEditing() {
+    if (!editingText) return;
+    const next = (textEditor.current ? normalizeEditableText(textEditor.current) : textDraft.current).slice(0, 180);
+    textDraft.current = next;
+    setEditingText(false);
+    if (next !== (layer.text ?? "")) onUpdate?.(layer.id, { text: next });
   }
 
   const shapeVisual = layer.kind === "shape" ? (
@@ -243,28 +291,84 @@ function EditableLayer({
       transformOrigin: "center", touchAction: "none",
     }}>
       {editable ? (
-        <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif" : layer.kind === "shape" ? "Pilih dan geser bentuk" : "Pilih dan geser ilustrasi"}
-          aria-pressed={selected}
-          className={`pointer-events-auto relative block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
-          style={{ touchAction: "none" }}
-          onClick={(event) => { event.stopPropagation(); if (event.detail === 0) onSelect?.(layer.id, event.shiftKey); }} onPointerDown={(event) => begin(event, "move")}
-          onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
-          onKeyDown={keys}>
-          <span ref={motion} data-studio-layer-motion className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
-            {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
-              fontFamily: layer.fontFamily
-                ? invitationFontFamily(layer.fontFamily)
-                : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
-              fontSize: layer.fontSize ?? 24,
-              fontWeight: layer.fontWeight ?? 400,
-              textAlign: layer.textAlign ?? "center",
-              letterSpacing: layer.letterSpacing ?? 0,
-              lineHeight: layer.lineHeight ?? 1.2,
-              color: layer.color ?? "#C07A84",
-              filter: shadowFilter,
-            }}><InvitationLayerTextContent text={layer.text ?? ""} unit={layer.textAnimationUnit} /></span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
-          </span>
-        </button>
+        editingText && layer.kind === "text" ? (
+          <div
+            className={`pointer-events-auto relative block w-full border-0 bg-transparent p-0 text-inherit outline-none ${displayed.height === undefined ? "" : "h-full"}`}
+            data-studio-text-editing="true"
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <span ref={motion} data-studio-layer-motion className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
+              <span
+                ref={textEditor}
+                role="textbox"
+                aria-multiline="true"
+                contentEditable
+                suppressContentEditableWarning
+                className="block min-h-[1em] w-full whitespace-pre-wrap break-words outline-none"
+                style={{
+                  fontFamily: layer.fontFamily
+                    ? invitationFontFamily(layer.fontFamily)
+                    : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+                  fontSize: layer.fontSize ?? 24,
+                  fontWeight: layer.fontWeight ?? 400,
+                  textAlign: layer.textAlign ?? "center",
+                  letterSpacing: layer.letterSpacing ?? 0,
+                  lineHeight: layer.lineHeight ?? 1.2,
+                  color: layer.color ?? "#C07A84",
+                  filter: shadowFilter,
+                }}
+                onInput={(event) => {
+                  const node = event.currentTarget;
+                  const next = normalizeEditableText(node);
+                  textDraft.current = next;
+                  if (node.innerText.length > 180) {
+                    node.innerText = next;
+                    keepCaretAtEnd(node);
+                  }
+                }}
+                onBlur={commitTextEditing}
+                onKeyDown={(event) => {
+                  event.stopPropagation();
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                  }
+                }}
+              >{layer.text ?? ""}</span>
+            </span>
+          </div>
+        ) : (
+          <button type="button" aria-label={layer.kind === "text" ? "Pilih dan geser teks dekoratif. Double-click untuk mengedit." : layer.kind === "shape" ? "Pilih dan geser bentuk" : "Pilih dan geser ilustrasi"}
+            aria-pressed={selected}
+            className={`pointer-events-auto relative block w-full border-0 bg-transparent p-0 text-inherit outline-none focus-visible:outline-2 focus-visible:outline-primary ${layer.locked ? "cursor-default" : "cursor-grab active:cursor-grabbing"} ${displayed.height === undefined ? "" : "h-full"}`}
+            style={{ touchAction: "none" }}
+            onClick={(event) => { event.stopPropagation(); if (event.detail === 0) onSelect?.(layer.id, event.shiftKey); }}
+            onDoubleClick={(event) => {
+              if (layer.kind !== "text" || layer.locked) return;
+              event.preventDefault();
+              event.stopPropagation();
+              beginTextEditing();
+            }}
+            onPointerDown={(event) => begin(event, "move")}
+            onPointerMove={move} onPointerUp={end} onPointerCancel={() => { gesture.current = null; setLive({}); onGuides?.({}); }}
+            onKeyDown={keys}>
+            <span ref={motion} data-studio-layer-motion className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
+              {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
+                fontFamily: layer.fontFamily
+                  ? invitationFontFamily(layer.fontFamily)
+                  : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+                fontSize: layer.fontSize ?? 24,
+                fontWeight: layer.fontWeight ?? 400,
+                textAlign: layer.textAlign ?? "center",
+                letterSpacing: layer.letterSpacing ?? 0,
+                lineHeight: layer.lineHeight ?? 1.2,
+                color: layer.color ?? "#C07A84",
+                filter: shadowFilter,
+              }}><InvitationLayerTextContent text={layer.text ?? ""} unit={layer.textAnimationUnit} /></span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`pointer-events-none block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
+            </span>
+          </button>
+        )
       ) : (
         <span ref={motion} data-invitation-layer-motion aria-hidden="true" className={`relative block w-full ${displayed.height === undefined ? "" : "h-full"}`}>
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
@@ -281,7 +385,7 @@ function EditableLayer({
           }}><InvitationLayerTextContent text={layer.text ?? ""} unit={layer.textAnimationUnit} /></span> : layer.kind === "shape" ? shapeVisual : <img src={layer.src} alt="" draggable={false} className={`block w-full select-none ${displayed.height === undefined ? "h-auto" : "h-full object-fill"}`} style={{ transform: `scaleX(${layer.flipX ? -1 : 1}) scaleY(${layer.flipY ? -1 : 1})`, borderRadius: `${layer.radius ?? 0}px`, filter: shadowFilter }} />}
         </span>
       )}
-      {editable && selected && <>
+      {editable && selected && !editingText && <>
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 border border-primary" />
         {layer.locked && <span aria-label="Layer terkunci" title="Layer terkunci" className="pointer-events-none absolute -right-2 -top-2 z-30 grid h-6 w-6 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm"><Lock size={13} /></span>}
         {!layer.locked && <button type="button" aria-label="Putar objek" title="Tarik untuk memutar" className="pointer-events-auto absolute -bottom-10 left-1/2 z-20 grid h-8 w-8 -translate-x-1/2 place-items-center rounded-full border border-primary bg-background text-primary shadow-sm cursor-grab transition hover:bg-primary hover:text-primary-foreground active:cursor-grabbing"
