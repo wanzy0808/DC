@@ -36,9 +36,9 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">Sebuah undangan<br />untuk orang istimewa</p>
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
         </div>
-        <div className="zen-jp-paper-stage" aria-hidden="true">
+        <div className="zen-jp-paper-stage" aria-hidden="true" data-studio-native-object="object:envelope:paper-stage">
           <div className="zen-jp-envelope-shell" data-studio-native-object="object:envelope:shell" />
-          <div className="zen-jp-letter">
+          <div className="zen-jp-letter" data-studio-native-object="object:envelope:letter">
             <span className="zen-jp-letter-kicker" data-studio-native-object="object:envelope:letter-kicker">ZEN ATELIER</span>
             <span className="zen-jp-letter-names" data-studio-native-object="object:envelope:names">{title}</span>
             <span className="zen-jp-letter-rule" data-studio-native-object="object:envelope:letter-rule" />
