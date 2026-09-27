@@ -188,3 +188,27 @@ test("Zen envelope seal participates in native visual transforms", () => {
   const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
   assert.match(zen, /zen-jp-seal" lang="ja" data-studio-native-object="object:envelope:seal"/);
 });
+
+
+test("template-authored supporting visuals remain directly selectable without section wrappers stealing the click", () => {
+  const story = read("components/PublicInvitation/OurStorySection.tsx");
+  const zenGallery = read("components/PublicInvitation/ZenAtelierGallery.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const instance = read("components/PublicInvitation/EditableSectionInstance.tsx");
+
+  assert.match(story, /object:identity:our-story-kicker/);
+  assert.match(story, /object:identity:our-story-heading/);
+  assert.match(story, /object:identity:our-story-divider/);
+  assert.match(zenGallery, /data-studio-photo-id=\{photo\.id\}/);
+  assert.match(zenGallery, /object:gallery:quote/);
+  assert.match(rose, /object:envelope:letter-card/);
+  assert.match(rose, /object:cover:background-photo/);
+  assert.match(rose, /object:cover:gradient-overlay/);
+  assert.match(universal, /object:gallery:memory-panel/);
+  assert.match(universal, /object:gallery:memory-symbols/);
+  assert.match(universal, /object:identity:\$\{slot\}-symbol/);
+  assert.match(instance, /\[data-studio-native-object\]/);
+  assert.match(instance, /\[data-studio-native-heading\]/);
+  assert.match(instance, /\[data-invitation-photo-slot\]/);
+});
