@@ -21,7 +21,7 @@ export type StudioCanvasPanController = {
   canvasPanReady: boolean;
   canvasPanning: boolean;
   setCanvasPanReady: Dispatch<SetStateAction<boolean>>;
-  beginCanvasPan: (event: ReactPointerEvent<HTMLDivElement>) => boolean;
+  beginCanvasPan: (event: ReactPointerEvent<HTMLDivElement>, zoomed?: boolean) => boolean;
   moveCanvasPan: (event: ReactPointerEvent<HTMLDivElement>) => void;
   endCanvasPan: (event: ReactPointerEvent<HTMLDivElement>) => void;
   consumeSuppressedCanvasClick: () => boolean;
@@ -33,8 +33,12 @@ export function useStudioCanvasPan(): StudioCanvasPanController {
   const canvasPan = useRef<CanvasPanSession | null>(null);
   const suppressCanvasClick = useRef(false);
 
-  function beginCanvasPan(event: ReactPointerEvent<HTMLDivElement>) {
-    if (!canvasPanReady || event.button !== 0) return false;
+  function beginCanvasPan(event: ReactPointerEvent<HTMLDivElement>, zoomed = false) {
+    if (event.button !== 0 || (!canvasPanReady && !zoomed)) return false;
+    const target = event.target;
+    if (!canvasPanReady && target instanceof Element && target.closest(
+      'button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object], [data-studio-photo-slot], [data-studio-rsvp-element], [data-studio-section-element]',
+    )) return false;
 
     event.preventDefault();
     const node = event.currentTarget;
