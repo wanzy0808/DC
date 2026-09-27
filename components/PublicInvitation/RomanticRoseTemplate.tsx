@@ -132,6 +132,7 @@ export default function RomanticRoseTemplate({
   onToggleSectionInstance,
   onDuplicateSectionInstance,
   onDeleteSectionInstance,
+  editorMode = "customer",
   personalGuest,
 }: {
   invitation: RoseInvitation;
@@ -159,6 +160,7 @@ export default function RomanticRoseTemplate({
   onToggleSectionInstance?: (id: string) => void;
   onDuplicateSectionInstance?: (id: string) => void;
   onDeleteSectionInstance?: (id: string) => void;
+  editorMode?: "template" | "customer";
 }) {
   const [opened, setOpened] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
@@ -233,7 +235,7 @@ export default function RomanticRoseTemplate({
   }, [opened, sections.envelope]);
 
   const objectOverlay = (target: StudioObjectSection, instanceId: string = target) => <InvitationAssetLayers layers={illustrationLayers} section={target} sectionInstanceId={instanceId}
-    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer} onUpdate={onUpdateAssetLayer} />;
+    editable={preview && Boolean(onUpdateAssetLayer)} editorMode={editorMode} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer} onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (key: InvitationSectionKey, render: (instanceId: string) => React.ReactNode) => {
     const hidden = sections[key] === false;
