@@ -61,8 +61,12 @@ export type InvitationAssetLayer = {
   animationStagger?: number;
 };
 
-export const MAX_ASSET_LAYERS = 10;
-const assetRoots = ["/template/", "/templates/"];
+/** Customer Studio stays intentionally simple; Template Mode may author richer compositions. */
+export const MAX_CUSTOMER_ASSET_LAYERS = 10;
+export const MAX_TEMPLATE_ASSET_LAYERS = 120;
+/** Backwards-compatible UI default for customer-scoped callers. */
+export const MAX_ASSET_LAYERS = MAX_CUSTOMER_ASSET_LAYERS;
+const assetRoots = ["/template/", "/templates/", "/uploads/designer-assets/"];
 const numberBetween = (input: unknown, min: number, max: number, fallback: number) =>
   typeof input === "number" && Number.isFinite(input) ? Math.min(max, Math.max(min, input)) : fallback;
 
@@ -148,7 +152,7 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       }
     }
     output.push(layer);
-    if (output.length === MAX_ASSET_LAYERS) break;
+    if (output.length === MAX_TEMPLATE_ASSET_LAYERS) break;
   }
   return output;
 }
