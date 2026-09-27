@@ -180,8 +180,8 @@ test("generic theme envelope and cover artwork expose transform targets for visu
     "object:cover:starfield",
     "object:cover:card",
   ]) assert.ok(scenes.includes(marker), `missing Studio marker ${marker}`);
-  assert.doesNotMatch(scenes, /<BotanicalSprig /><BotanicalSprig mirrored />/);
-  assert.doesNotMatch(scenes, /<Lines className="mt-9" />/);
+  assert.ok(!scenes.includes("<BotanicalSprig /><BotanicalSprig mirrored />"));
+  assert.ok(!scenes.includes('<Lines className="mt-9" />'));
 });
 
 test("Zen envelope seal participates in native visual transforms", () => {
