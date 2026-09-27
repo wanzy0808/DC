@@ -650,7 +650,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       case "photo":
         selectPhotoVisual(selection.slot);
         if (selection.slot === "gallery" && selection.assetId) {
-          const key = `photo:gallery:${selection.assetId}`;
+          const key = `photo:gallery:${selection.assetId}${selection.instanceId ? `:${selection.instanceId}` : ""}`;
           if (isNativeVisualKey(key)) setSelectedNativeKey(key);
         }
         return;
