@@ -211,4 +211,7 @@ test("template-authored supporting visuals remain directly selectable without se
   assert.match(instance, /\[data-studio-native-object\]/);
   assert.match(instance, /\[data-studio-native-heading\]/);
   assert.match(instance, /\[data-invitation-photo-slot\]/);
+  const selection = read("components/InvitationStudio/studio-canvas-selection.ts");
+  assert.match(selection, /studioObjectSections\.includes\(sectionName\)/);
 });
+
