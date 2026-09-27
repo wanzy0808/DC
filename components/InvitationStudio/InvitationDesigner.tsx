@@ -1232,12 +1232,16 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     change({ copyMotion });
   }
 
-  function resetNarrativeCopyAndMotion(field: EditableInvitationCopyField) {
+  function resetNarrativeCopy(field: EditableInvitationCopyField) {
     const copy = { ...design.copy };
-    const copyMotion = { ...design.copyMotion };
     delete copy[field];
+    change({ copy });
+  }
+
+  function resetCopyMotion(field: EditableInvitationCopyField) {
+    const copyMotion = { ...design.copyMotion };
     delete copyMotion[field];
-    change({ copy, copyMotion });
+    change({ copyMotion });
   }
 
   function addRsvpCustomField() {
@@ -1778,6 +1782,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               sections={design.sections}
               rsvpConfig={design.rsvpConfig}
               eventCategory={invitation?.eventCategory ?? ""}
+              templateKey={design.template}
+              eventDescription={invitation?.description}
+              narrativeCopy={design.copy}
+              onNarrativeCopy={setNarrativeCopy}
+              onResetNarrativeCopy={resetNarrativeCopy}
               onChange={setSection}
               onSelectSection={focusContentSection}
               onSelectElement={focusContentElement}
@@ -2057,7 +2066,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             <StudioSelectionInspector
               locale={locale}
               design={design}
-              invitationDescription={invitation?.description}
               selectedAssetLayer={selectedAssetLayer}
               selectedAssetIndex={selectedAssetIndex}
               selectedPhotoSlot={selectedPhotoSlot}
@@ -2078,9 +2086,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onCloseRsvp={() => setSelectedRsvpElementKey(null)}
               onUpdateSectionElementStyles={updateSectionElementStyles}
               onCloseSectionElement={() => setSelectedSectionElement(null)}
-              onSetNarrativeCopy={setNarrativeCopy}
               onUpdateCopyMotion={updateCopyMotion}
-              onResetNarrativeCopyAndMotion={resetNarrativeCopyAndMotion}
+              onResetCopyMotion={resetCopyMotion}
               onCloseCopy={() => setSelectedCopyField(null)}
               onUpdateSectionStyle={updateSectionStyle}
               onResetSectionStyle={resetSectionStyle}
