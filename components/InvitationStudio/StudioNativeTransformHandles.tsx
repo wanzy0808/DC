@@ -26,7 +26,7 @@ export default function StudioNativeTransformHandles({
   const gesture = useRef<{
     pointer: number; handle: Handle; startX: number; startY: number;
     start: NativeVisualTransform; rect: DOMRect; node: HTMLElement;
-    initialAngle: number; moved: boolean;
+    scrollLeft: number; scrollTop: number; initialAngle: number; moved: boolean;
   } | null>(null);
 
   function target() {
@@ -81,13 +81,14 @@ export default function StudioNativeTransformHandles({
   function calculate(event: PointerEvent<HTMLElement>) {
     const drag = gesture.current;
     if (!drag) return null;
-    const dx = event.clientX - drag.startX;
-    const dy = event.clientY - drag.startY;
+    const canvas = canvasRef.current;
+    const dx = event.clientX - drag.startX + ((canvas?.scrollLeft ?? drag.scrollLeft) - drag.scrollLeft);
+    const dy = event.clientY - drag.startY + ((canvas?.scrollTop ?? drag.scrollTop) - drag.scrollTop);
     const start = drag.start;
     if (drag.handle === "move") return {
       ...start,
-      x: round(clamp(start.x + dx / Math.max(1, drag.node.offsetWidth * zoom) * 100, -150, 150)),
-      y: round(clamp(start.y + dy / Math.max(1, drag.node.offsetHeight * zoom) * 100, -150, 150)),
+      x: round(clamp(start.x + dx / Math.max(1, drag.node.offsetWidth * zoom) * 100, -2000, 2000)),
+      y: round(clamp(start.y + dy / Math.max(1, drag.node.offsetHeight * zoom) * 100, -2000, 2000)),
     };
     if (drag.handle === "rotate") {
       const angle = Math.atan2(event.clientY - drag.rect.top - drag.rect.height / 2,
@@ -127,6 +128,8 @@ export default function StudioNativeTransformHandles({
     gesture.current = {
       pointer: event.pointerId, handle, startX: event.clientX, startY: event.clientY,
       start: { ...defaultNativeVisualTransform, ...transform }, rect, node,
+      scrollLeft: canvasRef.current?.scrollLeft ?? 0,
+      scrollTop: canvasRef.current?.scrollTop ?? 0,
       initialAngle: Math.atan2(event.clientY - rect.top - rect.height / 2,
         event.clientX - rect.left - rect.width / 2),
       moved: false,
@@ -138,6 +141,14 @@ export default function StudioNativeTransformHandles({
     const drag = gesture.current;
     if (!drag || drag.pointer !== event.pointerId) return;
     if (Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY) > 2) drag.moved = true;
+    const canvas = canvasRef.current;
+    const viewport = canvas?.getBoundingClientRect();
+    if (canvas && viewport) {
+      if (event.clientY > viewport.bottom - 42) canvas.scrollTop += 14;
+      else if (event.clientY < viewport.top + 42) canvas.scrollTop -= 14;
+      if (event.clientX > viewport.right - 42) canvas.scrollLeft += 14;
+      else if (event.clientX < viewport.left + 42) canvas.scrollLeft -= 14;
+    }
     const next = calculate(event);
     if (!next) return;
     apply(drag.node, next);
