@@ -151,7 +151,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(editor, /onUpdateAssetLayer=\{updateAssetLayer\}/);
   assert.match(editor, /section: section\.dataset\.invitationSection as StudioObjectSection/);
   assert.match(editor, /showDesignSection\(patch\.section\)/);
-  assert.match(editor, /if \(section === "envelope"\) setPreviewVersion\(/);
+  assert.match(editor, /if \(canvasStage !== "envelope"\) \{\s*setCanvasStage\("envelope"\);\s*setPreviewVersion\(/);
   assert.match(textPanel, /onClick=\{\(\) => onAdd\(en \? "Add your text" : "Tambahkan teks", targetSection\)\}/);
   const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
   assert.match(textInspector, /maxLength=\{180\}/);
@@ -172,7 +172,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   const geometry = read("lib/templates/object-resize.ts");
   assert.match(geometry, /const localX = dx \* cos \+ dy \* sin/);
   assert.match(geometry, /const localY = -dx \* sin \+ dy \* cos/);
-  assert.match(renderer, /absolute -bottom-9 left-1\/2/);
+  assert.match(renderer, /absolute -bottom-10 left-1\/2/);
   assert.match(renderer, /findSectionAt\(event\.clientX, event\.clientY, root\.current\)/);
   assert.match(renderer, /data-studio-design-object=\{layer\.id\}/);
   assert.match(selectionResolver, /data-studio-design-object/);
