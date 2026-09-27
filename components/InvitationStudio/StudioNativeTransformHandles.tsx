@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
-import { RotateCw } from "lucide-react";
+import { RotateCcw, RotateCw } from "lucide-react";
 import {
   defaultNativeVisualTransform, nativeVisualSelector,
   type NativeVisualTransform,
@@ -167,6 +167,10 @@ export default function StudioNativeTransformHandles({
           onPointerDown={(event) => begin(event, handle)} onPointerMove={move} onPointerUp={end}
           onPointerCancel={(event) => end(event, true)} />
       ))}
+      {transform && <button type="button" className="dc-studio-native-reset" aria-label="Reset posisi ukuran dan rotasi elemen"
+        title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, defaultNativeVisualTransform); }}>
+        <RotateCcw size={14} />
+      </button>}
       <button type="button" className="dc-studio-native-rotate" aria-label="Putar elemen"
         title="Tarik untuk memutar" onPointerDown={(event) => begin(event, "rotate")}
         onPointerMove={move} onPointerUp={end} onPointerCancel={(event) => end(event, true)}>
