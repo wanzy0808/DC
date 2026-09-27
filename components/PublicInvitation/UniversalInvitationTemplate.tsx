@@ -575,7 +575,7 @@ export default function UniversalInvitationTemplate({
                   <ZenMemoryArtwork />
                   <p data-studio-native-object="object:gallery:empty-copy" className="mt-5 text-sm opacity-65">Foto galeri belum ditambahkan.</p>
                 </div>
-              ) : <p className="text-sm opacity-65">Belum ada foto galeri.</p>}
+              ) : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm opacity-65">Belum ada foto galeri.</p>}
             </> : key === "zen-atelier" ? (
               <div className="mx-auto max-w-sm">
                 <ZenMemoryArtwork />
@@ -598,7 +598,7 @@ export default function UniversalInvitationTemplate({
                 </div>
               ))}
             </div></div>
-          ) : <p className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
+          ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
 
           {section("location", (
             <div className="mx-auto max-w-sm space-y-4">
@@ -606,7 +606,7 @@ export default function UniversalInvitationTemplate({
               <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
               {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--dc-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
-              {!maps && <p className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
+              {!maps && <p data-studio-native-object="object:location:empty-copy" className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
             </div>
           ), 7)}
 
@@ -628,7 +628,7 @@ export default function UniversalInvitationTemplate({
               <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
               {copyMessage && <p role="status" className="mt-3 text-xs">{copyMessage}</p>}
             </div>
-          ) : <p className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
+          ) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
 
           {section("closing", (
             <div className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
