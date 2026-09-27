@@ -222,7 +222,7 @@ test("Studio keeps Template Restart Undo Redo Save in one canvas toolbar row", (
   assert.match(reset, /setCopiedAssetLayer\(null\)/);
   assert.match(reset, /File upload tetap tersimpan di koleksi media/);
   assert.doesNotMatch(designer, /Smartphone|copy\.phone|phone: "Ponsel"|phone: "Mobile"/);
-  const canvas = designer.split('<div className="dc-studio-preview-workspace">')[1] || "";
+  const canvas = designer.split('className="dc-studio-preview-workspace">')[1] || "";
   assert.ok(canvas.indexOf("<StudioStageControls") >= 0 && canvas.indexOf("<StudioStageControls") < canvas.indexOf('className="dc-studio-preview-surface"'));
   assert.match(stageControlsSource, /className="dc-studio-stage-controls"/);
   assert.match(designer, /isUndo && history.length/);
