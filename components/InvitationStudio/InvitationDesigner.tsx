@@ -646,6 +646,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         return;
       case "photo":
         selectPhotoVisual(selection.slot);
+        if (selection.slot === "gallery" && selection.assetId) {
+          const key = `photo:gallery:${selection.assetId}`;
+          if (isNativeVisualKey(key)) setSelectedNativeKey(key);
+        }
         return;
       case "section":
         selectSectionInstance(selection.instanceId, selection.section);
@@ -1286,7 +1290,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   const activeNativeKey = selectedLayerId || selectedSectionKey ? null
-    : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? null : canvasStage === "envelope" && selectedPhotoSlot === "cover" ? "photo:envelope:cover" : `photo:${selectedPhotoSlot}`)
+    : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? selectedNativeKey : canvasStage === "envelope" && selectedPhotoSlot === "cover" ? "photo:envelope:cover" : `photo:${selectedPhotoSlot}`)
     : selectedSectionElement ? `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`
     : selectedRsvpElementKey ? `rsvp:${selectedRsvpElementKey}`
     : selectedCopyField ? `copy:${selectedCopyField}`
