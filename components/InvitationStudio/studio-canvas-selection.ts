@@ -1,6 +1,7 @@
 import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { PhotoSlot } from "@/lib/templates/photo-slots";
 import type { InvitationSectionKey } from "@/lib/templates/sections";
+import { studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import type { StudioSectionElementKind } from "@/lib/templates/section-element-styles";
 import { isNativeVisualKey } from "@/lib/templates/native-visual-transforms";
 
@@ -80,10 +81,12 @@ export function resolveStudioCanvasSelection(
 
   const section = target.closest<HTMLElement>("[data-invitation-section]");
   if (section?.dataset.invitationSection) {
-    if (section.dataset.invitationSection === "rsvp" && target.closest("img")) {
+    const sectionName = section.dataset.invitationSection as StudioObjectSection;
+    if (!studioObjectSections.includes(sectionName)) return { kind: "clear" };
+    if (sectionName === "rsvp" && target.closest("img")) {
       return { kind: "clear" };
     }
-    const sectionKey = section.dataset.invitationSection as InvitationSectionKey;
+    const sectionKey = sectionName as InvitationSectionKey;
     const instance = target.closest<HTMLElement>("[data-section-instance-id]");
     return {
       kind: "section",
