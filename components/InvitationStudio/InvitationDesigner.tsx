@@ -774,8 +774,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function showDesignSection(section: StudioObjectSection) {
-    setCanvasStage(section === "envelope" ? "envelope" : "cover");
-    if (section === "envelope") setPreviewVersion((current) => current + 1);
+    if (section === "envelope") {
+      if (canvasStage !== "envelope") {
+        setCanvasStage("envelope");
+        setPreviewVersion((current) => current + 1);
+      }
+    } else if (canvasStage !== "cover") {
+      setCanvasStage("cover");
+    }
   }
 
   function addAssetLayer(src: string, position: { x: number; y: number; section?: StudioObjectSection } = { x: 50, y: 38 }) {
@@ -852,7 +858,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     }));
   }
 
-  function focusDesignObject(id: string, additive = false) {
+  function focusDesignObject(id: string, additive = false, fromCanvas = false) {
     textTypingLayer.current = null;
     textInsertPoint.current = null;
     const layer = design.layers.find((item) => item.id === id);
@@ -882,7 +888,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     setSelectedLayerIds(nextIds);
     setSelectedLayerId(nextIds.includes(id) ? id : nextIds.at(-1) ?? null);
     showDesignSection(layer.section ?? "cover");
-    requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
+    if (!fromCanvas) requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${layer.section ?? "cover"}"]`)?.scrollIntoView({ block: "center" }));
   }
 
   function groupSelectedAssetLayers() {
@@ -1750,7 +1756,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                     musicUrl={musicUrl}
                     selectedAssetLayerId={selectedLayerId}
                     selectedAssetLayerIds={selectedLayerIds}
-                    onSelectAssetLayer={(id, additive) => focusDesignObject(id, Boolean(additive))}
+                    onSelectAssetLayer={(id, additive) => focusDesignObject(id, Boolean(additive), true)}
                     onMoveAssetLayer={(id, x, y) => updateAssetLayer(id, { x, y })}
                     onUpdateAssetLayer={updateAssetLayer}
                     onEditPhoto={editPhotoFromCanvas}
