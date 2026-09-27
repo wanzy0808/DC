@@ -265,7 +265,7 @@ export default function RomanticRoseTemplate({
             <div className="relative mt-2 flex min-h-[345px] flex-col items-center justify-center border border-[#dbadba] bg-[#fffdfb] p-5 shadow-[inset_0_0_0_7px_#f9e9ed]">
               <p className="text-[10px] uppercase tracking-[0.24em] text-[#ad7889]">Untuk yang terkasih</p>
               <span className="my-6 grid h-12 w-12 place-items-center rounded-full border border-[#d9a7b4] text-[#a76b80]"><Heart className="h-5 w-5" /></span>
-              <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl leading-relaxed text-[#713b50]">{displayName || "Undangan Pernikahan"}</h1>
+              <h1 data-studio-native-heading="" className="break-words font-[family-name:var(--font-dc-heading)] text-2xl leading-relaxed text-[#713b50]">{displayName || "Undangan Pernikahan"}</h1>
               <p className="mt-5 text-xs text-[#966a7c]">{eventDate}</p>
             </div>
             <div className="relative -mt-9 h-24 bg-[#edc6d0] [clip-path:polygon(0_0,50%_55%,100%_0,100%_100%,0_100%)]" aria-hidden />
@@ -285,7 +285,7 @@ export default function RomanticRoseTemplate({
                         <div className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
                         <div className="relative z-10 flex w-full flex-col items-center">
                           <p className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">The wedding of</p>
-                          <h1 className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || displayTitleCase(invitation.title)}</h1>
+                          <h1 data-studio-native-heading="" className="mt-5 max-w-full break-words font-[family-name:var(--font-dc-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || displayTitleCase(invitation.title)}</h1>
                           <div data-invitation-photo-slot="cover" className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
                             <RosePhoto url={cover} alt="Foto sampul pasangan" cropStyle={photoCropStyle(assignment, "cover")} className="aspect-[3/4] w-full object-cover" />
                             {editPhoto("cover", "cover utama")}
