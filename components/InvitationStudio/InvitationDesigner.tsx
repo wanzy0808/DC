@@ -1660,7 +1660,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             onRedo={redo}
             onSave={save}
           />
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-zoomed={canvasZoom > 1 ? "true" : undefined} data-panning={canvasPanning ? "true" : undefined}
+          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-enabled="true" data-panning={canvasPanning ? "true" : undefined}
           onKeyDown={(event) => {
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
@@ -1674,7 +1674,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             if (event.code === "Space") setCanvasPanReady(false);
           }}
           onPointerDown={(event) => {
-            if (beginCanvasPan(event, canvasZoom > 1)) return;
+            if (beginCanvasPan(event, true)) return;
             const target = event.target;
             if (target instanceof Element && !target.closest('input, textarea, select, button, a, [contenteditable="true"], [role="textbox"]')) event.currentTarget.focus({ preventScroll: true });
           }}
