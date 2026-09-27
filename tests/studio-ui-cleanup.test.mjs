@@ -416,9 +416,11 @@ test("Studio canvas has local zoom controls that do not alter saved invitation g
   assert.match(designer, /canvasZoom/);
   assert.match(canvasFooterSource, /<ZoomOut size=\{15\}/);
   assert.match(canvasFooterSource, /<ZoomIn size=\{15\}/);
-  assert.match(designer, /style=\{\{ zoom: canvasZoom \}\}/);
-  assert.match(designer, /Math\.max\(0\.7/);
-  assert.match(designer, /Math\.min\(1\.3/);
+  assert.match(designer, /transform: \`scale\(\$\{canvasZoom\}\)\`/);
+  assert.match(designer, /canvasNaturalSize\.width \* canvasZoom/);
+  assert.match(designer, /canvasNaturalSize\.height \* canvasZoom/);
+  assert.match(canvasFooterSource, /type="range" min=\{10\} max=\{500\}/);
+  assert.match(canvasFooterSource, /onZoomChange\(Number\(event\.currentTarget\.value\) \/ 100\)/);
 });
 
 
@@ -516,7 +518,7 @@ test("Studio clipboard operations preserve multi-selection and copied groups", (
 
 test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", () => {
   assert.match(designer, /function fitCanvasZoom\(\)/);
-  assert.match(designer, /querySelector<HTMLElement>\("\.dc-studio-preview-surface"\)/);
+  assert.match(designer, /availableWidth \/ canvasNaturalSize\.width/);
   assert.match(designer, /onResetZoom=\{\(\) => setCanvasZoom\(1\)\}/);
   assert.match(designer, /onFit=\{fitCanvasZoom\}/);
   assert.match(canvasFooterSource, /onClick=\{onFit\}/);
