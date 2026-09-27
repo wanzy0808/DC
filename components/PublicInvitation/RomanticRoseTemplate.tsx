@@ -307,7 +307,10 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="greeting" style={invitationSectionStyleCss(sectionStyles.greeting)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("greeting", instanceId)}
                         <RoseHeading section="greeting" eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
-                        <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+                        <div data-studio-native-object="object:greeting:copy-group" className="mx-auto max-w-md space-y-4 text-sm leading-8 text-[#765460]">
+                          <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+                          <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
+                        </div>
                       </section>
           ))}
 
@@ -450,6 +453,7 @@ export default function RomanticRoseTemplate({
                         <Heart data-studio-native-object="object:closing:heart" className="mx-auto h-7 w-7 text-[#bf8496]" />
                         <RoseHeading section="closing" eyebrow="Forever begins here">Terima Kasih</RoseHeading>
                         <p data-studio-copy-field="closing" className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p>
+                        <p data-studio-copy-field="prayerWish" className="mx-auto mt-5 max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
                         <p data-studio-native-object="object:closing:names" className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
                         {invitation.weddingHashtag && <p data-studio-native-object="object:closing:hashtag" className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
                       </section>
