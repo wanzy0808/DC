@@ -19,6 +19,7 @@ import { parseInvitationSectionStyles, withInvitationSectionStyles } from "@/lib
 import { parseInvitationRsvpConfig, withInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
 import { parseInvitationSectionLayout, withInvitationSectionLayout } from "@/lib/templates/section-layout";
 import { parseSectionElementStyles, withSectionElementStyles } from "@/lib/templates/section-element-styles";
+import { parseNativeVisualTransforms, withNativeVisualTransforms } from "@/lib/templates/native-visual-transforms";
 import type {
   InvitationDesignerInvitation,
   InvitationDesignState,
@@ -82,7 +83,7 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopyMotions(withEditableCopy(
+  return withNativeVisualTransforms(withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopyMotions(withEditableCopy(
     withPhotoAssignments(
       withInvitationSections(
         makeDesignKey(state.template, state.palette, state.font, state.decor),
@@ -91,7 +92,7 @@ export function makeInvitationDesignStateKey(state: InvitationDesignState) {
       state.photos,
     ),
     state.copy,
-  ), state.copyMotion), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles);
+  ), state.copyMotion), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles), state.nativeVisuals);
 }
 
 export function invitationDesignStateFromKey(
@@ -117,5 +118,6 @@ export function invitationDesignStateFromKey(
     rsvpConfig: parseInvitationRsvpConfig(key),
     sectionLayout: parseInvitationSectionLayout(key),
     sectionElementStyles: parseSectionElementStyles(key),
+    nativeVisuals: parseNativeVisualTransforms(key),
   };
 }
