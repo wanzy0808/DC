@@ -91,6 +91,7 @@
 .dc-studio-native-handle--left { top: 50%; left: -14px; transform: translateY(-50%); cursor: ew-resize; }
 .dc-studio-native-rotate { z-index: 3; left: 50%; bottom: -46px; display: grid; place-items: center; width: 30px; height: 30px; transform: translateX(-50%); border: 1px solid var(--primary) !important; border-radius: 50%; background: var(--background); color: var(--primary); cursor: grab; }
 .dc-studio-native-rotate:active { cursor: grabbing; }
+.dc-studio-native-reset { z-index: 3; right: 0; bottom: -42px; display: grid; place-items: center; width: 28px; height: 28px; border: 1px solid var(--primary) !important; border-radius: 8px; background: var(--background); color: var(--primary); cursor: pointer; }
 .dc-studio-native-transform button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
 .dc-studio-canvas-scroll[data-space-pan="true"], .dc-studio-canvas-scroll[data-pan-enabled="true"] { cursor: grab; }
