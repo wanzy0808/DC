@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
-  isTemplateIllustration, MAX_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
+  isTemplateIllustration, MAX_ASSET_LAYERS, MAX_PERSISTED_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, parseAssetLayers,
   sanitizeAssetLayers, withAssetLayers,
 } from "../lib/templates/asset-layers.ts";
 import { resizeObjectFromHandle } from "../lib/templates/object-resize.ts";
@@ -44,7 +44,8 @@ test("asset layer codec keeps bounded coordinates, transparency, IDs and stackin
   assert.deepEqual(parseAssetLayers("rose::layers=%BAD"), []);
   assert.equal(MAX_ASSET_LAYERS, 10);
   assert.equal(MAX_TEMPLATE_ASSET_LAYERS, 120);
-  assert.equal(sanitizeAssetLayers(Array.from({ length: 140 }, (_, index) => asset(String(index)))).length, MAX_TEMPLATE_ASSET_LAYERS);
+  assert.equal(MAX_PERSISTED_ASSET_LAYERS, 140);
+  assert.equal(sanitizeAssetLayers(Array.from({ length: 160 }, (_, index) => asset(String(index)))).length, MAX_PERSISTED_ASSET_LAYERS);
 });
 
 test("Studio saves, previews and reopens the same per-invitation cover artwork", () => {
@@ -112,6 +113,31 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerInspector, /onUpdate\(selectedAssetLayer\.id, \{ rotation \}\)/);
   assert.match(route, /getCurrentUser\(\)/);
   assert.match(route, /"template", "templates"/);
+});
+
+test("template layers persist customer edit access independently from staff authoring", () => {
+  const layers = sanitizeAssetLayers([
+    { ...asset("locked"), customerAccess: "locked" },
+    { ...asset("content"), kind: "text", src: "", text: "Editable words", customerAccess: "content" },
+    { ...asset("custom"), customerAccess: "customizable" },
+    { ...asset("invalid"), customerAccess: "owner-only" },
+  ]);
+  assert.equal(layers[0]?.customerAccess, "locked");
+  assert.equal(layers[1]?.customerAccess, "content");
+  assert.equal(layers[2]?.customerAccess, "customizable");
+  assert.equal(layers[3]?.customerAccess, undefined);
+
+  const renderer = read("components/PublicInvitation/InvitationAssetLayers.tsx");
+  const layerList = read("components/InvitationStudio/StudioLayerList.tsx");
+  const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
+  assert.match(renderer, /editorMode === "template"/);
+  assert.match(renderer, /layer\.customerAccess !== "locked"/);
+  assert.match(renderer, /layer\.customerAccess !== "content"/);
+  assert.match(layerList, /visibleLayers = editorMode === "template"/);
+  assert.match(editor, /customerAccess: templateMode \? "locked" : "customizable"/);
+  assert.match(editor, /customerAccess: layer\.customerAccess \?\? "locked"/);
+  assert.match(editor, /editorMode=\{templateMode \? "template" : "customer"\}/);
+  assert.match(editor, /onMoveSectionInstance=\{templateMode \? moveSectionInstance : undefined\}/);
 });
 
 test("decorative text and section-targeted artwork survive the shared design-key codec", () => {
