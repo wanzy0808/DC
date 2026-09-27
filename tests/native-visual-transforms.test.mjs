@@ -364,7 +364,7 @@ test("native animation runtime uses validated selectors and shared reduced-motio
   assert.match(hook, /observeInvitationEntrances\(targets\)/);
   assert.match(hook, /finalOpacity: config\.opacity/);
   assert.match(runtime, /finalOpacity\?: number/);
-  assert.match(runtime, /frame\.opacity \* config\.finalOpacity/);
+  assert.match(runtime, /frame\.opacity \* finalOpacity/);
   assert.match(universal, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\)\)/);
   assert.match(rose, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\)\)/);
   assert.match(inspector, /sectionAnimationGroups/);
