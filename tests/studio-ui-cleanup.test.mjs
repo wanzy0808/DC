@@ -371,7 +371,7 @@ test("Studio layers can be locked and hidden without removing them from the desi
   assert.match(assetLayers, /hidden\?: boolean/);
   assert.match(assetLayers, /entry\.locked === true/);
   assert.match(assetLayers, /entry\.hidden === true/);
-  assert.match(assetRenderer, /&& !layer\.hidden/);
+  assert.match(assetRenderer, /layer\.hidden\) return false/);
   assert.match(assetRenderer, /layer\.locked/);
   assert.match(assetInspector, /Buka kunci layer|Unlock layer/);
   assert.match(assetInspector, /Sembunyikan layer|Hide layer/);
