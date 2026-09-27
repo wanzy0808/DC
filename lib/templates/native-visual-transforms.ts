@@ -25,7 +25,7 @@ const keys = new Set<string>([
 ]);
 
 export function isNativeVisualKey(key: string) {
-  return keys.has(key);
+  return keys.has(key) || /^photo:gallery:[a-zA-Z0-9_-]{1,64}$/.test(key);
 }
 
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
@@ -36,7 +36,7 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   const result: NativeVisualTransforms = {};
   for (const [key, raw] of Object.entries(value).slice(0, 40)) {
-    if (!keys.has(key) || !raw || typeof raw !== "object" || Array.isArray(raw)) continue;
+    if (!isNativeVisualKey(key) || !raw || typeof raw !== "object" || Array.isArray(raw)) continue;
     const source = raw as Record<string, unknown>;
     const transform = {
       x: clamp(source.x, -150, 150, 0),
@@ -72,7 +72,7 @@ export function withNativeVisualTransforms(designKey: string, transforms: Native
 }
 
 export function nativeVisualSelector(key: string) {
-  if (!keys.has(key)) return null;
+  if (!isNativeVisualKey(key)) return null;
   const [kind, section, element] = key.split(":");
   if (kind === "copy") return `[data-studio-copy-field="${section}"]`;
   if (kind === "heading") return section === "envelope"
@@ -80,6 +80,7 @@ export function nativeVisualSelector(key: string) {
     : `[data-invitation-section="${section}"] [data-studio-native-heading]`;
   if (kind === "element") return `[data-studio-section-element="${section}:${element}"]`;
   if (kind === "rsvp") return `[data-invitation-section="rsvp"] [data-studio-rsvp-element="${section}"]`;
+  if (kind === "photo" && section === "gallery" && element) return `[data-invitation-photo-slot="gallery"][data-studio-photo-id="${element}"]`;
   if (kind === "photo") {
     const stage = section === "envelope" ? "envelope" : section === "cover" ? "cover" : "identity";
     const slot = section === "envelope" ? element : section;
