@@ -89,12 +89,21 @@ export function nativeVisualStyle(transform: NativeVisualTransform): CSSProperti
   };
 }
 
+export function nativeVisualScopeClass(designKey: string) {
+  let hash = 2166136261;
+  for (let index = 0; index < designKey.length; index++) {
+    hash = Math.imul(hash ^ designKey.charCodeAt(index), 16777619);
+  }
+  return `dc-native-${(hash >>> 0).toString(36)}`;
+}
+
 /** The selector registry and bounded numeric values keep injected styles free of user CSS. */
 export function nativeVisualStyleSheet(designKey: string) {
   const transforms = parseNativeVisualTransforms(designKey);
+  const scope = nativeVisualScopeClass(designKey);
   return Object.entries(transforms).map(([key, transform]) => {
     const selector = nativeVisualSelector(key);
     if (!selector) return "";
-    return `${selector}{translate:${transform.x}% ${transform.y}%;rotate:${transform.rotation}deg;scale:${transform.scaleX} ${transform.scaleY};transform-origin:center;}`;
+    return `.${scope} ${selector}{translate:${transform.x}% ${transform.y}%;rotate:${transform.rotation}deg;scale:${transform.scaleX} ${transform.scaleY};transform-origin:center;}`;
   }).join("\n");
 }
