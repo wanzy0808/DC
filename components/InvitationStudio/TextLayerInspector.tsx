@@ -126,18 +126,12 @@ export default function TextLayerInspector({
         </button>
       </div>
 
-      <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
-      <label className="dc-studio-layer-field">
-        <span>{en ? "Text" : "Teks"}</span>
-        <textarea
-          value={layer.text ?? ""}
-          rows={4}
-          maxLength={180}
-          onChange={(event) => onUpdate(layer.id, { text: event.target.value.slice(0, 180) })}
-          className="dc-studio-text-content"
-        />
-      </label>
+      <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+        <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
+        <span>{en ? "Edit wording from Text on the left or type directly on the canvas. This panel controls styling." : "Ubah isi dari menu Teks di kiri atau ketik langsung di canvas. Panel ini hanya mengatur styling."}</span>
+      </div>
 
+      <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
       <label className="dc-studio-layer-select">
         <span>{en ? "Section" : "Bagian"}</span>
         <select value={section} onChange={(event) => onUpdate(layer.id, { section: event.target.value as StudioObjectSection })}>
