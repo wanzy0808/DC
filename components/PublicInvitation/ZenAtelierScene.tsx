@@ -25,13 +25,13 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
   return (
     <section data-invitation-section={stage} className={`zen-scene zen-${stage}`} data-opening={opening || undefined}>
       {stage === "envelope" ? <>
-        <div className="zen-jp-atmosphere" aria-hidden="true">
+        <div className="zen-jp-atmosphere" aria-hidden="true" data-studio-native-object="object:envelope:atmosphere-group">
           <div className="zen-jp-shoji" data-studio-native-object="object:envelope:shoji" />
           <EnsoSun className="zen-jp-sun" studioObject="object:envelope:sun" />
           <BlossomBranch className="zen-jp-branch" studioObject="object:envelope:branch" />
           <InkMountains className="zen-jp-mountains" studioObject="object:envelope:mountains" />
         </div>
-        <div className="zen-jp-intro">
+        <div className="zen-jp-intro" data-studio-native-object="object:envelope:intro-group">
           <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
           <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">Sebuah undangan<br />untuk orang istimewa</p>
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
@@ -68,7 +68,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
         </button>
       </> : <>
         <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.png"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" data-studio-native-object="object:cover:blossom" />
-        <div className="zen-cover-copy">
+        <div className="zen-cover-copy" data-studio-native-object="object:cover:copy-group">
           <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{isWedding ? "The Wedding Of" : "Sebuah Undangan"}</p>
           <h1 data-studio-native-heading="">{couple.length === 2 ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></> : <span>{title}</span>}</h1>
           <p className="zen-cover-date" data-studio-native-object="object:cover:date">{date}</p>
