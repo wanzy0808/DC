@@ -67,10 +67,10 @@ export function InkMountains({ className = "", style, studioObject }: ArtworkPro
 export function ZenMemoryArtwork() {
   return (
     <div aria-hidden="true" data-studio-native-object="object:gallery:memory-art" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
-      <img src="/templates/Zen%20Atelier/japanroom2.png" alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
-      <img src="/templates/Zen%20Atelier/japancup.png" alt="" loading="lazy" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
-      <span className="absolute inset-3 border border-[#f7eee0]/60" />
+      <img src="/templates/Zen%20Atelier/japanroom2.png" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-room" className="absolute inset-0 h-full w-full object-cover" />
+      <div data-studio-native-object="object:gallery:memory-gradient" className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
+      <img src="/templates/Zen%20Atelier/japancup.png" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-cup" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
+      <span data-studio-native-object="object:gallery:memory-frame" className="absolute inset-3 border border-[#f7eee0]/60" />
     </div>
   );
 }
