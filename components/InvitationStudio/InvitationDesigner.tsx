@@ -219,6 +219,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [savedState, setSavedState] = useState("");
   const [serverRevision, setServerRevision] = useState("");
   const [templateDraftId, setTemplateDraftId] = useState<string | null>(null);
+  const [templateDraftStatus, setTemplateDraftStatus] = useState<string | null>(null);
   const audioMutation = useRef(false);
   const requestedCatalogApplied = useRef(false);
   const [audioBusy, setAudioBusy] = useState(false);
@@ -266,7 +267,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       let defaultMusic: string;
 
       if (savedDraft) {
-        if (savedDraft.status !== "DRAFT") throw new Error("Template ini bukan draft yang dapat diedit.");
+        if (savedDraft.status !== "DRAFT" && savedDraft.status !== "REVIEW") throw new Error("Template ini sudah tidak dapat dibuka sebagai draft.");
         if (!savedDraft.designKey) throw new Error("Draft template belum memiliki design yang dapat diedit.");
         initialKey = savedDraft.designKey;
         loadedDesign = invitationDesignStateFromKey(initialKey, templateDemoPhoto);
@@ -313,6 +314,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setSavedState(canonicalSavedState);
       setServerRevision(serverBaseline);
       setTemplateDraftId(savedDraft?.id || null);
+      setTemplateDraftStatus(savedDraft?.status || null);
       setSelectedCatalogKey(loadedDesign.template);
       setCanvasStage("envelope");
       setSelectedLayerId(null);
@@ -320,7 +322,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       setCopiedAssetLayers([]);
       setHistory([]);
       setFuture([]);
-      setNotice(savedDraft ? `Draft Template #${savedDraft.templateNo} dimuat.` : "");
+      setNotice(savedDraft
+        ? savedDraft.status === "REVIEW"
+          ? `Template #${savedDraft.templateNo} sedang direview. Preview tersedia, editing dikunci sampai dikembalikan ke Draft.`
+          : `Draft Template #${savedDraft.templateNo} dimuat.`
+        : "");
       return;
     }
 
@@ -1609,6 +1615,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           musicUrl,
         }, templateDraftId);
         setTemplateDraftId(savedTemplate.id);
+        setTemplateDraftStatus(savedTemplate.status);
         setSavedState(currentState);
         try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
         const studioEntryId = `template-studio-draft:${savedTemplate.id}`;
@@ -1838,7 +1845,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             canUndo={history.length > 0}
             canRedo={future.length > 0}
             templateMode={templateMode}
-            dirty={dirty}
+            dirty={templateMode && templateDraftStatus === "REVIEW" ? false : dirty}
             labels={{
               hidePanel: copy.hidePanel,
               showPanel: copy.showPanel,
