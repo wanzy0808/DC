@@ -1286,7 +1286,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   const activeNativeKey = selectedLayerId || selectedSectionKey ? null
-    : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? null : `photo:${selectedPhotoSlot}`)
+    : selectedPhotoSlot ? (cropModeSlot || selectedPhotoSlot === "gallery" ? null : canvasStage === "envelope" && selectedPhotoSlot === "cover" ? "photo:envelope:cover" : `photo:${selectedPhotoSlot}`)
     : selectedSectionElement ? `element:${selectedSectionElement.section}:${selectedSectionElement.kind}`
     : selectedRsvpElementKey ? `rsvp:${selectedRsvpElementKey}`
     : selectedCopyField ? `copy:${selectedCopyField}`
