@@ -28,9 +28,21 @@ async function nextTemplateNumber() {
   return String(Math.max(0, Number(latest?.templateNo ?? "0")) + 1).padStart(3, "0");
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const author = await requireTemplateAuthor();
   if (!author) return NextResponse.json({ error: "Akses Template Studio diperlukan." }, { status: 403 });
+
+  const requestedId = new URL(request.url).searchParams.get("id")?.trim();
+  if (requestedId) {
+    const template = await prisma.designerTemplate.findFirst({
+      where: {
+        id: requestedId,
+        ...(author.role === "OWNER" ? {} : { designerId: author.id }),
+      },
+    });
+    if (!template) return NextResponse.json({ error: "Draft template tidak ditemukan." }, { status: 404 });
+    return NextResponse.json({ template });
+  }
 
   const templates = await prisma.designerTemplate.findMany({
     where: { designerId: author.id },
@@ -131,6 +143,66 @@ async function createStudioTemplate(request: Request, author: NonNullable<Awaite
   }
 
   return NextResponse.json({ error: "Nomor template sedang dipakai. Coba simpan lagi." }, { status: 409 });
+}
+
+export async function PATCH(request: Request) {
+  const author = await requireTemplateAuthor();
+  if (!author) return NextResponse.json({ error: "Akses Template Studio diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
+
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().startsWith("application/json")) {
+    return NextResponse.json({ error: "Gunakan data Studio JSON untuk menyimpan draft." }, { status: 415 });
+  }
+
+  try {
+    const body = await request.json().catch(() => null) as Record<string, unknown> | null;
+    const id = String(body?.id ?? "").trim();
+    if (!id) return NextResponse.json({ error: "Draft template tidak valid." }, { status: 400 });
+
+    const current = await prisma.designerTemplate.findFirst({
+      where: {
+        id,
+        ...(author.role === "OWNER" ? {} : { designerId: author.id }),
+      },
+    });
+    if (!current) return NextResponse.json({ error: "Draft template tidak ditemukan." }, { status: 404 });
+    if (current.status !== "DRAFT") {
+      return NextResponse.json({ error: "Template yang sudah dipublikasikan tidak dapat ditimpa sebagai draft." }, { status: 409 });
+    }
+
+    const designKey = String(body?.designKey ?? "").trim();
+    if (!designKey || designKey.length > 30000) {
+      return NextResponse.json({ error: "Design template tidak valid." }, { status: 400 });
+    }
+    const parsed = parseDesignKey(designKey);
+    if (parsed.template === "blank-canvas" && !["OWNER", "DESIGNER"].includes(author.role)) {
+      return NextResponse.json({ error: "Canvas kosong hanya untuk Owner dan Designer." }, { status: 403 });
+    }
+    const baseTemplate = getInvitationTemplate(parsed.template);
+    if (!baseTemplate || baseTemplate.key !== parsed.template) {
+      return NextResponse.json({ error: "Base template tidak tersedia." }, { status: 400 });
+    }
+
+    const requestedName = String(body?.name ?? "").trim().replace(/\s+/g, " ").slice(0, 80);
+    const name = requestedName || current.name || `${baseTemplate.name} Studio`;
+    const category = String(body?.category ?? current.category ?? baseTemplate.category ?? "Designer").trim().slice(0, 40) || "Designer";
+    const description = String(body?.description ?? current.description ?? "").trim().replace(/\s+/g, " ").slice(0, 240)
+      || `Varian Studio dari ${baseTemplate.name}.`;
+    const tags = cleanTags(body?.tags);
+    const previewUrl = safePublicUrl(body?.previewUrl) || current.previewUrl || baseTemplate.previewImage;
+    const usesPhotos = body?.usesPhotos === undefined ? current.usesPhotos : body.usesPhotos === true;
+    const musicUrl = safePublicUrl(body?.musicUrl) || null;
+
+    const updated = await prisma.designerTemplate.update({
+      where: { id: current.id },
+      data: { name, tags, previewUrl, designKey, category, description, usesPhotos, musicUrl },
+    });
+    return NextResponse.json({ template: updated, ready: false });
+  } catch (error) {
+    console.error("PATCH /api/designer/templates Studio failed", error);
+    return NextResponse.json({ error: "Draft template belum dapat disimpan." }, { status: 500 });
+  }
 }
 
 export async function POST(request: Request) {
