@@ -1255,7 +1255,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
     const nativeVisuals = { ...design.nativeVisuals };
     for (const [key, value] of Object.entries(design.nativeVisuals)) {
-      if (!key.endsWith(`:${source.id}`)) continue;
+      if (nativeVisualInstanceId(key) !== source.id) continue;
       nativeVisuals[`${key.slice(0, -source.id.length)}${copyId}`] = { ...value };
     }
 
