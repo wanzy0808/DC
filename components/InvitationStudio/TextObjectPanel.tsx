@@ -26,7 +26,6 @@ export default function TextObjectPanel({
   selectedFont,
   onAdd,
   onSelect,
-  onUpdateText,
   onFontSelect,
 }: {
   layers: InvitationAssetLayer[];
@@ -35,13 +34,11 @@ export default function TextObjectPanel({
   selectedFont: FontKey;
   onAdd: (text: string, section: StudioObjectSection) => void;
   onSelect: (id: string) => void;
-  onUpdateText: (id: string, text: string) => void;
   onFontSelect: (font: FontKey) => void;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
   const texts = layers.filter((layer) => layer.kind === "text");
-  const selectedText = texts.find((layer) => layer.id === selectedId);
   const [showMoreFonts, setShowMoreFonts] = useState(false);
 
   const orderedFonts = useMemo(() => {
@@ -75,23 +72,10 @@ export default function TextObjectPanel({
       </Button>
 
       <p className="text-xs leading-5 text-muted-foreground">
-        {en ? "Or click the canvas, then type to create text directly." : "Atau klik canvas, lalu langsung ketik untuk membuat teks."}
+        {en
+          ? "A text box appears in the center of the canvas. Double-click it to type directly inside the box."
+          : "Kotak teks muncul di tengah canvas. Double-click kotaknya untuk mengetik langsung di dalam kotak."}
       </p>
-
-      {selectedText && (
-        <label className="grid gap-1.5 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.03] p-3 text-xs">
-          <span className="font-semibold text-primary">{en ? "Selected text content" : "Isi teks terpilih"}</span>
-          <textarea
-            value={selectedText.text ?? ""}
-            rows={4}
-            maxLength={180}
-            disabled={Boolean(selectedText.locked)}
-            onChange={(event) => onUpdateText(selectedText.id, event.target.value.slice(0, 180))}
-            className="min-h-24 w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-3 py-2 text-sm leading-6 outline-none focus:border-primary disabled:cursor-not-allowed disabled:opacity-50"
-          />
-          <small className="text-right text-[10px] text-muted-foreground">{(selectedText.text ?? "").length}/180</small>
-        </label>
-      )}
 
       <div className="space-y-2 border-t border-primary/20 pt-4">
         <div className="flex items-center justify-between gap-3">
