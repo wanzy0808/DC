@@ -374,7 +374,7 @@ export default function UniversalInvitationTemplate({
     ));
   };
 
-  const section = (keyName: keyof typeof headings, children: ReactNode, index: number) => {
+  const section = (keyName: keyof typeof headings, children: ReactNode, index: number, after?: (instanceId: string) => ReactNode) => {
     const left = key === "modern-maroon" || key === "golden-art-deco";
     const paper = key === "paper-cut-botanical";
     const celestial = key === "celestial-ink";
@@ -384,6 +384,7 @@ export default function UniversalInvitationTemplate({
     const backdrop = contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
+      <>
       <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : "py-16"} ${left ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
@@ -421,6 +422,8 @@ export default function UniversalInvitationTemplate({
         </div>
         {objectOverlay(keyName, instanceId)}
       </section>
+      {after?.(instanceId)}
+      </>
     ));
   };
 
@@ -523,9 +526,7 @@ export default function UniversalInvitationTemplate({
                 <p data-studio-native-object="object:identity:event-name" className="break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
               )}
             </div>
-          ), 2)}
-
-          {couple && sections.identity !== false && <OurStorySection story={editableCopy.ourStory} theme={key} preview={preview} motionUnit={copyMotions.ourStory?.unit} />}
+          ), 2, () => couple ? <OurStorySection story={editableCopy.ourStory} theme={key} preview={preview} motionUnit={copyMotions.ourStory?.unit} /> : null)}
 
           {section("event", key === "pencil-reverie" ? (
             <div className="pr-event-story">
