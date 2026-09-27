@@ -80,6 +80,7 @@ model User {
   auditLogs          AuditLog[]               @relation("ActorLogs")
   guestCheckIns      Guest[]                  @relation("GuestCheckInActor")
   designerTemplates  DesignerTemplate[]       @relation("TemplateDesigner")
+  designerAssets     DesignerAsset[]          @relation("DesignerAssetOwner")
   actionTokens       AccountActionToken[]     @relation("ActionTokenUser")
 }
 
@@ -229,6 +230,18 @@ model PaymentOrder {
   @@index([userId, createdAt])
   @@index([invitationId, createdAt])
   @@index([status, createdAt])
+}
+
+model DesignerAsset {
+  id        String   @id @default(cuid())
+  ownerId   String
+  url       String
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  owner     User     @relation("DesignerAssetOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([ownerId, createdAt])
 }
 
 model DesignerTemplate {
