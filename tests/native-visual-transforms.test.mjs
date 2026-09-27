@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
-  withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass,
+  withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -48,4 +48,15 @@ test("Studio and public renderers share the built-in transform contract", () => 
   }
   assert.match(handles, /onPointerDown=\{\(event\) => begin\(event, "rotate"\)\}/);
   assert.match(handles, /onPointerDown=\{\(event\) => begin\(event, handle\)\}/);
+});
+
+
+test("envelope and content photo transforms have separate targets", () => {
+  assert.equal(nativeVisualSelector("photo:envelope:cover"),
+    '[data-invitation-section="envelope"] [data-invitation-photo-slot="cover"]');
+  assert.equal(nativeVisualSelector("photo:cover"),
+    '[data-invitation-section="cover"] [data-invitation-photo-slot="cover"]');
+  assert.equal(nativeVisualSelector("heading:cover"),
+    '[data-invitation-section="cover"] [data-studio-native-heading]');
+  assert.equal(nativeVisualSelector("script:arbitrary"), null);
 });
