@@ -44,7 +44,7 @@ export default function PhotoPanel({
   onSetFocus: (slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) => void;
   onSetCrop: (slot: "cover" | "personOne" | "personTwo", crop: PhotoCrop) => void;
   onResetCrop: (slot: "cover" | "personOne" | "personTwo") => void;
-  onUpload: (file: File) => Promise<void>;
+  onUpload?: (file: File) => Promise<void>;
 }) {
   const { locale } = useLanguage();
   const en = locale === "en";
@@ -64,7 +64,7 @@ export default function PhotoPanel({
   };
 
   async function uploadFiles(files: File[]) {
-    if (!files.length) return;
+    if (!files.length || !onUpload) return;
     setError("");
     setUploading(true);
     try {
@@ -101,7 +101,7 @@ export default function PhotoPanel({
             {en ? "No photos uploaded yet." : "Foto belum diunggah."}
           </div>
         )}
-        <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
+        {onUpload && (        <label className={buttonVariants({ size: "lg", className: `mt-3 flex min-h-12 w-full justify-center px-3 ${uploading || pictures.length >= 30 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}` })}>
           <Upload className="h-4 w-4" />
           {uploading ? (en ? "Uploading..." : "Mengunggah foto...") : (en ? "Add Photos" : "Tambah Foto")}
           <input
@@ -117,6 +117,7 @@ export default function PhotoPanel({
             }}
           />
         </label>
+        )}
         <p className="mt-2 text-xs leading-5 text-muted-foreground">{en ? "JPG, PNG or WebP · up to 15 MB per photo." : "JPG, PNG atau WebP · maksimal 15 MB per foto."}</p>
         {error && <p role="alert" className="mt-2 text-xs text-destructive">{error}</p>}
       </section>
