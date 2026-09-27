@@ -25,6 +25,7 @@ import TextObjectPanel from "@/components/InvitationStudio/TextObjectPanel";
 import StudioLayerList from "@/components/InvitationStudio/StudioLayerList";
 import StudioSelectionInspector from "@/components/InvitationStudio/StudioSelectionInspector";
 import StudioCanvasToolbar from "@/components/InvitationStudio/StudioCanvasToolbar";
+import StudioFinalPreviewDialog from "@/components/InvitationStudio/StudioFinalPreviewDialog";
 import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
 import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
 import StudioNativeTransformHandles from "@/components/InvitationStudio/StudioNativeTransformHandles";
@@ -123,7 +124,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const copy = locale === "en" ? {
     unsaved: "Unsaved changes", saved: "Design saved", empty: "Design not saved",
     defaults: "Restore Defaults", defaultsHint: "Return this template to its original design state. Uploaded files stay in your media library.",
-    undo: "Undo design", redo: "Redo design", saving: "Saving...", save: "Save",
+    undo: "Undo design", redo: "Redo design", preview: "Preview", saving: "Saving...", save: "Save",
     settings: "Settings", invitation: "Invitation", tools: "Design tools",
     sections: "Content", colors: "Colors", photos: "Photos", music: "Music", assets: "Assets", text: "Text",
     envelope: "Envelope", cover: "Content",
@@ -133,7 +134,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   } : {
     unsaved: "Perubahan belum disimpan", saved: "Desain tersimpan", empty: "Belum ada desain tersimpan",
     defaults: "Kembalikan ke Default", defaultsHint: "Kembalikan template ke kondisi desain awal. File upload tetap tersimpan di koleksi media.",
-    undo: "Urungkan desain", redo: "Ulangi desain", saving: "Menyimpan...", save: "Simpan",
+    undo: "Urungkan desain", redo: "Ulangi desain", preview: "Preview", saving: "Menyimpan...", save: "Simpan",
     settings: "Pengaturan", invitation: "Undangan", tools: "Alat desain",
     sections: "Isi", colors: "Warna", photos: "Foto", music: "Musik", assets: "Aset", text: "Teks",
     envelope: "Amplop", cover: "Isi",
@@ -169,6 +170,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
+  const [finalPreviewOpen, setFinalPreviewOpen] = useState(false);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasNaturalSize, setCanvasNaturalSize] = useState({ width: 340, height: 760 });
@@ -370,7 +372,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     if (!available) return;
     requestedCatalogApplied.current = true;
     selectTemplate(requested);
-    setNotice("Template dipilih. Klik Simpan untuk menerapkan.");
+    setNotice("Template dipilih. Preview dulu bila perlu, lalu klik Simpan untuk menerapkan.");
   }, [catalog, invitation, templateMode]);
 
 
@@ -1582,7 +1584,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         });
         setSavedState(currentState);
         try { window.sessionStorage.removeItem(STUDIO_REFRESH_DRAFT_KEY); } catch { /* Optional cache. */ }
-        setNotice(`Template #${createdTemplate.templateNo} ditambahkan ke katalog dan siap dijual.`);
+        setNotice(`Draft Template #${createdTemplate.templateNo} tersimpan. Draft belum tampil di katalog sebelum dipublikasikan.`);
         return;
       }
 
@@ -1806,6 +1808,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               defaultsHint: copy.defaultsHint,
               undo: copy.undo,
               redo: copy.redo,
+              preview: copy.preview,
               saving: copy.saving,
               save: copy.save,
             }}
@@ -1813,6 +1816,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             onRestore={restoreDefaults}
             onUndo={undo}
             onRedo={redo}
+            onPreview={() => setFinalPreviewOpen(true)}
             onSave={save}
           />
           <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-enabled="true" data-panning={canvasPanning ? "true" : undefined}
@@ -1994,6 +1998,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           />
         </div>
       </div>
+
+      <StudioFinalPreviewDialog
+        open={finalPreviewOpen}
+        onOpenChange={setFinalPreviewOpen}
+        invitation={invitation}
+        design={design}
+        designKey={designKey}
+        musicUrl={musicUrl}
+        eventTag={eventTag}
+        dressCode={dressCode}
+        locale={locale}
+      />
 
       {notice && <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>}
     </section>
