@@ -482,7 +482,7 @@ export default function UniversalInvitationTemplate({
               </div>
               <p className="pr-identity-names" data-studio-native-object="object:identity:names">{names || eventTitle}</p>
               {couple && <p className="pr-identity-signature" data-studio-native-object="object:identity:signature">Dua hati, satu cerita yang selalu tumbuh.</p>}
-              {(groomParents || brideParents) && <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--inv-soft)] pt-6 text-xs leading-7"><p>{groomParents}</p><p>{brideParents}</p></div>}
+              {(groomParents || brideParents) && <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--inv-soft)] pt-6 text-xs leading-7"><p data-studio-native-object="object:identity:personOne-parents">{groomParents}</p><p data-studio-native-object="object:identity:personTwo-parents">{brideParents}</p></div>}
             </div>
           ) : key === "zen-atelier" ? (
             <div>
@@ -494,7 +494,7 @@ export default function UniversalInvitationTemplate({
               {!media.cover && preview && onEditPhoto && <button className="zen-action mb-6" type="button" onClick={() => onEditPhoto("cover")}>Pilih Foto Pasangan</button>}
               <p className="zen-couple-name" data-studio-native-object="object:identity:names">{couple ? <>{displayTitleCase(invitation.brideName)}<em>&amp;</em>{displayTitleCase(invitation.groomName)}</> : names || eventTitle}</p>
               {couple && <p className="zen-quote" data-studio-native-object="object:identity:quote">Dua jiwa, satu perjalanan, menuju selamanya.</p>}
-              {(groomParents || brideParents) && <div className="zen-parents"><p>{brideParents}</p><p>{groomParents}</p></div>}
+              {(groomParents || brideParents) && <div className="zen-parents"><p data-studio-native-object="object:identity:personTwo-parents">{brideParents}</p><p data-studio-native-object="object:identity:personOne-parents">{groomParents}</p></div>}
             </div>
           ) : (
             <div className={`mx-auto max-w-lg gap-5 ${couple ? "grid grid-cols-2" : "flex flex-col items-center"}`}>
@@ -508,8 +508,8 @@ export default function UniversalInvitationTemplate({
                         {cropOverlay(slot)}
                       </div>}
                       {!usesPhotos && (key === "zen-atelier"
-                        ? <span aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border-b border-[var(--inv-accent)] text-xl text-[var(--inv-accent)]">{slot === "personOne" ? "花" : "和"}</span>
-                        : <div aria-hidden className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>)}
+                        ? <span aria-hidden data-studio-native-object={`object:identity:${slot}-symbol`} className="mx-auto mb-5 flex h-12 w-12 items-center justify-center border-b border-[var(--inv-accent)] text-xl text-[var(--inv-accent)]">{slot === "personOne" ? "花" : "和"}</span>
+                        : <div aria-hidden data-studio-native-object={`object:identity:${slot}-symbol`} className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-current/40 text-xl">{slot === "personOne" ? "✧" : "◇"}</div>)}
                       <p data-studio-native-object={`object:identity:${slot}-name`} className="mt-4 break-words text-base" style={{ fontFamily: invitationFontFamily(font.heading) }}>{name || "Nama belum diisi"}</p>
                       {(slot === "personOne" ? groomParents : brideParents) && <p data-studio-native-object={`object:identity:${slot}-parents`} className="mx-auto mt-2 max-w-[18rem] text-xs leading-5 opacity-75">{slot === "personOne" ? groomParents : brideParents}</p>}
                     </div>
@@ -569,18 +569,18 @@ export default function UniversalInvitationTemplate({
               ) : key === "zen-atelier" ? (
                 <div className="mx-auto max-w-sm">
                   <ZenMemoryArtwork />
-                  <p className="mt-5 text-sm opacity-65">Foto galeri belum ditambahkan.</p>
+                  <p data-studio-native-object="object:gallery:empty-copy" className="mt-5 text-sm opacity-65">Foto galeri belum ditambahkan.</p>
                 </div>
               ) : <p className="text-sm opacity-65">Belum ada foto galeri.</p>}
             </> : key === "zen-atelier" ? (
               <div className="mx-auto max-w-sm">
                 <ZenMemoryArtwork />
-                <p className="mx-auto mt-6 max-w-xs text-sm leading-7 opacity-75">Setiap pertemuan menyimpan cerita yang layak dikenang.</p>
+                <p data-studio-native-object="object:gallery:memory-copy" className="mx-auto mt-6 max-w-xs text-sm leading-7 opacity-75">Setiap pertemuan menyimpan cerita yang layak dikenang.</p>
               </div>
             ) : (
-              <div className="relative mx-auto flex min-h-48 max-w-xs flex-col items-center justify-center border border-current/25 px-6 py-10">
-                <div aria-hidden className="mb-5 flex items-center gap-4 text-3xl opacity-60">{key === "celestial-ink" ? "✧ ✦ ☾" : key === "golden-art-deco" ? "◇ ◆ ◇" : key === "paper-cut-botanical" ? "❧ ❦ ❧" : "✦ ❖ ✦"}</div>
-                <p className="text-sm leading-7 opacity-75">Kenangan indah hadir dalam setiap momen yang kita rayakan bersama.</p>
+              <div data-studio-native-object="object:gallery:memory-panel" className="relative mx-auto flex min-h-48 max-w-xs flex-col items-center justify-center border border-current/25 px-6 py-10">
+                <div aria-hidden data-studio-native-object="object:gallery:memory-symbols" className="mb-5 flex items-center gap-4 text-3xl opacity-60">{key === "celestial-ink" ? "✧ ✦ ☾" : key === "golden-art-deco" ? "◇ ◆ ◇" : key === "paper-cut-botanical" ? "❧ ❦ ❧" : "✦ ❖ ✦"}</div>
+                <p data-studio-native-object="object:gallery:memory-copy" className="text-sm leading-7 opacity-75">Kenangan indah hadir dalam setiap momen yang kita rayakan bersama.</p>
               </div>
             )
           ), 5)}
