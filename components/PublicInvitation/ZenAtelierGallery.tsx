@@ -25,11 +25,11 @@ export default function ZenAtelierGallery({ photos, customMotion = false }: { ph
   if (!photos.length) return <p className="text-sm">Foto belum ditambahkan.</p>;
   return <>
     <div ref={grid} className="zen-gallery-grid">
-      {photos.map((photo, index) => <button type="button" key={photo.id} data-invitation-photo-slot="gallery" aria-label={`Buka foto ${index + 1}`} onClick={(event) => {
+      {photos.map((photo, index) => <button type="button" key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} aria-label={`Buka foto ${index + 1}`} onClick={(event) => {
         opener.current = event.currentTarget; setSelected(index); dialog.current?.showModal();
       }}><img src={photo.url} alt={photo.title || `Momen ${index + 1}`} loading="lazy" decoding="async" /></button>)}
     </div>
-    <p className="zen-quote">Setiap foto menyimpan cerita tentang kita.</p>
+    <p data-studio-native-object="object:gallery:quote" className="zen-quote">Setiap foto menyimpan cerita tentang kita.</p>
     <dialog ref={dialog} className="zen-lightbox" aria-label="Galeri foto" onClose={() => opener.current?.focus()} onKeyDown={(event) => {
       if (event.key === 'ArrowLeft') { event.preventDefault(); move(-1); }
       if (event.key === 'ArrowRight') { event.preventDefault(); move(1); }
