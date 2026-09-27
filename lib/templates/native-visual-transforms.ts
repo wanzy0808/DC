@@ -1,5 +1,7 @@
 import type { CSSProperties } from "react";
 import { editableInvitationCopyFields } from "@/lib/templates/editable-copy";
+import { invitationFonts } from "@/lib/templates/design";
+import { invitationFontFamily } from "@/lib/templates/presentation";
 import { invitationContentSectionKeys } from "@/lib/templates/section-layout";
 
 export type NativeVisualTextAlign = "left" | "center" | "right";
@@ -20,6 +22,7 @@ export type NativeVisualTransform = {
   textAlign?: NativeVisualTextAlign;
   letterSpacing?: number;
   lineHeight?: number;
+  fontFamily?: string;
 };
 export type NativeVisualTransforms = Record<string, NativeVisualTransform>;
 
@@ -30,6 +33,9 @@ export const defaultNativeVisualTransform: NativeVisualTransform = {
 const nativeObjectKey = /^object:(?:envelope|cover|greeting|identity|event|dateTime|gallery|countdown|location|rsvp|wishes|gift|closing|footer):[a-zA-Z0-9_-]{1,64}(?::[a-zA-Z0-9_-]{1,64})?$/;
 const nativeTextObjectId = /(?:^|[-_])(?:kicker|date|name|names|venue|address|title|heading|subtitle|signature|quote|hashtag|copy|greeting|timezone|start|end|bank-name|account-name|account-number|dress-code|side-label|ending|parents)(?:$|[-_])/i;
 const hexColor = /^#[0-9a-fA-F]{6}$/;
+const nativeFontFamilies = new Set(
+  Object.values(invitationFonts).flatMap((item) => [item.heading, item.body]),
+);
 
 const keys = new Set<string>([
   ...editableInvitationCopyFields.map((field) => `copy:${field}`),
@@ -80,6 +86,8 @@ const optionalColor = (value: unknown) =>
   typeof value === "string" && hexColor.test(value) ? value.toLowerCase() : undefined;
 const optionalAlign = (value: unknown): NativeVisualTextAlign | undefined =>
   value === "left" || value === "center" || value === "right" ? value : undefined;
+const optionalFontFamily = (value: unknown) =>
+  typeof value === "string" && nativeFontFamilies.has(value) ? value : undefined;
 
 export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTransforms {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
@@ -108,6 +116,7 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       transform.textAlign = optionalAlign(source.textAlign);
       transform.letterSpacing = optionalNumber(source.letterSpacing, -5, 20);
       transform.lineHeight = optionalNumber(source.lineHeight, 0.7, 3);
+      transform.fontFamily = optionalFontFamily(source.fontFamily);
     }
     for (const [property, propertyValue] of Object.entries(transform)) {
       if (propertyValue === undefined) delete (transform as Record<string, unknown>)[property];
@@ -182,7 +191,16 @@ export function nativeVisualStyle(transform: NativeVisualTransform): CSSProperti
     textAlign: transform.textAlign,
     letterSpacing: transform.letterSpacing,
     lineHeight: transform.lineHeight,
+    fontFamily: transform.fontFamily ? invitationFontFamily(transform.fontFamily) : undefined,
   };
+}
+
+export function nativeVisualFontFamilies(designKey: string) {
+  return [...new Set(
+    Object.values(parseNativeVisualTransforms(designKey))
+      .map((transform) => transform.fontFamily)
+      .filter((family): family is string => Boolean(family)),
+  )];
 }
 
 export function nativeVisualScopeClass(designKey: string) {
@@ -214,6 +232,11 @@ export function nativeVisualStyleSheet(designKey: string) {
       transform.textAlign ? `text-align:${transform.textAlign}` : "",
       transform.letterSpacing !== undefined ? `letter-spacing:${transform.letterSpacing}px` : "",
       transform.lineHeight !== undefined ? `line-height:${transform.lineHeight}` : "",
+      transform.fontFamily
+        ? `font-family:${invitationFontFamily(transform.fontFamily).startsWith("var(")
+          ? invitationFontFamily(transform.fontFamily)
+          : JSON.stringify(invitationFontFamily(transform.fontFamily))}`
+        : "",
     ].filter(Boolean).join(";");
     return `.${scope} ${selector}{${declarations};}`;
   }).join("\n");
