@@ -53,6 +53,9 @@ test("Studio and public renderers share the built-in transform contract", () => 
   assert.match(handles, /canvas\.scrollLeft \+= 14/);
   assert.match(handles, /drag\.scrollTop/);
   assert.match(handles, /-2000, 2000/);
+  assert.doesNotMatch(handles, /-150, 150/);
+  assert.match(handles, /nativeVisualUsesSystemContent\(targetKey\)/);
+  assert.match(handles, /dc-studio-native-content-lock/);
 });
 
 
