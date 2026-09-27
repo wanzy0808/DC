@@ -7,7 +7,7 @@ import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 async function requireTemplateAuthor() {
   const user = await getCurrentUser();
-  return user && ["OWNER", "DESIGNER", "EDITOR"].includes(user.role) ? user : null;
+  return user && ["OWNER", "ADMIN", "DESIGNER", "EDITOR"].includes(user.role) ? user : null;
 }
 
 function cleanTags(value: unknown) {
@@ -32,12 +32,28 @@ export async function GET(request: Request) {
   const author = await requireTemplateAuthor();
   if (!author) return NextResponse.json({ error: "Akses Template Studio diperlukan." }, { status: 403 });
 
-  const requestedId = new URL(request.url).searchParams.get("id")?.trim();
+  const url = new URL(request.url);
+  const requestedId = url.searchParams.get("id")?.trim();
+  const reviewScope = url.searchParams.get("scope") === "review";
+  const reviewer = author.role === "OWNER" || author.role === "ADMIN";
+
+  if (reviewScope) {
+    if (!reviewer) return NextResponse.json({ error: "Hanya Owner/Admin yang dapat membuka antrean review." }, { status: 403 });
+    const templates = await prisma.designerTemplate.findMany({
+      where: { status: "REVIEW" },
+      orderBy: { updatedAt: "asc" },
+      include: {
+        designer: { select: { id: true, firstName: true, lastName: true, email: true } },
+      },
+    });
+    return NextResponse.json({ templates });
+  }
+
   if (requestedId) {
     const template = await prisma.designerTemplate.findFirst({
       where: {
         id: requestedId,
-        ...(author.role === "OWNER" ? {} : { designerId: author.id }),
+        ...(reviewer ? {} : { designerId: author.id }),
       },
     });
     if (!template) return NextResponse.json({ error: "Draft template tidak ditemukan." }, { status: 404 });
@@ -163,12 +179,48 @@ export async function PATCH(request: Request) {
     const current = await prisma.designerTemplate.findFirst({
       where: {
         id,
-        ...(author.role === "OWNER" ? {} : { designerId: author.id }),
+        ...((author.role === "OWNER" || author.role === "ADMIN") ? {} : { designerId: author.id }),
       },
     });
     if (!current) return NextResponse.json({ error: "Draft template tidak ditemukan." }, { status: 404 });
+
+    const action = String(body?.action ?? "").trim().toUpperCase();
+    const reviewer = author.role === "OWNER" || author.role === "ADMIN";
+    if (action === "SUBMIT_REVIEW") {
+      if (current.status !== "DRAFT") {
+        return NextResponse.json({ error: "Hanya draft yang dapat dikirim untuk review." }, { status: 409 });
+      }
+      const updated = await prisma.designerTemplate.update({
+        where: { id: current.id },
+        data: { status: "REVIEW" },
+      });
+      return NextResponse.json({ template: updated, ready: false });
+    }
+    if (action === "PUBLISH") {
+      if (!reviewer) return NextResponse.json({ error: "Hanya Owner/Admin yang dapat mempublikasikan template." }, { status: 403 });
+      if (current.status !== "REVIEW") {
+        return NextResponse.json({ error: "Template harus melalui review sebelum dipublikasikan." }, { status: 409 });
+      }
+      const updated = await prisma.designerTemplate.update({
+        where: { id: current.id },
+        data: { status: "PUBLISHED" },
+      });
+      return NextResponse.json({ template: updated, ready: Boolean(updated.designKey) });
+    }
+    if (action === "RETURN_DRAFT") {
+      if (!reviewer) return NextResponse.json({ error: "Hanya Owner/Admin yang dapat mengembalikan template ke Draft." }, { status: 403 });
+      if (current.status !== "REVIEW") {
+        return NextResponse.json({ error: "Hanya template yang sedang direview yang dapat dikembalikan." }, { status: 409 });
+      }
+      const updated = await prisma.designerTemplate.update({
+        where: { id: current.id },
+        data: { status: "DRAFT" },
+      });
+      return NextResponse.json({ template: updated, ready: false });
+    }
+
     if (current.status !== "DRAFT") {
-      return NextResponse.json({ error: "Template yang sudah dipublikasikan tidak dapat ditimpa sebagai draft." }, { status: 409 });
+      return NextResponse.json({ error: "Hanya template Draft yang dapat diedit." }, { status: 409 });
     }
 
     const designKey = String(body?.designKey ?? "").trim();
