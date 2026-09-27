@@ -526,7 +526,7 @@ test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", ()
 });
 
 
-test("Studio canvas supports Space-drag panning at zoomed sizes", () => {
+test("Studio canvas pans horizontally at every zoom and preserves object gestures", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");
   const canvasPan = read("components/InvitationStudio/useStudioCanvasPan.ts");
   assert.match(designer, /useStudioCanvasPan\(\)/);
@@ -535,6 +535,11 @@ test("Studio canvas supports Space-drag panning at zoomed sizes", () => {
   assert.match(canvasPan, /function endCanvasPan\(/);
   assert.match(canvasPan, /Math\.hypot\(dx, dy\) > 3/);
   assert.match(designer, /data-space-pan=\{canvasPanReady \? "true" : undefined\}/);
+  assert.match(designer, /data-pan-enabled="true"/);
+  assert.match(designer, /beginCanvasPan\(event, true\)/);
+  assert.match(canvasPan, /\[data-studio-design-object\]/);
+  assert.match(styles, /min-width: max\(calc\(100% \+ 400px\)/);
+  assert.match(designer, /scroller\.scrollLeft \+= viewportRect\.left/);
   assert.match(designer, /event\.code !== "Space"/);
   assert.match(designer, /onPointerMove=\{moveCanvasPan\}/);
   assert.match(designer, /consumeSuppressedCanvasClick\(\)/);
