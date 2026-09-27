@@ -1,6 +1,9 @@
 "use client";
 
 import { AlignCenter, AlignLeft, AlignRight, RotateCcw, X } from "lucide-react";
+import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
+import { invitationFontOptions } from "@/components/InvitationStudio/designer-config";
+import { invitationFontFamily } from "@/lib/templates/presentation";
 import {
   defaultNativeVisualTransform,
   nativeVisualCapabilities,
@@ -9,6 +12,9 @@ import {
 } from "@/lib/templates/native-visual-transforms";
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
+const nativeFontFamilies = [...new Set(
+  invitationFontOptions.flatMap(([, item]) => [item.heading, item.body]),
+)].sort((a, b) => a.localeCompare(b));
 
 export default function StudioNativeVisualInspector({
   locale, targetKey, value, onChange, onClose,
@@ -50,6 +56,7 @@ export default function StudioNativeVisualInspector({
 
   return (
     <aside className="dc-studio-layer-side dc-studio-native-inspector" aria-label={en ? "Visual properties" : "Properti visual"}>
+      <InvitationFonts families={current.fontFamily ? [current.fontFamily] : []} />
       <div className="flex items-center justify-between gap-2">
         <h3 className="truncate text-sm font-semibold capitalize text-primary">{title}</h3>
         <button type="button" onClick={onClose} aria-label={en ? "Close properties" : "Tutup properti"}
@@ -110,6 +117,18 @@ export default function StudioNativeVisualInspector({
 
       {capabilities.typography && (
         <div className="mt-4 space-y-3 border-t border-primary/20 pt-4">
+          <label className="block text-xs text-foreground">
+            <span className="mb-1 block">Font</span>
+            <select value={current.fontFamily ?? ""}
+              style={{ fontFamily: current.fontFamily ? invitationFontFamily(current.fontFamily) : undefined }}
+              onChange={(event) => patch({ fontFamily: event.currentTarget.value || undefined })}
+              className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none">
+              <option value="">{en ? "Template font" : "Font template"}</option>
+              {nativeFontFamilies.map((family) => (
+                <option key={family} value={family} style={{ fontFamily: invitationFontFamily(family) }}>{family}</option>
+              ))}
+            </select>
+          </label>
           <div className="grid grid-cols-2 gap-3">
             <label className="text-xs text-foreground">
               <span className="mb-1 block">{en ? "Text size" : "Ukuran teks"}</span>
