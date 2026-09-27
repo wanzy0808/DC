@@ -97,3 +97,19 @@ test("context inspector edits native transforms without replacing copy or compon
   assert.match(inspector, /rotation/);
   assert.match(inspector, /onChange\(defaultNativeVisualTransform\)/);
 });
+
+
+test("duplicated sections can move one heading or copy without moving its sibling", () => {
+  assert.equal(nativeVisualSelector("heading:identity:identity_copy2"),
+    '[data-section-instance-id="identity_copy2"] [data-invitation-section="identity"] [data-studio-native-heading]');
+  assert.equal(nativeVisualSelector("copy:greeting:greeting_copy2"),
+    '[data-section-instance-id="greeting_copy2"] [data-studio-copy-field="greeting"]');
+  assert.equal(nativeVisualSelector("element:gift:button:gift_copy2"),
+    '[data-section-instance-id="gift_copy2"] [data-studio-section-element="gift:button"]');
+  assert.equal(nativeVisualSelector('copy:greeting:x"]{color:red}'), null);
+  const key = withNativeVisualTransforms("botanical-ivory", {
+    "copy:greeting:greeting_copy2": { x: 14, y: 0, scaleX: 1, scaleY: 1, rotation: 0 },
+  });
+  assert.equal(parseNativeVisualTransforms(key)["copy:greeting:greeting_copy2"].x, 14);
+  assert.match(read("components/InvitationStudio/studio-canvas-selection.ts"), /instanceId/);
+});
