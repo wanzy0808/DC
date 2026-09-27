@@ -1303,7 +1303,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     if (!source) return;
     if (patch.section && (design.sections[patch.section] === false || !studioObjectSections.includes(patch.section))) return;
 
-    const patchKeys = Object.keys(patch);
+    const targetSection = patch.section ?? source.section ?? "cover";
+    const nextPatch = patch.section && patch.sectionInstanceId === undefined
+      ? { ...patch, sectionInstanceId: sectionInstanceFor(patch.section) }
+      : patch;
+    if (nextPatch.sectionInstanceId) {
+      const validInstance = targetSection === "envelope"
+        ? nextPatch.sectionInstanceId === "envelope"
+        : design.sectionLayout.some((item) => item.id === nextPatch.sectionInstanceId && item.key === targetSection);
+      if (!validInstance) return;
+    }
+
+    const patchKeys = Object.keys(nextPatch);
     const movingSelection = selectedLayerIds.length > 1
       && selectedLayerIds.includes(id)
       && patchKeys.length > 0
@@ -1311,13 +1322,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       && !source.locked;
 
     if (movingSelection) {
-      const dx = patch.x === undefined ? 0 : patch.x - source.x;
-      const dy = patch.y === undefined ? 0 : patch.y - source.y;
+      const dx = nextPatch.x === undefined ? 0 : nextPatch.x - source.x;
+      const dy = nextPatch.y === undefined ? 0 : nextPatch.y - source.y;
       const sourceSection = source.section ?? "cover";
+      const sourceInstanceId = source.sectionInstanceId ?? sourceSection;
       const selected = new Set(selectedLayerIds);
       change({
         layers: design.layers.map((layer) => {
-          if (!selected.has(layer.id) || layer.locked || (layer.section ?? "cover") !== sourceSection) return layer;
+          if (!selected.has(layer.id) || layer.locked || (layer.section ?? "cover") !== sourceSection
+            || (layer.sectionInstanceId ?? (layer.section ?? "cover")) !== sourceInstanceId) return layer;
           return {
             ...layer,
             x: Math.min(100, Math.max(0, layer.x + dx)),
@@ -1328,10 +1341,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       return;
     }
 
-    change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...patch } : layer) });
-    if (patch.section) {
-      showDesignSection(patch.section);
-      requestAnimationFrame(() => canvasScrollRef.current?.querySelector(`[data-invitation-section="${patch.section}"]`)?.scrollIntoView({ block: "center" }));
+    change({ layers: design.layers.map((layer) => layer.id === id ? { ...layer, ...nextPatch } : layer) });
+    if (nextPatch.section) {
+      showDesignSection(nextPatch.section);
+      const instanceId = nextPatch.sectionInstanceId ?? sectionInstanceFor(nextPatch.section);
+      requestAnimationFrame(() => {
+        const instance = instanceId === "envelope"
+          ? null
+          : canvasScrollRef.current?.querySelector<HTMLElement>(`[data-section-instance-id="${CSS.escape(instanceId)}"]`);
+        (instance?.querySelector(`[data-invitation-section="${nextPatch.section}"]`)
+          ?? canvasScrollRef.current?.querySelector(`[data-invitation-section="${nextPatch.section}"]`))
+          ?.scrollIntoView({ block: "center" });
+      });
     }
   }
 
