@@ -153,11 +153,31 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [assetDropReady, setAssetDropReady] = useState(false);
   const [layerDragOverId, setLayerDragOverId] = useState<string | null>(null);
   const canvasScrollRef = useRef<HTMLDivElement>(null);
+  const previewSurfaceRef = useRef<HTMLDivElement>(null);
+  const previewWorkspaceRef = useRef<HTMLDivElement>(null);
   const [inspectorOpen, setInspectorOpen] = useState(true);
   const [mobileCanvas, setMobileCanvas] = useState(false);
   const [previewVersion, setPreviewVersion] = useState(0);
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [canvasZoom, setCanvasZoom] = useState(1);
+  const [canvasNaturalSize, setCanvasNaturalSize] = useState({ width: 340, height: 760 });
+  useEffect(() => {
+    const surface = previewSurfaceRef.current;
+    const workspace = previewWorkspaceRef.current;
+    if (!surface || !workspace) return;
+    const measure = () => {
+      const width = workspace.clientWidth;
+      const height = surface.offsetHeight;
+      if (!width || !height) return;
+      setCanvasNaturalSize((previous) =>
+        previous.width === width && previous.height === height ? previous : { width, height });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(surface);
+    observer.observe(workspace);
+    measure();
+    return () => observer.disconnect();
+  }, []);
   const [activeCanvasSectionId, setActiveCanvasSectionId] = useState("envelope");
   const {
     canvasPanReady,
@@ -747,14 +767,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function fitCanvasZoom() {
     const scroller = canvasScrollRef.current;
-    const surface = scroller?.querySelector<HTMLElement>(".dc-studio-preview-surface");
-    if (!scroller || !surface) return;
-    const rect = surface.getBoundingClientRect();
-    const naturalWidth = rect.width / Math.max(canvasZoom, 0.01);
-    if (!naturalWidth) return;
+    if (!scroller || !canvasNaturalSize.width) return;
     const availableWidth = Math.max(1, scroller.clientWidth - 32);
-    const next = Math.min(1.3, Math.max(0.7, availableWidth / naturalWidth));
-    setCanvasZoom(Math.round(next * 10) / 10);
+    const next = Math.min(5, Math.max(0.1, availableWidth / canvasNaturalSize.width));
+    setCanvasZoom(Math.round(next * 100) / 100);
   }
 
   function showDesignSection(section: StudioObjectSection) {
@@ -1697,7 +1713,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onDistribute={distributeSelectedAssetLayers}
             />
 
-            <div className="dc-studio-preview-workspace">
+            <div ref={previewWorkspaceRef} className="dc-studio-preview-workspace">
               <StudioStageControls
                 locale={locale}
                 envelopeEnabled={design.sections.envelope !== false}
@@ -1714,7 +1730,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 }}
                 onContent={() => { setCanvasStage("cover"); setActiveCanvasSectionId((current) => current === "envelope" ? canvasNavigationItems.find((item) => item.id !== "envelope")?.id ?? current : current); }}
               />
-              <div className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ zoom: canvasZoom }}>
+              <div className="dc-studio-preview-viewport" style={{ width: canvasNaturalSize.width * canvasZoom, height: canvasNaturalSize.height * canvasZoom }}>
+              <div ref={previewSurfaceRef} className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ width: canvasNaturalSize.width, transform: `scale(${canvasZoom})`, transformOrigin: "top left" }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
                     invitation={invitation}
@@ -1746,6 +1763,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                     onDeleteSectionInstance={deleteSectionInstance}
                   />
                 </div>
+              </div>
               </div>
             </div>
 
@@ -1786,10 +1804,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             activeId={canvasStage === "envelope" && design.sections.envelope !== false ? "envelope" : activeCanvasSectionId}
             zoom={canvasZoom}
             onNavigate={navigateCanvasSection}
-            onZoomOut={() => setCanvasZoom((value) => Math.max(0.7, Math.round((value - 0.1) * 10) / 10))}
+            onZoomOut={() => setCanvasZoom((value) => Math.max(0.1, Math.round((value - (value <= 1 ? 0.1 : 0.25)) * 100) / 100))}
+            onZoomChange={setCanvasZoom}
             onResetZoom={() => setCanvasZoom(1)}
             onFit={fitCanvasZoom}
-            onZoomIn={() => setCanvasZoom((value) => Math.min(1.3, Math.round((value + 0.1) * 10) / 10))}
+            onZoomIn={() => setCanvasZoom((value) => Math.min(5, Math.round((value + (value < 1 ? 0.1 : 0.25)) * 100) / 100))}
           />
         </div>
       </div>
