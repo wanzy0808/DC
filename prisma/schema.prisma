@@ -55,6 +55,7 @@ enum GuestSource {
 
 enum TemplateStatus {
   DRAFT
+  REVIEW
   PUBLISHED
   ARCHIVED
 }
