@@ -158,6 +158,7 @@ export default function UniversalInvitationTemplate({
   onToggleSectionInstance,
   onDuplicateSectionInstance,
   onDeleteSectionInstance,
+  editorMode = "customer",
   templateKey,
   designKey,
   personalGuest,
@@ -185,6 +186,7 @@ export default function UniversalInvitationTemplate({
   onToggleSectionInstance?: (id: string) => void;
   onDuplicateSectionInstance?: (id: string) => void;
   onDeleteSectionInstance?: (id: string) => void;
+  editorMode?: "template" | "customer";
   templateKey?: string;
   designKey?: string;
 }) {
@@ -351,7 +353,7 @@ export default function UniversalInvitationTemplate({
     ) : null;
 
   const objectOverlay = (target: StudioObjectSection, instanceId: string = target) => <InvitationAssetLayers layers={illustrationLayers} section={target} sectionInstanceId={instanceId}
-    editable={preview && Boolean(onUpdateAssetLayer)} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer}
+    editable={preview && Boolean(onUpdateAssetLayer)} editorMode={editorMode} selectedId={selectedAssetLayerId} selectedIds={selectedAssetLayerIds} onSelect={onSelectAssetLayer}
     onUpdate={onUpdateAssetLayer} />;
 
   const renderSectionInstances = (keyName: InvitationSectionKey, render: (instanceId: string) => ReactNode) => {
