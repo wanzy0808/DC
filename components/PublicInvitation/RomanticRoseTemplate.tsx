@@ -278,10 +278,9 @@ export default function RomanticRoseTemplate({
             <span data-studio-native-object="object:envelope:seal" className="absolute bottom-6 left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-4 border-[#edc6d0] bg-[#b7798d] text-white shadow-md"><Heart className="h-5 w-5" fill="currentColor" /></span>
           </div>
           <p data-studio-native-object="object:envelope:invitation-copy" className="mt-8 text-xs leading-6 text-[#815768]">Dengan hangat kami mengundang Anda<br />untuk merayakan hari istimewa kami.</p>
-          <button type="button" onClick={handleOpen} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
+          <button type="button" onClick={handleOpen} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" className="mt-7 min-h-11 rounded-[var(--dc-control-radius)] bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
             Buka Undangan
           </button>
-          {preview && <p className="mt-4 text-[11px] text-[#8e586d]">Preview · foto dan isi mengikuti undangan ini</p>}
         </section>
       ) : (
         <div className="mx-auto flex max-w-2xl flex-col">
@@ -370,7 +369,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="gallery" style={invitationSectionStyleCss(sectionStyles.gallery)} className="relative bg-[#fffaf8] px-6 py-20">
                         {objectOverlay("gallery", instanceId)}
                           <RoseHeading section="gallery" eyebrow="Our memories">Galeri Foto</RoseHeading>
-                          {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
+                          {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-[var(--dc-control-radius)] border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
                           {gallery.length ? <div className="grid grid-cols-2 gap-3">
                             {gallery.map((photo, index) => (
                               <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
