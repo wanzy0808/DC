@@ -115,3 +115,29 @@ test("duplicated sections can move one heading or copy without moving its siblin
   assert.equal(parseNativeVisualTransforms(key)["copy:greeting:greeting_copy2"].x, 14);
   assert.match(read("components/InvitationStudio/studio-canvas-selection.ts"), /instanceId/);
 });
+
+
+test("template-authored native objects use safe selectors and section-instance scope", () => {
+  assert.equal(nativeVisualSelector("object:cover:flower-left"),
+    '[data-studio-native-object="object:cover:flower-left"]');
+  assert.equal(nativeVisualSelector("object:identity:theme-art:identity_copy2"),
+    '[data-section-instance-id="identity_copy2"] [data-studio-native-object="object:identity:theme-art"]');
+  assert.equal(nativeVisualSelector('object:cover:x"]{color:red}'), null);
+  assert.match(read("components/InvitationStudio/studio-canvas-selection.ts"), /data-studio-native-object/);
+});
+
+test("theme-authored decorations and special cover headings are selectable in Studio", () => {
+  const themeScenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const pencil = read("components/PublicInvitation/PencilReverieScene.tsx");
+  const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
+  const pencilArt = read("components/PublicInvitation/PencilReverieArtwork.tsx");
+  const zenArt = read("components/PublicInvitation/ZenAtelierArtwork.tsx");
+  assert.match(themeScenes, /object:cover:flower-left/);
+  assert.match(themeScenes, /object:envelope:open-button/);
+  assert.match(pencil, /data-studio-native-heading/);
+  assert.match(pencil, /object:cover:main-art/);
+  assert.match(zen, /data-studio-native-heading/);
+  assert.match(zen, /object:envelope:mizuhiki/);
+  assert.match(pencilArt, /object:\$\{section\}:theme-art/);
+  assert.match(zenArt, /object:\$\{section\}:theme-art/);
+});

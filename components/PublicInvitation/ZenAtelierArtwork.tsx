@@ -7,9 +7,11 @@ import type { CSSProperties } from "react";
  * secrecy: the project repository is public and rendered browser art is copyable.
  * No customer data, private master image or raw uploaded binary belongs here.
  */
-export function EnsoSun({ className = "", style }: { className?: string; style?: CSSProperties }) {
+type ArtworkProps = { className?: string; style?: CSSProperties; studioObject?: string };
+
+export function EnsoSun({ className = "", style, studioObject }: ArtworkProps) {
   return (
-    <svg viewBox="0 0 240 240" fill="none" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 240 240" fill="none" className={className} style={style} aria-hidden="true" data-studio-native-object={studioObject}>
       <circle cx="120" cy="120" r="76" fill="#A9513B" fillOpacity=".92" />
       <path d="M181 160c27-35 13-90-25-117C112 11 54 35 35 79c-25 58 17 123 77 127 24 2 44-3 62-20" stroke="#893F30" strokeWidth="4" strokeLinecap="round" opacity=".45" />
       <path d="M48 90c-13 32 3 76 30 93" stroke="#F7E9D7" strokeWidth="3" strokeLinecap="round" opacity=".32" />
@@ -18,9 +20,9 @@ export function EnsoSun({ className = "", style }: { className?: string; style?:
   );
 }
 
-export function BlossomBranch({ className = "", style }: { className?: string; style?: CSSProperties }) {
+export function BlossomBranch({ className = "", style, studioObject }: ArtworkProps) {
   return (
-    <svg viewBox="0 0 390 350" fill="none" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 390 350" fill="none" className={className} style={style} aria-hidden="true" data-studio-native-object={studioObject}>
       <g stroke="#54493D" strokeLinecap="round" strokeLinejoin="round">
         <path d="M-10 4C60 50 80 96 126 133c52 40 89 70 165 101" strokeWidth="4"/>
         <path d="M72 81C93 36 131 16 180 10M123 131c5-41 26-69 61-90M163 159c41-9 79-3 112 16M213 193c-1-47 23-76 51-102M255 217c41-8 74-1 115 20" strokeWidth="2.3"/>
@@ -50,9 +52,9 @@ export function BlossomBranch({ className = "", style }: { className?: string; s
   );
 }
 
-export function InkMountains({ className = "", style }: { className?: string; style?: CSSProperties }) {
+export function InkMountains({ className = "", style, studioObject }: ArtworkProps) {
   return (
-    <svg viewBox="0 0 460 210" fill="none" className={className} style={style} aria-hidden="true">
+    <svg viewBox="0 0 460 210" fill="none" className={className} style={style} aria-hidden="true" data-studio-native-object={studioObject}>
       <path d="M0 146 56 105l35 15 61-89 66 88 30-22 45-61 72 93 43-25 52 37v69H0z" fill="#9AA397" fillOpacity=".28"/>
       <path d="m0 165 73-59 37 27 62-67 53 62 47-31 51-24 67 76 70-27v88H0z" fill="#637368" fillOpacity=".37"/>
       <path d="m0 178 60-25 57 24 64-42 78 36 58-43 70 50 73-24v56H0z" fill="#334842" fillOpacity=".58"/>
@@ -64,7 +66,7 @@ export function InkMountains({ className = "", style }: { className?: string; st
 /** Artwork-only gallery fallback. Never show demo people as the couple's own photos. */
 export function ZenMemoryArtwork() {
   return (
-    <div aria-hidden="true" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
+    <div aria-hidden="true" data-studio-native-object="object:gallery:memory-art" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
       <img src="/templates/Zen%20Atelier/japanroom2.png" alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
       <img src="/templates/Zen%20Atelier/japancup.png" alt="" loading="lazy" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
@@ -78,10 +80,10 @@ export function ZenMemoryArtwork() {
 export function ZenSectionArtwork({ section }: { section: string }) {
   const root = "/templates/Zen%20Atelier/";
   if (["closing", "rsvp", "gallery"].includes(section)) {
-    return <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.png"} alt="" aria-hidden="true" loading="lazy" className={`pointer-events-none absolute inset-x-0 h-auto w-full object-contain ${section === "gallery" ? "top-0 opacity-15" : "bottom-0 opacity-30"}`} />;
+    return <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.png"} alt="" aria-hidden="true" loading="lazy" className={`pointer-events-none absolute inset-x-0 h-auto w-full object-contain ${section === "gallery" ? "top-0 opacity-15" : "bottom-0 opacity-30"}`} data-studio-native-object={`object:${section}:theme-art`} />;
   }
   if (section === "identity") {
-    return <Image width={1254} height={1254} sizes="250px" src={root + "bunga0004.png"} alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 bottom-0 h-auto w-[48%] max-w-[250px] object-contain opacity-70" />;
+    return <Image width={1254} height={1254} sizes="250px" src={root + "bunga0004.png"} alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 bottom-0 h-auto w-[48%] max-w-[250px] object-contain opacity-70" data-studio-native-object="object:identity:theme-art" />;
   }
   return null;
 }

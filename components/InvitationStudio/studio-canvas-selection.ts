@@ -64,6 +64,14 @@ export function resolveStudioCanvasSelection(
       ? { assetId: photoElement.dataset.studioPhotoId } : {}) };
   }
 
+  const nativeObject = target.closest<HTMLElement>("[data-studio-native-object]");
+  const nativeObjectBaseKey = nativeObject?.dataset.studioNativeObject;
+  if (nativeObjectBaseKey) {
+    const instanceKey = instanceId ? `${nativeObjectBaseKey}:${instanceId}` : nativeObjectBaseKey;
+    if (isNativeVisualKey(instanceKey)) return { kind: "native", key: instanceKey };
+    if (isNativeVisualKey(nativeObjectBaseKey)) return { kind: "native", key: nativeObjectBaseKey };
+  }
+
   if (target.closest(
     "[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]",
   )) {

@@ -44,14 +44,14 @@ export function PencilSectionArt({ section }: { section: string }) {
   const id = sectionDrawings[section];
   if (!id) return null;
   const art = drawings[id];
-  return <figure className="pr-section-art" data-part={section} aria-hidden="true">
+  return <figure className="pr-section-art" data-part={section} aria-hidden="true" data-studio-native-object={`object:${section}:theme-art`}>
     <Image src={root+art.file} width={art.width} height={art.height}
       sizes="(max-width: 640px) 88vw, 510px" loading="lazy" alt="" className="pr-section-whole-image"/>
   </figure>;
 }
 
 export function PencilBackwardClock() {
-  return <div className="pr-clock-art" aria-hidden="true">
+  return <div className="pr-clock-art" aria-hidden="true" data-studio-native-object="object:countdown:clock-art">
     <span className="pr-clock-face"/><span className="pr-clock-hand pr-clock-hour"/>
     <span className="pr-clock-hand pr-clock-minute"/><span className="pr-clock-dot"/>
   </div>;

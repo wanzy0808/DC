@@ -484,3 +484,9 @@
   .dc-studio-status { padding: 8px 12px; font-size: 11px; }
 }
 @media (prefers-reduced-motion: reduce) { .dc-studio-tool { transition: none; } }
+
+
+/* Template-authored visual objects stay passive publicly, but must be targetable in Studio. */
+.dc-studio-preview-surface [data-studio-native-object] {
+  pointer-events: auto !important;
+}

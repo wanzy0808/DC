@@ -22,13 +22,13 @@ type SceneProps = {
  * In particular bungaandlampbg.png contains the ENTIRE lantern and its bracket.
  * The 1122x1402 paper illustrations have their own aspect ratio and remain in flow.
  */
-function PaperIllustration({ file, priority = false, className = "" }: { file: string; priority?: boolean; className?: string }) {
+function PaperIllustration({ file, priority = false, className = "", studioObject }: { file: string; priority?: boolean; className?: string; studioObject?: string }) {
   return <Image src={assetRoot + file} alt="" aria-hidden="true" width={1122} height={1402}
-    sizes="(max-width: 640px) 100vw, 560px" priority={priority} className={className}/>;
+    sizes="(max-width: 640px) 100vw, 560px" priority={priority} className={className} data-studio-native-object={studioObject}/>;
 }
 
-function HeartDoodle() {
-  return <svg className="pr-heart-doodle" aria-hidden="true" viewBox="0 0 64 62" fill="none">
+function HeartDoodle({ studioObject }: { studioObject?: string }) {
+  return <svg className="pr-heart-doodle" aria-hidden="true" viewBox="0 0 64 62" fill="none" data-studio-native-object={studioObject}>
     <path d="M31 56C16 41 3 30 6 18 10 1 25 7 32 21 41 2 56 8 59 20c3 14-17 30-28 36Z"
       stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>;
@@ -60,38 +60,38 @@ export default function PencilReverieScene({
   return <section ref={rootRef} data-invitation-section={stage} data-pr-opening={opening || undefined}
     data-pr-active={visible} data-pr-long={longName} className={"pr-scene pr-" + stage}>
     {stage === "envelope" ? <>
-      <div className="pr-gate-intro">
-        <span className="pr-overline">A LITTLE STORY OF US</span>
-        <p>Setiap cerita punya awalnya.</p>
+      <div className="pr-gate-intro" data-studio-native-object="object:envelope:intro">
+        <span className="pr-overline" data-studio-native-object="object:envelope:kicker">A LITTLE STORY OF US</span>
+        <p data-studio-native-object="object:envelope:intro-copy">Setiap cerita punya awalnya.</p>
       </div>
       <div className="pr-letter-illustration">
-        <PaperIllustration file="bingkai.png" priority className="pr-letter-paper"/>
+        <PaperIllustration file="bingkai.png" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy">
-          <p>Untuk momen istimewa</p>
-          <h1>{names}</h1>
-          <span>{date}</span>
+          <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
+          <h1 data-studio-native-heading="">{names}</h1>
+          <span data-studio-native-object="object:envelope:date">{date}</span>
         </div>
-        <HeartDoodle/>
+        <HeartDoodle studioObject="object:envelope:heart"/>
       </div>
-      <button className="pr-open-button" type="button" onClick={handleOpen} disabled={opening} data-studio-system-action={preview ? "open-invitation" : undefined}>
+      <button className="pr-open-button" type="button" onClick={handleOpen} disabled={opening} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button">
         <Play size={15} aria-hidden="true" fill="currentColor"/> Buka Undangan
       </button>
     </> : <>
       <header className="pr-cover-heading">
-        <span className="pr-overline">{isWedding ? "THE WEDDING OF" : "SEBUAH UNDANGAN"}</span>
+        <span className="pr-overline" data-studio-native-object="object:cover:kicker">{isWedding ? "THE WEDDING OF" : "SEBUAH UNDANGAN"}</span>
       </header>
       <div className="pr-cover-illustration">
-        <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper"/>
+        <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
         <div className="pr-cover-copy">
-          <h1 className="pr-cover-names">{couple.length === 2
+          <h1 className="pr-cover-names" data-studio-native-heading="">{couple.length === 2
             ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></>
             : <span>{names}</span>}</h1>
-          <p className="pr-cover-date">{date}</p>
-          {hashtag?.trim() && <p className="pr-cover-hashtag">{hashtag}</p>}
+          <p className="pr-cover-date" data-studio-native-object="object:cover:date">{date}</p>
+          {hashtag?.trim() && <p className="pr-cover-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
         </div>
-        <HeartDoodle/>
+        <HeartDoodle studioObject="object:cover:heart"/>
       </div>
-      <p className="pr-cover-end">Every little moment matters.</p>
+      <p className="pr-cover-end" data-studio-native-object="object:cover:ending">Every little moment matters.</p>
     </>}
   </section>;
 }
