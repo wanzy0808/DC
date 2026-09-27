@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { ArrowDown, MailOpen } from "lucide-react";
+import { MailOpen } from "lucide-react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
 import { BlossomBranch, EnsoSun, InkMountains } from "@/components/PublicInvitation/ZenAtelierArtwork";
 import "./zen-atelier.css";
@@ -75,10 +75,6 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           {hashtag?.trim() && <p className="zen-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
         </div>
         <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.png"} alt="" aria-hidden="true" className="zen-cover-mountain" data-studio-native-object="object:cover:mountains" />
-        <button type="button" aria-label="Ke bagian berikutnya" className="zen-scroll" data-studio-system-action={preview ? "next-section" : undefined} data-studio-native-object="object:cover:scroll-button" onClick={(event) => {
-          if (preview) return;
-          event.currentTarget.closest('section')?.nextElementSibling?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
-        }}><ArrowDown size={19} aria-hidden="true" /></button>
       </>}
     </section>
   );
