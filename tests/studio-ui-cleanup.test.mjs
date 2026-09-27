@@ -588,7 +588,7 @@ test("Studio keeps invitation and template persistence outside the canvas compon
   assert.match(designer, /from "@\/components\/InvitationStudio\/designer-persistence"/);
   assert.match(designer, /await loadStudioInvitation\(invitationId, legacyType\)/);
   assert.match(designer, /await saveStudioInvitation\(/);
-  assert.match(designer, /await createStudioTemplate\(/);
+  assert.match(designer, /await saveStudioTemplateDraft\(/);
   assert.match(designer, /await uploadStudioAsset\(invitation\.id, assetType, file\)/);
   assert.match(designer, /await deleteStudioAsset\(id\)/);
   assert.match(designer, /makeStudioServerRevision\(savedInvitation\)/);
@@ -596,7 +596,9 @@ test("Studio keeps invitation and template persistence outside the canvas compon
   assert.match(persistence, /fetcher\(\`\/api\/invitations\$\{query\}\`/);
   assert.match(persistence, /export async function saveStudioInvitation\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations"/);
-  assert.match(persistence, /export async function createStudioTemplate\(/);
+  assert.match(persistence, /export async function loadStudioTemplateDraft\(/);
+  assert.match(persistence, /export async function saveStudioTemplateDraft\(/);
+  assert.match(persistence, /method: templateId \? "PATCH" : "POST"/);
   assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
   assert.match(persistence, /export async function uploadStudioAsset\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations\/assets\/upload"/);
