@@ -26,14 +26,19 @@ test("staff Save creates a draft template while customer Save stays event-scoped
   const toolbar = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
 
   assert.match(editor, /if \(templateMode\)/);
-  assert.match(editor, /createStudioTemplate\(/);
+  assert.match(editor, /saveStudioTemplateDraft\(/);
   assert.match(persistence, /fetcher\("\/api\/designer\/templates"/);
-  assert.match(persistence, /method: "POST"/);
+  assert.match(persistence, /method: templateId \? "PATCH" : "POST"/);
+  assert.match(editor, /loadStudioTemplateDraft\(requestedDraftId\)/);
+  assert.match(editor, /setTemplateDraftId\(savedTemplate\.id\)/);
+  assert.match(editor, /location\.searchParams\.set\("draft", savedTemplate\.id\)/);
   assert.match(toolbar, /Simpan Draft/);
   assert.match(editor, /saveStudioInvitation\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
   assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
   assert.match(templateApi, /designKey,/);
+  assert.match(templateApi, /export async function PATCH\(request: Request\)/);
+  assert.match(templateApi, /current\.status !== "DRAFT"/);
   assert.match(templateApi, /status: "DRAFT"/);
   assert.match(templateApi, /ready: false/);
   assert.doesNotMatch(templateApi, /prisma\.invitation\.update/);
