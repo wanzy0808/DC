@@ -1831,6 +1831,9 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               selectedSectionElement={selectedSectionElement}
               selectedCopyField={selectedCopyField}
               selectedSectionKey={selectedSectionKey}
+              selectedNativeKey={selectedNativeKey}
+              onUpdateNative={commitNativeVisual}
+              onCloseNative={() => setSelectedNativeKey(null)}
               onCloseAsset={() => { setSelectedLayerIds([]); setSelectedLayerId(null); }}
               onUpdateAsset={updateAssetLayer}
               onPositionAsset={positionAssetLayer}
