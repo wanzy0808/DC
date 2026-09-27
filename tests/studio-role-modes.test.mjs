@@ -35,7 +35,7 @@ test("staff Save creates a draft template while customer Save stays event-scoped
   assert.match(toolbar, /Simpan Draft/);
   assert.match(editor, /saveStudioInvitation\(/);
   assert.match(persistence, /fetcher\("\/api\/invitations", \{[\s\S]*?method: "PUT"/);
-  assert.match(templateApi, /\["OWNER", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
+  assert.match(templateApi, /\["OWNER", "ADMIN", "DESIGNER", "EDITOR"\]\.includes\(user\.role\)/);
   assert.match(templateApi, /designKey,/);
   assert.match(templateApi, /export async function PATCH\(request: Request\)/);
   assert.match(templateApi, /current\.status !== "DRAFT"/);
@@ -71,4 +71,29 @@ test("staff cannot accidentally use the customer invitation save route", () => {
   assert.match(customerRoute, /user\.role === "DESIGNER" \|\| user\.role === "EDITOR"/);
   assert.match(ownerDashboard, /href="\/owner\/studio"/);
   assert.match(designerDashboard, /href="\/designer\/studio"/);
+});
+
+
+test("template catalog publication is gated by review and Owner/Admin approval", () => {
+  const schema = read("prisma/schema.prisma");
+  const migration = read("prisma/migrations/20260927114500_designer_template_review_status/migration.sql");
+  const templateApi = read("app/api/designer/templates/route.ts");
+  const designerDashboard = read("components/Designer/DesignerDashboard.tsx");
+  const ownerDashboard = read("components/Owner/OwnerDashboard.tsx");
+  const ownerReview = read("components/Owner/OwnerTemplateReview.tsx");
+
+  assert.match(schema, /enum TemplateStatus \{[\s\S]*DRAFT[\s\S]*REVIEW[\s\S]*PUBLISHED/);
+  assert.match(migration, /ALTER TYPE "TemplateStatus" ADD VALUE IF NOT EXISTS 'REVIEW'/);
+  assert.match(templateApi, /action === "SUBMIT_REVIEW"/);
+  assert.match(templateApi, /data: \{ status: "REVIEW" \}/);
+  assert.match(templateApi, /action === "PUBLISH"/);
+  assert.match(templateApi, /Hanya Owner\/Admin yang dapat mempublikasikan template/);
+  assert.match(templateApi, /data: \{ status: "PUBLISHED" \}/);
+  assert.match(templateApi, /action === "RETURN_DRAFT"/);
+  assert.match(designerDashboard, /Kirim Review/);
+  assert.match(designerDashboard, /action: "SUBMIT_REVIEW"/);
+  assert.match(ownerDashboard, /<OwnerTemplateReview \/>/);
+  assert.match(ownerReview, /scope=review/);
+  assert.match(ownerReview, /Publish ke Katalog/);
+  assert.match(ownerReview, /Kembalikan Draft/);
 });
