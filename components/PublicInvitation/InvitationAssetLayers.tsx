@@ -86,9 +86,14 @@ function EditableLayer({
     const bounds = root.current.getBoundingClientRect();
     const cx = bounds.left + bounds.width / 2;
     const cy = bounds.top + bounds.height / 2;
+    const naturalSectionWidth = root.current.parentElement?.offsetWidth ?? sectionRect.width;
+    const height = layer.height ?? root.current.offsetHeight / Math.max(1, naturalSectionWidth) * 100;
     gesture.current = {
-      pointer: event.pointerId, mode, handle, objectWidth: Math.max(1, root.current.offsetWidth), objectHeight: Math.max(1, root.current.offsetHeight), startX: event.clientX, startY: event.clientY,
-      x: layer.x, y: layer.y, width: layer.width, height: layer.height ?? root.current.offsetHeight / sectionRect.width * 100, rotation: layer.rotation ?? 0,
+      pointer: event.pointerId, mode, handle,
+      objectWidth: Math.max(1, sectionRect.width * layer.width / 100),
+      objectHeight: Math.max(1, sectionRect.width * height / 100),
+      startX: event.clientX, startY: event.clientY,
+      x: layer.x, y: layer.y, width: layer.width, height, rotation: layer.rotation ?? 0,
       rect: sectionRect, centerX: cx, centerY: cy,
       initialAngle: Math.atan2(event.clientY - cy, event.clientX - cx),
       moved: false, additive: event.shiftKey,
