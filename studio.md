@@ -29,6 +29,8 @@ DC Organizer **tetap membangun website undangan digital**, bukan aplikasi poster
 
 **Protected component dengan editable design properties.** Desainer boleh mengatur penempatan, ukuran, susunan, tipografi, palet, frame, border, spacing, dekorasi, foto, animasi, dan varian tata letak melalui properti yang dinyatakan di *capability/manifest* komponen. Editor hanya memperlihatkan kontrol yang benar-benar didukung renderer; jangan membuka source code, HTML/JavaScript/CSS arbitrer, endpoint, skema database, atau logika bisnis melalui inspector.
 
+**Data sistem = content locked, style editable (27 September 2026).** Teks/nilai yang berasal dari input acara atau engine—nama, orang tua, tanggal/jam, venue/alamat, rekening, countdown, hashtag, dan nilai fungsional sejenis—tidak boleh diketik ulang, dihapus, atau diganti dari canvas/inspector visual. Pemilik mengubah sumber datanya pada alur input yang benar; di Studio objeknya tetap dapat dipilih untuk mengatur typography, warna, posisi/ukuran yang aman, opacity, layer visual dan animasi. Konten naratif yang memang diizinkan template seperti Greeting, Closing dan Our Story tetap editable melalui menu Isi. Inspector kanan selalu styling-only; bila suatu konten dapat diubah, kontrol kontennya berada di kiri atau pada form data event yang sesuai.
+
 Komponen fungsional tetap milik engine DC Organizer:
 - **Amplop Digital:** desain flap, latar dan animasi boleh berubah; mekanisme membuka undangan harus tetap berjalan.
 - **Identitas, Detail Acara, Tanggal, Maps, Countdown:** gaya visual bisa berubah; nilai nama/keluarga, jadwal, venue, tautan lokasi dan hitung waktu tetap berasal dari data acara yang benar.
