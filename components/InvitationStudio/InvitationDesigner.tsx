@@ -234,6 +234,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
     sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
     sectionElementStyles: {},
+    nativeVisuals: {},
   });
 
   async function load() {
@@ -459,6 +460,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
       sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
       sectionElementStyles: {},
+    nativeVisuals: {},
     });
     setMusicUrl("");
     setSelectedCatalogKey("blank-canvas");
@@ -520,6 +522,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         rsvpConfig: templateKey === design.template ? design.rsvpConfig : { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
         sectionLayout: templateKey === design.template ? design.sectionLayout : defaultInvitationSectionLayout.map((item) => ({ ...item })),
         sectionElementStyles: templateKey === design.template ? design.sectionElementStyles : {},
+        nativeVisuals: templateKey === design.template ? design.nativeVisuals : {},
       });
       setMusicUrl(getInvitationDefaultMusic(templateKey).url);
     }
@@ -557,6 +560,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} },
       sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })),
       sectionElementStyles: {},
+    nativeVisuals: {},
     });
     setMusicUrl("");
     setActivePhotoSlot("cover");
