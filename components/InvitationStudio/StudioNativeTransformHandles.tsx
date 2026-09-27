@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, type PointerEvent, type RefObject } from "react";
-import { RotateCcw, RotateCw } from "lucide-react";
+import { Lock, RotateCcw, RotateCw } from "lucide-react";
 import {
-  defaultNativeVisualTransform, nativeVisualSelector,
+  defaultNativeVisualTransform, nativeVisualSelector, nativeVisualUsesSystemContent,
   type NativeVisualTransform,
 } from "@/lib/templates/native-visual-transforms";
 
@@ -112,8 +112,8 @@ export default function StudioNativeTransformHandles({
     const shiftX = signX * (scaleX - start.scaleX) * width / 2;
     const shiftY = signY * (scaleY - start.scaleY) * height / 2;
     return {
-      x: round(clamp(start.x + (shiftX * cos - shiftY * sin) / width * 100, -150, 150)),
-      y: round(clamp(start.y + (shiftX * sin + shiftY * cos) / height * 100, -150, 150)),
+      x: round(clamp(start.x + (shiftX * cos - shiftY * sin) / width * 100, -2000, 2000)),
+      y: round(clamp(start.y + (shiftX * sin + shiftY * cos) / height * 100, -2000, 2000)),
       scaleX, scaleY, rotation: start.rotation,
     };
   }
@@ -169,6 +169,11 @@ export default function StudioNativeTransformHandles({
   return (
     <div className="dc-studio-native-transform" style={{ left: box.left, top: box.top, width: box.width, height: box.height }}
       aria-label="Transformasi elemen bawaan">
+      {nativeVisualUsesSystemContent(targetKey) && (
+        <span className="dc-studio-native-content-lock" title="Isi dari data acara terkunci; styling tetap editable" aria-label="Isi data acara terkunci">
+          <Lock size={12} />
+        </span>
+      )}
       <button type="button" className="dc-studio-native-move" aria-label="Geser elemen" title="Tarik untuk menggeser"
         onPointerDown={(event) => begin(event, "move")} onPointerMove={move} onPointerUp={end}
         onPointerCancel={(event) => end(event, true)} />
