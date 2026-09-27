@@ -6,6 +6,12 @@
 
 ## 1. Prinsip untuk setiap template
 
+### Template tetap website undangan — bukan poster Canva
+
+Setiap template DC Organizer adalah **website invitation responsif**. Studio boleh terasa seperti Canva saat mengatur visual, tetapi hasil template tidak boleh berubah menjadi artboard gambar/fixed-layout: tetap gunakan struktur web, alur section, scroll, breakpoint mobile/desktop, semantic/interactive DOM, dan engine fitur bersama. Drag/resize/rotate/layer adalah alat authoring untuk menyusun elemen di dalam sistem website, bukan alasan untuk mengabsolutkan seluruh halaman.
+
+Elemen dekoratif dan visual bawaan boleh bebas dikomposisikan serta diberi edge bleed bila sesuai art direction, namun setiap objek tetap memiliki section/komponen pemilik yang jelas. RSVP, Maps, Countdown, Musik, Wishes, Gift, identitas, tanggal, venue, foto dan data tamu tetap komponen web nyata dan responsif; jangan bake data/fungsi tersebut menjadi gambar atau menggantinya dengan objek bebas. Template dinyatakan siap hanya bila komposisi hasil authoring tetap layak di desktop **dan** HP.
+
 Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
 ### Kebebasan komposisi: tidak wajib grid, boxy, atau simetris
