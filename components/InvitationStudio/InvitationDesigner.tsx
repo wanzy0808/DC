@@ -1806,7 +1806,16 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             onUploadLibraryAsset={templateMode ? uploadDesignerArtwork : undefined}
             maxLayers={maxAssetLayers}
           />}
-          {panel === "music" && <MusicPanel musicUrl={musicUrl} defaultTrack={getInvitationDefaultMusic(design.template).title} defaultUrl={getInvitationDefaultMusic(design.template).url} assets={invitation?.assets ?? []} busy={audioBusy || saving} setMusicUrl={setMusicUrl} onUpload={(file) => uploadAsset(file, "AUDIO")} onDelete={deleteMusic} />}
+          {panel === "music" && <MusicPanel
+            musicUrl={musicUrl}
+            defaultTrack={getInvitationDefaultMusic(design.template).title}
+            defaultUrl={getInvitationDefaultMusic(design.template).url}
+            assets={invitation?.assets ?? []}
+            busy={audioBusy || saving}
+            setMusicUrl={setMusicUrl}
+            onUpload={templateMode ? undefined : (file) => uploadAsset(file, "AUDIO")}
+            onDelete={templateMode ? undefined : deleteMusic}
+          />}
           </fieldset>
         </aside>
 
