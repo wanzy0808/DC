@@ -15,8 +15,20 @@ export type StudioTemplateCreateInput = {
   musicUrl: string;
 };
 
-export type StudioTemplateCreateResult = {
+export type StudioTemplateDraft = {
+  id: string;
   templateNo: string | number;
+  name: string;
+  designKey: string | null;
+  musicUrl: string | null;
+  status: "DRAFT" | "PUBLISHED" | string;
+  updatedAt?: string;
+};
+
+export type StudioTemplateSaveResult = {
+  id: string;
+  templateNo: string | number;
+  status: string;
 };
 
 export function makeStudioSavedState(
@@ -84,23 +96,38 @@ export async function saveStudioInvitation(
   return data.invitation as InvitationDesignerInvitation;
 }
 
-export async function createStudioTemplate(
-  input: StudioTemplateCreateInput,
+export async function loadStudioTemplateDraft(
+  templateId: string,
   fetcher: StudioFetcher = fetch,
-): Promise<StudioTemplateCreateResult> {
+): Promise<StudioTemplateDraft> {
+  const response = await fetcher(`/api/designer/templates?id=${encodeURIComponent(templateId)}`, { cache: "no-store" });
+  const data = await response.json();
+  if (!response.ok || !data.template) {
+    throw new Error(data.error || "Draft template belum dapat dimuat.");
+  }
+  return data.template as StudioTemplateDraft;
+}
+
+export async function saveStudioTemplateDraft(
+  input: StudioTemplateCreateInput,
+  templateId?: string | null,
+  fetcher: StudioFetcher = fetch,
+): Promise<StudioTemplateSaveResult> {
   const response = await fetcher("/api/designer/templates", {
-    method: "POST",
+    method: templateId ? "PATCH" : "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(input),
+    body: JSON.stringify(templateId ? { ...input, id: templateId } : input),
   });
   const data = await response.json();
 
   if (!response.ok || !data.template) {
-    throw new Error(data.error || "Template belum dapat disimpan.");
+    throw new Error(data.error || "Draft template belum dapat disimpan.");
   }
 
   return {
+    id: data.template.id,
     templateNo: data.template.templateNo,
+    status: data.template.status,
   };
 }
 
