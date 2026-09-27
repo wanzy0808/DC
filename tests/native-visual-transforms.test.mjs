@@ -201,7 +201,13 @@ test("template-authored supporting visuals remain directly selectable without se
   assert.match(story, /object:identity:our-story-heading/);
   assert.match(story, /object:identity:our-story-divider/);
   assert.match(zenGallery, /data-studio-photo-id=\{photo\.id\}/);
+  assert.match(zenGallery, /if \(preview\) \{ event\.preventDefault\(\); return; \}/);
+  assert.match(zenGallery, /!preview && <dialog/);
   assert.match(zenGallery, /object:gallery:quote/);
+  const pencilGallery = read("components/PublicInvitation/PencilReverieArtwork.tsx");
+  assert.match(pencilGallery, /object:gallery:memory-\$\{i \+ 1\}/);
+  assert.match(pencilGallery, /if \(preview\) \{ e\.preventDefault\(\); return; \}/);
+  assert.match(pencilGallery, /!preview && index!==null/);
   assert.match(rose, /object:envelope:letter-card/);
   assert.match(rose, /object:cover:background-photo/);
   assert.match(rose, /object:cover:gradient-overlay/);
