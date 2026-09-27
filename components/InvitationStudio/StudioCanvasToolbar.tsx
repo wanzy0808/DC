@@ -3,6 +3,7 @@
 import {
   PanelLeftClose,
   PanelLeftOpen,
+  Eye,
   Redo2,
   RotateCcw,
   Save,
@@ -26,6 +27,7 @@ export default function StudioCanvasToolbar({
   onRestore,
   onUndo,
   onRedo,
+  onPreview,
   onSave,
 }: {
   locale: string;
@@ -45,6 +47,7 @@ export default function StudioCanvasToolbar({
     defaultsHint: string;
     undo: string;
     redo: string;
+    preview: string;
     saving: string;
     save: string;
   };
@@ -52,6 +55,7 @@ export default function StudioCanvasToolbar({
   onRestore: () => void;
   onUndo: () => void;
   onRedo: () => void;
+  onPreview: () => void;
   onSave: () => void;
 }) {
   const busy = saving || audioBusy;
@@ -104,6 +108,17 @@ export default function StudioCanvasToolbar({
           <Redo2 className="h-4 w-4" />
         </Button>
       </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        onClick={onPreview}
+        disabled={busy || !invitationReady}
+        size="sm"
+      >
+        <Eye className="h-4 w-4" />
+        {labels.preview}
+      </Button>
 
       <Button
         onClick={onSave}
