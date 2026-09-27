@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
-  nativeVisualCapabilities,
+  nativeVisualCapabilities, nativeVisualFontFamilies,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -278,4 +278,34 @@ test("native inspector exposes visual styling without adding functional controls
   assert.match(inspector, /current\.letterSpacing/);
   assert.match(inspector, /current\.lineHeight/);
   assert.doesNotMatch(inspector, /href|endpoint|required|capacity/i);
+});
+
+
+test("native font overrides use the invitation font catalog and load in public renderers", () => {
+  const clean = sanitizeNativeVisualTransforms({
+    "object:cover:kicker": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      fontFamily: "Playfair Display",
+    },
+    "object:cover:date": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      fontFamily: "Arial; color:red",
+    },
+  });
+  assert.equal(clean["object:cover:kicker"].fontFamily, "Playfair Display");
+  assert.equal(clean["object:cover:date"], undefined);
+  const design = withNativeVisualTransforms("botanical-ivory", clean);
+  assert.deepEqual(nativeVisualFontFamilies(design), ["Playfair Display"]);
+  assert.match(nativeVisualStyleSheet(design), /font-family:"Playfair Display"/);
+  assert.doesNotMatch(nativeVisualStyleSheet(design), /Arial|color:red/);
+
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  assert.match(universal, /nativeVisualFontFamilies\(activeDesignKey\)/);
+  assert.match(rose, /nativeVisualFontFamilies\(activeDesignKey\)/);
+  assert.match(rose, /<InvitationFonts families=\{nativeVisualFontFamilies\(activeDesignKey\)\} \/>/);
+  assert.match(inspector, /nativeFontFamilies/);
+  assert.match(inspector, /current\.fontFamily/);
+  assert.match(inspector, /<InvitationFonts families=\{current\.fontFamily/);
 });
