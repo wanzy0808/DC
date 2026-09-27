@@ -24,6 +24,8 @@ export default function StudioLayerList({
   onUngroup,
   onAlign,
   onDistribute,
+  editorMode = "customer",
+  maxLayers = MAX_ASSET_LAYERS,
 }: {
   locale: string;
   layers: InvitationAssetLayer[];
@@ -38,15 +40,20 @@ export default function StudioLayerList({
   onUngroup: () => void;
   onAlign: (alignment: AssetLayerAlignment) => void;
   onDistribute: (direction: AssetLayerDistribution) => void;
+  editorMode?: "template" | "customer";
+  maxLayers?: number;
 }) {
   const en = locale === "en";
-  const selectedLayers = layers.filter((layer) => selectedIds.includes(layer.id));
+  const visibleLayers = editorMode === "template"
+    ? layers
+    : layers.filter((layer) => layer.customerAccess !== "locked" && layer.customerAccess !== "content");
+  const selectedLayers = visibleLayers.filter((layer) => selectedIds.includes(layer.id));
   const groupedSelection = selectedLayers.some((layer) => layer.groupId);
 
   return (
     <aside className="dc-studio-layer-list" aria-label={en ? "Asset list" : "Daftar aset"}>
       <div className="dc-studio-layer-list-head">
-        {en ? "Assets" : "Asset"} {layers.length}/{MAX_ASSET_LAYERS}
+        {en ? "Assets" : "Asset"} {visibleLayers.length}/{maxLayers}
       </div>
 
       {(selectedIds.length > 1 || groupedSelection) && (
@@ -77,7 +84,7 @@ export default function StudioLayerList({
       )}
 
       <div className="dc-studio-layer-list-items">
-        {[...layers].reverse().map((layer) => {
+        {[...visibleLayers].reverse().map((layer) => {
           const assetNumber = layers.indexOf(layer) + 1;
           const automaticLayerName = layer.kind === "text"
             ? `${en ? "Text" : "Teks"} · ${(layer.text || "").trim().slice(0, 18) || assetNumber}`
