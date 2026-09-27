@@ -42,6 +42,7 @@ export default function DesignerDashboard() {
     orderValue: 0,
   });
   const [message, setMessage] = useState("Memuat template...");
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   async function load() {
     const response = await fetch("/api/designer/templates", { cache: "no-store" });
@@ -61,6 +62,30 @@ export default function DesignerDashboard() {
   }
 
   useEffect(() => { void load(); }, []);
+
+  async function submitForReview(id: string) {
+    if (busyId) return;
+    setBusyId(id);
+    setMessage("");
+    try {
+      const response = await fetch("/api/designer/templates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "SUBMIT_REVIEW" }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Draft belum dapat dikirim untuk review.");
+      await load();
+      setMessage("Draft dikirim ke Owner/Admin untuk review.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Draft belum dapat dikirim untuk review.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  const statusLabel = (status: string) =>
+    status === "PUBLISHED" ? "Published" : status === "REVIEW" ? "Review" : status === "ARCHIVED" ? "Archived" : "Draft";
 
 
   return (
@@ -112,7 +137,7 @@ export default function DesignerDashboard() {
                       <p className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{item.templateNo}</p>
                       <div className="flex items-center gap-2">
                         <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">
-                          {item.status === "PUBLISHED" ? "Published" : "Draft"}
+                          {statusLabel(item.status)}
                         </span>
                         <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
                       </div>
@@ -134,9 +159,22 @@ export default function DesignerDashboard() {
                             : "Template Studio · draft belum tampil di katalog"}
                         </p>
                         {item.status === "DRAFT" && (
-                          <Button asChild size="sm" variant="outline">
-                            <Link href={`/designer/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link>
-                          </Button>
+                          <>
+                            <Button asChild size="sm" variant="outline">
+                              <Link href={`/designer/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link>
+                            </Button>
+                            <Button
+                              type="button"
+                              size="sm"
+                              disabled={busyId === item.id}
+                              onClick={() => void submitForReview(item.id)}
+                            >
+                              {busyId === item.id ? "Mengirim..." : "Kirim Review"}
+                            </Button>
+                          </>
+                        )}
+                        {item.status === "REVIEW" && (
+                          <span className="text-xs text-muted-foreground">Menunggu review Owner/Admin</span>
                         )}
                       </div>
                     )}
