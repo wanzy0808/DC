@@ -65,9 +65,9 @@ export default function TextLayerInspector({
     suffix: string,
     patch: (value: number) => Partial<InvitationAssetLayer>,
   ) => (
-    <label className="dc-studio-layer-field">
+    <label className="undara-studio-layer-field">
       <span>{label}</span>
-      <span className="dc-studio-layer-number">
+      <span className="undara-studio-layer-number">
         <input
           type="number"
           min={min}
@@ -86,14 +86,14 @@ export default function TextLayerInspector({
   );
 
   return (
-    <aside className="dc-studio-layer-side dc-studio-text-side" aria-label={en ? "Text properties" : "Properti teks"}>
+    <aside className="undara-studio-layer-side undara-studio-text-side" aria-label={en ? "Text properties" : "Properti teks"}>
       <InvitationFonts families={studioTextFontFamilies} />
-      <div className="dc-studio-layer-side-head">
+      <div className="undara-studio-layer-side-head">
         <strong>{en ? "Text box" : "Kotak teks"}</strong>
         <button type="button" onClick={onClose} aria-label={en ? "Close text properties" : "Tutup properti teks"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <label className="dc-studio-layer-field">
+      <label className="undara-studio-layer-field">
         <span>{en ? "Layer name" : "Nama layer"}</span>
         <input
           type="text"
@@ -101,14 +101,14 @@ export default function TextLayerInspector({
           value={layer.name ?? ""}
           placeholder={en ? "Optional" : "Opsional"}
           onChange={(event) => onUpdate(layer.id, { name: event.target.value || undefined })}
-          className="h-10 rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
+          className="h-10 rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
         />
       </label>
 
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
           aria-pressed={Boolean(layer.locked)}
           onClick={() => onUpdate(layer.id, { locked: layer.locked ? undefined : true })}
         >
@@ -117,7 +117,7 @@ export default function TextLayerInspector({
         </button>
         <button
           type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
           aria-pressed={!layer.hidden}
           onClick={() => onUpdate(layer.id, { hidden: layer.hidden ? undefined : true })}
         >
@@ -126,13 +126,13 @@ export default function TextLayerInspector({
         </button>
       </div>
 
-      <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+      <div className="flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
         <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
         <span>{en ? "Double-click the text box on the canvas to edit its wording. This panel controls styling only." : "Double-click kotak teks di canvas untuk mengubah isinya. Panel ini hanya mengatur styling."}</span>
       </div>
 
       <fieldset disabled={Boolean(layer.locked)} className="contents disabled:opacity-55">
-      <label className="dc-studio-layer-select">
+      <label className="undara-studio-layer-select">
         <span>{en ? "Section" : "Bagian"}</span>
         <select value={section} onChange={(event) => onUpdate(layer.id, { section: event.target.value as StudioObjectSection })}>
           {invitationSectionItems
@@ -141,7 +141,7 @@ export default function TextLayerInspector({
         </select>
       </label>
 
-      <label className="dc-studio-layer-select dc-studio-text-font">
+      <label className="undara-studio-layer-select undara-studio-text-font">
         <span>{en ? "Font" : "Font"}</span>
         <select
           value={family}
@@ -153,9 +153,9 @@ export default function TextLayerInspector({
         </select>
       </label>
 
-      <div className="dc-studio-layer-grid">
+      <div className="undara-studio-layer-grid">
         {numberInput(en ? "Size" : "Ukuran", layer.fontSize ?? 24, 10, 144, 1, "px", (fontSize) => ({ fontSize }))}
-        <label className="dc-studio-layer-select">
+        <label className="undara-studio-layer-select">
           <span>{en ? "Weight" : "Ketebalan"}</span>
           <select value={layer.fontWeight ?? 400} onChange={(event) => onUpdate(layer.id, { fontWeight: Number(event.target.value) })}>
             <option value="300">Light</option>
@@ -169,9 +169,9 @@ export default function TextLayerInspector({
         </label>
       </div>
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
-        <div className="dc-studio-align-icons" role="group" aria-label={en ? "Text alignment" : "Perataan teks"}>
+        <div className="undara-studio-align-icons" role="group" aria-label={en ? "Text alignment" : "Perataan teks"}>
           {[
             ["left", en ? "Align left" : "Rata kiri", AlignLeft],
             ["center", en ? "Align center" : "Rata tengah", AlignCenter],
@@ -194,25 +194,25 @@ export default function TextLayerInspector({
         </div>
       </div>
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Text color" : "Warna teks"}</span>
-        <div className="dc-studio-text-color">
+        <div className="undara-studio-text-color">
           <input type="color" value={layer.color ?? "#C07A84"} onChange={(event) => onUpdate(layer.id, { color: event.target.value })} aria-label={en ? "Text color" : "Warna teks"} />
           <output>{(layer.color ?? "#C07A84").toUpperCase()}</output>
         </div>
       </div>
 
-      <div className="dc-studio-layer-grid">
+      <div className="undara-studio-layer-grid">
         {numberInput(en ? "Letter spacing" : "Jarak huruf", layer.letterSpacing ?? 0, -2, 12, 0.1, "px", (letterSpacing) => ({ letterSpacing }))}
         {numberInput(en ? "Line height" : "Jarak baris", layer.lineHeight ?? 1.2, 0.8, 2.5, 0.1, "×", (lineHeight) => ({ lineHeight }))}
       </div>
 
-      <div className="dc-studio-layer-grid">
+      <div className="undara-studio-layer-grid">
         {numberInput("X", layer.x, 0, 100, 0.1, "%", (x) => ({ x }))}
         {numberInput("Y", layer.y, 0, 100, 0.1, "%", (y) => ({ y }))}
       </div>
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Quick position" : "Posisi cepat"}</span>
         <div className="grid grid-cols-3 gap-1.5">
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
@@ -220,11 +220,11 @@ export default function TextLayerInspector({
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(layer.id, { x: 50, y: 50 })}>{en ? "Center" : "Tengah"}</button>
         </div>
       </div>
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Shadow" : "Bayangan"}</span>
         <button
           type="button"
-          className="min-h-9 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
+          className="min-h-9 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
           aria-pressed={(layer.shadowOpacity ?? 0) > 0}
           onClick={() => onUpdate(layer.id, {
             shadowOpacity: (layer.shadowOpacity ?? 0) > 0 ? 0 : 0.22,
@@ -239,22 +239,22 @@ export default function TextLayerInspector({
       </div>
 
       {(layer.shadowOpacity ?? 0) > 0 && (
-        <div className="space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 p-2">
-          <label className="dc-studio-layer-field">
+        <div className="space-y-2 rounded-[var(--undara-control-radius)] border border-primary/20 p-2">
+          <label className="undara-studio-layer-field">
             <span>{en ? "Shadow color" : "Warna bayangan"}</span>
             <input
               type="color"
               value={layer.shadowColor ?? "#000000"}
               onChange={(event) => onUpdate(layer.id, { shadowColor: event.target.value })}
-              className="h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+              className="h-9 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background p-1"
             />
           </label>
-          <div className="dc-studio-layer-grid">
+          <div className="undara-studio-layer-grid">
             {numberInput("X", layer.shadowX ?? 0, -50, 50, 1, "px", (shadowX) => ({ shadowX }))}
             {numberInput("Y", layer.shadowY ?? 6, -50, 50, 1, "px", (shadowY) => ({ shadowY }))}
           </div>
           {numberInput(en ? "Blur" : "Blur", layer.shadowBlur ?? 12, 0, 60, 1, "px", (shadowBlur) => ({ shadowBlur }))}
-          <label className="dc-studio-layer-opacity">
+          <label className="undara-studio-layer-opacity">
             <span>{en ? "Shadow opacity" : "Opasitas bayangan"} <output>{Math.round((layer.shadowOpacity ?? 0.22) * 100)}%</output></span>
             <input
               type="range"
@@ -271,16 +271,16 @@ export default function TextLayerInspector({
       {numberInput(en ? "Box width" : "Lebar kotak", layer.width, 5, 85, 0.1, "%", (width) => ({ width }))}
       {numberInput(en ? "Rotation" : "Rotasi", layer.rotation ?? 0, -180, 180, 1, "°", (rotation) => ({ rotation }))}
 
-      <label className="dc-studio-layer-opacity">
+      <label className="undara-studio-layer-opacity">
         <span>{en ? "Opacity" : "Opasitas"} <output>{Math.round(layer.opacity * 100)}%</output></span>
         <input type="range" min="0" max="1" step="0.05" value={layer.opacity} onChange={(event) => onUpdate(layer.id, { opacity: Number(event.target.value) })} />
       </label>
 
       <LayerAnimationControls locale={locale} layer={layer} onUpdate={onUpdate} />
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Layer order" : "Urutan layer"}</span>
-        <div className="dc-studio-layer-order" role="group" aria-label={en ? "Layer order" : "Urutan layer"}>
+        <div className="undara-studio-layer-order" role="group" aria-label={en ? "Layer order" : "Urutan layer"}>
           <button type="button" onClick={() => onPosition(layer.id, "front")} disabled={selectedIndex === layerCount - 1} aria-label={en ? "Bring to front" : "Paling depan"} title={en ? "Bring to Front" : "Paling depan"}><LayerStackIcon action="front" /></button>
           <button type="button" onClick={() => onPosition(layer.id, "forward")} disabled={selectedIndex === layerCount - 1} aria-label={en ? "Bring forward" : "Naik 1 layer"} title={en ? "Bring Forward" : "Naik 1 layer"}><LayerStackIcon action="forward" /></button>
           <button type="button" onClick={() => onPosition(layer.id, "backward")} disabled={selectedIndex === 0} aria-label={en ? "Send backward" : "Turun 1 layer"} title={en ? "Send Backward" : "Turun 1 layer"}><LayerStackIcon action="backward" /></button>
@@ -288,7 +288,7 @@ export default function TextLayerInspector({
         </div>
       </div>
 
-      <p className="dc-studio-text-counter">{selectedIndex + 1}/{MAX_ASSET_LAYERS}</p>
+      <p className="undara-studio-text-counter">{selectedIndex + 1}/{MAX_ASSET_LAYERS}</p>
       </fieldset>
     </aside>
   );
