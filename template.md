@@ -1,4 +1,4 @@
-# template.md — Panduan Semua Template Undangan DC Organizer
+# template.md — Panduan Semua Template Undangan Undara
 
 **Cakupan:** Semua template undangan digital yang akan direncanakan, dirancang, dan dibuat bersama ChatGPT. Bukan panduan khusus Zen Atelier ataupun satu gaya visual tertentu.  
 **Fungsi:** Brief produksi desain dan interaksi, dari ide → moodboard → aset → contoh layar → coding → integrasi Studio → pengujian.  
@@ -8,7 +8,7 @@
 
 ### Template tetap website undangan — bukan poster Canva
 
-Setiap template DC Organizer adalah **website invitation responsif**. Studio boleh terasa seperti Canva saat mengatur visual, tetapi hasil template tidak boleh berubah menjadi artboard gambar/fixed-layout: tetap gunakan struktur web, alur section, scroll, breakpoint mobile/desktop, semantic/interactive DOM, dan engine fitur bersama. Drag/resize/rotate/layer adalah alat authoring untuk menyusun elemen di dalam sistem website, bukan alasan untuk mengabsolutkan seluruh halaman.
+Setiap template Undara adalah **website invitation responsif**. Studio boleh terasa seperti Canva saat mengatur visual, tetapi hasil template tidak boleh berubah menjadi artboard gambar/fixed-layout: tetap gunakan struktur web, alur section, scroll, breakpoint mobile/desktop, semantic/interactive DOM, dan engine fitur bersama. Drag/resize/rotate/layer adalah alat authoring untuk menyusun elemen di dalam sistem website, bukan alasan untuk mengabsolutkan seluruh halaman.
 
 Elemen dekoratif dan visual bawaan boleh bebas dikomposisikan serta diberi edge bleed bila sesuai art direction, namun setiap objek tetap memiliki section/komponen pemilik yang jelas. RSVP, Maps, Countdown, Musik, Wishes, Gift, identitas, tanggal, venue, foto dan data tamu tetap komponen web nyata dan responsif; jangan bake data/fungsi tersebut menjadi gambar atau menggantinya dengan objek bebas. Template dinyatakan siap hanya bila komposisi hasil authoring tetap layak di desktop **dan** HP.
 
@@ -141,7 +141,7 @@ Lightbox keyboard Escape, tombol/fokus dapat digunakan tanpa mouse, alt text ber
 
 ## 6. Library dan kemampuan animasi yang SUDAH kita miliki
 
-**Jangan batasi kreativitas pada animasi fade/slide biasa.** Repo DC Organizer sudah punya beberapa library yang dapat dikombinasikan untuk membuat masing-masing template memiliki gerak, kedalaman, dan interaksi berbeda. Daftar ini diverifikasi dari `package.json` dan stack proyek; *terpasang* bukan berarti setiap efek di bawah sudah terimplementasi, sudah lolos uji performa, atau boleh diaktifkan sekaligus.
+**Jangan batasi kreativitas pada animasi fade/slide biasa.** Repo Undara sudah punya beberapa library yang dapat dikombinasikan untuk membuat masing-masing template memiliki gerak, kedalaman, dan interaksi berbeda. Daftar ini diverifikasi dari `package.json` dan stack proyek; *terpasang* bukan berarti setiap efek di bawah sudah terimplementasi, sudah lolos uji performa, atau boleh diaktifkan sekaligus.
 
 | Library / teknologi | Kemampuan untuk template undangan | Contoh penerapan yang relevan |
 | --- | --- | --- |
