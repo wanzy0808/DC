@@ -5,8 +5,7 @@ import { motion, useReducedMotion } from "motion/react";
 
 const FOREST = "/assets/landing/atmosphere/forest-silhouette.png";
 const CANOPY = "/assets/landing/ornaments/botanical/canopy7.png";
-const DARK_LANTERN_GARDEN =
-  "/assets/landing/atmosphere/dark-lantern-garden.webp";
+const DARK_LANTERN_GARDEN = "/assets/landing/atmosphere/bgdarkmode.png";
 
 export default function LandingWoodlandAtmosphere() {
   const reduced = useReducedMotion();
@@ -17,7 +16,7 @@ export default function LandingWoodlandAtmosphere() {
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
       {/* Light mode keeps the airy woodland composition. */}
-      <div className="absolute inset-0 dark:hidden">
+      <div className="absolute inset-0 opacity-100 transition-opacity duration-700 dark:opacity-0">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)]" />
 
         <div
@@ -104,22 +103,14 @@ export default function LandingWoodlandAtmosphere() {
       {/* Dark mode is a separate scene instead of a tinted version of light mode.
           The artwork is built around Undara's brown family with restrained
           champagne-gold lantern light, keeping the center clear for the doors. */}
-      <div className="absolute inset-0 hidden overflow-hidden bg-[#241111] dark:block">
+      <div className="absolute inset-0 overflow-hidden bg-[#241111] opacity-0 transition-opacity duration-700 dark:opacity-100">
         <motion.div
           initial={reduced ? false : { opacity: 0, scale: 1.025 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: reduced ? 0 : 1.15, ease: "easeOut" }}
-          className="absolute inset-0"
-        >
-          <Image
-            src={DARK_LANTERN_GARDEN}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center [filter:saturate(0.78)_sepia(0.18)_hue-rotate(-7deg)_brightness(0.78)_contrast(1.08)]"
-          />
-        </motion.div>
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url("${DARK_LANTERN_GARDEN}")` }}
+        />
 
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(26,11,11,0.20)_0%,transparent_24%,transparent_65%,rgba(30,13,13,0.18)_100%)]" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(214,179,140,0.10)_0%,rgba(112,59,59,0.055)_36%,transparent_66%)]" />
