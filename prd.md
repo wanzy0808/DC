@@ -5550,10 +5550,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - Keep the canopy concentrated toward the center; logo/tagline and right-side controls must remain unobstructed without visible masking boxes.
 
 
-### Wider overhead canopy — 2026-09-28
-- The landing canopy should be roughly as wide as the door orbit, with denser foliage across the upper frame while preserving clear logo and control zones.
-- Compose the existing canopy assets as layers before generating another asset; avoid obvious bitmap stretching.
-
+### Overhead canopy — 2026-09-28
+- Use only the centered `canopy2.png` as the homepage overhead canopy.
+- Side canopy layers are removed; keep the top composition cleaner while maintaining the feeling of foliage above the viewer.
 
 ### 28 September 2026 — Jeda submenu burger Layanan
 
