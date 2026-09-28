@@ -5553,3 +5553,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Wider overhead canopy — 2026-09-28
 - The landing canopy should be roughly as wide as the door orbit, with denser foliage across the upper frame while preserving clear logo and control zones.
 - Compose the existing canopy assets as layers before generating another asset; avoid obvious bitmap stretching.
+
+
+### 28 September 2026 — Jeda submenu burger Layanan
+
+**Temuan visual owner:** outline item submenu pertama `Perencana Acara` terlalu dekat dengan trigger `Layanan` dan terlihat seperti terpotong pada batas wrapper submenu.
+
+**Implementasi:** wrapper submenu di `components/Layout/Navbar/BurgerMenuContent.tsx` mendapat `pt-2` di dalam container `overflow-hidden`. Perubahan ini hanya memberi clearance vertikal antara `Layanan` dan submenu pertama; ukuran/button style, outline thickness, urutan menu, icon, animasi buka/tutup, indentation `pl-4`, auth/session behavior dan item submenu lain tidak diubah.
+
+**Validasi:** regression test mengunci spacing internal submenu agar outline item pertama tidak kembali menempel pada batas atas wrapper.
