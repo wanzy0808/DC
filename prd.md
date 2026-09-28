@@ -5314,4 +5314,4 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Perbaikan:** token canonical `--undara-control-radius` / `--undara-control-menu-radius` tetap dipertahankan, sedangkan alias legacy `--dc-control-radius` / `--dc-control-menu-radius` kembali menyimpan literal 16px/18px agar kontrak regression lama tetap kompatibel selama migrasi bertahap.
 
-**Validasi:** sumber error dibaca langsung dari log GitHub Actions run `36370212358`. Build Validation commit follow-up harus diperiksa lagi sebelum dinyatakan lulus.
+**Validasi:** sumber error dibaca langsung dari log GitHub Actions run `36370212358`. Pada follow-up commit `7a47d5fc`, Source regression tests dan Build Validation run `36370416238` selesai **success**, dan Orphan Audit run `36370416106` juga **success**. Browser visual QA Light/Dark tetap pekerjaan tahap rebrand berikutnya.
