@@ -98,11 +98,11 @@ test("public template artwork does not leak Studio preview labels and primary CT
 
   assert.doesNotMatch(scenes, />Pratinjau<|>Preview ·/);
   assert.doesNotMatch(rose, />Pratinjau<|>Preview ·/);
-  assert.match(scenes, /min-h-12 rounded-\[var\(--dc-control-radius\)\]/);
-  assert.match(rose, /min-h-11 rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(scenes, /min-h-12 rounded-\[var\(--undara-control-radius\)\]/);
+  assert.match(rose, /min-h-11 rounded-\[var\(--undara-control-radius\)\]/);
   assert.match(pencilCss, /\.pr-open-button\{[^}]*border-radius:9px/);
   assert.match(zenCss, /\.zen-open \{[^}]*border-radius:8px/);
-  assert.match(zenCss, /\.zen-action \{[^}]*border-radius:var\(--dc-control-radius\)/);
+  assert.match(zenCss, /\.zen-action \{[^}]*border-radius:var\(--undara-control-radius\)/);
 });
 
 test("all active templates expose the shared narrative wording contract", () => {
