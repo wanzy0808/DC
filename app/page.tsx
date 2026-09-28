@@ -13,10 +13,10 @@ export default function HomePage() {
   const [doorOpen, setDoorOpen] = useState(false);
 
   return (
-    <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground">
+    <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground dark:bg-[#281414]">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.10),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(214,179,140,0.10),transparent_67%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.10),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(140,82,67,0.34)_0%,rgba(74,34,32,0.26)_42%,rgba(40,20,20,0.10)_67%,transparent_82%)]"
       />
       <motion.div
         data-dc-marketing-frame
