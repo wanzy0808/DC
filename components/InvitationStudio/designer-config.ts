@@ -3,9 +3,9 @@ import { invitationFonts, invitationPalettes, type FontKey, type PaletteKey } fr
 import type { InvitationTemplatePreset } from "@/components/InvitationStudio/designer-types";
 
 export const invitationDecorOptions = [
-  "/couple.jpg",
-  "/couple2.jpg",
-  "/couple3.jpg",
+  "/assets/demo/invitation/couple.jpg",
+  "/assets/demo/invitation/couple-02.jpg",
+  "/assets/demo/invitation/couple-03.jpg",
 ];
 
 export const invitationTemplatePresets: Record<string, InvitationTemplatePreset> = {
