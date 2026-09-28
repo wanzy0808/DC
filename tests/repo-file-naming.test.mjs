@@ -208,6 +208,7 @@ test("public marketing pages share one frame, footer control system and falling-
   const atmosphere = read("components/Layout/PublicMarketingAtmosphere.tsx");
   const footer = read("components/Layout/MarketingFrameFooter.tsx");
   const audio = read("components/Layout/MarketingAudio.tsx");
+  const doorNavigator = read("components/Layout/MarketingDoorNavigator.tsx");
   const framedPages = [
     "app/d-invitation/page.tsx",
     "app/template-design/page.tsx",
@@ -226,13 +227,17 @@ test("public marketing pages share one frame, footer control system and falling-
   assert.match(styles, /\.undara-marketing-frame \{/);
   assert.match(styles, /\.undara-marketing-frame-header \{/);
   assert.match(styles, /\.undara-marketing-scroll \{/);
+  assert.match(styles, /\.undara-control-surface \{/);
+  assert.match(styles, /\.dark \.undara-control-surface \{/);
   assert.match(styles, /\.undara-footer-control \{/);
   assert.match(styles, /\.undara-volume-slider/);
   assert.match(footer, /MarketingAudioControls/);
   assert.match(footer, /UndaraSocialIcons/);
-  assert.match(read("components/Layout/UndaraSocialIcons.tsx"), /undara-footer-control/);
-  assert.match(audio, /className="undara-footer-control"/);
+  assert.match(read("components/Layout/UndaraSocialIcons.tsx"), /undara-control-surface undara-footer-control/);
+  assert.match(audio, /className="undara-control-surface undara-footer-control"/);
+  assert.match(audio, /className="undara-control-surface undara-volume-control"/);
   assert.match(audio, /className="undara-volume-slider/);
+  assert.match(doorNavigator, /className="undara-control-surface group/);
 
   for (const file of framedPages) {
     const source = read(file);
