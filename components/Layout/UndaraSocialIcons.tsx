@@ -1,5 +1,7 @@
 "use client";
 
+import type React from "react";
+
 type SocialIconProps = { className?: string };
 
 function InstagramIcon({ className = "size-5" }: SocialIconProps) {
@@ -28,11 +30,18 @@ function FacebookIcon({ className = "size-5" }: SocialIconProps) {
   );
 }
 
-const SOCIAL_PROFILES = [
+type SocialProfile = {
+  id: "instagram" | "tiktok" | "facebook";
+  label: string;
+  href: string | null;
+  Icon: (props: SocialIconProps) => React.ReactNode;
+};
+
+const SOCIAL_PROFILES: readonly SocialProfile[] = [
   { id: "instagram", label: "Instagram Undara", href: null, Icon: InstagramIcon },
   { id: "tiktok", label: "TikTok Undara", href: null, Icon: TiktokIcon },
   { id: "facebook", label: "Facebook Undara", href: null, Icon: FacebookIcon },
-] as const;
+];
 
 /**
  * One source for Undara social actions.
