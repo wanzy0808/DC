@@ -1,19 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync } from "node:fs";
+import sharp from "sharp";
 import { join } from "node:path";
 
 const read = (path) => readFileSync(join(process.cwd(), path), "utf8");
 const folder = "public/templates/pencil-reverie";
-const files = ["bookstack.png", "bycicle.png", "camera1.png", "casette.png",
-  "couplesitting.png", "loveballon1.png", "loveticket.png", "polaroidlove.png",
-  "ribbon.png", "streetlamp.png", "bingkai.png", "bungaandlampbg.png",
-  "bungabg.png", "bungabg1.png", "sepedabg.png"];
+const files = ["bookstack.webp", "bycicle.webp", "camera1.webp", "casette.webp",
+  "couplesitting.webp", "loveballon1.webp", "loveticket.webp", "polaroidlove.webp",
+  "ribbon.webp", "streetlamp.webp", "bingkai.webp", "bungaandlampbg.webp",
+  "bungabg.webp", "bungabg1.webp", "sepedabg.webp"];
 
 test("Pencil Reverie uses every existing illustration without photo slots", () => {
   const catalog = read("lib/templates/catalog.ts");
   assert.match(catalog, /key:\s*"pencil-reverie"[\s\S]*?usesPhotos:\s*false[\s\S]*?photoSlots:\s*\[\]/);
-  assert.match(catalog, /previewImage:\s*"\/templates\/pencil-reverie\/bungaandlampbg.png"/);
+  assert.match(catalog, /previewImage:\s*"\/templates\/pencil-reverie\/bungaandlampbg.webp"/);
   const source = read("components/PublicInvitation/PencilReverieScene.tsx") +
     read("components/PublicInvitation/PencilReverieArtwork.tsx");
   for (const name of files) {
@@ -44,22 +45,22 @@ test("Pencil Reverie animation respects reduced motion and avoids silent backgro
 });
 
 
-test("illustrations are full-aspect sheets and the complete lantern is retained", () => {
+test("illustrations are full-aspect sheets and the complete lantern is retained", async () => {
   const scene = read("components/PublicInvitation/PencilReverieScene.tsx");
   const artwork = read("components/PublicInvitation/PencilReverieArtwork.tsx");
   const styles = read("components/PublicInvitation/pencil-reverie.css");
-  assert.match(scene, /PaperIllustration file="bungaandlampbg\.png"/);
-  assert.match(scene, /PaperIllustration file="bingkai\.png"/);
+  assert.match(scene, /PaperIllustration file="bungaandlampbg\.webp"/);
+  assert.match(scene, /PaperIllustration file="bingkai\.webp"/);
   assert.match(artwork, /location:\s*"lamp"/);
   assert.match(styles, /pr-section-whole-image/);
   assert.match(styles, /object-fit:contain!important/);
   assert.doesNotMatch(styles.replace(/\/\*[\s\S]*?\*\//g, ""), /object-fit:\s*cover/i);
   assert.match(styles, /pr-cover-paper\{width:100%;height:auto!important;object-fit:contain/);
   assert.match(styles, /pr-section-art\{position:relative!important/);
-  const img=readFileSync(join(process.cwd(),folder,"bungaandlampbg.png"));
-  assert.equal(img.toString("ascii",1,4),"PNG");
-  assert.equal(img.readUInt32BE(16),1122);
-  assert.equal(img.readUInt32BE(20),1402);
+  const metadata = await sharp(join(process.cwd(), folder, "bungaandlampbg.webp")).metadata();
+  assert.equal(metadata.format, "webp");
+  assert.equal(metadata.width, 1122);
+  assert.equal(metadata.height, 1402);
 });
 
 test("Pencil Reverie exposes actual independent editable narrative slots", () => {
