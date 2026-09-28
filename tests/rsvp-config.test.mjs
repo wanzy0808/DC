@@ -105,7 +105,7 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   assert.match(contentPanel, /MAX_RSVP_CUSTOM_FIELDS/);
   assert.match(contentPanel, /Judul RSVP/);
   assert.match(contentPanel, /onRsvpConfig\(\{ title: event\.target\.value \}\)/);
-  assert.doesNotMatch(inspector, /dc-studio-rsvp-text-input|onConfig\(\{ title:/);
+  assert.doesNotMatch(inspector, /undara-studio-rsvp-text-input|onConfig\(\{ title:/);
   assert.match(inspector, /Panel ini hanya mengubah styling/);
   assert.doesNotMatch(inspector, /Hadiri Semua Acara|Tambah Kolom|MAX_RSVP_CUSTOM_FIELDS/);
   assert.match(designer, /addRsvpCustomField/);
