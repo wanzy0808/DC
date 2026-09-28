@@ -66,7 +66,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(inspector, /Opasitas/);
   assert.match(inspector, /Warna latar section/);
   assert.doesNotMatch(inspector, />\s*Default\s*</);
-  assert.match(inspector, /dc-studio-section-reset/);
+  assert.match(inspector, /undara-studio-section-reset/);
   assert.doesNotMatch(inspector, /functionalNotes|>Komponen<|>Components</);
   assert.match(state, /withInvitationSectionStyles/);
   assert.match(state, /parseInvitationSectionStyles/);
@@ -79,7 +79,7 @@ test("Studio section selection opens a right-side inspector and renderers consum
   assert.match(romantic, /<RsvpForm slug=\{invitation\.slug\} preview=\{preview\}/);
   assert.doesNotMatch(universal, /Form RSVP tersedia di undangan yang sudah dipublikasikan/);
   assert.doesNotMatch(romantic, /Form RSVP akan tersedia di undangan yang sudah dipublikasikan/);
-  assert.match(css, /\.dc-studio-section-side \{[^}]*justify-self: end/);
+  assert.match(css, /\.undara-studio-section-side \{[^}]*justify-self: end/);
   assert.match(css, /\[data-studio-section-selected="true"\]/);
 });
 
@@ -99,18 +99,18 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(rail, /Sembunyikan section/);
   assert.match(rail, /Duplikat section/);
   assert.match(rail, /Hapus section/);
-  assert.match(css, /\.dc-studio-section-actions \{[\s\S]*?left: -52px;[\s\S]*?flex-direction: column[\s\S]*?border: 0;[\s\S]*?background: transparent/);
-  assert.match(css, /\.dc-studio-preview-surface \{[\s\S]*?overflow: visible/);
-  assert.match(css, /\.dc-studio-preview-surface \[data-studio-preview-root="true"\] \{[^}]*overflow: visible !important/);
-  assert.match(css, /\.dc-studio-preview-workspace \{[^}]*overflow: visible/);
-  assert.match(css, /\.dc-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(118px, 1fr\)[^}]*overflow: visible/);
-  assert.match(css, /\.dc-section-instance-content \{ overflow: hidden; \}/);
-  assert.match(css, /\.dc-section-instance-hidden \{[\s\S]*?max-height: 72px/);
+  assert.match(css, /\.undara-studio-section-actions \{[\s\S]*?left: -52px;[\s\S]*?flex-direction: column[\s\S]*?border: 0;[\s\S]*?background: transparent/);
+  assert.match(css, /\.undara-studio-preview-surface \{[\s\S]*?overflow: visible/);
+  assert.match(css, /\.undara-studio-preview-surface \[data-studio-preview-root="true"\] \{[^}]*overflow: visible !important/);
+  assert.match(css, /\.undara-studio-preview-workspace \{[^}]*overflow: visible/);
+  assert.match(css, /\.undara-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(118px, 1fr\)[^}]*overflow: visible/);
+  assert.match(css, /\.undara-section-instance-content \{ overflow: hidden; \}/);
+  assert.match(css, /\.undara-section-instance-hidden \{[\s\S]*?max-height: 72px/);
 
-  assert.match(sectionInspector, /dc-studio-align-icons/);
-  assert.match(rsvpInspector, /dc-studio-align-icons/);
+  assert.match(sectionInspector, /undara-studio-align-icons/);
+  assert.match(rsvpInspector, /undara-studio-align-icons/);
   assert.doesNotMatch(sectionInspector, /<select[\s\S]*?Perataan/);
-  assert.match(css, /\.dc-studio-layer-select select,[\s\S]*?appearance: none/);
+  assert.match(css, /\.undara-studio-layer-select select,[\s\S]*?appearance: none/);
   assert.match(css, /background-position:[\s\S]*?calc\(100% - 15px\)/);
 });
 
@@ -138,7 +138,7 @@ test("section inspector stays visual-only without duplicating function lists", (
   const inspector = read("components/InvitationStudio/SectionInspector.tsx");
   assert.doesNotMatch(inspector, /functionalNotes|Nama tamu|Kirim ucapan|Nomor rekening|Salin rekening/);
   assert.doesNotMatch(inspector, /fetch\(|\/api\/invite|onSubmit/);
-  assert.match(inspector, /dc-studio-align-icons/);
+  assert.match(inspector, /undara-studio-align-icons/);
   assert.match(inspector, /Ruang vertikal/);
 });
 
