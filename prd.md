@@ -5658,3 +5658,8 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Global marketing audio controls — 2026-09-28
 - Standardize Sound On/Off, volume slider, and percentage styling globally across marketing pages.
 - Volume slider and its numeric percentage should read as one compact branded control matching the sound button, especially in Light Mode.
+
+
+### Dark Mode marketing control parity — 2026-09-28
+- Widget, sound toggle, volume, social controls, and navbar controls must use the same border/background/color treatment in Dark Mode as they do as a system in Light Mode.
+- Persistent controls remain transparent with the shared theme primary color; no separate dark card fill.
