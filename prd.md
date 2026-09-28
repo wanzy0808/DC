@@ -5613,5 +5613,8 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Validasi:** regression test mengunci width baru dan tetap mewajibkan `branch-05.png`.
 
 
-### Landing footer root divider — 2026-09-28
-- Use a subtle organic root-shaped divider above the unified landing footer row instead of a straight separator line.
+
+
+
+### Landing footer separator removal — 2026-09-28
+- Remove all divider lines between the landing scene and footer. The footer should merge directly into the composition.
