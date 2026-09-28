@@ -174,9 +174,21 @@ export function MarketingAudioControls() {
     <Button size="icon-sm" variant="ghost" className="undara-footer-control" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
       {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
     </Button>
-    <label htmlFor="dc-marketing-volume" className="sr-only">Volume suara</label>
-    <input id="dc-marketing-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="undara-volume-slider w-14 cursor-pointer sm:w-20" aria-valuetext={volume + "%"} />
-    <span className="hidden w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-foreground/55 sm:block">{volume}%</span>
+
+    <div className="undara-volume-control">
+      <label htmlFor="dc-marketing-volume" className="sr-only">Volume suara</label>
+      <input
+        id="dc-marketing-volume"
+        type="range"
+        min="0"
+        max="100"
+        value={volume}
+        onChange={(event) => changeVolume(Number(event.target.value))}
+        className="undara-volume-slider w-12 cursor-pointer sm:w-16"
+        aria-valuetext={volume + "%"}
+      />
+      <span className="undara-volume-value">{volume}%</span>
+    </div>
   </div>;
 }
 
