@@ -35,15 +35,15 @@ export default function EventPlannerPage() {
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.12),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.11),transparent_65%)]" />
-      <div data-dc-marketing-frame className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]">
-        <div className="relative z-50 shrink-0 border-b border-primary/15 bg-background/70 backdrop-blur-sm">
+      <div data-dc-marketing-frame className="undara-marketing-frame">
+        <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
         <main
           ref={scrollRoot}
           tabIndex={0}
           aria-label={locale === "en" ? "Event planner page content" : "Konten halaman Event Planner"}
-          className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+          className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
                 className="mx-auto flex w-[88%] max-w-[1100px] flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16"
