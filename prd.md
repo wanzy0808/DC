@@ -5631,3 +5631,16 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Regression:** ditambahkan `tests/undara-typography.test.mjs` untuk mengunci loader DM Serif Display/Roboto/DM Mono, token global, inheritance control, dan larangan token Cinzel/Fauna pada file `page.tsx`/`layout.tsx`.
 
 **Commit implementasi:** `934a3c6`, `1bc9b43`, `7d9d126`, `b1d22f0`, `9532a57`, `1f2157f`. **Validasi:** source audit selesai; status CI/build dicatat setelah workflow commit dokumentasi ini terobservasi. Tidak ada migrasi database.
+
+
+### 28 September 2026 — Footer marketing, mainframe, dan ambience daun disatukan
+
+**Permintaan owner:** footer antar-page harus seragam setelah migrasi brand Undara; tombol musik, volume dan media sosial tidak boleh punya treatment warna yang berbeda-beda. Rose-petal ambience diganti daun berguguran. Owner juga menanyakan apakah forest/jungle silhouette landing sebaiknya dipasang ke semua page.
+
+**Keputusan visual:** forest silhouette penuh tetap **khusus homepage**. Halaman marketing yang padat konten memakai ambience lebih ringan supaya card, daftar, FAQ dan copy panjang tidak bersaing dengan background. Shared non-home ambience sekarang terdiri dari botanical glow + daun berguguran jarang di belakang konten; reduced-motion mematikan leaf motion. Rose-petal runtime lama dipensiunkan.
+
+**Implementasi:** `FallingLeaves.tsx` menggantikan `WindRosePetals.tsx` dan `RosePetalBackground.tsx`; `PublicMarketingAtmosphere` menjadi satu sumber glow + leaves. Geometri halaman marketing dipusatkan di `.undara-marketing-frame`, `.undara-marketing-frame-header`, dan `.undara-marketing-scroll`; `/help` dipindah ke shell yang sama. Route recognition navbar/footer/atmosphere/floating controls memakai `isFramedMarketingPath` agar tidak membuat layer ganda. Semua framed marketing page memakai satu `MarketingFrameFooter`: musik+volume kiri, copyright tengah, Instagram kanan. Music button, Instagram/social action dan slider memakai `undara-footer-control` / `undara-volume-slider` sehingga Light/Dark mengikuti semantic Undara tokens. Variant footer khusus landing dihapus; fallback floating controls juga mereuse footer yang sama. Ambience tidak dipasang pada Dashboard/Admin/Owner/Partner/Studio/Checkout maupun real guest invitation routes.
+
+**Area utama:** `components/Layout/FallingLeaves.tsx`, `PublicMarketingAtmosphere.tsx`, `PublicAtmosphere.tsx`, `MarketingFrameFooter.tsx`, `MarketingAudio.tsx`, `MarketingFloatingControls.tsx`, `Footer.tsx`, `Navbar.tsx`, `lib/marketing-paths.ts`, `app/globals.css`, homepage + enam marketing routes, `AGENTS.md`, dan regression test.
+
+**Commit implementasi utama:** `eec4dcc`, `bdaeb6b`, `7abbc26`, `0127427`, `b86b4d8`, `282e4b1`, `52fd051`, `c0bb471`, `655aa57`, `e129130`. **Validasi terobservasi:** Build Validation **PASS** pada `282e4b1` termasuk source regression baru; Orphan Audit **PASS** pada `655aa57`. Build Validation untuk guard ambience tambahan `e129130` masih berjalan saat entry ini ditulis. Browser visual QA desktop/mobile Light/Dark masih perlu review owner; tidak ada migrasi database.
