@@ -15,40 +15,37 @@ export default function LandingWoodlandAtmosphere() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_46%,rgba(214,179,140,0.18),rgba(112,59,59,0.055)_48%,transparent_75%)]" />
 
-      {/* Keep only the centered hanging canopy. The side canopy layers were
-          removed so the header stays cleaner and the woodland framing does
-          not compete with the doors. */}
+      {/* Canopy5 hangs from just outside the frame and nearly spans the
+          visual gap between the left brand block and the right controls.
+          It intentionally stops short on both sides so the header keeps a
+          small, natural breathing gap instead of looking edge-to-edge. */}
       <div
         data-landing-canopy
-        className="absolute inset-x-0 -top-[clamp(68px,7vw,126px)] h-[clamp(320px,39dvh,500px)] overflow-visible"
+        className="absolute inset-x-0 -top-[clamp(72px,7vw,128px)] h-[clamp(330px,39dvh,500px)] overflow-visible"
       >
         <motion.div
           initial={reduced ? false : { opacity: 0, y: -10 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -3, 0], rotate: [0, 0.14, 0] }}
+          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -3, 0], rotate: [0, 0.1, 0] }}
           transition={
             reduced
               ? { duration: 0 }
               : {
                   opacity: { duration: 1.05, ease: "easeOut" },
-                  y: { duration: 18, repeat: Infinity, ease: "easeInOut" },
-                  rotate: { duration: 24, repeat: Infinity, ease: "easeInOut" },
+                  y: { duration: 19, repeat: Infinity, ease: "easeInOut" },
+                  rotate: { duration: 26, repeat: Infinity, ease: "easeInOut" },
                 }
           }
-          className="absolute left-1/2 top-0 h-full w-[118vw] max-w-[1960px] -translate-x-1/2 origin-top sm:w-[108vw] lg:w-[92vw]"
+          className="absolute left-1/2 top-0 h-full w-[92vw] -translate-x-1/2 origin-top sm:w-[78vw] lg:w-[68vw] lg:max-w-[1240px]"
         >
           <Image
-            src="/assets/landing/ornaments/botanical/canopy2.png"
+            src="/assets/landing/ornaments/botanical/canopy5.png"
             alt=""
             fill
             priority
-            sizes="(max-width: 640px) 118vw, (max-width: 1024px) 108vw, 92vw"
-            className="object-contain object-top opacity-[0.82] brightness-[0.95] saturate-[0.86] drop-shadow-[0_20px_34px_rgba(93,62,48,0.075)] dark:opacity-[0.62] dark:brightness-[0.76] dark:saturate-[0.64]"
+            sizes="(max-width: 640px) 92vw, (max-width: 1024px) 78vw, min(68vw, 1240px)"
+            className="object-contain object-top opacity-[0.84] brightness-[0.96] saturate-[0.88] drop-shadow-[0_20px_34px_rgba(93,62,48,0.07)] dark:opacity-[0.64] dark:brightness-[0.78] dark:saturate-[0.66]"
           />
         </motion.div>
-
-        {/* Soft readability pockets only; the tree mass remains continuous. */}
-        <div className="absolute left-[1%] top-[clamp(74px,8vw,128px)] h-[104px] w-[25%] rounded-[50%] bg-background/38 blur-2xl sm:w-[19%]" />
-        <div className="absolute right-[1%] top-[clamp(74px,8vw,128px)] h-[104px] w-[24%] rounded-[50%] bg-background/35 blur-2xl sm:w-[18%]" />
       </div>
 
       <motion.div
