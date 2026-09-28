@@ -31,8 +31,8 @@ export default function CopyTextInspector({
 }) {
   const en = locale === "en";
   return (
-    <aside className="dc-studio-section-side" aria-label={en ? "Text properties" : "Properti teks"}>
-      <div className="dc-studio-section-side-head">
+    <aside className="undara-studio-section-side" aria-label={en ? "Text properties" : "Properti teks"}>
+      <div className="undara-studio-section-side-head">
         <div className="min-w-0">
           <span>{en ? "Text" : "Teks"}</span>
           <strong title={en ? labels[field].en : labels[field].id}>{en ? labels[field].en : labels[field].id}</strong>
@@ -40,14 +40,14 @@ export default function CopyTextInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close text properties" : "Tutup properti teks"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+      <div className="flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
         <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
         <span>{en ? "Edit the wording from Content on the left. This panel controls visual motion only." : "Ubah isi teks dari menu Isi di kiri. Panel ini hanya mengatur visual dan animasi."}</span>
       </div>
 
       <CopyMotionControls locale={locale} field={field} motion={motion} onUpdate={onMotion} />
 
-      <button type="button" className="dc-studio-section-reset" onClick={onReset}>
+      <button type="button" className="undara-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
         Reset
       </button>
