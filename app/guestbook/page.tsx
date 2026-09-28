@@ -22,7 +22,7 @@ export default function GuestbookPage() {
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
-      <div data-dc-marketing-frame className="undara-marketing-frame">
+      <div data-undara-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
@@ -56,7 +56,7 @@ export default function GuestbookPage() {
               <ReviewsGrid
           eyebrow="Client Stories"
           title="Yang paling terasa adalah hari acara yang lebih tenang"
-          description="Pengalaman pengguna setelah memakai sistem guestbook dan alur penerimaan tamu DC Organizer."
+          description="Pengalaman pengguna setelah memakai sistem guestbook dan alur penerimaan tamu Undara."
           reviews={guestbookReviews}
           framed
               />

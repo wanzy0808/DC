@@ -16,7 +16,7 @@ export default function PortfolioSection() {
       <SectionHeading
         eyebrow="Our Portfolio"
         title="Momen yang kami bantu jaga"
-        description="Beberapa contoh wedding, anniversary, dan intimate celebration yang menggambarkan cara kerja Event Planner DC Organizer."
+        description="Beberapa contoh wedding, anniversary, dan intimate celebration yang menggambarkan cara kerja Event Planner Undara."
       />
       <div className="grid gap-6 md:grid-cols-3">
         {plannerPortfolio.map((item) => (
@@ -41,15 +41,15 @@ export default function PortfolioSection() {
                   <Play className="ml-1 h-5 w-5 fill-current" />
                 </span>
               </div>
-              <span className="absolute left-3 top-3 rounded-lg bg-black/60 px-3 py-1 font-[family-name:var(--font-dc-mono)] text-[10px] text-white">
+              <span className="absolute left-3 top-3 rounded-lg bg-black/60 px-3 py-1 font-[family-name:var(--font-undara-mono)] text-[10px] text-white">
                 {item.date}
               </span>
             </button>
             <div className="space-y-2 p-5">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.16em] text-[var(--primary)]">
+              <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-[var(--primary)]">
                 {item.category}
               </p>
-              <h3 className="font-[family-name:var(--font-dc-heading)] text-xl">
+              <h3 className="font-[family-name:var(--font-undara-heading)] text-xl">
                 {item.name}
               </h3>
               <p className="text-xs text-[var(--primary)]">{item.concept}</p>

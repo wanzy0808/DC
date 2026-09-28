@@ -6,14 +6,14 @@ export default function HeroSection() {
   return (
     <section className="grid gap-10 lg:grid-cols-12 lg:items-center">
       <div className="lg:col-span-8">
-        <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-primary">
+        <p className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-primary">
           [ DIGITAL GUESTBOOK SYSTEM ]
         </p>
-        <h1 className="mt-4 max-w-5xl font-[family-name:var(--font-dc-heading)] text-4xl leading-tight md:text-5xl lg:text-6xl">
+        <h1 className="mt-4 max-w-5xl font-[family-name:var(--font-undara-heading)] text-4xl leading-tight md:text-5xl lg:text-6xl">
           Tamu datang dengan tenang. <span className="opacity-75">Tim acara tetap terkendali.</span>
         </h1>
-        <p className="mt-6 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-muted-foreground md:text-base">
-          Verifikasi tamu, QR check-in, seating, greeting, dan attendance dari satu sistem Guestbook Digital DC Organizer untuk hari acara.
+        <p className="mt-6 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base">
+          Verifikasi tamu, QR check-in, seating, greeting, dan attendance dari satu sistem Guestbook Digital Undara untuk hari acara.
         </p>
         <div className="mt-7 flex flex-wrap gap-3">
           <Link href="/packages" className={buttonVariants({ size: "lg" })}>
@@ -36,7 +36,7 @@ export default function HeroSection() {
             className="rounded-[24px] border border-primary/35 bg-card/70 p-4 text-center"
           >
             <Icon className="mx-auto h-5 w-5 text-primary" />
-            <p className="mt-3 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-wider text-muted-foreground">
+            <p className="mt-3 font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-wider text-muted-foreground">
               {label}
             </p>
           </div>
