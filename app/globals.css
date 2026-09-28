@@ -176,7 +176,35 @@
 
 .text-dc-maroon { color: var(--primary); }
 
-/* One visual contract for marketing-footer controls across every public frame. */
+/* One visual contract for every persistent marketing control: door widget, sound, volume, and social. */
+.undara-control-surface {
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--background) 92%, transparent) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease, transform 180ms ease !important;
+}
+.dark .undara-control-surface {
+  border-color: color-mix(in srgb, var(--primary) 64%, transparent) !important;
+  background: color-mix(in srgb, var(--card) 72%, var(--background)) !important;
+  color: var(--primary) !important;
+}
+.undara-control-surface:hover:not(:disabled) {
+  border-color: var(--primary) !important;
+  background: color-mix(in srgb, var(--primary) 10%, var(--background)) !important;
+  color: var(--primary) !important;
+}
+.dark .undara-control-surface:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--primary) 12%, var(--card)) !important;
+}
+.undara-control-surface:focus-visible,
+.undara-control-surface:focus-within {
+  border-color: var(--primary) !important;
+  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  outline-offset: 2px;
+}
+
 .undara-footer-control {
   display: inline-flex !important;
   height: 2.125rem !important;
@@ -184,22 +212,9 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--background) 92%, transparent) !important;
-  color: var(--primary) !important;
-  box-shadow: none !important;
-  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease !important;
 }
 .undara-footer-control:hover:not(:disabled) {
-  border-color: var(--primary) !important;
-  background: color-mix(in srgb, var(--primary) 10%, var(--background)) !important;
-  color: var(--primary) !important;
   transform: translateY(-1px);
-}
-.undara-footer-control:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
-  outline-offset: 2px;
 }
 .undara-volume-control {
   display: inline-flex;
@@ -208,21 +223,6 @@
   align-items: center;
   gap: 0.4rem;
   padding-inline: 0.55rem 0.45rem;
-  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--background) 92%, transparent);
-  color: var(--primary);
-  box-shadow: none;
-  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease;
-}
-.undara-volume-control:hover {
-  border-color: var(--primary);
-  background: color-mix(in srgb, var(--primary) 10%, var(--background));
-}
-.undara-volume-control:focus-within {
-  border-color: var(--primary);
-  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
-  outline-offset: 2px;
 }
 .undara-volume-value {
   display: inline-block;
@@ -234,7 +234,7 @@
   line-height: 1;
   font-variant-numeric: tabular-nums;
   color: var(--primary);
-  opacity: 0.78;
+  opacity: 0.88;
 }
 .undara-volume-slider {
   height: 1rem;
@@ -260,6 +260,9 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
   -webkit-appearance: none;
 }
+.dark .undara-volume-slider::-webkit-slider-thumb {
+  border-color: var(--card);
+}
 .undara-volume-slider::-moz-range-track {
   height: 4px;
   border-radius: 999px;
@@ -277,6 +280,9 @@
   border-radius: 999px;
   background: var(--primary);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
+}
+.dark .undara-volume-slider::-moz-range-thumb {
+  border-color: var(--card);
 }
 
 
