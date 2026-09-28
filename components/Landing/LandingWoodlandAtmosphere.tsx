@@ -15,67 +15,41 @@ export default function LandingWoodlandAtmosphere() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_46%,rgba(214,179,140,0.18),rgba(112,59,59,0.055)_48%,transparent_75%)]" />
 
-      {/* The canopy now begins inside the header zone. It stays visually light
-          behind the brand and controls, then becomes denser toward the middle
-          so the header reads as part of the same woodland scene. */}
+      {/* One dedicated transparent canopy asset hangs from outside the top
+          frame into the header, like a real tree overhead. It is centered so
+          the Undara wordmark and right-side controls stay naturally clear. */}
       <div
         data-landing-canopy
-        className="absolute inset-x-0 -top-[2px] h-[36%] overflow-hidden sm:-top-[4px] sm:h-[38%]"
+        className="absolute inset-x-0 -top-[clamp(54px,6vw,108px)] h-[clamp(270px,34dvh,430px)] overflow-visible"
       >
         <motion.div
-          initial={reduced ? false : { opacity: 0, y: -8 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -3, 0] }}
-          transition={reduced ? { duration: 0 } : { opacity: { duration: 1 }, y: { duration: 18, repeat: Infinity, ease: "easeInOut" } }}
-          className="absolute left-[17%] -top-[27%] h-[146%] w-[43%] [mask-image:linear-gradient(to_bottom,black_0%,black_58%,transparent_100%)] sm:left-[20%] sm:w-[38%]"
+          initial={reduced ? false : { opacity: 0, y: -10 }}
+          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -3, 0], rotate: [0, 0.18, 0] }}
+          transition={
+            reduced
+              ? { duration: 0 }
+              : {
+                  opacity: { duration: 1.05, ease: "easeOut" },
+                  y: { duration: 18, repeat: Infinity, ease: "easeInOut" },
+                  rotate: { duration: 22, repeat: Infinity, ease: "easeInOut" },
+                }
+          }
+          className="absolute left-1/2 top-0 h-full w-[94vw] max-w-[1480px] -translate-x-1/2 origin-top sm:w-[82vw] lg:w-[74vw]"
         >
           <Image
-            src={FOREST}
+            src="/assets/landing/ornaments/botanical/canopy2.png"
             alt=""
             fill
             priority
-            sizes="45vw"
-            className="object-cover object-[16%_4%] opacity-[0.44] brightness-[0.76] saturate-[0.70] dark:opacity-[0.34] dark:brightness-[0.60] dark:saturate-[0.52]"
+            sizes="(max-width: 640px) 94vw, (max-width: 1024px) 82vw, 74vw"
+            className="object-contain object-top opacity-[0.76] brightness-[0.96] saturate-[0.84] drop-shadow-[0_18px_30px_rgba(93,62,48,0.06)] dark:opacity-[0.58] dark:brightness-[0.78] dark:saturate-[0.62]"
           />
         </motion.div>
 
-        <motion.div
-          initial={reduced ? false : { opacity: 0, y: -8 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -2, 0] }}
-          transition={reduced ? { duration: 0 } : { opacity: { duration: 1.1 }, y: { duration: 20, delay: 1.1, repeat: Infinity, ease: "easeInOut" } }}
-          className="absolute right-[17%] -top-[27%] h-[146%] w-[43%] [mask-image:linear-gradient(to_bottom,black_0%,black_58%,transparent_100%)] sm:right-[20%] sm:w-[38%]"
-        >
-          <Image
-            src={FOREST}
-            alt=""
-            fill
-            priority
-            sizes="45vw"
-            className="scale-x-[-1] object-cover object-[16%_4%] opacity-[0.42] brightness-[0.76] saturate-[0.70] dark:opacity-[0.32] dark:brightness-[0.60] dark:saturate-[0.52]"
-          />
-        </motion.div>
-
-        <div className="absolute left-1/2 -top-[31%] h-[132%] w-[54%] -translate-x-1/2 [mask-image:radial-gradient(ellipse_at_top,black_0%,black_46%,transparent_78%)]">
-          <Image
-            src={FOREST}
-            alt=""
-            fill
-            priority
-            sizes="56vw"
-            className="object-cover object-[50%_2%] opacity-[0.19] brightness-[0.80] saturate-[0.60] dark:opacity-[0.15] dark:brightness-[0.62]"
-          />
-        </div>
-
-        {/* Header clearance pockets: these are purely visual veils, not
-            interactive layers. They keep the Undara wordmark and right-side
-            controls crisp while canopy remains visible around them. */}
-        <div
-          data-canopy-header-clearance="brand"
-          className="absolute -left-[2%] top-0 h-[38%] w-[31%] bg-[radial-gradient(ellipse_at_38%_28%,rgba(237,227,216,0.96)_0%,rgba(237,227,216,0.72)_42%,rgba(237,227,216,0.22)_68%,transparent_82%)] blur-[6px] dark:bg-[radial-gradient(ellipse_at_38%_28%,rgba(112,59,59,0.92)_0%,rgba(112,59,59,0.64)_42%,rgba(112,59,59,0.18)_68%,transparent_82%)]"
-        />
-        <div
-          data-canopy-header-clearance="controls"
-          className="absolute -right-[2%] top-0 h-[38%] w-[27%] bg-[radial-gradient(ellipse_at_62%_28%,rgba(237,227,216,0.96)_0%,rgba(237,227,216,0.72)_42%,rgba(237,227,216,0.22)_68%,transparent_82%)] blur-[6px] dark:bg-[radial-gradient(ellipse_at_62%_28%,rgba(112,59,59,0.92)_0%,rgba(112,59,59,0.64)_42%,rgba(112,59,59,0.18)_68%,transparent_82%)]"
-        />
+        {/* Very soft header wash only for legibility; it does not cut a hole
+            in the canopy or create a visible box around the controls. */}
+        <div className="absolute left-[1%] top-[clamp(62px,7vw,118px)] h-[92px] w-[24%] rounded-[50%] bg-background/34 blur-2xl sm:w-[20%]" />
+        <div className="absolute right-[1%] top-[clamp(62px,7vw,118px)] h-[92px] w-[22%] rounded-[50%] bg-background/30 blur-2xl sm:w-[18%]" />
       </div>
 
       <motion.div
