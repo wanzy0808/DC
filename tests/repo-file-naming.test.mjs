@@ -188,9 +188,9 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(home.includes("FallingLeaves"), false);
   assert.equal(existsSync(path("components/Landing/CloudCopy.tsx")), false);
 
-  assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.webp")), true);
+  assert.equal(existsSync(path("public/assets/landing/atmosphere/lightbg.webp")), true);\n  assert.equal(existsSync(path("public/assets/landing/atmosphere/darkbg.webp")), true);
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
-  assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.webp/);
+  assert.match(woodland, /\/assets\/landing\/atmosphere\/lightbg\.webp/);\n  assert.match(woodland, /\/assets\/landing\/atmosphere\/darkbg\.webp/);\n  assert.match(woodland, /BODY_MASK/);\n  assert.match(woodland, /#EDE3D8/);\n  assert.match(woodland, /#281414/);
   assert.match(canopy, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
   assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.webp/);
