@@ -1,6 +1,5 @@
 "use client";
 
-import Footer from "@/components/Layout/Footer";
 import { MarketingAudioControls } from "@/components/Layout/MarketingAudio";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -11,7 +10,8 @@ export function MarketingInstagramLink() {
 }
 
 /** One bottom edge shared by every framed marketing page. */
-export default function MarketingFrameFooter({ landingLayout: _landingLayout = false }: { landingLayout?: boolean }) {
+export default function MarketingFrameFooter({ landingLayout = false }: { landingLayout?: boolean }) {
+  void landingLayout;
   const { messages } = useLanguage();
 
   return (
