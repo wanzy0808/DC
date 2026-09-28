@@ -41,7 +41,9 @@ function Arch({ width, height, depth, color, z = 0, gradient = false, gradientBo
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
   }, [geometry, height, color, gradientBottom]);
   return <mesh geometry={geometry} position={[0, 0, z]} castShadow receiveShadow>
-    {gradient ? <meshStandardMaterial vertexColors roughness={0.75} metalness={0.03} /> : <meshStandardMaterial color={color} roughness={0.82} metalness={0} />}
+    {gradient
+      ? <meshStandardMaterial vertexColors roughness={0.75} metalness={0.03} emissive={color} emissiveIntensity={0.16} />
+      : <meshStandardMaterial color={color} roughness={0.82} metalness={0} emissive={color} emissiveIntensity={0.14} />}
   </mesh>;
 }
 
@@ -54,7 +56,7 @@ function DoorFrame({ color }: { color: string }) {
     outer.holes.push(hole);
     return new THREE.ExtrudeGeometry(outer, { depth: 0.09, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 2, curveSegments: 48 });
   }, []);
-  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color={color} roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
+  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color={color} roughness={0.7} metalness={0.05} emissive={color} emissiveIntensity={0.13} side={THREE.DoubleSide} /></mesh>;
 }
 
 function PortalWorld({ image, entering }: { image: string; entering: boolean }) {
@@ -442,9 +444,13 @@ function Door({ opening, image, title, crest, entering, isDarkMode }: { opening:
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = isDarkMode
-    ? { frame: "#D6B38C", panel: "#D6B38C", panelBottom: "#C19A72", trim: "#703B3B", metal: "#d1a9a0" }
-    : { frame: "#703B3B", panel: "#703B3B", panelBottom: "#5E3030", trim: "#EDE3D8", metal: "#d1a9a0" };
+  const palette = {
+    frame: "#703B3B",
+    panel: "#703B3B",
+    panelBottom: "#5E3030",
+    trim: isDarkMode ? "#D6B38C" : "#EDE3D8",
+    metal: "#d1a9a0",
+  };
   return <group position={[0, -2.12, 0]}>
     <DoorBacklight opening={opening} entering={entering} isDarkMode={isDarkMode} />
     <PortalWorld image={image} entering={entering} />
@@ -458,16 +464,16 @@ function Door({ opening, image, title, crest, entering, isDarkMode }: { opening:
         <Arch width={1.67} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
         <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient gradientBottom={palette.panelBottom} />
         <DoorTitle title={title} opening={opening} />
-        {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color={palette.trim} roughness={0.58} metalness={0.12} /></mesh>)}
+        {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color={palette.trim} roughness={0.58} metalness={0.12} emissive={palette.trim} emissiveIntensity={0.1} /></mesh>)}
         <DoorCrest kind={crest} color={palette.trim} />
 
         <mesh position={[0.67, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
-          <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
+          <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} emissive={palette.metal} emissiveIntensity={0.05} />
         </mesh>
         <mesh position={[0.57, 1.85, 0.165]} rotation={[0, 0, Math.PI / 2]} castShadow>
           <capsuleGeometry args={[0.022, 0.18, 4, 12]} />
-          <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} />
+          <meshStandardMaterial color={palette.metal} metalness={0.65} roughness={0.25} emissive={palette.metal} emissiveIntensity={0.05} />
         </mesh>
       </group>
     </group>
@@ -549,7 +555,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} crest={portal.crest} entering={entering && selected === index} isDarkMode={isDarkMode} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
-    <pointLight position={[0, 1.55, -1.15]} intensity={opening[index] ? 2.5 : 0.16} color="#F2D4AA" distance={4.8} decay={2} />
+    <pointLight position={[0, 1.65, -1.8]} intensity={opening[index] ? 2.35 : 0.12} color="#F2D4AA" distance={5.2} decay={2} />
   </group>)}</>;
 }
 
@@ -586,12 +592,11 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
       <Canvas shadows={{ type: THREE.PCFShadowMap }} camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startRoseCover} onArrive={finishZoom} />
-        {/* Keep only enough ambient light to read the door material; all dramatic/key light comes from the forest behind it. */}
-        <ambientLight intensity={0.28} />
-        <hemisphereLight args={["#EDE3D8", "#332126", 0.3]} />
+        {/* All directional/point illumination originates behind the doors. Neutral ambient only keeps the PBR base color readable. */}
+        <ambientLight intensity={0.34} />
         <directionalLight
-          position={[0, 5.8, -6.5]}
-          intensity={3.2}
+          position={[0, 5.8, -7.2]}
+          intensity={2.85}
           color="#F2D8B5"
           castShadow
           shadow-mapSize={[2048, 2048]}
@@ -602,7 +607,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
           shadow-bias={-0.00015}
           shadow-radius={6}
         />
-        <pointLight position={[0, 1.1, -2.2]} intensity={selected !== null && opening[selected] ? 4.8 : 0.32} color="#F3D8B1" distance={5.8} decay={2} />
+        <pointLight position={[0, 1.2, -2.6]} intensity={selected !== null && opening[selected] ? 4.4 : 0.26} color="#F3D8B1" distance={6.2} decay={2} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} isDarkMode={isDarkMode} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
