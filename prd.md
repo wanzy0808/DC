@@ -5598,3 +5598,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Rule aktif:** branch-05 adalah pengecualian khusus sebagai divider ukiran story block. Jangan menggantinya kembali dengan straight line dan jangan memperluasnya menjadi branch overlay besar tanpa instruksi owner.
 
 **Validasi:** regression test diperbarui agar homepage tetap bebas branch overlay besar tetapi mewajibkan branch-05 pada story divider.
+
+
+### Landing footer — 2026-09-28
+- Copyright must visually belong to the same footer row as the sound control and Instagram action: left / center / right, without a second stacked copyright row.
