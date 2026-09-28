@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/convert-png.trigger"
+      - "public/**/*.png"
 
 permissions:
   contents: write
