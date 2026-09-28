@@ -68,7 +68,7 @@ export default function StudioNativeVisualInspector({
   function previewAnimation() {
     const selector = nativeVisualSelector(targetKey);
     const node = selector
-      ? document.querySelector<HTMLElement>(`.dc-studio-preview-surface ${selector}`)
+      ? document.querySelector<HTMLElement>(`.undara-studio-preview-surface ${selector}`)
       : null;
     node?.getAnimations({ subtree: true }).forEach((animation) => {
       animation.cancel();
@@ -79,7 +79,7 @@ export default function StudioNativeVisualInspector({
   const animationPreset = getSectionAnimationPreset(current.animation);
 
   return (
-    <aside className="dc-studio-layer-side dc-studio-native-inspector" aria-label={en ? "Visual properties" : "Properti visual"}>
+    <aside className="undara-studio-layer-side undara-studio-native-inspector" aria-label={en ? "Visual properties" : "Properti visual"}>
       <InvitationFonts families={current.fontFamily ? [current.fontFamily] : []} />
       <div className="flex items-center justify-between gap-2">
         <h3 className="truncate text-sm font-semibold capitalize text-primary">{title}</h3>
@@ -87,7 +87,7 @@ export default function StudioNativeVisualInspector({
           className="grid h-8 w-8 place-items-center rounded-lg hover:bg-primary/10"><X size={16} /></button>
       </div>
       {systemContent && (
-        <div className="mt-3 flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+        <div className="mt-3 flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
           <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
           <span>{en ? "Content comes from event data and is locked here. Visual styling stays editable." : "Isi berasal dari data acara dan terkunci di sini. Styling visual tetap bisa diedit."}</span>
         </div>
@@ -137,7 +137,7 @@ export default function StudioNativeVisualInspector({
                   className="h-9 w-12 rounded-lg border border-primary/30 bg-background p-1" />
                 <button type="button"
                   onClick={() => patch({ [key]: undefined } as Partial<NativeVisualTransform>)}
-                  className="min-h-9 flex-1 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10">
+                  className="min-h-9 flex-1 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10">
                   Default
                 </button>
               </div>
@@ -153,7 +153,7 @@ export default function StudioNativeVisualInspector({
             <select value={current.fontFamily ?? ""}
               style={{ fontFamily: current.fontFamily ? invitationFontFamily(current.fontFamily) : undefined }}
               onChange={(event) => patch({ fontFamily: event.currentTarget.value || undefined })}
-              className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none">
+              className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none">
               <option value="">{en ? "Template font" : "Font template"}</option>
               {nativeFontFamilies.map((family) => (
                 <option key={family} value={family} style={{ fontFamily: invitationFontFamily(family) }}>{family}</option>
@@ -184,7 +184,7 @@ export default function StudioNativeVisualInspector({
 
           <div className="text-xs text-foreground">
             <span className="mb-1 block">{en ? "Alignment" : "Perataan"}</span>
-            <div className="dc-studio-align-icons" role="group" aria-label={en ? "Text alignment" : "Perataan teks"}>
+            <div className="undara-studio-align-icons" role="group" aria-label={en ? "Text alignment" : "Perataan teks"}>
               {aligns.map(({ value: align, label, Icon }) => (
                 <button key={align} type="button" aria-pressed={current.textAlign === align}
                   aria-label={label} title={label}
@@ -232,7 +232,7 @@ export default function StudioNativeVisualInspector({
                   ? { animation, animationDuration: undefined }
                   : { animation: undefined, animationDuration: undefined, animationDelay: undefined });
               }}
-              className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none"
+              className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none"
             >
               <option value="">{en ? "No animation" : "Tanpa animasi"}</option>
               {sectionAnimationGroups.map((group) => (
@@ -250,7 +250,7 @@ export default function StudioNativeVisualInspector({
           {current.animation && current.animation !== "none" && (
             <>
               <button type="button" onClick={previewAnimation}
-                className="flex min-h-9 w-full items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10">
+                className="flex min-h-9 w-full items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10">
                 <Play size={13} aria-hidden="true" />
                 {en ? "Preview animation" : "Preview animasi"}
               </button>
@@ -288,7 +288,7 @@ export default function StudioNativeVisualInspector({
       )}
 
       <button type="button" onClick={() => onChange(defaultNativeVisualTransform)}
-        className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-3 text-xs text-primary hover:bg-primary/10">
+        className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-3 text-xs text-primary hover:bg-primary/10">
         <RotateCcw size={14} />{en ? "Reset element" : "Reset elemen"}
       </button>
     </aside>
