@@ -34,7 +34,7 @@ const copy = {
     termsName: "Syarat & Ketentuan",
     privacy: "Kebijakan Privasi",
     and: "dan",
-    promo: "Saya ingin menerima email promo dan newsletter DC Organizer.",
+    promo: "Saya ingin menerima email promo dan newsletter Undara.",
     submit: "Daftar",
     loading: "Memproses...",
     haveAccount: "Sudah punya akun?",
@@ -64,7 +64,7 @@ const copy = {
     termsName: "Terms & Conditions",
     privacy: "Privacy Policy",
     and: "and",
-    promo: "I want to receive promotional emails and DC Organizer newsletters.",
+    promo: "I want to receive promotional emails and Undara newsletters.",
     submit: "Create account",
     loading: "Creating account...",
     haveAccount: "Already have an account?",
@@ -165,10 +165,10 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
         </div>
 
         <div className="space-y-4">
-          <label htmlFor="dc-register-email" className={authLabelClass}>
+          <label htmlFor="undara-register-email" className={authLabelClass}>
             {t.email}
             <input
-              id="dc-register-email"
+              id="undara-register-email"
               required
               type="email"
               autoComplete="email"
@@ -179,19 +179,19 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
           </label>
 
           <div>
-            <label htmlFor="dc-register-password" className={authLabelClass}>
+            <label htmlFor="undara-register-password" className={authLabelClass}>
               {t.password}
             </label>
             <div className="relative">
               <input
-                id="dc-register-password"
+                id="undara-register-password"
                 required
                 minLength={8}
                 type={showPassword ? "text" : "password"}
                 autoComplete="new-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                aria-describedby="dc-register-password-hint"
+                aria-describedby="undara-register-password-hint"
                 className={authFieldClass + " pr-14"}
               />
               <button
@@ -204,16 +204,16 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
                 {showPassword ? <EyeOff aria-hidden="true" className="size-4" /> : <Eye aria-hidden="true" className="size-4" />}
               </button>
             </div>
-            <p id="dc-register-password-hint" className="mt-1.5 text-xs text-[#74646a] dark:text-[#74646a]">{t.minimum}</p>
+            <p id="undara-register-password-hint" className="mt-1.5 text-xs text-[#74646a] dark:text-[#74646a]">{t.minimum}</p>
           </div>
 
           <div>
-            <label htmlFor="dc-register-password-confirm" className={authLabelClass}>
+            <label htmlFor="undara-register-password-confirm" className={authLabelClass}>
               {t.confirm}
             </label>
             <div className="relative">
               <input
-                id="dc-register-password-confirm"
+                id="undara-register-password-confirm"
                 required
                 minLength={8}
                 type={showConfirmPassword ? "text" : "password"}
@@ -265,7 +265,7 @@ export default function RegisterDialog({ next: providedNext, onSwitchToLogin, on
           {loading ? t.loading : t.submit}
         </Button>
 
-        <div className="space-y-3 border-t border-primary/15 pt-4 text-center font-[family-name:var(--font-dc-body)] text-sm text-[#74646a] dark:text-[#74646a]">
+        <div className="space-y-3 border-t border-primary/15 pt-4 text-center font-[family-name:var(--font-undara-body)] text-sm text-[#74646a] dark:text-[#74646a]">
           <p>
             {t.haveAccount}{" "}
             <button
