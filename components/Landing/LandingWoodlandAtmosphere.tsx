@@ -9,25 +9,25 @@ const cornerBranches = [
   {
     src: "/assets/landing/ornaments/botanical/branch-01.png",
     className:
-      "absolute -left-[14%] top-[16%] h-[35%] w-[32%] origin-top-left opacity-[0.94] [mask-image:linear-gradient(to_right,black_55%,transparent_100%)] dark:opacity-[0.7]",
+      "absolute -left-[6%] top-[18%] h-[37%] w-[36%] origin-top-left opacity-[0.94] [mask-image:linear-gradient(to_right,black_54%,transparent_100%)] dark:opacity-[0.78]",
     imageClassName: "object-contain object-left-top",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-02.png",
     className:
-      "absolute -right-[14%] top-[16%] hidden h-[35%] w-[32%] origin-top-right opacity-[0.9] [mask-image:linear-gradient(to_left,black_55%,transparent_100%)] sm:block dark:opacity-[0.68]",
+      "absolute -right-[6%] top-[18%] hidden h-[37%] w-[36%] origin-top-right opacity-[0.92] [mask-image:linear-gradient(to_left,black_54%,transparent_100%)] sm:block dark:opacity-[0.76]",
     imageClassName: "object-contain object-right-top",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-03.png",
     className:
-      "absolute -bottom-[4%] -left-[14%] h-[32%] w-[34%] origin-bottom-left opacity-[0.92] [mask-image:linear-gradient(to_bottom,black_22%,transparent_82%)] dark:opacity-[0.68]",
+      "absolute -bottom-[3%] -left-[6%] h-[38%] w-[38%] origin-bottom-left opacity-[0.92] [mask-image:linear-gradient(to_bottom,black_25%,transparent_82%)] dark:opacity-[0.76]",
     imageClassName: "object-contain object-left-bottom",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-04.png",
     className:
-      "absolute -bottom-[4%] -right-[14%] h-[32%] w-[34%] origin-bottom-right opacity-[0.9] [mask-image:linear-gradient(to_bottom,black_22%,transparent_82%)] dark:opacity-[0.66]",
+      "absolute -bottom-[3%] -right-[6%] h-[38%] w-[38%] origin-bottom-right opacity-[0.9] [mask-image:linear-gradient(to_bottom,black_25%,transparent_82%)] dark:opacity-[0.74]",
     imageClassName: "object-contain object-right-bottom",
   },
 ] as const;
@@ -46,7 +46,7 @@ export default function LandingWoodlandAtmosphere() {
         initial={reduced ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduced ? 0 : 1.1, ease: "easeOut" }}
-        className="absolute inset-x-[5%] bottom-[11%] h-[72%] sm:inset-x-[8%] sm:bottom-[9%] sm:h-[73%]"
+        className="absolute inset-x-3 bottom-[10%] aspect-[1672/941] sm:inset-x-[38px] sm:bottom-[8%]"
       >
         <Image
           src={FOREST}
@@ -54,7 +54,7 @@ export default function LandingWoodlandAtmosphere() {
           fill
           priority
           sizes="100vw"
-          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] dark:opacity-[0.23] dark:brightness-125 dark:saturate-[0.55]"
+          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] dark:opacity-[0.62] dark:brightness-[0.85] dark:saturate-[0.6]"
         />
       </motion.div>
 

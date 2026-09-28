@@ -123,7 +123,7 @@ export default function MarketingDoorNavigator() {
         aria-controls="dc-marketing-door-navigation"
         aria-label={open ? (isEnglish ? "Close page navigation" : "Tutup navigasi halaman") : label}
         onClick={() => setOpen((previous) => !previous)}
-        className="group flex w-[53px] flex-col items-center gap-1 rounded-[24px] border border-primary bg-primary px-1.5 py-2 text-primary-foreground shadow-[0_8px_25px_rgba(75,35,47,0.18)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-primary-foreground/60 hover:shadow-[0_10px_30px_rgba(75,35,47,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="group flex w-[53px] flex-col items-center gap-1 rounded-[16px] border border-primary/55 bg-background px-1.5 py-2 text-primary shadow-none transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <MiniDoor active={open} />
         <span className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-tight tracking-[0.05em]">
