@@ -59,7 +59,7 @@ export default function UndaraSocialIcons({ compact = false }: { compact?: boole
             rel="noopener noreferrer"
             aria-label={label}
             title={label}
-            className="undara-footer-control"
+            className="undara-control-surface undara-footer-control"
           >
             <Icon className={compact ? "size-4" : "size-5"} />
           </a>
@@ -69,7 +69,7 @@ export default function UndaraSocialIcons({ compact = false }: { compact?: boole
             role="img"
             aria-label={`${label} — tautan segera hadir`}
             title={`${label} — tautan segera hadir`}
-            className="undara-footer-control cursor-default opacity-80"
+            className="undara-control-surface undara-footer-control cursor-default"
             data-social={id}
             data-social-pending="true"
           >
