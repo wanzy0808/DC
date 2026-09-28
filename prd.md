@@ -5546,12 +5546,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 
 ### Dedicated overhead canopy — 2026-09-28
-- Use `canopy5.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
+- Use `canopy7.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
 - Keep the canopy concentrated toward the center; logo/tagline and right-side controls must remain unobstructed without visible masking boxes.
 
 
 ### Overhead canopy — 2026-09-28
-- Use only the centered `canopy5.png` as the homepage overhead canopy.
+- Use only the centered `canopy7.png` as the homepage overhead canopy.
 - Side canopy layers are removed; keep the top composition cleaner while maintaining the feeling of foliage above the viewer.
 
 ### 28 September 2026 — Jeda submenu burger Layanan
@@ -5571,7 +5571,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Validasi:** regression test mengunci default closed state.
 
-- Canopy5 should nearly fill the visual distance between the left brand block and right header controls, leaving a small breathing gap (roughly 1 cm feel) on each side rather than touching either group.
+- Canopy7 should nearly fill the visual distance between the left brand block and right header controls, leaving a small breathing gap (roughly 1 cm feel) on each side rather than touching either group.
 
 
 ### 28 September 2026 — Story copy bawah kanan diperkuat tanpa menghapus ukiran
@@ -5583,3 +5583,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Guardrail:** ukiran/dekorasi story block tidak boleh dihapus ketika mengubah copy atau ukuran pada iterasi berikutnya kecuali owner meminta eksplisit.
 
 **Validasi:** regression test mengunci copy, ukuran utama, dan keberadaan decorative divider.
+
+
+### Canopy7 visual treatment — 2026-09-28
+- Use canopy7 as a soft atmospheric layer rather than a high-contrast foreground ornament. Keep foliage muted and semi-transparent so the doors remain the visual focus.
