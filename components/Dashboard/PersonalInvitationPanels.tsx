@@ -93,7 +93,7 @@ export function PersonalInvitationCreatePanel({
           >
             <option value="">{displayTitleCase(d("Tambah tamu baru"))}</option>
             {availableGuests.map((guest) => (
-              <option key={guest.id} value={guest.id} className="dc-ui-name">
+              <option key={guest.id} value={guest.id} className="undara-ui-name">
                 {displayTitleCase(guest.name)}{guest.phone ? ` · ${guest.phone}` : ""}
               </option>
             ))}
@@ -105,7 +105,7 @@ export function PersonalInvitationCreatePanel({
 
         {selectedGuest ? (
           <div className="border-y border-primary/15 py-3">
-            <p className="dc-ui-name text-sm font-semibold text-foreground">{selectedGuest.name}</p>
+            <p className="undara-ui-name text-sm font-semibold text-foreground">{selectedGuest.name}</p>
             <p className="mt-1 text-sm text-muted-foreground">{selectedGuest.phone || d("Tanpa nomor WhatsApp")}</p>
             <p className="mt-1 text-xs text-muted-foreground">
               {d("Data ini terhubung dengan RSVP, WA Blast, dan pengaturan meja.")}
@@ -248,7 +248,7 @@ export function PersonalInvitationListPanel({
           return (
             <article
               key={item.id}
-              className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5"
+              className="undara-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                 <div className="min-w-0 flex-1">
@@ -284,11 +284,11 @@ export function PersonalInvitationListPanel({
                   ) : (
                     <>
                       <p className="break-words text-sm font-semibold text-foreground">
-                        <span className="dc-ui-name">{item.personalAddressee || item.name}</span>
+                        <span className="undara-ui-name">{item.personalAddressee || item.name}</span>
                       </p>
                       {item.personalAddressee && item.personalAddressee !== item.name && (
                         <p className="mt-0.5 text-xs text-muted-foreground">
-                          {d("Data tamu")}: <span className="dc-ui-name">{item.name}</span>
+                          {d("Data tamu")}: <span className="undara-ui-name">{item.name}</span>
                         </p>
                       )}
                       <p className="mt-1 break-words text-xs text-muted-foreground">
