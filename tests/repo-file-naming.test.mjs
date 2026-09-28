@@ -178,6 +178,7 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   const home = read("app/page.tsx");
   const woodland = read("components/Landing/LandingWoodlandAtmosphere.tsx");
   const story = read("components/Landing/LandingStoryCopy.tsx");
+  const canopy = read("components/Landing/LandingTopCanopy.tsx");
 
   assert.match(home, /LandingWoodlandAtmosphere/);
   assert.match(home, /LandingStoryCopy/);
@@ -190,7 +191,7 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.webp")), true);
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.webp/);
-  assert.match(woodland, /data-landing-canopy/);
+  assert.match(canopy, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
   assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.webp/);
   assert.equal(home.includes("LandingOuterBranches"), false);
