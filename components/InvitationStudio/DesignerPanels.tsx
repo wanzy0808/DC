@@ -40,7 +40,7 @@ export function DesignerTool({
   title?: string;
 }) {
   return (
-    <button type="button" onClick={onClick} disabled={disabled} title={title} className="dc-studio-tool" aria-pressed={active}>
+    <button type="button" onClick={onClick} disabled={disabled} title={title} className="undara-studio-tool" aria-pressed={active}>
       {icon}<span>{label}</span>
     </button>
   );
@@ -64,7 +64,7 @@ function Heading({ title, description }: { title: string; description: string })
   const shownDescription = locale === "en" ? studioHeadingEnglish[description] ?? description : description;
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
+      <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">
         {shownTitle}
       </h2>
       {shownDescription.trim() && <p className="mt-1 text-sm leading-6 text-foreground/75">{shownDescription}</p>}
@@ -209,7 +209,7 @@ export function ContentPanel({
                           rows={field === "ourStory" ? 7 : 4}
                           maxLength={editableCopyMaxLength[field]}
                           onChange={(event) => onNarrativeCopy(field, event.target.value)}
-                          className="min-h-20 w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/25 bg-background px-2.5 py-2 text-xs leading-5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                          className="min-h-20 w-full resize-y rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2.5 py-2 text-xs leading-5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
                         />
                         <small className="text-right text-[9px] text-muted-foreground">{value.length}/{editableCopyMaxLength[field]}</small>
                       </label>
@@ -236,7 +236,7 @@ export function ContentPanel({
                       </button>
 
                       {item.key === "rsvp" && element === "input" && activeElement === "rsvp:input" && (
-                        <div className="mt-2 space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
+                        <div className="mt-2 space-y-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
                           <label className="block text-[10px] text-foreground">
                             <span className="mb-1 block font-semibold text-primary">{en ? "RSVP title" : "Judul RSVP"}</span>
                             <input
@@ -252,15 +252,15 @@ export function ContentPanel({
                               : "Centang opsi acara yang boleh dipilih tamu di dropdown RSVP."}
                           </p>
                           {eventCategory !== "WEDDING" && <p className="text-[10px] leading-4 text-muted-foreground">{en ? "Event choices are mainly used for weddings." : "Pilihan acara terutama dipakai untuk wedding."}</p>}
-                          <label className="dc-studio-rsvp-switch">
+                          <label className="undara-studio-rsvp-switch">
                             <span>{en ? "Wedding Ceremony" : "Upacara Nikah"}</span>
                             <input type="checkbox" checked={rsvpConfig.ceremony} onChange={(event) => onRsvpConfig({ ceremony: event.target.checked })} />
                           </label>
-                          <label className="dc-studio-rsvp-switch">
+                          <label className="undara-studio-rsvp-switch">
                             <span>{en ? "Reception" : "Resepsi"}</span>
                             <input type="checkbox" checked={rsvpConfig.reception} onChange={(event) => onRsvpConfig({ reception: event.target.checked })} />
                           </label>
-                          <label className="dc-studio-rsvp-switch">
+                          <label className="undara-studio-rsvp-switch">
                             <span>{en ? "Attend all events" : "Hadiri Semua Acara"}</span>
                             <input type="checkbox" checked={rsvpConfig.attendAll} disabled={!(rsvpConfig.ceremony && rsvpConfig.reception)} onChange={(event) => onRsvpConfig({ attendAll: event.target.checked })} />
                           </label>
