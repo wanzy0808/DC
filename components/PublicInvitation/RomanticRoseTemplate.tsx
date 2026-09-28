@@ -4,7 +4,7 @@ import { displayTitleCase } from "@/lib/text/display-title-case";
 import { getInvitationCountdown } from "@/lib/invitations/countdown";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { CalendarDays, ChevronDown, Gift, Heart, MapPin } from "lucide-react";
+import { CalendarDays, Gift, Heart, MapPin } from "lucide-react";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import GuestWishes from "@/components/PublicInvitation/GuestWishes";
 import type { PersonalRsvpGuest } from "@/components/InvitationStudio/rsvp-types";
@@ -225,7 +225,6 @@ export default function RomanticRoseTemplate({
     setOpened(true);
     onEnvelopeOpened?.();
   };
-  const scrollHint = <ChevronDown data-studio-native-object="object:cover:scroll-hint" className="mx-auto mt-8 h-5 w-5 animate-bounce text-[#b77f90] motion-reduce:animate-none" aria-hidden />;
 
   useEffect(() => {
     if (!opened && sections.envelope !== false) return;
@@ -278,10 +277,9 @@ export default function RomanticRoseTemplate({
             <span data-studio-native-object="object:envelope:seal" className="absolute bottom-6 left-1/2 grid h-12 w-12 -translate-x-1/2 place-items-center rounded-full border-4 border-[#edc6d0] bg-[#b7798d] text-white shadow-md"><Heart className="h-5 w-5" fill="currentColor" /></span>
           </div>
           <p data-studio-native-object="object:envelope:invitation-copy" className="mt-8 text-xs leading-6 text-[#815768]">Dengan hangat kami mengundang Anda<br />untuk merayakan hari istimewa kami.</p>
-          <button type="button" onClick={handleOpen} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" className="mt-7 min-h-11 rounded-full bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
+          <button type="button" onClick={handleOpen} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" className="mt-7 min-h-11 rounded-[var(--dc-control-radius)] bg-[#a65e69] px-8 py-3 text-sm font-medium text-white shadow-lg transition hover:bg-[#8e4d5d] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#a65e69]">
             Buka Undangan
           </button>
-          {preview && <p className="mt-4 text-[11px] text-[#8e586d]">Preview · foto dan isi mengikuti undangan ini</p>}
         </section>
       ) : (
         <div className="mx-auto flex max-w-2xl flex-col">
@@ -298,7 +296,6 @@ export default function RomanticRoseTemplate({
                             {cropOverlay("cover")}
                           </div>
                           <p data-studio-native-object="object:cover:date" className="mt-8 text-sm tracking-[0.1em] text-[#754b5f]">{eventDate}</p>
-                          {scrollHint}
                         </div>
                         {objectOverlay("cover", instanceId)}
                       </section>
@@ -308,15 +305,19 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="greeting" style={invitationSectionStyleCss(sectionStyles.greeting)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("greeting", instanceId)}
                         <RoseHeading section="greeting" eyebrow="A warm invitation">Dengan penuh sukacita</RoseHeading>
-                        <p data-studio-copy-field="greeting" className="mx-auto max-w-md whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+                        <div data-studio-native-object="object:greeting:copy-group" className="mx-auto max-w-md space-y-4 text-sm leading-8 text-[#765460]">
+                          <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+                          <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
+                        </div>
                       </section>
           ))}
 
           {renderSectionInstances("identity", (instanceId) => (
+            <>
             <section data-invitation-section="identity" style={invitationSectionStyleCss(sectionStyles.identity)} className="relative bg-[#f8eef0] px-7 py-20">
                         {objectOverlay("identity", instanceId)}
                         <RoseHeading section="identity" eyebrow="The two of us">Mempelai</RoseHeading>
-                        <div className="grid grid-cols-2 gap-4">
+                        <div data-studio-native-object="object:identity:couple-group" className="grid grid-cols-2 gap-4">
                           <div className="min-w-0 text-center">
                             <div data-invitation-photo-slot="personOne" className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" cropStyle={photoCropStyle(assignment, "personOne")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
@@ -337,11 +338,9 @@ export default function RomanticRoseTemplate({
                           </div>
                         </div>
                       </section>
+            <OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} motionUnit={copyMotions.ourStory?.unit} />
+            </>
           ))}
-
-
-
-          {sections.identity !== false && <div style={{ order: Math.max(0, sectionLayout.findIndex((item) => item.key === "identity")) + 0.1 }}><OurStorySection story={editableCopy.ourStory} theme="romantic-rose" preview={preview} motionUnit={copyMotions.ourStory?.unit} /></div>}
 
           {renderSectionInstances("event", (instanceId) => (
             <section data-invitation-section="event" style={invitationSectionStyleCss(sectionStyles.event)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
@@ -371,14 +370,14 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="gallery" style={invitationSectionStyleCss(sectionStyles.gallery)} className="relative bg-[#fffaf8] px-6 py-20">
                         {objectOverlay("gallery", instanceId)}
                           <RoseHeading section="gallery" eyebrow="Our memories">Galeri Foto</RoseHeading>
-                          {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-full border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
-                          {gallery.length ? <div className="grid grid-cols-2 gap-3">
+                          {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-[var(--dc-control-radius)] border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
+                          {gallery.length ? <div data-studio-native-object="object:gallery:grid" className="grid grid-cols-2 gap-3">
                             {gallery.map((photo, index) => (
                               <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-2 overflow-hidden rounded-2xl" : "overflow-hidden rounded-2xl"}>
                                 <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className={index === 0 ? "aspect-[4/3] w-full object-cover" : "aspect-[3/4] w-full object-cover"} />
                               </div>
                             ))}
-                          </div> : <p className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
+                          </div> : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm text-[#906978]">Belum ada foto galeri.</p>}
                         </section>
           ))}
 
@@ -387,15 +386,15 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("countdown", instanceId)}
                         <RoseHeading section="countdown" eyebrow="Counting the moments">Menuju Hari Bahagia</RoseHeading>
                         {now !== null && countdown ? (
-                          <div className="grid grid-cols-4 gap-2">
+                          <div data-studio-native-object="object:countdown:grid" className="grid grid-cols-4 gap-2">
                             {([["Hari", countdown.days], ["Jam", countdown.hours], ["Menit", countdown.minutes], ["Detik", countdown.seconds]] as const).map(([label, value]) => (
                               <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className="rounded-xl border border-[#e8cbd3] bg-white/85 p-2">
-                                <p className="font-[family-name:var(--font-dc-heading)] text-xl text-[#7b465a]">{String(value).padStart(2, "0")}</p>
-                                <p className="mt-1 text-[10px] text-[#906978]">{label}</p>
+                                <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="font-[family-name:var(--font-dc-heading)] text-xl text-[#7b465a]">{String(value).padStart(2, "0")}</p>
+                                <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] text-[#906978]">{label}</p>
                               </div>
                             ))}
                           </div>
-                        ) : <p className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
+                        ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm text-[#906978]">Tanggal acara belum tersedia.</p>}
                       </section>
           ))}
 
@@ -403,6 +402,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="location" style={invitationSectionStyleCss(sectionStyles.location)} className="relative bg-[#fffaf8] px-8 py-20 text-center">
                         {objectOverlay("location", instanceId)}
                         <RoseHeading section="location" eyebrow="Find your way">Lokasi</RoseHeading>
+                        <div data-studio-native-object="object:location:details-group">
                         <MapPin data-studio-native-object="object:location:map-icon" className="mx-auto mb-3 h-6 w-6 text-[#a65e69]" />
                         <h3 data-studio-native-object="object:location:venue" className="text-lg text-[#66394b]">{invitation.venue || "Lokasi belum ditentukan"}</h3>
                         {invitation.address && <p data-studio-native-object="object:location:address" className="mx-auto mt-3 max-w-md text-sm leading-7 text-[#765460]">{invitation.address}</p>}
@@ -411,6 +411,7 @@ export default function RomanticRoseTemplate({
                             <MapPin className="h-4 w-4" /> Buka Google Maps
                           </a>
                         )}
+                        </div>
                       </section>
           ))}
 
@@ -440,7 +441,7 @@ export default function RomanticRoseTemplate({
                             <p data-studio-native-object="object:gift:account-name" className="mt-2 text-sm font-semibold">{invitation.giftAccountName}</p>
                             <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all font-[family-name:var(--font-dc-heading)] text-lg">{invitation.giftAccountNumber}</p>
                             {invitation.giftAccountNumber && <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={() => { if (!preview) navigator.clipboard?.writeText(invitation.giftAccountNumber || ""); }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[#d5a6b4] px-5 py-2 text-xs text-[#7b465a] hover:bg-[#f8eaec]">Salin nomor rekening</button>}
-                          </div> : <p className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
+                          </div> : <p data-studio-native-object="object:gift:empty-copy" className="mt-5 text-sm text-[#906978]">Informasi tanda kasih belum ditambahkan.</p>}
                         </section>
           ))}
 
@@ -450,6 +451,7 @@ export default function RomanticRoseTemplate({
                         <Heart data-studio-native-object="object:closing:heart" className="mx-auto h-7 w-7 text-[#bf8496]" />
                         <RoseHeading section="closing" eyebrow="Forever begins here">Terima Kasih</RoseHeading>
                         <p data-studio-copy-field="closing" className="mx-auto max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p>
+                        <p data-studio-copy-field="prayerWish" className="mx-auto mt-5 max-w-sm whitespace-pre-line text-sm leading-8 text-[#765460]"><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
                         <p data-studio-native-object="object:closing:names" className="mt-8 break-words font-[family-name:var(--font-dc-heading)] text-xl text-[#713b50]">{displayName}</p>
                         {invitation.weddingHashtag && <p data-studio-native-object="object:closing:hashtag" className="mt-4 text-sm text-[#765460]">{invitation.weddingHashtag}</p>}
                       </section>

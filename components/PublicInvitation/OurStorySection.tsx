@@ -23,10 +23,10 @@ export default function OurStorySection({
   const zen = theme === "zen-atelier";
   const pencil = theme === "pencil-reverie";
   const left = theme === "modern-maroon" || theme === "golden-art-deco";
-  const storyText = story?.trim() || (preview ? "Klik untuk menulis Our Story" : "");
+  const storyText = story?.trim() || (preview ? "Our Story belum diisi" : "");
   return (
     <section
-      data-invitation-section="our-story"
+      data-invitation-subsection="our-story"
       aria-labelledby="invitation-our-story-heading"
       className={`relative overflow-hidden px-7 py-16 sm:px-10 ${pencil ? "pr-our-story" : ""} ${rose
         ? "bg-[#f8eef0] text-[#765460]"

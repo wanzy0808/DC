@@ -51,6 +51,6 @@ test("old design lab routes stay retired without renaming customer media URLs", 
 
 test("package metadata uses the product name rather than a starter-app placeholder", () => {
   const pkg = JSON.parse(read("package.json"));
-  assert.equal(pkg.name, "dc-organizer");
+  assert.equal(pkg.name, "undara");
   assert.equal(pkg.private, true);
 });

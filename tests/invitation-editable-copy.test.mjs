@@ -21,20 +21,27 @@ const selectionInspector = read("components/InvitationStudio/StudioSelectionInsp
 const selectionResolver = read("components/InvitationStudio/studio-canvas-selection.ts");
 const persistence = read("components/InvitationStudio/designer-persistence.ts");
 
-test("Isi keeps narrative slots in the renderer and edits them directly from canvas", () => {
-  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "closing", "ourStory", "zenQuote"]);
-  assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "closing"]);
-  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "closing", "ourStory"]);
-  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "closing", "ourStory"]);
+test("Isi owns narrative wording while canvas selection opens styling-only controls", () => {
+  assert.deepEqual(availableEditableCopyFields("zen-atelier", true), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory", "zenQuote"]);
+  assert.deepEqual(availableEditableCopyFields("zen-atelier", false), ["greeting", "attendanceRequest", "prayerWish", "closing"]);
+  assert.deepEqual(availableEditableCopyFields("romantic-rose"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
+  assert.deepEqual(availableEditableCopyFields("botanical-ivory"), ["greeting", "attendanceRequest", "prayerWish", "closing", "ourStory"]);
   const content = panel.split("export function ContentPanel(")[1]?.split("export function ColorPanel(")[0] || "";
   assert.match(content, /<Heading title="Isi" description="" \/>/);
   assert.match(content, /sectionFunctionalElements/);
-  assert.doesNotMatch(content, /<textarea/);
+  assert.match(content, /copyFieldsBySection/);
+  assert.match(content, /<textarea/);
+  assert.match(content, /onNarrativeCopy\(field, event\.target\.value\)/);
+  assert.match(content, /onResetNarrativeCopy\(field\)/);
   assert.match(selectionResolver, /target\.closest<HTMLElement>\("\[data-studio-copy-field\]"\)/);
   assert.match(studio, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<CopyTextInspector/);
   assert.match(universal, /data-studio-copy-field="greeting"/);
+  assert.match(universal, /data-studio-copy-field="attendanceRequest"/);
+  assert.match(universal, /data-studio-copy-field="prayerWish"/);
   assert.match(universal, /data-studio-copy-field="closing"/);
+  assert.match(romantic, /data-studio-copy-field="attendanceRequest"/);
+  assert.match(romantic, /data-studio-copy-field="prayerWish"/);
 });
 
 test("copy overrides round-trip within the event-scoped design key without mutating event data", () => {
@@ -68,7 +75,9 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   assert.match(studio, /copy: \{\},/);
   assert.match(studio, /function setNarrativeCopy\(/);
   assert.match(studio, /change\(\{ copy: \{ \.\.\.design\.copy, \[field\]: text \} \}\)/);
-  assert.match(selectionInspector, /<CopyTextInspector[\s\S]*onChange=\{\(value\) => onSetNarrativeCopy\(selectedCopyField, value\)\}/);
+  assert.match(studio, /<ContentPanel[\s\S]*onNarrativeCopy=\{setNarrativeCopy\}/);
+  assert.match(selectionInspector, /<CopyTextInspector[\s\S]*onMotion=\{\(patch\) => onUpdateCopyMotion\(selectedCopyField, patch\)\}/);
+  assert.doesNotMatch(selectionInspector, /onSetNarrativeCopy/);
   assert.match(persistence, /templateKey: designKey,/);
   assert.match(studio, /setDesign\(invitationDesignStateFromKey\(key, design\.decor\)\)/);
   const customerSave = persistence.split('fetcher("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
@@ -88,16 +97,19 @@ test("Our Story is optional couple-owned text shown in the real Identity flow, n
   const sectionRegistry = read("lib/templates/sections.ts");
   assert.ok(!sectionRegistry.includes('{ key: "ourStory"'), "do not invent a 16th invitation visibility toggle");
   assert.match(story, /if \(!story\?\.trim\(\) && !preview\) return null;/);
-  assert.match(story, /data-invitation-section="our-story"/);
+  assert.match(story, /data-invitation-subsection="our-story"/);
+  assert.doesNotMatch(story, /data-invitation-section="our-story"/);
   assert.match(story, /data-studio-copy-field="ourStory"/);
-  assert.match(story, /Klik untuk menulis Our Story/);
+  assert.match(story, /Our Story belum diisi/);
   assert.match(story, /Tentang Kami/);
   assert.match(universal, /<OurStorySection story=\{editableCopy\.ourStory\} theme=\{key\} preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
   assert.match(romantic, /<OurStorySection story=\{editableCopy\.ourStory\} theme="romantic-rose" preview=\{preview\} motionUnit=\{copyMotions\.ourStory\?\.unit\} \/>/);
+  assert.match(universal, /after\?\.\(instanceId\)/);
+  assert.doesNotMatch(romantic, /sectionLayout\.findIndex\(\(item\) => item\.key === "identity"\)\) \+ 0\.1/);
   assert.deepEqual(parseEditableCopy(withEditableCopy("romantic-rose", { ourStory: "Bermula dari pertemuan sederhana." })), {
     ourStory: "Bermula dari pertemuan sederhana.",
   });
   assert.deepEqual(parseEditableCopy(withEditableCopy("zen-atelier", { ourStory: "y".repeat(1601) })), {});
   assert.equal(withEditableCopy("zen-atelier", {}), "zen-atelier");
-  assert.deepEqual(availableEditableCopyFields("modern-maroon", false), ["greeting", "closing"]);
+  assert.deepEqual(availableEditableCopyFields("modern-maroon", false), ["greeting", "attendanceRequest", "prayerWish", "closing"]);
 });

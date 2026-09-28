@@ -4,21 +4,25 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-dc-sans);
-  --font-serif: var(--font-dc-serif);
-  --font-heading: var(--font-dc-heading);
-  --font-mono: var(--font-dc-mono);
+  --font-sans: var(--font-undara-sans);
+  --font-serif: var(--font-undara-serif);
+  --font-heading: var(--font-undara-heading);
+  --font-mono: var(--font-undara-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-dc-pink: #C07A84;
-  --color-dc-pink-light: #D9A3AA;
-  --color-dc-maroon: #C07A84;
-  --color-dc-rose-wood: #C07A84;
-  --color-dc-rose-wood-dark: #A65E69;
-  --color-dc-gold: #D9A3AA;
-  --color-dc-gold-bright: #F1C9CE;
-  --color-dc-dark: #0B0B0C;
-  --color-dc-card: #111113;
+  --color-undara-brown: #703B3B;
+  --color-undara-brown-hover: #5E3030;
+  --color-undara-accent: #D6B38C;
+  --color-undara-accent-light: #E8D7C3;
+  --color-dc-pink: #703B3B;
+  --color-dc-pink-light: #D6B38C;
+  --color-dc-maroon: #703B3B;
+  --color-dc-rose-wood: #703B3B;
+  --color-dc-rose-wood-dark: #5E3030;
+  --color-dc-gold: #D6B38C;
+  --color-dc-gold-bright: #E8D7C3;
+  --color-dc-dark: #703B3B;
+  --color-dc-card: #5E3131;
   --color-dc-cream: #FFFFFF;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -60,79 +64,85 @@
 }
 
 :root {
-  --font-dc-sans: var(--font-fauna), serif;
-  --font-dc-serif: var(--font-cinzel), serif;
-  --font-dc-heading: var(--font-cinzel), serif;
-  --font-dc-mono: var(--font-mono), monospace;
-  /* One DC Organizer control shape: rounded rectangles, like the landing navbar. */
+  --font-undara-sans: var(--font-undara-body), Arial, sans-serif;
+  --font-undara-serif: var(--font-undara-display), Georgia, serif;
+  --font-undara-heading: var(--font-undara-display), Georgia, serif;
+  --font-undara-mono: var(--font-mono), monospace;
+  --font-dc-sans: var(--font-undara-sans);
+  --font-dc-serif: var(--font-undara-serif);
+  --font-dc-heading: var(--font-undara-heading);
+  --font-dc-mono: var(--font-undara-mono);
+  --undara-control-radius: 16px;
+  --undara-control-menu-radius: 18px;
+  --undara-control-outline: var(--primary);
   --dc-control-radius: 16px;
   --dc-control-menu-radius: 18px;
-  --dc-control-outline: var(--primary);
+  --dc-control-outline: var(--undara-control-outline);
   --background: #FFFFFF;
-  --foreground: #111111;
+  --foreground: #2B1A1A;
   --card: #FFFFFF;
-  --card-foreground: #111111;
+  --card-foreground: #2B1A1A;
   --popover: #FFFFFF;
-  --popover-foreground: #111111;
-  --primary: #C07A84;
+  --popover-foreground: #2B1A1A;
+  --primary: #703B3B;
   --primary-foreground: #FFFFFF;
-  --secondary: #FFFFFF;
-  --secondary-foreground: #111111;
-  --muted: #FFFFFF;
-  --muted-foreground: rgb(17 17 17 / 60%);
-  --accent: #C07A84;
+  --secondary: #F7F1ED;
+  --secondary-foreground: #2B1A1A;
+  --muted: #F7F1ED;
+  --muted-foreground: rgb(43 26 26 / 62%);
+  --accent: #703B3B;
   --accent-foreground: #FFFFFF;
   --destructive: #B42318;
-  --border: rgb(17 17 17 / 12%);
-  --input: rgb(17 17 17 / 16%);
-  --ring: #C07A84;
-  --chart-1: #C07A84;
-  --chart-2: #D9A3AA;
-  --chart-3: #A65E69;
-  --chart-4: #111111;
-  --chart-5: #FFFFFF;
+  --border: rgb(112 59 59 / 18%);
+  --input: rgb(112 59 59 / 24%);
+  --ring: #703B3B;
+  --chart-1: #703B3B;
+  --chart-2: #D6B38C;
+  --chart-3: #5E3030;
+  --chart-4: #2B1A1A;
+  --chart-5: #F7F1ED;
   --sidebar: #FFFFFF;
-  --sidebar-foreground: #111111;
-  --sidebar-primary: #C07A84;
+  --sidebar-foreground: #2B1A1A;
+  --sidebar-primary: #703B3B;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #FFFFFF;
-  --sidebar-accent-foreground: #C07A84;
-  --sidebar-border: rgb(17 17 17 / 12%);
-  --sidebar-ring: #C07A84;
+  --sidebar-accent: #F7F1ED;
+  --sidebar-accent-foreground: #703B3B;
+  --sidebar-border: rgb(112 59 59 / 18%);
+  --sidebar-ring: #703B3B;
 }
 
 .dark {
-  --background: #0B0B0C;
-  --foreground: #FFFFFF;
-  --card: #111113;
-  --card-foreground: #FFFFFF;
-  --popover: #111113;
-  --popover-foreground: #FFFFFF;
-  --secondary: #111113;
-  --secondary-foreground: #FFFFFF;
-  --muted: #111113;
-  --muted-foreground: rgb(255 255 255 / 60%);
-  --accent: #C07A84;
-  --accent-foreground: #FFFFFF;
-  --primary: #C07A84;
-  --primary-foreground: #FFFFFF;
-  --destructive: #F87171;
-  --border: rgb(255 255 255 / 12%);
-  --input: rgb(255 255 255 / 16%);
-  --ring: #D9A3AA;
-  --chart-1: #C07A84;
-  --chart-2: #D9A3AA;
-  --chart-3: #A65E69;
-  --chart-4: #FFFFFF;
-  --chart-5: #111113;
-  --sidebar: #0B0B0C;
-  --sidebar-foreground: #FFFFFF;
-  --sidebar-primary: #C07A84;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #111113;
-  --sidebar-accent-foreground: #C07A84;
-  --sidebar-border: rgb(255 255 255 / 12%);
-  --sidebar-ring: #D9A3AA;
+  --background: #703B3B;
+  --foreground: #FFF9F5;
+  --card: #5E3131;
+  --card-foreground: #FFF9F5;
+  --popover: #5E3131;
+  --popover-foreground: #FFF9F5;
+  --secondary: #653737;
+  --secondary-foreground: #FFF9F5;
+  --muted: #653737;
+  --muted-foreground: rgb(255 249 245 / 68%);
+  --accent: #D6B38C;
+  --accent-foreground: #3A2020;
+  --primary: #D6B38C;
+  --primary-foreground: #3A2020;
+  --destructive: #FCA5A5;
+  --border: rgb(255 249 245 / 20%);
+  --input: rgb(255 249 245 / 26%);
+  --ring: #E8D7C3;
+  --chart-1: #D6B38C;
+  --chart-2: #E8D7C3;
+  --chart-3: #B8866D;
+  --chart-4: #FFF9F5;
+  --chart-5: #5E3131;
+  --sidebar: #703B3B;
+  --sidebar-foreground: #FFF9F5;
+  --sidebar-primary: #D6B38C;
+  --sidebar-primary-foreground: #3A2020;
+  --sidebar-accent: #5E3131;
+  --sidebar-accent-foreground: #E8D7C3;
+  --sidebar-border: rgb(255 249 245 / 20%);
+  --sidebar-ring: #E8D7C3;
 }
 
 @layer base {
@@ -200,28 +210,28 @@ aside nav > p { font-family: var(--font-dc-heading); }
 [data-slot="dialog-content"] form { font-family: var(--font-dc-sans); }
 
 /* --------------------------------------------------------------------------
-   DC Organizer dashboard system
+   Undara dashboard system
    Single source of truth for dashboard shell, surfaces, forms and tables.
    -------------------------------------------------------------------------- */
 .dc-dashboard {
-  --dc-dashboard-canvas: #fff5f7;
+  --dc-dashboard-canvas: #F7F1ED;
   --dc-dashboard-card: #ffffff;
-  --dc-dashboard-border: #edd6db;
-  --dc-dashboard-rail: #bf7987;
-  --dc-dashboard-rail-hover: #a75d70;
-  --dc-dashboard-rail-active: #814255;
-  --dc-dashboard-header-bg: #fff9fa;
+  --dc-dashboard-border: #D9C3B6;
+  --dc-dashboard-rail: #703B3B;
+  --dc-dashboard-rail-hover: #5E3030;
+  --dc-dashboard-rail-active: #492525;
+  --dc-dashboard-header-bg: #FBF7F4;
   background: var(--dc-dashboard-canvas);
   color: var(--foreground);
 }
 .dark .dc-dashboard {
-  --dc-dashboard-canvas: #140f13;
-  --dc-dashboard-card: #21191f;
-  --dc-dashboard-border: #49343e;
-  --dc-dashboard-rail: #57303e;
-  --dc-dashboard-rail-hover: #744253;
-  --dc-dashboard-rail-active: #a65e69;
-  --dc-dashboard-header-bg: #1c141b;
+  --dc-dashboard-canvas: #703B3B;
+  --dc-dashboard-card: #5E3131;
+  --dc-dashboard-border: #9E6B6B;
+  --dc-dashboard-rail: #703B3B;
+  --dc-dashboard-rail-hover: #5E3030;
+  --dc-dashboard-rail-active: #D6B38C;
+  --dc-dashboard-header-bg: #653737;
 }
 
 /* Display-only Title Case for dashboard names and headings. Never mutate customer data,
@@ -253,7 +263,7 @@ aside nav > p { font-family: var(--font-dc-heading); }
   background: var(--dc-dashboard-header-bg) !important;
   color: var(--foreground) !important;
   border-color: var(--dc-dashboard-border) !important;
-  box-shadow: 0 1px 16px rgb(111 44 62 / 4%) !important;
+  box-shadow: 0 1px 16px rgb(112 59 59 / 4%) !important;
 }
 .dc-dashboard .dc-dashboard-brand {
   background: var(--dc-dashboard-rail);
@@ -298,13 +308,13 @@ aside nav > p { font-family: var(--font-dc-heading); }
 /* Account dropdown items mirror the same Dark Mode rule. */
 .dark .dc-dashboard .dc-dashboard-account-menu-item {
   border-color: var(--border) !important;
-  background: #0B0B0C !important;
+  background: #703B3B !important;
   color: #ffffff !important;
 }
 .dark .dc-dashboard .dc-dashboard-account-menu-item:hover {
   border-color: var(--primary) !important;
   background: var(--primary) !important;
-  color: #ffffff !important;
+  color: var(--primary-foreground) !important;
 }
 .dc-dashboard main {
   min-width: 0;
@@ -339,36 +349,37 @@ aside nav > p { font-family: var(--font-dc-heading); }
 }
 
 /* All canonical Button primitives inside operational content use the same
-   DC Organizer filled Rose treatment. Local legacy white/outline/text-Rose
+   Undara filled brand treatment. Local legacy white/outline/text-Rose
    overrides may not visually replace the primary button contract. Header/nav
    controls remain outside <main> and retain their approved special styling. */
 :is(.dc-dashboard, .dc-usher) main .dc-app-button {
   border-color: color-mix(in srgb, var(--primary) 80%, transparent) !important;
-  background: #C07A84 !important;
+  background: #703B3B !important;
   color: #ffffff !important;
   box-shadow: 0 3px 8px rgb(17 17 17 / 16%), inset 0 1px 0 rgb(255 255 255 / 18%) !important;
 }
 :is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
-  border-color: #A65E69 !important;
-  background: #A65E69 !important;
+  border-color: #5E3030 !important;
+  background: #5E3030 !important;
   color: #ffffff !important;
 }
 :is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
-  background: #C07A84 !important;
+  background: #703B3B !important;
   color: #ffffff !important;
 }
 .dark :is(.dc-dashboard, .dc-usher) main .dc-app-button {
-  background: #C07A84 !important;
-  color: #000000 !important;
+  border-color: #D6B38C !important;
+  background: #D6B38C !important;
+  color: #3A2020 !important;
 }
 .dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
-  border-color: #D9A3AA !important;
-  background: #D9A3AA !important;
-  color: #000000 !important;
+  border-color: #E8D7C3 !important;
+  background: #E8D7C3 !important;
+  color: #3A2020 !important;
 }
 .dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
-  background: #C07A84 !important;
-  color: #000000 !important;
+  background: #D6B38C !important;
+  color: #3A2020 !important;
 }
 
 /* Shared workspace stays wide but never stretches cards into blank tables. */
@@ -631,29 +642,29 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 }
 /* A stronger overview hierarchy without adding decorative filler cards. */
 .dc-dashboard .dc-dashboard-overview-hero {
-  background: linear-gradient(115deg, #864357 0%, #aa6576 62%, #c07a84 100%);
-  box-shadow: 0 16px 38px rgb(132 65 83 / 18%);
+  background: linear-gradient(115deg, #5A2C2C 0%, #7D4545 62%, #703B3B 100%);
+  box-shadow: 0 16px 38px rgb(112 59 59 / 18%);
 }
 .dark .dc-dashboard .dc-dashboard-overview-hero {
-  background: linear-gradient(115deg, #793f51 0%, #a65e69 100%);
+  background: linear-gradient(115deg, #703B3B 0%, #5E3030 100%);
 }
 .dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
   border-color: #fff !important;
   background: #fff !important;
-  color: #864357 !important;
+  color: #5A2C2C !important;
   box-shadow: 0 4px 15px rgb(60 20 36 / 13%) !important;
 }
 .dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
-  background: #fff0f3 !important;
-  color: #864357 !important;
+  background: #F6EEE8 !important;
+  color: #5A2C2C !important;
 }
 .dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
-  background: #f6e1e5 !important;
-  border-color: #e5b2bb !important;
+  background: #F1E2D6 !important;
+  border-color: #D6B38C !important;
 }
 .dark .dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
-  background: #442633 !important;
-  border-color: #744253 !important;
+  background: #5E3030 !important;
+  border-color: #8B5C5C !important;
 }
 .dc-dashboard .dc-dashboard-overview .dc-dashboard-metric {
   min-height: 110px;
@@ -690,10 +701,10 @@ body:has(.dc-dashboard--redesign) {
   --dc-dashboard-card-stripe: 0.3cm;
   --dc-dashboard-canvas: #ffffff;
   --dc-dashboard-card: #ffffff;
-  --dc-dashboard-border: rgb(192 122 132 / 53%);
+  --dc-dashboard-border: rgb(112 59 59 / 53%);
   --dc-dashboard-rail: #ffffff;
-  --dc-dashboard-rail-hover: rgb(192 122 132 / 12%);
-  --dc-dashboard-rail-active: #c07a84;
+  --dc-dashboard-rail-hover: rgb(112 59 59 / 12%);
+  --dc-dashboard-rail-active: #703B3B;
   --dc-dashboard-header-bg: #ffffff;
   height: 100dvh;
   min-height: 0;
@@ -702,14 +713,14 @@ body:has(.dc-dashboard--redesign) {
   background: var(--primary);
 }
 .dark .dc-dashboard.dc-dashboard--redesign {
-  --dc-dashboard-canvas: #0b0b0c;
-  --dc-dashboard-card: #0b0b0c;
-  --dc-dashboard-border: rgb(192 122 132 / 62%);
-  --dc-dashboard-rail: #0b0b0c;
-  --dc-dashboard-rail-hover: rgb(192 122 132 / 18%);
-  --dc-dashboard-rail-active: #c07a84;
-  --dc-dashboard-header-bg: #0b0b0c;
-  background: var(--primary);
+  --dc-dashboard-canvas: #703B3B;
+  --dc-dashboard-card: #703B3B;
+  --dc-dashboard-border: rgb(255 249 245 / 26%);
+  --dc-dashboard-rail: #703B3B;
+  --dc-dashboard-rail-hover: rgb(214 179 140 / 18%);
+  --dc-dashboard-rail-active: #D6B38C;
+  --dc-dashboard-header-bg: #703B3B;
+  background: #703B3B;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
   position: relative;
@@ -725,7 +736,7 @@ body:has(.dc-dashboard--redesign) {
   border: 1.5px solid rgb(255 255 255 / 75%);
   border-radius: 18px;
   background: var(--dc-dashboard-canvas);
-  box-shadow: 0 18px 65px rgb(75 35 47 / 24%), inset 0 0 0 1px rgb(192 122 132 / 30%);
+  box-shadow: 0 18px 65px rgb(75 35 47 / 24%), inset 0 0 0 1px rgb(112 59 59 / 30%);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-workspace {
   display: flex;
@@ -888,11 +899,11 @@ body:has(.dc-dashboard--redesign) {
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
   border: 1.5px solid var(--primary) !important;
-  background: linear-gradient(115deg, #ffffff, #fff2f5 90%) !important;
-  box-shadow: 0 12px 40px rgb(192 122 132 / 11%);
+  background: linear-gradient(115deg, #ffffff, #F8F1EC 90%) !important;
+  box-shadow: 0 12px 40px rgb(112 59 59 / 11%);
 }
 .dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
-  background: linear-gradient(115deg, #0b0b0c, #180e14 90%) !important;
+  background: linear-gradient(115deg, #703B3B, #5E3030 90%) !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero h1 {
   color: var(--primary) !important;
@@ -901,27 +912,27 @@ body:has(.dc-dashboard--redesign) {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
   color: #ffffff !important;
-  box-shadow: 0 4px 16px rgb(192 122 132 / 23%) !important;
+  box-shadow: 0 4px 16px rgb(112 59 59 / 23%) !important;
 }
 .dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
-  color: #0b0b0c !important;
+  color: #3A2020 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
-  background: #a65e69 !important;
-  border-color: #a65e69 !important;
+  background: #5E3030 !important;
+  border-color: #5E3030 !important;
   color: #ffffff !important;
 }
 .dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
-  background: #d9a3aa !important;
-  border-color: #d9a3aa !important;
-  color: #0b0b0c !important;
+  background: #E8D7C3 !important;
+  border-color: #E8D7C3 !important;
+  color: #3A2020 !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-surface,
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-metric,
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric--featured {
   background: var(--dc-dashboard-card) !important;
   border: 1px solid var(--dc-dashboard-border) !important;
-  box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
+  box-shadow: 0 10px 32px rgb(112 59 59 / 7%);
 }
 /* One deliberate card system for ALL dashboard workspaces.
    All cards have a ~0.3cm left brand stripe, square on three corners and
@@ -989,7 +1000,7 @@ body:has(.dc-dashboard--redesign) {
   border-left: var(--dc-dashboard-card-stripe) solid var(--primary) !important;
   border-radius: 0 26px 0 0 !important;
   background: var(--dc-dashboard-card) !important;
-  box-shadow: 0 10px 32px rgb(192 122 132 / 7%);
+  box-shadow: 0 10px 32px rgb(112 59 59 / 7%);
   padding: 0.625rem;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group .dc-dashboard-metric,
@@ -1048,13 +1059,13 @@ body:has(.dc-dashboard--redesign) {
   }
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
-  background: rgb(192 122 132 / 15%);
+  background: rgb(112 59 59 / 15%);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric .text-2xl {
   color: var(--primary) !important;
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-progress [role="progressbar"] {
-  background: rgb(192 122 132 / 17%);
+  background: rgb(112 59 59 / 17%);
 }
 .dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-page .dc-dashboard-surface {
   border-color: var(--dc-dashboard-border) !important;

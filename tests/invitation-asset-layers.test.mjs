@@ -92,7 +92,7 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "back"\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.match(editor, /const maxAssetLayers = templateMode \? MAX_TEMPLATE_ASSET_LAYERS : MAX_ASSET_LAYERS/);
-  assert.match(editor, /design\.layers\.length >= maxAssetLayers/);
+  assert.match(editor, /assetLayerUsage >= maxAssetLayers/);
   assert.match(editor, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<AssetLayerInspector/);
 
@@ -183,7 +183,16 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(editor, /if \(canvasStage !== "envelope"\) \{\s*setCanvasStage\("envelope"\);\s*setPreviewVersion\(/);
   assert.match(textPanel, /onClick=\{\(\) => onAdd\(en \? "Add your text" : "Tambahkan teks", targetSection\)\}/);
   const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
-  assert.match(textInspector, /maxLength=\{180\}/);
+  assert.doesNotMatch(textPanel, /<textarea|onUpdateText/);
+  assert.match(textPanel, /Double-click kotaknya untuk mengetik langsung di dalam kotak/);
+  assert.doesNotMatch(textInspector, /dc-studio-text-content|<textarea/);
+  assert.match(textInspector, /Double-click kotak teks di canvas/);
+  assert.match(renderer, /data-studio-text-editing="true"/);
+  assert.match(renderer, /contentEditable/);
+  assert.match(renderer, /onDoubleClick=\{\(event\) =>/);
+  assert.match(renderer, /beginTextEditing\(\)/);
+  assert.match(renderer, /onBlur=\{commitTextEditing\}/);
+  assert.match(renderer, /slice\(0, 180\)/);
   assert.match(inspector, /onUpdate\(selectedAssetLayer\.id, \{ section:/);
   assert.match(renderer, /begin\(event, "resize", handle\)/);
   assert.match(renderer, /"top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"/);

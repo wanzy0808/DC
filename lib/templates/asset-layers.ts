@@ -144,6 +144,9 @@ export function sanitizeAssetLayers(value: unknown): InvitationAssetLayer[] {
       const name = entry.name.replace(/[\\u0000-\\u001f\\u007f]/g, " ").replace(/\\s+/g, " ").trim().slice(0, 60);
       if (name) layer.name = name;
     }
+    if (entry.customerAccess === "locked" || entry.customerAccess === "content" || entry.customerAccess === "customizable") {
+      layer.customerAccess = entry.customerAccess;
+    }
     if (typeof entry.groupId === "string" && /^[a-zA-Z0-9_-]{1,64}$/.test(entry.groupId)) layer.groupId = entry.groupId;
     if (isInvitationSectionAnimation(entry.animation)) layer.animation = entry.animation;
     if (layer.animation && layer.animation !== "none") {

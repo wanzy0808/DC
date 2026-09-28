@@ -51,7 +51,7 @@ function Open({ onClick, dark = false, children, preview = false, studioObject }
     }}
     data-studio-system-action={preview ? "open-invitation" : undefined}
     aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
-    className={`relative z-20 mt-7 min-h-12 rounded-full border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
+    className={`relative z-20 mt-7 min-h-12 rounded-[var(--dc-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
   >{children || "Buka Undangan"}</button>;
 }
 function Edit({ onClick }: { onClick?: () => void }) {
@@ -110,14 +110,14 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
         <Moon aria-hidden data-studio-native-object="object:envelope:moon" className="absolute right-9 top-10 h-11 w-11 opacity-50"/>
       </> : theme === "golden-art-deco" ? <div aria-hidden data-studio-native-object="object:envelope:deco-diamond" className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : theme === "eternal-blossom" ? <Flower2 aria-hidden data-studio-native-object="object:envelope:flower" className="absolute -left-12 top-5 h-44 w-44 -rotate-12 opacity-20" strokeWidth={0.7}/> : null}
       <p data-studio-native-object="object:envelope:kicker" className={`${caption} relative mb-9 opacity-80`}>{theme === "modern-maroon" ? "Private / 01" : "A personal invitation"}</p>
-      <div className="relative w-[min(74vw,310px)] pt-11">
+      <div data-studio-native-object="object:envelope:card-stage" className="relative w-[min(74vw,310px)] pt-11">
         {usesPhoto && <div data-studio-native-object="object:envelope:photo-frame" className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
           <span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama pada kartu undangan" /></span>
         </div>}
         <div data-studio-native-object="object:envelope:card" className={`relative mt-12 flex min-h-[275px] flex-col items-center justify-end overflow-hidden border px-6 pb-10 pt-20 shadow-[0_22px_44px_#0002] ${style.effect}`} style={{backgroundColor:style.surface,borderColor:style.border,color:`var(--inv-scene-surface-ink, ${original.ink})`}}>
           <div aria-hidden data-studio-native-object="object:envelope:flap" className="absolute inset-x-0 top-0 z-10 h-44 origin-top opacity-95 [clip-path:polygon(0_0,100%_0,50%_100%)]" style={{backgroundColor:style.flap}}/>
           <div aria-hidden data-studio-native-object="object:envelope:seal" className="absolute left-1/2 top-[105px] z-20 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 text-3xl shadow-md" style={{borderColor:style.surface,backgroundColor:style.border,color:style.surface}}>{style.symbol}</div>
-          <div className="relative z-20 mt-8 w-full border-t pt-6 text-center" style={{borderColor:style.border}}>
+          <div data-studio-native-object="object:envelope:copy-panel" className="relative z-20 mt-8 w-full border-t pt-6 text-center" style={{borderColor:style.border}}>
             <p data-studio-native-object="object:envelope:letter-kicker" className="text-[9px] uppercase tracking-[.25em] opacity-70">Untuk momen istimewa</p>
             <Names className="mt-3 text-xl">{names}</Names>
             <p data-studio-native-object="object:envelope:date" className="mt-3 text-xs opacity-75">{date}</p>
@@ -125,7 +125,6 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
         </div>
       </div>
       <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
-      {preview && <p className="relative mt-4 text-[11px] opacity-60">Pratinjau</p>}
     </section>
   );
 }
@@ -167,11 +166,11 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:block-right" className="absolute right-0 top-0 h-full w-[12%] bg-[var(--inv-scene-soft,#7d2030)]" />
     <span aria-hidden data-studio-native-object="object:cover:monogram" className="absolute left-[13%] top-6 text-[110px] font-black leading-none text-[color:var(--inv-scene-text,#f9b6a3)]/20">M.</span>
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-7 self-start text-[color:var(--inv-scene-text,#f8af99)]`}>{content}</p>
-    <div className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
+    <div data-studio-native-object="object:cover:media-group" className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
       <div data-studio-native-object="object:cover:photo-frame" className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
       <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">DC Organizer — Selected events</p>
     </div>
-    <div className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
+    <div data-studio-native-object="object:cover:copy-panel" className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
       <Names className="text-3xl">{names}</Names><p data-studio-native-object="object:cover:date" className="mt-3 text-xs tracking-[.2em]">{date}</p>
     </div>
     <Lines studioObject="object:cover:ornament" className="mt-9" />

@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { Upload } from "lucide-react";
+import { RotateCcw, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
 import { invitationSectionItems } from "@/lib/templates/sections";
@@ -16,6 +16,13 @@ import {
 } from "@/components/InvitationStudio/designer-config";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import { MAX_RSVP_CUSTOM_FIELDS, type InvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import {
+  availableEditableCopyFields,
+  editableCopyMaxLength,
+  invitationCopyDefaults,
+  type EditableInvitationCopy,
+  type EditableInvitationCopyField,
+} from "@/lib/templates/editable-copy";
 
 export function DesignerTool({
   active,
@@ -84,10 +91,30 @@ const sectionFunctionalElements: Partial<Record<InvitationSectionKey, StudioCont
   gift: ["button"],
 };
 
+const copyFieldsBySection: Partial<Record<InvitationSectionKey, EditableInvitationCopyField[]>> = {
+  greeting: ["greeting", "attendanceRequest", "prayerWish"],
+  identity: ["ourStory"],
+  closing: ["closing", "zenQuote"],
+};
+
+const copyLabels: Record<EditableInvitationCopyField, { id: string; en: string }> = {
+  greeting: { id: "Salam / Pengantar", en: "Greeting / Introduction" },
+  attendanceRequest: { id: "Permohonan Kehadiran", en: "Invitation Message" },
+  prayerWish: { id: "Doa / Harapan", en: "Prayer / Wish" },
+  closing: { id: "Ucapan Penutup", en: "Closing Message" },
+  ourStory: { id: "Our Story / Tentang Kami", en: "Our Story / About Us" },
+  zenQuote: { id: "Kutipan Penutup", en: "Closing Quote" },
+};
+
 export function ContentPanel({
   sections,
   rsvpConfig,
   eventCategory,
+  templateKey,
+  eventDescription,
+  narrativeCopy,
+  onNarrativeCopy,
+  onResetNarrativeCopy,
   onChange,
   onSelectSection,
   onSelectElement,
@@ -99,6 +126,11 @@ export function ContentPanel({
   sections: InvitationSections;
   rsvpConfig: InvitationRsvpConfig;
   eventCategory: string;
+  templateKey: string;
+  eventDescription?: string | null;
+  narrativeCopy: EditableInvitationCopy;
+  onNarrativeCopy: (field: EditableInvitationCopyField, value: string) => void;
+  onResetNarrativeCopy: (field: EditableInvitationCopyField) => void;
   onChange: (section: InvitationSectionKey, enabled: boolean) => void;
   onSelectSection: (section: InvitationSectionKey) => void;
   onSelectElement: (section: InvitationSectionKey, element: StudioContentElementKind) => void;
@@ -110,6 +142,9 @@ export function ContentPanel({
   const { locale } = useLanguage();
   const en = locale === "en";
   const [activeElement, setActiveElement] = useState("");
+  const [activeCopySection, setActiveCopySection] = useState<InvitationSectionKey | null>(null);
+  const availableCopy = new Set(availableEditableCopyFields(templateKey, eventCategory === "WEDDING"));
+  const copyDefaults = invitationCopyDefaults(templateKey, eventDescription);
 
   return (
     <div>
@@ -118,13 +153,18 @@ export function ContentPanel({
         {invitationSectionItems.map((item) => {
           const enabled = sections[item.key] !== false;
           const elements = sectionFunctionalElements[item.key] ?? [];
+          const copyFields = (copyFieldsBySection[item.key] ?? []).filter((field) => availableCopy.has(field));
           return (
             <div key={item.key} className="py-2">
               <div className="flex min-h-12 items-center gap-2">
                 <button
                   type="button"
                   className="min-w-0 flex-1 truncate rounded-[10px] px-2 py-2 text-left text-sm text-foreground hover:bg-primary/5 hover:text-primary"
-                  onClick={() => onSelectSection(item.key)}
+                  onClick={() => {
+                    onSelectSection(item.key);
+                    if (copyFields.length) setActiveCopySection((current) => current === item.key ? null : item.key);
+                  }}
+                  aria-expanded={copyFields.length ? activeCopySection === item.key : undefined}
                   title={en ? sectionNamesEnglish[item.key] : item.title}
                 >
                   {en ? sectionNamesEnglish[item.key] : item.title}
@@ -141,6 +181,42 @@ export function ContentPanel({
                   <span className="absolute left-1 h-4 w-4 rounded-full bg-white shadow-sm transition-transform peer-checked:translate-x-5" />
                 </label>
               </div>
+
+              {enabled && copyFields.length > 0 && activeCopySection === item.key && (
+                <div className="ml-3 mb-2 grid gap-3 border-l border-primary/20 pl-3">
+                  {copyFields.map((field) => {
+                    const label = en ? copyLabels[field].en : copyLabels[field].id;
+                    const value = narrativeCopy[field] ?? copyDefaults[field] ?? "";
+                    return (
+                      <label key={field} className="grid gap-1 text-[10px] text-foreground">
+                        <span className="flex items-center justify-between gap-2">
+                          <strong className="font-semibold text-primary">{label}</strong>
+                          <button
+                            type="button"
+                            className="inline-flex h-7 items-center gap-1 rounded-[8px] px-2 text-[9px] text-muted-foreground hover:bg-primary/10 hover:text-primary"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              onResetNarrativeCopy(field);
+                            }}
+                            title={en ? "Reset content" : "Reset isi"}
+                          >
+                            <RotateCcw size={11} />
+                            Reset
+                          </button>
+                        </span>
+                        <textarea
+                          value={value}
+                          rows={field === "ourStory" ? 7 : 4}
+                          maxLength={editableCopyMaxLength[field]}
+                          onChange={(event) => onNarrativeCopy(field, event.target.value)}
+                          className="min-h-20 w-full resize-y rounded-[var(--dc-control-radius)] border border-primary/25 bg-background px-2.5 py-2 text-xs leading-5 outline-none focus:border-primary focus:ring-2 focus:ring-primary/10"
+                        />
+                        <small className="text-right text-[9px] text-muted-foreground">{value.length}/{editableCopyMaxLength[field]}</small>
+                      </label>
+                    );
+                  })}
+                </div>
+              )}
 
               {enabled && elements.length > 0 && (
                 <div className="ml-3 mt-1 grid gap-1 border-l border-primary/20 pl-3">
@@ -161,6 +237,15 @@ export function ContentPanel({
 
                       {item.key === "rsvp" && element === "input" && activeElement === "rsvp:input" && (
                         <div className="mt-2 space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.03] p-2.5">
+                          <label className="block text-[10px] text-foreground">
+                            <span className="mb-1 block font-semibold text-primary">{en ? "RSVP title" : "Judul RSVP"}</span>
+                            <input
+                              className="h-8 w-full rounded-[9px] border border-primary/25 bg-background px-2 text-[10px]"
+                              value={rsvpConfig.title ?? "Konfirmasi Kehadiran"}
+                              maxLength={80}
+                              onChange={(event) => onRsvpConfig({ title: event.target.value })}
+                            />
+                          </label>
                           <p className="text-[10px] leading-4 text-muted-foreground">
                             {en
                               ? "Check the event options guests may choose from in the RSVP dropdown."

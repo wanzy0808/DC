@@ -72,7 +72,9 @@ export default function TextObjectPanel({
       </Button>
 
       <p className="text-xs leading-5 text-muted-foreground">
-        {en ? "Or click the canvas, then type to create text directly." : "Atau klik canvas, lalu langsung ketik untuk membuat teks."}
+        {en
+          ? "A text box appears in the center of the canvas. Double-click it to type directly inside the box."
+          : "Kotak teks muncul di tengah canvas. Double-click kotaknya untuk mengetik langsung di dalam kotak."}
       </p>
 
       <div className="space-y-2 border-t border-primary/20 pt-4">

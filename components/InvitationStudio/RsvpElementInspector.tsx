@@ -1,6 +1,6 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight, RotateCcw } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Lock, RotateCcw } from "lucide-react";
 import {
   type InvitationRsvpConfig,
   type RsvpElementAlign,
@@ -48,10 +48,7 @@ export default function RsvpElementInspector({
   function reset() {
     const elementStyles = { ...config.elementStyles };
     delete elementStyles[elementKey];
-    onConfig({
-      elementStyles,
-      ...(elementKey === "title" ? { title: undefined } : {}),
-    });
+    onConfig({ elementStyles });
   }
 
   const numeric = (
@@ -120,17 +117,10 @@ export default function RsvpElementInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close component properties" : "Tutup properti komponen"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      {elementKey === "title" && (
-        <label className="dc-studio-section-field">
-          <span>{en ? "Text" : "Teks"}</span>
-          <input
-            className="dc-studio-rsvp-text-input"
-            value={config.title ?? "Konfirmasi Kehadiran"}
-            maxLength={80}
-            onChange={(event) => onConfig({ title: event.target.value })}
-          />
-        </label>
-      )}
+      <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+        <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
+        <span>{en ? "Content is managed from Content. This panel changes styling only." : "Isi diatur dari menu Isi. Panel ini hanya mengubah styling."}</span>
+      </div>
 
       {numeric(en ? "Width" : "Lebar", style.width, "100", 30, 100, "%", "width")}
       {numeric(en ? "Text size" : "Ukuran teks", style.fontSize, en ? "Template" : "Template", 10, 72, "px", "fontSize")}

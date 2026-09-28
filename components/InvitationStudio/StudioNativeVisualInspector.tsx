@@ -1,6 +1,6 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight, Play, RotateCcw, X } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Lock, Play, RotateCcw, X } from "lucide-react";
 import InvitationFonts from "@/components/PublicInvitation/InvitationFonts";
 import { invitationFontOptions } from "@/components/InvitationStudio/designer-config";
 import { invitationFontFamily } from "@/lib/templates/presentation";
@@ -9,6 +9,7 @@ import {
   nativeVisualCapabilities,
   nativeVisualSelector,
   nativeVisualSupportsAnimation,
+  nativeVisualUsesSystemContent,
   type NativeVisualTextAlign,
   type NativeVisualTransform,
 } from "@/lib/templates/native-visual-transforms";
@@ -37,6 +38,7 @@ export default function StudioNativeVisualInspector({
   const current: NativeVisualTransform = { ...defaultNativeVisualTransform, ...value };
   const capabilities = nativeVisualCapabilities(targetKey);
   const animationCapable = nativeVisualSupportsAnimation(targetKey);
+  const systemContent = nativeVisualUsesSystemContent(targetKey);
   const section = targetKey.split(":")[1] ?? "";
   const title = targetKey.startsWith("heading:")
     ? (en ? `${section} heading` : `Judul ${section}`)
@@ -84,6 +86,13 @@ export default function StudioNativeVisualInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close properties" : "Tutup properti"}
           className="grid h-8 w-8 place-items-center rounded-lg hover:bg-primary/10"><X size={16} /></button>
       </div>
+      {systemContent && (
+        <div className="mt-3 flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+          <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
+          <span>{en ? "Content comes from event data and is locked here. Visual styling stays editable." : "Isi berasal dari data acara dan terkunci di sini. Styling visual tetap bisa diedit."}</span>
+        </div>
+      )}
+
       <div className="mt-4 grid grid-cols-2 gap-3">
         {fields.map(({ key, label, unit, min, max, factor }) => (
           <label key={key} className="text-xs text-foreground">

@@ -158,8 +158,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [selectedPhotoSlot, setSelectedPhotoSlot] = useState<PhotoSlot | null>(null);
   const [selectedLayerId, setSelectedLayerId] = useState<string | null>(null);
   const [selectedLayerIds, setSelectedLayerIds] = useState<string[]>([]);
-  const textInsertPoint = useRef<{ section: StudioObjectSection; sectionInstanceId?: string; x: number; y: number } | null>(null);
-  const textTypingLayer = useRef<string | null>(null);
   const [selectedSectionKey, setSelectedSectionKey] = useState<InvitationSectionKey | null>(null);
   const [selectedSectionInstanceId, setSelectedSectionInstanceId] = useState<string | null>(null);
   const [selectedRsvpElementKey, setSelectedRsvpElementKey] = useState<string | null>(null);
@@ -236,11 +234,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [musicUrl, setMusicUrl] = useState("");
   const [eventTag, setEventTag] = useState("");
   const [dressCode, setDressCode] = useState("");
-  useEffect(() => {
-    if (panel === "text") return;
-    textInsertPoint.current = null;
-    textTypingLayer.current = null;
-  }, [panel]);
   useEffect(() => {
     if (!templateMode) {
       setDesignerLibraryAssets([]);
@@ -943,7 +936,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function addTextObject(
     text: string,
     section: StudioObjectSection,
-    position: { x: number; y: number; sectionInstanceId?: string } = { x: 50, y: 48 },
+    position: { x: number; y: number; sectionInstanceId?: string } = { x: 50, y: 50 },
   ) {
     if (!text.trim() || assetLayerUsage >= maxAssetLayers || design.sections[section] === false) return null;
     const id = crypto.randomUUID().replace(/-/g, "");
@@ -958,7 +951,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       letterSpacing: 0, lineHeight: 1.2, color: palette?.accent ?? "#C07A84", rotation: 0,
       customerAccess: templateMode ? "locked" : "customizable",
     }] });
-    textTypingLayer.current = id;
     setSelectedPhotoSlot(null);
     setSelectedLayerIds([id]);
     setSelectedLayerId(id);
@@ -969,16 +961,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     return id;
   }
 
-  function updateCanvasTypedText(id: string, text: string) {
-    setDesign((current) => ({
-      ...current,
-      layers: current.layers.map((layer) => layer.id === id ? { ...layer, text: text.slice(0, 180) } : layer),
-    }));
-  }
-
   function focusDesignObject(id: string, additive = false, fromCanvas = false) {
-    textTypingLayer.current = null;
-    textInsertPoint.current = null;
     const layer = design.layers.find((item) => item.id === id);
     if (!layer) return;
     if (!canCustomerEditLayer(layer)) {
@@ -1232,12 +1215,16 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     change({ copyMotion });
   }
 
-  function resetNarrativeCopyAndMotion(field: EditableInvitationCopyField) {
+  function resetNarrativeCopy(field: EditableInvitationCopyField) {
     const copy = { ...design.copy };
-    const copyMotion = { ...design.copyMotion };
     delete copy[field];
+    change({ copy });
+  }
+
+  function resetCopyMotion(field: EditableInvitationCopyField) {
+    const copyMotion = { ...design.copyMotion };
     delete copyMotion[field];
-    change({ copy, copyMotion });
+    change({ copyMotion });
   }
 
   function addRsvpCustomField() {
@@ -1778,6 +1765,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               sections={design.sections}
               rsvpConfig={design.rsvpConfig}
               eventCategory={invitation?.eventCategory ?? ""}
+              templateKey={design.template}
+              eventDescription={invitation?.description}
+              narrativeCopy={design.copy}
+              onNarrativeCopy={setNarrativeCopy}
+              onResetNarrativeCopy={resetNarrativeCopy}
               onChange={setSection}
               onSelectSection={focusContentSection}
               onSelectElement={focusContentElement}
@@ -1838,66 +1830,12 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           if (!invitation || saving || audioBusy || event.altKey || event.nativeEvent.isComposing) return;
           const target = event.target;
           if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
-
-          if (event.ctrlKey || event.metaKey) {
-            const key = event.key.toLowerCase();
-            const isUndo = key === "z" && !event.shiftKey;
-            const isRedo = (key === "z" && event.shiftKey) || (key === "y" && !event.shiftKey);
-            if (isUndo && history.length) { event.preventDefault(); undo(); }
-            if (isRedo && future.length) { event.preventDefault(); redo(); }
-            return;
-          }
-
-          if (panel !== "text") return;
-          if (event.key === "Escape") {
-            textTypingLayer.current = null;
-            return;
-          }
-
-          const selectedText = design.layers.find(
-            (layer) => layer.id === selectedLayerId && layer.kind === "text" && !layer.locked,
-          );
-          const printable = event.key.length === 1;
-          const textEditKey = printable || event.key === "Backspace" || event.key === "Enter";
-          if (!textEditKey) return;
-
-          event.preventDefault();
-          event.stopPropagation();
-
-          if (selectedText) {
-            if (textTypingLayer.current !== selectedText.id) {
-              setHistory((current) => [...current.slice(-14), designKey]);
-              setFuture([]);
-              textTypingLayer.current = selectedText.id;
-            }
-
-            let nextText = selectedText.text ?? "";
-            if (event.key === "Backspace") nextText = nextText.slice(0, -1);
-            else if (event.key === "Enter" && nextText.length < 180) nextText += "\n";
-            else if (printable && nextText.length < 180) nextText += event.key;
-
-            if (!nextText.trim() && event.key === "Backspace") {
-              setDesign((current) => ({
-                ...current,
-                layers: current.layers.filter((layer) => layer.id !== selectedText.id),
-              }));
-              setSelectedLayerIds([]);
-              setSelectedLayerId(null);
-              textTypingLayer.current = null;
-              return;
-            }
-
-            updateCanvasTypedText(selectedText.id, nextText);
-            return;
-          }
-
-          if (!printable || !event.key.trim()) return;
-          const insert = textInsertPoint.current ?? {
-            section: textTargetSection,
-            x: 50,
-            y: 48,
-          };
-          addTextObject(event.key, insert.section, { x: insert.x, y: insert.y, sectionInstanceId: insert.sectionInstanceId });
+          if (!(event.ctrlKey || event.metaKey)) return;
+          const key = event.key.toLowerCase();
+          const isUndo = key === "z" && !event.shiftKey;
+          const isRedo = (key === "z" && event.shiftKey) || (key === "y" && !event.shiftKey);
+          if (isUndo && history.length) { event.preventDefault(); undo(); }
+          if (isRedo && future.length) { event.preventDefault(); redo(); }
         }}>
           <StudioCanvasToolbar
             locale={locale}
@@ -1933,8 +1871,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
             if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
-            const selectedTextLayer = design.layers.find((layer) => layer.id === selectedLayerId && layer.kind === "text");
-            if (panel === "text" && (selectedTextLayer || textInsertPoint.current)) return;
             event.preventDefault();
             setCanvasPanReady(true);
           }}
@@ -1953,30 +1889,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             if (consumeSuppressedCanvasClick()) return;
             const target = event.target;
             if (!(target instanceof Element)) return;
-
-            if (
-              panel === "text" &&
-              !target.closest('button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object]')
-            ) {
-              const sectionNode = target.closest<HTMLElement>("[data-invitation-section]");
-              const section = sectionNode?.dataset.invitationSection as StudioObjectSection | undefined;
-              if (sectionNode && section && studioObjectSections.includes(section) && design.sections[section] !== false) {
-                const rect = sectionNode.getBoundingClientRect();
-                if (rect.width && rect.height) {
-                  textInsertPoint.current = {
-                    section,
-                    sectionInstanceId: sectionNode.closest<HTMLElement>("[data-section-instance-id]")?.dataset.sectionInstanceId
-                      ?? section,
-                    x: Math.min(100, Math.max(0, (event.clientX - rect.left) / rect.width * 100)),
-                    y: Math.min(100, Math.max(0, (event.clientY - rect.top) / rect.height * 100)),
-                  };
-                  textTypingLayer.current = null;
-                  setSelectedLayerIds([]);
-                  setSelectedLayerId(null);
-                  event.currentTarget.focus({ preventScroll: true });
-                }
-              }
-            }
 
             handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
@@ -2057,7 +1969,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             <StudioSelectionInspector
               locale={locale}
               design={design}
-              invitationDescription={invitation?.description}
               selectedAssetLayer={selectedAssetLayer}
               selectedAssetIndex={selectedAssetIndex}
               selectedPhotoSlot={selectedPhotoSlot}
@@ -2078,9 +1989,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onCloseRsvp={() => setSelectedRsvpElementKey(null)}
               onUpdateSectionElementStyles={updateSectionElementStyles}
               onCloseSectionElement={() => setSelectedSectionElement(null)}
-              onSetNarrativeCopy={setNarrativeCopy}
               onUpdateCopyMotion={updateCopyMotion}
-              onResetNarrativeCopyAndMotion={resetNarrativeCopyAndMotion}
+              onResetCopyMotion={resetCopyMotion}
               onCloseCopy={() => setSelectedCopyField(null)}
               onUpdateSectionStyle={updateSectionStyle}
               onResetSectionStyle={resetSectionStyle}

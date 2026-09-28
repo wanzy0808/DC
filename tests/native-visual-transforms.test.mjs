@@ -4,7 +4,7 @@ import test from "node:test";
 import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
-  nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation,
+  nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation, nativeVisualUsesSystemContent,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -53,6 +53,9 @@ test("Studio and public renderers share the built-in transform contract", () => 
   assert.match(handles, /canvas\.scrollLeft \+= 14/);
   assert.match(handles, /drag\.scrollTop/);
   assert.match(handles, /-2000, 2000/);
+  assert.doesNotMatch(handles, /-150, 150/);
+  assert.match(handles, /nativeVisualUsesSystemContent\(targetKey\)/);
+  assert.match(handles, /dc-studio-native-content-lock/);
 });
 
 
@@ -156,6 +159,23 @@ test("theme-authored decorations and special cover headings are selectable in St
 });
 
 
+test("complex template compositions expose selectable group targets without replacing child targets", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const pencil = read("components/PublicInvitation/PencilReverieScene.tsx");
+  const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
+
+  assert.match(pencil, /object:envelope:illustration-group/);
+  assert.match(pencil, /object:cover:illustration-group/);
+  assert.match(zen, /object:envelope:atmosphere-group/);
+  assert.match(zen, /object:envelope:intro-group/);
+  assert.match(zen, /object:cover:copy-group/);
+  assert.match(scenes, /object:envelope:card-stage/);
+  assert.match(scenes, /object:envelope:copy-panel/);
+  assert.match(scenes, /object:cover:media-group/);
+  assert.match(scenes, /object:cover:copy-panel/);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:copy-group"), false);
+});
+
 test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
@@ -232,6 +252,52 @@ test("template-authored supporting visuals remain directly selectable without se
 
 
 
+test("protected fallback messages are selectable visual objects without becoming editable content", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /object:gallery:empty-copy/);
+    assert.match(renderer, /object:countdown:empty-copy/);
+    assert.match(renderer, /object:gift:empty-copy/);
+  }
+  assert.match(universal, /object:location:empty-copy/);
+});
+
+test("shared section internals expose group and child targets without unlocking business values", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /object:gallery:grid/);
+    assert.match(renderer, /object:countdown:grid/);
+    assert.match(renderer, /object:countdown:\$\{label\.toLowerCase\(\)\}-value/);
+    assert.match(renderer, /object:countdown:\$\{label\.toLowerCase\(\)\}-label/);
+    assert.match(renderer, /object:location:details-group/);
+  }
+  assert.match(universal, /object:event:details-group/);
+  assert.match(universal, /object:closing:copy-group/);
+  assert.match(rose, /object:identity:couple-group/);
+  assert.equal(nativeVisualCapabilities("object:countdown:hari-value").typography, true);
+  assert.equal(nativeVisualCapabilities("object:countdown:hari-label").typography, true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari-value"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari-label"), false);
+});
+
+test("protected RSVP and Wishes forms expose whole-block visual targets while internals keep semantic controls", () => {
+  const rsvp = read("components/InvitationStudio/RsvpForm.tsx");
+  const rsvpPanels = read("components/InvitationStudio/RsvpPanels.tsx");
+  const wishes = read("components/PublicInvitation/GuestWishes.tsx");
+
+  assert.match(rsvp, /object:rsvp:form-group/);
+  assert.match(rsvpPanels, /data-studio-rsvp-element="inputs"/);
+  assert.match(rsvpPanels, /data-studio-rsvp-element="button"/);
+  assert.match(wishes, /object:wishes:form-group/);
+  assert.match(wishes, /data-studio-section-element="wishes:input"/);
+  assert.match(wishes, /data-studio-section-element="wishes:button"/);
+  assert.equal(nativeVisualCapabilities("object:rsvp:form-group").typography, false);
+  assert.equal(nativeVisualCapabilities("object:wishes:form-group").typography, false);
+});
+
 test("native visual styling stays inside the validated nativeVisuals contract", () => {
   const values = sanitizeNativeVisualTransforms({
     "object:cover:kicker": {
@@ -274,6 +340,24 @@ test("native visual capabilities avoid duplicating protected component styling",
   assert.deepEqual(nativeVisualCapabilities("photo:cover"), { opacity: true, colors: false, typography: false });
   assert.deepEqual(nativeVisualCapabilities("element:gift:button"), { opacity: false, colors: false, typography: false });
   assert.deepEqual(nativeVisualCapabilities("rsvp:button"), { opacity: false, colors: false, typography: false });
+});
+
+test("system-backed invitation content stays content-locked while native styling remains available", () => {
+  assert.equal(nativeVisualUsesSystemContent("object:event:venue"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:gift:account-number"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:countdown:hari"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:gift:empty-copy"), true);
+  assert.equal(nativeVisualUsesSystemContent("heading:cover"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:flower-left"), false);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:kicker"), false);
+
+  const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+  const selection = read("components/InvitationStudio/studio-canvas-selection.ts");
+  assert.match(inspector, /nativeVisualUsesSystemContent/);
+  assert.match(inspector, /Isi berasal dari data acara dan terkunci di sini/);
+  assert.match(selection, /\[data-studio-native-heading\]/);
+  assert.match(selection, /\[data-invitation-photo-slot\]/);
+  assert.match(selection, /\[data-studio-native-object\]/);
 });
 
 test("native inspector exposes visual styling without adding functional controls", () => {
