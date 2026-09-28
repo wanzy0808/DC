@@ -122,7 +122,7 @@ export default function DesignerDashboard() {
         <section className="rounded-2xl border border-border bg-background p-5">
           <div className="flex items-center justify-between">
             <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Template saya</h2>
-            <p className="font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{templates.length} template</p>
+            <p className="font-[family-name:var(--font-undara-mono)] text-xs text-muted-foreground">{templates.length} template</p>
           </div>
 
           {!templates.length ? (
@@ -134,7 +134,7 @@ export default function DesignerDashboard() {
                   <img src={item.previewUrl} alt={item.name} className="aspect-[4/3] w-full object-cover" />
                   <div className="p-4">
                     <div className="flex items-center justify-between gap-3">
-                      <p className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{item.templateNo}</p>
+                      <p className="font-[family-name:var(--font-undara-mono)] text-xs text-primary">#{item.templateNo}</p>
                       <div className="flex items-center gap-2">
                         <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">
                           {statusLabel(item.status)}
