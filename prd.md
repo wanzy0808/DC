@@ -599,7 +599,7 @@ Foto tetap melalui Sharp: decode, orientasi otomatis, resize maksimal 2000×2000
 
 Nama/judul di heading Studio ditampilkan memakai `invitationTitleCase` **hanya saat render**: `Pernikahan hendra & reni` terlihat sebagai **`Pernikahan Hendra & Reni`**, tanpa menimpa database atau mengubah judul user lain. Rail alat di kiri harus menyediakan jarak lega antara ikon dan label, ukuran teks terbaca, serta ruang kiri/kanan cukup; canvas utama dipersempit menjadi sekitar **340px** desktop dan maksimal lebar tersedia pada mobile, tetap dapat scroll dan menampilkan renderer template yang sama. Popup kedua tidak boleh digunakan hanya untuk melihat apa yang sudah tampak dalam canvas. Tombol mode Light/Dark dan ID/EN tetap dapat diakses pada viewport mobile. **Memilih Cover dari toolbar tidak boleh menyimpan toggle Amplop OFF**; saat Amplop dibuka, toolbar otomatis berpindah ke Cover tanpa me-remount player musik pada canvas (key renderer tidak mengikuti indikator stage).
 
-**Kerapian tombol, filter, dan panel tema Studio (24 September 2026):** Semua tombol isian Rose yang terpilih (termasuk filter foto dan tombol Amplop/Cover di canvas) harus memakai **teks putih pada Light Mode dan hitam pada Dark Mode**, mengikuti `components/ui/button-variants.ts`; jangan memakai `text-black` tanpa scope dark. Tombol tidak terpilih tetap outline Rose dengan teks warna foreground/aksen, tanpa menambahkan variasi CTA baru. Dropdown pengurutan **Pilihan aktif / Nama A–Z / Nama Z–A** harus memiliki penanda panah custom yang berada sekitar 16px dari sisi kanan, teks punya padding kanan sekitar 44px agar tidak bertabrakan, lebar cukup untuk label, dan tinggi ringkas sekitar 36px. Panel inspector yang memuat pencarian/filter/list template dibuat lebih lebar ke arah kiri (kolom 360px desktop / 380px lebar besar, tidak memperbesar canvas undangan), tinggi item tool rail diringkas menjadi sekitar 74px dengan jarak ikon-label 10px; pada ponsel tetap satu kolom responsif tanpa overflow. Tidak mengubah sortir, pencarian, pilihan tersimpan, atau 15 section.
+**Kerapian tombol, filter, dan panel tema Studio (updated 28 September 2026):** Semua tombol terpilih (termasuk filter foto dan tombol Amplop/Isi di canvas) mengikuti semantic Undara `bg-primary text-primary-foreground`: Light = Brown `#703B3B` + warm-white text, Dark = Champagne `#D6B38C` + deep-brown text. Jangan mengembalikan hardcoded Rose DC lama atau `text-black` tanpa semantic foreground. Tombol tidak terpilih tetap outline Rose dengan teks warna foreground/aksen, tanpa menambahkan variasi CTA baru. Dropdown pengurutan **Pilihan aktif / Nama A–Z / Nama Z–A** harus memiliki penanda panah custom yang berada sekitar 16px dari sisi kanan, teks punya padding kanan sekitar 44px agar tidak bertabrakan, lebar cukup untuk label, dan tinggi ringkas sekitar 36px. Panel inspector yang memuat pencarian/filter/list template dibuat lebih lebar ke arah kiri (kolom 360px desktop / 380px lebar besar, tidak memperbesar canvas undangan), tinggi item tool rail diringkas menjadi sekitar 74px dengan jarak ikon-label 10px; pada ponsel tetap satu kolom responsif tanpa overflow. Tidak mengubah sortir, pencarian, pilihan tersimpan, atau 15 section.
 
 ### 7.2.1c Konsistensi renderer dan kapitalisasi nama (24 September 2026)
 
@@ -1411,26 +1411,35 @@ Template typography boleh dinamis bila merupakan konten invitation, bukan shell 
 
 ### 15.2 Color
 
-Brand palette:
-- Rose `#C07A84`;
-- Supporting Rose `#D9A3AA`;
-- Deep Rose `#A65E69`.
+Canonical application-shell palette mengikuti §1.1:
+- Undara Brown `#703B3B`;
+- Champagne `#D6B38C`;
+- Warm Ivory `#EDE3D8`;
+- Soft Ivory `#F7F1EB`;
+- Deep Brown `#3A2020`.
 
 Light:
-- background `#FFFFFF`;
-- primary text `#111111`.
+- canvas utama `#EDE3D8`;
+- primary/accent `#703B3B`;
+- primary button foreground warm white.
 
 Dark:
-- background `#0B0B0C`;
-- primary text `#FFFFFF`.
+- canvas utama `#703B3B`;
+- primary/accent `#D6B38C`;
+- primary button foreground deep brown.
 
-Rose digunakan sebagai meaningful accent, bukan large page fill.
+Palet Rose lama `#C07A84 / #D9A3AA / #A65E69` adalah histori DC Organizer dan tidak boleh dipakai untuk application-shell baru. Palet invitation template tetap independen.
 
 ### 15.3 Buttons
 
 `components/ui/button.tsx` adalah canonical application button primitive.
 
-Tidak membuat visual button system baru per halaman.
+Tidak membuat visual button system baru per halaman. Warna mengikuti semantic theme token:
+- **Light:** `bg-primary = #703B3B`, `text-primary-foreground` warm white;
+- **Dark:** `bg-primary = #D6B38C`, `text-primary-foreground` deep brown;
+- hover/pressed tetap dalam keluarga `primary`, bukan hardcoded Rose lama.
+
+Studio selected/action buttons, Dashboard/Usher actions, auth submit dan marketing CTA yang memakai application-shell styling mengikuti kontrak yang sama. Navbar/theme/language controls yang memang outlined/transparent adalah pengecualian chrome; tombol di dalam artwork template undangan mengikuti palet template.
 
 Action hierarchy dibedakan melalui:
 - verb/label;
@@ -5484,3 +5493,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Permintaan owner:** warna widget Jelajah dibuat lebih padat. Tombol mengambang dan daun pintu mini kini memakai `primary` solid; bingkai, lis, dan knob memakai `primary-foreground` agar bentuk pintu tetap jelas. Panel menu memakai `background` solid tanpa transparansi. Semua warna mengikuti token Light/Dark, sementara tujuan menu, interaksi buka/tutup, dan ukuran tetap. Area: `MarketingDoorNavigator.tsx`, `prd.md`. Validasi: lint terarah dengan pengecualian rule effect existing dan TypeScript dari perubahan sebelumnya; QA visual browser menunggu review owner. Tidak ada migrasi database.
 
 **Tambahan owner:** tombol sound ON/OFF yang semula mewarisi pink hardcoded dari `Button` kini memakai `primary` dan `primary-foreground` dari tema melalui style scoped pada kontrol audio. Area tambahan: `MarketingAudio.tsx`; perilaku mute dan level volume tetap.
+
+
+### 28 September 2026 — Application buttons pindah penuh ke palette Undara
+
+**Temuan:** root theme sudah Undara, tetapi `components/ui/button-variants.ts` masih hardcoded palette DC Organizer lama `#C07A84 / #A65E69 / #D9A3AA`, sehingga CTA tidak mengikuti Light/Dark brand baru. Filter foto dan tombol stage Studio juga masih mengulang hex lama.
+
+**Implementasi:** canonical Button sekarang memakai `bg-primary text-primary-foreground`, border/ring semantic primary, font Roboto/Undara body, dan state hover/active dalam keluarga primary. Hasilnya Light = Brown `#703B3B` + warm-white; Dark = Champagne `#D6B38C` + deep-brown. `TemplatePanel` active filter/check badge dan `StudioStageControls` ikut semantic token yang sama. Google auth button tetap secondary putih tetapi hover pink lama diganti soft ivory `#F7F1EB`. Invitation-template palette tidak diubah.
+
+**Dokumentasi:** canonical §15.2/§15.3 dan AGENTS Button Color Standard diperbarui; aturan Rose lama dianggap histori.
+
+**Validasi:** source regression diperbarui untuk mengunci semantic Undara button contract; Build Validation/Orphan Audit harus diperiksa pada commit implementasi.

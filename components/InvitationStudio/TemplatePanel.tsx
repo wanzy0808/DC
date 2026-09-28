@@ -82,7 +82,7 @@ export function TemplatePanel({
               type="button"
               aria-pressed={photoFilter === key}
               onClick={() => { setPhotoFilter(key); setLimit(18); }}
-              className={`min-h-9 rounded-[var(--dc-control-radius)] border border-primary/70 px-3.5 text-xs font-medium transition-colors ${photoFilter === key ? "bg-[#C07A84] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]" : "bg-background text-foreground hover:bg-primary/10"}`}
+              className={`min-h-9 rounded-[var(--dc-control-radius)] border border-primary/70 px-3.5 text-xs font-medium transition-colors ${photoFilter === key ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-background text-foreground hover:bg-primary/10"}`}
             >{label}</button>
           ))}
         </div>
@@ -117,7 +117,7 @@ export function TemplatePanel({
               className="absolute inset-3 rounded-[12px] border border-dashed border-primary/30 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px)] bg-[size:20px_20px]"
             />
             {selected === "blank-canvas" && (
-              <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-white dark:text-black">
+              <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-primary-foreground">
                 <Check className="h-4 w-4" />
               </span>
             )}
@@ -153,7 +153,7 @@ export function TemplatePanel({
                 <img src={item.previewImage} alt="" loading="lazy" className="aspect-[9/19.5] w-full object-contain bg-primary/5" />
               )}
               {selected === item.key && (
-                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-white dark:text-black">
+                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-primary-foreground">
                   <Check className="h-4 w-4" />
                 </span>
               )}

@@ -153,12 +153,13 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 ### Button Color Standard
 - **`components/ui/button.tsx` is the single canonical application button primitive. All reusable application buttons MUST render through `Button`; do not introduce or maintain separate visual button primitives.**
 - The button has **one visual treatment only**. There are no visual variants. `size` is only a sizing axis and must not change color, border, shadow, gradient, or shape language.
-- Canonical shape: **rounded rectangle with 16px corners, never pill/capsule**, driven by global `--dc-control-radius`; visible Rose outline and solid Rose `#C07A84` fill. Hover/pressed may use Deep Rose `#A65E69` or Supporting Rose `#D9A3AA`. Shared `Button`, `Input`, dropdowns and Studio's custom action buttons use this one corner-radius token. Approved landing navbar toggles, artwork, checkboxes and radio controls retain their own intentionally distinct geometry.
+- Canonical shape: **rounded rectangle with 16px corners, never pill/capsule**, driven by global `--dc-control-radius`.
+- Canonical colors are semantic Undara tokens, never legacy Rose hex values: **Light = Undara Brown `#703B3B` with warm-white foreground; Dark = Champagne `#D6B38C` with deep-brown foreground.** Hover/pressed use the same semantic `primary` family through state opacity, not a second hardcoded palette.
+- Shared `Button`, Studio selected/action buttons, Dashboard/Usher operational actions and marketing CTAs inherit `bg-primary` + `text-primary-foreground`. Do not hardcode `#C07A84`, `#A65E69`, or `#D9A3AA` into application-shell buttons.
 - Canonical depth: subtle raised shadow only. **No gradients** and no page-specific glow/shine effects.
-- Light mode button text is **white**. Dark mode button text is **black**.
-- Legacy `variant` values are accepted only for source compatibility and MUST resolve to the exact same visual treatment.
+- Legacy `variant` values are accepted only for source compatibility and MUST resolve to the same visual treatment.
 - Do not introduce one-off button colors, gradients, borders, shadows, or page-specific button variants outside `components/ui/button.tsx`; generic filter/dropdown/field control styling belongs to the global `components/ui/control-styles.ts`.
-- Approved exception: burger navigation keeps its existing neutral/light surface with Rose labels/icons; auth dialog fields/Google action use the shared white-and-Rose rounded-rectangle treatment, while their main submit continues to use the canonical shared `Button` CTA. Do not extrapolate this exception into restyling the burger or forms.
+- Approved exception: burger/navigation toggles may keep their restrained outlined/transparent chrome; auth Google action remains a light secondary surface. The auth main submit continues to use the canonical shared `Button` CTA. Invitation-template artwork/buttons may follow the template's own palette and are not application-shell buttons.
 
 ## 5. Anti AI-Slop Text Hierarchy
 

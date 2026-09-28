@@ -21,7 +21,7 @@ export default function StudioStageControls({
   onContent: () => void;
 }) {
   const buttonClass =
-    "min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary/50 bg-[#C07A84] px-2.5 text-[11px] text-white hover:bg-[#A65E69] dark:text-black dark:hover:bg-[#D9A3AA]";
+    "min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary bg-primary px-2.5 text-[11px] text-primary-foreground hover:bg-primary/90";
 
   return (
     <div

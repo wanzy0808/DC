@@ -24,7 +24,7 @@ export const authPasswordToggleClass =
   "absolute right-2 top-1/2 grid size-10 -translate-y-1/2 place-items-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export const authGoogleButtonClass =
-  "h-12 w-full gap-3 rounded-[var(--dc-control-radius)] border border-primary/55 bg-white/95 font-[family-name:var(--font-dc-body)] text-sm font-semibold text-[#21191c] shadow-sm hover:border-primary hover:bg-[#fff3f5] hover:text-[#21191c] dark:border-primary/55 dark:bg-white/95 dark:text-[#21191c] dark:hover:bg-[#fff3f5] dark:hover:text-[#21191c]";
+  "h-12 w-full gap-3 rounded-[var(--dc-control-radius)] border border-primary/55 bg-white/95 font-[family-name:var(--font-dc-body)] text-sm font-semibold text-[#21191c] shadow-sm hover:border-primary hover:bg-[#F7F1EB] hover:text-[#21191c] dark:border-primary/55 dark:bg-white/95 dark:text-[#21191c] dark:hover:bg-[#F7F1EB] dark:hover:text-[#21191c]";
 
 export const authSubmitButtonClass =
   "h-12 w-full rounded-[var(--dc-control-radius)] font-[family-name:var(--font-dc-body)] text-sm font-semibold shadow-sm";

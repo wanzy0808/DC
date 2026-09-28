@@ -150,10 +150,11 @@ test("Studio folds Font into Text with four quick font pairs and See more", () =
   assert.match(textPanel, /<Button[\s\S]*variant="outline"[\s\S]*See more/);
 });
 
-test("Studio custom button states follow DC Organizer light/dark text and sorting has an inset chevron", () => {
-  assert.match(templatePanel, /photoFilter === key \? "bg-\[#C07A84\] text-white [^"]*dark:text-black/);
-  assert.doesNotMatch(templatePanel, /photoFilter === key \? "bg-primary text-black"/);
-  assert.match(stageControlsSource, /bg-\[#C07A84\][^"]*text-white[^"]*dark:text-black/);
+test("Studio custom button states follow Undara semantic colors and sorting has an inset chevron", () => {
+  assert.match(templatePanel, /photoFilter === key \? "bg-primary text-primary-foreground hover:bg-primary\/90"/);
+  assert.doesNotMatch(templatePanel, /#C07A84|#A65E69|#D9A3AA/);
+  assert.match(stageControlsSource, /bg-primary[^"]*text-primary-foreground[^"]*hover:bg-primary\/90/);
+  assert.doesNotMatch(stageControlsSource, /#C07A84|#A65E69|#D9A3AA/);
   assert.match(stageControlsSource, /aria-pressed=\{stage === "envelope"\}/);
   assert.match(stageControlsSource, /aria-pressed=\{stage === "cover" \|\| !envelopeEnabled\}/);
   assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
@@ -171,6 +172,10 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   assert.match(globalStyles, /--dc-control-menu-radius:\s*18px;/);
   assert.doesNotMatch(globalStyles, /--dc-control-radius:\s*9999px;/);
   assert.match(buttons, /rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(buttons, /bg-primary/);
+  assert.match(buttons, /text-primary-foreground/);
+  assert.match(buttons, /font-\[family-name:var\(--font-undara-body\)\]/);
+  assert.doesNotMatch(buttons, /#C07A84|#A65E69|#D9A3AA|--font-fauna/);
   assert.match(controls, /rounded-\[var\(--dc-control-radius\)\]/);
   assert.match(templatePanel, /photoFilter === key/);
   assert.match(templatePanel, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
