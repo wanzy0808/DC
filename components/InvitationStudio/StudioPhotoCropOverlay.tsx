@@ -114,7 +114,7 @@ export default function StudioPhotoCropOverlay({
         {en ? "Drag to reposition" : "Geser untuk atur posisi"}
       </div>
 
-      <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-[var(--dc-control-radius)] bg-background/95 p-1 shadow-lg">
+      <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 items-center gap-1 rounded-[var(--undara-control-radius)] bg-background/95 p-1 shadow-lg">
         <button
           type="button"
           className="grid h-8 w-8 place-items-center rounded-lg text-primary hover:bg-primary/10"
