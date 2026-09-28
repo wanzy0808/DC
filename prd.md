@@ -38,9 +38,9 @@ Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama 
 - Tipografi body/UI: **Roboto**. DM Mono boleh tetap dipakai untuk metadata/label teknis.
 - Warna brand utama: **#703B3B** (Undara Brown).
 - Warna state hover/pressed utama: **#5E3030**.
-- Accent Dark Mode: **#D6B38C** (warm Champagne), dengan support **#E8D7C3**.
-- **Light Mode:** seluruh pink/Rose yang berfungsi sebagai application-brand chrome berpindah ke Undara Brown `#703B3B`.
-- **Dark Mode:** black/near-black yang berfungsi sebagai base application chrome berpindah ke Undara Brown `#703B3B`; peran accent pink/Rose berpindah ke warm Champagne `#D6B38C`.
+- Pasangan tema disederhanakan menjadi **Light = #D6B38C (Warm Champagne)** dan **Dark = #703B3B (Undara Brown)**.
+- **Light Mode:** application canvas utama memakai `#D6B38C`; surface bertingkat boleh memakai `#E8D7C3`; brand accent/teks kuat memakai `#703B3B`.
+- **Dark Mode:** application canvas utama memakai `#703B3B`; brand accent utama memakai `#D6B38C`; surface lebih dalam boleh memakai brown yang lebih gelap.
 - Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
 - **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
 - Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
@@ -5346,3 +5346,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** `components/Brand/BrandWordmark.tsx` menggunakan tagline resmi tersebut pada public navbar saat `showTagline` aktif. Karena copy lebih panjang daripada tagline sebelumnya, ukuran/letter-spacing tagline dipadatkan secara responsif agar tetap muat bersama kontrol navbar tanpa mengubah ukuran artwork logo. Dashboard/workspace tetap logo-only tanpa tagline. `AGENTS.md` dan `README.md` diperbarui agar tagline lama tidak diperkenalkan kembali.
 
 **Validasi:** regression test brand memverifikasi copy canonical. GitHub Actions harus diperiksa setelah commit.
+
+
+### 28 September 2026 — Penyederhanaan Light/Dark Undara
+
+**Permintaan owner:** agar lebih mudah dijaga, dua mode Undara memakai pasangan warna langsung: **Light `#D6B38C`** dan **Dark `#703B3B`**.
+
+**Implementasi:** semantic root token di `app/globals.css` menjadikan Warm Champagne `#D6B38C` sebagai canvas Light Mode dan Undara Brown `#703B3B` sebagai canvas Dark Mode. Light memakai Brown sebagai warna kontras utama; Dark memakai Champagne sebagai warna kontras utama. Surface Light bertingkat memakai `#E8D7C3`, sedangkan Dark tetap memakai deeper brown untuk depth. Dashboard redesign light canvas/rail/header ikut memakai pasangan yang sama supaya tidak kembali ke putih. Logo tetap memakai warna kebalikan dari canvas agar kontras: Brown pada Light, Champagne pada Dark. Palet template undangan tidak ikut diubah.
+
+**Validasi:** source regression tests dan Build Validation wajib diperiksa pada commit implementasi. Browser QA Light/Dark tetap diperlukan untuk memastikan kontras seluruh surface.

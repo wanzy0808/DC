@@ -41,7 +41,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 - **Protected brand wordmark contract:** customer-facing `Undara` brand lockups MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The component uses the canonical image asset `public/brand/undara/logo.png`; do not recreate the logo as typed text. The image silhouette is theme-colored through semantic `currentColor`: Undara Brown `#703B3B` in Light Mode and the active Champagne brand accent in Dark Mode. **DM Serif Display** remains the canonical display/heading typeface outside the logo; application/body typography is **Roboto**.
 - Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
 - **Rebrand compatibility rule (28 September 2026):** existing `dc-*` CSS classes, variables, route IDs, cookies, database identifiers, and filenames may remain temporarily as compatibility internals. Do not mass-rename them merely for cosmetics. New shared tokens use `undara-*`; migrate legacy identifiers only when the affected behavior is tested.
-- **Palette migration rule:** Light Mode replaces the old Rose/pink application chrome with Undara Brown `#703B3B`. Dark Mode replaces the old black/near-black application base with Undara Brown `#703B3B`, while the old Rose/pink accent role becomes warm Champagne `#D6B38C` (light support `#E8D7C3`). Older active wording that literally says Rose/pink/black for app chrome is superseded by these semantic tokens.
+- **Palette migration rule:** the owner simplified the mode pair to **Light canvas = Warm Champagne `#D6B38C`** and **Dark canvas = Undara Brown `#703B3B`**. Brown is the primary contrasting accent on Light; Champagne is the primary contrasting accent on Dark. Older active wording that says white/near-black/Rose is superseded for application chrome.
 - **Template isolation:** invitation template artwork/palettes are design content, not application-brand chrome. Do not recolor existing invitation themes merely because Undara rebranded.
 - Never introduce legacy customer-facing brands such as Citin or DC Wedding.
 - Never reintroduce wedding-only assumptions into general event workflows unless the selected event category specifically requires them.
@@ -123,11 +123,11 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Semantic status colors (success/warning/error/info) remain functional colors and are not forced into the brand palette.
 
 ### Light
-- **Background:** `#FFFFFF`.
-- **Headings, icons, primary buttons, links, menu emphasis, outlines and brand accents:** `#703B3B`.
-- **Primary text:** warm near-black/brown `#2B1A1A`.
-- **Secondary text:** use semantic muted opacity.
-- Supporting surfaces may use warm ivory `#F7F1ED`; do not turn the whole UI brown.
+- **Base background:** Warm Champagne `#D6B38C`.
+- **Card/popover/support surfaces:** Soft Champagne `#E8D7C3`.
+- **Headings, icons, primary buttons, links, menu emphasis, outlines and brand accents:** Undara Brown `#703B3B`.
+- **Primary text:** deep warm brown `#3A2020`.
+- Light Mode is the lighter half of the two-color Undara system; do not reintroduce white as the default application canvas.
 
 ### Dark
 - **Base background:** Undara Brown `#703B3B` replaces the legacy black/near-black base.
@@ -137,7 +137,8 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Never reintroduce black as the default dark canvas or old Rose/pink as the default dark accent.
 
 ### Neutral / Accent Balance
-- Light mode should read as white/ivory + Undara Brown. Dark mode should read as Undara Brown + Champagne + warm white.
+- The simplified theme pair is **Light = Warm Champagne `#D6B38C`** and **Dark = Undara Brown `#703B3B`**.
+- For contrast, the main brand/logo/accent color is the opposite half of the pair: Brown on Light, Champagne on Dark.
 - Treat 60/30/10 as a visual-balance principle, not literal pixel coverage.
 - Typography, spacing, layout, opacity, and surface depth establish hierarchy before extra decorative color.
 - Invitation-template palettes remain independent from this application-shell palette.

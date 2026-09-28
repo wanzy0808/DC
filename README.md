@@ -2,7 +2,7 @@
 
 Undara is an event-focused SaaS for Digital Invitation, RSVP, guest management, optional WA Blast distribution, and event-day guestbook/check-in operations. The product is not limited to weddings: each user can create as many event workspaces as needed and activate invitations per event.
 
-> **Brand migration — 28 September 2026:** DC Organizer is the legacy brand; the customer-facing brand is now **Undara** (Undangan + Acara). Canonical typography is **DM Serif Display + Roboto**. Primary brand color is **#703B3B**; Dark Mode uses the same brown as its base and **#D6B38C** warm Champagne as the primary accent. Legacy `dc-*` identifiers remain compatibility internals during staged migration. Invitation-template palettes are not globally recolored.
+> **Brand migration — 28 September 2026:** DC Organizer is the legacy brand; the customer-facing brand is now **Undara** (Undangan + Acara). Canonical typography is **DM Serif Display + Roboto**. The simplified mode pair is **Light = #D6B38C Warm Champagne** and **Dark = #703B3B Undara Brown**; the opposite color is used as the main contrasting brand accent in each mode. Legacy `dc-*` identifiers remain compatibility internals during staged migration. Invitation-template palettes are not globally recolored.
 
 ## Approved Landing Page
 
@@ -130,7 +130,8 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/brand/undara/logo.png` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
 - Canonical public tagline: **“Melangkah Bersama, Menuju Hari Penuh Makna”**. Public navbar may show it; **dashboard headers use the Undara logo only and do not show the tagline**.
 - Logo / primary brand: Undara Brown `#703B3B`.
-- Dark/support accent: warm Champagne `#D6B38C`.
+- Theme pair: **Light canvas `#D6B38C` / Dark canvas `#703B3B`**.
+- Contrast pairing: Brown accents on Light; Champagne accents on Dark.
 - Deep hover / pressed Brown: `#5E3030`.
 - DM Serif Display: display, headings, titles, branding.
 - Roboto: body copy and application UI.
