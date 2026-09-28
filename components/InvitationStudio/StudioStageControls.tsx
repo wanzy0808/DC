@@ -21,11 +21,11 @@ export default function StudioStageControls({
   onContent: () => void;
 }) {
   const buttonClass =
-    "min-h-9 shrink-0 rounded-[var(--dc-control-radius)] border border-primary bg-primary px-2.5 text-[11px] text-primary-foreground hover:bg-primary/90";
+    "min-h-9 shrink-0 rounded-[var(--undara-control-radius)] border border-primary bg-primary px-2.5 text-[11px] text-primary-foreground hover:bg-primary/90";
 
   return (
     <div
-      className="dc-studio-stage-controls"
+      className="undara-studio-stage-controls"
       role="group"
       aria-label={locale === "en" ? "Invitation view" : "Tampilan undangan"}
     >
