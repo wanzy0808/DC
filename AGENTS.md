@@ -443,15 +443,20 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 
 
 ### 2026-09-28 — Dedicated landing canopy asset
-- Homepage canopy uses `/assets/landing/ornaments/botanical/canopy5.png` as one transparent overhead tree layer rather than re-cropping the forest background.
+- Homepage canopy uses `/assets/landing/ornaments/botanical/canopy7.png` as one transparent overhead tree layer rather than re-cropping the forest background.
 - Position begins outside the top frame and hangs through the header naturally; keep the visual mass centered so the Undara brand/tagline on the left and header controls on the right stay readable and interactive.
 - Use only soft background wash for legibility; do not cut obvious holes or add boxed clear zones around header UI.
 
 
 ### 2026-09-28 — Landing canopy composition
-- Keep only the centered `canopy5.png` overhead layer on the homepage.
+- Keep only the centered `canopy7.png` overhead layer on the homepage.
 - Do not use `canopy1.png` or `canopy33.png` as side canopy layers; they made the header composition too busy.
 - The single canopy may remain wide enough to relate to the door orbit, while preserving clear logo and control zones.
 
 
-- Canopy5 sizing rule: on desktop target about 68vw (max 1240px), visually almost spanning the space between the brand block and header controls while leaving a small breathing gap on both sides; do not stretch to full viewport width.
+- Canopy7 sizing rule: on desktop target about 68vw (max 1240px), visually almost spanning the space between the brand block and header controls while leaving a small breathing gap on both sides; do not stretch to full viewport width.
+
+
+### 2026-09-28 — Canopy7 visual treatment
+- Canopy7 is intentionally subdued: lower opacity, lower saturation, slightly lifted brightness, and reduced contrast so it blends into the woodland atmosphere instead of reading as a crisp decorative banner.
+- Preserve the current near-header-span width and centered placement; do not add side canopy layers.
