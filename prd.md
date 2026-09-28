@@ -5653,3 +5653,8 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** ditambahkan `components/Layout/UndaraSocialIcons.tsx` sebagai satu sumber ikon sosial. Ketiga ikon tampil pada `MarketingFrameFooter` dan footer publik lama, tetapi sengaja non-clickable sampai URL resmi Undara tersedia. Link Instagram `dc.organizer` dihapus. YouTube tidak ditampilkan pada set sosial baru. Regression test mengunci tiga ikon dan melarang referensi `dc.organizer` pada komponen sosial/footer.
 
 **Commit utama:** `f5a353f`, `6bce7c4`, `76b5a6f`, `3e6b5cd`. Tidak ada migrasi database.
+
+
+### Global marketing audio controls — 2026-09-28
+- Standardize Sound On/Off, volume slider, and percentage styling globally across marketing pages.
+- Volume slider and its numeric percentage should read as one compact branded control matching the sound button, especially in Light Mode.
