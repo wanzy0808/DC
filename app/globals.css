@@ -14,8 +14,8 @@
   --color-undara-brown-hover: #5E3030;
   --color-undara-accent: #D6B38C;
   --color-undara-accent-light: #E8D7C3;
-  --color-undara-pink: #703B3B;
-  --color-undara-pink-light: #D6B38C;
+  --color-undara-brown: #703B3B;
+  --color-undara-accent-light: #D6B38C;
   --color-undara-maroon: #703B3B;
   --color-undara-rose-wood: #703B3B;
   --color-undara-rose-wood-dark: #5E3030;
@@ -69,8 +69,6 @@
   --font-undara-heading: var(--font-undara-display), Georgia, serif;
   --font-undara-mono: var(--font-undara-technical), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   /* Legacy application font aliases: keep old surfaces on the Undara type system during migration. */
-  --font-cinzel: var(--font-undara-heading);
-  --font-fauna: var(--font-undara-sans);
   --undara-control-radius: 16px;
   --undara-control-menu-radius: 18px;
   --undara-control-outline: var(--primary);
@@ -588,7 +586,7 @@ aside nav > p { font-family: var(--font-undara-heading); }
 .undara-dashboard main section.border-t { border-top-width: 0 !important; }
 .undara-dashboard main section.border-b { border-bottom-width: 0 !important; }
 
-/* Form controls use a restrained neutral fill so each editable field is easy to scan without turning the dashboard pink. */
+/* Form controls use a restrained neutral fill so each editable field is easy to scan without overpowering the dashboard. */
 :is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]),
 :is(.undara-dashboard, .undara-usher) textarea,
 :is(.undara-dashboard, .undara-usher) select {
