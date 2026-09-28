@@ -5526,6 +5526,6 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 
 ### Landing door identity — 2026-09-28
-- Each of the four main doors must carry a distinct crest icon matching its destination instead of the same decorative diamond: Event Planner (calendar/spark), Undangan Digital (digital envelope/signal), Guestbook (open book), and Undangan Fisik (sealed envelope).
-- Add warm forest-style backlighting behind every doorway. The light is faint while closed, becomes stronger when the selected door opens, and intensifies during entry so it feels like light escaping from inside the woodland/portal.
+- Each of the four main doors must carry a distinct crest icon matching its destination instead of the same decorative diamond: Event Planner (clipboard/checklist), Undangan Digital (smartphone with invitation detail on-screen), Guestbook (open book), and Undangan Fisik (sealed envelope).
+- Add warm forest-style backlighting behind every doorway. The forest/portal behind the door is the visual light source: no frontal key light or luminous front floor strip. Keep ambient illumination low enough to read the door material, strengthen the rear light when opening/entering, and let the cast shadow extend forward toward the viewer.
 - The backlight must remain soft and edge-free, using warm cream/champagne tones rather than a pink box. It must not alter the established door orbit, camera, geometry, positioning, or open/close interaction.
