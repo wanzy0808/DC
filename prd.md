@@ -44,7 +44,7 @@ Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama 
 - Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
 - **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
 - Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
-- `components/Brand/BrandWordmark.tsx` adalah sumber wordmark customer-facing selama integrasi asset logo final berlangsung.
+- `components/Brand/BrandWordmark.tsx` adalah sumber tunggal brand lockup customer-facing dan memakai asset final `public/brand/undara/logo.png`. Logo tidak direka ulang sebagai teks biasa; asset monokrom diwarnai melalui semantic `currentColor` agar Light/Dark tetap kontras.
 - Nama badan hukum, rekening, kontrak, domain, email, dan social handle **tidak otomatis berubah hanya karena rebrand visual**; ubah hanya setelah data operasional/legal baru dikonfirmasi.
 - Ketentuan ini **menggantikan** instruksi visual aktif sebelumnya yang masih menyebut Cinzel/Fauna One, Rose/pink sebagai brand utama, atau black/near-black sebagai base Dark Mode. Riwayat lama di Appendix A tetap disimpan sebagai histori.
 
@@ -5315,3 +5315,16 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Perbaikan:** token canonical `--undara-control-radius` / `--undara-control-menu-radius` tetap dipertahankan, sedangkan alias legacy `--dc-control-radius` / `--dc-control-menu-radius` kembali menyimpan literal 16px/18px agar kontrak regression lama tetap kompatibel selama migrasi bertahap.
 
 **Validasi:** sumber error dibaca langsung dari log GitHub Actions run `36370212358`. Pada follow-up commit `7a47d5fc`, Source regression tests dan Build Validation run `36370416238` selesai **success**, dan Orphan Audit run `36370416106` juga **success**. Browser visual QA Light/Dark tetap pekerjaan tahap rebrand berikutnya.
+
+
+### 28 September 2026 — Uji image logo Undara pada seluruh brand navbar/header
+
+**Permintaan owner:** Uji semua navbar/header yang memakai identitas brand dengan **image logo Undara**, bukan wordmark teks.
+
+**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik `Undangan & Acara` tetap terpisah dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
+
+**Asset:** sumber PNG owner berukuran 3498×1471 (rasio horizontal), dipindahkan tanpa mengubah byte artwork. `app/Undara Door icon.png` tidak disentuh pada tahap navbar ini.
+
+**Regression:** `tests/repo-file-naming.test.mjs` memverifikasi canonical logo berada di folder public, file `app/logo.png` sudah tidak menjadi sumber aktif, dan BrandWordmark/CSS menunjuk asset bersama.
+
+**Validasi:** source regression dan Build Validation GitHub Actions harus diperiksa pada commit implementasi sebelum pekerjaan ini disebut lulus; browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.

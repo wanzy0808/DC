@@ -38,7 +38,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 ## 2. Product Identity & Preservation
 
 - Official product brand: **Undara**. **DC Organizer is the legacy brand name** and must not be introduced on new customer-facing surfaces except where historical/legal migration context explicitly requires it.
-- **Protected brand wordmark contract:** customer-facing `Undara` wordmarks MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). Canonical display typography is `var(--font-undara-heading)` / **DM Serif Display**; application/body typography is **Roboto**. The primary brand color is **#703B3B**.
+- **Protected brand wordmark contract:** customer-facing `Undara` brand lockups MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The component uses the canonical image asset `public/brand/undara/logo.png`; do not recreate the logo as typed text. The image silhouette is theme-colored through semantic `currentColor`: Undara Brown `#703B3B` in Light Mode and the active Champagne brand accent in Dark Mode. **DM Serif Display** remains the canonical display/heading typeface outside the logo; application/body typography is **Roboto**.
 - Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
 - **Rebrand compatibility rule (28 September 2026):** existing `dc-*` CSS classes, variables, route IDs, cookies, database identifiers, and filenames may remain temporarily as compatibility internals. Do not mass-rename them merely for cosmetics. New shared tokens use `undara-*`; migrate legacy identifiers only when the affected behavior is tested.
 - **Palette migration rule:** Light Mode replaces the old Rose/pink application chrome with Undara Brown `#703B3B`. Dark Mode replaces the old black/near-black application base with Undara Brown `#703B3B`, while the old Rose/pink accent role becomes warm Champagne `#D6B38C` (light support `#E8D7C3`). Older active wording that literally says Rose/pink/black for app chrome is superseded by these semantic tokens.
@@ -69,7 +69,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 ## 3. Typography
 
 Use only these application UI fonts:
-- **DM Serif Display** — Undara display, headings, titles, branding, editorial elements. **Undara wordmark uses the canonical `--font-undara-heading` token.** Legacy `--font-dc-heading` remains a temporary alias only.
+- **DM Serif Display** — Undara display, headings, titles, branding, editorial elements outside the image logo. The image wordmark itself comes from `public/brand/undara/logo.png`. Legacy `--font-dc-heading` remains a temporary alias only.
 - **Roboto** — Undara body/UI copy, navigation, forms, buttons, and descriptions.
 - **DM Mono** — metadata, codes, timestamps, status values, technical labels, small utility text.
 
@@ -319,7 +319,7 @@ On `/`, `components/Landing/CloudCopy.tsx` owns the two existing outlined clouds
 
 ## Shared brand wordmark across pages (23 September 2026)
 
-Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, which owns the exact name, Cinzel display typography, Rose color, tagline string, and responsive size tokens. All customer-facing visual brand lockups must render `BrandWordmark`, not custom text or manual two-line `D C / ORGANIZER` markup (including the regular public Footer). The default `size="public"` displays the same approved larger name (24px mobile, 34px from sm, 36px from lg) and optional larger tagline (8px mobile, 9px from sm, 10px from lg) in **every public Navbar**, not only `/`. The shared public Navbar uses `py-5 sm:py-4` for a similar overall height to the prior design, without moving the theme/language/burger controls or changing their appearance. The narrow workspace header/usher/mobile contexts reuse this SAME component with explicit `size="dashboard"` or `size="mobile"` to fit available space; dashboard does NOT show the public tagline. To adjust brand wording, typography, palette or shared responsive sizing, update `BrandWordmark` once rather than applying route-specific or footer-only overrides. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop and mobile fit. This supersedes the previous landing-only brand-size rule.
+Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, backed by the canonical image `public/brand/undara/logo.png`. All customer-facing visual brand lockups use this component instead of typed `Undara` text or legacy `DC Organizer` artwork. Public navbar may show the `Undangan & Acara` tagline; dashboard/workspace variants remain logo-only. Responsive logo sizing is centralized in this component. The monochrome PNG is used as a mask so Light Mode renders Undara Brown and Dark Mode renders the semantic Champagne accent without maintaining duplicate logo files. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop/mobile fit.
 
 
 ## Landing orbital scale and hover (23 September 2026)

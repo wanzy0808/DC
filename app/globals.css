@@ -171,6 +171,23 @@
 }
 
 .text-dc-maroon { color: var(--primary); }
+
+/* Canonical Undara logo image. The PNG supplies the exact artwork silhouette;
+   currentColor supplies theme-safe brand color so the same asset remains
+   visible on both the white Light canvas and brown Dark canvas. */
+.undara-brand-logo {
+  aspect-ratio: 3498 / 1471;
+  background-color: currentColor;
+  -webkit-mask-image: url("/brand/undara/logo.png");
+  mask-image: url("/brand/undara/logo.png");
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+}
+
 .dc-navbar { background: transparent; }
 
 /* Single source of truth for public navbar button appearance (both themes).

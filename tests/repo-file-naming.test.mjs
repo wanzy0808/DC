@@ -54,3 +54,14 @@ test("package metadata uses the product name rather than a starter-app placehold
   assert.equal(pkg.name, "undara");
   assert.equal(pkg.private, true);
 });
+
+
+test("Undara navbar brand uses the shared image logo asset", () => {
+  assert.equal(existsSync(path("public/brand/undara/logo.png")), true);
+  assert.equal(existsSync(path("app/logo.png")), false);
+  const brand = read("components/Brand/BrandWordmark.tsx");
+  const globalStyles = read("app/globals.css");
+  assert.match(brand, /undara-brand-logo/);
+  assert.doesNotMatch(brand, />\s*Undara\s*</);
+  assert.match(globalStyles, /mask-image:\s*url\("\/brand\/undara\/logo\.png"\)/);
+});
