@@ -55,7 +55,7 @@ test("Studio and public renderers share the built-in transform contract", () => 
   assert.match(handles, /-2000, 2000/);
   assert.doesNotMatch(handles, /-150, 150/);
   assert.match(handles, /nativeVisualUsesSystemContent\(targetKey\)/);
-  assert.match(handles, /dc-studio-native-content-lock/);
+  assert.match(handles, /undara-studio-native-content-lock/);
 });
 
 
@@ -100,7 +100,7 @@ test("protected link and gift buttons remain inert in Studio preview", () => {
 test("context inspector edits native transforms without replacing copy or component settings", () => {
   const selection = read("components/InvitationStudio/StudioSelectionInspector.tsx");
   const inspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
-  assert.match(selection, /dc-studio-selection-stack/);
+  assert.match(selection, /undara-studio-selection-stack/);
   assert.match(selection, /\{nativeControls\}/);
   assert.match(inspector, /scaleX/);
   assert.match(inspector, /scaleY/);
