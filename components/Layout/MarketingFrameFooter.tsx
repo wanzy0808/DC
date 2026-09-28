@@ -2,6 +2,7 @@
 
 import Footer from "@/components/Layout/Footer";
 import { MarketingAudioControls } from "@/components/Layout/MarketingAudio";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export function MarketingInstagramLink() {
   return <a href="https://www.instagram.com/dc.organizer/?hl=en" target="_blank" rel="noopener noreferrer" aria-label="Instagram Undara" title="Instagram Undara" className="flex size-8 shrink-0 items-center justify-center rounded-full text-primary transition-colors hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
@@ -11,12 +12,24 @@ export function MarketingInstagramLink() {
 
 /** Fixed bottom edge of the landing-style frame, shared by marketing subpages. */
 export default function MarketingFrameFooter({ landingLayout = false }: { landingLayout?: boolean }) {
+  const { messages } = useLanguage();
+
   if (landingLayout) {
-    return <div className="relative z-40 grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 bg-transparent px-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] sm:px-6">
-      <MarketingAudioControls />
-      <div className="col-span-2 row-start-2 flex justify-center sm:col-span-1 sm:col-start-2 sm:row-start-1"><Footer embedded /></div>
-      <div className="col-start-2 row-start-1 justify-self-end sm:col-start-3"><MarketingInstagramLink /></div>
-    </div>;
+    return (
+      <div className="relative z-40 grid min-h-11 shrink-0 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-3 bg-transparent px-3 sm:min-h-12 sm:px-6">
+        <div className="min-w-0 justify-self-start">
+          <MarketingAudioControls />
+        </div>
+
+        <p className="whitespace-nowrap text-center font-[family-name:var(--font-dc-mono)] text-[9px] tracking-[0.06em] text-foreground/48 sm:text-[10px]">
+          © {new Date().getFullYear()} Undara. {messages.footer.rights}
+        </p>
+
+        <div className="justify-self-end">
+          <MarketingInstagramLink />
+        </div>
+      </div>
+    );
   }
 
   return <div className="relative z-40 grid min-h-12 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 bg-transparent px-3 sm:px-6">
