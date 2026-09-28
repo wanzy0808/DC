@@ -83,13 +83,13 @@ export default function TemplateCollection() {
       <div className="w-full border-b border-border/70 pb-7">
         <div className="mx-auto flex w-full flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
           <div className="max-w-2xl">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
+            <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
               {copy.eyebrow}
             </p>
-            <h2 className="mt-4 font-[family-name:var(--font-dc-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
+            <h2 className="mt-4 font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
               {copy.title}
             </h2>
-            <p className="mt-3 max-w-xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65">
+            <p className="mt-3 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65">
               {copy.description}
             </p>
           </div>
@@ -125,14 +125,14 @@ export default function TemplateCollection() {
               />
             </div>
             <div className="mt-6 flex w-full max-w-[270px] flex-col items-center text-center">
-              <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground/50">
+              <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground/50">
                 {template.category}
               </p>
-              <h3 className="mt-2 font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
+              <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
                 {template.name}
               </h3>
               <p className="mt-2 text-xs leading-6 text-foreground/60">{template.description}</p>
-              <p className="mt-2 font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
+              <p className="mt-2 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
                 {copy.ready}
               </p>
             </div>
