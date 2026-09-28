@@ -479,3 +479,9 @@ Untuk template ilustrasi/scrapbook Undara, lihat dan audit aset asli terlebih da
 - Sound toggle, volume slider, and numeric volume value share one visual system across all public marketing frames.
 - Volume slider + percentage live inside a bordered rounded control matching the Sound On/Off button height, border, background, radius, and brand color.
 - Keep the styling theme-aware through global CSS variables so Light and Dark Mode remain consistent.
+
+
+### 2026-09-28 — Marketing control parity in Dark Mode
+- Navbar controls, door navigator widget, Sound On/Off, volume control, and social buttons use the exact same transparent surface treatment in both Light and Dark Mode.
+- Do not add a dark-only card/background fill to `.undara-control-surface`; theme differences come from the shared `--primary` color only.
+- Hover uses the same subtle primary tint as navbar controls.
