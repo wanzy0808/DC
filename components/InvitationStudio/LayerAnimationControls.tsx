@@ -23,7 +23,7 @@ export default function LayerAnimationControls({
 
   return (
     <>
-      <label className="dc-studio-layer-select">
+      <label className="undara-studio-layer-select">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
           value={layer.animation && layer.animation !== "none" ? layer.animation : ""}
@@ -53,7 +53,7 @@ export default function LayerAnimationControls({
         <>
           <button
             type="button"
-            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
+            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
             onClick={() => {
               const root = document.querySelector<HTMLElement>(`[data-studio-design-object="${CSS.escape(layer.id)}"]`);
               root?.getAnimations({ subtree: true }).forEach((animation) => {
@@ -66,10 +66,10 @@ export default function LayerAnimationControls({
             {en ? "Preview animation" : "Preview animasi"}
           </button>
 
-          <div className="dc-studio-layer-grid">
-            <label className="dc-studio-layer-field">
+          <div className="undara-studio-layer-grid">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Duration" : "Durasi"}</span>
-              <span className="dc-studio-layer-number">
+              <span className="undara-studio-layer-number">
                 <input
                   type="number"
                   min="0.2"
@@ -86,9 +86,9 @@ export default function LayerAnimationControls({
                 <small>s</small>
               </span>
             </label>
-            <label className="dc-studio-layer-field">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Delay" : "Jeda"}</span>
-              <span className="dc-studio-layer-number">
+              <span className="undara-studio-layer-number">
                 <input
                   type="number"
                   min="0"
@@ -109,7 +109,7 @@ export default function LayerAnimationControls({
 
           {layer.kind === "text" ? (
             <>
-              <label className="dc-studio-layer-select">
+              <label className="undara-studio-layer-select">
                 <span>{en ? "Text motion" : "Gerak teks"}</span>
                 <select
                   value={layer.textAnimationUnit ?? "whole"}
@@ -129,9 +129,9 @@ export default function LayerAnimationControls({
               </label>
 
               {layer.textAnimationUnit ? (
-                <label className="dc-studio-layer-field">
+                <label className="undara-studio-layer-field">
                   <span>{en ? "Stagger" : "Jarak gerak"}</span>
-                  <span className="dc-studio-layer-number">
+                  <span className="undara-studio-layer-number">
                     <input
                       type="number"
                       min="0.01"
