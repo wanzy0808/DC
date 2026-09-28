@@ -118,3 +118,42 @@ test("Undara shared assets stay centralized", () => {
   ];
   for (const file of retired) assert.equal(existsSync(path(file)), false, file);
 });
+
+
+test("runtime source does not reference retired root asset URLs", () => {
+  const extensions = /\.(?:ts|tsx|js|jsx|css)$/;
+  const roots = ["app", "components", "lib", "data"];
+  const files = [];
+  const walk = (directory) => {
+    for (const entry of readdirSync(path(directory), { withFileTypes: true })) {
+      const relative = join(directory, entry.name);
+      if (entry.isDirectory()) walk(relative);
+      else if (extensions.test(entry.name)) files.push(relative);
+    }
+  };
+  roots.forEach(walk);
+
+  const retiredUrls = [
+    "/Idigi.png",
+    "/Ufisik.png",
+    "/eventplanner.png",
+    "/guestbook.png",
+    "/flower.png",
+    "/cloud.png",
+    "/tiara.png",
+    "/couple.jpg",
+    "/couple2.jpg",
+    "/couple3.jpg",
+    "/man.jpg",
+    "/female.jpg",
+    "/bca.webp",
+    "/A%20Himitsu%20-%20Fragile.mp3",
+  ];
+
+  for (const file of files) {
+    const source = read(file);
+    for (const legacy of retiredUrls) {
+      assert.equal(source.includes(legacy), false, `${file} still references ${legacy}`);
+    }
+  }
+});
