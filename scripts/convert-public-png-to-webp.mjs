@@ -83,6 +83,11 @@ async function updateTextReferences(conversions) {
     const webPng = `/${publicRelativePng}`;
     const webWebp = `/${publicRelativeWebp}`;
 
+    const pngBase = path.basename(publicRelativePng);
+    const webpBase = path.basename(publicRelativeWebp);
+    const escapedPngBase = pngBase.replace(/\\.png$/i, "\\\\.png");
+    const escapedWebpBase = webpBase.replace(/\\.webp$/i, "\\\\.webp");
+
     replacements.push(
       [repoRelativePng, repoRelativeWebp],
       [webPng, webWebp],
@@ -90,6 +95,8 @@ async function updateTextReferences(conversions) {
       [encodeURI(repoRelativePng), encodeURI(repoRelativeWebp)],
       [encodeURI(webPng), encodeURI(webWebp)],
       [encodeURI(publicRelativePng), encodeURI(publicRelativeWebp)],
+      [pngBase, webpBase],
+      [escapedPngBase, escapedWebpBase],
     );
   }
 
