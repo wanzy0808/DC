@@ -26,7 +26,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
       initial={reduced ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: hidden ? 0 : 1, y: hidden ? 8 : 0 }}
       transition={{ duration: reduced ? 0 : 0.45, ease: "easeOut" }}
-      className="pointer-events-none absolute bottom-[clamp(72px,8dvh,108px)] right-[clamp(18px,5.2vw,88px)] z-20 w-[min(82vw,390px)] text-right sm:w-[min(38vw,420px)] lg:w-[min(27vw,455px)]"
+      className="pointer-events-none absolute bottom-[clamp(72px,8dvh,108px)] right-[clamp(18px,5.2vw,88px)] z-20 w-[min(88vw,460px)] text-right sm:w-[min(42vw,520px)] lg:w-[min(31vw,560px)]"
     >
       <div
         aria-hidden="true"
@@ -42,7 +42,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
 
       <div
         aria-hidden="true"
-        className="ml-auto mt-3 flex h-8 w-[240px] items-center justify-end text-primary/65 sm:w-[290px] lg:w-[340px] dark:text-[#D6B38C]/72"
+        className="ml-auto mt-3 flex h-8 w-[280px] items-center justify-end text-primary/65 sm:w-[350px] lg:w-[430px] dark:text-[#D6B38C]/72"
       >
         <span
           className="block h-full w-full bg-current"
@@ -59,7 +59,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
         />
       </div>
 
-      <p className="ml-auto mt-1 max-w-[34ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
+      <p className="ml-auto mt-1 max-w-[46ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
         {copy.body}
       </p>
     </motion.aside>
