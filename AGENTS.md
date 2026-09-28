@@ -467,7 +467,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Do not render the embedded full Footer component inside the landing footer; keep copyright inline so it does not look like a separate stacked footer.
 
 
-### 2026-09-28 — Root divider footer
-- Landing footer keeps the unified sound / copyright / Instagram row.
-- The visual separator above that row is an organic root-like SVG divider rather than a straight rule.
-- Divider stays subtle, non-interactive, and must not change footer controls or door scene geometry.
+
+
+
+### 2026-09-28 — Landing footer separator removal
+- Homepage footer has no decorative divider above it.
+- Do not add root, straight-line, or gradient separator treatments between the woodland scene and the unified footer row.
