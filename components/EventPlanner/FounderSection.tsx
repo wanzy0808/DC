@@ -14,7 +14,7 @@ export default function FounderSection() {
           <div className="relative h-[360px] overflow-hidden rounded-[25px] sm:h-[460px]">
             <Image
               src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"
-              alt="Founder DC Organizer"
+              alt="Founder Undara"
               fill
               className="object-cover"
             />
@@ -23,7 +23,7 @@ export default function FounderSection() {
         <div className="absolute -bottom-5 right-0 w-[min(18rem,calc(100%-1rem))] rounded-[24px] border border-primary/35 bg-[var(--card)] p-5 shadow-xl sm:-right-3">
           <div className="flex items-center gap-2 text-[var(--primary)]">
             <Sparkles className="h-4 w-4" />
-            <span className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold">
+            <span className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold">
               8+ Tahun Pengalaman
             </span>
           </div>
@@ -34,17 +34,17 @@ export default function FounderSection() {
       </div>
 
       <div className="space-y-6 lg:col-span-7">
-        <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
+        <p className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
           [ MEET THE FOUNDER ]
         </p>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-4xl md:text-5xl">
+        <h2 className="font-[family-name:var(--font-undara-heading)] text-4xl md:text-5xl">
           Christine
         </h2>
-        <p className="font-[family-name:var(--font-dc-mono)] text-sm uppercase tracking-wider text-[var(--primary)]">
+        <p className="font-[family-name:var(--font-undara-mono)] text-sm uppercase tracking-wider text-[var(--primary)]">
           Founder & Lead Event Planner
         </p>
-        <p className="font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
-          Berangkat dari pengalaman hospitality dan event execution, Christine membangun DC Organizer untuk membantu klien mengubah banyak detail menjadi alur acara yang jelas, terkoordinasi, dan tetap terasa personal.
+        <p className="font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
+          Berangkat dari pengalaman hospitality dan event execution, Christine membangun Undara untuk membantu klien mengubah banyak detail menjadi alur acara yang jelas, terkoordinasi, dan tetap terasa personal.
         </p>
 
         <div className="grid grid-cols-3 gap-4 border-t border-[var(--border)] pt-5">
@@ -54,7 +54,7 @@ export default function FounderSection() {
             ["8+", "Tahun"],
           ].map(([value, label]) => (
             <div key={label}>
-              <p className="font-[family-name:var(--font-dc-heading)] text-2xl text-[var(--primary)]">
+              <p className="font-[family-name:var(--font-undara-heading)] text-2xl text-[var(--primary)]">
                 {value}
               </p>
               <p className="mt-1 text-xs text-[var(--muted-foreground)]">{label}</p>
