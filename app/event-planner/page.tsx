@@ -34,7 +34,7 @@ export default function EventPlannerPage() {
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
-      <div data-dc-marketing-frame className="undara-marketing-frame">
+      <div data-undara-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
@@ -53,13 +53,13 @@ export default function EventPlannerPage() {
             <ScrollReveal scrollRoot={scrollRoot}>
               <header className="border-b border-primary/30 pb-9">
                 <div className="max-w-3xl">
-                  <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
-                    [ DC ORGANIZER / EVENT PLANNER ]
+                  <p className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
+                    [ UNDARA / EVENT PLANNER ]
                   </p>
-                  <h1 className="mt-3 font-[family-name:var(--font-dc-heading)] text-4xl leading-tight md:text-6xl">
+                  <h1 className="mt-3 font-[family-name:var(--font-undara-heading)] text-4xl leading-tight md:text-6xl">
                     Event Planner untuk momen yang ingin kamu jalani dengan lebih tenang.
                   </h1>
-                  <p className="mt-5 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
+                  <p className="mt-5 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
                     Dari wedding sampai anniversary dan baby shower, kami membantu merapikan konsep, vendor, rundown, tim, dan detail operasional supaya acara tetap terasa personal tanpa membuatmu tenggelam di koordinasi.
                   </p>
                 </div>
@@ -74,14 +74,14 @@ export default function EventPlannerPage() {
               <section className="border-y border-primary/30 py-10 md:py-12">
                 <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-end">
                   <div className="max-w-3xl">
-                    <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">
+                    <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-[var(--primary)]">
                       [ DIGITAL WORKFLOW ]
                     </p>
-                    <h2 className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl md:text-4xl">
+                    <h2 className="mt-3 font-[family-name:var(--font-undara-heading)] text-3xl md:text-4xl">
                       Planning yang nyambung dengan undangan dan data tamu.
                     </h2>
-                    <p className="mt-4 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)]">
-                      Bila dibutuhkan, setiap acara dapat memakai Undangan Digital DC Organizer untuk publikasi, RSVP, dan manajemen tamu. WA Blast tersedia sebagai add-on terpisah sesuai kuota acara.
+                    <p className="mt-4 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)]">
+                      Bila dibutuhkan, setiap acara dapat memakai Undangan Digital Undara untuk publikasi, RSVP, dan manajemen tamu. WA Blast tersedia sebagai add-on terpisah sesuai kuota acara.
                     </p>
                   </div>
                   <Button asChild size="lg" className="w-fit">
@@ -97,16 +97,16 @@ export default function EventPlannerPage() {
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="space-y-10" aria-labelledby="event-planner-packages">
                 <div className="mx-auto max-w-3xl text-center">
-                  <p className="font-[family-name:var(--font-dc-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
+                  <p className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
                     [ EVENT PLANNER PACKAGES ]
                   </p>
                   <h2
                     id="event-planner-packages"
-                    className="mt-3 font-[family-name:var(--font-dc-heading)] text-3xl md:text-5xl"
+                    className="mt-3 font-[family-name:var(--font-undara-heading)] text-3xl md:text-5xl"
                   >
                     Empat tipe layanan, dibahas sesuai kebutuhan acara.
                   </h2>
-                  <p className="mt-4 font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
+                  <p className="mt-4 font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
                     Kami tidak menampilkan harga tetap karena venue, jumlah tamu, kebutuhan tim, vendor, dan scope tiap acara berbeda. Mulai dari konsultasi, lalu kami susun kebutuhan yang paling relevan.
                   </p>
                 </div>
@@ -119,17 +119,17 @@ export default function EventPlannerPage() {
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div>
-                          <p className="font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.18em] text-[var(--primary)]">
+                          <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-[var(--primary)]">
                             Paket
                           </p>
-                          <h3 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
+                          <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl">
                             {item.name}
                           </h3>
                         </div>
                         <MessageCircle className="mt-1 h-5 w-5 shrink-0 text-[var(--primary)]" />
                       </div>
 
-                      <p className="mt-4 font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)]">
+                      <p className="mt-4 font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)]">
                         {item.description}
                       </p>
 
@@ -137,7 +137,7 @@ export default function EventPlannerPage() {
                         {item.features.map((feature) => (
                           <li
                             key={feature}
-                            className="flex gap-3 font-[family-name:var(--font-dc-body)] text-sm leading-6"
+                            className="flex gap-3 font-[family-name:var(--font-undara-body)] text-sm leading-6"
                           >
                             <Check className="mt-1 h-4 w-4 shrink-0 text-[var(--primary)]" />
                             <span>{feature}</span>
@@ -159,7 +159,7 @@ export default function EventPlannerPage() {
                   ))}
                 </div>
 
-                <p className="text-center font-[family-name:var(--font-dc-mono)] text-[10px] text-[var(--muted-foreground)]">
+                <p className="text-center font-[family-name:var(--font-undara-mono)] text-[10px] text-[var(--muted-foreground)]">
                   WhatsApp konsultasi: +62 821-2478-6516
                 </p>
               </section>
@@ -169,7 +169,7 @@ export default function EventPlannerPage() {
               <ReviewsGrid
                 eyebrow="Client Stories"
                 title="Saat host bisa benar-benar hadir di acaranya sendiri"
-                description="Cerita dari klien yang mempercayakan koordinasi dan planning kepada DC Organizer."
+                description="Cerita dari klien yang mempercayakan koordinasi dan planning kepada Undara."
                 reviews={plannerReviews}
                 framed
               />
@@ -186,13 +186,13 @@ export default function EventPlannerPage() {
 
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="rounded-[32px] border border-primary/35 bg-[var(--card)]/70 p-8 md:rounded-[40px] md:p-12">
-                <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.2em] text-[var(--primary)]">
+                <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[0.2em] text-[var(--primary)]">
                   [ READY WHEN YOU ARE ]
                 </p>
-                <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-dc-heading)] text-3xl md:text-4xl">
+                <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-undara-heading)] text-3xl md:text-4xl">
                   Ceritakan dulu acaranya. Scope bisa kita susun setelahnya.
                 </h2>
-                <p className="mt-4 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-[var(--muted-foreground)]">
+                <p className="mt-4 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)]">
                   Mulai dari tanggal, venue, jumlah tamu, dan jenis acara yang kamu bayangkan. Tim kami akan membantu memetakan prioritas sebelum masuk ke penawaran.
                 </p>
                 <Button asChild size="lg" className="mt-7">

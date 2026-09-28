@@ -14,16 +14,16 @@
   --color-undara-brown-hover: #5E3030;
   --color-undara-accent: #D6B38C;
   --color-undara-accent-light: #E8D7C3;
-  --color-dc-pink: #703B3B;
-  --color-dc-pink-light: #D6B38C;
-  --color-dc-maroon: #703B3B;
-  --color-dc-rose-wood: #703B3B;
-  --color-dc-rose-wood-dark: #5E3030;
-  --color-dc-gold: #D6B38C;
-  --color-dc-gold-bright: #E8D7C3;
-  --color-dc-dark: #703B3B;
-  --color-dc-card: #5E3131;
-  --color-dc-cream: #FFFFFF;
+  --color-undara-pink: #703B3B;
+  --color-undara-pink-light: #D6B38C;
+  --color-undara-maroon: #703B3B;
+  --color-undara-rose-wood: #703B3B;
+  --color-undara-rose-wood-dark: #5E3030;
+  --color-undara-gold: #D6B38C;
+  --color-undara-gold-bright: #E8D7C3;
+  --color-undara-dark: #703B3B;
+  --color-undara-card: #5E3131;
+  --color-undara-cream: #FFFFFF;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -68,19 +68,12 @@
   --font-undara-serif: var(--font-undara-display), Georgia, serif;
   --font-undara-heading: var(--font-undara-display), Georgia, serif;
   --font-undara-mono: var(--font-undara-technical), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --font-dc-sans: var(--font-undara-sans);
-  --font-dc-serif: var(--font-undara-serif);
-  --font-dc-heading: var(--font-undara-heading);
-  --font-dc-mono: var(--font-undara-mono);
   /* Legacy application font aliases: keep old surfaces on the Undara type system during migration. */
   --font-cinzel: var(--font-undara-heading);
   --font-fauna: var(--font-undara-sans);
   --undara-control-radius: 16px;
   --undara-control-menu-radius: 18px;
   --undara-control-outline: var(--primary);
-  --dc-control-radius: 16px;
-  --dc-control-menu-radius: 18px;
-  --dc-control-outline: var(--undara-control-outline);
   --background: #EDE3D8;
   --foreground: #3A2020;
   --card: #F7F1EB;
@@ -155,12 +148,12 @@
      Native select popup options are browser/OS rendered; custom dropdowns use controlStyles. */
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]),
   select {
-    border-radius: var(--dc-control-radius);
-    border-color: color-mix(in srgb, var(--dc-control-outline) 80%, transparent);
+    border-radius: var(--undara-control-radius);
+    border-color: color-mix(in srgb, var(--undara-control-outline) 80%, transparent);
   }
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="button"]):not([type="submit"]):not([type="reset"]):focus-visible,
   select:focus-visible {
-    outline-color: var(--dc-control-outline);
+    outline-color: var(--undara-control-outline);
   }
   html, body { font-family: var(--font-undara-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; }
   button, input, textarea, select, option { font-family: inherit; }
@@ -169,12 +162,12 @@
 }
 
 @layer utilities {
-  .font-dc-heading { font-family: var(--font-dc-heading); }
-  .font-dc-body { font-family: var(--font-dc-sans); }
-  .font-dc-mono { font-family: var(--font-dc-mono); }
+  .font-undara-heading { font-family: var(--font-undara-heading); }
+  .font-undara-body { font-family: var(--font-undara-sans); }
+  .font-undara-mono { font-family: var(--font-undara-mono); }
 }
 
-.text-dc-maroon { color: var(--primary); }
+.text-undara-maroon { color: var(--primary); }
 
 /* One visual contract for every persistent marketing control: door widget, sound, volume, and social. */
 .undara-control-surface {
@@ -229,7 +222,7 @@
   width: 2rem;
   flex: 0 0 auto;
   text-align: right;
-  font-family: var(--font-dc-mono);
+  font-family: var(--font-undara-mono);
   font-size: 0.625rem;
   line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -351,179 +344,179 @@
   mask-size: contain;
 }
 
-.dc-navbar { background: transparent; }
+.undara-navbar { background: transparent; }
 
 /* Single source of truth for public navbar button appearance (both themes).
    button-variants.ts supplies shared button behavior and dimensions; do not
    duplicate these appearance rules in ThemeToggle/LanguageToggle/Navbar. */
-.dc-navbar--landing { background: transparent; }
-.dc-navbar .dc-theme-toggle,
-.dc-navbar .dc-language-toggle button,
-.dc-navbar .dc-burger-toggle {
+.undara-navbar--landing { background: transparent; }
+.undara-navbar .undara-theme-toggle,
+.undara-navbar .undara-language-toggle button,
+.undara-navbar .undara-burger-toggle {
   background: transparent !important;
   border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
   color: var(--primary) !important;
   box-shadow: none !important;
 }
-.dc-navbar .dc-theme-toggle,
-.dc-navbar .dc-burger-toggle { border-radius: 16px !important; }
-.dc-navbar .dc-language-toggle button { border-radius: 10px !important; }
-.dc-navbar .dc-theme-toggle:hover,
-.dc-navbar .dc-language-toggle button:hover,
-.dc-navbar .dc-burger-toggle:hover {
+.undara-navbar .undara-theme-toggle,
+.undara-navbar .undara-burger-toggle { border-radius: 16px !important; }
+.undara-navbar .undara-language-toggle button { border-radius: 10px !important; }
+.undara-navbar .undara-theme-toggle:hover,
+.undara-navbar .undara-language-toggle button:hover,
+.undara-navbar .undara-burger-toggle:hover {
   background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
   border-color: var(--primary) !important;
   color: var(--primary) !important;
 }
-.dc-navbar .dc-language-toggle button[aria-pressed="true"] {
+.undara-navbar .undara-language-toggle button[aria-pressed="true"] {
   background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
   color: var(--primary) !important;
 }
 @keyframes publicTextReveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes dcSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
-@keyframes dcPageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.dc-snappy-word { animation: dcSnappyTextStretch 560ms cubic-bezier(0.22, 1.4, 0.36, 1) both; }
+@keyframes undaraSnappyTextStretch { 0% { opacity: 0; transform: translateY(0.35em) scaleX(0.72); transform-origin: left center; } 58% { opacity: 1; transform: translateY(-0.04em) scaleX(1.07); } 78% { transform: translateY(0) scaleX(0.97); } 100% { opacity: 1; transform: translateY(0) scaleX(1); } }
+@keyframes undaraPageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.undara-snappy-word { animation: undaraSnappyTextStretch 560ms cubic-bezier(0.22, 1.4, 0.36, 1) both; }
 .public-content h1, .public-content h2 { animation: publicTextReveal 700ms cubic-bezier(0.22, 1, 0.36, 1) both; }
-aside nav, aside nav button, aside nav a { font-family: var(--font-dc-sans); }
-aside nav > p { font-family: var(--font-dc-heading); }
-[data-slot="dialog-content"] h1, [data-slot="dialog-content"] h2, [data-slot="dialog-content"] h3 { font-family: var(--font-dc-heading); }
-[data-slot="dialog-content"] form { font-family: var(--font-dc-sans); }
+aside nav, aside nav button, aside nav a { font-family: var(--font-undara-sans); }
+aside nav > p { font-family: var(--font-undara-heading); }
+[data-slot="dialog-content"] h1, [data-slot="dialog-content"] h2, [data-slot="dialog-content"] h3 { font-family: var(--font-undara-heading); }
+[data-slot="dialog-content"] form { font-family: var(--font-undara-sans); }
 
 /* --------------------------------------------------------------------------
    Undara dashboard system
    Single source of truth for dashboard shell, surfaces, forms and tables.
    -------------------------------------------------------------------------- */
-.dc-dashboard {
-  --dc-dashboard-canvas: #F7F1ED;
-  --dc-dashboard-card: #ffffff;
-  --dc-dashboard-border: #D9C3B6;
-  --dc-dashboard-rail: #703B3B;
-  --dc-dashboard-rail-hover: #5E3030;
-  --dc-dashboard-rail-active: #492525;
-  --dc-dashboard-header-bg: #FBF7F4;
-  background: var(--dc-dashboard-canvas);
+.undara-dashboard {
+  --undara-dashboard-canvas: #F7F1ED;
+  --undara-dashboard-card: #ffffff;
+  --undara-dashboard-border: #D9C3B6;
+  --undara-dashboard-rail: #703B3B;
+  --undara-dashboard-rail-hover: #5E3030;
+  --undara-dashboard-rail-active: #492525;
+  --undara-dashboard-header-bg: #FBF7F4;
+  background: var(--undara-dashboard-canvas);
   color: var(--foreground);
 }
-.dark .dc-dashboard {
-  --dc-dashboard-canvas: #703B3B;
-  --dc-dashboard-card: #5E3131;
-  --dc-dashboard-border: #9E6B6B;
-  --dc-dashboard-rail: #703B3B;
-  --dc-dashboard-rail-hover: #5E3030;
-  --dc-dashboard-rail-active: #D6B38C;
-  --dc-dashboard-header-bg: #653737;
+.dark .undara-dashboard {
+  --undara-dashboard-canvas: #703B3B;
+  --undara-dashboard-card: #5E3131;
+  --undara-dashboard-border: #9E6B6B;
+  --undara-dashboard-rail: #703B3B;
+  --undara-dashboard-rail-hover: #5E3030;
+  --undara-dashboard-rail-active: #D6B38C;
+  --undara-dashboard-header-bg: #653737;
 }
 
 /* Display-only Title Case for dashboard names and headings. Never mutate customer data,
    sentence descriptions, database identifiers, or protected public invitation artwork. */
-.dc-dashboard :is(h1, h2, h3, h4, h5, h6),
-.dc-dashboard .dc-sidebar-link > span,
-.dc-dashboard :is(.dc-ui-name, .dc-ui-title, .dc-ui-label) {
+.undara-dashboard :is(h1, h2, h3, h4, h5, h6),
+.undara-dashboard .undara-sidebar-link > span,
+.undara-dashboard :is(.undara-ui-name, .undara-ui-title, .undara-ui-label) {
   text-transform: capitalize;
 }
 
 /* Native dropdown chrome is not a heading: extend Title Case to the selected
    value and options without touching typed inputs, messages or stored data.
    Explicitly format dynamic option text in JSX too (OS menus can ignore CSS). */
-:is(.dc-dashboard, .dc-usher) select,
-:is(.dc-dashboard, .dc-usher) select option {
+:is(.undara-dashboard, .undara-usher) select,
+:is(.undara-dashboard, .undara-usher) select option {
   text-transform: capitalize;
 }
 
 
 /* Branded, continuous dashboard chrome. Landing and public navbar are untouched. */
-.dc-dashboard .dc-dashboard-sidebar {
-  background: var(--dc-dashboard-rail);
+.undara-dashboard .undara-dashboard-sidebar {
+  background: var(--undara-dashboard-rail);
   color: #fff;
   border-color: transparent;
   box-shadow: inset -1px 0 rgb(255 255 255 / 12%);
 }
-.dc-dashboard .dc-dashboard-header {
+.undara-dashboard .undara-dashboard-header {
   height: 72px !important;
-  background: var(--dc-dashboard-header-bg) !important;
+  background: var(--undara-dashboard-header-bg) !important;
   color: var(--foreground) !important;
-  border-color: var(--dc-dashboard-border) !important;
+  border-color: var(--undara-dashboard-border) !important;
   box-shadow: 0 1px 16px rgb(112 59 59 / 4%) !important;
 }
-.dc-dashboard .dc-dashboard-brand {
-  background: var(--dc-dashboard-rail);
+.undara-dashboard .undara-dashboard-brand {
+  background: var(--undara-dashboard-rail);
   border-color: rgb(255 255 255 / 14%) !important;
 }
-.dc-dashboard .dc-dashboard-brand .text-primary { color: #fff !important; }
-.dc-dashboard .dc-dashboard-header-title {
+.undara-dashboard .undara-dashboard-brand .text-primary { color: #fff !important; }
+.undara-dashboard .undara-dashboard-header-title {
   color: var(--primary);
-  font-family: var(--font-dc-heading);
+  font-family: var(--font-undara-heading);
   font-size: 18px;
   font-weight: 600;
 }
-.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
-.dc-dashboard .dc-dashboard-header .dc-language-toggle button,
-.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+.undara-dashboard .undara-dashboard-header .undara-theme-toggle,
+.undara-dashboard .undara-dashboard-header .undara-language-toggle button,
+.undara-dashboard .undara-dashboard-header .undara-dashboard-account-button {
   background: transparent !important;
   border: 1px solid color-mix(in srgb, var(--primary) 48%, transparent) !important;
   color: var(--primary) !important;
   box-shadow: none !important;
 }
-.dc-dashboard .dc-dashboard-header .dc-theme-toggle,
-.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button { border-radius: 16px !important; }
-.dc-dashboard .dc-dashboard-header .dc-language-toggle button { border-radius: 10px !important; }
-.dc-dashboard .dc-dashboard-header .dc-theme-toggle:hover,
-.dc-dashboard .dc-dashboard-header .dc-language-toggle button:hover,
-.dc-dashboard .dc-dashboard-header .dc-dashboard-account-button:hover {
+.undara-dashboard .undara-dashboard-header .undara-theme-toggle,
+.undara-dashboard .undara-dashboard-header .undara-dashboard-account-button { border-radius: 16px !important; }
+.undara-dashboard .undara-dashboard-header .undara-language-toggle button { border-radius: 10px !important; }
+.undara-dashboard .undara-dashboard-header .undara-theme-toggle:hover,
+.undara-dashboard .undara-dashboard-header .undara-language-toggle button:hover,
+.undara-dashboard .undara-dashboard-header .undara-dashboard-account-button:hover {
   background: color-mix(in srgb, var(--primary) 10%, transparent) !important;
   border-color: var(--primary) !important;
   color: var(--primary) !important;
 }
-.dc-dashboard .dc-dashboard-header .dc-language-toggle button[aria-pressed="true"] {
+.undara-dashboard .undara-dashboard-header .undara-language-toggle button[aria-pressed="true"] {
   background: color-mix(in srgb, var(--primary) 16%, transparent) !important;
   border-color: var(--primary) !important;
   color: var(--primary) !important;
 }
-.dark .dc-dashboard .dc-dashboard-header .dc-theme-toggle,
-.dark .dc-dashboard .dc-dashboard-header .dc-language-toggle button,
-.dark .dc-dashboard .dc-dashboard-header .dc-dashboard-account-button {
+.dark .undara-dashboard .undara-dashboard-header .undara-theme-toggle,
+.dark .undara-dashboard .undara-dashboard-header .undara-language-toggle button,
+.dark .undara-dashboard .undara-dashboard-header .undara-dashboard-account-button {
   color: #fff !important;
 }
 
 /* Account dropdown items mirror the same Dark Mode rule. */
-.dark .dc-dashboard .dc-dashboard-account-menu-item {
+.dark .undara-dashboard .undara-dashboard-account-menu-item {
   border-color: var(--border) !important;
   background: #703B3B !important;
   color: #ffffff !important;
 }
-.dark .dc-dashboard .dc-dashboard-account-menu-item:hover {
+.dark .undara-dashboard .undara-dashboard-account-menu-item:hover {
   border-color: var(--primary) !important;
   background: var(--primary) !important;
   color: var(--primary-foreground) !important;
 }
-.dc-dashboard main {
+.undara-dashboard main {
   min-width: 0;
   min-height: calc(100vh - 72px);
-  background: var(--dc-dashboard-canvas);
+  background: var(--undara-dashboard-canvas);
   color: var(--foreground);
   font-size: 0.9375rem;
   line-height: 1.6;
 }
-.dc-dashboard main > * { min-width: 0; animation: dcPageIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
+.undara-dashboard main > * { min-width: 0; animation: undaraPageIn 420ms cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 /* Dashboard has generous workspace; avoid tiny 8–12px UI copy except where data density truly requires it. */
-.dc-dashboard main .text-xs { font-size: 0.875rem !important; line-height: 1.35rem !important; }
-.dc-dashboard main .text-sm { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
-.dc-dashboard main [class*="text-[8px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
-.dc-dashboard main [class*="text-[9px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
-.dc-dashboard main [class*="text-[10px]"] { font-size: 0.75rem !important; line-height: 1.1rem !important; }
-.dc-dashboard main [class*="text-[11px]"] { font-size: 0.8125rem !important; line-height: 1.2rem !important; }
-.dc-dashboard main input,
-.dc-dashboard main textarea,
-.dc-dashboard main select { font-size: 0.9rem !important; }
+.undara-dashboard main .text-xs { font-size: 0.875rem !important; line-height: 1.35rem !important; }
+.undara-dashboard main .text-sm { font-size: 0.9375rem !important; line-height: 1.5rem !important; }
+.undara-dashboard main [class*="text-[8px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.undara-dashboard main [class*="text-[9px]"] { font-size: 0.6875rem !important; line-height: 1rem !important; }
+.undara-dashboard main [class*="text-[10px]"] { font-size: 0.75rem !important; line-height: 1.1rem !important; }
+.undara-dashboard main [class*="text-[11px]"] { font-size: 0.8125rem !important; line-height: 1.2rem !important; }
+.undara-dashboard main input,
+.undara-dashboard main textarea,
+.undara-dashboard main select { font-size: 0.9rem !important; }
 
 /* Dashboard frame titles share one Rose + Title Case treatment.
    This targets section/frame headings only; row/card names remain neutral unless
    their component explicitly opts into the title treatment. */
-.dc-dashboard main .dc-dashboard-panel h2,
-.dc-dashboard main .dc-dashboard-surface > h2,
-.dc-dashboard main section > h2,
-.dc-dashboard main section > div:first-child > h2 {
+.undara-dashboard main .undara-dashboard-panel h2,
+.undara-dashboard main .undara-dashboard-surface > h2,
+.undara-dashboard main section > h2,
+.undara-dashboard main section > div:first-child > h2 {
   color: var(--primary) !important;
   text-transform: capitalize;
 }
@@ -532,122 +525,122 @@ aside nav > p { font-family: var(--font-dc-heading); }
    Undara filled brand treatment. Local legacy white/outline/text-Rose
    overrides may not visually replace the primary button contract. Header/nav
    controls remain outside <main> and retain their approved special styling. */
-:is(.dc-dashboard, .dc-usher) main .dc-app-button {
+:is(.undara-dashboard, .undara-usher) main .undara-app-button {
   border-color: color-mix(in srgb, var(--primary) 80%, transparent) !important;
   background: #703B3B !important;
   color: #ffffff !important;
   box-shadow: 0 3px 8px rgb(17 17 17 / 16%), inset 0 1px 0 rgb(255 255 255 / 18%) !important;
 }
-:is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
+:is(.undara-dashboard, .undara-usher) main .undara-app-button:hover:not(:disabled) {
   border-color: #5E3030 !important;
   background: #5E3030 !important;
   color: #ffffff !important;
 }
-:is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
+:is(.undara-dashboard, .undara-usher) main .undara-app-button:disabled {
   background: #703B3B !important;
   color: #ffffff !important;
 }
-.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button {
+.dark :is(.undara-dashboard, .undara-usher) main .undara-app-button {
   border-color: #D6B38C !important;
   background: #D6B38C !important;
   color: #3A2020 !important;
 }
-.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:hover:not(:disabled) {
+.dark :is(.undara-dashboard, .undara-usher) main .undara-app-button:hover:not(:disabled) {
   border-color: #E8D7C3 !important;
   background: #E8D7C3 !important;
   color: #3A2020 !important;
 }
-.dark :is(.dc-dashboard, .dc-usher) main .dc-app-button:disabled {
+.dark :is(.undara-dashboard, .undara-usher) main .undara-app-button:disabled {
   background: #D6B38C !important;
   color: #3A2020 !important;
 }
 
 /* Shared workspace stays wide but never stretches cards into blank tables. */
-.dc-dashboard-page {
+.undara-dashboard-page {
   width: calc(100% - 2rem);
   max-width: 100%;
   margin-inline: auto;
 }
 @media (min-width: 1024px) {
-  .dc-dashboard-page { width: min(80vw, calc(100% - 3rem)); }
+  .undara-dashboard-page { width: min(80vw, calc(100% - 3rem)); }
 }
-.dc-dashboard-surface {
-  border-color: var(--dc-dashboard-border) !important;
-  background: var(--dc-dashboard-card) !important;
+.undara-dashboard-surface {
+  border-color: var(--undara-dashboard-border) !important;
+  background: var(--undara-dashboard-card) !important;
   box-shadow: 0 12px 38px rgb(93 42 57 / 6%);
 }
-.dc-dashboard-metric {
-  border-color: var(--dc-dashboard-border) !important;
-  background: var(--dc-dashboard-card) !important;
+.undara-dashboard-metric {
+  border-color: var(--undara-dashboard-border) !important;
+  background: var(--undara-dashboard-card) !important;
   box-shadow: 0 9px 30px rgb(93 42 57 / 5%);
 }
 
 /* Keep shared card outlines Rose-tinted instead of the generic section border. */
-.dc-dashboard main .dc-dashboard-surface { border-color: var(--dc-dashboard-border) !important; }
-.dc-dashboard main .dc-dashboard-metric { border-color: var(--dc-dashboard-border) !important; }
+.undara-dashboard main .undara-dashboard-surface { border-color: var(--undara-dashboard-border) !important; }
+.undara-dashboard main .undara-dashboard-metric { border-color: var(--undara-dashboard-border) !important; }
 
-.dc-dashboard main section { border-color: var(--border) !important; }
-.dc-dashboard main section[class*="bg-[#f3ede6]"], .dc-dashboard main section[class*="bg-[#FAF7F2]"], .dc-dashboard main section[class*="bg-[#fffaf6]"], .dc-dashboard main section[class*="bg-[#121116]"] { background: var(--background) !important; }
+.undara-dashboard main section { border-color: var(--border) !important; }
+.undara-dashboard main section[class*="bg-[#f3ede6]"], .undara-dashboard main section[class*="bg-[#FAF7F2]"], .undara-dashboard main section[class*="bg-[#fffaf6]"], .undara-dashboard main section[class*="bg-[#121116]"] { background: var(--background) !important; }
 
 /* Prefer spacing and card surfaces over long horizontal dividers inside dashboard workspaces. */
-.dc-dashboard main > section { border-bottom-width: 0 !important; }
-.dc-dashboard main section.border-y { border-top-width: 0 !important; border-bottom-width: 0 !important; }
-.dc-dashboard main section.border-t { border-top-width: 0 !important; }
-.dc-dashboard main section.border-b { border-bottom-width: 0 !important; }
+.undara-dashboard main > section { border-bottom-width: 0 !important; }
+.undara-dashboard main section.border-y { border-top-width: 0 !important; border-bottom-width: 0 !important; }
+.undara-dashboard main section.border-t { border-top-width: 0 !important; }
+.undara-dashboard main section.border-b { border-bottom-width: 0 !important; }
 
 /* Form controls use a restrained neutral fill so each editable field is easy to scan without turning the dashboard pink. */
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]),
-:is(.dc-dashboard, .dc-usher) textarea,
-:is(.dc-dashboard, .dc-usher) select {
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]),
+:is(.undara-dashboard, .undara-usher) textarea,
+:is(.undara-dashboard, .undara-usher) select {
   min-height: 44px;
-  border-color: color-mix(in srgb, var(--dc-control-outline) 80%, transparent) !important;
+  border-color: color-mix(in srgb, var(--undara-control-outline) 80%, transparent) !important;
   background: color-mix(in srgb, var(--foreground) 3.5%, var(--background)) !important;
   color: var(--foreground) !important;
-  border-radius: var(--dc-control-radius) !important;
-  font-family: var(--font-dc-sans);
+  border-radius: var(--undara-control-radius) !important;
+  font-family: var(--font-undara-sans);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent);
   transition: background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
-:is(.dc-dashboard, .dc-usher) textarea { padding-top: 0.7rem; padding-bottom: 0.7rem; border-radius: 10px !important; }
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])::placeholder,
-:is(.dc-dashboard, .dc-usher) textarea::placeholder { color: color-mix(in srgb, var(--foreground) 44%, transparent); }
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):hover:not(:disabled):not([readonly]),
-:is(.dc-dashboard, .dc-usher) textarea:hover:not(:disabled):not([readonly]),
-:is(.dc-dashboard, .dc-usher) select:hover:not(:disabled) {
-  border-color: var(--dc-control-outline) !important;
+:is(.undara-dashboard, .undara-usher) textarea { padding-top: 0.7rem; padding-bottom: 0.7rem; border-radius: 10px !important; }
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])::placeholder,
+:is(.undara-dashboard, .undara-usher) textarea::placeholder { color: color-mix(in srgb, var(--foreground) 44%, transparent); }
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):hover:not(:disabled):not([readonly]),
+:is(.undara-dashboard, .undara-usher) textarea:hover:not(:disabled):not([readonly]),
+:is(.undara-dashboard, .undara-usher) select:hover:not(:disabled) {
+  border-color: var(--undara-control-outline) !important;
   background: color-mix(in srgb, var(--foreground) 4.5%, var(--background)) !important;
 }
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus,
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
-:is(.dc-dashboard, .dc-usher) textarea:focus,
-:is(.dc-dashboard, .dc-usher) textarea:focus-visible,
-:is(.dc-dashboard, .dc-usher) select:focus,
-:is(.dc-dashboard, .dc-usher) select:focus-visible {
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus,
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):focus-visible,
+:is(.undara-dashboard, .undara-usher) textarea:focus,
+:is(.undara-dashboard, .undara-usher) textarea:focus-visible,
+:is(.undara-dashboard, .undara-usher) select:focus,
+:is(.undara-dashboard, .undara-usher) select:focus-visible {
   border-color: var(--primary) !important;
   background: var(--background) !important;
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 12%, transparent) !important;
   outline: none !important;
 }
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])[readonly],
-:is(.dc-dashboard, .dc-usher) textarea[readonly],
-:is(.dc-dashboard, .dc-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):disabled,
-:is(.dc-dashboard, .dc-usher) textarea:disabled,
-:is(.dc-dashboard, .dc-usher) select:disabled {
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"])[readonly],
+:is(.undara-dashboard, .undara-usher) textarea[readonly],
+:is(.undara-dashboard, .undara-usher) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]):not([type="hidden"]):disabled,
+:is(.undara-dashboard, .undara-usher) textarea:disabled,
+:is(.undara-dashboard, .undara-usher) select:disabled {
   opacity: 1 !important;
   border-color: color-mix(in srgb, var(--foreground) 10%, var(--background)) !important;
   background: color-mix(in srgb, var(--foreground) 2%, var(--background)) !important;
   color: var(--muted-foreground) !important;
   box-shadow: none;
 }
-:is(.dc-dashboard, .dc-usher) main label > span:first-child {
+:is(.undara-dashboard, .undara-usher) main label > span:first-child {
   color: color-mix(in srgb, var(--foreground) 72%, transparent);
 }
 
 /* Data-form dropdowns: the browser-owned chevron can hug the right edge.
    Replace ONLY these form select arrows with a 15px Rose chevron inset 18px;
    nav menus and controls with their own external/compact arrows opt out. */
-:is(.dc-dashboard, .dc-usher) main select:not([data-dc-native-chevron]),
-:is(.dc-dashboard, .dc-usher) main select:not([data-dc-native-chevron]):is(:hover, :focus, :focus-visible, :disabled) {
+:is(.undara-dashboard, .undara-usher) main select:not([data-undara-native-chevron]),
+:is(.undara-dashboard, .undara-usher) main select:not([data-undara-native-chevron]):is(:hover, :focus, :focus-visible, :disabled) {
   -webkit-appearance: none;
   appearance: none;
   padding-right: 3rem !important;
@@ -661,56 +654,56 @@ aside nav > p { font-family: var(--font-dc-heading); }
    Do not force white backgrounds on left-aligned grid actions. */
 
 /* Data tables use separated rounded rows so dense information is easier to scan. */
-:is(.dc-dashboard, .dc-usher) main table {
+:is(.undara-dashboard, .undara-usher) main table {
   width: 100%;
   border-collapse: separate !important;
   border-spacing: 0 0.5rem !important;
   overflow: visible;
   border-radius: 0;
 }
-:is(.dc-dashboard, .dc-usher) main table thead { background: transparent !important; }
-:is(.dc-dashboard, .dc-usher) main table thead th {
+:is(.undara-dashboard, .undara-usher) main table thead { background: transparent !important; }
+:is(.undara-dashboard, .undara-usher) main table thead th {
   padding-top: 0.55rem !important;
   padding-bottom: 0.55rem !important;
 }
-:is(.dc-dashboard, .dc-usher) main table tbody tr {
+:is(.undara-dashboard, .undara-usher) main table tbody tr {
   border: 0 !important;
   transition: transform 160ms ease;
 }
-:is(.dc-dashboard, .dc-usher) main table tbody td {
+:is(.undara-dashboard, .undara-usher) main table tbody td {
   border-top: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-bottom: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   background: color-mix(in srgb, var(--foreground) 2.5%, var(--background));
   transition: background-color 160ms ease, border-color 160ms ease;
 }
-:is(.dc-dashboard, .dc-usher) main table tbody td:first-child {
+:is(.undara-dashboard, .undara-usher) main table tbody td:first-child {
   border-left: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-radius: 10px 0 0 10px;
 }
-:is(.dc-dashboard, .dc-usher) main table tbody td:last-child {
+:is(.undara-dashboard, .undara-usher) main table tbody td:last-child {
   border-right: 1px solid color-mix(in srgb, var(--primary) 12%, var(--border));
   border-radius: 0 10px 10px 0;
 }
-:is(.dc-dashboard, .dc-usher) main table tbody tr:hover td {
+:is(.undara-dashboard, .undara-usher) main table tbody tr:hover td {
   border-color: color-mix(in srgb, var(--primary) 28%, var(--border));
   background: color-mix(in srgb, var(--primary) 4%, var(--background));
 }
-:is(.dc-dashboard, .dc-usher) main table tbody tr:hover { background: transparent !important; }
-:is(.dc-dashboard, .dc-usher) main table th { font-family: var(--font-dc-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
-:is(.dc-dashboard, .dc-usher) main table tbody td { font-size: 0.875rem; line-height: 1.35rem; }
-.dc-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
-.dc-dashboard main [class*="bg-[#7A1C25]/10"], .dc-dashboard main [class*="bg-[#E8A5AE]/10"] { background: color-mix(in srgb, var(--primary) 9%, transparent) !important; }
-.dc-dashboard [role="dialog"], .dc-dashboard > div > div[class*="fixed"] > div { border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important; }
-.dc-dashboard main button { transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease; }
-.dc-invitation-studio > div:first-child { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
-.dc-invitation-studio .studio-tool-rail { background: var(--background); color: var(--foreground); border-color: var(--border); }
-.dc-invitation-studio .studio-control-panel { background: var(--card); }
+:is(.undara-dashboard, .undara-usher) main table tbody tr:hover { background: transparent !important; }
+:is(.undara-dashboard, .undara-usher) main table th { font-family: var(--font-undara-mono); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.75rem; }
+:is(.undara-dashboard, .undara-usher) main table tbody td { font-size: 0.875rem; line-height: 1.35rem; }
+.undara-dashboard main [class*="font-[family-name:var(--font-dm-mono)]"] { letter-spacing: 0.08em; }
+.undara-dashboard main [class*="bg-[#7A1C25]/10"], .undara-dashboard main [class*="bg-[#E8A5AE]/10"] { background: color-mix(in srgb, var(--primary) 9%, transparent) !important; }
+.undara-dashboard [role="dialog"], .undara-dashboard > div > div[class*="fixed"] > div { border-color: color-mix(in srgb, var(--primary) 18%, var(--border)) !important; }
+.undara-dashboard main button { transition: transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, color 180ms ease; }
+.undara-invitation-studio > div:first-child { background: var(--background) !important; color: var(--foreground); border-color: var(--border) !important; }
+.undara-invitation-studio .studio-tool-rail { background: var(--background); color: var(--foreground); border-color: var(--border); }
+.undara-invitation-studio .studio-control-panel { background: var(--card); }
 
 
-@media (prefers-reduced-motion: reduce) { .dc-dashboard main > * { animation: none; } .dc-dashboard button, .dc-dashboard a, .dc-dashboard main table tbody tr { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .undara-dashboard main > * { animation: none; } .undara-dashboard button, .undara-dashboard a, .undara-dashboard main table tbody tr { transition: none; } }
 /* Native selection controls retain their compact geometry and Rose state. */
-.dc-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
-.dc-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
+.undara-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
+.undara-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 
 /* While Rose light covers a route change, dissolve the DECORATIVE 90vw
    frame chrome underneath it. Otherwise its translucent background, border,
@@ -718,11 +711,11 @@ aside nav > p { font-family: var(--font-dc-heading); }
    "body" even when the fullscreen veil itself has no square edges.
    Keep layout, contents, overflow and all interactions unchanged. These
    properties return smoothly once PortalTransition removes its state. */
-[data-dc-marketing-frame] {
+[data-undara-marketing-frame] {
   transition: background-color 420ms ease, border-color 420ms ease,
     box-shadow 420ms ease, backdrop-filter 420ms ease;
 }
-html[data-dc-marketing-transition] [data-dc-marketing-frame] {
+html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   background-color: transparent !important;
   border-color: transparent !important;
   box-shadow: none !important;
@@ -733,11 +726,11 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
    Do not scale the gradient layer or clip it into a separate opaque shape:
    either can reveal rectangular compositor seams during the 3D camera zoom.
    Destination pieces still assemble as this single surface fades away. */
-@keyframes dc-marketing-veil-in {
+@keyframes undara-marketing-veil-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-@keyframes dc-marketing-veil-out {
+@keyframes undara-marketing-veil-out {
   from { opacity: 1; }
   to { opacity: 0; }
 }
@@ -745,19 +738,19 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
 
 /* Brand Rose sidebar. Only selected items have outside corner flares: hovering
    an adjacent item cannot stack two colored corner wedges. */
-.dc-dashboard .dc-dashboard-sidebar-nav {
-  --dc-sidebar-corner: 10px;
+.undara-dashboard .undara-dashboard-sidebar-nav {
+  --undara-sidebar-corner: 10px;
   padding: 1.25rem 0 2rem 0.875rem;
-  background: var(--dc-dashboard-rail);
+  background: var(--undara-dashboard-rail);
 }
-.dc-dashboard .dc-sidebar-group { background: transparent; border: 0; }
-.dc-dashboard .dc-sidebar-subnav {
+.undara-dashboard .undara-sidebar-group { background: transparent; border: 0; }
+.undara-dashboard .undara-sidebar-subnav {
   margin: 0 0 0 0.625rem;
   padding-left: 0.5rem;
   border-left: 1px solid rgb(255 255 255 / 25%);
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link {
-  --dc-sidebar-fill: transparent;
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link {
+  --undara-sidebar-fill: transparent;
   position: relative;
   isolation: isolate;
   display: flex;
@@ -774,135 +767,135 @@ html[data-dc-marketing-transition] [data-dc-marketing-frame] {
   background: transparent !important;
   color: #fff !important;
   box-shadow: none !important;
-  font-family: var(--font-dc-sans);
+  font-family: var(--font-undara-sans);
   font-size: 15px;
   font-weight: 500;
   text-align: left;
   transform: none !important;
   transition: background-color 180ms ease, color 180ms ease !important;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-sublink {
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-sublink {
   min-height: 44px;
   font-size: 14px;
   padding-left: 0.75rem;
   gap: 0.75rem;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
-  background: var(--dc-dashboard-rail-hover) !important;
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
+  background: var(--undara-dashboard-rail-hover) !important;
   color: #fff !important;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]),
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]):hover {
-  --dc-sidebar-fill: var(--dc-dashboard-rail-active);
-  background: var(--dc-sidebar-fill) !important;
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"]),
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"]):hover {
+  --undara-sidebar-fill: var(--undara-dashboard-rail-active);
+  background: var(--undara-sidebar-fill) !important;
   color: #fff !important;
   font-weight: 600;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before,
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::before,
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::after {
   content: "";
   position: absolute;
   right: 0;
   z-index: -1;
-  width: var(--dc-sidebar-corner);
-  height: var(--dc-sidebar-corner);
+  width: var(--undara-sidebar-corner);
+  height: var(--undara-sidebar-corner);
   pointer-events: none;
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before {
-  top: calc(-1 * var(--dc-sidebar-corner));
-  background: radial-gradient(circle at 0 0, transparent calc(var(--dc-sidebar-corner) - 0.5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::before {
+  top: calc(-1 * var(--undara-sidebar-corner));
+  background: radial-gradient(circle at 0 0, transparent calc(var(--undara-sidebar-corner) - 0.5px), var(--undara-sidebar-fill) var(--undara-sidebar-corner));
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
-  bottom: calc(-1 * var(--dc-sidebar-corner));
-  background: radial-gradient(circle at 0 100%, transparent calc(var(--dc-sidebar-corner) - 0.5px), var(--dc-sidebar-fill) var(--dc-sidebar-corner));
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::after {
+  bottom: calc(-1 * var(--undara-sidebar-corner));
+  background: radial-gradient(circle at 0 100%, transparent calc(var(--undara-sidebar-corner) - 0.5px), var(--undara-sidebar-fill) var(--undara-sidebar-corner));
 }
-.dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link:focus-visible {
+.undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link:focus-visible {
   outline: 2px solid #fff !important;
   outline-offset: -3px;
 }
 /* A stronger overview hierarchy without adding decorative filler cards. */
-.dc-dashboard .dc-dashboard-overview-hero {
+.undara-dashboard .undara-dashboard-overview-hero {
   background: linear-gradient(115deg, #5A2C2C 0%, #7D4545 62%, #703B3B 100%);
   box-shadow: 0 16px 38px rgb(112 59 59 / 18%);
 }
-.dark .dc-dashboard .dc-dashboard-overview-hero {
+.dark .undara-dashboard .undara-dashboard-overview-hero {
   background: linear-gradient(115deg, #703B3B 0%, #5E3030 100%);
 }
-.dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
+.undara-dashboard .undara-dashboard-overview-hero .undara-dashboard-overview-cta {
   border-color: #fff !important;
   background: #fff !important;
   color: #5A2C2C !important;
   box-shadow: 0 4px 15px rgb(60 20 36 / 13%) !important;
 }
-.dc-dashboard .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+.undara-dashboard .undara-dashboard-overview-hero .undara-dashboard-overview-cta:hover {
   background: #F6EEE8 !important;
   color: #5A2C2C !important;
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
+.undara-dashboard .undara-dashboard-overview .undara-dashboard-metric--featured {
   background: #F1E2D6 !important;
   border-color: #D6B38C !important;
 }
-.dark .dc-dashboard .dc-dashboard-overview .dc-dashboard-metric--featured {
+.dark .undara-dashboard .undara-dashboard-overview .undara-dashboard-metric--featured {
   background: #5E3030 !important;
   border-color: #8B5C5C !important;
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric {
+.undara-dashboard .undara-dashboard-overview .undara-dashboard-metric {
   min-height: 110px;
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric .text-2xl {
+.undara-dashboard .undara-dashboard-overview .undara-dashboard-metric .text-2xl {
   font-size: 30px !important;
   line-height: 1.1 !important;
   color: var(--primary);
   font-variant-numeric: tabular-nums;
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-metric > span {
-  background: color-mix(in srgb, var(--primary) 14%, var(--dc-dashboard-card));
+.undara-dashboard .undara-dashboard-overview .undara-dashboard-metric > span {
+  background: color-mix(in srgb, var(--primary) 14%, var(--undara-dashboard-card));
 }
-.dc-dashboard .dc-dashboard-overview .dc-dashboard-event-list article:last-child { border-bottom: 0; }
+.undara-dashboard .undara-dashboard-overview .undara-dashboard-event-list article:last-child { border-bottom: 0; }
 @media (max-width: 639px) {
-  .dc-dashboard .dc-dashboard-overview-hero { padding: 1.5rem; }
-  .dc-dashboard .dc-dashboard-header-inner { gap: 0.5rem; }
-  .dc-dashboard .dc-dashboard-header-title { font-size: 14px; }
+  .undara-dashboard .undara-dashboard-overview-hero { padding: 1.5rem; }
+  .undara-dashboard .undara-dashboard-header-inner { gap: 0.5rem; }
+  .undara-dashboard .undara-dashboard-header-title { font-size: 14px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dc-dashboard .dc-dashboard-sidebar-nav .dc-sidebar-link { transition: none !important; }
+  .undara-dashboard .undara-dashboard-sidebar-nav .undara-sidebar-link { transition: none !important; }
 }
 
 
 /* Customer mainframe mirrors the approved marketing page's *scroll model*:
    fixed viewport shell, persistent brand/navigation, and one inner scrollport.
    Landing assets / public page chrome are deliberately not mounted here. */
-body:has(.dc-dashboard--redesign) {
+body:has(.undara-dashboard--redesign) {
   height: 100dvh;
   min-height: 100dvh;
   overflow: hidden;
 }
-.dc-dashboard.dc-dashboard--redesign {
-  --dc-dashboard-card-stripe: 0.3cm;
-  --dc-dashboard-canvas: #EDE3D8;
-  --dc-dashboard-card: #F7F1EB;
-  --dc-dashboard-border: rgb(112 59 59 / 36%);
-  --dc-dashboard-rail: #EDE3D8;
-  --dc-dashboard-rail-hover: rgb(112 59 59 / 9%);
-  --dc-dashboard-rail-active: #703B3B;
-  --dc-dashboard-header-bg: #EDE3D8;
+.undara-dashboard.undara-dashboard--redesign {
+  --undara-dashboard-card-stripe: 0.3cm;
+  --undara-dashboard-canvas: #EDE3D8;
+  --undara-dashboard-card: #F7F1EB;
+  --undara-dashboard-border: rgb(112 59 59 / 36%);
+  --undara-dashboard-rail: #EDE3D8;
+  --undara-dashboard-rail-hover: rgb(112 59 59 / 9%);
+  --undara-dashboard-rail-active: #703B3B;
+  --undara-dashboard-header-bg: #EDE3D8;
   height: 100dvh;
   min-height: 0;
   padding: 0;
   overflow: hidden;
   background: var(--primary);
 }
-.dark .dc-dashboard.dc-dashboard--redesign {
-  --dc-dashboard-canvas: #703B3B;
-  --dc-dashboard-card: #703B3B;
-  --dc-dashboard-border: rgb(255 249 245 / 26%);
-  --dc-dashboard-rail: #703B3B;
-  --dc-dashboard-rail-hover: rgb(214 179 140 / 18%);
-  --dc-dashboard-rail-active: #D6B38C;
-  --dc-dashboard-header-bg: #703B3B;
+.dark .undara-dashboard.undara-dashboard--redesign {
+  --undara-dashboard-canvas: #703B3B;
+  --undara-dashboard-card: #703B3B;
+  --undara-dashboard-border: rgb(255 249 245 / 26%);
+  --undara-dashboard-rail: #703B3B;
+  --undara-dashboard-rail-hover: rgb(214 179 140 / 18%);
+  --undara-dashboard-rail-active: #D6B38C;
+  --undara-dashboard-header-bg: #703B3B;
   background: #703B3B;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-frame {
   position: relative;
   isolation: isolate;
   display: flex;
@@ -915,41 +908,41 @@ body:has(.dc-dashboard--redesign) {
   overflow: hidden;
   border: 1.5px solid rgb(255 255 255 / 75%);
   border-radius: 18px;
-  background: var(--dc-dashboard-canvas);
+  background: var(--undara-dashboard-canvas);
   box-shadow: 0 18px 65px rgb(75 35 47 / 24%), inset 0 0 0 1px rgb(112 59 59 / 30%);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-workspace {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-workspace {
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  background: var(--dc-dashboard-canvas);
+  background: var(--undara-dashboard-canvas);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header {
   position: relative;
   top: auto;
   z-index: 35;
   flex: 0 0 72px;
   height: 72px !important;
   min-height: 72px;
-  background: var(--dc-dashboard-header-bg) !important;
-  border-bottom: 1px solid var(--dc-dashboard-border) !important;
+  background: var(--undara-dashboard-header-bg) !important;
+  border-bottom: 1px solid var(--undara-dashboard-border) !important;
   box-shadow: none !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header > div,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header > div,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header-inner {
   min-height: 72px;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-brand {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-dashboard-brand {
   display: none !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header-inner {
   width: min(80vw, calc(100% - 3rem));
   max-width: 100%;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll {
   flex: 1 1 0;
   display: block;
   min-height: 0 !important;
@@ -961,13 +954,13 @@ body:has(.dc-dashboard--redesign) {
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
-  background: var(--dc-dashboard-canvas);
+  background: var(--undara-dashboard-canvas);
   color: var(--foreground);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll > * {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll > * {
   min-width: 0;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar {
   position: relative;
   inset: auto;
   top: auto;
@@ -980,293 +973,293 @@ body:has(.dc-dashboard--redesign) {
   max-height: none;
   min-height: 0 !important;
   overflow: hidden;
-  border-right: 1px solid var(--dc-dashboard-border);
-  background: var(--dc-dashboard-rail);
+  border-right: 1px solid var(--undara-dashboard-border);
+  background: var(--undara-dashboard-rail);
   color: var(--foreground);
   box-shadow: none;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-brand {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-brand {
   flex: 0 0 72px;
   min-height: 72px;
   padding-inline: 1.25rem;
-  border-bottom: 1px solid var(--dc-dashboard-border);
-  background: var(--dc-dashboard-rail);
+  border-bottom: 1px solid var(--undara-dashboard-border);
+  background: var(--undara-dashboard-rail);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-brand .text-primary {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-brand .text-primary {
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav {
   flex: 1 1 0;
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  background: var(--dc-dashboard-rail);
+  background: var(--undara-dashboard-rail);
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
   padding: 1.25rem 0.75rem 1.5rem;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link {
   color: var(--primary) !important;
   background: transparent !important;
   border: 1px solid transparent !important;
-  border-radius: var(--dc-control-radius) !important;
+  border-radius: var(--undara-control-radius) !important;
   font-weight: 500;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:hover:not(.is-active):not([aria-current="page"]) {
   color: var(--primary) !important;
-  border-color: var(--dc-dashboard-border) !important;
-  background: var(--dc-dashboard-rail-hover) !important;
+  border-color: var(--undara-dashboard-border) !important;
+  background: var(--undara-dashboard-rail-hover) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]),
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"]):hover {
-  --dc-sidebar-fill: var(--dc-dashboard-rail-active);
-  background: var(--dc-sidebar-fill) !important;
-  border-color: var(--dc-sidebar-fill) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"]),
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"]):hover {
+  --undara-sidebar-fill: var(--undara-dashboard-rail-active);
+  background: var(--undara-sidebar-fill) !important;
+  border-color: var(--undara-sidebar-fill) !important;
   color: #ffffff !important;
   font-weight: 600;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::before,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:is(.is-active, [aria-current="page"])::after {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::before,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:is(.is-active, [aria-current="page"])::after {
   content: none;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-link:focus-visible {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-link:focus-visible {
   outline-color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar-nav .dc-sidebar-subnav {
-  border-left-color: var(--dc-dashboard-border);
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar-nav .undara-sidebar-subnav {
+  border-left-color: var(--undara-dashboard-border);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-theme-toggle,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-theme-toggle,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-language-toggle button,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-dashboard-account-button {
   background: transparent !important;
   color: var(--primary) !important;
   border: 1px solid var(--primary) !important;
-  border-radius: var(--dc-control-radius) !important;
+  border-radius: var(--undara-control-radius) !important;
   box-shadow: none !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-theme-toggle:hover,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button:hover,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button:hover,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-language-toggle button[aria-pressed="true"] {
-  background: var(--dc-dashboard-rail-hover) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-theme-toggle:hover,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-language-toggle button:hover,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-dashboard-account-button:hover,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-language-toggle button[aria-pressed="true"] {
+  background: var(--undara-dashboard-rail-hover) !important;
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-header .dc-dashboard-account-button {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-header .undara-dashboard-account-button {
   padding-inline: 0.5rem 0.875rem;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-account-menu {
   max-height: calc(90dvh - 95px);
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
-  background: var(--dc-dashboard-card) !important;
+  background: var(--undara-dashboard-card) !important;
   border: 1px solid var(--primary) !important;
   box-shadow: 0 16px 48px rgb(76 32 47 / 18%);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu-item {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-account-menu-item {
   border: 1px solid transparent !important;
-  border-radius: var(--dc-control-radius) !important;
+  border-radius: var(--undara-control-radius) !important;
   background: transparent !important;
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu-item:hover {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-account-menu-item:hover {
   border-color: var(--primary) !important;
-  background: var(--dc-dashboard-rail-hover) !important;
+  background: var(--undara-dashboard-rail-hover) !important;
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero {
   border: 1.5px solid var(--primary) !important;
   background: linear-gradient(115deg, #ffffff, #F8F1EC 90%) !important;
   box-shadow: 0 12px 40px rgb(112 59 59 / 11%);
 }
-.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero {
+.dark .undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero {
   background: linear-gradient(115deg, #703B3B, #5E3030 90%) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero h1 {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero h1 {
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero .undara-dashboard-overview-cta {
   background: var(--primary) !important;
   border-color: var(--primary) !important;
   color: #ffffff !important;
   box-shadow: 0 4px 16px rgb(112 59 59 / 23%) !important;
 }
-.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta {
+.dark .undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero .undara-dashboard-overview-cta {
   color: #3A2020 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero .undara-dashboard-overview-cta:hover {
   background: #5E3030 !important;
   border-color: #5E3030 !important;
   color: #ffffff !important;
 }
-.dark .dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-hero .dc-dashboard-overview-cta:hover {
+.dark .undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-hero .undara-dashboard-overview-cta:hover {
   background: #E8D7C3 !important;
   border-color: #E8D7C3 !important;
   color: #3A2020 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-surface,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-metric,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric--featured {
-  background: var(--dc-dashboard-card) !important;
-  border: 1px solid var(--dc-dashboard-border) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-surface,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-metric,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview .undara-dashboard-metric--featured {
+  background: var(--undara-dashboard-card) !important;
+  border: 1px solid var(--undara-dashboard-border) !important;
   box-shadow: 0 10px 32px rgb(112 59 59 / 7%);
 }
 /* One deliberate card system for ALL dashboard workspaces.
    All cards have a ~0.3cm left brand stripe, square on three corners and
    round ONLY at the top-right. Controls, badges, input fields, chart strokes
    and the outer frame do not inherit this treatment. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
-  .dc-dashboard-surface,
-  .dc-dashboard-metric,
-  .dc-dashboard-overview-hero,
-  .dc-dashboard-compact-stat,
-  .dc-dashboard-notice,
-  .dc-dashboard-empty-state,
-  .dc-dashboard-detail-card
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll :is(
+  .undara-dashboard-surface,
+  .undara-dashboard-metric,
+  .undara-dashboard-overview-hero,
+  .undara-dashboard-compact-stat,
+  .undara-dashboard-notice,
+  .undara-dashboard-empty-state,
+  .undara-dashboard-detail-card
 ) {
   box-sizing: border-box;
-  border: 1px solid var(--dc-dashboard-border) !important;
-  border-left: var(--dc-dashboard-card-stripe) solid var(--primary) !important;
+  border: 1px solid var(--undara-dashboard-border) !important;
+  border-left: var(--undara-dashboard-card-stripe) solid var(--primary) !important;
   border-radius: 0 26px 0 0 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
-  .dc-dashboard-compact-stat,
-  .dc-dashboard-notice,
-  .dc-dashboard-empty-state,
-  .dc-dashboard-detail-card
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-metric,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll :is(
+  .undara-dashboard-compact-stat,
+  .undara-dashboard-notice,
+  .undara-dashboard-empty-state,
+  .undara-dashboard-detail-card
 ) {
   border-top-right-radius: 22px !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview-hero {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-overview-hero {
   border-top-right-radius: 28px !important;
 }
 /* Standalone detail cards keep their shape; rows in a larger panel are
    flattened by the single-frame section rule further below. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-detail-card {
   min-width: 0;
-  background: var(--dc-dashboard-card) !important;
+  background: var(--undara-dashboard-card) !important;
   box-shadow: 0 8px 26px rgb(93 42 57 / 4%);
 }
 /* Keep hover and selected feedback on actionable card-shaped items. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll :is(
-  button.dc-dashboard-detail-card,
-  [draggable="true"].dc-dashboard-detail-card
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll :is(
+  button.undara-dashboard-detail-card,
+  [draggable="true"].undara-dashboard-detail-card
 ):hover:not([aria-pressed="true"]) {
-  background: color-mix(in srgb, var(--primary) 7%, var(--dc-dashboard-card)) !important;
+  background: color-mix(in srgb, var(--primary) 7%, var(--undara-dashboard-card)) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-detail-card[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-detail-card[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, var(--undara-dashboard-card)) !important;
 }
 /* Owner's revised hierarchy: only LARGE group panels carry a Rose stripe.
    Metrics are simple columns within one framed group, not four smaller cards. */
 /* Rose + Title Case for the header of each LARGE dashboard frame only.
    Never cascade into guest names, message bodies, table rows or inner copy. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel > div:first-child h2,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-surface > div:first-child > h2,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-surface > header > h2,
-.dc-dashboard main > div.grid > section > div:first-child > h2,
-.dc-dashboard main > div.grid > section > h2 {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel > div:first-child h2,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-surface > div:first-child > h2,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-surface > header > h2,
+.undara-dashboard main > div.grid > section > div:first-child > h2,
+.undara-dashboard main > div.grid > section > h2 {
   color: var(--primary) !important;
   text-transform: capitalize;
 }
 
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-metric-group {
   box-sizing: border-box;
-  border: 1px solid var(--dc-dashboard-border) !important;
-  border-left: var(--dc-dashboard-card-stripe) solid var(--primary) !important;
+  border: 1px solid var(--undara-dashboard-border) !important;
+  border-left: var(--undara-dashboard-card-stripe) solid var(--primary) !important;
   border-radius: 0 26px 0 0 !important;
-  background: var(--dc-dashboard-card) !important;
+  background: var(--undara-dashboard-card) !important;
   box-shadow: 0 10px 32px rgb(112 59 59 / 7%);
   padding: 0.625rem;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group .dc-dashboard-metric,
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-overview .dc-dashboard-metric-group .dc-dashboard-metric--featured {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-metric-group .undara-dashboard-metric,
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-overview .undara-dashboard-metric-group .undara-dashboard-metric--featured {
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group .dc-dashboard-metric > span {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-metric-group .undara-dashboard-metric > span {
   background: transparent !important;
 }
 /* A dashboard section owns one frame. Nested detail/list records are plain
    rows separated by a hairline, never separately framed or striped. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel .undara-dashboard-detail-card {
   border: 0 !important;
-  border-bottom: 1px solid var(--dc-dashboard-border) !important;
+  border-bottom: 1px solid var(--undara-dashboard-border) !important;
   border-radius: 0 !important;
   background: transparent !important;
   box-shadow: none !important;
   padding-block: 1rem !important;
   padding-inline: 0 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card:last-child {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel .undara-dashboard-detail-card:last-child {
   border-bottom: 0 !important;
 }
 /* A stack of plain records should read as ONE list, not spaced-apart tiles. */
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .grid:has(> .dc-dashboard-detail-card) {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel .grid:has(> .undara-dashboard-detail-card) {
   gap: 0 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card + .dc-dashboard-detail-card {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel .undara-dashboard-detail-card + .undara-dashboard-detail-card {
   margin-top: 0 !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel :is(
-  .dc-dashboard-compact-stat,
-  .dc-dashboard-empty-state,
-  .dc-dashboard-notice
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel :is(
+  .undara-dashboard-compact-stat,
+  .undara-dashboard-empty-state,
+  .undara-dashboard-notice
 ) {
   border: 0 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
   background: transparent !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel .dc-dashboard-detail-card[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--primary) 12%, var(--dc-dashboard-card)) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel .undara-dashboard-detail-card[aria-pressed="true"] {
+  background: color-mix(in srgb, var(--primary) 12%, var(--undara-dashboard-card)) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-panel :is(
-  button.dc-dashboard-detail-card,
-  [draggable="true"].dc-dashboard-detail-card
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-panel :is(
+  button.undara-dashboard-detail-card,
+  [draggable="true"].undara-dashboard-detail-card
 ):hover:not([aria-pressed="true"]) {
-  background: color-mix(in srgb, var(--primary) 7%, var(--dc-dashboard-card)) !important;
+  background: color-mix(in srgb, var(--primary) 7%, var(--undara-dashboard-card)) !important;
 }
 @media (min-width: 640px) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll .dc-dashboard-metric-group {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll .undara-dashboard-metric-group {
     padding: 0.875rem;
   }
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric > span {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview .undara-dashboard-metric > span {
   background: rgb(112 59 59 / 15%);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview .dc-dashboard-metric .text-2xl {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview .undara-dashboard-metric .text-2xl {
   color: var(--primary) !important;
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-overview-progress [role="progressbar"] {
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-overview-progress [role="progressbar"] {
   background: rgb(112 59 59 / 17%);
 }
-.dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-page .dc-dashboard-surface {
-  border-color: var(--dc-dashboard-border) !important;
+.undara-dashboard.undara-dashboard--redesign .undara-dashboard-account-page .undara-dashboard-surface {
+  border-color: var(--undara-dashboard-border) !important;
 }
 @media (min-width: 640px) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-account-menu {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-account-menu {
     max-height: calc(100dvh - 130px);
   }
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-frame {
     width: calc(100% - 46px);
     height: calc(100dvh - 46px);
   }
 }
 @media (min-width: 1024px) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-frame {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-frame {
     width: calc(100% - 54px);
     height: calc(100dvh - 54px);
   }
 }
 @media (max-width: 1023px) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar {
     position: absolute;
     inset: 0 auto 0 0;
     z-index: 50;
@@ -1276,20 +1269,20 @@ body:has(.dc-dashboard--redesign) {
     border-radius: 0;
     box-shadow: 16px 0 48px rgb(0 0 0 / 16%);
   }
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar.hidden {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar.hidden {
     display: none;
   }
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-header-inner {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-header-inner {
     width: calc(100% - 1.25rem);
   }
 }
 @media (min-width: 1024px) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-sidebar {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-sidebar {
     display: flex;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dc-dashboard.dc-dashboard--redesign .dc-dashboard-scroll {
+  .undara-dashboard.undara-dashboard--redesign .undara-dashboard-scroll {
     scroll-behavior: auto;
   }
 }
