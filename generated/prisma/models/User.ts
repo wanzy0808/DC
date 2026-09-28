@@ -231,6 +231,7 @@ export type UserWhereInput = {
   auditLogs?: Prisma.AuditLogListRelationFilter
   guestCheckIns?: Prisma.GuestListRelationFilter
   designerTemplates?: Prisma.DesignerTemplateListRelationFilter
+  designerAssets?: Prisma.DesignerAssetListRelationFilter
   actionTokens?: Prisma.AccountActionTokenListRelationFilter
 }
 
@@ -254,6 +255,7 @@ export type UserOrderByWithRelationInput = {
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
   guestCheckIns?: Prisma.GuestOrderByRelationAggregateInput
   designerTemplates?: Prisma.DesignerTemplateOrderByRelationAggregateInput
+  designerAssets?: Prisma.DesignerAssetOrderByRelationAggregateInput
   actionTokens?: Prisma.AccountActionTokenOrderByRelationAggregateInput
 }
 
@@ -280,6 +282,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   auditLogs?: Prisma.AuditLogListRelationFilter
   guestCheckIns?: Prisma.GuestListRelationFilter
   designerTemplates?: Prisma.DesignerTemplateListRelationFilter
+  designerAssets?: Prisma.DesignerAssetListRelationFilter
   actionTokens?: Prisma.AccountActionTokenListRelationFilter
 }, "id" | "email">
 
@@ -335,6 +338,7 @@ export type UserCreateInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -358,6 +362,7 @@ export type UserUncheckedCreateInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -381,6 +386,7 @@ export type UserUpdateInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -404,6 +410,7 @@ export type UserUncheckedUpdateInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -613,6 +620,20 @@ export type UserUpdateOneRequiredWithoutOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutOrdersInput, Prisma.UserUpdateWithoutOrdersInput>, Prisma.UserUncheckedUpdateWithoutOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutDesignerAssetsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDesignerAssetsInput, Prisma.UserUncheckedCreateWithoutDesignerAssetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDesignerAssetsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutDesignerAssetsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDesignerAssetsInput, Prisma.UserUncheckedCreateWithoutDesignerAssetsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDesignerAssetsInput
+  upsert?: Prisma.UserUpsertWithoutDesignerAssetsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDesignerAssetsInput, Prisma.UserUpdateWithoutDesignerAssetsInput>, Prisma.UserUncheckedUpdateWithoutDesignerAssetsInput>
+}
+
 export type UserCreateNestedOneWithoutDesignerTemplatesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutDesignerTemplatesInput, Prisma.UserUncheckedCreateWithoutDesignerTemplatesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutDesignerTemplatesInput
@@ -678,6 +699,7 @@ export type UserCreateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -700,6 +722,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -738,6 +761,7 @@ export type UserUpdateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -760,6 +784,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -782,6 +807,7 @@ export type UserCreateWithoutVerificationTokensInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -804,6 +830,7 @@ export type UserUncheckedCreateWithoutVerificationTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -842,6 +869,7 @@ export type UserUpdateWithoutVerificationTokensInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -864,6 +892,7 @@ export type UserUncheckedUpdateWithoutVerificationTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -887,6 +916,7 @@ export type UserCreateWithoutActionTokensInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
 }
 
 export type UserUncheckedCreateWithoutActionTokensInput = {
@@ -909,6 +939,7 @@ export type UserUncheckedCreateWithoutActionTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
 }
 
 export type UserCreateOrConnectWithoutActionTokensInput = {
@@ -947,6 +978,7 @@ export type UserUpdateWithoutActionTokensInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutActionTokensInput = {
@@ -969,6 +1001,7 @@ export type UserUncheckedUpdateWithoutActionTokensInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
 }
 
 export type UserCreateWithoutInvitationsInput = {
@@ -990,6 +1023,7 @@ export type UserCreateWithoutInvitationsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1012,6 +1046,7 @@ export type UserUncheckedCreateWithoutInvitationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1050,6 +1085,7 @@ export type UserUpdateWithoutInvitationsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1072,6 +1108,7 @@ export type UserUncheckedUpdateWithoutInvitationsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1094,6 +1131,7 @@ export type UserCreateWithoutInvitationAssetsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1116,6 +1154,7 @@ export type UserUncheckedCreateWithoutInvitationAssetsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1154,6 +1193,7 @@ export type UserUpdateWithoutInvitationAssetsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1176,6 +1216,7 @@ export type UserUncheckedUpdateWithoutInvitationAssetsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1198,6 +1239,7 @@ export type UserCreateWithoutPaymentsInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1220,6 +1262,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1258,6 +1301,7 @@ export type UserUpdateWithoutPaymentsInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1280,6 +1324,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1302,6 +1347,7 @@ export type UserCreateWithoutOrdersInput = {
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1324,6 +1370,7 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1362,6 +1409,7 @@ export type UserUpdateWithoutOrdersInput = {
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1381,6 +1429,115 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOwnerNestedInput
   invitationAssets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutOwnerNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
+  designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
+  actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutDesignerAssetsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  avatarUrl?: string | null
+  firstName: string
+  lastName?: string | null
+  role?: $Enums.UserRole
+  emailVerifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  verificationTokens?: Prisma.EmailVerificationTokenCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationCreateNestedManyWithoutOwnerInput
+  invitationAssets?: Prisma.InvitationAssetCreateNestedManyWithoutOwnerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutUserInput
+  orders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
+  designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutDesignerAssetsInput = {
+  id?: string
+  email: string
+  passwordHash: string
+  avatarUrl?: string | null
+  firstName: string
+  lastName?: string | null
+  role?: $Enums.UserRole
+  emailVerifiedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  verificationTokens?: Prisma.EmailVerificationTokenUncheckedCreateNestedManyWithoutUserInput
+  invitations?: Prisma.InvitationUncheckedCreateNestedManyWithoutOwnerInput
+  invitationAssets?: Prisma.InvitationAssetUncheckedCreateNestedManyWithoutOwnerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutUserInput
+  orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
+  designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutDesignerAssetsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDesignerAssetsInput, Prisma.UserUncheckedCreateWithoutDesignerAssetsInput>
+}
+
+export type UserUpsertWithoutDesignerAssetsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDesignerAssetsInput, Prisma.UserUncheckedUpdateWithoutDesignerAssetsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDesignerAssetsInput, Prisma.UserUncheckedCreateWithoutDesignerAssetsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDesignerAssetsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDesignerAssetsInput, Prisma.UserUncheckedUpdateWithoutDesignerAssetsInput>
+}
+
+export type UserUpdateWithoutDesignerAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  verificationTokens?: Prisma.EmailVerificationTokenUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUpdateManyWithoutOwnerNestedInput
+  invitationAssets?: Prisma.InvitationAssetUpdateManyWithoutOwnerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutUserNestedInput
+  orders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
+  designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDesignerAssetsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  avatarUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  firstName?: Prisma.StringFieldUpdateOperationsInput | string
+  lastName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  verificationTokens?: Prisma.EmailVerificationTokenUncheckedUpdateManyWithoutUserNestedInput
+  invitations?: Prisma.InvitationUncheckedUpdateManyWithoutOwnerNestedInput
+  invitationAssets?: Prisma.InvitationAssetUncheckedUpdateManyWithoutOwnerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutUserNestedInput
+  orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
@@ -1406,6 +1563,7 @@ export type UserCreateWithoutDesignerTemplatesInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1428,6 +1586,7 @@ export type UserUncheckedCreateWithoutDesignerTemplatesInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1466,6 +1625,7 @@ export type UserUpdateWithoutDesignerTemplatesInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1488,6 +1648,7 @@ export type UserUncheckedUpdateWithoutDesignerTemplatesInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1510,6 +1671,7 @@ export type UserCreateWithoutGuestCheckInsInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1532,6 +1694,7 @@ export type UserUncheckedCreateWithoutGuestCheckInsInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1570,6 +1733,7 @@ export type UserUpdateWithoutGuestCheckInsInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1592,6 +1756,7 @@ export type UserUncheckedUpdateWithoutGuestCheckInsInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1614,6 +1779,7 @@ export type UserCreateWithoutAuditLogsInput = {
   orders?: Prisma.PaymentOrderCreateNestedManyWithoutUserInput
   guestCheckIns?: Prisma.GuestCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenCreateNestedManyWithoutUserInput
 }
 
@@ -1636,6 +1802,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   orders?: Prisma.PaymentOrderUncheckedCreateNestedManyWithoutUserInput
   guestCheckIns?: Prisma.GuestUncheckedCreateNestedManyWithoutCheckedInByInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedCreateNestedManyWithoutDesignerInput
+  designerAssets?: Prisma.DesignerAssetUncheckedCreateNestedManyWithoutOwnerInput
   actionTokens?: Prisma.AccountActionTokenUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -1674,6 +1841,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   orders?: Prisma.PaymentOrderUpdateManyWithoutUserNestedInput
   guestCheckIns?: Prisma.GuestUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUpdateManyWithoutUserNestedInput
 }
 
@@ -1696,6 +1864,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   orders?: Prisma.PaymentOrderUncheckedUpdateManyWithoutUserNestedInput
   guestCheckIns?: Prisma.GuestUncheckedUpdateManyWithoutCheckedInByNestedInput
   designerTemplates?: Prisma.DesignerTemplateUncheckedUpdateManyWithoutDesignerNestedInput
+  designerAssets?: Prisma.DesignerAssetUncheckedUpdateManyWithoutOwnerNestedInput
   actionTokens?: Prisma.AccountActionTokenUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -1714,6 +1883,7 @@ export type UserCountOutputType = {
   auditLogs: number
   guestCheckIns: number
   designerTemplates: number
+  designerAssets: number
   actionTokens: number
 }
 
@@ -1727,6 +1897,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
   guestCheckIns?: boolean | UserCountOutputTypeCountGuestCheckInsArgs
   designerTemplates?: boolean | UserCountOutputTypeCountDesignerTemplatesArgs
+  designerAssets?: boolean | UserCountOutputTypeCountDesignerAssetsArgs
   actionTokens?: boolean | UserCountOutputTypeCountActionTokensArgs
 }
 
@@ -1806,6 +1977,13 @@ export type UserCountOutputTypeCountDesignerTemplatesArgs<ExtArgs extends runtim
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountDesignerAssetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DesignerAssetWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountActionTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.AccountActionTokenWhereInput
 }
@@ -1831,6 +2009,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   guestCheckIns?: boolean | Prisma.User$guestCheckInsArgs<ExtArgs>
   designerTemplates?: boolean | Prisma.User$designerTemplatesArgs<ExtArgs>
+  designerAssets?: boolean | Prisma.User$designerAssetsArgs<ExtArgs>
   actionTokens?: boolean | Prisma.User$actionTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -1885,6 +2064,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
   guestCheckIns?: boolean | Prisma.User$guestCheckInsArgs<ExtArgs>
   designerTemplates?: boolean | Prisma.User$designerTemplatesArgs<ExtArgs>
+  designerAssets?: boolean | Prisma.User$designerAssetsArgs<ExtArgs>
   actionTokens?: boolean | Prisma.User$actionTokensArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1903,6 +2083,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
     guestCheckIns: Prisma.$GuestPayload<ExtArgs>[]
     designerTemplates: Prisma.$DesignerTemplatePayload<ExtArgs>[]
+    designerAssets: Prisma.$DesignerAssetPayload<ExtArgs>[]
     actionTokens: Prisma.$AccountActionTokenPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2319,6 +2500,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   guestCheckIns<T extends Prisma.User$guestCheckInsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$guestCheckInsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GuestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   designerTemplates<T extends Prisma.User$designerTemplatesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$designerTemplatesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DesignerTemplatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  designerAssets<T extends Prisma.User$designerAssetsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$designerAssetsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DesignerAssetPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   actionTokens<T extends Prisma.User$actionTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$actionTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountActionTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2965,6 +3147,30 @@ export type User$designerTemplatesArgs<ExtArgs extends runtime.Types.Extensions.
   take?: number
   skip?: number
   distinct?: Prisma.DesignerTemplateScalarFieldEnum | Prisma.DesignerTemplateScalarFieldEnum[]
+}
+
+/**
+ * User.designerAssets
+ */
+export type User$designerAssetsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DesignerAsset
+   */
+  select?: Prisma.DesignerAssetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DesignerAsset
+   */
+  omit?: Prisma.DesignerAssetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DesignerAssetInclude<ExtArgs> | null
+  where?: Prisma.DesignerAssetWhereInput
+  orderBy?: Prisma.DesignerAssetOrderByWithRelationInput | Prisma.DesignerAssetOrderByWithRelationInput[]
+  cursor?: Prisma.DesignerAssetWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DesignerAssetScalarFieldEnum | Prisma.DesignerAssetScalarFieldEnum[]
 }
 
 /**

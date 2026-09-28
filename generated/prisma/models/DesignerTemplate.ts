@@ -30,6 +30,11 @@ export type DesignerTemplateMinAggregateOutputType = {
   name: string | null
   previewUrl: string | null
   templateFile: string | null
+  designKey: string | null
+  category: string | null
+  description: string | null
+  usesPhotos: boolean | null
+  musicUrl: string | null
   status: $Enums.TemplateStatus | null
   designerId: string | null
   createdAt: Date | null
@@ -42,6 +47,11 @@ export type DesignerTemplateMaxAggregateOutputType = {
   name: string | null
   previewUrl: string | null
   templateFile: string | null
+  designKey: string | null
+  category: string | null
+  description: string | null
+  usesPhotos: boolean | null
+  musicUrl: string | null
   status: $Enums.TemplateStatus | null
   designerId: string | null
   createdAt: Date | null
@@ -55,6 +65,11 @@ export type DesignerTemplateCountAggregateOutputType = {
   tags: number
   previewUrl: number
   templateFile: number
+  designKey: number
+  category: number
+  description: number
+  usesPhotos: number
+  musicUrl: number
   status: number
   designerId: number
   createdAt: number
@@ -69,6 +84,11 @@ export type DesignerTemplateMinAggregateInputType = {
   name?: true
   previewUrl?: true
   templateFile?: true
+  designKey?: true
+  category?: true
+  description?: true
+  usesPhotos?: true
+  musicUrl?: true
   status?: true
   designerId?: true
   createdAt?: true
@@ -81,6 +101,11 @@ export type DesignerTemplateMaxAggregateInputType = {
   name?: true
   previewUrl?: true
   templateFile?: true
+  designKey?: true
+  category?: true
+  description?: true
+  usesPhotos?: true
+  musicUrl?: true
   status?: true
   designerId?: true
   createdAt?: true
@@ -94,6 +119,11 @@ export type DesignerTemplateCountAggregateInputType = {
   tags?: true
   previewUrl?: true
   templateFile?: true
+  designKey?: true
+  category?: true
+  description?: true
+  usesPhotos?: true
+  musicUrl?: true
   status?: true
   designerId?: true
   createdAt?: true
@@ -179,7 +209,12 @@ export type DesignerTemplateGroupByOutputType = {
   name: string
   tags: string[]
   previewUrl: string
-  templateFile: string
+  templateFile: string | null
+  designKey: string | null
+  category: string
+  description: string
+  usesPhotos: boolean
+  musicUrl: string | null
   status: $Enums.TemplateStatus
   designerId: string
   createdAt: Date
@@ -213,7 +248,12 @@ export type DesignerTemplateWhereInput = {
   name?: Prisma.StringFilter<"DesignerTemplate"> | string
   tags?: Prisma.StringNullableListFilter<"DesignerTemplate">
   previewUrl?: Prisma.StringFilter<"DesignerTemplate"> | string
-  templateFile?: Prisma.StringFilter<"DesignerTemplate"> | string
+  templateFile?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  designKey?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  category?: Prisma.StringFilter<"DesignerTemplate"> | string
+  description?: Prisma.StringFilter<"DesignerTemplate"> | string
+  usesPhotos?: Prisma.BoolFilter<"DesignerTemplate"> | boolean
+  musicUrl?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
   status?: Prisma.EnumTemplateStatusFilter<"DesignerTemplate"> | $Enums.TemplateStatus
   designerId?: Prisma.StringFilter<"DesignerTemplate"> | string
   createdAt?: Prisma.DateTimeFilter<"DesignerTemplate"> | Date | string
@@ -227,7 +267,12 @@ export type DesignerTemplateOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   previewUrl?: Prisma.SortOrder
-  templateFile?: Prisma.SortOrder
+  templateFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  designKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  usesPhotos?: Prisma.SortOrder
+  musicUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   designerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -244,7 +289,12 @@ export type DesignerTemplateWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"DesignerTemplate"> | string
   tags?: Prisma.StringNullableListFilter<"DesignerTemplate">
   previewUrl?: Prisma.StringFilter<"DesignerTemplate"> | string
-  templateFile?: Prisma.StringFilter<"DesignerTemplate"> | string
+  templateFile?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  designKey?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  category?: Prisma.StringFilter<"DesignerTemplate"> | string
+  description?: Prisma.StringFilter<"DesignerTemplate"> | string
+  usesPhotos?: Prisma.BoolFilter<"DesignerTemplate"> | boolean
+  musicUrl?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
   status?: Prisma.EnumTemplateStatusFilter<"DesignerTemplate"> | $Enums.TemplateStatus
   designerId?: Prisma.StringFilter<"DesignerTemplate"> | string
   createdAt?: Prisma.DateTimeFilter<"DesignerTemplate"> | Date | string
@@ -258,7 +308,12 @@ export type DesignerTemplateOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   previewUrl?: Prisma.SortOrder
-  templateFile?: Prisma.SortOrder
+  templateFile?: Prisma.SortOrderInput | Prisma.SortOrder
+  designKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  usesPhotos?: Prisma.SortOrder
+  musicUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   designerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -277,7 +332,12 @@ export type DesignerTemplateScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
   tags?: Prisma.StringNullableListFilter<"DesignerTemplate">
   previewUrl?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
-  templateFile?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
+  templateFile?: Prisma.StringNullableWithAggregatesFilter<"DesignerTemplate"> | string | null
+  designKey?: Prisma.StringNullableWithAggregatesFilter<"DesignerTemplate"> | string | null
+  category?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
+  description?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
+  usesPhotos?: Prisma.BoolWithAggregatesFilter<"DesignerTemplate"> | boolean
+  musicUrl?: Prisma.StringNullableWithAggregatesFilter<"DesignerTemplate"> | string | null
   status?: Prisma.EnumTemplateStatusWithAggregatesFilter<"DesignerTemplate"> | $Enums.TemplateStatus
   designerId?: Prisma.StringWithAggregatesFilter<"DesignerTemplate"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DesignerTemplate"> | Date | string
@@ -290,7 +350,12 @@ export type DesignerTemplateCreateInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -303,7 +368,12 @@ export type DesignerTemplateUncheckedCreateInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   designerId: string
   createdAt?: Date | string
@@ -316,7 +386,12 @@ export type DesignerTemplateUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -329,7 +404,12 @@ export type DesignerTemplateUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   designerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -342,7 +422,12 @@ export type DesignerTemplateCreateManyInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   designerId: string
   createdAt?: Date | string
@@ -355,7 +440,12 @@ export type DesignerTemplateUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -367,7 +457,12 @@ export type DesignerTemplateUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   designerId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -399,6 +494,11 @@ export type DesignerTemplateCountOrderByAggregateInput = {
   tags?: Prisma.SortOrder
   previewUrl?: Prisma.SortOrder
   templateFile?: Prisma.SortOrder
+  designKey?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  usesPhotos?: Prisma.SortOrder
+  musicUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   designerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -411,6 +511,11 @@ export type DesignerTemplateMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   previewUrl?: Prisma.SortOrder
   templateFile?: Prisma.SortOrder
+  designKey?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  usesPhotos?: Prisma.SortOrder
+  musicUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   designerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -423,6 +528,11 @@ export type DesignerTemplateMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   previewUrl?: Prisma.SortOrder
   templateFile?: Prisma.SortOrder
+  designKey?: Prisma.SortOrder
+  category?: Prisma.SortOrder
+  description?: Prisma.SortOrder
+  usesPhotos?: Prisma.SortOrder
+  musicUrl?: Prisma.SortOrder
   status?: Prisma.SortOrder
   designerId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -490,7 +600,12 @@ export type DesignerTemplateCreateWithoutDesignerInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -502,7 +617,12 @@ export type DesignerTemplateUncheckedCreateWithoutDesignerInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -543,7 +663,12 @@ export type DesignerTemplateScalarWhereInput = {
   name?: Prisma.StringFilter<"DesignerTemplate"> | string
   tags?: Prisma.StringNullableListFilter<"DesignerTemplate">
   previewUrl?: Prisma.StringFilter<"DesignerTemplate"> | string
-  templateFile?: Prisma.StringFilter<"DesignerTemplate"> | string
+  templateFile?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  designKey?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
+  category?: Prisma.StringFilter<"DesignerTemplate"> | string
+  description?: Prisma.StringFilter<"DesignerTemplate"> | string
+  usesPhotos?: Prisma.BoolFilter<"DesignerTemplate"> | boolean
+  musicUrl?: Prisma.StringNullableFilter<"DesignerTemplate"> | string | null
   status?: Prisma.EnumTemplateStatusFilter<"DesignerTemplate"> | $Enums.TemplateStatus
   designerId?: Prisma.StringFilter<"DesignerTemplate"> | string
   createdAt?: Prisma.DateTimeFilter<"DesignerTemplate"> | Date | string
@@ -556,7 +681,12 @@ export type DesignerTemplateCreateManyDesignerInput = {
   name: string
   tags?: Prisma.DesignerTemplateCreatetagsInput | string[]
   previewUrl: string
-  templateFile: string
+  templateFile?: string | null
+  designKey?: string | null
+  category?: string
+  description?: string
+  usesPhotos?: boolean
+  musicUrl?: string | null
   status?: $Enums.TemplateStatus
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -568,7 +698,12 @@ export type DesignerTemplateUpdateWithoutDesignerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -580,7 +715,12 @@ export type DesignerTemplateUncheckedUpdateWithoutDesignerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -592,7 +732,12 @@ export type DesignerTemplateUncheckedUpdateManyWithoutDesignerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.DesignerTemplateUpdatetagsInput | string[]
   previewUrl?: Prisma.StringFieldUpdateOperationsInput | string
-  templateFile?: Prisma.StringFieldUpdateOperationsInput | string
+  templateFile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  designKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  usesPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  musicUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumTemplateStatusFieldUpdateOperationsInput | $Enums.TemplateStatus
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -607,6 +752,11 @@ export type DesignerTemplateSelect<ExtArgs extends runtime.Types.Extensions.Inte
   tags?: boolean
   previewUrl?: boolean
   templateFile?: boolean
+  designKey?: boolean
+  category?: boolean
+  description?: boolean
+  usesPhotos?: boolean
+  musicUrl?: boolean
   status?: boolean
   designerId?: boolean
   createdAt?: boolean
@@ -621,6 +771,11 @@ export type DesignerTemplateSelectCreateManyAndReturn<ExtArgs extends runtime.Ty
   tags?: boolean
   previewUrl?: boolean
   templateFile?: boolean
+  designKey?: boolean
+  category?: boolean
+  description?: boolean
+  usesPhotos?: boolean
+  musicUrl?: boolean
   status?: boolean
   designerId?: boolean
   createdAt?: boolean
@@ -635,6 +790,11 @@ export type DesignerTemplateSelectUpdateManyAndReturn<ExtArgs extends runtime.Ty
   tags?: boolean
   previewUrl?: boolean
   templateFile?: boolean
+  designKey?: boolean
+  category?: boolean
+  description?: boolean
+  usesPhotos?: boolean
+  musicUrl?: boolean
   status?: boolean
   designerId?: boolean
   createdAt?: boolean
@@ -649,13 +809,18 @@ export type DesignerTemplateSelectScalar = {
   tags?: boolean
   previewUrl?: boolean
   templateFile?: boolean
+  designKey?: boolean
+  category?: boolean
+  description?: boolean
+  usesPhotos?: boolean
+  musicUrl?: boolean
   status?: boolean
   designerId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DesignerTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateNo" | "name" | "tags" | "previewUrl" | "templateFile" | "status" | "designerId" | "createdAt" | "updatedAt", ExtArgs["result"]["designerTemplate"]>
+export type DesignerTemplateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "templateNo" | "name" | "tags" | "previewUrl" | "templateFile" | "designKey" | "category" | "description" | "usesPhotos" | "musicUrl" | "status" | "designerId" | "createdAt" | "updatedAt", ExtArgs["result"]["designerTemplate"]>
 export type DesignerTemplateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   designer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -677,7 +842,12 @@ export type $DesignerTemplatePayload<ExtArgs extends runtime.Types.Extensions.In
     name: string
     tags: string[]
     previewUrl: string
-    templateFile: string
+    templateFile: string | null
+    designKey: string | null
+    category: string
+    description: string
+    usesPhotos: boolean
+    musicUrl: string | null
     status: $Enums.TemplateStatus
     designerId: string
     createdAt: Date
@@ -1112,6 +1282,11 @@ export interface DesignerTemplateFieldRefs {
   readonly tags: Prisma.FieldRef<"DesignerTemplate", 'String[]'>
   readonly previewUrl: Prisma.FieldRef<"DesignerTemplate", 'String'>
   readonly templateFile: Prisma.FieldRef<"DesignerTemplate", 'String'>
+  readonly designKey: Prisma.FieldRef<"DesignerTemplate", 'String'>
+  readonly category: Prisma.FieldRef<"DesignerTemplate", 'String'>
+  readonly description: Prisma.FieldRef<"DesignerTemplate", 'String'>
+  readonly usesPhotos: Prisma.FieldRef<"DesignerTemplate", 'Boolean'>
+  readonly musicUrl: Prisma.FieldRef<"DesignerTemplate", 'String'>
   readonly status: Prisma.FieldRef<"DesignerTemplate", 'TemplateStatus'>
   readonly designerId: Prisma.FieldRef<"DesignerTemplate", 'String'>
   readonly createdAt: Prisma.FieldRef<"DesignerTemplate", 'DateTime'>

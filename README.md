@@ -150,7 +150,7 @@ The homepage `/` uses a dedicated woodland atmosphere instead of the older cloud
 ## Design System
 
 - Brand: **Undara**.
-- Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/assets/brand/undara/logo.png` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
+- Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/assets/brand/undara/logo.webp` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
 - Canonical public tagline: **“Melangkah Bersama, Menuju Hari Penuh Makna”**. Public navbar may show it; **dashboard headers use the Undara logo only and do not show the tagline**.
 - Logo / primary brand: Undara Brown `#703B3B`.
 - Theme pair: **Light canvas `#EDE3D8` / Dark canvas `#703B3B`**.

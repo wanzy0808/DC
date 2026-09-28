@@ -24,7 +24,7 @@ export const blankCanvasTemplate: InvitationTemplate = {
   preset: { layout: "editorial", palette: "pearl", font: "cinzelFauna" },
   name: "Canvas Kosong",
   description: "Canvas kosong untuk membangun desain dari nol di Studio.",
-  previewImage: "/assets/landing/ornaments/legacy/flower.png",
+  previewImage: "/assets/landing/ornaments/legacy/flower.webp",
   assetPath: "",
 };
 
@@ -129,7 +129,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "classic", palette: "champagne", font: "cinzelFauna" },
     name: "Golden Art Deco",
     description: "Komposisi geometris emas dan garis simetris, sepenuhnya tanpa foto.",
-    previewImage: "/assets/landing/ornaments/legacy/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/golden-art-deco",
   },
   {
@@ -141,7 +141,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "garden", palette: "sage", font: "cinzelFauna" },
     name: "Paper Cut Botanical",
     description: "Kolase daun dan lapisan kertas berwarna sage, tanpa foto.",
-    previewImage: "/assets/landing/ornaments/legacy/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/paper-cut-botanical",
   },
   {
@@ -153,7 +153,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "pencil", font: "playfairQuicksand" },
     name: "Pencil Reverie",
     description: "Romansa sketsa pensil, kolase kenangan vintage, dan animasi waktu, tanpa foto.",
-    previewImage: "/templates/pencil-reverie/bungaandlampbg.png",
+    previewImage: "/templates/pencil-reverie/bungaandlampbg.webp",
     assetPath: "/templates/pencil-reverie",
   },
   {
@@ -177,7 +177,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
     name: "Celestial Ink",
     description: "Langit malam, orbit dan bintang berilustrasi tanpa foto.",
-    previewImage: "/assets/landing/ornaments/legacy/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/celestial-ink",
   },
 ];

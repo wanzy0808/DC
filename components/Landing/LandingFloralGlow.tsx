@@ -27,7 +27,7 @@ export default function LandingFloralGlow() {
       >
         <div className="relative h-full w-full">
           <Image
-            src="/assets/landing/ornaments/botanical/branch-02.png"
+            src="/assets/landing/ornaments/botanical/branch-02.webp"
             alt=""
             width={800}
             height={1200}
@@ -57,7 +57,7 @@ export default function LandingFloralGlow() {
       >
         <div className="relative h-full w-full -scale-x-100">
           <Image
-            src="/assets/landing/ornaments/botanical/branch-02.png"
+            src="/assets/landing/ornaments/botanical/branch-02.webp"
             alt=""
             width={800}
             height={1200}

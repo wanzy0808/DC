@@ -405,9 +405,11 @@ export const ModelName = {
   InvitationAsset: 'InvitationAsset',
   Payment: 'Payment',
   PaymentOrder: 'PaymentOrder',
+  DesignerAsset: 'DesignerAsset',
   DesignerTemplate: 'DesignerTemplate',
   WeddingTable: 'WeddingTable',
   Guest: 'Guest',
+  GuestWish: 'GuestWish',
   AuditLog: 'AuditLog',
   WaBlastTemplate: 'WaBlastTemplate'
 } as const
@@ -425,7 +427,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "emailVerificationToken" | "accountActionToken" | "invitation" | "invitationAsset" | "payment" | "paymentOrder" | "designerTemplate" | "weddingTable" | "guest" | "auditLog" | "waBlastTemplate"
+    modelProps: "user" | "session" | "emailVerificationToken" | "accountActionToken" | "invitation" | "invitationAsset" | "payment" | "paymentOrder" | "designerAsset" | "designerTemplate" | "weddingTable" | "guest" | "guestWish" | "auditLog" | "waBlastTemplate"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1021,6 +1023,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DesignerAsset: {
+      payload: Prisma.$DesignerAssetPayload<ExtArgs>
+      fields: Prisma.DesignerAssetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DesignerAssetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DesignerAssetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        findFirst: {
+          args: Prisma.DesignerAssetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DesignerAssetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        findMany: {
+          args: Prisma.DesignerAssetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>[]
+        }
+        create: {
+          args: Prisma.DesignerAssetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        createMany: {
+          args: Prisma.DesignerAssetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DesignerAssetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>[]
+        }
+        delete: {
+          args: Prisma.DesignerAssetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        update: {
+          args: Prisma.DesignerAssetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        deleteMany: {
+          args: Prisma.DesignerAssetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DesignerAssetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DesignerAssetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>[]
+        }
+        upsert: {
+          args: Prisma.DesignerAssetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DesignerAssetPayload>
+        }
+        aggregate: {
+          args: Prisma.DesignerAssetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDesignerAsset>
+        }
+        groupBy: {
+          args: Prisma.DesignerAssetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DesignerAssetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DesignerAssetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DesignerAssetCountAggregateOutputType> | number
+        }
+      }
+    }
     DesignerTemplate: {
       payload: Prisma.$DesignerTemplatePayload<ExtArgs>
       fields: Prisma.DesignerTemplateFieldRefs
@@ -1240,6 +1316,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GuestCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GuestCountAggregateOutputType> | number
+        }
+      }
+    }
+    GuestWish: {
+      payload: Prisma.$GuestWishPayload<ExtArgs>
+      fields: Prisma.GuestWishFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GuestWishFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GuestWishFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        findFirst: {
+          args: Prisma.GuestWishFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GuestWishFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        findMany: {
+          args: Prisma.GuestWishFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>[]
+        }
+        create: {
+          args: Prisma.GuestWishCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        createMany: {
+          args: Prisma.GuestWishCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GuestWishCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>[]
+        }
+        delete: {
+          args: Prisma.GuestWishDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        update: {
+          args: Prisma.GuestWishUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        deleteMany: {
+          args: Prisma.GuestWishDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GuestWishUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GuestWishUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>[]
+        }
+        upsert: {
+          args: Prisma.GuestWishUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GuestWishPayload>
+        }
+        aggregate: {
+          args: Prisma.GuestWishAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGuestWish>
+        }
+        groupBy: {
+          args: Prisma.GuestWishGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestWishGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GuestWishCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GuestWishCountAggregateOutputType> | number
         }
       }
     }
@@ -1583,6 +1733,18 @@ export const PaymentOrderScalarFieldEnum = {
 export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
 
 
+export const DesignerAssetScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  url: 'url',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DesignerAssetScalarFieldEnum = (typeof DesignerAssetScalarFieldEnum)[keyof typeof DesignerAssetScalarFieldEnum]
+
+
 export const DesignerTemplateScalarFieldEnum = {
   id: 'id',
   templateNo: 'templateNo',
@@ -1590,6 +1752,11 @@ export const DesignerTemplateScalarFieldEnum = {
   tags: 'tags',
   previewUrl: 'previewUrl',
   templateFile: 'templateFile',
+  designKey: 'designKey',
+  category: 'category',
+  description: 'description',
+  usesPhotos: 'usesPhotos',
+  musicUrl: 'musicUrl',
   status: 'status',
   designerId: 'designerId',
   createdAt: 'createdAt',
@@ -1629,6 +1796,8 @@ export const GuestScalarFieldEnum = {
   source: 'source',
   rsvpStatus: 'rsvpStatus',
   plusOnes: 'plusOnes',
+  rsvpEvents: 'rsvpEvents',
+  rsvpAnswers: 'rsvpAnswers',
   checkedIn: 'checkedIn',
   checkedInAt: 'checkedInAt',
   checkedInById: 'checkedInById',
@@ -1644,6 +1813,17 @@ export const GuestScalarFieldEnum = {
 } as const
 
 export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
+
+
+export const GuestWishScalarFieldEnum = {
+  id: 'id',
+  invitationId: 'invitationId',
+  authorName: 'authorName',
+  message: 'message',
+  createdAt: 'createdAt'
+} as const
+
+export type GuestWishScalarFieldEnum = (typeof GuestWishScalarFieldEnum)[keyof typeof GuestWishScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -2074,9 +2254,11 @@ export type GlobalOmitConfig = {
   invitationAsset?: Prisma.InvitationAssetOmit
   payment?: Prisma.PaymentOmit
   paymentOrder?: Prisma.PaymentOrderOmit
+  designerAsset?: Prisma.DesignerAssetOmit
   designerTemplate?: Prisma.DesignerTemplateOmit
   weddingTable?: Prisma.WeddingTableOmit
   guest?: Prisma.GuestOmit
+  guestWish?: Prisma.GuestWishOmit
   auditLog?: Prisma.AuditLogOmit
   waBlastTemplate?: Prisma.WaBlastTemplateOmit
 }

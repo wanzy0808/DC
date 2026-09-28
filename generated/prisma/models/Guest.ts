@@ -117,6 +117,8 @@ export type GuestCountAggregateOutputType = {
   source: number
   rsvpStatus: number
   plusOnes: number
+  rsvpEvents: number
+  rsvpAnswers: number
   checkedIn: number
   checkedInAt: number
   checkedInById: number
@@ -224,6 +226,8 @@ export type GuestCountAggregateInputType = {
   source?: true
   rsvpStatus?: true
   plusOnes?: true
+  rsvpEvents?: true
+  rsvpAnswers?: true
   checkedIn?: true
   checkedInAt?: true
   checkedInById?: true
@@ -342,6 +346,8 @@ export type GuestGroupByOutputType = {
   source: $Enums.GuestSource
   rsvpStatus: $Enums.RsvpStatus
   plusOnes: number
+  rsvpEvents: string[]
+  rsvpAnswers: runtime.JsonValue | null
   checkedIn: boolean
   checkedInAt: Date | null
   checkedInById: string | null
@@ -396,6 +402,8 @@ export type GuestWhereInput = {
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
+  rsvpEvents?: Prisma.StringNullableListFilter<"Guest">
+  rsvpAnswers?: Prisma.JsonNullableFilter<"Guest">
   checkedIn?: Prisma.BoolFilter<"Guest"> | boolean
   checkedInAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   checkedInById?: Prisma.StringNullableFilter<"Guest"> | string | null
@@ -430,6 +438,8 @@ export type GuestOrderByWithRelationInput = {
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
+  rsvpEvents?: Prisma.SortOrder
+  rsvpAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedIn?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -469,6 +479,8 @@ export type GuestWhereUniqueInput = Prisma.AtLeast<{
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
+  rsvpEvents?: Prisma.StringNullableListFilter<"Guest">
+  rsvpAnswers?: Prisma.JsonNullableFilter<"Guest">
   checkedIn?: Prisma.BoolFilter<"Guest"> | boolean
   checkedInAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   checkedInById?: Prisma.StringNullableFilter<"Guest"> | string | null
@@ -502,6 +514,8 @@ export type GuestOrderByWithAggregationInput = {
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
+  rsvpEvents?: Prisma.SortOrder
+  rsvpAnswers?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedIn?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -541,6 +555,8 @@ export type GuestScalarWhereWithAggregatesInput = {
   source?: Prisma.EnumGuestSourceWithAggregatesFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusWithAggregatesFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntWithAggregatesFilter<"Guest"> | number
+  rsvpEvents?: Prisma.StringNullableListFilter<"Guest">
+  rsvpAnswers?: Prisma.JsonNullableWithAggregatesFilter<"Guest">
   checkedIn?: Prisma.BoolWithAggregatesFilter<"Guest"> | boolean
   checkedInAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Guest"> | Date | string | null
   checkedInById?: Prisma.StringNullableWithAggregatesFilter<"Guest"> | string | null
@@ -570,6 +586,8 @@ export type GuestCreateInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -603,6 +621,8 @@ export type GuestUncheckedCreateInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -632,6 +652,8 @@ export type GuestUpdateInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -665,6 +687,8 @@ export type GuestUncheckedUpdateInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -696,6 +720,8 @@ export type GuestCreateManyInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -725,6 +751,8 @@ export type GuestUpdateManyMutationInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -755,6 +783,8 @@ export type GuestUncheckedUpdateManyInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -801,6 +831,8 @@ export type GuestCountOrderByAggregateInput = {
   source?: Prisma.SortOrder
   rsvpStatus?: Prisma.SortOrder
   plusOnes?: Prisma.SortOrder
+  rsvpEvents?: Prisma.SortOrder
+  rsvpAnswers?: Prisma.SortOrder
   checkedIn?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrder
   checkedInById?: Prisma.SortOrder
@@ -1019,6 +1051,10 @@ export type GuestCreatetagsInput = {
   set: string[]
 }
 
+export type GuestCreatersvpEventsInput = {
+  set: string[]
+}
+
 export type GuestUpdatetagsInput = {
   set?: string[]
   push?: string | string[]
@@ -1030,6 +1066,11 @@ export type EnumGuestSourceFieldUpdateOperationsInput = {
 
 export type EnumRsvpStatusFieldUpdateOperationsInput = {
   set?: $Enums.RsvpStatus
+}
+
+export type GuestUpdatersvpEventsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type GuestCreateWithoutCheckedInByInput = {
@@ -1047,6 +1088,8 @@ export type GuestCreateWithoutCheckedInByInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -1079,6 +1122,8 @@ export type GuestUncheckedCreateWithoutCheckedInByInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -1138,6 +1183,8 @@ export type GuestScalarWhereInput = {
   source?: Prisma.EnumGuestSourceFilter<"Guest"> | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFilter<"Guest"> | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFilter<"Guest"> | number
+  rsvpEvents?: Prisma.StringNullableListFilter<"Guest">
+  rsvpAnswers?: Prisma.JsonNullableFilter<"Guest">
   checkedIn?: Prisma.BoolFilter<"Guest"> | boolean
   checkedInAt?: Prisma.DateTimeNullableFilter<"Guest"> | Date | string | null
   checkedInById?: Prisma.StringNullableFilter<"Guest"> | string | null
@@ -1167,6 +1214,8 @@ export type GuestCreateWithoutInvitationInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -1198,6 +1247,8 @@ export type GuestUncheckedCreateWithoutInvitationInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -1253,6 +1304,8 @@ export type GuestCreateWithoutTableInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -1284,6 +1337,8 @@ export type GuestUncheckedCreateWithoutTableInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -1341,6 +1396,8 @@ export type GuestCreateManyCheckedInByInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   waBlastSelected?: boolean
@@ -1369,6 +1426,8 @@ export type GuestUpdateWithoutCheckedInByInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1401,6 +1460,8 @@ export type GuestUncheckedUpdateWithoutCheckedInByInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1431,6 +1492,8 @@ export type GuestUncheckedUpdateManyWithoutCheckedInByInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1460,6 +1523,8 @@ export type GuestCreateManyInvitationInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -1489,6 +1554,8 @@ export type GuestUpdateWithoutInvitationInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1520,6 +1587,8 @@ export type GuestUncheckedUpdateWithoutInvitationInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1550,6 +1619,8 @@ export type GuestUncheckedUpdateManyWithoutInvitationInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1580,6 +1651,8 @@ export type GuestCreateManyTableInput = {
   source?: $Enums.GuestSource
   rsvpStatus?: $Enums.RsvpStatus
   plusOnes?: number
+  rsvpEvents?: Prisma.GuestCreatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: boolean
   checkedInAt?: Date | string | null
   checkedInById?: string | null
@@ -1609,6 +1682,8 @@ export type GuestUpdateWithoutTableInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   waBlastSelected?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1640,6 +1715,8 @@ export type GuestUncheckedUpdateWithoutTableInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1670,6 +1747,8 @@ export type GuestUncheckedUpdateManyWithoutTableInput = {
   source?: Prisma.EnumGuestSourceFieldUpdateOperationsInput | $Enums.GuestSource
   rsvpStatus?: Prisma.EnumRsvpStatusFieldUpdateOperationsInput | $Enums.RsvpStatus
   plusOnes?: Prisma.IntFieldUpdateOperationsInput | number
+  rsvpEvents?: Prisma.GuestUpdatersvpEventsInput | string[]
+  rsvpAnswers?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   checkedIn?: Prisma.BoolFieldUpdateOperationsInput | boolean
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1703,6 +1782,8 @@ export type GuestSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
+  rsvpEvents?: boolean
+  rsvpAnswers?: boolean
   checkedIn?: boolean
   checkedInAt?: boolean
   checkedInById?: boolean
@@ -1737,6 +1818,8 @@ export type GuestSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
+  rsvpEvents?: boolean
+  rsvpAnswers?: boolean
   checkedIn?: boolean
   checkedInAt?: boolean
   checkedInById?: boolean
@@ -1771,6 +1854,8 @@ export type GuestSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
+  rsvpEvents?: boolean
+  rsvpAnswers?: boolean
   checkedIn?: boolean
   checkedInAt?: boolean
   checkedInById?: boolean
@@ -1805,6 +1890,8 @@ export type GuestSelectScalar = {
   source?: boolean
   rsvpStatus?: boolean
   plusOnes?: boolean
+  rsvpEvents?: boolean
+  rsvpAnswers?: boolean
   checkedIn?: boolean
   checkedInAt?: boolean
   checkedInById?: boolean
@@ -1819,7 +1906,7 @@ export type GuestSelectScalar = {
   updatedAt?: boolean
 }
 
-export type GuestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invitationId" | "tableId" | "seatNumber" | "name" | "phone" | "category" | "tags" | "personalAddressee" | "recipientType" | "invitedPax" | "personalGreeting" | "personalSharedAt" | "source" | "rsvpStatus" | "plusOnes" | "checkedIn" | "checkedInAt" | "checkedInById" | "waBlastSelected" | "waBlastSentAt" | "personalToken" | "personalPublished" | "personalPasswordProtected" | "personalPasswordHash" | "personalViewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
+export type GuestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "invitationId" | "tableId" | "seatNumber" | "name" | "phone" | "category" | "tags" | "personalAddressee" | "recipientType" | "invitedPax" | "personalGreeting" | "personalSharedAt" | "source" | "rsvpStatus" | "plusOnes" | "rsvpEvents" | "rsvpAnswers" | "checkedIn" | "checkedInAt" | "checkedInById" | "waBlastSelected" | "waBlastSentAt" | "personalToken" | "personalPublished" | "personalPasswordProtected" | "personalPasswordHash" | "personalViewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["guest"]>
 export type GuestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   invitation?: boolean | Prisma.InvitationDefaultArgs<ExtArgs>
   table?: boolean | Prisma.Guest$tableArgs<ExtArgs>
@@ -1860,6 +1947,8 @@ export type $GuestPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     source: $Enums.GuestSource
     rsvpStatus: $Enums.RsvpStatus
     plusOnes: number
+    rsvpEvents: string[]
+    rsvpAnswers: runtime.JsonValue | null
     checkedIn: boolean
     checkedInAt: Date | null
     checkedInById: string | null
@@ -2314,6 +2403,8 @@ export interface GuestFieldRefs {
   readonly source: Prisma.FieldRef<"Guest", 'GuestSource'>
   readonly rsvpStatus: Prisma.FieldRef<"Guest", 'RsvpStatus'>
   readonly plusOnes: Prisma.FieldRef<"Guest", 'Int'>
+  readonly rsvpEvents: Prisma.FieldRef<"Guest", 'String[]'>
+  readonly rsvpAnswers: Prisma.FieldRef<"Guest", 'Json'>
   readonly checkedIn: Prisma.FieldRef<"Guest", 'Boolean'>
   readonly checkedInAt: Prisma.FieldRef<"Guest", 'DateTime'>
   readonly checkedInById: Prisma.FieldRef<"Guest", 'String'>

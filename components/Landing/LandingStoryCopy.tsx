@@ -53,8 +53,8 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
         <span
           className="block h-full w-full bg-current"
           style={{
-            WebkitMaskImage: 'url("/assets/landing/ornaments/botanical/branch-05.png")',
-            maskImage: 'url("/assets/landing/ornaments/botanical/branch-05.png")',
+            WebkitMaskImage: 'url("/assets/landing/ornaments/botanical/branch-05.webp")',
+            maskImage: 'url("/assets/landing/ornaments/botanical/branch-05.webp")',
             WebkitMaskRepeat: "no-repeat",
             maskRepeat: "no-repeat",
             WebkitMaskPosition: "right center",

@@ -10,7 +10,7 @@ This folder documents the Zen Atelier design assets; React artwork components no
 
 The latest **owner-requested envelope** is a hand-built Japanese ceremonial stationery composition in `components/PublicInvitation/ZenAtelierScene.tsx` and `components/PublicInvitation/zen-atelier.css`: an ivory washi paper packet, asymmetrical folded layers, central red/gold `mizuhiki` cord and printed red seal, shoji/slatted shadow and subdued blossom/enso/ink-mountain vectors already defined in `components/PublicInvitation/ZenAtelierArtwork.tsx`. A guest's actual names/date appear on the inner letter only once it opens. The Japanese label is decorative and changes between wedding/general event context. One **Buka Undangan** action directly starts the existing shared music gesture and stages the fold → letter → Cover animation. Reduced-motion users advance immediately. Studio canvas can show/replay the same envelope; catalog cards/popups continue showing Cover/Hero.
 
-This **replaces use of `amplop1.png` in the live envelope**, because that asset is a Western-style photographic wax-seal envelope and the owner requested a stronger Japanese visual distinct from the rest of the template. The original image stays in `public/templates/Zen Atelier/` untouched as an optional reference; do not remove or rename it. Cover, identity, gallery and remaining invitation sections are unchanged by this envelope-only redesign. Older log entries below document the previous visual implementation and are historical, not instructions to restore it. This code change has not been compared against a real browser screenshot of the latest right-hand visual reference: no pixel-perfect claim.
+This **replaces use of `amplop1.webp` in the live envelope**, because that asset is a Western-style photographic wax-seal envelope and the owner requested a stronger Japanese visual distinct from the rest of the template. The original image stays in `public/templates/Zen Atelier/` untouched as an optional reference; do not remove or rename it. Cover, identity, gallery and remaining invitation sections are unchanged by this envelope-only redesign. Older log entries below document the previous visual implementation and are historical, not instructions to restore it. This code change has not been compared against a real browser screenshot of the latest right-hand visual reference: no pixel-perfect claim.
 
 ## Original user-uploaded images
 
@@ -37,20 +37,20 @@ Source: owner-uploaded `Pasted markdown(3).md`, plus universal `template.md`. Th
 
 | File | Dimensions | Alpha channel | Current role |
 | --- | --- | --- | --- |
-| `amplop1.png` | 1122 × 1402 | No | Preserved historical wax-envelope reference; **not used by the current Japanese envelope** |
-| `bamboo1.png` | 1024 × 1536 | Yes | Available bamboo; omitted from revised gallery |
-| `bunga0001.png` | 1254 × 1254 | Yes | Upper-left cover sakura |
-| `bunga0002.png` | 1254 × 1254 | Yes | Available alternate sakura; not added to cover |
-| `bunga0003.png` | 1254 × 1254 | Yes | Available alternate sakura |
-| `bunga0004.png` | 1254 × 1254 | Yes | Lower-right identity sakura |
-| `darkcloud1.png` | 2172 × 724 | Yes | Available alternate transparent landscape |
-| `darkcloud2.png` | 2172 × 724 | Yes | Gallery heading, RSVP and closing landscape |
-| `ensostroke.png` | 1254 × 1254 | Yes | Available ink circle; omitted from sections without reference need |
-| `inkmountain.png` | 1122 × 1402 | No | Cover lower landscape with feathered edge |
-| `japancup.png` | 1122 × 1402 | No | Available tea photo; removed from RSVP/Gift decoration |
-| `japanroom1.png` | 1122 × 1402 | No | Available interior; not a substitute couple photograph |
-| `japanroom2.png` | 1122 × 1402 | No | Available interior; legacy unused empty-state asset |
-| `redsun1.png` | 1254 × 1254 | Yes | Available red sun; omitted from revised cover |
+| `amplop1.webp` | 1122 × 1402 | No | Preserved historical wax-envelope reference; **not used by the current Japanese envelope** |
+| `bamboo1.webp` | 1024 × 1536 | Yes | Available bamboo; omitted from revised gallery |
+| `bunga0001.webp` | 1254 × 1254 | Yes | Upper-left cover sakura |
+| `bunga0002.webp` | 1254 × 1254 | Yes | Available alternate sakura; not added to cover |
+| `bunga0003.webp` | 1254 × 1254 | Yes | Available alternate sakura |
+| `bunga0004.webp` | 1254 × 1254 | Yes | Lower-right identity sakura |
+| `darkcloud1.webp` | 2172 × 724 | Yes | Available alternate transparent landscape |
+| `darkcloud2.webp` | 2172 × 724 | Yes | Gallery heading, RSVP and closing landscape |
+| `ensostroke.webp` | 1254 × 1254 | Yes | Available ink circle; omitted from sections without reference need |
+| `inkmountain.webp` | 1122 × 1402 | No | Cover lower landscape with feathered edge |
+| `japancup.webp` | 1122 × 1402 | No | Available tea photo; removed from RSVP/Gift decoration |
+| `japanroom1.webp` | 1122 × 1402 | No | Available interior; not a substitute couple photograph |
+| `japanroom2.webp` | 1122 × 1402 | No | Available interior; legacy unused empty-state asset |
+| `redsun1.webp` | 1254 × 1254 | Yes | Available red sun; omitted from revised cover |
 
 The Zen default music now uses the shared canonical `public/assets/audio/jikan-wa-mikata-da.mp3`, with owner audio still taking precedence. The old duplicate MP3 inside `public/templates/Zen Atelier/` was removed during shared-asset cleanup. The repository also has shared demo photographs under `/assets/demo/invitation/`; catalogue fixtures use those already-provided local images, not random external sources. They are not verified as the moodboard's Aruna/Kaito photos. No separate paper texture or wax-seal export exists in this directory. The envelope photograph contains both paper and seal; CSS adds subtle grain without generating substitute ornaments. Next/Image serves sized derivatives of the principal decorative files without modifying PNG sources.
 

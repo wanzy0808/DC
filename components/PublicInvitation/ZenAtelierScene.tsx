@@ -67,14 +67,14 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           <span>Buka Undangan</span>
         </button>
       </> : <>
-        <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.png"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" data-studio-native-object="object:cover:blossom" />
+        <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.webp"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" data-studio-native-object="object:cover:blossom" />
         <div className="zen-cover-copy" data-studio-native-object="object:cover:copy-group">
           <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{isWedding ? "The Wedding Of" : "Sebuah Undangan"}</p>
           <h1 data-studio-native-heading="">{couple.length === 2 ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></> : <span>{title}</span>}</h1>
           <p className="zen-cover-date" data-studio-native-object="object:cover:date">{date}</p>
           {hashtag?.trim() && <p className="zen-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
         </div>
-        <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.png"} alt="" aria-hidden="true" className="zen-cover-mountain" data-studio-native-object="object:cover:mountains" />
+        <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.webp"} alt="" aria-hidden="true" className="zen-cover-mountain" data-studio-native-object="object:cover:mountains" />
       </>}
     </section>
   );

@@ -82,6 +82,11 @@ export type Payment = Prisma.PaymentModel
  */
 export type PaymentOrder = Prisma.PaymentOrderModel
 /**
+ * Model DesignerAsset
+ * 
+ */
+export type DesignerAsset = Prisma.DesignerAssetModel
+/**
  * Model DesignerTemplate
  * 
  */
@@ -96,6 +101,11 @@ export type WeddingTable = Prisma.WeddingTableModel
  * 
  */
 export type Guest = Prisma.GuestModel
+/**
+ * Model GuestWish
+ * 
+ */
+export type GuestWish = Prisma.GuestWishModel
 /**
  * Model AuditLog
  * 

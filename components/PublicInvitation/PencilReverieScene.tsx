@@ -19,7 +19,7 @@ type SceneProps = {
 
 /**
  * The artwork is a complete drawing, not a cropped CSS background.
- * In particular bungaandlampbg.png contains the ENTIRE lantern and its bracket.
+ * In particular bungaandlampbg.webp contains the ENTIRE lantern and its bracket.
  * The 1122x1402 paper illustrations have their own aspect ratio and remain in flow.
  */
 function PaperIllustration({ file, priority = false, className = "", studioObject }: { file: string; priority?: boolean; className?: string; studioObject?: string }) {
@@ -65,7 +65,7 @@ export default function PencilReverieScene({
         <p data-studio-native-object="object:envelope:intro-copy">Setiap cerita punya awalnya.</p>
       </div>
       <div className="pr-letter-illustration" data-studio-native-object="object:envelope:illustration-group">
-        <PaperIllustration file="bingkai.png" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
+        <PaperIllustration file="bingkai.webp" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
           <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
           <h1 data-studio-native-heading="">{names}</h1>
@@ -81,7 +81,7 @@ export default function PencilReverieScene({
         <span className="pr-overline" data-studio-native-object="object:cover:kicker">{isWedding ? "THE WEDDING OF" : "SEBUAH UNDANGAN"}</span>
       </header>
       <div className="pr-cover-illustration" data-studio-native-object="object:cover:illustration-group">
-        <PaperIllustration file="bungaandlampbg.png" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
+        <PaperIllustration file="bungaandlampbg.webp" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
         <div className="pr-cover-copy" data-studio-native-object="object:cover:copy-panel">
           <h1 className="pr-cover-names" data-studio-native-heading="">{couple.length === 2
             ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></>

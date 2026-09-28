@@ -18,7 +18,7 @@ test("only browser-public template illustrations can be placed", () => {
   assert.ok(isTemplateIllustration("/templates/Zen%20Atelier/ornament.webp"));
   assert.ok(isTemplateIllustration("/uploads/designer-assets/user123/asset.webp"));
   for (const invalid of [
-    "/assets/private.svg", "https://example.com/image.png", "//evil.com/flower.png",
+    "/assets/private.svg", "https://example.com/image.png", "//evil.com/flower.webp",
     "/templates/../secret.png", "/templates/%2e%2e/secret.png",
     "/templates/rose/../../secret.webp", "/templates/rose/%252e%252e/flower.webp",
     "/templates/rose/file.pdf", "/uploads/designer-assets/../secret.webp",
@@ -31,7 +31,7 @@ test("asset layer codec keeps bounded coordinates, transparency, IDs and stackin
     asset("front", "/templates/pencil-reverie/flower.webp"),
     { ...asset("back"), id: "back", x: -10, y: 999, opacity: 2, width: 100 },
     asset("front"),
-    { ...asset("unknown"), src: "https://example.com/flower.png" },
+    { ...asset("unknown"), src: "https://example.com/flower.webp" },
   ];
   const value = withAssetLayers(original, layers);
   assert.equal(value.split("::").filter((part) => part.startsWith("layers=")).length, 1);

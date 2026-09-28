@@ -59,9 +59,11 @@ export const ModelName = {
   InvitationAsset: 'InvitationAsset',
   Payment: 'Payment',
   PaymentOrder: 'PaymentOrder',
+  DesignerAsset: 'DesignerAsset',
   DesignerTemplate: 'DesignerTemplate',
   WeddingTable: 'WeddingTable',
   Guest: 'Guest',
+  GuestWish: 'GuestWish',
   AuditLog: 'AuditLog',
   WaBlastTemplate: 'WaBlastTemplate'
 } as const
@@ -235,6 +237,18 @@ export const PaymentOrderScalarFieldEnum = {
 export type PaymentOrderScalarFieldEnum = (typeof PaymentOrderScalarFieldEnum)[keyof typeof PaymentOrderScalarFieldEnum]
 
 
+export const DesignerAssetScalarFieldEnum = {
+  id: 'id',
+  ownerId: 'ownerId',
+  url: 'url',
+  title: 'title',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DesignerAssetScalarFieldEnum = (typeof DesignerAssetScalarFieldEnum)[keyof typeof DesignerAssetScalarFieldEnum]
+
+
 export const DesignerTemplateScalarFieldEnum = {
   id: 'id',
   templateNo: 'templateNo',
@@ -242,6 +256,11 @@ export const DesignerTemplateScalarFieldEnum = {
   tags: 'tags',
   previewUrl: 'previewUrl',
   templateFile: 'templateFile',
+  designKey: 'designKey',
+  category: 'category',
+  description: 'description',
+  usesPhotos: 'usesPhotos',
+  musicUrl: 'musicUrl',
   status: 'status',
   designerId: 'designerId',
   createdAt: 'createdAt',
@@ -281,6 +300,8 @@ export const GuestScalarFieldEnum = {
   source: 'source',
   rsvpStatus: 'rsvpStatus',
   plusOnes: 'plusOnes',
+  rsvpEvents: 'rsvpEvents',
+  rsvpAnswers: 'rsvpAnswers',
   checkedIn: 'checkedIn',
   checkedInAt: 'checkedInAt',
   checkedInById: 'checkedInById',
@@ -296,6 +317,17 @@ export const GuestScalarFieldEnum = {
 } as const
 
 export type GuestScalarFieldEnum = (typeof GuestScalarFieldEnum)[keyof typeof GuestScalarFieldEnum]
+
+
+export const GuestWishScalarFieldEnum = {
+  id: 'id',
+  invitationId: 'invitationId',
+  authorName: 'authorName',
+  message: 'message',
+  createdAt: 'createdAt'
+} as const
+
+export type GuestWishScalarFieldEnum = (typeof GuestWishScalarFieldEnum)[keyof typeof GuestWishScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

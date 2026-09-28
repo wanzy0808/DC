@@ -78,6 +78,7 @@ export type GuestSource = (typeof GuestSource)[keyof typeof GuestSource]
 
 export const TemplateStatus = {
   DRAFT: 'DRAFT',
+  REVIEW: 'REVIEW',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
 } as const

@@ -8,21 +8,21 @@ import "./pencil-reverie.css";
 const root = "/templates/pencil-reverie/";
 type Drawing = { file: string; width: number; height: number; caption: string };
 const drawings: Record<string, Drawing> = {
-  bingkai: { file:"bingkai.png", width:1122, height:1402, caption:"Surat kecil untukmu" },
-  riverside: { file:"bungaandlampbg.png", width:1122, height:1402, caption:"Jalan kecil penuh cerita" },
-  booksScene: { file:"bungabg.png", width:1122, height:1402, caption:"Halaman-halaman kenangan" },
-  magnolia: { file:"bungabg1.png", width:1122, height:1402, caption:"Bunga-bunga yang mekar" },
-  bicycleScene: { file:"sepedabg.png", width:1122, height:1402, caption:"Perjalanan bersama" },
-  lamp: { file:"streetlamp.png", width:1086, height:1448, caption:"Lampu jalan vintage" },
-  couple: { file:"couplesitting.png", width:1122, height:1402, caption:"Sketsa pasangan" },
-  bicycle: { file:"bycicle.png", width:1448, height:1086, caption:"Sepeda klasik" },
-  camera: { file:"camera1.png", width:1254, height:1254, caption:"Kamera analog" },
-  cassette: { file:"casette.png", width:1254, height:1254, caption:"Kaset nostalgia" },
-  balloon: { file:"loveballon1.png", width:1254, height:1254, caption:"Balon hati" },
-  ticket: { file:"loveticket.png", width:1448, height:1086, caption:"Tiket kenangan" },
-  polaroid: { file:"polaroidlove.png", width:1254, height:1254, caption:"Polaroid kisah kita" },
-  bow: { file:"ribbon.png", width:1254, height:1254, caption:"Pita merah muda" },
-  books: { file:"bookstack.png", width:1254, height:1254, caption:"Buku-buku lama" },
+  bingkai: { file:"bingkai.webp", width:1122, height:1402, caption:"Surat kecil untukmu" },
+  riverside: { file:"bungaandlampbg.webp", width:1122, height:1402, caption:"Jalan kecil penuh cerita" },
+  booksScene: { file:"bungabg.webp", width:1122, height:1402, caption:"Halaman-halaman kenangan" },
+  magnolia: { file:"bungabg1.webp", width:1122, height:1402, caption:"Bunga-bunga yang mekar" },
+  bicycleScene: { file:"sepedabg.webp", width:1122, height:1402, caption:"Perjalanan bersama" },
+  lamp: { file:"streetlamp.webp", width:1086, height:1448, caption:"Lampu jalan vintage" },
+  couple: { file:"couplesitting.webp", width:1122, height:1402, caption:"Sketsa pasangan" },
+  bicycle: { file:"bycicle.webp", width:1448, height:1086, caption:"Sepeda klasik" },
+  camera: { file:"camera1.webp", width:1254, height:1254, caption:"Kamera analog" },
+  cassette: { file:"casette.webp", width:1254, height:1254, caption:"Kaset nostalgia" },
+  balloon: { file:"loveballon1.webp", width:1254, height:1254, caption:"Balon hati" },
+  ticket: { file:"loveticket.webp", width:1448, height:1086, caption:"Tiket kenangan" },
+  polaroid: { file:"polaroidlove.webp", width:1254, height:1254, caption:"Polaroid kisah kita" },
+  bow: { file:"ribbon.webp", width:1254, height:1254, caption:"Pita merah muda" },
+  books: { file:"bookstack.webp", width:1254, height:1254, caption:"Buku-buku lama" },
 };
 
 // One COMPLETE drawing per section. Old artwork had three absolutely-positioned

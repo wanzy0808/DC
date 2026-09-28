@@ -490,7 +490,7 @@ export default function UniversalInvitationTemplate({
           {section("identity", key === "pencil-reverie" ? (
             <div className="pr-identity-story">
               <div className="pr-identity-polaroid" data-studio-native-object="object:identity:portrait-art"><span className="pr-polaroid-tape" aria-hidden="true"/>
-                <Image alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.png" width={1122} height={1402} sizes="(max-width: 640px) 70vw, 310px" loading="lazy"/>
+                <Image alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.webp" width={1122} height={1402} sizes="(max-width: 640px) 70vw, 310px" loading="lazy"/>
               </div>
               <p className="pr-identity-names" data-studio-native-object="object:identity:names">{names || eventTitle}</p>
               {couple && <p className="pr-identity-signature" data-studio-native-object="object:identity:signature">Dua hati, satu cerita yang selalu tumbuh.</p>}

@@ -58,7 +58,7 @@ test("package metadata uses the product name rather than a starter-app placehold
 
 test("Undara navbar brand uses the shared image logo asset", () => {
   assert.equal(existsSync(path("public/assets/brand/undara/logo.webp")), true);
-  assert.equal(existsSync(path("app/logo.png")), false);
+  assert.equal(existsSync(path("app/logo.webp")), false);
   const brand = read("components/Brand/BrandWordmark.tsx");
   const globalStyles = read("app/globals.css");
   assert.match(brand, /undara-brand-logo/);
@@ -66,7 +66,7 @@ test("Undara navbar brand uses the shared image logo asset", () => {
   assert.match(brand, /Melangkah Bersama, Menuju Hari Penuh Makna/);
   assert.match(brand, /public: "w-\[112px\] sm:w-\[140px\] lg:w-\[148px\]"/);
   assert.match(brand, /text-\[7px\] sm:text-\[9px\] lg:text-\[10px\]/);
-  assert.match(globalStyles, /mask-image:\s*url\("\/assets\/brand\/undara\/logo\.png"\)/);
+  assert.match(globalStyles, /mask-image:\s*url\("\/assets\/brand\/undara\/logo\.webp"\)/);
 });
 
 
@@ -113,8 +113,8 @@ test("Undara shared assets stay centralized", () => {
     "public/Idigi.png",
     "public/Ufisik.png",
     "public/eventplanner.png",
-    "public/guestbook.png",
-    "public/flower.png",
+    "public/guestbook.webp",
+    "public/flower.webp",
     "public/couple.jpg",
     "public/bca.webp",
     "public/A Himitsu - Fragile.mp3",
@@ -142,9 +142,9 @@ test("runtime source does not reference retired root asset URLs", () => {
     "/Idigi.png",
     "/Ufisik.png",
     "/eventplanner.png",
-    "/guestbook.png",
-    "/flower.png",
-    "/cloud.png",
+    "/guestbook.webp",
+    "/flower.webp",
+    "/cloud.webp",
     "/tiara.png",
     "/couple.jpg",
     "/couple2.jpg",
@@ -170,7 +170,7 @@ test("runtime source does not reference retired root asset URLs", () => {
 
 test("shared non-home marketing atmosphere uses botanical branch-02 instead of the legacy flower asset", () => {
   const landingOrnament = read("components/Landing/LandingFloralGlow.tsx");
-  assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.png/);
+  assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.webp/);
   assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.webp"), false);
 });
 
@@ -189,10 +189,10 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
 
   assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.webp")), true);
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
-  assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.png/);
+  assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.webp/);
   assert.match(woodland, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
-  assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
+  assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.webp/);
   assert.equal(home.includes("LandingOuterBranches"), false);
 });
 
@@ -284,7 +284,7 @@ test("landing story copy keeps the Undara doorway message and larger emphasis", 
   assert.match(story, /Seluruh kebutuhan perayaanmu ada di sini/);
   assert.match(story, /w-\[min\(88vw,460px\)\][^"]*sm:w-\[min\(42vw,520px\)\][^"]*lg:w-\[min\(31vw,560px\)\]/);
   assert.match(story, /text-\[clamp\(1\.35rem,2\.05vw,2\.05rem\)\]/);
-  assert.match(story, /branch-05\.png/);
+  assert.match(story, /branch-05\.webp/);
   assert.doesNotMatch(story, /h-px w-\[180px\] bg-gradient-to-l/);
 });
 
@@ -292,5 +292,5 @@ test("landing story copy keeps the Undara doorway message and larger emphasis", 
 test("story divider keeps the wider ornamental width", () => {
   const story = read("components/Landing/LandingStoryCopy.tsx");
   assert.match(story, /h-8 w-\[280px\][^"]*sm:w-\[350px\][^"]*lg:w-\[430px\]/);
-  assert.match(story, /branch-05\.png/);
+  assert.match(story, /branch-05\.webp/);
 });

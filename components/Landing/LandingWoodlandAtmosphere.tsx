@@ -3,9 +3,9 @@
 import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 
-const FOREST = "/assets/landing/atmosphere/forest-silhouette.png";
-const CANOPY = "/assets/landing/ornaments/botanical/canopy7.png";
-const DARK_LANTERN_GARDEN = "/assets/landing/atmosphere/bgdarkmode.png";
+const FOREST = "/assets/landing/atmosphere/forest-silhouette.webp";
+const CANOPY = "/assets/landing/ornaments/botanical/canopy7.webp";
+const DARK_LANTERN_GARDEN = "/assets/landing/atmosphere/bgdarkmode.webp";
 
 export default function LandingWoodlandAtmosphere() {
   const reduced = useReducedMotion();

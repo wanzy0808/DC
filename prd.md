@@ -44,7 +44,7 @@ Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama 
 - Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
 - **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
 - Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
-- `components/Brand/BrandWordmark.tsx` adalah sumber tunggal brand lockup customer-facing dan memakai asset final `public/assets/brand/undara/logo.png`. Logo tidak direka ulang sebagai teks biasa; asset monokrom diwarnai melalui semantic `currentColor` agar Light/Dark tetap kontras.
+- `components/Brand/BrandWordmark.tsx` adalah sumber tunggal brand lockup customer-facing dan memakai asset final `public/assets/brand/undara/logo.webp`. Logo tidak direka ulang sebagai teks biasa; asset monokrom diwarnai melalui semantic `currentColor` agar Light/Dark tetap kontras.
 - Nama badan hukum, rekening, kontrak, domain, email, dan social handle **tidak otomatis berubah hanya karena rebrand visual**; ubah hanya setelah data operasional/legal baru dikonfirmasi.
 - Ketentuan ini **menggantikan** instruksi visual aktif sebelumnya yang masih menyebut Cinzel/Fauna One, Rose/pink sebagai brand utama, atau black/near-black sebagai base Dark Mode. Riwayat lama di Appendix A tetap disimpan sebagai histori.
 
@@ -712,7 +712,7 @@ Galeri publik dan pemilih template Studio menampilkan thumbnail scene visual yan
 **Zen Atelier — prompt reconstruction (24 September 2026):** Ikuti `template.md` dan prompt owner: satu amplop dengan aksi Buka Undangan, cover bunga kiri-atas/nama bertumpuk/gunung bawah, foto pasangan lebar via slot cover, galeri dua kolom dengan modal keyboard/swipe, form RSVP bersama berkulit ivory/charcoal, dan musik lokal Zen. Jangan memakai akhir acara sebagai jam resepsi atau kategori foto palsu. RSVP dan Wishes menggunakan layanan bersama yang sudah ada di source; kemampuan produksi pada database target tetap bergantung pada migrasi dan pengujian alur publik yang relevan. Inventaris aset, pemetaan, batas model, dan sisa verifikasi visual dicatat di `assets/templates/zen-atelier/README.md`. 15 key section existing dipertahankan; tidak membuat key cerita fiktif.
 
 
-**Zen Atelier — Amplop Digital ala Jepang, revisi owner (24 September 2026):** Amplop Zen wajib berkarakter **surat seremonial Jepang berbahan washi**, berbeda dari fotografi amplop gaya Barat dengan segel lilin yang dipakai pada implementasi sebelumnya. Komposisi khusus amplop: lipatan kertas asimetris bertumpuk, ikatan seremonial merah/emas `mizuhiki`, cap merah seperti stempel tinta (bukan wax seal), tekstur ivory, aksen rangka `shoji`, cabang bunga, enso/matahari terakota, dan gunung sumi-e yang sudah disediakan sebagai SVG milik Zen. Nama/tanggal di slip dalam harus diambil dari data undangan aktif. Animasi pembuka mengikuti satu gestur `Buka Undangan` → simpul membuka → lipatan terangkat → surat naik → Cover, menghormati `prefers-reduced-motion`, timer parent dan tombol Amplop/Cover Studio; jangan menambah CTA kedua atau tulisan teknis. **Hanya Amplop Zen yang direvisi:** Cover/Hero, 13 bagian lainnya, katalog Cover-first, database, pembayaran, landing/Pintu dan tema lain tetap tidak berubah. PNG `amplop1.png` tidak lagi dipakai oleh renderer Zen saat ini, tetapi tetap ada sebagai aset referensi historis. Foto moodboard kanan menjadi inspirasi owner; klaim kemiripan visual eksak memerlukan screenshot browser untuk perbandingan.
+**Zen Atelier — Amplop Digital ala Jepang, revisi owner (24 September 2026):** Amplop Zen wajib berkarakter **surat seremonial Jepang berbahan washi**, berbeda dari fotografi amplop gaya Barat dengan segel lilin yang dipakai pada implementasi sebelumnya. Komposisi khusus amplop: lipatan kertas asimetris bertumpuk, ikatan seremonial merah/emas `mizuhiki`, cap merah seperti stempel tinta (bukan wax seal), tekstur ivory, aksen rangka `shoji`, cabang bunga, enso/matahari terakota, dan gunung sumi-e yang sudah disediakan sebagai SVG milik Zen. Nama/tanggal di slip dalam harus diambil dari data undangan aktif. Animasi pembuka mengikuti satu gestur `Buka Undangan` → simpul membuka → lipatan terangkat → surat naik → Cover, menghormati `prefers-reduced-motion`, timer parent dan tombol Amplop/Cover Studio; jangan menambah CTA kedua atau tulisan teknis. **Hanya Amplop Zen yang direvisi:** Cover/Hero, 13 bagian lainnya, katalog Cover-first, database, pembayaran, landing/Pintu dan tema lain tetap tidak berubah. PNG `amplop1.webp` tidak lagi dipakai oleh renderer Zen saat ini, tetapi tetap ada sebagai aset referensi historis. Foto moodboard kanan menjadi inspirasi owner; klaim kemiripan visual eksak memerlukan screenshot browser untuk perbandingan.
 
 
 **Representasi kartu template:** Kartu katalog lengkap `/template-design` dan kartu smartphone pilihan di `/d-invitation` menampilkan Cover / Hero sesungguhnya, **bukan** Amplop Digital. Render hanya komponen Cover pada kartu untuk menghindari mengunduh keseluruhan section yang tidak ditampilkan; ketika pengunjung membuka contoh interaktif atau tamu membuka URL undangan, alur tetap mulai dari Amplop Digital jika aktif. Aturan ini berlaku untuk seluruh template dan merupakan kontrak visual `template.md`, bukan perubahan 15 toggle atau data event.
@@ -3541,8 +3541,8 @@ Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geo
 ### Asset contract sementara
 `/jiplak` mengharapkan asset berikut berada di `public/`:
 - `tiara.png`;
-- `flower.png`;
-- `cloud.png`.
+- `flower.webp`;
+- `cloud.webp`.
 
 ### Validation
 - GitHub Actions observation: pending.
@@ -3550,8 +3550,8 @@ Owner meminta eksperimen `/jiplak` berhenti mengandalkan line-art/background geo
 
 ### Follow-up — Jiplak Chrome Continuity & Actual Asset Names
 - Header dan compact footer `/jiplak` dibuat transparan agar ambience/asset backdrop menyatu sampai chrome atas-bawah; landing canonical `/` tetap memakai canvas background existing.
-- Asset remote yang sudah tersedia dipakai dengan nama aktual `/tiara.png` dan `/flower.png`.
-- `/cloud.png` saat ini memiliki blob SHA yang sama dengan `/tiara.png`, sehingga belum dipakai sebagai mist layer agar tidak menampilkan crest yang sama sebagai background. Mist sementara tetap dibangun dari soft animated Rose gradients + rose petals sampai asset cloud diperbaiki.
+- Asset remote yang sudah tersedia dipakai dengan nama aktual `/tiara.png` dan `/flower.webp`.
+- `/cloud.webp` saat ini memiliki blob SHA yang sama dengan `/tiara.png`, sehingga belum dipakai sebagai mist layer agar tidak menampilkan crest yang sama sebagai background. Mist sementara tetap dibangun dari soft animated Rose gradients + rose petals sampai asset cloud diperbaiki.
 
 
 ---
@@ -3563,7 +3563,7 @@ Owner approved exactly two visual elements from the `/jiplak` experiment for the
 
 ### Implementation
 - added `components/Landing/LandingFloralGlow.tsx` as an isolated decorative layer;
-- uses committed `/flower.png` on the lower left and a softer mirrored instance on the lower right;
+- uses committed `/flower.webp` on the lower left and a softer mirrored instance on the lower right;
 - adds a restrained animated Rose radial glow near the Pintu side;
 - respects `useReducedMotion()`;
 - `app/page.tsx` only adds this layer before the existing `RosePetalBackground`;
@@ -3641,7 +3641,7 @@ Implementasikan keseluruhan flow secara bertahap pada branch kode terpisah. Jang
 ## 2026-09-20 — Landing image warning cleanup
 
 ### Intent
-Rapikan warning Next.js pada gambar Pintu `/hp-digital.png` dan `/bukutamu.png` (parent `fill` terdeteksi `position: static`) serta warning LCP pada `/wo.png` dan `/flower.png`. Jangan mengubah desain, konten, ukuran, layout, animasi, maupun perilaku landing utama dan `/jiplak`.
+Rapikan warning Next.js pada gambar Pintu `/hp-digital.png` dan `/bukutamu.png` (parent `fill` terdeteksi `position: static`) serta warning LCP pada `/wo.png` dan `/flower.webp`. Jangan mengubah desain, konten, ukuran, layout, animasi, maupun perilaku landing utama dan `/jiplak`.
 
 ### Implementation
 - `PintuCard.tsx` dan `AssetDreamPortalScene.tsx`: beri setiap `Image fill` wrapper `relative h-full w-full` di dalam elemen absolute/animated yang sudah ada, sehingga containing block selalu eksplisit tanpa mengubah geometry atau Motion.
@@ -3706,7 +3706,7 @@ Three.js pass pertama terlihat seperti Pintu plastik dengan gambar yang melar; M
 - `app/jiplak/ThreePortalScene.tsx` mengembalikan timing orbital asli melalui Motion `animate(useMotionValue)`: tiga fase merata, 10 detik per putaran, ease `[0.42,0,0.58,1]`, repeat delay 0.8 detik, hover pause/resume, perubahan active-door mengikuti Pintu yang paling depan. Explicit selector dipertahankan dan mengarahkan kembali orbit ke dunia yang dipilih.
 - `app/jiplak/three-portal-engine.js` kini memetakan Motion progress ke ellipse x/y/z + depth scale, bukan menahan satu pintu di tengah dan dua pintu statis di sisi. Pintu memakai matte Rose `#C07A84`, panel inset, proper jamb hinge/pivot, stepped threshold, gentle natural studio lighting dan shadow lantai yang tetap ada.
 - Texture UV world foto memakai aspect-ratio-aware *cover* crop dari intrinsic image size. Tidak ada stretch; crop diperlukan mengikuti aspect aperture melengkung.
-- Menghapus shader glow/halo/saturated pink light-spill dan extraneous shine. `components/Layout/AssetDreamBackdrop.tsx` menghapus pink radial background glow khusus eksperimen, tetapi `flower.png` kiri/kanan dan protected `RosePetalBackground` tidak diubah. Soft contact shadow tetap.
+- Menghapus shader glow/halo/saturated pink light-spill dan extraneous shine. `components/Layout/AssetDreamBackdrop.tsx` menghapus pink radial background glow khusus eksperimen, tetapi `flower.webp` kiri/kanan dan protected `RosePetalBackground` tidak diubah. Soft contact shadow tetap.
 - `app/page.tsx`, Pintu canonical, `LandingFloralGlow.tsx`, shared header/footer dan protected rose-petal implementation tidak diubah.
 
 ### Validation
@@ -4519,11 +4519,11 @@ Owner confirmed that the final `/pagecontoh` is complete and must be used at `/`
 
 ## 2026-09-23 — Perbaikan pemuatan PNG Pintu dan warning bunga landing
 
-**Laporan pengguna:** Saat `pnpm dev` dengan Next.js 16.3.3/Turbopack, browser melaporkan `Could not load /eventplanner.png: undefined` dari `PortalWorld` pada landing; Next/Image mengeluh `/flower.png` memiliki parent `position: static`/tinggi 0 saat `fill`; Three.js juga mengeluarkan peringatan nonfatal `THREE.Clock` deprecated.
+**Laporan pengguna:** Saat `pnpm dev` dengan Next.js 16.3.3/Turbopack, browser melaporkan `Could not load /eventplanner.png: undefined` dari `PortalWorld` pada landing; Next/Image mengeluh `/flower.webp` memiliki parent `position: static`/tinggi 0 saat `fill`; Three.js juga mengeluarkan peringatan nonfatal `THREE.Clock` deprecated.
 
-**Temuan:** GitHub `main` memuat `public/eventplanner.png` (ukuran 2.142.034 byte) beserta `Idigi.png`, `guestbook.png`, dan `Ufisik.png`. Keberadaan di remote **tidak membuktikan file bisa diambil dari localhost pengguna**: cek kesesuaian file lokal, huruf besar/kecil, status HTTP dan format PNG jika error masih muncul. Sebelumnya `PortalWorld` memakai `useLoader(THREE.TextureLoader, image)`, yang melempar ketika request atau decode texture gagal dan menjatuhkan seluruh `Canvas`.
+**Temuan:** GitHub `main` memuat `public/eventplanner.png` (ukuran 2.142.034 byte) beserta `Idigi.png`, `guestbook.webp`, dan `Ufisik.png`. Keberadaan di remote **tidak membuktikan file bisa diambil dari localhost pengguna**: cek kesesuaian file lokal, huruf besar/kecil, status HTTP dan format PNG jika error masih muncul. Sebelumnya `PortalWorld` memakai `useLoader(THREE.TextureLoader, image)`, yang melempar ketika request atau decode texture gagal dan menjatuhkan seluruh `Canvas`.
 
-**Perubahan terbatas:** `components/Landing/Pintu/SimpleDoorLab.tsx` mengganti loader suspending/throwing khusus gambar portal dengan `THREE.TextureLoader.load` dalam `useEffect`, callback sukses/error dan disposal ketika unmount. Saat loading/gagal, mesh gambar saja tidak dirender sehingga bidang Rose yang **sudah ada** di bawahnya tetap terlihat; berhasil load menampilkan aset asli yang sama, dengan warna sRGB, clamp, anisotropy, UV dan fade `entering` existing. Tidak ada penggantian foto ke stock image, perubahan geometri/frame Pintu, interaksi, portal zoom, audio atau route. `components/Landing/LandingFloralGlow.tsx` mengganti properti `fill` pada dua Next/Image `flower.png` dengan dimensi eksplisit dan kelas absolute/inset/h-full/w-full/object-contain, mempertahankan posisi dan animasi parent existing. Tidak ada perubahan pada `AssetDreamBackdrop`/eksperimen `/jiplak` atau warna/menu auth.
+**Perubahan terbatas:** `components/Landing/Pintu/SimpleDoorLab.tsx` mengganti loader suspending/throwing khusus gambar portal dengan `THREE.TextureLoader.load` dalam `useEffect`, callback sukses/error dan disposal ketika unmount. Saat loading/gagal, mesh gambar saja tidak dirender sehingga bidang Rose yang **sudah ada** di bawahnya tetap terlihat; berhasil load menampilkan aset asli yang sama, dengan warna sRGB, clamp, anisotropy, UV dan fade `entering` existing. Tidak ada penggantian foto ke stock image, perubahan geometri/frame Pintu, interaksi, portal zoom, audio atau route. `components/Landing/LandingFloralGlow.tsx` mengganti properti `fill` pada dua Next/Image `flower.webp` dengan dimensi eksplisit dan kelas absolute/inset/h-full/w-full/object-contain, mempertahankan posisi dan animasi parent existing. Tidak ada perubahan pada `AssetDreamBackdrop`/eksperimen `/jiplak` atau warna/menu auth.
 
 **Peringatan clock:** `THREE.Clock` deprecated tidak menyebabkan error image; scene masih memakai React Three Fiber, yang dapat memunculkan peringatan melalui internal library. Jangan mengklaim peringatan pasti hilang atau menaikkan major/minor dependency hanya untuk menekannya tanpa pengujian kompatibilitas.
 
@@ -4866,7 +4866,7 @@ Sidebar dashboard sekarang menempatkan **Manajemen Tamu** sebagai grup menu yang
 
 **Alasan:** Owner meminta visual Zen Atelier dari shared ChatGPT dan gambar contoh yang telah dimasukkan ke repo. Setelah inspeksi ditemukan `public/templates/` (bukan `public/template/`), sementara renderer Zen sebelumnya masih menampilkan SVG pengganti.
 
-**Implementasi:** Amplop memakai `amplop1.png`; cover mengomposisikan `japanroom1.png`, `redsun1.png`, `inkmountain.png` beserta bambu/bunga; bagian undangan menggunakan bunga, ensō, pegunungan, dan teh/ruang Jepang sebagai ornamen maupun empty state galeri. Label "The Wedding of" hanya dipakai pada kategori WEDDING. Foto mempelai/galeri tetap menggunakan satu library milik event melalui renderer bersama, palet/font/toggle tetap dipilih Studio; musik tetap dipicu secara sinkron saat klik buka, agar kebijakan autoplay tidak memblokir percobaan play. Foto dekoratif tidak menjadi pengganti foto pelanggan.
+**Implementasi:** Amplop memakai `amplop1.webp`; cover mengomposisikan `japanroom1.webp`, `redsun1.webp`, `inkmountain.webp` beserta bambu/bunga; bagian undangan menggunakan bunga, ensō, pegunungan, dan teh/ruang Jepang sebagai ornamen maupun empty state galeri. Label "The Wedding of" hanya dipakai pada kategori WEDDING. Foto mempelai/galeri tetap menggunakan satu library milik event melalui renderer bersama, palet/font/toggle tetap dipilih Studio; musik tetap dipicu secara sinkron saat klik buka, agar kebijakan autoplay tidak memblokir percobaan play. Foto dekoratif tidak menjadi pengganti foto pelanggan.
 
 **Area/commit:** `components/PublicInvitation/{ZenAtelierScene,InvitationThemeScenes,UniversalInvitationTemplate}.tsx`, `assets/templates/zen-atelier/{ZenArtwork.tsx,README.md}`, `tests/zen-atelier-assets.test.mjs`, AGENTS, README, PRD. Commits implementasi: `cf01b632`, `c235afa6`, `879a1c65`, `4002bffc`, `0df4bb81`, `d1370c92`, `e739c74e` (beserta commit dokumentasi). Tidak ada migrasi database dan tidak mengubah landing/Pintu.
 
@@ -4922,7 +4922,7 @@ Saat memeriksa kegagalan GitHub Actions setelah revisi copy katalog, ditemukan u
 
 **Permintaan:** Owner mengirim gambar moodboard nyata dan meminta hanya satu langkah **coding Amplop Digital**, bukan menghasilkan gambar referensi baru. Aplikasi yang diubah terbatas pada tampilan awal Zen Atelier, sedangkan Cover, 13 section lain, Studio, data pelanggan, landing dan template lain tidak diubah. Acuan khusus amplop adalah panel nomor 02 pada gambar: kertas krem memenuhi viewport ponsel, sapaan di bagian atas, lipatan amplop dan segel lilin terakota di tengah, serta tombol bawah berlabel **Buka Undangan**.
 
-**Implementasi:** `components/PublicInvitation/ZenAtelierScene.tsx` menyusun gambar amplop asli `/templates/Zen%20Atelier/amplop1.png` sebagai lapis kertas, lipatan atas/bawah serta surat yang muncul setelah membuka; tulisan pengantar dan tombol bawah dibuat sebagai HTML hidup, tanpa copy teknis / tombol kedua. `components/PublicInvitation/zen-atelier.css` mengatur komposisi amplop memenuhi tinggi viewport mobile, tekstur dari PNG, font/warna tinta, garis pemisah, ikon Lucide, dan transisi lipatan perspektif → surat terangkat → cover melalui mekanisme pembuka bersama yang sudah tersedia. Music tetap dimulai dari klik asli `Buka Undangan`; fallback reduced motion tidak menahan alur. `tests/zen-atelier-assets.test.mjs` mendapat assertion spesifik untuk area amplop, sumber PNG, trigger animasi, caption dan interaksi bersama. Tidak ada aset master yang diubah dan tidak ada library baru.
+**Implementasi:** `components/PublicInvitation/ZenAtelierScene.tsx` menyusun gambar amplop asli `/templates/Zen%20Atelier/amplop1.webp` sebagai lapis kertas, lipatan atas/bawah serta surat yang muncul setelah membuka; tulisan pengantar dan tombol bawah dibuat sebagai HTML hidup, tanpa copy teknis / tombol kedua. `components/PublicInvitation/zen-atelier.css` mengatur komposisi amplop memenuhi tinggi viewport mobile, tekstur dari PNG, font/warna tinta, garis pemisah, ikon Lucide, dan transisi lipatan perspektif → surat terangkat → cover melalui mekanisme pembuka bersama yang sudah tersedia. Music tetap dimulai dari klik asli `Buka Undangan`; fallback reduced motion tidak menahan alur. `tests/zen-atelier-assets.test.mjs` mendapat assertion spesifik untuk area amplop, sumber PNG, trigger animasi, caption dan interaksi bersama. Tidak ada aset master yang diubah dan tidak ada library baru.
 
 **Berkas:** `components/PublicInvitation/ZenAtelierScene.tsx`, `components/PublicInvitation/zen-atelier.css`, `tests/zen-atelier-assets.test.mjs`, `prd.md`. **Commit coding:** `ac6a86568df454ed61b67d528dbec1f13c631789`, `cb4a73b3f2b49645b9699d28260816fc143284b4`, `3d945da9ec1ad3fb2606333a5415f6268ed40a7d`, `a23504b98d538f75c578f2b5c716782041109e3f`. **Validasi:** Source, test, dan Actions head diperiksa. Belum ada screenshot browser dari runtime untuk perbandingan pixel/proporsi dengan moodboard: **jangan mengklaim tampilan sama persis sebelum owner meninjau hasil aktual di mobile**. Penggunaan PNG asli yang sudah ada tidak berarti geometri lipatan dari foto datar setara objek amplop tiga dimensi yang benar-benar terpisah.
 
@@ -4971,7 +4971,7 @@ Owner meminta tema yang sudah dipilih lewat tombol **Buat Undangan** tidak hilan
 
 ### 24 September 2026 — Redesign Amplop Zen Atelier ala Jepang (referensi owner sisi kanan)
 
-Owner meminta amplop Zen Atelier lebih kuat karakter Jepangnya mengikuti contoh pada **gambar sebelah kanan**, dengan gaya yang harmonis dengan isi Zen, bukan membuat gambar baru. `components/PublicInvitation/ZenAtelierScene.tsx` kini merender amplop seremonial dari lapis washi/origami nyata (HTML/CSS), ikatan `mizuhiki` merah-emas vektor, cap merah non-wax dan slip berisi nama/tanggal data acara, bersama `BlossomBranch`, `EnsoSun`, `InkMountains` dari `assets/templates/zen-atelier/ZenArtwork.tsx`. `components/PublicInvitation/zen-atelier.css` mengatur komposisi responsif, bayangan shoji, pergantian lapis saat buka dan animasi selesai sebelum timer parent Zen 1.350ms (reduced motion langsung masuk). Tombol `Buka Undangan`, data music gesture, sinkronisasi tahap Amplop/Cover Studio dan semua section/renderer bersama tetap memakai mekanisme yang sudah ada. PNG `public/templates/Zen Atelier/amplop1.png` tetap utuh sebagai aset historis tetapi tidak lagi dirender pada amplop Zen; tidak ada aset eksternal/dependency baru. `tests/zen-atelier-assets.test.mjs` diperbarui menguji struktur Jepang dan tahap pembuka; `assets/templates/zen-atelier/README.md` memisahkan arah baru dari inventaris/implementasi lama.
+Owner meminta amplop Zen Atelier lebih kuat karakter Jepangnya mengikuti contoh pada **gambar sebelah kanan**, dengan gaya yang harmonis dengan isi Zen, bukan membuat gambar baru. `components/PublicInvitation/ZenAtelierScene.tsx` kini merender amplop seremonial dari lapis washi/origami nyata (HTML/CSS), ikatan `mizuhiki` merah-emas vektor, cap merah non-wax dan slip berisi nama/tanggal data acara, bersama `BlossomBranch`, `EnsoSun`, `InkMountains` dari `assets/templates/zen-atelier/ZenArtwork.tsx`. `components/PublicInvitation/zen-atelier.css` mengatur komposisi responsif, bayangan shoji, pergantian lapis saat buka dan animasi selesai sebelum timer parent Zen 1.350ms (reduced motion langsung masuk). Tombol `Buka Undangan`, data music gesture, sinkronisasi tahap Amplop/Cover Studio dan semua section/renderer bersama tetap memakai mekanisme yang sudah ada. PNG `public/templates/Zen Atelier/amplop1.webp` tetap utuh sebagai aset historis tetapi tidak lagi dirender pada amplop Zen; tidak ada aset eksternal/dependency baru. `tests/zen-atelier-assets.test.mjs` diperbarui menguji struktur Jepang dan tahap pembuka; `assets/templates/zen-atelier/README.md` memisahkan arah baru dari inventaris/implementasi lama.
 
 **File:** `components/PublicInvitation/ZenAtelierScene.tsx`, `components/PublicInvitation/zen-atelier.css`, `tests/zen-atelier-assets.test.mjs`, `assets/templates/zen-atelier/README.md`, `prd.md`. **Commit kode:** `ff51d7e6f3ed8cd6a3931a0c5c2ada5978af1b4c`, `02e9988a4e7c61204c87c570aacee0fe9d2b8aa6`, `ae82bcb83a20ebc6c64b9b8aac4487e54fd034f9`, `dceb2339ee5caba5cd3d99c83a7919f1635a205c`, dan commit PRD ini. **Validasi:** source dan regression test diperiksa; CI head serta inspeksi visual screenshot mobile/desktop harus diperiksa terpisah. Jangan menyatakan visual pixel-identical dengan gambar kanan tanpa verifikasi browser.
 
@@ -5160,7 +5160,7 @@ Commit [`f0368103`](https://github.com/wanzy0808/DC/commit/f0368103e874425a248ec
 
 Setelah route eksperimen pensiun, komponen produksi homepage dengan nama historis `components/Landing/Pintu/SimpleDoorLab.tsx` dipindah menjadi **`components/Landing/Pintu/LandingDoorScene.tsx`** agar istilah `Lab` tidak menyiratkan masih demo/orphan. Commit [`f2dbec48`](https://github.com/wanzy0808/DC/commit/f2dbec480ad938fbf0e9539074ddf4f1c8e0cae8) hanya mengubah nama file, nama export default, dan import/JSX `app/page.tsx`; isi scene, animasi, props, gambar, transisi dan URL tidak diubah. [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36021506334) dan [Orphan Audit](https://github.com/wanzy0808/DC/actions/runs/36021506263) berhasil untuk commit renaming. Audit tree menemukan **103 file komponen fitur `.tsx`** di luar `components/ui/`, semua memenuhi penamaan PascalCase. Tes source baru `tests/repo-file-naming.test.mjs` memeriksa konvensi komponen, impor homepage produksi, dan route lab yang telah dihapus; tes pertama salah membaca nama sah `TemplateSection.tsx` sebagai `Temp*`, dikoreksi di commit [`a53096ec`](https://github.com/wanzy0808/DC/commit/a53096ec39ee5f4a352cb104bdcda7e1084deb44). [Build Validation run 36022078654](https://github.com/wanzy0808/DC/actions/runs/36022078654) setelah perbaikan **success**. Dokumen aktif AGENTS/README/checklist dan §15 PRD memakai nama komponen baru; nama file lama pada entri Appendix A sebelum catatan ini tetap asli sesuai histori commit.
 
-Jurnal `Dashboard-redesign.md` yang sudah berstatus riwayat dipindah ke `dashboard-redesign-history.md` agar tidak tampak seperti spesifikasi redesign baru. Referensi aktif diperbarui, sedangkan entry historis Appendix A mempertahankan nama pada commit semula. Tidak ada keputusan produk, UI Dashboard atau migrasi data yang berubah. Nama `public/templates/Zen Atelier/`, aset `bycicle.png` dan file musik dengan spasi/simbol sengaja **tidak diubah**: nama persisnya menjadi bagian dari URL dan dapat tersimpan dalam data undangan, referensi tema, serta galeri Studio.
+Jurnal `Dashboard-redesign.md` yang sudah berstatus riwayat dipindah ke `dashboard-redesign-history.md` agar tidak tampak seperti spesifikasi redesign baru. Referensi aktif diperbarui, sedangkan entry historis Appendix A mempertahankan nama pada commit semula. Tidak ada keputusan produk, UI Dashboard atau migrasi data yang berubah. Nama `public/templates/Zen Atelier/`, aset `bycicle.webp` dan file musik dengan spasi/simbol sengaja **tidak diubah**: nama persisnya menjadi bagian dari URL dan dapat tersimpan dalam data undangan, referensi tema, serta galeri Studio.
 
 ### 24 September 2026 — Nama metadata paket aplikasi
 
@@ -5348,11 +5348,11 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** Uji semua navbar/header yang memakai identitas brand dengan **image logo Undara**, bukan wordmark teks.
 
-**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/assets/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik tetap terpisah dari artwork logo dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
+**Implementasi:** file owner `app/logo.webp` dipindahkan ke `public/assets/brand/undara/logo.webp` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik tetap terpisah dari artwork logo dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
 
 **Asset:** sumber PNG owner berukuran 3498×1471 (rasio horizontal), dipindahkan tanpa mengubah byte artwork. `app/Undara Door icon.png` tidak disentuh pada tahap navbar ini.
 
-**Regression:** `tests/repo-file-naming.test.mjs` memverifikasi canonical logo berada di folder public, file `app/logo.png` sudah tidak menjadi sumber aktif, dan BrandWordmark/CSS menunjuk asset bersama.
+**Regression:** `tests/repo-file-naming.test.mjs` memverifikasi canonical logo berada di folder public, file `app/logo.webp` sudah tidak menjadi sumber aktif, dan BrandWordmark/CSS menunjuk asset bersama.
 
 **Validasi:** source regression dan Build Validation GitHub Actions harus diperiksa pada commit implementasi sebelum pekerjaan ini disebut lulus; browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.
 
@@ -5361,7 +5361,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Temuan CI:** Build Validation commit `085dc692` berhenti pada regression test baru karena assertion awal melarang seluruh literal `Undara` di markup, termasuk `<span className="sr-only">Undara</span>` yang sengaja dipertahankan sebagai nama aksesibel untuk screen reader. Visual logo tetap berasal dari image asset/mask dan bukan teks.
 
-**Perbaikan:** regression test diubah untuk justru mewajibkan label `sr-only` tersebut sambil tetap memverifikasi `undara-brand-logo`, canonical asset path, dan tidak adanya `app/logo.png` lama. Tidak ada perubahan visual pada navbar/header.
+**Perbaikan:** regression test diubah untuk justru mewajibkan label `sr-only` tersebut sambil tetap memverifikasi `undara-brand-logo`, canonical asset path, dan tidak adanya `app/logo.webp` lama. Tidak ada perubahan visual pada navbar/header.
 
 **Validasi:** follow-up commit `30270888` menjalankan Source regression tests dan Build pada GitHub Actions run `36372691176`; keduanya selesai **success**. Orphan Audit pada commit implementasi awal `085dc692` juga selesai **success**. Browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.
 
@@ -5412,7 +5412,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Keputusan struktur:** shared/runtime asset dipusatkan di `public/assets/` berdasarkan fungsi: `brand`, `landing`, `marketing`, `demo`, `payments`, dan `audio`. Asset yang benar-benar milik satu template tetap di `public/templates/<template>/` agar ownership template tetap jelas. File metadata Next.js tetap di `app/`: icon Undara dinormalisasi menjadi `app/icon.png`, sedangkan `app/favicon.ico` dipertahankan.
 
-**Migrasi:** empat portal image Pintu pindah ke `public/assets/landing/doors/`; branch ornament baru 1–6 pindah ke `public/assets/landing/ornaments/botanical/`; asset flower lama yang masih dipakai dipindah ke `landing/ornaments/legacy/`; referensi pintu lama 1–4 dipindah ke `landing/reference/doors/`; hero marketing lama dikelompokkan per layanan; demo invitation photos pindah ke `demo/invitation/`; BCA pindah ke `payments/banks/`; semua audio shared pindah ke `audio/` dengan nama kebab-case. Duplikat `tiara.png` yang identik dengan `cloud.png` tidak dipertahankan sebagai file kedua. MP3 Zen yang sebelumnya dobel sekarang memakai satu canonical shared copy.
+**Migrasi:** empat portal image Pintu pindah ke `public/assets/landing/doors/`; branch ornament baru 1–6 pindah ke `public/assets/landing/ornaments/botanical/`; asset flower lama yang masih dipakai dipindah ke `landing/ornaments/legacy/`; referensi pintu lama 1–4 dipindah ke `landing/reference/doors/`; hero marketing lama dikelompokkan per layanan; demo invitation photos pindah ke `demo/invitation/`; BCA pindah ke `payments/banks/`; semua audio shared pindah ke `audio/` dengan nama kebab-case. Duplikat `tiara.png` yang identik dengan `cloud.webp` tidak dipertahankan sebagai file kedua. MP3 Zen yang sebelumnya dobel sekarang memakai satu canonical shared copy.
 
 **Kode:** runtime reference aktif pada landing door, floral legacy, marketing audio, template music registry, template demo/catalog, footer payment dan brand logo diperbarui ke path baru. Asset artwork template lain tidak diubah.
 
@@ -5423,18 +5423,18 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 ### 28 September 2026 — Landing ornament: bunga → branch-02
 
-**Permintaan owner:** ganti asset bunga pada landing page dengan asset ranting daun `branch-02.png`.
+**Permintaan owner:** ganti asset bunga pada landing page dengan asset ranting daun `branch-02.webp`.
 
-**Implementasi:** kedua instance ornament kiri/kanan di `components/Landing/LandingFloralGlow.tsx` sekarang menggunakan `/assets/landing/ornaments/botanical/branch-02.png`. Posisi, ukuran container, opacity, mirror kanan, durasi animasi dan motion tidak diubah agar perubahan ini murni asset swap.
+**Implementasi:** kedua instance ornament kiri/kanan di `components/Landing/LandingFloralGlow.tsx` sekarang menggunakan `/assets/landing/ornaments/botanical/branch-02.webp`. Posisi, ukuran container, opacity, mirror kanan, durasi animasi dan motion tidak diubah agar perubahan ini murni asset swap.
 
-**Validasi:** regression test memastikan landing tidak kembali memakai `legacy/flower.png`.
+**Validasi:** regression test memastikan landing tidak kembali memakai `legacy/flower.webp`.
 
 
 ### 28 September 2026 — Homepage woodland art direction
 
 **Permintaan owner:** setelah melihat placement branch-02 yang terlalu terlihat sebagai ornament tempelan, landing diminta dirapikan secara profesional memakai seluruh set asset botanical dan forest yang sudah tersedia. Preferensi visual terbaru adalah **kayu + pohon + ranting**, bukan bunga + awan.
 
-**Implementasi:** homepage `/` berhenti memakai `PublicMarketingAtmosphere` dan cloud-shaped `CloudCopy`. Komponen baru `LandingWoodlandAtmosphere.tsx` menempatkan forest silhouette sebagai depth transparan di belakang Pintu; branch-01/02 mengikat sudut atas, branch-03/04 membentuk foreground edge bawah secara restrained, dan center haze menjaga fokus ke Pintu. Komponen baru `LandingStoryCopy.tsx` menyederhanakan copy menjadi satu editorial block kanan bawah dengan branch-05 sebagai divider, tanpa cloud outline. Petal ambience tidak dirender pada homepage. Asset owner `bgwood.png` dinormalisasi menjadi `public/assets/landing/atmosphere/forest-silhouette.png`.
+**Implementasi:** homepage `/` berhenti memakai `PublicMarketingAtmosphere` dan cloud-shaped `CloudCopy`. Komponen baru `LandingWoodlandAtmosphere.tsx` menempatkan forest silhouette sebagai depth transparan di belakang Pintu; branch-01/02 mengikat sudut atas, branch-03/04 membentuk foreground edge bawah secara restrained, dan center haze menjaga fokus ke Pintu. Komponen baru `LandingStoryCopy.tsx` menyederhanakan copy menjadi satu editorial block kanan bawah dengan branch-05 sebagai divider, tanpa cloud outline. Petal ambience tidak dirender pada homepage. Asset owner `bgwood.png` dinormalisasi menjadi `public/assets/landing/atmosphere/forest-silhouette.webp`.
 
 **Yang sengaja tidak diubah:** `LandingDoorScene` dan empat tujuan layanan, geometry/material Pintu, orbit/selection, click/opening, kamera, portal transition, route, Navbar, logo/tagline, footer/audio controls dan widget Jelajah. Shared `PublicMarketingAtmosphere` tetap tersedia bagi route marketing non-home yang sudah memakainya.
 
@@ -5484,7 +5484,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Canonical yang ditegaskan:** homepage aktif adalah woodland (forest silhouette + canopy7 + branch-05 divider ornamental khusus story block), cloud/petal homepage lama pensiun; Pintu tetap 4 layanan dengan palette Light body `#703B3B` + trim `#EDE3D8`, Dark body `#D6B38C` + trim `#703B3B`; fireflies Light `#703B3B`, Dark `#D6B38C`; logo/tagline dan theme pair Undara tetap mengikuti §1.1. Workflow owner untuk coding adalah direct-repo implementation, bukan copy-paste snippet, selama akses tersedia.
 
-**Dokumentasi:** `AGENTS.md` mendapat direct-repo workflow rule; paragraf canonical landing di §15.4.1b dibetulkan agar tidak lagi menyebut cloud/petal sebagai baseline aktif; checklist path logo lama diselaraskan dengan `public/assets/brand/undara/logo.png`.
+**Dokumentasi:** `AGENTS.md` mendapat direct-repo workflow rule; paragraf canonical landing di §15.4.1b dibetulkan agar tidak lagi menyebut cloud/petal sebagai baseline aktif; checklist path logo lama diselaraskan dengan `public/assets/brand/undara/logo.webp`.
 
 **Validasi:** perubahan dokumentasi saja; tidak mengubah runtime application behavior.
 
@@ -5536,7 +5536,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Landing woodland refinement — 2026-09-28
 - Keep the four production doors unchanged while refining the environment.
 - Cast shadows must preserve the arched door silhouette and extend naturally toward the viewer; no visibly rectangular receiver edges.
-- Remove large decorative branch overlays from the homepage composition and story copy. A single compact `branch-05.png` is allowed only as the ornamental divider inside the lower-right story block; use the soft tree canopy for the broader woodland framing.
+- Remove large decorative branch overlays from the homepage composition and story copy. A single compact `branch-05.webp` is allowed only as the ornamental divider inside the lower-right story block; use the soft tree canopy for the broader woodland framing.
 - Preserve rear-origin lighting, while keeping the branded door faces readable and adding subtle forest mist/clearing light so the scene feels inhabited rather than underexposed.
 
 
@@ -5546,12 +5546,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 
 ### Dedicated overhead canopy — 2026-09-28
-- Use `canopy7.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
+- Use `canopy7.webp` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
 - Keep the canopy concentrated toward the center; logo/tagline and right-side controls must remain unobstructed without visible masking boxes.
 
 
 ### Overhead canopy — 2026-09-28
-- Use only the centered `canopy7.png` as the homepage overhead canopy.
+- Use only the centered `canopy7.webp` as the homepage overhead canopy.
 - Side canopy layers are removed; keep the top composition cleaner while maintaining the feeling of foliage above the viewer.
 
 ### 28 September 2026 — Jeda submenu burger Layanan
@@ -5593,7 +5593,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** straight divider pada copy kanan-bawah diganti ukiran; title menjadi **“Temukan kebutuhanmu di balik pintu.”** dan body menjadi **“Seluruh kebutuhan perayaanmu ada di sini, semoga perayaanmu terasa lebih personal, hangat dan penuh makna.”**
 
-**Implementasi:** `LandingStoryCopy.tsx` mengganti garis lurus dengan silhouette `/assets/landing/ornaments/botanical/branch-05.png` melalui CSS mask. Divider mengikuti warna theme otomatis: Undara Brown pada Light dan Champagne pada Dark. Ukiran hanya menjadi divider kecil; branch overlay besar pada story/homepage tetap tidak digunakan. Versi EN diselaraskan maknanya. Posisi kanan-bawah, radial backing, ukuran story block, Pintu 3D, canopy7, forest silhouette dan footer tidak diubah.
+**Implementasi:** `LandingStoryCopy.tsx` mengganti garis lurus dengan silhouette `/assets/landing/ornaments/botanical/branch-05.webp` melalui CSS mask. Divider mengikuti warna theme otomatis: Undara Brown pada Light dan Champagne pada Dark. Ukiran hanya menjadi divider kecil; branch overlay besar pada story/homepage tetap tidak digunakan. Versi EN diselaraskan maknanya. Posisi kanan-bawah, radial backing, ukuran story block, Pintu 3D, canopy7, forest silhouette dan footer tidak diubah.
 
 **Rule aktif:** branch-05 adalah pengecualian khusus sebagai divider ukiran story block. Jangan menggantinya kembali dengan straight line dan jangan memperluasnya menjadi branch overlay besar tanpa instruksi owner.
 
@@ -5608,9 +5608,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** ukiran divider pada story block kanan-bawah dibuat lebih lebar tanpa mengubah tinggi, warna, posisi, copy, atau ornament source.
 
-**Implementasi:** width divider `branch-05.png` dinaikkan dari 190/230/260px menjadi **240/290/340px** untuk mobile/tablet/desktop. Tinggi tetap `h-8`, alignment tetap kanan, warna tetap theme-aware, dan story block/Pintu/woodland tidak diubah.
+**Implementasi:** width divider `branch-05.webp` dinaikkan dari 190/230/260px menjadi **240/290/340px** untuk mobile/tablet/desktop. Tinggi tetap `h-8`, alignment tetap kanan, warna tetap theme-aware, dan story block/Pintu/woodland tidak diubah.
 
-**Validasi:** regression test mengunci width baru dan tetap mewajibkan `branch-05.png`.
+**Validasi:** regression test mengunci width baru dan tetap mewajibkan `branch-05.webp`.
 
 
 

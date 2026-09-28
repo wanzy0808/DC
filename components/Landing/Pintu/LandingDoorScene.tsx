@@ -533,10 +533,10 @@ function Door({ opening, image, title, crest, entering, isDarkMode }: { opening:
 }
 
 const PORTALS: Array<{ title: string; image: string; href: string; crest: DoorCrestKind }> = [
-  { title: "Event Planner", image: "/assets/landing/doors/event-planner.png", href: "/event-planner", crest: "event-planner" },
-  { title: "Undangan Digital", image: "/assets/landing/doors/digital-invitation.png", href: "/d-invitation", crest: "digital-invitation" },
-  { title: "Guestbook", image: "/assets/landing/doors/guestbook.png", href: "/guestbook", crest: "guestbook" },
-  { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.png", href: "/undangan-fisik", crest: "physical-invitation" },
+  { title: "Event Planner", image: "/assets/landing/doors/event-planner.webp", href: "/event-planner", crest: "event-planner" },
+  { title: "Undangan Digital", image: "/assets/landing/doors/digital-invitation.webp", href: "/d-invitation", crest: "digital-invitation" },
+  { title: "Guestbook", image: "/assets/landing/doors/guestbook.webp", href: "/guestbook", crest: "guestbook" },
+  { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.webp", href: "/undangan-fisik", crest: "physical-invitation" },
 ];
 
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; isDarkMode: boolean }) {
