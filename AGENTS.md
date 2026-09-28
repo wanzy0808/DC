@@ -41,7 +41,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 - **Protected brand wordmark contract:** customer-facing `Undara` brand lockups MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The component uses the canonical image asset `public/brand/undara/logo.png`; do not recreate the logo as typed text. The image silhouette is theme-colored through semantic `currentColor`: Undara Brown `#703B3B` in Light Mode and the active Champagne brand accent in Dark Mode. **DM Serif Display** remains the canonical display/heading typeface outside the logo; application/body typography is **Roboto**.
 - Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
 - **Rebrand compatibility rule (28 September 2026):** existing `dc-*` CSS classes, variables, route IDs, cookies, database identifiers, and filenames may remain temporarily as compatibility internals. Do not mass-rename them merely for cosmetics. New shared tokens use `undara-*`; migrate legacy identifiers only when the affected behavior is tested.
-- **Palette migration rule:** the owner simplified the mode pair to **Light canvas = Warm Champagne `#D6B38C`** and **Dark canvas = Undara Brown `#703B3B`**. Brown is the primary contrasting accent on Light; Champagne is the primary contrasting accent on Dark. Older active wording that says white/near-black/Rose is superseded for application chrome.
+- **Palette migration rule:** the owner finalized the mode pair as **Light canvas = Warm Ivory `#EDE3D8`** and **Dark canvas = Undara Brown `#703B3B`**. Brown is the primary contrasting accent on Light; Champagne `#D6B38C` is the primary contrasting accent on Dark. Older active wording that says white/near-black/Rose or Light `#D6B38C` is superseded for application chrome.
 - **Template isolation:** invitation template artwork/palettes are design content, not application-brand chrome. Do not recolor existing invitation themes merely because Undara rebranded.
 - Never introduce legacy customer-facing brands such as Citin or DC Wedding.
 - Never reintroduce wedding-only assumptions into general event workflows unless the selected event category specifically requires them.
@@ -123,11 +123,11 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Semantic status colors (success/warning/error/info) remain functional colors and are not forced into the brand palette.
 
 ### Light
-- **Base background:** Warm Champagne `#D6B38C`.
-- **Card/popover/support surfaces:** Soft Champagne `#E8D7C3`.
+- **Base background:** Warm Ivory `#EDE3D8`.
+- **Card/popover/support surfaces:** soft ivory `#F7F1EB`.
 - **Headings, icons, primary buttons, links, menu emphasis, outlines and brand accents:** Undara Brown `#703B3B`.
 - **Primary text:** deep warm brown `#3A2020`.
-- Light Mode is the lighter half of the two-color Undara system; do not reintroduce white as the default application canvas.
+- Champagne `#D6B38C` is a support/accent color, not the Light canvas.
 
 ### Dark
 - **Base background:** Undara Brown `#703B3B` replaces the legacy black/near-black base.
@@ -137,7 +137,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Never reintroduce black as the default dark canvas or old Rose/pink as the default dark accent.
 
 ### Neutral / Accent Balance
-- The simplified theme pair is **Light = Warm Champagne `#D6B38C`** and **Dark = Undara Brown `#703B3B`**.
+- The simplified theme pair is **Light = Warm Ivory `#EDE3D8`** and **Dark = Undara Brown `#703B3B`**.
 - For contrast, the main brand/logo/accent color is the opposite half of the pair: Brown on Light, Champagne on Dark.
 - Treat 60/30/10 as a visual-balance principle, not literal pixel coverage.
 - Typography, spacing, layout, opacity, and surface depth establish hierarchy before extra decorative color.

@@ -78,17 +78,17 @@
   --dc-control-radius: 16px;
   --dc-control-menu-radius: 18px;
   --dc-control-outline: var(--undara-control-outline);
-  --background: #D6B38C;
+  --background: #EDE3D8;
   --foreground: #3A2020;
-  --card: #E8D7C3;
+  --card: #F7F1EB;
   --card-foreground: #3A2020;
-  --popover: #E8D7C3;
+  --popover: #F7F1EB;
   --popover-foreground: #3A2020;
   --primary: #703B3B;
   --primary-foreground: #FFF9F5;
-  --secondary: #E8D7C3;
+  --secondary: #F7F1EB;
   --secondary-foreground: #3A2020;
-  --muted: #E8D7C3;
+  --muted: #F7F1EB;
   --muted-foreground: rgb(58 32 32 / 64%);
   --accent: #703B3B;
   --accent-foreground: #FFF9F5;
@@ -100,12 +100,12 @@
   --chart-2: #D6B38C;
   --chart-3: #5E3030;
   --chart-4: #2B1A1A;
-  --chart-5: #E8D7C3;
-  --sidebar: #D6B38C;
+  --chart-5: #F7F1EB;
+  --sidebar: #EDE3D8;
   --sidebar-foreground: #3A2020;
   --sidebar-primary: #703B3B;
   --sidebar-primary-foreground: #FFF9F5;
-  --sidebar-accent: #E8D7C3;
+  --sidebar-accent: #F7F1EB;
   --sidebar-accent-foreground: #703B3B;
   --sidebar-border: rgb(112 59 59 / 18%);
   --sidebar-ring: #703B3B;
@@ -716,13 +716,13 @@ body:has(.dc-dashboard--redesign) {
 }
 .dc-dashboard.dc-dashboard--redesign {
   --dc-dashboard-card-stripe: 0.3cm;
-  --dc-dashboard-canvas: #D6B38C;
-  --dc-dashboard-card: #E8D7C3;
-  --dc-dashboard-border: rgb(112 59 59 / 44%);
-  --dc-dashboard-rail: #D6B38C;
-  --dc-dashboard-rail-hover: rgb(112 59 59 / 10%);
+  --dc-dashboard-canvas: #EDE3D8;
+  --dc-dashboard-card: #F7F1EB;
+  --dc-dashboard-border: rgb(112 59 59 / 36%);
+  --dc-dashboard-rail: #EDE3D8;
+  --dc-dashboard-rail-hover: rgb(112 59 59 / 9%);
   --dc-dashboard-rail-active: #703B3B;
-  --dc-dashboard-header-bg: #D6B38C;
+  --dc-dashboard-header-bg: #EDE3D8;
   height: 100dvh;
   min-height: 0;
   padding: 0;

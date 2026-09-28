@@ -13,7 +13,7 @@
 
 - [x] Tetapkan nama customer-facing **Undara** (Undangan + Acara) di aturan canonical.
 - [x] Tetapkan font **DM Serif Display + Roboto**.
-- [x] Sederhanakan pasangan mode: **Light `#D6B38C` / Dark `#703B3B`**; gunakan warna kebalikannya sebagai accent utama per mode.
+- [x] Finalisasi pasangan mode: **Light `#EDE3D8` / Dark `#703B3B`**; Brown menjadi accent Light dan Champagne `#D6B38C` menjadi accent Dark.
 - [x] Ubah root metadata, wordmark teks, i18n/footer utama, dan semantic theme tokens tanpa mass-rename identifier internal.
 - [x] Dark base berpindah dari black/near-black ke Undara Brown pada token global/dashboard foundation.
 - [x] Light brand chrome berpindah dari Rose/pink ke Undara Brown.

@@ -38,9 +38,9 @@ Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama 
 - Tipografi body/UI: **Roboto**. DM Mono boleh tetap dipakai untuk metadata/label teknis.
 - Warna brand utama: **#703B3B** (Undara Brown).
 - Warna state hover/pressed utama: **#5E3030**.
-- Pasangan tema disederhanakan menjadi **Light = #D6B38C (Warm Champagne)** dan **Dark = #703B3B (Undara Brown)**.
-- **Light Mode:** application canvas utama memakai `#D6B38C`; surface bertingkat boleh memakai `#E8D7C3`; brand accent/teks kuat memakai `#703B3B`.
-- **Dark Mode:** application canvas utama memakai `#703B3B`; brand accent utama memakai `#D6B38C`; surface lebih dalam boleh memakai brown yang lebih gelap.
+- Pasangan tema final: **Light = #EDE3D8 (Warm Ivory / putih kekuningan)** dan **Dark = #703B3B (Undara Brown)**.
+- **Light Mode:** application canvas utama memakai `#EDE3D8`; surface bertingkat memakai soft ivory `#F7F1EB`; brand accent/teks kuat memakai `#703B3B`.
+- **Dark Mode:** application canvas utama memakai `#703B3B`; brand accent utama memakai Champagne `#D6B38C`; surface lebih dalam boleh memakai brown yang lebih gelap.
 - Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
 - **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
 - Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
@@ -5355,3 +5355,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** semantic root token di `app/globals.css` menjadikan Warm Champagne `#D6B38C` sebagai canvas Light Mode dan Undara Brown `#703B3B` sebagai canvas Dark Mode. Light memakai Brown sebagai warna kontras utama; Dark memakai Champagne sebagai warna kontras utama. Surface Light bertingkat memakai `#E8D7C3`, sedangkan Dark tetap memakai deeper brown untuk depth. Dashboard redesign light canvas/rail/header ikut memakai pasangan yang sama supaya tidak kembali ke putih. Logo tetap memakai warna kebalikan dari canvas agar kontras: Brown pada Light, Champagne pada Dark. Palet template undangan tidak ikut diubah.
 
 **Validasi:** source regression tests dan Build Validation wajib diperiksa pada commit implementasi. Browser QA Light/Dark tetap diperlukan untuk memastikan kontras seluruh surface.
+
+
+### 28 September 2026 — Finalisasi Light Mode Warm Ivory
+
+**Permintaan owner:** Light Mode sebelumnya terlalu champagne; base Light diganti menjadi **`#EDE3D8`**, putih kekuningan/warm ivory. Dark Mode tetap **`#703B3B`**.
+
+**Implementasi:** root semantic `--background` Light, sidebar, serta canvas/rail/header Dashboard redesign memakai `#EDE3D8`. Card/popover/support surface Light memakai `#F7F1EB` untuk memberi depth ringan tanpa kembali ke putih murni. Undara Brown `#703B3B` tetap menjadi logo/heading/button/accent utama di Light. Champagne `#D6B38C` tetap dipertahankan sebagai accent/support, terutama untuk kontras Dark Mode. Dark Mode dan palet template undangan tidak diubah.
+
+**Kontrak final:** **Light `#EDE3D8` / Dark `#703B3B`**. Instruksi Light `#D6B38C` pada entri sebelumnya adalah histori dan digantikan oleh keputusan ini.
+
+**Validasi:** regression test brand/theme memverifikasi token Light/Dark canonical. GitHub Actions harus lulus sebelum tahap ini dinyatakan selesai.

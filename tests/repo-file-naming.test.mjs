@@ -66,3 +66,11 @@ test("Undara navbar brand uses the shared image logo asset", () => {
   assert.match(brand, /Melangkah Bersama, Menuju Hari Penuh Makna/);
   assert.match(globalStyles, /mask-image:\s*url\("\/brand\/undara\/logo\.png"\)/);
 });
+
+
+test("Undara light and dark palette stays on the canonical pair", () => {
+  const styles = read("app/globals.css");
+  assert.match(styles, /:root \{[\s\S]*?--background:\s*#EDE3D8;/);
+  assert.match(styles, /\.dark \{[\s\S]*?--background:\s*#703B3B;/);
+  assert.match(styles, /--dc-dashboard-canvas:\s*#EDE3D8;/);
+});
