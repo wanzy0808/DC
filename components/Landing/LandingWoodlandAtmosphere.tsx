@@ -54,7 +54,7 @@ export default function LandingWoodlandAtmosphere() {
           fill
           priority
           sizes="100vw"
-          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] dark:opacity-[0.62] dark:brightness-[0.85] dark:saturate-[0.6]"
+          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] lg:object-cover lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_12%)] dark:opacity-[0.62] dark:brightness-[0.85] dark:saturate-[0.6]"
         />
       </motion.div>
 
