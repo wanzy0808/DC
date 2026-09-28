@@ -5546,12 +5546,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 
 ### Dedicated overhead canopy — 2026-09-28
-- Use `canopy2.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
+- Use `canopy5.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
 - Keep the canopy concentrated toward the center; logo/tagline and right-side controls must remain unobstructed without visible masking boxes.
 
 
 ### Overhead canopy — 2026-09-28
-- Use only the centered `canopy2.png` as the homepage overhead canopy.
+- Use only the centered `canopy5.png` as the homepage overhead canopy.
 - Side canopy layers are removed; keep the top composition cleaner while maintaining the feeling of foliage above the viewer.
 
 ### 28 September 2026 — Jeda submenu burger Layanan
@@ -5570,3 +5570,5 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** initial state `servicesOpen` di `components/Layout/Navbar/BurgerMenuContent.tsx` diubah dari `true` menjadi `false`. Toggle click, animasi expand/collapse, spacing submenu, urutan item, route, icon, auth/session behavior dan style outline tidak diubah.
 
 **Validasi:** regression test mengunci default closed state.
+
+- Canopy5 should nearly fill the visual distance between the left brand block and right header controls, leaving a small breathing gap (roughly 1 cm feel) on each side rather than touching either group.
