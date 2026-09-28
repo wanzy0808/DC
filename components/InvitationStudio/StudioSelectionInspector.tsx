@@ -122,7 +122,7 @@ export default function StudioSelectionInspector({
 
   if (selectedPhotoSlot) {
     return (
-      <div className="dc-studio-selection-stack">
+      <div className="undara-studio-selection-stack">
       <PhotoSlotInspector
         locale={locale}
         slot={selectedPhotoSlot}
@@ -138,7 +138,7 @@ export default function StudioSelectionInspector({
 
   if (selectedRsvpElementKey) {
     return (
-      <div className="dc-studio-selection-stack">
+      <div className="undara-studio-selection-stack">
       <RsvpElementInspector
         locale={locale}
         elementKey={selectedRsvpElementKey}
@@ -153,7 +153,7 @@ export default function StudioSelectionInspector({
 
   if (selectedSectionElement) {
     return (
-      <div className="dc-studio-selection-stack">
+      <div className="undara-studio-selection-stack">
       <SectionElementInspector
         locale={locale}
         section={selectedSectionElement.section}
@@ -169,7 +169,7 @@ export default function StudioSelectionInspector({
 
   if (selectedCopyField) {
     return (
-      <div className="dc-studio-selection-stack">
+      <div className="undara-studio-selection-stack">
       <CopyTextInspector
         locale={locale}
         field={selectedCopyField}
