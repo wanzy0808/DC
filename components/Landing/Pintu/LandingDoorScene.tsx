@@ -622,7 +622,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
     if (transitionStarted.current || selected === null) return;
     transitionStarted.current = true;
     // Start the image-free Rose veil during the existing camera zoom, before its view could reach the portal plane.
-    window.dispatchEvent(new CustomEvent("dc-portal-start", { detail: { href: PORTALS[selected].href } }));
+    window.dispatchEvent(new CustomEvent("undara-portal-start", { detail: { href: PORTALS[selected].href } }));
   }
   function finishZoom() {
     if (selected === null) return;
@@ -637,7 +637,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
   const closeButton = useRef<HTMLButtonElement>(null);
   function enterPortal() {
     if (selected === null || !opening[selected] || entering) return;
-    window.dispatchEvent(new Event("dc-portal-prime"));
+    window.dispatchEvent(new Event("undara-portal-prime"));
     setEntering(true);
   }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>

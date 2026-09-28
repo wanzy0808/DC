@@ -72,14 +72,14 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
       }
       resumeMarketingRef.current = false;
     };
-    window.addEventListener("dc-invitation-music-play", onInvitationPlay);
-    window.addEventListener("dc-invitation-music-pause", onInvitationPause);
+    window.addEventListener("undara-invitation-music-play", onInvitationPlay);
+    window.addEventListener("undara-invitation-music-pause", onInvitationPause);
     window.addEventListener("pointerdown", startOnGesture);
     window.addEventListener("keydown", startOnGesture);
     if (allowedRef.current) void player.play().catch(() => setSoundOn(false));
     return () => {
-      window.removeEventListener("dc-invitation-music-play", onInvitationPlay);
-      window.removeEventListener("dc-invitation-music-pause", onInvitationPause);
+      window.removeEventListener("undara-invitation-music-play", onInvitationPlay);
+      window.removeEventListener("undara-invitation-music-pause", onInvitationPause);
       window.removeEventListener("pointerdown", startOnGesture);
       window.removeEventListener("keydown", startOnGesture);
       player.removeEventListener("play", onPlay);
@@ -176,9 +176,9 @@ export function MarketingAudioControls() {
     </Button>
 
     <div className="undara-control-surface undara-volume-control">
-      <label htmlFor="dc-marketing-volume" className="sr-only">Volume suara</label>
+      <label htmlFor="undara-marketing-volume" className="sr-only">Volume suara</label>
       <input
-        id="dc-marketing-volume"
+        id="undara-marketing-volume"
         type="range"
         min="0"
         max="100"

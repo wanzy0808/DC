@@ -74,7 +74,7 @@ export function resolveStudioCanvasSelection(
   }
 
   if (target.closest(
-    "[data-studio-design-object], .dc-studio-layer-side, .dc-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]",
+    "[data-studio-design-object], .undara-studio-layer-side, .undara-studio-section-side, button, a, input, select, textarea, [contenteditable], [role=button]",
   )) {
     return { kind: "ignore" };
   }
@@ -97,8 +97,8 @@ export function resolveStudioCanvasSelection(
 
   if (
     target === canvasRoot ||
-    target.closest(".dc-studio-preview-surface") ||
-    target.closest(".dc-studio-preview-workspace")
+    target.closest(".undara-studio-preview-surface") ||
+    target.closest(".undara-studio-preview-workspace")
   ) {
     return { kind: "clear" };
   }

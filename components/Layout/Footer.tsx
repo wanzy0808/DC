@@ -24,7 +24,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
   if (isLanding) {
     return (
       <footer
-        className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs`}
+        className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-undara-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs`}
       >
         © {new Date().getFullYear()} Undara. {footer.rights}
       </footer>
@@ -43,10 +43,10 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
             <Link href="/" className="inline-block">
               <BrandWordmark />
             </Link>
-            <p className="max-w-sm font-[family-name:var(--font-dc-body)] text-xs font-light leading-relaxed opacity-70">
+            <p className="max-w-sm font-[family-name:var(--font-undara-body)] text-xs font-light leading-relaxed opacity-70">
               {footer.description}
             </p>
-            <div className="space-y-1 pt-2 font-[family-name:var(--font-dc-mono)] text-xs opacity-80">
+            <div className="space-y-1 pt-2 font-[family-name:var(--font-undara-mono)] text-xs opacity-80">
               <p>{footer.customerService}:</p>
               <a
                 href="https://wa.me/6282124786516"
@@ -60,7 +60,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
           </div>
 
           <div className="space-y-3 text-left md:col-span-6 md:text-right">
-            <h4 className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-widest opacity-80">
+            <h4 className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-widest opacity-80">
               {footer.paymentMethods}
             </h4>
             <div className="flex items-center md:justify-end">
@@ -85,10 +85,10 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
 
         <div className="grid grid-cols-1 gap-8 border-t border-[var(--border)] pt-8 md:grid-cols-4">
           <div className="space-y-3">
-            <h5 className="font-[family-name:var(--font-dc-heading)] text-xs font-bold text-[var(--primary)]">
+            <h5 className="font-[family-name:var(--font-undara-heading)] text-xs font-bold text-[var(--primary)]">
               {footer.products}
             </h5>
-            <ul className="space-y-2 font-[family-name:var(--font-dc-body)] text-xs font-light opacity-70">
+            <ul className="space-y-2 font-[family-name:var(--font-undara-body)] text-xs font-light opacity-70">
               <li>
                 <Link href="/d-invitation">{footer.digitalInvitation}</Link>
               </li>
@@ -102,10 +102,10 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
           </div>
 
           <div className="space-y-3">
-            <h5 className="font-[family-name:var(--font-dc-heading)] text-xs font-bold text-[var(--primary)]">
+            <h5 className="font-[family-name:var(--font-undara-heading)] text-xs font-bold text-[var(--primary)]">
               {footer.help}
             </h5>
-            <ul className="space-y-2 font-[family-name:var(--font-dc-body)] text-xs font-light opacity-70">
+            <ul className="space-y-2 font-[family-name:var(--font-undara-body)] text-xs font-light opacity-70">
               <li>{footer.faq}</li>
               <li><Link href="/terms-and-conditions" className="text-inherit transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.terms}</Link></li>
               <li><Link href="/privacy-policy" className="text-inherit transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link></li>
@@ -113,24 +113,24 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
           </div>
 
           <div className="space-y-3">
-            <h5 className="font-[family-name:var(--font-dc-heading)] text-xs font-bold text-[var(--primary)]">
+            <h5 className="font-[family-name:var(--font-undara-heading)] text-xs font-bold text-[var(--primary)]">
               {footer.resources}
             </h5>
-            <ul className="space-y-2 font-[family-name:var(--font-dc-body)] text-xs font-light opacity-70">
+            <ul className="space-y-2 font-[family-name:var(--font-undara-body)] text-xs font-light opacity-70">
               <li>{footer.templates}</li>
               <li>{footer.articles}</li>
             </ul>
           </div>
 
           <div className="space-y-3">
-            <h5 className="font-[family-name:var(--font-dc-heading)] text-xs font-bold text-[var(--primary)]">
+            <h5 className="font-[family-name:var(--font-undara-heading)] text-xs font-bold text-[var(--primary)]">
               {footer.followUs}
             </h5>
             <UndaraSocialIcons compact />
           </div>
         </div>
 
-        <div className="flex flex-col items-center justify-between gap-2 pt-4 font-[family-name:var(--font-dc-mono)] text-[10px] opacity-50 md:flex-row">
+        <div className="flex flex-col items-center justify-between gap-2 pt-4 font-[family-name:var(--font-undara-mono)] text-[10px] opacity-50 md:flex-row">
           <p>© 2026 Undara. {footer.rights}</p>
           <div className="flex gap-4">
             <span>{footer.legal}</span>

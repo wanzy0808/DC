@@ -114,19 +114,19 @@ export default function MarketingDoorNavigator() {
     <nav
       ref={rootRef}
       aria-label={isEnglish ? "Explore Undara pages" : "Jelajahi halaman Undara"}
-      className="fixed bottom-[74px] left-2 z-[80] font-[family-name:var(--font-dc-body)] sm:bottom-auto sm:left-2 sm:top-1/2 sm:-translate-y-1/2 lg:left-3"
+      className="fixed bottom-[74px] left-2 z-[80] font-[family-name:var(--font-undara-body)] sm:bottom-auto sm:left-2 sm:top-1/2 sm:-translate-y-1/2 lg:left-3"
     >
       <button
         ref={triggerRef}
         type="button"
         aria-expanded={open}
-        aria-controls="dc-marketing-door-navigation"
+        aria-controls="undara-marketing-door-navigation"
         aria-label={open ? (isEnglish ? "Close page navigation" : "Tutup navigasi halaman") : label}
         onClick={() => setOpen((previous) => !previous)}
         className="undara-control-surface group flex w-[53px] flex-col items-center gap-1 px-1.5 py-2 text-primary transition-transform duration-300 hover:-translate-y-0.5"
       >
         <MiniDoor active={open} />
-        <span className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-tight tracking-[0.05em]">
+        <span className="font-[family-name:var(--font-undara-mono)] text-[8px] uppercase leading-tight tracking-[0.05em]">
           {isEnglish ? "Explore" : "Jelajah"}
         </span>
       </button>
@@ -134,7 +134,7 @@ export default function MarketingDoorNavigator() {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            id="dc-marketing-door-navigation"
+            id="undara-marketing-door-navigation"
             initial={reducedMotion ? false : { opacity: 0, x: -9, scale: 0.97 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -8, scale: 0.98 }}
@@ -143,10 +143,10 @@ export default function MarketingDoorNavigator() {
           >
             <div className="mb-3 flex items-start justify-between gap-3 border-b border-primary/20 px-1 pb-3">
               <div>
-                <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">
                   {isEnglish ? "Explore" : "Jelajahi"}
                 </p>
-                <p className="mt-1 font-[family-name:var(--font-dc-heading)] text-base text-foreground">
+                <p className="mt-1 font-[family-name:var(--font-undara-heading)] text-base text-foreground">
                   {pageLabel}
                 </p>
               </div>
@@ -181,14 +181,14 @@ export default function MarketingDoorNavigator() {
                   >
                     <MiniDoor active={current} />
                     <span className="min-w-0 flex-1">
-                      <span className="block font-[family-name:var(--font-dc-heading)] text-sm font-medium text-primary">
+                      <span className="block font-[family-name:var(--font-undara-heading)] text-sm font-medium text-primary">
                         {copy.title}
                       </span>
                       <span className="mt-1 block text-[11px] leading-[1.5] text-foreground/70">
                         {copy.description}
                       </span>
                       {current && (
-                        <span className="mt-1 block font-[family-name:var(--font-dc-mono)] text-[9px] uppercase tracking-[0.1em] text-primary/80">
+                        <span className="mt-1 block font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.1em] text-primary/80">
                           {currentLabel}
                         </span>
                       )}
