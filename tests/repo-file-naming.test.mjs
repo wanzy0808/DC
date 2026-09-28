@@ -45,8 +45,8 @@ test("the homepage uses the actual four-door production scene, not a misleading 
 test("old design lab routes stay retired without renaming customer media URLs", () => {
   assert.equal(existsSync(path("app/jiplak")), false);
   assert.equal(existsSync(path("app/pintu-lab")), false);
-  assert.equal(existsSync(path("public/templates/Zen Atelier/amplop1.png")), true);
-  assert.equal(existsSync(path("public/templates/pencil-reverie/bycicle.png")), true);
+  assert.equal(existsSync(path("public/templates/Zen Atelier/amplop1.webp")), true);
+  assert.equal(existsSync(path("public/templates/pencil-reverie/bycicle.webp")), true);
 });
 
 test("package metadata uses the product name rather than a starter-app placeholder", () => {
@@ -57,7 +57,7 @@ test("package metadata uses the product name rather than a starter-app placehold
 
 
 test("Undara navbar brand uses the shared image logo asset", () => {
-  assert.equal(existsSync(path("public/assets/brand/undara/logo.png")), true);
+  assert.equal(existsSync(path("public/assets/brand/undara/logo.webp")), true);
   assert.equal(existsSync(path("app/logo.png")), false);
   const brand = read("components/Brand/BrandWordmark.tsx");
   const globalStyles = read("app/globals.css");
@@ -94,14 +94,14 @@ test("Undara production doors keep the brand body color under rear-only lighting
 
 test("Undara shared assets stay centralized", () => {
   const expected = [
-    "public/assets/brand/undara/logo.png",
-    "public/assets/landing/doors/digital-invitation.png",
-    "public/assets/landing/doors/physical-invitation.png",
-    "public/assets/landing/doors/guestbook.png",
-    "public/assets/landing/doors/event-planner.png",
-    "public/assets/landing/ornaments/botanical/branch-01.png",
-    "public/assets/landing/ornaments/botanical/branch-06.png",
-    "public/assets/landing/atmosphere/forest-silhouette.png",
+    "public/assets/brand/undara/logo.webp",
+    "public/assets/landing/doors/digital-invitation.webp",
+    "public/assets/landing/doors/physical-invitation.webp",
+    "public/assets/landing/doors/guestbook.webp",
+    "public/assets/landing/doors/event-planner.webp",
+    "public/assets/landing/ornaments/botanical/branch-01.webp",
+    "public/assets/landing/ornaments/botanical/branch-06.webp",
+    "public/assets/landing/atmosphere/forest-silhouette.webp",
     "public/assets/demo/invitation/couple.jpg",
     "public/assets/payments/banks/bca.webp",
     "public/assets/audio/a-himitsu-fragile.mp3",
@@ -171,7 +171,7 @@ test("runtime source does not reference retired root asset URLs", () => {
 test("shared non-home marketing atmosphere uses botanical branch-02 instead of the legacy flower asset", () => {
   const landingOrnament = read("components/Landing/LandingFloralGlow.tsx");
   assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.png/);
-  assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.png"), false);
+  assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.webp"), false);
 });
 
 test("homepage uses the dedicated woodland composition without cloud or petal ambience", () => {
@@ -187,7 +187,7 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(home.includes("FallingLeaves"), false);
   assert.equal(existsSync(path("components/Landing/CloudCopy.tsx")), false);
 
-  assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.png")), true);
+  assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.webp")), true);
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.png/);
   assert.match(woodland, /data-landing-canopy/);
@@ -235,7 +235,7 @@ test("public marketing pages share one frame, footer control system and falling-
     assert.match(source, /undara-marketing-scroll/, file);
     assert.match(source, /<MarketingFrameFooter/, file);
     assert.equal(source.includes("LandingWoodlandAtmosphere"), false, file);
-    assert.equal(source.includes("forest-silhouette.png"), false, file);
+    assert.equal(source.includes("forest-silhouette.webp"), false, file);
   }
 });
 
