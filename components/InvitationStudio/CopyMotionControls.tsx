@@ -29,7 +29,7 @@ export default function CopyMotionControls({
 
   return (
     <>
-      <label className="dc-studio-section-field">
+      <label className="undara-studio-section-field">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
           value={motion?.animation && motion.animation !== "none" ? motion.animation : ""}
@@ -59,7 +59,7 @@ export default function CopyMotionControls({
         <>
           <button
             type="button"
-            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
+            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
             onClick={() => {
               document.querySelectorAll<HTMLElement>(
                 `[data-studio-copy-field="${CSS.escape(field)}"]`,
@@ -75,10 +75,10 @@ export default function CopyMotionControls({
             {en ? "Preview animation" : "Preview animasi"}
           </button>
 
-          <div className="dc-studio-layer-grid">
-            <label className="dc-studio-section-field">
+          <div className="undara-studio-layer-grid">
+            <label className="undara-studio-section-field">
               <span>{en ? "Duration" : "Durasi"}</span>
-              <span className="dc-studio-section-number">
+              <span className="undara-studio-section-number">
                 <input
                   type="number"
                   min="0.2"
@@ -93,9 +93,9 @@ export default function CopyMotionControls({
                 <small>s</small>
               </span>
             </label>
-            <label className="dc-studio-section-field">
+            <label className="undara-studio-section-field">
               <span>{en ? "Delay" : "Jeda"}</span>
-              <span className="dc-studio-section-number">
+              <span className="undara-studio-section-number">
                 <input
                   type="number"
                   min="0"
@@ -112,7 +112,7 @@ export default function CopyMotionControls({
             </label>
           </div>
 
-          <label className="dc-studio-section-field">
+          <label className="undara-studio-section-field">
             <span>{en ? "Text motion" : "Gerak teks"}</span>
             <select
               value={motion.unit ?? "whole"}
@@ -132,9 +132,9 @@ export default function CopyMotionControls({
           </label>
 
           {motion.unit ? (
-            <label className="dc-studio-section-field">
+            <label className="undara-studio-section-field">
               <span>{en ? "Stagger" : "Jarak gerak"}</span>
-              <span className="dc-studio-section-number">
+              <span className="undara-studio-section-number">
                 <input
                   type="number"
                   min="0.01"
