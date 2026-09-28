@@ -5,33 +5,6 @@ import { motion, useReducedMotion } from "motion/react";
 
 const FOREST = "/assets/landing/atmosphere/forest-silhouette.png";
 
-const cornerBranches = [
-  {
-    src: "/assets/landing/ornaments/botanical/branch-01.png",
-    className:
-      "absolute -left-[6%] top-[18%] h-[37%] w-[36%] origin-top-left opacity-[0.94] [mask-image:linear-gradient(to_right,black_54%,transparent_100%)] dark:opacity-[0.78]",
-    imageClassName: "object-contain object-left-top",
-  },
-  {
-    src: "/assets/landing/ornaments/botanical/branch-02.png",
-    className:
-      "absolute -right-[6%] top-[18%] hidden h-[37%] w-[36%] origin-top-right opacity-[0.92] [mask-image:linear-gradient(to_left,black_54%,transparent_100%)] sm:block dark:opacity-[0.76]",
-    imageClassName: "object-contain object-right-top",
-  },
-  {
-    src: "/assets/landing/ornaments/botanical/branch-03.png",
-    className:
-      "absolute -bottom-[3%] -left-[6%] h-[38%] w-[38%] origin-bottom-left opacity-[0.92] [mask-image:linear-gradient(to_bottom,black_25%,transparent_82%)] dark:opacity-[0.76]",
-    imageClassName: "object-contain object-left-bottom",
-  },
-  {
-    src: "/assets/landing/ornaments/botanical/branch-04.png",
-    className:
-      "absolute -bottom-[3%] -right-[6%] h-[38%] w-[38%] origin-bottom-right opacity-[0.9] [mask-image:linear-gradient(to_bottom,black_25%,transparent_82%)] dark:opacity-[0.74]",
-    imageClassName: "object-contain object-right-bottom",
-  },
-] as const;
-
 export default function LandingWoodlandAtmosphere() {
   const reduced = useReducedMotion();
 
@@ -40,7 +13,54 @@ export default function LandingWoodlandAtmosphere() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_52%,rgba(255,249,245,0.64),rgba(237,227,216,0.18)_43%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_50%,rgba(214,179,140,0.16),rgba(112,59,59,0.05)_48%,transparent_74%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_46%,rgba(214,179,140,0.18),rgba(112,59,59,0.055)_48%,transparent_75%)]" />
+
+      {/* A denser overhead canopy replaces the old decorative corner branches.
+          It reuses the woodland artwork so the frame reads as one forest scene. */}
+      <div data-landing-canopy className="absolute inset-x-0 top-[72px] h-[31%] overflow-hidden sm:top-[82px]">
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: -8 }}
+          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -3, 0] }}
+          transition={reduced ? { duration: 0 } : { opacity: { duration: 1 }, y: { duration: 18, repeat: Infinity, ease: "easeInOut" } }}
+          className="absolute -left-[9%] -top-[18%] h-[135%] w-[64%] [mask-image:linear-gradient(to_bottom,black_0%,black_54%,transparent_100%)]"
+        >
+          <Image
+            src={FOREST}
+            alt=""
+            fill
+            priority
+            sizes="65vw"
+            className="object-cover object-[12%_8%] opacity-[0.42] brightness-[0.78] saturate-[0.72] dark:opacity-[0.34] dark:brightness-[0.62] dark:saturate-[0.55]"
+          />
+        </motion.div>
+
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: -8 }}
+          animate={reduced ? { opacity: 1 } : { opacity: 1, y: [0, -2, 0] }}
+          transition={reduced ? { duration: 0 } : { opacity: { duration: 1.1 }, y: { duration: 20, delay: 1.1, repeat: Infinity, ease: "easeInOut" } }}
+          className="absolute -right-[9%] -top-[18%] h-[135%] w-[64%] [mask-image:linear-gradient(to_bottom,black_0%,black_54%,transparent_100%)]"
+        >
+          <Image
+            src={FOREST}
+            alt=""
+            fill
+            priority
+            sizes="65vw"
+            className="scale-x-[-1] object-cover object-[12%_8%] opacity-[0.40] brightness-[0.78] saturate-[0.72] dark:opacity-[0.32] dark:brightness-[0.62] dark:saturate-[0.55]"
+          />
+        </motion.div>
+
+        <div className="absolute left-1/2 top-[-22%] h-[115%] w-[47%] -translate-x-1/2 [mask-image:radial-gradient(ellipse_at_top,black_0%,black_42%,transparent_76%)]">
+          <Image
+            src={FOREST}
+            alt=""
+            fill
+            priority
+            sizes="50vw"
+            className="object-cover object-[50%_4%] opacity-[0.16] brightness-[0.82] saturate-[0.62] dark:opacity-[0.13] dark:brightness-[0.64]"
+          />
+        </div>
+      </div>
 
       <motion.div
         initial={reduced ? false : { opacity: 0, y: 10 }}
@@ -54,46 +74,16 @@ export default function LandingWoodlandAtmosphere() {
           fill
           priority
           sizes="100vw"
-          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] lg:object-cover lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_12%)] dark:opacity-[0.62] dark:brightness-[0.85] dark:saturate-[0.6]"
+          className="object-contain object-bottom opacity-[0.78] brightness-[0.88] saturate-[0.82] lg:object-cover lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_12%)] dark:opacity-[0.58] dark:brightness-[0.82] dark:saturate-[0.58]"
         />
       </motion.div>
 
-      <div className="absolute inset-x-[18%] bottom-[6%] h-[19%] rounded-[50%] bg-[#D6B38C]/18 blur-3xl dark:bg-[#EDE3D8]/10" />
+      {/* The visual source of the backlight lives inside the forest opening,
+          not in front of the doors. */}
+      <div className="absolute left-1/2 top-[31%] h-[38%] w-[46%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(255,248,235,0.58),rgba(225,196,157,0.16)_48%,transparent_74%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(214,179,140,0.20),rgba(112,59,59,0.06)_52%,transparent_76%)]" />
 
-      <div className="absolute inset-x-[5%] bottom-[5.5%] h-px bg-gradient-to-r from-transparent via-primary/15 to-transparent dark:via-[#D6B38C]/18" />
-    </div>
-  );
-}
-
-/** Outside the frame clip, but behind its content so the logo and controls stay clear. */
-export function LandingOuterBranches() {
-  const reduced = useReducedMotion();
-
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5] overflow-hidden">
-      {cornerBranches.map((branch, index) => (
-        <motion.div
-          key={branch.src}
-          initial={false}
-          animate={reduced ? undefined : { rotate: [0, index % 2 ? 0.55 : -0.55, 0], y: [0, -2, 0] }}
-          transition={{
-            duration: 16 + index * 2,
-            delay: index * 0.4,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className={branch.className}
-        >
-          <Image
-            src={branch.src}
-            alt=""
-            fill
-            sizes="(max-width: 640px) 55vw, 42vw"
-            className={branch.imageClassName}
-          />
-        </motion.div>
-      ))}
-
+      <div className="absolute inset-x-[22%] bottom-[7%] h-[16%] rounded-[50%] bg-[#D6B38C]/10 blur-3xl dark:bg-[#EDE3D8]/6" />
+      <div className="absolute inset-x-[5%] bottom-[5.5%] h-px bg-gradient-to-r from-transparent via-primary/12 to-transparent dark:via-[#D6B38C]/14" />
     </div>
   );
 }
