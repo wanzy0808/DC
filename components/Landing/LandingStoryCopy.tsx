@@ -12,12 +12,18 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
       ? {
           eyebrow: "Every story begins at a doorway",
           title: "Find what you need beyond the door.",
-          body: "Everything your celebration needs is here, so your day can feel more personal, warm, and full of meaning.",
+          body: [
+            "Everything your celebration needs is here,",
+            "so your day can feel more personal, warm, and full of meaning.",
+          ],
         }
       : {
           eyebrow: "Setiap cerita dimulai dari sebuah pintu",
           title: "Temukan kebutuhanmu di balik pintu.",
-          body: "Seluruh kebutuhan perayaanmu ada di sini, semoga perayaanmu terasa lebih personal, hangat dan penuh makna.",
+          body: [
+            "Seluruh kebutuhan perayaanmu ada di sini,",
+            "semoga perayaanmu terasa lebih personal, hangat dan penuh makna.",
+          ],
         };
 
   return (
@@ -59,8 +65,9 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
         />
       </div>
 
-      <p className="ml-auto mt-1 max-w-[46ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
-        {copy.body}
+      <p className="ml-auto mt-1 max-w-[52ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
+        <span className="block">{copy.body[0]}</span>
+        <span className="block">{copy.body[1]}</span>
       </p>
     </motion.aside>
   );
