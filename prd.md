@@ -5482,7 +5482,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Tujuan:** memastikan keputusan terbaru tidak hanya tersimpan sebagai histori chat/Appendix A tetapi juga menjadi rule canonical yang dibaca agent berikutnya.
 
-**Canonical yang ditegaskan:** homepage aktif adalah woodland (forest silhouette + branch 01–04 framing + branch 05 divider editorial), cloud/petal homepage lama pensiun; Pintu tetap 4 layanan dengan palette Light body `#703B3B` + trim `#EDE3D8`, Dark body `#D6B38C` + trim `#703B3B`; fireflies Light `#703B3B`, Dark `#D6B38C`; logo/tagline dan theme pair Undara tetap mengikuti §1.1. Workflow owner untuk coding adalah direct-repo implementation, bukan copy-paste snippet, selama akses tersedia.
+**Canonical yang ditegaskan:** homepage aktif adalah woodland (forest silhouette + canopy7 + branch-05 divider ornamental khusus story block), cloud/petal homepage lama pensiun; Pintu tetap 4 layanan dengan palette Light body `#703B3B` + trim `#EDE3D8`, Dark body `#D6B38C` + trim `#703B3B`; fireflies Light `#703B3B`, Dark `#D6B38C`; logo/tagline dan theme pair Undara tetap mengikuti §1.1. Workflow owner untuk coding adalah direct-repo implementation, bukan copy-paste snippet, selama akses tersedia.
 
 **Dokumentasi:** `AGENTS.md` mendapat direct-repo workflow rule; paragraf canonical landing di §15.4.1b dibetulkan agar tidak lagi menyebut cloud/petal sebagai baseline aktif; checklist path logo lama diselaraskan dengan `public/assets/brand/undara/logo.png`.
 
@@ -5536,7 +5536,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Landing woodland refinement — 2026-09-28
 - Keep the four production doors unchanged while refining the environment.
 - Cast shadows must preserve the arched door silhouette and extend naturally toward the viewer; no visibly rectangular receiver edges.
-- Remove decorative branch overlays from the homepage composition and story copy. Use a soft tree canopy across the upper woodland area instead.
+- Remove large decorative branch overlays from the homepage composition and story copy. A single compact `branch-05.png` is allowed only as the ornamental divider inside the lower-right story block; use the soft tree canopy for the broader woodland framing.
 - Preserve rear-origin lighting, while keeping the branded door faces readable and adding subtle forest mist/clearing light so the scene feels inhabited rather than underexposed.
 
 
@@ -5587,3 +5587,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 ### Canopy7 visual treatment — 2026-09-28
 - Use canopy7 as a soft atmospheric layer rather than a high-contrast foreground ornament. Keep foliage muted and semi-transparent so the doors remain the visual focus.
+
+
+### 28 September 2026 — Divider story block menjadi ukiran branch-05 + copy baru
+
+**Permintaan owner:** straight divider pada copy kanan-bawah diganti ukiran; title menjadi **“Temukan kebutuhanmu di balik pintu.”** dan body menjadi **“Seluruh kebutuhan perayaanmu ada di sini, semoga perayaanmu terasa lebih personal, hangat dan penuh makna.”**
+
+**Implementasi:** `LandingStoryCopy.tsx` mengganti garis lurus dengan silhouette `/assets/landing/ornaments/botanical/branch-05.png` melalui CSS mask. Divider mengikuti warna theme otomatis: Undara Brown pada Light dan Champagne pada Dark. Ukiran hanya menjadi divider kecil; branch overlay besar pada story/homepage tetap tidak digunakan. Versi EN diselaraskan maknanya. Posisi kanan-bawah, radial backing, ukuran story block, Pintu 3D, canopy7, forest silhouette dan footer tidak diubah.
+
+**Rule aktif:** branch-05 adalah pengecualian khusus sebagai divider ukiran story block. Jangan menggantinya kembali dengan straight line dan jangan memperluasnya menjadi branch overlay besar tanpa instruksi owner.
+
+**Validasi:** regression test diperbarui agar homepage tetap bebas branch overlay besar tetapi mewajibkan branch-05 pada story divider.

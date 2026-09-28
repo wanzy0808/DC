@@ -11,13 +11,13 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
     locale === "en"
       ? {
           eyebrow: "Every story begins at a doorway",
-          title: "Open the door to your day.",
-          body: "From the first invitation to the celebration itself, every step is shaped to feel personal, warm, and full of meaning.",
+          title: "Find what you need beyond the door.",
+          body: "Everything your celebration needs is here, so your day can feel more personal, warm, and full of meaning.",
         }
       : {
           eyebrow: "Setiap cerita dimulai dari sebuah pintu",
-          title: "Buka pintu menuju harimu.",
-          body: "Dari undangan pertama hingga hari perayaan, setiap langkah dirangkai agar terasa personal, hangat, dan penuh makna.",
+          title: "Temukan kebutuhanmu di balik pintu.",
+          body: "Seluruh kebutuhan perayaanmu ada di sini, semoga perayaanmu terasa lebih personal, hangat dan penuh makna.",
         };
 
   return (
@@ -42,8 +42,22 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
 
       <div
         aria-hidden="true"
-        className="ml-auto mt-4 h-px w-[180px] bg-gradient-to-l from-primary/45 via-primary/18 to-transparent dark:from-[#D6B38C]/38 dark:via-[#D6B38C]/14 sm:w-[220px] lg:w-[245px]"
-      />
+        className="ml-auto mt-3 flex h-8 w-[190px] items-center justify-end text-primary/65 sm:w-[230px] lg:w-[260px] dark:text-[#D6B38C]/72"
+      >
+        <span
+          className="block h-full w-full bg-current"
+          style={{
+            WebkitMaskImage: 'url("/assets/landing/ornaments/botanical/branch-05.png")',
+            maskImage: 'url("/assets/landing/ornaments/botanical/branch-05.png")',
+            WebkitMaskRepeat: "no-repeat",
+            maskRepeat: "no-repeat",
+            WebkitMaskPosition: "right center",
+            maskPosition: "right center",
+            WebkitMaskSize: "contain",
+            maskSize: "contain",
+          }}
+        />
+      </div>
 
       <p className="ml-auto mt-1 max-w-[34ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
         {copy.body}

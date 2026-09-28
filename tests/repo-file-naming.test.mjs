@@ -191,7 +191,7 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.png/);
   assert.match(woodland, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
-  assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(story), false);
+  assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
   assert.equal(home.includes("LandingOuterBranches"), false);
 });
 
@@ -220,8 +220,10 @@ test("burger services submenu is closed by default", () => {
 test("landing story copy keeps the Undara doorway message and larger emphasis", () => {
   const story = read("components/Landing/LandingStoryCopy.tsx");
   assert.match(story, /Setiap cerita dimulai dari sebuah pintu/);
-  assert.match(story, /Buka pintu menuju harimu\./);
+  assert.match(story, /Temukan kebutuhanmu di balik pintu\./);
+  assert.match(story, /Seluruh kebutuhan perayaanmu ada di sini/);
   assert.match(story, /w-\[min\(82vw,390px\)\]/);
   assert.match(story, /text-\[clamp\(1\.35rem,2\.05vw,2\.05rem\)\]/);
-  assert.match(story, /bg-gradient-to-l from-primary\/45 via-primary\/18 to-transparent/);
+  assert.match(story, /branch-05\.png/);
+  assert.doesNotMatch(story, /h-px w-\[180px\] bg-gradient-to-l/);
 });
