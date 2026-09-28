@@ -171,11 +171,11 @@ export function MarketingAudioControls() {
   if (!audio) throw new Error("MarketingAudioControls requires MarketingAudioProvider");
   const { soundOn, volume, toggleSound, changeVolume } = audio;
   return <div className="flex shrink-0 items-center gap-2">
-    <Button size="icon-sm" variant="ghost" className="undara-footer-control" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
+    <Button size="icon-sm" variant="ghost" className="undara-control-surface undara-footer-control" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
       {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
     </Button>
 
-    <div className="undara-volume-control">
+    <div className="undara-control-surface undara-volume-control">
       <label htmlFor="dc-marketing-volume" className="sr-only">Volume suara</label>
       <input
         id="dc-marketing-volume"
