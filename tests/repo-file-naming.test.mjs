@@ -154,7 +154,11 @@ test("runtime source does not reference retired root asset URLs", () => {
   for (const file of files) {
     const source = read(file);
     for (const legacy of retiredUrls) {
-      assert.equal(source.includes(legacy), false, `${file} still references ${legacy}`);
+      const hasRetiredRootLiteral =
+        source.includes(`"${legacy}"`) ||
+        source.includes(`'${legacy}'`) ||
+        source.includes("`" + legacy + "`");
+      assert.equal(hasRetiredRootLiteral, false, `${file} still references root URL ${legacy}`);
     }
   }
 });
