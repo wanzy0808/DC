@@ -1487,6 +1487,8 @@ Owner approved the landing composition formerly developed under `/pagecontoh`, w
 
 The approved landing is a continuous botanical/rose-glow/petal scene with a rounded main frame, embedded navbar and footer, four orbiting 3D doors, two transparent cloud-copy regions with a single outer rose outline, puzzle-like in-place cloud assembly and letter-by-letter bilingual copy, audio controls, and Instagram link. The precise existing component code, layout, assets, animations, content, responsive states, light/dark modes, and ID/EN states are the visual/behavioral source of truth. Future related marketing surfaces must follow this established design language using existing components and installed libraries where appropriate; this does not authorize copying landing-specific decoration onto unrelated surfaces.
 
+**Current Pintu color override (28 September 2026):** perubahan hanya pada warna material. Light Mode memakai body/frame pintu `#703B3B` dan lis/trim `#EDE3D8`; Dark Mode memakai body/frame pintu `#D6B38C` dan lis/trim `#703B3B`. Geometry, ukuran, ornament, material roughness/metalness, orbit, kamera, animasi buka/tutup, glow, lighting, shadow, portal dan route tidak berubah.
+
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
 
 Active canonical references: `app/page.tsx`, `components/Landing/Pintu/LandingDoorScene.tsx`, `components/Landing/CloudCopy.tsx`, `components/Layout/PublicMarketingAtmosphere.tsx`, `components/Layout/MarketingFrameFooter.tsx`, `components/Layout/Navbar/Navbar.tsx`, and the shared theme/language controls and button components they actually import. Historical `app/pagecontoh/page.tsx` is not a live source file. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
@@ -5366,3 +5368,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Kontrak final:** **Light `#EDE3D8` / Dark `#703B3B`**. Instruksi Light `#D6B38C` pada entri sebelumnya adalah histori dan digantikan oleh keputusan ini.
 
 **Validasi:** regression test brand/theme memverifikasi token Light/Dark canonical. GitHub Actions harus lulus sebelum tahap ini dinyatakan selesai.
+
+
+### 28 September 2026 — Logo/tagline diperbesar & Pintu mengikuti palette Undara
+
+**Permintaan owner:** logo dan tagline navbar diperbesar sedikit. Pintu boleh berubah **warna saja**: Light body/frame `#703B3B`, lis `#EDE3D8`; Dark body/frame `#D6B38C`, lis `#703B3B`.
+
+**Implementasi brand:** ukuran logo public naik dari 104/128/136px menjadi **112/140/148px**, dashboard 104→**112px**, mobile 84→**90px**. Tagline public naik dari 6/8/9px menjadi **7/9/10px**; copy, font, posisi navbar dan kontrol kanan tidak diubah.
+
+**Implementasi Pintu:** `LandingDoorScene.tsx` menerima palette berdasarkan `isDarkMode`. Frame dan panel mengikuti body color per mode; lis panel, dua garis vertikal dan diamond ornament mengikuti trim color per mode. Gradient panel tetap dipertahankan dengan bottom shade dari keluarga warna yang sama. Tidak ada perubahan geometry, roughness/metalness, ukuran, orbit, scale, hover, opening pivot, kamera, portal, glow, fireflies, ground shadow, lighting, tombol atau route.
+
+**Validasi:** regression test memverifikasi ukuran brand dan pasangan warna Pintu. GitHub Actions harus lulus sebelum tahap ini dinyatakan selesai.

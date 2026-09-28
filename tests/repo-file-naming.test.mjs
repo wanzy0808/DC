@@ -64,6 +64,8 @@ test("Undara navbar brand uses the shared image logo asset", () => {
   assert.match(brand, /undara-brand-logo/);
   assert.match(brand, /<span className="sr-only">Undara<\/span>/);
   assert.match(brand, /Melangkah Bersama, Menuju Hari Penuh Makna/);
+  assert.match(brand, /public: "w-\[112px\] sm:w-\[140px\] lg:w-\[148px\]"/);
+  assert.match(brand, /text-\[7px\] sm:text-\[9px\] lg:text-\[10px\]/);
   assert.match(globalStyles, /mask-image:\s*url\("\/brand\/undara\/logo\.png"\)/);
 });
 
@@ -73,4 +75,14 @@ test("Undara light and dark palette stays on the canonical pair", () => {
   assert.match(styles, /:root \{[\s\S]*?--background:\s*#EDE3D8;/);
   assert.match(styles, /\.dark \{[\s\S]*?--background:\s*#703B3B;/);
   assert.match(styles, /--dc-dashboard-canvas:\s*#EDE3D8;/);
+});
+
+
+test("Undara production doors use the theme-specific color-only palette", () => {
+  const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
+  assert.match(doors, /isDarkMode[\s\S]*?frame: "#D6B38C"[\s\S]*?trim: "#703B3B"/);
+  assert.match(doors, /frame: "#703B3B"[\s\S]*?trim: "#EDE3D8"/);
+  assert.match(doors, /<DoorFrame color=\{palette\.frame\} \/>/);
+  assert.match(doors, /color=\{palette\.trim\} roughness=\{0\.58\} metalness=\{0\.12\}/);
+  assert.match(doors, /isDarkMode=\{isDarkMode\}/);
 });

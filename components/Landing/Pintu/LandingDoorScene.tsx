@@ -21,16 +21,16 @@ function archShape(width: number, height: number) {
   return s;
 }
 
-function Arch({ width, height, depth, color, z = 0, gradient = false }: { width: number; height: number; depth: number; color: string; z?: number; gradient?: boolean }) {
+function Arch({ width, height, depth, color, z = 0, gradient = false, gradientBottom }: { width: number; height: number; depth: number; color: string; z?: number; gradient?: boolean; gradientBottom?: string }) {
   const geometry = useMemo(() => new THREE.ExtrudeGeometry(archShape(width, height), {
     depth, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.009, bevelThickness: 0.009, curveSegments: 48,
   }), [width, height, depth]);
   useMemo(() => {
     const position = geometry.getAttribute("position");
     const colors = new Float32Array(position.count * 3);
-    const bottom = new THREE.Color("#9e5868");
-    const middle = new THREE.Color("#c07a84");
-    const top = new THREE.Color("#c07a84");
+    const bottom = new THREE.Color(gradientBottom ?? color);
+    const middle = new THREE.Color(color);
+    const top = new THREE.Color(color);
     for (let i = 0; i < position.count; i++) {
       const t = THREE.MathUtils.smoothstep(position.getY(i) / height, 0, 0.44);
       const colorAt = t < 0.8 ? bottom.clone().lerp(middle, t / 0.8) : middle.clone().lerp(top, (t - 0.8) / 0.2);
@@ -39,13 +39,13 @@ function Arch({ width, height, depth, color, z = 0, gradient = false }: { width:
       colors[i * 3 + 2] = colorAt.b;
     }
     geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-  }, [geometry, height]);
+  }, [geometry, height, color, gradientBottom]);
   return <mesh geometry={geometry} position={[0, 0, z]} castShadow receiveShadow>
     {gradient ? <meshStandardMaterial vertexColors roughness={0.75} metalness={0.03} /> : <meshStandardMaterial color={color} roughness={0.82} metalness={0} />}
   </mesh>;
 }
 
-function DoorFrame() {
+function DoorFrame({ color }: { color: string }) {
   const geometry = useMemo(() => {
     const outer = archShape(2.02, 4.18);
     const inner = archShape(1.88, 4.06);
@@ -54,7 +54,7 @@ function DoorFrame() {
     outer.holes.push(hole);
     return new THREE.ExtrudeGeometry(outer, { depth: 0.09, bevelEnabled: true, bevelSize: 0.006, bevelThickness: 0.006, bevelSegments: 2, curveSegments: 48 });
   }, []);
-  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color="#c07a84" roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
+  return <mesh geometry={geometry} castShadow receiveShadow><meshStandardMaterial color={color} roughness={0.7} metalness={0.05} side={THREE.DoubleSide} /></mesh>;
 }
 
 function PortalWorld({ image, entering }: { image: string; entering: boolean }) {
@@ -301,26 +301,28 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   </mesh>;
 }
 
-function Door({ opening, image, title, entering }: { opening: boolean; image: string; title: string; entering: boolean }) {
+function Door({ opening, image, title, entering, isDarkMode }: { opening: boolean; image: string; title: string; entering: boolean; isDarkMode: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
   });
-  const palette = { frame: "#c07a84", panel: "#c07a84", trim: "#e9e5df", metal: "#d1a9a0" };
+  const palette = isDarkMode
+    ? { frame: "#D6B38C", panel: "#D6B38C", panelBottom: "#C19A72", trim: "#703B3B", metal: "#d1a9a0" }
+    : { frame: "#703B3B", panel: "#703B3B", panelBottom: "#5E3030", trim: "#EDE3D8", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
     <PortalWorld image={image} entering={entering} />
     <DoorOpeningGlow opening={opening} entering={entering} />
     <group position={[0, 0, -0.16]}>
-      <DoorFrame />
+      <DoorFrame color={palette.frame} />
     </group>
     <group ref={pivot} position={[-0.94, 0, -0.065]}>
       <group position={[0.94, 0, 0]}>
-        <Arch width={1.88} height={4.06} depth={0.075} color={palette.panel} gradient />
+        <Arch width={1.88} height={4.06} depth={0.075} color={palette.panel} gradient gradientBottom={palette.panelBottom} />
         <Arch width={1.67} height={3.78} depth={0.012} z={0.079} color={palette.trim} />
-        <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient />
+        <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient gradientBottom={palette.panelBottom} />
         <DoorTitle title={title} opening={opening} />
-        {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color="#e9e5df" roughness={0.58} metalness={0.12} /></mesh>)}
-        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color="#e9e5df" metalness={0.28} roughness={0.48} /></mesh>
+        {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color={palette.trim} roughness={0.58} metalness={0.12} /></mesh>)}
+        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color={palette.trim} metalness={0.28} roughness={0.48} /></mesh>
 
         <mesh position={[0.67, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
@@ -412,7 +414,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onPointerOver={(event) => { event.stopPropagation(); if (selected === null && !entering && !reducedMotion) hovered.current = index; }}
     onPointerOut={(event) => { event.stopPropagation(); if (hovered.current === index) hovered.current = null; }}
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} />
+    <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} isDarkMode={isDarkMode} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
     <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 1.65 : 0.15} color="#ffe1d5" distance={2.8} />
   </group>)}</>;

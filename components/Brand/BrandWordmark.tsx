@@ -8,9 +8,9 @@ type BrandWordmarkProps = HTMLAttributes<HTMLSpanElement> & {
 };
 
 const sizeClass: Record<BrandWordmarkSize, string> = {
-  public: "w-[104px] sm:w-[128px] lg:w-[136px]",
-  dashboard: "w-[104px]",
-  mobile: "w-[84px]",
+  public: "w-[112px] sm:w-[140px] lg:w-[148px]",
+  dashboard: "w-[112px]",
+  mobile: "w-[90px]",
 };
 
 export default function BrandWordmark({
@@ -27,7 +27,7 @@ export default function BrandWordmark({
       />
       <span className="sr-only">Undara</span>
       {showTagline && (
-        <span className={`mt-1 block whitespace-nowrap font-[family-name:var(--font-undara-body)] font-medium tracking-[0.05em] text-foreground/65 ${size === "public" ? "text-[6px] sm:text-[8px] lg:text-[9px]" : "text-[7px]"}`}>
+        <span className={`mt-1 block whitespace-nowrap font-[family-name:var(--font-undara-body)] font-medium tracking-[0.05em] text-foreground/65 ${size === "public" ? "text-[7px] sm:text-[9px] lg:text-[10px]" : "text-[8px]"}`}>
           Melangkah Bersama, Menuju Hari Penuh Makna
         </span>
       )}

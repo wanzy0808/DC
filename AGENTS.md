@@ -175,6 +175,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Do not duplicate the same metric/context in adjacent header cards and metric grids. If the information is already clearly visible nearby, remove the duplicate.
 - Small owner corrections to recurring UI/copy style are repository conventions, not throwaway tweaks: update the relevant active requirement in `prd.md` and keep this file limited to reusable engineering/design guardrails. Record material change history only in `prd.md` Appendix A; never recreate the retired `prd-tambahan.md`.
 - Landing root chrome must visually merge with the landing canvas: header and compact landing footer use `var(--background)` rather than a visibly separate surface. In landing Dark Mode, the selected ID/EN option uses opaque Rose with near-black text, and the theme toggle uses opaque Rose with a near-black icon/text. Scope these landing-only overrides through the landing navbar class so Dashboard/shared controls are not accidentally restyled.
+- **Landing Pintu palette (28 September 2026):** preserve the approved production door geometry, orbit, camera, open/close motion, scale, lighting, portal, shadows and service mapping. Color-only override: **Light Mode door body/frame = `#703B3B`, trim/list = `#EDE3D8`; Dark Mode door body/frame = `#D6B38C`, trim/list = `#703B3B`**. Do not use a Pintu recolor request to redesign the object.
 
 ## 6. Motion & Accessibility
 

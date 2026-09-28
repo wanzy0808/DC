@@ -17,7 +17,8 @@
 - [x] Ubah root metadata, wordmark teks, i18n/footer utama, dan semantic theme tokens tanpa mass-rename identifier internal.
 - [x] Dark base berpindah dari black/near-black ke Undara Brown pada token global/dashboard foundation.
 - [x] Light brand chrome berpindah dari Rose/pink ke Undara Brown.
-- [ ] Integrasikan file logo/icon Undara final setelah asset benar-benar ter-push ke repo; jangan membuat path palsu.
+- [x] Palette Pintu produksi: Light body `#703B3B` / lis `#EDE3D8`; Dark body `#D6B38C` / lis `#703B3B`, tanpa perubahan geometry/motion.
+- [x] Integrasikan logo Undara final melalui `public/brand/undara/logo.png` dan shared `BrandWordmark`.
 - [ ] Audit sisa hardcoded Rose/pink/black pada marketing, auth, dashboard, owner/designer, dan public chrome satu per satu.
 - [ ] Audit seluruh customer-facing string `DC Organizer`; pertahankan hanya histori, compatibility, atau legal context yang masih benar.
 - [ ] Review Privacy/Terms setelah identitas badan hukum/contact/domain baru dikonfirmasi; jangan mengarang perubahan legal.
