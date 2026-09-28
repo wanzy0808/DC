@@ -52,7 +52,7 @@ export default async function PersonalInvitationPage({
 
   return (
     <>
-      <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-[family-name:var(--font-fauna)] text-sm text-foreground">
+      <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-sans text-sm text-foreground">
         Undangan khusus untuk <strong>{guest.personalAddressee || guest.name}</strong>
         {guest.personalGreeting && (
           <p className="mx-auto mt-2 max-w-xl whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{guest.personalGreeting}</p>
