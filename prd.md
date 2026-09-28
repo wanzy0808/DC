@@ -1501,6 +1501,8 @@ The current approved homepage is a **woodland composition** with a rounded main 
 
 **Ranting dan warna kontrol marketing:** ranting homepage tetap terbaca di tepi kiri/kanan dan melintasi batas frame, dengan area navbar, Pintu, dan footer tetap jelas. Slider volume, ikon suara, dan pintu mini widget Jelajah memakai token `--primary`/`--accent` dari tema aktif; perubahan palet tema harus diterapkan bersama tanpa warna pink lama yang tertanam di komponen tersebut.
 
+**Widget Jelajah dan tombol suara:** tombol widget, kedua daun pintu mini, dan tombol sound ON/OFF memakai warna `primary` solid dengan detail `primary-foreground` yang kontras. Panel navigasinya memakai permukaan `background` solid agar tetap terbaca pada Light/Dark Mode.
+
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
 
 **Owner coding workflow:** bila owner meminta perubahan coding pada Undara, default proses adalah cek HEAD repo → implement langsung di repo → jalankan/observasi regression/build yang relevan → laporkan commit dan status. Jangan mengalihkan pekerjaan menjadi potongan kode untuk owner tempel manual kecuali owner memang meminta code-only, meminta repo tidak diubah, atau akses repo/tool sedang tidak tersedia.
@@ -5476,3 +5478,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Dokumentasi:** `AGENTS.md` mendapat direct-repo workflow rule; paragraf canonical landing di §15.4.1b dibetulkan agar tidak lagi menyebut cloud/petal sebagai baseline aktif; checklist path logo lama diselaraskan dengan `public/assets/brand/undara/logo.png`.
 
 **Validasi:** perubahan dokumentasi saja; tidak mengubah runtime application behavior.
+
+### 28 September 2026 — Widget Jelajah lebih solid
+
+**Permintaan owner:** warna widget Jelajah dibuat lebih padat. Tombol mengambang dan daun pintu mini kini memakai `primary` solid; bingkai, lis, dan knob memakai `primary-foreground` agar bentuk pintu tetap jelas. Panel menu memakai `background` solid tanpa transparansi. Semua warna mengikuti token Light/Dark, sementara tujuan menu, interaksi buka/tutup, dan ukuran tetap. Area: `MarketingDoorNavigator.tsx`, `prd.md`. Validasi: lint terarah dengan pengecualian rule effect existing dan TypeScript dari perubahan sebelumnya; QA visual browser menunggu review owner. Tidak ada migrasi database.
+
+**Tambahan owner:** tombol sound ON/OFF yang semula mewarisi pink hardcoded dari `Button` kini memakai `primary` dan `primary-foreground` dari tema melalui style scoped pada kontrol audio. Area tambahan: `MarketingAudio.tsx`; perilaku mute dan level volume tetap.

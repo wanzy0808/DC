@@ -45,26 +45,26 @@ function MiniDoor({ active = false }: { active?: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-primary/70 bg-card shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35),0_5px_12px_rgba(64,25,36,0.22)]"
+      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-primary-foreground/70 bg-primary-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,0.25),0_5px_12px_rgba(64,25,36,0.22)]"
     >
-      <span className="absolute inset-[3px] rounded-t-[13px] bg-[radial-gradient(ellipse_at_50%_45%,var(--background)_0%,var(--card)_55%,var(--primary)_100%)]" />
+      <span className="absolute inset-[3px] rounded-t-[13px] bg-card" />
       <span
         className={
-          "absolute bottom-[3px] left-[3px] top-[3px] w-[calc(50%_-_3px)] origin-left rounded-tl-[13px] border border-background/35 bg-[linear-gradient(125deg,var(--card)_0%,var(--primary)_80%)] shadow-[2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
+          "absolute bottom-[3px] left-[3px] top-[3px] w-[calc(50%_-_3px)] origin-left rounded-tl-[13px] border border-primary-foreground/60 bg-primary shadow-[2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
           (active ? "-translate-x-[4px]" : "group-hover:-translate-x-[4px] group-focus-visible:-translate-x-[4px]")
         }
       >
-        <span className="absolute inset-[3px] rounded-tl-[10px] border border-background/30" />
-        <span className="absolute right-[1px] top-[56%] size-[2px] rounded-full bg-accent" />
+        <span className="absolute inset-[3px] rounded-tl-[10px] border border-primary-foreground/35" />
+        <span className="absolute right-[1px] top-[56%] size-[2px] rounded-full bg-primary-foreground" />
       </span>
       <span
         className={
-          "absolute bottom-[3px] right-[3px] top-[3px] w-[calc(50%_-_3px)] origin-right rounded-tr-[13px] border border-background/35 bg-[linear-gradient(235deg,var(--card)_0%,var(--primary)_85%)] shadow-[-2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
+          "absolute bottom-[3px] right-[3px] top-[3px] w-[calc(50%_-_3px)] origin-right rounded-tr-[13px] border border-primary-foreground/60 bg-primary shadow-[-2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
           (active ? "translate-x-[4px]" : "group-hover:translate-x-[4px] group-focus-visible:translate-x-[4px]")
         }
       >
-        <span className="absolute inset-[3px] rounded-tr-[10px] border border-background/30" />
-        <span className="absolute left-[1px] top-[56%] size-[2px] rounded-full bg-accent" />
+        <span className="absolute inset-[3px] rounded-tr-[10px] border border-primary-foreground/35" />
+        <span className="absolute left-[1px] top-[56%] size-[2px] rounded-full bg-primary-foreground" />
       </span>
     </span>
   );
@@ -123,7 +123,7 @@ export default function MarketingDoorNavigator() {
         aria-controls="dc-marketing-door-navigation"
         aria-label={open ? (isEnglish ? "Close page navigation" : "Tutup navigasi halaman") : label}
         onClick={() => setOpen((previous) => !previous)}
-        className="group flex w-[53px] flex-col items-center gap-1 rounded-[24px] border border-primary/40 bg-background/90 px-1.5 py-2 text-primary shadow-[0_8px_25px_rgba(75,35,47,0.18)] backdrop-blur-xl transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-primary hover:shadow-[0_10px_30px_rgba(75,35,47,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="group flex w-[53px] flex-col items-center gap-1 rounded-[24px] border border-primary bg-primary px-1.5 py-2 text-primary-foreground shadow-[0_8px_25px_rgba(75,35,47,0.18)] transition-[border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:border-primary-foreground/60 hover:shadow-[0_10px_30px_rgba(75,35,47,0.25)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
       >
         <MiniDoor active={open} />
         <span className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-tight tracking-[0.05em]">
@@ -139,7 +139,7 @@ export default function MarketingDoorNavigator() {
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -8, scale: 0.98 }}
             transition={{ duration: reducedMotion ? 0.08 : 0.25, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute bottom-[calc(100%+10px)] left-0 w-[min(340px,calc(100vw-72px))] max-h-[min(70dvh,550px)] overflow-y-auto rounded-[24px] border border-primary/35 bg-background/95 p-3 text-foreground shadow-[0_20px_65px_rgba(57,23,35,0.25)] backdrop-blur-xl sm:bottom-auto sm:left-[calc(100%+12px)] sm:top-1/2 sm:max-h-[min(82dvh,580px)] sm:-translate-y-1/2 sm:p-4"
+            className="absolute bottom-[calc(100%+10px)] left-0 w-[min(340px,calc(100vw-72px))] max-h-[min(70dvh,550px)] overflow-y-auto rounded-[24px] border border-primary/35 bg-background p-3 text-foreground shadow-[0_20px_65px_rgba(57,23,35,0.25)] sm:bottom-auto sm:left-[calc(100%+12px)] sm:top-1/2 sm:max-h-[min(82dvh,580px)] sm:-translate-y-1/2 sm:p-4"
           >
             <div className="mb-3 flex items-start justify-between gap-3 border-b border-primary/20 px-1 pb-3">
               <div>
