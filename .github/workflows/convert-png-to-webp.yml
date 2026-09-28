@@ -17,24 +17,28 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
-          version: 12.6.0
           run_install: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 22
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
 
       - name: Convert PNG assets and update references
         run: node scripts/convert-public-png-to-webp.mjs
@@ -46,6 +50,9 @@ jobs:
           count="$(find public -type f -iname '*.png' | wc -l | tr -d ' ')"
           echo "Remaining public PNG files: $count"
           test "$count" = "0"
+
+      - name: Source regression tests
+        run: pnpm test
 
       - name: Verify application build
         run: pnpm build
