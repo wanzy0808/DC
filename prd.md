@@ -5644,3 +5644,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Area utama:** `components/Layout/FallingLeaves.tsx`, `PublicMarketingAtmosphere.tsx`, `PublicAtmosphere.tsx`, `MarketingFrameFooter.tsx`, `MarketingAudio.tsx`, `MarketingFloatingControls.tsx`, `Footer.tsx`, `Navbar.tsx`, `lib/marketing-paths.ts`, `app/globals.css`, homepage + enam marketing routes, `AGENTS.md`, dan regression test.
 
 **Commit implementasi utama:** `eec4dcc`, `bdaeb6b`, `7abbc26`, `0127427`, `b86b4d8`, `282e4b1`, `52fd051`, `c0bb471`, `655aa57`, `e129130`. **Validasi terobservasi:** Build Validation **PASS** pada `282e4b1` termasuk source regression baru; Orphan Audit **PASS** pada `655aa57`. Build Validation untuk guard ambience tambahan `e129130` masih berjalan saat entry ini ditulis. Browser visual QA desktop/mobile Light/Dark masih perlu review owner; tidak ada migrasi database.
+
+
+### 28 September 2026 — Ikon sosial Undara tanpa link legacy
+
+**Permintaan owner:** footer kanan-bawah menampilkan Instagram, TikTok, dan Facebook; akun resmi belum dibuat dan Instagram tidak boleh lagi mengarah ke akun DC Organizer.
+
+**Implementasi:** ditambahkan `components/Layout/UndaraSocialIcons.tsx` sebagai satu sumber ikon sosial. Ketiga ikon tampil pada `MarketingFrameFooter` dan footer publik lama, tetapi sengaja non-clickable sampai URL resmi Undara tersedia. Link Instagram `dc.organizer` dihapus. YouTube tidak ditampilkan pada set sosial baru. Regression test mengunci tiga ikon dan melarang referensi `dc.organizer` pada komponen sosial/footer.
+
+**Commit utama:** `f5a353f`, `6bce7c4`, `76b5a6f`, `3e6b5cd`. Tidak ada migrasi database.

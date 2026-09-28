@@ -223,8 +223,8 @@ test("public marketing pages share one frame, footer control system and falling-
   assert.match(styles, /\.undara-footer-control \{/);
   assert.match(styles, /\.undara-volume-slider/);
   assert.match(footer, /MarketingAudioControls/);
-  assert.match(footer, /MarketingInstagramLink/);
-  assert.match(footer, /undara-footer-control/);
+  assert.match(footer, /UndaraSocialIcons/);
+  assert.match(read("components/Layout/UndaraSocialIcons.tsx"), /undara-footer-control/);
   assert.match(audio, /className="undara-footer-control"/);
   assert.match(audio, /className="undara-volume-slider/);
 
@@ -237,6 +237,22 @@ test("public marketing pages share one frame, footer control system and falling-
     assert.equal(source.includes("LandingWoodlandAtmosphere"), false, file);
     assert.equal(source.includes("forest-silhouette.png"), false, file);
   }
+});
+
+
+test("Undara footer social icons stay link-free until official profiles exist", () => {
+  const social = read("components/Layout/UndaraSocialIcons.tsx");
+  const frameFooter = read("components/Layout/MarketingFrameFooter.tsx");
+  const publicFooter = read("components/Layout/Footer.tsx");
+
+  assert.match(social, /Instagram Undara/);
+  assert.match(social, /TikTok Undara/);
+  assert.match(social, /Facebook Undara/);
+  assert.match(social, /data-social-pending="true"/);
+  assert.doesNotMatch(social, /dc\.organizer/i);
+  assert.doesNotMatch(frameFooter, /dc\.organizer/i);
+  assert.match(frameFooter, /<UndaraSocialIcons \/>/);
+  assert.match(publicFooter, /<UndaraSocialIcons compact \/>/);
 });
 
 
