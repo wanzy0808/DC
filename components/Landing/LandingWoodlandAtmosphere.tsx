@@ -1,10 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 
-const FOREST = "/assets/landing/atmosphere/forest-silhouette.webp";
-const DARK_LANTERN_GARDEN = "/assets/landing/atmosphere/bgdarkmode.webp";
+const LIGHT_GARDEN = "/assets/landing/atmosphere/lightbg.webp";
+const DARK_LANTERN_GARDEN = "/assets/landing/atmosphere/darkbg.webp";
+
+const BODY_MASK =
+  "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.28) 7%, black 16%, black 84%, rgba(0,0,0,0.30) 93%, transparent 100%)";
 
 export default function LandingWoodlandAtmosphere() {
   const reduced = useReducedMotion();
@@ -14,75 +16,49 @@ export default function LandingWoodlandAtmosphere() {
       aria-hidden="true"
       className="pointer-events-none absolute inset-x-0 bottom-11 top-[72px] z-0 overflow-hidden sm:bottom-12 sm:top-[88px] lg:top-[96px]"
     >
-      {/* Light mode keeps the airy woodland composition. */}
+      {/* Light and dark intentionally use separate artwork.
+          Both are limited to the body and dissolve into the header/footer
+          instead of ending on a hard horizontal edge. */}
       <div className="absolute inset-0 opacity-100 transition-opacity duration-700 dark:opacity-0">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)]" />
-
         <motion.div
-          initial={reduced ? false : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: reduced ? 0 : 1.1, ease: "easeOut" }}
-          className="absolute inset-x-3 top-[88px] bottom-[10%] sm:inset-x-[38px] sm:top-[100px] sm:bottom-[8%]"
-        >
-          <Image
-            src={FOREST}
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-contain object-bottom opacity-[0.78] brightness-[0.88] saturate-[0.82] lg:object-cover lg:[mask-image:linear-gradient(to_bottom,transparent_0%,black_12%)]"
-          />
-        </motion.div>
+          initial={reduced ? false : { opacity: 0, scale: 1.018 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: reduced ? 0 : 1.05, ease: "easeOut" }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url("${LIGHT_GARDEN}")`,
+            WebkitMaskImage: BODY_MASK,
+            maskImage: BODY_MASK,
+          }}
+        />
 
-        <div className="absolute left-1/2 top-[31%] h-[38%] w-[46%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(255,248,235,0.58),rgba(225,196,157,0.16)_48%,transparent_74%)] blur-2xl" />
-        <div className="absolute inset-x-[22%] bottom-[7%] h-[16%] rounded-[50%] bg-[#D6B38C]/10 blur-3xl" />
+        {/* Fog bridges the body artwork into the clean light header/footer. */}
+        <div className="absolute inset-x-0 top-0 h-[clamp(82px,11dvh,138px)] bg-[linear-gradient(to_bottom,#EDE3D8_0%,rgba(237,227,216,0.92)_18%,rgba(237,227,216,0.60)_43%,rgba(237,227,216,0.20)_72%,transparent_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[clamp(76px,10dvh,128px)] bg-[linear-gradient(to_top,#EDE3D8_0%,rgba(237,227,216,0.90)_18%,rgba(237,227,216,0.56)_44%,rgba(237,227,216,0.18)_72%,transparent_100%)]" />
+
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.12)_0%,transparent_58%)]" />
       </div>
 
-      {/* Dark mode is a separate scene instead of a tinted version of light mode.
-          The artwork is built around Undara's brown family with restrained
-          champagne-gold lantern light, keeping the center clear for the doors. */}
-      <div className="absolute inset-0 overflow-hidden bg-[#241111] opacity-0 transition-opacity duration-700 dark:opacity-100">
+      <div className="absolute inset-0 opacity-0 transition-opacity duration-700 dark:opacity-100">
         <motion.div
-          initial={reduced ? false : { opacity: 0, scale: 1.025 }}
+          initial={reduced ? false : { opacity: 0, scale: 1.018 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: reduced ? 0 : 1.15, ease: "easeOut" }}
+          transition={{ duration: reduced ? 0 : 1.08, ease: "easeOut" }}
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url("${DARK_LANTERN_GARDEN}")` }}
-        />
-
-        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(26,11,11,0.20)_0%,transparent_24%,transparent_65%,rgba(30,13,13,0.18)_100%)]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(214,179,140,0.10)_0%,rgba(112,59,59,0.055)_36%,transparent_66%)]" />
-        <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(18,7,7,0.38)]" />
-
-        <motion.div
-          animate={
-            reduced
-              ? undefined
-              : {
-                  opacity: [0.42, 0.72, 0.42],
-                  scale: [0.96, 1.04, 0.96],
-                }
-          }
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute left-[18%] top-[18%] h-24 w-24 rounded-full bg-[#E4B86A]/10 blur-3xl"
-        />
-        <motion.div
-          animate={
-            reduced
-              ? undefined
-              : {
-                  opacity: [0.36, 0.64, 0.36],
-                  scale: [1.03, 0.96, 1.03],
-                }
-          }
-          transition={{
-            duration: 8.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: 0.8,
+          style={{
+            backgroundImage: `url("${DARK_LANTERN_GARDEN}")`,
+            WebkitMaskImage: BODY_MASK,
+            maskImage: BODY_MASK,
           }}
-          className="absolute right-[15%] top-[20%] h-28 w-28 rounded-full bg-[#E4B86A]/10 blur-3xl"
         />
+
+        {/* Brown fog keeps the lamp-lit forest inside the body while visually
+            continuing the #281414 frame through header and footer. */}
+        <div className="absolute inset-x-0 top-0 h-[clamp(86px,11.5dvh,144px)] bg-[linear-gradient(to_bottom,#281414_0%,rgba(40,20,20,0.94)_18%,rgba(40,20,20,0.62)_44%,rgba(40,20,20,0.20)_73%,transparent_100%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[clamp(80px,10.5dvh,136px)] bg-[linear-gradient(to_top,#281414_0%,rgba(40,20,20,0.94)_18%,rgba(40,20,20,0.60)_44%,rgba(40,20,20,0.19)_73%,transparent_100%)]" />
+
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(214,179,140,0.07)_0%,rgba(112,59,59,0.025)_40%,transparent_70%)]" />
+        <div className="absolute inset-0 shadow-[inset_0_0_130px_rgba(18,7,7,0.20)]" />
       </div>
     </div>
   );
