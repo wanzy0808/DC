@@ -5306,3 +5306,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Commit:** commit rebrand tahap 1 yang memuat entry Appendix A ini.
 
 **Validasi:** source dan kontrak token diperiksa pada repository. Build/CI serta browser visual QA Light/Dark untuk landing, auth, dashboard, Studio, dan halaman marketing **belum boleh dianggap PASS** sampai workflow/hasil browser terbaru diperiksa.
+
+
+### 28 September 2026 — Follow-up CI rebrand tahap 1
+
+**Temuan CI:** Build Validation commit `b33b6458` berhenti pada source regression test sebelum langkah build karena tes Studio masih memverifikasi literal compatibility token `--dc-control-radius: 16px` dan `--dc-control-menu-radius: 18px`. Nilai visual sebenarnya tidak berubah; rebrand tahap 1 sempat mengubah alias legacy tersebut menjadi referensi ke token `--undara-control-*`.
+
+**Perbaikan:** token canonical `--undara-control-radius` / `--undara-control-menu-radius` tetap dipertahankan, sedangkan alias legacy `--dc-control-radius` / `--dc-control-menu-radius` kembali menyimpan literal 16px/18px agar kontrak regression lama tetap kompatibel selama migrasi bertahap.
+
+**Validasi:** sumber error dibaca langsung dari log GitHub Actions run `36370212358`. Build Validation commit follow-up harus diperiksa lagi sebelum dinyatakan lulus.

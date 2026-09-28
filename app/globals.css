@@ -75,8 +75,8 @@
   --undara-control-radius: 16px;
   --undara-control-menu-radius: 18px;
   --undara-control-outline: var(--primary);
-  --dc-control-radius: var(--undara-control-radius);
-  --dc-control-menu-radius: var(--undara-control-menu-radius);
+  --dc-control-radius: 16px;
+  --dc-control-menu-radius: 18px;
   --dc-control-outline: var(--undara-control-outline);
   --background: #FFFFFF;
   --foreground: #2B1A1A;
