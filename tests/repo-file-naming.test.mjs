@@ -97,6 +97,7 @@ test("Undara shared assets stay centralized", () => {
     "public/assets/landing/doors/event-planner.png",
     "public/assets/landing/ornaments/botanical/branch-01.png",
     "public/assets/landing/ornaments/botanical/branch-06.png",
+    "public/assets/landing/atmosphere/forest-silhouette.png",
     "public/assets/demo/invitation/couple.jpg",
     "public/assets/payments/banks/bca.webp",
     "public/assets/audio/a-himitsu-fragile.mp3",
@@ -159,8 +160,29 @@ test("runtime source does not reference retired root asset URLs", () => {
 });
 
 
-test("landing page uses botanical branch-02 instead of the legacy flower asset", () => {
+test("shared non-home marketing atmosphere uses botanical branch-02 instead of the legacy flower asset", () => {
   const landingOrnament = read("components/Landing/LandingFloralGlow.tsx");
   assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.png/);
   assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.png"), false);
+});
+
+test("homepage uses the dedicated woodland composition without cloud or petal ambience", () => {
+  const home = read("app/page.tsx");
+  const woodland = read("components/Landing/LandingWoodlandAtmosphere.tsx");
+  const story = read("components/Landing/LandingStoryCopy.tsx");
+
+  assert.match(home, /LandingWoodlandAtmosphere/);
+  assert.match(home, /LandingStoryCopy/);
+  assert.equal(home.includes("PublicMarketingAtmosphere"), false);
+  assert.equal(home.includes("CloudCopy"), false);
+  assert.equal(home.includes("WindRosePetals"), false);
+  assert.equal(existsSync(path("components/Landing/CloudCopy.tsx")), false);
+
+  assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.png")), true);
+  assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
+  assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.png/);
+  for (const branch of ["01", "02", "03", "04"]) {
+    assert.ok(woodland.includes(`/assets/landing/ornaments/botanical/branch-${branch}.png`));
+  }
+  assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
 });
