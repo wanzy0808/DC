@@ -26,7 +26,7 @@
 - [x] Palette Pintu produksi: Light body `#703B3B` / lis `#EDE3D8`; Dark body `#D6B38C` / lis `#703B3B`, tanpa perubahan geometry/motion.
 - [x] Integrasikan logo Undara final melalui `public/assets/brand/undara/logo.webp` dan shared `BrandWordmark`.
 - [ ] Audit sisa hardcoded Rose/pink/black pada marketing, auth, dashboard, owner/designer, dan public chrome satu per satu.
-- [ ] Audit seluruh customer-facing string `DC Organizer`; pertahankan hanya histori, compatibility, atau legal context yang masih benar.
+- [ ] Audit seluruh customer-facing string `Undara`; pertahankan hanya histori, compatibility, atau legal context yang masih benar.
 - [ ] Review Privacy/Terms setelah identitas badan hukum/contact/domain baru dikonfirmasi; jangan mengarang perubahan legal.
 - [ ] Review domain, email, Instagram/social handle, WhatsApp label, OpenGraph/SEO image dan manifest setelah aset/akun baru siap.
 - [ ] Refactor identifier internal `dc-*` → `undara-*` hanya jika aman dan disertai regression test; compatibility alias boleh dipertahankan selama migrasi.
@@ -66,7 +66,7 @@ Urutan kerja aktif: uji alur akun/pembayaran dengan PostgreSQL dan email nyata, 
 
 # 1. Current audit summary
 
-The product core is substantially implemented. DC Organizer is no longer primarily in feature-building mode; the remaining work is mostly **launch hardening, production operations, security verification, and end-to-end validation**.
+The product core is substantially implemented. Undara is no longer primarily in feature-building mode; the remaining work is mostly **launch hardening, production operations, security verification, and end-to-end validation**.
 
 Current repository evidence already shows:
 
@@ -134,7 +134,7 @@ Important gaps found in the initial audit:
 
 # 3. BLOCKER — Authorization & tenant/event isolation
 
-DC Organizer is multi-tenant and event-scoped. Authentication alone is insufficient. Every sensitive server mutation/read must prove that the current actor is allowed to access the target event/resource.
+Undara is multi-tenant and event-scoped. Authentication alone is insufficient. Every sensitive server mutation/read must prove that the current actor is allowed to access the target event/resource.
 
 - [x] Main invitation API resolves owned invitations server-side.
 - [x] Payment proof submission verifies `invitationId + ownerId`.
@@ -508,7 +508,7 @@ These are valuable, but should not block the first safe release unless they are 
 
 # 20. Launch sign-off gate
 
-DC Organizer is ready for a public paid launch only when all **BLOCKER** items below are either checked or explicitly accepted as a documented business/operational risk by the owner:
+Undara is ready for a public paid launch only when all **BLOCKER** items below are either checked or explicitly accepted as a documented business/operational risk by the owner:
 
 - [ ] Authentication production-ready: real email verification + password recovery + auth rate limiting.
 - [ ] Full API authorization/tenant isolation audit passed.
