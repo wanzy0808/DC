@@ -162,7 +162,7 @@ export default function UsherWorkspace({ invitationId, eventTitle }: { invitatio
   const attendancePercent = guests.length ? Math.round((checkedIn.length / guests.length) * 100) : 0;
 
   return (
-    <div className="dc-usher min-h-screen bg-background font-[family-name:var(--font-dc-sans)] text-foreground">
+    <div className="undara-usher min-h-screen bg-background font-[family-name:var(--font-undara-sans)] text-foreground">
       <header className="sticky top-0 z-30 flex min-h-16 flex-wrap items-center justify-between gap-3 py-3 border-b border-border bg-background/95 px-4 backdrop-blur sm:px-7">
         <div className="flex items-center gap-4">
           <BrandWordmark size="dashboard" />
@@ -192,7 +192,7 @@ export default function UsherWorkspace({ invitationId, eventTitle }: { invitatio
         </aside>
 
         <main className="min-w-0 flex-1 py-6">
-          <div className="dc-dashboard-page">
+          <div className="undara-dashboard-page">
             <div className="mb-6 flex gap-2 overflow-x-auto md:hidden">
               {usherTabs.map((item) => <Button key={item.id} onClick={() => setTab(item.id)} aria-current={tab === item.id ? "page" : undefined} className={`shrink-0 ${tab === item.id ? "" : "border-border bg-background text-foreground shadow-none"}`}>{item.label}</Button>)}
             </div>
@@ -222,7 +222,7 @@ export default function UsherWorkspace({ invitationId, eventTitle }: { invitatio
         </main>
       </div>
 
-      {issuedQr && <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/50 p-4" onClick={() => setIssuedQr(null)}><div className="w-full max-w-sm rounded-2xl bg-background p-6 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}><Button onClick={() => setIssuedQr(null)} className="float-right rounded-full p-2 hover:bg-foreground/5"><X className="h-4 w-4" /></Button><p className="text-xs uppercase tracking-[0.2em] text-primary">QR tamu diterbitkan</p><h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl">{issuedQr.guest.name}</h2><p className="mt-2 text-xs text-muted-foreground">Tamu ini ditemukan di daftar undangan. QR ini dapat dipakai sebagai tiket masuk.</p><div className="mx-auto mt-5 w-fit rounded-2xl border border-border bg-white p-3"><img src={usherQrImageUrl(issuedQr.token)} alt={`QR ${issuedQr.guest.name}`} width={280} height={280} /></div><Button onClick={() => window.open(usherQrImageUrl(issuedQr.token), "_blank", "noopener,noreferrer")} className="mt-5 rounded-xl bg-black px-5 py-3 text-xs font-medium text-white">Buka QR ukuran besar</Button></div></div>}
+      {issuedQr && <div className="fixed inset-0 z-50 grid place-items-center bg-foreground/50 p-4" onClick={() => setIssuedQr(null)}><div className="w-full max-w-sm rounded-2xl bg-background p-6 text-center shadow-2xl" onClick={(e) => e.stopPropagation()}><Button onClick={() => setIssuedQr(null)} className="float-right rounded-full p-2 hover:bg-foreground/5"><X className="h-4 w-4" /></Button><p className="text-xs uppercase tracking-[0.2em] text-primary">QR tamu diterbitkan</p><h2 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl">{issuedQr.guest.name}</h2><p className="mt-2 text-xs text-muted-foreground">Tamu ini ditemukan di daftar undangan. QR ini dapat dipakai sebagai tiket masuk.</p><div className="mx-auto mt-5 w-fit rounded-2xl border border-border bg-white p-3"><img src={usherQrImageUrl(issuedQr.token)} alt={`QR ${issuedQr.guest.name}`} width={280} height={280} /></div><Button onClick={() => window.open(usherQrImageUrl(issuedQr.token), "_blank", "noopener,noreferrer")} className="mt-5 rounded-xl bg-black px-5 py-3 text-xs font-medium text-white">Buka QR ukuran besar</Button></div></div>}
     </div>
   );
 }
