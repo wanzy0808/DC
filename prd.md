@@ -5538,3 +5538,8 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - Cast shadows must preserve the arched door silhouette and extend naturally toward the viewer; no visibly rectangular receiver edges.
 - Remove decorative branch overlays from the homepage composition and story copy. Use a soft tree canopy across the upper woodland area instead.
 - Preserve rear-origin lighting, while keeping the branded door faces readable and adding subtle forest mist/clearing light so the scene feels inhabited rather than underexposed.
+
+
+### Canopy/header integration — 2026-09-28
+- The upper woodland canopy should occupy the top/header area so the forest feels continuous to the top of the frame.
+- It may sit behind the header but must not obscure or visually compete with the Undara brand/tagline or the right-side header controls.
