@@ -3,6 +3,7 @@
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import LandingDoorScene from "@/components/Landing/Pintu/LandingDoorScene";
 import LandingWoodlandAtmosphere from "@/components/Landing/LandingWoodlandAtmosphere";
+import LandingTopCanopy from "@/components/Landing/LandingTopCanopy";
 import LandingStoryCopy from "@/components/Landing/LandingStoryCopy";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 import { motion, useReducedMotion } from "motion/react";
@@ -18,6 +19,8 @@ export default function HomePage() {
         aria-hidden
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.10),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(140,82,67,0.34)_0%,rgba(74,34,32,0.26)_42%,rgba(40,20,20,0.10)_67%,transparent_82%)]"
       />
+      <LandingTopCanopy />
+
       <motion.div
         data-dc-marketing-frame
         initial={reduced ? false : { opacity: 0, y: 18 }}
