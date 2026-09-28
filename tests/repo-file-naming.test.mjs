@@ -222,7 +222,7 @@ test("landing story copy keeps the Undara doorway message and larger emphasis", 
   assert.match(story, /Setiap cerita dimulai dari sebuah pintu/);
   assert.match(story, /Temukan kebutuhanmu di balik pintu\./);
   assert.match(story, /Seluruh kebutuhan perayaanmu ada di sini/);
-  assert.match(story, /w-\[min\(82vw,390px\)\]/);
+  assert.match(story, /w-\[min\(88vw,460px\)\][^"]*sm:w-\[min\(42vw,520px\)\][^"]*lg:w-\[min\(31vw,560px\)\]/);
   assert.match(story, /text-\[clamp\(1\.35rem,2\.05vw,2\.05rem\)\]/);
   assert.match(story, /branch-05\.png/);
   assert.doesNotMatch(story, /h-px w-\[180px\] bg-gradient-to-l/);
@@ -231,6 +231,6 @@ test("landing story copy keeps the Undara doorway message and larger emphasis", 
 
 test("story divider keeps the wider ornamental width", () => {
   const story = read("components/Landing/LandingStoryCopy.tsx");
-  assert.match(story, /h-8 w-\[240px\][^"]*sm:w-\[290px\][^"]*lg:w-\[340px\]/);
+  assert.match(story, /h-8 w-\[280px\][^"]*sm:w-\[350px\][^"]*lg:w-\[430px\]/);
   assert.match(story, /branch-05\.png/);
 });
