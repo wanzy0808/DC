@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
-import RosePetalBackground from "@/components/Layout/RosePetalBackground";
+import FallingLeaves from "@/components/Layout/FallingLeaves";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import { isMarketingPath } from "@/lib/marketing-paths";
 
@@ -19,8 +19,8 @@ export default function PublicAtmosphere() {
   if (isPrivateArea || isLanding || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik") return null;
   if (isMarketingPath(pathname)) return <PublicMarketingAtmosphere />;
 
-  // Preserve existing background behavior for unrelated public routes.
-  return <RosePetalBackground />;
+  // Unrelated public routes keep only the restrained leaf ambience; no full woodland silhouette.
+  return <FallingLeaves />;
 }
 
 export function PublicContent({ children }: { children: ReactNode }) {
