@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { ArrowRight, CircleHelp } from "lucide-react";
 import FaqSection from "@/components/Marketing/FaqSection";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 
 const helpFaq = [
   {
@@ -21,56 +24,81 @@ const helpFaq = [
   {
     question: "Bagaimana cara memilih paket?",
     answer:
-      "Buka halaman Package untuk melihat pilihan layanan. Setelah memilih paket dan pembayaran dikonfirmasi admin, fitur sesuai paket akan aktif di dashboard.",
+      "Buka halaman Paket untuk melihat pilihan layanan. Setelah memilih paket dan pembayaran dikonfirmasi admin, fitur sesuai paket akan aktif di dashboard.",
   },
   {
     question: "Saya mengalami masalah saat menggunakan dashboard, harus bagaimana?",
     answer:
-      "Pastikan akun sudah masuk dan paket yang dibutuhkan sudah aktif. Jika masalah tetap terjadi, simpan informasi error yang muncul agar tim DC dapat membantu melakukan pengecekan.",
+      "Pastikan akun sudah masuk dan paket yang dibutuhkan sudah aktif. Jika masalah tetap terjadi, simpan informasi error yang muncul agar tim Undara dapat membantu melakukan pengecekan.",
   },
 ];
 
 export default function HelpPage() {
   return (
-    <div className="w-full space-y-20 py-16 md:py-24">
-      <section className="space-y-5">
-        <div className="flex items-center gap-3 text-sm uppercase tracking-[0.24em] text-primary">
-          <CircleHelp className="h-4 w-4" />
-          Bantuan DC Wedding
-        </div>
-        <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
-          Jawaban untuk pertanyaan yang paling sering muncul.
-        </h1>
-        <p className="max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
-          Panduan singkat mengenai produk, paket, template, publikasi, RSVP,
-          Guestbook, dan alur penggunaan DC Wedding.
-        </p>
-      </section>
-
-      <FaqSection
-        title="Pertanyaan umum"
-        description="Kalau masih bingung, mulai dari sini."
-        items={helpFaq}
+    <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <PublicMarketingAtmosphere />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.08),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(214,179,140,0.09),transparent_66%)]"
       />
 
-      <section className="flex flex-col gap-4 rounded-3xl border border-[var(--border)] bg-[var(--card)]/70 p-7 md:flex-row md:items-center md:justify-between md:p-9">
-        <div>
-          <p className="font-[family-name:var(--font-dc-heading)] text-xl">
-            Siap mulai?
-          </p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Lihat paket atau masuk ke dashboard untuk melanjutkan persiapan.
-          </p>
+      <div
+        data-dc-marketing-frame
+        className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]"
+      >
+        <div className="relative z-50 shrink-0 bg-background/70 backdrop-blur-sm">
+          <Navbar embedded />
         </div>
-        <div className="flex flex-wrap gap-3">
-          <Link href="/packages" className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-            Lihat Package <ArrowRight className="ml-2 h-4 w-4" />
-          </Link>
-          <Link href="/login" className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground">
-            Masuk
-          </Link>
-        </div>
-      </section>
+
+        <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth">
+          <div className="mx-auto w-[88%] max-w-[1100px] space-y-20 py-12 sm:w-[80vw] md:space-y-24 md:py-16">
+            <section className="space-y-5">
+              <div className="flex items-center gap-3 text-sm uppercase tracking-[0.24em] text-primary">
+                <CircleHelp className="h-4 w-4" />
+                Bantuan Undara
+              </div>
+              <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
+                Jawaban untuk pertanyaan yang paling sering muncul.
+              </h1>
+              <p className="max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+                Panduan singkat mengenai produk, paket, template, publikasi, RSVP,
+                Guestbook, dan alur penggunaan Undara.
+              </p>
+            </section>
+
+            <FaqSection
+              title="Pertanyaan umum"
+              description="Kalau masih bingung, mulai dari sini."
+              items={helpFaq}
+            />
+
+            <section className="flex flex-col gap-4 rounded-[24px] border border-primary/25 bg-card/65 p-7 md:flex-row md:items-center md:justify-between md:p-9">
+              <div>
+                <p className="font-heading text-xl text-primary">Siap mulai?</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Lihat paket atau masuk ke dashboard untuk melanjutkan persiapan.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/packages"
+                  className="inline-flex min-h-10 items-center justify-center rounded-[16px] border border-primary bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  Lihat Paket <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex min-h-10 items-center justify-center rounded-[16px] border border-primary/55 bg-background/70 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+                >
+                  Masuk
+                </Link>
+              </div>
+            </section>
+          </div>
+        </main>
+
+        <MarketingFrameFooter />
+      </div>
     </div>
   );
 }
