@@ -22,7 +22,6 @@ export default function GuestbookPage() {
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(217,163,170,0.12),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(192,122,132,0.11),transparent_65%)]" />
       <div data-dc-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
           <Navbar embedded />
