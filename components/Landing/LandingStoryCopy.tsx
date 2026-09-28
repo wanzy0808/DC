@@ -65,7 +65,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
         />
       </div>
 
-      <p className="ml-auto mt-1 max-w-[52ch] font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
+      <p className="ml-auto mt-1 w-full max-w-none font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
         <span className="block">{copy.body[0]}</span>
         <span className="block">{copy.body[1]}</span>
       </p>
