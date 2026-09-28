@@ -5336,4 +5336,4 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Perbaikan:** regression test diubah untuk justru mewajibkan label `sr-only` tersebut sambil tetap memverifikasi `undara-brand-logo`, canonical asset path, dan tidak adanya `app/logo.png` lama. Tidak ada perubahan visual pada navbar/header.
 
-**Validasi:** Build Validation follow-up wajib diperiksa lagi sebelum dinyatakan lulus.
+**Validasi:** follow-up commit `30270888` menjalankan Source regression tests dan Build pada GitHub Actions run `36372691176`; keduanya selesai **success**. Orphan Audit pada commit implementasi awal `085dc692` juga selesai **success**. Browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.
