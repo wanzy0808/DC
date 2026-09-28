@@ -27,19 +27,19 @@ export default function MarketingTextReveal({ children, className, scrollRoot, r
     const intersection = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          entry.target.classList.toggle("dc-invitation-text-inview", entry.isIntersecting);
+          entry.target.classList.toggle("undara-invitation-text-inview", entry.isIntersecting);
         }
       },
       { root: panel, rootMargin: "0px 0px -4% 0px", threshold: 0.04 },
     );
 
-    const selector = "h1, h2, h3, p, li, [data-dc-text-reveal]";
+    const selector = "h1, h2, h3, p, li, [data-undara-text-reveal]";
     function register(node: Element) {
       if (
         node.closest("button, a, [inert], .invitation-phone-scroll, [aria-hidden='true']") ||
-        node.classList.contains("dc-invitation-text-ready")
+        node.classList.contains("undara-invitation-text-ready")
       ) return;
-      node.classList.add("dc-invitation-text-ready");
+      node.classList.add("undara-invitation-text-ready");
       intersection.observe(node);
     }
 
@@ -61,8 +61,8 @@ export default function MarketingTextReveal({ children, className, scrollRoot, r
     return () => {
       mutations.disconnect();
       intersection.disconnect();
-      content.querySelectorAll(".dc-invitation-text-ready").forEach((element) => {
-        element.classList.remove("dc-invitation-text-ready", "dc-invitation-text-inview");
+      content.querySelectorAll(".undara-invitation-text-ready").forEach((element) => {
+        element.classList.remove("undara-invitation-text-ready", "undara-invitation-text-inview");
       });
     };
   }, [ready, scrollRoot, locale]);
@@ -71,19 +71,19 @@ export default function MarketingTextReveal({ children, className, scrollRoot, r
     <>
       <div ref={contentRef} className={className}>{children}</div>
       <style jsx global>{`
-        .dc-invitation-text-ready {
+        .undara-invitation-text-ready {
           opacity: 0;
           transform: translate3d(0, 14px, 0);
         }
-        .dc-invitation-text-ready.dc-invitation-text-inview {
+        .undara-invitation-text-ready.undara-invitation-text-inview {
           opacity: 1;
           transform: translate3d(0, 0, 0);
           transition: opacity 720ms cubic-bezier(0.22, 1, 0.36, 1),
             transform 720ms cubic-bezier(0.22, 1, 0.36, 1);
         }
         @media (prefers-reduced-motion: reduce) {
-          .dc-invitation-text-ready,
-          .dc-invitation-text-ready.dc-invitation-text-inview {
+          .undara-invitation-text-ready,
+          .undara-invitation-text-ready.undara-invitation-text-inview {
             opacity: 1;
             transform: none;
             transition: none;
