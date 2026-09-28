@@ -12,7 +12,7 @@ import { dashboardRouteForRole } from "@/lib/auth/dashboard-route";
 export default function BurgerMenuContent({ onClose }: { onClose: () => void }) {
   const pathname = usePathname();
   const reduced = useReducedMotion();
-  const [servicesOpen, setServicesOpen] = useState(true);
+  const [servicesOpen, setServicesOpen] = useState(false);
   // Remount on every burger open and check the live server session. The user
   // may have signed in/out on another route or browser tab.
   const [session, setSession] = useState<"checking" | "signedOut" | "signedIn">("checking");

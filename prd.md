@@ -5561,3 +5561,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** wrapper submenu di `components/Layout/Navbar/BurgerMenuContent.tsx` mendapat `pt-2` di dalam container `overflow-hidden`. Perubahan ini hanya memberi clearance vertikal antara `Layanan` dan submenu pertama; ukuran/button style, outline thickness, urutan menu, icon, animasi buka/tutup, indentation `pl-4`, auth/session behavior dan item submenu lain tidak diubah.
 
 **Validasi:** regression test mengunci spacing internal submenu agar outline item pertama tidak kembali menempel pada batas atas wrapper.
+
+
+### 28 September 2026 — Submenu Layanan burger tertutup secara default
+
+**Permintaan owner:** submenu `Layanan` pada burger harus selalu mulai dalam keadaan tertutup. `Perencana Acara`, `Undangan Digital`, dan `Guestbook` baru ditampilkan setelah user menekan `Layanan`.
+
+**Implementasi:** initial state `servicesOpen` di `components/Layout/Navbar/BurgerMenuContent.tsx` diubah dari `true` menjadi `false`. Toggle click, animasi expand/collapse, spacing submenu, urutan item, route, icon, auth/session behavior dan style outline tidak diubah.
+
+**Validasi:** regression test mengunci default closed state.

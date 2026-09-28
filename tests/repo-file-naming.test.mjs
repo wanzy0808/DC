@@ -209,3 +209,9 @@ test("burger services submenu keeps clearance below the Services trigger", () =>
   const burger = read("components/Layout/Navbar/BurgerMenuContent.tsx");
   assert.match(burger, /className="space-y-2 overflow-hidden pl-4 pt-2"/);
 });
+
+
+test("burger services submenu is closed by default", () => {
+  const burger = read("components/Layout/Navbar/BurgerMenuContent.tsx");
+  assert.match(burger, /const \[servicesOpen, setServicesOpen\] = useState\(false\);/);
+});
