@@ -5438,3 +5438,10 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Temuan owner:** ranting yang berada di dalam frame terpotong dan nyaris tidak terlihat, ranting atas mendekati logo, serta siluet hutan terlalu sempit dan tidak menyatu dengan putaran pintu.
 
 **Perbaikan:** ranting dipindah menjadi layer homepage di luar clip main frame, di belakang isi frame sehingga tetap menembus garis bingkai tanpa menutup logo atau hit target. Sudut kiri atas dipendekkan dan dibuat memudar ke arah brand. Siluet diperlebar melewati tepi frame, ditinggikan, dan disejajarkan dengan kaki pintu; kontras Light Mode dinaikkan agar pepohonan terbaca sebagai latar, sementara Dark Mode tetap lembut. Empat pintu, orbit, copy, dan kontrol tidak diubah. Area: `app/page.tsx`, `LandingWoodlandAtmosphere.tsx`, `prd.md`. Lint terarah, 11/11 source regression, `git diff --check`, dan production build webpack + TypeScript lulus. Screenshot setelah revisi, Light/Dark mobile, dan pemutaran audio perangkat nyata belum diverifikasi.
+### 28 September 2026 — Warna kunang-kunang mengikuti mode Undara
+
+**Permintaan owner:** kunang-kunang landing memakai warna brand pada Light Mode dan Champagne pada Dark Mode.
+
+**Implementasi:** `Fireflies` di `LandingDoorScene.tsx` sekarang menerima `isDarkMode`. Light memakai `#703B3B`; Dark memakai `#D6B38C`. Sprite glow diubah menjadi alpha putih netral agar warna material tidak tercampur tint kuning lama. Light menggunakan normal blending supaya coklat brand tetap terbaca di Warm Ivory; Dark mempertahankan additive glow untuk Champagne. Jumlah partikel, ukuran, posisi, pola gerak, kecepatan, dan opacity animation tidak diubah.
+
+**Validasi:** regression test mengunci pasangan warna dan penggunaan mode pada komponen Fireflies.

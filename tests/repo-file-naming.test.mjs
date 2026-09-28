@@ -190,3 +190,12 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   }
   assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
 });
+
+
+test("landing fireflies follow the Undara theme colors", () => {
+  const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
+  assert.match(doors, /function Fireflies\(\{ reducedMotion, isDarkMode \}/);
+  assert.match(doors, /color=\{isDarkMode \? "#D6B38C" : "#703B3B"\}/);
+  assert.match(doors, /blending=\{isDarkMode \? THREE\.AdditiveBlending : THREE\.NormalBlending\}/);
+  assert.match(doors, /<Fireflies reducedMotion=\{Boolean\(reducedMotion\)\} isDarkMode=\{isDarkMode\} \/>/);
+});
