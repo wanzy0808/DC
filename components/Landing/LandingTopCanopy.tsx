@@ -12,7 +12,7 @@ export default function LandingTopCanopy() {
     <div
       aria-hidden="true"
       data-landing-canopy
-      className="pointer-events-none absolute inset-x-0 top-0 z-[12] h-[clamp(220px,28dvh,360px)] overflow-visible dark:hidden"
+      className="pointer-events-none absolute inset-x-0 top-0 z-[5] h-[clamp(220px,28dvh,360px)] overflow-visible dark:hidden"
     >
       <motion.div
         initial={reduced ? false : { opacity: 0, y: -12 }}
