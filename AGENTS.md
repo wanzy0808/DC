@@ -473,3 +473,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 ### 2026-09-28 — Landing footer separator removal
 - Homepage footer has no decorative divider above it.
 - Do not add root, straight-line, or gradient separator treatments between the woodland scene and the unified footer row.
+
+
+### 2026-09-28 — Global marketing audio controls
+- Sound toggle, volume slider, and numeric volume value share one visual system across all public marketing frames.
+- Volume slider + percentage live inside a bordered rounded control matching the Sound On/Off button height, border, background, radius, and brand color.
+- Keep the styling theme-aware through global CSS variables so Light and Dark Mode remain consistent.
