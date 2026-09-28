@@ -10,8 +10,7 @@ export function MarketingInstagramLink() {
 }
 
 /** One bottom edge shared by every framed marketing page. */
-export default function MarketingFrameFooter({ landingLayout = false }: { landingLayout?: boolean }) {
-  void landingLayout;
+export default function MarketingFrameFooter() {
   const { messages } = useLanguage();
 
   return (
