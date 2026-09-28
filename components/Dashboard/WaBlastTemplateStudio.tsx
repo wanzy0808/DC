@@ -205,7 +205,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
                 key={item.id}
                 onClick={() => editTemplate(item)}
                 aria-pressed={mode === "edit" && activeId === item.id}
-                className={`dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border px-4 py-3 text-left transition focus-visible:outline-2 focus-visible:outline-primary ${mode === "edit" && activeId === item.id ? "border-primary bg-primary/15" : "border-primary/20 bg-primary/[0.025] hover:border-primary/60 hover:bg-primary/10"}`}
+                className={`undara-dashboard-detail-card min-w-0 rounded-tr-[22px] border px-4 py-3 text-left transition focus-visible:outline-2 focus-visible:outline-primary ${mode === "edit" && activeId === item.id ? "border-primary bg-primary/15" : "border-primary/20 bg-primary/[0.025] hover:border-primary/60 hover:bg-primary/10"}`}
               >
                 <span className="block truncate text-sm font-semibold text-foreground">{item.name}</span>
                 <span className="mt-1 block text-xs text-muted-foreground">{categoryName(item.category, locale)}</span>
@@ -307,7 +307,7 @@ export default function WaBlastTemplateStudio({ event, recipients }: Props) {
             {recipients.length ? recipients.map((item) => <option key={item.id} value={item.id}>{displayTitleCase(item.name)}</option>) : <option value="">{displayTitleCase(d("Contoh · belum ada penerima"))}</option>}
           </select>
         </label>
-        <div className="dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.055] p-4">
+        <div className="undara-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.055] p-4">
           <p className="break-words text-sm font-semibold text-primary">{preview.title}</p>
           <p className="mt-3 whitespace-pre-wrap break-words text-sm leading-6 text-foreground">{preview.body}</p>
         </div>
