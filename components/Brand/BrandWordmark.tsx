@@ -22,13 +22,13 @@ export default function BrandWordmark({
   return (
     <span className={`block min-w-0 ${className}`} {...props}>
       <span
-        className={`block font-[family-name:var(--font-dc-heading)] font-bold leading-none tracking-[0.12em] text-primary ${sizeClass[size]}`}
+        className={`block font-[family-name:var(--font-undara-heading)] font-normal leading-none tracking-[0.035em] text-primary ${sizeClass[size]}`}
       >
-        DC Organizer
+        Undara
       </span>
       {showTagline && (
         <span className={`mt-1 block font-[family-name:var(--font-dc-mono)] uppercase tracking-[0.22em] text-foreground/60 ${size === "public" ? "text-[8px] sm:text-[9px] lg:text-[10px]" : "text-[8px]"}`}>
-          Your best consultant for wedding & event
+          Undangan & Acara
         </span>
       )}
     </span>

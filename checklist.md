@@ -1,13 +1,34 @@
-# DC Organizer — Launch Readiness Checklist
+# Undara — Launch Readiness Checklist
 
 **Status:** Living launch-hardening guide  
 **Initial audit:** 17 September 2026  
-**Scope:** Production readiness for the general-event DC Organizer SaaS.  
+**Scope:** Production readiness for the general-event Undara SaaS.  
 **Canonical product requirements:** `prd.md`  
 **Engineering rules:** `AGENTS.md`  
 **Implementation history:** `prd.md` → Appendix A
 
 > This file is a launch checklist, not a parallel PRD. If this file conflicts with `prd.md`, `prd.md` wins. When an item is implemented, follow `AGENTS.md`: update `prd.md` only if requirements changed and append implementation history/validation to Appendix A in `prd.md`.
+
+## Rebrand Undara — migrasi bertahap (28 September 2026)
+
+- [x] Tetapkan nama customer-facing **Undara** (Undangan + Acara) di aturan canonical.
+- [x] Tetapkan font **DM Serif Display + Roboto**.
+- [x] Tetapkan primary **#703B3B**, hover **#5E3030**, Dark accent **#D6B38C**, support **#E8D7C3**.
+- [x] Ubah root metadata, wordmark teks, i18n/footer utama, dan semantic theme tokens tanpa mass-rename identifier internal.
+- [x] Dark base berpindah dari black/near-black ke Undara Brown pada token global/dashboard foundation.
+- [x] Light brand chrome berpindah dari Rose/pink ke Undara Brown.
+- [ ] Integrasikan file logo/icon Undara final setelah asset benar-benar ter-push ke repo; jangan membuat path palsu.
+- [ ] Audit sisa hardcoded Rose/pink/black pada marketing, auth, dashboard, owner/designer, dan public chrome satu per satu.
+- [ ] Audit seluruh customer-facing string `DC Organizer`; pertahankan hanya histori, compatibility, atau legal context yang masih benar.
+- [ ] Review Privacy/Terms setelah identitas badan hukum/contact/domain baru dikonfirmasi; jangan mengarang perubahan legal.
+- [ ] Review domain, email, Instagram/social handle, WhatsApp label, OpenGraph/SEO image dan manifest setelah aset/akun baru siap.
+- [ ] Refactor identifier internal `dc-*` → `undara-*` hanya jika aman dan disertai regression test; compatibility alias boleh dipertahankan selama migrasi.
+- [ ] Browser QA Light/Dark + ID/EN untuk landing, marketing pages, auth, dashboard, Studio, owner/designer.
+- [ ] CI/build terbaru lulus setelah setiap batch rebrand sebelum batch berikutnya disebut selesai.
+
+**Batas:** palette artwork/template undangan tidak ikut diganti global; template tetap boleh mempunyai identitas warna sendiri.
+
+---
 
 > **Catatan audit dokumentasi (24 September 2026):** ringkasan dan checkbox bertanggal 17 September adalah snapshot historis, **bukan** verifikasi bahwa seluruh status launch masih berlaku pada HEAD atau environment produksi sekarang. Untuk setiap klaim readiness baru, periksa source/CI/migrasi/E2E terbaru dan catat tanggal, commit serta environment. Persyaratan aktif berada di `prd.md` §21; checklist ini hanya alat QA.
 

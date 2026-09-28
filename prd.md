@@ -1,19 +1,19 @@
-# DC Organizer — Master Product Requirements Document
+# Undara — Master Product Requirements Document
 
 **Document Status:** Single Source of Truth  
-**Brand:** DC Organizer  
+**Brand:** Undara  
 **Repository:** `wanzy0808/DC`  
 **Last Consolidated:** 18 September 2026  
 **Documentation Audit:** 24 September 2026 — tahap 1, pembenahan referensi/konflik; konsolidasi isi menyeluruh belum selesai  
 **Implementation History:** Appendix A (same file)
 
-> Dokumen ini adalah **single source of truth** DC Organizer dan menggantikan requirement yang sebelumnya tersebar di `prd.md`, `prd1.md`, `prdnew.md`, `prd-tambahan.md`, serta PRD legacy lain. Requirement aktif berada di badan utama; histori implementasi disimpan di **Appendix A** pada file yang sama. Jika histori lama bertentangan dengan requirement canonical, **requirement canonical di badan utama yang berlaku**.
+> Dokumen ini adalah **single source of truth** Undara dan menggantikan requirement yang sebelumnya tersebar di `prd.md`, `prd1.md`, `prdnew.md`, `prd-tambahan.md`, serta PRD legacy lain. Requirement aktif berada di badan utama; histori implementasi disimpan di **Appendix A** pada file yang sama. Jika histori lama bertentangan dengan requirement canonical, **requirement canonical di badan utama yang berlaku**.
 
 ---
 
 ## 1. Product Vision & Scope
 
-DC Organizer adalah **general-event digital invitation & event operations SaaS**, bukan wedding-only SaaS.
+Undara adalah **general-event digital invitation & event operations SaaS**, bukan wedding-only SaaS.
 
 Platform mendukung lifecycle acara dari pembuatan event sampai distribusi undangan dan operasional onsite:
 
@@ -29,7 +29,24 @@ Jenis event yang didukung minimal:
 
 Platform harus dapat berkembang ke engagement, anniversary, corporate/private event, gathering, dan event lain tanpa memaksa data couple/wedding.
 
-Customer-facing brand wajib **DC Organizer**. Nama lama seperti DC Wedding/Citin tidak boleh diperkenalkan kembali pada surface baru.
+Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama dan hanya boleh muncul pada histori, compatibility identifier internal, atau konteks legal/migrasi yang memang belum selesai. Nama lama lain seperti DC Wedding/Citin tetap tidak boleh diperkenalkan kembali pada surface baru.
+
+### 1.1 Identitas Brand Undara & migrasi bertahap — 28 September 2026
+
+- Nama brand: **Undara**, berasal dari **Undangan + Acara**.
+- Tipografi brand/display/heading: **DM Serif Display**.
+- Tipografi body/UI: **Roboto**. DM Mono boleh tetap dipakai untuk metadata/label teknis.
+- Warna brand utama: **#703B3B** (Undara Brown).
+- Warna state hover/pressed utama: **#5E3030**.
+- Accent Dark Mode: **#D6B38C** (warm Champagne), dengan support **#E8D7C3**.
+- **Light Mode:** seluruh pink/Rose yang berfungsi sebagai application-brand chrome berpindah ke Undara Brown `#703B3B`.
+- **Dark Mode:** black/near-black yang berfungsi sebagai base application chrome berpindah ke Undara Brown `#703B3B`; peran accent pink/Rose berpindah ke warm Champagne `#D6B38C`.
+- Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
+- **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
+- Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
+- `components/Brand/BrandWordmark.tsx` adalah sumber wordmark customer-facing selama integrasi asset logo final berlangsung.
+- Nama badan hukum, rekening, kontrak, domain, email, dan social handle **tidak otomatis berubah hanya karena rebrand visual**; ubah hanya setelah data operasional/legal baru dikonfirmasi.
+- Ketentuan ini **menggantikan** instruksi visual aktif sebelumnya yang masih menyebut Cinzel/Fauna One, Rose/pink sebagai brand utama, atau black/near-black sebagai base Dark Mode. Riwayat lama di Appendix A tetap disimpan sebagai histori.
 
 ---
 
@@ -5276,3 +5293,16 @@ Gerak objek bawaan juga diperluas untuk penggunaan canvas penuh: handle native m
 Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e888` (font individual + loader publik + typing), `347a0e8`–`1d8fca4` (native entrance animation dan regresinya). Perubahan section-instance paralel yang masuk selama rangkaian ini dipertahankan; regression fixture diperbarui mengikuti signature instance-scoped, bukan mengembalikan renderer ke perilaku lama. Tidak ada migrasi database.
 
 **Validasi:** [Build Validation](https://github.com/wanzy0808/DC/actions/runs/36292319277) pada commit `1d8fca4` berhasil, termasuk source regression tests dan Next.js production build. Orphan Audit pada batch styling sebelumnya juga berhasil. QA browser nyata untuk mouse/touch, nested native object, font lintas tema, replay animation, reduced-motion, zoom tinggi dan section duplikat masih wajib. Native object belum mempunyai seluruh operasi layer-management yang sudah ada pada asset layer—khususnya lock/hide/reorder—jadi editor penuh seperti Canva belum dinyatakan selesai.
+
+
+### 28 September 2026 — Rebrand tahap 1: DC Organizer → Undara
+
+**Permintaan owner:** Brand DC Organizer diganti total menjadi **Undara** (Undangan + Acara) secara bertahap agar perubahan besar tidak merusak aplikasi. Font brand baru: **DM Serif Display + Roboto**. Warna brand utama: **#703B3B**. Light Mode mengganti pink application chrome menjadi coklat brand; Dark Mode mengganti base hitam menjadi coklat brand dan mengganti accent pink dengan warna pendamping premium yang dipilih sebagai **warm Champagne #D6B38C**.
+
+**Implementasi tahap 1:** canonical brand/rules diperbarui di `prd.md`, `AGENTS.md`, `README.md`, dan `checklist.md`; root metadata/font loading menjadi Undara + DM Serif Display/Roboto; `BrandWordmark` menampilkan Undara; semantic theme tokens di `app/globals.css` menggunakan Undara Brown/Champagne dengan alias `dc-*` sementara; footer/i18n customer-facing utama berpindah ke Undara; locale cookie baru `undara_locale` tetap membaca legacy `dc_locale`; landing radial glow mengikuti palet baru. Palet artwork/template undangan sengaja tidak diubah. Legal entity/domain/social handle belum diasumsikan berubah.
+
+**Kompatibilitas:** identifier internal `dc-*` tetap sementara agar refactor visual tidak sekaligus memutus behavior. Asset logo/icon baru yang disebut owner belum terlihat pada HEAD GitHub saat tahap ini, sehingga belum dipindah/diintegrasikan untuk menghindari path palsu.
+
+**Commit:** commit rebrand tahap 1 yang memuat entry Appendix A ini.
+
+**Validasi:** source dan kontrak token diperiksa pada repository. Build/CI serta browser visual QA Light/Dark untuk landing, auth, dashboard, Studio, dan halaman marketing **belum boleh dianggap PASS** sampai workflow/hasil browser terbaru diperiksa.

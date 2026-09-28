@@ -1,6 +1,8 @@
-# DC Organizer
+# Undara
 
-DC Organizer is an event-focused SaaS for Digital Invitation, RSVP, guest management, optional WA Blast distribution, and event-day guestbook/check-in operations. The product is not limited to weddings: each user can create as many event workspaces as needed and activate invitations per event.
+Undara is an event-focused SaaS for Digital Invitation, RSVP, guest management, optional WA Blast distribution, and event-day guestbook/check-in operations. The product is not limited to weddings: each user can create as many event workspaces as needed and activate invitations per event.
+
+> **Brand migration — 28 September 2026:** DC Organizer is the legacy brand; the customer-facing brand is now **Undara** (Undangan + Acara). Canonical typography is **DM Serif Display + Roboto**. Primary brand color is **#703B3B**; Dark Mode uses the same brown as its base and **#D6B38C** warm Champagne as the primary accent. Legacy `dc-*` identifiers remain compatibility internals during staged migration. Invitation-template palettes are not globally recolored.
 
 ## Approved Landing Page
 
@@ -124,14 +126,14 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 
 ## Design System
 
-- Brand: **DC Organizer**.
-- Canonical wordmark implementation: `components/Brand/BrandWordmark.tsx`; the wordmark uses `--font-dc-heading` / Cinzel and must not be reinterpreted per page.
-- Public navbar may show the existing marketing tagline; **dashboard headers use the DC Organizer wordmark only and do not show the tagline**.
-- Logo / primary brand: Rose `#C07A84`.
-- Supporting Rose: `#D9A3AA`.
-- Deep hover / pressed Rose: `#A65E69`.
-- Cinzel: display, headings, titles, branding.
-- Fauna One: body copy and application UI.
+- Brand: **Undara**.
+- Canonical wordmark implementation: `components/Brand/BrandWordmark.tsx`; the wordmark uses `--font-undara-heading` / DM Serif Display. Legacy `--font-dc-heading` is a compatibility alias.
+- Public navbar may show the existing marketing tagline; **dashboard headers use the Undara wordmark only and do not show the tagline**.
+- Logo / primary brand: Undara Brown `#703B3B`.
+- Dark/support accent: warm Champagne `#D6B38C`.
+- Deep hover / pressed Brown: `#5E3030`.
+- DM Serif Display: display, headings, titles, branding.
+- Roboto: body copy and application UI.
 - DM Mono: metadata, status, technical labels.
 - Visible UI names and standalone titles (including dashboard frame/panel headings, menu names, metric titles and displayed person/event names) use **Title Case**: capitalize the first letter of each word. Preserve official acronyms/brand spelling (`DC Organizer`, `RSVP`, `VIP`, `WhatsApp`). Sentences/descriptions and user-written messages retain natural capitalization. Customer names and event titles are capitalized **for display only**; their stored values are untouched. Dashboard heading/menu capitalization is scoped in `app/globals.css`, with `dc-ui-name`, `dc-ui-title` and `dc-ui-label` for non-heading labels; new UI should follow the same convention in both ID/EN. See canonical `prd.md` §15.1a and `AGENTS.md` §3.
 - Dashboard/operational dropdowns (including RSVP, event, guest, category/tag and WhatsApp selectors) apply the same display-only Title Case in ID/EN; native options are formatted in JSX with `lib/text/display-title-case.ts` because OS popups do not always honor CSS text transformation. Public invitation RSVP status choices are Title Case too. The underlying option values, saved names, RSVP statuses and filters do not change. See `prd.md` §15.1b.
@@ -165,7 +167,7 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 
 Invitation identity remains database-first through PostgreSQL/Prisma. Browser cookies/localStorage are not used as the source of truth for event identity.
 
-The invitation root domain is configurable through `NEXT_PUBLIC_INVITATION_ROOT_DOMAIN`. The existing `dcwedding.com` fallback remains for backward compatibility until a separate domain migration is defined; new customer-facing product copy uses the DC Organizer brand and event terminology.
+The invitation root domain is configurable through `NEXT_PUBLIC_INVITATION_ROOT_DOMAIN`. The existing `dcwedding.com` fallback remains for backward compatibility until a separate domain migration is defined; new customer-facing product copy uses the Undara brand and event terminology.
 
 Legacy `/invite/[slug]` routes remain for internal routing/backward-compatible behavior where required by the application architecture.
 

@@ -1,7 +1,8 @@
 export const LOCALES = ["id", "en"] as const;
 export type Locale = (typeof LOCALES)[number];
 
-export const LOCALE_COOKIE = "dc_locale";
+export const LOCALE_COOKIE = "undara_locale";
+export const LEGACY_LOCALE_COOKIE = "dc_locale";
 
 export function isLocale(value: string | undefined): value is Locale {
   return value === "id" || value === "en";
@@ -44,7 +45,7 @@ export const messages = {
           capabilities: ["Tim", "Rundown", "Vendor"],
           proof: {
             quote: "Acara terasa lebih ringan ketika setiap detail punya tempat.",
-            source: "Prinsip layanan DC Organizer",
+            source: "Prinsip layanan Undara",
           },
         },
         invitation: {
@@ -54,7 +55,7 @@ export const messages = {
           capabilities: ["Undangan", "RSVP", "Tamu"],
           proof: {
             quote: "Undangan yang rapi membuat tamu lebih mudah mengikuti alur acara.",
-            source: "Prinsip layanan DC Organizer",
+            source: "Prinsip layanan Undara",
           },
         },
         guestbook: {
@@ -64,14 +65,14 @@ export const messages = {
           capabilities: ["Guestbook", "QR check-in", "Kehadiran"],
           proof: {
             quote: "Penyambutan yang cepat membuat kesan pertama terasa lebih hangat.",
-            source: "Prinsip layanan DC Organizer",
+            source: "Prinsip layanan Undara",
           },
         },
       },
       openWorkspace: "Lihat Detail",
     },
     footer: {
-      description: "DC Organizer adalah platform event dan undangan digital untuk membuat publikasi, RSVP, manajemen tamu, serta operasional acara lebih terarah.",
+      description: "Undara adalah platform event dan undangan digital untuk membuat publikasi, RSVP, manajemen tamu, serta operasional acara lebih terarah.",
       customerService: "Layanan Pelanggan",
       paymentMethods: "Metode Pembayaran",
       products: "Produk",
@@ -126,7 +127,7 @@ export const messages = {
           capabilities: ["Crew", "Rundown", "Vendors"],
           proof: {
             quote: "An event feels lighter when every detail has its place.",
-            source: "DC Organizer service principle",
+            source: "Undara service principle",
           },
         },
         invitation: {
@@ -136,7 +137,7 @@ export const messages = {
           capabilities: ["Invitation", "RSVP", "Guests"],
           proof: {
             quote: "A clear invitation makes the event flow easier for every guest to follow.",
-            source: "DC Organizer service principle",
+            source: "Undara service principle",
           },
         },
         guestbook: {
@@ -146,14 +147,14 @@ export const messages = {
           capabilities: ["Guestbook", "QR check-in", "Attendance"],
           proof: {
             quote: "A smoother welcome makes the first impression feel warmer.",
-            source: "DC Organizer service principle",
+            source: "Undara service principle",
           },
         },
       },
       openWorkspace: "View Details",
     },
     footer: {
-      description: "DC Organizer is an event and digital-invitation platform for publishing invitations, collecting RSVPs, managing guests, and supporting event operations.",
+      description: "Undara is an event and digital-invitation platform for publishing invitations, collecting RSVPs, managing guests, and supporting event operations.",
       customerService: "Customer Service",
       paymentMethods: "Payment Methods",
       products: "Products",

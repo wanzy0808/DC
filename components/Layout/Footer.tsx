@@ -56,7 +56,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
       <footer
         className={`${embedded ? "relative" : "absolute bottom-0 left-0"} z-20 w-full border-none bg-background py-3 text-center font-[family-name:var(--font-dc-mono)] text-[10px] tracking-wider text-[var(--foreground)] opacity-50 md:text-xs`}
       >
-        © {new Date().getFullYear()} DC Organizer. {footer.rights}
+        © {new Date().getFullYear()} Undara. {footer.rights}
       </footer>
     );
   }
@@ -178,7 +178,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
         </div>
 
         <div className="flex flex-col items-center justify-between gap-2 pt-4 font-[family-name:var(--font-dc-mono)] text-[10px] opacity-50 md:flex-row">
-          <p>© 2026 PT DC ORGANIZER INDONESIA. {footer.rights}</p>
+          <p>© 2026 Undara. {footer.rights}</p>
           <div className="flex gap-4">
             <span>{footer.legal}</span>
             <Link href="/privacy-policy" className="text-inherit transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{footer.privacy}</Link>

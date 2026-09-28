@@ -8,7 +8,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# DC Organizer — Agent, Design System & Engineering Rules
+# Undara — Agent, Design System & Engineering Rules
 
 These rules apply to the entire repository unless a more specific implementation requirement says otherwise.
 
@@ -31,15 +31,18 @@ Do not add generic project-wide prompt/skill documents that duplicate or conflic
 
 Validation must distinguish source inspection, actual build/CI results, database migration, and browser/E2E verification. Never describe build/CI/migration/E2E as PASS without direct observed evidence for the relevant commit and environment.
 
-**Web-invitation-first Studio rule (27 September 2026):** Canva/Figma-like behavior applies to the **authoring interaction only**. DC Organizer output remains a responsive web invitation with section ownership, normal document/scroll flow, mobile/desktop behavior, semantic interactive DOM, and the shared RSVP/Maps/Countdown/Music/Wishes/Gift/data engines. Never turn invitation rendering into one global fixed-size poster/artboard or blanket absolute-position all content. Free transforms must remain section/component-scoped, editor zoom/pan/handles must not leak into public layout, and Designer/Owner freedom must preserve responsive usability and protected web functionality.
+**Web-invitation-first Studio rule (27 September 2026):** Canva/Figma-like behavior applies to the **authoring interaction only**. Undara output remains a responsive web invitation with section ownership, normal document/scroll flow, mobile/desktop behavior, semantic interactive DOM, and the shared RSVP/Maps/Countdown/Music/Wishes/Gift/data engines. Never turn invitation rendering into one global fixed-size poster/artboard or blanket absolute-position all content. Free transforms must remain section/component-scoped, editor zoom/pan/handles must not leak into public layout, and Designer/Owner freedom must preserve responsive usability and protected web functionality.
 
 **Designer/Customer Studio scoped rule (24 September 2026):** Before modifying designer template authoring, the invitation canvas, visual properties of shared components, or custom-made workflows, read `studio.md` as the scoped design and authorization rule alongside canonical `prd.md` §7.2.0c and `template.md`. Designer may modify whitelisted visual presentation across sections but must never rewrite or bypass protected component behavior, event data, business APIs, or customer permissions. `studio.md` describes future requirements and must not be mistaken for already implemented functionality.
 
 ## 2. Product Identity & Preservation
 
-- Official product brand: **DC Organizer**.
-- **Protected brand wordmark contract:** customer-facing `DC Organizer` wordmarks MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The wordmark font is `var(--font-dc-heading)` / Cinzel, its wording and Rose treatment are locked, and agents must not reinterpret, restyle, substitute, or resize it into a different logo system unless the user explicitly requests a brand change.
+- Official product brand: **Undara**. **DC Organizer is the legacy brand name** and must not be introduced on new customer-facing surfaces except where historical/legal migration context explicitly requires it.
+- **Protected brand wordmark contract:** customer-facing `Undara` wordmarks MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). Canonical display typography is `var(--font-undara-heading)` / **DM Serif Display**; application/body typography is **Roboto**. The primary brand color is **#703B3B**.
 - Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
+- **Rebrand compatibility rule (28 September 2026):** existing `dc-*` CSS classes, variables, route IDs, cookies, database identifiers, and filenames may remain temporarily as compatibility internals. Do not mass-rename them merely for cosmetics. New shared tokens use `undara-*`; migrate legacy identifiers only when the affected behavior is tested.
+- **Palette migration rule:** Light Mode replaces the old Rose/pink application chrome with Undara Brown `#703B3B`. Dark Mode replaces the old black/near-black application base with Undara Brown `#703B3B`, while the old Rose/pink accent role becomes warm Champagne `#D6B38C` (light support `#E8D7C3`). Older active wording that literally says Rose/pink/black for app chrome is superseded by these semantic tokens.
+- **Template isolation:** invitation template artwork/palettes are design content, not application-brand chrome. Do not recolor existing invitation themes merely because Undara rebranded.
 - Never introduce legacy customer-facing brands such as Citin or DC Wedding.
 - Never reintroduce wedding-only assumptions into general event workflows unless the selected event category specifically requires them.
 - Preserve `/dashboard` and Beranda.
@@ -66,8 +69,8 @@ Validation must distinguish source inspection, actual build/CI results, database
 ## 3. Typography
 
 Use only these application UI fonts:
-- **Cinzel** — display, headings, titles, branding, editorial elements. **DC Organizer wordmark always uses the canonical `--font-dc-heading` token and must not be swapped to another font class.**
-- **Fauna One** — body/UI copy, navigation, forms, buttons, descriptions.
+- **DM Serif Display** — Undara display, headings, titles, branding, editorial elements. **Undara wordmark uses the canonical `--font-undara-heading` token.** Legacy `--font-dc-heading` remains a temporary alias only.
+- **Roboto** — Undara body/UI copy, navigation, forms, buttons, and descriptions.
 - **DM Mono** — metadata, codes, timestamps, status values, technical labels, small utility text.
 
 Do not introduce additional fonts, random Google Fonts, template fonts, or intentional browser/system fallback styling. Invitation-template typography may remain dynamic when it belongs to invitation content itself.
@@ -82,7 +85,7 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 ### Title Case for visible names and headings (23 September 2026)
 
 - **Every word in a customer-facing name or standalone UI title starts with a capital letter.** Apply Title Case consistently to page titles, section/frame/card headers (including large Dashboard frames), navigation names, metric titles, and displayed person/event names: `Manajemen Tamu`, `Daftar Undangan`, `Nama Di Amplop`.
-- Keep official spelling of brands, acronyms and product names, e.g. `DC Organizer`, `RSVP`, `VIP`, `VVIP`, `WhatsApp`; preserve numerals, punctuation and ID/EN meaning. Do not force uppercase on every letter, translate proper names, or apply Title Case to complete sentences, descriptions, helper text, message bodies, URLs or code identifiers.
+- Keep official spelling of brands, acronyms and product names, e.g. `Undara`, `RSVP`, `VIP`, `VVIP`, `WhatsApp`; preserve numerals, punctuation and ID/EN meaning. Do not force uppercase on every letter, translate proper names, or apply Title Case to complete sentences, descriptions, helper text, message bodies, URLs or code identifiers.
 - For user-entered names/event titles, use **display-only capitalization**; do not silently overwrite data in Prisma, API payloads, RSVP, messages or personal invitation storage. Reuse the Dashboard's scoped title/name display convention (`dc-ui-title` / `dc-ui-name` / `dc-ui-label`) for dashboard labels outside semantic heading tags. Ensure new UI headers in both ID/EN follow the same rule, without changing the approved landing/door or invitation-template artwork as a side effect.
 - **Dropdowns (23 September 2026):** Title Case applies to all standalone select/option labels in Dashboard and operational forms, including RSVP sorting, event scope, guest/WA Blast recipients, category/tag filters, and public RSVP status choices. CSS scopes the selected value and native options, but browser/OS popup options may ignore styling: pass actual display strings through `lib/text/display-title-case.ts` for dynamic/translated choices and write static public RSVP choices in Title Case. Keep `option.value`, data matching/filtering, persisted names, phone numbers, URLs, emails, technical timezone IDs, and narrative/helper copy unchanged. Preserve canonical acronyms and brand spelling (RSVP, VIP/VVIP, DC, WA, WhatsApp).
 - **Owner logout:** The Owner Panel must expose a visible Logout action in its header on desktop and mobile; reuse the authenticated `POST /api/auth/logout` session invalidation through `components/Auth/SessionLogoutButton.tsx`, shared with Admin. Navigate to Login only after the server confirms success; show a retryable error if logout fails. Never replace logout with a client-only navigation or expose any owner data to a signed-out session. No schema changes are needed for these UI fixes.
@@ -111,30 +114,33 @@ Do not introduce additional fonts, random Google Fonts, template fonts, or inten
 - Never fabricate customer testimonials, customer names, ratings, or quotes. Only attribute a quote to a customer when a real source is available; otherwise use clearly non-customer brand/service copy.
 
 ### Brand Anchor
-- Logo / brand primary: `#C07A84` Rose.
-- Supporting rose: `#D9A3AA`.
-- Deep hover/pressed rose: `#A65E69`.
-- All application accent colors must stay within this Rose family unless a semantic status color is required.
+- Brand name: **Undara**.
+- Brand primary: **Undara Brown `#703B3B`**.
+- Deep hover/pressed Brown: **`#5E3030`**.
+- Dark-theme/support accent: **Warm Champagne `#D6B38C`**.
+- Soft Champagne: **`#E8D7C3`**.
+- Typography: **DM Serif Display** for display/branding/headings and **Roboto** for body/UI. DM Mono may remain for technical metadata.
+- Semantic status colors (success/warning/error/info) remain functional colors and are not forced into the brand palette.
 
 ### Light
-- **Background:** `#FFFFFF` pure white.
-- **Headings, icons, buttons, links, help chat, menu, and accents:** Rose `#C07A84` as the canonical brand accent. Supporting Rose `#D9A3AA` and Deep Rose `#A65E69` may be used for states and emphasis.
-- **Primary text:** `#111111` near-black.
-- **Secondary text:** black with opacity, preferably the semantic muted token, rather than introducing another text color.
-- Surfaces should stay white; do not use pink as a page background or repeated card fill.
+- **Background:** `#FFFFFF`.
+- **Headings, icons, primary buttons, links, menu emphasis, outlines and brand accents:** `#703B3B`.
+- **Primary text:** warm near-black/brown `#2B1A1A`.
+- **Secondary text:** use semantic muted opacity.
+- Supporting surfaces may use warm ivory `#F7F1ED`; do not turn the whole UI brown.
 
 ### Dark
-- **Background:** `#0B0B0C` almost black.
-- **Headings, icons, buttons, links, help chat, menu, and accents:** Rose `#C07A84` as the canonical brand accent. Supporting Rose `#D9A3AA` and Deep Rose `#A65E69` may be used for states and emphasis.
-- **Primary text:** `#FFFFFF` white.
-- **Secondary text:** white with opacity, preferably the semantic muted token, rather than introducing another text color.
-- Surfaces should remain near-black/dark neutral; do not use pink as a page background or repeated card fill.
+- **Base background:** Undara Brown `#703B3B` replaces the legacy black/near-black base.
+- **Card/depth surfaces:** use deeper brown such as `#5E3131` only where hierarchy requires separation.
+- **Primary accent:** Warm Champagne `#D6B38C`; hover/support may use `#E8D7C3`.
+- **Primary text:** warm white `#FFF9F5`.
+- Never reintroduce black as the default dark canvas or old Rose/pink as the default dark accent.
 
 ### Neutral / Accent Balance
-- The visual goal is a white or almost-black canvas with Rose concentrated on meaningful brand elements: headings, icons, buttons, links, menus, help chat, selected states, outlines, and small accents.
-- Treat 60/30/10 as a visual-balance principle, not literal pixel coverage. Do not force large pink areas merely to satisfy a ratio.
-- Do not use Rose as a large decorative glow, repeated card fill, or default body-text color.
-- Text hierarchy should come primarily from typography, spacing, layout, and opacity.
+- Light mode should read as white/ivory + Undara Brown. Dark mode should read as Undara Brown + Champagne + warm white.
+- Treat 60/30/10 as a visual-balance principle, not literal pixel coverage.
+- Typography, spacing, layout, opacity, and surface depth establish hierarchy before extra decorative color.
+- Invitation-template palettes remain independent from this application-shell palette.
 
 ### Navbar Control Standard
 - Public-navbar controls use the same restrained opacity treatment established in the current implementation; do not increase their fill opacity or redesign them into solid/pill-heavy controls without explicit user instruction.
