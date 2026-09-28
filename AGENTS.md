@@ -420,3 +420,10 @@ RSVP success must follow committed Guest state for all three statuses, independe
 ## 2026-09-24 — Pencil Reverie ilustrasi tidak boleh terpotong
 
 Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terlebih dahulu. Gambar opaque (pemandangan, kertas, adegan sepeda/lampu) adalah satu halaman utuh: pertahankan rasio asli dengan `width:100%; height:auto` atau `object-fit:contain`. Jangan menggeser aset besar dengan offset negatif dan klip parent sampai lampu hanya terlihat gagangnya, sepeda tanpa roda, atau pasangan terpotong tanpa sengaja. Render ilustrasi utuh dalam panel tersendiri di alur layout bila perlu; overlay transparan harus tetap sepenuhnya di dalam kanvas. Prioritaskan kesesuaian screenshot pemilik atas penambahan banyak efek, dan batasi dekorasi berulang. Untuk Pencil Reverie, bedakan `bungabg.png` (buku) dari `bungabg1.png` (magnolia); `bungaandlampbg.png` memuat lampu jalan lengkap. Semua 15 artwork dipakai secara bermakna pada Cover, Amplop, beberapa section, dan Galeri Cerita. No Photo berarti tidak ada foto pelanggan wajib. Animasi CSS sederhana harus tetap terlihat, dapat berulang sewajarnya, berhenti saat di luar viewport, dan menghormati reduced motion. Tidak ada klaim tampilan identik atau lulus build sebelum tes browser/CI nyata.
+
+
+### 2026-09-28 — Door crest & woodland backlight
+- Landing doors keep their existing geometry, orbit, position, camera, open/close motion, portal transition, and interactions unless explicitly requested otherwise.
+- Replace the generic top diamond crest with a service-specific crest glyph: Event Planner = calendar/spark, Undangan Digital = digital envelope/signal, Guestbook = open book, Undangan Fisik = sealed envelope.
+- Door light must read as warm woodland light coming from behind/inside the doorway. Keep a subtle halo while closed, strengthen it when opened/entered, and avoid pink rectangular overlays or a bottom-origin light source.
+- Backlight follows the Undara palette: warm cream/champagne around `#D6B38C` / `#EDE3D8`; door theme colors remain Light `#703B3B` body with `#EDE3D8` trim and Dark `#D6B38C` body with `#703B3B` trim.
