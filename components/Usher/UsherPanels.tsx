@@ -70,7 +70,7 @@ export function CheckinPanel({
                 <div className="mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-primary/15 text-primary">
                   <Camera className="h-8 w-8" />
                 </div>
-                <h2 className="font-[family-name:var(--font-dc-heading)] text-2xl">
+                <h2 className="font-[family-name:var(--font-undara-heading)] text-2xl">
                   Siap menerima tamu?
                 </h2>
                 <p className="mt-2 max-w-sm text-xs leading-5 text-white/50">
@@ -110,7 +110,7 @@ export function CheckinPanel({
                 <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">
                   Status hari-H
                 </p>
-                <p className="mt-1 font-[family-name:var(--font-dc-heading)] text-2xl">
+                <p className="mt-1 font-[family-name:var(--font-undara-heading)] text-2xl">
                   {checkedIn.length} / {guests.length} tamu
                 </p>
               </div>
@@ -141,7 +141,7 @@ export function CheckinPanel({
               <p className="text-xs uppercase tracking-[0.2em] text-emerald-700 dark:text-emerald-300">
                 Check-in berhasil
               </p>
-              <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl text-foreground">
+              <h2 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl text-foreground">
                 Selamat datang, {selectedGuest.name}
               </h2>
               <p className="mt-2 text-xs text-emerald-700 dark:text-emerald-300">
@@ -230,7 +230,7 @@ export function FeaturePanel({
         <p className="mt-6 text-xs uppercase tracking-[0.22em] text-primary">
           Usher feature
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-4xl">
+        <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-4xl">
           {title}
         </h1>
         <p className="mt-4 text-sm leading-6 text-muted-foreground">{description}</p>
