@@ -74,7 +74,7 @@ test("Undara light and dark palette stays on the canonical pair", () => {
   const styles = read("app/globals.css");
   assert.match(styles, /:root \{[\s\S]*?--background:\s*#EDE3D8;/);
   assert.match(styles, /\.dark \{[\s\S]*?--background:\s*#703B3B;/);
-  assert.match(styles, /--dc-dashboard-canvas:\s*#EDE3D8;/);
+  assert.match(styles, /--undara-dashboard-canvas:\s*#EDE3D8;/);
 });
 
 
