@@ -1495,6 +1495,8 @@ The approved landing is a continuous botanical/rose-glow/petal scene with a roun
 
 **Penempatan layer dari review screenshot owner:** ranting harus menyeberangi batas main frame seperti dekorasi lama, tetapi tetap berada di belakang isi frame dan tidak menimpa logo Undara. Siluet hutan mengisi bidang jauh lebih lebar di belakang orbit pintu dan sejajar dengan area pijakan pintu; jangan membuatnya seperti gambar kecil terpisah di tengah.
 
+**Footer homepage:** kontrol musik/volume di kiri, copyright di tengah, dan ikon Instagram di kanan harus menempel pada dasar main frame. Pada viewport sempit copyright boleh turun menjadi baris kedua agar tidak menimpa kontrol. Ruang fleksibel antara navbar dan footer tidak boleh menangkap klik Pintu.
+
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
 
 Active canonical references for homepage `/`: `app/page.tsx`, `components/Landing/Pintu/LandingDoorScene.tsx`, `components/Landing/LandingWoodlandAtmosphere.tsx`, `components/Landing/LandingStoryCopy.tsx`, `components/Layout/MarketingFrameFooter.tsx`, `components/Layout/Navbar/Navbar.tsx`, and the shared theme/language controls and button components they actually import. `PublicMarketingAtmosphere` remains a non-home marketing component; `CloudCopy` is retired from the active homepage. Historical `app/pagecontoh/page.tsx` is not a live source file. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
@@ -5438,6 +5440,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Temuan owner:** ranting yang berada di dalam frame terpotong dan nyaris tidak terlihat, ranting atas mendekati logo, serta siluet hutan terlalu sempit dan tidak menyatu dengan putaran pintu.
 
 **Perbaikan:** ranting dipindah menjadi layer homepage di luar clip main frame, di belakang isi frame sehingga tetap menembus garis bingkai tanpa menutup logo atau hit target. Sudut kiri atas dipendekkan dan dibuat memudar ke arah brand. Siluet diperlebar melewati tepi frame, ditinggikan, dan disejajarkan dengan kaki pintu; kontras Light Mode dinaikkan agar pepohonan terbaca sebagai latar, sementara Dark Mode tetap lembut. Empat pintu, orbit, copy, dan kontrol tidak diubah. Area: `app/page.tsx`, `LandingWoodlandAtmosphere.tsx`, `prd.md`. Lint terarah, 11/11 source regression, `git diff --check`, dan production build webpack + TypeScript lulus. Screenshot setelah revisi, Light/Dark mobile, dan pemutaran audio perangkat nyata belum diverifikasi.
+
+### 28 September 2026 — Footer landing kembali di dasar frame
+
+**Temuan owner:** setelah copy awan diganti menjadi editorial block absolut, elemen fleksibel pengisi ruang tengah hilang; footer berikut volume dan ikon media sosial ikut naik tepat di bawah navbar.
+
+**Perbaikan:** `app/page.tsx` menambahkan ruang fleksibel pasif di antara navbar dan footer. `MarketingFrameFooter` mendapat layout khusus homepage: volume kiri, copyright tengah, Instagram kanan pada desktop; copyright di baris bawah pada mobile agar kontrol tidak saling menimpa. Layout halaman marketing lain tetap memakai markup semula. Lint terarah, 12/12 source regression, `git diff --check`, serta production build webpack + TypeScript lulus; inspeksi visual browser desktop/mobile belum dilakukan.
 ### 28 September 2026 — Warna kunang-kunang mengikuti mode Undara
 
 **Permintaan owner:** kunang-kunang landing memakai warna brand pada Light Mode dan Champagne pada Dark Mode.

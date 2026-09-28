@@ -10,7 +10,15 @@ export function MarketingInstagramLink() {
 }
 
 /** Fixed bottom edge of the landing-style frame, shared by marketing subpages. */
-export default function MarketingFrameFooter() {
+export default function MarketingFrameFooter({ landingLayout = false }: { landingLayout?: boolean }) {
+  if (landingLayout) {
+    return <div className="relative z-40 grid shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 bg-transparent px-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] sm:px-6">
+      <MarketingAudioControls />
+      <div className="col-span-2 row-start-2 flex justify-center sm:col-span-1 sm:col-start-2 sm:row-start-1"><Footer embedded /></div>
+      <div className="col-start-2 row-start-1 justify-self-end sm:col-start-3"><MarketingInstagramLink /></div>
+    </div>;
+  }
+
   return <div className="relative z-40 grid min-h-12 shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 bg-transparent px-3 sm:px-6">
     <MarketingAudioControls />
     <div className="pointer-events-none absolute inset-x-0 flex justify-center [&_a]:pointer-events-auto [&_button]:pointer-events-auto"><Footer embedded /></div>
