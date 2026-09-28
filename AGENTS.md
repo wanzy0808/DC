@@ -465,3 +465,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 ### 2026-09-28 — Landing footer copyright
 - Homepage footer uses one unified horizontal bar: audio controls left, copyright centered, Instagram right.
 - Do not render the embedded full Footer component inside the landing footer; keep copyright inline so it does not look like a separate stacked footer.
+
+
+### 2026-09-28 — Root divider footer
+- Landing footer keeps the unified sound / copyright / Instagram row.
+- The visual separator above that row is an organic root-like SVG divider rather than a straight rule.
+- Divider stays subtle, non-interactive, and must not change footer controls or door scene geometry.
