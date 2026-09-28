@@ -108,7 +108,7 @@ export default function AdminPayments() {
       <div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-primary">Finance</p>
-          <h2 className="mt-1 font-[family-name:var(--font-dc-heading)] text-2xl">Pembayaran & aktivasi paket</h2>
+          <h2 className="mt-1 font-[family-name:var(--font-undara-heading)] text-2xl">Pembayaran & aktivasi paket</h2>
           <p className="mt-1 text-sm text-muted-foreground">Periksa laporan transfer atau bukti pembayaran sebelum paket diaktifkan.</p>
         </div>
         <Button type="button" size="sm" onClick={() => void load()}>Muat ulang</Button>
@@ -118,7 +118,7 @@ export default function AdminPayments() {
         {(["REPORTED", "PENDING", "PAID", "ALL"] as const).map((status) => (
           <button key={status} type="button" onClick={() => setFilter(status)} className={`rounded-xl border p-4 text-left transition-transform hover:-translate-y-0.5 ${filter === status ? "border-primary bg-primary/5" : "border-border"}`}>
             <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{status === "REPORTED" ? "Lapor bayar" : status === "ALL" ? "Semua order" : statusLabels[status]}</p>
-            <p className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">{counts[status]}</p>
+            <p className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl">{counts[status]}</p>
           </button>
         ))}
       </div>
@@ -163,7 +163,7 @@ export default function AdminPayments() {
             <div className="flex items-start justify-between gap-4">
               <div>
                 <p className="font-mono text-[10px] uppercase tracking-wider text-primary">Invoice</p>
-                <h3 className="mt-1 font-[family-name:var(--font-dc-heading)] text-xl">{selectedOrder.invoiceNumber}</h3>
+                <h3 className="mt-1 font-[family-name:var(--font-undara-heading)] text-xl">{selectedOrder.invoiceNumber}</h3>
               </div>
               <Button type="button" size="sm" onClick={() => setSelectedOrderId(null)}>Tutup</Button>
             </div>
