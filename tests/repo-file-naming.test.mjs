@@ -240,6 +240,22 @@ test("public marketing pages share one frame, footer control system and falling-
 });
 
 
+test("Undara footer social icons stay link-free until official profiles exist", () => {
+  const social = read("components/Layout/UndaraSocialIcons.tsx");
+  const frameFooter = read("components/Layout/MarketingFrameFooter.tsx");
+  const publicFooter = read("components/Layout/Footer.tsx");
+
+  assert.match(social, /Instagram Undara/);
+  assert.match(social, /TikTok Undara/);
+  assert.match(social, /Facebook Undara/);
+  assert.match(social, /data-social-pending="true"/);
+  assert.doesNotMatch(social, /dc\.organizer/i);
+  assert.doesNotMatch(frameFooter, /dc\.organizer/i);
+  assert.match(frameFooter, /<UndaraSocialIcons \/>/);
+  assert.match(publicFooter, /<UndaraSocialIcons compact \/>/);
+});
+
+
 test("landing fireflies follow the Undara theme colors", () => {
   const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
   assert.match(doors, /function Fireflies\(\{ reducedMotion, isDarkMode \}/);
