@@ -100,7 +100,7 @@ export default function LandingWoodlandAtmosphere() {
           adds warm depth without whitening the entire forest layer. */}
       <div className="absolute left-1/2 top-[31%] h-[38%] w-[46%] -translate-x-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(255,248,235,0.58),rgba(225,196,157,0.16)_48%,transparent_74%)] blur-2xl dark:bg-[radial-gradient(ellipse_at_center,rgba(214,179,140,0.16),rgba(122,71,54,0.055)_48%,transparent_73%)]" />
 
-      <div className="absolute inset-x-[22%] bottom-[7%] h-[16%] rounded-[50%] bg-[#D6B38C]/10 blur-3xl dark:bg-[#D6B38C]/[0.035]" />
+      <div className="absolute inset-x-[22%] bottom-[7%] h-[16%] rounded-[50%] bg-[#D6B38C]/10 blur-3xl dark:bg-[rgba(214,179,140,0.035)]" />
     </div>
   );
 }
