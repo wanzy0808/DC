@@ -31,7 +31,7 @@ export default function StudioNativeTransformHandles({
 
   function target() {
     const selector = targetKey && nativeVisualSelector(targetKey);
-    return selector ? canvasRef.current?.querySelector<HTMLElement>(`.dc-studio-preview-surface ${selector}`) ?? null : null;
+    return selector ? canvasRef.current?.querySelector<HTMLElement>(`.undara-studio-preview-surface ${selector}`) ?? null : null;
   }
 
   function measure() {
@@ -167,27 +167,27 @@ export default function StudioNativeTransformHandles({
   if (!box || !targetKey) return null;
   const handles = ["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"] as const;
   return (
-    <div className="dc-studio-native-transform" style={{ left: box.left, top: box.top, width: box.width, height: box.height }}
+    <div className="undara-studio-native-transform" style={{ left: box.left, top: box.top, width: box.width, height: box.height }}
       aria-label="Transformasi elemen bawaan">
       {nativeVisualUsesSystemContent(targetKey) && (
-        <span className="dc-studio-native-content-lock" title="Isi dari data acara terkunci; styling tetap editable" aria-label="Isi data acara terkunci">
+        <span className="undara-studio-native-content-lock" title="Isi dari data acara terkunci; styling tetap editable" aria-label="Isi data acara terkunci">
           <Lock size={12} />
         </span>
       )}
-      <button type="button" className="dc-studio-native-move" aria-label="Geser elemen" title="Tarik untuk menggeser"
+      <button type="button" className="undara-studio-native-move" aria-label="Geser elemen" title="Tarik untuk menggeser"
         onPointerDown={(event) => begin(event, "move")} onPointerMove={move} onPointerUp={end}
         onPointerCancel={(event) => end(event, true)} />
       {handles.map((handle) => (
-        <button key={handle} type="button" className={`dc-studio-native-handle dc-studio-native-handle--${handle}`}
+        <button key={handle} type="button" className={`undara-studio-native-handle undara-studio-native-handle--${handle}`}
           aria-label={`Ubah ukuran dari ${handle}`} title={`Tarik untuk mengubah ukuran dari ${handle}`}
           onPointerDown={(event) => begin(event, handle)} onPointerMove={move} onPointerUp={end}
           onPointerCancel={(event) => end(event, true)} />
       ))}
-      {transform && <button type="button" className="dc-studio-native-reset" aria-label="Reset posisi ukuran dan rotasi elemen"
+      {transform && <button type="button" className="undara-studio-native-reset" aria-label="Reset posisi ukuran dan rotasi elemen"
         title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, defaultNativeVisualTransform); }}>
         <RotateCcw size={14} />
       </button>}
-      <button type="button" className="dc-studio-native-rotate" aria-label="Putar elemen"
+      <button type="button" className="undara-studio-native-rotate" aria-label="Putar elemen"
         title="Tarik untuk memutar" onPointerDown={(event) => begin(event, "rotate")}
         onPointerMove={move} onPointerUp={end} onPointerCancel={(event) => end(event, true)}>
         <RotateCw size={15} />
