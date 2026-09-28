@@ -38,15 +38,10 @@ export default function HelpPage() {
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
       <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.08),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(214,179,140,0.09),transparent_66%)]"
-      />
-
-      <div
         data-dc-marketing-frame
         className="undara-marketing-frame"
       >
-        <div className="relative z-50 shrink-0 bg-background/70 backdrop-blur-sm">
+        <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
 
