@@ -434,3 +434,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Landing door shadows use one large scene-wide receiver so the real cast silhouette follows the arched door and does not clip into a rectangular patch. Per-door ground treatment is contact shadow only.
 - Homepage decorative corner branches are removed. The upper frame is filled with a restrained canopy made from the shared forest silhouette; landing story copy uses a simple divider instead of botanical branch artwork.
 - Dramatic light remains behind the doors. Neutral ambient/material readability is allowed, but no frontal key light. Forest mist/backlight may fill the opening so the scene reads as a luminous clearing rather than a black silhouette.
+
+
+### 2026-09-28 — Canopy header placement
+- Homepage woodland canopy starts inside the header zone rather than below it.
+- Canopy may visually pass behind the header, but the Undara wordmark/tagline area on the left and theme/language/menu controls on the right must remain visually clear and fully interactive.
+- Keep navbar/content z-order above the atmosphere; use visual clearance/fade pockets rather than moving or restyling the brand/buttons.
