@@ -67,11 +67,14 @@
   --font-undara-sans: var(--font-undara-body), Arial, sans-serif;
   --font-undara-serif: var(--font-undara-display), Georgia, serif;
   --font-undara-heading: var(--font-undara-display), Georgia, serif;
-  --font-undara-mono: var(--font-mono), monospace;
+  --font-undara-mono: var(--font-undara-technical), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   --font-dc-sans: var(--font-undara-sans);
   --font-dc-serif: var(--font-undara-serif);
   --font-dc-heading: var(--font-undara-heading);
   --font-dc-mono: var(--font-undara-mono);
+  /* Legacy application font aliases: keep old surfaces on the Undara type system during migration. */
+  --font-cinzel: var(--font-undara-heading);
+  --font-fauna: var(--font-undara-sans);
   --undara-control-radius: 16px;
   --undara-control-menu-radius: 18px;
   --undara-control-outline: var(--primary);
@@ -159,8 +162,9 @@
   select:focus-visible {
     outline-color: var(--dc-control-outline);
   }
-  html, body { font-family: var(--font-dc-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; }
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-dc-heading); color: var(--primary); }
+  html, body { font-family: var(--font-undara-sans); background-color: var(--background); color: var(--foreground); transition: background-color 500ms, color 500ms; }
+  button, input, textarea, select, option { font-family: inherit; }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-undara-heading); color: var(--primary); }
   a { color: var(--primary); }
 }
 
