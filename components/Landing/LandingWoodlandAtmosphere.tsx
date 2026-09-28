@@ -46,7 +46,7 @@ export default function LandingWoodlandAtmosphere() {
         initial={reduced ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduced ? 0 : 1.1, ease: "easeOut" }}
-        className="absolute inset-x-3 bottom-[10%] aspect-[1672/941] sm:inset-x-[38px] sm:bottom-[8%]"
+        className="absolute inset-x-3 top-[88px] bottom-[10%] sm:inset-x-[38px] sm:top-[100px] sm:bottom-[8%]"
       >
         <Image
           src={FOREST}
