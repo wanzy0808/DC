@@ -176,6 +176,69 @@
 
 .text-dc-maroon { color: var(--primary); }
 
+/* One visual contract for marketing-footer controls across every public frame. */
+.undara-footer-control {
+  display: inline-flex !important;
+  height: 2.125rem !important;
+  width: 2.125rem !important;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  border-radius: 12px !important;
+  background: color-mix(in srgb, var(--background) 92%, transparent) !important;
+  color: var(--primary) !important;
+  box-shadow: none !important;
+  transition: border-color 180ms ease, background-color 180ms ease, transform 180ms ease !important;
+}
+.undara-footer-control:hover:not(:disabled) {
+  border-color: var(--primary) !important;
+  background: color-mix(in srgb, var(--primary) 10%, var(--background)) !important;
+  color: var(--primary) !important;
+  transform: translateY(-1px);
+}
+.undara-footer-control:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
+  outline-offset: 2px;
+}
+.undara-volume-slider {
+  height: 1rem;
+  accent-color: var(--primary);
+}
+.undara-volume-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.undara-volume-slider::-webkit-slider-thumb {
+  width: 12px;
+  height: 12px;
+  margin-top: -4px;
+  border: 2px solid var(--background);
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
+  -webkit-appearance: none;
+}
+.undara-volume-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+}
+.undara-volume-slider::-moz-range-progress {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+.undara-volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--background);
+  border-radius: 999px;
+  background: var(--primary);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
+}
+
 /* Canonical Undara logo image. The PNG supplies the exact artwork silhouette;
    currentColor supplies theme-safe brand color so the same asset remains
    visible on both the white Light canvas and brown Dark canvas. */
