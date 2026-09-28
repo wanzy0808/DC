@@ -51,8 +51,8 @@ test("Studio header has landing-style ID/EN and dark/light toggles without its o
   assert.match(studio, /<LanguageToggle \/>/);
   assert.doesNotMatch(studio, /onClick=\{publish\}|async function publish\(|>Terbitkan<|Paket diperlukan saat terbitkan/);
   assert.doesNotMatch(studio, /Desain bisa disimpan sekarang/);
-  assert.match(styles, /\.dc-studio-page-header \.dc-theme-toggle/);
-  assert.match(styles, /\.dc-studio-page-header \.dc-language-toggle button/);
+  assert.match(styles, /\.undara-studio-page-header \.undara-theme-toggle/);
+  assert.match(styles, /\.undara-studio-page-header \.undara-language-toggle button/);
   assert.match(dashboard, /async function publishInvitation\(/);
 });
 
@@ -76,18 +76,18 @@ test("Studio keeps the live edit canvas and adds a separate final preview from t
 
 test("Studio has a wider inspector, compact side tools and a smaller invitation canvas", () => {
   assert.match(styles, /grid-template-columns: 98px 360px minmax\(0, 1fr\)/);
-  assert.match(styles, /\.dc-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
-  assert.match(styles, /\.dc-studio-preview-surface \{[^}]*width: 340px;/);
+  assert.match(styles, /\.undara-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
+  assert.match(styles, /\.undara-studio-preview-surface \{[^}]*width: 340px;/);
 });
 
 test("Studio text tool uses a simple Type icon instead of a text cursor icon", () => {
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /label=\{copy\.text\} icon=\{<Type/);
   assert.doesNotMatch(designer, /TextCursorInput/);
 });
 
 test("Studio left rail names the template browser Katalog", () => {
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /label=\{locale === "en" \? "Catalog" : "Katalog"\}/);
   assert.doesNotMatch(rail, /label="Template"/);
 });
@@ -103,7 +103,7 @@ test("Studio ID/EN switch updates its navigation, template search and photo cont
 
 test("Studio uses one left-rail Isi menu for sections and functional components", () => {
   assert.match(designer, /sections: "Isi"/);
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.match(rail, /label=\{copy\.sections\}/);
   assert.doesNotMatch(rail, /panel === "content"|copy\.content|FilePenLine/);
   const mergedPanel = designer.split('{panel === "sections" && (')[1]?.split('{panel === "color"')[0] || "";
@@ -114,7 +114,7 @@ test("Studio uses one left-rail Isi menu for sections and functional components"
 });
 
 test("Studio left rail follows Catalog Isi Teks Foto Aset Musik Warna order", () => {
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   const order = [
     'panel === "template"',
     'panel === "sections"',
@@ -131,13 +131,13 @@ test("Studio left rail follows Catalog Isi Teks Foto Aset Musik Warna order", ()
     previous = index;
   }
   assert.match(rail, /label=\{locale === "en" \? "Catalog" : "Katalog"\}/);
-  assert.doesNotMatch(rail, /dc-studio-rail-divider/);
+  assert.doesNotMatch(rail, /undara-studio-rail-divider/);
 });
 
 test("Studio folds Font into Text with four quick font pairs and See more", () => {
   const textPanel = read("components/InvitationStudio/TextObjectPanel.tsx");
   const types = read("components/InvitationStudio/designer-types.ts");
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.doesNotMatch(rail, /label="Font"|panel === "font"|setPanel\("font"\)/);
   assert.match(rail, /label=\{copy\.text\}/);
   assert.doesNotMatch(designer, /<FontPanel|panel === "font"/);
@@ -168,21 +168,21 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   const buttons = read("components/ui/button-variants.ts");
   const controls = read("components/ui/control-styles.ts");
   const catalog = read("app/template-design/page.tsx");
-  assert.match(globalStyles, /--dc-control-radius:\s*16px;/);
-  assert.match(globalStyles, /--dc-control-menu-radius:\s*18px;/);
-  assert.doesNotMatch(globalStyles, /--dc-control-radius:\s*9999px;/);
-  assert.match(buttons, /rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(globalStyles, /--undara-control-radius:\s*16px;/);
+  assert.match(globalStyles, /--undara-control-menu-radius:\s*18px;/);
+  assert.doesNotMatch(globalStyles, /--undara-control-radius:\s*9999px;/);
+  assert.match(buttons, /rounded-\[var\(--undara-control-radius\)\]/);
   assert.match(buttons, /bg-primary/);
   assert.match(buttons, /text-primary-foreground/);
   assert.match(buttons, /font-\[family-name:var\(--font-undara-body\)\]/);
   assert.doesNotMatch(buttons, /#C07A84|#A65E69|#D9A3AA|--font-fauna/);
-  assert.match(controls, /rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(controls, /rounded-\[var\(--undara-control-radius\)\]/);
   assert.match(templatePanel, /photoFilter === key/);
-  assert.match(templatePanel, /h-9 w-full appearance-none rounded-\[var\(--dc-control-radius\)\]/);
-  assert.match(stageControlsSource, /min-h-9 shrink-0 rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(templatePanel, /h-9 w-full appearance-none rounded-\[var\(--undara-control-radius\)\]/);
+  assert.match(stageControlsSource, /min-h-9 shrink-0 rounded-\[var\(--undara-control-radius\)\]/);
   assert.doesNotMatch(stageControlsSource, /min-h-9 shrink-0 rounded-full/);
-  assert.match(styles, /\.dc-studio-icon \{[^}]*border-radius: var\(--dc-control-radius\)/);
-  assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--dc-control-radius\)\]/);
+  assert.match(styles, /\.undara-studio-icon \{[^}]*border-radius: var\(--undara-control-radius\)/);
+  assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--undara-control-radius\)\]/);
 });
 
 test("Ucapan Tamu section label has no stale unavailable caption", () => {
@@ -202,8 +202,8 @@ test("Studio stage labels use Amplop and Isi while keeping internal cover state"
 test("Studio keeps Template Restart Undo Redo Preview Save in one canvas toolbar row", () => {
   assert.match(designer, /save: "Simpan"/);
   assert.doesNotMatch(designer, /save: "Simpan Desain"/);
-  assert.doesNotMatch(designer, /<header className="dc-studio-toolbar">/);
-  const rail = designer.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  assert.doesNotMatch(designer, /<header className="undara-studio-toolbar">/);
+  const rail = designer.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   assert.doesNotMatch(rail, /onClick=\{restoreDefaults\}|copy\.startOver|onClick=\{undo\}|onClick=\{redo\}|onClick=\{save\}/);
   assert.match(designer, /<StudioCanvasToolbar/);
   assert.match(designer, /onRestore=\{restoreDefaults\}/);
@@ -213,8 +213,8 @@ test("Studio keeps Template Restart Undo Redo Preview Save in one canvas toolbar
   assert.match(designer, /onSave=\{save\}/);
   assert.match(designer, /canUndo=\{history\.length > 0\}/);
   assert.match(designer, /canRedo=\{future\.length > 0\}/);
-  assert.match(canvasToolbarSource, /className="dc-studio-canvas-toolbar"/);
-  assert.match(canvasToolbarSource, /dc-studio-history-actions/);
+  assert.match(canvasToolbarSource, /className="undara-studio-canvas-toolbar"/);
+  assert.match(canvasToolbarSource, /undara-studio-history-actions/);
   assert.match(canvasToolbarSource, /onClick=\{onRestore\}/);
   assert.match(canvasToolbarSource, /onClick=\{onUndo\}/);
   assert.match(canvasToolbarSource, /onClick=\{onRedo\}/);
@@ -241,14 +241,14 @@ test("Studio keeps Template Restart Undo Redo Preview Save in one canvas toolbar
   assert.match(reset, /setCopiedAssetLayer\(null\)/);
   assert.match(reset, /File upload tetap tersimpan di koleksi media/);
   assert.doesNotMatch(designer, /Smartphone|copy\.phone|phone: "Ponsel"|phone: "Mobile"/);
-  const canvas = designer.split('className="dc-studio-preview-workspace">')[1] || "";
-  assert.ok(canvas.indexOf("<StudioStageControls") >= 0 && canvas.indexOf("<StudioStageControls") < canvas.indexOf('className="dc-studio-preview-surface"'));
-  assert.match(stageControlsSource, /className="dc-studio-stage-controls"/);
+  const canvas = designer.split('className="undara-studio-preview-workspace">')[1] || "";
+  assert.ok(canvas.indexOf("<StudioStageControls") >= 0 && canvas.indexOf("<StudioStageControls") < canvas.indexOf('className="undara-studio-preview-surface"'));
+  assert.match(stageControlsSource, /className="undara-studio-stage-controls"/);
   assert.match(designer, /isUndo && history.length/);
   assert.match(designer, /isRedo && future.length/);
   assert.match(designer, /event\.nativeEvent\.isComposing/);
-  assert.match(styles, /\.dc-studio-history-actions \{[^}]*display: flex;[^}]*align-items: center/);
-  assert.match(styles, /\.dc-studio-stage-controls button \{[^}]*border-radius: var\(--dc-control-radius\)/);
+  assert.match(styles, /\.undara-studio-history-actions \{[^}]*display: flex;[^}]*align-items: center/);
+  assert.match(styles, /\.undara-studio-stage-controls button \{[^}]*border-radius: var\(--undara-control-radius\)/);
   assert.doesNotMatch(stageControlsSource, /min-h-9 shrink-0 rounded-full/);
 });
 
@@ -323,12 +323,12 @@ test("right-side Studio inspectors avoid redundant component labels and use one 
 test("selected assets use a compact left list and right-side properties panel", () => {
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
-  assert.match(designer, /className="dc-studio-canvas-layout"/);
+  assert.match(designer, /className="undara-studio-canvas-layout"/);
   assert.match(designer, /<StudioLayerList/);
-  assert.match(layerList, /className="dc-studio-layer-list"/);
+  assert.match(layerList, /className="undara-studio-layer-list"/);
   assert.match(layerList, /const automaticLayerName = layer\.kind === "text"/);
   assert.match(layerList, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
-  assert.match(layerList, /dc-studio-layer-select-button/);
+  assert.match(layerList, /undara-studio-layer-select-button/);
   assert.match(designer, /onPositionAsset=\{positionAssetLayer\}/);
   assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
   assert.match(layerInspector, /numberInput\("X"/);
@@ -352,14 +352,14 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.match(designer, /position: AssetLayerPosition/);
   assert.match(layerOrder, /position === "forward"/);
   assert.match(layerOrder, /position === "backward"/);
-  assert.match(styles, /\.dc-studio-layer-order \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
+  assert.match(styles, /\.undara-studio-layer-order \{[^}]*grid-template-columns: repeat\(4, minmax\(0, 1fr\)\)/);
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.doesNotMatch(assetPanel, /selectedId|onReorder|onRemove|selected\.opacity/);
-  assert.match(styles, /\.dc-studio-layer-list \{[^}]*width: 104px/);
-  assert.match(styles, /\.dc-studio-layer-side \{[^}]*position: sticky;[^}]*width: 230px;[^}]*justify-self: end/);
-  assert.match(styles, /\.dc-studio-section-side \{[^}]*width: 236px;[^}]*padding: 14px/);
-  assert.match(styles, /\.dc-studio-section-side-head strong \{[^}]*font-size: 15px;[^}]*font-weight: 700/);
-  assert.match(styles, /\.dc-studio-section-field \{[^}]*font-size: 12px;[^}]*font-weight: 600/);
+  assert.match(styles, /\.undara-studio-layer-list \{[^}]*width: 104px/);
+  assert.match(styles, /\.undara-studio-layer-side \{[^}]*position: sticky;[^}]*width: 230px;[^}]*justify-self: end/);
+  assert.match(styles, /\.undara-studio-section-side \{[^}]*width: 236px;[^}]*padding: 14px/);
+  assert.match(styles, /\.undara-studio-section-side-head strong \{[^}]*font-size: 15px;[^}]*font-weight: 700/);
+  assert.match(styles, /\.undara-studio-section-field \{[^}]*font-size: 12px;[^}]*font-weight: 600/);
 });
 
 
@@ -396,7 +396,7 @@ test("Studio layers can be locked and hidden without removing them from the desi
   assert.match(assetInspector, /Sembunyikan layer|Hide layer/);
   assert.match(textInspector, /Terkunci/);
   assert.match(textInspector, /Tersembunyi/);
-  assert.match(layerList, /dc-studio-layer-quick/);
+  assert.match(layerList, /undara-studio-layer-quick/);
   assert.match(layerList, /layerName/);
 });
 
@@ -481,7 +481,7 @@ test("Studio supports shift multi-select and persistent group controls", () => {
   assert.match(designer, /function ungroupSelectedAssetLayers\(\)/);
   assert.match(layerList, /event\.shiftKey/);
   assert.match(designer, /selectedAssetLayerIds=\{selectedLayerIds\}/);
-  assert.match(layerList, /dc-studio-layer-group-actions/);
+  assert.match(layerList, /undara-studio-layer-group-actions/);
   assert.match(assetRenderer, /selectedIds\?: string\[\]/);
   assert.match(assetRenderer, /onSelect\?: \(id: string, additive\?: boolean\)/);
   assert.match(preview, /selectedAssetLayerIds\?: string\[\]/);
@@ -563,7 +563,7 @@ test("Studio canvas pans horizontally at every zoom and preserves object gesture
   assert.match(designer, /onPointerMove=\{moveCanvasPan\}/);
   assert.match(designer, /consumeSuppressedCanvasClick\(\)/);
   assert.match(assetLayers, /data-space-pan="true"/);
-  assert.match(styles, /\.dc-studio-canvas-scroll \{[^}]*overflow: auto;/);
+  assert.match(styles, /\.undara-studio-canvas-scroll \{[^}]*overflow: auto;/);
   assert.match(styles, /data-panning="true"/);
 });
 
@@ -571,7 +571,7 @@ test("Studio canvas pans horizontally at every zoom and preserves object gesture
 test("Studio layer list supports direct drag reordering while locked layers stay fixed", () => {
   assert.match(designer, /function reorderAssetLayer\(sourceId: string, targetId: string\)/);
   assert.match(layerList, /draggable=\{!layer\.locked\}/);
-  assert.match(layerList, /application\/x-dc-layer/);
+  assert.match(layerList, /application\/x-undara-layer/);
   assert.match(layerList, /onReorder\(sourceId, layer\.id\)/);
   assert.match(layerList, /data-layer-drag-over/);
   assert.match(styles, /data-layer-drag-over="true"/);
