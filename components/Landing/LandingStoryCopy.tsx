@@ -32,7 +32,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
       initial={reduced ? false : { opacity: 0, y: 12 }}
       animate={{ opacity: hidden ? 0 : 1, y: hidden ? 8 : 0 }}
       transition={{ duration: reduced ? 0 : 0.45, ease: "easeOut" }}
-      className="pointer-events-none absolute bottom-[clamp(72px,8dvh,108px)] right-[clamp(18px,5.2vw,88px)] z-20 w-[min(88vw,460px)] text-right sm:w-[min(42vw,520px)] lg:w-[min(31vw,560px)]"
+      className="pointer-events-none absolute bottom-[clamp(72px,8dvh,108px)] right-[clamp(18px,5.2vw,88px)] z-20 w-[min(88vw,460px)] text-left sm:w-[min(42vw,520px)] lg:w-[min(31vw,560px)]"
     >
       <div
         aria-hidden="true"
@@ -48,7 +48,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
 
       <div
         aria-hidden="true"
-        className="ml-auto mt-3 flex h-8 w-[280px] items-center justify-end text-primary/65 sm:w-[350px] lg:w-[430px] dark:text-[#D6B38C]/72"
+        className="mt-3 flex h-8 w-[280px] items-center justify-start text-primary/65 sm:w-[350px] lg:w-[430px] dark:text-[#D6B38C]/72"
       >
         <span
           className="block h-full w-full bg-current"
@@ -57,15 +57,15 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
             maskImage: 'url("/assets/landing/ornaments/botanical/branch-05.webp")',
             WebkitMaskRepeat: "no-repeat",
             maskRepeat: "no-repeat",
-            WebkitMaskPosition: "right center",
-            maskPosition: "right center",
+            WebkitMaskPosition: "left center",
+            maskPosition: "left center",
             WebkitMaskSize: "contain",
             maskSize: "contain",
           }}
         />
       </div>
 
-      <p className="ml-auto mt-1 w-full max-w-none font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
+      <p className="mt-1 w-full max-w-none font-[family-name:var(--font-undara-body)] text-[11px] leading-[1.6] text-foreground/78 sm:text-[12px] lg:text-[13px]">
         <span className="block">{copy.body[0]}</span>
         <span className="block">{copy.body[1]}</span>
       </p>
