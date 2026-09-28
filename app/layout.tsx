@@ -25,7 +25,7 @@ const roboto = Roboto({
   weight: ["400", "500", "700"],
   variable: "--font-undara-body",
 });
-const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
+const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-undara-technical" });
 
 export const metadata: Metadata = {
   title: "Undara — Undangan & Acara",
