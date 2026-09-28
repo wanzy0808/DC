@@ -59,21 +59,21 @@ export default function InvitationEditorPage({ mode = "invitation", backHref = "
 
   return (
     <main
-      className={`dc-invitation-editor font-[family-name:var(--font-dc-sans)] text-foreground ${previewOnly ? "dc-unlicensed-studio" : ""}`}
+      className={`undara-invitation-editor font-[family-name:var(--font-undara-sans)] text-foreground ${previewOnly ? "undara-unlicensed-studio" : ""}`}
       onContextMenu={previewOnly ? (event) => event.preventDefault() : undefined}
     >
-      <div className="dc-studio-frame">
-        <header className="dc-studio-page-header">
-          <div className="dc-studio-header-brand flex min-w-0 items-center gap-3">
-            <Button asChild size="icon" variant="outline" className="dc-studio-back shrink-0">
+      <div className="undara-studio-frame">
+        <header className="undara-studio-page-header">
+          <div className="undara-studio-header-brand flex min-w-0 items-center gap-3">
+            <Button asChild size="icon" variant="outline" className="undara-studio-back shrink-0">
               <Link href={backHref} aria-label={backLabel} title={backLabel}>
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <Link href="/" className="min-w-0"><BrandWordmark size="mobile" /></Link>
           </div>
-          <h1 className="dc-studio-document-title truncate font-[family-name:var(--font-dc-heading)] text-base text-primary sm:text-lg" title={documentTitle}>{documentTitle}</h1>
-          <div className="dc-studio-header-actions flex shrink-0 items-center gap-1 sm:gap-2">
+          <h1 className="undara-studio-document-title truncate font-[family-name:var(--font-undara-heading)] text-base text-primary sm:text-lg" title={documentTitle}>{documentTitle}</h1>
+          <div className="undara-studio-header-actions flex shrink-0 items-center gap-1 sm:gap-2">
             <ThemeToggle />
             <LanguageToggle />
           </div>
