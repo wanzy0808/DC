@@ -5394,3 +5394,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Guardrail:** jangan menaruh file shared baru langsung di root `public/`; gunakan `public/assets/<domain>/`. Jangan mass-move `public/templates/` karena itu merupakan asset ownership per-template.
 
 **Validasi:** commit `1b0742d8` lulus Source regression tests dan production Build pada GitHub Actions run `36378590499`; Orphan Audit run `36378590502` juga lulus. Follow-up guard menyapu runtime source (`app`, `components`, `lib`, `data`) agar URL asset root lama tidak dapat masuk kembali tanpa membuat CI gagal.
+
+
+### 28 September 2026 — Landing ornament: bunga → branch-02
+
+**Permintaan owner:** ganti asset bunga pada landing page dengan asset ranting daun `branch-02.png`.
+
+**Implementasi:** kedua instance ornament kiri/kanan di `components/Landing/LandingFloralGlow.tsx` sekarang menggunakan `/assets/landing/ornaments/botanical/branch-02.png`. Posisi, ukuran container, opacity, mirror kanan, durasi animasi dan motion tidak diubah agar perubahan ini murni asset swap.
+
+**Validasi:** regression test memastikan landing tidak kembali memakai `legacy/flower.png`.

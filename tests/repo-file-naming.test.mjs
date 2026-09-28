@@ -157,3 +157,10 @@ test("runtime source does not reference retired root asset URLs", () => {
     }
   }
 });
+
+
+test("landing page uses botanical branch-02 instead of the legacy flower asset", () => {
+  const landingOrnament = read("components/Landing/LandingFloralGlow.tsx");
+  assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.png/);
+  assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.png"), false);
+});
