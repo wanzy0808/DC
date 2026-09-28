@@ -215,3 +215,13 @@ test("burger services submenu is closed by default", () => {
   const burger = read("components/Layout/Navbar/BurgerMenuContent.tsx");
   assert.match(burger, /const \[servicesOpen, setServicesOpen\] = useState\(false\);/);
 });
+
+
+test("landing story copy keeps the Undara doorway message and larger emphasis", () => {
+  const story = read("components/Landing/LandingStoryCopy.tsx");
+  assert.match(story, /Setiap cerita dimulai dari sebuah pintu/);
+  assert.match(story, /Buka pintu menuju harimu\./);
+  assert.match(story, /w-\[min\(82vw,390px\)\]/);
+  assert.match(story, /text-\[clamp\(1\.35rem,2\.05vw,2\.05rem\)\]/);
+  assert.match(story, /bg-gradient-to-l from-primary\/45 via-primary\/18 to-transparent/);
+});
