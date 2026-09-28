@@ -5543,3 +5543,8 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Canopy/header integration — 2026-09-28
 - The upper woodland canopy should occupy the top/header area so the forest feels continuous to the top of the frame.
 - It may sit behind the header but must not obscure or visually compete with the Undara brand/tagline or the right-side header controls.
+
+
+### Dedicated overhead canopy — 2026-09-28
+- Use `canopy2.png` for the homepage overhead canopy. It starts above/outside the frame and hangs through the header to create the feeling of standing under a tree.
+- Keep the canopy concentrated toward the center; logo/tagline and right-side controls must remain unobstructed without visible masking boxes.
