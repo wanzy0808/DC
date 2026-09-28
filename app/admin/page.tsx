@@ -10,10 +10,10 @@ export default async function AdminPage() {
 
   return (
     <div className="dc-dashboard min-h-screen bg-background text-foreground">
-      <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
+      <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-sans">
         <header>
           <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Admin Dashboard</p>
-          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Halo, {user?.firstName}</h1>
+          <h1 className="mt-2 font-heading text-3xl font-semibold">Halo, {user?.firstName}</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Database dapat dipantau di sini. Perubahan dibatasi pada bantuan operasional yang memang menjadi tugas Admin.</p>
         </header>
         <AdminOperations />
