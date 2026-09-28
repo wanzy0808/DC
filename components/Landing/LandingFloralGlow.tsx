@@ -80,8 +80,8 @@ export default function LandingFloralGlow() {
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         className={`absolute right-[1%] top-[12%] h-[52vh] w-[42vw] rounded-[50%] blur-3xl ${
           isDarkMode
-            ? "bg-[radial-gradient(ellipse,rgba(192,122,132,0.12),rgba(217,163,170,0.045)_46%,transparent_72%)]"
-            : "bg-[radial-gradient(ellipse,rgba(192,122,132,0.14),rgba(217,163,170,0.06)_48%,transparent_72%)]"
+            ? "bg-[radial-gradient(ellipse,rgba(214,179,140,0.12),rgba(112,59,59,0.045)_46%,transparent_72%)]"
+            : "bg-[radial-gradient(ellipse,rgba(112,59,59,0.10),rgba(214,179,140,0.05)_48%,transparent_72%)]"
         }`}
       />
     </div>
