@@ -167,27 +167,29 @@
 
 .text-undara-maroon { color: var(--primary); }
 
-/* One visual contract for every persistent marketing control: door widget, sound, volume, and social. */
-.undara-control-surface {
+/* One visual contract for every persistent public control.
+   Navbar, door navigator widget, sound, volume and social controls deliberately
+   share the SAME transparent surface in Light and Dark Mode. */
+.undara-control-surface,
+.undara-navbar .undara-theme-toggle,
+.undara-navbar .undara-language-toggle button,
+.undara-navbar .undara-burger-toggle {
   border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
-  border-radius: 12px !important;
-  background: color-mix(in srgb, var(--background) 92%, transparent) !important;
+  background: transparent !important;
   color: var(--primary) !important;
   box-shadow: none !important;
   transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease, transform 180ms ease !important;
 }
-.dark .undara-control-surface {
-  border-color: color-mix(in srgb, var(--primary) 64%, transparent) !important;
-  background: color-mix(in srgb, var(--card) 72%, var(--background)) !important;
-  color: var(--primary) !important;
+.undara-control-surface {
+  border-radius: 12px !important;
 }
-.undara-control-surface:hover:not(:disabled) {
+.undara-control-surface:hover:not(:disabled),
+.undara-navbar .undara-theme-toggle:hover,
+.undara-navbar .undara-language-toggle button:hover,
+.undara-navbar .undara-burger-toggle:hover {
   border-color: var(--primary) !important;
-  background: color-mix(in srgb, var(--primary) 10%, var(--background)) !important;
+  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
   color: var(--primary) !important;
-}
-.dark .undara-control-surface:hover:not(:disabled) {
-  background: color-mix(in srgb, var(--primary) 12%, var(--card)) !important;
 }
 .undara-control-surface:focus-visible,
 .undara-control-surface:focus-within {
@@ -195,7 +197,6 @@
   outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
   outline-offset: 2px;
 }
-
 .undara-footer-control {
   display: inline-flex !important;
   height: 2.125rem !important;
@@ -251,9 +252,6 @@
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
   -webkit-appearance: none;
 }
-.dark .undara-volume-slider::-webkit-slider-thumb {
-  border-color: var(--card);
-}
 .undara-volume-slider::-moz-range-track {
   height: 4px;
   border-radius: 999px;
@@ -271,9 +269,6 @@
   border-radius: 999px;
   background: var(--primary);
   box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 60%, transparent);
-}
-.dark .undara-volume-slider::-moz-range-thumb {
-  border-color: var(--card);
 }
 
 
@@ -344,28 +339,12 @@
 
 .undara-navbar { background: transparent; }
 
-/* Single source of truth for public navbar button appearance (both themes).
-   button-variants.ts supplies shared button behavior and dimensions; do not
-   duplicate these appearance rules in ThemeToggle/LanguageToggle/Navbar. */
+/* Navbar keeps only geometry and selected-language state here.
+   Surface appearance is shared with all persistent marketing controls above. */
 .undara-navbar--landing { background: transparent; }
-.undara-navbar .undara-theme-toggle,
-.undara-navbar .undara-language-toggle button,
-.undara-navbar .undara-burger-toggle {
-  background: transparent !important;
-  border: 1px solid color-mix(in srgb, var(--primary) 55%, transparent) !important;
-  color: var(--primary) !important;
-  box-shadow: none !important;
-}
 .undara-navbar .undara-theme-toggle,
 .undara-navbar .undara-burger-toggle { border-radius: 16px !important; }
 .undara-navbar .undara-language-toggle button { border-radius: 10px !important; }
-.undara-navbar .undara-theme-toggle:hover,
-.undara-navbar .undara-language-toggle button:hover,
-.undara-navbar .undara-burger-toggle:hover {
-  background: color-mix(in srgb, var(--primary) 8%, transparent) !important;
-  border-color: var(--primary) !important;
-  color: var(--primary) !important;
-}
 .undara-navbar .undara-language-toggle button[aria-pressed="true"] {
   background: color-mix(in srgb, var(--primary) 12%, transparent) !important;
   color: var(--primary) !important;
