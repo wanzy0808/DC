@@ -15,10 +15,9 @@ export default function LandingWoodlandAtmosphere() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_46%,rgba(214,179,140,0.18),rgba(112,59,59,0.055)_48%,transparent_75%)]" />
 
-      {/* Overhead woodland canopy spans roughly the whole door orbit.
-          The hanging center layer stays dominant, while left/right tree
-          masses make it feel like a real crown above the viewer instead of a
-          single narrow decoration. */}
+      {/* Keep only the centered hanging canopy. The side canopy layers were
+          removed so the header stays cleaner and the woodland framing does
+          not compete with the doors. */}
       <div
         data-landing-canopy
         className="absolute inset-x-0 -top-[clamp(68px,7vw,126px)] h-[clamp(320px,39dvh,500px)] overflow-visible"
@@ -44,54 +43,6 @@ export default function LandingWoodlandAtmosphere() {
             priority
             sizes="(max-width: 640px) 118vw, (max-width: 1024px) 108vw, 92vw"
             className="object-contain object-top opacity-[0.82] brightness-[0.95] saturate-[0.86] drop-shadow-[0_20px_34px_rgba(93,62,48,0.075)] dark:opacity-[0.62] dark:brightness-[0.76] dark:saturate-[0.64]"
-          />
-        </motion.div>
-
-        <motion.div
-          initial={reduced ? false : { opacity: 0, x: -14 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, x: [0, -3, 0], y: [0, -2, 0] }}
-          transition={
-            reduced
-              ? { duration: 0 }
-              : {
-                  opacity: { duration: 1.15, ease: "easeOut" },
-                  x: { duration: 23, repeat: Infinity, ease: "easeInOut" },
-                  y: { duration: 19, repeat: Infinity, ease: "easeInOut" },
-                }
-          }
-          className="absolute -left-[15vw] -top-[8%] h-[118%] w-[58vw] max-w-[920px] origin-top-left sm:-left-[11vw] lg:-left-[7vw] lg:w-[46vw]"
-        >
-          <Image
-            src="/assets/landing/ornaments/botanical/canopy1.png"
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 640px) 58vw, 46vw"
-            className="object-contain object-left-top opacity-[0.46] brightness-[0.90] saturate-[0.78] dark:opacity-[0.32] dark:brightness-[0.68] dark:saturate-[0.56]"
-          />
-        </motion.div>
-
-        <motion.div
-          initial={reduced ? false : { opacity: 0, x: 14 }}
-          animate={reduced ? { opacity: 1 } : { opacity: 1, x: [0, 3, 0], y: [0, -2, 0] }}
-          transition={
-            reduced
-              ? { duration: 0 }
-              : {
-                  opacity: { duration: 1.15, ease: "easeOut" },
-                  x: { duration: 25, repeat: Infinity, ease: "easeInOut" },
-                  y: { duration: 21, repeat: Infinity, ease: "easeInOut" },
-                }
-          }
-          className="absolute -right-[15vw] -top-[8%] h-[118%] w-[58vw] max-w-[920px] origin-top-right sm:-right-[11vw] lg:-right-[7vw] lg:w-[46vw]"
-        >
-          <Image
-            src="/assets/landing/ornaments/botanical/canopy33.png"
-            alt=""
-            fill
-            priority
-            sizes="(max-width: 640px) 58vw, 46vw"
-            className="object-contain object-right-top opacity-[0.44] brightness-[0.90] saturate-[0.78] dark:opacity-[0.31] dark:brightness-[0.68] dark:saturate-[0.56]"
           />
         </motion.div>
 

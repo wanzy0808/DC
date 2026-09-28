@@ -448,7 +448,8 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Use only soft background wash for legibility; do not cut obvious holes or add boxed clear zones around header UI.
 
 
-### 2026-09-28 — Wider landing canopy
-- Overhead canopy should span approximately the full visual width of the four-door orbit.
-- Keep `canopy2.png` as the dominant hanging center layer, with `canopy1.png` and `canopy33.png` as lighter side masses so the tree crown feels broad and lush without stretching one bitmap unnaturally.
-- Header readability zones remain soft washes only; do not create hard cutouts or move the navbar.
+### 2026-09-28 — Landing canopy composition
+- Keep only the centered `canopy2.png` overhead layer on the homepage.
+- Do not use `canopy1.png` or `canopy33.png` as side canopy layers; they made the header composition too busy.
+- The single canopy may remain wide enough to relate to the door orbit, while preserving clear logo and control zones.
+

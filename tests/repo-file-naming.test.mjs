@@ -203,3 +203,9 @@ test("landing fireflies follow the Undara theme colors", () => {
   assert.match(doors, /blending=\{isDarkMode \? THREE\.AdditiveBlending : THREE\.NormalBlending\}/);
   assert.match(doors, /<Fireflies reducedMotion=\{Boolean\(reducedMotion\)\} isDarkMode=\{isDarkMode\} \/>/);
 });
+
+
+test("burger services submenu keeps clearance below the Services trigger", () => {
+  const burger = read("components/Layout/Navbar/BurgerMenuContent.tsx");
+  assert.match(burger, /className="space-y-2 overflow-hidden pl-4 pt-2"/);
+});

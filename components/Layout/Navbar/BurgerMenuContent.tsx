@@ -104,7 +104,7 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
       </motion.div>
       <AnimatePresence initial={false}>
         {servicesOpen && (
-          <motion.div initial={reduced ? false : { opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: reduced ? 0.1 : 0.24 }} className="space-y-2 overflow-hidden pl-4">
+          <motion.div initial={reduced ? false : { opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: reduced ? 0.1 : 0.24 }} className="space-y-2 overflow-hidden pl-4 pt-2">
             {services.map(({ href, label, icon: Icon }, index) => (
               <motion.div key={href} {...reveal(index + 6)}>
                 <Link href={href} onClick={onClose} aria-current={pathname === href ? "page" : undefined} className={itemClass}><Icon className="size-4 shrink-0" strokeWidth={1.8} /><span>{label}</span></Link>
