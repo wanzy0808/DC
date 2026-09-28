@@ -5531,3 +5531,10 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - The backlight must remain soft and edge-free. All directional and point lights stay physically behind the doors; never compensate with a front key/fill light. Use neutral ambient plus subtle material emissive only to keep `#703B3B` readable while rear light casts shadows toward the viewer.
 
 - Door body stays Undara brand `#703B3B` in both light and dark modes; rear-only lighting must never make the front face read black. Use low neutral ambient and subtle material emissive for readability, not a front-facing light source.
+
+
+### Landing woodland refinement — 2026-09-28
+- Keep the four production doors unchanged while refining the environment.
+- Cast shadows must preserve the arched door silhouette and extend naturally toward the viewer; no visibly rectangular receiver edges.
+- Remove decorative branch overlays from the homepage composition and story copy. Use a soft tree canopy across the upper woodland area instead.
+- Preserve rear-origin lighting, while keeping the branded door faces readable and adding subtle forest mist/clearing light so the scene feels inhabited rather than underexposed.
