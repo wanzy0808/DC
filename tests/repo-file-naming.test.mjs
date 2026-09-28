@@ -78,12 +78,14 @@ test("Undara light and dark palette stays on the canonical pair", () => {
 });
 
 
-test("Undara production doors use the theme-specific color-only palette", () => {
+test("Undara production doors keep the brand body color under rear-only lighting", () => {
   const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
-  assert.match(doors, /isDarkMode[\s\S]*?frame: "#D6B38C"[\s\S]*?trim: "#703B3B"/);
-  assert.match(doors, /frame: "#703B3B"[\s\S]*?trim: "#EDE3D8"/);
+  assert.match(doors, /frame: "#703B3B"[\s\S]*?panel: "#703B3B"[\s\S]*?panelBottom: "#5E3030"/);
+  assert.match(doors, /trim: isDarkMode \? "#D6B38C" : "#EDE3D8"/);
   assert.match(doors, /<DoorFrame color=\{palette\.frame\} \/>/);
-  assert.match(doors, /color=\{palette\.trim\} roughness=\{0\.58\} metalness=\{0\.12\}/);
+  assert.match(doors, /emissive=\{color\} emissiveIntensity=\{0\.1[34-6]\}/);
+  assert.match(doors, /directionalLight[\s\S]*?position=\{\[0, 5\.8, -7\.2\]\}/);
+  assert.match(doors, /pointLight position=\{\[0, 1\.2, -2\.6\]\}/);
   assert.match(doors, /isDarkMode=\{isDarkMode\}/);
 });
 
