@@ -5618,3 +5618,16 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 ### Landing footer separator removal — 2026-09-28
 - Remove all divider lines between the landing scene and footer. The footer should merge directly into the composition.
+
+
+### 28 September 2026 — Rollout tipografi Undara ke seluruh application routes
+
+**Permintaan owner:** seluruh page aplikasi mengikuti tipografi canonical Undara dari PRD/Agent.
+
+**Implementasi:** root tetap memuat **DM Serif Display** untuk display/heading, **Roboto** untuk body/UI, dan **DM Mono** hanya untuk metadata teknis. Wiring DM Mono dipisah ke token `--font-undara-technical` agar tidak membentuk referensi melingkar dengan token Tailwind `font-mono`. `app/globals.css` menjadi sumber global aplikasi: body memakai `--font-undara-sans`, heading memakai `--font-undara-heading`, dan native form controls mewarisi font konteksnya. Alias compatibility `--font-cinzel`/`--font-fauna` diarahkan ke sistem Undara agar komponen legacy yang belum dimigrasi tidak kembali ke brand font lama.
+
+**Cleanup route:** override Cinzel/Fauna yang masih tersisa pada Admin, personal invitation banner, dan Owner account confirmation diganti ke semantic `font-sans`/`font-heading`. Invitation-template typography tetap terisolasi sebagai artwork/content dan tidak dipaksa menjadi font aplikasi.
+
+**Regression:** ditambahkan `tests/undara-typography.test.mjs` untuk mengunci loader DM Serif Display/Roboto/DM Mono, token global, inheritance control, dan larangan token Cinzel/Fauna pada file `page.tsx`/`layout.tsx`.
+
+**Commit implementasi:** `934a3c6`, `1bc9b43`, `7d9d126`, `b1d22f0`, `9532a57`, `1f2157f`. **Validasi:** source audit selesai; status CI/build dicatat setelah workflow commit dokumentasi ini terobservasi. Tidak ada migrasi database.
