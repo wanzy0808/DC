@@ -28,21 +28,21 @@ export default function StudioSection() {
     <section className="border-y border-border/70 py-10 md:py-12">
       <div className="mx-auto grid w-full items-center gap-5 md:grid-cols-[minmax(0,680px)_auto] md:justify-center md:gap-8">
         <div className="max-w-3xl">
-          <div className="flex items-center gap-2 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.25em] text-primary">
+          <div className="flex items-center gap-2 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.25em] text-primary">
             <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             {copy.eyebrow}
           </div>
-          <h2 className="mt-4 font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary md:text-5xl">
+          <h2 className="mt-4 font-[family-name:var(--font-undara-heading)] text-3xl font-normal leading-tight text-primary md:text-5xl">
             {copy.title}
           </h2>
-          <p className="mt-4 max-w-2xl font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65 md:text-base md:leading-8">
+          <p className="mt-4 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65 md:text-base md:leading-8">
             {copy.description}
           </p>
         </div>
         <Button
           asChild
           size="lg"
-          className="min-w-[9rem] font-[family-name:var(--font-dc-body)] text-base"
+          className="min-w-[9rem] font-[family-name:var(--font-undara-body)] text-base"
         >
           <Link href="/studio">
             {copy.action}
