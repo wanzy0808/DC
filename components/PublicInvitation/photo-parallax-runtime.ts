@@ -9,7 +9,7 @@ export function observePhotoParallax(targets: PhotoParallaxTarget[]) {
   if (!targets.length || typeof window === "undefined") return () => {};
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return () => {};
 
-  const scroller = targets[0]?.node.closest<HTMLElement>(".dc-studio-canvas-scroll") ?? null;
+  const scroller = targets[0]?.node.closest<HTMLElement>(".undara-studio-canvas-scroll") ?? null;
   const initial = new Map(targets.map(({ node }) => [node, node.style.translate]));
   let frame = 0;
 
