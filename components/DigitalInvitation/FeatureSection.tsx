@@ -74,10 +74,10 @@ export default function FeatureSection() {
     >
       <div className="w-full">
         <div className="mb-8 max-w-2xl md:mb-10">
-          <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
+          <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
             {copy[0]}
           </p>
-          <h2 className="mt-3 max-w-xl font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary md:text-4xl">
+          <h2 className="mt-3 max-w-xl font-[family-name:var(--font-undara-heading)] text-3xl font-normal leading-tight text-primary md:text-4xl">
             {copy[1]}
           </h2>
         </div>
@@ -97,13 +97,13 @@ export default function FeatureSection() {
                 strokeWidth={1.6}
                 aria-hidden="true"
               />
-              <h3 className="mt-6 max-w-xs font-[family-name:var(--font-dc-heading)] text-xl font-normal text-primary">
+              <h3 className="mt-6 max-w-xs font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
                 {title}
               </h3>
-              <p className="mt-3 max-w-sm font-[family-name:var(--font-dc-body)] text-sm leading-7 text-foreground/65">
+              <p className="mt-3 max-w-sm font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65">
                 {description}
               </p>
-              <div className="mt-6 flex items-center gap-2 font-[family-name:var(--font-dc-mono)] text-[8px] uppercase tracking-[0.16em] text-foreground/40">
+              <div className="mt-6 flex items-center gap-2 font-[family-name:var(--font-undara-mono)] text-[8px] uppercase tracking-[0.16em] text-foreground/40">
                 <CalendarCheck2
                   className="h-3 w-3 text-primary/75"
                   aria-hidden="true"
