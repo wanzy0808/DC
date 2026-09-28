@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/Theme/ThemeProvider";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
+import { isFramedMarketingPath } from "@/lib/marketing-paths";
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -43,11 +44,11 @@ function YoutubeIcon({ className }: { className?: string }) {
 export default function Footer({ embedded = false }: { embedded?: boolean }) {
   const { isDarkMode } = useTheme();
   const pathname = usePathname();
-  const isLanding = pathname === "/" || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
+  const isLanding = embedded && isFramedMarketingPath(pathname);
   const { messages } = useLanguage();
   const { footer } = messages;
 
-  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/") || pathname === "/partner" || pathname.startsWith("/partner/")) {
+  if ((!embedded && isFramedMarketingPath(pathname)) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/") || pathname === "/partner" || pathname.startsWith("/partner/")) {
     return null;
   }
 
