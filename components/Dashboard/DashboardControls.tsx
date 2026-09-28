@@ -19,7 +19,7 @@ export function DashboardMenuItem({
     <Button
       type="button"
       onClick={onClick}
-      className={`dc-dashboard-account-menu-item h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
+      className={`undara-dashboard-account-menu-item h-10 w-full min-w-0 justify-start rounded-[10px] border border-border/70 bg-background px-3 text-left text-xs shadow-none ${
         danger
           ? "text-red-700 hover:border-red-500/25 hover:bg-red-500/5 dark:text-red-300"
           : "text-foreground hover:border-primary/25 hover:bg-primary/[0.06] hover:text-primary"
