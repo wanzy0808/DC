@@ -44,13 +44,13 @@ export default function HelpPage() {
 
       <div
         data-dc-marketing-frame
-        className="relative z-10 mx-auto my-auto flex h-[90dvh] w-[90vw] min-h-0 flex-col overflow-hidden rounded-[18px] border border-primary/30 bg-background/65 shadow-[0_18px_75px_rgba(75,35,47,0.09)] backdrop-blur-[2px] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]"
+        className="undara-marketing-frame"
       >
         <div className="relative z-50 shrink-0 bg-background/70 backdrop-blur-sm">
           <Navbar embedded />
         </div>
 
-        <main className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth">
+        <main className="undara-marketing-scroll">
           <div className="mx-auto w-[88%] max-w-[1100px] space-y-20 py-12 sm:w-[80vw] md:space-y-24 md:py-16">
             <section className="space-y-5">
               <div className="flex items-center gap-3 text-sm uppercase tracking-[0.24em] text-primary">
