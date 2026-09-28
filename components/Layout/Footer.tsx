@@ -165,11 +165,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
                   key={index}
                   href="#"
                   aria-label={footer.followUs}
-                  className={`rounded-full border p-2.5 transition-all duration-300 hover:scale-110 ${
-                    isDarkMode
-                      ? "border-white/10 bg-white/5 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)]"
-                      : "border-[var(--primary)]/20 bg-[var(--primary)]/10 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)]"
-                  }`}
+                  className="undara-footer-control"
                 >
                   <IconComponent className="h-4 w-4" />
                 </a>
