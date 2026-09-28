@@ -45,7 +45,7 @@ function MiniDoor({ active = false }: { active?: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-primary-foreground/70 bg-primary-foreground shadow-[inset_0_0_0_1px_rgba(255,255,255,0.25),0_5px_12px_rgba(64,25,36,0.22)]"
+      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-primary bg-primary shadow-[0_5px_12px_rgba(64,25,36,0.18)]"
     >
       <span className="absolute inset-[3px] rounded-t-[13px] bg-card" />
       <span
@@ -113,7 +113,7 @@ export default function MarketingDoorNavigator() {
   return (
     <nav
       ref={rootRef}
-      aria-label={isEnglish ? "Explore DC Organizer pages" : "Jelajahi halaman DC Organizer"}
+      aria-label={isEnglish ? "Explore Undara pages" : "Jelajahi halaman Undara"}
       className="fixed bottom-[74px] left-2 z-[80] font-[family-name:var(--font-dc-body)] sm:bottom-auto sm:left-2 sm:top-1/2 sm:-translate-y-1/2 lg:left-3"
     >
       <button
@@ -123,7 +123,7 @@ export default function MarketingDoorNavigator() {
         aria-controls="dc-marketing-door-navigation"
         aria-label={open ? (isEnglish ? "Close page navigation" : "Tutup navigasi halaman") : label}
         onClick={() => setOpen((previous) => !previous)}
-        className="group flex w-[53px] flex-col items-center gap-1 rounded-[16px] border border-primary/55 bg-background px-1.5 py-2 text-primary shadow-none transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+        className="undara-control-surface group flex w-[53px] flex-col items-center gap-1 px-1.5 py-2 text-primary transition-transform duration-300 hover:-translate-y-0.5"
       >
         <MiniDoor active={open} />
         <span className="font-[family-name:var(--font-dc-mono)] text-[8px] uppercase leading-tight tracking-[0.05em]">
