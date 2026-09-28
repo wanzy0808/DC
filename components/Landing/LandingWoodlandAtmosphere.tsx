@@ -47,7 +47,7 @@ export default function LandingWoodlandAtmosphere() {
             fill
             priority
             sizes="(max-width: 640px) 61vw, (max-width: 1024px) 50vw, 44vw"
-            className="object-contain object-left-top opacity-[0.38] brightness-[1.03] saturate-[0.70] contrast-[0.98] drop-shadow-[0_16px_28px_rgba(93,62,48,0.03)] dark:opacity-[0.20] dark:brightness-[0.66] dark:saturate-[0.90] dark:contrast-[1.18] dark:mix-blend-multiply"
+            className="object-contain object-left-top opacity-[0.38] [filter:sepia(0.58)_saturate(0.72)_hue-rotate(-10deg)_brightness(1.02)_contrast(0.96)] drop-shadow-[0_16px_28px_rgba(93,62,48,0.03)] dark:opacity-[0.20] dark:[filter:sepia(0.52)_saturate(0.64)_hue-rotate(-8deg)_brightness(0.69)_contrast(1.12)] dark:mix-blend-multiply"
           />
         </motion.div>
 
@@ -75,7 +75,7 @@ export default function LandingWoodlandAtmosphere() {
             fill
             priority
             sizes="(max-width: 640px) 49vw, (max-width: 1024px) 40vw, 35vw"
-            className="-scale-x-100 object-contain object-right-top opacity-[0.25] brightness-[1.02] saturate-[0.66] contrast-[0.96] dark:opacity-[0.13] dark:brightness-[0.62] dark:saturate-[0.88] dark:contrast-[1.22] dark:mix-blend-multiply"
+            className="-scale-x-100 object-contain object-right-top opacity-[0.25] [filter:sepia(0.58)_saturate(0.70)_hue-rotate(-10deg)_brightness(1.01)_contrast(0.95)] dark:opacity-[0.13] dark:[filter:sepia(0.50)_saturate(0.62)_hue-rotate(-8deg)_brightness(0.66)_contrast(1.14)] dark:mix-blend-multiply"
           />
         </motion.div>
       </div>
