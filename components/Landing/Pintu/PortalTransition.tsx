@@ -38,7 +38,7 @@ export default function PortalTransition() {
   const reset = () => {
     clearTimers();
     pending.current = null;
-    delete document.documentElement.dataset.dcMarketingTransition;
+    delete document.documentElement.dataset.undaraMarketingTransition;
     setPhase("idle");
   };
 
@@ -52,7 +52,7 @@ export default function PortalTransition() {
         pending.current = null;
         return;
       }
-      document.documentElement.dataset.dcMarketingTransition = "1";
+      document.documentElement.dataset.undaraMarketingTransition = "1";
       playRef.current();
       const cover = viaDoor ? DOOR_COVER_MS : COVER_MS;
       setCoverDuration(cover);
@@ -92,24 +92,24 @@ export default function PortalTransition() {
     };
 
     document.addEventListener("click", onMarketingLink, true);
-    window.addEventListener("dc-portal-prime", onDoorPrime);
-    window.addEventListener("dc-portal-start", onDoorStart);
+    window.addEventListener("undara-portal-prime", onDoorPrime);
+    window.addEventListener("undara-portal-start", onDoorStart);
     return () => {
       document.removeEventListener("click", onMarketingLink, true);
-      window.removeEventListener("dc-portal-prime", onDoorPrime);
-      window.removeEventListener("dc-portal-start", onDoorStart);
+      window.removeEventListener("undara-portal-prime", onDoorPrime);
+      window.removeEventListener("undara-portal-start", onDoorStart);
       clearTimers();
-      delete document.documentElement.dataset.dcMarketingTransition;
+      delete document.documentElement.dataset.undaraMarketingTransition;
     };
   }, [router, reducedMotion]);
 
   useEffect(() => {
     if (!pending.current || pending.current.path !== pathname || phase !== "hold") return;
     const timer = window.setTimeout(() => {
-      document.documentElement.dataset.dcMarketingTransition = "reveal";
+      document.documentElement.dataset.undaraMarketingTransition = "reveal";
       setPhase("reveal");
       // Destination sections begin assembling in sync with the opening veil.
-      window.dispatchEvent(new Event("dc-marketing-reveal"));
+      window.dispatchEvent(new Event("undara-marketing-reveal"));
       timers.current.push(window.setTimeout(reset, REVEAL_MS + 80));
     }, 90);
     return () => clearTimeout(timer);
@@ -125,9 +125,9 @@ export default function PortalTransition() {
         // separately scaled rectangular glow, it cannot expose its own edges
         // as box-shaped seams during the door's camera zoom.
         animation: phase === "cover"
-          ? `dc-marketing-veil-in ${coverDuration}ms cubic-bezier(.22,1,.36,1) both`
+          ? `undara-marketing-veil-in ${coverDuration}ms cubic-bezier(.22,1,.36,1) both`
           : phase === "reveal"
-            ? `dc-marketing-veil-out ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1) both`
+            ? `undara-marketing-veil-out ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1) both`
             : undefined,
       }}
     />

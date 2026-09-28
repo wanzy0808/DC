@@ -24,7 +24,7 @@ export default function ThemeToggle() {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="dc-theme-toggle h-11 w-11"
+      className="undara-theme-toggle h-11 w-11"
     >
       {isDarkMode ? (
         <Sun className="h-4 w-4" aria-hidden="true" />

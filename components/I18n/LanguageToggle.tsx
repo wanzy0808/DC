@@ -17,7 +17,7 @@ export default function LanguageToggle() {
   };
 
   return (
-    <div className="dc-language-toggle flex h-11 items-center gap-1 bg-transparent p-0" aria-label={selectorLabel}>
+    <div className="undara-language-toggle flex h-11 items-center gap-1 bg-transparent p-0" aria-label={selectorLabel}>
       {(["id", "en"] as const).map((item) => {
         const selected = locale === item;
 
@@ -29,7 +29,7 @@ export default function LanguageToggle() {
             onClick={() => changeLocale(item)}
             aria-pressed={selected}
             aria-label={item === "id" ? "Bahasa Indonesia" : "English"}
-            className="h-9 min-w-10 px-2.5 font-[family-name:var(--font-dc-mono)] text-[10px] font-medium uppercase tracking-[0.08em]"
+            className="h-9 min-w-10 px-2.5 font-[family-name:var(--font-undara-mono)] text-[10px] font-medium uppercase tracking-[0.08em]"
           >
             {item.toUpperCase()}
           </Button>

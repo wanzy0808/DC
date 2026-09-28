@@ -27,15 +27,15 @@ export default function DigitalInvitationPage() {
   useEffect(() => {
     // When reached through a marketing link or Pintu, assemble behind the
     // opening veil. Direct loads and refreshes assemble immediately.
-    if (document.documentElement.dataset.dcMarketingTransition !== "1") {
+    if (document.documentElement.dataset.undaraMarketingTransition !== "1") {
       const frame = requestAnimationFrame(() => setAssembleReady(true));
       return () => cancelAnimationFrame(frame);
     }
     const onReveal = () => setAssembleReady(true);
-    window.addEventListener("dc-marketing-reveal", onReveal);
+    window.addEventListener("undara-marketing-reveal", onReveal);
     const fallback = window.setTimeout(onReveal, 4300);
     return () => {
-      window.removeEventListener("dc-marketing-reveal", onReveal);
+      window.removeEventListener("undara-marketing-reveal", onReveal);
       window.clearTimeout(fallback);
     };
   }, []);
@@ -77,7 +77,7 @@ export default function DigitalInvitationPage() {
       {/* The same flowers and wind-driven petals as the landing, behind the scrolling main frame. */}
       <PublicMarketingAtmosphere />
       {/* Match the approved landing frame. Only the center panel scrolls; navigation stays visible. */}
-      <div data-dc-marketing-frame className="undara-marketing-frame">
+      <div data-undara-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
           <PuzzleAssemble ready={assembleReady} direction="top" delay={0.02} className="w-full"><Navbar embedded /></PuzzleAssemble>
         </div>
@@ -94,7 +94,7 @@ export default function DigitalInvitationPage() {
             locale={locale}
           >
             <HeroSection ready={assembleReady} />
-            <div className="dc-invitation-other-sections flex flex-col gap-20 md:gap-24">
+            <div className="undara-invitation-other-sections flex flex-col gap-20 md:gap-24">
               <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04}>
                 <FeatureSection />
               </PuzzleAssemble>
