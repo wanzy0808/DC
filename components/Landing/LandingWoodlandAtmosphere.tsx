@@ -46,7 +46,7 @@ export default function LandingWoodlandAtmosphere() {
         initial={reduced ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: reduced ? 0 : 1.1, ease: "easeOut" }}
-        className="absolute -inset-x-[9%] bottom-[9%] h-[78%] sm:-inset-x-[7%] sm:bottom-[8%] sm:h-[80%]"
+        className="absolute inset-x-[5%] bottom-[11%] h-[72%] sm:inset-x-[8%] sm:bottom-[9%] sm:h-[73%]"
       >
         <Image
           src={FOREST}
@@ -54,7 +54,7 @@ export default function LandingWoodlandAtmosphere() {
           fill
           priority
           sizes="100vw"
-          className="object-fill opacity-[0.82] brightness-[0.88] saturate-[0.85] dark:opacity-[0.23] dark:brightness-125 dark:saturate-[0.55]"
+          className="object-contain object-bottom opacity-[0.82] brightness-[0.88] saturate-[0.85] dark:opacity-[0.23] dark:brightness-125 dark:saturate-[0.55]"
         />
       </motion.div>
 

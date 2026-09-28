@@ -1504,7 +1504,7 @@ The current approved homepage is a **woodland composition** with a rounded main 
 
 **Gerak botanical homepage:** empat ranting sudut boleh berayun sangat pelan (maksimal sekitar 0,55° dan 2px) dengan titik putar pada tepi frame. Opacity Light/Dark yang ditentukan oleh kelas tema tetap berlaku; pengguna dengan reduced motion melihat ranting diam.
 
-**Penempatan layer dari review screenshot owner:** ranting harus menyeberangi batas main frame seperti dekorasi lama, tetapi tetap berada di belakang isi frame dan tidak menimpa logo Undara. Siluet hutan mengisi bidang jauh lebih lebar di belakang orbit pintu dan sejajar dengan area pijakan pintu; jangan membuatnya seperti gambar kecil terpisah di tengah.
+**Penempatan layer dari review screenshot owner:** ranting harus menyeberangi batas main frame seperti dekorasi lama, tetapi tetap berada di belakang isi frame dan tidak menimpa logo Undara. Siluet hutan mengisi bidang di belakang orbit pintu dan sejajar dengan area pijakan pintu, dengan jeda dari tepi main frame; gambar menjaga rasio asli agar pepohonan tidak terlihat melar atau menjadi gambar kecil terpisah di tengah.
 
 **Footer homepage:** kontrol musik/volume di kiri, copyright di tengah, dan ikon Instagram di kanan harus menempel pada dasar main frame. Pada viewport sempit copyright boleh turun menjadi baris kedua agar tidak menimpa kontrol. Ruang fleksibel antara navbar dan footer tidak boleh menangkap klik Pintu.
 
@@ -5494,7 +5494,6 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Tambahan owner:** tombol sound ON/OFF yang semula mewarisi pink hardcoded dari `Button` kini memakai `primary` dan `primary-foreground` dari tema melalui style scoped pada kontrol audio. Area tambahan: `MarketingAudio.tsx`; perilaku mute dan level volume tetap.
 
-
 ### 28 September 2026 — Application buttons pindah penuh ke palette Undara
 
 **Temuan:** root theme sudah Undara, tetapi `components/ui/button-variants.ts` masih hardcoded palette DC Organizer lama `#C07A84 / #A65E69 / #D9A3AA`, sehingga CTA tidak mengikuti Light/Dark brand baru. Filter foto dan tombol stage Studio juga masih mengulang hex lama.
@@ -5504,3 +5503,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Dokumentasi:** canonical §15.2/§15.3 dan AGENTS Button Color Standard diperbarui; aturan Rose lama dianggap histori.
 
 **Validasi:** source regression diperbarui untuk mengunci semantic Undara button contract; Build Validation/Orphan Audit harus diperiksa pada commit implementasi.
+
+### 28 September 2026 — Skala siluet hutan mengikuti area Pintu
+
+**Permintaan owner:** background hutan diberi jeda dari main frame dan proporsi gambar tidak tampak stretch; ukurannya mendukung komposisi Pintu.
+
+**Implementasi:** wrapper forest memakai inset kiri/kanan positif dan tinggi lebih terukur; gambar memakai `object-contain object-bottom` sehingga rasio 1672×941 tetap utuh dan dasar siluet berada di belakang area pijakan Pintu. Hanya `LandingWoodlandAtmosphere.tsx` dan rule canonical §15.4.1b yang berubah. Validasi lokal: lint terarah, 12/12 source regression, dan `git diff --check` lulus; QA visual desktop/mobile Light/Dark menunggu review owner. Tidak ada migrasi database.
