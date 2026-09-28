@@ -49,7 +49,7 @@ export function TemplatePanel({
 
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Choose a Theme" : "Pilih Tema"}</h2>
+      <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">{en ? "Choose a Theme" : "Pilih Tema"}</h2>
       {activeName && <p className="mt-2 text-sm font-medium text-foreground">{en ? "Selected" : "Dipilih"}: {activeName}</p>}
       <div className="mt-4 space-y-3">
         <div className="relative">
@@ -57,7 +57,7 @@ export function TemplatePanel({
             type="button"
             aria-label={en ? "Search templates" : "Cari template"}
             onClick={() => searchRef.current?.focus()}
-            className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-[var(--dc-control-radius)] text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
+            className="absolute left-1 top-1/2 z-10 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-[var(--undara-control-radius)] text-primary hover:bg-primary/10 focus-visible:outline-2 focus-visible:outline-primary"
           >
             <Search size={17} aria-hidden="true" />
           </button>
@@ -82,7 +82,7 @@ export function TemplatePanel({
               type="button"
               aria-pressed={photoFilter === key}
               onClick={() => { setPhotoFilter(key); setLimit(18); }}
-              className={`min-h-9 rounded-[var(--dc-control-radius)] border border-primary/70 px-3.5 text-xs font-medium transition-colors ${photoFilter === key ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-background text-foreground hover:bg-primary/10"}`}
+              className={`min-h-9 rounded-[var(--undara-control-radius)] border border-primary/70 px-3.5 text-xs font-medium transition-colors ${photoFilter === key ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-background text-foreground hover:bg-primary/10"}`}
             >{label}</button>
           ))}
         </div>
@@ -93,7 +93,7 @@ export function TemplatePanel({
               aria-label={en ? "Sort templates" : "Urutkan template"}
               value={sort}
               onChange={(event) => { setSort(event.target.value as "selected" | "az" | "za"); setLimit(18); }}
-              className="h-9 w-full appearance-none rounded-[var(--dc-control-radius)] border border-primary/70 bg-background py-1 pl-4 pr-11 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              className="h-9 w-full appearance-none rounded-[var(--undara-control-radius)] border border-primary/70 bg-background py-1 pl-4 pr-11 text-xs text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               <option value="selected">{en ? "Selected first" : "Pilihan aktif"}</option>
               <option value="az">{en ? "Name A–Z" : "Nama A–Z"}</option>
@@ -105,7 +105,7 @@ export function TemplatePanel({
       </div>
       <div className="mt-5 grid grid-cols-2 items-start gap-2">
         {onBlankCanvas && <div
-          className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
+          className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--undara-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
             selected === "blank-canvas"
               ? "border-primary ring-2 ring-primary/20"
               : "border-border hover:border-primary/40"
@@ -117,13 +117,13 @@ export function TemplatePanel({
               className="absolute inset-3 rounded-[12px] border border-dashed border-primary/30 bg-[linear-gradient(to_right,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px),linear-gradient(to_bottom,color-mix(in_srgb,var(--primary)_8%,transparent)_1px,transparent_1px)] bg-[size:20px_20px]"
             />
             {selected === "blank-canvas" && (
-              <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-primary-foreground">
+              <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--undara-control-radius)] bg-primary text-primary-foreground">
                 <Check className="h-4 w-4" />
               </span>
             )}
           </span>
           <span className="flex min-h-14 min-w-0 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2 py-2">
-            <span className="break-words font-[family-name:var(--font-dc-heading)] text-xs font-semibold leading-snug text-foreground">{en ? "Blank Canvas" : "Canvas Kosong"}</span>
+            <span className="break-words font-[family-name:var(--font-undara-heading)] text-xs font-semibold leading-snug text-foreground">{en ? "Blank Canvas" : "Canvas Kosong"}</span>
             <span className="text-[11px] text-primary">{en ? "Start from scratch" : "Mulai dari nol"}</span>
           </span>
           <button
@@ -131,14 +131,14 @@ export function TemplatePanel({
             onClick={onBlankCanvas}
             aria-label={en ? "Start with a blank canvas" : "Mulai dari canvas kosong"}
             aria-pressed={selected === "blank-canvas"}
-            className="absolute inset-0 z-10 rounded-[var(--dc-control-radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+            className="absolute inset-0 z-10 rounded-[var(--undara-control-radius)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           />
         </div>}
 
         {filtered.slice(0, limit).map((item) => (
           <div
             key={item.key}
-            className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--dc-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
+            className={`group relative w-full min-w-0 max-w-[152px] overflow-hidden rounded-[var(--undara-control-radius)] border bg-background text-left shadow-[0_8px_24px_rgba(90,40,55,0.08)] transition-shadow hover:shadow-[0_12px_30px_rgba(90,40,55,0.14)] ${
               selected === item.key
                 ? "border-primary ring-2 ring-primary/20"
                 : "border-border hover:border-primary/40"
@@ -153,13 +153,13 @@ export function TemplatePanel({
                 <img src={item.previewImage} alt="" loading="lazy" className="aspect-[9/19.5] w-full object-contain bg-primary/5" />
               )}
               {selected === item.key && (
-                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--dc-control-radius)] bg-primary text-primary-foreground">
+                <span className="absolute right-3 top-3 grid h-7 w-7 place-items-center rounded-[var(--undara-control-radius)] bg-primary text-primary-foreground">
                   <Check className="h-4 w-4" />
                 </span>
               )}
             </span>
             <span className="flex min-h-14 min-w-0 flex-col justify-center gap-1 border-t border-primary/20 bg-background px-2 py-2">
-              <span className="break-words font-[family-name:var(--font-dc-heading)] text-xs font-semibold leading-snug text-foreground">{item.name}</span>
+              <span className="break-words font-[family-name:var(--font-undara-heading)] text-xs font-semibold leading-snug text-foreground">{item.name}</span>
               <span className="text-[11px] text-primary">{!item.ready ? (en ? "Not Available" : "Belum tersedia") : item.usesPhotos ? (en ? "With Photos" : "Dengan foto") : (en ? "Without Photos" : "Tanpa foto")}</span>
             </span>
             <button
