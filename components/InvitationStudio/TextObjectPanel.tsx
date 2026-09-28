@@ -54,7 +54,7 @@ export default function TextObjectPanel({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="flex items-center gap-2 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
+        <h2 className="flex items-center gap-2 font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">
           <Type size={18} />
           {en ? "Text" : "Teks"}
         </h2>
@@ -92,7 +92,7 @@ export default function TextObjectPanel({
               key={key}
               onClick={() => onFontSelect(key)}
               aria-pressed={selectedFont === key}
-              className="dc-studio-font-choice"
+              className="undara-studio-font-choice"
             >
               <span style={{ fontFamily: invitationFontFamily(item.heading) }}>{item.heading}</span>
               <small style={{ fontFamily: invitationFontFamily(item.body) }}>{item.body}</small>
@@ -125,7 +125,7 @@ export default function TextObjectPanel({
               key={layer.id}
               onClick={() => onSelect(layer.id)}
               aria-pressed={selectedId === layer.id}
-              className="dc-studio-text-list-item"
+              className="undara-studio-text-list-item"
             >
               <Type size={15} className="shrink-0 text-primary" />
               <span className="min-w-0 flex-1">
