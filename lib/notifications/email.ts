@@ -27,15 +27,15 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
 export async function sendInvoiceEmail(input: InvoiceEmailInput) {
   return sendEmail({
     to: input.to,
-    subject: `Invoice ${input.invoiceNumber} — DC Organizer`,
-    html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111;line-height:1.6"><h2>DC Organizer</h2><p>Terima kasih. Pesanan kamu sudah dibuat.</p><p><strong>Invoice:</strong> ${input.invoiceNumber}<br><strong>Paket:</strong> ${input.packageName}<br><strong>Total:</strong> Rp ${input.amount.toLocaleString("id-ID")}</p><p>Silakan buka invoice untuk melihat instruksi transfer dan mengirim bukti pembayaran:</p><p><a href="${input.invoiceUrl}">${input.invoiceUrl}</a></p><p>Paket belum aktif sampai pembayaran diverifikasi secara manual oleh tim DC Organizer.</p></body></html>`,
+    subject: `Invoice ${input.invoiceNumber} — Undara`,
+    html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111;line-height:1.6"><h2>Undara</h2><p>Terima kasih. Pesanan kamu sudah dibuat.</p><p><strong>Invoice:</strong> ${input.invoiceNumber}<br><strong>Paket:</strong> ${input.packageName}<br><strong>Total:</strong> Rp ${input.amount.toLocaleString("id-ID")}</p><p>Silakan buka invoice untuk melihat instruksi transfer dan mengirim bukti pembayaran:</p><p><a href="${input.invoiceUrl}">${input.invoiceUrl}</a></p><p>Paket belum aktif sampai pembayaran diverifikasi secara manual oleh tim Undara.</p></body></html>`,
   });
 }
 
 export async function sendOwnerAccountActionEmail(input: { to: string; actionLabel: string; targetEmail: string; confirmationUrl: string }) {
   return sendEmail({
     to: input.to,
-    subject: `Konfirmasi ${input.actionLabel} — DC Organizer`,
-    html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111;line-height:1.6"><h2>DC Organizer</h2><p>Permintaan <strong>${input.actionLabel}</strong> dibuat untuk akun <strong>${input.targetEmail}</strong>.</p><p>Jika benar kamu yang meminta perubahan ini, konfirmasi melalui tombol berikut:</p><p><a href="${input.confirmationUrl}">Konfirmasi perubahan</a></p><p>Link ini berlaku terbatas dan hanya dapat digunakan sekali.</p></body></html>`,
+    subject: `Konfirmasi ${input.actionLabel} — Undara`,
+    html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#111;line-height:1.6"><h2>Undara</h2><p>Permintaan <strong>${input.actionLabel}</strong> dibuat untuk akun <strong>${input.targetEmail}</strong>.</p><p>Jika benar kamu yang meminta perubahan ini, konfirmasi melalui tombol berikut:</p><p><a href="${input.confirmationUrl}">Konfirmasi perubahan</a></p><p>Link ini berlaku terbatas dan hanya dapat digunakan sekali.</p></body></html>`,
   });
 }

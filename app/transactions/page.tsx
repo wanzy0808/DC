@@ -65,7 +65,7 @@ export default function TransactionsPage() {
       <div className="mx-auto w-[80vw] max-w-full">
         <Link href="/dashboard" className="inline-flex items-center gap-2 text-sm text-primary hover:underline"><ArrowLeft className="h-4 w-4" /> Kembali ke Beranda</Link>
         <div className="mt-8">
-          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">DC Organizer</p>
+          <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-primary">Transaksi</p>
           <h1 className="mt-2 font-[family-name:var(--font-dc-heading)] text-3xl font-medium">Transaksi & Paket</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Lihat invoice, nominal, status verifikasi, dan bukti pembayaran akun ini.</p>
         </div>

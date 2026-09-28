@@ -38,7 +38,7 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
           return (
             <article key={item.key} className={`relative flex h-full w-full max-w-[430px] flex-col border p-6 md:p-7 ${roundedCard ? "rounded-[40px] border-primary/70 md:rounded-[48px]" : "rounded-3xl"} ${featured ? "border-[var(--primary)] bg-[var(--primary)]/[0.07] shadow-[0_20px_60px_rgba(122,28,37,0.12)]" : roundedCard ? "bg-[var(--card)]/75" : "border-[var(--border)] bg-[var(--card)]/75"}`}>
               {featured ? <span className="absolute right-5 top-5 rounded-full bg-[var(--primary)] px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-white">{featuredLabel}</span> : null}
-              <p className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--primary)]">DC Organizer</p>
+              <p className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--primary)]">{locale === "en" ? "Services" : "Layanan"}</p>
               <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-dc-heading)] text-2xl">{item.name[locale]}</h3>
               <p className="mt-4 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
               <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>

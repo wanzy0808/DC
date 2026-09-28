@@ -168,7 +168,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-7 self-start text-[color:var(--inv-scene-text,#f8af99)]`}>{content}</p>
     <div data-studio-native-object="object:cover:media-group" className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
       <div data-studio-native-object="object:cover:photo-frame" className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
-      <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">DC Organizer — Selected events</p>
+      <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">Selected events</p>
     </div>
     <div data-studio-native-object="object:cover:copy-panel" className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
       <Names className="text-3xl">{names}</Names><p data-studio-native-object="object:cover:date" className="mt-3 text-xs tracking-[.2em]">{date}</p>
