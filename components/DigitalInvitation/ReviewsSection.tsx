@@ -24,10 +24,10 @@ export default function ReviewsSection({
   return (
     <section className="space-y-8 md:space-y-10">
       <div className="mx-auto max-w-2xl space-y-3 text-center">
-        <p className="font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
+        <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
           {eyebrow}
         </p>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
+        <h2 className="font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
           {title}
         </h2>
         <p className="text-sm leading-7 text-foreground/65">{description}</p>
@@ -49,14 +49,14 @@ export default function ReviewsSection({
                   />
                 ))}
               </div>
-              <span className="font-[family-name:var(--font-dc-mono)] text-[9px] tracking-[0.16em] text-foreground/40">
+              <span className="font-[family-name:var(--font-undara-mono)] text-[9px] tracking-[0.16em] text-foreground/40">
                 {item.date}
               </span>
             </div>
-            <p className="mt-5 font-[family-name:var(--font-dc-heading)] text-lg italic leading-7 text-foreground/85">
+            <p className="mt-5 font-[family-name:var(--font-undara-heading)] text-lg italic leading-7 text-foreground/85">
               “{item.review}”
             </p>
-            <p className="mt-6 border-t border-border/70 pt-4 font-[family-name:var(--font-dc-mono)] text-[9px] font-medium uppercase tracking-[0.15em] text-primary">
+            <p className="mt-6 border-t border-border/70 pt-4 font-[family-name:var(--font-undara-mono)] text-[9px] font-medium uppercase tracking-[0.15em] text-primary">
               {item.name}
             </p>
           </article>
