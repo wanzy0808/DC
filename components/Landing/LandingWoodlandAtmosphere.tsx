@@ -21,7 +21,7 @@ export default function LandingWoodlandAtmosphere() {
 
         <div
           data-landing-canopy
-          className="absolute inset-x-0 -top-[clamp(78px,7vw,126px)] h-[clamp(300px,35dvh,455px)] overflow-visible"
+          className="absolute inset-x-0 top-[clamp(8px,1.3vw,22px)] h-[clamp(300px,35dvh,455px)] overflow-hidden"
         >
           <motion.div
             initial={reduced ? false : { opacity: 0, y: -10 }}
