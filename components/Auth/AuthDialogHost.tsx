@@ -39,8 +39,8 @@ export default function AuthDialogHost() {
       setRegistrationComplete(false);
       setMode(request.mode);
     }
-    window.addEventListener("dc-auth-open", openFromMenu);
-    return () => window.removeEventListener("dc-auth-open", openFromMenu);
+    window.addEventListener("undara-auth-open", openFromMenu);
+    return () => window.removeEventListener("undara-auth-open", openFromMenu);
   }, []);
 
   useEffect(() => {
