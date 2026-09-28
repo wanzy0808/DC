@@ -34,7 +34,7 @@ type SocialProfile = {
   id: "instagram" | "tiktok" | "facebook";
   label: string;
   href: string | null;
-  Icon: (props: SocialIconProps) => React.ReactNode;
+  Icon: React.ComponentType<SocialIconProps>;
 };
 
 const SOCIAL_PROFILES: readonly SocialProfile[] = [
