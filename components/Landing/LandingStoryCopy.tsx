@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { motion, useReducedMotion } from "motion/react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
@@ -41,15 +40,10 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
         {copy.title}
       </h1>
 
-      <div className="ml-auto mt-2 h-5 w-[150px] sm:h-6 sm:w-[180px]">
-        <Image
-          src="/assets/landing/ornaments/botanical/branch-05.png"
-          alt=""
-          width={1800}
-          height={420}
-          className="h-full w-full object-contain object-right opacity-[0.54] dark:opacity-[0.32]"
-        />
-      </div>
+      <div
+        aria-hidden="true"
+        className="ml-auto mt-3 h-px w-[150px] bg-gradient-to-l from-primary/45 via-primary/18 to-transparent dark:from-[#D6B38C]/38 dark:via-[#D6B38C]/14 sm:w-[180px]"
+      />
 
       <p className="ml-auto mt-1 max-w-[34ch] font-[family-name:var(--font-undara-body)] text-[10px] leading-[1.55] text-foreground/76 sm:text-[11px] lg:text-[12px]">
         {copy.body}
