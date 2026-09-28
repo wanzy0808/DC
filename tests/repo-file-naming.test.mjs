@@ -227,3 +227,10 @@ test("landing story copy keeps the Undara doorway message and larger emphasis", 
   assert.match(story, /branch-05\.png/);
   assert.doesNotMatch(story, /h-px w-\[180px\] bg-gradient-to-l/);
 });
+
+
+test("story divider keeps the wider ornamental width", () => {
+  const story = read("components/Landing/LandingStoryCopy.tsx");
+  assert.match(story, /h-8 w-\[240px\][^"]*sm:w-\[290px\][^"]*lg:w-\[340px\]/);
+  assert.match(story, /branch-05\.png/);
+});

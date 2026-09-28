@@ -5602,3 +5602,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 ### Landing footer — 2026-09-28
 - Copyright must visually belong to the same footer row as the sound control and Instagram action: left / center / right, without a second stacked copyright row.
+
+
+### 28 September 2026 — Ukiran divider story block diperlebar
+
+**Permintaan owner:** ukiran divider pada story block kanan-bawah dibuat lebih lebar tanpa mengubah tinggi, warna, posisi, copy, atau ornament source.
+
+**Implementasi:** width divider `branch-05.png` dinaikkan dari 190/230/260px menjadi **240/290/340px** untuk mobile/tablet/desktop. Tinggi tetap `h-8`, alignment tetap kanan, warna tetap theme-aware, dan story block/Pintu/woodland tidak diubah.
+
+**Validasi:** regression test mengunci width baru dan tetap mewajibkan `branch-05.png`.

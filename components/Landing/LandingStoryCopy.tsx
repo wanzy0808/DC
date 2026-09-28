@@ -42,7 +42,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
 
       <div
         aria-hidden="true"
-        className="ml-auto mt-3 flex h-8 w-[190px] items-center justify-end text-primary/65 sm:w-[230px] lg:w-[260px] dark:text-[#D6B38C]/72"
+        className="ml-auto mt-3 flex h-8 w-[240px] items-center justify-end text-primary/65 sm:w-[290px] lg:w-[340px] dark:text-[#D6B38C]/72"
       >
         <span
           className="block h-full w-full bg-current"
