@@ -37,7 +37,7 @@ export default function HomePage() {
 
         <LandingStoryCopy hidden={doorOpen} />
         <div aria-hidden="true" className="pointer-events-none min-h-0 flex-1" />
-        <MarketingFrameFooter landingLayout />
+        <MarketingFrameFooter />
       </motion.div>
     </div>
   );
