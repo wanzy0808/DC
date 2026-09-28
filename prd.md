@@ -5624,7 +5624,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** seluruh page aplikasi mengikuti tipografi canonical Undara dari PRD/Agent.
 
-**Implementasi:** root tetap memuat **DM Serif Display** untuk display/heading, **Roboto** untuk body/UI, dan **DM Mono** hanya untuk metadata teknis. Wiring DM Mono dipisah ke token `--font-undara-technical` agar tidak membentuk referensi melingkar dengan token Tailwind `font-mono`. `app/globals.css` menjadi sumber global aplikasi: body memakai `--font-undara-sans`, heading memakai `--font-undara-heading`, dan native form controls mewarisi font konteksnya. Alias compatibility `--font-cinzel`/`--font-fauna` diarahkan ke sistem Undara agar komponen legacy yang belum dimigrasi tidak kembali ke brand font lama.
+**Implementasi:** root tetap memuat **DM Serif Display** untuk display/heading, **Roboto** untuk body/UI, dan **DM Mono** hanya untuk metadata teknis. Wiring DM Mono dipisah ke token `--font-undara-technical` agar tidak membentuk referensi melingkar dengan token Tailwind `font-mono`. `app/globals.css` menjadi sumber global aplikasi: body memakai `--font-undara-sans`, heading memakai `--font-undara-heading`, dan native form controls mewarisi font konteksnya. Semua komponen aplikasi memakai token font Undara secara langsung; alias font brand lama tidak dipertahankan.
 
 **Cleanup route:** override DM Serif Display/Roboto yang masih tersisa pada Admin, personal invitation banner, dan Owner account confirmation diganti ke semantic `font-sans`/`font-heading`. Invitation-template typography tetap terisolasi sebagai artwork/content dan tidak dipaksa menjadi font aplikasi.
 
