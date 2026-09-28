@@ -424,6 +424,6 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 
 ### 2026-09-28 — Door crest & woodland backlight
 - Landing doors keep their existing geometry, orbit, position, camera, open/close motion, portal transition, and interactions unless explicitly requested otherwise.
-- Replace the generic top diamond crest with a service-specific crest glyph: Event Planner = calendar/spark, Undangan Digital = digital envelope/signal, Guestbook = open book, Undangan Fisik = sealed envelope.
-- Door light must read as warm woodland light coming from behind/inside the doorway. Keep a subtle halo while closed, strengthen it when opened/entered, and avoid pink rectangular overlays or a bottom-origin light source.
+- Replace the generic top diamond crest with a service-specific crest glyph: Event Planner = clipboard/checklist, Undangan Digital = smartphone with a secondary invitation cue on-screen, Guestbook = open book, Undangan Fisik = sealed envelope.
+- Door light must read as warm woodland light coming only from behind/inside the doorway. Front key/fill lighting and luminous floor strips are not allowed; keep only minimal ambient readability. The forest/portal background is the apparent source, and dynamic shadows should project forward toward the viewer. Keep a subtle rear halo while closed and strengthen it when opened/entered.
 - Backlight follows the Undara palette: warm cream/champagne around `#D6B38C` / `#EDE3D8`; door theme colors remain Light `#703B3B` body with `#EDE3D8` trim and Dark `#D6B38C` body with `#703B3B` trim.
