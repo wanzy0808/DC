@@ -44,7 +44,7 @@ export default async function UsherPage({
   }
 
   return (
-    <div className="dc-dashboard min-h-dvh bg-background text-foreground">
+    <div className="undara-dashboard min-h-dvh bg-background text-foreground">
       <main>
         <DashboardPage>
           <Link
