@@ -36,7 +36,7 @@ export default function LandingStoryCopy({ hidden = false }: { hidden?: boolean 
     >
       <div
         aria-hidden="true"
-        className="absolute -inset-x-8 -inset-y-7 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(237,227,216,0.90),rgba(237,227,216,0.55)_52%,transparent_76%)] blur-[3px] dark:bg-[radial-gradient(ellipse_at_center,rgba(112,59,59,0.80),rgba(112,59,59,0.46)_55%,transparent_78%)]"
+        className="absolute -inset-x-8 -inset-y-7 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(237,227,216,0.90),rgba(237,227,216,0.55)_52%,transparent_76%)] blur-[3px] dark:bg-[radial-gradient(ellipse_at_center,rgba(24,10,10,0.34),rgba(24,10,10,0.14)_55%,transparent_78%)]"
       />
 
       <p className="font-[family-name:var(--font-undara-body)] text-[10px] font-medium uppercase tracking-[0.17em] text-primary/72 sm:text-[11px] lg:text-[12px] dark:text-[#D6B38C]/78">
