@@ -13,7 +13,7 @@ export default function LandingWoodlandAtmosphere() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
+      className="pointer-events-none absolute inset-x-0 bottom-11 top-[72px] z-0 overflow-hidden sm:bottom-12 sm:top-[88px] lg:top-[96px]"
     >
       {/* Light mode keeps the airy woodland composition. */}
       <div className="absolute inset-0 opacity-100 transition-opacity duration-700 dark:opacity-0">
