@@ -39,7 +39,7 @@ export default function LandingWoodlandAtmosphere() {
                   rotate: { duration: 27, repeat: Infinity, ease: "easeInOut" },
                 }
           }
-          className="absolute -left-[7vw] top-0 h-full w-[61vw] origin-top-left sm:-left-[5vw] sm:w-[50vw] lg:-left-[3vw] lg:w-[44vw]"
+          className="absolute left-[2vw] top-0 h-full w-[56vw] origin-top-left sm:left-[7vw] sm:w-[45vw] lg:left-[13vw] lg:w-[36vw]"
         >
           <Image
             src={CANOPY}
