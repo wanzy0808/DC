@@ -57,7 +57,7 @@ test("package metadata uses the product name rather than a starter-app placehold
 
 
 test("Undara navbar brand uses the shared image logo asset", () => {
-  assert.equal(existsSync(path("public/brand/undara/logo.png")), true);
+  assert.equal(existsSync(path("public/assets/brand/undara/logo.png")), true);
   assert.equal(existsSync(path("app/logo.png")), false);
   const brand = read("components/Brand/BrandWordmark.tsx");
   const globalStyles = read("app/globals.css");
@@ -66,7 +66,7 @@ test("Undara navbar brand uses the shared image logo asset", () => {
   assert.match(brand, /Melangkah Bersama, Menuju Hari Penuh Makna/);
   assert.match(brand, /public: "w-\[112px\] sm:w-\[140px\] lg:w-\[148px\]"/);
   assert.match(brand, /text-\[7px\] sm:text-\[9px\] lg:text-\[10px\]/);
-  assert.match(globalStyles, /mask-image:\s*url\("\/brand\/undara\/logo\.png"\)/);
+  assert.match(globalStyles, /mask-image:\s*url\("\/assets\/brand\/undara\/logo\.png"\)/);
 });
 
 
@@ -85,4 +85,36 @@ test("Undara production doors use the theme-specific color-only palette", () => 
   assert.match(doors, /<DoorFrame color=\{palette\.frame\} \/>/);
   assert.match(doors, /color=\{palette\.trim\} roughness=\{0\.58\} metalness=\{0\.12\}/);
   assert.match(doors, /isDarkMode=\{isDarkMode\}/);
+});
+
+
+test("Undara shared assets stay centralized", () => {
+  const expected = [
+    "public/assets/brand/undara/logo.png",
+    "public/assets/landing/doors/digital-invitation.png",
+    "public/assets/landing/doors/physical-invitation.png",
+    "public/assets/landing/doors/guestbook.png",
+    "public/assets/landing/doors/event-planner.png",
+    "public/assets/landing/ornaments/botanical/branch-01.png",
+    "public/assets/landing/ornaments/botanical/branch-06.png",
+    "public/assets/demo/invitation/couple.jpg",
+    "public/assets/payments/banks/bca.webp",
+    "public/assets/audio/a-himitsu-fragile.mp3",
+    "app/icon.png",
+  ];
+  for (const file of expected) assert.equal(existsSync(path(file)), true, file);
+
+  const retired = [
+    "public/Idigi.png",
+    "public/Ufisik.png",
+    "public/eventplanner.png",
+    "public/guestbook.png",
+    "public/flower.png",
+    "public/couple.jpg",
+    "public/bca.webp",
+    "public/A Himitsu - Fragile.mp3",
+    "app/Undara Door icon.png",
+    "assets/templates/landing page/branch1.png",
+  ];
+  for (const file of retired) assert.equal(existsSync(path(file)), false, file);
 });

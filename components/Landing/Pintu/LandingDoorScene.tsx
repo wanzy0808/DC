@@ -83,7 +83,7 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
       },
       undefined,
       (error) => {
-        if (!cancelled) console.warn(`[DC Organizer] Portal image unavailable: ${image}. Confirm that the file exists in local public/ and responds with HTTP 200.`, error);
+        if (!cancelled) console.warn(`[Undara] Portal image unavailable: ${image}. Confirm that the file exists in local public/ and responds with HTTP 200.`, error);
       },
     );
     return () => {
@@ -342,10 +342,10 @@ function Door({ opening, image, title, entering, isDarkMode }: { opening: boolea
 }
 
 const PORTALS = [
-  { title: "Event Planner", image: "/eventplanner.png", href: "/event-planner" },
-  { title: "Undangan Digital", image: "/Idigi.png", href: "/d-invitation" },
-  { title: "Guestbook", image: "/guestbook.png", href: "/guestbook" },
-  { title: "Undangan Fisik", image: "/Ufisik.png", href: "/undangan-fisik" },
+  { title: "Event Planner", image: "/assets/landing/doors/event-planner.png", href: "/event-planner" },
+  { title: "Undangan Digital", image: "/assets/landing/doors/digital-invitation.png", href: "/d-invitation" },
+  { title: "Guestbook", image: "/assets/landing/doors/guestbook.png", href: "/guestbook" },
+  { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.png", href: "/undangan-fisik" },
 ];
 
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {

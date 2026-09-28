@@ -43,7 +43,7 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
   }, [isMarketing]);
 
   useEffect(() => {
-    const player = new Audio("/A%20Himitsu%20-%20Fragile.mp3");
+    const player = new Audio("/assets/audio/a-himitsu-fragile.mp3");
     player.loop = true;
     player.preload = "auto";
     player.volume = volumeRef.current / 100;

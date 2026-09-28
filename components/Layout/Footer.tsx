@@ -104,7 +104,7 @@ export default function Footer({ embedded = false }: { embedded?: boolean }) {
                 }`}
               >
                 <Image
-                  src="/bca.webp"
+                  src="/assets/payments/banks/bca.webp"
                   alt="Bank BCA"
                   width={75}
                   height={25}

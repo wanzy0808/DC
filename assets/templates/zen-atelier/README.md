@@ -52,7 +52,7 @@ Source: owner-uploaded `Pasted markdown(3).md`, plus universal `template.md`. Th
 | `japanroom2.png` | 1122 × 1402 | No | Available interior; legacy unused empty-state asset |
 | `redsun1.png` | 1254 × 1254 | Yes | Available red sun; omitted from revised cover |
 
-The local MP3 `audiolibraryinfinite-jikan-wa-mikata-da-314226.mp3` is the Zen default, with owner audio still taking precedence. The repository also has shared `/couple.jpg`, `/couple2.jpg`, `/couple3.jpg`, `/man.jpg` and `/female.jpg` demo photographs; catalogue fixtures use those already-provided local images, not random external sources. They are not verified as the moodboard's Aruna/Kaito photos. No separate paper texture or wax-seal export exists in this directory. The envelope photograph contains both paper and seal; CSS adds subtle grain without generating substitute ornaments. Next/Image serves sized derivatives of the principal decorative files without modifying PNG sources.
+The Zen default music now uses the shared canonical `public/assets/audio/jikan-wa-mikata-da.mp3`, with owner audio still taking precedence. The old duplicate MP3 inside `public/templates/Zen Atelier/` was removed during shared-asset cleanup. The repository also has shared demo photographs under `/assets/demo/invitation/`; catalogue fixtures use those already-provided local images, not random external sources. They are not verified as the moodboard's Aruna/Kaito photos. No separate paper texture or wax-seal export exists in this directory. The envelope photograph contains both paper and seal; CSS adds subtle grain without generating substitute ornaments. Next/Image serves sized derivatives of the principal decorative files without modifying PNG sources.
 
 ### Composition and integration
 

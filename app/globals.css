@@ -178,8 +178,8 @@
 .undara-brand-logo {
   aspect-ratio: 3498 / 1471;
   background-color: currentColor;
-  -webkit-mask-image: url("/brand/undara/logo.png");
-  mask-image: url("/brand/undara/logo.png");
+  -webkit-mask-image: url("/assets/brand/undara/logo.png");
+  mask-image: url("/assets/brand/undara/logo.png");
   -webkit-mask-position: left center;
   mask-position: left center;
   -webkit-mask-repeat: no-repeat;

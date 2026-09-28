@@ -24,7 +24,7 @@ export const blankCanvasTemplate: InvitationTemplate = {
   preset: { layout: "editorial", palette: "pearl", font: "cinzelFauna" },
   name: "Canvas Kosong",
   description: "Canvas kosong untuk membangun desain dari nol di Studio.",
-  previewImage: "/flower.png",
+  previewImage: "/assets/landing/ornaments/legacy/flower.png",
   assetPath: "",
 };
 
@@ -38,7 +38,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "blush", font: "cinzelFauna" },
     name: "Romantic Rose",
     description: "Amplop digital, galeri foto pasangan, dan 13 bagian undangan dalam nuansa rose.",
-    previewImage: "/couple.jpg",
+    previewImage: "/assets/demo/invitation/couple.jpg",
     assetPath: "/templates/romantic-rose",
   },
   {
@@ -52,7 +52,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description:
       "Ivory botanical bergaya editorial dengan susunan RSVP, Wishes, dan Gift seperti undangan mobile klasik.",
     previewImage:
-      "/couple2.jpg",
+      "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/botanical-ivory",
   },
   {
@@ -65,7 +65,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Eternal Blossom",
     description: "Floral editorial yang lembut untuk perayaan personal dan intimate.",
     previewImage:
-      "/couple3.jpg",
+      "/assets/demo/invitation/couple-03.jpg",
     assetPath: "/templates/eternal-blossom",
   },
   {
@@ -78,7 +78,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Modern Maroon",
     description: "Editorial modern dengan aksen berani untuk berbagai jenis acara.",
     previewImage:
-      "/couple2.jpg",
+      "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/modern-maroon",
   },
   {
@@ -91,7 +91,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Garden Light",
     description: "Botanical terang untuk acara outdoor, garden, dan daytime celebration.",
     previewImage:
-      "/couple3.jpg",
+      "/assets/demo/invitation/couple-03.jpg",
     assetPath: "/templates/garden-light",
   },
   {
@@ -104,7 +104,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Midnight Romance",
     description: "Dramatis, intimate, dan elegan untuk acara malam hari.",
     previewImage:
-      "/couple.jpg",
+      "/assets/demo/invitation/couple.jpg",
     assetPath: "/templates/midnight-romance",
   },
   {
@@ -117,7 +117,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Classic Pearl",
     description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
     previewImage:
-      "/couple2.jpg",
+      "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/classic-pearl",
   },
   {
@@ -129,7 +129,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "classic", palette: "champagne", font: "cinzelFauna" },
     name: "Golden Art Deco",
     description: "Komposisi geometris emas dan garis simetris, sepenuhnya tanpa foto.",
-    previewImage: "/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.png",
     assetPath: "/templates/golden-art-deco",
   },
   {
@@ -141,7 +141,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "garden", palette: "sage", font: "cinzelFauna" },
     name: "Paper Cut Botanical",
     description: "Kolase daun dan lapisan kertas berwarna sage, tanpa foto.",
-    previewImage: "/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.png",
     assetPath: "/templates/paper-cut-botanical",
   },
   {
@@ -177,7 +177,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
     name: "Celestial Ink",
     description: "Langit malam, orbit dan bintang berilustrasi tanpa foto.",
-    previewImage: "/flower.png",
+    previewImage: "/assets/landing/ornaments/legacy/flower.png",
     assetPath: "/templates/celestial-ink",
   },
 ];

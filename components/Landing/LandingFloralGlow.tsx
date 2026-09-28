@@ -27,7 +27,7 @@ export default function LandingFloralGlow() {
       >
         <div className="relative h-full w-full">
           <Image
-            src="/flower.png"
+            src="/assets/landing/ornaments/legacy/flower.png"
             alt=""
             width={800}
             height={1200}
@@ -57,7 +57,7 @@ export default function LandingFloralGlow() {
       >
         <div className="relative h-full w-full -scale-x-100">
           <Image
-            src="/flower.png"
+            src="/assets/landing/ornaments/legacy/flower.png"
             alt=""
             width={800}
             height={1200}

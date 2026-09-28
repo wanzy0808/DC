@@ -124,10 +124,29 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 - Animation Engine: Motion via `motion/react`.
 - Image processing: Sharp.
 
+## Static Assets
+
+Shared runtime assets are centralized under `public/assets/`:
+
+```text
+public/assets/
+  brand/undara/
+  landing/doors/
+  landing/ornaments/botanical/
+  landing/ornaments/legacy/
+  landing/reference/doors/
+  marketing/
+  demo/invitation/
+  payments/banks/
+  audio/
+```
+
+Template-owned artwork remains under `public/templates/<template>/`. Next.js app metadata icons remain in `app/icon.png` and `app/favicon.ico`. New shared files use lowercase kebab-case with no spaces; avoid adding loose files at `public/` root.
+
 ## Design System
 
 - Brand: **Undara**.
-- Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/brand/undara/logo.png` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
+- Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/assets/brand/undara/logo.png` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
 - Canonical public tagline: **“Melangkah Bersama, Menuju Hari Penuh Makna”**. Public navbar may show it; **dashboard headers use the Undara logo only and do not show the tagline**.
 - Logo / primary brand: Undara Brown `#703B3B`.
 - Theme pair: **Light canvas `#EDE3D8` / Dark canvas `#703B3B`**.

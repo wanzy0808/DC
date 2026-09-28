@@ -11,6 +11,8 @@
 
 ## Rebrand Undara — migrasi bertahap (28 September 2026)
 
+- [x] Konsolidasikan shared static asset ke `public/assets/`; pertahankan `public/templates/<template>/` untuk asset template-owned dan `app/icon.png` untuk metadata icon Next.js.
+
 - [x] Tetapkan nama customer-facing **Undara** (Undangan + Acara) di aturan canonical.
 - [x] Tetapkan font **DM Serif Display + Roboto**.
 - [x] Finalisasi pasangan mode: **Light `#EDE3D8` / Dark `#703B3B`**; Brown menjadi accent Light dan Champagne `#D6B38C` menjadi accent Dark.

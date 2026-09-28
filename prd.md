@@ -44,7 +44,7 @@ Customer-facing brand wajib **Undara**. **DC Organizer** adalah nama brand lama 
 - Warna semantic status (error/success/warning/info) tetap mengikuti fungsi, bukan dipaksa menjadi coklat.
 - **Palet template undangan tidak ikut direbrand otomatis.** Template adalah artwork/content dan boleh mempertahankan warna uniknya.
 - Migrasi dilakukan bertahap. Identifier internal legacy seperti class/token `dc-*`, cookie lama, route ID, nama database, atau nama file tidak boleh di-rename massal hanya demi kosmetik jika berisiko memutus kompatibilitas. Alias compatibility boleh dipertahankan sampai migrasi teruji.
-- `components/Brand/BrandWordmark.tsx` adalah sumber tunggal brand lockup customer-facing dan memakai asset final `public/brand/undara/logo.png`. Logo tidak direka ulang sebagai teks biasa; asset monokrom diwarnai melalui semantic `currentColor` agar Light/Dark tetap kontras.
+- `components/Brand/BrandWordmark.tsx` adalah sumber tunggal brand lockup customer-facing dan memakai asset final `public/assets/brand/undara/logo.png`. Logo tidak direka ulang sebagai teks biasa; asset monokrom diwarnai melalui semantic `currentColor` agar Light/Dark tetap kontras.
 - Nama badan hukum, rekening, kontrak, domain, email, dan social handle **tidak otomatis berubah hanya karena rebrand visual**; ubah hanya setelah data operasional/legal baru dikonfirmasi.
 - Ketentuan ini **menggantikan** instruksi visual aktif sebelumnya yang masih menyebut Cinzel/Fauna One, Rose/pink sebagai brand utama, atau black/near-black sebagai base Dark Mode. Riwayat lama di Appendix A tetap disimpan sebagai histori.
 
@@ -5323,7 +5323,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** Uji semua navbar/header yang memakai identitas brand dengan **image logo Undara**, bukan wordmark teks.
 
-**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik tetap terpisah dari artwork logo dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
+**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/assets/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik tetap terpisah dari artwork logo dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
 
 **Asset:** sumber PNG owner berukuran 3498×1471 (rasio horizontal), dipindahkan tanpa mengubah byte artwork. `app/Undara Door icon.png` tidak disentuh pada tahap navbar ini.
 
@@ -5379,3 +5379,18 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi Pintu:** `LandingDoorScene.tsx` menerima palette berdasarkan `isDarkMode`. Frame dan panel mengikuti body color per mode; lis panel, dua garis vertikal dan diamond ornament mengikuti trim color per mode. Gradient panel tetap dipertahankan dengan bottom shade dari keluarga warna yang sama. Tidak ada perubahan geometry, roughness/metalness, ukuran, orbit, scale, hover, opening pivot, kamera, portal, glow, fireflies, ground shadow, lighting, tombol atau route.
 
 **Validasi:** regression test memverifikasi ukuran brand dan pasangan warna Pintu. GitHub Actions harus lulus sebelum tahap ini dinyatakan selesai.
+
+
+### 28 September 2026 — Konsolidasi static asset Undara
+
+**Permintaan owner:** asset repository yang tersebar dirapikan dan disatukan secara maintainable.
+
+**Keputusan struktur:** shared/runtime asset dipusatkan di `public/assets/` berdasarkan fungsi: `brand`, `landing`, `marketing`, `demo`, `payments`, dan `audio`. Asset yang benar-benar milik satu template tetap di `public/templates/<template>/` agar ownership template tetap jelas. File metadata Next.js tetap di `app/`: icon Undara dinormalisasi menjadi `app/icon.png`, sedangkan `app/favicon.ico` dipertahankan.
+
+**Migrasi:** empat portal image Pintu pindah ke `public/assets/landing/doors/`; branch ornament baru 1–6 pindah ke `public/assets/landing/ornaments/botanical/`; asset flower lama yang masih dipakai dipindah ke `landing/ornaments/legacy/`; referensi pintu lama 1–4 dipindah ke `landing/reference/doors/`; hero marketing lama dikelompokkan per layanan; demo invitation photos pindah ke `demo/invitation/`; BCA pindah ke `payments/banks/`; semua audio shared pindah ke `audio/` dengan nama kebab-case. Duplikat `tiara.png` yang identik dengan `cloud.png` tidak dipertahankan sebagai file kedua. MP3 Zen yang sebelumnya dobel sekarang memakai satu canonical shared copy.
+
+**Kode:** runtime reference aktif pada landing door, floral legacy, marketing audio, template music registry, template demo/catalog, footer payment dan brand logo diperbarui ke path baru. Asset artwork template lain tidak diubah.
+
+**Guardrail:** jangan menaruh file shared baru langsung di root `public/`; gunakan `public/assets/<domain>/`. Jangan mass-move `public/templates/` karena itu merupakan asset ownership per-template.
+
+**Validasi:** regression test repository memverifikasi path canonical dan legacy root paths penting tidak muncul kembali. Build Validation dan Orphan Audit wajib diperiksa setelah commit.

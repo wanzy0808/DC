@@ -38,7 +38,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 ## 2. Product Identity & Preservation
 
 - Official product brand: **Undara**. **DC Organizer is the legacy brand name** and must not be introduced on new customer-facing surfaces except where historical/legal migration context explicitly requires it.
-- **Protected brand wordmark contract:** customer-facing `Undara` brand lockups MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The component uses the canonical image asset `public/brand/undara/logo.png`; do not recreate the logo as typed text. The image silhouette is theme-colored through semantic `currentColor`: Undara Brown `#703B3B` in Light Mode and the active Champagne brand accent in Dark Mode. **DM Serif Display** remains the canonical display/heading typeface outside the logo; application/body typography is **Roboto**.
+- **Protected brand wordmark contract:** customer-facing `Undara` brand lockups MUST render through `components/Brand/BrandWordmark.tsx` (or preserve its exact output when technically impossible to import it). The component uses the canonical image asset `public/assets/brand/undara/logo.png`; do not recreate the logo as typed text. The image silhouette is theme-colored through semantic `currentColor`: Undara Brown `#703B3B` in Light Mode and the active Champagne brand accent in Dark Mode. **DM Serif Display** remains the canonical display/heading typeface outside the logo; application/body typography is **Roboto**.
 - Public navbar may show the existing brand tagline through `BrandWordmark showTagline`. **Dashboard/app workspace headers MUST NOT show the marketing tagline; dashboard brand anchor is wordmark-only.**
 - **Rebrand compatibility rule (28 September 2026):** existing `dc-*` CSS classes, variables, route IDs, cookies, database identifiers, and filenames may remain temporarily as compatibility internals. Do not mass-rename them merely for cosmetics. New shared tokens use `undara-*`; migrate legacy identifiers only when the affected behavior is tested.
 - **Palette migration rule:** the owner finalized the mode pair as **Light canvas = Warm Ivory `#EDE3D8`** and **Dark canvas = Undara Brown `#703B3B`**. Brown is the primary contrasting accent on Light; Champagne `#D6B38C` is the primary contrasting accent on Dark. Older active wording that says white/near-black/Rose or Light `#D6B38C` is superseded for application chrome.
@@ -69,7 +69,7 @@ Validation must distinguish source inspection, actual build/CI results, database
 ## 3. Typography
 
 Use only these application UI fonts:
-- **DM Serif Display** — Undara display, headings, titles, branding, editorial elements outside the image logo. The image wordmark itself comes from `public/brand/undara/logo.png`. Legacy `--font-dc-heading` remains a temporary alias only.
+- **DM Serif Display** — Undara display, headings, titles, branding, editorial elements outside the image logo. The image wordmark itself comes from `public/assets/brand/undara/logo.png`. Legacy `--font-dc-heading` remains a temporary alias only.
 - **Roboto** — Undara body/UI copy, navigation, forms, buttons, and descriptions.
 - **DM Mono** — metadata, codes, timestamps, status values, technical labels, small utility text.
 
@@ -205,6 +205,15 @@ Use Lucide icons consistently and keep interactive targets at least `44x44px`. U
 
 ## 8. Repository Structure & Naming
 
+### Public asset layout — Undara
+- Shared/static runtime assets live under `public/assets/`, grouped by role: `brand/`, `landing/`, `marketing/`, `demo/`, `payments/`, and `audio/`.
+- Template-owned artwork stays under `public/templates/<template>/`; do not move template-specific files into shared landing/marketing folders.
+- Next.js metadata icons remain in `app/` using framework conventions (`app/icon.png`, `app/favicon.ico`).
+- New filenames use lowercase kebab-case and no spaces. Do not add new loose image/audio files directly under `public/`.
+- Landing botanical ornaments live in `public/assets/landing/ornaments/botanical/`. Legacy visuals retained only for compatibility live in `public/assets/landing/ornaments/legacy/`.
+- Shared audio has one canonical copy in `public/assets/audio/`; do not duplicate the same MP3 inside template folders.
+
+
 - Organize reusable business UI by feature with descriptive PascalCase folders under `components/`, for example `DigitalInvitation`, `EventPlanner`, `Guestbook`, `Dashboard`, `Payments`, and `Landing/Pintu`.
 - Shared provider modules must be explicit: keep state/provider logic in `ThemeProvider.tsx` / `LanguageProvider.tsx` and UI controls such as `ThemeToggle.tsx` / `LanguageToggle.tsx` separate. Do not recombine provider, hook, and control UI into one context file.
 - Reserve `components/Layout`, `components/Brand`, `components/Theme`, `components/I18n`, `components/Marketing`, and `components/ui` for shared/global concerns. Do not place feature-specific purchase, editor, or service components in `Layout`.
@@ -321,7 +330,7 @@ On `/`, `components/Landing/CloudCopy.tsx` owns the two existing outlined clouds
 
 ## Shared brand wordmark across pages (23 September 2026)
 
-Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, backed by the canonical image `public/brand/undara/logo.png`. All customer-facing visual brand lockups use this component instead of typed `Undara` text or legacy `DC Organizer` artwork. Public navbar may show the canonical tagline `Melangkah Bersama, Menuju Hari Penuh Makna`; dashboard/workspace variants remain logo-only. Responsive logo sizing is centralized in this component. The monochrome PNG is used as a mask so Light Mode renders Undara Brown and Dark Mode renders the semantic Champagne accent without maintaining duplicate logo files. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop/mobile fit.
+Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, backed by the canonical image `public/assets/brand/undara/logo.png`. All customer-facing visual brand lockups use this component instead of typed `Undara` text or legacy `DC Organizer` artwork. Public navbar may show the canonical tagline `Melangkah Bersama, Menuju Hari Penuh Makna`; dashboard/workspace variants remain logo-only. Responsive logo sizing is centralized in this component. The monochrome PNG is used as a mask so Light Mode renders Undara Brown and Dark Mode renders the semantic Champagne accent without maintaining duplicate logo files. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop/mobile fit.
 
 
 ## Landing orbital scale and hover (23 September 2026)
