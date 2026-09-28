@@ -5321,7 +5321,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Permintaan owner:** Uji semua navbar/header yang memakai identitas brand dengan **image logo Undara**, bukan wordmark teks.
 
-**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik `Undangan & Acara` tetap terpisah dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
+**Implementasi:** file owner `app/logo.png` dipindahkan ke `public/brand/undara/logo.png` sebagai canonical public brand asset. `components/Brand/BrandWordmark.tsx` tetap menjadi satu pintu penggunaan logo untuk public Navbar, Dashboard/mobile header, Usher, Footer, dan surface lain yang sudah mengonsumsi komponen bersama. Logo PNG monokrom digunakan sebagai CSS mask sehingga bentuk gambar tetap persis, Light Mode berwarna Undara Brown melalui `currentColor`, dan Dark Mode mengikuti Champagne semantic accent sehingga tidak hilang di background coklat. Tagline publik tetap terpisah dari artwork logo dan dashboard tetap logo-only. Ukuran dibuat terpusat per varian public/dashboard/mobile; layout navbar lain tidak diubah.
 
 **Asset:** sumber PNG owner berukuran 3498×1471 (rasio horizontal), dipindahkan tanpa mengubah byte artwork. `app/Undara Door icon.png` tidak disentuh pada tahap navbar ini.
 
@@ -5337,3 +5337,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Perbaikan:** regression test diubah untuk justru mewajibkan label `sr-only` tersebut sambil tetap memverifikasi `undara-brand-logo`, canonical asset path, dan tidak adanya `app/logo.png` lama. Tidak ada perubahan visual pada navbar/header.
 
 **Validasi:** follow-up commit `30270888` menjalankan Source regression tests dan Build pada GitHub Actions run `36372691176`; keduanya selesai **success**. Orphan Audit pada commit implementasi awal `085dc692` juga selesai **success**. Browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.
+
+
+### 28 September 2026 — Tagline resmi Undara
+
+**Permintaan owner:** tagline Undara ditetapkan menjadi **“Melangkah Bersama, Menuju Hari Penuh Makna”**.
+
+**Implementasi:** `components/Brand/BrandWordmark.tsx` menggunakan tagline resmi tersebut pada public navbar saat `showTagline` aktif. Karena copy lebih panjang daripada tagline sebelumnya, ukuran/letter-spacing tagline dipadatkan secara responsif agar tetap muat bersama kontrol navbar tanpa mengubah ukuran artwork logo. Dashboard/workspace tetap logo-only tanpa tagline. `AGENTS.md` dan `README.md` diperbarui agar tagline lama tidak diperkenalkan kembali.
+
+**Validasi:** regression test brand memverifikasi copy canonical. GitHub Actions harus diperiksa setelah commit.

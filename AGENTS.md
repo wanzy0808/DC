@@ -319,7 +319,7 @@ On `/`, `components/Landing/CloudCopy.tsx` owns the two existing outlined clouds
 
 ## Shared brand wordmark across pages (23 September 2026)
 
-Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, backed by the canonical image `public/brand/undara/logo.png`. All customer-facing visual brand lockups use this component instead of typed `Undara` text or legacy `DC Organizer` artwork. Public navbar may show the `Undangan & Acara` tagline; dashboard/workspace variants remain logo-only. Responsive logo sizing is centralized in this component. The monochrome PNG is used as a mask so Light Mode renders Undara Brown and Dark Mode renders the semantic Champagne accent without maintaining duplicate logo files. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop/mobile fit.
+Branding is **one reusable component**, `components/Brand/BrandWordmark.tsx`, backed by the canonical image `public/brand/undara/logo.png`. All customer-facing visual brand lockups use this component instead of typed `Undara` text or legacy `DC Organizer` artwork. Public navbar may show the canonical tagline `Melangkah Bersama, Menuju Hari Penuh Makna`; dashboard/workspace variants remain logo-only. Responsive logo sizing is centralized in this component. The monochrome PNG is used as a mask so Light Mode renders Undara Brown and Dark Mode renders the semantic Champagne accent without maintaining duplicate logo files. Preserve unrelated layout/Pintu/doors/cloud/auth and test desktop/mobile fit.
 
 
 ## Landing orbital scale and hover (23 September 2026)

@@ -128,7 +128,7 @@ Guestbook Digital remains the onsite operational service for QR check-in, Usher 
 
 - Brand: **Undara**.
 - Canonical logo implementation: `components/Brand/BrandWordmark.tsx` renders `public/brand/undara/logo.png` as the shared Undara image lockup. The monochrome image is theme-colored through semantic `currentColor`; DM Serif Display remains the display/heading font outside the logo. Legacy `--font-dc-heading` is a compatibility alias.
-- Public navbar may show the existing marketing tagline; **dashboard headers use the Undara wordmark only and do not show the tagline**.
+- Canonical public tagline: **“Melangkah Bersama, Menuju Hari Penuh Makna”**. Public navbar may show it; **dashboard headers use the Undara logo only and do not show the tagline**.
 - Logo / primary brand: Undara Brown `#703B3B`.
 - Dark/support accent: warm Champagne `#D6B38C`.
 - Deep hover / pressed Brown: `#5E3030`.

@@ -27,8 +27,8 @@ export default function BrandWordmark({
       />
       <span className="sr-only">Undara</span>
       {showTagline && (
-        <span className={`mt-1 block font-[family-name:var(--font-dc-mono)] uppercase tracking-[0.22em] text-foreground/60 ${size === "public" ? "text-[8px] sm:text-[9px] lg:text-[10px]" : "text-[8px]"}`}>
-          Undangan & Acara
+        <span className={`mt-1 block whitespace-nowrap font-[family-name:var(--font-undara-body)] font-medium tracking-[0.05em] text-foreground/65 ${size === "public" ? "text-[6px] sm:text-[8px] lg:text-[9px]" : "text-[7px]"}`}>
+          Melangkah Bersama, Menuju Hari Penuh Makna
         </span>
       )}
     </span>
