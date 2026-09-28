@@ -23,12 +23,12 @@ export default function DashboardAccessNotice({
         <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/10 text-primary">
           <LockKeyhole className="size-5" aria-hidden="true" />
         </span>
-        <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
+        <p className="font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.16em] text-muted-foreground">
           {label}
         </p>
       </div>
       <div className="space-y-3">
-        <Heading className="break-words font-[family-name:var(--font-dc-heading)] text-2xl leading-tight text-foreground sm:text-3xl">
+        <Heading className="break-words font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-foreground sm:text-3xl">
           {title}
         </Heading>
         <p className="max-w-xl text-sm leading-6 text-muted-foreground">
