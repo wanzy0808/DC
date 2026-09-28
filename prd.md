@@ -5611,3 +5611,7 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** width divider `branch-05.png` dinaikkan dari 190/230/260px menjadi **240/290/340px** untuk mobile/tablet/desktop. Tinggi tetap `h-8`, alignment tetap kanan, warna tetap theme-aware, dan story block/Pintu/woodland tidak diubah.
 
 **Validasi:** regression test mengunci width baru dan tetap mewajibkan `branch-05.png`.
+
+
+### Landing footer root divider — 2026-09-28
+- Use a subtle organic root-shaped divider above the unified landing footer row instead of a straight separator line.
