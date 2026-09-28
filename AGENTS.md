@@ -427,3 +427,10 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Replace the generic top diamond crest with a service-specific crest glyph: Event Planner = clipboard/checklist, Undangan Digital = smartphone with a secondary invitation cue on-screen, Guestbook = open book, Undangan Fisik = sealed envelope.
 - Door light must read as warm woodland light coming only from behind/inside the doorway. Front key/fill lighting and luminous floor strips are not allowed; keep only minimal ambient readability. The forest/portal background is the apparent source, and dynamic shadows should project forward toward the viewer. Keep a subtle rear halo while closed and strengthen it when opened/entered.
 - Door body stays Undara brand `#703B3B` in both light and dark modes; lighting must not recolor it. Trim may adapt for contrast. Preserve the brand read with subtle same-color material emissive rather than adding any front light source.
+
+
+### 2026-09-28 — Landing woodland shadow/canopy follow-up
+- Do not change the door geometry, orbit, scale, crest, or brand body color when tuning the woodland scene.
+- Landing door shadows use one large scene-wide receiver so the real cast silhouette follows the arched door and does not clip into a rectangular patch. Per-door ground treatment is contact shadow only.
+- Homepage decorative corner branches are removed. The upper frame is filled with a restrained canopy made from the shared forest silhouette; landing story copy uses a simple divider instead of botanical branch artwork.
+- Dramatic light remains behind the doors. Neutral ambient/material readability is allowed, but no frontal key light. Forest mist/backlight may fill the opening so the scene reads as a luminous clearing rather than a black silhouette.
