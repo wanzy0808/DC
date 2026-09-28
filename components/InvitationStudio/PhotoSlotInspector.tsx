@@ -35,13 +35,13 @@ export default function PhotoSlotInspector({
   const preset = getSectionAnimationPreset(motion?.animation);
 
   return (
-    <aside className="dc-studio-layer-side" aria-label={en ? "Photo properties" : "Properti foto"}>
-      <div className="dc-studio-layer-side-head">
+    <aside className="undara-studio-layer-side" aria-label={en ? "Photo properties" : "Properti foto"}>
+      <div className="undara-studio-layer-side-head">
         <strong>{en ? labels[slot].en : labels[slot].id}</strong>
         <button type="button" onClick={onClose} aria-label={en ? "Close photo properties" : "Tutup properti foto"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <label className="dc-studio-layer-select">
+      <label className="undara-studio-layer-select">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
           value={motion?.animation && motion.animation !== "none" ? motion.animation : ""}
@@ -71,7 +71,7 @@ export default function PhotoSlotInspector({
         <>
           <button
             type="button"
-            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
+            className="flex min-h-9 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs font-medium text-primary hover:bg-primary/10"
             onClick={() => {
               document.querySelectorAll<HTMLElement>(
                 `[data-invitation-photo-slot="${CSS.escape(slot)}"]`,
@@ -87,10 +87,10 @@ export default function PhotoSlotInspector({
             {en ? "Preview animation" : "Preview animasi"}
           </button>
 
-          <div className="dc-studio-layer-grid">
-            <label className="dc-studio-layer-field">
+          <div className="undara-studio-layer-grid">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Duration" : "Durasi"}</span>
-              <span className="dc-studio-layer-number">
+              <span className="undara-studio-layer-number">
                 <input
                   type="number"
                   min="0.2"
@@ -105,9 +105,9 @@ export default function PhotoSlotInspector({
                 <small>s</small>
               </span>
             </label>
-            <label className="dc-studio-layer-field">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Delay" : "Jeda"}</span>
-              <span className="dc-studio-layer-number">
+              <span className="undara-studio-layer-number">
                 <input
                   type="number"
                   min="0"
@@ -125,9 +125,9 @@ export default function PhotoSlotInspector({
           </div>
 
           {slot === "gallery" ? (
-            <label className="dc-studio-layer-field">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Photo stagger" : "Jeda antar foto"}</span>
-              <span className="dc-studio-layer-number">
+              <span className="undara-studio-layer-number">
                 <input
                   type="number"
                   min="0.01"
@@ -146,7 +146,7 @@ export default function PhotoSlotInspector({
         </>
       ) : null}
 
-      <label className="dc-studio-layer-opacity">
+      <label className="undara-studio-layer-opacity">
         <span className="flex items-center justify-between gap-2">
           <span>{en ? "Parallax" : "Parallax"}</span>
           <output>{Math.round(motion?.parallax ?? 0)}px</output>
@@ -164,7 +164,7 @@ export default function PhotoSlotInspector({
         />
       </label>
 
-      <button type="button" className="dc-studio-section-reset" onClick={onReset}>
+      <button type="button" className="undara-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
         Reset
       </button>
