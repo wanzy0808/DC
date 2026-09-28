@@ -440,3 +440,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Homepage woodland canopy starts inside the header zone rather than below it.
 - Canopy may visually pass behind the header, but the Undara wordmark/tagline area on the left and theme/language/menu controls on the right must remain visually clear and fully interactive.
 - Keep navbar/content z-order above the atmosphere; use visual clearance/fade pockets rather than moving or restyling the brand/buttons.
+
+
+### 2026-09-28 — Dedicated landing canopy asset
+- Homepage canopy uses `/assets/landing/ornaments/botanical/canopy2.png` as one transparent overhead tree layer rather than re-cropping the forest background.
+- Position begins outside the top frame and hangs through the header naturally; keep the visual mass centered so the Undara brand/tagline on the left and header controls on the right stay readable and interactive.
+- Use only soft background wash for legibility; do not cut obvious holes or add boxed clear zones around header UI.
