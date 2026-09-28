@@ -72,12 +72,12 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /event\.ctrlKey \|\| event\.metaKey/);
   assert.match(editor, /closest\('input, textarea, select,/);
   assert.match(editor, /window\.getSelection\(\)\?\.toString\(\)/);
-  assert.match(layerInspector, /<aside className="dc-studio-layer-side"/);
+  assert.match(layerInspector, /<aside className="undara-studio-layer-side"/);
   assert.match(editor, /<StudioLayerList/);
-  assert.match(layerList, /className="dc-studio-layer-list"/);
+  assert.match(layerList, /className="undara-studio-layer-list"/);
   assert.match(layerList, /const automaticLayerName = layer\.kind === "text"/);
   assert.match(layerList, /const layerName = layer\.name\?\.trim\(\) \|\| automaticLayerName/);
-  assert.match(layerList, /dc-studio-layer-select-button/);
+  assert.match(layerList, /undara-studio-layer-select-button/);
   assert.match(editor, /function positionAssetLayer\(id: string, position: AssetLayerPosition\)/);
   assert.match(editor, /onPositionAsset=\{positionAssetLayer\}/);
   assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
@@ -185,7 +185,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
   assert.doesNotMatch(textPanel, /<textarea|onUpdateText/);
   assert.match(textPanel, /Double-click kotaknya untuk mengetik langsung di dalam kotak/);
-  assert.doesNotMatch(textInspector, /dc-studio-text-content|<textarea/);
+  assert.doesNotMatch(textInspector, /undara-studio-text-content|<textarea/);
   assert.match(textInspector, /Double-click kotak teks di canvas/);
   assert.match(renderer, /data-studio-text-editing="true"/);
   assert.match(renderer, /contentEditable/);
@@ -222,7 +222,7 @@ test("section selection, pointer resize/rotation, and decorative text are wired 
   assert.match(selectionResolver, /instanceId: instance\?\.dataset\.sectionInstanceId \|\| sectionKey/);
   assert.match(editor, /selectSectionInstance\(selection\.instanceId, selection\.section\)/);
   assert.match(editor, /setSelectedLayerId\(null\);/);
-  assert.match(selectionResolver, /target\.closest\("\.dc-studio-preview-surface"\)/);
+  assert.match(selectionResolver, /target\.closest\("\.undara-studio-preview-surface"\)/);
   assert.match(renderer, /layer\.kind === "text"/);
   assert.match(universal, /objectOverlay\(keyName, instanceId\)/);
   assert.match(universal, /objectOverlay\("cover", instanceId\)/);
@@ -268,20 +268,20 @@ test("Studio displays its document name in the real page header, never above the
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
   const css = read("components/InvitationStudio/studio.css");
   assert.match(page, /setDocumentTitle\(invitationTitleCase\(data\.invitation\.title \|\| "Studio"\)\)/);
-  assert.match(page, /<h1 className="dc-studio-document-title/);
-  assert.ok(page.indexOf('<header className="dc-studio-page-header">') < page.indexOf('<h1 className="dc-studio-document-title'));
-  assert.doesNotMatch(editor, /<h1 className="dc-studio-document-title/);
+  assert.match(page, /<h1 className="undara-studio-document-title/);
+  assert.ok(page.indexOf('<header className="undara-studio-page-header">') < page.indexOf('<h1 className="undara-studio-document-title'));
+  assert.doesNotMatch(editor, /<h1 className="undara-studio-document-title/);
   assert.doesNotMatch(editor, /\{dirty \? copy\.unsaved : invitation \? \(invitation\.templateKey \? copy\.saved/);
-  assert.match(css, /\.dc-studio-page-header \{ display: grid; grid-template-columns: minmax\(0, 1fr\) minmax\(0, 2fr\) minmax\(0, 1fr\)/);
-  assert.match(css, /\.dc-studio-page-header > \.dc-studio-document-title \{ grid-column: 2; min-width: 0; margin: 0; \}/);
-  assert.match(css, /\.dc-studio-header-actions \{ grid-column: 3; justify-self: end; \}/);
-  assert.match(css, /\.dc-studio-page-header > \.dc-studio-document-title \{ grid-column: 1 \/ -1; grid-row: 2; \}/);
+  assert.match(css, /\.undara-studio-page-header \{ display: grid; grid-template-columns: minmax\(0, 1fr\) minmax\(0, 2fr\) minmax\(0, 1fr\)/);
+  assert.match(css, /\.undara-studio-page-header > \.undara-studio-document-title \{ grid-column: 2; min-width: 0; margin: 0; \}/);
+  assert.match(css, /\.undara-studio-header-actions \{ grid-column: 3; justify-self: end; \}/);
+  assert.match(css, /\.undara-studio-page-header > \.undara-studio-document-title \{ grid-column: 1 \/ -1; grid-row: 2; \}/);
 });
 
 
 test("Restart lives only in the canvas toolbar, not in the left rail", () => {
   const editor = read("components/InvitationStudio/InvitationDesigner.tsx");
-  const rail = editor.split('<nav className="dc-studio-rail"')[1]?.split("</nav>")[0] || "";
+  const rail = editor.split('<nav className="undara-studio-rail"')[1]?.split("</nav>")[0] || "";
   const toolbar = read("components/InvitationStudio/StudioCanvasToolbar.tsx");
   assert.doesNotMatch(rail, /restoreDefaults|startOver/);
   assert.match(editor, /onRestore=\{restoreDefaults\}/);
