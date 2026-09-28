@@ -79,7 +79,7 @@ export default function PhotoPanel({
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-xl text-foreground">{en ? "Invitation Photos" : "Foto Undangan"}</h2>
+        <h2 className="font-[family-name:var(--font-undara-heading)] text-xl text-foreground">{en ? "Invitation Photos" : "Foto Undangan"}</h2>
       </div>
 
       <section aria-label={en ? "Photo Library" : "Koleksi foto"}>
@@ -224,7 +224,7 @@ export default function PhotoPanel({
                                   type="button"
                                   aria-pressed={activeAspect === aspect}
                                   onClick={() => onSetCrop(slot, { ...crop, aspect: aspect as PhotoCropAspect })}
-                                  className={`min-h-9 rounded-[var(--dc-control-radius)] border px-2 text-[11px] ${activeAspect === aspect ? "border-primary bg-primary text-white dark:text-black" : "border-border hover:border-primary/50"}`}
+                                  className={`min-h-9 rounded-[var(--undara-control-radius)] border px-2 text-[11px] ${activeAspect === aspect ? "border-primary bg-primary text-white dark:text-black" : "border-border hover:border-primary/50"}`}
                                 >
                                   {label}
                                 </button>
