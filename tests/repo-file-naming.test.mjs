@@ -184,6 +184,7 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(home.includes("PublicMarketingAtmosphere"), false);
   assert.equal(home.includes("CloudCopy"), false);
   assert.equal(home.includes("WindRosePetals"), false);
+  assert.equal(home.includes("FallingLeaves"), false);
   assert.equal(existsSync(path("components/Landing/CloudCopy.tsx")), false);
 
   assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.png")), true);
@@ -193,6 +194,49 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
   assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
   assert.equal(home.includes("LandingOuterBranches"), false);
+});
+
+
+test("public marketing pages share one frame, footer control system and falling-leaf ambience", () => {
+  const styles = read("app/globals.css");
+  const atmosphere = read("components/Layout/PublicMarketingAtmosphere.tsx");
+  const footer = read("components/Layout/MarketingFrameFooter.tsx");
+  const audio = read("components/Layout/MarketingAudio.tsx");
+  const framedPages = [
+    "app/d-invitation/page.tsx",
+    "app/template-design/page.tsx",
+    "app/event-planner/page.tsx",
+    "app/guestbook/page.tsx",
+    "app/undangan-fisik/page.tsx",
+    "app/help/page.tsx",
+  ];
+
+  assert.equal(existsSync(path("components/Layout/FallingLeaves.tsx")), true);
+  assert.equal(existsSync(path("components/Layout/RosePetalBackground.tsx")), false);
+  assert.equal(existsSync(path("components/Landing/WindRosePetals.tsx")), false);
+  assert.match(atmosphere, /FallingLeaves/);
+  assert.doesNotMatch(atmosphere, /WindRosePetals|RosePetalBackground/);
+
+  assert.match(styles, /\.undara-marketing-frame \{/);
+  assert.match(styles, /\.undara-marketing-frame-header \{/);
+  assert.match(styles, /\.undara-marketing-scroll \{/);
+  assert.match(styles, /\.undara-footer-control \{/);
+  assert.match(styles, /\.undara-volume-slider/);
+  assert.match(footer, /MarketingAudioControls/);
+  assert.match(footer, /MarketingInstagramLink/);
+  assert.match(footer, /undara-footer-control/);
+  assert.match(audio, /className="undara-footer-control"/);
+  assert.match(audio, /className="undara-volume-slider/);
+
+  for (const file of framedPages) {
+    const source = read(file);
+    assert.match(source, /className="undara-marketing-frame"/, file);
+    assert.match(source, /className="undara-marketing-frame-header"/, file);
+    assert.match(source, /undara-marketing-scroll/, file);
+    assert.match(source, /<MarketingFrameFooter/, file);
+    assert.equal(source.includes("LandingWoodlandAtmosphere"), false, file);
+    assert.equal(source.includes("forest-silhouette.png"), false, file);
+  }
 });
 
 
