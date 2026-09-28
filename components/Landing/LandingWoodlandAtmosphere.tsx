@@ -15,10 +15,10 @@ export default function LandingWoodlandAtmosphere() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_48%,rgba(255,249,242,0.72),rgba(237,227,216,0.22)_42%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_50%_46%,rgba(214,179,140,0.18),rgba(112,59,59,0.055)_48%,transparent_75%)]" />
 
-      {/* Canopy5 hangs from just outside the frame and nearly spans the
+      {/* Canopy7 hangs from just outside the frame and nearly spans the
           visual gap between the left brand block and the right controls.
-          It intentionally stops short on both sides so the header keeps a
-          small, natural breathing gap instead of looking edge-to-edge. */}
+          Its foliage stays intentionally soft so it reads as distant woodland,
+          not a hard decorative strip across the header. */}
       <div
         data-landing-canopy
         className="absolute inset-x-0 -top-[clamp(72px,7vw,128px)] h-[clamp(330px,39dvh,500px)] overflow-visible"
@@ -38,12 +38,12 @@ export default function LandingWoodlandAtmosphere() {
           className="absolute left-1/2 top-0 h-full w-[92vw] -translate-x-1/2 origin-top sm:w-[78vw] lg:w-[68vw] lg:max-w-[1240px]"
         >
           <Image
-            src="/assets/landing/ornaments/botanical/canopy5.png"
+            src="/assets/landing/ornaments/botanical/canopy7.png"
             alt=""
             fill
             priority
             sizes="(max-width: 640px) 92vw, (max-width: 1024px) 78vw, min(68vw, 1240px)"
-            className="object-contain object-top opacity-[0.84] brightness-[0.96] saturate-[0.88] drop-shadow-[0_20px_34px_rgba(93,62,48,0.07)] dark:opacity-[0.64] dark:brightness-[0.78] dark:saturate-[0.66]"
+            className="object-contain object-top opacity-[0.48] brightness-[1.04] saturate-[0.62] contrast-[0.93] drop-shadow-[0_16px_28px_rgba(93,62,48,0.035)] dark:opacity-[0.34] dark:brightness-[0.88] dark:saturate-[0.48] dark:contrast-[0.90]"
           />
         </motion.div>
       </div>
