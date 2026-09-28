@@ -62,6 +62,6 @@ test("Undara navbar brand uses the shared image logo asset", () => {
   const brand = read("components/Brand/BrandWordmark.tsx");
   const globalStyles = read("app/globals.css");
   assert.match(brand, /undara-brand-logo/);
-  assert.doesNotMatch(brand, />\s*Undara\s*</);
+  assert.match(brand, /<span className="sr-only">Undara<\/span>/);
   assert.match(globalStyles, /mask-image:\s*url\("\/brand\/undara\/logo\.png"\)/);
 });

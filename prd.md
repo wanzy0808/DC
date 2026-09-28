@@ -5328,3 +5328,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Regression:** `tests/repo-file-naming.test.mjs` memverifikasi canonical logo berada di folder public, file `app/logo.png` sudah tidak menjadi sumber aktif, dan BrandWordmark/CSS menunjuk asset bersama.
 
 **Validasi:** source regression dan Build Validation GitHub Actions harus diperiksa pada commit implementasi sebelum pekerjaan ini disebut lulus; browser visual QA tetap diperlukan untuk menilai ukuran final logo di public/mobile/dashboard.
+
+
+### 28 September 2026 — Follow-up regression image logo Undara
+
+**Temuan CI:** Build Validation commit `085dc692` berhenti pada regression test baru karena assertion awal melarang seluruh literal `Undara` di markup, termasuk `<span className="sr-only">Undara</span>` yang sengaja dipertahankan sebagai nama aksesibel untuk screen reader. Visual logo tetap berasal dari image asset/mask dan bukan teks.
+
+**Perbaikan:** regression test diubah untuk justru mewajibkan label `sr-only` tersebut sambil tetap memverifikasi `undara-brand-logo`, canonical asset path, dan tidak adanya `app/logo.png` lama. Tidak ada perubahan visual pada navbar/header.
+
+**Validasi:** Build Validation follow-up wajib diperiksa lagi sebelum dinyatakan lulus.
