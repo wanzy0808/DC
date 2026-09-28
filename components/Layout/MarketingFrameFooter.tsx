@@ -15,7 +15,7 @@ export default function MarketingFrameFooter() {
           <MarketingAudioControls />
         </div>
 
-        <p className="whitespace-nowrap text-center font-[family-name:var(--font-dc-mono)] text-[9px] tracking-[0.06em] text-foreground/48 sm:text-[10px]">
+        <p className="whitespace-nowrap text-center font-[family-name:var(--font-undara-mono)] text-[9px] tracking-[0.06em] text-foreground/48 sm:text-[10px]">
           © {new Date().getFullYear()} Undara. {messages.footer.rights}
         </p>
 
