@@ -9,25 +9,25 @@ const cornerBranches = [
   {
     src: "/assets/landing/ornaments/botanical/branch-01.png",
     className:
-      "absolute -left-[6%] -top-[10%] h-[34%] w-[33%] origin-top-left opacity-[0.84] [mask-image:linear-gradient(to_bottom,black_12%,transparent_74%)] dark:opacity-[0.48]",
+      "absolute -left-[14%] top-[16%] h-[35%] w-[32%] origin-top-left opacity-[0.94] [mask-image:linear-gradient(to_right,black_55%,transparent_100%)] dark:opacity-[0.7]",
     imageClassName: "object-contain object-left-top",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-02.png",
     className:
-      "absolute -right-[5%] -top-[9%] hidden h-[34%] w-[31%] origin-top-right opacity-[0.78] sm:block dark:opacity-[0.43]",
+      "absolute -right-[14%] top-[16%] hidden h-[35%] w-[32%] origin-top-right opacity-[0.9] [mask-image:linear-gradient(to_left,black_55%,transparent_100%)] sm:block dark:opacity-[0.68]",
     imageClassName: "object-contain object-right-top",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-03.png",
     className:
-      "absolute -bottom-[12%] -left-[7%] h-[44%] w-[44%] origin-bottom-left opacity-[0.85] dark:opacity-[0.46]",
+      "absolute -bottom-[4%] -left-[14%] h-[32%] w-[34%] origin-bottom-left opacity-[0.92] [mask-image:linear-gradient(to_bottom,black_22%,transparent_82%)] dark:opacity-[0.68]",
     imageClassName: "object-contain object-left-bottom",
   },
   {
     src: "/assets/landing/ornaments/botanical/branch-04.png",
     className:
-      "absolute -bottom-[12%] -right-[7%] h-[44%] w-[43%] origin-bottom-right opacity-[0.82] dark:opacity-[0.44]",
+      "absolute -bottom-[4%] -right-[14%] h-[32%] w-[34%] origin-bottom-right opacity-[0.9] [mask-image:linear-gradient(to_bottom,black_22%,transparent_82%)] dark:opacity-[0.66]",
     imageClassName: "object-contain object-right-bottom",
   },
 ] as const;

@@ -45,26 +45,26 @@ function MiniDoor({ active = false }: { active?: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-[#e8bec6] bg-[#472630] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35),0_5px_12px_rgba(64,25,36,0.22)]"
+      className="relative inline-block h-[51px] w-[34px] shrink-0 overflow-hidden rounded-t-[17px] rounded-b-[4px] border-[2px] border-primary/70 bg-card shadow-[inset_0_0_0_1px_rgba(255,255,255,0.35),0_5px_12px_rgba(64,25,36,0.22)]"
     >
-      <span className="absolute inset-[3px] rounded-t-[13px] bg-[radial-gradient(ellipse_at_50%_45%,#ffe1e8_0%,#d78c9d_55%,#8f4e5d_100%)]" />
+      <span className="absolute inset-[3px] rounded-t-[13px] bg-[radial-gradient(ellipse_at_50%_45%,var(--background)_0%,var(--card)_55%,var(--primary)_100%)]" />
       <span
         className={
-          "absolute bottom-[3px] left-[3px] top-[3px] w-[calc(50%_-_3px)] origin-left rounded-tl-[13px] border border-white/35 bg-[linear-gradient(125deg,#e9b6c0_0%,#b66f80_80%)] shadow-[2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
+          "absolute bottom-[3px] left-[3px] top-[3px] w-[calc(50%_-_3px)] origin-left rounded-tl-[13px] border border-background/35 bg-[linear-gradient(125deg,var(--card)_0%,var(--primary)_80%)] shadow-[2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
           (active ? "-translate-x-[4px]" : "group-hover:-translate-x-[4px] group-focus-visible:-translate-x-[4px]")
         }
       >
-        <span className="absolute inset-[3px] rounded-tl-[10px] border border-white/30" />
-        <span className="absolute right-[1px] top-[56%] size-[2px] rounded-full bg-[#fff3dc]" />
+        <span className="absolute inset-[3px] rounded-tl-[10px] border border-background/30" />
+        <span className="absolute right-[1px] top-[56%] size-[2px] rounded-full bg-accent" />
       </span>
       <span
         className={
-          "absolute bottom-[3px] right-[3px] top-[3px] w-[calc(50%_-_3px)] origin-right rounded-tr-[13px] border border-white/35 bg-[linear-gradient(235deg,#d99eac_0%,#a96173_85%)] shadow-[-2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
+          "absolute bottom-[3px] right-[3px] top-[3px] w-[calc(50%_-_3px)] origin-right rounded-tr-[13px] border border-background/35 bg-[linear-gradient(235deg,var(--card)_0%,var(--primary)_85%)] shadow-[-2px_0_4px_rgba(51,20,31,0.3)] transition-transform duration-500 ease-out " +
           (active ? "translate-x-[4px]" : "group-hover:translate-x-[4px] group-focus-visible:translate-x-[4px]")
         }
       >
-        <span className="absolute inset-[3px] rounded-tr-[10px] border border-white/30" />
-        <span className="absolute left-[1px] top-[56%] size-[2px] rounded-full bg-[#fff3dc]" />
+        <span className="absolute inset-[3px] rounded-tr-[10px] border border-background/30" />
+        <span className="absolute left-[1px] top-[56%] size-[2px] rounded-full bg-accent" />
       </span>
     </span>
   );

@@ -171,12 +171,12 @@ export function MarketingAudioControls() {
   if (!audio) throw new Error("MarketingAudioControls requires MarketingAudioProvider");
   const { soundOn, volume, toggleSound, changeVolume } = audio;
   return <div className="flex shrink-0 items-center gap-2">
-    <Button size="icon-sm" variant="ghost" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
+    <Button size="icon-sm" variant="ghost" className="text-primary hover:text-primary" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
       {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
     </Button>
     <label htmlFor="dc-marketing-volume" className="sr-only">Volume suara</label>
-    <input id="dc-marketing-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="w-14 cursor-pointer accent-[#C07A84] sm:w-20" aria-valuetext={volume + "%"} />
-    <span className="hidden w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-foreground/70 sm:block">{volume}%</span>
+    <input id="dc-marketing-volume" type="range" min="0" max="100" value={volume} onChange={(event) => changeVolume(Number(event.target.value))} className="w-14 cursor-pointer accent-primary sm:w-20" aria-valuetext={volume + "%"} />
+    <span className="hidden w-8 text-right font-[family-name:var(--font-dc-mono)] text-xs tabular-nums text-primary/70 sm:block">{volume}%</span>
   </div>;
 }
 

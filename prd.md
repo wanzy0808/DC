@@ -1499,6 +1499,8 @@ The current approved homepage is a **woodland composition** with a rounded main 
 
 **Footer homepage:** kontrol musik/volume di kiri, copyright di tengah, dan ikon Instagram di kanan harus menempel pada dasar main frame. Pada viewport sempit copyright boleh turun menjadi baris kedua agar tidak menimpa kontrol. Ruang fleksibel antara navbar dan footer tidak boleh menangkap klik Pintu.
 
+**Ranting dan warna kontrol marketing:** ranting homepage tetap terbaca di tepi kiri/kanan dan melintasi batas frame, dengan area navbar, Pintu, dan footer tetap jelas. Slider volume, ikon suara, dan pintu mini widget Jelajah memakai token `--primary`/`--accent` dari tema aktif; perubahan palet tema harus diterapkan bersama tanpa warna pink lama yang tertanam di komponen tersebut.
+
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
 
 **Owner coding workflow:** bila owner meminta perubahan coding pada Undara, default proses adalah cek HEAD repo → implement langsung di repo → jalankan/observasi regression/build yang relevan → laporkan commit dan status. Jangan mengalihkan pekerjaan menjadi potongan kode untuk owner tempel manual kecuali owner memang meminta code-only, meminta repo tidak diubah, atau akses repo/tool sedang tidak tersedia.
@@ -5450,6 +5452,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Temuan owner:** setelah copy awan diganti menjadi editorial block absolut, elemen fleksibel pengisi ruang tengah hilang; footer berikut volume dan ikon media sosial ikut naik tepat di bawah navbar.
 
 **Perbaikan:** `app/page.tsx` menambahkan ruang fleksibel pasif di antara navbar dan footer. `MarketingFrameFooter` mendapat layout khusus homepage: volume kiri, copyright tengah, Instagram kanan pada desktop; copyright di baris bawah pada mobile agar kontrol tidak saling menimpa. Layout halaman marketing lain tetap memakai markup semula. Lint terarah, 12/12 source regression, `git diff --check`, serta production build webpack + TypeScript lulus; inspeksi visual browser desktop/mobile belum dilakukan.
+### 28 September 2026 — Ranting tepi dan warna widget marketing
+
+**Permintaan owner:** ranting pada landing harus tampak rapi tanpa bertabrakan dengan tombol; volume dan widget Jelajah mengikuti ketentuan warna Undara sehingga perubahan palet bisa diterapkan bersama.
+
+**Implementasi:** empat ranting digeser ke sisi frame, dibuat lebih terbaca, dan diberi fade ke arah pusat atau footer sehingga tidak memotong navbar dan kontrol bawah. Ikon suara dan slider memakai `primary`; ilustrasi pintu mini widget memakai `primary`, `accent`, `card`, dan `background` yang berganti bersama Light/Dark Mode. Area: `LandingWoodlandAtmosphere.tsx`, `MarketingAudio.tsx`, `MarketingDoorNavigator.tsx`, `prd.md`. Perubahan tidak menyentuh Pintu utama, navigasi widget, atau perilaku audio. Validasi lokal: 185/185 tes lulus, `tsc --noEmit` lulus setelah Prisma client lokal di-generate, lint terarah lulus dengan rule existing `react-hooks/set-state-in-effect` dikecualikan (file widget sebelumnya sudah memanggil `setOpen` langsung di effect), dan `git diff --check` bersih. Inspeksi browser visual tetap perlu saat review owner. Tidak ada migrasi database.
+
 ### 28 September 2026 — Warna kunang-kunang mengikuti mode Undara
 
 **Permintaan owner:** kunang-kunang landing memakai warna brand pada Light Mode dan Champagne pada Dark Mode.
