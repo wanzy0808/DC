@@ -223,8 +223,8 @@ test("public marketing pages share one frame, footer control system and falling-
   assert.match(styles, /\.undara-footer-control \{/);
   assert.match(styles, /\.undara-volume-slider/);
   assert.match(footer, /MarketingAudioControls/);
-  assert.match(footer, /MarketingInstagramLink/);
-  assert.match(footer, /undara-footer-control/);
+  assert.match(footer, /UndaraSocialIcons/);
+  assert.match(read("components/Layout/UndaraSocialIcons.tsx"), /undara-footer-control/);
   assert.match(audio, /className="undara-footer-control"/);
   assert.match(audio, /className="undara-volume-slider/);
 
