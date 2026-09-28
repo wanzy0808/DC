@@ -148,7 +148,7 @@ export default function RsvpAnalyticsPanel({
     );
     const link = document.createElement("a");
     link.href = url;
-    link.download = "dc-organizer-rsvp.csv";
+    link.download = "undara-rsvp.csv";
     link.click();
     URL.revokeObjectURL(url);
   }
@@ -214,7 +214,7 @@ export default function RsvpAnalyticsPanel({
       className={
         embedded
           ? "min-w-0 overflow-x-clip text-foreground"
-          : "dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
+          : "undara-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 overflow-x-clip pb-16 pt-7 text-foreground sm:pt-8"
       }
     >
       {notice && (
@@ -275,7 +275,7 @@ export default function RsvpAnalyticsPanel({
         {filtered.length ? (
           <div className="grid min-w-0 gap-3">
             {filtered.map((guest) => (
-              <article key={guest.id} className="dc-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+              <article key={guest.id} className="undara-dashboard-detail-card min-w-0 rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
                     <h3 className="break-words text-base font-semibold text-foreground">{guest.name}</h3>
@@ -334,13 +334,13 @@ export default function RsvpAnalyticsPanel({
             ))}
           </div>
         ) : (
-          <p className="dc-dashboard-detail-card rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-8 text-sm text-muted-foreground">
+          <p className="undara-dashboard-detail-card rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-8 text-sm text-muted-foreground">
             {guests.length ? d("Tidak ada tamu yang cocok.") : d("Belum ada data RSVP untuk acara ini.")}
           </p>
         )}
 
         {slug && (
-          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-dc-mono)] text-[11px] text-foreground/45">
+          <p className="mt-3 rounded-lg bg-background px-3 py-2 font-[family-name:var(--font-undara-mono)] text-[11px] text-foreground/45">
             /invite/{slug}
           </p>
         )}
@@ -364,7 +364,7 @@ export default function RsvpAnalyticsPanel({
             >
               <X className="h-4 w-4" />
             </Button>
-            <p className="pr-10 font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">
+            <p className="pr-10 font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">
               {qr.name}
             </p>
             <div className="mx-auto mt-5 w-fit border border-border bg-white p-3">
@@ -374,7 +374,7 @@ export default function RsvpAnalyticsPanel({
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=560x560&data=${encodeURIComponent(qr.token)}`}
               />
             </div>
-            <p className="mt-4 break-all font-[family-name:var(--font-dc-mono)] text-[11px] leading-4 text-foreground/45">
+            <p className="mt-4 break-all font-[family-name:var(--font-undara-mono)] text-[11px] leading-4 text-foreground/45">
               {qr.token}
             </p>
           </div>
