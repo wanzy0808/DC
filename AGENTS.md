@@ -460,3 +460,8 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 ### 2026-09-28 — Canopy7 visual treatment
 - Canopy7 is intentionally subdued: lower opacity, lower saturation, slightly lifted brightness, and reduced contrast so it blends into the woodland atmosphere instead of reading as a crisp decorative banner.
 - Preserve the current near-header-span width and centered placement; do not add side canopy layers.
+
+
+### 2026-09-28 — Landing footer copyright
+- Homepage footer uses one unified horizontal bar: audio controls left, copyright centered, Instagram right.
+- Do not render the embedded full Footer component inside the landing footer; keep copyright inline so it does not look like a separate stacked footer.
