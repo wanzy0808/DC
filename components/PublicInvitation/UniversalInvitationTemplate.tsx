@@ -567,7 +567,7 @@ export default function UniversalInvitationTemplate({
             <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} preview={preview} />
           </> : (
             usesPhotos ? <>
-              {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
+              {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Atur foto galeri</button>}
               {media.gallery.length ? (
                 <div data-studio-native-object="object:gallery:grid" className={`grid gap-3 ${key === "modern-maroon" ? "grid-cols-3" : key === "midnight-romance" ? "grid-cols-2 rounded-t-[120px] overflow-hidden" : key === "eternal-blossom" ? "grid-cols-2 rotate-[-1deg]" : key === "zen-atelier" ? "grid-cols-2 auto-rows-[125px] sm:auto-rows-[155px]" : "grid-cols-2"}`}>
                   {media.gallery.map((asset, index) => (
@@ -611,7 +611,7 @@ export default function UniversalInvitationTemplate({
               <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
               <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--dc-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
+              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
               {!maps && <p data-studio-native-object="object:location:empty-copy" className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
             </div>
           ), 7)}
@@ -631,7 +631,7 @@ export default function UniversalInvitationTemplate({
               <p data-studio-native-object="object:gift:bank-name" className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p data-studio-native-object="object:gift:account-name" className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
-              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--dc-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
+              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
               {copyMessage && <p role="status" className="mt-3 text-xs">{copyMessage}</p>}
             </div>
           ) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
