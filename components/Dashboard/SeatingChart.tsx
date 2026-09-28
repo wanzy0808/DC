@@ -490,7 +490,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                   setDraggedGuestId(guest.id);
                   setSwapCandidate(null);
                 }}
-                className="dc-dashboard-detail-card cursor-grab rounded-tr-[22px] border border-primary/20 bg-primary/[0.035] px-4 py-3 text-sm transition hover:border-primary/40 hover:bg-primary/[0.08] active:cursor-grabbing"
+                className="undara-dashboard-detail-card cursor-grab rounded-tr-[22px] border border-primary/20 bg-primary/[0.035] px-4 py-3 text-sm transition hover:border-primary/40 hover:bg-primary/[0.08] active:cursor-grabbing"
               >
                 <div className="truncate font-medium text-foreground">{guest.name}</div>
                 {(guest.category || Boolean(guest.tags?.length)) && (
@@ -498,7 +498,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                     {[guest.category, ...(guest.tags ?? [])].filter(Boolean).join(" · ")}
                   </p>
                 )}
-                <div className="mt-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+                <div className="mt-1 font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
                   {guest.invitedPax ? `${guest.invitedPax} ${d("orang diundang")} · ` : ""}
                   {guest.source === "RSVP" ? `RSVP · ${d("Hadir")}` : d("Manual")}
                 </div>
@@ -519,7 +519,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
       >
 
         <div
-          className="dc-dashboard-seating-stage min-w-0 overflow-hidden bg-primary/[0.025]"
+          className="undara-dashboard-seating-stage min-w-0 overflow-hidden bg-primary/[0.025]"
           onDragOver={(event) => {
             event.preventDefault();
             const rect = event.currentTarget.getBoundingClientRect();
@@ -656,14 +656,14 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
         <div className="mt-3 flex min-h-10 flex-wrap items-center justify-between gap-3 rounded-lg bg-background px-3 py-2 text-xs text-muted-foreground">
           <span>{d("Tarik tamu ke kursi untuk menyimpan posisi.")}</span>
           {savingGuestId && (
-            <span className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
+            <span className="font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.1em] text-primary">
               {d("Menyimpan...")}
             </span>
           )}
         </div>
 
         {swapCandidate && (
-          <div className="dc-dashboard-detail-card mt-3 rounded-tr-[22px] border border-primary/20 bg-primary/[0.045] p-4">
+          <div className="undara-dashboard-detail-card mt-3 rounded-tr-[22px] border border-primary/20 bg-primary/[0.045] p-4">
             <p className="text-xs font-medium leading-5 text-foreground">
               {locale === "en" ? `Seat occupied by ${swapCandidate.target.guest?.name}. Swap with ${draggedGuest?.name}?` : `Kursi ditempati ${swapCandidate.target.guest?.name}. Tukar dengan ${draggedGuest?.name}?`}
             </p>
