@@ -143,6 +143,10 @@ public/assets/
 
 Template-owned artwork remains under `public/templates/<template>/`. Next.js app metadata icons remain in `app/icon.png` and `app/favicon.ico`. New shared files use lowercase kebab-case with no spaces; avoid adding loose files at `public/` root.
 
+### Homepage woodland composition
+
+The homepage `/` uses a dedicated woodland atmosphere instead of the older cloud/petal treatment. `LandingWoodlandAtmosphere` layers a soft forest silhouette behind the production Pintu and uses botanical branch assets 01–04 as edge framing. `LandingStoryCopy` keeps one restrained editorial copy block and uses branch 05 as its divider. The four-door production scene, portal interaction, Navbar, audio/footer controls and destination routes are unchanged. Other marketing routes may continue using their existing shared `PublicMarketingAtmosphere`.
+
 ## Design System
 
 - Brand: **Undara**.

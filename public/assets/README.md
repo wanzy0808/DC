@@ -4,6 +4,7 @@ This directory is the canonical home for shared browser-served assets.
 
 - `brand/undara/` — logo and brand files.
 - `landing/doors/` — service images shown inside the production landing doors.
+- `landing/atmosphere/` — homepage-only depth artwork such as the woodland forest silhouette.
 - `landing/ornaments/botanical/` — current reusable branch and leaf ornaments.
 - `landing/ornaments/legacy/` — retained legacy landing ornaments still referenced by code.
 - `landing/reference/doors/` — visual reference door images, not production geometry.

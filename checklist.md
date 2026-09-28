@@ -11,6 +11,9 @@
 
 ## Rebrand Undara — migrasi bertahap (28 September 2026)
 
+- [x] Homepage woodland composition: forest silhouette sebagai depth di belakang Pintu, branch 01–04 sebagai edge framing, branch 05 sebagai divider copy; cloud bubble dan petal ambience tidak dipakai di homepage.
+- [ ] Browser QA woodland homepage pada desktop/mobile Light/Dark untuk memastikan ornament tidak menutup Pintu, logo, controls, widget Jelajah, atau footer.
+
 - [x] Konsolidasikan shared static asset ke `public/assets/`; pertahankan `public/templates/<template>/` untuk asset template-owned dan `app/icon.png` untuk metadata icon Next.js.
 
 - [x] Tetapkan nama customer-facing **Undara** (Undangan + Acara) di aturan canonical.
