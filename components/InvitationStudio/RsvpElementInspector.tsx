@@ -60,9 +60,9 @@ export default function RsvpElementInspector({
     suffix: string,
     property: "width" | "fontSize",
   ) => (
-    <label className="dc-studio-section-field">
+    <label className="undara-studio-section-field">
       <span>{label}</span>
-      <span className="dc-studio-section-number">
+      <span className="undara-studio-section-number">
         <input
           type="number"
           min={min}
@@ -86,9 +86,9 @@ export default function RsvpElementInspector({
     property: "background" | "color" | "borderColor",
     fallback: string,
   ) => (
-    <div className="dc-studio-section-field">
+    <div className="undara-studio-section-field">
       <span>{label}</span>
-      <div className="dc-studio-section-color">
+      <div className="undara-studio-section-color">
         <input
           type="color"
           value={value ?? fallback}
@@ -109,15 +109,15 @@ export default function RsvpElementInspector({
   ];
 
   return (
-    <aside className="dc-studio-section-side dc-studio-rsvp-element-side" aria-label={en ? "RSVP component properties" : "Properti komponen RSVP"}>
-      <div className="dc-studio-section-side-head">
+    <aside className="undara-studio-section-side undara-studio-rsvp-element-side" aria-label={en ? "RSVP component properties" : "Properti komponen RSVP"}>
+      <div className="undara-studio-section-side-head">
         <div className="min-w-0">
           <strong title={displayName}>{displayName}</strong>
         </div>
         <button type="button" onClick={onClose} aria-label={en ? "Close component properties" : "Tutup properti komponen"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <div className="flex items-start gap-2 rounded-[var(--dc-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
+      <div className="flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
         <Lock size={13} className="mt-0.5 shrink-0 text-primary" />
         <span>{en ? "Content is managed from Content. This panel changes styling only." : "Isi diatur dari menu Isi. Panel ini hanya mengubah styling."}</span>
       </div>
@@ -125,9 +125,9 @@ export default function RsvpElementInspector({
       {numeric(en ? "Width" : "Lebar", style.width, "100", 30, 100, "%", "width")}
       {numeric(en ? "Text size" : "Ukuran teks", style.fontSize, en ? "Template" : "Template", 10, 72, "px", "fontSize")}
 
-      <div className="dc-studio-section-field">
+      <div className="undara-studio-section-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
-        <div className="dc-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
+        <div className="undara-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
           {alignments.map(({ value, label, Icon }) => (
             <button
               key={value}
@@ -143,7 +143,7 @@ export default function RsvpElementInspector({
         </div>
       </div>
 
-      <label className="dc-studio-section-field">
+      <label className="undara-studio-section-field">
         <span className="flex items-center justify-between gap-2">
           <span>{en ? "Opacity" : "Opasitas"}</span>
           <output>{Math.round((style.opacity ?? 1) * 100)}%</output>
@@ -164,7 +164,7 @@ export default function RsvpElementInspector({
 
 
 
-      <button type="button" className="dc-studio-section-reset" onClick={reset}>
+      <button type="button" className="undara-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
         Reset
       </button>
