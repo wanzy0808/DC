@@ -1,9 +1,9 @@
 "use client";
 
 import LandingFloralGlow from "@/components/Landing/LandingFloralGlow";
-import WindRosePetals from "@/components/Landing/WindRosePetals";
+import FallingLeaves from "@/components/Layout/FallingLeaves";
 
-/** Reuse the approved landing flowers and wind-driven petals without duplicating animations. */
+/** Shared non-home marketing ambience: restrained botanical glow + sparse falling leaves. */
 export default function PublicMarketingAtmosphere() {
-  return <><LandingFloralGlow /><WindRosePetals /></>;
+  return <><LandingFloralGlow /><FallingLeaves /></>;
 }
