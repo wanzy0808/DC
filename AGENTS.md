@@ -446,3 +446,9 @@ Untuk template ilustrasi/scrapbook DC Organizer, lihat dan audit aset asli terle
 - Homepage canopy uses `/assets/landing/ornaments/botanical/canopy2.png` as one transparent overhead tree layer rather than re-cropping the forest background.
 - Position begins outside the top frame and hangs through the header naturally; keep the visual mass centered so the Undara brand/tagline on the left and header controls on the right stay readable and interactive.
 - Use only soft background wash for legibility; do not cut obvious holes or add boxed clear zones around header UI.
+
+
+### 2026-09-28 — Wider landing canopy
+- Overhead canopy should span approximately the full visual width of the four-door orbit.
+- Keep `canopy2.png` as the dominant hanging center layer, with `canopy1.png` and `canopy33.png` as lighter side masses so the tree crown feels broad and lush without stretching one bitmap unnaturally.
+- Header readability zones remain soft washes only; do not create hard cutouts or move the navbar.
