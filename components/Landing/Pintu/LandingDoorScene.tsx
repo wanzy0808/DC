@@ -117,6 +117,51 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
   </group>;
 }
 
+
+/** Warm woodland light that sits behind the whole doorway and leaks around the frame. */
+function DoorBacklight({ opening, entering, isDarkMode }: { opening: boolean; entering: boolean; isDarkMode: boolean }) {
+  const material = useRef<THREE.SpriteMaterial>(null);
+  const map = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 512;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(128, 250, 8, 128, 250, 190);
+      gradient.addColorStop(0, "rgba(255,250,238,0.98)");
+      gradient.addColorStop(0.24, "rgba(244,218,177,0.66)");
+      gradient.addColorStop(0.58, "rgba(214,179,140,0.24)");
+      gradient.addColorStop(1, "rgba(214,179,140,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 256, 512);
+    }
+    return new THREE.CanvasTexture(canvas);
+  }, []);
+
+  useEffect(() => () => map.dispose(), [map]);
+
+  useFrame((_, delta) => {
+    if (!material.current) return;
+    const target = opening ? (entering ? 0.9 : 0.7) : 0.16;
+    material.current.opacity = THREE.MathUtils.damp(material.current.opacity, target, 2.8, delta);
+  });
+
+  return (
+    <sprite position={[0, 1.45, -0.31]} scale={[3.05, 5.35, 1]}>
+      <spriteMaterial
+        ref={material}
+        map={map}
+        color={isDarkMode ? "#D6B38C" : "#E7C89F"}
+        transparent
+        opacity={0.16}
+        depthWrite={false}
+        toneMapped={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </sprite>
+  );
+}
+
 /** A soft pool of light revealed by the opening panel, without a rectangular overlay. */
 function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: boolean }) {
   const material = useRef<THREE.SpriteMaterial>(null);
@@ -126,10 +171,10 @@ function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: bo
     const context = canvas.getContext("2d");
     if (context) {
       const gradient = context.createRadialGradient(128, 128, 0, 128, 128, 128);
-      gradient.addColorStop(0, "rgba(255,246,234,0.72)");
-      gradient.addColorStop(0.27, "rgba(255,220,207,0.35)");
-      gradient.addColorStop(0.65, "rgba(235,157,170,0.09)");
-      gradient.addColorStop(1, "rgba(235,157,170,0)");
+      gradient.addColorStop(0, "rgba(255,250,238,0.86)");
+      gradient.addColorStop(0.27, "rgba(244,218,177,0.46)");
+      gradient.addColorStop(0.65, "rgba(214,179,140,0.13)");
+      gradient.addColorStop(1, "rgba(214,179,140,0)");
       context.fillStyle = gradient;
       context.fillRect(0, 0, 256, 256);
     }
@@ -143,8 +188,8 @@ function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: bo
       );
     }
   });
-  return <sprite position={[0, 1.85, -0.145]} scale={[2.0, 3.6, 1]}>
-    <spriteMaterial ref={material} map={map} color="#ffe6de" transparent opacity={0}
+  return <sprite position={[0, 1.62, -0.145]} scale={[2.15, 3.95, 1]}>
+    <spriteMaterial ref={material} map={map} color="#F0D2A8" transparent opacity={0}
       depthWrite={false} toneMapped={false} blending={THREE.AdditiveBlending} />
   </sprite>;
 }
@@ -271,6 +316,101 @@ function PortalCamera({ entering, reducedMotion, onCover, onArrive }: { entering
   return null;
 }
 
+
+type DoorCrestKind = "event-planner" | "digital-invitation" | "guestbook" | "physical-invitation";
+
+function DoorCrest({ kind, color }: { kind: DoorCrestKind; color: string }) {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 256;
+    const context = canvas.getContext("2d");
+    if (!context) return new THREE.CanvasTexture(canvas);
+
+    context.clearRect(0, 0, 256, 256);
+    context.strokeStyle = color;
+    context.fillStyle = color;
+    context.lineWidth = 17;
+    context.lineCap = "round";
+    context.lineJoin = "round";
+
+    const line = (points: Array<[number, number]>) => {
+      context.beginPath();
+      points.forEach(([x, y], index) => index === 0 ? context.moveTo(x, y) : context.lineTo(x, y));
+      context.stroke();
+    };
+
+    if (kind === "event-planner") {
+      context.strokeRect(58, 70, 140, 126);
+      line([[58, 104], [198, 104]]);
+      line([[88, 58], [88, 84]]);
+      line([[168, 58], [168, 84]]);
+      context.beginPath();
+      for (let i = 0; i < 8; i++) {
+        const radius = i % 2 === 0 ? 28 : 10;
+        const angle = -Math.PI / 2 + i * Math.PI / 4;
+        const x = 150 + Math.cos(angle) * radius;
+        const y = 150 + Math.sin(angle) * radius;
+        i === 0 ? context.moveTo(x, y) : context.lineTo(x, y);
+      }
+      context.closePath();
+      context.stroke();
+    } else if (kind === "digital-invitation") {
+      context.strokeRect(46, 76, 164, 112);
+      line([[46, 82], [128, 143], [210, 82]]);
+      context.beginPath();
+      context.arc(181, 61, 18, Math.PI * 1.1, Math.PI * 1.9);
+      context.stroke();
+      context.beginPath();
+      context.arc(181, 61, 31, Math.PI * 1.1, Math.PI * 1.9);
+      context.stroke();
+    } else if (kind === "guestbook") {
+      context.beginPath();
+      context.moveTo(128, 83);
+      context.bezierCurveTo(104, 65, 72, 64, 48, 76);
+      context.lineTo(48, 182);
+      context.bezierCurveTo(75, 169, 105, 171, 128, 190);
+      context.bezierCurveTo(151, 171, 181, 169, 208, 182);
+      context.lineTo(208, 76);
+      context.bezierCurveTo(184, 64, 152, 65, 128, 83);
+      context.closePath();
+      context.stroke();
+      line([[128, 84], [128, 190]]);
+    } else {
+      context.strokeRect(46, 76, 164, 112);
+      line([[46, 82], [128, 143], [210, 82]]);
+      context.beginPath();
+      context.arc(128, 153, 27, 0, Math.PI * 2);
+      context.fill();
+      context.strokeStyle = "#000000";
+      context.globalCompositeOperation = "destination-out";
+      context.beginPath();
+      context.arc(128, 153, 10, 0, Math.PI * 2);
+      context.fill();
+      context.globalCompositeOperation = "source-over";
+    }
+
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    map.needsUpdate = true;
+    return map;
+  }, [kind, color]);
+
+  useEffect(() => () => texture.dispose(), [texture]);
+
+  return (
+    <group position={[0, 3.11, 0.119]}>
+      <mesh>
+        <ringGeometry args={[0.185, 0.205, 40]} />
+        <meshStandardMaterial color={color} metalness={0.16} roughness={0.48} side={THREE.DoubleSide} />
+      </mesh>
+      <mesh position={[0, 0, 0.006]} renderOrder={4}>
+        <planeGeometry args={[0.35, 0.35]} />
+        <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
+    </group>
+  );
+}
+
 function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   const label = useRef<THREE.MeshBasicMaterial>(null);
   const texture = useMemo(() => {
@@ -301,7 +441,7 @@ function DoorTitle({ title, opening }: { title: string; opening: boolean }) {
   </mesh>;
 }
 
-function Door({ opening, image, title, entering, isDarkMode }: { opening: boolean; image: string; title: string; entering: boolean; isDarkMode: boolean }) {
+function Door({ opening, image, title, crest, entering, isDarkMode }: { opening: boolean; image: string; title: string; crest: DoorCrestKind; entering: boolean; isDarkMode: boolean }) {
   const pivot = useRef<THREE.Group>(null);
   useFrame((_, delta) => {
     if (pivot.current) pivot.current.rotation.y = THREE.MathUtils.damp(pivot.current.rotation.y, opening ? -1.55 : 0, 2.2, delta);
@@ -310,6 +450,7 @@ function Door({ opening, image, title, entering, isDarkMode }: { opening: boolea
     ? { frame: "#D6B38C", panel: "#D6B38C", panelBottom: "#C19A72", trim: "#703B3B", metal: "#d1a9a0" }
     : { frame: "#703B3B", panel: "#703B3B", panelBottom: "#5E3030", trim: "#EDE3D8", metal: "#d1a9a0" };
   return <group position={[0, -2.12, 0]}>
+    <DoorBacklight opening={opening} entering={entering} isDarkMode={isDarkMode} />
     <PortalWorld image={image} entering={entering} />
     <DoorOpeningGlow opening={opening} entering={entering} />
     <group position={[0, 0, -0.16]}>
@@ -322,7 +463,7 @@ function Door({ opening, image, title, entering, isDarkMode }: { opening: boolea
         <Arch width={1.61} height={3.72} depth={0.013} z={0.095} color={palette.panel} gradient gradientBottom={palette.panelBottom} />
         <DoorTitle title={title} opening={opening} />
         {[-0.62, 0.62].map((x) => <mesh key={x} position={[x, 1.55, 0.113]} castShadow><boxGeometry args={[0.009, 2.5, 0.005]} /><meshStandardMaterial color={palette.trim} roughness={0.58} metalness={0.12} /></mesh>)}
-        <mesh position={[0, 3.12, 0.115]} rotation={[0, 0, Math.PI / 4]}><boxGeometry args={[0.16, 0.16, 0.008]} /><meshStandardMaterial color={palette.trim} metalness={0.28} roughness={0.48} /></mesh>
+        <DoorCrest kind={crest} color={palette.trim} />
 
         <mesh position={[0.67, 1.85, 0.115]} castShadow>
           <sphereGeometry args={[0.045, 16, 16]} />
@@ -341,11 +482,11 @@ function Door({ opening, image, title, entering, isDarkMode }: { opening: boolea
   </group>;
 }
 
-const PORTALS = [
-  { title: "Event Planner", image: "/assets/landing/doors/event-planner.png", href: "/event-planner" },
-  { title: "Undangan Digital", image: "/assets/landing/doors/digital-invitation.png", href: "/d-invitation" },
-  { title: "Guestbook", image: "/assets/landing/doors/guestbook.png", href: "/guestbook" },
-  { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.png", href: "/undangan-fisik" },
+const PORTALS: Array<{ title: string; image: string; href: string; crest: DoorCrestKind }> = [
+  { title: "Event Planner", image: "/assets/landing/doors/event-planner.png", href: "/event-planner", crest: "event-planner" },
+  { title: "Undangan Digital", image: "/assets/landing/doors/digital-invitation.png", href: "/d-invitation", crest: "digital-invitation" },
+  { title: "Guestbook", image: "/assets/landing/doors/guestbook.png", href: "/guestbook", crest: "guestbook" },
+  { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.png", href: "/undangan-fisik", crest: "physical-invitation" },
 ];
 
 function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
@@ -414,9 +555,9 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onPointerOver={(event) => { event.stopPropagation(); if (selected === null && !entering && !reducedMotion) hovered.current = index; }}
     onPointerOut={(event) => { event.stopPropagation(); if (hovered.current === index) hovered.current = null; }}
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
-    <Door opening={opening[index]} image={portal.image} title={portal.title} entering={entering && selected === index} isDarkMode={isDarkMode} />
+    <Door opening={opening[index]} image={portal.image} title={portal.title} crest={portal.crest} entering={entering && selected === index} isDarkMode={isDarkMode} />
     <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
-    <pointLight position={[0, -1.2, -0.4]} intensity={opening[index] ? 1.65 : 0.15} color="#ffe1d5" distance={2.8} />
+    <pointLight position={[0, 1.38, -0.48]} intensity={opening[index] ? 2.2 : 0.2} color="#F2D4AA" distance={4.2} />
   </group>)}</>;
 }
 
@@ -456,7 +597,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
         <ambientLight intensity={0.85} />
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
-        <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
+        <pointLight position={[0, 0.9, -0.42]} intensity={selected !== null && opening[selected] ? 5.6 : 0.5} color="#F3D8B1" distance={4.4} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} isDarkMode={isDarkMode} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
