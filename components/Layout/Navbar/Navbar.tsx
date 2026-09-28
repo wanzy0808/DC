@@ -10,13 +10,14 @@ import LanguageToggle from "@/components/I18n/LanguageToggle";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
+import { isFramedMarketingPath } from "@/lib/marketing-paths";
 
 export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
-  const isLanding = pathname === "/" || (embedded && (pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik"));
-  if ((!embedded && (pathname === "/" || pathname === "/d-invitation" || pathname === "/template-design" || pathname === "/event-planner" || pathname === "/guestbook" || pathname === "/undangan-fisik")) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/") || pathname === "/partner" || pathname.startsWith("/partner/")) return null;
+  const isLanding = embedded && isFramedMarketingPath(pathname);
+  if ((!embedded && isFramedMarketingPath(pathname)) || pathname === "/dashboard" || pathname.startsWith("/dashboard/") || pathname === "/owner" || pathname.startsWith("/owner/") || pathname === "/partner" || pathname.startsWith("/partner/")) return null;
 
   return (
     <header className={`dc-navbar relative z-50 w-full text-foreground transition-colors duration-500 ${
