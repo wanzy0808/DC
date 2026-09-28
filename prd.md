@@ -5523,3 +5523,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### 28 September 2026 — Forest tetap lebar di body
 
 **Koreksi owner:** pembatasan tinggi memakai `object-contain` membuat tampilan gambar menyusut ke tengah; jarak visual dari sisi frame tidak lagi sekitar 1 cm. Pada desktop, forest kini memakai `object-cover object-bottom` dalam wrapper yang tetap berjarak `38px` dari sisi frame dan mulai di bawah header. Bagian atas yang harus terpotong karena rasio viewport memudar lembut agar tidak terlihat sebagai tepi keras; gambar tidak ditarik. Mobile tetap memakai contain agar sisi artwork tidak terpotong pada viewport sempit. Area: `LandingWoodlandAtmosphere.tsx`, canonical §15.4.1b, Appendix A. Lint terarah, 12/12 source regression, dan `git diff --check` lulus; QA visual browser masih diperlukan. Tidak ada migrasi database.
+
+
+### Landing door identity — 2026-09-28
+- Each of the four main doors must carry a distinct crest icon matching its destination instead of the same decorative diamond: Event Planner (calendar/spark), Undangan Digital (digital envelope/signal), Guestbook (open book), and Undangan Fisik (sealed envelope).
+- Add warm forest-style backlighting behind every doorway. The light is faint while closed, becomes stronger when the selected door opens, and intensifies during entry so it feels like light escaping from inside the woodland/portal.
+- The backlight must remain soft and edge-free, using warm cream/champagne tones rather than a pink box. It must not alter the established door orbit, camera, geometry, positioning, or open/close interaction.
