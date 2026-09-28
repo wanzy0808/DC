@@ -1489,6 +1489,12 @@ The approved landing is a continuous botanical/rose-glow/petal scene with a roun
 
 **Current Pintu color override (28 September 2026):** perubahan hanya pada warna material. Light Mode memakai body/frame pintu `#703B3B` dan lis/trim `#EDE3D8`; Dark Mode memakai body/frame pintu `#D6B38C` dan lis/trim `#703B3B`. Geometry, ukuran, ornament, material roughness/metalness, orbit, kamera, animasi buka/tutup, glow, lighting, shadow, portal dan route tidak berubah.
 
+**Musik marketing saat ini (28 September 2026):** pemutar bersama yang dimulai dari landing memakai `Epic Spectrum — Forgiveness` dari aset owner `public/assets/audio/epic-spectrum-forgiveness.mp3`. Status mute dan volume tetap persisten saat berpindah antarhalaman marketing; aturan autoplay browser dan kontrol manual tetap berlaku.
+
+**Gerak botanical homepage:** empat ranting sudut boleh berayun sangat pelan (maksimal sekitar 0,55° dan 2px) dengan titik putar pada tepi frame. Opacity Light/Dark yang ditentukan oleh kelas tema tetap berlaku; pengguna dengan reduced motion melihat ranting diam.
+
+**Penempatan layer dari review screenshot owner:** ranting harus menyeberangi batas main frame seperti dekorasi lama, tetapi tetap berada di belakang isi frame dan tidak menimpa logo Undara. Siluet hutan mengisi bidang jauh lebih lebar di belakang orbit pintu dan sejajar dengan area pijakan pintu; jangan membuatnya seperti gambar kecil terpisah di tengah.
+
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
 
 Active canonical references for homepage `/`: `app/page.tsx`, `components/Landing/Pintu/LandingDoorScene.tsx`, `components/Landing/LandingWoodlandAtmosphere.tsx`, `components/Landing/LandingStoryCopy.tsx`, `components/Layout/MarketingFrameFooter.tsx`, `components/Layout/Navbar/Navbar.tsx`, and the shared theme/language controls and button components they actually import. `PublicMarketingAtmosphere` remains a non-home marketing component; `CloudCopy` is retired from the active homepage. Historical `app/pagecontoh/page.tsx` is not a live source file. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
@@ -5417,7 +5423,21 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 
 **Validasi:** source regression memverifikasi homepage memakai woodland component, forest + branch 01–05 tersedia di path canonical, `CloudCopy` pensiun dari source aktif, dan homepage tidak mengimpor petal/shared marketing atmosphere. Browser visual QA desktop/mobile Light/Dark tetap diperlukan untuk fine-tuning scale/offset ornament terhadap viewport nyata.
 
+### 28 September 2026 — Penyempurnaan gerak ranting dan musik landing
 
+**Permintaan owner:** gambar `Undara’s Dreamy Portal Invitation.png` menjadi patokan penempatan branch/background dengan animasi sedikit; musik landing diganti ke `Epic Spectrum - Forgiveness (freetouse.com)` yang ditambahkan owner.
+
+**Implementasi:** memakai komposisi woodland yang sudah masuk `main`, tanpa menimpa ulang posisi dan copy. Keempat ranting sudut mendapat ayunan halus sekitar 0,55° dan 2px dengan titik putar pada tepi masing-masing; animasi berhenti pada reduced motion. Animasi lama menulis opacity inline hingga mengabaikan kelas opacity Light/Dark; opacity sekarang mengikuti kelas tema. Aset MP3 owner dinormalisasi ke nama URL kebab-case dan `MarketingAudioProvider` menunjuk file itu sehingga satu pemutar tetap berjalan saat navigasi marketing.
+
+**Sinkronisasi `main`:** selama pengerjaan, commit `e3dac6a` dan `8b01159` sudah memperbaiki tiga URL foto demo Studio dan guard URL pensiun. Perubahan yang sama pada checkout kerja dibuang; commit landing ini memakai versi terbaru dari `main` tanpa menduplikasinya.
+
+**Area:** `LandingWoodlandAtmosphere.tsx`, `MarketingAudio.tsx`, `public/assets/audio/`, `prd.md`. **Validasi:** production build webpack + TypeScript berhasil dengan perubahan yang setara sebelum sinkronisasi dua commit `main` tersebut; lint terarah dan 11/11 source regression lulus, `git diff --check` bersih. Browser QA Light/Dark serta pemutaran audio di perangkat nyata belum dilakukan. Tidak ada migrasi database. Commit dicatat pada riwayat Git perubahan ini.
+
+### 28 September 2026 — Koreksi visual frame setelah screenshot owner
+
+**Temuan owner:** ranting yang berada di dalam frame terpotong dan nyaris tidak terlihat, ranting atas mendekati logo, serta siluet hutan terlalu sempit dan tidak menyatu dengan putaran pintu.
+
+**Perbaikan:** ranting dipindah menjadi layer homepage di luar clip main frame, di belakang isi frame sehingga tetap menembus garis bingkai tanpa menutup logo atau hit target. Sudut kiri atas dipendekkan dan dibuat memudar ke arah brand. Siluet diperlebar melewati tepi frame, ditinggikan, dan disejajarkan dengan kaki pintu; kontras Light Mode dinaikkan agar pepohonan terbaca sebagai latar, sementara Dark Mode tetap lembut. Empat pintu, orbit, copy, dan kontrol tidak diubah. Area: `app/page.tsx`, `LandingWoodlandAtmosphere.tsx`, `prd.md`. Lint terarah, 11/11 source regression, `git diff --check`, dan production build webpack + TypeScript lulus. Screenshot setelah revisi, Light/Dark mobile, dan pemutaran audio perangkat nyata belum diverifikasi.
 ### 28 September 2026 — Warna kunang-kunang mengikuti mode Undara
 
 **Permintaan owner:** kunang-kunang landing memakai warna brand pada Light Mode dan Champagne pada Dark Mode.
