@@ -193,7 +193,7 @@ function GroundShadow({ fullFrame, isDarkMode }: { fullFrame: boolean; isDarkMod
   </group>;
 }
 
-function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
+function Fireflies({ reducedMotion, isDarkMode }: { reducedMotion: boolean; isDarkMode: boolean }) {
   const points = useRef<THREE.Points>(null);
   const base = useMemo(() => {
     const particles = Array.from({ length: 110 }, (_, i) => {
@@ -219,10 +219,10 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
     const context = canvas.getContext("2d");
     if (context) {
       const gradient = context.createRadialGradient(32, 32, 0, 32, 32, 32);
-      gradient.addColorStop(0, "rgba(255,253,222,0.95)");
-      gradient.addColorStop(0.16, "rgba(255,226,130,0.72)");
-      gradient.addColorStop(0.42, "rgba(255,197,86,0.24)");
-      gradient.addColorStop(1, "rgba(255,197,86,0)");
+      gradient.addColorStop(0, "rgba(255,255,255,0.95)");
+      gradient.addColorStop(0.16, "rgba(255,255,255,0.72)");
+      gradient.addColorStop(0.42, "rgba(255,255,255,0.24)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
       context.fillStyle = gradient;
       context.fillRect(0, 0, 64, 64);
     }
@@ -243,7 +243,7 @@ function Fireflies({ reducedMotion }: { reducedMotion: boolean }) {
   });
   return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial map={glowMap} color="#ffe6a1" size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={THREE.AdditiveBlending} />
+    <pointsMaterial map={glowMap} color={isDarkMode ? "#D6B38C" : "#703B3B"} size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={isDarkMode ? THREE.AdditiveBlending : THREE.NormalBlending} />
   </points>;
 }
 
@@ -457,7 +457,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
         <hemisphereLight args={["#fff1e6", "#ad7180", 0.85]} />
         <directionalLight position={[-3, 6, 5]} intensity={2.4} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0002} shadow-radius={4} />
         <pointLight position={[0, -1.35, -0.1]} intensity={selected !== null && opening[selected] ? 7 : 0.7} color="#ffe5bc" distance={3.5} />
-        <Fireflies reducedMotion={Boolean(reducedMotion)} />
+        <Fireflies reducedMotion={Boolean(reducedMotion)} isDarkMode={isDarkMode} />
         <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
       </Canvas>
       <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); onDoorOpenChange?.(false); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>

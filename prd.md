@@ -5416,3 +5416,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Responsive/accessibility:** ornament memakai `pointer-events-none`; top-right branch disembunyikan pada viewport sempit; forest/branches tidak menambah hit target; motion hanya fade/settle singkat dan menghormati `prefers-reduced-motion`. Story copy ikut fade saat Pintu aktif agar tidak bersaing dengan entry state.
 
 **Validasi:** source regression memverifikasi homepage memakai woodland component, forest + branch 01–05 tersedia di path canonical, `CloudCopy` pensiun dari source aktif, dan homepage tidak mengimpor petal/shared marketing atmosphere. Browser visual QA desktop/mobile Light/Dark tetap diperlukan untuk fine-tuning scale/offset ornament terhadap viewport nyata.
+
+
+### 28 September 2026 — Warna kunang-kunang mengikuti mode Undara
+
+**Permintaan owner:** kunang-kunang landing memakai warna brand pada Light Mode dan Champagne pada Dark Mode.
+
+**Implementasi:** `Fireflies` di `LandingDoorScene.tsx` sekarang menerima `isDarkMode`. Light memakai `#703B3B`; Dark memakai `#D6B38C`. Sprite glow diubah menjadi alpha putih netral agar warna material tidak tercampur tint kuning lama. Light menggunakan normal blending supaya coklat brand tetap terbaca di Warm Ivory; Dark mempertahankan additive glow untuk Champagne. Jumlah partikel, ukuran, posisi, pola gerak, kecepatan, dan opacity animation tidak diubah.
+
+**Validasi:** regression test mengunci pasangan warna dan penggunaan mode pada komponen Fireflies.
