@@ -223,7 +223,7 @@ export default function WhatsAppBlastPanel({
 
         <div className="mt-4 flex flex-wrap items-end justify-between gap-3">
           <label className="block min-w-0 flex-1 sm:max-w-md">
-            <span className="mb-1.5 block font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+            <span className="mb-1.5 block font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
               {d("Undangan aktif")}
             </span>
             <select
