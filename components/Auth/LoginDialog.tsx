@@ -245,10 +245,10 @@ export default function LoginDialog({
         </div>
 
         <div className="space-y-4">
-          <label htmlFor="dc-login-email" className={authLabelClass}>
+          <label htmlFor="undara-login-email" className={authLabelClass}>
             {t.email}
             <input
-              id="dc-login-email"
+              id="undara-login-email"
               required
               type="email"
               autoComplete="email"
@@ -258,10 +258,10 @@ export default function LoginDialog({
             />
           </label>
           <div>
-            <label htmlFor="dc-login-password" className={authLabelClass}>{t.password}</label>
+            <label htmlFor="undara-login-password" className={authLabelClass}>{t.password}</label>
             <div className="relative">
               <input
-                id="dc-login-password"
+                id="undara-login-password"
                 required
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
