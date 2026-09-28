@@ -84,8 +84,10 @@ test("Undara production doors keep the brand body color under rear-only lighting
   assert.match(doors, /trim: isDarkMode \? "#D6B38C" : "#EDE3D8"/);
   assert.match(doors, /<DoorFrame color=\{palette\.frame\} \/>/);
   assert.match(doors, /emissive=\{color\} emissiveIntensity=\{0\.1[34-6]\}/);
-  assert.match(doors, /directionalLight[\s\S]*?position=\{\[0, 5\.8, -7\.2\]\}/);
-  assert.match(doors, /pointLight position=\{\[0, 1\.2, -2\.6\]\}/);
+  assert.match(doors, /directionalLight[\s\S]*?position=\{\[0, 6\.1, -7\.8\]\}/);
+  assert.match(doors, /pointLight position=\{\[0, 1\.35, -2\.9\]\}/);
+  assert.match(doors, /function ForestShadowFloor/);
+  assert.match(doors, /planeGeometry args=\{\[17, 13\]\}/);
   assert.match(doors, /isDarkMode=\{isDarkMode\}/);
 });
 
@@ -187,10 +189,10 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(existsSync(path("public/assets/landing/atmosphere/forest-silhouette.png")), true);
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/forest-silhouette\.png/);
-  for (const branch of ["01", "02", "03", "04"]) {
-    assert.ok(woodland.includes(`/assets/landing/ornaments/botanical/branch-${branch}.png`));
-  }
-  assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.png/);
+  assert.match(woodland, /data-landing-canopy/);
+  assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
+  assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(story), false);
+  assert.equal(home.includes("LandingOuterBranches"), false);
 });
 
 
