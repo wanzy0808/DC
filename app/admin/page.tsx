@@ -9,7 +9,7 @@ export default async function AdminPage() {
   const [userCount, invitationCount] = await Promise.all([prisma.user.count(), prisma.invitation.count()]);
 
   return (
-    <div className="dc-dashboard min-h-screen bg-background text-foreground">
+    <div className="undara-dashboard min-h-screen bg-background text-foreground">
       <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-sans">
         <header>
           <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Admin Dashboard</p>
