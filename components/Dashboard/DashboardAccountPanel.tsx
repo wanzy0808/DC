@@ -130,11 +130,11 @@ export default function DashboardAccountPanel({
   }
 
   return (
-    <DashboardPage className="dc-dashboard-account-page">
+    <DashboardPage className="undara-dashboard-account-page">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.15em] text-primary">{t("Akun", "Account")}</p>
-          <h1 className="mt-1 font-[family-name:var(--font-dc-heading)] text-2xl font-semibold text-primary sm:text-3xl">{t("Profil Saya", "My profile")}</h1>
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[0.15em] text-primary">{t("Akun", "Account")}</p>
+          <h1 className="mt-1 font-[family-name:var(--font-undara-heading)] text-2xl font-semibold text-primary sm:text-3xl">{t("Profil Saya", "My profile")}</h1>
         </div>
         <div className="flex flex-wrap gap-2" role="group" aria-label={t("Pengaturan akun", "Account settings")}>
           <Button type="button" variant={section === "profile" ? "default" : "outline"} onClick={() => { setError(""); setNotice(""); onSectionChange("profile"); }}>
@@ -146,7 +146,7 @@ export default function DashboardAccountPanel({
         </div>
       </div>
 
-      {notice && <p role="status" className="dc-dashboard-notice mb-4 rounded-tr-[22px] border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">{notice}</p>}
+      {notice && <p role="status" className="undara-dashboard-notice mb-4 rounded-tr-[22px] border border-primary/30 bg-primary/10 px-4 py-3 text-sm text-foreground">{notice}</p>}
       {error && <p role="alert" className="mb-4 rounded-2xl border border-red-500/35 bg-red-500/10 px-4 py-3 text-sm text-red-700 dark:text-red-300">{error}</p>}
 
       {section === "profile" ? (
