@@ -201,10 +201,10 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     ? d("Siap publish")
                     : d("Belum desain");
               return (
-                <article key={invitation.id} className="dc-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
+                <article key={invitation.id} className="undara-dashboard-detail-card rounded-tr-[22px] border border-primary/20 bg-primary/[0.025] p-4 sm:p-5">
                   <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div className="min-w-0">
-                      <h3 className="dc-ui-name break-words text-base font-semibold text-foreground">{title}</h3>
+                      <h3 className="undara-ui-name break-words text-base font-semibold text-foreground">{title}</h3>
                       {invitation.venue && <p className="mt-1 truncate text-sm text-muted-foreground">{invitation.venue}</p>}
                     </div>
                     <DashboardStatusBadge active={invitation.isPublished}>{status}</DashboardStatusBadge>
@@ -271,7 +271,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                       </div>
                       <div className="min-w-0 space-y-3">
                         <div>
-                          <h4 className="dc-ui-title text-base font-semibold text-primary">{d("QR Undangan")}</h4>
+                          <h4 className="undara-ui-title text-base font-semibold text-primary">{d("QR Undangan")}</h4>
                           <p className="mt-1 max-w-lg text-sm leading-6 text-muted-foreground">
                             {d("Satu QR untuk undangan ini. Bisa dibagikan kepada tamu, bukan tiket QR check-in per tamu.")}
                           </p>
@@ -282,7 +282,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                           )}
                         </div>
                         <Button asChild size="sm">
-                          <a href={qrDownloadHref} download={"dc-organizer-undangan-" + invitation.id + "-qr.png"}>
+                          <a href={qrDownloadHref} download={"undara-undangan-" + invitation.id + "-qr.png"}>
                             <Download className="size-4" aria-hidden="true" />
                             {d("Download QR PNG")}
                           </a>
@@ -312,7 +312,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
           {responders.map((guest) => (
             <div
               key={guest.id}
-              className="dc-dashboard-detail-card flex flex-wrap items-center justify-between gap-3 rounded-tr-[22px] border border-primary/15 bg-primary/[0.025] px-4 py-3"
+              className="undara-dashboard-detail-card flex flex-wrap items-center justify-between gap-3 rounded-tr-[22px] border border-primary/15 bg-primary/[0.025] px-4 py-3"
             >
               <div className="min-w-0">
                 <span className="block truncate text-xs font-medium text-foreground">
@@ -322,7 +322,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                   {guest.invitation?.title || d("Acara tanpa judul")}
                 </span>
               </div>
-              <span className="shrink-0 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
+              <span className="shrink-0 font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.08em] text-muted-foreground">
                 {d(responseLabel[guest.rsvpStatus] || guest.rsvpStatus)} · {guest.plusOnes + 1} pax
               </span>
             </div>

@@ -12,8 +12,8 @@ const helpOptions = [
     labelEn: "Wedding Planner",
     contact: "Christine",
     number: "6282124786516",
-    message: "Halo Christine, saya ingin konsultasi mengenai layanan Wedding Planner DC Organizer.",
-    messageEn: "Hello Christine, I would like to ask about DC Organizer Wedding Planner services.",
+    message: "Halo Christine, saya ingin konsultasi mengenai layanan Wedding Planner Undara.",
+    messageEn: "Hello Christine, I would like to ask about Undara Wedding Planner services.",
     icon: CalendarHeart,
   },
   {
@@ -22,8 +22,8 @@ const helpOptions = [
     labelEn: "Invitations & Guestbook",
     contact: "Admin",
     number: "6281285009609",
-    message: "Halo Admin DC Organizer, saya ingin bertanya mengenai undangan fisik, undangan digital, atau Guestbook.",
-    messageEn: "Hello DC Organizer Admin, I have a question about printed invitations, digital invitations, or Guestbook.",
+    message: "Halo Admin Undara, saya ingin bertanya mengenai undangan fisik, undangan digital, atau Guestbook.",
+    messageEn: "Hello Undara Admin, I have a question about printed invitations, digital invitations, or Guestbook.",
     icon: MessageCircle,
   },
 ] as const;
@@ -52,7 +52,7 @@ export default function DashboardWhatsAppHelp() {
   return (
     <div ref={rootRef} className="absolute bottom-5 right-5 z-[70] flex max-w-[calc(100%-2.5rem)] flex-col items-end gap-3 sm:bottom-6 sm:right-6">
       {open && (
-        <div id="dc-dashboard-whatsapp-options" className="max-h-[calc(90dvh-6rem)] w-[min(330px,calc(90vw-3rem))] max-w-full overflow-x-hidden overflow-y-auto overscroll-contain rounded-[24px] border border-primary/25 bg-background p-2 text-foreground shadow-[0_16px_45px_rgba(0,0,0,0.16)]">
+        <div id="undara-dashboard-whatsapp-options" className="max-h-[calc(90dvh-6rem)] w-[min(330px,calc(90vw-3rem))] max-w-full overflow-x-hidden overflow-y-auto overscroll-contain rounded-[24px] border border-primary/25 bg-background p-2 text-foreground shadow-[0_16px_45px_rgba(0,0,0,0.16)]">
           <div className="flex items-center justify-between gap-2 px-3 py-2">
             <p className="text-sm font-semibold">{d("Hubungi kami")}</p>
             <button type="button" aria-label={d("Tutup")} onClick={() => setOpen(false)} className="grid size-8 place-items-center rounded-full text-muted-foreground transition hover:bg-primary/10 hover:text-primary focus-visible:outline-2 focus-visible:outline-primary">
@@ -91,7 +91,7 @@ export default function DashboardWhatsAppHelp() {
         size="icon-lg"
         aria-label={d("Buka bantuan WhatsApp")}
         aria-expanded={open}
-        aria-controls="dc-dashboard-whatsapp-options"
+        aria-controls="undara-dashboard-whatsapp-options"
         onClick={() => setOpen((current) => !current)}
         className="rounded-full"
       >

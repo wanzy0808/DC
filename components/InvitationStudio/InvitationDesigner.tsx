@@ -195,7 +195,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   useEffect(() => {
     const frame = requestAnimationFrame(() => {
       const scroller = canvasScrollRef.current;
-      const viewport = scroller?.querySelector<HTMLElement>(".dc-studio-preview-viewport");
+      const viewport = scroller?.querySelector<HTMLElement>(".undara-studio-preview-viewport");
       if (!scroller || !viewport) return;
       const viewportRect = viewport.getBoundingClientRect();
       const scrollRect = scroller.getBoundingClientRect();
@@ -1643,7 +1643,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           tags: [selectedCatalog?.category || template?.category || "Designer", "studio"],
           previewUrl: selectedCatalog?.previewImage || template?.previewImage,
           category: selectedCatalog?.category || template?.category || "Designer",
-          description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain DC Organizer"}.`,
+          description: `Template Studio berbasis ${selectedCatalog?.name || template?.name || "desain Undara"}.`,
           usesPhotos: selectedCatalog?.usesPhotos ?? template?.usesPhotos ?? false,
           musicUrl,
         }, templateDraftId);
@@ -1740,14 +1740,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   );
 
   return (
-    <section className="dc-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
+    <section className="undara-invitation-studio-shell" data-inspector={inspectorOpen} data-mobile-canvas={mobileCanvas}>
 
-      <div className="dc-studio-mobile-view" aria-label="Studio">
+      <div className="undara-studio-mobile-view" aria-label="Studio">
         <button type="button" aria-pressed={!mobileCanvas} onClick={() => setMobileCanvas(false)}>{copy.settings}</button>
         <button type="button" aria-pressed={mobileCanvas} onClick={() => setMobileCanvas(true)}>{copy.invitation}</button>
       </div>
-      <div className="dc-studio-workspace">
-        <nav className="dc-studio-rail" aria-label={copy.tools}>
+      <div className="undara-studio-workspace">
+        <nav className="undara-studio-rail" aria-label={copy.tools}>
           <DesignerTool active={panel === "template"} label={locale === "en" ? "Catalog" : "Katalog"} icon={<LayoutTemplate className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("template"); }} />
           <DesignerTool active={panel === "sections"} label={copy.sections} icon={<SlidersHorizontal className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("sections"); }} />
           <DesignerTool active={panel === "text"} label={copy.text} icon={<Type className="h-4 w-4" strokeWidth={2.2} />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("text"); }} />
@@ -1757,7 +1757,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           <DesignerTool active={panel === "color"} label={copy.colors} icon={<Palette className="h-4 w-4" />} onClick={() => { setInspectorOpen(true); setMobileCanvas(false); setPanel("color"); }} />
         </nav>
 
-        <aside className="dc-studio-inspector" aria-label="Pengaturan desain">
+        <aside className="undara-studio-inspector" aria-label="Pengaturan desain">
           <fieldset disabled={!invitation || saving} className="min-w-0 border-0 p-0 disabled:opacity-50">
           {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} onBlankCanvas={templateMode && allowBlankCanvas ? startBlankCanvas : undefined} />}
           {panel === "sections" && (
@@ -1783,7 +1783,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           {panel === "color" && design.template !== "romantic-rose" && <ColorPanel selected={design.palette} onSelect={(value) => change({ palette: value })} />}
           {panel === "decor" && template && !template.usesPhotos ? (
             <div className="space-y-4 rounded-2xl border border-primary/25 bg-primary/5 p-5">
-              <h2 className="font-[family-name:var(--font-dc-heading)] text-lg text-foreground">{copy.photoFree}</h2>
+              <h2 className="font-[family-name:var(--font-undara-heading)] text-lg text-foreground">{copy.photoFree}</h2>
               <p className="text-sm leading-7 text-muted-foreground">Desain ini menggunakan tipografi dan ilustrasi, tanpa slot foto. Koleksi foto acara tetap tersimpan jika nanti kamu mengganti tema dengan foto.</p>
               <p className="text-xs text-primary">Pilih tema bertanda “Dengan foto” untuk mengatur cover, foto individu, dan galeri.</p>
             </div>
@@ -1826,7 +1826,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           </fieldset>
         </aside>
 
-        <div className="dc-studio-canvas" onKeyDown={(event) => {
+        <div className="undara-studio-canvas" onKeyDown={(event) => {
           if (!invitation || saving || audioBusy || event.altKey || event.nativeEvent.isComposing) return;
           const target = event.target;
           if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
@@ -1866,7 +1866,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             onPreview={() => setFinalPreviewOpen(true)}
             onSave={save}
           />
-          <div ref={canvasScrollRef} className="dc-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-enabled="true" data-panning={canvasPanning ? "true" : undefined}
+          <div ref={canvasScrollRef} className="undara-studio-canvas-scroll" onScroll={syncCanvasSectionOnScroll} tabIndex={0} aria-label={locale === "en" ? "Invitation canvas" : "Kanvas undangan"} data-space-pan={canvasPanReady ? "true" : undefined} data-pan-enabled="true" data-panning={canvasPanning ? "true" : undefined}
           onKeyDown={(event) => {
             if (event.code !== "Space" || event.altKey || event.ctrlKey || event.metaKey) return;
             const target = event.target;
@@ -1892,7 +1892,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
             handleCanvasSelection(target, event.currentTarget);
           }} onDragOver={onAssetDragOver} onDrop={onAssetDrop} onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) setAssetDropReady(false); }}>
-          <div className="dc-studio-canvas-layout" style={{ "--dc-zoomed-stage-width": `${Math.max(340, canvasNaturalSize.width * canvasZoom)}px` } as React.CSSProperties}>
+          <div className="undara-studio-canvas-layout" style={{ "--undara-zoomed-stage-width": `${Math.max(340, canvasNaturalSize.width * canvasZoom)}px` } as React.CSSProperties}>
             <StudioLayerList
               locale={locale}
               layers={design.layers}
@@ -1911,7 +1911,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onDistribute={distributeSelectedAssetLayers}
             />
 
-            <div className="dc-studio-preview-workspace">
+            <div className="undara-studio-preview-workspace">
               <StudioStageControls
                 locale={locale}
                 envelopeEnabled={design.sections.envelope !== false}
@@ -1928,8 +1928,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 }}
                 onContent={() => { setCanvasStage("cover"); setActiveCanvasSectionId((current) => current === "envelope" ? canvasNavigationItems.find((item) => item.id !== "envelope")?.id ?? current : current); }}
               />
-              <div className="dc-studio-preview-viewport" style={{ width: canvasNaturalSize.width * canvasZoom, height: canvasNaturalSize.height * canvasZoom }}>
-              <div ref={previewSurfaceRef} className="dc-studio-preview-surface" data-asset-drop={assetDropReady} style={{ width: canvasNaturalSize.width, transform: `scale(${canvasZoom})`, transformOrigin: "top left" }}>
+              <div className="undara-studio-preview-viewport" style={{ width: canvasNaturalSize.width * canvasZoom, height: canvasNaturalSize.height * canvasZoom }}>
+              <div ref={previewSurfaceRef} className="undara-studio-preview-surface" data-asset-drop={assetDropReady} style={{ width: canvasNaturalSize.width, transform: `scale(${canvasZoom})`, transformOrigin: "top left" }}>
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
                     invitation={invitation}
@@ -2033,7 +2033,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         locale={locale}
       />
 
-      {notice && <footer className="dc-studio-status" role="status" aria-live="polite">{notice}</footer>}
+      {notice && <footer className="undara-studio-status" role="status" aria-live="polite">{notice}</footer>}
     </section>
   );
 }

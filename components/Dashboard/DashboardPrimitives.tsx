@@ -16,7 +16,7 @@ export function DashboardPage({
   return (
     <div
       className={classes(
-        "dc-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-8",
+        "undara-dashboard-page mx-auto w-[80vw] max-w-full min-w-0 pb-16 pt-6 sm:pt-8",
         className,
       )}
     >
@@ -34,7 +34,7 @@ export function DashboardSurface({
     <section
       {...props}
       className={classes(
-        "dc-dashboard-surface rounded-tr-[26px] border border-primary/15 bg-background shadow-[0_10px_36px_rgba(78,32,47,0.045)]",
+        "undara-dashboard-surface rounded-tr-[26px] border border-primary/15 bg-background shadow-[0_10px_36px_rgba(78,32,47,0.045)]",
         className,
       )}
     >
@@ -51,7 +51,7 @@ export function DashboardMetricGrid({
   className?: string;
 }) {
   return (
-    <section className={classes("dc-dashboard-metric-group grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-4", className)}>
+    <section className={classes("undara-dashboard-metric-group grid min-w-0 gap-2 sm:grid-cols-2 xl:grid-cols-4", className)}>
       {children}
     </section>
   );
@@ -71,7 +71,7 @@ export function DashboardMetricCard({
   return (
     <article
       className={classes(
-        "dc-dashboard-metric flex min-w-0 items-center gap-3 px-4 py-5",
+        "undara-dashboard-metric flex min-w-0 items-center gap-3 px-4 py-5",
         className,
       )}
     >
@@ -81,7 +81,7 @@ export function DashboardMetricCard({
         </span>
       )}
       <div className="min-w-0">
-        <p className="dc-ui-label text-[14px] leading-5 text-muted-foreground">{label}</p>
+        <p className="undara-ui-label text-[14px] leading-5 text-muted-foreground">{label}</p>
         <div className="mt-1 break-words text-[28px] font-semibold leading-none text-foreground tabular-nums">{value}</div>
       </div>
     </article>
@@ -100,11 +100,11 @@ export function DashboardCompactStat({
   return (
     <div
       className={classes(
-        "dc-dashboard-compact-stat min-w-0 rounded-tr-[18px] border border-border/70 bg-foreground/[0.018] px-3.5 py-3",
+        "undara-dashboard-compact-stat min-w-0 rounded-tr-[18px] border border-border/70 bg-foreground/[0.018] px-3.5 py-3",
         className,
       )}
     >
-      <p className="dc-ui-label font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
+      <p className="undara-ui-label font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.1em] text-muted-foreground">
         {label}
       </p>
       <div className="mt-1.5 break-words text-base font-semibold text-foreground">{value}</div>
@@ -123,7 +123,7 @@ export function DashboardNotice({
     <div
       role="status"
       className={classes(
-        "dc-dashboard-notice rounded-tr-[18px] border border-primary/25 bg-primary/[0.065] px-4 py-3.5 text-sm leading-6 text-foreground",
+        "undara-dashboard-notice rounded-tr-[18px] border border-primary/25 bg-primary/[0.065] px-4 py-3.5 text-sm leading-6 text-foreground",
         className,
       )}
     >
@@ -147,11 +147,11 @@ export function DashboardSectionHeader({
     <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
         {eyebrow && (
-          <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.14em] text-primary">
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[0.14em] text-primary">
             {eyebrow}
           </p>
         )}
-        <h2 className={`${eyebrow ? "mt-1.5" : ""} dc-ui-title font-[family-name:var(--font-dc-heading)] text-xl font-semibold leading-tight text-primary sm:text-2xl`}>
+        <h2 className={`${eyebrow ? "mt-1.5" : ""} undara-ui-title font-[family-name:var(--font-undara-heading)] text-xl font-semibold leading-tight text-primary sm:text-2xl`}>
           {title}
         </h2>
         {description && (
@@ -177,7 +177,7 @@ export function DashboardStatusBadge({
   return (
     <span
       className={classes(
-        "inline-flex min-h-8 items-center rounded-full border px-3 py-1 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.08em]",
+        "inline-flex min-h-8 items-center rounded-full border px-3 py-1 font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.08em]",
         active
           ? "border-primary/15 bg-primary/[0.08] text-primary"
           : "border-border/70 bg-background text-muted-foreground",
@@ -205,7 +205,7 @@ export function DashboardEmptyState({
   return (
     <div
       className={classes(
-        "dc-dashboard-empty-state flex min-h-40 flex-col items-start justify-center rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-7",
+        "undara-dashboard-empty-state flex min-h-40 flex-col items-start justify-center rounded-tr-[22px] border border-dashed border-primary/25 bg-primary/[0.035] px-5 py-7",
         className,
       )}
     >
@@ -214,7 +214,7 @@ export function DashboardEmptyState({
           <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} />
         </span>
       )}
-      <p className="dc-ui-title text-base font-semibold text-foreground">{title}</p>
+      <p className="undara-ui-title text-base font-semibold text-foreground">{title}</p>
       {description && (
         <p className="mt-1.5 max-w-xl text-sm leading-6 text-muted-foreground">{description}</p>
       )}
@@ -234,8 +234,8 @@ export function DashboardPageHeader({ eyebrow, title, description, actions, chil
   return (
     <div className="mb-6 flex flex-col gap-4 border-b border-primary/20 pb-5 sm:flex-row sm:items-center sm:justify-between">
       <div className="min-w-0">
-        {eyebrow && <p className="font-[family-name:var(--font-dc-mono)] text-xs uppercase tracking-[0.1em] text-primary">{eyebrow}</p>}
-        <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-primary sm:text-3xl">{title}</h1>
+        {eyebrow && <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[0.1em] text-primary">{eyebrow}</p>}
+        <h1 className="break-words font-[family-name:var(--font-undara-heading)] text-2xl font-semibold leading-tight text-primary sm:text-3xl">{title}</h1>
         {description && <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">{description}</p>}
         {children && <div className="mt-3">{children}</div>}
       </div>
@@ -250,7 +250,7 @@ export function DashboardPanel({ children, className, ...header }: Parameters<ty
   className?: string;
 }) {
   return (
-    <DashboardSurface className={classes("dc-dashboard-panel min-w-0 overflow-hidden", className)}>
+    <DashboardSurface className={classes("undara-dashboard-panel min-w-0 overflow-hidden", className)}>
       <div className="border-b border-primary/20 px-5 py-5 sm:px-6">
         <DashboardSectionHeader {...header} />
       </div>

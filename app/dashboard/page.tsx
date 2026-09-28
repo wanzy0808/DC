@@ -359,9 +359,9 @@ export default function DashboardPage() {
 
   return (
     <div
-      className="dc-dashboard dc-dashboard--redesign relative isolate flex h-dvh min-h-0 w-full flex-col overflow-hidden font-[family-name:var(--font-dc-sans)] text-foreground"
+      className="undara-dashboard undara-dashboard--redesign relative isolate flex h-dvh min-h-0 w-full flex-col overflow-hidden font-[family-name:var(--font-undara-sans)] text-foreground"
     >
-      <div className="dc-dashboard-frame relative flex h-[90dvh] min-h-0 w-[90vw] overflow-hidden">
+      <div className="undara-dashboard-frame relative flex h-[90dvh] min-h-0 w-[90vw] overflow-hidden">
         <DashboardSidebar
           tab={tab}
           onNavigate={go}
@@ -373,10 +373,10 @@ export default function DashboardPage() {
           onCloseMobile={() => setMobileOpen(false)}
         />
 
-        <div className="dc-dashboard-workspace flex min-h-0 min-w-0 flex-1 flex-col">
-          <header className="dc-dashboard-header sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
+        <div className="undara-dashboard-workspace flex min-h-0 min-w-0 flex-1 flex-col">
+          <header className="undara-dashboard-header sticky top-0 z-40 border-b border-border/70 bg-background/95 backdrop-blur-xl">
             <div className="flex min-h-16 w-full min-w-0 items-stretch">
-              <div className="dc-dashboard-brand hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
+              <div className="undara-dashboard-brand hidden w-64 shrink-0 items-center border-r border-border/70 px-5 lg:flex">
                 <Link href="/" className="group block min-w-0">
                   <BrandWordmark
                     size="dashboard"
@@ -386,7 +386,7 @@ export default function DashboardPage() {
               </div>
 
               <div className="min-w-0 flex-1">
-                <div className="dc-dashboard-header-inner mx-auto flex min-h-16 w-[80vw] max-w-[calc(100%-2rem)] min-w-0 items-center gap-3">
+                <div className="undara-dashboard-header-inner mx-auto flex min-h-16 w-[80vw] max-w-[calc(100%-2rem)] min-w-0 items-center gap-3">
                   <Button
                     type="button"
                     size="icon"
@@ -394,7 +394,7 @@ export default function DashboardPage() {
                     onClick={() => setMobileOpen((value) => !value)}
                     aria-label={mobileOpen ? d("Tutup menu dashboard") : d("Buka menu dashboard")}
                     aria-expanded={mobileOpen}
-                    aria-controls="dc-dashboard-sidebar"
+                    aria-controls="undara-dashboard-sidebar"
                     title={d("Buka menu dashboard")}
                   >
                     {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -408,7 +408,7 @@ export default function DashboardPage() {
 
                   <div className="min-w-0">
                     <div className="flex min-w-0 items-center gap-2">
-                      <p className="dc-dashboard-header-title truncate text-base font-semibold text-foreground sm:text-lg">
+                      <p className="undara-dashboard-header-title truncate text-base font-semibold text-foreground sm:text-lg">
                         {d(meta.title)}
                       </p>
                       {scopedHeaderEvent && (
@@ -419,22 +419,22 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <div className="dc-dashboard-header-controls ml-auto hidden items-center gap-1 sm:flex">
+                  <div className="undara-dashboard-header-controls ml-auto hidden items-center gap-1 sm:flex">
                     <ThemeToggle />
                     <LanguageToggle />
                   </div>
 
-                  <div ref={accountMenuRef} className="dc-dashboard-account relative">
+                  <div ref={accountMenuRef} className="undara-dashboard-account relative">
                     <Button
                       type="button"
                       onClick={() => setProfileMenu((value) => !value)}
-                      className="dc-dashboard-account-button h-11 min-w-0 border-primary/35 bg-transparent px-2 text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-white/20 dark:text-white dark:hover:border-white/35 dark:hover:bg-white/[0.07] dark:hover:text-white"
+                      className="undara-dashboard-account-button h-11 min-w-0 border-primary/35 bg-transparent px-2 text-primary shadow-none hover:border-primary hover:bg-primary/5 hover:text-primary dark:border-white/20 dark:text-white dark:hover:border-white/35 dark:hover:bg-white/[0.07] dark:hover:text-white"
                       aria-label={`${d("Menu akun")}: ${profileLabel}`}
                       aria-expanded={profileMenu}
                       aria-haspopup="true"
                       title={d("Menu akun")}
                     >
-                      <span className="dc-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-dc-mono)] text-[12px] font-semibold uppercase text-current">
+                      <span className="undara-dashboard-account-avatar grid size-9 shrink-0 place-items-center rounded-full border border-current/25 bg-transparent font-[family-name:var(--font-undara-mono)] text-[12px] font-semibold uppercase text-current">
                         {ctx?.profile.avatarUrl ? (
                           <Image src={ctx.profile.avatarUrl} alt="" width={36} height={36} unoptimized className="size-full rounded-full object-cover" />
                         ) : profileLabel.slice(0, 2)}
@@ -446,9 +446,9 @@ export default function DashboardPage() {
                     </Button>
 
                     {profileMenu && (
-                      <div className="dc-dashboard-account-menu absolute right-0 z-50 mt-3 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-[24px] border border-primary/35 bg-background p-3 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
+                      <div className="undara-dashboard-account-menu absolute right-0 z-50 mt-3 w-72 max-w-[calc(100vw-2rem)] overflow-hidden rounded-[24px] border border-primary/35 bg-background p-3 text-foreground shadow-[0_18px_45px_rgba(0,0,0,0.12)] dark:shadow-black/40">
                         <div className="px-2 pb-3 pt-1">
-                          <p className="font-[family-name:var(--font-dc-heading)] text-base font-semibold">
+                          <p className="font-[family-name:var(--font-undara-heading)] text-base font-semibold">
                             {profileLabel}
                           </p>
                           <p className="mt-1 truncate text-xs text-muted-foreground">
@@ -497,7 +497,7 @@ export default function DashboardPage() {
             </div>
           </header>
 
-          <main ref={contentScrollRef} tabIndex={0} aria-label={d("Konten dashboard")} className="dc-dashboard-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary">
+          <main ref={contentScrollRef} tabIndex={0} aria-label={d("Konten dashboard")} className="undara-dashboard-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-contain scroll-smooth focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary">
             {tab === "overview" && (
               <WorkspaceOverview ctx={ctx} events={events} onGo={go} />
             )}
@@ -577,10 +577,10 @@ export default function DashboardPage() {
       {onboarding && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-4">
           <div className="w-full max-w-lg rounded-xl border border-border bg-background p-6 shadow-2xl dark:bg-[#0B0B0C] sm:p-8">
-            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
+            <p className="font-[family-name:var(--font-undara-mono)] text-[11px] font-medium uppercase tracking-[0.2em] text-primary">
               {d("Setup awal")}
             </p>
-            <h2 className="mt-2 font-[family-name:var(--font-dc-heading)] text-2xl">
+            <h2 className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl">
               {d("Profil akun")}
             </h2>
             <div className="mt-6">
