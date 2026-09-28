@@ -3,7 +3,7 @@
 **Document Status:** Single Source of Truth  
 **Brand:** Undara  
 **Repository:** `wanzy0808/DC`  
-**Last Consolidated:** 18 September 2026  
+**Last Consolidated:** 28 September 2026  
 **Documentation Audit:** 24 September 2026 — tahap 1, pembenahan referensi/konflik; konsolidasi isi menyeluruh belum selesai  
 **Implementation History:** Appendix A (same file)
 
@@ -1485,9 +1485,11 @@ Bukan melalui banyak warna/variant berbeda.
 
 Owner approved the landing composition formerly developed under `/pagecontoh`, which has since moved into **`app/page.tsx` as the active production homepage**. The former `/pagecontoh`, `/jiplak` and `/pintu-lab` routes are absent from the current branch; do not restore duplicate homepages or retired previews to satisfy legacy historical notes. Preserve the approved `/` composition without unsolicited redesign.
 
-The approved landing is a continuous botanical/rose-glow/petal scene with a rounded main frame, embedded navbar and footer, four orbiting 3D doors, two transparent cloud-copy regions with a single outer rose outline, puzzle-like in-place cloud assembly and letter-by-letter bilingual copy, audio controls, and Instagram link. The precise existing component code, layout, assets, animations, content, responsive states, light/dark modes, and ID/EN states are the visual/behavioral source of truth. Future related marketing surfaces must follow this established design language using existing components and installed libraries where appropriate; this does not authorize copying landing-specific decoration onto unrelated surfaces.
+The current approved homepage is a **woodland composition** with a rounded main frame, embedded Navbar/footer, four orbiting 3D service doors, a transparent forest silhouette as background depth, branch 01–04 as restrained edge framing, and one editorial story block using branch 05 as its divider. The homepage **does not mount the old cloud-shaped copy or petal ambience**. The exact current component code, layout, assets, animations, responsive states, Light/Dark behavior and ID/EN states are the visual/behavioral source of truth. Other marketing routes may keep their existing shared `PublicMarketingAtmosphere`; do not spread the homepage woodland composition onto unrelated Dashboard/Admin/Studio/checkout/customer-invitation surfaces.
 
 **Current Pintu color override (28 September 2026):** perubahan hanya pada warna material. Light Mode memakai body/frame pintu `#703B3B` dan lis/trim `#EDE3D8`; Dark Mode memakai body/frame pintu `#D6B38C` dan lis/trim `#703B3B`. Geometry, ukuran, ornament, material roughness/metalness, orbit, kamera, animasi buka/tutup, glow, lighting, shadow, portal dan route tidak berubah.
+
+**Warna kunang-kunang homepage (28 September 2026):** Light Mode memakai Undara Brown `#703B3B`; Dark Mode memakai Champagne `#D6B38C`. Sprite glow menggunakan alpha netral agar tint material tetap murni. Jumlah, ukuran, posisi, kecepatan, pola gerak dan opacity animation tidak boleh berubah hanya karena pergantian warna.
 
 **Musik marketing saat ini (28 September 2026):** pemutar bersama yang dimulai dari landing memakai `Epic Spectrum — Forgiveness` dari aset owner `public/assets/audio/epic-spectrum-forgiveness.mp3`. Status mute dan volume tetap persisten saat berpindah antarhalaman marketing; aturan autoplay browser dan kontrol manual tetap berlaku.
 
@@ -1498,6 +1500,8 @@ The approved landing is a continuous botanical/rose-glow/petal scene with a roun
 **Footer homepage:** kontrol musik/volume di kiri, copyright di tengah, dan ikon Instagram di kanan harus menempel pada dasar main frame. Pada viewport sempit copyright boleh turun menjadi baris kedua agar tidak menimpa kontrol. Ruang fleksibel antara navbar dan footer tidak boleh menangkap klik Pintu.
 
 **Owner change-control requirement:** Never add, remove, replace, rearrange, restyle, or simplify anything the owner has not specifically requested. Keep each change narrowly scoped and preserve all other approved behavior. Ask before a necessary fix would visibly affect another approved element. Reuse existing dependencies/components rather than adding a new library or design system without a concrete need and approval. Preserve `/` and prevent duplicate navbar/footer in its currently active frame; `/pagecontoh` is a historical route, not a mandatory live page. Check affected responsive/theme/language states where possible; distinguish actual build/browser validation from unverified changes.
+
+**Owner coding workflow:** bila owner meminta perubahan coding pada Undara, default proses adalah cek HEAD repo → implement langsung di repo → jalankan/observasi regression/build yang relevan → laporkan commit dan status. Jangan mengalihkan pekerjaan menjadi potongan kode untuk owner tempel manual kecuali owner memang meminta code-only, meminta repo tidak diubah, atau akses repo/tool sedang tidak tersedia.
 
 Active canonical references for homepage `/`: `app/page.tsx`, `components/Landing/Pintu/LandingDoorScene.tsx`, `components/Landing/LandingWoodlandAtmosphere.tsx`, `components/Landing/LandingStoryCopy.tsx`, `components/Layout/MarketingFrameFooter.tsx`, `components/Layout/Navbar/Navbar.tsx`, and the shared theme/language controls and button components they actually import. `PublicMarketingAtmosphere` remains a non-home marketing component; `CloudCopy` is retired from the active homepage. Historical `app/pagecontoh/page.tsx` is not a live source file. Established stack: Next.js App Router, React, TypeScript, Tailwind CSS, Motion, Three.js/React Three Fiber where already used, and shared application providers/components.
 
@@ -5453,3 +5457,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** `Fireflies` di `LandingDoorScene.tsx` sekarang menerima `isDarkMode`. Light memakai `#703B3B`; Dark memakai `#D6B38C`. Sprite glow diubah menjadi alpha putih netral agar warna material tidak tercampur tint kuning lama. Light menggunakan normal blending supaya coklat brand tetap terbaca di Warm Ivory; Dark mempertahankan additive glow untuk Champagne. Jumlah partikel, ukuran, posisi, pola gerak, kecepatan, dan opacity animation tidak diubah.
 
 **Validasi:** regression test mengunci pasangan warna dan penggunaan mode pada komponen Fireflies.
+
+
+### 28 September 2026 — Konsolidasi rule aktif Undara/landing & workflow repo
+
+**Tujuan:** memastikan keputusan terbaru tidak hanya tersimpan sebagai histori chat/Appendix A tetapi juga menjadi rule canonical yang dibaca agent berikutnya.
+
+**Canonical yang ditegaskan:** homepage aktif adalah woodland (forest silhouette + branch 01–04 framing + branch 05 divider editorial), cloud/petal homepage lama pensiun; Pintu tetap 4 layanan dengan palette Light body `#703B3B` + trim `#EDE3D8`, Dark body `#D6B38C` + trim `#703B3B`; fireflies Light `#703B3B`, Dark `#D6B38C`; logo/tagline dan theme pair Undara tetap mengikuti §1.1. Workflow owner untuk coding adalah direct-repo implementation, bukan copy-paste snippet, selama akses tersedia.
+
+**Dokumentasi:** `AGENTS.md` mendapat direct-repo workflow rule; paragraf canonical landing di §15.4.1b dibetulkan agar tidak lagi menyebut cloud/petal sebagai baseline aktif; checklist path logo lama diselaraskan dengan `public/assets/brand/undara/logo.png`.
+
+**Validasi:** perubahan dokumentasi saja; tidak mengubah runtime application behavior.
