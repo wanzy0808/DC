@@ -49,7 +49,7 @@ const SOCIAL_PROFILES: readonly SocialProfile[] = [
  */
 export default function UndaraSocialIcons({ compact = false }: { compact?: boolean }) {
   return (
-    <div className="flex items-center justify-end gap-2" aria-label="Media sosial Undara">
+    <div className="flex items-center justify-end gap-3" aria-label="Media sosial Undara">
       {SOCIAL_PROFILES.map(({ id, label, href, Icon }) =>
         href ? (
           <a
