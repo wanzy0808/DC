@@ -222,7 +222,7 @@ export default function PublicInvitation({
         )}
 
         <footer className="mt-8 flex flex-wrap items-center justify-center gap-4 text-center font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
-          <span>DC Organizer</span>
+          <span>Undara</span>
           <span>•</span>
           <Link href="/" className="hover:text-primary">
             Digital Event Invitation
