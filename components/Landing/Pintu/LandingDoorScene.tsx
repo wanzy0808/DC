@@ -196,36 +196,88 @@ function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: bo
   </sprite>;
 }
 
-function GroundShadow({ fullFrame, isDarkMode }: { fullFrame: boolean; isDarkMode: boolean }) {
-  // Contact shadow + a real shadow receiver extending toward the camera.
-  // There is intentionally no luminous floor/glow here: the forest behind the door is the light source.
+function GroundShadow({ isDarkMode }: { isDarkMode: boolean }) {
+  // Only a soft contact patch follows each orbiting door. The actual cast
+  // shadow is received by one scene-wide floor so its arch silhouette is not
+  // clipped into a rectangle.
   const texture = useMemo(() => {
     const canvas = document.createElement("canvas");
-    canvas.width = canvas.height = 128;
+    canvas.width = canvas.height = 192;
     const context = canvas.getContext("2d");
     if (context) {
-      const gradient = context.createRadialGradient(64, 64, 5, 64, 64, 64);
-      gradient.addColorStop(0, "rgba(83,39,53,0.32)");
-      gradient.addColorStop(0.35, "rgba(83,39,53,0.17)");
-      gradient.addColorStop(0.72, "rgba(83,39,53,0.045)");
-      gradient.addColorStop(1, "rgba(83,39,53,0)");
+      const gradient = context.createRadialGradient(96, 96, 5, 96, 96, 92);
+      gradient.addColorStop(0, "rgba(57,25,31,0.34)");
+      gradient.addColorStop(0.34, "rgba(57,25,31,0.18)");
+      gradient.addColorStop(0.72, "rgba(57,25,31,0.05)");
+      gradient.addColorStop(1, "rgba(57,25,31,0)");
       context.fillStyle = gradient;
-      context.fillRect(0, 0, 128, 128);
+      context.fillRect(0, 0, 192, 192);
     }
-    return new THREE.CanvasTexture(canvas);
+    const map = new THREE.CanvasTexture(canvas);
+    map.colorSpace = THREE.SRGBColorSpace;
+    return map;
   }, []);
   useEffect(() => () => texture.dispose(), [texture]);
 
-  return <group>
-    <mesh position={[0, -2.142, 0.18]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-1}>
-      <planeGeometry args={[2.9, 1.6]} />
-      <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} opacity={0.72} />
+  return <mesh position={[0, -2.142, 0.12]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={-2}>
+    <planeGeometry args={[2.45, 1.18]} />
+    <meshBasicMaterial
+      map={texture}
+      transparent
+      depthWrite={false}
+      toneMapped={false}
+      opacity={isDarkMode ? 0.72 : 0.58}
+    />
+  </mesh>;
+}
+
+function ForestShadowFloor({ isDarkMode }: { isDarkMode: boolean }) {
+  return (
+    <mesh position={[0, -2.147, 2.15]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow renderOrder={-5}>
+      <planeGeometry args={[17, 13]} />
+      <shadowMaterial
+        transparent
+        opacity={isDarkMode ? 0.30 : 0.18}
+        color={isDarkMode ? "#130d0f" : "#4A2C31"}
+        depthWrite={false}
+      />
     </mesh>
-    {fullFrame && <mesh position={[0, -2.146, 1.32]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow renderOrder={-3}>
-      <planeGeometry args={[3.45, 3.5]} />
-      <shadowMaterial transparent opacity={isDarkMode ? 0.34 : 0.22} color={isDarkMode ? "#160f12" : "#4b2c31"} depthWrite={false} />
-    </mesh>}
-  </group>;
+  );
+}
+
+function ForestMist({ isDarkMode }: { isDarkMode: boolean }) {
+  const map = useMemo(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 384;
+    canvas.height = 256;
+    const context = canvas.getContext("2d");
+    if (context) {
+      const gradient = context.createRadialGradient(192, 142, 8, 192, 142, 180);
+      gradient.addColorStop(0, "rgba(255,250,240,0.78)");
+      gradient.addColorStop(0.3, "rgba(241,220,192,0.34)");
+      gradient.addColorStop(0.68, "rgba(214,179,140,0.09)");
+      gradient.addColorStop(1, "rgba(214,179,140,0)");
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, 384, 256);
+    }
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+  useEffect(() => () => map.dispose(), [map]);
+
+  return (
+    <sprite position={[0, 0.15, -2.65]} scale={[8.4, 5.1, 1]} renderOrder={-6}>
+      <spriteMaterial
+        map={map}
+        color={isDarkMode ? "#D6B38C" : "#F3E3CF"}
+        transparent
+        opacity={isDarkMode ? 0.12 : 0.18}
+        depthWrite={false}
+        toneMapped={false}
+      />
+    </sprite>
+  );
 }
 
 function Fireflies({ reducedMotion, isDarkMode }: { reducedMotion: boolean; isDarkMode: boolean }) {
@@ -487,7 +539,7 @@ const PORTALS: Array<{ title: string; image: string; href: string; crest: DoorCr
   { title: "Undangan Fisik", image: "/assets/landing/doors/physical-invitation.png", href: "/undangan-fisik", crest: "physical-invitation" },
 ];
 
-function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, fullFrame, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; fullFrame: boolean; isDarkMode: boolean }) {
+function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, enterButton, closeButton, isDarkMode }: { selected: number | null; opening: boolean[]; entering: boolean; reducedMotion: boolean; onSelect: (index: number) => void; enterButton: React.RefObject<HTMLDivElement | null>; closeButton: React.RefObject<HTMLButtonElement | null>; isDarkMode: boolean }) {
   const groups = useRef<(THREE.Group | null)[]>([]);
   const phase = useRef(0);
   const hovered = useRef<number | null>(null);
@@ -554,7 +606,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onPointerOut={(event) => { event.stopPropagation(); if (hovered.current === index) hovered.current = null; }}
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} crest={portal.crest} entering={entering && selected === index} isDarkMode={isDarkMode} />
-    <GroundShadow fullFrame={fullFrame} isDarkMode={isDarkMode} />
+    <GroundShadow isDarkMode={isDarkMode} />
     <pointLight position={[0, 1.65, -1.8]} intensity={opening[index] ? 2.35 : 0.12} color="#F2D4AA" distance={5.2} decay={2} />
   </group>)}</>;
 }
@@ -593,10 +645,10 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
       <Canvas shadows={{ type: THREE.PCFShadowMap }} camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
         <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startRoseCover} onArrive={finishZoom} />
         {/* All directional/point illumination originates behind the doors. Neutral ambient only keeps the PBR base color readable. */}
-        <ambientLight intensity={0.34} />
+        <ambientLight intensity={0.40} />
         <directionalLight
-          position={[0, 5.8, -7.2]}
-          intensity={2.85}
+          position={[0, 6.1, -7.8]}
+          intensity={3.05}
           color="#F2D8B5"
           castShadow
           shadow-mapSize={[2048, 2048]}
@@ -607,9 +659,11 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
           shadow-bias={-0.00015}
           shadow-radius={6}
         />
-        <pointLight position={[0, 1.2, -2.6]} intensity={selected !== null && opening[selected] ? 4.4 : 0.26} color="#F3D8B1" distance={6.2} decay={2} />
+        <pointLight position={[0, 1.35, -2.9]} intensity={selected !== null && opening[selected] ? 4.6 : 0.30} color="#F3D8B1" distance={6.8} decay={2} />
+        <ForestMist isDarkMode={isDarkMode} />
+        <ForestShadowFloor isDarkMode={isDarkMode} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} isDarkMode={isDarkMode} />
-        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} fullFrame={fullFrame} isDarkMode={isDarkMode} />
+        <OrbitalDoors selected={selected} opening={opening} entering={entering} reducedMotion={Boolean(reducedMotion)} onSelect={(index) => { setSelected(index); setOpening(PORTALS.map((_, i) => i === index)); onDoorOpenChange?.(true); }} enterButton={enterButton} closeButton={closeButton} isDarkMode={isDarkMode} />
       </Canvas>
       <button ref={closeButton} type="button" aria-label="Tutup pintu dan putar kembali" title="Kembali melihat semua pintu" onClick={() => { setSelected(null); setOpening(PORTALS.map(() => false)); onDoorOpenChange?.(false); }} className="pointer-events-none absolute z-20 flex size-7 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary/30 bg-background/90 text-primary opacity-0 shadow-sm backdrop-blur-sm transition-opacity duration-200 hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"><X className="size-3.5" /></button>
       <div ref={enterButton} className="pointer-events-none absolute left-0 top-0 z-10 opacity-0 transition-opacity duration-300" style={{ willChange: "transform, opacity" }}><Button size="sm" onClick={enterPortal} disabled={selected === null || entering}>Masuk</Button></div>
