@@ -5572,3 +5572,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Validasi:** regression test mengunci default closed state.
 
 - Canopy5 should nearly fill the visual distance between the left brand block and right header controls, leaving a small breathing gap (roughly 1 cm feel) on each side rather than touching either group.
+
+
+### 28 September 2026 — Story copy bawah kanan diperkuat tanpa menghapus ukiran
+
+**Permintaan owner:** elemen dekoratif/ukiran pada copy bawah kanan landing dipertahankan; copy dibuat lebih sesuai tema Undara dan blok diperbesar agar menjadi secondary focal point.
+
+**Implementasi:** `LandingStoryCopy.tsx` mempertahankan struktur dekoratif existing, termasuk radial backing dan divider/ornamental line. Copy ID menjadi eyebrow **“Setiap cerita dimulai dari sebuah pintu”**, title **“Buka pintu menuju harimu.”**, body **“Dari undangan pertama hingga hari perayaan, setiap langkah dirangkai agar terasa personal, hangat, dan penuh makna.”** Versi EN diselaraskan secara makna. Lebar block dinaikkan hingga ±455px desktop; eyebrow, title, divider, dan body dibesarkan moderat. Posisi tetap kanan bawah dan Pintu/3D scene tidak diubah.
+
+**Guardrail:** ukiran/dekorasi story block tidak boleh dihapus ketika mengubah copy atau ukuran pada iterasi berikutnya kecuali owner meminta eksplisit.
+
+**Validasi:** regression test mengunci copy, ukuran utama, dan keberadaan decorative divider.
