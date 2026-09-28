@@ -6,7 +6,7 @@ import FallingLeaves from "@/components/Layout/FallingLeaves";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import { isFramedMarketingPath, isMarketingPath } from "@/lib/marketing-paths";
 
-const privatePrefixes = ["/dashboard", "/admin"];
+const privatePrefixes = ["/dashboard", "/admin", "/owner", "/partner", "/studio", "/checkout", "/invite"];
 
 export default function PublicAtmosphere() {
   const pathname = usePathname();
