@@ -5689,3 +5689,10 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** `PortalTransition` memakai 11 layer gerbang visual: tiga cabang kiri, tiga kanan, dua canopy atas, satu brush bawah, serta dua cabang foreground dekat kamera. Asset `branch-01` sampai `branch-06`, `canopy7`, dan `forest-silhouette` dipakai ulang dengan posisi, pivot, skala, dan sudut yang berbeda agar tidak terlihat seperti panel mirror. Cover memakai tiga motion group dengan timing berbeda; reveal membalik urutan depth sehingga foreground membuka lebih dulu dan canopy lebih akhir. Route tetap commit ketika gate tertutup. Glow pintu tetap diredupkan saat `entering`; tidak ada hue-rotate rosé pada branch gate.
 
 **Area:** `components/Landing/Pintu/PortalTransition.tsx`, `app/globals.css`, `tests/marketing-transition.test.mjs`. QA browser desktop/mobile Light/Dark masih perlu diverifikasi secara visual.
+
+
+### 29 September 2026 — Branch gate dipadatkan full-screen
+
+**Revisi owner:** cabang transisi masih terlalu sedikit dan belum memenuhi layar. Saat zoom masuk, cabang harus berkumpul rapat ke tengah sampai hampir menutup seluruh viewport, lalu mundur lagi ke arah asal saat halaman baru terbuka.
+
+**Implementasi:** branch gate dinaikkan menjadi 21 layer visual dengan tambahan pasangan cabang kiri/kanan, cabang diagonal silang dekat kamera, cabang dari atas-tengah, dan cabang dari bawah. Posisi `--branch-closed` diarahkan lebih dalam ke pusat viewport agar fase hold terbaca sebagai simpul ranting padat, bukan sekadar frame di tepi layar. Motion dibagi empat kedalaman (`close/open a–d`) agar penutupan dan pembukaan tetap organik walau density meningkat. Durasi cover/reveal sedikit diperpanjang agar gerak cabang banyak tidak terasa tersentak.
