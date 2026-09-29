@@ -88,9 +88,9 @@ export default function EventPlannerPage() {
           aria-label={en ? "Event Planner page content" : "Konten halaman Event Planner"}
           className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <div className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20">
+          <div className="undara-marketing-content flex flex-col gap-24 py-8 md:gap-28 md:py-12">
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="relative mx-auto grid min-h-[calc(100dvh-150px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden border-b border-primary/25 pb-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
+              <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full items-center gap-10 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -left-[8%] top-[2%] h-[62%] w-[48%] rounded-full bg-[radial-gradient(ellipse,rgba(112,59,59,0.10),transparent_68%)] blur-3xl dark:bg-[radial-gradient(ellipse,rgba(214,179,140,0.08),transparent_68%)]"
@@ -160,7 +160,7 @@ export default function EventPlannerPage() {
 
                 <div className="relative z-10 min-h-[460px] lg:min-h-[680px]">
                   <motion.div
-                    className="absolute inset-[4%_0_2%_4%] overflow-hidden rounded-[48px_8px_48px_8px] border border-primary/25 bg-card shadow-[0_30px_90px_rgba(70,42,32,0.14)]"
+                    className="undara-editorial-media absolute inset-[4%_0_2%_4%]"
                     initial={reduced ? false : { opacity: 0, scale: 1.025, y: 14 }}
                     animate={{ opacity: 1, scale: 1, y: 0 }}
                     transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
