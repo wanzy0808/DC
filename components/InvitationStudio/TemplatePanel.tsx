@@ -36,7 +36,7 @@ export function TemplatePanel({
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase("id");
     const matches = templates.filter((item) => {
-      if (term && !`${item.name} ${item.category} ${item.description}`.toLocaleLowerCase("id").includes(term)) return false;
+      if (term && !`${item.name} ${item.category} ${item.description} ${item.descriptionEn ?? ""}`.toLocaleLowerCase("id").includes(term)) return false;
       if (photoFilter === "photo" && !item.usesPhotos) return false;
       if (photoFilter === "no-photo" && item.usesPhotos) return false;
       return true;
