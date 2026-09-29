@@ -24,6 +24,7 @@ type SceneProps = {
   preview?: boolean;
   isWedding?: boolean;
   hashtag?: string | null;
+  recipientLine?: string;
 };
 const heading = { color: "inherit", fontFamily: "var(--inv-heading, var(--font-dc-heading)), Georgia, serif" };
 const caption = "text-[10px] uppercase tracking-[.3em]";
@@ -90,7 +91,7 @@ const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
-function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: SceneProps) {
+function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipientLine}: SceneProps) {
   const original = envelopeVisuals[theme] || envelopeVisuals["botanical-ivory"];
   const style = { ...original,
     backdrop: `var(--inv-scene-bg, ${original.backdrop})`,
@@ -119,6 +120,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
           <div aria-hidden data-studio-native-object="object:envelope:seal" className="absolute left-1/2 top-[105px] z-20 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 text-3xl shadow-md" style={{borderColor:style.surface,backgroundColor:style.border,color:style.surface}}>{style.symbol}</div>
           <div data-studio-native-object="object:envelope:copy-panel" className="relative z-20 mt-8 w-full border-t pt-6 text-center" style={{borderColor:style.border}}>
             <p data-studio-native-object="object:envelope:letter-kicker" className="text-[9px] uppercase tracking-[.25em] opacity-70">Untuk momen istimewa</p>
+            {recipientLine && <p data-personal-envelope-address className="mt-3 break-words text-[11px] font-semibold leading-5">{recipientLine}</p>}
             <Names className="mt-3 text-xl">{names}</Names>
             <p data-studio-native-object="object:envelope:date" className="mt-3 text-xs opacity-75">{date}</p>
           </div>
@@ -131,7 +133,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview}: Scene
 const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,hashtag}: SceneProps) {
+export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,hashtag,recipientLine}: SceneProps) {
   if (theme === "blank-canvas") {
     return (
       <section
@@ -141,9 +143,9 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       />
     );
   }
-  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
-  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} />;
-  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} />;
+  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
+  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
+  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
