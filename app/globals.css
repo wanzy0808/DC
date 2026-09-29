@@ -518,6 +518,13 @@ aside nav > p { font-family: var(--font-undara-heading); }
 }
 @media (min-width: 1280px) {
   .undara-marketing-content { padding-inline: 4rem; }
+
+  /* Full template catalog gets a subtle editorial cadence on wide screens.
+     Hover lift remains intact because the stagger uses translate on the card's
+     inner visual flow rather than changing DOM order or interaction targets. */
+  .undara-template-catalog-grid > article:nth-child(3n + 2) {
+    transform: translateY(2rem);
+  }
 }
 @media (min-width: 1536px) {
   .undara-marketing-content { padding-inline: 5rem; }
