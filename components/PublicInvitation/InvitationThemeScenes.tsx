@@ -51,7 +51,7 @@ function Open({ onClick, dark = false, children, preview = false, studioObject }
     }}
     data-studio-system-action={preview ? "open-invitation" : undefined}
     aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
-    className={`relative z-20 mt-7 min-h-12 rounded-[var(--dc-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
+    className={`relative z-20 mt-7 min-h-12 rounded-[var(--undara-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
   >{children || "Buka Undangan"}</button>;
 }
 function Edit({ onClick }: { onClick?: () => void }) {

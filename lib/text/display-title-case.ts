@@ -13,7 +13,8 @@ const canonicalWords: Record<string, string> = {
 
 /** Apply Title Case only when rendering a standalone name, heading or dropdown option. */
 export function displayTitleCase(value: string): string {
-  return value.replace(
+  const normalized = value.replace(/\bdc organizer\b/giu, "Undara");
+  return normalized.replace(
     /(^|[^\p{L}\p{N}])([\p{L}][\p{L}\p{M}\p{N}]*)/gu,
     (_match, separator: string, word: string) =>
       separator + (canonicalWords[word.toLocaleLowerCase("id-ID")] ?? word[0].toLocaleUpperCase("id-ID") + word.slice(1)),

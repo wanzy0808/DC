@@ -242,7 +242,7 @@ test("public marketing pages share one frame, footer control system and falling-
   assert.match(styles, /\.undara-marketing-frame-header \{/);
   assert.match(styles, /\.undara-marketing-scroll \{/);
   assert.match(styles, /\.undara-control-surface \{/);
-  assert.match(styles, /\.dark \.undara-control-surface \{/);
+  assert.doesNotMatch(styles, /\.dark \.undara-control-surface \{/);
   assert.match(styles, /\.undara-footer-control \{/);
   assert.match(styles, /\.undara-volume-slider/);
   assert.match(footer, /MarketingAudioControls/);
