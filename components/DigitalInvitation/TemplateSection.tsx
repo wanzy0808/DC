@@ -79,14 +79,14 @@ export default function TemplateCollection() {
         };
 
   return (
-    <section className="space-y-14 md:space-y-16">
-      <div className="w-full border-b border-border/70 pb-7">
+    <section className="undara-marketing-section space-y-14 border-y border-primary/25 py-14 md:space-y-16 md:py-20">
+      <div className="w-full border-b border-primary/30 pb-8">
         <div className="mx-auto flex w-full flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
           <div className="max-w-2xl">
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
               {copy.eyebrow}
             </p>
-            <h2 className="mt-4 font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-tight text-primary md:text-5xl">
+            <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.04] text-primary md:text-5xl lg:text-6xl">
               {copy.title}
             </h2>
             <p className="mt-3 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65">
@@ -102,10 +102,10 @@ export default function TemplateCollection() {
         </div>
       </div>
 
-      <div className="grid justify-items-center gap-10 md:grid-cols-3 md:gap-6">
-        {featuredTemplates.map((template) => (
-          <article key={template.key} className="group flex w-full min-w-0 max-w-[290px] flex-col items-center">
-            <div className="relative mx-auto aspect-[9/19.5] w-full max-w-[238px] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_55px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-transform duration-500 group-hover:-translate-y-1.5 dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
+      <div className="grid justify-items-center gap-12 md:grid-cols-3 md:gap-7 lg:gap-10">
+        {featuredTemplates.map((template, index) => (
+          <article key={template.key} className={`group flex w-full min-w-0 max-w-[300px] flex-col items-center ${index === 1 ? "md:translate-y-10" : ""}`}>
+            <div className="relative mx-auto aspect-[9/19.5] w-full max-w-[246px] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_55px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] transition-transform duration-500 group-hover:-translate-y-1.5 dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
               <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-12 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
               <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
               <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
@@ -124,10 +124,13 @@ export default function TemplateCollection() {
                 aria-label={`${copy.preview}: ${template.name}`}
               />
             </div>
-            <div className="mt-6 flex w-full max-w-[270px] flex-col items-center text-center">
-              <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-foreground/50">
-                {template.category}
-              </p>
+            <div className="mt-6 flex w-full max-w-[276px] flex-col items-start text-left">
+              <div className="flex w-full items-center justify-between gap-4">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
+                  {template.category}
+                </p>
+                <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
+              </div>
               <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
                 {template.name}
               </h3>
