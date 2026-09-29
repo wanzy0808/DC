@@ -30,6 +30,19 @@ Sistem pelanggan tetap satu: katalog template, data event, autentikasi, Studio, 
 
 ## 2. Alur desain bersama ChatGPT — diulang untuk tiap tema
 
+### Quality stack saat owner mengatakan `to design`
+
+Untuk pekerjaan template yang dipimpin lewat ChatGPT/GPT, `to design` berarti jalankan quality stack berikut **di dalam batas brief tema ini**, bukan mengganti requirement Undara:
+
+1. **GPT-Taste (`gpt-taste`) — art direction utama.** Gunakan untuk composition, visual hierarchy, typography, whitespace, density, layout variance, anti-card/anti-grid generik, serta direction motion. Jangan jalankan Taste default dan GPT-Taste sekaligus hanya karena keduanya tersedia; untuk sesi GPT pilih `gpt-taste` sebagai baseline.
+2. **Emil Kowalski — motion & interaction craft.** Gunakan `emil-design-eng` dan, bila relevan, `animate` / `review-animations` untuk memilih apakah sesuatu perlu bergerak, kurva easing, durasi, interruption, exit/enter, hover/tap feedback, dan kualitas micro-interaction. Motion harus memperjelas pengalaman, bukan sekadar membuat semua benda bergerak.
+3. **Impeccable — review/refinement.** Setelah arah visual jelas, lakukan critique terhadap hierarchy/clarity, polish terhadap konsistensi dan detail, lalu audit/harden/adapt sesuai kebutuhan sebelum menyebut template siap. Temuan Impeccable tidak boleh menghapus karakter tema atau mengubah kontrak produk yang dilindungi.
+
+Urutan kerja default untuk template baru:
+`brief + moodboard → gpt-taste direction → implementasi → Emil motion review → Impeccable critique/polish/audit → screenshot HP + desktop → koreksi`.
+
+Semua skill eksternal hanya **quality layer**. Prioritas tetap: instruksi owner → `prd.md` → `AGENTS.md` → `template.md` → skill eksternal. Bila skill menyarankan sesuatu yang bertentangan dengan 15 komponen, responsive web invitation, accessibility, data nyata, brand/tema yang sudah disetujui, atau batas Studio, aturan Undara yang menang.
+
 ### Langkah A — Brief
 
 Catat nama tema dan stable key, sasaran jenis acara, kesan yang ingin dicapai, foto atau tanpa foto, palet, pasangan font, batasan layout, pilihan dekorasi, referensi visual, tingkat motion, dan kebutuhan aset. Nama/tanggal/foto demo boleh dipilih bervariasi per tema, tetapi **tidak boleh dipakai sebagai data undangan pelanggan**.
