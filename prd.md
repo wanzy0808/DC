@@ -850,6 +850,8 @@ Penambahan template baru idealnya tidak menyentuh Prisma schema, core RSVP/Wishe
 
 Undara harus memiliki standard demo/dummy invitation data yang reusable untuk preview dan QA template baru. Demo data tidak boleh bercampur dengan production customer data.
 
+Nama pasangan contoh untuk katalog dan Template Studio adalah **Unsal & Tara**, bersumber dari satu fixture `data/templates/preview-invitation.ts`. Undangan milik customer dan tautan personal selalu memakai data acara asli, bukan nama contoh.
+
 Template baru minimal diuji terhadap variasi:
 - identity pendek dan panjang;
 - venue/address pendek dan panjang;
@@ -5707,3 +5709,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** sanitizer `nativeVisuals` kini mempertahankan styling saat transform kembali ke default, membatasi urutan layer 1–20, dan menyimpan kunci posisi bagi heading/copy/objek bawaan. Inspector Template Mode memberi kontrol urutan dan kunci posisi; handle dan input posisi tidak aktif saat terkunci. Reset handle hanya mereset transform tanpa membuang styling. Designer Dashboard dan Owner Panel menyediakan **Buat Draft Revisi** dari template Published miliknya; API menyalin desain dan metadata ke ID/nomor baru berstatus Draft dengan pemeriksaan kepemilikan (Owner/Admin berwenang untuk review), sementara sumber tetap Published. Draft Owner dapat dibuka kembali dari panel. Pesan hasil/error di panel Designer kini terlihat. Area: `lib/templates/native-visual-transforms.ts`, `components/InvitationStudio/InvitationDesigner.tsx`, `StudioNativeVisualInspector.tsx`, `StudioNativeTransformHandles.tsx`, `app/api/designer/templates/route.ts`, `components/Designer/DesignerDashboard.tsx`, `components/Owner/OwnerTemplateReview.tsx`, dan `tests/native-visual-transforms.test.mjs`. Tidak ada migrasi database. Sistem versi master yang menautkan revisi, alur custom made, hide/reorder semua objek, dan QA interaksi browser nyata tetap terbuka sesuai `studio.md` §5–§7.
 
 **Commit implementasi:** `b547546`. **Validasi lokal:** tes source/codec penuh 197/197 lulus, TypeScript, lint terarah tanpa error, production build webpack, dan `git diff --check` lulus. Build tidak membuktikan kompatibilitas visual z-index di setiap tema; QA pointer/touch di browser dan alur duplikasi dengan database target masih perlu dilakukan. Workflow CI untuk commit terbaru belum terlihat saat catatan ini ditulis.
+
+### 29 September 2026 — Nama contoh katalog dan Template Studio
+
+**Permintaan owner:** pasangan contoh pada undangan menggunakan Unsal & Tara. Fixture bersama `data/templates/preview-invitation.ts` diubah pada judul dan kedua nama, sehingga katalog dan Template Studio staff memakai nama yang sama. Aturan di `template.md`, `studio.md`, dan canonical §7.2.9 diselaraskan. Data acara customer, tautan personal, serta kontak Christine pada layanan Event Planner tidak diubah. Tidak ada migrasi database; validasi source/build dicatat setelah pemeriksaan.
+
+**Validasi lokal:** source katalog dan Template Studio terbukti mengimpor fixture bersama; tes role Studio 5/5, production build webpack, TypeScript setelah build, dan `git diff --check` lulus. TypeScript yang sempat dijalankan bersamaan dengan build membaca `.next/types` saat sedang diregenerasi dan menghasilkan error file hilang; pemeriksaan ulang setelah build selesai lulus. QA visual preview di browser belum dilakukan.

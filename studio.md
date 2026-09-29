@@ -96,7 +96,7 @@ Studio memakai **satu editor yang sama**, tetapi semantics Save wajib dibedakan 
 - **OWNER / DESIGNER / EDITOR — Template Mode:** masuk dari Owner Panel atau Designer Panel ke Studio dengan data demo Undara, bukan event customer. Tombol berubah menjadi **Simpan Draft**. Save membuat **DesignerTemplate draft** melalui `/api/designer/templates`, membawa `designKey` hasil Studio, dan **belum** tampil di katalog publik. Publish adalah langkah terpisah setelah review/approval; hanya status `PUBLISHED` yang boleh masuk katalog.
 - Role staff tidak boleh jatuh ke customer editor. URL `/dashboard/editor` harus mengarahkan Owner ke `/owner/studio`, Designer/Editor ke `/designer/studio`.
 - Template Mode **tidak boleh melakukan PUT ke Invitation customer**. Sebaliknya customer tidak memiliki aksi untuk membuat template katalog.
-- Master template Studio yang disimpan staff harus tetap memakai kontrak section lengkap dan seluruh guardrail `template.md`. Data demo Denny & Christine hanya preview/template authoring dan tidak boleh masuk sebagai data event customer.
+- Master template Studio yang disimpan staff harus tetap memakai kontrak section lengkap dan seluruh guardrail `template.md`. Data demo Unsal & Tara hanya preview/template authoring dan tidak boleh masuk sebagai data event customer.
 
 ### Library artwork Designer/Owner (27 September 2026)
 
