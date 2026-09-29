@@ -49,14 +49,19 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <FeatureSection />
+              <div className="undara-editorial-offset-left undara-editorial-rail undara-editorial-ambient undara-editorial-ambient-left">
+                <FeatureSection />
+              </div>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <ProcessSection />
+              <div className="undara-editorial-offset-right">
+                <ProcessSection />
+              </div>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
+              <div className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-right">
               <PackageShowcase
                 eyebrow={en ? "Digital Guestbook" : "Guestbook Digital"}
                 title={
@@ -78,10 +83,11 @@ export default function GuestbookPage() {
                     : "Guestbook Digital dapat digunakan untuk berbagai jenis acara. Undangan Digital tetap merupakan produk terpisah Rp150.000 per event ketika halaman undangan publik juga dibutuhkan."
                 }
               />
+              </div>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section grid gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
+              <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail grid gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{en ? "One event, one source" : "Satu Acara, Satu Sumber Data"}</p>
                   <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
@@ -97,6 +103,7 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
+              <div className="undara-editorial-offset-left">
               <FaqSection
                 eyebrow={en ? "Before event day" : "Sebelum Hari Acara"}
                 title={en ? "Questions the reception team should settle early." : "Pertanyaan yang sebaiknya jelas sebelum tamu datang."}
@@ -109,6 +116,7 @@ export default function GuestbookPage() {
                 wide
                 editorial
               />
+              </div>
             </ScrollReveal>
           </MarketingTextReveal>
         </main>
