@@ -112,6 +112,7 @@ export default function DigitalInvitationPage() {
                   packageKeys={["INVITATION_BASIC"]}
                   roundedCard
                   wide
+                  editorial
                   note={copy.packageNote}
                 />
               </PuzzleAssemble>
