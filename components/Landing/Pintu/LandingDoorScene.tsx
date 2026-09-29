@@ -144,7 +144,7 @@ function DoorBacklight({ opening, entering, isDarkMode }: { opening: boolean; en
 
   useFrame((_, delta) => {
     if (!material.current) return;
-    const target = opening ? (entering ? 0.92 : 0.72) : 0.08;
+    const target = opening ? (entering ? 0.28 : 0.68) : 0.08;
     material.current.opacity = THREE.MathUtils.damp(material.current.opacity, target, 2.8, delta);
   });
 
@@ -186,7 +186,7 @@ function DoorOpeningGlow({ opening, entering }: { opening: boolean; entering: bo
   useFrame((_, delta) => {
     if (material.current) {
       material.current.opacity = THREE.MathUtils.damp(
-        material.current.opacity, opening ? (entering ? 0.55 : 0.34) : 0, 2.6, delta,
+        material.current.opacity, opening ? (entering ? 0.04 : 0.30) : 0, 2.6, delta,
       );
     }
   });
@@ -607,7 +607,7 @@ function OrbitalDoors({ selected, opening, entering, reducedMotion, onSelect, en
     onClick={(event) => { event.stopPropagation(); if (!entering) onSelect(index); }}>
     <Door opening={opening[index]} image={portal.image} title={portal.title} crest={portal.crest} entering={entering && selected === index} isDarkMode={isDarkMode} />
     <GroundShadow isDarkMode={isDarkMode} />
-    <pointLight position={[0, 1.65, -1.8]} intensity={opening[index] ? 2.35 : 0.12} color="#F2D4AA" distance={5.2} decay={2} />
+    <pointLight position={[0, 1.65, -1.8]} intensity={opening[index] ? (entering && selected === index ? 0.55 : 2.1) : 0.12} color="#F2D4AA" distance={5.2} decay={2} />
   </group>)}</>;
 }
 
@@ -659,7 +659,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
           shadow-bias={-0.00015}
           shadow-radius={6}
         />
-        <pointLight position={[0, 1.35, -2.9]} intensity={selected !== null && opening[selected] ? 4.6 : 0.30} color="#F3D8B1" distance={6.8} decay={2} />
+        <pointLight position={[0, 1.35, -2.9]} intensity={entering ? 0.65 : selected !== null && opening[selected] ? 3.8 : 0.30} color="#F3D8B1" distance={6.8} decay={2} />
         <ForestMist isDarkMode={isDarkMode} />
         <ForestShadowFloor isDarkMode={isDarkMode} />
         <Fireflies reducedMotion={Boolean(reducedMotion)} isDarkMode={isDarkMode} />
