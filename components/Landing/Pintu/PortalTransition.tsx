@@ -165,6 +165,7 @@ export default function PortalTransition() {
           "--branch-rotate-right": `${-branch.rotate}deg`,
           "--branch-scale": branch.scale,
           "--branch-delay": `${branch.delay}ms`,
+          "--branch-reveal-delay": `${Math.round(branch.delay * 0.28)}ms`,
           "--branch-z": branch.z,
         } as CSSProperties;
 
@@ -186,6 +187,7 @@ export default function PortalTransition() {
           "--branch-rotate-right": `${-branch.rotate}deg`,
           "--branch-scale": branch.scale,
           "--branch-delay": `${branch.delay + 18}ms`,
+          "--branch-reveal-delay": `${Math.round((branch.delay + 18) * 0.28)}ms`,
           "--branch-z": branch.z,
         } as CSSProperties;
 
