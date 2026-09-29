@@ -284,7 +284,7 @@ test("Undara footer social icons stay link-free until official profiles exist", 
 test("landing fireflies follow the Undara theme colors", () => {
   const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
   assert.match(doors, /function Fireflies\(\{ reducedMotion, isDarkMode \}/);
-  assert.match(doors, /color=\{isDarkMode \? "#D6B38C" : "#703B3B"\}/);
+  assert.match(doors, /color=\{isDarkMode \? "#D6B38C" : "#B28B5E"\}/);
   assert.match(doors, /blending=\{isDarkMode \? THREE\.AdditiveBlending : THREE\.NormalBlending\}/);
   assert.match(doors, /<Fireflies reducedMotion=\{Boolean\(reducedMotion\)\} isDarkMode=\{isDarkMode\} \/>/);
 });
