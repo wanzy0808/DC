@@ -134,9 +134,9 @@
 .undara-studio-layer-quick:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); }
 .undara-studio-layer-list-items button:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 
-.undara-studio-selection-stack { position: sticky; top: 0; right: 0; z-index: 100; display: grid; align-content: start; justify-self: end; gap: 10px; width: 236px; }
-.undara-studio-selection-stack > :is(.undara-studio-layer-side, .undara-studio-section-side) { position: static; width: 100%; }
-.undara-studio-layer-side { position: sticky; top: 0; right: 0; z-index: 100; width: 230px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.undara-studio-selection-stack { position: sticky; top: 0; right: 0; z-index: 100; display: grid; align-content: start; justify-self: end; gap: 10px; width: 236px; max-height: calc(100dvh - 214px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
+.undara-studio-selection-stack > :is(.undara-studio-layer-side, .undara-studio-section-side) { position: static; width: 100%; max-height: none; overflow: visible; }
+.undara-studio-layer-side { position: sticky; top: 0; right: 0; z-index: 100; width: 236px; max-height: calc(100dvh - 214px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .undara-studio-layer-side-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .undara-studio-layer-side-head strong { color: var(--primary); font-size: 14px; font-weight: 700; }
 .undara-studio-layer-side-head button { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; color: var(--muted-foreground); font-size: 20px; line-height: 1; }
@@ -153,6 +153,10 @@
 .undara-studio-layer-order button { display: grid; min-width: 0; height: 38px; place-items: center; border: 1px solid color-mix(in srgb, var(--primary) 34%, transparent); border-radius: 10px; background: var(--background); color: var(--foreground); }
 .undara-studio-layer-order button:hover:not(:disabled) { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 9%, transparent); color: var(--primary); }
 .undara-studio-layer-order button:disabled { cursor: not-allowed; opacity: .32; }
+.undara-studio-layer-reset { display: flex; width: 100%; min-height: 38px; align-items: center; justify-content: center; gap: 6px; margin-top: 12px; border: 1px solid color-mix(in srgb, var(--primary) 40%, transparent); border-radius: var(--undara-control-radius); background: var(--background); color: var(--primary); font-size: 12px; font-weight: 700; }
+.undara-studio-layer-reset:hover:not(:disabled) { background: color-mix(in srgb, var(--primary) 8%, transparent); }
+.undara-studio-native-color { display: grid; grid-template-columns: 44px minmax(0, 1fr); align-items: center; gap: 8px; }
+.undara-studio-native-color output { min-width: 0; color: var(--muted-foreground); font-size: 10px; font-weight: 700; text-align: right; }
 .undara-studio-layer-side :is(input, select, button):focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 .undara-studio-font-choice {
   display: grid;
@@ -222,12 +226,7 @@
   white-space: nowrap;
 }
 
-.undara-studio-text-side {
-  max-height: calc(100vh - 220px);
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary) transparent;
-}
+.undara-studio-text-side { scrollbar-width: thin; scrollbar-color: var(--primary) transparent; }
 .undara-studio-text-content {
   width: 100%;
   min-height: 96px;
@@ -277,7 +276,7 @@
   font-size: 10px;
   text-align: right;
 }
-.undara-studio-section-side { position: sticky; top: 0; right: 0; z-index: 100; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.undara-studio-section-side { position: sticky; top: 0; right: 0; z-index: 100; width: 236px; max-height: calc(100dvh - 214px); overflow-y: auto; overscroll-behavior: contain; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: var(--primary) transparent; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .undara-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .undara-studio-section-side-head > div { display: grid; min-width: 0; gap: 3px; }
 .undara-studio-section-side-head span { color: var(--muted-foreground); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
