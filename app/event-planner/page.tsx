@@ -293,7 +293,7 @@ export default function EventPlannerPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="mx-auto grid w-full max-w-[1500px] gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16 lg:pb-18">
+              <section className="mx-auto grid w-full max-w-[1500px] gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16 lg:pb-16">
                 <div>
                   <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
                     {en ? "Already using Undara?" : "Sudah pakai Undara?"}
