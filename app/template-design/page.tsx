@@ -164,8 +164,8 @@ export default function TemplateDesignPage() {
           aria-label={copy.contentLabel}
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <section className="mx-auto w-full max-w-none px-5 pb-16 pt-8 font-[family-name:var(--font-undara-body)] sm:px-8 md:pb-24 md:pt-12 lg:px-12 xl:px-16 2xl:px-20">
-        <div className="grid min-h-[min(58dvh,620px)] items-end gap-10 border-b border-primary/25 pb-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+          <section className="undara-marketing-content pb-16 pt-8 font-[family-name:var(--font-undara-body)] md:pb-24 md:pt-12">
+        <div className="undara-marketing-section grid min-h-[min(64dvh,680px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div className="max-w-4xl">
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary md:text-xs">{copy.eyebrow}</p>
             <h1 className="mt-5 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,6vw,6.6rem)] font-normal leading-[0.97] tracking-[-0.035em] text-primary">{copy.title}</h1>
@@ -251,13 +251,13 @@ export default function TemplateDesignPage() {
         <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
         <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {filteredTemplates.map((template) => (
-            <article key={template.key} className="group min-w-0 overflow-hidden rounded-[24px] border border-primary/25 bg-background/80 shadow-[0_8px_28px_rgba(80,45,58,0.06)] backdrop-blur-sm transition duration-300 hover:-translate-y-1 hover:border-primary/55 hover:shadow-[0_16px_38px_rgba(80,45,58,0.13)]">
+            <article key={template.key} className="group min-w-0 overflow-hidden rounded-[32px_8px_32px_8px] border border-primary/25 bg-background/45 shadow-[0_14px_42px_rgba(80,45,58,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_22px_55px_rgba(80,45,58,0.14)]">
               <div className="relative w-full overflow-hidden text-left">
                 {template.ready ? <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} /> : (
                   <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
                 )}
                 {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
-                <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-4">
+                <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-5">
                   <div className="min-w-0">
                     <p className="mb-1 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
                     <h2 className="truncate font-[family-name:var(--font-undara-heading)] text-lg font-normal text-primary">{template.name}</h2>
@@ -266,7 +266,7 @@ export default function TemplateDesignPage() {
                 </div>
                 <button type="button" onClick={() => openPreview(template.key)} aria-label={`Lihat pratinjau ${template.name}`} className="absolute inset-0 z-10 w-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" />
               </div>
-              <div className="px-5 pb-5 pt-3">
+              <div className="px-5 pb-6 pt-4">
                 <p className="min-h-12 text-sm leading-6 text-foreground/65">{template.description}</p>
                 <Button onClick={() => openPreview(template.key)} size="sm" className={controlStyles.cta}>
                   {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
