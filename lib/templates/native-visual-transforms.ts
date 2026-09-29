@@ -102,7 +102,7 @@ export function isNativeVisualKey(key: string) {
   return false;
 }
 
-const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|border|branch|deco|diamond|divider|flourish|gem|leaf|line|lines|moon|orbit|ornament|paper|ring|seal|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
+const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|border|branch|deco|diamond|divider|flourish|flower|gem|leaf|line|lines|moon|orbit|ornament|paper|ring|seal|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
 
 /** Delete/Backspace may hide decorative artwork, never business data or functional controls. */
 export function nativeVisualCanHide(key: string) {
