@@ -2070,6 +2070,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               design={design}
               selectedAssetLayer={selectedAssetLayer}
               selectedAssetIndex={selectedAssetIndex}
+              maxAssetLayers={maxAssetLayers}
               selectedPhotoSlot={selectedPhotoSlot}
               selectedRsvpElementKey={selectedRsvpElementKey}
               selectedSectionElement={selectedSectionElement}
