@@ -88,7 +88,7 @@ export default function EventPlannerPage() {
           aria-label={en ? "Event Planner page content" : "Konten halaman Event Planner"}
           className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <div className="undara-marketing-content flex flex-col gap-24 py-8 md:gap-28 md:py-12">
+          <div className="undara-marketing-content flex w-full max-w-none flex-col gap-24 py-8 md:gap-28 md:py-12">
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full items-center gap-10 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
                 <div
