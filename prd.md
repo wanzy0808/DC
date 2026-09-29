@@ -5680,3 +5680,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi dokumentasi:** `AGENTS.md` kini mendefinisikan shorthand `to design`, precedence, peran masing-masing skill, upstream canonical references, dan guard agar skill tidak memperluas scope diam-diam. `template.md` menambahkan quality stack khusus produksi template: brief/moodboard → GPT-Taste direction → implementasi → Emil motion review → Impeccable critique/polish/audit → screenshot HP+desktop → koreksi. `.gitignore` mengabaikan runtime/cache lokal `.impeccable/` agar file kerja developer tidak masuk repository.
 
 **Commit implementasi:** `156e898` (AGENTS orchestration), `6394f95` (template quality stack), `5c86088` (.impeccable gitignore). **Validasi:** source inspection dokumentasi selesai; tidak ada perubahan runtime aplikasi, build, browser/E2E, atau migrasi database yang diklaim untuk perubahan ini.
+
+
+### 29 September 2026 — Transisi masuk pintu: natural branch gate
+
+**Arah owner:** transisi masuk pintu memakai banyak cabang/ranting seperti pagar atau pintu alami. Saat kamera zoom, cabang menutup viewport secara bertahap; sesudah route berpindah, cabang membuka lagi sehingga halaman tujuan terasa seperti pemandangan baru di balik gerbang.
+
+**Implementasi:** `PortalTransition` memakai 11 layer gerbang visual: tiga cabang kiri, tiga kanan, dua canopy atas, satu brush bawah, serta dua cabang foreground dekat kamera. Asset `branch-01` sampai `branch-06`, `canopy7`, dan `forest-silhouette` dipakai ulang dengan posisi, pivot, skala, dan sudut yang berbeda agar tidak terlihat seperti panel mirror. Cover memakai tiga motion group dengan timing berbeda; reveal membalik urutan depth sehingga foreground membuka lebih dulu dan canopy lebih akhir. Route tetap commit ketika gate tertutup. Glow pintu tetap diredupkan saat `entering`; tidak ada hue-rotate rosé pada branch gate.
+
+**Area:** `components/Landing/Pintu/PortalTransition.tsx`, `app/globals.css`, `tests/marketing-transition.test.mjs`. QA browser desktop/mobile Light/Dark masih perlu diverifikasi secara visual.
