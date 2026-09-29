@@ -5,57 +5,46 @@ import test from "node:test";
 const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
 
 const page = read("app/event-planner/page.tsx");
-const founder = read("components/EventPlanner/FounderSection.tsx");
 const services = read("components/EventPlanner/ServicesSection.tsx");
-const portfolio = read("components/EventPlanner/PortfolioSection.tsx");
 const faq = read("components/Marketing/FaqSection.tsx");
 const data = read("data/services/event-planner.ts");
 
-test("event planner keeps the editorial redesign direction", () => {
-  assert.match(page, /\/assets\/marketing\/event-planner\/hero\.webp/);
-  assert.match(page, /Hadir penuh di momenmu/);
-  assert.match(page, /We keep it moving/);
-  assert.match(page, /lg:grid-cols-\[1\.05fr_0\.95fr\]/);
-  assert.match(page, /plannerPackages\.map/);
-  assert.doesNotMatch(page, /rounded-\[28px\].*plannerPackages/s);
-  assert.doesNotMatch(page, /md:grid-cols-3/);
+test("event planner is a connector-only Undara service", () => {
+  assert.match(page, /const WHATSAPP_NUMBER = "6281285009609"/);
+  assert.doesNotMatch(page, /6282124786516|FounderSection|PortfolioSection|plannerReviews|plannerPortfolio|Christine/);
+  assert.doesNotMatch(data, /\bDC\b|DC Organizer|Christine|plannerReviews|plannerPortfolio/);
 
-  assert.match(founder, /Christine/);
-  assert.match(founder, /Pendiri & Perencana Acara Utama/);
-  assert.match(founder, /rounded-\[8px_44px_8px_44px\]/);
-
-  assert.match(services, /Cara kami bekerja/);
-  assert.match(services, /md:grid-cols-\[2\.4rem_minmax\(0,0\.9fr\)_minmax\(0,1\.35fr\)\]/);
-  assert.doesNotMatch(services, /max-w-\[10ch\]/);
-
-  assert.match(portfolio, /Pilihan perayaan/);
-  assert.match(portfolio, /max-w-\[18ch\]/);
-  assert.match(portfolio, /lg:grid-cols-12/);
-
-  assert.match(faq, /editorial\?: boolean/);
-  assert.match(page, /editorial/);
-  assert.doesNotMatch(data, /Event Planner DC|Undangan Digital DC|produk digital DC/);
+  assert.match(page, /Butuh Event Planner\?/);
+  assert.match(page, /Undara bantu menerima kebutuhan awal lalu menghubungkan kamu/);
+  assert.match(data, /Apa peran Undara untuk layanan Event Planner\?/);
+  assert.match(data, /Siapa yang menangani pelaksanaan acaranya\?/);
+  assert.match(data, /penyedia layanan yang relevan/);
+  assert.match(services, /Sebelum kami hubungkan/);
+  assert.match(services, /Kami Hubungkan/);
 });
 
-test("event planner follows the ID EN toggle for visible copy", () => {
+test("event planner uses planner notes as decoration and a wider body", () => {
+  assert.match(page, /\/assets\/note1\.webp/);
+  assert.match(page, /\/assets\/note2\.webp/);
+  assert.match(page, /\/assets\/note3\.webp/);
+  assert.match(page, /function PlannerNote/);
+  assert.match(page, /motion, useReducedMotion/);
+  assert.match(page, /w-full max-w-none/);
+  assert.match(page, /max-w-\[1560px\]/);
+  assert.doesNotMatch(page, /md:grid-cols-3/);
+});
+
+test("event planner follows ID EN and avoids legacy copy", () => {
   assert.match(page, /const en = locale === "en"/);
-  assert.match(page, /Sebelum kita mulai/);
-  assert.match(page, /Before we plan/);
-  assert.match(founder, /8\+ years of experience/);
-  assert.match(founder, /8\+ tahun pengalaman/);
-  assert.match(services, /Less noise, clearer decisions/);
-  assert.match(services, /Lebih sedikit keruwetan/);
-  assert.match(portfolio, /Selected celebrations/);
-  assert.match(portfolio, /Pilihan perayaan/);
   assert.match(data, /questionEn:/);
   assert.match(data, /featuresEn:/);
-  assert.match(data, /reviewEn:/);
-});
+  assert.match(data, /titleEn:/);
+  assert.match(faq, /editorial\?: boolean/);
 
-test("event planner avoids narrow text columns and legacy typography", () => {
-  const combined = [page, founder, services, portfolio].join("\n");
+  const combined = [page, services, data].join("\n");
   assert.doesNotMatch(combined, /font-dc-/);
   assert.doesNotMatch(combined, /max-w-\[(10|11|12)ch\]/);
+  assert.doesNotMatch(combined, /\bDC\b|DC Organizer/);
   assert.match(combined, /font-undara-heading/);
   assert.match(combined, /font-undara-body/);
   assert.match(combined, /font-undara-mono/);
