@@ -159,6 +159,13 @@ export function PersonalInvitationGuestFields({
                 </select>
               </label>
             )}
+            {value.personalEnvelopeEnabled && value.recipientType === "COUPLE" && (
+              <p className="mt-3 text-xs leading-5 text-muted-foreground">
+                {value.personalLanguage === "EN"
+                  ? "Dear : Mr Andi and Mrs Sari"
+                  : "Kepada Yth : Bapak Andi dan Ibu Sari"}
+              </p>
+            )}
           </div>
           <label className="block min-w-0 text-sm font-medium text-foreground">
             {d("Nama di amplop (opsional)")}
