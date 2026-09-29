@@ -17,7 +17,7 @@ export default function HomePage() {
     <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground dark:bg-[#281414]">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(109,88,72,0.14),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(126,102,75,0.22)_0%,rgba(58,42,31,0.24)_42%,rgba(40,20,20,0.08)_67%,transparent_82%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(109,88,72,0.08),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(126,102,75,0.12)_0%,rgba(58,42,31,0.14)_42%,rgba(40,20,20,0.05)_67%,transparent_82%)]"
       />
       <LandingTopCanopy />
       <LandingWoodlandAtmosphere />
@@ -27,9 +27,8 @@ export default function HomePage() {
         initial={reduced ? false : { opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
-        className="relative z-10 mx-auto my-auto flex h-[calc(100dvh-24px)] w-[calc(100%-16px)] flex-col overflow-visible rounded-[14px] border border-primary/20 bg-transparent sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] sm:rounded-[18px] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]"
+        className="relative z-10 mx-auto my-auto flex h-[calc(100dvh-24px)] w-[calc(100%-16px)] flex-col overflow-visible rounded-[14px] border-2 border-primary/60 bg-background/[0.12] shadow-[0_12px_44px_rgba(75,35,47,0.07)] sm:my-[23px] sm:h-[calc(100dvh-46px)] sm:w-[calc(100%-46px)] sm:rounded-[18px] lg:my-[27px] lg:h-[calc(100dvh-54px)] lg:w-[calc(100%-54px)]"
       >
-
         <main className={`absolute inset-0 ${doorOpen ? "z-[25] sm:z-[5]" : "z-[5]"}`}>
           <LandingDoorScene fullFrame onDoorOpenChange={setDoorOpen} />
         </main>

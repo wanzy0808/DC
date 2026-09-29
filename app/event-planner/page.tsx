@@ -238,15 +238,15 @@ export default function EventPlannerPage() {
                 </div>
 
                 <div className="relative z-10 mt-10 border-t border-primary/30">
-                  {plannerPackages.map((item) => {
+                  {plannerPackages.map((item, index) => {
                     const features = en ? item.featuresEn : item.features;
 
                     return (
                       <article
                         key={item.key}
-                        className="grid gap-7 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12"
+                        className={`grid gap-7 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[7%]"}`}
                       >
-                        <div>
+                        <div className={index % 2 ? "md:order-2" : ""}>
                           <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl lg:text-4xl">
                             {en ? item.nameEn : item.name}
                           </h3>
@@ -255,7 +255,7 @@ export default function EventPlannerPage() {
                           </p>
                         </div>
 
-                        <div>
+                        <div className={index % 2 ? "md:order-1" : ""}>
                           <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-8">
                             {features.map((feature) => (
                               <li

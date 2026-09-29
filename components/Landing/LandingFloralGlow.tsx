@@ -23,7 +23,7 @@ export default function LandingFloralGlow() {
               }
         }
         transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute -bottom-[6%] -left-[4%] h-[72vh] w-[24vw] min-w-[210px] opacity-[0.36] sm:opacity-[0.5]"
+        className="absolute -bottom-[6%] -left-[4%] h-[72vh] w-[24vw] min-w-[210px] opacity-[0.26] sm:opacity-[0.36]"
       >
         <div className="relative h-full w-full">
           <Image
@@ -53,7 +53,7 @@ export default function LandingFloralGlow() {
           ease: "easeInOut",
           delay: 0.5,
         }}
-        className="absolute -bottom-[8%] -right-[5%] h-[66vh] w-[22vw] min-w-[190px] opacity-[0.2] sm:opacity-[0.34]"
+        className="absolute -bottom-[8%] -right-[5%] h-[66vh] w-[22vw] min-w-[190px] opacity-[0.15] sm:opacity-[0.25]"
       >
         <div className="relative h-full w-full -scale-x-100">
           <Image
