@@ -5917,3 +5917,20 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Commits implementasi:** `c93ff90`, `5a036ee`, `61e9f5f`.
 
 **Validasi:** source inspection selesai. Build/CI commit terbaru harus diamati terpisah sebelum dinyatakan PASS; QA browser visual lintas viewport juga tetap terpisah.
+
+
+### 30 September 2026 — Marketing continuation: legal alignment and catalog cadence
+
+**Rationale:** lanjutan visual QA source setelah editorial rhythm pass. Dua legal route masih memakai standalone card lama, dan full template catalog masih terlalu rigid sebagai grid tiga kolom. Pembenahan menjaga konten/data/interaction tetap sama sambil membuat perpindahan antar-public page terasa satu keluarga.
+
+- `/privacy-policy` dan `/terms-and-conditions` dipindahkan ke shared framed marketing system: `PublicMarketingAtmosphere`, embedded Navbar, `undara-marketing-frame`, internal scrollport, `undara-marketing-content`, dan `MarketingFrameFooter`.
+- Isi legal tidak diubah; presentation memakai hero legal bilingual, editorial numbering, rail, dan spacing yang lebih terbaca.
+- Full `/template-design` catalog mendapat subtle wide-screen stagger pada kolom tengah. Stagger memakai `margin-top`, bukan `transform`, supaya existing card hover lift tidak tertimpa.
+- `components/Guestbook/HeroSection.tsx` memakai iconography yang lebih semantik: Seating menggunakan Armchair dan live attendance menggunakan BarChart3 alih-alih mengulang icon Users/ScanLine.
+- Regression marketing ditambah untuk shared legal frame dan catalog stagger.
+
+**Area:** `app/{privacy-policy,terms-and-conditions,template-design}/page.tsx`, `app/globals.css`, `components/Guestbook/HeroSection.tsx`, `tests/marketing-polish.test.mjs`.
+
+**Commits implementasi:** `c93ff90`, `5a036ee`, `61e9f5f`, `c37047c`, `058baad`, `2460591`, `45bde8a`, `e74dc71`.
+
+**Validasi:** source inspection selesai. Build/CI dan Orphan Audit untuk commit terbaru harus diamati sebelum diklaim PASS; QA browser visual nyata lintas viewport tetap belum diklaim PASS.
