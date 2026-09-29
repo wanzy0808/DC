@@ -7,6 +7,7 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import BurgerMenuContent from "@/components/Layout/Navbar/BurgerMenuContent";
 import LanguageToggle from "@/components/I18n/LanguageToggle";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import BrandWordmark from "@/components/Brand/BrandWordmark";
@@ -14,6 +15,8 @@ import { isFramedMarketingPath } from "@/lib/marketing-paths";
 
 export default function Navbar({ embedded = false }: { embedded?: boolean }) {
   const pathname = usePathname();
+  const { locale } = useLanguage();
+  const en = locale === "en";
   const [menuOpen, setMenuOpen] = useState(false);
   const reducedMotion = useReducedMotion();
   const isLanding = embedded && isFramedMarketingPath(pathname);
@@ -39,7 +42,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label={menuOpen ? "Tutup menu navigasi" : "Buka menu navigasi"}
+                  aria-label={menuOpen ? (en ? "Close navigation menu" : "Tutup menu navigasi") : (en ? "Open navigation menu" : "Buka menu navigasi")}
                   aria-expanded={menuOpen}
                   aria-controls="undara-burger-dropdown"
                   onClick={() => setMenuOpen((open) => !open)}
@@ -50,7 +53,7 @@ export default function Navbar({ embedded = false }: { embedded?: boolean }) {
             <AnimatePresence>
               {menuOpen && (
                 <>
-                  <button type="button" aria-label="Tutup menu" className="fixed inset-0 z-40 cursor-default bg-transparent" onClick={() => setMenuOpen(false)} />
+                  <button type="button" aria-label={en ? "Close menu" : "Tutup menu"} className="fixed inset-0 z-40 cursor-default bg-transparent" onClick={() => setMenuOpen(false)} />
                   <motion.div id="undara-burger-dropdown" initial={reducedMotion ? false : { opacity: 0, scale: 0.88, y: -12 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={reducedMotion ? { opacity: 0 } : { opacity: 0, scale: 0.9, y: -10 }} transition={{ duration: reducedMotion ? 0.1 : 0.32, ease: [0.22, 1, 0.36, 1] }} style={{ transformOrigin: "top right" }} className="absolute right-0 top-[calc(100%+32px)] z-50 w-[min(88vw,370px)] max-h-[min(75dvh,650px)] overflow-y-auto !rounded-[28px] border border-primary/35 bg-background/95 p-3 shadow-[0_18px_65px_rgba(75,35,47,0.16)] backdrop-blur-xl">
                     <BurgerMenuContent onClose={() => setMenuOpen(false)} />
                   </motion.div>
