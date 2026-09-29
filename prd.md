@@ -5696,3 +5696,10 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Revisi owner:** cabang transisi masih terlalu sedikit dan belum memenuhi layar. Saat zoom masuk, cabang harus berkumpul rapat ke tengah sampai hampir menutup seluruh viewport, lalu mundur lagi ke arah asal saat halaman baru terbuka.
 
 **Implementasi:** branch gate dinaikkan menjadi 21 layer visual dengan tambahan pasangan cabang kiri/kanan, cabang diagonal silang dekat kamera, cabang dari atas-tengah, dan cabang dari bawah. Posisi `--branch-closed` diarahkan lebih dalam ke pusat viewport agar fase hold terbaca sebagai simpul ranting padat, bukan sekadar frame di tepi layar. Motion dibagi empat kedalaman (`close/open a–d`) agar penutupan dan pembukaan tetap organik walau density meningkat. Durasi cover/reveal sedikit diperpanjang agar gerak cabang banyak tidak terasa tersentak.
+
+
+### 29 September 2026 — Final branch transition: 10 kiri + 10 kanan, satu jenis
+
+**Revisi owner (supersedes branch gate campuran sebelumnya):** transisi tidak memakai banyak tipe branch/canopy dari berbagai arah. Gunakan satu jenis branch yang sama: 10 layer dari kiri dan 10 layer mirrored dari kanan. Semua layer bergerak menuju pusat viewport sampai layar tertutup rapat, route commit saat tertutup, lalu seluruh branch mundur kembali ke sisi asal untuk membuka halaman tujuan.
+
+**Implementasi:** `PortalTransition` sekarang merender 10 konfigurasi `BRANCH_SWARM` dua kali (kiri/kanan) sehingga total 20 visual branch. Semua memakai `branch-03.webp`; sisi kanan hanya mirror. Variasi hanya pada top, ukuran, rotasi, scale, z-depth, dan delay untuk menjaga gerak natural tanpa mencampur siluet. Posisi closed kiri/kanan masuk sekitar ±43% relatif ke layer sehingga pasangan branch overlap kuat di tengah. Mobile memakai overlap lebih dalam (±48%). Durasi tiap layer dikurangi sebesar delay masing-masing agar seluruh swarm selesai tepat pada akhir fase cover/reveal dan tidak snap ketika route commit.
