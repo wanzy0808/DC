@@ -5663,3 +5663,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Dark Mode marketing control parity — 2026-09-28
 - Widget, sound toggle, volume, social controls, and navbar controls must use the same border/background/color treatment in Dark Mode as they do as a system in Light Mode.
 - Persistent controls remain transparent with the shared theme primary color; no separate dark card fill.
+
+
+### Persistent Light/Dark mode — 2026-09-29
+- The user's last selected Light or Dark mode must survive refresh and navigation.
+- Theme must not automatically follow OS/system appearance after the user has selected a mode.
+- Persist the selection so only an explicit theme-toggle action changes it.
