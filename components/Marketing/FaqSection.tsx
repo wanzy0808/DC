@@ -13,6 +13,7 @@ type FaqSectionProps = {
   description: string;
   items: readonly FaqItem[];
   wide?: boolean;
+  editorial?: boolean;
 };
 
 export default function FaqSection({
@@ -21,23 +22,40 @@ export default function FaqSection({
   description,
   items,
   wide = false,
+  editorial = false,
 }: FaqSectionProps) {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section className={`mx-auto w-full space-y-8 md:space-y-10 ${wide ? "max-w-none" : "max-w-4xl"}`}>
-      <SectionHeading eyebrow={eyebrow} title={title} description={description} />
-      <div className="space-y-4">
+      <SectionHeading
+        eyebrow={eyebrow}
+        title={title}
+        description={description}
+        align={editorial ? "left" : "center"}
+      />
+      <div className={editorial ? "border-y border-primary/25" : "space-y-4"}>
         {items.map((item, index) => {
           const isOpen = open === index;
           return (
-            <div key={item.question} className="overflow-hidden rounded-[28px] border border-primary/70 bg-[var(--card)]/75 md:rounded-[32px]">
+            <div
+              key={item.question}
+              className={
+                editorial
+                  ? "border-b border-primary/20 last:border-b-0"
+                  : "overflow-hidden rounded-[28px] border border-primary/70 bg-[var(--card)]/75 md:rounded-[32px]"
+              }
+            >
               <Button
                 type="button"
                 onClick={() => setOpen(isOpen ? null : index)}
                 aria-expanded={isOpen}
                 size="sm"
-                className={`h-auto min-h-11 w-full min-w-0 justify-between border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base ${isOpen ? "rounded-t-[28px] rounded-b-none md:rounded-t-[32px]" : "rounded-[28px] md:rounded-[32px]"}`}
+                className={
+                  editorial
+                    ? "h-auto min-h-14 w-full min-w-0 justify-between rounded-none border-0 bg-transparent px-0 py-5 text-left text-sm text-foreground shadow-none hover:bg-transparent md:py-6 md:text-base"
+                    : `h-auto min-h-11 w-full min-w-0 justify-between border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base ${isOpen ? "rounded-t-[28px] rounded-b-none md:rounded-t-[32px]" : "rounded-[28px] md:rounded-[32px]"}`
+                }
               >
                 <span className="font-[family-name:var(--font-undara-heading)] font-semibold">
                   {item.question}
@@ -45,7 +63,14 @@ export default function FaqSection({
                 <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
               </Button>
               {isOpen ? (
-                <div data-dc-text-reveal className="border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6">
+                <div
+                  data-dc-text-reveal
+                  className={
+                    editorial
+                      ? "max-w-4xl pb-6 pr-10 text-sm leading-7 text-[var(--muted-foreground)] md:pb-7 md:text-base md:leading-8"
+                      : "border-t border-[var(--border)] px-5 pb-6 pt-4 text-sm leading-7 text-[var(--muted-foreground)] md:px-6"
+                  }
+                >
                   {item.answer}
                 </div>
               ) : null}
