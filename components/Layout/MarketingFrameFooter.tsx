@@ -20,7 +20,7 @@ export default function MarketingFrameFooter() {
         </p>
 
         <div className="col-start-2 row-start-1 justify-self-end sm:col-start-3">
-          <UndaraSocialIcons compact />
+          <UndaraSocialIcons />
         </div>
       </div>
     </div>
