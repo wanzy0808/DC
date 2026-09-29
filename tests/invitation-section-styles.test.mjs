@@ -103,7 +103,7 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   assert.match(css, /\.undara-studio-preview-surface \{[\s\S]*?overflow: visible/);
   assert.match(css, /\.undara-studio-preview-surface \[data-studio-preview-root="true"\] \{[^}]*overflow: visible !important/);
   assert.match(css, /\.undara-studio-preview-workspace \{[^}]*overflow: visible/);
-  assert.match(css, /\.undara-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(118px, 1fr\)[^}]*overflow: visible/);
+  assert.match(css, /\.undara-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(236px, 1fr\)[^}]*overflow: visible/);
   assert.match(css, /\.undara-section-instance-content \{ overflow: hidden; \}/);
   assert.match(css, /\.undara-section-instance-hidden \{[\s\S]*?max-height: 72px/);
 
