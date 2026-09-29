@@ -17,6 +17,7 @@ import { parseDesignKey } from "@/lib/templates/design";
 import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { weddingParentLine } from "@/lib/events/parents";
+import { formatPersonalEnvelopeAddress } from "@/lib/guests/personal-envelope";
 import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
@@ -218,6 +219,7 @@ export default function RomanticRoseTemplate({
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
   const countdown = getInvitationCountdown(invitation.eventDate, now ?? 0);
   const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
+  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : "";
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
   const handleOpen = () => {
     if (preview) return;
@@ -269,6 +271,9 @@ export default function RomanticRoseTemplate({
             <div data-studio-native-object="object:envelope:top-fold" className="absolute inset-x-0 top-0 h-1/2 origin-top [clip-path:polygon(0_0,100%_0,50%_100%)] bg-[#d8a0b0] shadow-xl" />
             <div data-studio-native-object="object:envelope:letter-card" className="relative mt-2 flex min-h-[345px] flex-col items-center justify-center border border-[#dbadba] bg-[#fffdfb] p-5 shadow-[inset_0_0_0_7px_#f9e9ed]">
               <p data-studio-native-object="object:envelope:letter-kicker" className="text-[10px] uppercase tracking-[0.24em] text-[#ad7889]">Untuk yang terkasih</p>
+              {personalEnvelopeAddress && (
+                <p data-personal-envelope-address className="mt-3 max-w-[250px] break-words text-xs font-semibold leading-5 text-[#713b50]">{personalEnvelopeAddress}</p>
+              )}
               <span data-studio-native-object="object:envelope:heart" className="my-6 grid h-12 w-12 place-items-center rounded-full border border-[#d9a7b4] text-[#a76b80]"><Heart className="h-5 w-5" /></span>
               <h1 data-studio-native-heading="" className="break-words font-[family-name:var(--font-undara-heading)] text-2xl leading-relaxed text-[#713b50]">{displayName || "Undangan Pernikahan"}</h1>
               <p data-studio-native-object="object:envelope:date" className="mt-5 text-xs text-[#966a7c]">{eventDate}</p>
