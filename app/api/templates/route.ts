@@ -43,7 +43,7 @@ export async function GET() {
       return {
         key: `designer:${item.templateNo}`,
         name: item.name,
-        description: item.description || item.tags.join(" · ") || "Desain dari designer",
+        description: item.description || item.tags.join(" · ") || "Template Designer",
         previewImage: item.previewUrl,
         assetPath: base?.assetPath ?? "",
         category: item.category || item.tags[0] || "Designer",
