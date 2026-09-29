@@ -10,16 +10,26 @@ const styles = read("app/globals.css");
 test("marketing transitions use woodland foliage instead of the old pink veil", () => {
   assert.match(portal, /className="undara-portal-transition"/);
   assert.match(portal, /undara-portal-transition__landscape/);
-  assert.match(portal, /undara-portal-transition__foliage--left-front/);
-  assert.match(portal, /undara-portal-transition__foliage--right-front/);
+  assert.match(portal, /undara-branch-gate--left-1/);
+  assert.match(portal, /undara-branch-gate--right-1/);
   assert.doesNotMatch(portal, /undara-marketing-veil-in|undara-marketing-veil-out|#fae9ef|#f8dce7/);
 
   assert.match(styles, /canopy7\.webp/);
   assert.match(styles, /forest-silhouette\.webp/);
+  assert.match(styles, /branch-01\.webp/);
+  assert.match(styles, /branch-02\.webp/);
   assert.match(styles, /branch-03\.webp/);
+  assert.match(styles, /branch-04\.webp/);
+  assert.match(styles, /branch-05\.webp/);
   assert.match(styles, /branch-06\.webp/);
+  assert.match(styles, /@keyframes undara-branch-close-a/);
+  assert.match(styles, /@keyframes undara-branch-close-b/);
+  assert.match(styles, /@keyframes undara-branch-close-c/);
+  assert.match(styles, /@keyframes undara-branch-open-a/);
+  assert.match(styles, /@keyframes undara-branch-open-b/);
+  assert.match(styles, /@keyframes undara-branch-open-c/);
   assert.doesNotMatch(styles, /@keyframes undara-marketing-veil-in|@keyframes undara-marketing-veil-out/);
-  assert.doesNotMatch(styles, /undara-portal-transition__[^{]+\{[^}]*hue-rotate/s);
+  assert.doesNotMatch(styles, /hue-rotate/);
 
   assert.match(doorScene, /function startWoodlandCover\(\)/);
   assert.match(doorScene, /color="#4F463A"/);
