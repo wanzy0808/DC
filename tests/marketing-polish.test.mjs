@@ -55,3 +55,12 @@ test("public legal pages use the shared marketing frame", () => {
     assert.match(source, /undara-marketing-content/);
   }
 });
+
+
+test("template catalog keeps wide-screen editorial staggering without overriding hover transforms", () => {
+  const catalogPage = read("app/template-design/page.tsx");
+  const styles = read("app/globals.css");
+  assert.match(catalogPage, /undara-template-catalog-grid/);
+  assert.match(styles, /\.undara-template-catalog-grid > article:nth-child\(3n \+ 2\)/);
+  assert.match(styles, /margin-top: 2rem/);
+});
