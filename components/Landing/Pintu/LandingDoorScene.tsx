@@ -66,7 +66,7 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
     let cancelled = false;
     let loaded: THREE.Texture | null = null;
     // A missing or still-syncing local image should not crash the whole 3D
-    // landing. Keep the existing Rose portal surface while its image loads.
+    // landing. Keep a warm woodland portal surface while its image loads.
     const loader = new THREE.TextureLoader();
     loader.load(
       image,
@@ -109,9 +109,9 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
     return shape;
   }, []);
   return <group position={[0, 0, -0.19]}>
-    {/* The service image is visible while choosing a door, then fades into an image-free Rose passage as the camera enters. */}
+    {/* The service image is visible while choosing a door, then fades into a warm woodland passage as the camera enters. */}
     <mesh geometry={geometry} position={[0, 0, -0.008]}>
-      <meshBasicMaterial color="#e8a9bd" toneMapped={false} side={THREE.DoubleSide} />
+      <meshBasicMaterial color="#6D5848" toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
     {texture && <mesh geometry={geometry}>
       <meshBasicMaterial ref={imageMaterial} map={texture} transparent depthWrite={false} side={THREE.DoubleSide} toneMapped={false} />
@@ -618,16 +618,16 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const transitionStarted = useRef(false);
   useEffect(() => () => { if (navigationTimer.current) clearTimeout(navigationTimer.current); }, []);
-  function startRoseCover() {
+  function startWoodlandCover() {
     if (transitionStarted.current || selected === null) return;
     transitionStarted.current = true;
-    // Start the image-free Rose veil during the existing camera zoom, before its view could reach the portal plane.
+    // Start the foliage passage during the existing camera zoom, before its view can reach the portal plane.
     window.dispatchEvent(new CustomEvent("undara-portal-start", { detail: { href: PORTALS[selected].href } }));
   }
   function finishZoom() {
     if (selected === null) return;
-    startRoseCover(); // Fallback if the mid-zoom callback was missed (including reduced motion).
-    // Route change happens only after the veil has covered the original door; no second door scene is rendered.
+    startWoodlandCover(); // Fallback if the mid-zoom callback was missed (including reduced motion).
+    // Route change happens only after foliage has covered the original door; no second door scene is rendered.
     navigationTimer.current = setTimeout(() => router.push(PORTALS[selected].href), reducedMotion ? 40 : 220);
   }
   const router = useRouter();
@@ -643,7 +643,7 @@ export default function LandingDoorScene({ fullFrame = false, onDoorOpenChange }
   return <section className={fullFrame ? "absolute inset-0 h-full w-full" : "w-full max-w-5xl space-y-4"}>
     <div className={fullFrame ? "absolute inset-0 h-full w-full overflow-hidden bg-transparent" : "relative h-[min(82dvh,790px)] min-h-[480px] overflow-hidden bg-transparent"}>
       <Canvas shadows={{ type: THREE.PCFShadowMap }} camera={{ position: [0, 0.05, 11.7], fov: 39 }} gl={{ alpha: true }} onCreated={({ gl }) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.setClearColor(0x000000, 0); }}>
-        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startRoseCover} onArrive={finishZoom} />
+        <PortalCamera entering={entering} reducedMotion={Boolean(reducedMotion)} onCover={startWoodlandCover} onArrive={finishZoom} />
         {/* All directional/point illumination originates behind the doors. Neutral ambient only keeps the PBR base color readable. */}
         <ambientLight intensity={0.40} />
         <directionalLight
