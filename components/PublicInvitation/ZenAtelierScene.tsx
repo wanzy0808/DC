@@ -15,10 +15,11 @@ type ZenAtelierSceneProps = {
   preview?: boolean;
   isWedding?: boolean;
   hashtag?: string | null;
+  recipientLine?: string;
 };
 const root = "/templates/Zen%20Atelier/";
 
-export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true, hashtag }: ZenAtelierSceneProps) {
+export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
   const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
   const couple = isWedding ? title.split(/\s*&\s*/).filter(Boolean) : [];
@@ -34,6 +35,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
         <div className="zen-jp-intro" data-studio-native-object="object:envelope:intro-group">
           <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
           <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">Sebuah undangan<br />untuk orang istimewa</p>
+          {recipientLine && <p data-personal-envelope-address className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
         </div>
         <div className="zen-jp-paper-stage" aria-hidden="true" data-studio-native-object="object:envelope:paper-stage">
