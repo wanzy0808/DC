@@ -10,7 +10,7 @@ test("marketing footer keeps mobile controls from colliding", () => {
   assert.match(footer, /grid-rows-\[auto_auto\]/);
   assert.match(footer, /sm:grid-cols-\[minmax\(0,1fr\)_auto_minmax\(0,1fr\)\]/);
   assert.match(footer, /col-span-2 row-start-2/);
-  assert.match(footer, /<UndaraSocialIcons compact \/>/);
+  assert.match(footer, /<UndaraSocialIcons \/>/);
 });
 
 test("marketing footer controls follow the global ID EN language", () => {
