@@ -81,7 +81,7 @@ export const plannerFaq = [
       "Wedding Organizer berfokus pada finalisasi dan eksekusi acara, sedangkan Wedding Planner mendampingi lebih awal mulai dari konsep, budget, vendor, timeline, sampai hari-H.",
   },
   {
-    question: "Apakah Event Planner DC hanya untuk pernikahan?",
+    question: "Apakah Event Planner Undara hanya untuk pernikahan?",
     answer:
       "Tidak. Selain Wedding Organizer dan Wedding Planner, DC juga menangani Silver / Golden Wedding dan Baby Shower. Scope acara lain dapat dibicarakan terlebih dahulu melalui konsultasi.",
   },
@@ -96,9 +96,9 @@ export const plannerFaq = [
       "Tidak. Setiap acara memiliki kebutuhan, venue, jumlah tamu, dan scope yang berbeda. Tim akan menyusun penawaran setelah konsultasi awal.",
   },
   {
-    question: "Apakah layanan Event Planner bisa terhubung dengan Undangan Digital DC?",
+    question: "Apakah layanan Event Planner bisa terhubung dengan Undangan Digital Undara?",
     answer:
-      "Bisa. Undangan Digital DC dapat digunakan untuk RSVP dan manajemen tamu, sementara kebutuhan WA Blast tersedia sebagai add-on terpisah.",
+      "Bisa. Undangan Digital Undara dapat digunakan untuk RSVP dan manajemen tamu, sementara kebutuhan WA Blast tersedia sebagai add-on terpisah.",
   },
 ];
 
@@ -150,6 +150,6 @@ export const plannerServices = [
   },
   {
     title: "Guest Experience",
-    text: "Menghubungkan alur RSVP, seating, greeting, dan kebutuhan onsite dengan produk digital DC bila diperlukan.",
+    text: "Menghubungkan alur RSVP, seating, greeting, dan kebutuhan onsite dengan produk digital Undara bila diperlukan.",
   },
 ];
