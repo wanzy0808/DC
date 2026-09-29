@@ -14,8 +14,10 @@ type Phase = "idle" | "cover" | "hold" | "reveal";
 type PendingRoute = { path: string; href: string };
 
 /**
- * One persistent rose veil for both a door entry and ordinary marketing links.
- * Cover -> route commit -> reveal. Dashboard/auth/checkout/external links are not intercepted.
+ * One persistent woodland passage for both a door entry and ordinary marketing links.
+ * Foliage closes toward the viewer, the route commits behind it, then the plants
+ * part again so the destination reads like a new clearing.
+ * Dashboard/auth/checkout/external links are not intercepted.
  */
 export default function PortalTransition() {
   const pathname = usePathname();
@@ -119,17 +121,25 @@ export default function PortalTransition() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-auto fixed inset-0 z-[9999] bg-[#fae9ef] bg-[radial-gradient(ellipse_120%_135%_at_50%_50%,#fff8fb_0%,#f8dce7_36%,#efd1dc_68%,#fae9ef_100%)] dark:bg-[#251b21] dark:bg-[radial-gradient(ellipse_120%_135%_at_50%_50%,#fff3f8_0%,#ecc0d2_30%,#996678_68%,#251b21_100%)]"
+      className="undara-portal-transition"
+      data-phase={phase}
       style={{
-        // A single full-viewport Rose surface fades in and out. Unlike a
-        // separately scaled rectangular glow, it cannot expose its own edges
-        // as box-shaped seams during the door's camera zoom.
-        animation: phase === "cover"
-          ? `undara-marketing-veil-in ${coverDuration}ms cubic-bezier(.22,1,.36,1) both`
-          : phase === "reveal"
-            ? `undara-marketing-veil-out ${REVEAL_MS}ms cubic-bezier(.22,1,.36,1) both`
-            : undefined,
-      }}
-    />
+        "--undara-portal-cover-ms": `${coverDuration}ms`,
+        "--undara-portal-reveal-ms": `${REVEAL_MS}ms`,
+      } as React.CSSProperties}
+    >
+      <div className="undara-portal-transition__landscape" />
+      <div className="undara-portal-transition__mist undara-portal-transition__mist--back" />
+
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--left-back" />
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--right-back" />
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--top" />
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--bottom" />
+
+      <div className="undara-portal-transition__mist undara-portal-transition__mist--front" />
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--left-front" />
+      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--right-front" />
+      <div className="undara-portal-transition__vignette" />
+    </div>
   );
 }
