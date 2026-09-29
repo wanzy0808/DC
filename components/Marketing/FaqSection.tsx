@@ -39,7 +39,7 @@ export default function FaqSection({
                 size="sm"
                 className={`h-auto min-h-11 w-full min-w-0 justify-between border-0 px-5 py-4 text-left text-sm md:px-6 md:text-base ${isOpen ? "rounded-t-[28px] rounded-b-none md:rounded-t-[32px]" : "rounded-[28px] md:rounded-[32px]"}`}
               >
-                <span className="font-[family-name:var(--font-dc-heading)] font-semibold">
+                <span className="font-[family-name:var(--font-undara-heading)] font-semibold">
                   {item.question}
                 </span>
                 <ChevronDown className={`h-5 w-5 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
