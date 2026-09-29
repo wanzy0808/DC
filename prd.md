@@ -1563,6 +1563,12 @@ Marketing minimum menjelaskan:
 
 Guestbook marketing juga harus event-oriented.
 
+### 16.0a Kontinuitas background dan tipografi marketing — 29 September 2026
+
+Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: foliage bronze/champagne dari `EventPlannerBotanicalAtmosphere`, glow halus, dan daun jatuh beragam. Atmosfer berada sebagai sibling di belakang mainframe transparan, jadi header, body scroll, footer, dan bagian luar frame tetap tersambung secara visual. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan bunga/Rose glow lama dan pengecualian foliage khusus Event Planner pada paragraf historis.
+
+Katalog dan seluruh chrome halaman marketing memakai DM Serif Display untuk judul, Roboto untuk body/kontrol, dan DM Mono untuk label kecil; karya di dalam preview template tetap memakai font tema masing-masing. Copy produk, email, unduhan QR, dan dokumen baru memakai nama Undara. Nomor invoice lama serta ID teknis `dc-*` tetap dibaca untuk kompatibilitas; invoice baru memakai awalan `UND-`.
+
 ### 16.1 Guestbook dan Undangan Fisik — main frame marketing
 
 Halaman `/guestbook` dan `/undangan-fisik` menggunakan komposisi frame viewport yang sudah disetujui pada `/d-invitation` dan `/event-planner`: bingkai Rose responsif ±90vw; navbar embedded tetap di atas, footer compact embedded berisi player musik persisten serta Instagram tetap di bawah, hanya `main` di tengah yang scroll. Dekorasi bunga, kelopak dan Rose glow memakai **satu** `PublicMarketingAtmosphere` per route di dalam scene, bukan overlay dekorasi global tambahan. Semua konten memakai satu lebar tengah 88% mobile / 80vw mulai sm, `max-w-[1100px]`, dengan gap antarsection 80px mobile / 96px desktop. Global `PublicAtmosphere`, `PublicContent`, Navbar, Footer serta `MarketingFloatingControls` harus mengecualikan kedua framed route ini agar tidak menumpuk background, footer, navbar atau kontrol audio/Instagram.
@@ -5807,3 +5813,13 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Implementasi:** `app/help/page.tsx` menggunakan pembuka dua kolom, tautan menuju dua layanan, FAQ editorial dengan divider, dan CTA akhir tanpa panel kartu tambahan. `app/template-design/page.tsx` memperluas isi dalam mainframe dan mengelompokkan judul, deskripsi, serta pencarian dalam komposisi dua kolom. Filter foto/kategori, sortir, status READY, modal preview, dan handoff Studio tidak diubah. Atmosfer, navbar, footer, dan scrollport bersama tetap dipakai.
 
 **Commit dan validasi:** `bd09472`; ESLint, TypeScript, 20 tes marketing/repo, dan `next build` lulus. Build masih mencatat peringatan tracing path upload asset yang sudah ada. QA visual lintas viewport belum dilakukan.
+
+### 29 September 2026 — Atmosfer marketing sama dan audit nama Undara
+
+**Koreksi owner:** penyelarasan konten pada tahap sebelumnya belum menyamakan background. Katalog juga perlu memakai font Undara, dan teks DC yang masih tampil di halaman lain harus dibersihkan.
+
+**Implementasi:** `PublicMarketingAtmosphere` menggunakan foliage bronze dan FallingLeaves mode forest dari `EventPlannerBotanicalAtmosphere`, sehingga Digital Invitation, Guestbook, Undangan Fisik, Katalog, dan Bantuan berbagi background yang sama dengan Event Planner. Homepage woodland khusus tidak diubah. Katalog menggunakan token DM Serif Display/Roboto/DM Mono untuk chrome; font di dalam preview tetap milik tema. Teks customer-facing DC pada FAQ, paket, transaksi, panel Owner/Mitra, email autentikasi/invoice, unduhan QR, dan beberapa artwork/preview lama dibersihkan. Invoice baru berawalan `UND-`; invoice lama dan key teknis `dc-*` tetap kompatibel. Font lama pada chrome Admin, Designer, Owner, Mitra, Dashboard, pembayaran, dan gerbang sandi diganti token Undara.
+
+**Area/commit:** `components/Layout/PublicMarketingAtmosphere.tsx`, route dan komponen terkait, email, preview lama, serta tes continuity — `8aea96f`.
+
+**Validasi:** `node --import tsx --test tests/*.test.mjs` lulus 212/212; TypeScript dan `next build` lulus. ESLint pada berkas berubah lulus saat aturan `react-hooks/set-state-in-effect` lama dinonaktifkan; aturan itu masih menandai 4 efek yang sudah ada pada Owner/PackageSelector. Build tetap memberi satu peringatan tracing upload asset di luar area ini. QA visual di browser belum dilakukan.
