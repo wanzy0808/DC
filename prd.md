@@ -5715,3 +5715,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Permintaan owner:** pasangan contoh pada undangan menggunakan Unsal & Tara. Fixture bersama `data/templates/preview-invitation.ts` diubah pada judul dan kedua nama, sehingga katalog dan Template Studio staff memakai nama yang sama. Aturan di `template.md`, `studio.md`, dan canonical §7.2.9 diselaraskan. Data acara customer, tautan personal, serta kontak Christine pada layanan Event Planner tidak diubah. Tidak ada migrasi database; validasi source/build dicatat setelah pemeriksaan.
 
 **Validasi lokal:** source katalog dan Template Studio terbukti mengimpor fixture bersama; tes role Studio 5/5, production build webpack, TypeScript setelah build, dan `git diff --check` lulus. TypeScript yang sempat dijalankan bersamaan dengan build membaca `.next/types` saat sedang diregenerasi dan menghasilkan error file hilang; pemeriksaan ulang setelah build selesai lulus. QA visual preview di browser belum dilakukan.
+
+
+### 29 September 2026 — Studio: dock properti kanan tetap saat canvas dipan
+
+**Permintaan owner:** panel properti di kanan harus tetap berada di sisi kanan Studio walaupun canvas digeser kiri/kanan.
+
+**Implementasi:** `StudioSelectionInspector` dipindahkan keluar dari surface scroll/pan canvas ke `undara-studio-properties-dock` yang menempel pada viewport canvas Studio. Dock mempunyai scroll vertikal sendiri, tidak mengikuti pan horizontal/Space+drag, dan tetap memakai inspector styling yang sama untuk asset, teks, foto, section, RSVP, copy, serta native object. Regression contract ditambahkan di `tests/studio-ui-cleanup.test.mjs`; aturan layout diselaraskan di `studio.md`. Area: `components/InvitationStudio/InvitationDesigner.tsx`, `components/InvitationStudio/studio.css`, `tests/studio-ui-cleanup.test.mjs`, dan `studio.md`. Tidak ada migrasi database.
+
+**Validasi:** struktur source dan kontrak regression sudah diperbarui pada branch review. QA visual/pointer desktop-mobile dan workflow CI untuk commit terbaru belum terlihat saat catatan ini ditulis.
