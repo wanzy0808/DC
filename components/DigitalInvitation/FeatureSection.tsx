@@ -1,114 +1,113 @@
 "use client";
 
-import {
-  CalendarCheck2,
-  Palette,
-  Sparkles,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { Palette, Sparkles, Users, type LucideIcon } from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
-type FeatureItem = [
-  icon: LucideIcon,
-  title: string,
-  description: string,
-];
+type FeatureItem = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  note: string;
+};
 
 export default function FeatureSection() {
   const { locale } = useLanguage();
-  const features: FeatureItem[] =
-    locale === "en"
-      ? [
-          [
-            Palette,
-            "One template for one event",
-            "Choose the design that fits the occasion, then personalize the content, photos, colors, music, venue, and event details.",
-          ],
-          [
-            Sparkles,
-            "A studio that stays simple",
-            "Keep invitation content in one workspace so every event can be edited and published independently.",
-          ],
-          [
-            Users,
-            "RSVP and guest management included",
-            "Collect responses, plus-one information, and manage the guest list for the selected event without mixing data from your other events.",
-          ],
-        ]
-      : [
-          [
-            Palette,
-            "Satu template untuk satu acara",
-            "Pilih desain yang cocok untuk acaranya, lalu personalisasi konten, foto, warna, musik, venue, dan detail yang ingin dibagikan.",
-          ],
-          [
-            Sparkles,
-            "Studio yang tetap sederhana",
-            "Kelola isi undangan dalam satu workspace agar setiap acara bisa diedit dan dipublikasikan secara independen.",
-          ],
-          [
-            Users,
-            "RSVP dan manajemen tamu termasuk",
-            "Terima respons, data plus one, dan kelola daftar tamu untuk acara yang dipilih tanpa mencampur data dengan acara lain.",
-          ],
-        ];
+  const en = locale === "en";
 
-  const copy =
-    locale === "en"
-      ? [
-          "What you get",
-          "The invitation is only the beginning of the event workflow.",
-          "One event, one organized flow",
-        ]
-      : [
-          "Yang kamu dapatkan",
-          "Undangan adalah awal dari alur acara yang lebih rapi.",
-          "Satu acara, satu alur yang rapi",
-        ];
+  const features: FeatureItem[] = en
+    ? [
+        {
+          icon: Palette,
+          title: "Begin with a visual direction, not a blank page.",
+          description:
+            "Choose a ready invitation theme, then shape the photos, tone, copy, music, venue, and event details around your celebration.",
+          note: "Template → personal direction",
+        },
+        {
+          icon: Sparkles,
+          title: "Keep the creative work in one calm workspace.",
+          description:
+            "Invitation content and design stay together in Studio, so every event can be refined independently without turning the setup into a complicated design tool.",
+          note: "Studio → draft → publish",
+        },
+        {
+          icon: Users,
+          title: "Let the invitation continue into the guest flow.",
+          description:
+            "RSVP, plus-one information, and guest management remain scoped to the same event, so the invitation is connected to what happens after guests open it.",
+          note: "Invitation → RSVP → guests",
+        },
+      ]
+    : [
+        {
+          icon: Palette,
+          title: "Mulai dari arah visual, bukan halaman kosong.",
+          description:
+            "Pilih tema undangan yang sudah siap, lalu bentuk foto, nuansa, isi, musik, venue, dan detail acara agar terasa benar-benar milik perayaanmu.",
+          note: "Template → arah personal",
+        },
+        {
+          icon: Sparkles,
+          title: "Rapikan proses kreatif dalam satu ruang yang tenang.",
+          description:
+            "Isi dan desain undangan tetap berada di Studio yang sama, sehingga setiap acara bisa dibentuk sendiri tanpa membuat prosesnya terasa seperti software desain yang rumit.",
+          note: "Studio → draft → publish",
+        },
+        {
+          icon: Users,
+          title: "Biarkan undangan berlanjut sampai ke alur tamu.",
+          description:
+            "RSVP, informasi plus one, dan manajemen tamu tetap terikat pada acara yang sama, jadi undangan tidak berhenti saat tamu selesai membacanya.",
+          note: "Undangan → RSVP → tamu",
+        },
+      ];
 
   return (
-    <section
-      id="fitur"
-      className="scroll-mt-24 border-y border-border/70 py-10 md:py-12"
-    >
-      <div className="w-full">
-        <div className="mb-8 max-w-2xl md:mb-10">
-          <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
-            {copy[0]}
+    <section id="fitur" className="undara-marketing-section scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
+      <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
+        <div className="lg:sticky lg:top-8 lg:self-start">
+          <p className="undara-marketing-kicker">
+            {en ? "A complete invitation flow" : "Alur Undangan yang Utuh"}
           </p>
-          <h2 className="mt-3 max-w-xl font-[family-name:var(--font-undara-heading)] text-3xl font-normal leading-tight text-primary md:text-4xl">
-            {copy[1]}
+          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.02] text-primary md:text-5xl lg:text-6xl">
+            {en
+              ? "Beautiful first. Useful all the way through."
+              : "Cantik saat dibuka. Berguna sampai acara berjalan."}
           </h2>
+          <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+            {en
+              ? "Undara connects the visual invitation with the practical event flow without making the experience feel like an admin dashboard."
+              : "Undara menghubungkan pengalaman visual undangan dengan kebutuhan acara yang praktis, tanpa membuat tamu maupun pemilik acara merasa sedang membuka dashboard admin."}
+          </p>
+          <div className="mt-8 hidden items-center gap-3 text-primary/55 lg:flex" aria-hidden="true">
+            <span className="h-px w-16 bg-current" />
+            <span className="undara-editorial-index">01 — 03</span>
+          </div>
         </div>
 
-        <div className="grid gap-0 md:grid-cols-3">
-          {features.map(([Icon, title, description], index) => (
+        <div className="border-t border-primary/30">
+          {features.map(({ icon: Icon, title, description, note }, index) => (
             <article
               key={title}
-              className={`py-6 md:px-6 ${
-                index > 0
-                  ? "border-t border-border/70 md:border-l md:border-t-0"
-                  : ""
-              }`}
+              className={`group grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,1fr)] md:gap-9 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[5%]"}`}
             >
-              <Icon
-                className="h-5 w-5 text-primary"
-                strokeWidth={1.6}
-                aria-hidden="true"
-              />
-              <h3 className="mt-6 max-w-xs font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
-                {title}
-              </h3>
-              <p className="mt-3 max-w-sm font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65">
-                {description}
-              </p>
-              <div className="mt-6 flex items-center gap-2 font-[family-name:var(--font-undara-mono)] text-[8px] uppercase tracking-[0.16em] text-foreground/40">
-                <CalendarCheck2
-                  className="h-3 w-3 text-primary/75"
-                  aria-hidden="true"
-                />
-                {copy[2]}
+              <div className="flex items-start justify-between md:block">
+                <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
+                <span className="mt-5 grid h-11 w-11 place-items-center border border-primary/35 text-primary transition-transform duration-300 group-hover:-translate-y-1 md:mt-7">
+                  <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+                </span>
+              </div>
+
+              <div>
+                <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
+                  {note}
+                </p>
+                <h3 className="mt-4 max-w-[21ch] font-[family-name:var(--font-undara-heading)] text-2xl font-normal leading-[1.08] text-primary md:text-3xl lg:text-4xl">
+                  {title}
+                </h3>
+                <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                  {description}
+                </p>
               </div>
             </article>
           ))}
