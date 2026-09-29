@@ -331,6 +331,35 @@ test("native visual styling stays inside the validated nativeVisuals contract", 
   assert.doesNotMatch(css, /background-color:red|text-align:justify/);
 });
 
+test("native layer order and position lock survive save without dropping visual styling", () => {
+  const base = "botanical-ivory";
+  const key = withNativeVisualTransforms(base, {
+    "object:cover:flower-left": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      color: "#703B3B", zIndex: 12, positionLocked: true,
+    },
+    "rsvp:button": {
+      x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+      zIndex: 20, positionLocked: true,
+    },
+  });
+  assert.deepEqual(parseNativeVisualTransforms(key)["object:cover:flower-left"], {
+    x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0,
+    zIndex: 12, positionLocked: true, color: "#703b3b",
+  });
+  assert.equal(parseNativeVisualTransforms(key)["rsvp:button"], undefined);
+  assert.match(nativeVisualStyleSheet(key), /z-index:12/);
+  assert.doesNotMatch(nativeVisualStyleSheet(key), /position:relative/);
+  assert.deepEqual(sanitizeNativeVisualTransforms({
+    "heading:cover": { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, zIndex: 999, positionLocked: "true", color: "#703b3b" },
+  })["heading:cover"], {
+    x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, zIndex: 20, color: "#703b3b",
+  });
+  const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+  assert.match(designer, /sanitizeNativeVisualTransforms\(\{ \[key\]: value \}\)/);
+  assert.match(designer, /!design\.nativeVisuals\[activeNativeKey\]\?\.positionLocked \? activeNativeKey : null/);
+});
+
 test("native visual capabilities avoid duplicating protected component styling", () => {
   assert.deepEqual(nativeVisualCapabilities("heading:cover"), { opacity: true, colors: true, typography: true });
   assert.deepEqual(nativeVisualCapabilities("copy:greeting"), { opacity: true, colors: true, typography: true });

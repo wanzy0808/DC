@@ -84,6 +84,27 @@ export default function DesignerDashboard() {
     }
   }
 
+  async function duplicateDraft(id: string) {
+    if (busyId) return;
+    setBusyId(id);
+    setMessage("");
+    try {
+      const response = await fetch("/api/designer/templates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "DUPLICATE_DRAFT", sourceId: id }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Draft revisi belum dapat dibuat.");
+      await load();
+      setMessage("Draft revisi dibuat. Template yang sudah terbit tetap tersedia.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Draft revisi belum dapat dibuat.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   const statusLabel = (status: string) =>
     status === "PUBLISHED" ? "Published" : status === "REVIEW" ? "Review" : status === "ARCHIVED" ? "Archived" : "Draft";
 
@@ -98,6 +119,8 @@ export default function DesignerDashboard() {
         </div>
         <Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button>
       </header>
+
+      {message && <p role="status" className="rounded-xl border border-primary/20 bg-primary/5 p-3 text-sm">{message}</p>}
 
       <div className="grid gap-4 sm:grid-cols-4">
         <section className="rounded-2xl border border-border bg-background p-5">
@@ -175,6 +198,12 @@ export default function DesignerDashboard() {
                         )}
                         {item.status === "REVIEW" && (
                           <span className="text-xs text-muted-foreground">Menunggu review Owner/Admin</span>
+                        )}
+                        {item.status === "PUBLISHED" && item.designKey && (
+                          <Button type="button" size="sm" variant="outline" disabled={busyId !== null}
+                            onClick={() => void duplicateDraft(item.id)}>
+                            {busyId === item.id ? "Membuat..." : "Buat Draft Revisi"}
+                          </Button>
                         )}
                       </div>
                     )}

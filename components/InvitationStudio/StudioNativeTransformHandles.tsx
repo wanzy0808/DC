@@ -184,7 +184,7 @@ export default function StudioNativeTransformHandles({
           onPointerCancel={(event) => end(event, true)} />
       ))}
       {transform && <button type="button" className="undara-studio-native-reset" aria-label="Reset posisi ukuran dan rotasi elemen"
-        title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, defaultNativeVisualTransform); }}>
+        title="Reset transformasi" onClick={(event) => { event.stopPropagation(); onCommit(targetKey, { ...transform, ...defaultNativeVisualTransform }); }}>
         <RotateCcw size={14} />
       </button>}
       <button type="button" className="undara-studio-native-rotate" aria-label="Putar elemen"

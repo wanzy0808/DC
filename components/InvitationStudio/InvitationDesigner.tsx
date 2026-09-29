@@ -29,7 +29,7 @@ import StudioFinalPreviewDialog from "@/components/InvitationStudio/StudioFinalP
 import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
 import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
 import StudioNativeTransformHandles from "@/components/InvitationStudio/StudioNativeTransformHandles";
-import { defaultNativeVisualTransform, isNativeVisualKey, type NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
+import { isNativeVisualKey, sanitizeNativeVisualTransforms, type NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -1466,11 +1466,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function commitNativeVisual(key: string, value: NativeVisualTransform) {
     if (!isNativeVisualKey(key)) return;
     const next = { ...design.nativeVisuals };
-    if (Object.keys(defaultNativeVisualTransform).every((property) =>
-      value[property as keyof NativeVisualTransform] === defaultNativeVisualTransform[property as keyof NativeVisualTransform])) {
+    const clean = sanitizeNativeVisualTransforms({ [key]: value })[key];
+    if (!clean) {
       delete next[key];
     } else {
-      next[key] = value;
+      next[key] = clean;
     }
     change({ nativeVisuals: next });
   }
@@ -1999,7 +1999,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           </div>
           <StudioNativeTransformHandles
             canvasRef={canvasScrollRef}
-            targetKey={activeNativeKey}
+            targetKey={activeNativeKey && !design.nativeVisuals[activeNativeKey]?.positionLocked ? activeNativeKey : null}
             transform={activeNativeKey ? design.nativeVisuals[activeNativeKey] : undefined}
             zoom={canvasZoom}
             revision={`${designKey}|${canvasStage}|${previewVersion}`}

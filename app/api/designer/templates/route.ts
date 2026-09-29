@@ -103,8 +103,7 @@ export async function GET(request: Request) {
   });
 }
 
-async function createStudioTemplate(request: Request, author: NonNullable<Awaited<ReturnType<typeof requireTemplateAuthor>>>) {
-  const body = await request.json().catch(() => null) as Record<string, unknown> | null;
+async function createStudioTemplate(body: Record<string, unknown> | null, author: NonNullable<Awaited<ReturnType<typeof requireTemplateAuthor>>>) {
   const designKey = String(body?.designKey ?? "").trim();
   if (!designKey || designKey.length > 30000) {
     return NextResponse.json({ error: "Design template tidak valid." }, { status: 400 });
@@ -271,7 +270,29 @@ export async function POST(request: Request) {
   }
 
   try {
-    return await createStudioTemplate(request, author);
+    const body = await request.json().catch(() => null) as Record<string, unknown> | null;
+    if (body?.action === "DUPLICATE_DRAFT") {
+      const sourceId = String(body.sourceId ?? "").trim();
+      if (!sourceId) return NextResponse.json({ error: "Template sumber wajib dipilih." }, { status: 400 });
+      const source = await prisma.designerTemplate.findFirst({
+        where: {
+          id: sourceId,
+          ...(["OWNER", "ADMIN"].includes(author.role) ? {} : { designerId: author.id }),
+        },
+      });
+      if (!source?.designKey) return NextResponse.json({ error: "Template sumber tidak tersedia." }, { status: 404 });
+      return await createStudioTemplate({
+        designKey: source.designKey,
+        name: `${source.name} Revisi`.slice(0, 80),
+        category: source.category,
+        description: source.description,
+        tags: source.tags,
+        previewUrl: source.previewUrl,
+        usesPhotos: source.usesPhotos,
+        musicUrl: source.musicUrl,
+      }, author);
+    }
+    return await createStudioTemplate(body, author);
   } catch (error) {
     console.error("POST /api/designer/templates Studio failed", error);
     return NextResponse.json({ error: "Template Studio belum dapat disimpan." }, { status: 500 });

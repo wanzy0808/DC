@@ -16,6 +16,9 @@ export type NativeVisualTransform = {
   scaleX: number;
   scaleY: number;
   rotation: number;
+  /** Template-only layer placement and transform lock; content remains protected. */
+  zIndex?: number;
+  positionLocked?: boolean;
   /** Optional visual overrides share the same persisted nativeVisuals token. */
   opacity?: number;
   color?: string;
@@ -127,6 +130,10 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       scaleY: clamp(source.scaleY, 0.25, 3, 1),
       rotation: clamp(source.rotation, -180, 180, 0),
     };
+    if (key.startsWith("object:") || key.startsWith("heading:") || key.startsWith("copy:")) {
+      transform.zIndex = optionalNumber(source.zIndex, 1, 20);
+      if (source.positionLocked === true) transform.positionLocked = true;
+    }
     if (capabilities.opacity) transform.opacity = optionalNumber(source.opacity, 0.2, 1);
     if (capabilities.colors) {
       transform.color = optionalColor(source.color);
@@ -212,6 +219,7 @@ export function nativeVisualStyle(transform: NativeVisualTransform): CSSProperti
     scale: `${transform.scaleX} ${transform.scaleY}`,
     transformOrigin: "center",
     opacity: transform.opacity,
+    zIndex: transform.zIndex,
     color: transform.color,
     backgroundColor: transform.background,
     borderColor: transform.borderColor,
@@ -253,6 +261,7 @@ export function nativeVisualStyleSheet(designKey: string) {
       `scale:${transform.scaleX} ${transform.scaleY}`,
       "transform-origin:center",
       transform.opacity !== undefined ? `opacity:${transform.opacity}` : "",
+      transform.zIndex !== undefined ? `z-index:${transform.zIndex}${key.startsWith("object:") ? "" : ";position:relative"}` : "",
       transform.color ? `color:${transform.color}` : "",
       transform.background ? `background-color:${transform.background}` : "",
       transform.borderColor ? `border-color:${transform.borderColor}` : "",

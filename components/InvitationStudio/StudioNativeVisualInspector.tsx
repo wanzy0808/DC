@@ -39,6 +39,7 @@ export default function StudioNativeVisualInspector({
   const capabilities = nativeVisualCapabilities(targetKey);
   const animationCapable = nativeVisualSupportsAnimation(targetKey);
   const systemContent = nativeVisualUsesSystemContent(targetKey);
+  const canArrange = targetKey.startsWith("object:") || targetKey.startsWith("heading:") || targetKey.startsWith("copy:");
   const section = targetKey.split(":")[1] ?? "";
   const title = targetKey.startsWith("heading:")
     ? (en ? `${section} heading` : `Judul ${section}`)
@@ -93,12 +94,32 @@ export default function StudioNativeVisualInspector({
         </div>
       )}
 
+      {canArrange && (
+        <div className="mt-4 space-y-3 rounded-[var(--undara-control-radius)] border border-primary/20 p-3 text-xs">
+          <label className="flex items-center justify-between gap-2">
+            <span>{en ? "Layer order" : "Urutan layer"}</span>
+            <select aria-label={en ? "Layer order" : "Urutan layer"}
+              value={current.zIndex ?? 0}
+              onChange={(event) => patch({ zIndex: Number(event.currentTarget.value) || undefined })}
+              className="h-9 rounded-lg border border-primary/30 bg-background px-2">
+              {Array.from({ length: 21 }, (_, index) => <option key={index} value={index}>{index === 0 ? (en ? "Template default" : "Bawaan template") : index}</option>)}
+            </select>
+          </label>
+          <label className="flex items-center gap-2">
+            <input type="checkbox" checked={current.positionLocked === true}
+              onChange={(event) => patch({ positionLocked: event.currentTarget.checked || undefined })}
+              className="size-4 accent-[var(--primary)]" />
+            <span>{en ? "Lock position and handles" : "Kunci posisi dan handle"}</span>
+          </label>
+        </div>
+      )}
+
       <div className="mt-4 grid grid-cols-2 gap-3">
         {fields.map(({ key, label, unit, min, max, factor }) => (
           <label key={key} className="text-xs text-foreground">
             <span className="mb-1 block">{label}</span>
             <span className="flex items-center rounded-lg border border-primary/30 px-2">
-              <input type="number" min={min} max={max} step={1}
+              <input type="number" min={min} max={max} step={1} disabled={current.positionLocked === true}
                 value={Math.round(current[key] * factor)}
                 onChange={(event) => {
                   const number = Number(event.currentTarget.value);
@@ -138,7 +159,7 @@ export default function StudioNativeVisualInspector({
                 <button type="button"
                   onClick={() => patch({ [key]: undefined } as Partial<NativeVisualTransform>)}
                   className="min-h-9 flex-1 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10">
-                  Default
+                  Reset
                 </button>
               </div>
             </div>
@@ -289,7 +310,7 @@ export default function StudioNativeVisualInspector({
 
       <button type="button" onClick={() => onChange(defaultNativeVisualTransform)}
         className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-3 text-xs text-primary hover:bg-primary/10">
-        <RotateCcw size={14} />{en ? "Reset element" : "Reset elemen"}
+        <RotateCcw size={14} />Reset
       </button>
     </aside>
   );

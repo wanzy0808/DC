@@ -23,18 +23,27 @@ type ReviewTemplate = {
 
 export default function OwnerTemplateReview() {
   const [templates, setTemplates] = useState<ReviewTemplate[]>([]);
+  const [ownTemplates, setOwnTemplates] = useState<ReviewTemplate[]>([]);
   const [message, setMessage] = useState("Memuat antrean review...");
   const [busyId, setBusyId] = useState<string | null>(null);
 
   async function load() {
-    const response = await fetch("/api/designer/templates?scope=review", { cache: "no-store" });
-    const data = await response.json();
-    if (!response.ok) {
-      setMessage(data.error || "Antrean review belum dapat dimuat.");
-      return;
+    try {
+      const [reviewResponse, ownResponse] = await Promise.all([
+        fetch("/api/designer/templates?scope=review", { cache: "no-store" }),
+        fetch("/api/designer/templates", { cache: "no-store" }),
+      ]);
+      const [reviewData, ownData] = await Promise.all([reviewResponse.json(), ownResponse.json()]);
+      if (!reviewResponse.ok || !ownResponse.ok) {
+        setMessage(reviewData.error || ownData.error || "Template belum dapat dimuat.");
+        return;
+      }
+      setTemplates(Array.isArray(reviewData.templates) ? reviewData.templates : []);
+      setOwnTemplates(Array.isArray(ownData.templates) ? ownData.templates : []);
+      setMessage("");
+    } catch {
+      setMessage("Template belum dapat dimuat.");
     }
-    setTemplates(Array.isArray(data.templates) ? data.templates : []);
-    setMessage("");
   }
 
   useEffect(() => { void load(); }, []);
@@ -57,6 +66,27 @@ export default function OwnerTemplateReview() {
         : "Template dikembalikan ke Designer sebagai Draft.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Status template belum dapat diubah.");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function duplicateDraft(id: string) {
+    if (busyId) return;
+    setBusyId(id);
+    setMessage("");
+    try {
+      const response = await fetch("/api/designer/templates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "DUPLICATE_DRAFT", sourceId: id }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Draft revisi belum dapat dibuat.");
+      await load();
+      setMessage("Draft revisi dibuat. Template yang sudah terbit tetap tersedia.");
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Draft revisi belum dapat dibuat.");
     } finally {
       setBusyId(null);
     }
@@ -117,6 +147,38 @@ export default function OwnerTemplateReview() {
               </article>
             );
           })}
+        </div>
+      )}
+
+      {ownTemplates.some((item) => item.status === "PUBLISHED") && (
+        <div className="mt-6 border-t border-border pt-5">
+          <h3 className="font-[family-name:var(--font-undara-heading)] text-lg">Template Owner yang Terbit</h3>
+          <p className="mt-1 text-xs text-muted-foreground">Buat salinan Draft untuk revisi tanpa mengubah template yang sudah terbit.</p>
+          <div className="mt-4 space-y-3">
+            {ownTemplates.filter((item) => item.status === "PUBLISHED").map((item) => (
+              <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border p-3">
+                <span className="text-sm font-medium">#{item.templateNo} · {item.name}</span>
+                <Button type="button" size="sm" variant="outline" disabled={busyId !== null}
+                  onClick={() => void duplicateDraft(item.id)}>
+                  {busyId === item.id ? "Membuat..." : "Buat Draft Revisi"}
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {ownTemplates.some((item) => item.status === "DRAFT") && (
+        <div className="mt-6 border-t border-border pt-5">
+          <h3 className="font-[family-name:var(--font-undara-heading)] text-lg">Draft Template Owner</h3>
+          <div className="mt-4 space-y-3">
+            {ownTemplates.filter((item) => item.status === "DRAFT").map((item) => (
+              <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-border p-3">
+                <span className="text-sm font-medium">#{item.templateNo} · {item.name}</span>
+                <Button asChild size="sm" variant="outline"><Link href={`/owner/studio?draft=${encodeURIComponent(item.id)}`}>Lanjut edit</Link></Button>
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </section>
