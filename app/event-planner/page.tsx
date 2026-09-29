@@ -75,8 +75,8 @@ export default function EventPlannerPage() {
 
   return (
     <div className="event-planner-shell relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <EventPlannerBotanicalAtmosphere />
       <div data-undara-marketing-frame className="undara-marketing-frame event-planner-frame">
-        <EventPlannerBotanicalAtmosphere />
 
         <div className="undara-marketing-frame-header">
           <Navbar embedded />

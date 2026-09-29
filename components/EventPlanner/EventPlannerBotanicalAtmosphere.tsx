@@ -54,7 +54,7 @@ function BotanicalLayer({ className, x, y, duration, flipped = false }: { classN
 
 export default function EventPlannerBotanicalAtmosphere() {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[12] overflow-hidden">
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_8%_72%,rgba(178,139,94,0.13),transparent_48%),radial-gradient(ellipse_at_90%_25%,rgba(112,59,59,0.12),transparent_48%)] dark:bg-[radial-gradient(ellipse_at_8%_72%,rgba(214,179,140,0.10),transparent_48%),radial-gradient(ellipse_at_90%_25%,rgba(214,179,140,0.08),transparent_48%)]" />
       <BotanicalLayer className="-bottom-[20%] -left-[5%] h-[115%] w-[37%] min-w-[250px] max-w-[650px] opacity-[0.38] dark:opacity-[0.31]" x={7} y={12} duration={18} />
       <BotanicalLayer className="-right-[6%] -top-[24%] h-[105%] w-[37%] min-w-[250px] max-w-[650px] opacity-[0.34] dark:opacity-[0.28]" x={-6} y={9} duration={21} flipped />

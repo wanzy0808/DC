@@ -48,15 +48,15 @@ test("event planner uses its own animated bronze botanical atmosphere", () => {
   assert.match(atmosphere, /FallingLeaves/);
   assert.match(atmosphere, /useReducedMotion/);
   assert.match(atmosphere, /repeat: Infinity/);
-  assert.match(atmosphere, /absolute inset-0 z-\[12\]/);
+  assert.match(atmosphere, /absolute inset-0 z-0/);
   assert.match(atmosphere, /FallingLeaves embedded variety="forest"/);
-  assert.match(page, /undara-marketing-frame event-planner-frame">\s*<EventPlannerBotanicalAtmosphere/);
+  assert.match(page, /<EventPlannerBotanicalAtmosphere \/>\s*<div data-undara-marketing-frame/);
   assert.match(page, /undara-marketing-scroll relative z-20/);
   assert.doesNotMatch(atmosphere, /branch-0[1-6]\.webp/);
   assert.match(leaves, /index % 3 === 0/);
   assert.match(leaves, /index % 3 === 1/);
   assert.match(styles, /\.undara-marketing-frame\.event-planner-frame \{/);
-  assert.match(styles, /border-radius: 0;\s*background: var\(--background\);\s*box-shadow: none/);
+  assert.match(styles, /border-radius: 0;\s*background: transparent;\s*box-shadow: none/);
   assert.doesNotMatch(page, /MarketingTextReveal/);
   assert.match(reveal, /once: true/);
   assert.doesNotMatch(reveal, /y: 18/);

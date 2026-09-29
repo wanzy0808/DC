@@ -24,7 +24,7 @@ export default function UndanganFisikPage() {
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
       <PublicMarketingAtmosphere />
-      <div data-dc-marketing-frame className="undara-marketing-frame">
+      <div data-undara-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
