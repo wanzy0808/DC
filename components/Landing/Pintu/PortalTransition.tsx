@@ -13,6 +13,30 @@ const STALLED_ROUTE_MS = 8000;
 type Phase = "idle" | "cover" | "hold" | "reveal";
 type PendingRoute = { path: string; href: string };
 
+type BranchSwarmLayer = {
+  top: string;
+  width: string;
+  height: string;
+  y: string;
+  rotate: number;
+  scale: number;
+  delay: number;
+  z: number;
+};
+
+const BRANCH_SWARM: BranchSwarmLayer[] = [
+  { top: "-24vh", width: "78vw", height: "124vh", y: "-8vh", rotate: -19, scale: 1.18, delay: 0, z: 6 },
+  { top: "-14vh", width: "74vw", height: "116vh", y: "-5vh", rotate: -13, scale: 1.14, delay: 35, z: 7 },
+  { top: "-5vh", width: "82vw", height: "112vh", y: "-3vh", rotate: -8, scale: 1.20, delay: 70, z: 8 },
+  { top: "5vh", width: "76vw", height: "104vh", y: "-1vh", rotate: -4, scale: 1.15, delay: 105, z: 9 },
+  { top: "15vh", width: "84vw", height: "98vh", y: "0vh", rotate: 2, scale: 1.22, delay: 140, z: 10 },
+  { top: "24vh", width: "80vw", height: "92vh", y: "1vh", rotate: 7, scale: 1.18, delay: 175, z: 11 },
+  { top: "33vh", width: "76vw", height: "86vh", y: "2vh", rotate: 12, scale: 1.15, delay: 210, z: 12 },
+  { top: "42vh", width: "82vw", height: "82vh", y: "4vh", rotate: 17, scale: 1.20, delay: 245, z: 13 },
+  { top: "51vh", width: "78vw", height: "76vh", y: "6vh", rotate: 22, scale: 1.17, delay: 280, z: 14 },
+  { top: "59vh", width: "86vw", height: "72vh", y: "8vh", rotate: 27, scale: 1.24, delay: 315, z: 15 },
+];
+
 /**
  * One persistent woodland passage for both a door entry and ordinary marketing links.
  * Foliage closes toward the viewer, the route commits behind it, then the plants
@@ -131,30 +155,50 @@ export default function PortalTransition() {
       <div className="undara-portal-transition__landscape" />
       <div className="undara-portal-transition__mist undara-portal-transition__mist--back" />
 
-      <div className="undara-branch-gate undara-branch-gate--left-1" />
-      <div className="undara-branch-gate undara-branch-gate--right-1" />
-      <div className="undara-branch-gate undara-branch-gate--left-2" />
-      <div className="undara-branch-gate undara-branch-gate--right-2" />
-      <div className="undara-branch-gate undara-branch-gate--left-3" />
-      <div className="undara-branch-gate undara-branch-gate--right-3" />
-      <div className="undara-branch-gate undara-branch-gate--left-4" />
-      <div className="undara-branch-gate undara-branch-gate--right-4" />
-      <div className="undara-branch-gate undara-branch-gate--left-5" />
-      <div className="undara-branch-gate undara-branch-gate--right-5" />
+      {BRANCH_SWARM.map((branch, index) => {
+        const style = {
+          "--branch-top": branch.top,
+          "--branch-width": branch.width,
+          "--branch-height": branch.height,
+          "--branch-y": branch.y,
+          "--branch-rotate": `${branch.rotate}deg`,
+          "--branch-rotate-right": `${-branch.rotate}deg`,
+          "--branch-scale": branch.scale,
+          "--branch-delay": `${branch.delay}ms`,
+          "--branch-z": branch.z,
+        } as CSSProperties;
 
-      <div className="undara-branch-gate undara-branch-gate--top-left" />
-      <div className="undara-branch-gate undara-branch-gate--top-right" />
-      <div className="undara-branch-gate undara-branch-gate--top-mid-left" />
-      <div className="undara-branch-gate undara-branch-gate--top-mid-right" />
-      <div className="undara-branch-gate undara-branch-gate--bottom-left" />
-      <div className="undara-branch-gate undara-branch-gate--bottom-right" />
-      <div className="undara-branch-gate undara-branch-gate--brush" />
+        return (
+          <div
+            key={`left-${index}`}
+            className="undara-branch-swarm undara-branch-swarm--left"
+            style={style}
+          />
+        );
+      })}
+      {BRANCH_SWARM.map((branch, index) => {
+        const style = {
+          "--branch-top": branch.top,
+          "--branch-width": branch.width,
+          "--branch-height": branch.height,
+          "--branch-y": branch.y,
+          "--branch-rotate": `${branch.rotate}deg`,
+          "--branch-rotate-right": `${-branch.rotate}deg`,
+          "--branch-scale": branch.scale,
+          "--branch-delay": `${branch.delay + 18}ms`,
+          "--branch-z": branch.z,
+        } as CSSProperties;
+
+        return (
+          <div
+            key={`right-${index}`}
+            className="undara-branch-swarm undara-branch-swarm--right"
+            style={style}
+          />
+        );
+      })}
 
       <div className="undara-portal-transition__mist undara-portal-transition__mist--front" />
-      <div className="undara-branch-gate undara-branch-gate--near-left" />
-      <div className="undara-branch-gate undara-branch-gate--near-right" />
-      <div className="undara-branch-gate undara-branch-gate--cross-left" />
-      <div className="undara-branch-gate undara-branch-gate--cross-right" />
       <div className="undara-portal-transition__vignette" />
     </div>
   );
