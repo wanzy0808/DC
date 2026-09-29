@@ -502,6 +502,16 @@ test("Studio clipboard shortcuts never hijack text editing", () => {
   assert.match(designer, /shortcutKey === "v"/);
 });
 
+test("Amplop and Isi share the same asset-layer keyboard shortcut path", () => {
+  assert.doesNotMatch(designer, /canvasStage !== "cover" \|\| selectedPhotoSlot/);
+  assert.match(designer, /if \(selectedPhotoSlot\) return;/);
+  assert.match(designer, /selectedAssetLayer\?\.section \?\? \(canvasStage === "envelope" \? "envelope" : "cover"\)/);
+  assert.match(designer, /selectedAssetLayer\?\.section \?\? \(canvasStage === "envelope" \? "envelope" : "cover"\);/);
+  assert.match(designer, /event\.key === "Delete" \|\| event\.key === "Backspace"/);
+  assert.match(designer, /removeAssetLayer\(selectedAssetLayer\.id\)/);
+});
+
+
 
 test("Studio supports shift multi-select and persistent group controls", () => {
   const assetLayers = read("lib/templates/asset-layers.ts");
