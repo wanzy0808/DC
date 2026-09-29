@@ -1,6 +1,9 @@
 "use client";
 
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 
 const privacyContent = {
   id: {
@@ -30,20 +33,60 @@ const privacyContent = {
 export default function PrivacyPolicyPage() {
   const { locale } = useLanguage();
   const content = privacyContent[locale];
+  const en = locale === "en";
 
   return (
-    <article className="relative left-1/2 my-10 w-[calc(100vw-32px)] max-w-[920px] -translate-x-1/2 rounded-[32px] border border-primary/25 bg-background/95 px-5 py-9 text-foreground shadow-[0_18px_65px_rgba(75,35,47,0.09)] sm:my-16 sm:w-full sm:px-10 sm:py-12 lg:px-14">
-      <header className="mb-8 border-b border-primary/20 pb-7 sm:mb-10">
-        <span aria-hidden="true" className="mb-5 block h-1 w-12 rounded-full bg-primary/70" />
-        <h1 className="font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary sm:text-4xl">
-          {content.title}
-        </h1>
-      </header>
-      <div className="space-y-6 font-[family-name:var(--font-undara-body)] text-sm leading-8 text-foreground/85 sm:text-base sm:leading-8">
-        {content.paragraphs.map((paragraph, index) => (
-          <p key={index}>{paragraph}</p>
-        ))}
+    <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <PublicMarketingAtmosphere />
+
+      <div data-undara-marketing-frame className="undara-marketing-frame">
+        <div className="undara-marketing-frame-header">
+          <Navbar embedded />
+        </div>
+
+        <main
+          tabIndex={0}
+          aria-label={content.title}
+          className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+        >
+          <article className="undara-marketing-content flex flex-col gap-16 pb-16 pt-8 md:gap-20 md:pb-24 md:pt-12">
+            <header className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(52dvh,560px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
+              <div>
+                <p className="undara-marketing-kicker">{en ? "Legal / Privacy" : "Legal / Privasi"}</p>
+                <h1 className="mt-5 max-w-[13ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.2rem,6vw,6.5rem)] leading-[0.96] tracking-[-0.035em] text-primary">
+                  {content.title}
+                </h1>
+              </div>
+
+              <div className="max-w-xl border-l border-primary/30 py-5 pl-7 md:pl-12">
+                <p className="text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                  {en
+                    ? "How Undara handles personal information and technical data when you use the website and its services."
+                    : "Penjelasan mengenai cara Undara memproses informasi pribadi dan data teknis saat kamu menggunakan website serta layanannya."}
+                </p>
+              </div>
+            </header>
+
+            <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail">
+              <div className="border-t border-primary/30">
+                {content.paragraphs.map((paragraph, index) => (
+                  <div
+                    key={index}
+                    className={`grid gap-5 border-b border-primary/20 py-8 md:grid-cols-[72px_minmax(0,1fr)] md:gap-10 md:py-10 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[4%]"}`}
+                  >
+                    <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
+                    <p className="max-w-4xl font-[family-name:var(--font-undara-body)] text-sm leading-8 text-foreground/82 md:text-base md:leading-8">
+                      {paragraph}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          </article>
+        </main>
+
+        <MarketingFrameFooter />
       </div>
-    </article>
+    </div>
   );
 }
