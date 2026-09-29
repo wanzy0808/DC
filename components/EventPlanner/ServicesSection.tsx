@@ -26,21 +26,25 @@ export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
         </div>
       </div>
 
-      <div className="divide-y divide-primary/20 border-b border-primary/20">
+      <div className="relative grid gap-5 border-b border-primary/20 pb-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:pb-14 lg:gap-x-16">
+        <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/2 top-0 hidden w-px bg-primary/20 md:block" />
         {plannerServices.map((service, index) => (
           <article
             key={service.title}
-            className="grid gap-5 py-7 md:grid-cols-[3.25rem_minmax(0,0.85fr)_minmax(0,1.25fr)] md:items-start md:gap-7 md:py-9"
+            style={{ gridRow: index + 1 }}
+            className={`relative z-10 min-w-0 border border-primary/20 bg-background/25 p-6 backdrop-blur-[1px] sm:p-8 md:px-9 md:py-10 ${index % 2 ? "md:col-start-2" : "md:col-start-1"}`}
           >
-            <p className="font-[family-name:var(--font-undara-heading)] text-3xl leading-none text-primary/50">
+            <div className="flex items-center gap-4 font-[family-name:var(--font-undara-mono)] text-xs tracking-[0.2em] text-primary/70">
+              <span className="h-1.5 w-1.5 bg-primary" />
               {String(index + 1).padStart(2, "0")}
-            </p>
+              <span className="h-px flex-1 bg-primary/20" />
+            </div>
 
-            <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl">
+            <h3 className="mt-10 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary md:text-4xl">
               {en ? service.titleEn : service.title}
             </h3>
 
-            <p className="max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+            <p className="mt-4 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
               {en ? service.textEn : service.text}
             </p>
           </article>

@@ -272,8 +272,8 @@
 }
 
 
-/* Marketing frame is a transparent outline on one page-wide atmosphere.
-   Only the inner scrollport clips content; ambient effects cross the outline. */
+/* The frame remains legible while ambience continues through its light surface.
+   Only the inner scrollport clips content; decoration lives behind the frame. */
 .undara-marketing-frame {
   position: relative;
   z-index: 10;
@@ -284,16 +284,16 @@
   margin: auto;
   flex-direction: column;
   overflow: visible;
-  border: 1px solid color-mix(in srgb, var(--primary) 30%, transparent);
+  border: 2px solid color-mix(in srgb, var(--primary) 58%, transparent);
   border-radius: 18px;
-  background: transparent;
-  box-shadow: none;
+  background: color-mix(in srgb, var(--background) 12%, transparent);
+  box-shadow: 0 12px 44px rgb(75 35 47 / 7%);
 }
 .undara-marketing-frame-header {
   position: relative;
   z-index: 50;
   flex: 0 0 auto;
-  border-bottom: 1px solid color-mix(in srgb, var(--primary) 15%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--primary) 26%, transparent);
   background: transparent;
 }
 .undara-marketing-scroll {
@@ -305,19 +305,12 @@
   overscroll-behavior: contain;
   scroll-behavior: smooth;
 }
-/* Event Planner is one continuous canvas, with its foliage anchored to the viewport. */
+/* Event Planner shares the visible frame geometry; its foliage stays behind it. */
 .event-planner-shell {
   height: 100dvh;
 }
 .undara-marketing-frame.event-planner-frame {
-  width: 100%;
-  height: 100dvh;
-  margin: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  box-shadow: none;
-  backdrop-filter: none;
+  background: color-mix(in srgb, var(--background) 12%, transparent);
 }
 .event-planner-frame .undara-marketing-frame-header,
 .event-planner-frame .event-planner-footer {

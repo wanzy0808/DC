@@ -36,6 +36,11 @@ test("event planner uses planner notes as decoration and a wider body", () => {
   assert.match(page, /w-full max-w-none/);
   assert.match(page, /max-w-\[1560px\]/);
   assert.doesNotMatch(page, /md:grid-cols-3/);
+  assert.match(services, /style=\{\{ gridRow: index \+ 1 \}\}/);
+  assert.match(services, /md:col-start-2/);
+  assert.match(services, /md:col-start-1/);
+  assert.match(page, /plannerPackages\.map\(\(item, index\)/);
+  assert.match(page, /md:order-2/);
 });
 
 test("event planner uses its own animated bronze botanical atmosphere", () => {
@@ -56,7 +61,8 @@ test("event planner uses its own animated bronze botanical atmosphere", () => {
   assert.match(leaves, /index % 3 === 0/);
   assert.match(leaves, /index % 3 === 1/);
   assert.match(styles, /\.undara-marketing-frame\.event-planner-frame \{/);
-  assert.match(styles, /border-radius: 0;\s*background: transparent;\s*box-shadow: none/);
+  assert.match(styles, /\.undara-marketing-frame\.event-planner-frame \{\s*background: color-mix/);
+  assert.doesNotMatch(styles, /\.undara-marketing-frame\.event-planner-frame \{[^}]*border: 0/);
   assert.doesNotMatch(page, /MarketingTextReveal/);
   assert.match(reveal, /once: true/);
   assert.doesNotMatch(reveal, /y: 18/);

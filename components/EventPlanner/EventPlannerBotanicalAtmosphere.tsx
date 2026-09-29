@@ -55,11 +55,10 @@ function BotanicalLayer({ className, x, y, duration, flipped = false }: { classN
 export default function EventPlannerBotanicalAtmosphere() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_8%_72%,rgba(178,139,94,0.13),transparent_48%),radial-gradient(ellipse_at_90%_25%,rgba(112,59,59,0.12),transparent_48%)] dark:bg-[radial-gradient(ellipse_at_8%_72%,rgba(214,179,140,0.10),transparent_48%),radial-gradient(ellipse_at_90%_25%,rgba(214,179,140,0.08),transparent_48%)]" />
-      <BotanicalLayer className="-bottom-[20%] -left-[5%] h-[115%] w-[37%] min-w-[250px] max-w-[650px] opacity-[0.38] dark:opacity-[0.31]" x={7} y={12} duration={18} />
-      <BotanicalLayer className="-right-[6%] -top-[24%] h-[105%] w-[37%] min-w-[250px] max-w-[650px] opacity-[0.34] dark:opacity-[0.28]" x={-6} y={9} duration={21} flipped />
-      <BotanicalLayer className="bottom-[1%] right-[13%] hidden h-[46%] w-[19%] opacity-[0.14] lg:block dark:opacity-[0.12]" x={-5} y={14} duration={16} />
-      <FallingLeaves embedded variety="forest" className="opacity-85" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_8%_72%,rgba(178,139,94,0.065),transparent_42%),radial-gradient(ellipse_at_90%_25%,rgba(112,59,59,0.06),transparent_42%)] dark:bg-[radial-gradient(ellipse_at_8%_72%,rgba(214,179,140,0.055),transparent_42%),radial-gradient(ellipse_at_90%_25%,rgba(214,179,140,0.045),transparent_42%)]" />
+      <BotanicalLayer className="-bottom-[12%] -left-[4%] h-[82%] w-[30%] min-w-[210px] max-w-[520px] opacity-[0.25] dark:opacity-[0.20]" x={7} y={12} duration={18} />
+      <BotanicalLayer className="-right-[4%] -top-[14%] h-[78%] w-[30%] min-w-[210px] max-w-[520px] opacity-[0.23] dark:opacity-[0.19]" x={-6} y={9} duration={21} flipped />
+      <FallingLeaves embedded variety="forest" className="opacity-65" />
     </div>
   );
 }

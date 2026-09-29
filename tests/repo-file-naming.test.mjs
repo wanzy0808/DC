@@ -207,8 +207,8 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/lightbg\.webp/);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/darkbg\.webp/);
-  assert.match(woodland, /VIEWPORT_MASK/);
-  assert.match(woodland, /absolute inset-0 z-0/);
+  assert.match(woodland, /BODY_MASK/);
+  assert.match(woodland, /inset-x-\[4%\]/);
   assert.match(home, /dark:bg-\[#281414\]/);
   assert.match(canopy, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);

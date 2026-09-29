@@ -9,7 +9,7 @@ export default function PublicMarketingAtmosphere() {
     <>
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.09),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(214,179,140,0.09),transparent_66%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.06),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_45%,rgba(214,179,140,0.06),transparent_66%)]"
       />
       <LandingFloralGlow />
       <FallingLeaves />
