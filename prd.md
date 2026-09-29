@@ -416,6 +416,7 @@ Canonical behavior:
 - RSVP dan Manajemen Tamu tidak menampilkan activation/paywall overlay hanya karena `accessPaid = false`;
 - Personal Invitation juga dapat dipersiapkan sebelum Publish; public delivery tetap bergantung pada lifecycle public invitation yang valid;
 - Personal Invitation memiliki personalisasi Amplop per Guest yang dapat ON/OFF dari Dashboard. Saat ON, nama berasal dari `personalAddressee` atau fallback `Guest.name`, ditampilkan Title Case tanpa menimpa data sumber. Bahasa sapaan disimpan per Guest sebagai ID/EN; pasangan dengan dua nama yang dipisahkan `&`/“dan”/“and” dirender **“Kepada Yth : Bapak [Nama] dan Ibu [Nama]”** atau **“Dear : Mr [Name] and Mrs [Name]”**. Saat OFF, Amplop kembali generik tetapi token personal, RSVP, WA Blast, seating dan data Guest tetap sama.
+- Form Dashboard menampilkan pratinjau sapaan yang berubah bersama nama, jenis penerima, bahasa, dan toggle. Canvas Amplop di Studio menampilkan contoh ID/EN untuk membantu penataan semua tema; contoh tersebut hanya milik pratinjau, tidak disimpan pada undangan dan tidak pernah menjadi nama tamu publik. Tautan personal memakai pengaturan Guest yang nyata; pratinjau katalog umum tetap tanpa contoh nama personal.
 - apabila belum ada data karena undangan belum dibagikan, gunakan empty state normal agar user tetap dapat memahami fungsi halaman;
 - payment gate Digital Invitation hanya ditegakkan ketika user menekan **Publish** di **Dashboard → Undangan Digital**; Studio hanya untuk menyusun dan menyimpan desain, tanpa tombol Publish atau pembayaran;
 - public RSVP/personal invitation tidak dianggap usable untuk tamu sampai parent invitation memenuhi configured + saved template + published + entitlement gates;
@@ -5823,3 +5824,13 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Area/commit:** `components/Layout/PublicMarketingAtmosphere.tsx`, route dan komponen terkait, email, preview lama, serta tes continuity — `8aea96f`.
 
 **Validasi:** `node --import tsx --test tests/*.test.mjs` lulus 212/212; TypeScript dan `next build` lulus. ESLint pada berkas berubah lulus saat aturan `react-hooks/set-state-in-effect` lama dinonaktifkan; aturan itu masih menandai 4 efek yang sudah ada pada Owner/PackageSelector. Build tetap memberi satu peringatan tracing upload asset di luar area ini. QA visual di browser belum dilakukan.
+
+### 29 September 2026 — Sapaan Amplop private tersambung ke Studio dan persiapan sebelum bayar
+
+**Alasan:** sapaan `Kepada Yth`/`Dear` sudah tersimpan per Guest dan tampil di tautan personal, tetapi canvas Amplop Studio belum memperlihatkan contoh penataannya. Dashboard dan API juga masih mengosongkan/menolak draft Personal Invitation sebelum pembayaran, bertentangan dengan §6.1.
+
+**Implementasi:** `PersonalInvitationGuestFields` memakai formatter yang sama dengan renderer untuk pratinjau langsung dari nama tamu, `personalAddressee`, jenis penerima, bahasa ID/EN, dan toggle ON/OFF. `InvitationDesigner` mengirim contoh sapaan sesuai bahasa Studio hanya ke preview Amplop; `InvitationPreview`, `UniversalInvitationTemplate`, dan `RomanticRoseTemplate` memakai contoh itu hanya dalam mode preview tanpa Guest nyata. Renderer tautan personal tetap mengutamakan data Guest sesungguhnya; katalog umum tidak menerima contoh. `PersonalInvitationPanel` dan GET/POST/PATCH `/api/personal-invitations` mengizinkan penyiapan draft pada event milik user yang sudah configured sebelum bayar. PATCH terbit tetap memerlukan undangan acara terbit dan route publik tetap memerlukan entitlement valid. Tidak ada migrasi baru.
+
+**Area/commit:** Dashboard Personal Invitation, Studio canvas, dua renderer Amplop, API Personal Invitation, `tests/personal-envelope.test.mjs`, dan §6.1 — commit yang memuat catatan ini.
+
+**Validasi:** seluruh tes 214/214 (termasuk enam tes sapaan personal), TypeScript, `git diff --check`, dan `next build` lulus. Build masih memperingatkan tracing path upload asset di luar area ini. ESLint terarah menghasilkan 8 error `react-hooks/set-state-in-effect` pada efek lama; dengan aturan itu dinonaktifkan, 0 error dan 11 warning lama. QA visual browser serta database produksi belum dilakukan.

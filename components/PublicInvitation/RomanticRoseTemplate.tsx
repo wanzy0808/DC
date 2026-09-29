@@ -135,12 +135,14 @@ export default function RomanticRoseTemplate({
   onDeleteSectionInstance,
   editorMode = "customer",
   personalGuest,
+  previewRecipientLine,
 }: {
   invitation: RoseInvitation;
   /** Studio override; the public renderer reads the saved design key. */
   designKey?: string;
   personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
+  previewRecipientLine?: string;
   sections?: InvitationSections;
   coverUrl?: string;
   photoAssignments?: PhotoAssignments;
@@ -219,7 +221,7 @@ export default function RomanticRoseTemplate({
   const eventDate = readableDate(invitation.eventDate, invitation.timezone || "Asia/Jakarta");
   const countdown = getInvitationCountdown(invitation.eventDate, now ?? 0);
   const music = resolveInvitationMusic(invitation.templateKey, invitation.musicUrl, invitation.assets);
-  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : "";
+  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : preview ? previewRecipientLine ?? "" : "";
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
   const handleOpen = () => {
     if (preview) return;

@@ -2032,6 +2032,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
                     invitation={invitation}
+                    previewRecipientLine={locale === "en" ? "Dear : Mr [Name] and Mrs [Name]" : "Kepada Yth : Bapak [Nama] dan Ibu [Nama]"}
                     templateKey={design.template}
                     palette={palette}
                     fontPair={fontPair}

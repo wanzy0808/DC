@@ -76,6 +76,8 @@ test("dashboard and every ready envelope path receive the personal recipient lin
   assert.match(fields, /personalEnvelopeEnabled/);
   assert.match(fields, /personalLanguage/);
   assert.match(fields, /Bahasa sapaan amplop/);
+  assert.match(fields, /formatPersonalEnvelopeAddress\(/);
+  assert.match(fields, /name: guestName/);
   assert.match(publicPage, /personalEnvelopeEnabled: guest\.personalEnvelopeEnabled/);
   assert.match(previewPage, /<PublicInvitationRenderer/);
   assert.match(universal, /formatPersonalEnvelopeAddress\(personalGuest\)/);
@@ -84,4 +86,28 @@ test("dashboard and every ready envelope path receive the personal recipient lin
   assert.match(scenes, /data-personal-envelope-address/);
   assert.match(pencil, /data-personal-envelope-address/);
   assert.match(zen, /data-personal-envelope-address/);
+});
+
+test("Studio previews a sample addressee while real guest lines remain authoritative", () => {
+  const designer = read("components/InvitationStudio/InvitationDesigner.tsx");
+  const preview = read("components/InvitationStudio/InvitationPreview.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+
+  assert.match(designer, /previewRecipientLine=\{locale === "en"/);
+  assert.match(preview, /previewRecipientLine=\{previewRecipientLine\}/);
+  for (const renderer of [universal, rose]) {
+    assert.match(renderer, /personalGuest \? formatPersonalEnvelopeAddress\(personalGuest\) : preview \? previewRecipientLine/);
+  }
+});
+
+test("personal drafts are editable before payment, but guest publication requires the parent invitation", () => {
+  const api = read("app/api/personal-invitations/route.ts");
+  const panel = read("components/Dashboard/PersonalInvitationPanel.tsx");
+  const publicPage = read("app/invite/[slug]/p/[token]/page.tsx");
+
+  assert.doesNotMatch(api, /hasAccountDigitalInvitation/);
+  assert.doesNotMatch(panel, /if \(!selectedEvent\.accessPaid\)/);
+  assert.match(api, /body\.published && !invitation\.isPublished/);
+  assert.match(publicPage, /hasPaidDigitalInvitation\(invitation\.payment\)/);
 });

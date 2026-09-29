@@ -25,6 +25,7 @@ export function InvitationPreview({
   onFinishCrop,
   onEditPhoto,
   onEnvelopeOpened,
+  previewRecipientLine,
   designKey,
   musicUrl,
   selectedAssetLayerId,
@@ -57,6 +58,8 @@ export function InvitationPreview({
   onEditPhoto?: (slot: PhotoSlot) => void;
   /** Studio canvas only: the guest has finished opening the envelope. */
   onEnvelopeOpened?: () => void;
+  /** Studio-only sample, never a Guest record or saved invitation content. */
+  previewRecipientLine?: string;
   designKey?: string;
   musicUrl?: string;
   selectedAssetLayerId?: string | null;
@@ -77,7 +80,7 @@ export function InvitationPreview({
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} />;
+    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview previewRecipientLine={previewRecipientLine} sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} />;
   }
   return (
     <UniversalInvitationTemplate
@@ -85,6 +88,7 @@ export function InvitationPreview({
       templateKey={templateKey}
       designKey={designKey}
       preview
+      previewRecipientLine={previewRecipientLine}
       sections={sections}
       coverUrl={decorUrl}
       photoAssignments={photoAssignments}

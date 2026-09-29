@@ -115,13 +115,6 @@ export default function PersonalInvitationPanel({
       return;
     }
 
-    if (!selectedEvent.accessPaid) {
-      setPersonal([]);
-      setGuests([]);
-      setLoading(false);
-      return;
-    }
-
     setLoading(true);
     setNotice("");
 

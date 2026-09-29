@@ -141,7 +141,7 @@ export function PersonalInvitationCreatePanel({
           </div>
         )}
 
-        <PersonalInvitationGuestFields value={profile} onChange={setProfile} disabled={busy} />
+        <PersonalInvitationGuestFields value={profile} guestName={selectedGuest?.name ?? name} onChange={setProfile} disabled={busy} />
 
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-primary/15 pt-4">
           <p className="text-xs text-muted-foreground">
@@ -279,6 +279,7 @@ export function PersonalInvitationListPanel({
                       </div>
                       <PersonalInvitationGuestFields
                         value={editProfile}
+                        guestName={editName}
                         onChange={setEditProfile}
                         disabled={busyId === item.id}
                       />

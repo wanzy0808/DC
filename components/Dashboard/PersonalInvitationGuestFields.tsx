@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { formatPersonalEnvelopeAddress } from "@/lib/guests/personal-envelope";
 import type { PersonalInvitationGuest } from "@/components/Dashboard/personal-invitation-types";
 
 export type GuestInvitationForm = {
@@ -56,14 +57,23 @@ export function guestInvitationProfilePayload(value: GuestInvitationForm) {
 
 export function PersonalInvitationGuestFields({
   value,
+  guestName = "",
   onChange,
   disabled = false,
 }: {
   value: GuestInvitationForm;
+  guestName?: string;
   onChange: (next: GuestInvitationForm) => void;
   disabled?: boolean;
 }) {
   const { d } = useDashboardI18n();
+  const envelopePreview = formatPersonalEnvelopeAddress({
+    name: guestName,
+    personalAddressee: value.personalAddressee,
+    recipientType: value.recipientType,
+    personalEnvelopeEnabled: value.personalEnvelopeEnabled,
+    personalLanguage: value.personalLanguage,
+  });
   function set<K extends keyof GuestInvitationForm>(key: K, next: GuestInvitationForm[K]) {
     onChange({ ...value, [key]: next });
   }
@@ -159,11 +169,11 @@ export function PersonalInvitationGuestFields({
                 </select>
               </label>
             )}
-            {value.personalEnvelopeEnabled && value.recipientType === "COUPLE" && (
-              <p className="mt-3 text-xs leading-5 text-muted-foreground">
-                {value.personalLanguage === "EN"
-                  ? "Dear : Mr Andi and Mrs Sari"
-                  : "Kepada Yth : Bapak Andi dan Ibu Sari"}
+            {value.personalEnvelopeEnabled && (
+              <p className="mt-3 break-words text-xs leading-5 text-muted-foreground" aria-live="polite">
+                {envelopePreview || (value.recipientType === "COUPLE"
+                  ? value.personalLanguage === "EN" ? "Dear : Mr Andi and Mrs Sari" : "Kepada Yth : Bapak Andi dan Ibu Sari"
+                  : value.personalLanguage === "EN" ? "Dear : [Name]" : "Kepada Yth : [Nama]")}
               </p>
             )}
           </div>

@@ -163,10 +163,12 @@ export default function UniversalInvitationTemplate({
   templateKey,
   designKey,
   personalGuest,
+  previewRecipientLine,
 }: {
   invitation: InvitationData;
   personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
+  previewRecipientLine?: string;
   sections?: InvitationSections;
   photoAssignments?: PhotoAssignments;
   activeCropSlot?: CroppablePhotoSlot | null;
@@ -247,7 +249,7 @@ export default function UniversalInvitationTemplate({
   const maps = invitation.mapUrl && /^https?:\/\//i.test(invitation.mapUrl) ? invitation.mapUrl : null;
   const hasGift = Boolean(invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim());
   const music = resolveInvitationMusic(key, invitation.musicUrl, invitation.assets);
-  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : "";
+  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : preview ? previewRecipientLine ?? "" : "";
   const frame = key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] p-1 bg-[var(--inv-surface)]" : layout === "midnight" ? "rounded-full" : layout === "maroon" ? "rounded-none" : layout === "editorial" ? "rounded-2xl" : "rounded-t-[140px] rounded-b-xl";
   const panel = key === "zen-atelier" ? "rounded-none" : layout === "midnight" ? "rounded-3xl" : layout === "maroon" ? "rounded-sm" : layout === "editorial" ? "rounded-xl" : "rounded-[28px]";
   const customPalette = design.palette !== template.preset.palette;
