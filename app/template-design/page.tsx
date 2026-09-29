@@ -18,11 +18,7 @@ import { TemplateCanvas, TemplateCardCanvas } from "@/components/Templates/Templ
 import { controlStyles } from "@/components/ui/control-styles";
 import { rememberTemplateSelection } from "@/lib/templates/template-intent";
 
-const optionalSections: { key: InvitationSectionKey; label: string }[] = [
-  { key: "rsvp", label: "RSVP" },
-  { key: "wishes", label: "Ucapan" },
-  { key: "gift", label: "E-Angpao" },
-];
+const optionalSectionKeys: InvitationSectionKey[] = ["rsvp", "wishes", "gift"];
 
 export default function TemplateDesignPage() {
   const { locale } = useLanguage();
@@ -53,6 +49,9 @@ export default function TemplateDesignPage() {
         toggle: "Try showing or hiding invitation sections",
         start: "Create an invitation",
         contentLabel: "Template gallery",
+        previewLabel: "Preview",
+        previewCanvasLabel: "Invitation preview",
+        optionalLabels: { rsvp: "RSVP", wishes: "Guest wishes", gift: "Gift" },
       }
     : {
         eyebrow: "Koleksi undangan",
@@ -76,8 +75,13 @@ export default function TemplateDesignPage() {
         toggle: "Coba tampilkan atau sembunyikan bagian undangan",
         start: "Buat Undangan",
         contentLabel: "Koleksi template undangan",
+        previewLabel: "Pratinjau",
+        previewCanvasLabel: "Contoh undangan",
+        optionalLabels: { rsvp: "RSVP", wishes: "Ucapan", gift: "E-Angpao" },
       };
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
+  const descriptionFor = (template: (typeof catalog)[number]) =>
+    locale === "en" ? template.descriptionEn ?? template.description : template.description;
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState("Semua");
   const [photoFilter, setPhotoFilter] = useState<"all" | "photo" | "no-photo">("all");
@@ -88,7 +92,7 @@ export default function TemplateDesignPage() {
 
   const filteredTemplates = useMemo(() => {
     const result = catalog.filter((template) =>
-      `${template.name} ${template.description} ${template.category}`.toLocaleLowerCase("id").includes(query.trim().toLocaleLowerCase("id")) &&
+      `${template.name} ${template.description} ${template.descriptionEn ?? ""} ${template.category}`.toLocaleLowerCase("id").includes(query.trim().toLocaleLowerCase("id")) &&
       (category === "Semua" || template.category === category) &&
       (photoFilter === "all" || (template.ready && (photoFilter === "photo" ? template.usesPhotos : !template.usesPhotos))),
     );
@@ -264,10 +268,10 @@ export default function TemplateDesignPage() {
                   </div>
                   <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
                 </div>
-                <button type="button" onClick={() => openPreview(template.key)} aria-label={`Lihat pratinjau ${template.name}`} className="absolute inset-0 z-10 w-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" />
+                <button type="button" onClick={() => openPreview(template.key)} aria-label={`${copy.previewLabel} ${template.name}`} className="absolute inset-0 z-10 w-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" />
               </div>
               <div className="px-5 pb-6 pt-4">
-                <p className="min-h-12 text-sm leading-6 text-foreground/65">{template.description}</p>
+                <p className="min-h-12 text-sm leading-6 text-foreground/65">{descriptionFor(template)}</p>
                 <Button onClick={() => openPreview(template.key)} size="sm" className={controlStyles.cta}>
                   {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Button>
@@ -305,17 +309,17 @@ export default function TemplateDesignPage() {
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>
-              <p className="mt-3 hidden text-xs leading-6 text-foreground/60 md:block">{selected.description}</p>
+              <p className="mt-3 hidden text-xs leading-6 text-foreground/60 md:block">{descriptionFor(selected)}</p>
               {selected.ready && <div className="mt-4 flex flex-wrap gap-2 md:mt-7" aria-label={copy.toggle}>
-                {optionalSections.map((item) => (
-                  <label key={item.key} className="flex min-h-9 cursor-pointer items-center gap-2 rounded-full border border-border px-3 py-2 text-xs">
+                {optionalSectionKeys.map((key) => (
+                  <label key={key} className="flex min-h-9 cursor-pointer items-center gap-2 rounded-[var(--undara-control-radius)] border border-border px-3 py-2 text-xs">
                     <input
                       type="checkbox"
-                      checked={sections[item.key]}
-                      onChange={(event) => setSections((current) => ({ ...current, [item.key]: event.target.checked }))}
+                      checked={sections[key]}
+                      onChange={(event) => setSections((current) => ({ ...current, [key]: event.target.checked }))}
                       className="accent-[#a65e69]"
                     />
-                    {item.label}
+                    {copy.optionalLabels[key as keyof typeof copy.optionalLabels]}
                   </label>
                 ))}
               </div>}
@@ -326,7 +330,7 @@ export default function TemplateDesignPage() {
                 </Button>
               </div>}
             </aside>
-            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`Contoh undangan ${selected.name}`}>
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`${copy.previewCanvasLabel} ${selected.name}`}>
               <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
                 {selected.ready ? (
                   <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...sections, envelope: false }} />
