@@ -25,6 +25,8 @@ test("marketing transitions use woodland foliage instead of the old pink veil", 
   assert.match(doorScene, /color="#4F463A"/);
   assert.match(doorScene, /color=\{isDarkMode \? "#D6B38C" : "#B28B5E"\}/);
   assert.match(doorScene, /metal: "#B89168"/);
+  assert.match(doorScene, /entering \? 0\.04 : 0\.30/);
+  assert.match(doorScene, /entering \? 0\.65 : selected !== null/);
   assert.doesNotMatch(doorScene, /#e8a9bd|startRoseCover/);
 });
 
