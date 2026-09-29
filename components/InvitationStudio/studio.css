@@ -29,7 +29,7 @@
 }
 .undara-invitation-studio-shell { display: flex; flex: 1; min-height: 0; flex-direction: column; background: var(--background); }
 .undara-studio-document-title { width: 100%; text-align: center; }
-.undara-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-height: 0; }
+.undara-studio-workspace { display: grid; grid-template-columns: 98px 360px minmax(0, 1fr); flex: 1; min-width: 0; min-height: 0; overflow: hidden; }
 .undara-studio-rail { padding: 16px 10px; overflow-y: auto; border-right: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); }
 .undara-studio-history-actions { display: flex; align-items: center; gap: 4px; }
 .undara-studio-history-actions button:disabled { opacity: .45; }
@@ -46,7 +46,7 @@
 .undara-studio-inspector input:not([type=checkbox]):not([type=file]) { border-color: var(--primary); border-radius: var(--undara-control-radius); min-height: 44px; font-size: 14px; }
 .undara-studio-inspector button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .undara-studio-canvas { display: flex; flex-direction: column; min-width: 0; min-height: 0; background: color-mix(in srgb, var(--primary) 7%, var(--background)); }
-.undara-studio-canvas-toolbar { display: flex; align-items: center; gap: 12px; padding: 6px 16px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); }
+.undara-studio-canvas-toolbar { display: flex; flex: 0 0 auto; min-width: 0; align-items: center; gap: 12px; padding: 6px 16px; border-bottom: 1px solid color-mix(in srgb, var(--primary) 20%, transparent); background: var(--background); }
 .undara-studio-icon { display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: var(--undara-control-radius); color: var(--primary); cursor: pointer; }
 .undara-studio-icon:hover { background: color-mix(in srgb, var(--primary) 12%, transparent); }
 .undara-studio-icon:disabled { opacity: .35; cursor: not-allowed; }
@@ -55,7 +55,7 @@
 .undara-studio-layer-toolbar input[type="range"] { accent-color: var(--primary); }
 
 
-.undara-studio-canvas-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 6px 14px; border-top: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); background: var(--background); }
+.undara-studio-canvas-footer { display: flex; flex: 0 0 auto; align-items: center; justify-content: space-between; gap: 12px; min-height: 50px; padding: 6px 14px; border-top: 1px solid color-mix(in srgb, var(--primary) 25%, transparent); background: var(--background); }
 .undara-studio-canvas-pages, .undara-studio-canvas-zoom { display: flex; align-items: center; gap: 5px; min-width: 0; }
 .undara-studio-canvas-page-label { min-width: 0; max-width: 230px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--foreground); font-size: 12px; font-weight: 600; }
 .undara-studio-canvas-footer button { display: grid; place-items: center; min-width: 30px; height: 30px; padding: 0 6px; border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent); border-radius: 8px; color: var(--foreground); background: var(--background); font-size: 11px; font-weight: 600; }
@@ -113,7 +113,7 @@
 .undara-studio-stage-controls button[aria-pressed="true"] { box-shadow: inset 0 -3px var(--foreground); }
 .undara-studio-stage-controls button[aria-pressed="false"] { opacity: .7; }
 .undara-studio-stage-controls button[aria-pressed="false"]:hover { opacity: 1; }
-.undara-studio-layer-list { position: sticky; top: 0; width: 104px; max-height: calc(100vh - 220px); overflow-y: auto; justify-self: start; padding: 8px; border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent); border-radius: var(--undara-control-radius); background: color-mix(in srgb, var(--background) 96%, transparent); }
+.undara-studio-layer-list { position: sticky; top: 0; left: 0; z-index: 20; width: 104px; max-height: calc(100vh - 220px); overflow-y: auto; justify-self: start; padding: 8px; border: 1px solid color-mix(in srgb, var(--primary) 28%, transparent); border-radius: var(--undara-control-radius); background: color-mix(in srgb, var(--background) 96%, transparent); }
 .undara-studio-layer-list-head { margin-bottom: 6px; color: var(--muted-foreground); font-size: 10px; font-weight: 600; }
 .undara-studio-layer-group-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; margin: 4px 0 7px; }
 .undara-studio-layer-group-actions button { min-height: 28px; border: 1px solid color-mix(in srgb, var(--primary) 38%, transparent); border-radius: 8px; padding: 3px 5px; color: var(--primary); background: transparent; font-size: 9px; font-weight: 700; }
@@ -133,9 +133,9 @@
 .undara-studio-layer-quick:hover { background: color-mix(in srgb, var(--primary) 10%, transparent); color: var(--primary); }
 .undara-studio-layer-list-items button:focus-visible { outline: 2px solid var(--primary); outline-offset: 1px; }
 
-.undara-studio-selection-stack { display: grid; align-content: start; justify-self: end; gap: 10px; width: 236px; }
+.undara-studio-selection-stack { position: sticky; top: 0; right: 0; z-index: 20; display: grid; align-content: start; justify-self: end; gap: 10px; width: 236px; }
 .undara-studio-selection-stack > :is(.undara-studio-layer-side, .undara-studio-section-side) { position: static; width: 100%; }
-.undara-studio-layer-side { position: sticky; top: 0; width: 230px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.undara-studio-layer-side { position: sticky; top: 0; right: 0; z-index: 20; width: 230px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .undara-studio-layer-side-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .undara-studio-layer-side-head strong { color: var(--primary); font-size: 14px; font-weight: 700; }
 .undara-studio-layer-side-head button { display: grid; width: 30px; height: 30px; place-items: center; border-radius: 9px; color: var(--muted-foreground); font-size: 20px; line-height: 1; }
@@ -276,7 +276,7 @@
   font-size: 10px;
   text-align: right;
 }
-.undara-studio-section-side { position: sticky; top: 0; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
+.undara-studio-section-side { position: sticky; top: 0; right: 0; z-index: 20; width: 236px; justify-self: end; padding: 14px; border: 1px solid color-mix(in srgb, var(--primary) 36%, transparent); border-radius: var(--undara-control-radius); background: var(--background); box-shadow: 0 8px 24px rgb(0 0 0 / .07); }
 .undara-studio-section-side-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .undara-studio-section-side-head > div { display: grid; min-width: 0; gap: 3px; }
 .undara-studio-section-side-head span { color: var(--muted-foreground); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; }
@@ -441,7 +441,7 @@
 @media (max-width: 1100px) {
   .undara-studio-canvas-layout { grid-template-columns: 80px minmax(0, var(--undara-zoomed-stage-width, 340px)); min-width: max(calc(100% + 400px), calc(98px + var(--undara-zoomed-stage-width, 340px))); justify-content: center; }
   .undara-studio-layer-list { width: 80px; }
-  .undara-studio-layer-side, .undara-studio-section-side { position: static; grid-column: 1 / -1; width: min(340px, 100%); justify-self: end; margin-top: 2px; }
+  .undara-studio-selection-stack, .undara-studio-layer-side, .undara-studio-section-side { position: static; grid-column: 1 / -1; width: min(340px, 100%); justify-self: end; margin-top: 2px; }
 }
 .undara-studio-preview-surface[data-asset-drop="true"] { outline: 3px dashed var(--primary); outline-offset: 5px; }
 .undara-studio-inspector button[draggable="true"] { user-select: none; -webkit-user-drag: element; }
