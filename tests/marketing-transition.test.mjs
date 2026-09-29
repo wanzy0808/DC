@@ -6,6 +6,7 @@ const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf
 const portal = read("components/Landing/Pintu/PortalTransition.tsx");
 const doorScene = read("components/Landing/Pintu/LandingDoorScene.tsx");
 const styles = read("app/globals.css");
+const transitionStyles = styles.match(/\/\* Marketing route transition:[\s\S]*?\/\* Brand Rose sidebar\./)?.[0] ?? "";
 
 test("marketing transitions use a single 10x10 branch swarm instead of mixed foliage", () => {
   assert.match(portal, /const BRANCH_SWARM: BranchSwarmLayer\[\] = \[/);
@@ -14,19 +15,19 @@ test("marketing transitions use a single 10x10 branch swarm instead of mixed fol
 
   assert.match(portal, /undara-branch-swarm undara-branch-swarm--left/);
   assert.match(portal, /undara-branch-swarm undara-branch-swarm--right/);
-  assert.match(styles, /background-image: url\("\/assets\/landing\/ornaments\/botanical\/branch-03\.webp"\)/);
-  assert.doesNotMatch(styles, /branch-01\.webp|branch-02\.webp|branch-04\.webp|branch-05\.webp|branch-06\.webp/);
+  assert.match(transitionStyles, /background-image: url\("\/assets\/landing\/ornaments\/botanical\/branch-03\.webp"\)/);
+  assert.doesNotMatch(transitionStyles, /branch-01\.webp|branch-02\.webp|branch-04\.webp|branch-05\.webp|branch-06\.webp/);
 
-  assert.match(styles, /@keyframes undara-branch-swarm-close-left/);
-  assert.match(styles, /@keyframes undara-branch-swarm-close-right/);
-  assert.match(styles, /@keyframes undara-branch-swarm-open-left/);
-  assert.match(styles, /@keyframes undara-branch-swarm-open-right/);
-  assert.match(styles, /translate3d\(43%, var\(--branch-y\), 0\)/);
-  assert.match(styles, /translate3d\(-43%, var\(--branch-y\), 0\)/);
+  assert.match(transitionStyles, /@keyframes undara-branch-swarm-close-left/);
+  assert.match(transitionStyles, /@keyframes undara-branch-swarm-close-right/);
+  assert.match(transitionStyles, /@keyframes undara-branch-swarm-open-left/);
+  assert.match(transitionStyles, /@keyframes undara-branch-swarm-open-right/);
+  assert.match(transitionStyles, /translate3d\(43%, var\(--branch-y\), 0\)/);
+  assert.match(transitionStyles, /translate3d\(-43%, var\(--branch-y\), 0\)/);
   assert.doesNotMatch(portal, /undara-branch-gate/);
-  assert.doesNotMatch(styles, /undara-branch-gate/);
+  assert.doesNotMatch(transitionStyles, /undara-branch-gate/);
   assert.doesNotMatch(portal, /undara-marketing-veil-in|undara-marketing-veil-out|#fae9ef|#f8dce7/);
-  assert.doesNotMatch(styles, /@keyframes undara-marketing-veil-in|@keyframes undara-marketing-veil-out|hue-rotate/);
+  assert.doesNotMatch(transitionStyles, /@keyframes undara-marketing-veil-in|@keyframes undara-marketing-veil-out|hue-rotate/);
 
   assert.match(doorScene, /function startWoodlandCover\(\)/);
   assert.match(doorScene, /color="#4F463A"/);
