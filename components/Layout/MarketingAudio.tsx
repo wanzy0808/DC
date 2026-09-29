@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { usePathname } from "next/navigation";
 import { Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { isMarketingPath } from "@/lib/marketing-paths";
 
 type MarketingAudioState = {
@@ -168,15 +169,29 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
 
 export function MarketingAudioControls() {
   const audio = useContext(MarketingAudioContext);
+  const { locale } = useLanguage();
   if (!audio) throw new Error("MarketingAudioControls requires MarketingAudioProvider");
   const { soundOn, volume, toggleSound, changeVolume } = audio;
+  const soundLabel = soundOn
+    ? (locale === "en" ? "Turn sound off" : "Matikan suara")
+    : (locale === "en" ? "Turn sound on" : "Nyalakan suara");
+  const volumeLabel = locale === "en" ? "Music volume" : "Volume musik";
+
   return <div className="flex shrink-0 items-center gap-2">
-    <Button size="icon-sm" variant="ghost" className="undara-control-surface undara-footer-control" onClick={() => void toggleSound()} aria-label={soundOn ? "Matikan suara" : "Nyalakan suara"} aria-pressed={soundOn} title={soundOn ? "Matikan suara" : "Nyalakan suara"}>
+    <Button
+      size="icon-sm"
+      variant="ghost"
+      className="undara-control-surface undara-footer-control"
+      onClick={() => void toggleSound()}
+      aria-label={soundLabel}
+      aria-pressed={soundOn}
+      title={soundLabel}
+    >
       {soundOn ? <Volume2 className="size-4" /> : <VolumeX className="size-4" />}
     </Button>
 
     <div className="undara-control-surface undara-volume-control">
-      <label htmlFor="undara-marketing-volume" className="sr-only">Volume suara</label>
+      <label htmlFor="undara-marketing-volume" className="sr-only">{volumeLabel}</label>
       <input
         id="undara-marketing-volume"
         type="range"
@@ -184,7 +199,7 @@ export function MarketingAudioControls() {
         max="100"
         value={volume}
         onChange={(event) => changeVolume(Number(event.target.value))}
-        className="undara-volume-slider w-12 cursor-pointer sm:w-16"
+        className="undara-volume-slider w-10 cursor-pointer min-[380px]:w-12 sm:w-16"
         aria-valuetext={volume + "%"}
       />
       <span className="undara-volume-value">{volume}%</span>
