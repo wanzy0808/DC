@@ -36,3 +36,11 @@ test("public catalog and featured collection render localized descriptions", () 
   assert.match(catalogPage, /descriptionFor\(selected\)/);
   assert.match(featured, /template\.descriptionEn \?\? template\.description/);
 });
+
+
+test("marketing navbar menu labels follow ID EN", () => {
+  const navbar = read("components/Layout/Navbar/Navbar.tsx");
+  assert.match(navbar, /Open navigation menu/);
+  assert.match(navbar, /Close navigation menu/);
+  assert.match(navbar, /Close menu/);
+});
