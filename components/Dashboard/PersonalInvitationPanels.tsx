@@ -387,6 +387,9 @@ export function PersonalInvitationListPanel({
                     ? d("Password aktif")
                     : d("Tanpa password")}
                 </DashboardStatusBadge>
+                <DashboardStatusBadge active={item.personalEnvelopeEnabled !== false}>
+                  {item.personalEnvelopeEnabled !== false ? d("Nama amplop aktif") : d("Nama amplop mati")}
+                </DashboardStatusBadge>
 
                 <Button
                   type="button"
