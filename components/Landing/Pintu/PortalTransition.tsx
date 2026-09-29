@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "motion/react";
 import { isMarketingPath } from "@/lib/marketing-paths";
 import { useMarketingTransitionAudio } from "@/components/Layout/MarketingAudio";
@@ -126,7 +126,7 @@ export default function PortalTransition() {
       style={{
         "--undara-portal-cover-ms": `${coverDuration}ms`,
         "--undara-portal-reveal-ms": `${REVEAL_MS}ms`,
-      } as React.CSSProperties}
+      } as CSSProperties}
     >
       <div className="undara-portal-transition__landscape" />
       <div className="undara-portal-transition__mist undara-portal-transition__mist--back" />
