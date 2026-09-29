@@ -5881,3 +5881,22 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 
 **Validasi:** Build Validation commit `ec664df` terobservasi **success**: Prisma generate, seluruh source regression tests, dan production `pnpm build` lulus. Build commit `e7146ff` sebelumnya juga lulus sebelum patch navbar terakhir. Intermediate failure berasal dari regression lama yang mengharuskan pemanggilan literal `<UndaraSocialIcons />`; kontrak dipulihkan lalu test final lulus. QA browser visual nyata lintas device masih terpisah dari source/CI dan tidak diklaim sebagai PASS.
 
+
+
+### 30 September 2026 — Marketing editorial rhythm refinement
+
+**Rationale:** follow-up design audit terhadap marketing pages setelah overhaul utama. Brand, main frame, navbar/footer, bilingual copy, dan product flow sudah benar; masalah yang tersisa terutama ritme komposisi yang terlalu seragam antar-section. Refinement ini menerapkan metode art-direction yang sudah didokumentasikan di `AGENTS.md`: hierarchy/asymmetry/whitespace lebih kuat tanpa mengubah data contract, route, auth, package, atau Invitation Studio.
+
+- `app/globals.css` menambah helper `undara-editorial-offset-left/right`, `undara-editorial-rail`, dan `undara-editorial-ambient` untuk menciptakan alternating editorial rhythm pada desktop, sementara mobile tetap full-width.
+- `/d-invitation` memakai alternating offset/rail/ambient pada feature, Studio CTA, package, reviews, dan FAQ tanpa mengubah PuzzleAssemble, template registry, atau flow pembelian.
+- `/guestbook` memakai ritme yang sama pada feature, process, package, source-of-truth section, dan FAQ.
+- `/undangan-fisik` memakai alternating rhythm pada tactile direction, process, digital companion, dan CTA; WhatsApp admin dan product copy tidak berubah.
+- `/help` dan `/template-design` mendapat hierarchy/ambient/rail refinement tanpa mengubah FAQ behavior, search/filter/sort, preview modal, atau template intent handoff.
+- Event Planner tetap menjadi benchmark editorial dan tidak dipaksa memakai layout identik; shared helpers hanya membawa DNA komposisinya ke marketing pages lain.
+- External design-skill files tidak tersedia sebagai executable tool pada sesi ini. Sesuai `AGENTS.md`, implementasi mengikuti metode yang sudah didokumentasikan di repo dan tidak mengklaim skill global telah dieksekusi.
+
+**Area:** `app/globals.css`, `app/{d-invitation,guestbook,undangan-fisik,help,template-design}/page.tsx`.
+
+**Commits implementasi:** `5c1e7da`, `8cb5c98`, `2a45e96`, `36d1edb`, `d6bccee`, `8669920`.
+
+**Validasi:** source inspection selesai. Build/CI untuk rangkaian commit ini harus diamati terpisah dan belum boleh dianggap PASS pada entry ini sampai workflow terkait memberi status sukses. QA browser visual lintas viewport juga belum diklaim PASS.
