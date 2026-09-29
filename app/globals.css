@@ -762,10 +762,10 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   background-position: center;
   background-size: contain;
   transform-origin: center;
-  filter: sepia(.42) saturate(.72) hue-rotate(338deg) brightness(.62) contrast(.96);
+  filter: saturate(.82) brightness(.66) contrast(1.02);
 }
 .dark .undara-portal-transition__foliage {
-  filter: sepia(.55) saturate(.74) hue-rotate(335deg) brightness(.38) contrast(1.08);
+  filter: saturate(.74) brightness(.40) contrast(1.08);
 }
 .undara-portal-transition__foliage--left-back {
   left: -15vw;
@@ -812,10 +812,10 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   background-position: center top;
   transform: translate3d(0, 76%, 0) scale(1.08);
   transform-origin: center bottom;
-  filter: sepia(.5) saturate(.68) hue-rotate(338deg) brightness(.48) contrast(1.04);
+  filter: saturate(.72) brightness(.46) contrast(1.06);
 }
 .dark .undara-portal-transition__foliage--bottom {
-  filter: sepia(.52) saturate(.72) hue-rotate(335deg) brightness(.26) contrast(1.12);
+  filter: saturate(.68) brightness(.25) contrast(1.12);
 }
 .undara-portal-transition__foliage--left-front {
   left: -24vw;
@@ -827,7 +827,7 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   background-image: url("/assets/landing/ornaments/botanical/branch-01.webp");
   transform: translate3d(-88%, 18%, 0) rotate(-18deg) scale(1.16);
   transform-origin: left bottom;
-  filter: sepia(.5) saturate(.76) hue-rotate(338deg) brightness(.50) contrast(1.02) blur(.25px);
+  filter: saturate(.78) brightness(.50) contrast(1.04) blur(.25px);
 }
 .undara-portal-transition__foliage--right-front {
   right: -24vw;
@@ -839,11 +839,11 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   background-image: url("/assets/landing/ornaments/botanical/branch-05.webp");
   transform: translate3d(90%, 20%, 0) rotate(18deg) scale(1.18);
   transform-origin: right bottom;
-  filter: sepia(.5) saturate(.76) hue-rotate(338deg) brightness(.50) contrast(1.02) blur(.25px);
+  filter: saturate(.78) brightness(.50) contrast(1.04) blur(.25px);
 }
 .dark .undara-portal-transition__foliage--left-front,
 .dark .undara-portal-transition__foliage--right-front {
-  filter: sepia(.58) saturate(.78) hue-rotate(335deg) brightness(.29) contrast(1.1) blur(.25px);
+  filter: saturate(.70) brightness(.28) contrast(1.1) blur(.25px);
 }
 .undara-portal-transition__vignette {
   inset: 0;
