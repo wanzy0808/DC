@@ -5,6 +5,8 @@
  */
 export const RECIPIENT_TYPES = ["INDIVIDUAL", "COUPLE", "FAMILY", "GROUP"] as const;
 export type RecipientType = (typeof RECIPIENT_TYPES)[number];
+export const PERSONAL_INVITATION_LANGUAGES = ["ID", "EN"] as const;
+export type PersonalInvitationLanguage = (typeof PERSONAL_INVITATION_LANGUAGES)[number];
 
 export type PersonalGuestFields = {
   personalAddressee?: string | null;
@@ -13,6 +15,8 @@ export type PersonalGuestFields = {
   category?: string | null;
   tags?: string[];
   personalGreeting?: string | null;
+  personalEnvelopeEnabled?: boolean;
+  personalLanguage?: PersonalInvitationLanguage;
 };
 
 export function parsePersonalGuestFields(body: Record<string, unknown>): PersonalGuestFields {
@@ -57,6 +61,19 @@ export function parsePersonalGuestFields(body: Record<string, unknown>): Persona
       throw new Error("Pesan pribadi maksimal 280 karakter.");
     }
     data.personalGreeting = body.personalGreeting.trim() || null;
+  }
+  if (body.personalEnvelopeEnabled !== undefined) {
+    if (typeof body.personalEnvelopeEnabled !== "boolean") {
+      throw new Error("Pengaturan nama di amplop tidak valid.");
+    }
+    data.personalEnvelopeEnabled = body.personalEnvelopeEnabled;
+  }
+  if (body.personalLanguage !== undefined) {
+    if (typeof body.personalLanguage !== "string"
+      || !PERSONAL_INVITATION_LANGUAGES.some((language) => language === body.personalLanguage)) {
+      throw new Error("Bahasa amplop tidak valid.");
+    }
+    data.personalLanguage = body.personalLanguage as PersonalInvitationLanguage;
   }
   return data;
 }
