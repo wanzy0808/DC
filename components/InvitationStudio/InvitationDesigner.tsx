@@ -1966,6 +1966,17 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               </div>
             </div>
 
+          </div>
+          <StudioNativeTransformHandles
+            canvasRef={canvasScrollRef}
+            targetKey={activeNativeKey && !design.nativeVisuals[activeNativeKey]?.positionLocked ? activeNativeKey : null}
+            transform={activeNativeKey ? design.nativeVisuals[activeNativeKey] : undefined}
+            zoom={canvasZoom}
+            revision={`${designKey}|${canvasStage}|${previewVersion}`}
+            onCommit={commitNativeVisual}
+          />
+          </div>
+          <div className="undara-studio-properties-dock" aria-label={locale === "en" ? "Selected object properties" : "Properti objek terpilih"}>
             <StudioSelectionInspector
               locale={locale}
               design={design}
@@ -1996,15 +2007,6 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onResetSectionStyle={resetSectionStyle}
               onCloseSection={() => { setSelectedSectionKey(null); setSelectedSectionInstanceId(null); }}
             />
-          </div>
-          <StudioNativeTransformHandles
-            canvasRef={canvasScrollRef}
-            targetKey={activeNativeKey && !design.nativeVisuals[activeNativeKey]?.positionLocked ? activeNativeKey : null}
-            transform={activeNativeKey ? design.nativeVisuals[activeNativeKey] : undefined}
-            zoom={canvasZoom}
-            revision={`${designKey}|${canvasStage}|${previewVersion}`}
-            onCommit={commitNativeVisual}
-          />
           </div>
           <StudioCanvasFooter
             locale={locale}
