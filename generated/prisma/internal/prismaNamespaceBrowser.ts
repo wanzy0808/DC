@@ -296,6 +296,8 @@ export const GuestScalarFieldEnum = {
   recipientType: 'recipientType',
   invitedPax: 'invitedPax',
   personalGreeting: 'personalGreeting',
+  personalEnvelopeEnabled: 'personalEnvelopeEnabled',
+  personalLanguage: 'personalLanguage',
   personalSharedAt: 'personalSharedAt',
   source: 'source',
   rsvpStatus: 'rsvpStatus',
