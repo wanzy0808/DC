@@ -1,45 +1,93 @@
-import { Armchair, BarChart3, ClipboardList, ScanLine } from "lucide-react";
-import SectionHeading from "@/components/Marketing/SectionHeading";
+"use client";
 
-const steps = [
-  {
-    icon: ClipboardList,
-    title: "Siapkan daftar tamu",
-    text: "Masukkan tamu, WhatsApp, RSVP, plus one, dan nomor meja sebelum acara berlangsung.",
-  },
-  {
-    icon: ScanLine,
-    title: "Terbitkan QR",
-    text: "Kirim QR kepada tamu. Tamu yang belum punya QR dapat diverifikasi usher dan diterbitkan QR resmi.",
-  },
-  {
-    icon: Armchair,
-    title: "Scan di venue",
-    text: "QR menjadi validasi resmi masuk. Setelah scan berhasil, data tamu dan meja langsung tampil.",
-  },
-  {
-    icon: BarChart3,
-    title: "Pantau realtime",
-    text: "Tim dapat melihat attendance dan status tamu secara live untuk membantu keputusan saat acara berjalan.",
-  },
-];
+import { Armchair, BarChart3, ClipboardList, ScanLine } from "lucide-react";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 export default function ProcessSection() {
+  const { locale } = useLanguage();
+  const en = locale === "en";
+
+  const steps = en
+    ? [
+        {
+          icon: ClipboardList,
+          title: "Prepare the guest list",
+          text: "Set up guest identities, WhatsApp numbers, RSVP status, plus-one information, and table assignments before the event begins.",
+        },
+        {
+          icon: ScanLine,
+          title: "Issue official QR access",
+          text: "Send QR credentials to guests. If someone arrives without one, the usher verifies the guest first and issues an official QR.",
+        },
+        {
+          icon: Armchair,
+          title: "Scan and direct at the venue",
+          text: "A valid scan confirms arrival, then the guest and seating information can immediately guide the reception team.",
+        },
+        {
+          icon: BarChart3,
+          title: "Follow attendance live",
+          text: "The event team can follow arrivals and guest status in real time from the same event data while the venue flow continues.",
+        },
+      ]
+    : [
+        {
+          icon: ClipboardList,
+          title: "Siapkan daftar tamu",
+          text: "Rapikan identitas tamu, WhatsApp, status RSVP, plus one, dan penempatan meja sebelum acara dimulai.",
+        },
+        {
+          icon: ScanLine,
+          title: "Terbitkan akses QR resmi",
+          text: "Kirim QR kepada tamu. Jika seseorang datang tanpa QR, usher melakukan verifikasi terlebih dulu lalu menerbitkan QR resmi.",
+        },
+        {
+          icon: Armchair,
+          title: "Scan dan arahkan di venue",
+          text: "Scan yang valid mengonfirmasi kedatangan, lalu informasi tamu dan meja langsung membantu tim penerima memberi arahan.",
+        },
+        {
+          icon: BarChart3,
+          title: "Pantau attendance secara live",
+          text: "Tim acara dapat mengikuti kedatangan dan status tamu secara realtime dari data acara yang sama selama flow venue berjalan.",
+        },
+      ];
+
   return (
-    <section className="border-y border-primary/25 py-14 md:py-20">
-      <SectionHeading
-        eyebrow="How It Works"
-        title="Alur sederhana, kontrol tetap kuat"
-        description="Dari daftar tamu sampai check-in, setiap langkah dibuat jelas agar usher tidak perlu menebak-nebak saat acara berlangsung."
-      />
-      <div className="mt-12 border-t border-primary/30">
+    <section className="undara-marketing-section border-y border-primary/25 py-14 md:py-20">
+      <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
+        <div>
+          <p className="undara-marketing-kicker">{en ? "From list to arrival" : "Dari Daftar sampai Kedatangan"}</p>
+          <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+            {en ? "A clear sequence for the busiest part of the day." : "Urutan yang jelas untuk bagian hari yang paling sibuk."}
+          </h2>
+        </div>
+        <p className="max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+          {en
+            ? "The system follows the way guests actually arrive: prepare the data, verify access, scan at the venue, then keep the team informed."
+            : "Sistem mengikuti cara tamu benar-benar datang: siapkan datanya, verifikasi akses, scan di venue, lalu jaga seluruh tim tetap mendapat informasi yang sama."}
+        </p>
+      </div>
+
+      <div className="relative mt-12 border-t border-primary/30">
+        <div aria-hidden="true" className="absolute left-[41px] top-0 hidden h-full w-px bg-primary/15 md:block" />
         {steps.map(({ icon: Icon, title, text }, index) => (
           <article
             key={title}
-            className={`grid gap-5 border-b border-primary/25 py-7 md:grid-cols-[0.72fr_1.28fr] md:items-center md:gap-14 md:py-10 ${index % 2 ? "md:pl-[8%]" : "md:pr-[8%]"}`}
+            className={`relative grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,0.92fr)_minmax(0,1.08fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
           >
-            <div className={index % 2 ? "md:order-2" : ""}><Icon className="h-6 w-6 text-primary" /><h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-2xl text-primary md:text-3xl">{title}</h3></div>
-            <p className={`max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8 ${index % 2 ? "md:order-1" : ""}`}>{text}</p>
+            <div className="relative z-10 flex items-center gap-4 md:block">
+              <span className="grid h-11 w-11 place-items-center border border-primary/35 bg-background text-primary">
+                <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
+              </span>
+              <span className="undara-editorial-index md:mt-3 md:block">{String(index + 1).padStart(2, "0")}</span>
+            </div>
+            <h3 className="max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl">
+              {title}
+            </h3>
+            <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+              {text}
+            </p>
           </article>
         ))}
       </div>
