@@ -102,14 +102,15 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
   const assignedCount = visibleGuests.filter((guest) => guest.tableId).length;
 
   const canvas = {
-    background: isDarkMode ? "#111113" : "#FBFAFA",
-    table: "#C07A84",
-    tableText: isDarkMode ? "#111111" : "#FFFFFF",
-    seatEmpty: isDarkMode ? "#0B0B0C" : "#FFFFFF",
-    seatOccupied: "#D9A3AA",
-    seatStroke: "#C07A84",
-    guestText: isDarkMode ? "#FFFFFF" : "#111111",
-    mutedText: isDarkMode ? "#A3A3A3" : "#737373",
+    background: isDarkMode ? "#703B3B" : "#EDE3D8",
+    table: isDarkMode ? "#D6B38C" : "#703B3B",
+    tableText: isDarkMode ? "#392323" : "#FFF8EF",
+    seatEmpty: isDarkMode ? "#6A3636" : "#FFF8EF",
+    seatOccupied: isDarkMode ? "#E1C39B" : "#915757",
+    seatStroke: isDarkMode ? "#D6B38C" : "#703B3B",
+    seatText: isDarkMode ? "#392323" : "#FFF8EF",
+    guestText: isDarkMode ? "#FFF8EF" : "#392323",
+    mutedText: isDarkMode ? "#E2C8AA" : "#6F5151",
   };
 
   async function generateTables(event: React.FormEvent<HTMLFormElement>) {
@@ -615,7 +616,7 @@ export default function SeatingChart({ invitationId, guests, tables, onAssigned 
                               text={String(seat)}
                               fontSize={10}
                               fontStyle="bold"
-                              fill={guest ? canvas.guestText : canvas.seatStroke}
+                              fill={guest ? canvas.seatText : canvas.seatStroke}
                               listening={false}
                             />
                             {guest && (

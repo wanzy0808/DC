@@ -208,7 +208,7 @@ export function EventTimeField({
           value={value}
           onChange={(event) => onChange(formatTimeInput(event.target.value))}
           placeholder="00:00"
-          className="font-[family-name:var(--font-dc-mono)]"
+          className="font-[family-name:var(--font-undara-mono)]"
         />
         <Button
           type="button"

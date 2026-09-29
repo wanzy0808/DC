@@ -254,7 +254,7 @@ export default function InvitationWorkspacePanel({ onCreateSequence }: Props) {
                     >
                       <div className="shrink-0 self-start bg-white p-2">
                         {qrErrorId === invitation.id ? (
-                          <div role="alert" className="flex h-[208px] w-[208px] items-center justify-center p-3 text-center text-sm text-[#7A1C25]">
+                          <div role="alert" className="flex h-[208px] w-[208px] items-center justify-center p-3 text-center text-sm text-primary">
                             {d("QR belum berhasil dibuat. Tutup dan coba lagi.")}
                           </div>
                         ) : (

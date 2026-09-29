@@ -82,7 +82,7 @@ export function WorkspaceOverview({
     <DashboardPageShell className="dc-dashboard-overview">
       <section className="dc-dashboard-overview-hero relative flex min-w-0 flex-col justify-between gap-5 overflow-hidden rounded-tr-[28px] px-6 py-7 sm:flex-row sm:items-center sm:px-8">
         <div className="relative z-[1] min-w-0">
-          <h1 className="break-words font-[family-name:var(--font-dc-heading)] text-2xl font-semibold leading-tight text-white sm:text-[30px]">
+          <h1 className="break-words font-[family-name:var(--font-undara-heading)] text-2xl font-semibold leading-tight text-white sm:text-[30px]">
             {d("Halo")}, {ctx?.profile.displayName?.trim() || d("Akun")}
           </h1>
         </div>
@@ -107,7 +107,7 @@ export function WorkspaceOverview({
       <section className="mt-5 grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.8fr)]">
         <DashboardSurface className="dc-dashboard-overview-events min-w-0 overflow-hidden">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-primary/10 px-5 py-5 sm:px-6">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl font-semibold text-primary">
               {d("Terbaru")}
             </h2>
             <Button type="button" size="sm" onClick={() => onGo("events")}>
@@ -152,7 +152,7 @@ export function WorkspaceOverview({
 
         <DashboardSurface className="dc-dashboard-overview-progress min-w-0 overflow-hidden">
           <div className="border-b border-primary/10 px-5 py-5 sm:px-6">
-            <h2 className="font-[family-name:var(--font-dc-heading)] text-xl font-semibold text-primary">
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl font-semibold text-primary">
               {d("RSVP")} &amp; {d("Publikasi")}
             </h2>
           </div>
@@ -193,7 +193,7 @@ export function WorkspaceOverview({
             <div className="border-t border-primary/10 pt-5">
               <div className="flex items-center justify-between gap-4">
                 <p className="text-sm font-semibold text-foreground">{d("Publikasi")}</p>
-                <p className="font-[family-name:var(--font-dc-mono)] text-sm font-semibold text-primary">{events.length ? `${publishRate}%` : "—"}</p>
+                <p className="font-[family-name:var(--font-undara-mono)] text-sm font-semibold text-primary">{events.length ? `${publishRate}%` : "—"}</p>
               </div>
               <div
                 className="mt-3 h-2.5 overflow-hidden rounded-full bg-primary/10"
@@ -392,7 +392,7 @@ function PlacementPanel({
 function LoadingSurface() {
   const { d } = useDashboardI18n();
   return (
-    <DashboardSurface className="p-5 font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
+    <DashboardSurface className="p-5 font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.12em] text-muted-foreground">
       {d("Memuat data acara...")}
     </DashboardSurface>
   );
