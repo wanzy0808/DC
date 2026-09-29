@@ -24,7 +24,7 @@ const DARK_LEAVES = ["#D6B38C", "#BE936D", "#E1C39B", "#9E765B"];
  * Shared Undara ambient leaves.
  * Kept sparse and behind content so long-form pages stay readable.
  */
-export default function FallingLeaves({ className = "", embedded = false }: { className?: string; embedded?: boolean }) {
+export default function FallingLeaves({ className = "", embedded = false, variety = "classic" }: { className?: string; embedded?: boolean; variety?: "classic" | "forest" }) {
   const layer = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { isDarkMode } = useTheme();
@@ -53,7 +53,7 @@ export default function FallingLeaves({ className = "", embedded = false }: { cl
       vy: 0,
       spin: index % 2 ? 1 : -1,
       angle: index * 39,
-      size: 10 + (index % 5) * 2.5,
+      size: (variety === "forest" ? 15 : 10) + (index % 5) * 2.5,
       depth: 0.62 + (index % 4) * 0.13,
     }));
 
@@ -130,7 +130,7 @@ export default function FallingLeaves({ className = "", embedded = false }: { cl
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerleave", leave);
     };
-  }, [embedded, reduced]);
+  }, [embedded, reduced, variety]);
 
   if (reduced) return null;
 
@@ -141,7 +141,7 @@ export default function FallingLeaves({ className = "", embedded = false }: { cl
       className={`pointer-events-none ${embedded ? "absolute" : "fixed"} inset-0 z-[4] overflow-hidden ${className}`}
     >
       {Array.from({ length: COUNT }, (_, index) => {
-        const size = 10 + (index % 5) * 2.5;
+        const size = (variety === "forest" ? 15 : 10) + (index % 5) * 2.5;
         const color = palette[index % palette.length];
 
         return (
@@ -154,14 +154,26 @@ export default function FallingLeaves({ className = "", embedded = false }: { cl
               opacity: (isDarkMode ? 0.28 : 0.22) + (index % 4) * 0.055,
             }}
           >
-            <span
-              className="relative block h-full w-full rounded-[88%_18%_82%_22%] shadow-[0_3px_8px_rgba(72,49,35,0.10)]"
-              style={{
-                background: `linear-gradient(145deg, ${color}, color-mix(in srgb, ${color} 64%, transparent))`,
-              }}
-            >
-              <span className="absolute left-1/2 top-[12%] h-[76%] w-px -translate-x-1/2 rotate-[18deg] bg-white/24 dark:bg-[#703B3B]/22" />
-            </span>
+            {variety === "forest" ? (
+              <svg viewBox="0 0 40 64" className="block h-full w-full drop-shadow-sm" fill={color} aria-hidden="true">
+                {index % 3 === 0 ? (
+                  <path d="M20 4 24 15 30 11 28 21 37 19 31 30 36 35 24 38 22 51 18 51 16 38 4 35 9 30 3 19 12 21 10 11 16 15Z M20 47v15" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+                ) : index % 3 === 1 ? (
+                  <g>
+                    <path d="M20 60V6 M19 13 C9 10 4 12 2 19 L18 23 M20 18 C30 11 35 12 38 19 L22 26 M18 28 C8 23 3 25 1 32 L18 36 M22 33 C31 24 36 27 39 33 L22 42 M18 42 C8 36 5 40 4 47 L19 50 M22 47 C30 38 35 42 36 48 L21 53" stroke={color} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                ) : (
+                  <path d="M20 5 C-1 14 2 39 20 55 C38 39 41 14 20 5Z M20 23v38 M20 40 10 29 M20 34 29 21" stroke={color} strokeWidth="1.5" strokeLinejoin="round" />
+                )}
+              </svg>
+            ) : (
+              <span
+                className="relative block h-full w-full rounded-[88%_18%_82%_22%] shadow-[0_3px_8px_rgba(72,49,35,0.10)]"
+                style={{ background: `linear-gradient(145deg, ${color}, color-mix(in srgb, ${color} 64%, transparent))` }}
+              >
+                <span className="absolute left-1/2 top-[12%] h-[76%] w-px -translate-x-1/2 rotate-[18deg] bg-white/24 dark:bg-[#703B3B]/22" />
+              </span>
+            )}
           </span>
         );
       })}

@@ -306,6 +306,28 @@
   overscroll-behavior: contain;
   scroll-behavior: smooth;
 }
+/* Event Planner is one continuous canvas, with its foliage anchored to the viewport. */
+.event-planner-shell {
+  height: 100dvh;
+}
+.undara-marketing-frame.event-planner-frame {
+  width: 100%;
+  height: 100dvh;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--background);
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.event-planner-frame .undara-marketing-frame-header,
+.event-planner-frame .event-planner-footer {
+  background: transparent;
+  backdrop-filter: none;
+}
+.event-planner-frame .event-planner-footer {
+  border-top: 1px solid color-mix(in srgb, var(--primary) 18%, transparent);
+}
 @media (min-width: 640px) {
   .undara-marketing-frame {
     width: calc(100% - 46px);

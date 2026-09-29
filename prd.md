@@ -5759,3 +5759,13 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 - Layer canonical: atmosphere `z-[12]`, body scroll `relative z-20`, navbar/header tetap di atasnya. Footer Event Planner dibungkus `relative z-20`.
 - `FallingLeaves` mendukung mode `embedded` agar daun jatuh hidup di dalam frame dan tidak tersembunyi di belakang background marketing frame.
 - Jangan menurunkan foliage Event Planner ke z-index di bawah marketing frame; itu membuat asset tampak hilang walaupun sudah terpasang.
+
+### 29 September 2026 — Event Planner continuous canvas and varied foliage
+
+**Revisi owner (menggantikan ketentuan frame dan asset foliage Event Planner di atas):** header, isi, dan footer harus terlihat sebagai satu kanvas penuh, bukan kartu besar dengan tepi, radius, atau bayangan. Hanya isi yang dapat digulir; navbar dan footer tetap pada posisinya. Isi tidak boleh naik atau mengulang entrance motion saat pengguna scroll.
+
+- `.event-planner-frame` mengisi viewport tanpa margin, border, radius, shadow, atau backdrop blur. Header dan footer transparan di atas background yang sama; footer diberi divider halus.
+- Dekorasi foliage tetap ditambatkan ke frame viewport di belakang isi dan tampak di sisi kiri/kanan pada light dan dark mode. Tiga file foliage WebP sebelumnya dihapus karena data file terpotong dan tidak dapat didekode.
+- Foliage besar memakai SVG bronze/champagne ringan dengan cabang dan daun lebar; daun jatuh khusus Event Planner memadukan siluet maple, pelepah palem, dan daun lonjong. Halaman lain tetap memakai gaya daun yang sudah ada.
+- Event Planner tidak memakai animasi teks yang keluar-masuk viewport; section hanya memudar sekali tanpa translasi. Preferensi reduced motion tetap dihormati.
+- Area terdampak: `app/event-planner/page.tsx`, `app/globals.css`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `components/EventPlanner/ScrollReveal.tsx`, `components/Layout/FallingLeaves.tsx`. Verifikasi: regression Event Planner, ESLint, TypeScript, build.

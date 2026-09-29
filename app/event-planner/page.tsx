@@ -13,7 +13,6 @@ import {
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import EventPlannerBotanicalAtmosphere from "@/components/EventPlanner/EventPlannerBotanicalAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
-import MarketingTextReveal from "@/components/DigitalInvitation/MarketingTextReveal";
 import ScrollReveal from "@/components/EventPlanner/ScrollReveal";
 import ServicesSection from "@/components/EventPlanner/ServicesSection";
 import FaqSection from "@/components/Marketing/FaqSection";
@@ -75,8 +74,8 @@ export default function EventPlannerPage() {
   }));
 
   return (
-    <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
-      <div data-undara-marketing-frame className="undara-marketing-frame">
+    <div className="event-planner-shell relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <div data-undara-marketing-frame className="undara-marketing-frame event-planner-frame">
         <EventPlannerBotanicalAtmosphere />
 
         <div className="undara-marketing-frame-header">
@@ -89,12 +88,7 @@ export default function EventPlannerPage() {
           aria-label={en ? "Event Planner page content" : "Konten halaman Event Planner"}
           className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <MarketingTextReveal
-            className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
-            scrollRoot={scrollRoot}
-            ready
-            locale={locale}
-          >
+          <div className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20">
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="relative mx-auto grid min-h-[calc(100dvh-150px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden border-b border-primary/25 pb-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
                 <div
@@ -375,10 +369,10 @@ export default function EventPlannerPage() {
                 </div>
               </section>
             </ScrollReveal>
-          </MarketingTextReveal>
+          </div>
         </main>
 
-        <div className="relative z-20">
+        <div className="event-planner-footer relative z-20">
           <MarketingFrameFooter />
         </div>
       </div>

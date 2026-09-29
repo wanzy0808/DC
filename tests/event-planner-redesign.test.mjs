@@ -9,6 +9,9 @@ const services = read("components/EventPlanner/ServicesSection.tsx");
 const faq = read("components/Marketing/FaqSection.tsx");
 const data = read("data/services/event-planner.ts");
 const atmosphere = read("components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx");
+const leaves = read("components/Layout/FallingLeaves.tsx");
+const styles = read("app/globals.css");
+const reveal = read("components/EventPlanner/ScrollReveal.tsx");
 
 test("event planner is a connector-only Undara service", () => {
   assert.match(page, /const WHATSAPP_NUMBER = "6281285009609"/);
@@ -21,7 +24,7 @@ test("event planner is a connector-only Undara service", () => {
   assert.match(data, /Siapa yang menangani pelaksanaan acaranya\?/);
   assert.match(data, /penyedia layanan yang relevan/);
   assert.match(services, /Sebelum kami hubungkan/);
-  assert.match(services, /Kami Hubungkan/);
+  assert.match(services, /Sebelum kami hubungkan/);
 });
 
 test("event planner uses planner notes as decoration and a wider body", () => {
@@ -39,17 +42,24 @@ test("event planner uses its own animated bronze botanical atmosphere", () => {
   assert.match(page, /EventPlannerBotanicalAtmosphere/);
   assert.doesNotMatch(page, /PublicMarketingAtmosphere|LandingFloralGlow/);
 
-  assert.match(atmosphere, /foliage-left\.webp/);
-  assert.match(atmosphere, /foliage-right\.webp/);
-  assert.match(atmosphere, /foliage-floating\.webp/);
+  assert.match(atmosphere, /<svg viewBox="0 0 470 760"/);
+  assert.match(atmosphere, /<FoliageDrawing \/>/);
+  assert.doesNotMatch(atmosphere, /foliage-(left|right|floating)\.webp/);
   assert.match(atmosphere, /FallingLeaves/);
   assert.match(atmosphere, /useReducedMotion/);
   assert.match(atmosphere, /repeat: Infinity/);
   assert.match(atmosphere, /absolute inset-0 z-\[12\]/);
-  assert.match(atmosphere, /FallingLeaves embedded/);
-  assert.match(page, /undara-marketing-frame">\s*<EventPlannerBotanicalAtmosphere/);
+  assert.match(atmosphere, /FallingLeaves embedded variety="forest"/);
+  assert.match(page, /undara-marketing-frame event-planner-frame">\s*<EventPlannerBotanicalAtmosphere/);
   assert.match(page, /undara-marketing-scroll relative z-20/);
   assert.doesNotMatch(atmosphere, /branch-0[1-6]\.webp/);
+  assert.match(leaves, /index % 3 === 0/);
+  assert.match(leaves, /index % 3 === 1/);
+  assert.match(styles, /\.undara-marketing-frame\.event-planner-frame \{/);
+  assert.match(styles, /border-radius: 0;\s*background: var\(--background\);\s*box-shadow: none/);
+  assert.doesNotMatch(page, /MarketingTextReveal/);
+  assert.match(reveal, /once: true/);
+  assert.doesNotMatch(reveal, /y: 18/);
 });
 
 test("event planner follows ID EN and avoids legacy copy", () => {
