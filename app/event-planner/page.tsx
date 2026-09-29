@@ -11,7 +11,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
-import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import EventPlannerBotanicalAtmosphere from "@/components/EventPlanner/EventPlannerBotanicalAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 import MarketingTextReveal from "@/components/DigitalInvitation/MarketingTextReveal";
 import ScrollReveal from "@/components/EventPlanner/ScrollReveal";
@@ -76,7 +76,7 @@ export default function EventPlannerPage() {
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
-      <PublicMarketingAtmosphere />
+      <EventPlannerBotanicalAtmosphere />
 
       <div data-undara-marketing-frame className="undara-marketing-frame">
         <div className="undara-marketing-frame-header">
@@ -104,7 +104,7 @@ export default function EventPlannerPage() {
 
                 <PlannerNote
                   src="/assets/note1.webp"
-                  className="-right-[7%] top-[2%] h-[56%] w-[44%] opacity-[0.20] lg:opacity-[0.26] dark:opacity-[0.13]"
+                  className="-right-[5%] top-[3%] h-[52%] w-[40%] opacity-[0.12] lg:opacity-[0.16] dark:opacity-[0.08]"
                   motionY={12}
                   rotate={7}
                   reduced={reduced}
@@ -203,7 +203,7 @@ export default function EventPlannerPage() {
               <section id="cara-mulai" className="relative mx-auto w-full max-w-[1500px] scroll-mt-24 py-4">
                 <PlannerNote
                   src="/assets/note2.webp"
-                  className="-left-[10%] top-[2%] h-[68%] w-[40%] -rotate-6 opacity-[0.12] lg:opacity-[0.18] dark:opacity-[0.08]"
+                  className="-left-[8%] top-[4%] h-[62%] w-[36%] -rotate-6 opacity-[0.09] lg:opacity-[0.13] dark:opacity-[0.06]"
                   motionY={8}
                   rotate={-6}
                   reduced={reduced}
@@ -218,7 +218,7 @@ export default function EventPlannerPage() {
               <section className="relative mx-auto w-full max-w-[1500px] overflow-hidden border-y border-primary/25 py-12 md:py-16 lg:py-20">
                 <PlannerNote
                   src="/assets/note3.webp"
-                  className="-right-[8%] -top-[4%] h-[72%] w-[40%] rotate-6 opacity-[0.13] lg:opacity-[0.20] dark:opacity-[0.09]"
+                  className="-right-[5%] top-[2%] h-[64%] w-[36%] rotate-6 opacity-[0.09] lg:opacity-[0.14] dark:opacity-[0.06]"
                   motionY={11}
                   rotate={6}
                   reduced={reduced}
