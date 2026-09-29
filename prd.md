@@ -1453,6 +1453,7 @@ Bukan melalui banyak warna/variant berbeda.
 
 ### 15.4 Surfaces/layout
 
+- **Kanvas marketing menyatu (29 September 2026; menggantikan aturan lama yang mengisi atau memotong frame):** Semua halaman marketing berbingkai memakai satu background/atmosphere yang tampak berlanjut dari area luar frame ke header, body, dan footer. Frame berfungsi sebagai outline dan tata letak semu tanpa fill, backdrop blur, bayangan tebal, atau overflow yang memotong efek. Animasi dekoratif berada pada layer halaman di belakang frame dan dapat melintasi outline; teks serta interaksi tetap di depan. Hanya panel isi yang scroll dan mengklip konten panjang. Landing mempertahankan forest khususnya, Event Planner mempertahankan foliage khususnya, sedangkan halaman layanan lain memakai ambient shared yang lebih tenang. Transisi antarroute melarutkan chrome frame tanpa kotak atau patahan background.
 - Hero halaman marketing `/d-invitation` menyeimbangkan dua kolom: teks mengambil bagian lebih lebar daripada mockup perangkat pada desktop, sementara mockup menggunakan rasio smartphone ramping/tinggi (sekitar 9:19.5), bukan menyerupai tablet. Judul dan deskripsi boleh melebar mengikuti kolom teks. **Keduanya dikelompokkan di tengah main frame** (maksimal lebar Hero mengikuti batas konten bersama sekitar 1100px di desktop, gap kolom sedang), bukan menempel di sisi luar frame. Responsif mobile tetap aman; isi dan animasi undangan, frame halaman, transisi Pintu, dan visual landing tidak diubah oleh penyesuaian proporsi ini.
 - Homepage `/` memakai **woodland atmosphere khusus**: forest silhouette transparan sebagai depth di belakang Pintu, branch 01–04 sebagai edge framing, dan satu editorial story block dengan branch 05 sebagai divider. Homepage tidak lagi memakai cloud bubble atau petal ambience. Route marketing lain yang sudah memakai `PublicMarketingAtmosphere` tetap boleh mempertahankan shared ambience mereka; jangan memaksakan woodland homepage ke Dashboard/Admin/Studio/checkout atau undangan publik pelanggan.
 - Musik latar marketing adalah **satu audio player persisten** di root layout: track dan volume/mute tidak restart setiap navigasi antarhalaman marketing; autoplay hanya jika browser mengizinkan, user bisa mute/play dan atur volume secara manual. Kontrol berada di kiri bawah serta tautan Instagram resmi Undara di kanan bawah pada setiap halaman marketing. Untuk main frame, kedua kontrol tertanam pada bar footer; halaman marketing tanpa frame memakai floating control di tepi bawah. Jangan menduplikasi player, petals, atau tombol Instagram dalam satu halaman.
@@ -5759,3 +5760,21 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 - Layer canonical: atmosphere `z-[12]`, body scroll `relative z-20`, navbar/header tetap di atasnya. Footer Event Planner dibungkus `relative z-20`.
 - `FallingLeaves` mendukung mode `embedded` agar daun jatuh hidup di dalam frame dan tidak tersembunyi di belakang background marketing frame.
 - Jangan menurunkan foliage Event Planner ke z-index di bawah marketing frame; itu membuat asset tampak hilang walaupun sudah terpasang.
+
+### 29 September 2026 — Event Planner continuous canvas and varied foliage
+
+**Revisi owner (menggantikan ketentuan frame dan asset foliage Event Planner di atas):** header, isi, dan footer harus terlihat sebagai satu kanvas penuh, bukan kartu besar dengan tepi, radius, atau bayangan. Hanya isi yang dapat digulir; navbar dan footer tetap pada posisinya. Isi tidak boleh naik atau mengulang entrance motion saat pengguna scroll.
+
+- `.event-planner-frame` mengisi viewport tanpa margin, border, radius, shadow, atau backdrop blur. Header dan footer transparan di atas background yang sama; footer diberi divider halus.
+- Dekorasi foliage tetap ditambatkan ke frame viewport di belakang isi dan tampak di sisi kiri/kanan pada light dan dark mode. Tiga file foliage WebP sebelumnya dihapus karena data file terpotong dan tidak dapat didekode.
+- Foliage besar memakai SVG bronze/champagne ringan dengan cabang dan daun lebar; daun jatuh khusus Event Planner memadukan siluet maple, pelepah palem, dan daun lonjong. Halaman lain tetap memakai gaya daun yang sudah ada.
+- Event Planner tidak memakai animasi teks yang keluar-masuk viewport; section hanya memudar sekali tanpa translasi. Preferensi reduced motion tetap dihormati.
+- Area terdampak: `app/event-planner/page.tsx`, `app/globals.css`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `components/EventPlanner/ScrollReveal.tsx`, `components/Layout/FallingLeaves.tsx`. Verifikasi: regression Event Planner, ESLint, TypeScript, build.
+
+### 29 September 2026 — Kontinuitas atmosfer seluruh frame marketing
+
+**Alasan:** owner meminta agar mainframe hanya terasa sebagai susunan isi; background dan gerak dekorasi harus tampak berlanjut ke luar bingkai dan tidak patah pada header/footer atau saat perpindahan halaman. Ketentuan ini menggantikan instruksi historis yang menempatkan foliage Event Planner di dalam frame serta woodland landing hanya pada rentang body.
+
+**Implementasi:** `.undara-marketing-frame` transparan dan overflow visible tanpa shadow/blur; header transparan, sedangkan `.undara-marketing-scroll` tetap scrollport yang mengklip isi. Woodland landing dan foliage Event Planner dipasang sebagai sibling frame pada layer halaman, menjaga animasi di belakang konten. Halaman Undangan Fisik dan Katalog memakai atribut transisi `data-undara-marketing-frame` yang sama dengan route lainnya. Atmosfer layanan lain tetap shared dan tidak digandakan.
+
+**Area:** `app/globals.css`, `app/page.tsx`, `app/event-planner/page.tsx`, `app/undangan-fisik/page.tsx`, `app/template-design/page.tsx`, `components/Landing/LandingWoodlandAtmosphere.tsx`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, dan regression terkait. Commit dan hasil validasi dicatat pada PR perubahan ini.

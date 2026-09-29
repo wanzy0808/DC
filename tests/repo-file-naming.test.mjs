@@ -207,9 +207,9 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.equal(existsSync(path("public/assets/landing/ornaments/botanical/bgwood.png")), false);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/lightbg\.webp/);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/darkbg\.webp/);
-  assert.match(woodland, /BODY_MASK/);
-  assert.match(woodland, /#EDE3D8/);
-  assert.match(woodland, /#281414/);
+  assert.match(woodland, /VIEWPORT_MASK/);
+  assert.match(woodland, /absolute inset-0 z-0/);
+  assert.match(home, /dark:bg-\[#281414\]/);
   assert.match(canopy, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
   assert.match(story, /\/assets\/landing\/ornaments\/botanical\/branch-05\.webp/);
@@ -255,7 +255,7 @@ test("public marketing pages share one frame, footer control system and falling-
 
   for (const file of framedPages) {
     const source = read(file);
-    assert.match(source, /className="undara-marketing-frame"/, file);
+    assert.match(source, /className="undara-marketing-frame(?: event-planner-frame)?"/, file);
     assert.match(source, /className="undara-marketing-frame-header"/, file);
     assert.match(source, /undara-marketing-scroll/, file);
     assert.match(source, /<MarketingFrameFooter/, file);
