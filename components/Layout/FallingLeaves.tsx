@@ -24,7 +24,7 @@ const DARK_LEAVES = ["#D6B38C", "#BE936D", "#E1C39B", "#9E765B"];
  * Shared Undara ambient leaves.
  * Kept sparse and behind content so long-form pages stay readable.
  */
-export default function FallingLeaves({ className = "" }: { className?: string }) {
+export default function FallingLeaves({ className = "", embedded = false }: { className?: string; embedded?: boolean }) {
   const layer = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion();
   const { isDarkMode } = useTheme();
@@ -35,8 +35,8 @@ export default function FallingLeaves({ className = "" }: { className?: string }
     if (!root || reduced) return;
 
     const nodes = Array.from(root.children) as HTMLSpanElement[];
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let width = embedded ? root.clientWidth : window.innerWidth;
+    let height = embedded ? root.clientHeight : window.innerHeight;
     let frame = 0;
     let previous = performance.now();
     let pointerX = -1000;
@@ -58,8 +58,8 @@ export default function FallingLeaves({ className = "" }: { className?: string }
     }));
 
     const resize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
+      width = embedded ? root.clientWidth : window.innerWidth;
+      height = embedded ? root.clientHeight : window.innerHeight;
     };
 
     const move = (event: PointerEvent) => {
@@ -130,7 +130,7 @@ export default function FallingLeaves({ className = "" }: { className?: string }
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerleave", leave);
     };
-  }, [reduced]);
+  }, [embedded, reduced]);
 
   if (reduced) return null;
 
@@ -138,7 +138,7 @@ export default function FallingLeaves({ className = "" }: { className?: string }
     <div
       ref={layer}
       aria-hidden="true"
-      className={`pointer-events-none fixed inset-0 z-[4] overflow-hidden ${className}`}
+      className={`pointer-events-none ${embedded ? "absolute" : "fixed"} inset-0 z-[4] overflow-hidden ${className}`}
     >
       {Array.from({ length: COUNT }, (_, index) => {
         const size = 10 + (index % 5) * 2.5;
