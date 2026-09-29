@@ -332,6 +332,7 @@ export default function EventPlannerPage() {
                 }
                 items={faqItems}
                 wide
+                editorial
               />
             </ScrollReveal>
 
