@@ -5866,3 +5866,18 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 
 **Validasi final:** Build Validation commit `ad799cb` terobservasi **success**: dependency install, Prisma generate, seluruh source regression tests, dan `pnpm build` lulus. Regression awal sempat gagal karena test Event Planner mengunci literal `w-full max-w-none` dan `max-w-[1560px]`; kedua compatibility marker dipulihkan tanpa membatalkan shared editorial system. Orphan Audit pada commit intermediate juga terobservasi sukses. QA visual lintas browser/viewport belum dilakukan dan tidak boleh dianggap PASS hanya dari source/CI.
 
+### 30 September 2026 — Marketing responsive polish & bilingual catalog hardening
+
+**QA source follow-up:** setelah editorial overhaul, marketing chrome dan katalog diaudit ulang untuk risiko viewport kecil serta sisa copy yang belum mengikuti global ID/EN.
+
+- Shared `MarketingFrameFooter` memakai dua baris pada viewport < `sm`: audio/volume di kiri dan social controls di kanan pada baris pertama, copyright di tengah pada baris kedua. Pada `sm+` kembali menjadi tiga kolom satu baris. Ini mencegah sound + volume + copyright + tiga social icons saling mendorong pada layar sempit tanpa menyembunyikan kontrol.
+- Lebar slider volume diperkecil hanya pada viewport paling kecil; angka persentase tetap terlihat. Audio labels, social pending labels, dan burger-navbar accessibility labels mengikuti locale ID/EN.
+- Registry template tetap satu sumber. Built-in template mendapat field opsional `descriptionEn`; public `/template-design` dan featured collection `/d-invitation` memilih description sesuai locale dengan fallback ke `description`. Studio search mengindeks kedua bahasa tanpa membuat daftar template kedua.
+- Preview catalog menyesuaikan label section optional, preview aria labels, dan deskripsi modal terhadap locale. Designer-upload description tetap satu data owner/designer; bila tidak tersedia, fallback publik dibuat locale-neutral `Template Designer` alih-alih copy Indonesia.
+- Regression baru `tests/marketing-polish.test.mjs` menjaga footer responsive, bilingual controls/navbar, seluruh built-in `descriptionEn`, dan penggunaan localized description di public catalog/featured collection.
+- Regression lama mengunci literal `<UndaraSocialIcons />`; implementasi responsive mempertahankan kontrak tersebut tanpa memerlukan prop khusus.
+
+**Area:** `components/Layout/{MarketingFrameFooter,MarketingAudio,UndaraSocialIcons}.tsx`, `components/Layout/Navbar/Navbar.tsx`, `lib/templates/catalog.ts`, `app/template-design/page.tsx`, `components/DigitalInvitation/TemplateSection.tsx`, `components/InvitationStudio/TemplatePanel.tsx`, `app/api/templates/route.ts`, dan `tests/marketing-polish.test.mjs`.
+
+**Validasi:** Build Validation commit `ec664df` terobservasi **success**: Prisma generate, seluruh source regression tests, dan production `pnpm build` lulus. Build commit `e7146ff` sebelumnya juga lulus sebelum patch navbar terakhir. Intermediate failure berasal dari regression lama yang mengharuskan pemanggilan literal `<UndaraSocialIcons />`; kontrak dipulihkan lalu test final lulus. QA browser visual nyata lintas device masih terpisah dari source/CI dan tidak diklaim sebagai PASS.
+
