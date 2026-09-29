@@ -48,16 +48,24 @@ export default async function PersonalInvitationPage({
     data: { personalViewCount: { increment: 1 } },
   });
 
-  const content = <PublicInvitationRenderer invitation={invitation} personalGuest={{ id: guest.id, name: guest.name, token, invitedPax: guest.invitedPax }} />;
+  const content = <PublicInvitationRenderer invitation={invitation} personalGuest={{
+    id: guest.id,
+    name: guest.name,
+    token,
+    invitedPax: guest.invitedPax,
+    personalAddressee: guest.personalAddressee,
+    recipientType: guest.recipientType as "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP",
+    personalEnvelopeEnabled: guest.personalEnvelopeEnabled,
+    personalLanguage: guest.personalLanguage === "EN" ? "EN" : "ID",
+  }} />;
 
   return (
     <>
-      <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-sans text-sm text-foreground">
-        Undangan khusus untuk <strong>{guest.personalAddressee || guest.name}</strong>
-        {guest.personalGreeting && (
-          <p className="mx-auto mt-2 max-w-xl whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{guest.personalGreeting}</p>
-        )}
-      </div>
+      {guest.personalGreeting && (
+        <div className="border-b border-primary/15 bg-primary/[0.045] px-4 py-3 text-center font-sans text-sm text-foreground">
+          <p className="mx-auto max-w-xl whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground">{guest.personalGreeting}</p>
+        </div>
+      )}
       {content}
     </>
   );
