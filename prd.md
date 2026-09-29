@@ -5934,3 +5934,13 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Commits implementasi:** `c93ff90`, `5a036ee`, `61e9f5f`, `c37047c`, `058baad`, `2460591`, `45bde8a`, `e74dc71`.
 
 **Validasi:** source inspection selesai. Build/CI dan Orphan Audit untuk commit terbaru harus diamati sebelum diklaim PASS; QA browser visual nyata lintas viewport tetap belum diklaim PASS.
+
+### 29 September 2026 — Katalog marketing: kontrol tema dan akses pratinjau
+
+**Alasan:** audit lanjutan terhadap katalog marketing menemukan warna lama yang masih mengunci latar pratinjau dan checkbox, fokus keyboard yang dapat keluar dari dialog pratinjau, serta garis editorial yang menjorok pada viewport sempit. Aset layanan dan desain masing-masing template tetap mengikuti kepemilikannya di repo; tidak ada penggantian aset dari Library.
+
+**Implementasi:** latar preview dan aksen checkbox katalog memakai token Undara Light/Dark. Dialog pratinjau menjaga fokus Tab di dalamnya, Escape menutupnya, dan fokus kembali ke pemicu setelah ditutup. Garis rail editorial ditampilkan mulai desktop agar ruang baca mobile bersih. Registry, filter, sort, tautan Studio, renderer undangan, landing dan Pintu tidak berubah.
+
+**Area/commit:** `app/template-design/page.tsx`, `app/globals.css` — commit perubahan ini.
+
+**Validasi lokal:** ESLint terarah, TypeScript, 223 tes regresi, `git diff --check`, Prisma generate, dan production `pnpm build` lulus. Build mencatat peringatan tracing path upload asset yang sudah ada di luar area ini. QA visual browser lintas viewport belum dilakukan; tidak ada migrasi database.

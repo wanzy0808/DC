@@ -450,7 +450,7 @@ aside nav > p { font-family: var(--font-undara-heading); }
   position: relative;
 }
 .undara-editorial-rail::before {
-  content: "";
+  content: none;
   position: absolute;
   top: 0.25rem;
   bottom: 0.25rem;
@@ -507,6 +507,7 @@ aside nav > p { font-family: var(--font-undara-heading); }
 }
 @media (min-width: 1024px) {
   .undara-marketing-content { padding-inline: 3rem; }
+  .undara-editorial-rail::before { content: ""; }
   .undara-editorial-offset-left {
     width: 94%;
     margin-right: auto;

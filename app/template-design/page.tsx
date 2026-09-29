@@ -24,6 +24,8 @@ export default function TemplateDesignPage() {
   const { locale } = useLanguage();
   const catalog = useTemplateCatalog();
   const deepLinkHandled = useRef(false);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
   const sortMenuRef = useRef<HTMLDivElement>(null);
   const sortTriggerRef = useRef<HTMLButtonElement>(null);
   const copy = locale === "en"
@@ -125,15 +127,34 @@ export default function TemplateDesignPage() {
 
   useEffect(() => {
     if (!selectedKey) return;
+    previousFocusRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedKey(null);
+      if (event.key === "Escape") {
+        setSelectedKey(null);
+        return;
+      }
+      if (event.key !== "Tab") return;
+      const focusable = Array.from(dialogRef.current?.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) ?? []).filter((item) => item.getClientRects().length > 0);
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !dialogRef.current?.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKeyDown);
     return () => {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", onKeyDown);
+      previousFocusRef.current?.focus();
     };
   }, [selectedKey]);
 
@@ -258,7 +279,7 @@ export default function TemplateDesignPage() {
             <article key={template.key} className="group min-w-0 overflow-hidden rounded-[32px_8px_32px_8px] border border-primary/25 bg-background/45 shadow-[0_14px_42px_rgba(80,45,58,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_22px_55px_rgba(80,45,58,0.14)]">
               <div className="relative w-full overflow-hidden text-left">
                 {template.ready ? <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} /> : (
-                  <div className="relative h-[340px] overflow-hidden bg-[#fcf7f6]"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
+                  <div className="relative h-[340px] overflow-hidden bg-card"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
                 )}
                 {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
                 <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-5">
@@ -295,6 +316,7 @@ export default function TemplateDesignPage() {
           onMouseDown={(event) => { if (event.target === event.currentTarget) setSelectedKey(null); }}
         >
           <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="template-preview-title"
@@ -317,7 +339,7 @@ export default function TemplateDesignPage() {
                       type="checkbox"
                       checked={sections[key]}
                       onChange={(event) => setSections((current) => ({ ...current, [key]: event.target.checked }))}
-                      className="accent-[#a65e69]"
+                      className="accent-primary"
                     />
                     {copy.optionalLabels[key as keyof typeof copy.optionalLabels]}
                   </label>
@@ -330,7 +352,7 @@ export default function TemplateDesignPage() {
                 </Button>
               </div>}
             </aside>
-            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-[#f4eeee] px-2 py-5 dark:bg-[#201a1d] sm:px-5" aria-label={`${copy.previewCanvasLabel} ${selected.name}`}>
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-primary/10 px-2 py-5 sm:px-5" aria-label={`${copy.previewCanvasLabel} ${selected.name}`}>
               <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
                 {selected.ready ? (
                   <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...sections, envelope: false }} />
