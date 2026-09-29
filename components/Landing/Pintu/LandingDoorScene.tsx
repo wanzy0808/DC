@@ -111,7 +111,7 @@ function PortalWorld({ image, entering }: { image: string; entering: boolean }) 
   return <group position={[0, 0, -0.19]}>
     {/* The service image is visible while choosing a door, then fades into a warm woodland passage as the camera enters. */}
     <mesh geometry={geometry} position={[0, 0, -0.008]}>
-      <meshBasicMaterial color="#6D5848" toneMapped={false} side={THREE.DoubleSide} />
+      <meshBasicMaterial color="#4F463A" toneMapped={false} side={THREE.DoubleSide} />
     </mesh>
     {texture && <mesh geometry={geometry}>
       <meshBasicMaterial ref={imageMaterial} map={texture} transparent depthWrite={false} side={THREE.DoubleSide} toneMapped={false} />
@@ -238,7 +238,7 @@ function ForestShadowFloor({ isDarkMode }: { isDarkMode: boolean }) {
       <shadowMaterial
         transparent
         opacity={isDarkMode ? 0.30 : 0.18}
-        color={isDarkMode ? "#130d0f" : "#4A2C31"}
+        color={isDarkMode ? "#130d0f" : "#4B3A2E"}
         depthWrite={false}
       />
     </mesh>
@@ -330,7 +330,7 @@ function Fireflies({ reducedMotion, isDarkMode }: { reducedMotion: boolean; isDa
   });
   return <points ref={points}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial map={glowMap} color={isDarkMode ? "#D6B38C" : "#703B3B"} size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={isDarkMode ? THREE.AdditiveBlending : THREE.NormalBlending} />
+    <pointsMaterial map={glowMap} color={isDarkMode ? "#D6B38C" : "#B28B5E"} size={0.19} transparent opacity={0.42} alphaTest={0.005} depthWrite={false} sizeAttenuation blending={isDarkMode ? THREE.AdditiveBlending : THREE.NormalBlending} />
   </points>;
 }
 
@@ -501,7 +501,7 @@ function Door({ opening, image, title, crest, entering, isDarkMode }: { opening:
     panel: "#703B3B",
     panelBottom: "#5E3030",
     trim: isDarkMode ? "#D6B38C" : "#EDE3D8",
-    metal: "#d1a9a0",
+    metal: "#B89168",
   };
   return <group position={[0, -2.12, 0]}>
     <DoorBacklight opening={opening} entering={entering} isDarkMode={isDarkMode} />
