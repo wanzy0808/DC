@@ -469,10 +469,10 @@ test("Studio layers can be locked and hidden without removing them from the desi
   assert.match(assetLayers, /entry\.hidden === true/);
   assert.match(assetRenderer, /layer\.hidden\) return false/);
   assert.match(assetRenderer, /layer\.locked/);
-  assert.match(assetInspector, /Buka kunci layer|Unlock layer/);
-  assert.match(assetInspector, /Sembunyikan layer|Hide layer/);
-  assert.match(textInspector, /Terkunci/);
-  assert.match(textInspector, /Tersembunyi/);
+  assert.doesNotMatch(assetInspector, /Buka kunci layer|Unlock layer|Sembunyikan layer|Hide layer/);
+  assert.doesNotMatch(textInspector, /EyeOff|Unlock/);
+  assert.match(layerList, /Buka kunci layer|Unlock layer/);
+  assert.match(layerList, /Sembunyikan layer|Hide layer/);
   assert.match(layerList, /undara-studio-layer-quick/);
   assert.match(layerList, /layerName/);
 });
