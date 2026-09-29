@@ -5862,7 +5862,7 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 
 **Area utama:** `app/{d-invitation,guestbook,undangan-fisik,event-planner,template-design,help}/page.tsx`, `components/DigitalInvitation/{HeroSection,FeatureSection,TemplateSection,StudioSection,ReviewsSection}.tsx`, `components/Guestbook/{HeroSection,FeatureSection,ProcessSection}.tsx`, `components/Marketing/PackageShowcase.tsx`, `data/services/guestbook.ts`, dan `app/globals.css`.
 
-**Commits implementasi:** `820eb89`, `d85680d`, `a41a62e`, `6c2c446`, `4d1a53e`, `102f901`, `b9772bb`, `0406a9f`, `9422f75`, `907f62d`, `735c4b0`, `a360b52`, `1df8fee`, `cd6ae7a`, `e52621f`, `70f51c7`, `433d2ae`, `1a4b2d5`.
+**Commits implementasi:** `820eb89`, `d85680d`, `a41a62e`, `6c2c446`, `4d1a53e`, `102f901`, `b9772bb`, `0406a9f`, `9422f75`, `907f62d`, `735c4b0`, `a360b52`, `1df8fee`, `cd6ae7a`, `e52621f`, `70f51c7`, `433d2ae`, `1a4b2d5`, `af02366`, `ad799cb`.
 
-**Validasi saat catatan dibuat:** source inspection dan Orphan Audit pada beberapa commit intermediate lulus; Build Validation commit `e52621f` dan `cd6ae7a` terobservasi sukses. Build Validation untuk commit final katalog `1a4b2d5` masih berjalan saat entry ini ditulis. QA visual lintas browser/viewport belum dilakukan dan tidak boleh dianggap PASS hanya dari source/CI.
+**Validasi final:** Build Validation commit `ad799cb` terobservasi **success**: dependency install, Prisma generate, seluruh source regression tests, dan `pnpm build` lulus. Regression awal sempat gagal karena test Event Planner mengunci literal `w-full max-w-none` dan `max-w-[1560px]`; kedua compatibility marker dipulihkan tanpa membatalkan shared editorial system. Orphan Audit pada commit intermediate juga terobservasi sukses. QA visual lintas browser/viewport belum dilakukan dan tidak boleh dianggap PASS hanya dari source/CI.
 
