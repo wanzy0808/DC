@@ -5789,3 +5789,13 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Area:** `app/globals.css`, `app/page.tsx`, `components/Landing/LandingWoodlandAtmosphere.tsx`, `components/Landing/LandingFloralGlow.tsx`, `components/Layout/PublicMarketingAtmosphere.tsx`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, dan tes regresi. Validasi serta commit tercatat bersama perubahan ini.
 
 **Tambahan referensi owner:** screenshot layout memperlihatkan panel isi bergantian pada dua sisi poros, dengan background tetap di belakang mainframe. `components/EventPlanner/ServicesSection.tsx` memakai alur berselang kiri/kanan, sedangkan kategori layanan di `app/event-planner/page.tsx` membalik kolom tiap baris. Pada mobile urutannya tetap linear; dekorasi tidak mengambil alih keterbacaan.
+
+### 29 September 2026 — Penyelarasan halaman layanan dengan Event Planner
+
+**Alasan:** owner meminta halaman marketing lain mengikuti komposisi Event Planner secara bertahap. Mainframe, latar yang tembus, navbar dan footer bersama tetap menjadi kontrak semua halaman.
+
+**Implementasi tahap ini:** Guestbook memakai hero foto editorial, fitur interaktif sebagai daftar dengan panel detail, dan alur kerja berupa baris berselang kiri/kanan. Blok testimoni tanpa sumber pada halaman itu diganti penjelasan operasional. Undangan Fisik memakai foto produk yang sudah ada, warna dan tipografi Undara, serta proses cetak berselang kiri/kanan; CTA konsultasi menuju WhatsApp admin Undara. Undangan Digital memperluas ruang section di dalam frame, sementara koleksi template tetap dibatasi 1100px sesuai aturan khususnya. Paket tunggal di halaman layanan mendapat komposisi judul dan isi dua kolom. Perubahan hanya menyentuh isi; atmosfer tidak diduplikasi dan panel scroll tetap satu.
+
+**Area dan commit:** `app/d-invitation/page.tsx`, `app/guestbook/page.tsx`, `app/undangan-fisik/page.tsx`, `components/Guestbook/{HeroSection,FeatureSection,ProcessSection}.tsx`, dan `components/Marketing/PackageShowcase.tsx` — `1526d97`.
+
+**Validasi:** ESLint pada berkas berubah dan TypeScript lulus; 24 tes regresi marketing lulus; `next build` lulus dengan satu peringatan Turbopack lama pada tracing upload asset. QA visual lintas ukuran layar masih perlu dilakukan di browser.
