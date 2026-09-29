@@ -73,7 +73,7 @@ export default function UndanganFisikPage() {
         >
           <div className="undara-marketing-content flex flex-col gap-24 py-8 md:gap-28 md:py-12">
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section grid min-h-[calc(100dvh-170px)] items-center gap-12 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pb-16">
+              <section className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[calc(100dvh-170px)] items-center gap-12 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pb-16">
                 <div className="relative z-10 max-w-3xl py-8 lg:py-12">
                   <p className="undara-marketing-kicker">
                     {en ? "Printed Invitations / Undara" : "Undangan Fisik / Undara"}
@@ -148,7 +148,7 @@ export default function UndanganFisikPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section border-y border-primary/25 py-14 md:py-20">
+              <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail border-y border-primary/25 py-14 md:py-20">
                 <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-16">
                   <div>
                     <p className="undara-marketing-kicker">{en ? "Tactile direction" : "Arah Tactile"}</p>
@@ -186,7 +186,7 @@ export default function UndanganFisikPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section id="proses" className="undara-marketing-section scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
+              <section id="proses" className="undara-marketing-section undara-editorial-offset-left scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
                 <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                   <div>
                     <p className="undara-marketing-kicker">{en ? "From idea to delivery" : "Dari Ide hingga Diterima"}</p>
@@ -222,7 +222,7 @@ export default function UndanganFisikPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section grid gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
+              <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail grid gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{en ? "Digital companion" : "Pasangan Digital"}</p>
                   <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
@@ -246,7 +246,7 @@ export default function UndanganFisikPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section relative mb-4 overflow-hidden border-y border-primary/30 py-14 md:py-20">
+              <section className="undara-marketing-section undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-right relative mb-4 overflow-hidden border-y border-primary/30 py-14 md:py-20">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-[8%] top-1/2 h-[30rem] w-[30rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.11),transparent_68%)] blur-2xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.08),transparent_68%)]"
