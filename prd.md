@@ -5704,3 +5704,16 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Revisi owner (supersedes branch gate campuran sebelumnya):** transisi tidak memakai banyak tipe branch/canopy dari berbagai arah. Gunakan satu jenis branch yang sama: 10 layer dari kiri dan 10 layer mirrored dari kanan. Semua layer bergerak menuju pusat viewport sampai layar tertutup rapat, route commit saat tertutup, lalu seluruh branch mundur kembali ke sisi asal untuk membuka halaman tujuan.
 
 **Implementasi:** `PortalTransition` sekarang merender 10 konfigurasi `BRANCH_SWARM` dua kali (kiri/kanan) sehingga total 20 visual branch. Semua memakai `branch-03.webp`; sisi kanan hanya mirror. Variasi hanya pada top, ukuran, rotasi, scale, z-depth, dan delay untuk menjaga gerak natural tanpa mencampur siluet. Posisi closed kiri/kanan masuk sekitar ±43% relatif ke layer sehingga pasangan branch overlap kuat di tengah. Mobile memakai overlap lebih dalam (±48%). Durasi tiap layer dikurangi sebesar delay masing-masing agar seluruh swarm selesai tepat pada akhir fase cover/reveal dan tidak snap ketika route commit.
+
+
+### 29 September 2026 — Event Planner editorial redesign
+
+- Event Planner tetap memakai shared marketing main frame, internal scroll, navbar/footer, botanical glow samar, dan falling leaves; tidak memakai jungle silhouette penuh.
+- Visual Event Planner harus berbeda dari Digital Invitation dan lebih terasa sebagai layanan planning, staffing, coordination, dan event execution.
+- Hero memakai asset lokal `/assets/marketing/event-planner/hero.webp` sebagai visual utama dalam komposisi editorial asimetris. Headline utama: **“Kamu hadir di momenmu. Kami jaga alurnya.”**
+- Hindari halaman yang seluruh section-nya berupa card grid seragam. Services memakai vertical planning flow; packages memakai bordered service rows; testimonials memakai editorial quote columns; portfolio memakai asymmetric cinematic image grid.
+- Founder Christine tetap dipertahankan sebagai Founder & Lead Event Planner dan kontak konsultasi layanan.
+- Package/service cards tidak memakai nomor dekoratif. Harga tidak dibuat generik/fixed; scope dibahas melalui konsultasi.
+- Digital workflow tetap boleh menghubungkan Event Planner dengan Undangan Digital Undara untuk RSVP dan manajemen tamu.
+- Typography Event Planner wajib memakai token `font-undara-heading`, `font-undara-body`, dan `font-undara-mono`; legacy `font-dc-*` tidak dipakai pada surface ini.
+- Source regression: `tests/event-planner-redesign.test.mjs`.
