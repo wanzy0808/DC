@@ -39,7 +39,7 @@ export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
           <img src={ticketUrl} alt="QR check-in tamu" width={280} height={280} className="h-auto max-w-full" />
         </div>
         <Button asChild className="mt-5">
-          <a href={`${ticketUrl}&download=1`} download="dc-organizer-qr.png">
+          <a href={`${ticketUrl}&download=1`} download="undara-qr.png">
             <Download aria-hidden="true" className="h-4 w-4" /> Unduh QR Code
           </a>
         </Button>
