@@ -43,9 +43,9 @@ export default function SectionInspector({
     suffix: string,
     key: "paddingY",
   ) => (
-    <label className="dc-studio-section-field">
+    <label className="undara-studio-section-field">
       <span>{label}</span>
-      <span className="dc-studio-section-number">
+      <span className="undara-studio-section-number">
         <input
           type="number"
           min={min}
@@ -72,8 +72,8 @@ export default function SectionInspector({
   ];
 
   return (
-    <aside className="dc-studio-section-side" aria-label={en ? "Section properties" : "Properti section"}>
-      <div className="dc-studio-section-side-head">
+    <aside className="undara-studio-section-side" aria-label={en ? "Section properties" : "Properti section"}>
+      <div className="undara-studio-section-side-head">
         <div className="min-w-0">
           <span>Section</span>
           <strong title={title}>{title}</strong>
@@ -81,9 +81,9 @@ export default function SectionInspector({
         <button type="button" onClick={onClose} aria-label={en ? "Close section properties" : "Tutup properti section"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <div className="dc-studio-section-field">
+      <div className="undara-studio-section-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
-        <div className="dc-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
+        <div className="undara-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
           {alignments.map(({ value, label, Icon }) => (
             <button
               key={value}
@@ -101,7 +101,7 @@ export default function SectionInspector({
 
       {optionalNumber(en ? "Vertical space" : "Ruang vertikal", style?.paddingY, en ? "Template" : "Template", 0, 160, "px", "paddingY")}
 
-      <label className="dc-studio-section-field">
+      <label className="undara-studio-section-field">
         <span className="flex items-center justify-between gap-2">
           <span>{en ? "Opacity" : "Opasitas"}</span>
           <output>{Math.round((style?.opacity ?? 1) * 100)}%</output>
@@ -117,7 +117,7 @@ export default function SectionInspector({
       </label>
 
       {supportsPremiumTimeline ? (
-        <div className="dc-studio-section-field">
+        <div className="undara-studio-section-field">
           <span>{en ? "Premium timeline" : "Timeline premium"}</span>
           <select
             value={style?.timeline ?? ""}
@@ -148,7 +148,7 @@ export default function SectionInspector({
 
       {!style?.timeline ? (
         <>
-      <div className="dc-studio-section-field">
+      <div className="undara-studio-section-field">
         <span>{en ? "Animation" : "Animasi"}</span>
         <select
           value={style?.animation ?? ""}
@@ -174,10 +174,10 @@ export default function SectionInspector({
       </div>
 
       {style?.animation && style.animation !== "none" ? (
-        <div className="dc-studio-layer-grid">
-          <label className="dc-studio-section-field">
+        <div className="undara-studio-layer-grid">
+          <label className="undara-studio-section-field">
             <span>{en ? "Duration" : "Durasi"}</span>
-            <span className="dc-studio-section-number">
+            <span className="undara-studio-section-number">
               <input
                 type="number"
                 min="0.2"
@@ -192,9 +192,9 @@ export default function SectionInspector({
               <small>s</small>
             </span>
           </label>
-          <label className="dc-studio-section-field">
+          <label className="undara-studio-section-field">
             <span>{en ? "Delay" : "Jeda"}</span>
-            <span className="dc-studio-section-number">
+            <span className="undara-studio-section-number">
               <input
                 type="number"
                 min="0"
@@ -214,9 +214,9 @@ export default function SectionInspector({
         </>
       ) : null}
 
-      <div className="dc-studio-section-field">
+      <div className="undara-studio-section-field">
         <span>{en ? "Background" : "Latar"}</span>
-        <div className="dc-studio-section-color">
+        <div className="undara-studio-section-color">
           <input
             type="color"
             value={style?.background ?? "#ffffff"}
@@ -228,7 +228,7 @@ export default function SectionInspector({
         </div>
       </div>
 
-      <button type="button" className="dc-studio-section-reset" onClick={onReset}>
+      <button type="button" className="undara-studio-section-reset" onClick={onReset}>
         <RotateCcw size={14} />
         Reset
       </button>
