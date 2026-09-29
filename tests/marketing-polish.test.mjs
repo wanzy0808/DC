@@ -44,3 +44,14 @@ test("marketing navbar menu labels follow ID EN", () => {
   assert.match(navbar, /Close navigation menu/);
   assert.match(navbar, /Close menu/);
 });
+
+
+test("public legal pages use the shared marketing frame", () => {
+  for (const file of ["app/privacy-policy/page.tsx", "app/terms-and-conditions/page.tsx"]) {
+    const source = read(file);
+    assert.match(source, /data-undara-marketing-frame/);
+    assert.match(source, /<Navbar embedded \/>/);
+    assert.match(source, /<MarketingFrameFooter \/>/);
+    assert.match(source, /undara-marketing-content/);
+  }
+});
