@@ -80,7 +80,7 @@ export default function HelpPage() {
 
         <main className="undara-marketing-scroll relative z-20">
           <div className="undara-marketing-content flex flex-col gap-24 py-8 md:gap-28 md:py-12">
-            <section className="undara-marketing-section grid min-h-[min(68dvh,690px)] items-center gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
+            <section className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(68dvh,690px)] items-center gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
               <div>
                 <div className="flex items-center gap-3">
                   <CircleHelp className="h-4 w-4 text-primary" aria-hidden="true" />
@@ -127,7 +127,7 @@ export default function HelpPage() {
               </div>
             </section>
 
-            <section className="undara-marketing-section border-b border-primary/25 pb-16">
+            <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail border-b border-primary/25 pb-16">
               <FaqSection
                 eyebrow={en ? "Common questions" : "Pertanyaan Umum"}
                 title={en ? "Clear answers before you continue." : "Jawaban yang jelas sebelum kamu lanjut."}
@@ -142,7 +142,7 @@ export default function HelpPage() {
               />
             </section>
 
-            <section className="undara-marketing-section relative mb-4 overflow-hidden border-y border-primary/30 py-14 md:py-20">
+            <section className="undara-marketing-section undara-editorial-offset-left relative mb-4 overflow-hidden border-y border-primary/30 py-14 md:py-20">
               <div
                 aria-hidden="true"
                 className="pointer-events-none absolute -right-[8%] top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.10),transparent_68%)] blur-2xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.08),transparent_68%)]"
