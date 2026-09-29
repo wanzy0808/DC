@@ -45,45 +45,56 @@ export default function HelpPage() {
           <Navbar embedded />
         </div>
 
-        <main className="undara-marketing-scroll">
-          <div className="mx-auto w-[88%] max-w-[1100px] space-y-20 py-12 sm:w-[80vw] md:space-y-24 md:py-16">
-            <section className="space-y-5">
-              <div className="flex items-center gap-3 text-sm uppercase tracking-[0.24em] text-primary">
+        <main className="undara-marketing-scroll relative z-20">
+          <div className="mx-auto w-full max-w-none space-y-24 px-5 py-8 sm:px-8 md:space-y-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20">
+            <section className="grid min-h-[min(68dvh,690px)] items-center gap-10 border-b border-primary/25 pb-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+              <div>
+              <div className="flex items-center gap-3 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary">
                 <CircleHelp className="h-4 w-4" />
                 Bantuan Undara
               </div>
-              <h1 className="max-w-3xl text-4xl leading-tight md:text-6xl">
+              <h1 className="mt-5 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,6vw,6.6rem)] leading-[0.97] tracking-[-0.035em] text-primary">
                 Jawaban untuk pertanyaan yang paling sering muncul.
               </h1>
-              <p className="max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+              </div>
+              <div className="max-w-xl border-l border-primary/30 py-5 pl-7 md:pl-12">
+              <p className="text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                 Panduan singkat mengenai produk, paket, template, publikasi, RSVP,
                 Guestbook, dan alur penggunaan Undara.
               </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/d-invitation" className="inline-flex items-center gap-2 border-b border-primary/50 pb-2 text-sm text-primary hover:border-primary">Undangan Digital <ArrowRight className="h-4 w-4" /></Link>
+                <Link href="/guestbook" className="inline-flex items-center gap-2 border-b border-primary/50 pb-2 text-sm text-primary hover:border-primary">Buku Tamu Digital <ArrowRight className="h-4 w-4" /></Link>
+              </div>
+              </div>
             </section>
 
-            <FaqSection
+            <div className="border-b border-primary/25 pb-16"><FaqSection
               title="Pertanyaan umum"
               description="Kalau masih bingung, mulai dari sini."
               items={helpFaq}
-            />
+              wide
+              editorial
+            /></div>
 
-            <section className="flex flex-col gap-4 rounded-[24px] border border-primary/25 bg-card/65 p-7 md:flex-row md:items-center md:justify-between md:p-9">
+            <section className="mb-4 grid gap-8 border-y border-primary/30 py-14 md:py-20 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
               <div>
-                <p className="font-heading text-xl text-primary">Siap mulai?</p>
-                <p className="mt-2 text-sm text-muted-foreground">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">Langkah Berikutnya</p>
+                <h2 className="mt-4 font-[family-name:var(--font-undara-heading)] text-4xl text-primary md:text-6xl">Siap mulai?</h2>
+                <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                   Lihat paket atau masuk ke dashboard untuk melanjutkan persiapan.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
                 <Link
                   href="/packages"
-                  className="inline-flex min-h-10 items-center justify-center rounded-[16px] border border-primary bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-primary bg-primary px-6 py-3 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90"
                 >
                   Lihat Paket <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex min-h-10 items-center justify-center rounded-[16px] border border-primary/55 bg-background/70 px-4 py-2 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full border border-primary/55 px-6 py-3 text-sm font-medium text-primary transition-colors hover:bg-primary/10"
                 >
                   Masuk
                 </Link>
