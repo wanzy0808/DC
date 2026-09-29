@@ -253,7 +253,7 @@ export default function TemplateDesignPage() {
         </div>
 
         <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
-        <div className="undara-editorial-offset-right undara-editorial-rail grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="undara-template-catalog-grid undara-editorial-offset-right undara-editorial-rail grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:pb-10">
           {filteredTemplates.map((template) => (
             <article key={template.key} className="group min-w-0 overflow-hidden rounded-[32px_8px_32px_8px] border border-primary/25 bg-background/45 shadow-[0_14px_42px_rgba(80,45,58,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_22px_55px_rgba(80,45,58,0.14)]">
               <div className="relative w-full overflow-hidden text-left">
