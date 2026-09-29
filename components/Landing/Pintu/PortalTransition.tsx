@@ -6,9 +6,9 @@ import { useReducedMotion } from "motion/react";
 import { isMarketingPath } from "@/lib/marketing-paths";
 import { useMarketingTransitionAudio } from "@/components/Layout/MarketingAudio";
 
-const COVER_MS = 780;
-const DOOR_COVER_MS = 950;
-const REVEAL_MS = 900;
+const COVER_MS = 980;
+const DOOR_COVER_MS = 1180;
+const REVEAL_MS = 1080;
 const STALLED_ROUTE_MS = 8000;
 type Phase = "idle" | "cover" | "hold" | "reveal";
 type PendingRoute = { path: string; href: string };
@@ -131,14 +131,20 @@ export default function PortalTransition() {
       <div className="undara-portal-transition__landscape" />
       <div className="undara-portal-transition__mist undara-portal-transition__mist--back" />
 
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--left-back" />
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--right-back" />
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--top" />
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--bottom" />
+      <div className="undara-branch-gate undara-branch-gate--left-1" />
+      <div className="undara-branch-gate undara-branch-gate--right-1" />
+      <div className="undara-branch-gate undara-branch-gate--left-2" />
+      <div className="undara-branch-gate undara-branch-gate--right-2" />
+      <div className="undara-branch-gate undara-branch-gate--left-3" />
+      <div className="undara-branch-gate undara-branch-gate--right-3" />
+
+      <div className="undara-branch-gate undara-branch-gate--top-left" />
+      <div className="undara-branch-gate undara-branch-gate--top-right" />
+      <div className="undara-branch-gate undara-branch-gate--brush" />
 
       <div className="undara-portal-transition__mist undara-portal-transition__mist--front" />
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--left-front" />
-      <div className="undara-portal-transition__foliage undara-portal-transition__foliage--right-front" />
+      <div className="undara-branch-gate undara-branch-gate--near-left" />
+      <div className="undara-branch-gate undara-branch-gate--near-right" />
       <div className="undara-portal-transition__vignette" />
     </div>
   );
