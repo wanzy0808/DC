@@ -815,11 +815,11 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
    but retains a short natural overlap before the whole view clears. */
 .undara-portal-transition[data-phase="reveal"] .undara-branch-swarm--left {
   animation: undara-branch-swarm-open-left var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
-  animation-delay: calc(var(--branch-delay) * .28);
+  animation-delay: var(--branch-reveal-delay);
 }
 .undara-portal-transition[data-phase="reveal"] .undara-branch-swarm--right {
   animation: undara-branch-swarm-open-right var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
-  animation-delay: calc(var(--branch-delay) * .28);
+  animation-delay: var(--branch-reveal-delay);
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__landscape {
   animation: undara-branch-swarm-landscape-reveal var(--undara-portal-reveal-ms) ease-out both;
