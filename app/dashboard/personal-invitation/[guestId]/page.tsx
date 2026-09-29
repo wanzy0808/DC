@@ -3,8 +3,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import PublicInvitation from "@/components/PublicInvitation/PublicInvitation";
-import ClassicInvitationTemplate from "@/components/PublicInvitation/ClassicInvitationTemplate";
+import PublicInvitationRenderer from "@/components/PublicInvitation/PublicInvitationRenderer";
 import { Button } from "@/components/ui/button";
 
 export default async function PersonalInvitationPreviewPage({
@@ -29,13 +28,21 @@ export default async function PersonalInvitationPreviewPage({
   if (!guest) notFound();
 
   const invitation = guest.invitation;
-  const templateKey = invitation.templateKey.split("::")[0];
-  const content =
-    templateKey === "eternal-blossom" ? (
-      <ClassicInvitationTemplate invitation={invitation} />
-    ) : (
-      <PublicInvitation invitation={invitation} />
-    );
+  const content = (
+    <PublicInvitationRenderer
+      invitation={invitation}
+      personalGuest={{
+        id: guest.id,
+        name: guest.name,
+        token: guest.personalToken!,
+        invitedPax: guest.invitedPax,
+        personalAddressee: guest.personalAddressee,
+        recipientType: guest.recipientType as "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP",
+        personalEnvelopeEnabled: guest.personalEnvelopeEnabled,
+        personalLanguage: guest.personalLanguage === "EN" ? "EN" : "ID",
+      }}
+    />
+  );
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -55,12 +62,11 @@ export default async function PersonalInvitationPreviewPage({
           </p>
         </div>
       </div>
-      <div className="border-b border-border bg-background px-4 py-3 text-center font-[family-name:var(--font-undara-sans)] text-sm">
-        Undangan khusus untuk <strong>{guest.personalAddressee || guest.name}</strong>
-        {guest.personalGreeting && (
-          <p className="mx-auto mt-2 max-w-xl whitespace-pre-wrap text-sm text-muted-foreground">{guest.personalGreeting}</p>
-        )}
-      </div>
+      {guest.personalGreeting && (
+        <div className="border-b border-border bg-background px-4 py-3 text-center font-[family-name:var(--font-undara-sans)] text-sm">
+          <p className="mx-auto max-w-xl whitespace-pre-wrap text-sm text-muted-foreground">{guest.personalGreeting}</p>
+        </div>
+      )}
       {content}
     </main>
   );
