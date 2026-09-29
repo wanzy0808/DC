@@ -98,7 +98,7 @@ export default function StudioLayerList({
               draggable={!layer.locked}
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("application/x-dc-layer", layer.id);
+                event.dataTransfer.setData("application/x-undara-layer", layer.id);
               }}
               onDragEnter={() => onDragOverId(layer.id)}
               onDragOver={(event) => {
@@ -108,7 +108,7 @@ export default function StudioLayerList({
               onDrop={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                const sourceId = event.dataTransfer.getData("application/x-dc-layer");
+                const sourceId = event.dataTransfer.getData("application/x-undara-layer");
                 if (sourceId) onReorder(sourceId, layer.id);
                 onDragOverId(null);
               }}
