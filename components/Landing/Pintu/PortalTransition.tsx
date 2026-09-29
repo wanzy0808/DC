@@ -6,9 +6,9 @@ import { useReducedMotion } from "motion/react";
 import { isMarketingPath } from "@/lib/marketing-paths";
 import { useMarketingTransitionAudio } from "@/components/Layout/MarketingAudio";
 
-const COVER_MS = 980;
-const DOOR_COVER_MS = 1180;
-const REVEAL_MS = 1080;
+const COVER_MS = 1120;
+const DOOR_COVER_MS = 1360;
+const REVEAL_MS = 1180;
 const STALLED_ROUTE_MS = 8000;
 type Phase = "idle" | "cover" | "hold" | "reveal";
 type PendingRoute = { path: string; href: string };
@@ -137,14 +137,24 @@ export default function PortalTransition() {
       <div className="undara-branch-gate undara-branch-gate--right-2" />
       <div className="undara-branch-gate undara-branch-gate--left-3" />
       <div className="undara-branch-gate undara-branch-gate--right-3" />
+      <div className="undara-branch-gate undara-branch-gate--left-4" />
+      <div className="undara-branch-gate undara-branch-gate--right-4" />
+      <div className="undara-branch-gate undara-branch-gate--left-5" />
+      <div className="undara-branch-gate undara-branch-gate--right-5" />
 
       <div className="undara-branch-gate undara-branch-gate--top-left" />
       <div className="undara-branch-gate undara-branch-gate--top-right" />
+      <div className="undara-branch-gate undara-branch-gate--top-mid-left" />
+      <div className="undara-branch-gate undara-branch-gate--top-mid-right" />
+      <div className="undara-branch-gate undara-branch-gate--bottom-left" />
+      <div className="undara-branch-gate undara-branch-gate--bottom-right" />
       <div className="undara-branch-gate undara-branch-gate--brush" />
 
       <div className="undara-portal-transition__mist undara-portal-transition__mist--front" />
       <div className="undara-branch-gate undara-branch-gate--near-left" />
       <div className="undara-branch-gate undara-branch-gate--near-right" />
+      <div className="undara-branch-gate undara-branch-gate--cross-left" />
+      <div className="undara-branch-gate undara-branch-gate--cross-right" />
       <div className="undara-portal-transition__vignette" />
     </div>
   );
