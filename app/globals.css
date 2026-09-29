@@ -775,20 +775,20 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
 }
 .undara-branch-swarm--right {
   right: -31vw;
-  --branch-from: translate3d(112%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scaleX(-1) scaleY(var(--branch-scale));
-  --branch-closed: translate3d(-43%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scaleX(-1) scaleY(var(--branch-scale));
-  --branch-open: translate3d(124%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scaleX(-1) scaleY(var(--branch-scale));
+  --branch-from: translate3d(112%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scale(var(--branch-scale)) scaleX(-1);
+  --branch-closed: translate3d(-43%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scale(var(--branch-scale)) scaleX(-1);
+  --branch-open: translate3d(124%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scale(var(--branch-scale)) scaleX(-1);
 }
 
 /* During cover all twenty branches converge on the center. Small per-layer
    delays preserve organic follow-through while keeping the closure readable as
    one gate instead of twenty independent decorations. */
 .undara-portal-transition[data-phase="cover"] .undara-branch-swarm--left {
-  animation: undara-branch-swarm-close-left var(--undara-portal-cover-ms) cubic-bezier(.18,.84,.20,1) both;
+  animation: undara-branch-swarm-close-left calc(var(--undara-portal-cover-ms) - var(--branch-delay)) cubic-bezier(.18,.84,.20,1) both;
   animation-delay: var(--branch-delay);
 }
 .undara-portal-transition[data-phase="cover"] .undara-branch-swarm--right {
-  animation: undara-branch-swarm-close-right var(--undara-portal-cover-ms) cubic-bezier(.18,.84,.20,1) both;
+  animation: undara-branch-swarm-close-right calc(var(--undara-portal-cover-ms) - var(--branch-delay)) cubic-bezier(.18,.84,.20,1) both;
   animation-delay: var(--branch-delay);
 }
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__landscape {
@@ -814,11 +814,11 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
    visually by the branch ordering, so the center starts opening immediately
    but retains a short natural overlap before the whole view clears. */
 .undara-portal-transition[data-phase="reveal"] .undara-branch-swarm--left {
-  animation: undara-branch-swarm-open-left var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+  animation: undara-branch-swarm-open-left calc(var(--undara-portal-reveal-ms) - var(--branch-reveal-delay)) cubic-bezier(.22,1,.36,1) both;
   animation-delay: var(--branch-reveal-delay);
 }
 .undara-portal-transition[data-phase="reveal"] .undara-branch-swarm--right {
-  animation: undara-branch-swarm-open-right var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+  animation: undara-branch-swarm-open-right calc(var(--undara-portal-reveal-ms) - var(--branch-reveal-delay)) cubic-bezier(.22,1,.36,1) both;
   animation-delay: var(--branch-reveal-delay);
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__landscape {
@@ -886,7 +886,7 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
     --branch-closed: translate3d(48%, var(--branch-y), 0) rotate(var(--branch-rotate)) scale(var(--branch-scale));
   }
   .undara-branch-swarm--right {
-    --branch-closed: translate3d(-48%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scaleX(-1) scaleY(var(--branch-scale));
+    --branch-closed: translate3d(-48%, var(--branch-y), 0) rotate(var(--branch-rotate-right)) scale(var(--branch-scale)) scaleX(-1);
   }
 }
 @media (prefers-reduced-motion: reduce) {
