@@ -10,6 +10,8 @@ export type PersonalInvitationGuest = {
   invitedPax?: number;
   personalAddressee?: string | null;
   personalGreeting?: string | null;
+  personalEnvelopeEnabled?: boolean;
+  personalLanguage?: "ID" | "EN";
   personalSharedAt?: string | null;
   rsvpStatus?: "ATTENDING" | "NOT_ATTENDING" | "TENTATIVE" | "PENDING";
   plusOnes?: number;
