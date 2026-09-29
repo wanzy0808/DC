@@ -77,6 +77,20 @@ test("Undara light and dark palette stays on the canonical pair", () => {
   assert.match(styles, /--undara-dashboard-canvas:\s*#EDE3D8;/);
 });
 
+test("Light and Dark preference survives refresh and never follows system theme automatically", () => {
+  const provider = read("components/Theme/ThemeProvider.tsx");
+  const layout = read("app/layout.tsx");
+
+  assert.match(provider, /const THEME_STORAGE_KEY = "theme"/);
+  assert.match(provider, /localStorage\.setItem\(THEME_STORAGE_KEY, theme\)/);
+  assert.match(provider, /document\.cookie =/);
+  assert.match(provider, /if \(!themeReady\) return;/);
+  assert.doesNotMatch(provider, /window\.matchMedia/);
+  assert.match(layout, /cookieStore\.get\("theme"\)/);
+  assert.match(layout, /initialTheme === "dark" \? "dark scroll-smooth" : "scroll-smooth"/);
+  assert.match(layout, /<ThemeProvider initialTheme=\{initialTheme\}>/);
+});
+
 
 test("Undara production doors keep the brand body color under rear-only lighting", () => {
   const doors = read("components/Landing/Pintu/LandingDoorScene.tsx");
