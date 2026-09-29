@@ -5752,3 +5752,10 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 - Jangan mengembalikan `branch-01..06` langsung ke Event Planner kecuali owner meminta komposisi baru. Event Planner memakai bahasa visual foliage bronze + stationery note1–3.
 - `note1.webp`, `note2.webp`, dan `note3.webp` tetap sebagai prop planner, tetapi opacity diturunkan agar tidak bersaing dengan foliage/background.
 - Source regression: `tests/event-planner-redesign.test.mjs`.
+
+### 29 September 2026 — Fix visibility foliage Event Planner
+
+- Botanical atmosphere Event Planner harus dirender **di dalam** `.undara-marketing-frame`, bukan sebagai sibling di belakang frame.
+- Layer canonical: atmosphere `z-[12]`, body scroll `relative z-20`, navbar/header tetap di atasnya. Footer Event Planner dibungkus `relative z-20`.
+- `FallingLeaves` mendukung mode `embedded` agar daun jatuh hidup di dalam frame dan tidak tersembunyi di belakang background marketing frame.
+- Jangan menurunkan foliage Event Planner ke z-index di bawah marketing frame; itu membuat asset tampak hilang walaupun sudah terpasang.
