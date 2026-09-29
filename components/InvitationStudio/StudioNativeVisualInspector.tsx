@@ -131,15 +131,11 @@ export default function StudioNativeVisualInspector({
           {colors.map(({ key, label, fallback }) => (
             <div key={key} className="text-xs text-foreground">
               <span className="mb-1 block">{label}</span>
-              <div className="flex items-center gap-2">
+              <div className="undara-studio-native-color">
                 <input type="color" value={current[key] ?? fallback} aria-label={label}
                   onChange={(event) => patch({ [key]: event.currentTarget.value } as Partial<NativeVisualTransform>)}
                   className="h-9 w-12 rounded-lg border border-primary/30 bg-background p-1" />
-                <button type="button"
-                  onClick={() => patch({ [key]: undefined } as Partial<NativeVisualTransform>)}
-                  className="min-h-9 flex-1 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10">
-                  Default
-                </button>
+                <output>{current[key]?.toUpperCase() ?? (en ? "Theme" : "Tema")}</output>
               </div>
             </div>
           ))}
@@ -288,8 +284,8 @@ export default function StudioNativeVisualInspector({
       )}
 
       <button type="button" onClick={() => onChange(defaultNativeVisualTransform)}
-        className="mt-4 inline-flex min-h-9 items-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-3 text-xs text-primary hover:bg-primary/10">
-        <RotateCcw size={14} />{en ? "Reset element" : "Reset elemen"}
+        className="undara-studio-layer-reset mt-4">
+        <RotateCcw size={14} />Reset
       </button>
     </aside>
   );
