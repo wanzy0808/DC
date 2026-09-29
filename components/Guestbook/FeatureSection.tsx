@@ -136,7 +136,6 @@ export default function FeatureSection() {
                 aria-pressed={active === index}
                 className={`group flex w-full items-center gap-4 border-b border-primary/20 py-5 text-left transition-colors duration-200 ${active === index ? "text-primary" : "text-foreground/65 hover:text-primary"}`}
               >
-                <span className="undara-editorial-index w-7 shrink-0">{String(index + 1).padStart(2, "0")}</span>
                 <span className="flex-1 font-[family-name:var(--font-undara-heading)] text-xl leading-tight md:text-2xl">
                   {feature.title}
                 </span>

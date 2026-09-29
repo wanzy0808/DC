@@ -133,7 +133,7 @@ export default function StudioSection() {
           </div>
 
           <div className="absolute left-0 top-[14%] hidden w-[230px] border border-primary/25 bg-background/88 p-5 shadow-[0_18px_50px_rgba(58,32,32,0.11)] backdrop-blur-md md:block">
-            <p className="undara-editorial-index">02 / Studio</p>
+            <p className="undara-editorial-index">{en ? "Invitation Studio" : "Studio Undangan"}</p>
             <p className="mt-3 font-[family-name:var(--font-undara-heading)] text-xl leading-tight text-primary">
               {en ? "Design freedom, with useful guardrails." : "Bebas mendesain, tetap punya pagar yang berguna."}
             </p>

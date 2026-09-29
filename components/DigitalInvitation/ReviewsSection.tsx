@@ -42,8 +42,7 @@ export default function ReviewsSection({
               className={`grid gap-5 border-b border-primary/25 py-8 md:grid-cols-[90px_minmax(0,1fr)] md:gap-8 md:py-10 ${index % 2 ? "lg:pl-[8%]" : "lg:pr-[5%]"}`}
             >
               <div>
-                <p className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</p>
-                <div className="mt-4 flex gap-0.5 text-primary" aria-label="5 out of 5 stars">
+                <div className="flex gap-0.5 text-primary" aria-label="5 out of 5 stars">
                   {Array.from({ length: 5 }).map((_, starIndex) => (
                     <Star key={starIndex} className="h-2.5 w-2.5 fill-current" aria-hidden="true" />
                   ))}

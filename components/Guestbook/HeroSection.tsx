@@ -93,7 +93,7 @@ export default function HeroSection() {
         </div>
 
         <div className="absolute left-0 top-[16%] hidden w-[220px] border border-primary/25 bg-background/88 p-5 shadow-[0_18px_50px_rgba(58,32,32,0.11)] backdrop-blur-md md:block">
-          <p className="undara-editorial-index">01 / Arrival</p>
+          <p className="undara-editorial-index">{en ? "Guest arrival" : "Kedatangan Tamu"}</p>
           <p className="mt-3 font-[family-name:var(--font-undara-heading)] text-xl leading-tight text-primary">
             {en ? "Verify first. Check in with confidence." : "Verifikasi dulu. Check-in tanpa menebak."}
           </p>

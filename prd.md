@@ -5944,3 +5944,11 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Area/commit:** `app/template-design/page.tsx`, `app/globals.css` — commit perubahan ini.
 
 **Validasi lokal:** ESLint terarah, TypeScript, 223 tes regresi, `git diff --check`, Prisma generate, dan production `pnpm build` lulus. Build mencatat peringatan tracing path upload asset yang sudah ada di luar area ini. QA visual browser lintas viewport belum dilakukan; tidak ada migrasi database.
+
+### 30 September 2026 — Hapus penomoran dekoratif kecil pada marketing
+
+**Koreksi owner:** aturan canonical §15 dan `AGENTS.md` sudah melarang nomor urutan yang hanya menjadi ornamen. Pass editorial marketing sebelumnya tanpa sengaja menambahkan label `01/02/03` pada hero, fitur, proses, katalog, ulasan, paket, Event Planner, dan halaman legal. Label seperti itu dihapus; ruang layout yang semula dipakai angka disatukan kembali dengan icon, judul, atau isi. Label kecil yang masih berguna diberi nama deskriptif ID/EN. Poin legal tetap tersusun, tetapi tanpa nomor presentasional; naskah hukumnya tidak berubah. Satu `Private / 01` pada amplop Modern Maroon menjadi copy undangan personal lokal tanpa nomor. Angka data nyata—tanggal, harga, rating, jumlah, countdown, dan nilai acara—tetap ditampilkan.
+
+**Area/commit:** route Undangan Fisik, Privasi, Ketentuan; komponen marketing Digital Invitation, Guestbook, Event Planner, PackageShowcase; `InvitationThemeScenes` dan regresi marketing — commit perubahan ini.
+
+**Validasi lokal:** ESLint terarah, TypeScript, 224 tes regresi, `git diff --check`, dan build produksi lulus. Build masih mencatat peringatan tracing upload asset di luar scope ini. QA visual browser lintas viewport belum dilakukan; tidak ada migrasi database.

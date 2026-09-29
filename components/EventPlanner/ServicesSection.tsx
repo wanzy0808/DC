@@ -36,7 +36,6 @@ export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
           >
             <div className="flex items-center gap-4 font-[family-name:var(--font-undara-mono)] text-xs tracking-[0.2em] text-primary/70">
               <span className="h-1.5 w-1.5 bg-primary" />
-              {String(index + 1).padStart(2, "0")}
               <span className="h-px flex-1 bg-primary/20" />
             </div>
 

@@ -94,7 +94,6 @@ export default function HeroSection({ ready }: { ready: boolean }) {
       <div className="relative z-10 mx-auto w-full min-w-0 max-w-xl py-8 lg:py-10">
         <div aria-hidden="true" className="pointer-events-none absolute -right-[10%] top-[4%] h-[72%] w-[72%] rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.12),transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.10),transparent_68%)]" />
         <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-[18%] hidden h-[62%] w-px bg-primary/25 lg:block" />
-        <p className="undara-editorial-index absolute left-[5%] top-[13%] hidden lg:block">01 / Invitation</p>
         <PuzzleAssemble ready={ready} direction="right" delay={0.15} className="relative mx-auto w-[min(100%,340px)] lg:translate-x-[8%]">
           <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div

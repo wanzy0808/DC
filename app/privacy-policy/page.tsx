@@ -72,9 +72,8 @@ export default function PrivacyPolicyPage() {
                 {content.paragraphs.map((paragraph, index) => (
                   <div
                     key={index}
-                    className={`grid gap-5 border-b border-primary/20 py-8 md:grid-cols-[72px_minmax(0,1fr)] md:gap-10 md:py-10 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[4%]"}`}
+                    className={`border-b border-primary/20 py-8 md:py-10 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[4%]"}`}
                   >
-                    <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
                     <p className="max-w-4xl font-[family-name:var(--font-undara-body)] text-sm leading-8 text-foreground/82 md:text-base md:leading-8">
                       {paragraph}
                     </p>

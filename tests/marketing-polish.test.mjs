@@ -64,3 +64,27 @@ test("template catalog keeps wide-screen editorial staggering without overriding
   assert.match(styles, /\.undara-template-catalog-grid > article:nth-child\(3n \+ 2\)/);
   assert.match(styles, /margin-top: 2rem/);
 });
+
+test("marketing and legal surfaces have no decorative sequence labels", () => {
+  const files = [
+    "app/undangan-fisik/page.tsx",
+    "app/privacy-policy/page.tsx",
+    "app/terms-and-conditions/page.tsx",
+    "components/Marketing/PackageShowcase.tsx",
+    "components/EventPlanner/ServicesSection.tsx",
+    "components/Guestbook/HeroSection.tsx",
+    "components/Guestbook/FeatureSection.tsx",
+    "components/Guestbook/ProcessSection.tsx",
+    "components/DigitalInvitation/HeroSection.tsx",
+    "components/DigitalInvitation/FeatureSection.tsx",
+    "components/DigitalInvitation/TemplateSection.tsx",
+    "components/DigitalInvitation/StudioSection.tsx",
+    "components/DigitalInvitation/ReviewsSection.tsx",
+    "components/PublicInvitation/InvitationThemeScenes.tsx",
+  ];
+  for (const file of files) {
+    const source = read(file);
+    assert.doesNotMatch(source, /String\((?:index|pointIndex) \+ 1\)\.padStart\(2, "0"\)/, file);
+    assert.doesNotMatch(source, /(?:Private\s*\/\s*|>\s*)0[1-9]\s*(?:\/|—|<)/, file);
+  }
+});

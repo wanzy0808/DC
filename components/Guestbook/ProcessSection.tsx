@@ -70,7 +70,6 @@ export default function ProcessSection() {
       </div>
 
       <div className="relative mt-12 border-t border-primary/30">
-        <div aria-hidden="true" className="absolute left-[41px] top-0 hidden h-full w-px bg-primary/15 md:block" />
         {steps.map(({ icon: Icon, title, text }, index) => (
           <article
             key={title}
@@ -80,7 +79,6 @@ export default function ProcessSection() {
               <span className="grid h-11 w-11 place-items-center border border-primary/35 bg-background text-primary">
                 <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
               </span>
-              <span className="undara-editorial-index md:mt-3 md:block">{String(index + 1).padStart(2, "0")}</span>
             </div>
             <h3 className="max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl">
               {title}

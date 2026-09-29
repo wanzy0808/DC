@@ -129,7 +129,6 @@ export default function TemplateCollection() {
                 <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
                   {template.category}
                 </p>
-                <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
               </div>
               <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
                 {template.name}

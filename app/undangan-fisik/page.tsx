@@ -138,7 +138,7 @@ export default function UndanganFisikPage() {
                   </div>
 
                   <div className="absolute left-0 top-[15%] hidden w-[220px] border border-primary/25 bg-background/88 p-5 shadow-[0_18px_50px_rgba(58,32,32,0.11)] backdrop-blur-md md:block">
-                    <p className="undara-editorial-index">01 / Stationery</p>
+                    <p className="undara-editorial-index">{en ? "Printed invitation" : "Undangan Cetak"}</p>
                     <p className="mt-3 font-[family-name:var(--font-undara-heading)] text-xl leading-tight text-primary">
                       {en ? "Texture, proportion, and quiet details matter." : "Tekstur, proporsi, dan detail kecil ikut berbicara."}
                     </p>
@@ -169,9 +169,8 @@ export default function UndanganFisikPage() {
                       key={title}
                       className={`py-8 md:px-8 md:py-10 ${index > 0 ? "border-t border-primary/20 md:border-l md:border-t-0" : ""}`}
                     >
-                      <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
                         <Icon className="h-5 w-5 text-primary" strokeWidth={1.5} aria-hidden="true" />
-                        <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
                       </div>
                       <h3 className="mt-8 font-[family-name:var(--font-undara-heading)] text-2xl text-primary md:text-3xl">
                         {title}
@@ -205,9 +204,8 @@ export default function UndanganFisikPage() {
                   {steps.map(([title, detail], index) => (
                     <article
                       key={title}
-                      className={`grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,0.88fr)_minmax(0,1.12fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
+                      className={`grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
                     >
-                      <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
                       <h3 className="max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl">
                         {title}
                       </h3>

@@ -79,10 +79,6 @@ export default function FeatureSection() {
               ? "Undara connects the visual invitation with the practical event flow without making the experience feel like an admin dashboard."
               : "Undara menghubungkan pengalaman visual undangan dengan kebutuhan acara yang praktis, tanpa membuat tamu maupun pemilik acara merasa sedang membuka dashboard admin."}
           </p>
-          <div className="mt-8 hidden items-center gap-3 text-primary/55 lg:flex" aria-hidden="true">
-            <span className="h-px w-16 bg-current" />
-            <span className="undara-editorial-index">01 — 03</span>
-          </div>
         </div>
 
         <div className="border-t border-primary/30">
@@ -91,9 +87,8 @@ export default function FeatureSection() {
               key={title}
               className={`group grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,1fr)] md:gap-9 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[5%]"}`}
             >
-              <div className="flex items-start justify-between md:block">
-                <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
-                <span className="mt-5 grid h-11 w-11 place-items-center border border-primary/35 text-primary transition-transform duration-300 group-hover:-translate-y-1 md:mt-7">
+              <div className="flex items-start md:block">
+                <span className="grid h-11 w-11 place-items-center border border-primary/35 text-primary transition-transform duration-300 group-hover:-translate-y-1">
                   <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
                 </span>
               </div>

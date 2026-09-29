@@ -274,9 +274,8 @@ export default function TermsAndConditionsPage() {
                   <section
                     key={index}
                     aria-labelledby={`undara-terms-section-${index}`}
-                    className={`grid gap-6 border-b border-primary/20 py-9 md:grid-cols-[88px_minmax(0,1fr)] md:gap-10 md:py-12 ${index % 2 ? "lg:pl-[5%]" : "lg:pr-[4%]"}`}
+                    className={`border-b border-primary/20 py-9 md:py-12 ${index % 2 ? "lg:pl-[5%]" : "lg:pr-[4%]"}`}
                   >
-                    <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
                     <div>
                       <h2
                         id={`undara-terms-section-${index}`}
@@ -284,19 +283,16 @@ export default function TermsAndConditionsPage() {
                       >
                         {section.title}
                       </h2>
-                      <ol className="mt-6 space-y-4">
+                      <ul className="mt-6 space-y-4">
                         {section.points.map((point, pointIndex) => (
                           <li
                             key={pointIndex}
-                            className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 text-sm leading-8 text-foreground/82 md:text-base"
+                            className="border-l border-primary/25 pl-4 text-sm leading-8 text-foreground/82 md:text-base"
                           >
-                            <span className="font-[family-name:var(--font-undara-mono)] text-[9px] tracking-[0.12em] text-primary/70">
-                              {String(pointIndex + 1).padStart(2, "0")}
-                            </span>
                             <span>{point}</span>
                           </li>
                         ))}
-                      </ol>
+                      </ul>
                       {index === 7 ? (
                         <Link
                           href="/privacy-policy"

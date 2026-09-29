@@ -52,7 +52,7 @@ export default function PackageShowcase({
           </div>
 
           <div className="border-t border-primary/30">
-            {packages.map((item, index) => {
+            {packages.map((item) => {
               if (!item) return null;
               return (
                 <article
@@ -61,7 +61,7 @@ export default function PackageShowcase({
                 >
                   <div>
                     <div className="flex items-center justify-between gap-4">
-                      <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")} / Package</span>
+                      <span className="undara-editorial-index">{locale === "en" ? "Package" : "Paket"}</span>
                       <span className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
                         Undara
                       </span>
