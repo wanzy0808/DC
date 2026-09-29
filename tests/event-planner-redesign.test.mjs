@@ -21,7 +21,7 @@ test("event planner keeps the editorial redesign direction", () => {
   assert.doesNotMatch(page, /md:grid-cols-3/);
 
   assert.match(founder, /Christine/);
-  assert.match(founder, /Pendiri & Lead Event Planner/);
+  assert.match(founder, /Pendiri & Perencana Acara Utama/);
   assert.match(founder, /rounded-\[8px_44px_8px_44px\]/);
 
   assert.match(services, /Cara kami bekerja/);
