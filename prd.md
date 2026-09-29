@@ -5725,3 +5725,20 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - Heading besar Event Planner tidak boleh dipaksa ke kolom super sempit seperti `max-w-[10ch]`, `11ch`, atau `12ch`; gunakan rentang baca lebih lapang agar teks tidak turun kata-per-kata.
 - Package rows memakai dua kolom lapang, testimonial memakai baris editorial horizontal, dan FAQ Event Planner memakai divider editorial alih-alih kumpulan rounded cards.
 - Source regression: `tests/event-planner-redesign.test.mjs`.
+
+### 29 September 2026 — Event Planner menjadi connector-only service
+
+**Keputusan owner — menggantikan positioning Event Planner sebelumnya:** Undara tidak dipresentasikan sebagai tim Event Planner yang mengerjakan event secara langsung. Halaman Event Planner berfungsi sebagai titik konsultasi awal dan penghubung kebutuhan pengguna ke penyedia layanan yang relevan. Nama pihak penyedia tidak ditampilkan pada halaman publik.
+
+- Semua CTA Event Planner sementara diarahkan ke WhatsApp admin Undara **0812-8500-9609** (`6281285009609` untuk wa.me).
+- Jangan tampilkan founder biography, profil planner, klaim “tim kami mengerjakan”, portfolio seolah dikerjakan Undara, atau testimonial yang mengesankan Undara mengeksekusi acara.
+- Copy harus menjelaskan proses secara konkret: pengguna mengirim jenis acara, tanggal, kota/venue bila ada, jumlah tamu, serta kebutuhan yang dicari; Undara menerima kebutuhan awal lalu membantu menghubungkan untuk pembahasan scope, availability, dan penawaran.
+- FAQ hanya memakai identitas **Undara** dan tidak menyebut brand/provider lama.
+- Wedding Organizer, Wedding Planner, Silver / Golden Wedding, dan Baby Shower adalah kategori awal untuk memudahkan konsultasi, bukan paket final atau jaminan scope/harga.
+- FounderSection dan PortfolioSection Event Planner lama dihapus dari runtime karena tidak sesuai positioning connector-only.
+- Asset `/assets/note1.webp`, `note2.webp`, dan `note3.webp` digunakan sebagai dekorasi planner-specific dengan motion ringan. Hero memakai `/assets/marketing/event-planner/hero.webp`.
+- Internal body Event Planner tidak dikunci pada lebar/tinggi card lama; layout boleh menggunakan hampir seluruh marketing frame dengan hero viewport-height, section lebar, divider editorial, dan whitespace yang cukup.
+- Undangan Digital Undara tetap ditawarkan sebagai produk terpisah untuk RSVP/manajemen tamu; jangan menyiratkan bahwa pengguna wajib mengambilnya bersama Event Planner.
+- Source regression: `tests/event-planner-redesign.test.mjs`.
+
+Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebagai histori desain, tetapi ketentuan founder, portfolio, testimonial, dan wording in-house di entry tersebut **tidak lagi berlaku**.
