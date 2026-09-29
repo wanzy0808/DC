@@ -889,7 +889,7 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
    not cause a one-frame jump while Next commits the destination. */
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__landscape { opacity: 1; transform: scale(1); }
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist { opacity: .72; }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist--front { opacity: .52; }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist--front { opacity: .72; }
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--left-back { transform: translate3d(-5%, 0, 0) rotate(2deg) scale(1.1); }
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--right-back { transform: translate3d(7%, 0, 0) rotate(-2deg) scale(1.1); }
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--top { transform: translate3d(0, -14%, 0) scale(1.15); }
