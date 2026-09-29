@@ -76,9 +76,9 @@ export default function EventPlannerPage() {
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
-      <EventPlannerBotanicalAtmosphere />
-
       <div data-undara-marketing-frame className="undara-marketing-frame">
+        <EventPlannerBotanicalAtmosphere />
+
         <div className="undara-marketing-frame-header">
           <Navbar embedded />
         </div>
@@ -87,7 +87,7 @@ export default function EventPlannerPage() {
           ref={scrollRoot}
           tabIndex={0}
           aria-label={en ? "Event Planner page content" : "Konten halaman Event Planner"}
-          className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+          className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
             className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
@@ -378,7 +378,9 @@ export default function EventPlannerPage() {
           </MarketingTextReveal>
         </main>
 
-        <MarketingFrameFooter />
+        <div className="relative z-20">
+          <MarketingFrameFooter />
+        </div>
       </div>
     </div>
   );
