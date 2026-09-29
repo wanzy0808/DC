@@ -45,6 +45,8 @@ const templatePanel = read("components/InvitationStudio/TemplatePanel.tsx");
 const photos = read("components/InvitationStudio/PhotoPanel.tsx");
 const styles = read("components/InvitationStudio/studio.css");
 const dashboard = read("components/Dashboard/InvitationWorkspacePanel.tsx");
+const assetPanelSource = read("components/InvitationStudio/AssetPanel.tsx");
+const templateAssetRoute = read("app/api/templates/assets/route.ts");
 
 test("Studio header has landing-style ID/EN and dark/light toggles without its own publish CTA", () => {
   assert.match(studio, /<ThemeToggle \/>/);
@@ -262,6 +264,37 @@ test("asset library inserts images by drag-and-drop only", () => {
   assert.match(assetPanel, /Seret gambar ke section undangan/);
   assert.doesNotMatch(designer, /<AssetPanel[^>]*onAdd=\{addAssetLayer\}/);
 });
+
+test("Studio asset library failures stay recoverable instead of exposing raw fetch errors", () => {
+  assert.match(assetPanelSource, /await response\.text\(\)/);
+  assert.match(assetPanelSource, /Array\.isArray\(data\.assets\)/);
+  assert.match(assetPanelSource, /kind: "network"/);
+  assert.match(assetPanelSource, /setAssetLoadVersion\(\(value\) => value \+ 1\)/);
+  assert.match(assetPanelSource, />\s*\{en \? "Try again" : "Coba lagi"\}\s*</);
+  assert.doesNotMatch(assetPanelSource, /<p role="alert"[^>]*>\{error\}<\/p>/);
+  assert.match(templateAssetRoute, /try \{[\s\S]*user = await getCurrentUser\(\)/);
+  assert.match(templateAssetRoute, /failedRoots\.length === roots\.length/);
+  assert.match(templateAssetRoute, /partial: failedRoots\.length > 0/);
+});
+
+test("Studio chrome does not mix legacy DC class or design-token names", () => {
+  const sources = [
+    assetPanelSource,
+    canvasToolbarSource,
+    canvasFooterSource,
+    layerList,
+    sectionInspector,
+    read("components/InvitationStudio/AssetLayerInspector.tsx"),
+    read("components/InvitationStudio/SectionElementInspector.tsx"),
+    read("components/InvitationStudio/SectionActionRail.tsx"),
+    read("components/InvitationStudio/StudioFinalPreviewDialog.tsx"),
+    read("components/InvitationStudio/StudioEntrySection.tsx"),
+  ];
+  for (const source of sources) {
+    assert.doesNotMatch(source, /dc-studio|--dc-control|--font-dc/);
+  }
+});
+
 
 test("selected Studio objects use an icon rotate handle without a connector line", () => {
   const assetLayers = read("components/PublicInvitation/InvitationAssetLayers.tsx");

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Circle, ImagePlus, Minus, Search, Square, Upload } from "lucide-react";
+import { Circle, ImagePlus, Minus, RefreshCcw, Search, Square, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import type { InvitationAssetLayer, InvitationShapeKind } from "@/lib/templates/asset-layers";
@@ -10,6 +10,14 @@ import type { DesignerLibraryAsset } from "@/components/InvitationStudio/designe
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type Asset = { src: string; name: string; folder: string };
+type AssetLoadError = { kind: "network" | "response"; message?: string };
+type AssetApiResponse = { assets?: unknown; limited?: unknown; error?: unknown };
+
+function isAsset(value: unknown): value is Asset {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Partial<Asset>;
+  return typeof item.src === "string" && typeof item.name === "string" && typeof item.folder === "string";
+}
 
 export default function AssetPanel({
   layers,
@@ -35,27 +43,56 @@ export default function AssetPanel({
   const [assets, setAssets] = useState<Asset[]>([]);
   const [search, setSearch] = useState("");
   const [visibleCount, setVisibleCount] = useState(40);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<AssetLoadError | null>(null);
   const [loading, setLoading] = useState(true);
+  const [assetLoadVersion, setAssetLoadVersion] = useState(0);
   const [limited, setLimited] = useState(false);
   const [uploadingLibrary, setUploadingLibrary] = useState(false);
   const [libraryError, setLibraryError] = useState("");
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch("/api/templates/assets", { cache: "no-store", signal: controller.signal })
-      .then(async (response) => {
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || "Gagal memuat aset.");
-        setAssets(data.assets);
-        setLimited(Boolean(data.limited));
-      })
-      .catch((reason: unknown) => {
-        if (!controller.signal.aborted) setError(reason instanceof Error ? reason.message : "Gagal memuat aset.");
-      })
-      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    setLoading(true);
+    setError(null);
+
+    void (async () => {
+      try {
+        const response = await fetch("/api/templates/assets", { cache: "no-store", signal: controller.signal });
+        const raw = await response.text();
+        let data: AssetApiResponse | null = null;
+        if (raw) {
+          try {
+            data = JSON.parse(raw) as AssetApiResponse;
+          } catch {
+            data = null;
+          }
+        }
+
+        if (!response.ok) {
+          const message = typeof data?.error === "string" ? data.error : undefined;
+          throw new Error(message || `HTTP ${response.status}`);
+        }
+        if (!data || !Array.isArray(data.assets)) {
+          setError({ kind: "response" });
+          return;
+        }
+
+        setAssets(data.assets.filter(isAsset));
+        setLimited(data.limited === true);
+      } catch (reason: unknown) {
+        if (controller.signal.aborted) return;
+        if (reason instanceof TypeError) {
+          setError({ kind: "network" });
+        } else {
+          setError({ kind: "response", message: reason instanceof Error ? reason.message : undefined });
+        }
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+
     return () => controller.abort();
-  }, []);
+  }, [assetLoadVersion]);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase("id");
@@ -176,7 +213,19 @@ export default function AssetPanel({
         </div>
 
         {loading && <p className="text-sm text-muted-foreground">{en ? "Loading images…" : "Memuat gambar…"}</p>}
-        {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
+        {error && (
+          <div role="alert" className="space-y-2 rounded-[var(--undara-control-radius)] border border-destructive/30 bg-destructive/5 p-3">
+            <p className="text-sm text-destructive">
+              {error.kind === "network"
+                ? (en ? "The asset library could not reach the Studio service." : "Library aset tidak dapat terhubung ke layanan Studio.")
+                : (error.message || (en ? "The asset library returned an invalid response." : "Library aset mengembalikan respons yang tidak valid."))}
+            </p>
+            <Button type="button" size="sm" variant="outline" disabled={loading} onClick={() => setAssetLoadVersion((value) => value + 1)}>
+              <RefreshCcw className="h-4 w-4" />
+              {en ? "Try again" : "Coba lagi"}
+            </Button>
+          </div>
+        )}
         {!loading && !error && filtered.length === 0 && <p className="text-sm text-muted-foreground">{en ? "No images found." : "Gambar tidak ditemukan."}</p>}
         {limited && <p className="text-xs text-muted-foreground">{en ? "Showing the first 500 images; use search to narrow the list." : "Menampilkan 500 gambar pertama; gunakan pencarian untuk mempersempit daftar."}</p>}
 
