@@ -83,7 +83,8 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
-  assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
+  assert.match(layerInspector, /numberInput\(en \? "Width" : "Lebar"/);
+  assert.match(layerInspector, /optionalNumberInput\(en \? "Height" : "Tinggi"/);
   assert.match(layerInspector, /numberInput\(en \? "Rotation" : "Rotasi"/);
   assert.match(layerInspector, /type="range"/);
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "front"\)/);
