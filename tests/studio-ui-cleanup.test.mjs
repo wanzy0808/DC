@@ -512,6 +512,8 @@ test("Studio image layers support flip transforms and quick centering", () => {
   assert.match(assetLayers, /flipY\?: boolean/);
   assert.match(assetRenderer, /scaleX\(\$\{layer\.flipX \? -1 : 1\}\)/);
   assert.match(assetRenderer, /scaleY\(\$\{layer\.flipY \? -1 : 1\}\)/);
+  assert.doesNotMatch(assetRenderer, /--font-dc-heading/);
+  assert.match(assetRenderer, /--font-undara-heading/);
   assert.match(assetInspector, /Posisi cepat/);
   assert.match(assetInspector, /flipX/);
   assert.match(assetInspector, /flipY/);
@@ -538,6 +540,25 @@ test("Amplop and Isi share the same asset-layer keyboard shortcut path", () => {
 });
 
 
+
+test("Stage 4 gives Amplop and Isi native objects one selection, transform and keyboard path", () => {
+  assert.doesNotMatch(designer, /templateMode && selection\.instanceId/);
+  assert.doesNotMatch(designer, /if \(templateMode\) setSelectedNativeKey\(selection\.key\)/);
+  assert.match(designer, /setSelectedNativeKey\(selection\.key\)/);
+  assert.match(designer, /sanitizeNativeVisualTransforms\(\{ \[key\]: value \}\)\[key\]/);
+  assert.match(designer, /activeNativeKey && !selectedAssetLayer/);
+  assert.match(designer, /hideSelectedNativeVisual\(activeNativeKey\)/);
+  assert.match(designer, /current\.x \+ \(event\.key === "ArrowLeft"/);
+  assert.match(designer, /current\.y \+ \(event\.key === "ArrowUp"/);
+  assert.match(designer, /Elemen sistem ini dilindungi/);
+
+  const handles = read("components/InvitationStudio/StudioNativeTransformHandles.tsx");
+  for (const handle of ["top-left", "top", "top-right", "right", "bottom-right", "bottom", "bottom-left", "left"]) {
+    assert.ok(handles.includes(`"${handle}"`), `missing native transform handle ${handle}`);
+  }
+  assert.match(handles, /begin\(event, "rotate"\)/);
+  assert.match(handles, /transform\?\.hidden/);
+});
 
 test("Studio supports shift multi-select and persistent group controls", () => {
   const assetLayers = read("lib/templates/asset-layers.ts");

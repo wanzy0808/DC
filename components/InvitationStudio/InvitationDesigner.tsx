@@ -29,7 +29,13 @@ import StudioFinalPreviewDialog from "@/components/InvitationStudio/StudioFinalP
 import StudioStageControls from "@/components/InvitationStudio/StudioStageControls";
 import StudioCanvasFooter, { type CanvasNavigationItem } from "@/components/InvitationStudio/StudioCanvasFooter";
 import StudioNativeTransformHandles from "@/components/InvitationStudio/StudioNativeTransformHandles";
-import { defaultNativeVisualTransform, isNativeVisualKey, type NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
+import {
+  defaultNativeVisualTransform,
+  isNativeVisualKey,
+  nativeVisualCanHide,
+  sanitizeNativeVisualTransforms,
+  type NativeVisualTransform,
+} from "@/lib/templates/native-visual-transforms";
 import { isTemplateIllustration, MAX_ASSET_LAYERS, MAX_TEMPLATE_ASSET_LAYERS, studioObjectSections, type StudioObjectSection, type InvitationAssetLayer, type InvitationShapeKind } from "@/lib/templates/asset-layers";
 import {
   invitationFonts,
@@ -747,7 +753,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       case "rsvp-element":
         clearCanvasSelection();
         setSelectedRsvpElementKey(selection.key);
-        if (templateMode && selection.instanceId) setSelectedNativeKey(`rsvp:${selection.key}:${selection.instanceId}`);
+        if (selection.instanceId) setSelectedNativeKey(`rsvp:${selection.key}:${selection.instanceId}`);
         return;
       case "section-element":
         clearCanvasSelection();
@@ -755,22 +761,22 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           section: selection.section,
           kind: selection.elementKind,
         });
-        if (templateMode && selection.instanceId) setSelectedNativeKey(`element:${selection.section}:${selection.elementKind}:${selection.instanceId}`);
+        if (selection.instanceId) setSelectedNativeKey(`element:${selection.section}:${selection.elementKind}:${selection.instanceId}`);
         return;
       case "copy":
         clearCanvasSelection();
         setSelectedCopyField(selection.field);
-        if (templateMode && selection.instanceId) setSelectedNativeKey(`copy:${selection.field}:${selection.instanceId}`);
+        if (selection.instanceId) setSelectedNativeKey(`copy:${selection.field}:${selection.instanceId}`);
         return;
       case "native":
         clearCanvasSelection();
-        if (templateMode) setSelectedNativeKey(selection.key);
+        setSelectedNativeKey(selection.key);
         return;
       case "photo":
         selectPhotoVisual(selection.slot);
         if (selection.slot === "gallery" && selection.assetId) {
           const key = `photo:gallery:${selection.assetId}${selection.instanceId ? `:${selection.instanceId}` : ""}`;
-          if (templateMode && isNativeVisualKey(key)) setSelectedNativeKey(key);
+          if (isNativeVisualKey(key)) setSelectedNativeKey(key);
         }
         return;
       case "section":
@@ -1527,13 +1533,18 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   function commitNativeVisual(key: string, value: NativeVisualTransform) {
     if (!isNativeVisualKey(key)) return;
     const next = { ...design.nativeVisuals };
-    if (Object.keys(defaultNativeVisualTransform).every((property) =>
-      value[property as keyof NativeVisualTransform] === defaultNativeVisualTransform[property as keyof NativeVisualTransform])) {
-      delete next[key];
-    } else {
-      next[key] = value;
-    }
+    const normalized = sanitizeNativeVisualTransforms({ [key]: value })[key];
+    if (normalized) next[key] = normalized;
+    else delete next[key];
     change({ nativeVisuals: next });
+  }
+
+  function hideSelectedNativeVisual(key: string) {
+    if (!nativeVisualCanHide(key)) return false;
+    const current = { ...defaultNativeVisualTransform, ...design.nativeVisuals[key], hidden: true };
+    commitNativeVisual(key, current);
+    setSelectedNativeKey(null);
+    return true;
   }
 
   useStudioCanvasSelectionMarkers(
@@ -1554,14 +1565,41 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       const target = event.target;
       if (target instanceof Element && target.closest('input, textarea, select, [contenteditable="true"], [role="textbox"]')) return;
       if (!event.ctrlKey && !event.metaKey && !event.altKey && event.key === "Escape" && selectedPhotoSlot) {
-        setSelectedPhotoSlot(null);
+        clearCanvasSelection();
         return;
       }
-      if (selectedPhotoSlot) return;
       const activeText = window.getSelection()?.toString();
       if (activeText) return;
       const modifier = event.ctrlKey || event.metaKey;
       const shortcutKey = event.key.toLowerCase();
+
+      if (!modifier && !event.altKey && activeNativeKey && !selectedAssetLayer
+        && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].includes(event.key)) {
+        event.preventDefault();
+        const step = event.shiftKey ? 5 : 1;
+        const current = { ...defaultNativeVisualTransform, ...design.nativeVisuals[activeNativeKey] };
+        commitNativeVisual(activeNativeKey, {
+          ...current,
+          x: Math.min(2000, Math.max(-2000, current.x + (event.key === "ArrowLeft" ? -step : event.key === "ArrowRight" ? step : 0))),
+          y: Math.min(2000, Math.max(-2000, current.y + (event.key === "ArrowUp" ? -step : event.key === "ArrowDown" ? step : 0))),
+        });
+        return;
+      }
+      if (!modifier && !event.altKey && activeNativeKey && !selectedAssetLayer
+        && (event.key === "Delete" || event.key === "Backspace")) {
+        event.preventDefault();
+        if (!hideSelectedNativeVisual(activeNativeKey)) {
+          setNotice(locale === "en"
+            ? "This system element is protected. Its visual styling can still be edited."
+            : "Elemen sistem ini dilindungi. Styling visualnya tetap bisa diedit.");
+        }
+        return;
+      }
+      if (!modifier && !event.altKey && event.key === "Escape" && activeNativeKey && !selectedAssetLayer) {
+        clearCanvasSelection();
+        return;
+      }
+      if (selectedPhotoSlot && !activeNativeKey) return;
       if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "a") {
         event.preventDefault();
         const targetSection = selectedAssetLayer?.section ?? (canvasStage === "envelope" ? "envelope" : "cover");
@@ -1620,7 +1658,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     }
     window.addEventListener("keydown", handleLayerShortcut);
     return () => window.removeEventListener("keydown", handleLayerShortcut);
-  }, [invitation, saving, audioBusy, canvasStage, selectedPhotoSlot, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, copiedAssetLayers, design.layers]);
+  }, [invitation, saving, audioBusy, canvasStage, selectedPhotoSlot, selectedAssetLayer, selectedAssetLayers, selectedLayerIds, copiedAssetLayer, copiedAssetLayers, design.layers, design.nativeVisuals, activeNativeKey, locale]);
 
   function undo() {
     const key = history.at(-1);

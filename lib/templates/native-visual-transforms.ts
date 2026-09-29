@@ -30,6 +30,8 @@ export type NativeVisualTransform = {
   animation?: InvitationSectionAnimation;
   animationDuration?: number;
   animationDelay?: number;
+  /** Instance-local removal for decorative template artwork. Protected/system content cannot set this. */
+  hidden?: boolean;
 };
 export type NativeVisualTransforms = Record<string, NativeVisualTransform>;
 
@@ -100,6 +102,17 @@ export function isNativeVisualKey(key: string) {
   return false;
 }
 
+const removableNativeDecorationId = /(?:^|[-_])(?:art|artwork|atmosphere|border|branch|deco|diamond|divider|flourish|gem|leaf|line|lines|moon|orbit|ornament|paper|ring|seal|sparkle|sprig|star|starfield|sun|symbol|theme-art)(?:$|[-_])/i;
+
+/** Delete/Backspace may hide decorative artwork, never business data or functional controls. */
+export function nativeVisualCanHide(key: string) {
+  if (!isNativeVisualKey(key) || nativeVisualUsesSystemContent(key)) return false;
+  const parts = key.split(":");
+  if (parts[0] !== "object") return false;
+  const objectId = parts[2] ?? "";
+  return removableNativeDecorationId.test(objectId);
+}
+
 const clamp = (value: unknown, min: number, max: number, fallback: number) =>
   typeof value === "number" && Number.isFinite(value)
     ? Math.round(Math.min(max, Math.max(min, value)) * 100) / 100 : fallback;
@@ -147,6 +160,7 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       transform.animationDuration = optionalNumber(source.animationDuration, 0.2, 2.5);
       transform.animationDelay = optionalNumber(source.animationDelay, 0, 2);
     }
+    if (source.hidden === true && nativeVisualCanHide(key)) transform.hidden = true;
     for (const [property, propertyValue] of Object.entries(transform)) {
       if (propertyValue === undefined) delete (transform as Record<string, unknown>)[property];
     }
@@ -221,6 +235,7 @@ export function nativeVisualStyle(transform: NativeVisualTransform): CSSProperti
     letterSpacing: transform.letterSpacing,
     lineHeight: transform.lineHeight,
     fontFamily: transform.fontFamily ? invitationFontFamily(transform.fontFamily) : undefined,
+    display: transform.hidden ? "none" : undefined,
   };
 }
 
@@ -266,6 +281,7 @@ export function nativeVisualStyleSheet(designKey: string) {
           ? invitationFontFamily(transform.fontFamily)
           : JSON.stringify(invitationFontFamily(transform.fontFamily))}`
         : "",
+      transform.hidden ? "display:none" : "",
     ].filter(Boolean).join(";");
     return `.${scope} ${selector}{${declarations};}`;
   }).join("\n");

@@ -39,6 +39,7 @@ export default function StudioNativeTransformHandles({
     const node = target();
     if (!canvas || !node) { setBox(null); return; }
     const rect = node.getBoundingClientRect();
+    if (!rect.width || !rect.height || transform?.hidden) { setBox(null); return; }
     const origin = canvas.getBoundingClientRect();
     setBox({
       left: rect.left - origin.left + canvas.scrollLeft,
@@ -64,7 +65,7 @@ export default function StudioNativeTransformHandles({
       cancelAnimationFrame(frame);
     };
   // The revision and transform trigger a remeasure when the renderer changes.
-  }, [canvasRef, targetKey, zoom, revision, transform?.x, transform?.y, transform?.scaleX, transform?.scaleY, transform?.rotation]);
+  }, [canvasRef, targetKey, zoom, revision, transform?.x, transform?.y, transform?.scaleX, transform?.scaleY, transform?.rotation, transform?.hidden]);
 
   function apply(node: HTMLElement, next: NativeVisualTransform) {
     node.style.translate = `${next.x}% ${next.y}%`;

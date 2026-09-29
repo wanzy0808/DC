@@ -5,6 +5,7 @@ import {
   sanitizeNativeVisualTransforms, parseNativeVisualTransforms,
   withNativeVisualTransforms, nativeVisualStyleSheet, nativeVisualScopeClass, nativeVisualSelector,
   nativeVisualCapabilities, nativeVisualFontFamilies, nativeVisualSupportsAnimation, nativeVisualUsesSystemContent,
+  nativeVisualCanHide,
 } from "../lib/templates/native-visual-transforms.ts";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -296,6 +297,23 @@ test("protected RSVP and Wishes forms expose whole-block visual targets while in
   assert.match(wishes, /data-studio-section-element="wishes:button"/);
   assert.equal(nativeVisualCapabilities("object:rsvp:form-group").typography, false);
   assert.equal(nativeVisualCapabilities("object:wishes:form-group").typography, false);
+});
+
+test("decorative native objects can be removed per invitation without hiding protected content", () => {
+  assert.equal(nativeVisualCanHide("object:cover:flower-left"), true);
+  assert.equal(nativeVisualCanHide("object:envelope:seal"), true);
+  assert.equal(nativeVisualCanHide("object:event:venue"), false);
+  assert.equal(nativeVisualCanHide("heading:cover"), false);
+  assert.equal(nativeVisualCanHide("element:gift:button"), false);
+
+  const values = sanitizeNativeVisualTransforms({
+    "object:cover:flower-left": { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, hidden: true },
+    "object:event:venue": { x: 0, y: 0, scaleX: 1, scaleY: 1, rotation: 0, hidden: true },
+  });
+  assert.equal(values["object:cover:flower-left"]?.hidden, true);
+  assert.equal(values["object:event:venue"], undefined);
+  const css = nativeVisualStyleSheet(withNativeVisualTransforms("botanical-ivory", values));
+  assert.match(css, /display:none/);
 });
 
 test("native visual styling stays inside the validated nativeVisuals contract", () => {
