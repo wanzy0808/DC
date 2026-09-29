@@ -43,7 +43,7 @@ export default function FounderSection({ locale }: { locale: "id" | "en" }) {
           Christine
         </h2>
         <p className="mt-3 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
-          {en ? "Founder & Lead Event Planner" : "Founder & Lead Event Planner"}
+          {en ? "Founder & Lead Event Planner" : "Pendiri & Lead Event Planner"}
         </p>
 
         <p className="mt-7 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
