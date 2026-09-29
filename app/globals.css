@@ -682,12 +682,9 @@ aside nav > p { font-family: var(--font-undara-heading); }
 .undara-dashboard input:is([type="checkbox"], [type="radio"]) { accent-color: var(--primary); }
 .undara-dashboard input:is([type="checkbox"], [type="radio"]):focus-visible { outline: 2px solid var(--ring); outline-offset: 3px; }
 
-/* While Rose light covers a route change, dissolve the DECORATIVE 90vw
-   frame chrome underneath it. Otherwise its translucent background, border,
-   shadow and backdrop blur show through the glow as a large rectangular
-   "body" even when the fullscreen veil itself has no square edges.
-   Keep layout, contents, overflow and all interactions unchanged. These
-   properties return smoothly once PortalTransition removes its state. */
+/* During a marketing route passage, dissolve decorative frame chrome so the
+   fullscreen foliage can read as one continuous foreground layer. Layout and
+   interactions stay mounted underneath and return when the passage finishes. */
 [data-undara-marketing-frame] {
   transition: background-color 420ms ease, border-color 420ms ease,
     box-shadow 420ms ease, backdrop-filter 420ms ease;
@@ -699,19 +696,280 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   backdrop-filter: none !important;
 }
 
-/* One full-viewport Rose surface covers and uncovers marketing routes.
-   Do not scale the gradient layer or clip it into a separate opaque shape:
-   either can reveal rectangular compositor seams during the 3D camera zoom.
-   Destination pieces still assemble as this single surface fades away. */
-@keyframes undara-marketing-veil-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Marketing route transition: move through foreground plants instead of a
+   branded color flash. Existing transparent woodland artwork is reused so the
+   effect belongs to Undara's landing world. The landscape layer fully covers
+   the route only during the handoff; on reveal it dissolves while foliage
+   parts, making the committed destination feel like a new clearing. */
+.undara-portal-transition {
+  --undara-portal-cover-ms: 780ms;
+  --undara-portal-reveal-ms: 900ms;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: auto;
+  background: transparent;
 }
-@keyframes undara-marketing-veil-out {
-  from { opacity: 1; }
-  to { opacity: 0; }
+.undara-portal-transition__landscape,
+.undara-portal-transition__mist,
+.undara-portal-transition__foliage,
+.undara-portal-transition__vignette {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.undara-portal-transition__landscape {
+  inset: -5%;
+  z-index: 0;
+  opacity: 0;
+  transform: scale(1.08);
+  background: #e8ded3 url("/assets/landing/atmosphere/lightbg.webp") center / cover no-repeat;
+}
+.dark .undara-portal-transition__landscape {
+  background-color: #281414;
+  background-image: url("/assets/landing/atmosphere/darkbg.webp");
+}
+.undara-portal-transition__mist {
+  inset: -12%;
+  z-index: 2;
+  opacity: 0;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgb(247 240 231 / 64%) 0%, rgb(236 226 213 / 22%) 38%, transparent 68%);
+  filter: blur(14px);
+}
+.dark .undara-portal-transition__mist {
+  background:
+    radial-gradient(ellipse at 50% 45%, rgb(214 179 140 / 18%) 0%, rgb(72 39 34 / 18%) 40%, transparent 70%);
+}
+.undara-portal-transition__mist--back { z-index: 1; }
+.undara-portal-transition__mist--front {
+  z-index: 7;
+  inset: -20%;
+  filter: blur(28px);
+  background:
+    radial-gradient(ellipse at 50% 52%, rgb(246 237 226 / 45%) 0%, transparent 58%);
+}
+.dark .undara-portal-transition__mist--front {
+  background:
+    radial-gradient(ellipse at 50% 52%, rgb(214 179 140 / 13%) 0%, transparent 60%);
 }
 
+.undara-portal-transition__foliage {
+  z-index: 5;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  transform-origin: center;
+  filter: sepia(.42) saturate(.72) hue-rotate(338deg) brightness(.62) contrast(.96);
+}
+.dark .undara-portal-transition__foliage {
+  filter: sepia(.55) saturate(.74) hue-rotate(335deg) brightness(.38) contrast(1.08);
+}
+.undara-portal-transition__foliage--left-back {
+  left: -15vw;
+  top: -8vh;
+  width: min(78vw, 1040px);
+  height: 116vh;
+  opacity: .94;
+  background-image: url("/assets/landing/ornaments/botanical/branch-03.webp");
+  transform: translate3d(-72%, 0, 0) rotate(-8deg) scale(1.04);
+  transform-origin: left center;
+}
+.undara-portal-transition__foliage--right-back {
+  right: -18vw;
+  top: -10vh;
+  width: min(82vw, 1100px);
+  height: 120vh;
+  opacity: .92;
+  background-image: url("/assets/landing/ornaments/botanical/branch-06.webp");
+  transform: translate3d(76%, 0, 0) rotate(8deg) scale(1.06);
+  transform-origin: right center;
+}
+.undara-portal-transition__foliage--top {
+  left: -10vw;
+  top: -40vh;
+  width: 120vw;
+  height: 82vh;
+  z-index: 6;
+  opacity: .98;
+  background-image: url("/assets/landing/ornaments/botanical/canopy7.webp");
+  background-size: cover;
+  background-position: center bottom;
+  transform: translate3d(0, -74%, 0) scale(1.12);
+  transform-origin: center top;
+}
+.undara-portal-transition__foliage--bottom {
+  left: -8vw;
+  bottom: -32vh;
+  width: 116vw;
+  height: 66vh;
+  z-index: 4;
+  opacity: .88;
+  background-image: url("/assets/landing/atmosphere/forest-silhouette.webp");
+  background-size: cover;
+  background-position: center top;
+  transform: translate3d(0, 76%, 0) scale(1.08);
+  transform-origin: center bottom;
+  filter: sepia(.5) saturate(.68) hue-rotate(338deg) brightness(.48) contrast(1.04);
+}
+.dark .undara-portal-transition__foliage--bottom {
+  filter: sepia(.52) saturate(.72) hue-rotate(335deg) brightness(.26) contrast(1.12);
+}
+.undara-portal-transition__foliage--left-front {
+  left: -24vw;
+  bottom: -26vh;
+  width: min(72vw, 940px);
+  height: 92vh;
+  z-index: 8;
+  opacity: .98;
+  background-image: url("/assets/landing/ornaments/botanical/branch-01.webp");
+  transform: translate3d(-88%, 18%, 0) rotate(-18deg) scale(1.16);
+  transform-origin: left bottom;
+  filter: sepia(.5) saturate(.76) hue-rotate(338deg) brightness(.50) contrast(1.02) blur(.25px);
+}
+.undara-portal-transition__foliage--right-front {
+  right: -24vw;
+  bottom: -28vh;
+  width: min(74vw, 980px);
+  height: 94vh;
+  z-index: 8;
+  opacity: .98;
+  background-image: url("/assets/landing/ornaments/botanical/branch-05.webp");
+  transform: translate3d(90%, 20%, 0) rotate(18deg) scale(1.18);
+  transform-origin: right bottom;
+  filter: sepia(.5) saturate(.76) hue-rotate(338deg) brightness(.50) contrast(1.02) blur(.25px);
+}
+.dark .undara-portal-transition__foliage--left-front,
+.dark .undara-portal-transition__foliage--right-front {
+  filter: sepia(.58) saturate(.78) hue-rotate(335deg) brightness(.29) contrast(1.1) blur(.25px);
+}
+.undara-portal-transition__vignette {
+  inset: 0;
+  z-index: 10;
+  opacity: 0;
+  box-shadow: inset 0 0 18vw rgb(50 29 22 / 42%);
+}
+.dark .undara-portal-transition__vignette {
+  box-shadow: inset 0 0 20vw rgb(14 5 5 / 72%);
+}
+
+/* Cover: foreground vegetation arrives at different speeds, giving the camera
+   a shallow push-through instead of a flat wipe. */
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__landscape {
+  animation: undara-portal-landscape-cover var(--undara-portal-cover-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__mist {
+  animation: undara-portal-mist-cover var(--undara-portal-cover-ms) ease-out both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--left-back {
+  animation: undara-portal-left-back-cover var(--undara-portal-cover-ms) cubic-bezier(.22,.86,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--right-back {
+  animation: undara-portal-right-back-cover var(--undara-portal-cover-ms) cubic-bezier(.22,.86,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--top {
+  animation: undara-portal-top-cover var(--undara-portal-cover-ms) cubic-bezier(.2,.82,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--bottom {
+  animation: undara-portal-bottom-cover var(--undara-portal-cover-ms) cubic-bezier(.2,.82,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--left-front {
+  animation: undara-portal-left-front-cover var(--undara-portal-cover-ms) cubic-bezier(.16,.82,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--right-front {
+  animation: undara-portal-right-front-cover var(--undara-portal-cover-ms) cubic-bezier(.16,.82,.2,1) both;
+}
+.undara-portal-transition[data-phase="cover"] .undara-portal-transition__vignette {
+  animation: undara-portal-vignette-cover var(--undara-portal-cover-ms) ease-out both;
+}
+
+/* Hold mirrors the final cover frame exactly, so switching React phase does
+   not cause a one-frame jump while Next commits the destination. */
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__landscape { opacity: 1; transform: scale(1); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist { opacity: .72; }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist--front { opacity: .72; }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--left-back { transform: translate3d(-5%, 0, 0) rotate(2deg) scale(1.1); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--right-back { transform: translate3d(7%, 0, 0) rotate(-2deg) scale(1.1); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--top { transform: translate3d(0, -14%, 0) scale(1.15); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--bottom { transform: translate3d(0, 18%, 0) scale(1.12); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--left-front { transform: translate3d(-6%, 5%, 0) rotate(-4deg) scale(1.2); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--right-front { transform: translate3d(8%, 7%, 0) rotate(4deg) scale(1.21); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__vignette { opacity: 1; }
+
+/* Reveal: the route underneath is already committed. Landscape/fog dissolve
+   first, then near and far foliage peel away with slightly different timing. */
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__landscape {
+  animation: undara-portal-landscape-reveal var(--undara-portal-reveal-ms) ease-out both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__mist {
+  animation: undara-portal-mist-reveal var(--undara-portal-reveal-ms) ease-out both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-back {
+  animation: undara-portal-left-back-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--right-back {
+  animation: undara-portal-right-back-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--top {
+  animation: undara-portal-top-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--bottom {
+  animation: undara-portal-bottom-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-front {
+  animation: undara-portal-left-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--right-front {
+  animation: undara-portal-right-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__vignette {
+  animation: undara-portal-vignette-reveal var(--undara-portal-reveal-ms) ease-out both;
+}
+
+@keyframes undara-portal-landscape-cover {
+  from { opacity: 0; transform: scale(1.08); }
+  34% { opacity: .62; }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes undara-portal-mist-cover { from { opacity: 0; transform: scale(1.08); } to { opacity: .72; transform: scale(1); } }
+@keyframes undara-portal-left-back-cover { from { transform: translate3d(-72%,0,0) rotate(-8deg) scale(1.04); } to { transform: translate3d(-5%,0,0) rotate(2deg) scale(1.1); } }
+@keyframes undara-portal-right-back-cover { from { transform: translate3d(76%,0,0) rotate(8deg) scale(1.06); } to { transform: translate3d(7%,0,0) rotate(-2deg) scale(1.1); } }
+@keyframes undara-portal-top-cover { from { transform: translate3d(0,-74%,0) scale(1.12); } to { transform: translate3d(0,-14%,0) scale(1.15); } }
+@keyframes undara-portal-bottom-cover { from { transform: translate3d(0,76%,0) scale(1.08); } to { transform: translate3d(0,18%,0) scale(1.12); } }
+@keyframes undara-portal-left-front-cover { from { transform: translate3d(-88%,18%,0) rotate(-18deg) scale(1.16); } 72% { transform: translate3d(-13%,7%,0) rotate(-6deg) scale(1.2); } to { transform: translate3d(-6%,5%,0) rotate(-4deg) scale(1.2); } }
+@keyframes undara-portal-right-front-cover { from { transform: translate3d(90%,20%,0) rotate(18deg) scale(1.18); } 72% { transform: translate3d(15%,9%,0) rotate(6deg) scale(1.21); } to { transform: translate3d(8%,7%,0) rotate(4deg) scale(1.21); } }
+@keyframes undara-portal-vignette-cover { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes undara-portal-landscape-reveal { from { opacity: 1; transform: scale(1); } 42% { opacity: .18; } to { opacity: 0; transform: scale(.985); } }
+@keyframes undara-portal-mist-reveal { from { opacity: .7; } to { opacity: 0; } }
+@keyframes undara-portal-left-back-reveal { from { transform: translate3d(-5%,0,0) rotate(2deg) scale(1.1); } to { transform: translate3d(-86%,-2%,0) rotate(-10deg) scale(1.03); } }
+@keyframes undara-portal-right-back-reveal { from { transform: translate3d(7%,0,0) rotate(-2deg) scale(1.1); } to { transform: translate3d(88%,-2%,0) rotate(10deg) scale(1.04); } }
+@keyframes undara-portal-top-reveal { from { transform: translate3d(0,-14%,0) scale(1.15); } to { transform: translate3d(0,-82%,0) scale(1.09); } }
+@keyframes undara-portal-bottom-reveal { from { transform: translate3d(0,18%,0) scale(1.12); } to { transform: translate3d(0,86%,0) scale(1.07); } }
+@keyframes undara-portal-left-front-reveal { from { transform: translate3d(-6%,5%,0) rotate(-4deg) scale(1.2); } to { transform: translate3d(-104%,22%,0) rotate(-22deg) scale(1.14); } }
+@keyframes undara-portal-right-front-reveal { from { transform: translate3d(8%,7%,0) rotate(4deg) scale(1.21); } to { transform: translate3d(106%,24%,0) rotate(22deg) scale(1.15); } }
+@keyframes undara-portal-vignette-reveal { from { opacity: 1; } to { opacity: 0; } }
+
+@media (max-width: 640px) {
+  .undara-portal-transition__foliage--left-back,
+  .undara-portal-transition__foliage--right-back {
+    width: 100vw;
+  }
+  .undara-portal-transition__foliage--left-front,
+  .undara-portal-transition__foliage--right-front {
+    width: 92vw;
+  }
+  .undara-portal-transition__foliage--top {
+    left: -24vw;
+    width: 148vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .undara-portal-transition { display: none; }
+}
 
 /* Brand Rose sidebar. Only selected items have outside corner flares: hovering
    an adjacent item cannot stack two colored corner wedges. */
