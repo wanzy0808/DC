@@ -5900,3 +5900,20 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Commits implementasi:** `5c1e7da`, `8cb5c98`, `2a45e96`, `36d1edb`, `d6bccee`, `8669920`.
 
 **Validasi:** source inspection selesai. Build/CI untuk rangkaian commit ini harus diamati terpisah dan belum boleh dianggap PASS pada entry ini sampai workflow terkait memberi status sukses. QA browser visual lintas viewport juga belum diklaim PASS.
+
+
+### 30 September 2026 — Legal pages join the shared marketing system
+
+**Rationale:** `/privacy-policy` dan `/terms-and-conditions` masih memakai standalone rounded card lama sehingga terasa terpisah dari marketing surface Undara yang sudah memakai framed editorial system. Perubahan ini hanya merapikan presentasi; naskah legal, route, locale, dan link antar-halaman dipertahankan.
+
+- Kedua halaman sekarang memakai `PublicMarketingAtmosphere`, shared `Navbar`, `undara-marketing-frame`, internal scrollport, `undara-marketing-content`, dan `MarketingFrameFooter`.
+- Privacy Policy memakai hero legal bilingual dan numbered editorial paragraphs untuk meningkatkan readability tanpa mengubah isi kebijakan.
+- Terms & Conditions memakai hero legal bilingual, blok Ketentuan Umum, numbered editorial sections, serta link Privacy Policy yang tetap tersedia.
+- Layout memanfaatkan helper editorial offset/rail/ambient yang sama dengan service pages sehingga legal content terasa satu keluarga tanpa dibuat dekoratif berlebihan.
+- Regression `tests/marketing-polish.test.mjs` sekarang menjaga kedua legal route tetap memakai shared frame/navbar/footer/content system.
+
+**Area:** `app/privacy-policy/page.tsx`, `app/terms-and-conditions/page.tsx`, `tests/marketing-polish.test.mjs`.
+
+**Commits implementasi:** `c93ff90`, `5a036ee`, `61e9f5f`.
+
+**Validasi:** source inspection selesai. Build/CI commit terbaru harus diamati terpisah sebelum dinyatakan PASS; QA browser visual lintas viewport juga tetap terpisah.
