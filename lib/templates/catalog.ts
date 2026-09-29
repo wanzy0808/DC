@@ -6,6 +6,7 @@ export type InvitationTemplate = {
   key: string;
   name: string;
   description: string;
+  descriptionEn?: string;
   previewImage: string;
   assetPath: string;
   category: string;
@@ -24,6 +25,7 @@ export const blankCanvasTemplate: InvitationTemplate = {
   preset: { layout: "editorial", palette: "pearl", font: "cinzelFauna" },
   name: "Canvas Kosong",
   description: "Canvas kosong untuk membangun desain dari nol di Studio.",
+  descriptionEn: "A blank canvas for building a design from scratch in Studio.",
   previewImage: "/assets/landing/ornaments/legacy/flower.webp",
   assetPath: "",
 };
@@ -38,6 +40,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "blush", font: "cinzelFauna" },
     name: "Romantic Rose",
     description: "Amplop digital, galeri foto pasangan, dan 13 bagian undangan dalam nuansa rose.",
+    descriptionEn: "A digital envelope, couple photo gallery, and 13 invitation sections in a romantic rose direction.",
     previewImage: "/assets/demo/invitation/couple.jpg",
     assetPath: "/templates/romantic-rose",
   },
@@ -51,6 +54,8 @@ export const invitationTemplates: InvitationTemplate[] = [
     name: "Botanical Ivory",
     description:
       "Ivory botanical bergaya editorial dengan susunan RSVP, Wishes, dan Gift seperti undangan mobile klasik.",
+    descriptionEn:
+      "An editorial ivory botanical theme with RSVP, Wishes, and Gift arranged like a classic mobile invitation.",
     previewImage:
       "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/botanical-ivory",
@@ -64,6 +69,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "blush", font: "playfairLora" },
     name: "Eternal Blossom",
     description: "Floral editorial yang lembut untuk perayaan personal dan intimate.",
+    descriptionEn: "A soft editorial floral theme for personal and intimate celebrations.",
     previewImage:
       "/assets/demo/invitation/couple-03.jpg",
     assetPath: "/templates/eternal-blossom",
@@ -77,6 +83,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
     name: "Modern Maroon",
     description: "Editorial modern dengan aksen berani untuk berbagai jenis acara.",
+    descriptionEn: "A modern editorial direction with bold accents for many kinds of celebrations.",
     previewImage:
       "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/modern-maroon",
@@ -90,6 +97,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "garden", palette: "sage", font: "playfairLora" },
     name: "Garden Light",
     description: "Botanical terang untuk acara outdoor, garden, dan daytime celebration.",
+    descriptionEn: "A bright botanical direction for outdoor, garden, and daytime celebrations.",
     previewImage:
       "/assets/demo/invitation/couple-03.jpg",
     assetPath: "/templates/garden-light",
@@ -103,6 +111,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "midnight", palette: "midnight", font: "cinzelFauna" },
     name: "Midnight Romance",
     description: "Dramatis, intimate, dan elegan untuk acara malam hari.",
+    descriptionEn: "A dramatic, intimate, and elegant direction for evening celebrations.",
     previewImage:
       "/assets/demo/invitation/couple.jpg",
     assetPath: "/templates/midnight-romance",
@@ -116,6 +125,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "classic", palette: "pearl", font: "playfairLora" },
     name: "Classic Pearl",
     description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
+    descriptionEn: "A clean classic theme with a timeless feel that adapts to many event styles.",
     previewImage:
       "/assets/demo/invitation/couple-02.jpg",
     assetPath: "/templates/classic-pearl",
@@ -129,6 +139,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "classic", palette: "champagne", font: "cinzelFauna" },
     name: "Golden Art Deco",
     description: "Komposisi geometris emas dan garis simetris, sepenuhnya tanpa foto.",
+    descriptionEn: "Golden geometric composition and symmetrical lines, designed completely without photos.",
     previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/golden-art-deco",
   },
@@ -141,6 +152,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "garden", palette: "sage", font: "cinzelFauna" },
     name: "Paper Cut Botanical",
     description: "Kolase daun dan lapisan kertas berwarna sage, tanpa foto.",
+    descriptionEn: "A sage paper-cut collage of layered leaves, designed without photos.",
     previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/paper-cut-botanical",
   },
@@ -153,6 +165,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "editorial", palette: "pencil", font: "playfairQuicksand" },
     name: "Pencil Reverie",
     description: "Romansa sketsa pensil, kolase kenangan vintage, dan animasi waktu, tanpa foto.",
+    descriptionEn: "Pencil-sketch romance, vintage memory collage, and time-inspired motion, without photos.",
     previewImage: "/templates/pencil-reverie/bungaandlampbg.webp",
     assetPath: "/templates/pencil-reverie",
   },
@@ -165,6 +178,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "botanical", palette: "zen", font: "playfairInter" },
     name: "Zen Atelier",
     description: "Sampul ilustrasi sakura dan pegunungan tinta, potret pasangan editorial, dan galeri foto.",
+    descriptionEn: "An illustrated sakura and ink-mountain cover with editorial couple portraits and a photo gallery.",
     previewImage: "/api/template-preview/zen-atelier",
     assetPath: "assets/templates/zen-atelier",
   },
@@ -177,6 +191,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
     name: "Celestial Ink",
     description: "Langit malam, orbit dan bintang berilustrasi tanpa foto.",
+    descriptionEn: "An illustrated night sky of orbits and stars, designed without photos.",
     previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/celestial-ink",
   },
