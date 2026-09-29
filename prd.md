@@ -415,6 +415,7 @@ Canonical behavior:
 - **Rangkaian Acara**, **Undangan/Studio**, **Personal Invitation**, **RSVP**, dan **Manajemen Tamu** tetap dapat dibuka sebelum Publish/payment;
 - RSVP dan Manajemen Tamu tidak menampilkan activation/paywall overlay hanya karena `accessPaid = false`;
 - Personal Invitation juga dapat dipersiapkan sebelum Publish; public delivery tetap bergantung pada lifecycle public invitation yang valid;
+- Personal Invitation memiliki personalisasi Amplop per Guest yang dapat ON/OFF dari Dashboard. Saat ON, nama berasal dari `personalAddressee` atau fallback `Guest.name`, ditampilkan Title Case tanpa menimpa data sumber. Bahasa sapaan disimpan per Guest sebagai ID/EN; pasangan dengan dua nama yang dipisahkan `&`/“dan”/“and” dirender **“Kepada Yth : Bapak [Nama] dan Ibu [Nama]”** atau **“Dear : Mr [Name] and Mrs [Name]”**. Saat OFF, Amplop kembali generik tetapi token personal, RSVP, WA Blast, seating dan data Guest tetap sama.
 - apabila belum ada data karena undangan belum dibagikan, gunakan empty state normal agar user tetap dapat memahami fungsi halaman;
 - payment gate Digital Invitation hanya ditegakkan ketika user menekan **Publish** di **Dashboard → Undangan Digital**; Studio hanya untuk menyusun dan menyimpan desain, tanpa tombol Publish atau pembayaran;
 - public RSVP/personal invitation tidak dianggap usable untuk tamu sampai parent invitation memenuhi configured + saved template + published + entitlement gates;
