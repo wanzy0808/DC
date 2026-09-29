@@ -4,6 +4,7 @@ import test from "node:test";
 
 const read = (file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8");
 const portal = read("components/Landing/Pintu/PortalTransition.tsx");
+const doorScene = read("components/Landing/Pintu/LandingDoorScene.tsx");
 const styles = read("app/globals.css");
 
 test("marketing page transitions use the woodland passage instead of the old rose veil", () => {
@@ -23,6 +24,9 @@ test("marketing page transitions use the woodland passage instead of the old ros
   assert.match(styles, /@keyframes undara-portal-left-front-cover/);
   assert.match(styles, /@keyframes undara-portal-right-front-reveal/);
   assert.doesNotMatch(styles, /@keyframes undara-marketing-veil-in|@keyframes undara-marketing-veil-out/);
+  assert.match(doorScene, /function startWoodlandCover\(\)/);
+  assert.match(doorScene, /color="#6D5848"/);
+  assert.doesNotMatch(doorScene, /#e8a9bd|startRoseCover/);
 });
 
 test("woodland transition keeps reduced-motion users on the no-animation route", () => {
