@@ -1,4 +1,4 @@
-import { ArrowDownRight, Check } from "lucide-react";
+import { ArrowDownRight } from "lucide-react";
 import { plannerServices } from "@/data/services/event-planner";
 
 export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
@@ -6,37 +6,35 @@ export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
 
   return (
     <section className="space-y-10 md:space-y-12">
-      <div className="grid gap-6 border-b border-primary/25 pb-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-14">
+      <div className="grid gap-6 border-b border-primary/25 pb-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-14">
         <div>
-          <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary">
-            {en ? "How we work" : "Cara kami bekerja"}
+          <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
+            {en ? "Before we connect you" : "Sebelum kami hubungkan"}
           </p>
-          <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
-            {en
-              ? "Less noise, clearer decisions, calmer execution."
-              : "Lebih sedikit keruwetan, lebih banyak keputusan yang jelas."}
+          <h2 className="mt-4 max-w-[19ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+            {en ? "Four things are enough to get started." : "Empat hal sederhana sudah cukup untuk mulai."}
           </h2>
         </div>
 
         <div className="flex items-end gap-4">
           <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
             {en
-              ? "We turn preparation into clear decisions, owners, timing, and contingencies so every person involved understands what needs to happen next."
-              : "Kami memecah persiapan menjadi keputusan, PIC, timing, dan contingency yang jelas supaya semua orang yang terlibat paham apa yang perlu dilakukan berikutnya."}
+              ? "You do not need a complete brief. Send whatever is already known, and the rest can be clarified during consultation."
+              : "Kamu tidak perlu menyiapkan brief yang lengkap. Kirim saja informasi yang sudah ada, sisanya bisa dibicarakan saat konsultasi."}
           </p>
           <ArrowDownRight className="mb-1 hidden h-6 w-6 shrink-0 text-primary/55 lg:block" />
         </div>
       </div>
 
       <div className="divide-y divide-primary/20 border-b border-primary/20">
-        {plannerServices.map((service) => (
+        {plannerServices.map((service, index) => (
           <article
             key={service.title}
-            className="grid gap-5 py-7 md:grid-cols-[2.4rem_minmax(0,0.9fr)_minmax(0,1.35fr)] md:items-start md:gap-7 md:py-9"
+            className="grid gap-5 py-7 md:grid-cols-[3.25rem_minmax(0,0.85fr)_minmax(0,1.25fr)] md:items-start md:gap-7 md:py-9"
           >
-            <span className="mt-1 flex h-9 w-9 items-center justify-center rounded-full border border-primary/35 text-primary">
-              <Check className="h-4 w-4" />
-            </span>
+            <p className="font-[family-name:var(--font-undara-heading)] text-3xl leading-none text-primary/50">
+              {String(index + 1).padStart(2, "0")}
+            </p>
 
             <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl">
               {en ? service.titleEn : service.title}
