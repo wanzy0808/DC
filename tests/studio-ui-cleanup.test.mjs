@@ -162,7 +162,7 @@ test("Studio custom button states follow Undara semantic colors and sorting has 
   assert.match(templatePanel, /w-\[204px\] max-w-\[68%\] shrink-0/);
   assert.match(templatePanel, /className="h-9 w-full appearance-none [^"]*pl-4 pr-11/);
   assert.match(templatePanel, /<ChevronDown size=\{15\} [^>]*className="pointer-events-none absolute right-4/);
-  assert.match(styles, /grid-template-columns: 108px 380px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 104px minmax\(340px, 360px\) minmax\(0, 1fr\)/);
 });
 
 test("landing and Studio share one rounded-rectangle button radius instead of pill controls", () => {
