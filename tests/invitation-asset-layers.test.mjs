@@ -137,7 +137,10 @@ test("template layers persist customer edit access independently from staff auth
   assert.match(editor, /customerAccess: templateMode \? "locked" : "customizable"/);
   assert.match(editor, /customerAccess: layer\.customerAccess \?\? "locked"/);
   assert.match(editor, /editorMode=\{templateMode \? "template" : "customer"\}/);
-  assert.match(editor, /onMoveSectionInstance=\{templateMode \? moveSectionInstance : undefined\}/);
+  assert.match(editor, /onMoveSectionInstance=\{moveSectionInstance\}/);
+  assert.match(editor, /onToggleSectionInstance=\{toggleSectionInstance\}/);
+  assert.match(editor, /onDuplicateSectionInstance=\{duplicateSectionInstance\}/);
+  assert.match(editor, /onDeleteSectionInstance=\{deleteSectionInstance\}/);
 });
 
 test("decorative text and section-targeted artwork survive the shared design-key codec", () => {
