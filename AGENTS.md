@@ -485,3 +485,10 @@ Untuk template ilustrasi/scrapbook Undara, lihat dan audit aset asli terlebih da
 - Navbar controls, door navigator widget, Sound On/Off, volume control, and social buttons use the exact same transparent surface treatment in both Light and Dark Mode.
 - Do not add a dark-only card/background fill to `.undara-control-surface`; theme differences come from the shared `--primary` color only.
 - Hover uses the same subtle primary tint as navbar controls.
+
+
+### 2026-09-29 — Persistent explicit theme
+- Light/Dark mode is a user preference, not an automatic system-theme mode.
+- Persist the last explicit theme selection in both the `theme` cookie and localStorage.
+- Root layout reads the cookie so refresh renders the saved theme immediately; ThemeProvider migrates an older localStorage-only preference without overwriting it during hydration.
+- Do not change theme on refresh, navigation, time of day, or `prefers-color-scheme`. Theme changes only through the explicit theme control (or an intentional product action using the same persisted state).
