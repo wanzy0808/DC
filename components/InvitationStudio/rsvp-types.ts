@@ -5,6 +5,10 @@ export type PersonalRsvpGuest = {
   name: string;
   token: string;
   invitedPax: number;
+  personalAddressee?: string | null;
+  recipientType?: "INDIVIDUAL" | "COUPLE" | "FAMILY" | "GROUP";
+  personalEnvelopeEnabled?: boolean;
+  personalLanguage?: "ID" | "EN";
 };
 
 export type RsvpFormProps = {
