@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const CONSULTATION_URL =
@@ -8,65 +8,79 @@ const CONSULTATION_URL =
 
 export default function FounderSection() {
   return (
-    <section className="grid items-center gap-10 lg:grid-cols-12">
-      <div className="relative lg:col-span-5">
-        <div className="rounded-[32px] border border-primary/35 bg-[var(--card)]/75 p-2">
-          <div className="relative h-[360px] overflow-hidden rounded-[25px] sm:h-[460px]">
-            <Image
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1000&auto=format&fit=crop"
-              alt="Founder Undara"
-              fill
-              className="object-cover"
-            />
-          </div>
+    <section className="grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-16">
+      <div className="relative min-h-[520px] lg:min-h-[640px]">
+        <div className="absolute inset-[0_8%_10%_0] overflow-hidden rounded-[8px_44px_8px_44px] border border-primary/25">
+          <Image
+            src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=1200&auto=format&fit=crop"
+            alt="Christine, Founder dan Lead Event Planner Undara"
+            fill
+            sizes="(max-width: 1024px) 90vw, 52vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(25,17,13,0.52),transparent_42%)]" />
         </div>
-        <div className="absolute -bottom-5 right-0 w-[min(18rem,calc(100%-1rem))] rounded-[24px] border border-primary/35 bg-[var(--card)] p-5 shadow-xl sm:-right-3">
-          <div className="flex items-center gap-2 text-[var(--primary)]">
+
+        <div className="absolute bottom-0 right-0 max-w-[19rem] border-l border-t border-primary/30 bg-background/92 px-6 py-5 backdrop-blur-md">
+          <div className="flex items-center gap-2 text-primary">
             <Sparkles className="h-4 w-4" />
-            <span className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold">
-              8+ Tahun Pengalaman
+            <span className="font-[family-name:var(--font-undara-mono)] text-[9px] font-semibold uppercase tracking-[0.16em]">
+              8+ tahun pengalaman
             </span>
           </div>
-          <p className="mt-2 text-xs italic leading-6 text-[var(--muted-foreground)]">
-            “Acara yang baik bukan hanya terlihat indah, tapi terasa terarah bagi host, keluarga, vendor, dan setiap tamu.”
+          <p className="mt-3 font-[family-name:var(--font-undara-heading)] text-lg italic leading-7">
+            “Acara yang baik terasa terarah bagi host, keluarga, vendor, dan setiap tamu.”
           </p>
         </div>
       </div>
 
-      <div className="space-y-6 lg:col-span-7">
-        <p className="font-[family-name:var(--font-undara-mono)] text-xs font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">
-          [ MEET THE FOUNDER ]
+      <div>
+        <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary">
+          Meet the founder
         </p>
-        <h2 className="font-[family-name:var(--font-undara-heading)] text-4xl md:text-5xl">
+        <h2 className="mt-4 font-[family-name:var(--font-undara-heading)] text-5xl leading-none text-primary md:text-6xl">
           Christine
         </h2>
-        <p className="font-[family-name:var(--font-undara-mono)] text-sm uppercase tracking-wider text-[var(--primary)]">
+        <p className="mt-3 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
           Founder & Lead Event Planner
         </p>
-        <p className="font-[family-name:var(--font-undara-body)] text-sm leading-7 text-[var(--muted-foreground)] md:text-base">
-          Berangkat dari pengalaman hospitality dan event execution, Christine membangun Undara untuk membantu klien mengubah banyak detail menjadi alur acara yang jelas, terkoordinasi, dan tetap terasa personal.
+
+        <p className="mt-7 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+          Berangkat dari hospitality dan event execution, Christine membangun Undara untuk
+          mengubah banyak detail menjadi keputusan yang jelas. Bukan sekadar membuat acara
+          terlihat rapi, tapi memastikan orang-orang di dalamnya tahu kapan harus bergerak,
+          siapa yang mengambil keputusan, dan apa yang terjadi ketika rencana berubah.
         </p>
 
-        <div className="grid grid-cols-3 gap-4 border-t border-[var(--border)] pt-5">
+        <div className="mt-9 grid grid-cols-3 border-y border-primary/25 py-6">
           {[
             ["150+", "Acara"],
             ["99%", "Kepuasan"],
             ["8+", "Tahun"],
-          ].map(([value, label]) => (
-            <div key={label}>
-              <p className="font-[family-name:var(--font-undara-heading)] text-2xl text-[var(--primary)]">
+          ].map(([value, label], index) => (
+            <div
+              key={label}
+              className={index > 0 ? "border-l border-primary/20 pl-5 sm:pl-7" : ""}
+            >
+              <p className="font-[family-name:var(--font-undara-heading)] text-3xl text-primary md:text-4xl">
                 {value}
               </p>
-              <p className="mt-1 text-xs text-[var(--muted-foreground)]">{label}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{label}</p>
             </div>
           ))}
         </div>
 
-        <Button asChild>
-          <Link href={CONSULTATION_URL} target="_blank" rel="noreferrer">
-            Konsultasi dengan Christine
-          </Link>
-        </Button>
+        <div className="mt-8 flex items-center gap-5">
+          <Button asChild>
+            <Link href={CONSULTATION_URL} target="_blank" rel="noreferrer">
+              Konsultasi dengan Christine
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+          <p className="hidden max-w-[16rem] text-xs leading-5 text-muted-foreground sm:block">
+            Mulai dari cerita acaranya dulu. Scope dan kebutuhan tim bisa disusun setelahnya.
+          </p>
+        </div>
       </div>
     </section>
   );
