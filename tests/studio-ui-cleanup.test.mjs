@@ -532,7 +532,7 @@ test("Studio clipboard shortcuts never hijack text editing", () => {
 
 test("Amplop and Isi share the same asset-layer keyboard shortcut path", () => {
   assert.doesNotMatch(designer, /canvasStage !== "cover" \|\| selectedPhotoSlot/);
-  assert.match(designer, /if \(selectedPhotoSlot\) return;/);
+  assert.match(designer, /if \(selectedPhotoSlot && !activeNativeKey\) return;/);
   assert.match(designer, /selectedAssetLayer\?\.section \?\? \(canvasStage === "envelope" \? "envelope" : "cover"\)/);
   assert.match(designer, /selectedAssetLayer\?\.section \?\? \(canvasStage === "envelope" \? "envelope" : "cover"\);/);
   assert.match(designer, /event\.key === "Delete" \|\| event\.key === "Backspace"/);
