@@ -68,7 +68,7 @@ export default function AssetPanel({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
+        <h2 className="font-[family-name:var(--font-undara-heading)] text-lg font-semibold text-primary">{en ? "Assets" : "Aset"}</h2>
         <p className="mt-1 text-sm text-foreground/75">
           {en ? "Drag an image onto the invitation section where you want to place it." : "Seret gambar ke section undangan tempat kamu ingin meletakkannya."}
         </p>
@@ -85,7 +85,7 @@ export default function AssetPanel({
               </p>
             </div>
           </div>
-          <label className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/35 px-3 text-xs font-semibold text-primary transition hover:bg-primary/5 ${uploadingLibrary ? "pointer-events-none opacity-50" : ""}`}>
+          <label className={`flex min-h-10 cursor-pointer items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/35 px-3 text-xs font-semibold text-primary transition hover:bg-primary/5 ${uploadingLibrary ? "pointer-events-none opacity-50" : ""}`}>
             <Upload size={15} />
             {uploadingLibrary ? (en ? "Uploading…" : "Mengunggah…") : (en ? "Upload artwork" : "Upload artwork")}
             <input
@@ -122,7 +122,7 @@ export default function AssetPanel({
                   }}
                   onDragEnd={onDragAssetEnd}
                   title={asset.title}
-                  className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
+                  className={`min-w-0 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
                 >
                   <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                     <img src={asset.url} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
@@ -151,7 +151,7 @@ export default function AssetPanel({
                 type="button"
                 disabled={layers.length >= maxLayers}
                 onClick={() => onAddShape(shape as InvitationShapeKind)}
-                className="grid min-h-20 place-items-center gap-1 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background px-2 py-3 text-xs text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid min-h-20 place-items-center gap-1 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background px-2 py-3 text-xs text-foreground transition hover:border-primary hover:bg-primary/5 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ShapeIcon size={24} strokeWidth={1.5} />
                 <span>{label}</span>
@@ -193,7 +193,7 @@ export default function AssetPanel({
               }}
               onDragEnd={onDragAssetEnd}
               title={asset.folder + " / " + asset.name}
-              className={`min-w-0 rounded-[var(--dc-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
+              className={`min-w-0 rounded-[var(--undara-control-radius)] border border-primary/25 bg-background p-2 text-left transition hover:border-primary hover:bg-primary/5 ${layers.length >= maxLayers ? "cursor-not-allowed opacity-40" : "cursor-grab active:cursor-grabbing"}`}
             >
               <span className="grid h-24 place-items-center overflow-hidden rounded-lg bg-primary/5">
                 <img src={asset.src} alt="" loading="lazy" className="max-h-full max-w-full object-contain" />
