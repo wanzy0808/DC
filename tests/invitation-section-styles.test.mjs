@@ -90,7 +90,9 @@ test("every Studio section keeps an always-visible vertical action rail on its l
   const rsvpInspector = read("components/InvitationStudio/RsvpElementInspector.tsx");
   const css = read("components/InvitationStudio/studio.css");
 
-  assert.match(wrapper, /className="undara-section-instance relative"/);\n  assert.doesNotMatch(wrapper, /dc-section-instance/);\n  assert.match(wrapper, /const showActions = Boolean\(preview && actions\?\.onMove/);
+  assert.match(wrapper, /className="undara-section-instance relative"/);
+  assert.doesNotMatch(wrapper, /dc-section-instance/);
+  assert.match(wrapper, /const showActions = Boolean\(preview && actions\?\.onMove/);
   assert.match(wrapper, /\{showActions && \(/);
   assert.doesNotMatch(wrapper, /\{selected && actions\?\.onMove/);
   assert.match(rail, /aria-orientation="vertical"/);
