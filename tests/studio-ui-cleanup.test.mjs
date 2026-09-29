@@ -77,7 +77,7 @@ test("Studio keeps the live edit canvas and adds a separate final preview from t
 });
 
 test("Studio has a wider inspector, compact side tools and a smaller invitation canvas", () => {
-  assert.match(styles, /grid-template-columns: 98px 360px minmax\(0, 1fr\)/);
+  assert.match(styles, /grid-template-columns: 96px minmax\(320px, 360px\) minmax\(0, 1fr\)/);
   assert.match(styles, /\.undara-studio-tool \{[^}]*gap: 10px;[^}]*min-height: 74px;/);
   assert.match(styles, /\.undara-studio-preview-surface \{[^}]*width: 340px;/);
 });
@@ -353,6 +353,15 @@ test("right-side Studio inspectors avoid redundant component labels and use one 
   assert.match(sectionInspector, />\s*Reset\s*</);
 });
 
+test("Studio shell keeps canvas centered while side controls stay pinned during horizontal pan", () => {
+  assert.match(styles, /\.undara-studio-canvas \{[^}]*overflow: hidden/);
+  assert.match(styles, /\.undara-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(236px, 1fr\) minmax\(0, var\(--undara-zoomed-stage-width, 340px\)\) minmax\(236px, 1fr\)/);
+  assert.match(styles, /\.undara-studio-layer-list \{[^}]*position: sticky;[^}]*left: 0;[^}]*z-index: 100/);
+  assert.match(styles, /\.undara-studio-selection-stack \{[^}]*position: sticky;[^}]*right: 0;[^}]*z-index: 100/);
+  assert.match(styles, /\.undara-studio-canvas-toolbar \{[^}]*z-index: 125;[^}]*overflow-x: auto/);
+  assert.match(styles, /\.undara-studio-canvas-footer \{[^}]*z-index: 125/);
+});
+
 test("selected assets use a compact left list and right-side properties panel", () => {
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
@@ -600,7 +609,8 @@ test("Studio canvas pans horizontally at every zoom and preserves object gesture
   assert.match(designer, /data-pan-enabled="true"/);
   assert.match(designer, /beginCanvasPan\(event, true\)/);
   assert.match(canvasPan, /\[data-studio-design-object\]/);
-  assert.match(styles, /min-width: max\(calc\(100% \+ 400px\)/);
+  assert.match(styles, /min-width: max\(100%, calc\(var\(--undara-zoomed-stage-width, 340px\) \+ 508px\)\)/);
+  assert.doesNotMatch(styles, /calc\(100% \+ 400px\)/);
   assert.match(designer, /scroller\.scrollLeft \+= viewportRect\.left/);
   assert.match(designer, /event\.code !== "Space"/);
   assert.match(designer, /onPointerMove=\{moveCanvasPan\}/);
