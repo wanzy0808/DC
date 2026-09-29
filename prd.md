@@ -5669,3 +5669,14 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - The user's last selected Light or Dark mode must survive refresh and navigation.
 - Theme must not automatically follow OS/system appearance after the user has selected a mode.
 - Persist the selection so only an explicit theme-toggle action changes it.
+
+
+### 29 September 2026 — Design quality orchestration untuk `to design`
+
+**Permintaan owner:** workflow desain Undara yang dikerjakan lewat ChatGPT harus bisa dipicu singkat dengan frasa **`to design`**, tanpa bergantung pada agent mode atau kemampuan ChatGPT untuk membaca instalasi skill global di PC owner.
+
+**Keputusan workflow:** external design skills dipakai sebagai quality layer, bukan sumber requirement produk. Untuk sesi GPT/ChatGPT, **`gpt-taste`** menjadi art-direction/composition baseline; Taste default tidak ditumpuk bersamaan pada pass yang sama. **Emil Kowalski** (`emil-design-eng`, `animate`, `review-animations`) dipakai secara scoped untuk motion, easing, timing, interruption, feedback dan micro-interaction ketika relevan. **Impeccable** dipakai sebagai review/refinement layer melalui critique, polish, audit/harden/adapt sesuai kebutuhan. Prioritas tetap owner → `prd.md` → `AGENTS.md` → scoped docs → external skills.
+
+**Implementasi dokumentasi:** `AGENTS.md` kini mendefinisikan shorthand `to design`, precedence, peran masing-masing skill, upstream canonical references, dan guard agar skill tidak memperluas scope diam-diam. `template.md` menambahkan quality stack khusus produksi template: brief/moodboard → GPT-Taste direction → implementasi → Emil motion review → Impeccable critique/polish/audit → screenshot HP+desktop → koreksi. `.gitignore` mengabaikan runtime/cache lokal `.impeccable/` agar file kerja developer tidak masuk repository.
+
+**Commit implementasi:** `156e898` (AGENTS orchestration), `6394f95` (template quality stack), `5c86088` (.impeccable gitignore). **Validasi:** source inspection dokumentasi selesai; tidak ada perubahan runtime aplikasi, build, browser/E2E, atau migrasi database yang diklaim untuk perubahan ini.
