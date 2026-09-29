@@ -9,7 +9,7 @@ import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import StudioNativeVisualInspector from "@/components/InvitationStudio/StudioNativeVisualInspector";
 import type { NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
-import type { AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
+import { assetLayerScopePosition, type AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
 import type { InvitationDesignState } from "@/components/InvitationStudio/designer-types";
 import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy";
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
@@ -29,6 +29,7 @@ export default function StudioSelectionInspector({
   design,
   selectedAssetLayer,
   selectedAssetIndex,
+  maxAssetLayers,
   selectedPhotoSlot,
   selectedRsvpElementKey,
   selectedSectionElement,
@@ -58,6 +59,7 @@ export default function StudioSelectionInspector({
   design: InvitationDesignState;
   selectedAssetLayer: InvitationAssetLayer | null | undefined;
   selectedAssetIndex: number;
+  maxAssetLayers: number;
   selectedPhotoSlot: PhotoSlot | null;
   selectedRsvpElementKey: string | null;
   selectedSectionElement: SelectedSectionElement;
@@ -83,6 +85,9 @@ export default function StudioSelectionInspector({
   onResetSectionStyle: (key: InvitationSectionKey) => void;
   onCloseSection: () => void;
 }) {
+  const scopedLayerPosition = selectedAssetLayer
+    ? assetLayerScopePosition(design.layers, selectedAssetLayer.id)
+    : { index: selectedAssetIndex, count: design.layers.length };
   const nativeControls = selectedNativeKey ? (
     <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
       value={design.nativeVisuals[selectedNativeKey]}
@@ -95,9 +100,10 @@ export default function StudioSelectionInspector({
       <TextLayerInspector
         locale={locale}
         layer={selectedAssetLayer}
-        selectedIndex={selectedAssetIndex}
-        layerCount={design.layers.length}
+        selectedIndex={scopedLayerPosition.index}
+        layerCount={scopedLayerPosition.count}
         sections={design.sections}
+        maxLayers={maxAssetLayers}
         onClose={onCloseAsset}
         onUpdate={onUpdateAsset}
         onPosition={onPositionAsset}
@@ -111,8 +117,9 @@ export default function StudioSelectionInspector({
         locale={locale}
         selectedAssetLayer={selectedAssetLayer}
         selectedAssetIndex={selectedAssetIndex}
-        layerCount={design.layers.length}
+        layerCount={scopedLayerPosition.count}
         sections={design.sections}
+        maxLayers={maxAssetLayers}
         onDeselect={onCloseAsset}
         onUpdate={onUpdateAsset}
         onPosition={onPositionAsset}
