@@ -65,45 +65,45 @@ export default function FeatureSection() {
   const selected = features[active];
 
   return (
-    <section className="space-y-10">
+    <section id="fitur-guestbook" className="scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
       <SectionHeading
         eyebrow="Guestbook System"
         title="Satu alur untuk tamu, usher, meja, dan hari acara"
         description="Guestbook Digital bukan sekadar buku tamu online. Sistem ini dirancang untuk membuat proses masuk venue lebih terkontrol sekaligus memberi tim acara data yang bisa langsung dipakai."
       />
-      <div className="grid gap-6 lg:grid-cols-12 lg:items-start">
-        <div className="space-y-2 lg:col-span-5">
+      <div className="mt-12 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start lg:gap-20">
+        <div className="border-t border-primary/30">
           {features.map((feature, index) => (
             <button
               key={feature.title}
               type="button"
               onClick={() => setActive(index)}
-              className={`flex w-full items-center justify-between rounded-[22px] border p-4 text-left transition-[background-color,border-color,transform] duration-300 hover:-translate-y-0.5 md:p-5 ${
+              className={`flex w-full items-center justify-between border-b border-primary/25 px-2 py-5 text-left transition-colors duration-300 md:py-6 ${
                 active === index
-                  ? "border-primary bg-primary/[0.07]"
-                  : "border-primary/25 bg-card/60 hover:border-primary/50"
+                  ? "text-primary"
+                  : "text-foreground/70 hover:text-primary"
               }`}
             >
-              <span className="font-[family-name:var(--font-dc-heading)] text-sm font-semibold md:text-base">
+              <span className="font-[family-name:var(--font-undara-heading)] text-xl md:text-2xl">
                 {feature.title}
               </span>
               <span className="text-primary">→</span>
             </button>
           ))}
         </div>
-        <div className="rounded-[30px] border border-primary/35 bg-card/75 p-7 lg:col-span-7 md:p-10">
-          <span className="rounded-full border border-primary/30 bg-primary/10 px-3 py-1 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-wider text-primary">
+        <div aria-live="polite" className="relative border-l border-primary/30 py-5 pl-7 md:pl-12 lg:sticky lg:top-8">
+          <span className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
             {selected.badge}
           </span>
-          <h3 className="mt-5 font-[family-name:var(--font-dc-heading)] text-2xl md:text-3xl">
+          <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl text-primary md:text-5xl">
             {selected.title}
           </h3>
-          <p className="mt-4 font-[family-name:var(--font-dc-body)] text-sm leading-7 text-muted-foreground">
+          <p className="mt-6 max-w-xl font-[family-name:var(--font-undara-body)] text-base leading-8 text-muted-foreground">
             {selected.description}
           </p>
           <ul className="mt-6 space-y-3 border-t border-primary/25 pt-5">
             {selected.highlights.map((item) => (
-              <li key={item} className="flex gap-3 font-[family-name:var(--font-dc-body)] text-sm">
+              <li key={item} className="flex gap-3 font-[family-name:var(--font-undara-body)] text-sm">
                 <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                 {item}
               </li>

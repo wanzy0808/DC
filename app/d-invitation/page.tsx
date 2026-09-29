@@ -88,17 +88,17 @@ export default function DigitalInvitationPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
-            className="mx-auto flex w-[88%] max-w-[1100px] flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16"
+            className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
             scrollRoot={scrollRoot}
             ready={assembleReady}
             locale={locale}
           >
             <HeroSection ready={assembleReady} />
-            <div className="undara-invitation-other-sections flex flex-col gap-20 md:gap-24">
+            <div className="undara-invitation-other-sections flex flex-col gap-24 md:gap-28">
               <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04}>
                 <FeatureSection />
               </PuzzleAssemble>
-              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07}>
+              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07} className="mx-auto w-full max-w-[1100px]">
                 <TemplateCollection />
               </PuzzleAssemble>
               <PuzzleAssemble ready={assembleReady} direction="bottom" scrollRoot={scrollRoot} delay={0.07}>

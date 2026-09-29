@@ -25,21 +25,22 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
   const featuredLabel = locale === "en" ? "Best value" : "Paling lengkap";
 
   return (
-    <section className={`w-full space-y-8 md:space-y-10 ${wide ? "max-w-none" : ""}`}>
-      <div className="mx-auto max-w-3xl space-y-3 text-center">
-        <p className="text-xs font-mono font-semibold uppercase tracking-[0.24em] text-[var(--primary)]">[ {eyebrow} ]</p>
-        <h2 className="font-[family-name:var(--font-dc-heading)] text-3xl md:text-4xl lg:text-5xl">{title}</h2>
-        <p className="text-sm leading-7 text-[var(--muted-foreground)] md:text-base">{description}</p>
+    <section className={`w-full border-y border-primary/25 py-14 md:py-20 ${wide ? "max-w-none" : ""}`}>
+      <div className={`grid gap-10 ${wide && packages.length === 1 ? "lg:grid-cols-[0.95fr_1.05fr] lg:gap-16" : ""}`}>
+      <div className={`space-y-4 ${wide && packages.length === 1 ? "lg:pt-8" : "mx-auto max-w-3xl text-center"}`}>
+        <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">{eyebrow}</p>
+        <h2 className="max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.05] text-primary md:text-5xl">{title}</h2>
+        <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">{description}</p>
       </div>
-      <div className={`mx-auto grid w-full ${wide ? "max-w-none" : "max-w-4xl"} justify-items-center gap-6 ${packages.length === 2 ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
+      <div className={`grid w-full gap-6 ${packages.length === 2 ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
         {packages.map((item, index) => {
           if (!item) return null;
           const featured = packageKeys.length === 3 && index === 2;
           return (
-            <article key={item.key} className={`relative flex h-full w-full max-w-[430px] flex-col border p-6 md:p-7 ${roundedCard ? "rounded-[40px] border-primary/70 md:rounded-[48px]" : "rounded-3xl"} ${featured ? "border-[var(--primary)] bg-[var(--primary)]/[0.07] shadow-[0_20px_60px_rgba(122,28,37,0.12)]" : roundedCard ? "bg-[var(--card)]/75" : "border-[var(--border)] bg-[var(--card)]/75"}`}>
+            <article key={item.key} className={`relative flex h-full w-full flex-col border p-7 md:p-10 ${roundedCard ? "rounded-[40px] border-primary/50 md:rounded-[48px]" : "rounded-3xl"} ${featured ? "border-primary bg-primary/[0.07]" : "bg-card/70"}`}>
               {featured ? <span className="absolute right-5 top-5 rounded-full bg-[var(--primary)] px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-white">{featuredLabel}</span> : null}
-              <p className="text-xs font-mono uppercase tracking-[0.18em] text-[var(--primary)]">DC Organizer</p>
-              <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-dc-heading)] text-2xl">{item.name[locale]}</h3>
+              <p className="text-xs font-[family-name:var(--font-undara-mono)] uppercase tracking-[0.18em] text-[var(--primary)]">Undara</p>
+              <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-undara-heading)] text-3xl text-primary">{item.name[locale]}</h3>
               <p className="mt-4 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
               <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>
               <ul className="mt-6 flex-1 space-y-3">{item.features[locale].map((feature) => <li key={feature} className="flex gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--primary)]" /><span>{feature}</span></li>)}</ul>
@@ -50,7 +51,8 @@ export default function PackageShowcase({ eyebrow, title, description, packageKe
           );
         })}
       </div>
-      {note ? <p className="text-center text-xs text-[var(--muted-foreground)]">{note}</p> : null}
+      </div>
+      {note ? <p className="mt-7 text-xs leading-6 text-muted-foreground">{note}</p> : null}
     </section>
   );
 }

@@ -11,9 +11,8 @@ import HeroSection from "@/components/Guestbook/HeroSection";
 import FeatureSection from "@/components/Guestbook/FeatureSection";
 import ProcessSection from "@/components/Guestbook/ProcessSection";
 import PackageShowcase from "@/components/Marketing/PackageShowcase";
-import ReviewsGrid from "@/components/Marketing/ReviewsGrid";
 import FaqSection from "@/components/Marketing/FaqSection";
-import { guestbookReviews, guestbookFaq } from "@/data/services/guestbook";
+import { guestbookFaq } from "@/data/services/guestbook";
 
 export default function GuestbookPage() {
   const { locale } = useLanguage();
@@ -33,7 +32,7 @@ export default function GuestbookPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
-            className="mx-auto flex w-[88%] max-w-[1100px] flex-col gap-20 py-12 sm:w-[80vw] md:gap-24 md:py-16"
+            className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
             scrollRoot={scrollRoot}
             ready
             locale={locale}
@@ -53,13 +52,10 @@ export default function GuestbookPage() {
               />
             </ScrollReveal>
             <ScrollReveal scrollRoot={scrollRoot}>
-              <ReviewsGrid
-          eyebrow="Client Stories"
-          title="Yang paling terasa adalah hari acara yang lebih tenang"
-          description="Pengalaman pengguna setelah memakai sistem guestbook dan alur penerimaan tamu Undara."
-          reviews={guestbookReviews}
-          framed
-              />
+              <section className="grid gap-8 border-b border-primary/25 pb-14 lg:grid-cols-2 lg:items-end lg:gap-16">
+                <div><p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">{locale === "en" ? "On the event day" : "Saat Hari Acara"}</p><h2 className="mt-4 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-tight text-primary md:text-5xl">{locale === "en" ? "One guest list for the whole team." : "Satu daftar tamu untuk seluruh tim."}</h2></div>
+                <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">{locale === "en" ? "The usher can verify arrivals and scan valid QR codes while the event team follows attendance and seating from the same event data." : "Usher dapat memverifikasi kedatangan dan memindai QR yang valid, sementara tim acara memantau kehadiran dan meja dari data acara yang sama."}</p>
+              </section>
             </ScrollReveal>
             <ScrollReveal scrollRoot={scrollRoot}>
               <FaqSection
@@ -67,6 +63,7 @@ export default function GuestbookPage() {
           description="Aturan check-in, usher, meja, dan penggunaan layanan dijelaskan sejak awal agar tim venue bekerja dengan alur yang jelas."
           items={guestbookFaq}
           wide
+          editorial
               />
             </ScrollReveal>
           </MarketingTextReveal>
