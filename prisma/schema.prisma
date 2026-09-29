@@ -293,6 +293,8 @@ model Guest {
   recipientType             String        @default("INDIVIDUAL")
   invitedPax                Int           @default(1)
   personalGreeting          String?       @db.Text
+  personalEnvelopeEnabled   Boolean       @default(true)
+  personalLanguage          String        @default("ID")
   personalSharedAt          DateTime?
   source                    GuestSource   @default(MANUAL)
   rsvpStatus                RsvpStatus    @default(PENDING)
