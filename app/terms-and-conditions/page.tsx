@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import Navbar from "@/components/Layout/Navbar/Navbar";
+import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
+import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 
 /**
  * Owner-supplied terms adapted for Undara. Keep legal/operational promises
@@ -207,31 +210,111 @@ const terms = {
 export default function TermsAndConditionsPage() {
   const { locale } = useLanguage();
   const copy = terms[locale];
+  const en = locale === "en";
 
   return (
-    <article className="relative left-1/2 my-10 w-[calc(100vw-32px)] max-w-[920px] -translate-x-1/2 rounded-[32px] border border-primary/25 bg-background/95 px-5 py-9 text-foreground shadow-[0_18px_65px_rgba(75,35,47,0.09)] sm:my-16 sm:w-full sm:px-10 sm:py-12 lg:px-14">
-      <header className="mb-8 border-b border-primary/20 pb-7 sm:mb-10">
-        <span aria-hidden="true" className="mb-5 block h-1 w-12 rounded-full bg-primary/70" />
-        <h1 className="font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary sm:text-4xl">
-          {copy.title}
-        </h1>
-      </header>
+    <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
+      <PublicMarketingAtmosphere />
 
-      <div className="space-y-9 font-[family-name:var(--font-undara-body)] text-sm leading-8 text-foreground/85 sm:text-base sm:leading-8">
-        <section aria-labelledby="undara-terms-general" className="space-y-4">
-          <h2 id="undara-terms-general" className="font-[family-name:var(--font-undara-heading)] text-xl text-primary sm:text-2xl">{copy.introduction}</h2>
-          {copy.opening.map((paragraph, i) => <p key={i}>{paragraph}</p>)}
-        </section>
-        {copy.sections.map((section, index) => (
-          <section key={index} aria-labelledby={`undara-terms-section-${index}`} className="space-y-4 border-t border-primary/15 pt-7">
-            <h2 id={`undara-terms-section-${index}`} className="font-[family-name:var(--font-undara-heading)] text-xl leading-snug text-primary sm:text-2xl">{index + 1}. {section.title}</h2>
-            <ol className="list-decimal space-y-3 pl-6 marker:text-primary">
-              {section.points.map((point, pointIndex) => <li key={pointIndex} className="pl-1">{point}</li>)}
-            </ol>
-            {index === 7 && <Link href="/privacy-policy" className="inline-flex text-sm font-semibold text-primary underline underline-offset-4 transition-colors hover:text-primary/80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">{copy.privacy}</Link>}
-          </section>
-        ))}
+      <div data-undara-marketing-frame className="undara-marketing-frame">
+        <div className="undara-marketing-frame-header">
+          <Navbar embedded />
+        </div>
+
+        <main
+          tabIndex={0}
+          aria-label={copy.title}
+          className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
+        >
+          <article className="undara-marketing-content flex flex-col gap-16 pb-16 pt-8 md:gap-20 md:pb-24 md:pt-12">
+            <header className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(56dvh,590px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
+              <div>
+                <p className="undara-marketing-kicker">{en ? "Legal / Terms" : "Legal / Ketentuan"}</p>
+                <h1 className="mt-5 max-w-[13ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.2rem,6vw,6.5rem)] leading-[0.96] tracking-[-0.035em] text-primary">
+                  {copy.title}
+                </h1>
+              </div>
+
+              <div className="max-w-xl border-l border-primary/30 py-5 pl-7 md:pl-12">
+                <p className="text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                  {en
+                    ? "The rules that govern access to Undara, paid services, user content, transactions, and platform responsibilities."
+                    : "Ketentuan yang mengatur penggunaan Undara, layanan berbayar, konten pengguna, transaksi, dan tanggung jawab platform."}
+                </p>
+                <Link
+                  href="/privacy-policy"
+                  className="mt-7 inline-flex border-b border-primary/45 pb-2 text-sm font-medium text-primary transition-colors hover:border-primary"
+                >
+                  {copy.privacy}
+                </Link>
+              </div>
+            </header>
+
+            <section className="undara-marketing-section undara-editorial-offset-left border-y border-primary/25 py-12 md:py-16">
+              <div className="grid gap-8 lg:grid-cols-[0.34fr_0.66fr] lg:gap-16">
+                <div>
+                  <p className="undara-marketing-kicker">{copy.introduction}</p>
+                  <h2 className="mt-4 max-w-[12ch] font-[family-name:var(--font-undara-heading)] text-3xl leading-[1.05] text-primary md:text-5xl">
+                    {en ? "Start with the general agreement." : "Mulai dari ketentuan umumnya."}
+                  </h2>
+                </div>
+                <div className="space-y-5">
+                  {copy.opening.map((paragraph, i) => (
+                    <p key={i} className="text-sm leading-8 text-foreground/82 md:text-base md:leading-8">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail">
+              <div className="border-t border-primary/30">
+                {copy.sections.map((section, index) => (
+                  <section
+                    key={index}
+                    aria-labelledby={`undara-terms-section-${index}`}
+                    className={`grid gap-6 border-b border-primary/20 py-9 md:grid-cols-[88px_minmax(0,1fr)] md:gap-10 md:py-12 ${index % 2 ? "lg:pl-[5%]" : "lg:pr-[4%]"}`}
+                  >
+                    <span className="undara-editorial-index">{String(index + 1).padStart(2, "0")}</span>
+                    <div>
+                      <h2
+                        id={`undara-terms-section-${index}`}
+                        className="font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl"
+                      >
+                        {section.title}
+                      </h2>
+                      <ol className="mt-6 space-y-4">
+                        {section.points.map((point, pointIndex) => (
+                          <li
+                            key={pointIndex}
+                            className="grid grid-cols-[28px_minmax(0,1fr)] gap-3 text-sm leading-8 text-foreground/82 md:text-base"
+                          >
+                            <span className="font-[family-name:var(--font-undara-mono)] text-[9px] tracking-[0.12em] text-primary/70">
+                              {String(pointIndex + 1).padStart(2, "0")}
+                            </span>
+                            <span>{point}</span>
+                          </li>
+                        ))}
+                      </ol>
+                      {index === 7 ? (
+                        <Link
+                          href="/privacy-policy"
+                          className="mt-7 inline-flex border-b border-primary/45 pb-2 text-sm font-semibold text-primary transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                        >
+                          {copy.privacy}
+                        </Link>
+                      ) : null}
+                    </div>
+                  </section>
+                ))}
+              </div>
+            </section>
+          </article>
+        </main>
+
+        <MarketingFrameFooter />
       </div>
-    </article>
+    </div>
   );
 }
