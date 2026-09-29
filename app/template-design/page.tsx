@@ -169,7 +169,7 @@ export default function TemplateDesignPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <section className="undara-marketing-content pb-16 pt-8 font-[family-name:var(--font-undara-body)] md:pb-24 md:pt-12">
-        <div className="undara-marketing-section grid min-h-[min(64dvh,680px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+        <div className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(64dvh,680px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div className="max-w-4xl">
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary md:text-xs">{copy.eyebrow}</p>
             <h1 className="mt-5 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,6vw,6.6rem)] font-normal leading-[0.97] tracking-[-0.035em] text-primary">{copy.title}</h1>
@@ -253,7 +253,7 @@ export default function TemplateDesignPage() {
         </div>
 
         <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
-        <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <div className="undara-editorial-offset-right undara-editorial-rail grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
           {filteredTemplates.map((template) => (
             <article key={template.key} className="group min-w-0 overflow-hidden rounded-[32px_8px_32px_8px] border border-primary/25 bg-background/45 shadow-[0_14px_42px_rgba(80,45,58,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_22px_55px_rgba(80,45,58,0.14)]">
               <div className="relative w-full overflow-hidden text-left">
