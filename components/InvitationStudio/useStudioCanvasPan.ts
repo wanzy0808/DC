@@ -37,7 +37,7 @@ export function useStudioCanvasPan(): StudioCanvasPanController {
     if (event.button !== 0 || (!canvasPanReady && !backgroundPan)) return false;
     const target = event.target;
     if (!canvasPanReady && target instanceof Element && target.closest(
-      'button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object], [data-studio-photo-slot], [data-studio-rsvp-element], [data-studio-section-element]',
+      'button, a, input, textarea, select, [contenteditable="true"], [role="textbox"], [data-studio-design-object], [data-studio-native-object], [data-studio-native-heading], [data-studio-copy-field], [data-invitation-photo-slot], [data-studio-rsvp-element], [data-studio-section-element]',
     )) return false;
 
     event.preventDefault();

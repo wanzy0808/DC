@@ -107,7 +107,7 @@
 .undara-section-instance-content { overflow: hidden; }
 .undara-section-instance:first-child > .undara-section-instance-content { border-radius: 23px 23px 0 0; }
 .undara-section-instance:last-child > .undara-section-instance-content { border-radius: 0 0 23px 23px; }
-.undara-studio-canvas-layout { display: grid; grid-template-columns: minmax(236px, 1fr) minmax(0, var(--undara-zoomed-stage-width, 340px)) minmax(236px, 1fr); align-items: start; gap: 18px; width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 508px)); min-width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 508px)); overflow: visible; }
+.undara-studio-canvas-layout { --undara-canvas-side-reserve: 508px; display: grid; grid-template-columns: minmax(236px, 1fr) minmax(0, var(--undara-zoomed-stage-width, 340px)) minmax(236px, 1fr); align-items: start; gap: 18px; width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 508px)); min-width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 508px)); overflow: visible; }
 .undara-studio-preview-workspace { position: relative; width: var(--undara-zoomed-stage-width, 340px); max-width: none; margin-inline: auto; overflow: visible; }
 .undara-studio-stage-controls { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 340px; margin: 0 auto 12px; }
 .undara-studio-stage-controls button { flex: 1 1 0; min-width: 0; min-height: 44px; border-radius: var(--undara-control-radius); font-size: 12px; font-weight: 500; }
@@ -383,13 +383,14 @@
 .undara-studio-rsvp-add:disabled { cursor: not-allowed; opacity: .45; }
 .undara-studio-preview-surface [data-studio-section-selected="true"] { outline: 2px solid var(--primary); outline-offset: -2px; }
 .undara-studio-preview-surface [data-studio-section-selected="true"]::after { content: ""; position: absolute; inset: 0; z-index: 35; border: 1px dashed color-mix(in srgb, var(--primary) 58%, transparent); pointer-events: none; }
-.undara-section-instance { position: relative; }
+.undara-section-instance { position: relative; overflow: visible; }
 .undara-studio-section-actions {
   position: absolute;
   top: 10px;
   left: -52px;
   z-index: 120;
   display: flex;
+  pointer-events: auto;
   flex-direction: column;
   align-items: center;
   gap: 7px;
@@ -441,7 +442,7 @@
 
 @media (max-width: 1100px) and (min-width: 768px) {
   .undara-studio-workspace { grid-template-columns: 88px minmax(280px, 320px) minmax(0, 1fr); }
-  .undara-studio-canvas-layout { grid-template-columns: minmax(190px, 1fr) minmax(0, var(--undara-zoomed-stage-width, 340px)) minmax(220px, 1fr); width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 446px)); min-width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 446px)); }
+  .undara-studio-canvas-layout { --undara-canvas-side-reserve: 446px; grid-template-columns: minmax(190px, 1fr) minmax(0, var(--undara-zoomed-stage-width, 340px)) minmax(220px, 1fr); width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 446px)); min-width: max(100%, calc(var(--undara-zoomed-stage-width, 340px) + 446px)); }
   .undara-studio-layer-list { width: 86px; }
   .undara-studio-selection-stack { width: 220px; }
   .undara-studio-layer-side, .undara-studio-section-side { width: 220px; }

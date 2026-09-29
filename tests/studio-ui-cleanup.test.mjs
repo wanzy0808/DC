@@ -353,6 +353,23 @@ test("right-side Studio inspectors avoid redundant component labels and use one 
   assert.match(sectionInspector, />\s*Reset\s*</);
 });
 
+test("all editable Isi section instances keep the five-button action rail for template and invitation drafts", () => {
+  const instance = read("components/PublicInvitation/EditableSectionInstance.tsx");
+  const rail = read("components/InvitationStudio/SectionActionRail.tsx");
+  assert.match(instance, /className="undara-section-instance relative"/);
+  assert.match(instance, /undara-section-instance-content/);
+  assert.doesNotMatch(instance, /dc-section-instance/);
+  assert.match(designer, /onMoveSectionInstance=\{moveSectionInstance\}/);
+  assert.match(designer, /onToggleSectionInstance=\{toggleSectionInstance\}/);
+  assert.match(designer, /onDuplicateSectionInstance=\{duplicateSectionInstance\}/);
+  assert.match(designer, /onDeleteSectionInstance=\{deleteSectionInstance\}/);
+  assert.match(rail, /Geser section ke atas/);
+  assert.match(rail, /Geser section ke bawah/);
+  assert.match(rail, /Sembunyikan section/);
+  assert.match(rail, /Duplikat section/);
+  assert.match(rail, /Hapus section/);
+});
+
 test("Studio shell keeps canvas centered while side controls stay pinned during horizontal pan", () => {
   assert.match(styles, /\.undara-studio-canvas \{[^}]*overflow: hidden/);
   assert.match(styles, /\.undara-studio-canvas-layout \{[^}]*grid-template-columns: minmax\(236px, 1fr\) minmax\(0, var\(--undara-zoomed-stage-width, 340px\)\) minmax\(236px, 1fr\)/);
@@ -590,7 +607,9 @@ test("Studio clipboard operations preserve multi-selection and copied groups", (
 test("Studio canvas zoom supports reset to 100 percent and fit-to-workspace", () => {
   assert.match(designer, /function fitCanvasZoom\(\)/);
   assert.match(designer, /availableWidth \/ canvasNaturalSize\.width/);
-  assert.match(designer, /onResetZoom=\{\(\) => setCanvasZoom\(1\)\}/);
+  assert.match(designer, /function changeCanvasZoom\(nextZoom: number, centerHorizontal = false\)/);
+  assert.match(designer, /pendingCanvasZoomAnchor/);
+  assert.match(designer, /onResetZoom=\{\(\) => changeCanvasZoom\(1, true\)\}/);
   assert.match(designer, /onFit=\{fitCanvasZoom\}/);
   assert.match(canvasFooterSource, /onClick=\{onFit\}/);
   assert.match(canvasFooterSource, />\s*Fit\s*<\/button>/);
@@ -611,13 +630,18 @@ test("Studio canvas pans horizontally at every zoom and preserves object gesture
   assert.match(canvasPan, /\[data-studio-design-object\]/);
   assert.match(styles, /min-width: max\(100%, calc\(var\(--undara-zoomed-stage-width, 340px\) \+ 508px\)\)/);
   assert.doesNotMatch(styles, /calc\(100% \+ 400px\)/);
-  assert.match(designer, /scroller\.scrollLeft \+= viewportRect\.left/);
+  assert.match(designer, /function centerCanvasHorizontally\(\)/);
+  assert.match(designer, /geometry\.scroller\.scrollLeft = geometry\.left \+ geometry\.width \/ 2/);
+  assert.match(designer, /function restoreCanvasZoomAnchor\(/);
   assert.match(designer, /event\.code !== "Space"/);
   assert.match(designer, /onPointerMove=\{moveCanvasPan\}/);
   assert.match(designer, /consumeSuppressedCanvasClick\(\)/);
   assert.match(assetLayers, /data-space-pan="true"/);
   assert.match(styles, /\.undara-studio-canvas-scroll \{[^}]*overflow: auto;/);
   assert.match(styles, /data-panning="true"/);
+  assert.match(canvasPan, /\[data-studio-native-object\]/);
+  assert.match(canvasPan, /\[data-invitation-photo-slot\]/);
+  assert.match(styles, /--undara-canvas-side-reserve: 508px/);
 });
 
 

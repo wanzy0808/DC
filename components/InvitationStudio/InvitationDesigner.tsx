@@ -178,6 +178,59 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [canvasStage, setCanvasStage] = useState<"envelope" | "cover">("envelope");
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [canvasNaturalSize, setCanvasNaturalSize] = useState({ width: 340, height: 760 });
+  const pendingCanvasZoomAnchor = useRef<{ x: number; y: number } | null>(null);
+
+  function canvasViewportGeometry() {
+    const scroller = canvasScrollRef.current;
+    const viewport = scroller?.querySelector<HTMLElement>(".undara-studio-preview-viewport");
+    if (!scroller || !viewport) return null;
+    const viewportRect = viewport.getBoundingClientRect();
+    const scrollRect = scroller.getBoundingClientRect();
+    return {
+      scroller,
+      left: viewportRect.left - scrollRect.left + scroller.scrollLeft,
+      top: viewportRect.top - scrollRect.top + scroller.scrollTop,
+      width: Math.max(1, viewportRect.width),
+      height: Math.max(1, viewportRect.height),
+    };
+  }
+
+  function centerCanvasHorizontally() {
+    const geometry = canvasViewportGeometry();
+    if (!geometry) return;
+    geometry.scroller.scrollLeft = geometry.left + geometry.width / 2 - geometry.scroller.clientWidth / 2;
+  }
+
+  function restoreCanvasZoomAnchor(anchor: { x: number; y: number }) {
+    const geometry = canvasViewportGeometry();
+    if (!geometry) return;
+    geometry.scroller.scrollLeft = geometry.left + geometry.width * anchor.x - geometry.scroller.clientWidth / 2;
+    geometry.scroller.scrollTop = geometry.top + geometry.height * anchor.y - geometry.scroller.clientHeight / 2;
+  }
+
+  function changeCanvasZoom(nextZoom: number, centerHorizontal = false) {
+    const next = Math.min(5, Math.max(0.1, Math.round(nextZoom * 100) / 100));
+    const geometry = canvasViewportGeometry();
+    if (geometry) {
+      const focusX = geometry.scroller.scrollLeft + geometry.scroller.clientWidth / 2;
+      const focusY = geometry.scroller.scrollTop + geometry.scroller.clientHeight / 2;
+      pendingCanvasZoomAnchor.current = {
+        x: centerHorizontal ? 0.5 : Math.min(1, Math.max(0, (focusX - geometry.left) / geometry.width)),
+        y: Math.min(1, Math.max(0, (focusY - geometry.top) / geometry.height)),
+      };
+    }
+    if (next === canvasZoom) {
+      const anchor = pendingCanvasZoomAnchor.current;
+      pendingCanvasZoomAnchor.current = null;
+      requestAnimationFrame(() => {
+        if (anchor) restoreCanvasZoomAnchor(anchor);
+        else if (centerHorizontal) centerCanvasHorizontally();
+      });
+      return;
+    }
+    setCanvasZoom(next);
+  }
+
   useEffect(() => {
     const surface = previewSurfaceRef.current;
     if (!surface) return;
@@ -192,18 +245,21 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     measure();
     return () => observer.disconnect();
   }, []);
+
   useEffect(() => {
+    const anchor = pendingCanvasZoomAnchor.current;
+    pendingCanvasZoomAnchor.current = null;
     const frame = requestAnimationFrame(() => {
-      const scroller = canvasScrollRef.current;
-      const viewport = scroller?.querySelector<HTMLElement>(".undara-studio-preview-viewport");
-      if (!scroller || !viewport) return;
-      const viewportRect = viewport.getBoundingClientRect();
-      const scrollRect = scroller.getBoundingClientRect();
-      scroller.scrollLeft += viewportRect.left + viewportRect.width / 2
-        - (scrollRect.left + scroller.clientWidth / 2);
+      if (anchor) restoreCanvasZoomAnchor(anchor);
+      else centerCanvasHorizontally();
     });
     return () => cancelAnimationFrame(frame);
   }, [canvasZoom]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(centerCanvasHorizontally);
+    return () => cancelAnimationFrame(frame);
+  }, [canvasStage, inspectorOpen, mobileCanvas]);
   const [activeCanvasSectionId, setActiveCanvasSectionId] = useState("envelope");
   const {
     canvasPanReady,
@@ -860,10 +916,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
 
   function fitCanvasZoom() {
     const scroller = canvasScrollRef.current;
-    if (!scroller || !canvasNaturalSize.width) return;
-    const availableWidth = Math.max(1, scroller.clientWidth - 32);
-    const next = Math.min(5, Math.max(0.1, availableWidth / canvasNaturalSize.width));
-    setCanvasZoom(Math.round(next * 100) / 100);
+    const layout = scroller?.querySelector<HTMLElement>(".undara-studio-canvas-layout");
+    if (!scroller || !layout || !canvasNaturalSize.width) return;
+    const scrollerStyle = getComputedStyle(scroller);
+    const horizontalPadding = (Number.parseFloat(scrollerStyle.paddingLeft) || 0)
+      + (Number.parseFloat(scrollerStyle.paddingRight) || 0);
+    const layoutStyle = getComputedStyle(layout);
+    const sideReserve = Number.parseFloat(layoutStyle.getPropertyValue("--undara-canvas-side-reserve")) || 508;
+    const availableWidth = Math.max(34, scroller.clientWidth - horizontalPadding - sideReserve);
+    changeCanvasZoom(availableWidth / canvasNaturalSize.width, true);
   }
 
   function showDesignSection(section: StudioObjectSection) {
@@ -1956,10 +2017,10 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                     editorMode={templateMode ? "template" : "customer"}
                     selectedSectionInstanceId={selectedSectionInstanceId}
                     onSelectSectionInstance={selectSectionInstance}
-                    onMoveSectionInstance={templateMode ? moveSectionInstance : undefined}
-                    onToggleSectionInstance={templateMode ? toggleSectionInstance : undefined}
-                    onDuplicateSectionInstance={templateMode ? duplicateSectionInstance : undefined}
-                    onDeleteSectionInstance={templateMode ? deleteSectionInstance : undefined}
+                    onMoveSectionInstance={moveSectionInstance}
+                    onToggleSectionInstance={toggleSectionInstance}
+                    onDuplicateSectionInstance={duplicateSectionInstance}
+                    onDeleteSectionInstance={deleteSectionInstance}
                   />
                 </div>
               </div>
@@ -2012,11 +2073,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
             activeId={canvasStage === "envelope" && design.sections.envelope !== false ? "envelope" : activeCanvasSectionId}
             zoom={canvasZoom}
             onNavigate={navigateCanvasSection}
-            onZoomOut={() => setCanvasZoom((value) => Math.max(0.1, Math.round((value - (value <= 1 ? 0.1 : 0.25)) * 100) / 100))}
-            onZoomChange={setCanvasZoom}
-            onResetZoom={() => setCanvasZoom(1)}
+            onZoomOut={() => changeCanvasZoom(canvasZoom - (canvasZoom <= 1 ? 0.1 : 0.25))}
+            onZoomChange={(value) => changeCanvasZoom(value)}
+            onResetZoom={() => changeCanvasZoom(1, true)}
             onFit={fitCanvasZoom}
-            onZoomIn={() => setCanvasZoom((value) => Math.min(5, Math.round((value + (value < 1 ? 0.1 : 0.25)) * 100) / 100))}
+            onZoomIn={() => changeCanvasZoom(canvasZoom + (canvasZoom < 1 ? 0.1 : 0.25))}
           />
         </div>
       </div>

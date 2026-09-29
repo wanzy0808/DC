@@ -40,7 +40,7 @@ export default function EditableSectionInstance({
       data-section-instance-id={instance.id}
       data-section-instance-key={instance.key}
       data-section-instance-hidden={hidden ? "true" : undefined}
-      className="dc-section-instance relative"
+      className="undara-section-instance relative"
       data-section-instance-selected={selected ? "true" : undefined}
       style={{ order }}
       onClick={(event) => {
@@ -51,7 +51,7 @@ export default function EditableSectionInstance({
         actions?.onSelect?.(instance.id, instance.key);
       }}
     >
-      <div className={`dc-section-instance-content${hidden && preview ? " dc-section-instance-hidden" : ""}`}>
+      <div className={`undara-section-instance-content${hidden && preview ? " undara-section-instance-hidden" : ""}`}>
         {children}
       </div>
       {showActions && (
