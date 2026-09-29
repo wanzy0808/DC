@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDownRight, ArrowRight, ScanLine, Users } from "lucide-react";
+import { ArrowDownRight, ArrowRight, Armchair, BarChart3, ScanLine, Users } from "lucide-react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { Button } from "@/components/ui/button";
 
@@ -49,8 +49,8 @@ export default function HeroSection() {
           {[
             [ScanLine, en ? "Official QR" : "QR Resmi"],
             [Users, en ? "Guest verification" : "Verifikasi Tamu"],
-            [Users, en ? "Seating" : "Meja"],
-            [ScanLine, en ? "Live attendance" : "Attendance"],
+            [Armchair, en ? "Seating" : "Meja"],
+            [BarChart3, en ? "Live attendance" : "Attendance"],
           ].map(([Icon, label]) => {
             const ItemIcon = Icon as typeof ScanLine;
             return (
