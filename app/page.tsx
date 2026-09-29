@@ -17,7 +17,7 @@ export default function HomePage() {
     <div className="relative isolate -mx-[calc((100vw-100%)/2)] min-h-dvh w-screen overflow-hidden bg-background text-foreground dark:bg-[#281414]">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(112,59,59,0.10),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(140,82,67,0.34)_0%,rgba(74,34,32,0.26)_42%,rgba(40,20,20,0.10)_67%,transparent_82%)]"
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(109,88,72,0.14),transparent_64%)] dark:bg-[radial-gradient(ellipse_at_50%_42%,rgba(126,102,75,0.22)_0%,rgba(58,42,31,0.24)_42%,rgba(40,20,20,0.08)_67%,transparent_82%)]"
       />
       <LandingTopCanopy />
 
