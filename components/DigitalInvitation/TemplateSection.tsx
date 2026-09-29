@@ -134,7 +134,9 @@ export default function TemplateCollection() {
               <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-xl font-normal text-primary">
                 {template.name}
               </h3>
-              <p className="mt-2 text-xs leading-6 text-foreground/60">{template.description}</p>
+              <p className="mt-2 text-xs leading-6 text-foreground/60">
+                {locale === "en" ? template.descriptionEn ?? template.description : template.description}
+              </p>
               <p className="mt-2 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.12em] text-foreground/40">
                 {copy.ready}
               </p>
