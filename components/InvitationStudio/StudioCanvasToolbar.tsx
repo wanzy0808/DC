@@ -61,10 +61,10 @@ export default function StudioCanvasToolbar({
   const busy = saving || audioBusy;
 
   return (
-    <div className="dc-studio-canvas-toolbar">
+    <div className="undara-studio-canvas-toolbar">
       <button
         type="button"
-        className="dc-studio-icon dc-studio-panel-toggle"
+        className="undara-studio-icon undara-studio-panel-toggle"
         onClick={onToggleInspector}
         aria-label={inspectorOpen ? labels.hidePanel : labels.showPanel}
         title={inspectorOpen ? labels.hidePanel : labels.showPanel}
@@ -85,7 +85,7 @@ export default function StudioCanvasToolbar({
       </Button>
 
       <div
-        className="dc-studio-history-actions"
+        className="undara-studio-history-actions"
         role="group"
         aria-label={locale === "en" ? "Design history" : "Riwayat desain"}
       >

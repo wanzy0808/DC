@@ -17,7 +17,7 @@ export function readableInk(background: string, preferred: string) {
 
 /** next/font exposes generated family names through CSS variables. */
 export function invitationFontFamily(family: string) {
-  if (family === "Cinzel") return "var(--font-dc-heading)";
-  if (family === "Fauna One") return "var(--font-dc-sans)";
+  if (family === "Cinzel") return '"Cinzel", Georgia, serif';
+  if (family === "Fauna One") return '"Fauna One", Georgia, serif';
   return family;
 }

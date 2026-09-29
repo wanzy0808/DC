@@ -32,13 +32,13 @@ export default function StudioCanvasFooter({
   const title = current ? (en ? englishTitles[current.key] ?? current.title : current.title) : (en ? "Canvas" : "Kanvas");
 
   return (
-    <div className="dc-studio-canvas-footer" role="group" aria-label={en ? "Canvas navigation and zoom" : "Navigasi dan zoom kanvas"}>
-      <div className="dc-studio-canvas-pages">
+    <div className="undara-studio-canvas-footer" role="group" aria-label={en ? "Canvas navigation and zoom" : "Navigasi dan zoom kanvas"}>
+      <div className="undara-studio-canvas-pages">
         <button type="button" onClick={() => onNavigate(items[index - 1]!.id)} disabled={index <= 0}
           aria-label={en ? "Previous section" : "Bagian sebelumnya"} title={en ? "Previous section" : "Bagian sebelumnya"}>
           <ChevronLeft size={16} />
         </button>
-        <span className="dc-studio-canvas-page-label" title={title}>
+        <span className="undara-studio-canvas-page-label" title={title}>
           {items.length ? `${index + 1}/${items.length}` : "0/0"} <span aria-hidden="true">·</span> {title}
         </span>
         <button type="button" onClick={() => onNavigate(items[index + 1]!.id)} disabled={index >= items.length - 1}
@@ -46,13 +46,13 @@ export default function StudioCanvasFooter({
           <ChevronRight size={16} />
         </button>
       </div>
-      <div className="dc-studio-canvas-zoom" role="group" aria-label={en ? "Canvas zoom" : "Zoom kanvas"}>
+      <div className="undara-studio-canvas-zoom" role="group" aria-label={en ? "Canvas zoom" : "Zoom kanvas"}>
         <button type="button" onClick={onZoomOut} disabled={zoom <= 0.1} aria-label={en ? "Zoom out canvas" : "Perkecil kanvas"}><ZoomOut size={15} /></button>
         <input type="range" min={10} max={500} step={1} value={Math.round(zoom * 100)}
           onChange={(event) => onZoomChange(Number(event.currentTarget.value) / 100)}
           aria-label={en ? "Canvas zoom percentage" : "Persentase zoom kanvas"}
           aria-valuetext={`${Math.round(zoom * 100)}%`} />
-        <button type="button" className="dc-studio-canvas-zoom-value" onClick={onResetZoom}
+        <button type="button" className="undara-studio-canvas-zoom-value" onClick={onResetZoom}
           aria-label={en ? "Reset canvas zoom to 100 percent" : "Reset zoom kanvas ke 100 persen"}
           title={en ? "Reset to 100%" : "Kembali ke 100%"}>{Math.round(zoom * 100)}%</button>
         <button type="button" onClick={onFit} aria-label={en ? "Fit canvas to workspace" : "Sesuaikan kanvas ke area kerja"}>Fit</button>

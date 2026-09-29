@@ -51,14 +51,14 @@ export default function StudioLayerList({
   const groupedSelection = selectedLayers.some((layer) => layer.groupId);
 
   return (
-    <aside className="dc-studio-layer-list" aria-label={en ? "Asset list" : "Daftar aset"}>
-      <div className="dc-studio-layer-list-head">
+    <aside className="undara-studio-layer-list" aria-label={en ? "Asset list" : "Daftar aset"}>
+      <div className="undara-studio-layer-list-head">
         {en ? "Assets" : "Asset"} {visibleLayers.length}/{maxLayers}
       </div>
 
       {(selectedIds.length > 1 || groupedSelection) && (
         <div
-          className="dc-studio-layer-group-actions"
+          className="undara-studio-layer-group-actions"
           role="group"
           aria-label={en ? "Layer grouping and alignment" : "Pengelompokan dan alignment layer"}
         >
@@ -83,7 +83,7 @@ export default function StudioLayerList({
         </div>
       )}
 
-      <div className="dc-studio-layer-list-items">
+      <div className="undara-studio-layer-list-items">
         {[...visibleLayers].reverse().map((layer) => {
           const assetNumber = layers.indexOf(layer) + 1;
           const automaticLayerName = layer.kind === "text"
@@ -94,11 +94,11 @@ export default function StudioLayerList({
           return (
             <div
               key={layer.id}
-              className="dc-studio-layer-list-row"
+              className="undara-studio-layer-list-row"
               draggable={!layer.locked}
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("application/x-dc-layer", layer.id);
+                event.dataTransfer.setData("application/x-undara-layer", layer.id);
               }}
               onDragEnter={() => onDragOverId(layer.id)}
               onDragOver={(event) => {
@@ -108,7 +108,7 @@ export default function StudioLayerList({
               onDrop={(event) => {
                 event.preventDefault();
                 event.stopPropagation();
-                const sourceId = event.dataTransfer.getData("application/x-dc-layer");
+                const sourceId = event.dataTransfer.getData("application/x-undara-layer");
                 if (sourceId) onReorder(sourceId, layer.id);
                 onDragOverId(null);
               }}
@@ -117,7 +117,7 @@ export default function StudioLayerList({
             >
               <button
                 type="button"
-                className="dc-studio-layer-select-button"
+                className="undara-studio-layer-select-button"
                 aria-pressed={selectedIds.includes(layer.id) || selectedId === layer.id}
                 onClick={(event) => onSelect(layer.id, event.shiftKey)}
                 title={layerName}
@@ -126,7 +126,7 @@ export default function StudioLayerList({
               </button>
               <button
                 type="button"
-                className="dc-studio-layer-quick"
+                className="undara-studio-layer-quick"
                 aria-label={layer.hidden ? (en ? "Show layer" : "Tampilkan layer") : (en ? "Hide layer" : "Sembunyikan layer")}
                 title={layer.hidden ? (en ? "Show" : "Tampilkan") : (en ? "Hide" : "Sembunyikan")}
                 onClick={() => onUpdate(layer.id, { hidden: layer.hidden ? undefined : true })}
@@ -135,7 +135,7 @@ export default function StudioLayerList({
               </button>
               <button
                 type="button"
-                className="dc-studio-layer-quick"
+                className="undara-studio-layer-quick"
                 aria-label={layer.locked ? (en ? "Unlock layer" : "Buka kunci layer") : (en ? "Lock layer" : "Kunci layer")}
                 title={layer.locked ? (en ? "Unlock" : "Buka kunci") : (en ? "Lock" : "Kunci")}
                 onClick={() => onUpdate(layer.id, { locked: layer.locked ? undefined : true })}

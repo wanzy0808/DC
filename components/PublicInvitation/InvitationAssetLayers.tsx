@@ -309,7 +309,7 @@ function EditableLayer({
                 style={{
                   fontFamily: layer.fontFamily
                     ? invitationFontFamily(layer.fontFamily)
-                    : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+                    : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-undara-heading))",
                   fontSize: layer.fontSize ?? 24,
                   fontWeight: layer.fontWeight ?? 400,
                   textAlign: layer.textAlign ?? "center",
@@ -357,7 +357,7 @@ function EditableLayer({
               {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
                 fontFamily: layer.fontFamily
                   ? invitationFontFamily(layer.fontFamily)
-                  : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+                  : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-undara-heading))",
                 fontSize: layer.fontSize ?? 24,
                 fontWeight: layer.fontWeight ?? 400,
                 textAlign: layer.textAlign ?? "center",
@@ -374,7 +374,7 @@ function EditableLayer({
           {layer.kind === "text" ? <span className="block w-full whitespace-pre-wrap break-words" style={{
             fontFamily: layer.fontFamily
               ? invitationFontFamily(layer.fontFamily)
-              : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-dc-heading))",
+              : layer.fontRole === "body" ? "inherit" : "var(--inv-heading, var(--font-undara-heading))",
             fontSize: layer.fontSize ?? 24,
             fontWeight: layer.fontWeight ?? 400,
             textAlign: layer.textAlign ?? "center",

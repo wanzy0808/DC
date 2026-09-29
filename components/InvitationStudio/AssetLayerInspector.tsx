@@ -62,9 +62,9 @@ export default function AssetLayerInspector({
     suffix: string,
     update: (next: number) => void,
   ) => (
-    <label className="dc-studio-layer-field">
+    <label className="undara-studio-layer-field">
       <span>{label}</span>
-      <span className="dc-studio-layer-number">
+      <span className="undara-studio-layer-number">
         <input
           type="number"
           min={min}
@@ -83,13 +83,13 @@ export default function AssetLayerInspector({
   );
 
   return (
-    <aside className="dc-studio-layer-side" aria-label={en ? "Asset properties" : "Properti aset"}>
-      <div className="dc-studio-layer-side-head">
+    <aside className="undara-studio-layer-side" aria-label={en ? "Asset properties" : "Properti aset"}>
+      <div className="undara-studio-layer-side-head">
         <strong>{selectedAssetLayer.kind === "shape" ? (en ? "Shape" : "Bentuk") : (en ? "Asset" : "Asset")} {selectedAssetIndex + 1}/{MAX_ASSET_LAYERS}</strong>
         <button type="button" onClick={onDeselect} aria-label={en ? "Close asset properties" : "Tutup properti aset"} title={en ? "Close" : "Tutup"}>×</button>
       </div>
 
-      <label className="dc-studio-layer-field">
+      <label className="undara-studio-layer-field">
         <span>{en ? "Layer name" : "Nama layer"}</span>
         <input
           type="text"
@@ -97,14 +97,14 @@ export default function AssetLayerInspector({
           value={selectedAssetLayer.name ?? ""}
           placeholder={en ? "Optional" : "Opsional"}
           onChange={(event) => onUpdate(selectedAssetLayer.id, { name: event.target.value || undefined })}
-          className="h-10 rounded-[var(--dc-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
+          className="h-10 rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
         />
       </label>
 
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
           aria-pressed={Boolean(selectedAssetLayer.locked)}
           onClick={() => onUpdate(selectedAssetLayer.id, { locked: selectedAssetLayer.locked ? undefined : true })}
           title={selectedAssetLayer.locked ? (en ? "Unlock layer" : "Buka kunci layer") : (en ? "Lock layer" : "Kunci layer")}
@@ -114,7 +114,7 @@ export default function AssetLayerInspector({
         </button>
         <button
           type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--dc-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
+          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
           aria-pressed={!selectedAssetLayer.hidden}
           onClick={() => onUpdate(selectedAssetLayer.id, { hidden: selectedAssetLayer.hidden ? undefined : true })}
           title={selectedAssetLayer.hidden ? (en ? "Show layer" : "Tampilkan layer") : (en ? "Hide layer" : "Sembunyikan layer")}
@@ -125,7 +125,7 @@ export default function AssetLayerInspector({
       </div>
 
       <fieldset disabled={Boolean(selectedAssetLayer.locked)} className="contents disabled:opacity-55">
-      <label className="dc-studio-layer-select">
+      <label className="undara-studio-layer-select">
         <span>{en ? "Section" : "Bagian"}</span>
         <select
           value={section}
@@ -137,12 +137,12 @@ export default function AssetLayerInspector({
         </select>
       </label>
 
-      <div className="dc-studio-layer-grid">
+      <div className="undara-studio-layer-grid">
         {numberInput("X", selectedAssetLayer.x, 0, 100, 0.1, "%", (x) => onUpdate(selectedAssetLayer.id, { x }))}
         {numberInput("Y", selectedAssetLayer.y, 0, 100, 0.1, "%", (y) => onUpdate(selectedAssetLayer.id, { y }))}
       </div>
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Quick position" : "Posisi cepat"}</span>
         <div className="grid grid-cols-3 gap-1.5">
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" onClick={() => onUpdate(selectedAssetLayer.id, { x: 50 })}>{en ? "Center X" : "Tengah X"}</button>
@@ -151,7 +151,7 @@ export default function AssetLayerInspector({
         </div>
       </div>
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Flip" : "Balik"}</span>
         <div className="grid grid-cols-2 gap-1.5">
           <button type="button" className="min-h-9 rounded-lg border border-primary/30 px-2 text-[10px] hover:bg-primary/10" aria-pressed={Boolean(selectedAssetLayer.flipX)} onClick={() => onUpdate(selectedAssetLayer.id, { flipX: selectedAssetLayer.flipX ? undefined : true })}>{en ? "Horizontal" : "Horizontal"}</button>
@@ -161,7 +161,7 @@ export default function AssetLayerInspector({
 
       {selectedAssetLayer.kind === "shape" && (
         <div className="space-y-3 border-t border-border pt-3">
-          <label className="dc-studio-layer-select">
+          <label className="undara-studio-layer-select">
             <span>{en ? "Shape" : "Bentuk"}</span>
             <select
               value={selectedAssetLayer.shape ?? "rectangle"}
@@ -181,34 +181,34 @@ export default function AssetLayerInspector({
           </label>
 
           {selectedAssetLayer.shape !== "line" ? (
-            <div className="dc-studio-layer-grid">
-              <label className="dc-studio-layer-field">
+            <div className="undara-studio-layer-grid">
+              <label className="undara-studio-layer-field">
                 <span>{en ? "Fill" : "Isi"}</span>
                 <input
                   type="color"
                   value={selectedAssetLayer.fill ?? "#C07A84"}
                   onChange={(event) => onUpdate(selectedAssetLayer.id, { fill: event.target.value })}
-                  className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+                  className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background p-1"
                 />
               </label>
-              <label className="dc-studio-layer-field">
+              <label className="undara-studio-layer-field">
                 <span>{en ? "Border" : "Garis tepi"}</span>
                 <input
                   type="color"
                   value={selectedAssetLayer.stroke ?? "#C07A84"}
                   onChange={(event) => onUpdate(selectedAssetLayer.id, { stroke: event.target.value })}
-                  className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+                  className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background p-1"
                 />
               </label>
             </div>
           ) : (
-            <label className="dc-studio-layer-field">
+            <label className="undara-studio-layer-field">
               <span>{en ? "Line color" : "Warna garis"}</span>
               <input
                 type="color"
                 value={selectedAssetLayer.stroke ?? "#C07A84"}
                 onChange={(event) => onUpdate(selectedAssetLayer.id, { stroke: event.target.value })}
-                className="h-10 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+                className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background p-1"
               />
             </label>
           )}
@@ -244,11 +244,11 @@ export default function AssetLayerInspector({
         (radius) => onUpdate(selectedAssetLayer.id, { radius }),
       )}
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Shadow" : "Bayangan"}</span>
         <button
           type="button"
-          className="min-h-9 rounded-[var(--dc-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
+          className="min-h-9 rounded-[var(--undara-control-radius)] border border-primary/30 px-3 text-xs hover:bg-primary/10"
           aria-pressed={(selectedAssetLayer.shadowOpacity ?? 0) > 0}
           onClick={() => onUpdate(selectedAssetLayer.id, {
             shadowOpacity: (selectedAssetLayer.shadowOpacity ?? 0) > 0 ? 0 : 0.22,
@@ -263,22 +263,22 @@ export default function AssetLayerInspector({
       </div>
 
       {(selectedAssetLayer.shadowOpacity ?? 0) > 0 && (
-        <div className="space-y-2 rounded-[var(--dc-control-radius)] border border-primary/20 p-2">
-          <label className="dc-studio-layer-field">
+        <div className="space-y-2 rounded-[var(--undara-control-radius)] border border-primary/20 p-2">
+          <label className="undara-studio-layer-field">
             <span>{en ? "Shadow color" : "Warna bayangan"}</span>
             <input
               type="color"
               value={selectedAssetLayer.shadowColor ?? "#000000"}
               onChange={(event) => onUpdate(selectedAssetLayer.id, { shadowColor: event.target.value })}
-              className="h-9 w-full rounded-[var(--dc-control-radius)] border border-primary/30 bg-background p-1"
+              className="h-9 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background p-1"
             />
           </label>
-          <div className="dc-studio-layer-grid">
+          <div className="undara-studio-layer-grid">
             {numberInput("X", selectedAssetLayer.shadowX ?? 0, -50, 50, 1, "px", (shadowX) => onUpdate(selectedAssetLayer.id, { shadowX }))}
             {numberInput("Y", selectedAssetLayer.shadowY ?? 8, -50, 50, 1, "px", (shadowY) => onUpdate(selectedAssetLayer.id, { shadowY }))}
           </div>
           {numberInput(en ? "Blur" : "Blur", selectedAssetLayer.shadowBlur ?? 18, 0, 60, 1, "px", (shadowBlur) => onUpdate(selectedAssetLayer.id, { shadowBlur }))}
-          <label className="dc-studio-layer-opacity">
+          <label className="undara-studio-layer-opacity">
             <span>{en ? "Shadow opacity" : "Opasitas bayangan"} <output>{Math.round((selectedAssetLayer.shadowOpacity ?? 0.22) * 100)}%</output></span>
             <input
               type="range"
@@ -295,7 +295,7 @@ export default function AssetLayerInspector({
       {numberInput(en ? "Size" : "Size", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
       {numberInput(en ? "Rotation" : "Rotasi", selectedAssetLayer.rotation ?? 0, -180, 180, 1, "°", (rotation) => onUpdate(selectedAssetLayer.id, { rotation }))}
 
-      <label className="dc-studio-layer-opacity">
+      <label className="undara-studio-layer-opacity">
         <span>{en ? "Opacity" : "Opasitas"} <output>{Math.round(selectedAssetLayer.opacity * 100)}%</output></span>
         <input
           type="range"
@@ -310,9 +310,9 @@ export default function AssetLayerInspector({
 
       <LayerAnimationControls locale={locale} layer={selectedAssetLayer} onUpdate={onUpdate} />
 
-      <div className="dc-studio-layer-field">
+      <div className="undara-studio-layer-field">
         <span>{en ? "Layer order" : "Urutan layer"}</span>
-        <div className="dc-studio-layer-order" role="group" aria-label={en ? "Layer order" : "Urutan layer"}>
+        <div className="undara-studio-layer-order" role="group" aria-label={en ? "Layer order" : "Urutan layer"}>
           <button
             type="button"
             onClick={() => onPosition(selectedAssetLayer.id, "front")}

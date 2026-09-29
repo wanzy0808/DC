@@ -23,8 +23,8 @@ export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
   const attending = ticketGuest.rsvpStatus === "ATTENDING";
   return (
     <div className="text-center" role="status" aria-live="polite">
-      <CheckCircle2 aria-hidden="true" className="mx-auto h-8 w-8 text-[var(--inv-accent,#7A1C25)]" />
-      <h2 className="mt-4 font-[var(--inv-heading,var(--font-cinzel))] text-3xl">
+      <CheckCircle2 aria-hidden="true" className="mx-auto h-8 w-8 text-[var(--inv-accent,#703B3B)]" />
+      <h2 className="mt-4 font-[family-name:var(--inv-heading,var(--font-undara-heading))] text-3xl">
         Terima kasih, {displayTitleCase(ticketGuest.name)}
       </h2>
       <p className="mt-3 text-sm leading-relaxed opacity-75">
@@ -39,7 +39,7 @@ export function RsvpSuccessPanel({ ticketGuest, ticketUrl, calendarUrl }: {
           <img src={ticketUrl} alt="QR check-in tamu" width={280} height={280} className="h-auto max-w-full" />
         </div>
         <Button asChild className="mt-5">
-          <a href={`${ticketUrl}&download=1`} download="dc-organizer-qr.png">
+          <a href={`${ticketUrl}&download=1`} download="undara-qr.png">
             <Download aria-hidden="true" className="h-4 w-4" /> Unduh QR Code
           </a>
         </Button>
@@ -88,7 +88,7 @@ export function RsvpInputPanel({
   const inputTextStyle = inputFontSize !== undefined ? { fontSize: `${inputFontSize}px` } : undefined;
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4 font-[var(--font-fauna)]">
+    <form onSubmit={onSubmit} className="space-y-4">
       {(guestName || invitedPax !== undefined) && (
         <div>
           {guestName && (
@@ -250,7 +250,7 @@ export function RsvpInputPanel({
         type="submit"
         disabled={submitting}
         aria-disabled={submitting || preview}
-        className="rounded-xl bg-[#7A1C25] px-5 py-3 font-[var(--font-fauna)] text-xs text-white hover:bg-[#5E141C]"
+        className="rounded-xl bg-[var(--inv-accent,#703B3B)] px-5 py-3 text-xs text-white hover:opacity-90"
       >
         {submitting ? "Menyimpan..." : appearance === "zen" ? "Kirim RSVP" : "Konfirmasi Kehadiran"}
       </Button>

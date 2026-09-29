@@ -9,7 +9,7 @@ test("dropdown options and event titles use Title Case", () => {
   assert.equal(displayTitleCase("tamu kehormatan - keluarga"), "Tamu Kehormatan - Keluarga");
 });
 test("acronyms and official brand spelling survive capitalization", () => {
-  assert.equal(displayTitleCase("dc organizer · wa blast · rsvp · vip · vvip · whatsapp"), "Undara · WA Blast · RSVP · VIP · VVIP · WhatsApp");
+  assert.equal(displayTitleCase("undara · wa blast · rsvp · vip · vvip · whatsapp"), "Undara · WA Blast · RSVP · VIP · VVIP · WhatsApp");
   assert.equal(displayTitleCase("RSVP / QR Check-in"), "RSVP / QR Check-In");
 });
 test("display-only capitalization does not alter the stored value", () => {
