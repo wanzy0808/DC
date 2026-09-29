@@ -8,6 +8,7 @@ const page = read("app/event-planner/page.tsx");
 const services = read("components/EventPlanner/ServicesSection.tsx");
 const faq = read("components/Marketing/FaqSection.tsx");
 const data = read("data/services/event-planner.ts");
+const atmosphere = read("components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx");
 
 test("event planner is a connector-only Undara service", () => {
   assert.match(page, /const WHATSAPP_NUMBER = "6281285009609"/);
@@ -32,6 +33,19 @@ test("event planner uses planner notes as decoration and a wider body", () => {
   assert.match(page, /w-full max-w-none/);
   assert.match(page, /max-w-\[1560px\]/);
   assert.doesNotMatch(page, /md:grid-cols-3/);
+});
+
+test("event planner uses its own animated bronze botanical atmosphere", () => {
+  assert.match(page, /EventPlannerBotanicalAtmosphere/);
+  assert.doesNotMatch(page, /PublicMarketingAtmosphere|LandingFloralGlow/);
+
+  assert.match(atmosphere, /foliage-left\.webp/);
+  assert.match(atmosphere, /foliage-right\.webp/);
+  assert.match(atmosphere, /foliage-floating\.webp/);
+  assert.match(atmosphere, /FallingLeaves/);
+  assert.match(atmosphere, /useReducedMotion/);
+  assert.match(atmosphere, /repeat: Infinity/);
+  assert.doesNotMatch(atmosphere, /branch-0[1-6]\.webp/);
 });
 
 test("event planner follows ID EN and avoids legacy copy", () => {
