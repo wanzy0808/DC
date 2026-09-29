@@ -44,8 +44,8 @@ export async function POST(request: Request) {
       const verifyUrl = `${baseUrl ?? "http://localhost:3000"}/api/auth/verify-email?token=${token}`;
       const mail = await sendEmail({
         to: email,
-        subject: "Verifikasi email — DC Organizer",
-        html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#21191c;line-height:1.6"><h2>DC Organizer</h2><p>Verifikasi email untuk mengaktifkan akunmu.</p><p><a href="${verifyUrl}">Verifikasi email</a></p><p>Link berlaku 24 jam dan hanya dapat digunakan sekali.</p></body></html>`,
+        subject: "Verifikasi email — Undara",
+        html: `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#21191c;line-height:1.6"><h2>Undara</h2><p>Verifikasi email untuk mengaktifkan akunmu.</p><p><a href="${verifyUrl}">Verifikasi email</a></p><p>Link berlaku 24 jam dan hanya dapat digunakan sekali.</p></body></html>`,
       });
       if (!mail.sent) {
         if (process.env.NODE_ENV !== "production") {

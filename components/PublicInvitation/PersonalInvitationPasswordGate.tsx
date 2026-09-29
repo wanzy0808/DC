@@ -49,8 +49,8 @@ export default function PersonalInvitationPasswordGate({
         <div className="mx-auto grid h-10 w-10 place-items-center rounded-lg bg-primary/[0.08] text-primary">
           <LockKeyhole className="h-5 w-5" />
         </div>
-        <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.18em] text-primary">Personal Invitation</p>
-        <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">Untuk {displayTitleCase(guestName)}</h1>
+        <p className="mt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-primary">Personal Invitation</p>
+        <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl font-semibold">Untuk {displayTitleCase(guestName)}</h1>
         <p className="mt-2 text-sm text-muted-foreground">Masukkan password untuk membuka undangan personal ini.</p>
         <Input
           type="password"

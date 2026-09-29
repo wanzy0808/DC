@@ -9,7 +9,7 @@ async function requireStaff() {
   const user = await getCurrentUser();
   return user && ["ADMIN", "FINANCE"].includes(user.role) ? user : null;
 }
-function invoiceNumber(){const stamp=new Date().toISOString().slice(0,10).replaceAll("-","");return `DC-${stamp}-${randomBytes(3).toString("hex").toUpperCase()}`}
+function invoiceNumber(){const stamp=new Date().toISOString().slice(0,10).replaceAll("-","");return `UND-${stamp}-${randomBytes(3).toString("hex").toUpperCase()}`}
 
 export async function GET() {
   const staff = await requireStaff();

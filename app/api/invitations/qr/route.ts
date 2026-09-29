@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       headers: {
         ...PRIVATE_HEADERS,
         "Content-Type": "image/png",
-        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="dc-organizer-undangan-${invitation.id}-qr.png"`,
+        "Content-Disposition": `${download ? "attachment" : "inline"}; filename="undara-undangan-${invitation.id}-qr.png"`,
         "Content-Length": String(bytes.byteLength),
         "X-Content-Type-Options": "nosniff",
       },

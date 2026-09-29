@@ -24,6 +24,10 @@ test("all framed marketing pages keep a visible outline over restrained ambience
     assert.match(source, /<PublicMarketingAtmosphere \/>[\s\S]*data-undara-marketing-frame/, route);
   }
 
+  const sharedAtmosphere = read("components/Layout/PublicMarketingAtmosphere.tsx");
+  assert.match(sharedAtmosphere, /EventPlannerBotanicalAtmosphere/);
+  assert.doesNotMatch(sharedAtmosphere, /LandingFloralGlow/);
+
   const home = read("app/page.tsx");
   assert.match(home, /<LandingWoodlandAtmosphere \/>[\s\S]*data-undara-marketing-frame/);
   assert.doesNotMatch(home, /flex-col overflow-hidden rounded-\[14px\]/);

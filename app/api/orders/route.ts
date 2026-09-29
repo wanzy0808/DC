@@ -14,7 +14,7 @@ type AllowedPackage = (typeof allowedPackages)[number];
 
 function invoiceNumber() {
   const stamp = new Date().toISOString().slice(0, 10).replaceAll("-", "");
-  return `DC-${stamp}-${randomBytes(3).toString("hex").toUpperCase()}`;
+  return `UND-${stamp}-${randomBytes(3).toString("hex").toUpperCase()}`;
 }
 
 function slugPart(value: string) {

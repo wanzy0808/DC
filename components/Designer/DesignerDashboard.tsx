@@ -89,11 +89,11 @@ export default function DesignerDashboard() {
 
 
   return (
-    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
+    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-undara-body)]">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p>
-          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Template Studio</h1>
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Designer Dashboard</p>
+          <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Template Studio</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Kelola template dan lihat berapa banyak template kamu dipakai pada transaksi yang sudah PAID.</p>
         </div>
         <Button asChild><Link href="/designer/studio">Buka Template Studio</Link></Button>
@@ -121,7 +121,7 @@ export default function DesignerDashboard() {
       <div className="grid gap-6">
         <section className="rounded-2xl border border-border bg-background p-5">
           <div className="flex items-center justify-between">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Template saya</h2>
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Template saya</h2>
             <p className="font-[family-name:var(--font-undara-mono)] text-xs text-muted-foreground">{templates.length} template</p>
           </div>
 
@@ -142,7 +142,7 @@ export default function DesignerDashboard() {
                         <p className="text-xs font-medium text-primary">{item.salesCount} terjual</p>
                       </div>
                     </div>
-                    <h3 className="mt-1 font-[family-name:var(--font-cinzel)] text-lg">{item.name}</h3>
+                    <h3 className="mt-1 font-[family-name:var(--font-undara-heading)] text-lg">{item.name}</h3>
                     <p className="mt-1 text-xs text-muted-foreground">Nilai order terkait: {rupiah(item.orderValue)}</p>
                     <div className="mt-2 flex flex-wrap gap-1">
                       {item.tags.map((tag) => (

@@ -182,10 +182,12 @@ test("runtime source does not reference retired root asset URLs", () => {
 });
 
 
-test("shared non-home marketing atmosphere uses botanical branch-02 instead of the legacy flower asset", () => {
+test("retained landing ornament uses WebP while framed services use shared bronze foliage", () => {
   const landingOrnament = read("components/Landing/LandingFloralGlow.tsx");
+  const atmosphere = read("components/Layout/PublicMarketingAtmosphere.tsx");
   assert.match(landingOrnament, /\/assets\/landing\/ornaments\/botanical\/branch-02\.webp/);
   assert.equal(landingOrnament.includes("/assets/landing/ornaments/legacy/flower.webp"), false);
+  assert.doesNotMatch(atmosphere, /LandingFloralGlow/);
 });
 
 test("homepage uses the dedicated woodland composition without cloud or petal ambience", () => {
@@ -235,7 +237,7 @@ test("public marketing pages share one frame, footer control system and falling-
   assert.equal(existsSync(path("components/Layout/FallingLeaves.tsx")), true);
   assert.equal(existsSync(path("components/Layout/RosePetalBackground.tsx")), false);
   assert.equal(existsSync(path("components/Landing/WindRosePetals.tsx")), false);
-  assert.match(atmosphere, /FallingLeaves/);
+  assert.match(atmosphere, /EventPlannerBotanicalAtmosphere/);
   assert.doesNotMatch(atmosphere, /WindRosePetals|RosePetalBackground/);
 
   assert.match(styles, /\.undara-marketing-frame \{/);

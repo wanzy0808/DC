@@ -58,11 +58,11 @@ export default function PartnerDashboard() {
   }, []);
 
   return (
-    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
+    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-undara-body)]">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Mitra DC Organizer</p>
-          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Dashboard Mitra</h1>
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Mitra Undara</p>
+          <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Dashboard Mitra</h1>
           <p className="mt-2 text-sm text-muted-foreground">{data?.partner.email ?? "Pantau penjualan dari kode voucher kamu."}</p>
         </div>
         <SessionLogoutButton />
@@ -85,7 +85,7 @@ export default function PartnerDashboard() {
           </div>
 
           <section className="rounded-2xl border border-border bg-background p-5">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Kode voucher saya</h2>
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Kode voucher saya</h2>
             <div className="mt-4 flex flex-wrap gap-2">
               {data.vouchers.length ? data.vouchers.map((code) => (
                 <span key={code} className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 font-mono text-sm text-primary">{code}</span>
@@ -95,7 +95,7 @@ export default function PartnerDashboard() {
 
           <section className="overflow-hidden rounded-2xl border border-border bg-background">
             <div className="border-b border-border p-5">
-              <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Penjualan dari kode voucher</h2>
+              <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Penjualan dari kode voucher</h2>
               <p className="mt-1 text-xs text-muted-foreground">Hanya transaksi dengan kode voucher milik akun ini yang ditampilkan.</p>
             </div>
             {!data.sales.length ? (

@@ -44,13 +44,13 @@ export default function InvitationPasswordGate({ slug }: { slug: string }) {
         <div className="mx-auto grid h-10 w-10 place-items-center rounded-lg bg-primary/[0.08] text-primary">
           <LockKeyhole className="h-5 w-5" aria-hidden="true" />
         </div>
-        <p className="mt-5 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.18em] text-primary">
+        <p className="mt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-primary">
           Private Invitation
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-2xl font-semibold">
+        <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl font-semibold">
           Masukkan Password
         </h1>
-        <p className="mt-2 font-[family-name:var(--font-fauna)] text-sm text-muted-foreground">
+        <p className="mt-2 font-[family-name:var(--font-undara-body)] text-sm text-muted-foreground">
           Undangan ini dilindungi password. Masukkan password untuk melanjutkan.
         </p>
         <Input

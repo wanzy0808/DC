@@ -43,7 +43,7 @@ export default function OurStorySection({
           id="invitation-our-story-heading"
           data-studio-native-object="object:identity:our-story-heading"
           className={`mt-3 text-2xl leading-snug ${rose ? "text-[#713b50]" : ""}`}
-          style={{ fontFamily: "var(--inv-heading, var(--font-dc-heading))" }}
+          style={{ fontFamily: "var(--inv-heading, var(--font-undara-heading))" }}
         >
           Tentang Kami
         </h2>

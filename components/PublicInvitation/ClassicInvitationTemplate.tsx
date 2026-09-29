@@ -57,7 +57,7 @@ function initials(value: string) {
     .slice(0, 2)
     .map((part) => part.slice(0, 1).toUpperCase())
     .join("");
-  return letters || "DC";
+  return letters || "U";
 }
 
 function formatTime(value: string | null, timezoneLabel: string) {
@@ -337,9 +337,6 @@ export default function ClassicInvitationTemplate({
             <p className="mt-6 font-[Cormorant_Garamond,serif] text-xl">Sampai bertemu di acara,</p>
             <p className="mt-4 font-[Cormorant_Garamond,serif] text-2xl">
               {identityTitle || eventTitle}
-            </p>
-            <p className="mt-6 font-sans text-[9px] uppercase tracking-[0.16em] text-stone-400">
-              DC Organizer
             </p>
           </footer>
         </section>

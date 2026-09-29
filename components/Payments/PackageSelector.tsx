@@ -38,7 +38,7 @@ export default function PackageSelector({
   const copy =
     locale === "en"
       ? {
-          eyebrow: "DC Services",
+          eyebrow: "Services",
           title: invitationId ? "Activate this event" : "Choose a service",
           description: invitationId
             ? "Your purchase is attached to this event only. Additional events can be created and activated separately."
@@ -48,10 +48,10 @@ export default function PackageSelector({
           fallbackError: "This product could not be selected yet.",
           eventContext: "Event-specific purchase",
           voucher: "Partner voucher code",
-          voucherHint: "Optional. Used to attribute this sale to a DC Organizer partner.",
+          voucherHint: "Optional. Used to attribute this sale to an Undara partner.",
         }
       : {
-          eyebrow: "DC Services",
+          eyebrow: "Layanan",
           title: invitationId ? "Aktifkan acara ini" : "Pilih layanan",
           description: invitationId
             ? "Pembelian hanya berlaku untuk acara ini. Acara lain dapat dibuat dan diaktifkan secara terpisah."
@@ -61,7 +61,7 @@ export default function PackageSelector({
           fallbackError: "Produk belum dapat dipilih.",
           eventContext: "Pembelian khusus acara",
           voucher: "Kode voucher mitra",
-          voucherHint: "Opsional. Dipakai untuk mencatat penjualan ke mitra DC Organizer.",
+          voucherHint: "Opsional. Dipakai untuk mencatat penjualan ke mitra Undara.",
         };
 
   async function choosePackage() {
@@ -90,17 +90,17 @@ export default function PackageSelector({
     <main className="relative z-10 min-h-screen w-full px-5 py-12 text-foreground sm:px-8">
       <div className="mx-auto w-[80vw] max-w-full space-y-10">
         <div className="mx-auto max-w-4xl text-center">
-          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[0.25em] text-primary">
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[0.25em] text-primary">
             {copy.eyebrow}
           </p>
-          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-4xl">
+          <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-4xl">
             {copy.title}
           </h1>
-          <p className="mx-auto mt-2 max-w-2xl font-[family-name:var(--font-fauna)] text-sm leading-7 text-muted-foreground">
+          <p className="mx-auto mt-2 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground">
             {copy.description}
           </p>
           {invitationId && (
-            <p className="mt-3 font-[family-name:var(--font-dm-mono)] text-[9px] uppercase tracking-[0.14em] text-primary">
+            <p className="mt-3 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-primary">
               {copy.eventContext}
             </p>
           )}
@@ -128,21 +128,21 @@ export default function PackageSelector({
                 />
                 <span className="min-w-0">
                   <span className="flex items-center justify-between gap-3">
-                    <span className="font-[family-name:var(--font-dm-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                      DC Organizer
+                    <span className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
+                      {locale === "en" ? "Service" : "Layanan"}
                     </span>
                     {active && <CheckCircle2 className="h-4 w-4 shrink-0 text-primary" />}
                   </span>
-                  <span className="mt-3 block font-[family-name:var(--font-cinzel)] text-xl">
+                  <span className="mt-3 block font-[family-name:var(--font-undara-heading)] text-xl">
                     {item.name[locale]}
                   </span>
                   <span className="mt-2 block text-2xl font-semibold">
                     Rp {item.price.toLocaleString("id-ID")}
                   </span>
-                  <span className="mt-3 block font-[family-name:var(--font-fauna)] text-sm leading-6 text-muted-foreground">
+                  <span className="mt-3 block font-[family-name:var(--font-undara-body)] text-sm leading-6 text-muted-foreground">
                     {item.description[locale]}
                   </span>
-                  <span className="mt-5 block space-y-2 font-[family-name:var(--font-fauna)] text-xs text-muted-foreground">
+                  <span className="mt-5 block space-y-2 font-[family-name:var(--font-undara-body)] text-xs text-muted-foreground">
                     {item.features[locale].map((feature) => (
                       <span key={feature} className="flex gap-2">
                         <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary" />

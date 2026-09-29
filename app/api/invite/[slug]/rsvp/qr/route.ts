@@ -31,7 +31,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
     const png = await QRCode.toBuffer(token, { type: "png", width: 840, margin: 4, errorCorrectionLevel: "M" });
     return new Response(new Uint8Array(png), {
       headers: { ...headers, "Content-Type": "image/png",
-        "Content-Disposition": `${url.searchParams.get("download") === "1" ? "attachment" : "inline"}; filename="dc-organizer-qr.png"` },
+        "Content-Disposition": `${url.searchParams.get("download") === "1" ? "attachment" : "inline"}; filename="undara-qr.png"` },
     });
   } catch {
     return NextResponse.json({ error: "QR belum dapat dimuat." }, { status: 503, headers });

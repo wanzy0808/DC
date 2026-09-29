@@ -44,7 +44,7 @@ export const digitalInvitationReviews = {
 export const digitalInvitationFaq = {
   id: [
     {
-      question: "Undangan Digital DC hanya untuk wedding?",
+      question: "Apakah Undangan Digital Undara hanya untuk pernikahan?",
       answer:
         "Tidak. Undangan Digital dirancang per acara, jadi bisa digunakan untuk wedding, anniversary, baby shower, ulang tahun, private event, atau acara lain yang membutuhkan undangan, RSVP, dan manajemen tamu.",
     },
@@ -71,7 +71,7 @@ export const digitalInvitationFaq = {
   ],
   en: [
     {
-      question: "Is DC Digital Invitation only for weddings?",
+      question: "Is Undara Digital Invitation only for weddings?",
       answer:
         "No. Digital Invitation is event-based, so it can be used for weddings, anniversaries, baby showers, birthdays, private events, or other occasions that need invitations, RSVP, and guest management.",
     },

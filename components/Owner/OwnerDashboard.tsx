@@ -150,11 +150,11 @@ export default function OwnerDashboard() {
   const effectiveDigital = purchasedDigital || effectiveGuestbook || form.packageAccess.digital;
 
   return (
-    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-fauna)]">
+    <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-undara-body)]">
       <header className="flex flex-wrap items-start justify-between gap-4">
         <div className="min-w-0">
-          <p className="font-[family-name:var(--font-dm-mono)] text-xs uppercase tracking-[.2em] text-primary">Owner Dashboard</p>
-          <h1 className="mt-2 font-[family-name:var(--font-cinzel)] text-3xl font-semibold">Kontrol DC Organizer</h1>
+          <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Owner Dashboard</p>
+          <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Kontrol Undara</h1>
           <p className="mt-2 max-w-2xl text-sm text-muted-foreground">Akun, hak paket, pembayaran, designer, dan mitra dalam satu panel.</p>
         </div>
         <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export default function OwnerDashboard() {
         ].map(([label, count]) => (
           <section key={String(label)} className="rounded-2xl border border-border bg-background p-5">
             <p className="text-sm text-muted-foreground">{label}</p>
-            <p className="mt-2 font-[family-name:var(--font-dm-mono)] text-3xl">{count}</p>
+            <p className="mt-2 font-[family-name:var(--font-undara-mono)] text-3xl">{count}</p>
           </section>
         ))}
       </div>
@@ -184,7 +184,7 @@ export default function OwnerDashboard() {
       <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
         <section className="overflow-hidden rounded-2xl border border-border bg-background">
           <div className="border-b border-border p-5">
-            <h2 className="font-[family-name:var(--font-cinzel)] text-xl">Daftar akun</h2>
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Daftar akun</h2>
           </div>
           {loading ? (
             <p className="p-5 text-sm text-muted-foreground">Memuat...</p>
@@ -227,7 +227,7 @@ export default function OwnerDashboard() {
         </section>
 
         <section className="rounded-2xl border border-border bg-background p-5">
-          <h2 className="font-[family-name:var(--font-cinzel)] text-xl">{selected ? "Edit ID" : "Buat ID"}</h2>
+          <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">{selected ? "Edit ID" : "Buat ID"}</h2>
           <div className="mt-4 space-y-4">
             <Input
               type="email"
