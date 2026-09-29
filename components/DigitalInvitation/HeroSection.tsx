@@ -54,21 +54,21 @@ export default function HeroSection({ ready }: { ready: boolean }) {
         };
 
   return (
-    <section className="relative mx-auto grid w-full min-w-0 items-center gap-12 pb-0 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)] lg:gap-10 lg:pb-0">
-      <div className="undara-invitation-hero-copy min-w-0 w-full max-w-none lg:-translate-x-4">
+    <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full min-w-0 items-center gap-12 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,0.94fr)] lg:gap-14 lg:pb-16">
+      <div className="undara-invitation-hero-copy relative z-10 min-w-0 w-full max-w-none py-8 lg:py-12">
         <PuzzleAssemble ready={ready} direction="top" delay={0.04}>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
             {copy.eyebrow}
           </p>
         </PuzzleAssemble>
         <PuzzleAssemble ready={ready} direction="left" delay={0.12}>
-          <h1 className="mt-6 max-w-3xl font-[family-name:var(--font-undara-heading)] text-5xl font-normal leading-[1.02] tracking-[-0.045em] text-primary md:text-7xl">
+          <h1 className="mt-5 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.2rem,6vw,6.8rem)] font-normal leading-[0.94] tracking-[-0.04em] text-primary">
             {copy.title}
             <span className="mt-2 block text-foreground">{copy.accent}</span>
           </h1>
         </PuzzleAssemble>
         <PuzzleAssemble ready={ready} direction="right" delay={0.22}>
-          <p className="mt-7 max-w-2xl font-[family-name:var(--font-undara-body)] text-base leading-8 text-foreground/70 md:text-lg">
+          <p className="mt-7 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
             {copy.description}
           </p>
         </PuzzleAssemble>
@@ -83,7 +83,7 @@ export default function HeroSection({ ready }: { ready: boolean }) {
           </div>
         </PuzzleAssemble>
         <PuzzleAssemble ready={ready} direction="left" delay={0.38}>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/55">
+          <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 border-t border-primary/20 pt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
             {copy.tags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
@@ -91,8 +91,11 @@ export default function HeroSection({ ready }: { ready: boolean }) {
         </PuzzleAssemble>
       </div>
 
-      <div className="relative mx-auto w-full min-w-0 max-w-lg lg:translate-x-4">
-        <PuzzleAssemble ready={ready} direction="right" delay={0.15} className="relative mx-auto w-[min(100%,340px)]">
+      <div className="relative z-10 mx-auto w-full min-w-0 max-w-xl py-8 lg:py-10">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-[10%] top-[4%] h-[72%] w-[72%] rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.12),transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.10),transparent_68%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-[18%] hidden h-[62%] w-px bg-primary/25 lg:block" />
+        <p className="undara-editorial-index absolute left-[5%] top-[13%] hidden lg:block">01 / Invitation</p>
+        <PuzzleAssemble ready={ready} direction="right" delay={0.15} className="relative mx-auto w-[min(100%,340px)] lg:translate-x-[8%]">
           <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div
               className="absolute -right-[4px] top-[24%] h-16 w-[4px] rounded-r-full bg-[#4a4a4c] shadow-[inset_1px_0_1px_rgba(255,255,255,0.28)] dark:bg-[#8b8b8e]"
