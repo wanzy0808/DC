@@ -1,6 +1,7 @@
 "use client";
 
 import type React from "react";
+import { useLanguage } from "@/components/I18n/LanguageProvider";
 
 type SocialIconProps = { className?: string };
 
@@ -48,8 +49,12 @@ const SOCIAL_PROFILES: readonly SocialProfile[] = [
  * Until the official profiles are ready, icons stay visible but intentionally non-clickable.
  */
 export default function UndaraSocialIcons({ compact = false }: { compact?: boolean }) {
+  const { locale } = useLanguage();
+  const pending = locale === "en" ? "link coming soon" : "tautan segera hadir";
+  const groupLabel = locale === "en" ? "Undara social media" : "Media sosial Undara";
+
   return (
-    <div className="flex items-center justify-end gap-3" aria-label="Media sosial Undara">
+    <div className="flex items-center justify-end gap-2 sm:gap-3" aria-label={groupLabel}>
       {SOCIAL_PROFILES.map(({ id, label, href, Icon }) =>
         href ? (
           <a
@@ -67,8 +72,8 @@ export default function UndaraSocialIcons({ compact = false }: { compact?: boole
           <span
             key={id}
             role="img"
-            aria-label={`${label} — tautan segera hadir`}
-            title={`${label} — tautan segera hadir`}
+            aria-label={`${label} — ${pending}`}
+            title={`${label} — ${pending}`}
             className="undara-control-surface undara-footer-control cursor-default"
             data-social={id}
             data-social-pending="true"
