@@ -438,6 +438,66 @@ aside nav > p { font-family: var(--font-undara-heading); }
   letter-spacing: 0.16em;
   color: color-mix(in srgb, var(--primary) 70%, transparent);
 }
+
+/* Editorial rhythm helpers for framed marketing pages.
+   Keep content readable while avoiding a repetitive centered-section stack. */
+.undara-editorial-offset-left,
+.undara-editorial-offset-right {
+  position: relative;
+  width: 100%;
+}
+.undara-editorial-rail {
+  position: relative;
+}
+.undara-editorial-rail::before {
+  content: "";
+  position: absolute;
+  top: 0.25rem;
+  bottom: 0.25rem;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    color-mix(in srgb, var(--primary) 34%, transparent) 16%,
+    color-mix(in srgb, var(--primary) 22%, transparent) 84%,
+    transparent
+  );
+  pointer-events: none;
+}
+.undara-editorial-offset-left.undara-editorial-rail::before {
+  right: -1.5rem;
+}
+.undara-editorial-offset-right.undara-editorial-rail::before {
+  left: -1.5rem;
+}
+.undara-editorial-ambient {
+  position: relative;
+  isolation: isolate;
+}
+.undara-editorial-ambient::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: min(34rem, 70vw);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--primary) 9%, transparent),
+    transparent 68%
+  );
+  filter: blur(18px);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.undara-editorial-ambient-left::after {
+  left: -12%;
+  top: 16%;
+}
+.undara-editorial-ambient-right::after {
+  right: -12%;
+  top: 8%;
+}
 @media (min-width: 640px) {
   .undara-marketing-content { padding-inline: 2rem; }
 }
@@ -447,6 +507,14 @@ aside nav > p { font-family: var(--font-undara-heading); }
 }
 @media (min-width: 1024px) {
   .undara-marketing-content { padding-inline: 3rem; }
+  .undara-editorial-offset-left {
+    width: 94%;
+    margin-right: auto;
+  }
+  .undara-editorial-offset-right {
+    width: 94%;
+    margin-left: auto;
+  }
 }
 @media (min-width: 1280px) {
   .undara-marketing-content { padding-inline: 4rem; }
