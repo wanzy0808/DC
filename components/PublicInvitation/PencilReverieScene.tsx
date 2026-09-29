@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 import { Play } from "lucide-react";
 import "./pencil-reverie.css";
 
@@ -38,6 +40,8 @@ function HeartDoodle({ studioObject }: { studioObject?: string }) {
 export default function PencilReverieScene({
   stage, names, date, onOpen, isWedding = true, hashtag, preview = false, recipientLine,
 }: SceneProps) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
   const rootRef = useRef<HTMLElement>(null);
@@ -62,13 +66,13 @@ export default function PencilReverieScene({
     data-pr-active={visible} data-pr-long={longName} className={"pr-scene pr-" + stage}>
     {stage === "envelope" ? <>
       <div className="pr-gate-intro" data-studio-native-object="object:envelope:intro">
-        <span className="pr-overline" data-studio-native-object="object:envelope:kicker">A LITTLE STORY OF US</span>
-        <p data-studio-native-object="object:envelope:intro-copy">Setiap cerita punya awalnya.</p>
+        <span className="pr-overline" data-studio-native-object="object:envelope:kicker">{tr("A LITTLE STORY OF US")}</span>
+        <p data-studio-native-object="object:envelope:intro-copy">{tr("Setiap cerita punya awalnya.")}</p>
       </div>
       <div className="pr-letter-illustration" data-studio-native-object="object:envelope:illustration-group">
         <PaperIllustration file="bingkai.webp" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
-          <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
+          <p data-studio-native-object="object:envelope:letter-kicker">{tr("Untuk momen istimewa")}</p>
           {recipientLine && <p data-personal-envelope-address className="mt-2 break-words text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <h1 data-studio-native-heading="">{names}</h1>
           <span data-studio-native-object="object:envelope:date">{date}</span>
@@ -76,11 +80,11 @@ export default function PencilReverieScene({
         <HeartDoodle studioObject="object:envelope:heart"/>
       </div>
       <button className="pr-open-button" type="button" onClick={handleOpen} disabled={opening} data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button">
-        <Play size={15} aria-hidden="true" fill="currentColor"/> Buka Undangan
+        <Play size={15} aria-hidden="true" fill="currentColor"/> {tr("Buka Undangan")}
       </button>
     </> : <>
       <header className="pr-cover-heading">
-        <span className="pr-overline" data-studio-native-object="object:cover:kicker">{isWedding ? "THE WEDDING OF" : "SEBUAH UNDANGAN"}</span>
+        <span className="pr-overline" data-studio-native-object="object:cover:kicker">{tr(isWedding ? "THE WEDDING OF" : "Sebuah Undangan")}</span>
       </header>
       <div className="pr-cover-illustration" data-studio-native-object="object:cover:illustration-group">
         <PaperIllustration file="bungaandlampbg.webp" priority className="pr-cover-paper" studioObject="object:cover:main-art"/>
@@ -93,7 +97,7 @@ export default function PencilReverieScene({
         </div>
         <HeartDoodle studioObject="object:cover:heart"/>
       </div>
-      <p className="pr-cover-end" data-studio-native-object="object:cover:ending">Every little moment matters.</p>
+      <p className="pr-cover-end" data-studio-native-object="object:cover:ending">{tr("Every little moment matters.")}</p>
     </>}
   </section>;
 }

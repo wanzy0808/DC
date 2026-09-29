@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useState } from "react";
 import { MailOpen } from "lucide-react";
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 import { BlossomBranch, EnsoSun, InkMountains } from "@/components/PublicInvitation/ZenAtelierArtwork";
 import "./zen-atelier.css";
 
@@ -20,6 +22,8 @@ type ZenAtelierSceneProps = {
 const root = "/templates/Zen%20Atelier/";
 
 export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
   const couple = isWedding ? title.split(/\s*&\s*/).filter(Boolean) : [];
@@ -34,7 +38,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
         </div>
         <div className="zen-jp-intro" data-studio-native-object="object:envelope:intro-group">
           <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
-          <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">Sebuah undangan<br />untuk orang istimewa</p>
+          <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">{language === "EN" ? tr("Sebuah undangan untuk orang istimewa") : <>Sebuah undangan<br />untuk orang istimewa</>}</p>
           {recipientLine && <p data-personal-envelope-address className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
         </div>
@@ -66,12 +70,12 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           onOpen();
         }}>
           <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={17} strokeWidth={1.35} /></span>
-          <span>Buka Undangan</span>
+          <span>{tr("Buka Undangan")}</span>
         </button>
       </> : <>
         <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.webp"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" data-studio-native-object="object:cover:blossom" />
         <div className="zen-cover-copy" data-studio-native-object="object:cover:copy-group">
-          <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{isWedding ? "The Wedding Of" : "Sebuah Undangan"}</p>
+          <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{tr(isWedding ? "The Wedding Of" : "Sebuah Undangan")}</p>
           <h1 data-studio-native-heading="">{couple.length === 2 ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></> : <span>{title}</span>}</h1>
           <p className="zen-cover-date" data-studio-native-object="object:cover:date">{date}</p>
           {hashtag?.trim() && <p className="zen-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}

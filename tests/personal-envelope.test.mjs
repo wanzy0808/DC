@@ -80,7 +80,7 @@ test("dashboard and every ready envelope path receive the personal recipient lin
   assert.match(fields, /name: guestName/);
   assert.match(publicPage, /personalEnvelopeEnabled: guest\.personalEnvelopeEnabled/);
   assert.match(previewPage, /<PublicInvitationRenderer/);
-  assert.match(universal, /formatPersonalEnvelopeAddress\(personalGuest\)/);
+  assert.match(universal, /formatPersonalEnvelopeAddress\(\{ \.\.\.personalGuest, personalLanguage: language \}\)/);
   assert.match(universal, /recipientLine=\{personalEnvelopeAddress\}/);
   assert.match(rose, /data-personal-envelope-address/);
   assert.match(scenes, /data-personal-envelope-address/);
@@ -94,10 +94,10 @@ test("Studio previews a sample addressee while real guest lines remain authorita
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
 
-  assert.match(designer, /previewRecipientLine=\{locale === "en"/);
+  assert.match(designer, /previewRecipientLine=\{invitationLanguage === "EN"/);
   assert.match(preview, /previewRecipientLine=\{previewRecipientLine\}/);
   for (const renderer of [universal, rose]) {
-    assert.match(renderer, /personalGuest \? formatPersonalEnvelopeAddress\(personalGuest\) : preview \? previewRecipientLine/);
+    assert.match(renderer, /personalGuest \? formatPersonalEnvelopeAddress\(\{ \.\.\.personalGuest, personalLanguage: language \}\) : preview \? previewRecipientLine/);
   }
 });
 

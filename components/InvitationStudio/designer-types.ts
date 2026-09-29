@@ -71,6 +71,7 @@ export type InvitationDesignState = {
   photos: PhotoAssignments;
   /** Only template-owned narrative copy; never duplicates event identity or schedule. */
   copy: EditableInvitationCopy;
+  copyEn: EditableInvitationCopy;
   /** Visual-only entrance choreography for editable template-owned copy. */
   copyMotion: EditableCopyMotions;
   layers: InvitationAssetLayer[];

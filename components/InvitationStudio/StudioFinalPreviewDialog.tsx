@@ -16,6 +16,7 @@ import type {
   InvitationDesignState,
 } from "@/components/InvitationStudio/designer-types";
 import { invitationFonts, invitationPalettes } from "@/lib/templates/design";
+import type { InvitationLanguage } from "@/lib/invitations/language";
 
 export default function StudioFinalPreviewDialog({
   open,
@@ -27,6 +28,7 @@ export default function StudioFinalPreviewDialog({
   eventTag,
   dressCode,
   locale,
+  invitationLanguage,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -37,6 +39,7 @@ export default function StudioFinalPreviewDialog({
   eventTag: string;
   dressCode: string;
   locale: string;
+  invitationLanguage: InvitationLanguage;
 }) {
   const [device, setDevice] = useState<"mobile" | "desktop">("mobile");
   const en = locale === "en";
@@ -85,6 +88,8 @@ export default function StudioFinalPreviewDialog({
             data-studio-final-preview-device={device}
           >
             <InvitationPreview
+              invitationLanguage={invitationLanguage}
+              previewRecipientLine={invitationLanguage === "EN" ? "Dear : Mr [Name] and Mrs [Name]" : "Kepada Yth : Bapak [Nama] dan Ibu [Nama]"}
               key={`${device}:${designKey}`}
               invitation={invitation}
               templateKey={design.template}

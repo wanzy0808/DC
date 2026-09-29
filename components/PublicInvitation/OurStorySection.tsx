@@ -1,5 +1,7 @@
 import InvitationLayerTextContent from "@/components/PublicInvitation/InvitationLayerTextContent";
 import type { EditableCopyMotionUnit } from "@/lib/templates/editable-copy-motion";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 
 /**
  * A couple's own words, not fabricated template copy or duplicate event data.
@@ -17,13 +19,14 @@ export default function OurStorySection({
   preview?: boolean;
   motionUnit?: EditableCopyMotionUnit;
 }) {
+  const language = useInvitationLanguage();
   if (!story?.trim() && !preview) return null;
 
   const rose = theme === "romantic-rose";
   const zen = theme === "zen-atelier";
   const pencil = theme === "pencil-reverie";
   const left = theme === "modern-maroon" || theme === "golden-art-deco";
-  const storyText = story?.trim() || (preview ? "Our Story belum diisi" : "");
+  const storyText = story?.trim() || (preview ? invitationText(language, "Our Story belum diisi") : "");
   return (
     <section
       data-invitation-subsection="our-story"
@@ -37,7 +40,7 @@ export default function OurStorySection({
     >
       <div className={`relative mx-auto max-w-md ${left || pencil ? "text-left" : "text-center"}`}>
         <p data-studio-native-object="object:identity:our-story-kicker" className={`text-[10px] uppercase tracking-[.24em] ${rose ? "text-[#a65e69]" : "text-[var(--inv-accent)]"}`}>
-          Our Story
+          {invitationText(language, "Our Story")}
         </p>
         <h2
           id="invitation-our-story-heading"
@@ -45,7 +48,7 @@ export default function OurStorySection({
           className={`mt-3 text-2xl leading-snug ${rose ? "text-[#713b50]" : ""}`}
           style={{ fontFamily: "var(--inv-heading, var(--font-undara-heading))" }}
         >
-          Tentang Kami
+          {invitationText(language, "Tentang Kami")}
         </h2>
         <span
           aria-hidden="true"

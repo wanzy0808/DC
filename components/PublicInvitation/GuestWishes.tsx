@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useState, type CSSProperties, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 
 type Wish = { id: string; authorName: string; message: string; createdAt: string };
 
@@ -20,6 +22,8 @@ export default function GuestWishes({
   inputStyle?: CSSProperties;
   buttonStyle?: CSSProperties;
 }) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const inputId = useId();
   const messageId = useId();
   const [name, setName] = useState(initialName);
@@ -50,15 +54,15 @@ export default function GuestWishes({
     fetch(endpoint, { cache: "no-store" })
       .then(async (response) => {
         const data = await response.json().catch(() => null);
-        if (!response.ok) throw new Error(data?.error || "Ucapan belum dapat dimuat.");
+        if (!response.ok) throw new Error(language === "EN" ? invitationText(language, "Ucapan belum dapat dimuat.") : data?.error || "Ucapan belum dapat dimuat.");
         if (active) setWishes(Array.isArray(data?.wishes) ? data.wishes : []);
       })
       .catch((error: unknown) => {
-        if (active) setFetchError(error instanceof Error ? error.message : "Ucapan belum dapat dimuat.");
+        if (active) setFetchError(error instanceof Error ? error.message : invitationText(language, "Ucapan belum dapat dimuat."));
       })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
-  }, [endpoint, preview, reloadKey, slug]);
+  }, [endpoint, preview, reloadKey, slug, language]);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -67,7 +71,7 @@ export default function GuestWishes({
     const authorName = name.trim();
     const wishMessage = message.trim();
     if (!authorName || !wishMessage || authorName.length > 80 || wishMessage.length > 600) {
-      setSubmitMessage("Isi nama dan ucapan (nama maks. 80 karakter, ucapan maks. 600 karakter).");
+      setSubmitMessage(tr("Isi nama dan ucapan (nama maks. 80 karakter, ucapan maks. 600 karakter)."));
       return;
     }
     setSubmitting(true);
@@ -79,12 +83,12 @@ export default function GuestWishes({
         body: JSON.stringify({ name: authorName, message: wishMessage }),
       });
       const data = await response.json().catch(() => null);
-      if (!response.ok || !data?.wish) throw new Error(data?.error || "Ucapan belum dapat dikirim.");
+      if (!response.ok || !data?.wish) throw new Error(language === "EN" ? tr("Ucapan belum dapat dikirim.") : data?.error || "Ucapan belum dapat dikirim.");
       setWishes((current) => [data.wish as Wish, ...current].slice(0, 30));
       setMessage("");
-      setSubmitMessage("Ucapan berhasil dikirim. Terima kasih!");
+      setSubmitMessage(tr("Ucapan berhasil dikirim. Terima kasih!"));
     } catch (error) {
-      setSubmitMessage(error instanceof Error ? error.message : "Ucapan belum dapat dikirim.");
+      setSubmitMessage(error instanceof Error ? error.message : tr("Ucapan belum dapat dikirim."));
     } finally {
       setSubmitting(false);
     }
@@ -95,14 +99,14 @@ export default function GuestWishes({
       <form onSubmit={submit} className="space-y-4">
         <fieldset data-studio-section-element="wishes:input" style={inputStyle} disabled={submitting} aria-disabled={preview || submitting} className="min-w-0 space-y-4 border-0 p-0">
           <div>
-            <label htmlFor={inputId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>Nama</label>
+            <label htmlFor={inputId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>{tr("Nama")}</label>
             <input
               id={inputId}
               name="name"
               autoComplete="name"
               value={name}
               onChange={(event) => setName(event.target.value)}
-              placeholder="Nama kamu"
+              placeholder={tr("Nama kamu")}
               maxLength={80}
               required
               className={fieldClass}
@@ -110,14 +114,14 @@ export default function GuestWishes({
             />
           </div>
           <div>
-            <label htmlFor={messageId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>Ucapan & Doa</label>
+            <label htmlFor={messageId} className="mb-2 block text-sm font-medium" style={inputTextStyle}>{tr("Ucapan & Doa")}</label>
             <textarea
               id={messageId}
               name="wish"
               rows={4}
               value={message}
               onChange={(event) => setMessage(event.target.value)}
-              placeholder="Tulis ucapan atau doa di sini…"
+              placeholder={tr("Tulis ucapan atau doa di sini…")}
               maxLength={600}
               required
               className={`${fieldClass} resize-y`}
@@ -125,7 +129,7 @@ export default function GuestWishes({
             />
           </div>
           <Button data-studio-section-element="wishes:button" style={buttonStyle} type="submit" disabled={submitting} aria-disabled={preview || submitting} size="sm" className="min-h-10">
-            {submitting ? "Mengirim…" : "Kirim Ucapan"}
+            {tr(submitting ? "Mengirim…" : "Kirim Ucapan")}
           </Button>
         </fieldset>
         {!preview && submitMessage && <p role="status" aria-live="polite" className="text-sm">{submitMessage}</p>}
@@ -133,18 +137,18 @@ export default function GuestWishes({
 
       {!preview && (
         <div className={`mt-8 border-t pt-5 ${rose ? "border-[#e7cbd3]" : "border-[var(--inv-soft)]"}`}>
-          {loading && <p role="status" className="text-sm opacity-70">Memuat ucapan…</p>}
+          {loading && <p role="status" className="text-sm opacity-70">{tr("Memuat ucapan…")}</p>}
           {fetchError && (
             <div className="flex flex-wrap items-center gap-3 text-sm">
               <p role="alert">{fetchError}</p>
-              <Button size="sm" type="button" onClick={() => setReloadKey((value) => value + 1)}>Coba Lagi</Button>
+              <Button size="sm" type="button" onClick={() => setReloadKey((value) => value + 1)}>{tr("Coba Lagi")}</Button>
             </div>
           )}
           {!loading && !fetchError && wishes.length === 0 && (
-            <p className="text-sm opacity-70">Belum ada ucapan. Jadilah yang pertama!</p>
+            <p className="text-sm opacity-70">{tr("Belum ada ucapan. Jadilah yang pertama!")}</p>
           )}
           {!loading && !fetchError && wishes.length > 0 && (
-            <ul className="space-y-4" aria-label="Ucapan dari tamu">
+            <ul className="space-y-4" aria-label={tr("Ucapan dari tamu")}>
               {wishes.map((wish) => (
                 <li key={wish.id} className={`border-b pb-4 last:border-0 ${rose ? "border-[#e7cbd3]" : "border-[var(--inv-soft)]"}`}>
                   <p className="break-words text-sm font-semibold">{wish.authorName}</p>

@@ -101,9 +101,9 @@ test("Studio saves, previews and reopens the same per-invitation cover artwork",
   assert.match(editor, /const rect = section\.getBoundingClientRect\(\)/);
   assert.match(editor, /x: clamp\(\(event\.clientX - rect\.left\) \/ rect\.width \* 100\)/);
   assert.match(persistence, /templateKey: designKey,/);
-  assert.match(editor, /font: requestedPreset\.font, copy: \{\}, copyMotion: \{\}, layers: \[\]/);
+  assert.match(editor, /font: requestedPreset\.font, copy: \{\}, copyEn: \{\}, copyMotion: \{\}, layers: \[\]/);
   assert.match(route, /entry\.isSymbolicLink\(\)/);
-  assert.match(state, /withAssetLayers\(withEditableCopyMotions\(withEditableCopy\(/);
+  assert.match(state, /withAssetLayers\(withEditableCopyMotions\(withEnglishEditableCopy\(withEditableCopy\(/);
   assert.match(state, /layers: parseAssetLayers\(key\)/);
   assert.match(preview, /selectedAssetLayerId=\{selectedAssetLayerId\}/);
   assert.match(preview, /onUpdateAssetLayer=\{onUpdateAssetLayer\}/);

@@ -83,11 +83,11 @@ test("Studio's live canvas, Undo/Redo, Save and public renderer share narrative 
   const customerSave = persistence.split('fetcher("/api/invitations", {')[1]?.split("const data = await response.json()")[0] || "";
   assert.doesNotMatch(customerSave, /description:\s*|eventNotes:\s*|groomName:\s*|brideName:\s*|venue:\s*|eventDate:\s*/);
   assert.match(preview, /<RomanticRoseTemplate invitation=\{previewInvitation\} designKey=\{designKey\}/);
-  assert.match(universal, /resolveEditableCopy\(activeDesignKey, key, invitation\.description\)/);
+  assert.match(universal, /localizedEditableCopy\(activeDesignKey, key, invitation\.description, language\)/);
   assert.match(universal, /text=\{editableCopy\.greeting \?\? ""\}/);
   assert.match(universal, /text=\{editableCopy\.closing \?\? ""\}/);
   assert.match(universal, /text=\{editableCopy\.zenQuote \?\? ""\}/);
-  assert.match(romantic, /resolveEditableCopy\(designKey \|\| invitation\.templateKey, "romantic-rose", invitation\.description\)/);
+  assert.match(romantic, /localizedEditableCopy\(designKey \|\| invitation\.templateKey, "romantic-rose", invitation\.description, language\)/);
   assert.match(romantic, /text=\{editableCopy\.greeting \?\? ""\}/);
   assert.match(romantic, /text=\{editableCopy\.closing \?\? ""\}/);
 });

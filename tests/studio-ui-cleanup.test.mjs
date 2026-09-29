@@ -903,7 +903,7 @@ test("Editable template copy motion is a separate visual design token", () => {
   assert.match(copyMotionModel, /source\.stagger, 0\.01, 0\.15/);
 
   assert.match(designerTypes, /copyMotion: EditableCopyMotions/);
-  assert.match(designerState, /withEditableCopyMotions\(withEditableCopy\(/);
+  assert.match(designerState, /withEditableCopyMotions\(withEnglishEditableCopy\(withEditableCopy\(/);
   assert.match(designerState, /copyMotion: parseEditableCopyMotions\(key\)/);
   assert.match(designer, /copyMotion: \{\}/);
   assert.match(designer, /copyMotion: templateKey === design\.template \? design\.copyMotion : \{\}/);
@@ -1027,4 +1027,3 @@ test("Studio canvas click selection is resolved outside the large designer compo
   assert.match(canvasSelectionResolver, /data-studio-photo-crop/);
   assert.match(canvasSelectionResolver, /data-studio-design-object/);
 });
-

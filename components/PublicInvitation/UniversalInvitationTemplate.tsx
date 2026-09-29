@@ -21,10 +21,11 @@ import { parseAssetLayers, type InvitationAssetLayer, type StudioObjectSection }
 import InvitationMusic, { type InvitationMusicHandle } from "@/components/PublicInvitation/InvitationMusic";
 import { resolveInvitationMusic } from "@/lib/templates/music";
 import { getEventCategory, normalizeEventCategory } from "@/lib/events/catalog";
-import { weddingParentLine } from "@/lib/events/parents";
+import { localizedWeddingParentLine } from "@/lib/invitations/language";
 import { formatPersonalEnvelopeAddress } from "@/lib/guests/personal-envelope";
+import { invitationText, localizedEditableCopy, type InvitationLanguage } from "@/lib/invitations/language";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
-import { resolveEditableCopy } from "@/lib/templates/editable-copy";
 import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
@@ -112,13 +113,13 @@ const zenHeadings: Record<keyof typeof headings, string> = {
   closing: "Terima Kasih",
 };
 
-function displayDate(value: Date | string, timezone: string, numeric = false) {
+function displayDate(value: Date | string, timezone: string, numeric = false, language: InvitationLanguage = "ID") {
   const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Tanggal belum ditentukan";
+  if (Number.isNaN(date.getTime())) return invitationText(language, "Tanggal belum ditentukan");
   try {
-    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: timezone || "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
+    return new Intl.DateTimeFormat(language === "EN" ? "en-US" : "id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: timezone || "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
   } catch {
-    return new Intl.DateTimeFormat("id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
+    return new Intl.DateTimeFormat(language === "EN" ? "en-US" : "id-ID", { day: "numeric", month: numeric ? "2-digit" : "long", year: "numeric", timeZone: "Asia/Jakarta" }).format(date).replaceAll("/", " · ");
   }
 }
 
@@ -193,6 +194,8 @@ export default function UniversalInvitationTemplate({
   templateKey?: string;
   designKey?: string;
 }) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const [opened, setOpened] = useState(false);
   const [opening, setOpening] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
@@ -207,7 +210,7 @@ export default function UniversalInvitationTemplate({
     ? invitation.templateKey
     : `${key}::${template.preset.palette}::${template.preset.font}`);
   const design = parseDesignKey(activeDesignKey);
-  const editableCopy = resolveEditableCopy(activeDesignKey, key, invitation.description);
+  const editableCopy = localizedEditableCopy(activeDesignKey, key, invitation.description, language);
   const copyMotions = parseEditableCopyMotions(activeDesignKey);
   const illustrationLayers = parseAssetLayers(activeDesignKey);
   const palette = invitationPalettes[design.palette] || invitationPalettes[template.preset.palette];
@@ -241,15 +244,15 @@ export default function UniversalInvitationTemplate({
     : identity.nameMode === "single"
       ? displayTitleCase(invitation.groomName) || displayTitleCase(invitation.title)
       : displayTitleCase(invitation.title);
-  const groomParents = couple ? weddingParentLine(invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition) : "";
-  const brideParents = couple ? weddingParentLine(invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition) : "";
+  const groomParents = couple ? localizedWeddingParentLine(language, invitation.groomFatherName, invitation.groomMotherName, invitation.groomChildOrder, "putra", invitation.groomChildPosition) : "";
+  const brideParents = couple ? localizedWeddingParentLine(language, invitation.brideFatherName, invitation.brideMotherName, invitation.brideChildOrder, "putri", invitation.brideChildPosition) : "";
   const eventTitle = displayTitleCase(invitation.title) || names || "Perayaan";
-  const date = displayDate(invitation.eventDate, invitation.timezone);
+  const date = displayDate(invitation.eventDate, invitation.timezone, false, language);
   const countdown = eventCountdown(invitation.eventDate, now);
   const maps = invitation.mapUrl && /^https?:\/\//i.test(invitation.mapUrl) ? invitation.mapUrl : null;
   const hasGift = Boolean(invitation.giftBankName?.trim() && invitation.giftAccountNumber?.trim());
   const music = resolveInvitationMusic(key, invitation.musicUrl, invitation.assets);
-  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress(personalGuest) : preview ? previewRecipientLine ?? "" : "";
+  const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress({ ...personalGuest, personalLanguage: language }) : preview ? previewRecipientLine ?? "" : "";
   const frame = key === "zen-atelier" ? "rounded-none border border-[var(--inv-soft)] p-1 bg-[var(--inv-surface)]" : layout === "midnight" ? "rounded-full" : layout === "maroon" ? "rounded-none" : layout === "editorial" ? "rounded-2xl" : "rounded-t-[140px] rounded-b-xl";
   const panel = key === "zen-atelier" ? "rounded-none" : layout === "midnight" ? "rounded-3xl" : layout === "maroon" ? "rounded-sm" : layout === "editorial" ? "rounded-xl" : "rounded-[28px]";
   const customPalette = design.palette !== template.preset.palette;
@@ -400,7 +403,7 @@ export default function UniversalInvitationTemplate({
         {zen && <ZenSectionArtwork section={keyName} />}
         {pencil && <PencilSectionArt section={keyName} />}
         <div className="relative">
-          {!zen && !pencil && <p data-studio-native-object={`object:${keyName}:kicker`} className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{headings[keyName][0]}</p>}
+          {!zen && !pencil && <p data-studio-native-object={`object:${keyName}:kicker`} className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{tr(headings[keyName][0])}</p>}
           <h2
             data-studio-native-heading=""
             data-studio-rsvp-element={keyName === "rsvp" ? "title" : undefined}
@@ -412,8 +415,8 @@ export default function UniversalInvitationTemplate({
             }}
           >
             {keyName === "rsvp"
-              ? (rsvpConfig.title || (zen ? zenHeadings.rsvp : headings.rsvp[1]))
-              : zen ? zenHeadings[keyName] : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1]}
+              ? tr(rsvpConfig.title || (zen ? zenHeadings.rsvp : headings.rsvp[1]))
+              : tr(zen ? zenHeadings[keyName] : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1])}
           </h2>
           {zen || pencil ? <span aria-hidden="true" data-studio-native-object={`object:${keyName}:divider`} className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
             <div data-studio-native-object={`object:${keyName}:divider`} className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
@@ -447,7 +450,7 @@ export default function UniversalInvitationTemplate({
           isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
           hashtag={invitation.weddingHashtag}
           names={names || eventTitle}
-          date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
+          date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true, language) : date}
           cover={usesPhotos ? media.cover : undefined}
           focus={media.assignment.focus.cover}
           crop={resolvePhotoCrop(media.assignment, "cover")}
@@ -458,6 +461,7 @@ export default function UniversalInvitationTemplate({
           onOpen={handleOpen}
           preview={preview}
           recipientLine={personalEnvelopeAddress}
+          locale={language === "EN" ? "en" : "id"}
         />{objectOverlay("envelope")}</div>
       ) : (
         <div className={`${key === "zen-atelier" ? "zen-content " : ""}flex flex-col`}>
@@ -467,7 +471,8 @@ export default function UniversalInvitationTemplate({
               isWedding={normalizeEventCategory(invitation.eventCategory) === "WEDDING"}
               hashtag={invitation.weddingHashtag}
               names={names || eventTitle}
-              date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true) : date}
+              date={key === "zen-atelier" ? displayDate(invitation.eventDate, invitation.timezone, true, language) : date}
+              locale={language === "EN" ? "en" : "id"}
               cover={usesPhotos ? media.cover : undefined}
               focus={media.assignment.focus.cover}
           crop={resolvePhotoCrop(media.assignment, "cover")}
@@ -498,7 +503,7 @@ export default function UniversalInvitationTemplate({
                 <Image alt="Ilustrasi dua orang yang saling bersandar" src="/templates/pencil-reverie/couplesitting.webp" width={1122} height={1402} sizes="(max-width: 640px) 70vw, 310px" loading="lazy"/>
               </div>
               <p className="pr-identity-names" data-studio-native-object="object:identity:names">{names || eventTitle}</p>
-              {couple && <p className="pr-identity-signature" data-studio-native-object="object:identity:signature">Dua hati, satu cerita yang selalu tumbuh.</p>}
+              {couple && <p className="pr-identity-signature" data-studio-native-object="object:identity:signature">{tr("Dua hati, satu cerita yang selalu tumbuh.")}</p>}
               {(groomParents || brideParents) && <div className="mt-8 grid grid-cols-2 gap-4 border-t border-[var(--inv-soft)] pt-6 text-xs leading-7"><p data-studio-native-object="object:identity:personOne-parents">{groomParents}</p><p data-studio-native-object="object:identity:personTwo-parents">{brideParents}</p></div>}
             </div>
           ) : key === "zen-atelier" ? (
@@ -510,7 +515,7 @@ export default function UniversalInvitationTemplate({
               </div>}
               {!media.cover && preview && onEditPhoto && <button className="zen-action mb-6" type="button" onClick={() => onEditPhoto("cover")}>Pilih Foto Pasangan</button>}
               <p className="zen-couple-name" data-studio-native-object="object:identity:names">{couple ? <>{displayTitleCase(invitation.brideName)}<em>&amp;</em>{displayTitleCase(invitation.groomName)}</> : names || eventTitle}</p>
-              {couple && <p className="zen-quote" data-studio-native-object="object:identity:quote">Dua jiwa, satu perjalanan, menuju selamanya.</p>}
+              {couple && <p className="zen-quote" data-studio-native-object="object:identity:quote">{tr("Dua jiwa, satu perjalanan, menuju selamanya.")}</p>}
               {(groomParents || brideParents) && <div className="zen-parents"><p data-studio-native-object="object:identity:personTwo-parents">{brideParents}</p><p data-studio-native-object="object:identity:personOne-parents">{groomParents}</p></div>}
             </div>
           ) : (
@@ -540,7 +545,7 @@ export default function UniversalInvitationTemplate({
 
           {section("event", key === "pencil-reverie" ? (
             <div className="pr-event-story">
-              <p data-studio-native-object="object:event:kicker" className="mb-2 text-[10px] uppercase tracking-[.22em] text-[var(--inv-accent)]">{couple ? "Hari kita berdua" : "Hari istimewa"}</p>
+              <p data-studio-native-object="object:event:kicker" className="mb-2 text-[10px] uppercase tracking-[.22em] text-[var(--inv-accent)]">{tr(couple ? "Hari kita berdua" : "Hari istimewa")}</p>
               <h3 data-studio-native-object="object:event:event-title">{eventTitle}</h3>
               {invitation.venue && <p data-studio-native-object="object:event:venue" className="mt-3">{invitation.venue}</p>}
               {invitation.address && <p data-studio-native-object="object:event:address" className="mt-1 opacity-75">{invitation.address}</p>}
@@ -561,8 +566,8 @@ export default function UniversalInvitationTemplate({
             <div data-studio-native-object="object:dateTime:panel" className={key === "pencil-reverie" ? "pr-date-scrap" : `mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
               <CalendarDays data-studio-native-object="object:dateTime:calendar-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />
               <p data-studio-native-object="object:dateTime:date" className="mt-4 text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{date}</p>
-              {invitation.ceremonyTime && <p data-studio-native-object="object:dateTime:start" className="mt-3 text-sm">Mulai · {invitation.ceremonyTime}</p>}
-              {invitation.receptionTime && <p data-studio-native-object="object:dateTime:end" className="mt-1 text-sm">Selesai · {invitation.receptionTime === "END" ? "Selesai acara" : invitation.receptionTime}</p>}
+              {invitation.ceremonyTime && <p data-studio-native-object="object:dateTime:start" className="mt-3 text-sm">{tr("Mulai")} · {invitation.ceremonyTime}</p>}
+              {invitation.receptionTime && <p data-studio-native-object="object:dateTime:end" className="mt-1 text-sm">{tr("Selesai")} · {invitation.receptionTime === "END" ? tr("Selesai acara") : invitation.receptionTime}</p>}
               <p data-studio-native-object="object:dateTime:timezone" className="mt-3 text-xs opacity-65">{invitation.timezone || "Asia/Jakarta"}</p>
             </div>
           ), 4)}
@@ -584,18 +589,18 @@ export default function UniversalInvitationTemplate({
               ) : key === "zen-atelier" ? (
                 <div className="mx-auto max-w-sm">
                   <ZenMemoryArtwork />
-                  <p data-studio-native-object="object:gallery:empty-copy" className="mt-5 text-sm opacity-65">Foto galeri belum ditambahkan.</p>
+                  <p data-studio-native-object="object:gallery:empty-copy" className="mt-5 text-sm opacity-65">{tr("Foto galeri belum ditambahkan.")}</p>
                 </div>
-              ) : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm opacity-65">Belum ada foto galeri.</p>}
+              ) : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm opacity-65">{tr("Belum ada foto galeri.")}</p>}
             </> : key === "zen-atelier" ? (
               <div className="mx-auto max-w-sm">
                 <ZenMemoryArtwork />
-                <p data-studio-native-object="object:gallery:memory-copy" className="mx-auto mt-6 max-w-xs text-sm leading-7 opacity-75">Setiap pertemuan menyimpan cerita yang layak dikenang.</p>
+                <p data-studio-native-object="object:gallery:memory-copy" className="mx-auto mt-6 max-w-xs text-sm leading-7 opacity-75">{tr("Setiap pertemuan menyimpan cerita yang layak dikenang.")}</p>
               </div>
             ) : (
               <div data-studio-native-object="object:gallery:memory-panel" className="relative mx-auto flex min-h-48 max-w-xs flex-col items-center justify-center border border-current/25 px-6 py-10">
                 <div aria-hidden data-studio-native-object="object:gallery:memory-symbols" className="mb-5 flex items-center gap-4 text-3xl opacity-60">{key === "celestial-ink" ? "✧ ✦ ☾" : key === "golden-art-deco" ? "◇ ◆ ◇" : key === "paper-cut-botanical" ? "❧ ❦ ❧" : "✦ ❖ ✦"}</div>
-                <p data-studio-native-object="object:gallery:memory-copy" className="text-sm leading-7 opacity-75">Kenangan indah hadir dalam setiap momen yang kita rayakan bersama.</p>
+                <p data-studio-native-object="object:gallery:memory-copy" className="text-sm leading-7 opacity-75">{tr("Kenangan indah hadir dalam setiap momen yang kita rayakan bersama.")}</p>
               </div>
             )
           ), 5)}
@@ -605,24 +610,24 @@ export default function UniversalInvitationTemplate({
               {countdown.map(([label, value]) => (
                 <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
                   <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
-                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] opacity-65">{label}</p>
+                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] opacity-65">{tr(label)}</p>
                 </div>
               ))}
             </div></div>
-          ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">Tanggal acara belum tersedia.</p>, 6)}
+          ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">{tr("Tanggal acara belum tersedia.")}</p>, 6)}
 
           {section("location", (
             <div data-studio-native-object="object:location:details-group" className="mx-auto max-w-sm space-y-4">
               <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />
-              <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || "Lokasi belum ditentukan"}</p>
+              <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || tr("Lokasi belum ditentukan")}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>Lihat Lokasi</a>}
-              {!maps && <p data-studio-native-object="object:location:empty-copy" className="text-xs opacity-55">Tautan lokasi belum tersedia.</p>}
+              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>{tr("Lihat Lokasi")}</a>}
+              {!maps && <p data-studio-native-object="object:location:empty-copy" className="text-xs opacity-55">{tr("Tautan lokasi belum tersedia.")}</p>}
             </div>
           ), 7)}
 
           {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" ? <>
-            <p data-studio-native-object="object:rsvp:intro" className="mx-auto mb-7 max-w-sm text-sm leading-7">Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.</p>
+            <p data-studio-native-object="object:rsvp:intro" className="mx-auto mb-7 max-w-sm text-sm leading-7">{tr("Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.")}</p>
             <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
           </> : <RsvpForm slug={invitation.slug} preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
@@ -636,10 +641,10 @@ export default function UniversalInvitationTemplate({
               <p data-studio-native-object="object:gift:bank-name" className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p data-studio-native-object="object:gift:account-name" className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
-              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">Salin Nomor Rekening</button>
-              {copyMessage && <p role="status" className="mt-3 text-xs">{copyMessage}</p>}
+              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className="mt-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]">{tr("Salin Nomor Rekening")}</button>
+              {copyMessage && <p role="status" className="mt-3 text-xs">{tr(copyMessage)}</p>}
             </div>
-          ) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">Informasi tanda kasih belum ditambahkan.</p>, 10)}
+          ) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">{tr("Informasi tanda kasih belum ditambahkan.")}</p>, 10)}
 
           {section("closing", (
             <div data-studio-native-object="object:closing:copy-group" className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>

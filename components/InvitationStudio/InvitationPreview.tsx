@@ -1,6 +1,8 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { InvitationLanguageProvider } from "@/components/PublicInvitation/InvitationLanguage";
+import type { InvitationLanguage } from "@/lib/invitations/language";
 import type { InvitationSectionKey, InvitationSections } from "@/lib/templates/sections";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
 import type { CroppablePhotoSlot, PhotoAssignments, PhotoCrop, PhotoSlot } from "@/lib/templates/photo-slots";
@@ -26,6 +28,7 @@ export function InvitationPreview({
   onEditPhoto,
   onEnvelopeOpened,
   previewRecipientLine,
+  invitationLanguage = "ID",
   designKey,
   musicUrl,
   selectedAssetLayerId,
@@ -60,6 +63,7 @@ export function InvitationPreview({
   onEnvelopeOpened?: () => void;
   /** Studio-only sample, never a Guest record or saved invitation content. */
   previewRecipientLine?: string;
+  invitationLanguage?: InvitationLanguage;
   designKey?: string;
   musicUrl?: string;
   selectedAssetLayerId?: string | null;
@@ -80,10 +84,10 @@ export function InvitationPreview({
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview previewRecipientLine={previewRecipientLine} sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} />;
+    return <InvitationLanguageProvider language={invitationLanguage}><RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview previewRecipientLine={previewRecipientLine} sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} /></InvitationLanguageProvider>;
   }
   return (
-    <UniversalInvitationTemplate
+    <InvitationLanguageProvider language={invitationLanguage}><UniversalInvitationTemplate
       invitation={previewInvitation}
       templateKey={templateKey}
       designKey={designKey}
@@ -109,6 +113,6 @@ export function InvitationPreview({
       onDuplicateSectionInstance={onDuplicateSectionInstance}
       onDeleteSectionInstance={onDeleteSectionInstance}
       editorMode={editorMode}
-    />
+    /></InvitationLanguageProvider>
   );
 }

@@ -84,6 +84,22 @@ export function parseEditableCopy(designKey: string): EditableInvitationCopy {
   }
 }
 
+export function parseEnglishEditableCopy(designKey: string): EditableInvitationCopy {
+  const token = designKey.split("::").find((part) => part.startsWith("copyEn="));
+  if (!token) return {};
+  try {
+    return sanitizeEditableCopy(JSON.parse(decodeURIComponent(token.slice(7))), designKey.split("::")[0] || "");
+  } catch {
+    return {};
+  }
+}
+
+export function withEnglishEditableCopy(designKey: string, value: EditableInvitationCopy): string {
+  const base = designKey.split("::").filter((part) => !part.startsWith("copyEn=")).join("::");
+  const overrides = sanitizeEditableCopy(value, base.split("::")[0] || "");
+  return Object.keys(overrides).length ? `${base}::copyEn=${encodeURIComponent(JSON.stringify(overrides))}` : base;
+}
+
 export function withEditableCopy(designKey: string, value: EditableInvitationCopy): string {
   const base = designKey.split("::").filter((part) => !part.startsWith("copy=")).join("::");
   const overrides = sanitizeEditableCopy(value, base.split("::")[0] || "");

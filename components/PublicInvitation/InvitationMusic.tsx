@@ -1,5 +1,8 @@
 "use client";
 
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
+
 import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { Music2, Volume2, VolumeX } from "lucide-react";
 
@@ -19,6 +22,8 @@ type InvitationMusicProps = {
  */
 const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
   function InvitationMusic({ source, opened, preview }, ref) {
+    const language = useInvitationLanguage();
+    const tr = (text: string) => invitationText(language, text);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [playing, setPlaying] = useState(false);
     const [failed, setFailed] = useState(false);
@@ -88,14 +93,14 @@ const InvitationMusic = forwardRef<InvitationMusicHandle, InvitationMusicProps>(
         {opened && (
           <div className="fixed bottom-4 right-4 z-[70] flex items-center gap-2 rounded-full border border-white/35 bg-[#23191f]/90 px-2 py-1.5 text-white shadow-[0_8px_30px_rgba(0,0,0,0.24)] backdrop-blur-md sm:bottom-6 sm:right-6">
             <Music2 aria-hidden="true" className="ml-1 size-4 text-[#f6d3dc]" />
-            <span className="text-[11px] font-medium">Musik</span>
+            <span className="text-[11px] font-medium">{tr("Musik")}</span>
             <button
               type="button"
               onClick={toggle}
               disabled={failed}
-              aria-label={failed ? "Musik tidak tersedia" : playing ? "Jeda musik undangan" : "Putar musik undangan"}
+              aria-label={tr(failed ? "Musik tidak tersedia" : playing ? "Jeda musik undangan" : "Putar musik undangan")}
               aria-pressed={playing}
-              title={failed ? "Musik tidak tersedia" : playing ? "Jeda musik" : "Putar musik"}
+              title={tr(failed ? "Musik tidak tersedia" : playing ? "Jeda musik" : "Putar musik")}
               className="flex size-10 items-center justify-center rounded-full border border-white/40 bg-white/15 text-white transition-colors hover:bg-white/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f6d3dc] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {playing ? <Volume2 aria-hidden="true" className="size-5" /> : <VolumeX aria-hidden="true" className="size-5" />}

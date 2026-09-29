@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import { ArrowUpRight, Flower2, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 import type { PhotoCrop } from "@/lib/templates/photo-slots";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 
 /** Visual-only compositions. Data, action, and section rendering stay in shared invitation engine. */
 type SceneProps = {
@@ -39,6 +41,7 @@ function Portrait({ src, alt, focus, crop, className = "" }: { src?: string; alt
     : <div className={`flex h-full w-full items-center justify-center bg-black/10 ${className}`} role="img" aria-label="Foto belum ditambahkan"><Heart className="h-8 w-8 opacity-40" strokeWidth={1} /></div>;
 }
 function Open({ onClick, dark = false, children, preview = false, studioObject }: { onClick: () => void; dark?: boolean; children?: ReactNode; preview?: boolean; studioObject?: string }) {
+  const language = useInvitationLanguage();
   return <button
     type="button"
     data-studio-native-object={studioObject}
@@ -53,7 +56,7 @@ function Open({ onClick, dark = false, children, preview = false, studioObject }
     data-studio-system-action={preview ? "open-invitation" : undefined}
     aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
     className={`relative z-20 mt-7 min-h-12 rounded-[var(--undara-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
-  >{children || "Buka Undangan"}</button>;
+  >{children || invitationText(language, "Buka Undangan")}</button>;
 }
 function Edit({ onClick }: { onClick?: () => void }) {
   return onClick ? <button type="button" onClick={onClick} aria-label="Atur foto cover" className="absolute inset-0 z-10 flex items-end justify-center bg-transparent pb-3 text-xs font-medium text-transparent transition hover:bg-black/30 hover:text-white focus-visible:bg-black/30 focus-visible:text-white">Atur foto</button> : null;
@@ -92,6 +95,8 @@ const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
 function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipientLine}: SceneProps) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const original = envelopeVisuals[theme] || envelopeVisuals["botanical-ivory"];
   const style = { ...original,
     backdrop: `var(--inv-scene-bg, ${original.backdrop})`,
@@ -110,7 +115,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
         <div aria-hidden data-studio-native-object="object:envelope:starfield" className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
         <Moon aria-hidden data-studio-native-object="object:envelope:moon" className="absolute right-9 top-10 h-11 w-11 opacity-50"/>
       </> : theme === "golden-art-deco" ? <div aria-hidden data-studio-native-object="object:envelope:deco-diamond" className="pointer-events-none absolute top-[-120px] h-64 w-64 rotate-45 border opacity-50" style={{borderColor:style.border}}/> : theme === "eternal-blossom" ? <Flower2 aria-hidden data-studio-native-object="object:envelope:flower" className="absolute -left-12 top-5 h-44 w-44 -rotate-12 opacity-20" strokeWidth={0.7}/> : null}
-      <p data-studio-native-object="object:envelope:kicker" className={`${caption} relative mb-9 opacity-80`}>{theme === "modern-maroon" ? "Private / 01" : "A personal invitation"}</p>
+      <p data-studio-native-object="object:envelope:kicker" className={`${caption} relative mb-9 opacity-80`}>{theme === "modern-maroon" ? "Private / 01" : tr("A personal invitation")}</p>
       <div data-studio-native-object="object:envelope:card-stage" className="relative w-[min(74vw,310px)] pt-11">
         {usesPhoto && <div data-studio-native-object="object:envelope:photo-frame" className={`absolute left-1/2 top-[-26px] h-52 w-[67%] -translate-x-1/2 overflow-hidden border-[6px] shadow-lg ${style.photoPosition || ""}`} style={{borderColor:style.border,backgroundColor:style.surface}}>
           <span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama pada kartu undangan" /></span>
@@ -126,7 +131,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
           </div>
         </div>
       </div>
-      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>Buka Undangan</Open>
+      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>{tr("Buka Undangan")}</Open>
     </section>
   );
 }
@@ -134,6 +139,8 @@ const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/P
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,hashtag,recipientLine}: SceneProps) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   if (theme === "blank-canvas") {
     return (
       <section
@@ -149,7 +156,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
-  const content = "The Celebration";
+  const content = tr("The Celebration");
   if (theme === "eternal-blossom") return <section className={`${center} bg-[var(--inv-scene-bg,#ffedf0)] text-[color:var(--inv-scene-ink,#622a43)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:glow" className="absolute inset-x-0 top-0 h-[240px] bg-[radial-gradient(circle_at_50%_0%,#f4b9c9,transparent_70%)]" />
     <Flower2 aria-hidden data-studio-native-object="object:cover:flower-left" className="absolute -left-12 top-14 h-48 w-48 -rotate-[32deg] text-[color:var(--inv-scene-text,#cd7390)]/50" strokeWidth={0.6} />
@@ -170,7 +177,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-7 self-start text-[color:var(--inv-scene-text,#f8af99)]`}>{content}</p>
     <div data-studio-native-object="object:cover:media-group" className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
       <div data-studio-native-object="object:cover:photo-frame" className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
-      <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">Selected events</p>
+      <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">{tr("Selected events")}</p>
     </div>
     <div data-studio-native-object="object:cover:copy-panel" className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
       <Names className="text-3xl">{names}</Names><p data-studio-native-object="object:cover:date" className="mt-3 text-xs tracking-[.2em]">{date}</p>
@@ -182,7 +189,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:ring-left" className="absolute -left-24 top-20 h-72 w-72 rounded-full border-[18px] border-[var(--inv-scene-accent,#a6be92)]/40" />
     <div aria-hidden data-studio-native-object="object:cover:ring-right" className="absolute -right-28 bottom-20 h-80 w-80 rounded-full border-[18px] border-[var(--inv-scene-accent,#acc89b)]/40" />
     <BotanicalSprig studioObject="object:cover:sprig-left" /><BotanicalSprig mirrored studioObject="object:cover:sprig-right" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-6 text-[color:var(--inv-scene-text,#68855d)]`}>In full bloom</p>
+    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-6 text-[color:var(--inv-scene-text,#68855d)]`}>{tr("In full bloom")}</p>
     <div data-studio-native-object="object:cover:photo-frame" className="relative mt-9 w-[min(73vw,290px)] rounded-t-[180px] rounded-b-[16px] border-[12px] border-[var(--inv-scene-accent,#f8faed)] bg-[var(--inv-scene-soft,#e1ebd9)] p-1 shadow-[0_20px_48px_#41593733]">
       <div className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
       <span aria-hidden data-studio-native-object="object:cover:seal" className="absolute -bottom-7 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--inv-scene-accent,#ecf0de)] bg-[var(--inv-scene-soft,#607c52)] text-white"><Leaf className="h-6 w-6" /></span>
@@ -217,7 +224,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       <Lines studioObject="object:cover:inner-ornament" className="relative mt-7"><Leaf className="h-4 w-4"/></Lines>
       <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs tracking-[.2em]">{date}</p>
     </div>
-    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-12 max-w-xs text-sm leading-7">Kehadiran Anda adalah bagian dari cerita kami.</p>
+    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-12 max-w-xs text-sm leading-7">{tr("Kehadiran Anda adalah bagian dari cerita kami.")}</p>
   </section>;
 
   if (theme === "classic-pearl") return <section className={`${center} bg-[var(--inv-scene-bg,#f8f6ef)] text-[color:var(--inv-scene-ink,#37352f)]`} data-invitation-section={stage}>
@@ -231,7 +238,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     </div>
     <Lines studioObject="object:cover:ornament" className="relative mt-10"><Gem className="h-4 w-4"/></Lines>
     <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs uppercase tracking-[.22em]">{date}</p>
-    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">WITH LOVE AND GRATITUDE</p>
+    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">{tr("WITH LOVE AND GRATITUDE")}</p>
   </section>;
 
   if (theme === "golden-art-deco") return <section className={`${center} bg-[var(--inv-scene-bg,#191b17)] text-[color:var(--inv-scene-ink,#e4c888)]`} data-invitation-section={stage}>
@@ -240,7 +247,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:diamond-main" className="absolute left-1/2 top-0 h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/70" />
     <div aria-hidden data-studio-native-object="object:cover:diamond-top" className="absolute left-1/2 top-[-80px] h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
     <div aria-hidden data-studio-native-object="object:cover:diamond-bottom" className="absolute bottom-[-105px] left-1/2 h-64 w-64 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-20`}>A gilded celebration</p>
+    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-20`}>{tr("A gilded celebration")}</p>
     <div aria-hidden data-studio-native-object="object:cover:deco-bars" className="relative mt-10 flex items-center gap-2">{[0,1,2,3,4].map(i=><span key={i} className="h-8 w-4 border-x border-t border-[var(--inv-scene-accent,#bf9c4b)]" style={{height:`${33+Math.abs(2-i)*19}px`}}/>)}</div>
     <Names className="relative mt-14 max-w-xs text-3xl tracking-[.09em]">{names}</Names>
     <div aria-hidden data-studio-native-object="object:cover:deco-gem" className="relative mt-10 flex gap-3"><span className="h-14 w-px -rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/><Gem className="h-7 w-7"/><span className="h-14 w-px rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/></div>
@@ -253,7 +260,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:paper-right" className="absolute -right-20 bottom-[-95px] h-[440px] w-72 rotate-[23deg] rounded-full border-[50px] border-[var(--inv-scene-accent,#9aaf88)] bg-[var(--inv-scene-soft,#c6d0aa)] shadow-[-15px_-15px_0_#d4dab4]" />
     <Leaf aria-hidden data-studio-native-object="object:cover:leaf-left" className="absolute -left-3 top-12 h-40 w-40 rotate-[-30deg] fill-[var(--inv-scene-soft,#b2c2a0)] text-[color:var(--inv-scene-text,#819975)]" strokeWidth={0.7}/>
     <Leaf aria-hidden data-studio-native-object="object:cover:leaf-right" className="absolute -right-4 bottom-20 h-44 w-44 rotate-[170deg] fill-[var(--inv-scene-soft,#a4b998)] text-[color:var(--inv-scene-text,#76926e)]" strokeWidth={0.7}/>
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-10 text-[color:var(--inv-scene-text,#687b57)]`}>Handcrafted in paper</p>
+    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-10 text-[color:var(--inv-scene-text,#687b57)]`}>{tr("Handcrafted in paper")}</p>
     <div data-studio-native-object="object:cover:card" className="relative flex min-h-[350px] w-[min(77vw,300px)] flex-col items-center justify-center rounded-t-[155px] border-[9px] border-[var(--inv-scene-accent,#fdfcf1)] bg-[var(--inv-scene-surface,#f7f6e9)] text-[color:var(--inv-scene-surface-ink)] px-7 py-9 shadow-[12px_16px_0_#aabf92]">
       <Sun aria-hidden data-studio-native-object="object:cover:sun" className="mb-7 h-10 w-10 text-[color:var(--inv-scene-text,#93a97c)]" strokeWidth={0.8}/>
       <p data-studio-native-object="object:cover:subtitle" className={caption}>{content}</p>
@@ -269,7 +276,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:orbit-middle" className="absolute left-1/2 top-[23%] h-[340px] w-[340px] -translate-x-1/2 rounded-full border border-[var(--inv-scene-accent,#a4c0e1)]/55"/>
     <div aria-hidden data-studio-native-object="object:cover:orbit-inner" className="absolute left-1/2 top-[29%] h-[260px] w-[260px] -translate-x-1/2 rounded-full border border-[var(--inv-scene-accent,#a4c0e1)]/50"/>
     <Moon aria-hidden data-studio-native-object="object:cover:moon" className="relative mt-14 h-16 w-16 text-[color:var(--inv-scene-text,#b8cfea)]" strokeWidth={0.65}/>
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-8 text-[color:var(--inv-scene-text,#a3c8e5)]`}>Written in the stars</p>
+    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-8 text-[color:var(--inv-scene-text,#a3c8e5)]`}>{tr("Written in the stars")}</p>
     <Names className="relative mt-12 max-w-xs text-3xl">{names}</Names>
     <div aria-hidden data-studio-native-object="object:cover:star-cluster" className="relative mt-12 flex items-center gap-4"><Star className="h-4 w-4"/><Sparkles className="h-6 w-6"/><Star className="h-4 w-4"/></div>
     <p data-studio-native-object="object:cover:date" className="relative mt-9 text-xs uppercase tracking-[.23em]">{date}</p>

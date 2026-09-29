@@ -2,6 +2,8 @@
 
 import { type FormEvent, useMemo, useState } from "react";
 import { defaultInvitationRsvpConfig } from "@/lib/templates/rsvp-config";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 import {
   RsvpInputPanel,
   RsvpSuccessPanel,
@@ -33,6 +35,8 @@ export default function RsvpForm({
   eventCategory,
   rsvpConfig = defaultInvitationRsvpConfig,
 }: RsvpFormProps) {
+  const language = useInvitationLanguage();
+  const tr = (text: string) => invitationText(language, text);
   const [form, setForm] = useState<RsvpFormState>({
     name: guestName ?? "",
     phone: "",
@@ -85,7 +89,7 @@ export default function RsvpForm({
       const data = await response.json();
 
       if (!response.ok) {
-        setMessage(data.error ?? "RSVP belum dapat disimpan.");
+        setMessage(language === "EN" ? tr("RSVP belum dapat disimpan.") : data.error ?? "RSVP belum dapat disimpan.");
         return;
       }
 
@@ -93,11 +97,11 @@ export default function RsvpForm({
       setQrToken(data.qrToken ?? null);
       setMessage(
         form.status === "ATTENDING"
-          ? "Konfirmasi hadir berhasil."
-          : "Konfirmasi kehadiran tersimpan.",
+          ? tr("Konfirmasi hadir berhasil.")
+          : tr("Konfirmasi kehadiran tersimpan."),
       );
     } catch {
-      setMessage("Koneksi bermasalah. Silakan coba lagi.");
+      setMessage(tr("Koneksi bermasalah. Silakan coba lagi."));
     } finally {
       setSubmitting(false);
     }

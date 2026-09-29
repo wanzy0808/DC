@@ -11,7 +11,7 @@ import {
   withInvitationSections,
 } from "@/lib/templates/sections";
 import { parsePhotoAssignments, withPhotoAssignments } from "@/lib/templates/photo-slots";
-import { parseEditableCopy, withEditableCopy } from "@/lib/templates/editable-copy";
+import { parseEditableCopy, parseEnglishEditableCopy, withEditableCopy, withEnglishEditableCopy } from "@/lib/templates/editable-copy";
 import { parseEditableCopyMotions, withEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { invitationTemplatePresets } from "@/components/InvitationStudio/designer-config";
 import { parseAssetLayers, withAssetLayers } from "@/lib/templates/asset-layers";
@@ -83,7 +83,7 @@ export function formatInvitationEventDate(
 }
 
 export function makeInvitationDesignStateKey(state: InvitationDesignState) {
-  return withNativeVisualTransforms(withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopyMotions(withEditableCopy(
+  return withNativeVisualTransforms(withSectionElementStyles(withInvitationSectionLayout(withInvitationRsvpConfig(withInvitationSectionStyles(withAssetLayers(withEditableCopyMotions(withEnglishEditableCopy(withEditableCopy(
     withPhotoAssignments(
       withInvitationSections(
         makeDesignKey(state.template, state.palette, state.font, state.decor),
@@ -92,7 +92,7 @@ export function makeInvitationDesignStateKey(state: InvitationDesignState) {
       state.photos,
     ),
     state.copy,
-  ), state.copyMotion), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles), state.nativeVisuals);
+  ), state.copyEn), state.copyMotion), state.layers), state.sectionStyles), state.rsvpConfig), state.sectionLayout), state.sectionElementStyles), state.nativeVisuals);
 }
 
 export function invitationDesignStateFromKey(
@@ -112,6 +112,7 @@ export function invitationDesignStateFromKey(
     sections: parseInvitationSections(key),
     photos: parsePhotoAssignments(key),
     copy: parseEditableCopy(key),
+    copyEn: parseEnglishEditableCopy(key),
     copyMotion: parseEditableCopyMotions(key),
     layers: parseAssetLayers(key),
     sectionStyles: parseInvitationSectionStyles(key),

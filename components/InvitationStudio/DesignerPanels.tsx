@@ -2,6 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { invitationText, type InvitationLanguage } from "@/lib/invitations/language";
 import { RotateCcw, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { MAX_AUDIO_FILES, AUDIO_MIME_TYPES } from "@/lib/invitations/audio-limits";
@@ -107,12 +108,14 @@ const copyLabels: Record<EditableInvitationCopyField, { id: string; en: string }
 };
 
 export function ContentPanel({
+  invitationLanguage,
   sections,
   rsvpConfig,
   eventCategory,
   templateKey,
   eventDescription,
   narrativeCopy,
+  englishNarrativeCopy,
   onNarrativeCopy,
   onResetNarrativeCopy,
   onChange,
@@ -123,12 +126,14 @@ export function ContentPanel({
   onUpdateRsvpField,
   onRemoveRsvpField,
 }: {
+  invitationLanguage: InvitationLanguage;
   sections: InvitationSections;
   rsvpConfig: InvitationRsvpConfig;
   eventCategory: string;
   templateKey: string;
   eventDescription?: string | null;
   narrativeCopy: EditableInvitationCopy;
+  englishNarrativeCopy: EditableInvitationCopy;
   onNarrativeCopy: (field: EditableInvitationCopyField, value: string) => void;
   onResetNarrativeCopy: (field: EditableInvitationCopyField) => void;
   onChange: (section: InvitationSectionKey, enabled: boolean) => void;
@@ -186,7 +191,8 @@ export function ContentPanel({
                 <div className="ml-3 mb-2 grid gap-3 border-l border-primary/20 pl-3">
                   {copyFields.map((field) => {
                     const label = en ? copyLabels[field].en : copyLabels[field].id;
-                    const value = narrativeCopy[field] ?? copyDefaults[field] ?? "";
+                    const source = narrativeCopy[field] ?? copyDefaults[field] ?? "";
+                    const value = invitationLanguage === "EN" ? englishNarrativeCopy[field] ?? invitationText("EN", source) : source;
                     return (
                       <label key={field} className="grid gap-1 text-[10px] text-foreground">
                         <span className="flex items-center justify-between gap-2">

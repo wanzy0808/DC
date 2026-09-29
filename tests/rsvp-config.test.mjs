@@ -114,7 +114,7 @@ test("Studio keeps RSVP function controls in Isi while the right inspector stays
   assert.match(panels, /Upacara Nikah/);
   assert.match(panels, /Resepsi/);
   assert.match(panels, /Hadiri Semua Acara/);
-  assert.match(panels, /<select[\s\S]*aria-label="Acara yang akan dihadiri"[\s\S]*<option value="all">Hadiri Semua Acara<\/option>/);
+  assert.match(panels, /<select[\s\S]*aria-label=\{tr\("Acara yang akan dihadiri"\)\}[\s\S]*<option value="all">\{tr\("Hadiri Semua Acara"\)\}<\/option>/);
   assert.match(panels, /rsvpConfig\.customFields\.map/);
   assert.match(panels, /data-studio-rsvp-element="inputs"/);
   assert.match(panels, /data-studio-rsvp-element="button"/);

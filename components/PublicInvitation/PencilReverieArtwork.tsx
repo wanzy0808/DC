@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
+import { invitationText } from "@/lib/invitations/language";
 import "./pencil-reverie.css";
 
 const root = "/templates/pencil-reverie/";
@@ -66,6 +68,7 @@ const gallery: Drawing[] = [
 ];
 
 export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) {
+  const language = useInvitationLanguage();
   const [index, setIndex] = useState<number | null>(null);
   const trigger = useRef<HTMLButtonElement | null>(null);
   const closeRef = useRef<HTMLButtonElement | null>(null);
@@ -91,7 +94,7 @@ export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) 
         <span className="pr-polaroid-sheet">
           <Image src={root+item.file} width={item.width} height={item.height}
             sizes="(max-width: 640px) 42vw, 225px" loading="lazy" alt="" className="pr-polaroid-image"/>
-          <span className="pr-polaroid-caption">{item.caption}</span>
+          <span className="pr-polaroid-caption">{invitationText(language, item.caption)}</span>
         </span>
       </button>)}
     </div>
@@ -114,7 +117,7 @@ export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) 
       <figure className="pr-lightbox-art">
         <Image src={root+gallery[index].file} width={gallery[index].width} height={gallery[index].height}
           sizes="(max-width: 640px) 86vw, 580px" alt={gallery[index].caption} className="pr-lightbox-image"/>
-        <figcaption>{gallery[index].caption}</figcaption>
+        <figcaption>{invitationText(language, gallery[index].caption)}</figcaption>
       </figure>
       <button type="button" className="pr-lightbox-next" aria-label="Ilustrasi berikutnya" onClick={()=>shift(1)}><ChevronRight size={25}/></button>
     </div>}

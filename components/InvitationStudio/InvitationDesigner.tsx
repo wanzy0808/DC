@@ -57,6 +57,7 @@ import { InvitationPreview } from "@/components/InvitationStudio/InvitationPrevi
 import { getInvitationDefaultMusic } from "@/lib/templates/music";
 import { clearTemplateSelection, readTemplateSelection, rememberTemplateSelection } from "@/lib/templates/template-intent";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import type { InvitationLanguage } from "@/lib/invitations/language";
 import { STUDIO_REFRESH_DRAFT_KEY, makeStudioRefreshDraft, recoverStudioRefreshDraft } from "@/lib/templates/studio-refresh-draft";
 import {
   invitationDecorOptions,
@@ -159,6 +160,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const [invitation, setInvitation] = useState<InvitationDesignerInvitation | null>(null);
   const [designerLibraryAssets, setDesignerLibraryAssets] = useState<DesignerLibraryAsset[]>([]);
   const [panel, setPanel] = useState<InvitationDesignerPanel>("template");
+  const [invitationLanguage, setInvitationLanguage] = useState<InvitationLanguage>("ID");
   const [activePhotoSlot, setActivePhotoSlot] = useState<PhotoSlot>("cover");
   const [cropModeSlot, setCropModeSlot] = useState<CroppablePhotoSlot | null>(null);
   const [selectedPhotoSlot, setSelectedPhotoSlot] = useState<PhotoSlot | null>(null);
@@ -318,6 +320,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     sections: { ...defaultInvitationSections },
     photos: defaultPhotoAssignments(),
     copy: {},
+    copyEn: {},
     copyMotion: {},
     layers: [],
     sectionStyles: {},
@@ -425,7 +428,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     const requestedTheme = params.get("template") || (params.get("from") === "template" ? readTemplateSelection() : null);
     const requestedPreset = requestedTheme ? invitationTemplatePresets[requestedTheme] : undefined;
     const stagedDesign: InvitationDesignState = requestedTheme && requestedTheme !== loadedDesign.template && requestedPreset
-      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, copyMotion: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {}, nativeVisuals: {} }
+      ? { ...loadedDesign, template: requestedTheme, palette: requestedPreset.palette, font: requestedPreset.font, copy: {}, copyEn: {}, copyMotion: {}, layers: [], sectionStyles: {}, rsvpConfig: { ...defaultInvitationRsvpConfig, customFields: [], elementStyles: {} }, sectionLayout: defaultInvitationSectionLayout.map((item) => ({ ...item })), sectionElementStyles: {}, nativeVisuals: {} }
       : loadedDesign;
     // Use actual persisted fields for cache identity; fallback photo URLs can change after an upload.
     const serverBaseline = makeStudioServerRevision(next);
@@ -578,6 +581,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       sections: { ...blankCanvasSections },
       photos: defaultPhotoAssignments(),
       copy: {},
+      copyEn: {},
       copyMotion: {},
       layers: [],
       sectionStyles: {},
@@ -644,6 +648,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         palette: preset.palette,
         font: preset.font,
         copy: templateKey === design.template ? design.copy : {},
+        copyEn: templateKey === design.template ? design.copyEn : {},
         copyMotion: templateKey === design.template ? design.copyMotion : {},
         layers: templateKey === design.template ? design.layers : [],
         sectionStyles: templateKey === design.template ? design.sectionStyles : {},
@@ -682,6 +687,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       sections: design.template === "blank-canvas" ? { ...blankCanvasSections } : { ...defaultInvitationSections },
       photos: defaultPhotoAssignments(),
       copy: {},
+      copyEn: {},
       copyMotion: {},
       layers: [],
       sectionStyles: {},
@@ -731,7 +737,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function setNarrativeCopy(field: EditableInvitationCopyField, text: string) {
-    change({ copy: { ...design.copy, [field]: text } });
+    if (invitationLanguage === "EN") change({ copyEn: { ...design.copyEn, [field]: text } });
+    else change({ copy: { ...design.copy, [field]: text } });
   }
 
   function clearCanvasSelection() {
@@ -1283,9 +1290,15 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function resetNarrativeCopy(field: EditableInvitationCopyField) {
-    const copy = { ...design.copy };
-    delete copy[field];
-    change({ copy });
+    if (invitationLanguage === "EN") {
+      const copyEn = { ...design.copyEn };
+      delete copyEn[field];
+      change({ copyEn });
+    } else {
+      const copy = { ...design.copy };
+      delete copy[field];
+      change({ copy });
+    }
   }
 
   function resetCopyMotion(field: EditableInvitationCopyField) {
@@ -1861,12 +1874,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
           {panel === "template" && <TemplatePanel selected={selectedCatalogKey} onSelect={selectTemplate} templates={catalog} onBlankCanvas={templateMode && allowBlankCanvas ? startBlankCanvas : undefined} />}
           {panel === "sections" && (
             <ContentPanel
+              invitationLanguage={invitationLanguage}
               sections={design.sections}
               rsvpConfig={design.rsvpConfig}
               eventCategory={invitation?.eventCategory ?? ""}
               templateKey={design.template}
               eventDescription={invitation?.description}
               narrativeCopy={design.copy}
+              englishNarrativeCopy={design.copyEn}
               onNarrativeCopy={setNarrativeCopy}
               onResetNarrativeCopy={resetNarrativeCopy}
               onChange={setSection}
@@ -2015,6 +2030,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 locale={locale}
                 envelopeEnabled={design.sections.envelope !== false}
                 stage={canvasStage}
+                invitationLanguage={invitationLanguage}
+                onInvitationLanguage={setInvitationLanguage}
                 labels={{
                   envelope: copy.envelope,
                   cover: copy.cover,
@@ -2032,7 +2049,8 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
                 <div key={`${design.template}-${design.sections.envelope !== false}-${previewVersion}`}>
                   <InvitationPreview
                     invitation={invitation}
-                    previewRecipientLine={locale === "en" ? "Dear : Mr [Name] and Mrs [Name]" : "Kepada Yth : Bapak [Nama] dan Ibu [Nama]"}
+                    invitationLanguage={invitationLanguage}
+                    previewRecipientLine={invitationLanguage === "EN" ? "Dear : Mr [Name] and Mrs [Name]" : "Kepada Yth : Bapak [Nama] dan Ibu [Nama]"}
                     templateKey={design.template}
                     palette={palette}
                     fontPair={fontPair}
@@ -2132,6 +2150,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         eventTag={eventTag}
         dressCode={dressCode}
         locale={locale}
+        invitationLanguage={invitationLanguage}
       />
 
       {notice && <footer className="undara-studio-status" role="status" aria-live="polite">{notice}</footer>}
