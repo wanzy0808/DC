@@ -45,6 +45,10 @@ test("event planner uses its own animated bronze botanical atmosphere", () => {
   assert.match(atmosphere, /FallingLeaves/);
   assert.match(atmosphere, /useReducedMotion/);
   assert.match(atmosphere, /repeat: Infinity/);
+  assert.match(atmosphere, /absolute inset-0 z-\[12\]/);
+  assert.match(atmosphere, /FallingLeaves embedded/);
+  assert.match(page, /undara-marketing-frame">\s*<EventPlannerBotanicalAtmosphere/);
+  assert.match(page, /undara-marketing-scroll relative z-20/);
   assert.doesNotMatch(atmosphere, /branch-0[1-6]\.webp/);
 });
 
