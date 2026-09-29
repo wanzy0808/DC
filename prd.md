@@ -5742,3 +5742,13 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - Source regression: `tests/event-planner-redesign.test.mjs`.
 
 Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebagai histori desain, tetapi ketentuan founder, portfolio, testimonial, dan wording in-house di entry tersebut **tidak lagi berlaku**.
+
+### 29 September 2026 — Event Planner botanical atmosphere
+
+- Event Planner tidak lagi memakai `PublicMarketingAtmosphere` / `LandingFloralGlow` karena branch landing lama terlihat salah posisi pada komposisi Event Planner.
+- Background Event Planner memakai atmosphere khusus `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx` dengan foliage bronze/champagne transparan yang tetap satu keluarga visual dengan landing tetapi lebih tenang.
+- Asset aktif: `/assets/marketing/event-planner/foliage-left.webp`, `foliage-right.webp`, dan `foliage-floating.webp`. Asset ini dekoratif, tidak membawa informasi produk, dan tidak boleh menghalangi teks/CTA.
+- Foliage besar bergerak sangat pelan dengan drift, rotate, dan scale kecil; `FallingLeaves` tetap dipakai agar continuity dengan landing terjaga. `prefers-reduced-motion` / `useReducedMotion` membuat foliage statis dan FallingLeaves tidak berjalan.
+- Jangan mengembalikan `branch-01..06` langsung ke Event Planner kecuali owner meminta komposisi baru. Event Planner memakai bahasa visual foliage bronze + stationery note1–3.
+- `note1.webp`, `note2.webp`, dan `note3.webp` tetap sebagai prop planner, tetapi opacity diturunkan agar tidak bersaing dengan foliage/background.
+- Source regression: `tests/event-planner-redesign.test.mjs`.
