@@ -36,12 +36,19 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   const cookieStore = await cookies();
   const savedLocale = cookieStore.get(LOCALE_COOKIE)?.value ?? cookieStore.get(LEGACY_LOCALE_COOKIE)?.value;
   const locale: Locale = isLocale(savedLocale) ? savedLocale : "id";
+  const savedTheme = cookieStore.get("theme")?.value;
+  const initialTheme = savedTheme === "dark" || savedTheme === "light" ? savedTheme : undefined;
 
   return (
-    <html lang={locale} className="scroll-smooth" data-scroll-behavior="smooth">
+    <html
+      lang={locale}
+      className={initialTheme === "dark" ? "dark scroll-smooth" : "scroll-smooth"}
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className={`${dmSerifDisplay.variable} ${roboto.variable} ${dmMono.variable} antialiased min-h-screen flex flex-col justify-between overflow-x-hidden`}>
         <LanguageProvider initialLocale={locale}>
-          <ThemeProvider>
+          <ThemeProvider initialTheme={initialTheme}>
             <MarketingAudioProvider>
               <PortalTransition />
               <PublicAtmosphere />
