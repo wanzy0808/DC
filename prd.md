@@ -5845,3 +5845,24 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Area/commit:** `lib/invitations/language.ts`, `lib/templates/editable-copy.ts`, Studio state/canvas/preview, renderer dan scene publik, RSVP/Wishes/Music/Gallery, tes terkait, serta §6.1 — commit yang memuat catatan ini.
 
 **Validasi:** 216 tes regresi termasuk pengujian format dua bahasa dan `copyEn` lulus; TypeScript serta build produksi lulus. ESLint terarah dengan aturan efek lama dinonaktifkan menghasilkan 0 error dan warning yang dicatat dalam hasil lokal. QA visual browser dan database produksi belum dilakukan.
+
+### 29 September 2026 — Marketing editorial system & service-page visual overhaul
+
+**Permintaan owner:** seluruh halaman marketing Undara harus mengikuti kualitas visual landing yang sudah disetujui, menjalankan rule repo dan design-quality stack, serta memanfaatkan shared component/asset library tanpa membuat semua layanan terlihat identik.
+
+**Arah desain:** landing tetap menjadi benchmark dan tidak dirombak. Event Planner tetap menjadi referensi ritme editorial. Shared marketing chrome tetap memakai main frame, navbar/footer, atmosphere, Light/Dark token, DM Serif Display + Roboto, dan kontrol ID/EN. Service pages dibedakan lewat art direction masing-masing:
+- Digital Invitation: editorial celebration product dengan smartphone invitation sebagai focal artwork, feature narrative, template showcase, Studio showcase, pricing editorial, testimonial, dan FAQ divider.
+- Guestbook Digital: arrival experience / event operations dengan hero venue, verifikasi → QR → seating → attendance, feature selector interaktif, dan copy ID/EN penuh.
+- Undangan Fisik: tactile stationery direction dengan fokus paper, envelope, finishing, proofing, production, dan delivery.
+- Event Planner: desain existing dipertahankan; hanya dinormalisasi ke shared marketing content width/media treatment.
+- Template Design: fungsi registry/filter/sort/preview/Studio handoff tidak diubah; presentasi katalog diperhalus menjadi gallery artwork dengan spacing dan geometry editorial.
+- Help: diubah menjadi halaman concierge bilingual ID/EN, bukan FAQ statis ID-only.
+
+**Shared implementation:** `app/globals.css` menambah primitive `undara-marketing-content`, `undara-marketing-section`, `undara-marketing-kicker`, `undara-editorial-rule`, `undara-editorial-surface`, `undara-editorial-media`, dan `undara-editorial-index`. Primitive ini mengatur ritme/hierarchy bersama tanpa memaksa seluruh service memakai layout identik. `PackageShowcase` menambah mode `editorial` secara opt-in agar existing consumers tidak berubah otomatis.
+
+**Area utama:** `app/{d-invitation,guestbook,undangan-fisik,event-planner,template-design,help}/page.tsx`, `components/DigitalInvitation/{HeroSection,FeatureSection,TemplateSection,StudioSection,ReviewsSection}.tsx`, `components/Guestbook/{HeroSection,FeatureSection,ProcessSection}.tsx`, `components/Marketing/PackageShowcase.tsx`, `data/services/guestbook.ts`, dan `app/globals.css`.
+
+**Commits implementasi:** `820eb89`, `d85680d`, `a41a62e`, `6c2c446`, `4d1a53e`, `102f901`, `b9772bb`, `0406a9f`, `9422f75`, `907f62d`, `735c4b0`, `a360b52`, `1df8fee`, `cd6ae7a`, `e52621f`, `70f51c7`, `433d2ae`, `1a4b2d5`.
+
+**Validasi saat catatan dibuat:** source inspection dan Orphan Audit pada beberapa commit intermediate lulus; Build Validation commit `e52621f` dan `cd6ae7a` terobservasi sukses. Build Validation untuk commit final katalog `1a4b2d5` masih berjalan saat entry ini ditulis. QA visual lintas browser/viewport belum dilakukan dan tidak boleh dianggap PASS hanya dari source/CI.
+
