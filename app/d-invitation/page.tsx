@@ -88,7 +88,7 @@ export default function DigitalInvitationPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
-            className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
+            className="undara-marketing-content flex flex-col gap-24 py-8 md:gap-28 md:py-12"
             scrollRoot={scrollRoot}
             ready={assembleReady}
             locale={locale}
@@ -126,6 +126,7 @@ export default function DigitalInvitationPage() {
               <PuzzleAssemble ready={assembleReady} direction="bottom" scrollRoot={scrollRoot} delay={0.07}>
                 <FaqSection
                   wide
+                  editorial
                   title={copy.faqTitle}
                   description={copy.faqDescription}
                   items={digitalInvitationFaq[locale]}
