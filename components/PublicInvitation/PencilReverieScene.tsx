@@ -15,6 +15,7 @@ type SceneProps = {
   isWedding?: boolean;
   hashtag?: string | null;
   preview?: boolean;
+  recipientLine?: string;
 };
 
 /**
@@ -35,7 +36,7 @@ function HeartDoodle({ studioObject }: { studioObject?: string }) {
 }
 
 export default function PencilReverieScene({
-  stage, names, date, onOpen, isWedding = true, hashtag, preview = false,
+  stage, names, date, onOpen, isWedding = true, hashtag, preview = false, recipientLine,
 }: SceneProps) {
   const [opening, setOpening] = useState(false);
   const [visible, setVisible] = useState(true);
@@ -68,6 +69,7 @@ export default function PencilReverieScene({
         <PaperIllustration file="bingkai.webp" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
           <p data-studio-native-object="object:envelope:letter-kicker">Untuk momen istimewa</p>
+          {recipientLine && <p data-personal-envelope-address className="mt-2 break-words text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <h1 data-studio-native-heading="">{names}</h1>
           <span data-studio-native-object="object:envelope:date">{date}</span>
         </div>
