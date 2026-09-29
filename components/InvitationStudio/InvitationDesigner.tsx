@@ -436,7 +436,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   const textTargetSection: StudioObjectSection =
     selectedSectionKey && studioObjectSections.includes(selectedSectionKey as StudioObjectSection) && design.sections[selectedSectionKey] !== false
       ? selectedSectionKey as StudioObjectSection
-      : selectedAssetLayer?.section ?? "cover";
+      : selectedAssetLayer?.section ?? (canvasStage === "envelope" ? "envelope" : "cover");
   const identity = getInvitationEventIdentity(invitation);
   const currentState = makeStudioSavedState(designKey, musicUrl, eventTag, dressCode);
   const dirty = Boolean(invitation && savedState !== currentState);
@@ -1496,14 +1496,14 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
         setSelectedPhotoSlot(null);
         return;
       }
-      if (canvasStage !== "cover" || selectedPhotoSlot) return;
+      if (selectedPhotoSlot) return;
       const activeText = window.getSelection()?.toString();
       if (activeText) return;
       const modifier = event.ctrlKey || event.metaKey;
       const shortcutKey = event.key.toLowerCase();
       if (modifier && !event.altKey && !event.shiftKey && shortcutKey === "a") {
         event.preventDefault();
-        const targetSection = selectedAssetLayer?.section ?? "cover";
+        const targetSection = selectedAssetLayer?.section ?? (canvasStage === "envelope" ? "envelope" : "cover");
         const targetInstanceId = selectedAssetLayer?.sectionInstanceId ?? targetSection;
         const ids = design.layers
           .filter((layer) => (layer.section ?? "cover") === targetSection
