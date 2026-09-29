@@ -324,6 +324,9 @@ test("selected assets use a compact left list and right-side properties panel", 
   const assetPanel = read("components/InvitationStudio/AssetPanel.tsx");
   const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
   assert.match(designer, /className="undara-studio-canvas-layout"/);
+  assert.match(designer, /className="undara-studio-properties-dock"/);
+  assert.match(designer, /<StudioNativeTransformHandles[\s\S]*?\/>\s*<\/div>\s*<div className="undara-studio-properties-dock"/);
+  assert.match(styles, /\.undara-studio-properties-dock \{[^}]*position: absolute;[^}]*right: 14px;[^}]*overflow-y: auto;/);
   assert.match(designer, /<StudioLayerList/);
   assert.match(layerList, /className="undara-studio-layer-list"/);
   assert.match(layerList, /const automaticLayerName = layer\.kind === "text"/);
