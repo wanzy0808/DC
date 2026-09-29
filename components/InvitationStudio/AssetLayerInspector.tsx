@@ -1,8 +1,8 @@
 "use client";
 
-import { Eye, EyeOff, Lock, Unlock } from "lucide-react";
+import { RotateCcw } from "lucide-react";
 import type { InvitationAssetLayer } from "@/lib/templates/asset-layers";
-import { MAX_ASSET_LAYERS, studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
+import { studioObjectSections, type StudioObjectSection } from "@/lib/templates/asset-layers";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import LayerAnimationControls from "@/components/InvitationStudio/LayerAnimationControls";
 
@@ -11,6 +11,7 @@ type AssetLayerInspectorProps = {
   selectedAssetLayer: InvitationAssetLayer | undefined;
   selectedAssetIndex: number;
   layerCount: number;
+  maxLayers: number;
   sections: InvitationSections;
   onDeselect: () => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
@@ -44,6 +45,7 @@ export default function AssetLayerInspector({
   selectedAssetLayer,
   selectedAssetIndex,
   layerCount,
+  maxLayers,
   sections,
   onDeselect,
   onUpdate,
@@ -82,46 +84,42 @@ export default function AssetLayerInspector({
     </label>
   );
 
+  const optionalNumberInput = (
+    label: string,
+    value: number | undefined,
+    min: number,
+    max: number,
+    step: number,
+    suffix: string,
+    update: (next: number | undefined) => void,
+  ) => (
+    <label className="undara-studio-layer-field">
+      <span>{label}</span>
+      <span className="undara-studio-layer-number">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          step={step}
+          value={value ?? ""}
+          placeholder={en ? "Auto" : "Otomatis"}
+          onFocus={(event) => event.currentTarget.select()}
+          onChange={(event) => {
+            if (!event.currentTarget.value) return update(undefined);
+            const next = event.currentTarget.valueAsNumber;
+            if (Number.isFinite(next)) update(clamp(next, min, max));
+          }}
+        />
+        <small>{suffix}</small>
+      </span>
+    </label>
+  );
+
   return (
     <aside className="undara-studio-layer-side" aria-label={en ? "Asset properties" : "Properti aset"}>
       <div className="undara-studio-layer-side-head">
-        <strong>{selectedAssetLayer.kind === "shape" ? (en ? "Shape" : "Bentuk") : (en ? "Asset" : "Asset")} {selectedAssetIndex + 1}/{MAX_ASSET_LAYERS}</strong>
+        <strong>{selectedAssetLayer.kind === "shape" ? (en ? "Shape" : "Bentuk") : (en ? "Asset" : "Asset")} {selectedAssetIndex + 1}/{maxLayers}</strong>
         <button type="button" onClick={onDeselect} aria-label={en ? "Close asset properties" : "Tutup properti aset"} title={en ? "Close" : "Tutup"}>×</button>
-      </div>
-
-      <label className="undara-studio-layer-field">
-        <span>{en ? "Layer name" : "Nama layer"}</span>
-        <input
-          type="text"
-          maxLength={60}
-          value={selectedAssetLayer.name ?? ""}
-          placeholder={en ? "Optional" : "Opsional"}
-          onChange={(event) => onUpdate(selectedAssetLayer.id, { name: event.target.value || undefined })}
-          className="h-10 rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
-        />
-      </label>
-
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
-          aria-pressed={Boolean(selectedAssetLayer.locked)}
-          onClick={() => onUpdate(selectedAssetLayer.id, { locked: selectedAssetLayer.locked ? undefined : true })}
-          title={selectedAssetLayer.locked ? (en ? "Unlock layer" : "Buka kunci layer") : (en ? "Lock layer" : "Kunci layer")}
-        >
-          {selectedAssetLayer.locked ? <Lock size={14} /> : <Unlock size={14} />}
-          {selectedAssetLayer.locked ? (en ? "Locked" : "Terkunci") : (en ? "Lock" : "Kunci")}
-        </button>
-        <button
-          type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
-          aria-pressed={!selectedAssetLayer.hidden}
-          onClick={() => onUpdate(selectedAssetLayer.id, { hidden: selectedAssetLayer.hidden ? undefined : true })}
-          title={selectedAssetLayer.hidden ? (en ? "Show layer" : "Tampilkan layer") : (en ? "Hide layer" : "Sembunyikan layer")}
-        >
-          {selectedAssetLayer.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
-          {selectedAssetLayer.hidden ? (en ? "Hidden" : "Tersembunyi") : (en ? "Visible" : "Terlihat")}
-        </button>
       </div>
 
       <fieldset disabled={Boolean(selectedAssetLayer.locked)} className="contents disabled:opacity-55">
@@ -292,7 +290,10 @@ export default function AssetLayerInspector({
         </div>
       )}
 
-      {numberInput(en ? "Size" : "Size", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
+      <div className="undara-studio-layer-grid">
+        {numberInput(en ? "Width" : "Lebar", selectedAssetLayer.width, 5, 85, 0.1, "%", (width) => onUpdate(selectedAssetLayer.id, { width }))}
+        {optionalNumberInput(en ? "Height" : "Tinggi", selectedAssetLayer.height, 3, 200, 0.1, "%", (height) => onUpdate(selectedAssetLayer.id, { height }))}
+      </div>
       {numberInput(en ? "Rotation" : "Rotasi", selectedAssetLayer.rotation ?? 0, -180, 180, 1, "°", (rotation) => onUpdate(selectedAssetLayer.id, { rotation }))}
 
       <label className="undara-studio-layer-opacity">
@@ -351,6 +352,32 @@ export default function AssetLayerInspector({
           </button>
         </div>
       </div>
+
+      <button
+        type="button"
+        className="undara-studio-layer-reset"
+        onClick={() => onUpdate(selectedAssetLayer.id, {
+          x: 50,
+          y: selectedAssetLayer.section === "envelope" ? 38 : 42,
+          width: selectedAssetLayer.kind === "shape" ? (selectedAssetLayer.shape === "line" ? 42 : 38) : 28,
+          height: selectedAssetLayer.kind === "shape" ? (selectedAssetLayer.shape === "circle" ? 28 : selectedAssetLayer.shape === "line" ? 3 : 22) : undefined,
+          opacity: 1,
+          rotation: 0,
+          flipX: undefined,
+          flipY: undefined,
+          shadowX: undefined,
+          shadowY: undefined,
+          shadowBlur: undefined,
+          shadowColor: undefined,
+          shadowOpacity: undefined,
+          animation: undefined,
+          animationDuration: undefined,
+          animationDelay: undefined,
+        })}
+      >
+        <RotateCcw size={14} />
+        Reset
+      </button>
       </fieldset>
     </aside>
   );
