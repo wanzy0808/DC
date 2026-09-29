@@ -392,7 +392,8 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.match(selectionInspector, /onPosition=\{onPositionAsset\}/);
   assert.match(layerInspector, /numberInput\("X"/);
   assert.match(layerInspector, /numberInput\("Y"/);
-  assert.match(layerInspector, /numberInput\(en \? "Size" : "Size"/);
+  assert.match(layerInspector, /numberInput\(en \? "Width" : "Lebar"/);
+  assert.match(layerInspector, /optionalNumberInput\(en \? "Height" : "Tinggi"/);
   assert.match(layerInspector, /numberInput\(en \? "Rotation" : "Rotasi"/);
   assert.match(layerInspector, /type="range"/);
   assert.match(layerInspector, /onPosition\(selectedAssetLayer\.id, "front"\)/);
@@ -415,12 +416,29 @@ test("selected assets use a compact left list and right-side properties panel", 
   assert.doesNotMatch(layerInspector, /Trash2|onRemove|onCopy|onPaste/);
   assert.doesNotMatch(assetPanel, /selectedId|onReorder|onRemove|selected\.opacity/);
   assert.match(styles, /\.undara-studio-layer-list \{[^}]*width: 104px/);
-  assert.match(styles, /\.undara-studio-layer-side \{[^}]*position: sticky;[^}]*width: 230px;[^}]*justify-self: end/);
+  assert.match(styles, /\.undara-studio-layer-side \{[^}]*position: sticky;[^}]*right: 0;[^}]*width: 236px;[^}]*max-height: calc\(100dvh - 214px\);[^}]*overflow-y: auto;[^}]*justify-self: end/);
   assert.match(styles, /\.undara-studio-section-side \{[^}]*width: 236px;[^}]*padding: 14px/);
   assert.match(styles, /\.undara-studio-section-side-head strong \{[^}]*font-size: 15px;[^}]*font-weight: 700/);
   assert.match(styles, /\.undara-studio-section-field \{[^}]*font-size: 12px;[^}]*font-weight: 600/);
 });
 
+
+test("Stage 5 right inspector is styling-first, pinned, and exposes one Reset action", () => {
+  const layerInspector = read("components/InvitationStudio/AssetLayerInspector.tsx");
+  const textInspector = read("components/InvitationStudio/TextLayerInspector.tsx");
+  const nativeInspector = read("components/InvitationStudio/StudioNativeVisualInspector.tsx");
+
+  assert.doesNotMatch(layerInspector, /Layer name|Nama layer|EyeOff|Unlock/);
+  assert.doesNotMatch(textInspector, /Layer name|Nama layer|EyeOff|Unlock/);
+  assert.match(layerInspector, /className="undara-studio-layer-reset"/);
+  assert.match(textInspector, /className="undara-studio-layer-reset"/);
+  assert.match(nativeInspector, /className="undara-studio-layer-reset mt-4"/);
+  assert.doesNotMatch(nativeInspector, />\s*Default\s*</);
+  assert.match(nativeInspector, /undara-studio-native-color/);
+  assert.match(styles, /\.undara-studio-selection-stack \{[^}]*position: sticky;[^}]*right: 0;[^}]*max-height: calc\(100dvh - 214px\);[^}]*overflow-y: auto/);
+  assert.match(styles, /\.undara-studio-layer-reset \{/);
+  assert.match(designer, /maxAssetLayers=\{maxAssetLayers\}/);
+});
 
 test("Studio supports standard cut and non-destructive photo crop controls", () => {
   const photoSlots = read("lib/templates/photo-slots.ts");
@@ -679,13 +697,17 @@ test("Studio keeps layer ordering rules in a pure helper module", () => {
   assert.match(designer, /from "@\/components\/InvitationStudio\/designer-layer-order"/);
   assert.match(designer, /reorderAssetLayers\(design\.layers, sourceId, targetId\)/);
   assert.match(designer, /positionAssetLayers\(design\.layers, id, position\)/);
+  assert.match(layerOrder, /function ownerKey\(layer: InvitationAssetLayer\)/);
+  assert.match(layerOrder, /export function assetLayerScopePosition\(/);
+  assert.match(layerOrder, /ownerKey\(source\) !== ownerKey\(target\)/);
   assert.match(layerOrder, /export function reorderAssetLayers\(/);
   assert.match(layerOrder, /source\.locked/);
   assert.match(layerOrder, /export function positionAssetLayers\(/);
   assert.match(layerOrder, /position === "forward"/);
   assert.match(layerOrder, /position === "backward"/);
   assert.match(layerOrder, /position === "front"/);
-  assert.match(layerOrder, /next\.unshift\(layer\)/);
+  assert.match(layerOrder, /peers\.unshift\(layer\)/);
+  assert.match(selectionInspector, /assetLayerScopePosition\(design\.layers, selectedAssetLayer\.id\)/);
 });
 
 test("Studio keeps invitation and template persistence outside the canvas component", () => {
