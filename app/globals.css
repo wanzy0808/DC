@@ -904,7 +904,7 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   animation: undara-portal-landscape-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__mist {
-  animation: undara-portal-mist-reveal calc(var(--undara-portal-reveal-ms) * .72) ease-out both;
+  animation: undara-portal-mist-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-back {
   animation: undara-portal-left-back-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
@@ -919,13 +919,13 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   animation: undara-portal-bottom-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-front {
-  animation: undara-portal-left-front-reveal calc(var(--undara-portal-reveal-ms) * .92) cubic-bezier(.22,1,.36,1) both;
+  animation: undara-portal-left-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--right-front {
-  animation: undara-portal-right-front-reveal calc(var(--undara-portal-reveal-ms) * .92) cubic-bezier(.22,1,.36,1) both;
+  animation: undara-portal-right-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__vignette {
-  animation: undara-portal-vignette-reveal calc(var(--undara-portal-reveal-ms) * .68) ease-out both;
+  animation: undara-portal-vignette-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
 
 @keyframes undara-portal-landscape-cover {
