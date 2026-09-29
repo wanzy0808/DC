@@ -701,8 +701,8 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
    fully hide the old page during route commit, then peel away in staggered
    directions to reveal the destination as a new clearing. */
 .undara-portal-transition {
-  --undara-portal-cover-ms: 980ms;
-  --undara-portal-reveal-ms: 1080ms;
+  --undara-portal-cover-ms: 1120ms;
+  --undara-portal-reveal-ms: 1180ms;
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -825,6 +825,47 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   transform-origin: right bottom;
 }
 
+.undara-branch-gate--left-4 {
+  left: -20vw; top: -18vh;
+  width: min(66vw, 860px); height: 86vh;
+  z-index: 10;
+  background-image: url("/assets/landing/ornaments/botanical/branch-04.webp");
+  --branch-from: translate3d(-112%, -18%, 0) rotate(21deg) scale(1.02);
+  --branch-closed: translate3d(17%, 8%, 0) rotate(33deg) scale(1.18);
+  --branch-open: translate3d(-124%, -24%, 0) rotate(16deg) scale(.98);
+  transform-origin: left top;
+}
+.undara-branch-gate--right-4 {
+  right: -21vw; top: -20vh;
+  width: min(68vw, 890px); height: 88vh;
+  z-index: 10;
+  background-image: url("/assets/landing/ornaments/botanical/branch-02.webp");
+  --branch-from: translate3d(114%, -20%, 0) rotate(-20deg) scale(1.02);
+  --branch-closed: translate3d(-16%, 8%, 0) rotate(-34deg) scale(1.18);
+  --branch-open: translate3d(126%, -25%, 0) rotate(-15deg) scale(.98);
+  transform-origin: right top;
+}
+.undara-branch-gate--left-5 {
+  left: -18vw; top: 29vh;
+  width: min(60vw, 790px); height: 74vh;
+  z-index: 11;
+  background-image: url("/assets/landing/ornaments/botanical/branch-06.webp");
+  --branch-from: translate3d(-116%, 10%, 0) rotate(-42deg) scale(.98);
+  --branch-closed: translate3d(24%, -6%, 0) rotate(-22deg) scale(1.20);
+  --branch-open: translate3d(-130%, 18%, 0) rotate(-48deg) scale(.96);
+  transform-origin: left 68%;
+}
+.undara-branch-gate--right-5 {
+  right: -19vw; top: 31vh;
+  width: min(62vw, 810px); height: 76vh;
+  z-index: 11;
+  background-image: url("/assets/landing/ornaments/botanical/branch-03.webp");
+  --branch-from: translate3d(118%, 12%, 0) rotate(42deg) scale(.99);
+  --branch-closed: translate3d(-23%, -7%, 0) rotate(22deg) scale(1.20);
+  --branch-open: translate3d(132%, 19%, 0) rotate(49deg) scale(.96);
+  transform-origin: right 68%;
+}
+
 /* Upper branches close the last sky gaps like a living lintel rather than a
    rectangular top wipe. */
 .undara-branch-gate--top-left {
@@ -850,6 +891,46 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   --branch-closed: translate3d(-1%, -4%, 0) rotate(-1deg) scaleX(-1) scaleY(1.11);
   --branch-open: translate3d(22%, -96%, 0) rotate(9deg) scaleX(-1) scaleY(1.03);
   transform-origin: right top;
+}
+.undara-branch-gate--top-mid-left {
+  left: 6vw; top: -36vh;
+  width: 55vw; height: 72vh;
+  z-index: 12;
+  background-image: url("/assets/landing/ornaments/botanical/branch-05.webp");
+  --branch-from: translate3d(-18%, -108%, 0) rotate(52deg) scale(1.00);
+  --branch-closed: translate3d(10%, 29%, 0) rotate(76deg) scale(1.18);
+  --branch-open: translate3d(-22%, -120%, 0) rotate(46deg) scale(.97);
+  transform-origin: center top;
+}
+.undara-branch-gate--top-mid-right {
+  right: 6vw; top: -37vh;
+  width: 56vw; height: 74vh;
+  z-index: 12;
+  background-image: url("/assets/landing/ornaments/botanical/branch-01.webp");
+  --branch-from: translate3d(18%, -110%, 0) rotate(-52deg) scale(1.00);
+  --branch-closed: translate3d(-10%, 30%, 0) rotate(-76deg) scale(1.18);
+  --branch-open: translate3d(22%, -122%, 0) rotate(-46deg) scale(.97);
+  transform-origin: center top;
+}
+.undara-branch-gate--bottom-left {
+  left: -4vw; bottom: -37vh;
+  width: 58vw; height: 72vh;
+  z-index: 10;
+  background-image: url("/assets/landing/ornaments/botanical/branch-02.webp");
+  --branch-from: translate3d(-20%, 112%, 0) rotate(-58deg) scale(.98);
+  --branch-closed: translate3d(17%, -31%, 0) rotate(-82deg) scale(1.17);
+  --branch-open: translate3d(-26%, 124%, 0) rotate(-51deg) scale(.96);
+  transform-origin: left bottom;
+}
+.undara-branch-gate--bottom-right {
+  right: -5vw; bottom: -38vh;
+  width: 60vw; height: 74vh;
+  z-index: 10;
+  background-image: url("/assets/landing/ornaments/botanical/branch-04.webp");
+  --branch-from: translate3d(21%, 114%, 0) rotate(58deg) scale(.98);
+  --branch-closed: translate3d(-17%, -32%, 0) rotate(82deg) scale(1.17);
+  --branch-open: translate3d(27%, 126%, 0) rotate(51deg) scale(.96);
+  transform-origin: right bottom;
 }
 .undara-branch-gate--brush {
   left: -8vw; bottom: -39vh;
@@ -892,6 +973,33 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   transform-origin: right bottom;
   filter: saturate(.78) brightness(.48) contrast(1.05) blur(.45px);
 }
+.undara-branch-gate--cross-left {
+  left: -26vw; top: -5vh;
+  width: min(78vw, 1020px); height: 112vh;
+  z-index: 17;
+  background-image: url("/assets/landing/ornaments/botanical/branch-03.webp");
+  --branch-from: translate3d(-132%, -6%, 0) rotate(18deg) scale(1.20);
+  --branch-closed: translate3d(26%, 0, 0) rotate(47deg) scale(1.28);
+  --branch-open: translate3d(-146%, -8%, 0) rotate(12deg) scale(1.18);
+  transform-origin: left center;
+  filter: saturate(.76) brightness(.46) contrast(1.06) blur(.35px);
+}
+.undara-branch-gate--cross-right {
+  right: -27vw; top: -7vh;
+  width: min(80vw, 1050px); height: 114vh;
+  z-index: 17;
+  background-image: url("/assets/landing/ornaments/botanical/branch-06.webp");
+  --branch-from: translate3d(134%, -7%, 0) rotate(-18deg) scale(1.20);
+  --branch-closed: translate3d(-25%, 1%, 0) rotate(-47deg) scale(1.28);
+  --branch-open: translate3d(148%, -9%, 0) rotate(-12deg) scale(1.18);
+  transform-origin: right center;
+  filter: saturate(.76) brightness(.46) contrast(1.06) blur(.35px);
+}
+.dark .undara-branch-gate--cross-left,
+.dark .undara-branch-gate--cross-right {
+  filter: saturate(.66) brightness(.25) contrast(1.12) blur(.35px);
+}
+
 .dark .undara-branch-gate--near-left,
 .dark .undara-branch-gate--near-right {
   filter: saturate(.68) brightness(.27) contrast(1.12) blur(.45px);
@@ -915,14 +1023,17 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__mist {
   animation: undara-branch-mist-cover var(--undara-portal-cover-ms) ease-out both;
 }
-.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--brush) {
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--left-4,.undara-branch-gate--right-4,.undara-branch-gate--brush) {
   animation: undara-branch-close-a var(--undara-portal-cover-ms) cubic-bezier(.20,.82,.20,1) both;
 }
-.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--left-5,.undara-branch-gate--right-5,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
   animation: undara-branch-close-b var(--undara-portal-cover-ms) cubic-bezier(.18,.84,.20,1) both;
 }
-.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-3,.undara-branch-gate--right-3,.undara-branch-gate--near-left,.undara-branch-gate--near-right) {
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-3,.undara-branch-gate--right-3,.undara-branch-gate--top-mid-left,.undara-branch-gate--top-mid-right,.undara-branch-gate--bottom-left,.undara-branch-gate--bottom-right) {
   animation: undara-branch-close-c var(--undara-portal-cover-ms) cubic-bezier(.16,.86,.20,1) both;
+}
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--near-left,.undara-branch-gate--near-right,.undara-branch-gate--cross-left,.undara-branch-gate--cross-right) {
+  animation: undara-branch-close-d var(--undara-portal-cover-ms) cubic-bezier(.14,.88,.18,1) both;
 }
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__vignette {
   animation: undara-branch-vignette-cover var(--undara-portal-cover-ms) ease-out both;
@@ -943,14 +1054,17 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__mist {
   animation: undara-branch-mist-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
-.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--near-left,.undara-branch-gate--near-right,.undara-branch-gate--left-3,.undara-branch-gate--right-3) {
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--near-left,.undara-branch-gate--near-right,.undara-branch-gate--cross-left,.undara-branch-gate--cross-right) {
   animation: undara-branch-open-a var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
-.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--brush) {
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-3,.undara-branch-gate--right-3,.undara-branch-gate--top-mid-left,.undara-branch-gate--top-mid-right,.undara-branch-gate--bottom-left,.undara-branch-gate--bottom-right) {
   animation: undara-branch-open-b var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
-.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--left-5,.undara-branch-gate--right-5,.undara-branch-gate--brush) {
   animation: undara-branch-open-c var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+}
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--left-4,.undara-branch-gate--right-4,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
+  animation: undara-branch-open-d var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__vignette {
   animation: undara-branch-vignette-reveal var(--undara-portal-reveal-ms) ease-out both;
@@ -983,6 +1097,11 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   94% { transform: var(--branch-closed); }
   100% { transform: var(--branch-closed); opacity: .98; }
 }
+@keyframes undara-branch-close-d {
+  0%, 24% { transform: var(--branch-from); opacity: .55; }
+  31% { opacity: .98; }
+  97%,100% { transform: var(--branch-closed); opacity: 1; }
+}
 @keyframes undara-branch-vignette-cover { 0%, 35% { opacity: 0; } 100% { opacity: 1; } }
 
 @keyframes undara-branch-landscape-reveal {
@@ -1006,17 +1125,32 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   82% { transform: var(--branch-open); opacity: .90; }
   100% { transform: var(--branch-open); opacity: 0; }
 }
+@keyframes undara-branch-open-d {
+  0%, 22% { transform: var(--branch-closed); opacity: .98; }
+  90% { transform: var(--branch-open); opacity: .88; }
+  100% { transform: var(--branch-open); opacity: 0; }
+}
 @keyframes undara-branch-vignette-reveal { 0% { opacity: 1; } 54%,100% { opacity: 0; } }
 
 @media (max-width: 640px) {
   .undara-branch-gate--left-1,
   .undara-branch-gate--right-1 { width: 108vw; }
   .undara-branch-gate--left-2,
-  .undara-branch-gate--right-2 { width: 96vw; }
+  .undara-branch-gate--right-2,
+  .undara-branch-gate--left-4,
+  .undara-branch-gate--right-4,
+  .undara-branch-gate--left-5,
+  .undara-branch-gate--right-5 { width: 102vw; }
   .undara-branch-gate--near-left,
-  .undara-branch-gate--near-right { width: 104vw; }
+  .undara-branch-gate--near-right,
+  .undara-branch-gate--cross-left,
+  .undara-branch-gate--cross-right { width: 116vw; }
   .undara-branch-gate--top-left,
-  .undara-branch-gate--top-right { width: 96vw; }
+  .undara-branch-gate--top-right { width: 104vw; }
+  .undara-branch-gate--top-mid-left,
+  .undara-branch-gate--top-mid-right,
+  .undara-branch-gate--bottom-left,
+  .undara-branch-gate--bottom-right { width: 78vw; }
 }
 @media (prefers-reduced-motion: reduce) {
   .undara-portal-transition { display: none; }
