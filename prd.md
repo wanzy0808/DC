@@ -5724,3 +5724,12 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** `StudioSelectionInspector` dipindahkan keluar dari surface scroll/pan canvas ke `undara-studio-properties-dock` yang menempel pada viewport canvas Studio. Dock mempunyai scroll vertikal sendiri, tidak mengikuti pan horizontal/Space+drag, dan tetap memakai inspector styling yang sama untuk asset, teks, foto, section, RSVP, copy, serta native object. Regression contract ditambahkan di `tests/studio-ui-cleanup.test.mjs`; aturan layout diselaraskan di `studio.md`. Area: `components/InvitationStudio/InvitationDesigner.tsx`, `components/InvitationStudio/studio.css`, `tests/studio-ui-cleanup.test.mjs`, dan `studio.md`. Tidak ada migrasi database.
 
 **Validasi:** struktur source dan kontrak regression sudah diperbarui pada branch review. QA visual/pointer desktop-mobile dan workflow CI untuk commit terbaru belum terlihat saat catatan ini ditulis.
+
+
+### 29 September 2026 — Transisi marketing: woodland passage
+
+**Permintaan owner:** transisi antar halaman marketing tidak lagi memakai glow/pink veil. Perpindahan harus terasa seperti masuk melewati semak lalu keluar ke pemandangan/halaman baru.
+
+**Implementasi:** `PortalTransition` sekarang memakai passage berlapis dari foliage/ranting, canopy, forest silhouette, mist, dan woodland landscape Light/Dark yang sudah ada di asset Undara. Fase cover membawa tanaman foreground dari kiri/kanan/atas/bawah menuju kamera, route commit tetap terjadi saat layar tertutup, lalu fase reveal melarutkan landscape sementara foliage membuka sehingga halaman tujuan terlihat sebagai clearing baru. Jalur pintu 3D memakai transisi yang sama; permukaan fallback portal pink `#e8a9bd` diganti warm woodland `#6D5848` agar tidak ada flash pink ketika texture pintu memudar. `prefers-reduced-motion` tetap melewati animasi. Regression source ada di `tests/marketing-transition.test.mjs`.
+
+**Area:** `components/Landing/Pintu/PortalTransition.tsx`, `components/Landing/Pintu/LandingDoorScene.tsx`, `app/globals.css`, dan `tests/marketing-transition.test.mjs`. Tidak ada migrasi database. QA visual browser desktop/mobile Light/Dark dan workflow CI commit terbaru masih perlu diverifikasi.
