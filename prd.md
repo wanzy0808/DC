@@ -5799,3 +5799,11 @@ Entry **“Event Planner editorial redesign”** sebelumnya tetap disimpan sebag
 **Area dan commit:** `app/d-invitation/page.tsx`, `app/guestbook/page.tsx`, `app/undangan-fisik/page.tsx`, `components/Guestbook/{HeroSection,FeatureSection,ProcessSection}.tsx`, dan `components/Marketing/PackageShowcase.tsx` — `1526d97`.
 
 **Validasi:** ESLint pada berkas berubah dan TypeScript lulus; 24 tes regresi marketing lulus; `next build` lulus dengan satu peringatan Turbopack lama pada tracing upload asset. QA visual lintas ukuran layar masih perlu dilakukan di browser.
+
+### 29 September 2026 — Bantuan dan Katalog mengikuti ritme marketing
+
+**Alasan:** kedua halaman framed ini masih memakai header pendek dan batas isi lama yang terasa lebih padat daripada Event Planner. Katalog tetap mengutamakan kemudahan menelusuri dan membuka pratinjau.
+
+**Implementasi:** `app/help/page.tsx` menggunakan pembuka dua kolom, tautan menuju dua layanan, FAQ editorial dengan divider, dan CTA akhir tanpa panel kartu tambahan. `app/template-design/page.tsx` memperluas isi dalam mainframe dan mengelompokkan judul, deskripsi, serta pencarian dalam komposisi dua kolom. Filter foto/kategori, sortir, status READY, modal preview, dan handoff Studio tidak diubah. Atmosfer, navbar, footer, dan scrollport bersama tetap dipakai.
+
+**Commit dan validasi:** `bd09472`; ESLint, TypeScript, 20 tes marketing/repo, dan `next build` lulus. Build masih mencatat peringatan tracing path upload asset yang sudah ada. QA visual lintas viewport belum dilakukan.
