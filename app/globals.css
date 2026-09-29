@@ -696,14 +696,13 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   backdrop-filter: none !important;
 }
 
-/* Marketing route transition: move through foreground plants instead of a
-   branded color flash. Existing transparent woodland artwork is reused so the
-   effect belongs to Undara's landing world. The landscape layer fully covers
-   the route only during the handoff; on reveal it dissolves while foliage
-   parts, making the committed destination feel like a new clearing. */
+/* Marketing route transition: an organic branch gate. Branches cross the
+   viewport like a natural fence while the camera approaches the selected door,
+   fully hide the old page during route commit, then peel away in staggered
+   directions to reveal the destination as a new clearing. */
 .undara-portal-transition {
-  --undara-portal-cover-ms: 780ms;
-  --undara-portal-reveal-ms: 900ms;
+  --undara-portal-cover-ms: 980ms;
+  --undara-portal-reveal-ms: 1080ms;
   position: fixed;
   inset: 0;
   z-index: 9999;
@@ -714,7 +713,7 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
 }
 .undara-portal-transition__landscape,
 .undara-portal-transition__mist,
-.undara-portal-transition__foliage,
+.undara-branch-gate,
 .undara-portal-transition__vignette {
   position: absolute;
   pointer-events: none;
@@ -724,8 +723,8 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   inset: -5%;
   z-index: 0;
   opacity: 0;
-  transform: scale(1.08);
-  background: #e8ded3 url("/assets/landing/atmosphere/lightbg.webp") center / cover no-repeat;
+  transform: scale(1.065);
+  background: #e7ded2 url("/assets/landing/atmosphere/lightbg.webp") center / cover no-repeat;
 }
 .dark .undara-portal-transition__landscape {
   background-color: #281414;
@@ -735,238 +734,290 @@ html[data-undara-marketing-transition] [data-undara-marketing-frame] {
   inset: -12%;
   z-index: 2;
   opacity: 0;
-  background:
-    radial-gradient(ellipse at 50% 45%, rgb(247 240 231 / 64%) 0%, rgb(236 226 213 / 22%) 38%, transparent 68%);
-  filter: blur(14px);
+  background: radial-gradient(ellipse at 50% 48%, rgb(245 238 228 / 46%) 0%, rgb(221 211 196 / 15%) 44%, transparent 70%);
+  filter: blur(18px);
 }
 .dark .undara-portal-transition__mist {
-  background:
-    radial-gradient(ellipse at 50% 45%, rgb(214 179 140 / 18%) 0%, rgb(72 39 34 / 18%) 40%, transparent 70%);
+  background: radial-gradient(ellipse at 50% 48%, rgb(214 179 140 / 12%) 0%, rgb(50 35 27 / 15%) 46%, transparent 72%);
 }
 .undara-portal-transition__mist--back { z-index: 1; }
 .undara-portal-transition__mist--front {
-  z-index: 7;
-  inset: -20%;
-  filter: blur(28px);
-  background:
-    radial-gradient(ellipse at 50% 52%, rgb(246 237 226 / 45%) 0%, transparent 58%);
+  z-index: 14;
+  inset: -18%;
+  filter: blur(30px);
+  background: radial-gradient(ellipse at 50% 54%, rgb(244 235 222 / 24%) 0%, transparent 58%);
 }
 .dark .undara-portal-transition__mist--front {
-  background:
-    radial-gradient(ellipse at 50% 52%, rgb(214 179 140 / 13%) 0%, transparent 60%);
+  background: radial-gradient(ellipse at 50% 54%, rgb(214 179 140 / 8%) 0%, transparent 62%);
 }
 
-.undara-portal-transition__foliage {
-  z-index: 5;
+.undara-branch-gate {
+  z-index: 6;
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
-  transform-origin: center;
-  filter: saturate(.82) brightness(.66) contrast(1.02);
-}
-.dark .undara-portal-transition__foliage {
-  filter: saturate(.74) brightness(.40) contrast(1.08);
-}
-.undara-portal-transition__foliage--left-back {
-  left: -15vw;
-  top: -8vh;
-  width: min(78vw, 1040px);
-  height: 116vh;
-  opacity: .94;
-  background-image: url("/assets/landing/ornaments/botanical/branch-03.webp");
-  transform: translate3d(-72%, 0, 0) rotate(-8deg) scale(1.04);
-  transform-origin: left center;
-}
-.undara-portal-transition__foliage--right-back {
-  right: -18vw;
-  top: -10vh;
-  width: min(82vw, 1100px);
-  height: 120vh;
-  opacity: .92;
-  background-image: url("/assets/landing/ornaments/botanical/branch-06.webp");
-  transform: translate3d(76%, 0, 0) rotate(8deg) scale(1.06);
-  transform-origin: right center;
-}
-.undara-portal-transition__foliage--top {
-  left: -10vw;
-  top: -40vh;
-  width: 120vw;
-  height: 82vh;
-  z-index: 6;
   opacity: .98;
+  filter: saturate(.82) brightness(.63) contrast(1.04);
+  transform-origin: center;
+}
+.dark .undara-branch-gate {
+  filter: saturate(.72) brightness(.36) contrast(1.1);
+}
+
+/* Mid-depth branches. Each uses a different silhouette, angle and pivot so the
+   closing gate looks grown rather than mirrored. */
+.undara-branch-gate--left-1 {
+  left: -31vw; top: -9vh;
+  width: min(82vw, 1080px); height: 119vh;
+  background-image: url("/assets/landing/ornaments/botanical/branch-03.webp");
+  --branch-from: translate3d(-78%, -2%, 0) rotate(-13deg) scale(1.04);
+  --branch-closed: translate3d(-3%, 2%, 0) rotate(3deg) scale(1.10);
+  --branch-open: translate3d(-94%, -5%, 0) rotate(-18deg) scale(1.02);
+  transform-origin: left 54%;
+}
+.undara-branch-gate--right-1 {
+  right: -33vw; top: -12vh;
+  width: min(86vw, 1120px); height: 122vh;
+  background-image: url("/assets/landing/ornaments/botanical/branch-06.webp");
+  --branch-from: translate3d(82%, -1%, 0) rotate(14deg) scale(1.04);
+  --branch-closed: translate3d(4%, 1%, 0) rotate(-3deg) scale(1.10);
+  --branch-open: translate3d(96%, -5%, 0) rotate(18deg) scale(1.02);
+  transform-origin: right 52%;
+}
+.undara-branch-gate--left-2 {
+  left: -28vw; top: 13vh;
+  width: min(70vw, 920px); height: 92vh;
+  z-index: 7;
+  background-image: url("/assets/landing/ornaments/botanical/branch-02.webp");
+  --branch-from: translate3d(-92%, 8%, 0) rotate(-24deg) scale(.96);
+  --branch-closed: translate3d(-1%, -1%, 0) rotate(-7deg) scale(1.08);
+  --branch-open: translate3d(-106%, 11%, 0) rotate(-30deg) scale(.94);
+  transform-origin: left 70%;
+}
+.undara-branch-gate--right-2 {
+  right: -29vw; top: 10vh;
+  width: min(72vw, 940px); height: 94vh;
+  z-index: 7;
+  background-image: url("/assets/landing/ornaments/botanical/branch-04.webp");
+  --branch-from: translate3d(92%, 8%, 0) rotate(24deg) scale(.98);
+  --branch-closed: translate3d(2%, -2%, 0) rotate(7deg) scale(1.08);
+  --branch-open: translate3d(106%, 11%, 0) rotate(31deg) scale(.95);
+  transform-origin: right 70%;
+}
+.undara-branch-gate--left-3 {
+  left: -21vw; bottom: -22vh;
+  width: min(63vw, 830px); height: 78vh;
+  z-index: 8;
+  background-image: url("/assets/landing/ornaments/botanical/branch-01.webp");
+  --branch-from: translate3d(-104%, 28%, 0) rotate(-31deg) scale(1.02);
+  --branch-closed: translate3d(1%, 2%, 0) rotate(-10deg) scale(1.14);
+  --branch-open: translate3d(-116%, 34%, 0) rotate(-36deg) scale(.99);
+  transform-origin: left bottom;
+}
+.undara-branch-gate--right-3 {
+  right: -22vw; bottom: -24vh;
+  width: min(65vw, 850px); height: 80vh;
+  z-index: 8;
+  background-image: url("/assets/landing/ornaments/botanical/branch-05.webp");
+  --branch-from: translate3d(106%, 30%, 0) rotate(31deg) scale(1.02);
+  --branch-closed: translate3d(-1%, 3%, 0) rotate(10deg) scale(1.14);
+  --branch-open: translate3d(118%, 36%, 0) rotate(37deg) scale(.99);
+  transform-origin: right bottom;
+}
+
+/* Upper branches close the last sky gaps like a living lintel rather than a
+   rectangular top wipe. */
+.undara-branch-gate--top-left {
+  left: -22vw; top: -39vh;
+  width: 79vw; height: 78vh;
+  z-index: 9;
   background-image: url("/assets/landing/ornaments/botanical/canopy7.webp");
   background-size: cover;
-  background-position: center bottom;
-  transform: translate3d(0, -74%, 0) scale(1.12);
-  transform-origin: center top;
+  background-position: left bottom;
+  --branch-from: translate3d(-16%, -82%, 0) rotate(-7deg) scale(1.06);
+  --branch-closed: translate3d(1%, -5%, 0) rotate(1deg) scale(1.11);
+  --branch-open: translate3d(-21%, -94%, 0) rotate(-9deg) scale(1.03);
+  transform-origin: left top;
 }
-.undara-portal-transition__foliage--bottom {
-  left: -8vw;
-  bottom: -32vh;
-  width: 116vw;
-  height: 66vh;
-  z-index: 4;
-  opacity: .88;
+.undara-branch-gate--top-right {
+  right: -22vw; top: -41vh;
+  width: 79vw; height: 80vh;
+  z-index: 9;
+  background-image: url("/assets/landing/ornaments/botanical/canopy7.webp");
+  background-size: cover;
+  background-position: right bottom;
+  --branch-from: translate3d(18%, -84%, 0) rotate(7deg) scaleX(-1) scaleY(1.06);
+  --branch-closed: translate3d(-1%, -4%, 0) rotate(-1deg) scaleX(-1) scaleY(1.11);
+  --branch-open: translate3d(22%, -96%, 0) rotate(9deg) scaleX(-1) scaleY(1.03);
+  transform-origin: right top;
+}
+.undara-branch-gate--brush {
+  left: -8vw; bottom: -39vh;
+  width: 116vw; height: 70vh;
+  z-index: 5;
+  opacity: .90;
   background-image: url("/assets/landing/atmosphere/forest-silhouette.webp");
   background-size: cover;
   background-position: center top;
-  transform: translate3d(0, 76%, 0) scale(1.08);
-  transform-origin: center bottom;
-  filter: saturate(.72) brightness(.46) contrast(1.06);
+  --branch-from: translate3d(0, 88%, 0) scale(1.05);
+  --branch-closed: translate3d(0, 23%, 0) scale(1.12);
+  --branch-open: translate3d(0, 96%, 0) scale(1.04);
+  filter: saturate(.65) brightness(.43) contrast(1.08);
 }
-.dark .undara-portal-transition__foliage--bottom {
-  filter: saturate(.68) brightness(.25) contrast(1.12);
+.dark .undara-branch-gate--brush {
+  filter: saturate(.58) brightness(.22) contrast(1.14);
 }
-.undara-portal-transition__foliage--left-front {
-  left: -24vw;
-  bottom: -26vh;
-  width: min(72vw, 940px);
-  height: 92vh;
-  z-index: 8;
-  opacity: .98;
+
+/* Near-camera branches are intentionally larger and slightly soft. They arrive
+   last on cover and leave first on reveal, creating real parallax. */
+.undara-branch-gate--near-left {
+  left: -34vw; bottom: -31vh;
+  width: min(82vw, 1080px); height: 102vh;
+  z-index: 16;
   background-image: url("/assets/landing/ornaments/botanical/branch-01.webp");
-  transform: translate3d(-88%, 18%, 0) rotate(-18deg) scale(1.16);
+  --branch-from: translate3d(-120%, 26%, 0) rotate(-36deg) scale(1.26);
+  --branch-closed: translate3d(-7%, 7%, 0) rotate(-9deg) scale(1.31);
+  --branch-open: translate3d(-132%, 34%, 0) rotate(-41deg) scale(1.24);
   transform-origin: left bottom;
-  filter: saturate(.78) brightness(.50) contrast(1.04) blur(.25px);
+  filter: saturate(.78) brightness(.48) contrast(1.05) blur(.45px);
 }
-.undara-portal-transition__foliage--right-front {
-  right: -24vw;
-  bottom: -28vh;
-  width: min(74vw, 980px);
-  height: 94vh;
-  z-index: 8;
-  opacity: .98;
+.undara-branch-gate--near-right {
+  right: -35vw; bottom: -33vh;
+  width: min(84vw, 1110px); height: 104vh;
+  z-index: 16;
   background-image: url("/assets/landing/ornaments/botanical/branch-05.webp");
-  transform: translate3d(90%, 20%, 0) rotate(18deg) scale(1.18);
+  --branch-from: translate3d(122%, 28%, 0) rotate(36deg) scale(1.27);
+  --branch-closed: translate3d(8%, 8%, 0) rotate(9deg) scale(1.32);
+  --branch-open: translate3d(134%, 36%, 0) rotate(41deg) scale(1.25);
   transform-origin: right bottom;
-  filter: saturate(.78) brightness(.50) contrast(1.04) blur(.25px);
+  filter: saturate(.78) brightness(.48) contrast(1.05) blur(.45px);
 }
-.dark .undara-portal-transition__foliage--left-front,
-.dark .undara-portal-transition__foliage--right-front {
-  filter: saturate(.70) brightness(.28) contrast(1.1) blur(.25px);
+.dark .undara-branch-gate--near-left,
+.dark .undara-branch-gate--near-right {
+  filter: saturate(.68) brightness(.27) contrast(1.12) blur(.45px);
 }
+
 .undara-portal-transition__vignette {
   inset: 0;
-  z-index: 10;
+  z-index: 18;
   opacity: 0;
-  box-shadow: inset 0 0 18vw rgb(50 29 22 / 42%);
+  box-shadow: inset 0 0 15vw rgb(48 38 29 / 30%);
 }
 .dark .undara-portal-transition__vignette {
-  box-shadow: inset 0 0 20vw rgb(14 5 5 / 72%);
+  box-shadow: inset 0 0 18vw rgb(12 7 5 / 64%);
 }
 
-/* Cover: foreground vegetation arrives at different speeds, giving the camera
-   a shallow push-through instead of a flat wipe. */
+/* Cover groups have different motion windows. No two branch depths begin and
+   settle at exactly the same time. */
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__landscape {
-  animation: undara-portal-landscape-cover var(--undara-portal-cover-ms) cubic-bezier(.22,1,.36,1) both;
+  animation: undara-branch-landscape-cover var(--undara-portal-cover-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__mist {
-  animation: undara-portal-mist-cover var(--undara-portal-cover-ms) ease-out both;
+  animation: undara-branch-mist-cover var(--undara-portal-cover-ms) ease-out both;
 }
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--left-back {
-  animation: undara-portal-left-back-cover var(--undara-portal-cover-ms) cubic-bezier(.22,.86,.2,1) both;
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--brush) {
+  animation: undara-branch-close-a var(--undara-portal-cover-ms) cubic-bezier(.20,.82,.20,1) both;
 }
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--right-back {
-  animation: undara-portal-right-back-cover var(--undara-portal-cover-ms) cubic-bezier(.22,.86,.2,1) both;
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
+  animation: undara-branch-close-b var(--undara-portal-cover-ms) cubic-bezier(.18,.84,.20,1) both;
 }
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--top {
-  animation: undara-portal-top-cover var(--undara-portal-cover-ms) cubic-bezier(.2,.82,.2,1) both;
-}
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--bottom {
-  animation: undara-portal-bottom-cover var(--undara-portal-cover-ms) cubic-bezier(.2,.82,.2,1) both;
-}
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--left-front {
-  animation: undara-portal-left-front-cover var(--undara-portal-cover-ms) cubic-bezier(.16,.82,.2,1) both;
-}
-.undara-portal-transition[data-phase="cover"] .undara-portal-transition__foliage--right-front {
-  animation: undara-portal-right-front-cover var(--undara-portal-cover-ms) cubic-bezier(.16,.82,.2,1) both;
+.undara-portal-transition[data-phase="cover"] :is(.undara-branch-gate--left-3,.undara-branch-gate--right-3,.undara-branch-gate--near-left,.undara-branch-gate--near-right) {
+  animation: undara-branch-close-c var(--undara-portal-cover-ms) cubic-bezier(.16,.86,.20,1) both;
 }
 .undara-portal-transition[data-phase="cover"] .undara-portal-transition__vignette {
-  animation: undara-portal-vignette-cover var(--undara-portal-cover-ms) ease-out both;
+  animation: undara-branch-vignette-cover var(--undara-portal-cover-ms) ease-out both;
 }
 
-/* Hold mirrors the final cover frame exactly, so switching React phase does
-   not cause a one-frame jump while Next commits the destination. */
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__landscape { opacity: 1; transform: scale(1); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist { opacity: .72; }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist--front { opacity: .72; }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--left-back { transform: translate3d(-5%, 0, 0) rotate(2deg) scale(1.1); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--right-back { transform: translate3d(7%, 0, 0) rotate(-2deg) scale(1.1); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--top { transform: translate3d(0, -14%, 0) scale(1.15); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--bottom { transform: translate3d(0, 18%, 0) scale(1.12); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--left-front { transform: translate3d(-6%, 5%, 0) rotate(-4deg) scale(1.2); }
-.undara-portal-transition[data-phase="hold"] .undara-portal-transition__foliage--right-front { transform: translate3d(8%, 7%, 0) rotate(4deg) scale(1.21); }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist { opacity: .50; }
+.undara-portal-transition[data-phase="hold"] .undara-portal-transition__mist--front { opacity: .28; }
+.undara-portal-transition[data-phase="hold"] .undara-branch-gate { transform: var(--branch-closed); }
 .undara-portal-transition[data-phase="hold"] .undara-portal-transition__vignette { opacity: 1; }
 
-/* Reveal: the route underneath is already committed. Landscape/fog dissolve
-   first, then near and far foliage peel away with slightly different timing. */
+/* Reveal reverses the depth logic: closest branches peel away first, then the
+   middle fence, then the outer canopy. The new page is visible through gaps
+   before the final branches have completely left. */
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__landscape {
-  animation: undara-portal-landscape-reveal var(--undara-portal-reveal-ms) ease-out both;
+  animation: undara-branch-landscape-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__mist {
-  animation: undara-portal-mist-reveal var(--undara-portal-reveal-ms) ease-out both;
+  animation: undara-branch-mist-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-back {
-  animation: undara-portal-left-back-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--near-left,.undara-branch-gate--near-right,.undara-branch-gate--left-3,.undara-branch-gate--right-3) {
+  animation: undara-branch-open-a var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--right-back {
-  animation: undara-portal-right-back-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-2,.undara-branch-gate--right-2,.undara-branch-gate--brush) {
+  animation: undara-branch-open-b var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--top {
-  animation: undara-portal-top-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
-}
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--bottom {
-  animation: undara-portal-bottom-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
-}
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--left-front {
-  animation: undara-portal-left-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
-}
-.undara-portal-transition[data-phase="reveal"] .undara-portal-transition__foliage--right-front {
-  animation: undara-portal-right-front-reveal var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
+.undara-portal-transition[data-phase="reveal"] :is(.undara-branch-gate--left-1,.undara-branch-gate--right-1,.undara-branch-gate--top-left,.undara-branch-gate--top-right) {
+  animation: undara-branch-open-c var(--undara-portal-reveal-ms) cubic-bezier(.22,1,.36,1) both;
 }
 .undara-portal-transition[data-phase="reveal"] .undara-portal-transition__vignette {
-  animation: undara-portal-vignette-reveal var(--undara-portal-reveal-ms) ease-out both;
+  animation: undara-branch-vignette-reveal var(--undara-portal-reveal-ms) ease-out both;
 }
 
-@keyframes undara-portal-landscape-cover {
-  from { opacity: 0; transform: scale(1.08); }
-  34% { opacity: .62; }
-  to { opacity: 1; transform: scale(1); }
+@keyframes undara-branch-landscape-cover {
+  0% { opacity: 0; transform: scale(1.065); }
+  42% { opacity: .46; }
+  100% { opacity: 1; transform: scale(1); }
 }
-@keyframes undara-portal-mist-cover { from { opacity: 0; transform: scale(1.08); } to { opacity: .72; transform: scale(1); } }
-@keyframes undara-portal-left-back-cover { from { transform: translate3d(-72%,0,0) rotate(-8deg) scale(1.04); } to { transform: translate3d(-5%,0,0) rotate(2deg) scale(1.1); } }
-@keyframes undara-portal-right-back-cover { from { transform: translate3d(76%,0,0) rotate(8deg) scale(1.06); } to { transform: translate3d(7%,0,0) rotate(-2deg) scale(1.1); } }
-@keyframes undara-portal-top-cover { from { transform: translate3d(0,-74%,0) scale(1.12); } to { transform: translate3d(0,-14%,0) scale(1.15); } }
-@keyframes undara-portal-bottom-cover { from { transform: translate3d(0,76%,0) scale(1.08); } to { transform: translate3d(0,18%,0) scale(1.12); } }
-@keyframes undara-portal-left-front-cover { from { transform: translate3d(-88%,18%,0) rotate(-18deg) scale(1.16); } 72% { transform: translate3d(-13%,7%,0) rotate(-6deg) scale(1.2); } to { transform: translate3d(-6%,5%,0) rotate(-4deg) scale(1.2); } }
-@keyframes undara-portal-right-front-cover { from { transform: translate3d(90%,20%,0) rotate(18deg) scale(1.18); } 72% { transform: translate3d(15%,9%,0) rotate(6deg) scale(1.21); } to { transform: translate3d(8%,7%,0) rotate(4deg) scale(1.21); } }
-@keyframes undara-portal-vignette-cover { from { opacity: 0; } to { opacity: 1; } }
+@keyframes undara-branch-mist-cover {
+  0%, 16% { opacity: 0; transform: scale(1.08); }
+  100% { opacity: .50; transform: scale(1); }
+}
+@keyframes undara-branch-close-a {
+  0% { transform: var(--branch-from); opacity: .72; }
+  8% { opacity: .98; }
+  82% { transform: var(--branch-closed); }
+  100% { transform: var(--branch-closed); opacity: .98; }
+}
+@keyframes undara-branch-close-b {
+  0%, 8% { transform: var(--branch-from); opacity: .72; }
+  15% { opacity: .98; }
+  88% { transform: var(--branch-closed); }
+  100% { transform: var(--branch-closed); opacity: .98; }
+}
+@keyframes undara-branch-close-c {
+  0%, 16% { transform: var(--branch-from); opacity: .62; }
+  23% { opacity: .98; }
+  94% { transform: var(--branch-closed); }
+  100% { transform: var(--branch-closed); opacity: .98; }
+}
+@keyframes undara-branch-vignette-cover { 0%, 35% { opacity: 0; } 100% { opacity: 1; } }
 
-@keyframes undara-portal-landscape-reveal { from { opacity: 1; transform: scale(1); } 42% { opacity: .18; } to { opacity: 0; transform: scale(.985); } }
-@keyframes undara-portal-mist-reveal { from { opacity: .7; } to { opacity: 0; } }
-@keyframes undara-portal-left-back-reveal { from { transform: translate3d(-5%,0,0) rotate(2deg) scale(1.1); } to { transform: translate3d(-86%,-2%,0) rotate(-10deg) scale(1.03); } }
-@keyframes undara-portal-right-back-reveal { from { transform: translate3d(7%,0,0) rotate(-2deg) scale(1.1); } to { transform: translate3d(88%,-2%,0) rotate(10deg) scale(1.04); } }
-@keyframes undara-portal-top-reveal { from { transform: translate3d(0,-14%,0) scale(1.15); } to { transform: translate3d(0,-82%,0) scale(1.09); } }
-@keyframes undara-portal-bottom-reveal { from { transform: translate3d(0,18%,0) scale(1.12); } to { transform: translate3d(0,86%,0) scale(1.07); } }
-@keyframes undara-portal-left-front-reveal { from { transform: translate3d(-6%,5%,0) rotate(-4deg) scale(1.2); } to { transform: translate3d(-104%,22%,0) rotate(-22deg) scale(1.14); } }
-@keyframes undara-portal-right-front-reveal { from { transform: translate3d(8%,7%,0) rotate(4deg) scale(1.21); } to { transform: translate3d(106%,24%,0) rotate(22deg) scale(1.15); } }
-@keyframes undara-portal-vignette-reveal { from { opacity: 1; } to { opacity: 0; } }
+@keyframes undara-branch-landscape-reveal {
+  0% { opacity: 1; transform: scale(1); }
+  35% { opacity: .35; }
+  72%, 100% { opacity: 0; transform: scale(.987); }
+}
+@keyframes undara-branch-mist-reveal { 0% { opacity: .50; } 62%,100% { opacity: 0; } }
+@keyframes undara-branch-open-a {
+  0% { transform: var(--branch-closed); opacity: .98; }
+  58% { transform: var(--branch-open); opacity: .94; }
+  76%,100% { transform: var(--branch-open); opacity: 0; }
+}
+@keyframes undara-branch-open-b {
+  0%, 8% { transform: var(--branch-closed); opacity: .98; }
+  70% { transform: var(--branch-open); opacity: .92; }
+  86%,100% { transform: var(--branch-open); opacity: 0; }
+}
+@keyframes undara-branch-open-c {
+  0%, 16% { transform: var(--branch-closed); opacity: .98; }
+  82% { transform: var(--branch-open); opacity: .90; }
+  100% { transform: var(--branch-open); opacity: 0; }
+}
+@keyframes undara-branch-vignette-reveal { 0% { opacity: 1; } 54%,100% { opacity: 0; } }
 
 @media (max-width: 640px) {
-  .undara-portal-transition__foliage--left-back,
-  .undara-portal-transition__foliage--right-back {
-    width: 100vw;
-  }
-  .undara-portal-transition__foliage--left-front,
-  .undara-portal-transition__foliage--right-front {
-    width: 92vw;
-  }
-  .undara-portal-transition__foliage--top {
-    left: -24vw;
-    width: 148vw;
-  }
+  .undara-branch-gate--left-1,
+  .undara-branch-gate--right-1 { width: 108vw; }
+  .undara-branch-gate--left-2,
+  .undara-branch-gate--right-2 { width: 96vw; }
+  .undara-branch-gate--near-left,
+  .undara-branch-gate--near-right { width: 104vw; }
+  .undara-branch-gate--top-left,
+  .undara-branch-gate--top-right { width: 96vw; }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .undara-portal-transition { display: none; }
 }
