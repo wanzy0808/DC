@@ -243,6 +243,8 @@ export async function PATCH(request: Request) {
       category?: string | null;
       tags?: string[];
       personalGreeting?: string | null;
+      personalEnvelopeEnabled?: boolean;
+      personalLanguage?: "ID" | "EN";
     } = {};
 
     if (typeof body.name === "string") {
