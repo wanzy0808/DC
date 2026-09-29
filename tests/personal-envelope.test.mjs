@@ -49,6 +49,20 @@ test("personal invitation profile validates envelope toggle and language", () =>
   assert.throws(() => parsePersonalGuestFields({ personalLanguage: "JP" }), /Bahasa amplop/);
 });
 
+test("Personal Invitation dashboard previews and directly toggles the exact envelope addressee", () => {
+  const fields = read("components/Dashboard/PersonalInvitationGuestFields.tsx");
+  const panels = read("components/Dashboard/PersonalInvitationPanels.tsx");
+  const i18n = read("components/Dashboard/useDashboardI18n.ts");
+
+  assert.match(fields, /Kepada Yth : Bapak Andi dan Ibu Sari/);
+  assert.match(fields, /Dear : Mr Andi and Mrs Sari/);
+  assert.match(panels, /formatPersonalEnvelopeAddress\(item\)/);
+  assert.match(panels, /personalEnvelopeEnabled: item\.personalEnvelopeEnabled === false/);
+  assert.match(panels, /Aktifkan nama amplop/);
+  assert.match(panels, /Matikan nama amplop/);
+  assert.match(i18n, /"Amplop personal": "Personal envelope"/);
+});
+
 test("dashboard and every ready envelope path receive the personal recipient line", () => {
   const fields = read("components/Dashboard/PersonalInvitationGuestFields.tsx");
   const publicPage = read("app/invite/[slug]/p/[token]/page.tsx");

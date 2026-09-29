@@ -7,23 +7,25 @@ import { Play } from "lucide-react";
 import VideoModal from "@/components/Marketing/VideoModal";
 import { plannerPortfolio } from "@/data/services/event-planner";
 
-export default function PortfolioSection() {
+export default function PortfolioSection({ locale }: { locale: "id" | "en" }) {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const en = locale === "en";
 
   return (
     <section className="space-y-10">
-      <div className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
+      <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-14">
         <div>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary">
-            Selected celebrations
+            {en ? "Selected celebrations" : "Pilihan perayaan"}
           </p>
-          <h2 className="mt-3 max-w-[11ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.02] text-primary md:text-5xl">
-            Momen yang kami bantu jaga.
+          <h2 className="mt-3 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+            {en ? "Celebrations we helped hold together." : "Momen yang kami bantu jaga tetap utuh."}
           </h2>
         </div>
-        <p className="max-w-2xl text-sm leading-7 text-muted-foreground lg:justify-self-end md:text-base">
-          Bukan sekadar hasil akhir yang terlihat indah. Kami menjaga ritme, perpindahan,
-          komunikasi, dan keputusan kecil yang membuat acara terasa tenang dari dalam.
+        <p className="max-w-2xl text-sm leading-7 text-muted-foreground lg:justify-self-end md:text-base md:leading-8">
+          {en
+            ? "It is not only about a beautiful result. We look after timing, movement, communication, and the small decisions that make an event feel calm from the inside."
+            : "Bukan sekadar hasil akhir yang terlihat indah. Kami menjaga ritme, perpindahan, komunikasi, dan keputusan kecil yang membuat acara terasa tenang dari dalam."}
         </p>
       </div>
 
@@ -33,16 +35,12 @@ export default function PortfolioSection() {
           return (
             <article
               key={item.name}
-              className={
-                featured
-                  ? "group lg:col-span-7 lg:row-span-2"
-                  : "group lg:col-span-5"
-              }
+              className={featured ? "group lg:col-span-7 lg:row-span-2" : "group lg:col-span-5"}
             >
               <button
                 type="button"
                 onClick={() => setActiveVideo(item.video)}
-                aria-label={`Lihat video ${item.name}`}
+                aria-label={en ? `Watch ${item.name}` : `Lihat video ${item.name}`}
                 className={`relative block w-full overflow-hidden text-left ${featured ? "h-[520px] lg:h-full lg:min-h-[620px]" : "h-[300px]"}`}
               >
                 <Image
@@ -60,7 +58,7 @@ export default function PortfolioSection() {
 
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white md:p-7">
                   <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-white/70">
-                    {item.category} · {item.date}
+                    {en ? item.categoryEn : item.category} · {en ? item.dateEn : item.date}
                   </p>
                   <h3 className={`mt-2 max-w-xl font-[family-name:var(--font-undara-heading)] leading-tight ${featured ? "text-3xl md:text-4xl" : "text-2xl"}`}>
                     {item.name}

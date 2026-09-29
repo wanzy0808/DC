@@ -5717,3 +5717,11 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 - Digital workflow tetap boleh menghubungkan Event Planner dengan Undangan Digital Undara untuk RSVP dan manajemen tamu.
 - Typography Event Planner wajib memakai token `font-undara-heading`, `font-undara-body`, dan `font-undara-mono`; legacy `font-dc-*` tidak dipakai pada surface ini.
 - Source regression: `tests/event-planner-redesign.test.mjs`.
+
+### 29 September 2026 — Event Planner language & layout cleanup
+
+- Seluruh eyebrow, section title, CTA, FAQ, service descriptions, review dates/copy, dan helper copy Event Planner mengikuti global ID/EN toggle; jangan mencampur eyebrow Inggris dengan heading Indonesia pada locale ID.
+- Nama layanan yang memang merupakan product naming seperti Wedding Organizer / Wedding Planner boleh dipertahankan, tetapi narasi pendukung mengikuti locale.
+- Heading besar Event Planner tidak boleh dipaksa ke kolom super sempit seperti `max-w-[10ch]`, `11ch`, atau `12ch`; gunakan rentang baca lebih lapang agar teks tidak turun kata-per-kata.
+- Package rows memakai dua kolom lapang, testimonial memakai baris editorial horizontal, dan FAQ Event Planner memakai divider editorial alih-alih kumpulan rounded cards.
+- Source regression: `tests/event-planner-redesign.test.mjs`.
