@@ -3,44 +3,71 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import {
   ArrowDownRight,
   ArrowRight,
   Check,
   MessageCircle,
-  Quote,
 } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 import MarketingTextReveal from "@/components/DigitalInvitation/MarketingTextReveal";
 import ScrollReveal from "@/components/EventPlanner/ScrollReveal";
-import FounderSection from "@/components/EventPlanner/FounderSection";
 import ServicesSection from "@/components/EventPlanner/ServicesSection";
-import PortfolioSection from "@/components/EventPlanner/PortfolioSection";
 import FaqSection from "@/components/Marketing/FaqSection";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import {
-  plannerFaq,
-  plannerPackages,
-  plannerReviews,
-} from "@/data/services/event-planner";
+import { plannerFaq, plannerPackages } from "@/data/services/event-planner";
 
-const WHATSAPP_NUMBER = "6282124786516";
+const WHATSAPP_NUMBER = "6281285009609";
 
 function consultationUrl(message: string) {
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+function PlannerNote({
+  src,
+  className,
+  motionY = 10,
+  rotate = 0,
+  reduced,
+}: {
+  src: string;
+  className: string;
+  motionY?: number;
+  rotate?: number;
+  reduced: boolean;
+}) {
+  return (
+    <motion.div
+      aria-hidden="true"
+      className={`pointer-events-none absolute z-0 ${className}`}
+      animate={
+        reduced
+          ? undefined
+          : {
+              y: [0, -motionY, 0],
+              rotate: [rotate, rotate + 1.4, rotate],
+            }
+      }
+      transition={{ duration: 10 + motionY * 0.18, repeat: Infinity, ease: "easeInOut" }}
+    >
+      <Image src={src} alt="" fill sizes="36vw" className="object-contain" />
+    </motion.div>
+  );
+}
+
 export default function EventPlannerPage() {
   const { locale } = useLanguage();
   const scrollRoot = useRef<HTMLElement>(null);
+  const reduced = Boolean(useReducedMotion());
   const en = locale === "en";
 
   const scope = en
-    ? ["Concept & budget", "Vendor & venue", "Rundown & crew", "Guest flow"]
-    : ["Konsep & anggaran", "Vendor & venue", "Rundown & tim", "Alur tamu"];
+    ? ["Wedding Organizer", "Wedding Planner", "Anniversary", "Baby Shower"]
+    : ["Wedding Organizer", "Wedding Planner", "Anniversary", "Baby Shower"];
 
   const faqItems = plannerFaq.map((item) => ({
     question: en ? item.questionEn : item.question,
@@ -63,31 +90,42 @@ export default function EventPlannerPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
-            className="mx-auto flex w-[92%] max-w-[1240px] flex-col gap-24 py-10 sm:w-[86vw] md:gap-32 md:py-16"
+            className="mx-auto flex w-full max-w-none flex-col gap-24 px-5 py-8 sm:px-8 md:gap-28 md:py-12 lg:px-12 xl:px-16 2xl:px-20"
             scrollRoot={scrollRoot}
             ready
             locale={locale}
           >
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="relative grid min-h-[620px] items-center gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 lg:pb-20">
-                <div className="relative z-10 py-4 lg:py-10">
+              <section className="relative mx-auto grid min-h-[calc(100dvh-150px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden border-b border-primary/25 pb-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -left-[8%] top-[2%] h-[62%] w-[48%] rounded-full bg-[radial-gradient(ellipse,rgba(112,59,59,0.10),transparent_68%)] blur-3xl dark:bg-[radial-gradient(ellipse,rgba(214,179,140,0.08),transparent_68%)]"
+                />
+
+                <PlannerNote
+                  src="/assets/note1.webp"
+                  className="-right-[7%] top-[2%] h-[56%] w-[44%] opacity-[0.20] lg:opacity-[0.26] dark:opacity-[0.13]"
+                  motionY={12}
+                  rotate={7}
+                  reduced={reduced}
+                />
+
+                <div className="relative z-10 max-w-3xl py-8 lg:py-12">
                   <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.22em] text-primary md:text-xs">
-                    {en
-                      ? "Event planning · coordination · execution"
-                      : "Perencanaan · koordinasi · eksekusi acara"}
+                    {en ? "Event Planner via Undara" : "Event Planner via Undara"}
                   </p>
 
-                  <h1 className="mt-5 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,5.5vw,5.75rem)] leading-[0.96] tracking-[-0.03em] text-primary">
-                    {en ? "Be present in your moment." : "Hadir penuh di momenmu."}
+                  <h1 className="mt-5 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,6vw,6.6rem)] leading-[0.94] tracking-[-0.035em] text-primary">
+                    {en ? "Need an Event Planner?" : "Butuh Event Planner?"}
                     <span className="block text-foreground">
-                      {en ? "We keep it moving." : "Kami jaga alurnya."}
+                      {en ? "Tell us about the event first." : "Ceritakan dulu acaranya."}
                     </span>
                   </h1>
 
                   <p className="mt-7 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                     {en
-                      ? "From the first decision to the final cue, Undara brings structure to the concept, vendors, rundown, crew, and guest flow so you do not have to operate your own event."
-                      : "Dari keputusan pertama sampai cue terakhir, Undara merapikan konsep, vendor, rundown, tim, dan alur tamu supaya kamu tidak perlu menjadi operator di acaramu sendiri."}
+                      ? "Send the event type, date, city, venue if available, and estimated guest count. Undara will help collect the initial requirements and connect you for the next discussion."
+                      : "Kirim jenis acara, tanggal, kota, venue kalau sudah ada, dan perkiraan jumlah tamu. Undara bantu menerima kebutuhan awal lalu menghubungkan kamu untuk pembahasan berikutnya."}
                   </p>
 
                   <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -95,26 +133,26 @@ export default function EventPlannerPage() {
                       <a
                         href={consultationUrl(
                           en
-                            ? "Hi, I would like to consult about Undara Event Planner."
-                            : "Halo, aku ingin konsultasi Event Planner Undara.",
+                            ? "Hi, I would like to ask about Event Planner services via Undara."
+                            : "Halo, aku ingin tanya mengenai layanan Event Planner via Undara.",
                         )}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {en ? "Tell Us About Your Event" : "Ceritakan Acaramu"}
-                        <ArrowRight className="h-4 w-4" />
+                        <MessageCircle className="h-4 w-4" />
+                        {en ? "Chat on WhatsApp" : "Tanya via WhatsApp"}
                       </a>
                     </Button>
 
                     <Button asChild size="lg" variant="outline">
-                      <a href="#cara-kerja">
-                        {en ? "How We Work" : "Cara Kami Bekerja"}
+                      <a href="#cara-mulai">
+                        {en ? "See How to Start" : "Lihat Cara Mulai"}
                         <ArrowDownRight className="h-4 w-4" />
                       </a>
                     </Button>
                   </div>
 
-                  <div className="mt-10 flex max-w-2xl flex-wrap gap-x-7 gap-y-3 border-t border-primary/20 pt-5">
+                  <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 border-t border-primary/20 pt-5">
                     {scope.map((item) => (
                       <p
                         key={item}
@@ -126,130 +164,105 @@ export default function EventPlannerPage() {
                   </div>
                 </div>
 
-                <div className="relative min-h-[460px] lg:min-h-[620px]">
-                  <div className="absolute inset-[4%_0_0_5%] overflow-hidden rounded-[42px_8px_42px_8px] border border-primary/25 bg-card shadow-[0_30px_90px_rgba(70,42,32,0.14)]">
+                <div className="relative z-10 min-h-[460px] lg:min-h-[680px]">
+                  <motion.div
+                    className="absolute inset-[4%_0_2%_4%] overflow-hidden rounded-[48px_8px_48px_8px] border border-primary/25 bg-card shadow-[0_30px_90px_rgba(70,42,32,0.14)]"
+                    initial={reduced ? false : { opacity: 0, scale: 1.025, y: 14 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                  >
                     <Image
                       src="/assets/marketing/event-planner/hero.webp"
                       alt={
                         en
-                          ? "Undara Event Planner team coordinating an event"
-                          : "Tim Event Planner Undara mengoordinasikan jalannya acara"
+                          ? "Event planning consultation and preparation"
+                          : "Konsultasi dan persiapan kebutuhan Event Planner"
                       }
                       fill
                       priority
-                      sizes="(max-width: 1024px) 92vw, 48vw"
+                      sizes="(max-width: 1024px) 94vw, 54vw"
                       className="object-cover"
                     />
-                    <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(24,16,12,0.72)_0%,rgba(24,16,12,0.08)_42%,transparent_68%)]" />
-                    <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between gap-4 text-white md:bottom-8 md:left-8 md:right-8">
-                      <div className="max-w-md">
-                        <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-white/70">
-                          {en ? "Behind every calm celebration" : "Di balik perayaan yang terasa tenang"}
-                        </p>
-                        <p className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl leading-tight md:text-3xl">
-                          {en
-                            ? "A team is keeping every detail in motion."
-                            : "Ada tim yang menjaga setiap detail tetap bergerak."}
-                        </p>
-                      </div>
-                      <span className="hidden h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/35 bg-black/10 backdrop-blur-sm sm:flex">
-                        <ArrowDownRight className="h-5 w-5" />
-                      </span>
+                    <div className="absolute inset-0 bg-[linear-gradient(to_top,rgba(24,16,12,0.74)_0%,rgba(24,16,12,0.12)_48%,transparent_72%)]" />
+                    <div className="absolute bottom-6 left-6 right-6 text-white md:bottom-8 md:left-8 md:right-8">
+                      <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.17em] text-white/70">
+                        {en ? "Useful details to prepare" : "Informasi yang berguna untuk disiapkan"}
+                      </p>
+                      <p className="mt-2 max-w-lg font-[family-name:var(--font-undara-heading)] text-2xl leading-tight md:text-3xl">
+                        {en
+                          ? "Date, venue, guest count, and the kind of help you are looking for."
+                          : "Tanggal, venue, jumlah tamu, dan bantuan seperti apa yang sedang kamu cari."}
+                      </p>
                     </div>
-                  </div>
+                  </motion.div>
                 </div>
               </section>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <FounderSection locale={locale} />
-            </ScrollReveal>
-
-            <ScrollReveal scrollRoot={scrollRoot}>
-              <div id="cara-kerja" className="scroll-mt-24">
-                <ServicesSection locale={locale} />
-              </div>
-            </ScrollReveal>
-
-            <ScrollReveal scrollRoot={scrollRoot}>
-              <PortfolioSection locale={locale} />
-            </ScrollReveal>
-
-            <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="grid gap-8 border-y border-primary/25 py-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-end lg:gap-14 lg:py-16">
-                <div>
-                  <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                    {en ? "Connected digital workflow" : "Alur digital terhubung"}
-                  </p>
-                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
-                    {en
-                      ? "Planning and guest data, moving in one direction."
-                      : "Planning dan data tamu bergerak dalam satu alur."}
-                  </h2>
-                </div>
-
-                <div className="flex flex-col gap-7">
-                  <p className="max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
-                    {en
-                      ? "When useful, your event can connect with Undara Digital Invitations for publishing, RSVP, and guest management. The planning team stays focused on decisions and execution while the digital layer keeps operations organized."
-                      : "Bila dibutuhkan, acara dapat terhubung dengan Undangan Digital Undara untuk publikasi, RSVP, dan manajemen tamu. Tim planner tetap fokus pada keputusan dan eksekusi, sementara sistem digital membantu operasional tetap rapi."}
-                  </p>
-                  <Button asChild variant="outline" className="w-fit">
-                    <Link href="/d-invitation">
-                      {en ? "Explore Digital Invitations" : "Lihat Undangan Digital"}
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </Button>
+              <section id="cara-mulai" className="relative mx-auto w-full max-w-[1500px] scroll-mt-24 py-4">
+                <PlannerNote
+                  src="/assets/note2.webp"
+                  className="-left-[10%] top-[2%] h-[68%] w-[40%] -rotate-6 opacity-[0.12] lg:opacity-[0.18] dark:opacity-[0.08]"
+                  motionY={8}
+                  rotate={-6}
+                  reduced={reduced}
+                />
+                <div className="relative z-10 lg:pl-[8%]">
+                  <ServicesSection locale={locale} />
                 </div>
               </section>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="space-y-10" aria-labelledby="event-planner-packages">
-                <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-14">
+              <section className="relative mx-auto w-full max-w-[1500px] overflow-hidden border-y border-primary/25 py-12 md:py-16 lg:py-20">
+                <PlannerNote
+                  src="/assets/note3.webp"
+                  className="-right-[8%] -top-[4%] h-[72%] w-[40%] rotate-6 opacity-[0.13] lg:opacity-[0.20] dark:opacity-[0.09]"
+                  motionY={11}
+                  rotate={6}
+                  reduced={reduced}
+                />
+
+                <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-16">
                   <div>
                     <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                      {en ? "Service scope" : "Cakupan layanan"}
+                      {en ? "What can you ask about?" : "Apa yang bisa kamu tanyakan?"}
                     </p>
-                    <h2
-                      id="event-planner-packages"
-                      className="mt-3 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl"
-                    >
+                    <h2 className="mt-3 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
                       {en
-                        ? "Start from the support your event actually needs."
-                        : "Mulai dari dukungan yang benar-benar dibutuhkan acaramu."}
+                        ? "Start with the service that sounds closest to your event."
+                        : "Mulai dari layanan yang paling mendekati kebutuhan acaramu."}
                     </h2>
                   </div>
 
                   <p className="max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                     {en
-                      ? "We do not force one generic price across different events. Venue, guest count, crew, vendors, and scope are discussed first before we prepare a proposal."
-                      : "Kami tidak memaksakan satu harga generik untuk semua acara. Venue, jumlah tamu, kebutuhan tim, vendor, dan scope dibahas lebih dulu sebelum penawaran disusun."}
+                      ? "You do not need to choose the final package before chatting. These categories are simply a starting point so your requirements are easier to understand."
+                      : "Kamu tidak harus menentukan paket final sebelum chat. Kategori ini hanya titik awal supaya kebutuhanmu lebih mudah dipahami."}
                   </p>
                 </div>
 
-                <div className="border-t border-primary/30">
+                <div className="relative z-10 mt-10 border-t border-primary/30">
                   {plannerPackages.map((item) => {
                     const features = en ? item.featuresEn : item.features;
+
                     return (
                       <article
                         key={item.key}
-                        className="grid gap-7 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-12 md:py-10"
+                        className="grid gap-7 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12"
                       >
                         <div>
-                          <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-                            {en ? "Event service" : "Layanan acara"}
-                          </p>
-                          <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl">
+                          <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl lg:text-4xl">
                             {en ? item.nameEn : item.name}
                           </h3>
-                          <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground md:text-base">
+                          <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                             {en ? item.descriptionEn : item.description}
                           </p>
                         </div>
 
                         <div>
-                          <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-6">
+                          <ul className="grid gap-3 sm:grid-cols-2 sm:gap-x-8">
                             {features.map((feature) => (
                               <li
                                 key={feature}
@@ -267,7 +280,7 @@ export default function EventPlannerPage() {
                               target="_blank"
                               rel="noreferrer"
                             >
-                              {en ? "Consult" : "Konsultasi"}
+                              {en ? "Ask about this" : "Tanya layanan ini"}
                               <ArrowRight className="h-4 w-4" />
                             </a>
                           </Button>
@@ -276,85 +289,72 @@ export default function EventPlannerPage() {
                     );
                   })}
                 </div>
-
-                <p className="font-[family-name:var(--font-undara-mono)] text-[10px] text-muted-foreground">
-                  WhatsApp · +62 821-2478-6516
-                </p>
               </section>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="space-y-9">
-                <div className="max-w-4xl">
+              <section className="mx-auto grid w-full max-w-[1500px] gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16 lg:pb-18">
+                <div>
                   <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                    {en ? "Client stories" : "Cerita klien"}
+                    {en ? "Already using Undara?" : "Sudah pakai Undara?"}
                   </p>
-                  <h2 className="mt-3 max-w-[22ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
-                    {en
-                      ? "When hosts can truly be present in their own celebration."
-                      : "Saat host bisa benar-benar hadir di acaranya sendiri."}
+                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+                    {en ? "Digital invitations can stay separate." : "Undangan Digital tetap bisa dipakai terpisah."}
                   </h2>
                 </div>
 
-                <div className="border-y border-primary/25">
-                  {plannerReviews.map((item) => (
-                    <article
-                      key={`${item.name}-${item.date}`}
-                      className="grid gap-5 border-b border-primary/20 py-8 last:border-b-0 md:grid-cols-[0.3fr_0.7fr] md:gap-10 md:py-9"
-                    >
-                      <div>
-                        <p className="text-sm font-semibold">{item.name}</p>
-                        <p className="mt-1 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                          {en ? item.dateEn : item.date}
-                        </p>
-                      </div>
-
-                      <div className="flex gap-4">
-                        <Quote className="mt-1 h-5 w-5 shrink-0 text-primary/55" />
-                        <p className="max-w-3xl font-[family-name:var(--font-undara-heading)] text-xl italic leading-8 text-foreground md:text-2xl md:leading-9">
-                          “{en ? item.reviewEn : item.review}”
-                        </p>
-                      </div>
-                    </article>
-                  ))}
+                <div className="flex flex-col gap-7">
+                  <p className="max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                    {en
+                      ? "If you need RSVP and guest management, Undara Digital Invitations can be used independently from the Event Planner consultation."
+                      : "Kalau kamu membutuhkan RSVP dan manajemen tamu, Undangan Digital Undara tetap bisa digunakan terpisah dari konsultasi Event Planner."}
+                  </p>
+                  <Button asChild variant="outline" className="w-fit">
+                    <Link href="/d-invitation">
+                      {en ? "Explore Digital Invitations" : "Lihat Undangan Digital"}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
                 </div>
               </section>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <FaqSection
-                eyebrow={en ? "Before we plan" : "Sebelum kita mulai"}
-                title={en ? "Questions before we begin" : "Pertanyaan sebelum kita mulai"}
-                description={
-                  en
-                    ? "The things we usually discuss before defining the event scope and team requirements."
-                    : "Hal-hal yang paling sering dibahas sebelum menentukan scope acara dan kebutuhan tim."
-                }
-                items={faqItems}
-                wide
-                editorial
-              />
+              <section className="mx-auto w-full max-w-[1400px]">
+                <FaqSection
+                  eyebrow={en ? "Frequently asked" : "Yang sering ditanyakan"}
+                  title={en ? "Before you send the first message" : "Sebelum mengirim chat pertama"}
+                  description={
+                    en
+                      ? "A few practical details about how this Event Planner connection works."
+                      : "Beberapa hal praktis tentang cara layanan Event Planner ini berjalan."
+                  }
+                  items={faqItems}
+                  wide
+                  editorial
+                />
+              </section>
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="relative overflow-hidden border-y border-primary/30 py-12 md:py-16">
-                <div className="pointer-events-none absolute -right-12 top-1/2 h-56 w-56 -translate-y-1/2 rounded-full border border-primary/15 md:h-80 md:w-80" />
-                <div className="pointer-events-none absolute right-8 top-1/2 h-32 w-32 -translate-y-1/2 rounded-full border border-primary/20 md:h-48 md:w-48" />
+              <section className="relative mx-auto mb-4 w-full max-w-[1500px] overflow-hidden border-y border-primary/30 py-14 md:py-20">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -right-[8%] top-1/2 h-[34rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.11),transparent_68%)] blur-2xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.08),transparent_68%)]"
+                />
 
-                <div className="relative grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-12">
+                <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-14">
                   <div>
                     <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                      {en ? "Start with the story" : "Mulai dari ceritanya"}
+                      {en ? "Start here" : "Mulai dari sini"}
                     </p>
-                    <h2 className="mt-3 max-w-[24ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-6xl">
-                      {en
-                        ? "Tell us about the event. We will organize the rest together."
-                        : "Ceritakan acaranya. Detail lainnya kita rapikan bersama."}
+                    <h2 className="mt-3 max-w-[22ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.03] text-primary md:text-6xl">
+                      {en ? "Send the event details you already have." : "Kirim detail acara yang sudah kamu punya."}
                     </h2>
                     <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                       {en
-                        ? "Bring the date, venue, guest estimate, or even just an idea. Christine and the team will help map the priorities before moving into a proposal."
-                        : "Bawa tanggal, venue, perkiraan tamu, atau bahkan baru sebuah ide. Christine dan tim akan membantu memetakan prioritas sebelum masuk ke penawaran."}
+                        ? "Even if it is only the date and type of event, that is enough to begin the conversation."
+                        : "Walaupun baru ada tanggal dan jenis acaranya saja, itu sudah cukup untuk mulai ngobrol."}
                     </p>
                   </div>
 
@@ -362,14 +362,14 @@ export default function EventPlannerPage() {
                     <a
                       href={consultationUrl(
                         en
-                          ? "Hi, I would like to ask about Undara Event Planner."
-                          : "Halo, aku ingin tanya2 mengenai paket Event Planner.",
+                          ? "Hi, I would like to ask about Event Planner services via Undara."
+                          : "Halo, aku ingin tanya mengenai layanan Event Planner via Undara.",
                       )}
                       target="_blank"
                       rel="noreferrer"
                     >
                       <MessageCircle className="h-4 w-4" />
-                      {en ? "Start a Consultation" : "Mulai Konsultasi"}
+                      {en ? "WhatsApp Undara" : "WhatsApp Undara"}
                     </a>
                   </Button>
                 </div>
