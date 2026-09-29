@@ -4,230 +4,169 @@ export const plannerPackages = [
     name: "Wedding Organizer",
     nameEn: "Wedding Organizer",
     description:
-      "Untuk pasangan yang sudah menyiapkan sebagian besar kebutuhan dan membutuhkan tim yang menjaga koordinasi menjelang serta saat hari-H.",
+      "Untuk pasangan yang sebagian besar persiapannya sudah berjalan dan membutuhkan bantuan koordinasi menjelang serta pada hari acara.",
     descriptionEn:
-      "For couples who have prepared most of the wedding and need a team to coordinate the final preparation and event day.",
+      "For couples whose preparation is mostly underway and who need coordination support leading up to and during the event day.",
     features: [
       "Finalisasi rundown & technical meeting",
       "Koordinasi vendor, venue, keluarga & PIC",
-      "Tim operasional pada hari acara",
-      "Alur tamu, cue acara & contingency handling",
+      "Kebutuhan tim operasional hari acara",
+      "Alur tamu, cue acara & rencana cadangan",
     ],
     featuresEn: [
       "Final rundown & technical meeting",
       "Vendor, venue, family & PIC coordination",
-      "Operational team on event day",
-      "Guest flow, event cues & contingency handling",
+      "Event-day operational team needs",
+      "Guest flow, event cues & contingency plan",
     ],
-    waMessage: "Halo, aku ingin tanya2 mengenai paket Wedding Organizer.",
-    waMessageEn: "Hi, I would like to ask about the Wedding Organizer service.",
+    waMessage: "Halo, aku ingin tanya mengenai kebutuhan Wedding Organizer.",
+    waMessageEn: "Hi, I would like to ask about Wedding Organizer support.",
   },
   {
     key: "wedding-planner",
     name: "Wedding Planner",
     nameEn: "Wedding Planner",
     description:
-      "Pendampingan menyeluruh sejak konsep awal sampai hari acara untuk pasangan yang ingin proses persiapan lebih terarah.",
+      "Untuk pasangan yang ingin pendampingan lebih awal, mulai dari konsep, budget, vendor, timeline, sampai persiapan hari acara.",
     descriptionEn:
-      "End-to-end planning from the first concept to event day for couples who want a clearer, more structured preparation process.",
+      "For couples who want support from an earlier stage, covering concept, budget, vendors, timeline, and event-day preparation.",
     features: [
-      "Konsep, prioritas budget & master timeline",
-      "Shortlist dan koordinasi vendor",
-      "Meeting berkala & progress tracking",
-      "Eksekusi hari-H bersama tim organizer",
+      "Konsep & prioritas budget",
+      "Shortlist serta koordinasi vendor",
+      "Master timeline & progress meeting",
+      "Persiapan eksekusi hari acara",
     ],
     featuresEn: [
-      "Concept, budget priorities & master timeline",
+      "Concept & budget priorities",
       "Vendor shortlist & coordination",
-      "Regular meetings & progress tracking",
-      "Event-day execution with the organizer team",
+      "Master timeline & progress meetings",
+      "Event-day execution preparation",
     ],
-    waMessage: "Halo, aku ingin tanya2 mengenai paket Wedding Planner.",
-    waMessageEn: "Hi, I would like to ask about the Wedding Planner service.",
+    waMessage: "Halo, aku ingin tanya mengenai kebutuhan Wedding Planner.",
+    waMessageEn: "Hi, I would like to ask about Wedding Planner support.",
   },
   {
     key: "silver-golden-wedding",
     name: "Silver / Golden Wedding",
     nameEn: "Silver / Golden Wedding",
     description:
-      "Perayaan anniversary 25 atau 50 tahun yang hangat, personal, dan dirancang untuk mempertemukan kembali keluarga serta cerita perjalanan bersama.",
+      "Untuk perayaan anniversary 25 atau 50 tahun yang membutuhkan konsep, koordinasi keluarga, vendor, dan susunan acara yang lebih terarah.",
     descriptionEn:
-      "A warm and personal 25th or 50th anniversary celebration designed around family, memories, and the story built together.",
+      "For 25th or 50th anniversary celebrations that need support with concept, family coordination, vendors, and event flow.",
     features: [
-      "Konsep anniversary & family storytelling",
+      "Konsep anniversary & cerita keluarga",
       "Renewal moment / ceremony flow",
-      "Dekorasi, entertainment & koordinasi vendor",
-      "Guest experience untuk keluarga lintas generasi",
+      "Dekorasi, entertainment & vendor",
+      "Alur tamu lintas generasi",
     ],
     featuresEn: [
-      "Anniversary concept & family storytelling",
+      "Anniversary concept & family story",
       "Renewal moment / ceremony flow",
-      "Decor, entertainment & vendor coordination",
-      "Guest experience across generations",
+      "Decor, entertainment & vendors",
+      "Guest flow across generations",
     ],
-    waMessage: "Halo, aku ingin tanya2 mengenai paket Silver / Golden Wedding.",
-    waMessageEn: "Hi, I would like to ask about the Silver / Golden Wedding service.",
+    waMessage: "Halo, aku ingin tanya mengenai kebutuhan Silver / Golden Wedding.",
+    waMessageEn: "Hi, I would like to ask about Silver / Golden Wedding support.",
   },
   {
     key: "baby-shower",
     name: "Baby Shower",
     nameEn: "Baby Shower",
     description:
-      "Perayaan menyambut anggota keluarga baru dengan konsep yang ringan, hangat, dan mudah dinikmati oleh keluarga maupun sahabat.",
+      "Untuk baby shower yang membutuhkan bantuan menyusun tema, aktivitas, vendor, konsumsi, dan kebutuhan hari acara.",
     descriptionEn:
-      "A warm, relaxed celebration for welcoming a new family member, designed to be easy for family and friends to enjoy.",
+      "For baby showers that need support with theme, activities, vendors, catering, and event-day requirements.",
     features: [
-      "Konsep tema & styling acara",
-      "Rundown, games & activity planning",
-      "Vendor, dekorasi & koordinasi konsumsi",
-      "Guest flow, dokumentasi & event-day support",
+      "Konsep tema & styling",
+      "Rundown, games & aktivitas",
+      "Vendor, dekorasi & konsumsi",
+      "Dokumentasi & kebutuhan hari acara",
     ],
     featuresEn: [
-      "Theme concept & event styling",
-      "Rundown, games & activity planning",
-      "Vendor, decor & catering coordination",
-      "Guest flow, documentation & event-day support",
+      "Theme concept & styling",
+      "Rundown, games & activities",
+      "Vendors, decor & catering",
+      "Documentation & event-day needs",
     ],
-    waMessage: "Halo, aku ingin tanya2 mengenai paket Baby Shower.",
-    waMessageEn: "Hi, I would like to ask about the Baby Shower service.",
-  },
-] as const;
-
-export const plannerReviews = [
-  {
-    name: "Riko & Sarah",
-    review:
-      "Rundown-nya rapi sekali. Kami dan orang tua benar-benar bisa menikmati acara tanpa sibuk mengurus vendor.",
-    reviewEn:
-      "The rundown was incredibly organized. Our families and we could actually enjoy the celebration without managing vendors ourselves.",
-    date: "Oktober 2025",
-    dateEn: "October 2025",
-  },
-  {
-    name: "Keluarga Wijaya",
-    review:
-      "Anniversary orang tua terasa personal dan semua anggota keluarga punya ruang untuk ikut bercerita tanpa acara terasa kaku.",
-    reviewEn:
-      "Our parents’ anniversary felt deeply personal, and every family member had space to share stories without making the event feel rigid.",
-    date: "Desember 2025",
-    dateEn: "December 2025",
-  },
-  {
-    name: "Nadine",
-    review:
-      "Baby shower-nya ringan, hangat, dan semua aktivitas mengalir. Saya tinggal menikmati waktu bersama keluarga dan teman-teman.",
-    reviewEn:
-      "The baby shower felt warm and effortless. Every activity flowed naturally, so I could simply enjoy the time with family and friends.",
-    date: "Januari 2026",
-    dateEn: "January 2026",
+    waMessage: "Halo, aku ingin tanya mengenai kebutuhan Baby Shower.",
+    waMessageEn: "Hi, I would like to ask about Baby Shower support.",
   },
 ] as const;
 
 export const plannerFaq = [
   {
-    question: "Apa bedanya Wedding Organizer dan Wedding Planner?",
-    questionEn: "What is the difference between a Wedding Organizer and Wedding Planner?",
+    question: "Apa peran Undara untuk layanan Event Planner?",
+    questionEn: "What is Undara's role for Event Planner services?",
     answer:
-      "Wedding Organizer berfokus pada finalisasi dan eksekusi acara, sedangkan Wedding Planner mendampingi lebih awal mulai dari konsep, budget, vendor, timeline, sampai hari-H.",
+      "Undara membantu menerima kebutuhan awal, merangkum informasi dasar acara, lalu menghubungkan kamu ke layanan Event Planner yang relevan. Detail scope, ketersediaan, penawaran, dan pelaksanaan dibahas setelah konsultasi.",
     answerEn:
-      "Wedding Organizer focuses on final preparation and event-day execution, while Wedding Planner starts earlier with concept, budget, vendors, timeline, and the full planning journey.",
+      "Undara helps collect your initial requirements, summarize the basic event information, and connect you with a relevant Event Planner service. Scope, availability, proposal, and execution details are discussed after consultation.",
   },
   {
-    question: "Apakah Event Planner Undara hanya untuk pernikahan?",
-    questionEn: "Is Undara Event Planner only for weddings?",
+    question: "Apakah hanya untuk pernikahan?",
+    questionEn: "Is this only for weddings?",
     answer:
-      "Tidak. Selain Wedding Organizer dan Wedding Planner, Undara juga menangani Silver / Golden Wedding dan Baby Shower. Scope acara lain dapat dibicarakan terlebih dahulu melalui konsultasi.",
+      "Tidak. Kamu juga bisa menanyakan kebutuhan Silver / Golden Wedding, Baby Shower, atau jenis perayaan lain. Ceritakan dulu jenis acaranya melalui WhatsApp.",
     answerEn:
-      "No. Alongside Wedding Organizer and Wedding Planner services, Undara also handles Silver / Golden Weddings and Baby Showers. Other event scopes can be discussed during consultation.",
+      "No. You can also ask about Silver / Golden Weddings, Baby Showers, or other celebrations. Start by telling us the type of event through WhatsApp.",
   },
   {
-    question: "Apakah melayani acara di luar kota?",
-    questionEn: "Do you handle events outside the city?",
+    question: "Siapa yang menangani pelaksanaan acaranya?",
+    questionEn: "Who handles the event execution?",
     answer:
-      "Ya. Kebutuhan luar kota dapat dibahas saat konsultasi dan akan disesuaikan dengan venue, logistik, jumlah tim, serta scope pekerjaan.",
+      "Kebutuhanmu akan diteruskan ke penyedia layanan yang relevan. Pihak yang menangani acara, pembagian scope, dan detail kerja akan dikonfirmasi saat konsultasi.",
     answerEn:
-      "Yes. Out-of-town events can be discussed during consultation and adjusted based on venue, logistics, team size, and scope of work.",
+      "Your requirements will be forwarded to a relevant service provider. The event team, division of scope, and working details will be confirmed during consultation.",
   },
   {
-    question: "Apakah paket Event Planner menampilkan harga tetap?",
-    questionEn: "Do Event Planner services have fixed prices?",
+    question: "Apakah harga Event Planner sudah tetap?",
+    questionEn: "Are Event Planner prices fixed?",
     answer:
-      "Tidak. Setiap acara memiliki kebutuhan, venue, jumlah tamu, dan scope yang berbeda. Tim akan menyusun penawaran setelah konsultasi awal.",
+      "Tidak. Harga bergantung pada jenis acara, tanggal, venue, jumlah tamu, lokasi, kebutuhan tim, dan scope pekerjaan. Penawaran dibahas setelah kebutuhan awal diketahui.",
     answerEn:
-      "No. Every event has different needs, venues, guest counts, and scope. A tailored proposal is prepared after the initial consultation.",
+      "No. Pricing depends on the event type, date, venue, guest count, location, team requirements, and scope. A proposal is discussed after the initial requirements are understood.",
   },
   {
-    question: "Apakah layanan Event Planner bisa terhubung dengan Undangan Digital Undara?",
-    questionEn: "Can Event Planner services connect with Undara Digital Invitations?",
+    question: "Apakah bisa untuk acara di luar kota?",
+    questionEn: "Can I ask about an out-of-town event?",
     answer:
-      "Bisa. Undangan Digital Undara dapat digunakan untuk RSVP dan manajemen tamu, sementara kebutuhan WA Blast tersedia sebagai add-on terpisah.",
+      "Bisa ditanyakan. Ketersediaan untuk luar kota akan dikonfirmasi berdasarkan tanggal, lokasi, kebutuhan logistik, dan scope acara.",
     answerEn:
-      "Yes. Undara Digital Invitations can support RSVP and guest management, while WA Blast is available as a separate add-on.",
-  },
-] as const;
-
-export const plannerPortfolio = [
-  {
-    name: "Aria & Vania",
-    category: "Pernikahan",
-    categoryEn: "Wedding",
-    location: "The Glass House, Bandung",
-    concept: "Intimate Botanical Elegance",
-    date: "12 November 2025",
-    dateEn: "12 November 2025",
-    image:
-      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1000&auto=format&fit=crop",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "Yes. Out-of-town availability will be confirmed based on the date, location, logistics, and event scope.",
   },
   {
-    name: "25th Anniversary — Keluarga Wijaya",
-    category: "Silver Wedding",
-    categoryEn: "Silver Wedding",
-    location: "Jakarta",
-    concept: "A Celebration of 25 Years",
-    date: "20 Januari 2026",
-    dateEn: "20 January 2026",
-    image:
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1000&auto=format&fit=crop",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-  },
-  {
-    name: "Baby Shower Nadine",
-    category: "Baby Shower",
-    categoryEn: "Baby Shower",
-    location: "Bandung",
-    concept: "Soft Garden Afternoon",
-    date: "14 Februari 2026",
-    dateEn: "14 February 2026",
-    image:
-      "https://images.unsplash.com/photo-1583939003579-730e3918a45a2?q=80&w=1000&auto=format&fit=crop",
-    video: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    question: "Apakah bisa memakai Undangan Digital Undara juga?",
+    questionEn: "Can I also use Undara Digital Invitations?",
+    answer:
+      "Bisa. Undangan Digital Undara dapat dipakai terpisah untuk RSVP dan manajemen tamu bila dibutuhkan.",
+    answerEn:
+      "Yes. Undara Digital Invitations can be used separately for RSVP and guest management when needed.",
   },
 ] as const;
 
 export const plannerServices = [
   {
-    title: "Konsep & Anggaran",
-    titleEn: "Concept & Budget",
-    text: "Menyusun konsep, prioritas pengeluaran, timeline, dan ruang gerak anggaran agar keputusan terasa lebih terarah.",
-    textEn: "Shape the concept, spending priorities, timeline, and budget range so each decision has a clearer direction.",
+    title: "Jenis & Tanggal Acara",
+    titleEn: "Event Type & Date",
+    text: "Ceritakan jenis acara dan tanggal yang kamu rencanakan. Belum harus lengkap.",
+    textEn: "Tell us the type of event and the date you are planning. It does not need to be complete yet.",
   },
   {
-    title: "Koordinasi Vendor",
-    titleEn: "Vendor Management",
-    text: "Membantu shortlist vendor, komunikasi kebutuhan, timeline pembayaran, dan sinkronisasi antar vendor.",
-    textEn: "Support vendor shortlisting, requirement communication, payment timelines, and coordination across vendors.",
+    title: "Venue & Jumlah Tamu",
+    titleEn: "Venue & Guest Count",
+    text: "Kalau sudah ada, sertakan venue, kota, dan perkiraan jumlah tamu.",
+    textEn: "If available, include the venue, city, and estimated guest count.",
   },
   {
-    title: "Eksekusi Hari Acara",
-    titleEn: "Event Day Execution",
-    text: "Mengawal rundown, keluarga, vendor, venue, dan perubahan situasi agar host dapat fokus menikmati acara.",
-    textEn: "Manage the rundown, family, vendors, venue, and unexpected changes so hosts can focus on enjoying the event.",
+    title: "Kebutuhan yang Dicari",
+    titleEn: "Support You Need",
+    text: "Sampaikan apakah kamu mencari planner sejak awal, organizer hari acara, atau bantuan untuk jenis perayaan tertentu.",
+    textEn: "Tell us whether you need early-stage planning, event-day organization, or support for a specific type of celebration.",
   },
   {
-    title: "Pengalaman Tamu",
-    titleEn: "Guest Experience",
-    text: "Menghubungkan alur RSVP, seating, greeting, dan kebutuhan onsite dengan produk digital Undara bila diperlukan.",
-    textEn: "Connect RSVP, seating, greeting, and onsite needs with Undara digital products when they help the event flow.",
+    title: "Kami Hubungkan",
+    titleEn: "We Connect You",
+    text: "Setelah kebutuhan dasarnya jelas, Undara membantu menghubungkan kamu untuk pembahasan scope, ketersediaan, dan penawaran.",
+    textEn: "Once the basics are clear, Undara helps connect you for a discussion about scope, availability, and proposal.",
   },
 ] as const;
