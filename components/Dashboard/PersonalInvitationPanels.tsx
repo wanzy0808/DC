@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDashboardI18n } from "@/components/Dashboard/useDashboardI18n";
 import { displayTitleCase } from "@/lib/text/display-title-case";
+import { formatPersonalEnvelopeAddress } from "@/lib/guests/personal-envelope";
 import {
   DashboardEmptyState,
   DashboardPanel,
@@ -244,6 +245,7 @@ export function PersonalInvitationListPanel({
           );
           const editing = editingId === item.id;
           const passwordOpen = passwordId === item.id;
+          const personalEnvelopeAddress = formatPersonalEnvelopeAddress(item);
 
           return (
             <article
@@ -301,6 +303,12 @@ export function PersonalInvitationListPanel({
                       {item.personalGreeting && (
                         <p className="mt-1 break-words text-xs italic text-muted-foreground">
                           {item.personalGreeting}
+                        </p>
+                      )}
+                      {personalEnvelopeAddress && (
+                        <p className="mt-2 break-words rounded-[var(--undara-control-radius)] border border-primary/15 bg-primary/[.035] px-3 py-2 text-xs text-foreground">
+                          <span className="mr-1 font-semibold text-primary">{d("Amplop personal")}:</span>
+                          <span className="undara-ui-name">{personalEnvelopeAddress}</span>
                         </p>
                       )}
                     </>
@@ -390,6 +398,23 @@ export function PersonalInvitationListPanel({
                 <DashboardStatusBadge active={item.personalEnvelopeEnabled !== false}>
                   {item.personalEnvelopeEnabled !== false ? d("Nama amplop aktif") : d("Nama amplop mati")}
                 </DashboardStatusBadge>
+
+                <Button
+                  type="button"
+                  size="sm"
+                  disabled={busyId === item.id}
+                  onClick={() => onPatch(
+                    item.id,
+                    { personalEnvelopeEnabled: item.personalEnvelopeEnabled === false },
+                    item.personalEnvelopeEnabled === false
+                      ? d("Nama penerima di amplop diaktifkan.")
+                      : d("Nama penerima di amplop dimatikan."),
+                  )}
+                >
+                  {item.personalEnvelopeEnabled === false
+                    ? d("Aktifkan nama amplop")
+                    : d("Matikan nama amplop")}
+                </Button>
 
                 <Button
                   type="button"
