@@ -12,6 +12,8 @@ export type GuestInvitationForm = {
   groupText: string;
   personalAddressee: string;
   personalGreeting: string;
+  personalEnvelopeEnabled: boolean;
+  personalLanguage: "ID" | "EN";
 };
 
 export const emptyGuestInvitationForm: GuestInvitationForm = {
@@ -21,6 +23,8 @@ export const emptyGuestInvitationForm: GuestInvitationForm = {
   groupText: "",
   personalAddressee: "",
   personalGreeting: "",
+  personalEnvelopeEnabled: true,
+  personalLanguage: "ID",
 };
 
 export function guestInvitationFormFrom(guest: PersonalInvitationGuest): GuestInvitationForm {
@@ -31,6 +35,8 @@ export function guestInvitationFormFrom(guest: PersonalInvitationGuest): GuestIn
     groupText: (guest.tags ?? []).join(", "),
     personalAddressee: guest.personalAddressee || "",
     personalGreeting: guest.personalGreeting || "",
+    personalEnvelopeEnabled: guest.personalEnvelopeEnabled !== false,
+    personalLanguage: guest.personalLanguage === "EN" ? "EN" : "ID",
   };
 }
 
@@ -43,6 +49,8 @@ export function guestInvitationProfilePayload(value: GuestInvitationForm) {
     tags: Array.from(new Set(value.groupText.split(",").map((item) => item.trim()).filter(Boolean))),
     personalAddressee: value.personalAddressee.trim(),
     personalGreeting: value.personalGreeting.trim(),
+    personalEnvelopeEnabled: value.personalEnvelopeEnabled,
+    personalLanguage: value.personalLanguage,
   };
 }
 
@@ -122,18 +130,51 @@ export function PersonalInvitationGuestFields({
           {d("Pengaturan tambahan")}
         </summary>
         <div className="mt-4 space-y-4">
+          <div className="rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.025] p-3">
+            <label className="flex items-start justify-between gap-4">
+              <span className="min-w-0">
+                <strong className="block text-sm font-semibold text-foreground">{d("Tampilkan nama penerima di amplop")}</strong>
+                <span className="mt-1 block text-xs leading-5 text-muted-foreground">{d("Matikan untuk memakai amplop umum tanpa nama tamu.")}</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={value.personalEnvelopeEnabled}
+                onChange={(event) => set("personalEnvelopeEnabled", event.target.checked)}
+                disabled={disabled}
+                className="mt-1 h-4 w-4 accent-primary"
+                aria-label={d("Tampilkan nama penerima di amplop")}
+              />
+            </label>
+            {value.personalEnvelopeEnabled && (
+              <label className="mt-3 block min-w-0 text-sm font-medium text-foreground">
+                {d("Bahasa sapaan amplop")}
+                <select
+                  value={value.personalLanguage}
+                  onChange={(event) => set("personalLanguage", event.target.value as "ID" | "EN")}
+                  disabled={disabled}
+                  className="mt-1.5 min-h-10 w-full border border-primary/25 bg-background px-3 text-sm text-foreground"
+                >
+                  <option value="ID">Indonesia</option>
+                  <option value="EN">English</option>
+                </select>
+              </label>
+            )}
+          </div>
           <label className="block min-w-0 text-sm font-medium text-foreground">
             {d("Nama di amplop (opsional)")}
             <Input
               value={value.personalAddressee}
               maxLength={160}
               onChange={(event) => set("personalAddressee", event.target.value)}
-              placeholder={d("Contoh: Bapak Andi & Keluarga")}
-              disabled={disabled}
+              placeholder={value.recipientType === "COUPLE" ? d("Contoh: Andi & Sari") : d("Contoh: Bapak Andi & Keluarga")}
+              disabled={disabled || !value.personalEnvelopeEnabled}
               className="mt-1.5"
             />
             <span className="mt-1 block text-xs text-muted-foreground">
               {d("Kosongkan untuk memakai nama tamu di daftar.")}
+              {value.recipientType === "COUPLE" && (
+                <> {d("Untuk pasangan, tulis dua nama dengan tanda & agar sapaan Bapak/Ibu atau Mr/Mrs terbentuk otomatis.")}</>
+              )}
             </span>
           </label>
           <label className="block min-w-0 text-sm font-medium text-foreground">
