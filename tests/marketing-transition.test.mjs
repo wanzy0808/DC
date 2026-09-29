@@ -19,9 +19,12 @@ test("marketing transitions use woodland foliage instead of the old pink veil", 
   assert.match(styles, /branch-03\.webp/);
   assert.match(styles, /branch-06\.webp/);
   assert.doesNotMatch(styles, /@keyframes undara-marketing-veil-in|@keyframes undara-marketing-veil-out/);
+  assert.doesNotMatch(styles, /undara-portal-transition__[^{]+\{[^}]*hue-rotate/s);
 
   assert.match(doorScene, /function startWoodlandCover\(\)/);
-  assert.match(doorScene, /color="#6D5848"/);
+  assert.match(doorScene, /color="#4F463A"/);
+  assert.match(doorScene, /color=\{isDarkMode \? "#D6B38C" : "#B28B5E"\}/);
+  assert.match(doorScene, /metal: "#B89168"/);
   assert.doesNotMatch(doorScene, /#e8a9bd|startRoseCover/);
 });
 
