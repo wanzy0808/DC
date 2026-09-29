@@ -1,10 +1,9 @@
 "use client";
 
-import { AlignCenter, AlignLeft, AlignRight, Eye, EyeOff, Lock, Unlock } from "lucide-react";
+import { AlignCenter, AlignLeft, AlignRight, Lock, RotateCcw } from "lucide-react";
 import { invitationSectionItems, type InvitationSections } from "@/lib/templates/sections";
 import LayerAnimationControls from "@/components/InvitationStudio/LayerAnimationControls";
 import {
-  MAX_ASSET_LAYERS,
   studioObjectSections,
   type InvitationAssetLayer,
   type StudioObjectSection,
@@ -18,6 +17,7 @@ type Props = {
   layer: InvitationAssetLayer;
   selectedIndex: number;
   layerCount: number;
+  maxLayers: number;
   sections: InvitationSections;
   onClose: () => void;
   onUpdate: (id: string, patch: Partial<InvitationAssetLayer>) => void;
@@ -46,6 +46,7 @@ export default function TextLayerInspector({
   layer,
   selectedIndex,
   layerCount,
+  maxLayers,
   sections,
   onClose,
   onUpdate,
@@ -85,45 +86,43 @@ export default function TextLayerInspector({
     </label>
   );
 
+  const optionalNumberInput = (
+    label: string,
+    value: number | undefined,
+    min: number,
+    max: number,
+    step: number,
+    suffix: string,
+    patch: (value: number | undefined) => Partial<InvitationAssetLayer>,
+  ) => (
+    <label className="undara-studio-layer-field">
+      <span>{label}</span>
+      <span className="undara-studio-layer-number">
+        <input
+          type="number"
+          min={min}
+          max={max}
+          step={step}
+          value={value ?? ""}
+          placeholder={en ? "Auto" : "Otomatis"}
+          onFocus={(event) => event.currentTarget.select()}
+          onChange={(event) => {
+            if (!event.currentTarget.value) return onUpdate(layer.id, patch(undefined));
+            const next = event.currentTarget.valueAsNumber;
+            if (Number.isFinite(next)) onUpdate(layer.id, patch(clamp(next, min, max)));
+          }}
+        />
+        <small>{suffix}</small>
+      </span>
+    </label>
+  );
+
   return (
     <aside className="undara-studio-layer-side undara-studio-text-side" aria-label={en ? "Text properties" : "Properti teks"}>
       <InvitationFonts families={studioTextFontFamilies} />
       <div className="undara-studio-layer-side-head">
         <strong>{en ? "Text box" : "Kotak teks"}</strong>
         <button type="button" onClick={onClose} aria-label={en ? "Close text properties" : "Tutup properti teks"} title={en ? "Close" : "Tutup"}>×</button>
-      </div>
-
-      <label className="undara-studio-layer-field">
-        <span>{en ? "Layer name" : "Nama layer"}</span>
-        <input
-          type="text"
-          maxLength={60}
-          value={layer.name ?? ""}
-          placeholder={en ? "Optional" : "Opsional"}
-          onChange={(event) => onUpdate(layer.id, { name: event.target.value || undefined })}
-          className="h-10 rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-3 text-xs outline-none focus:border-primary"
-        />
-      </label>
-
-      <div className="grid grid-cols-2 gap-2">
-        <button
-          type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
-          aria-pressed={Boolean(layer.locked)}
-          onClick={() => onUpdate(layer.id, { locked: layer.locked ? undefined : true })}
-        >
-          {layer.locked ? <Lock size={14} /> : <Unlock size={14} />}
-          {layer.locked ? (en ? "Locked" : "Terkunci") : (en ? "Lock" : "Kunci")}
-        </button>
-        <button
-          type="button"
-          className="flex min-h-10 items-center justify-center gap-2 rounded-[var(--undara-control-radius)] border border-primary/40 px-2 text-xs font-medium text-primary hover:bg-primary/10"
-          aria-pressed={!layer.hidden}
-          onClick={() => onUpdate(layer.id, { hidden: layer.hidden ? undefined : true })}
-        >
-          {layer.hidden ? <EyeOff size={14} /> : <Eye size={14} />}
-          {layer.hidden ? (en ? "Hidden" : "Tersembunyi") : (en ? "Visible" : "Terlihat")}
-        </button>
       </div>
 
       <div className="flex items-start gap-2 rounded-[var(--undara-control-radius)] border border-primary/20 bg-primary/[.04] px-3 py-2 text-[10px] leading-4 text-muted-foreground">
@@ -268,7 +267,10 @@ export default function TextLayerInspector({
         </div>
       )}
 
-      {numberInput(en ? "Box width" : "Lebar kotak", layer.width, 5, 85, 0.1, "%", (width) => ({ width }))}
+      <div className="undara-studio-layer-grid">
+        {numberInput(en ? "Width" : "Lebar", layer.width, 5, 85, 0.1, "%", (width) => ({ width }))}
+        {optionalNumberInput(en ? "Height" : "Tinggi", layer.height, 3, 200, 0.1, "%", (height) => ({ height }))}
+      </div>
       {numberInput(en ? "Rotation" : "Rotasi", layer.rotation ?? 0, -180, 180, 1, "°", (rotation) => ({ rotation }))}
 
       <label className="undara-studio-layer-opacity">
@@ -288,7 +290,41 @@ export default function TextLayerInspector({
         </div>
       </div>
 
-      <p className="undara-studio-text-counter">{selectedIndex + 1}/{MAX_ASSET_LAYERS}</p>
+      <button
+        type="button"
+        className="undara-studio-layer-reset"
+        onClick={() => onUpdate(layer.id, {
+          x: 50,
+          y: 42,
+          width: 55,
+          height: undefined,
+          opacity: 1,
+          rotation: 0,
+          fontSize: 24,
+          fontRole: "heading",
+          fontFamily: undefined,
+          fontWeight: 400,
+          textAlign: "center",
+          letterSpacing: 0,
+          lineHeight: 1.2,
+          color: undefined,
+          shadowX: undefined,
+          shadowY: undefined,
+          shadowBlur: undefined,
+          shadowColor: undefined,
+          shadowOpacity: undefined,
+          animation: undefined,
+          animationDuration: undefined,
+          animationDelay: undefined,
+          textAnimationUnit: undefined,
+          animationStagger: undefined,
+        })}
+      >
+        <RotateCcw size={14} />
+        Reset
+      </button>
+
+      <p className="undara-studio-text-counter">{selectedIndex + 1}/{maxLayers}</p>
       </fieldset>
     </aside>
   );
