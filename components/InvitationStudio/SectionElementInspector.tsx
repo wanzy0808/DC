@@ -62,9 +62,9 @@ export default function SectionElementInspector({
     suffix: string,
     property: "width" | "fontSize",
   ) => (
-    <label className="dc-studio-section-field">
+    <label className="undara-studio-section-field">
       <span>{label}</span>
-      <span className="dc-studio-section-number">
+      <span className="undara-studio-section-number">
         <input
           type="number"
           min={min}
@@ -88,9 +88,9 @@ export default function SectionElementInspector({
     property: "background" | "color" | "borderColor",
     fallback: string,
   ) => (
-    <div className="dc-studio-section-field">
+    <div className="undara-studio-section-field">
       <span>{label}</span>
-      <div className="dc-studio-section-color">
+      <div className="undara-studio-section-color">
         <input type="color" value={value ?? fallback} aria-label={label} onChange={(event) => update({ [property]: event.target.value })} />
         <button type="button" onClick={() => update({ [property]: undefined })}>Default</button>
       </div>
@@ -104,8 +104,8 @@ export default function SectionElementInspector({
   ];
 
   return (
-    <aside className="dc-studio-section-side" aria-label={en ? "Component properties" : "Properti komponen"}>
-      <div className="dc-studio-section-side-head">
+    <aside className="undara-studio-section-side" aria-label={en ? "Component properties" : "Properti komponen"}>
+      <div className="undara-studio-section-side-head">
         <div className="min-w-0">
           <strong title={title}>{title}</strong>
         </div>
@@ -115,9 +115,9 @@ export default function SectionElementInspector({
       {numeric(en ? "Width" : "Lebar", style.width, 30, 100, "%", "width")}
       {numeric(en ? "Text size" : "Ukuran teks", style.fontSize, 10, 72, "px", "fontSize")}
 
-      <div className="dc-studio-section-field">
+      <div className="undara-studio-section-field">
         <span>{en ? "Alignment" : "Perataan"}</span>
-        <div className="dc-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
+        <div className="undara-studio-align-icons" role="group" aria-label={en ? "Alignment" : "Perataan"}>
           {aligns.map(({ value, label, Icon }) => (
             <button key={value} type="button" aria-pressed={style.align === value} aria-label={label} title={label} onClick={() => update({ align: value })}>
               <Icon size={15} />
@@ -126,7 +126,7 @@ export default function SectionElementInspector({
         </div>
       </div>
 
-      <label className="dc-studio-section-field">
+      <label className="undara-studio-section-field">
         <span className="flex items-center justify-between gap-2">
           <span>{en ? "Opacity" : "Opasitas"}</span>
           <output>{Math.round((style.opacity ?? 1) * 100)}%</output>
@@ -138,7 +138,7 @@ export default function SectionElementInspector({
       {colorControl(en ? "Text" : "Teks", style.color, "color", "#222222")}
       {colorControl(en ? "Border" : "Garis", style.borderColor, "borderColor", "#c07a84")}
 
-      <button type="button" className="dc-studio-section-reset" onClick={reset}>
+      <button type="button" className="undara-studio-section-reset" onClick={reset}>
         <RotateCcw size={14} />
         Reset
       </button>
