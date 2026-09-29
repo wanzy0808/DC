@@ -1065,6 +1065,10 @@ Layanan konsultasi:
 
 CTA: **Konsultasi** ke WhatsApp `+62 821-2478-6516`.
 
+### 8.6 Hak paket ID pada Owner Panel
+
+Owner membuat ID melalui formulir ringkas. Semua ID dan hak paketnya tampil pada satu tabel; satu baris mewakili satu ID dengan kolom email/ID, role, Undangan Digital, Guest Book, data, dan aksi. Tombol Edit pada tiap ID membuka checklist hak serta email/role di baris tersebut; tombol Simpan menyimpan perubahan untuk ID itu saja, dan Batal membuang draft. Satu ID diedit pada satu waktu. Hak dari pembelian tetap aktif dan terkunci, sementara grant Owner dapat diubah dan tidak dihitung sebagai penjualan. Guest Book juga memberi hak Undangan Digital. Perubahan password tetap melalui konfirmasi email Owner pada baris yang sedang diedit.
+
 ---
 
 ## 9. Guest Ecosystem, RSVP & Personal Invitation
@@ -5687,3 +5691,9 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 **Implementasi:** heading UI memakai `--font-undara-heading`, body memakai `--font-undara-sans`, metadata memakai `--font-undara-mono` pada Dashboard customer, Admin, Owner, Designer, checkout, dan transaksi. Konfirmasi Owner memakai wordmark resmi dan surface semantic; panel Admin memakai card/border/primary semantic. Denah meja memakai pasangan Warm Ivory/Brown dan Brown/Champagne dengan warna teks terpisah untuk meja, nomor kursi, dan nama tamu agar kontras pada kedua mode. Template invitation tetap memakai font/palet art direction masing-masing. Tes tipografi baru mengaudit file route dan komponen seluruh panel terkait.
 
 **Area:** `components/Dashboard/`, `components/Admin/`, `components/Owner/`, `components/Designer/`, `components/Payments/`, `app/admin/`, `app/owner/account-confirmation/`, `app/transactions/`, `tests/undara-typography.test.mjs`. **Validasi lokal:** tes tipografi terarah 3/3 dan suite penuh `node --import tsx --test` 193/193 lulus. `tsc --noEmit` dan build webpack lulus; lint file terkait tanpa error dengan rule `react-hooks/set-state-in-effect` lama dikecualikan (tiga warning existing tetap terlihat). Kontras teks kursi terisi diperiksa terhadap palet Light/Dark, lalu build final dijalankan. QA visual browser masih diperlukan. Tidak ada perubahan data atau migrasi database.
+
+### 29 September 2026 — Hak ID Owner dalam satu tabel
+
+**Permintaan owner:** hak paket setiap ID yang dibuat dapat dilihat dan diatur dalam satu tabel memakai checklist serta tombol Edit/Simpan per ID.
+
+**Implementasi:** formulir Buat ID tetap ringkas di atas tabel; kolom Undangan Digital dan Guest Book menampilkan checklist setiap ID, dan mode Edit memungkinkan perubahan hak, email, role, serta permintaan password di baris yang sama. Tombol Simpan/Batal berlaku pada satu ID. Hak yang berasal dari pembelian tetap tercentang dan terkunci; grant Owner tetap terpisah dari penjualan. `components/Owner/OwnerDashboard.tsx` memakai `components/Owner/owner-account-access.ts` untuk status hak dan perubahan checklist; `tests/owner-account-access.test.mjs` menguji kombinasi pembelian dan grant. Tidak ada migrasi database.
