@@ -7,8 +7,8 @@ export default function InvitationFonts({ families }: { families: readonly strin
   const key = [...new Set(families)].sort().join("|");
   useEffect(() => {
     for (const family of key.split("|")) {
-      if (!family || family === "Cinzel" || family === "Fauna One") continue;
-      const id = `dc-invitation-font-${family.replaceAll(" ", "-")}`;
+      if (!family) continue;
+      const id = `undara-invitation-font-${family.replaceAll(" ", "-")}`;
       if (document.getElementById(id)) continue;
       const link = document.createElement("link");
       link.id = id;

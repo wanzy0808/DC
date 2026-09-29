@@ -12,7 +12,7 @@ test('custom palette body text is readable on every background and surface', () 
 });
 test('readable preferred colors are preserved and next/font families use their loaded tokens', () => {
   assert.equal(readableInk('#ffffff', '#111111'), '#111111');
-  assert.equal(invitationFontFamily('Cinzel'), 'var(--font-undara-heading)');
-  assert.equal(invitationFontFamily('Fauna One'), 'var(--font-undara-sans)');
+  assert.equal(invitationFontFamily('Cinzel'), '"Cinzel", Georgia, serif');
+  assert.equal(invitationFontFamily('Fauna One'), '"Fauna One", Georgia, serif');
   assert.equal(invitationFontFamily('Playfair Display'), 'Playfair Display');
 });

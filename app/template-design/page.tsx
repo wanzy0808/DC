@@ -164,11 +164,11 @@ export default function TemplateDesignPage() {
           aria-label={copy.contentLabel}
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
-          <section className="mx-auto w-[88%] max-w-full pb-16 pt-12 font-[family-name:var(--font-dc-body)] sm:w-[80vw] md:pb-24 md:pt-16">
+          <section className="mx-auto w-[88%] max-w-full pb-16 pt-12 font-[family-name:var(--font-undara-body)] sm:w-[80vw] md:pb-24 md:pt-16">
         <div className="flex flex-col justify-between gap-7 border-b border-primary/20 pb-9 lg:flex-row lg:items-end">
           <div>
-            <p className="font-[family-name:var(--font-dc-mono)] text-[11px] uppercase tracking-[0.25em] text-primary">{copy.eyebrow}</p>
-            <h1 className="mt-4 max-w-3xl font-[family-name:var(--font-dc-heading)] text-3xl font-normal leading-tight text-primary sm:text-4xl lg:text-5xl">{copy.title}</h1>
+            <p className="font-[family-name:var(--font-undara-mono)] text-[11px] uppercase tracking-[0.25em] text-primary">{copy.eyebrow}</p>
+            <h1 className="mt-4 max-w-3xl font-[family-name:var(--font-undara-heading)] text-3xl font-normal leading-tight text-primary sm:text-4xl lg:text-5xl">{copy.title}</h1>
             <p className="mt-4 max-w-xl text-sm leading-7 text-foreground/65">
               {copy.description}
             </p>
@@ -203,7 +203,7 @@ export default function TemplateDesignPage() {
                 type="button"
                 aria-pressed={category === item}
                 onClick={() => setCategory(item)}
-                className={`${controlStyles.filter} min-h-10 px-4 font-[family-name:var(--font-dc-body)] ${category === item ? "bg-primary text-white shadow-sm dark:text-black" : "bg-background/65 text-foreground/75 hover:bg-primary/10 hover:text-primary"}`}
+                className={`${controlStyles.filter} min-h-10 px-4 font-[family-name:var(--font-undara-body)] ${category === item ? "bg-primary text-white shadow-sm dark:text-black" : "bg-background/65 text-foreground/75 hover:bg-primary/10 hover:text-primary"}`}
               >
                 {item === "Semua" ? copy.all : item}
               </button>
@@ -257,8 +257,8 @@ export default function TemplateDesignPage() {
                 {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
                 <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-4">
                   <div className="min-w-0">
-                    <p className="mb-1 font-[family-name:var(--font-dc-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
-                    <h2 className="truncate font-[family-name:var(--font-dc-heading)] text-lg font-normal text-primary">{template.name}</h2>
+                    <p className="mb-1 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
+                    <h2 className="truncate font-[family-name:var(--font-undara-heading)] text-lg font-normal text-primary">{template.name}</h2>
                   </div>
                   <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
                 </div>
@@ -297,9 +297,9 @@ export default function TemplateDesignPage() {
             <aside className="shrink-0 border-b border-border p-4 md:w-[310px] md:border-b-0 md:border-r md:p-6">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-dc-heading)] text-xl text-primary">{selected.name}</h2>
+                  <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-undara-heading)] text-xl text-primary">{selected.name}</h2>
                 </div>
-                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--dc-control-radius)] border border-primary/50 text-primary hover:bg-primary/10">
+                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--undara-control-radius)] border border-primary/50 text-primary hover:bg-primary/10">
                   <X className="h-4 w-4" aria-hidden />
                 </button>
               </div>

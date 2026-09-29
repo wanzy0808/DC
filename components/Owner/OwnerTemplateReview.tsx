@@ -66,10 +66,10 @@ export default function OwnerTemplateReview() {
     <section className="rounded-2xl border border-primary/35 bg-background p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="font-[family-name:var(--font-cinzel)] text-xl text-primary">Review Template</h2>
+          <h2 className="font-[family-name:var(--font-undara-heading)] text-xl text-primary">Review Template</h2>
           <p className="mt-1 text-sm text-muted-foreground">Draft Designer yang sudah dikirim untuk persetujuan katalog.</p>
         </div>
-        <span className="font-[family-name:var(--font-dc-mono)] text-xs text-muted-foreground">{templates.length} menunggu</span>
+        <span className="font-[family-name:var(--font-undara-mono)] text-xs text-muted-foreground">{templates.length} menunggu</span>
       </div>
 
       {message && <p className="mt-4 text-sm text-muted-foreground" role="status">{message}</p>}
@@ -85,10 +85,10 @@ export default function OwnerTemplateReview() {
                 <img src={item.previewUrl} alt={item.name} className="aspect-[4/3] w-full rounded-xl border border-border object-cover" />
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-[family-name:var(--font-dc-mono)] text-xs text-primary">#{item.templateNo}</span>
+                    <span className="font-[family-name:var(--font-undara-mono)] text-xs text-primary">#{item.templateNo}</span>
                     <span className="rounded-md border border-primary/30 px-2 py-1 text-[10px] font-semibold text-primary">Review</span>
                   </div>
-                  <h3 className="mt-2 font-[family-name:var(--font-cinzel)] text-lg">{item.name}</h3>
+                  <h3 className="mt-2 font-[family-name:var(--font-undara-heading)] text-lg">{item.name}</h3>
                   <p className="mt-1 text-xs text-muted-foreground">{designerName || item.designer.email} · {item.category}</p>
                   {item.description && <p className="mt-2 text-sm leading-6 text-muted-foreground">{item.description}</p>}
                   <div className="mt-4 flex flex-wrap gap-2">

@@ -79,7 +79,7 @@ export default function StudioFinalPreviewDialog({
           </div>
         </DialogHeader>
 
-        <div className="min-h-0 overflow-auto rounded-[var(--dc-control-menu-radius)] border border-primary/25 bg-muted/25 p-3 sm:p-5">
+        <div className="min-h-0 overflow-auto rounded-[var(--undara-control-menu-radius)] border border-primary/25 bg-muted/25 p-3 sm:p-5">
           <div
             className={device === "mobile" ? "mx-auto w-[390px] max-w-full" : "mx-auto w-[760px] max-w-full"}
             data-studio-final-preview-device={device}

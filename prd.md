@@ -1065,6 +1065,10 @@ Layanan konsultasi:
 
 CTA: **Konsultasi** ke WhatsApp `+62 821-2478-6516`.
 
+### 8.6 Hak paket ID pada Owner Panel
+
+Owner membuat ID melalui formulir ringkas. Semua ID dan hak paketnya tampil pada satu tabel; satu baris mewakili satu ID dengan kolom email/ID, role, Undangan Digital, Guest Book, data, dan aksi. Tombol Edit pada tiap ID membuka checklist hak serta email/role di baris tersebut; tombol Simpan menyimpan perubahan untuk ID itu saja, dan Batal membuang draft. Satu ID diedit pada satu waktu. Hak dari pembelian tetap aktif dan terkunci, sementara grant Owner dapat diubah dan tidak dihitung sebagai penjualan. Guest Book juga memberi hak Undangan Digital. Perubahan password tetap melalui konfirmasi email Owner pada baris yang sedang diedit.
+
 ---
 
 ## 9. Guest Ecosystem, RSVP & Personal Invitation
@@ -5663,3 +5667,33 @@ Rangkaian kode utama: `cd99a87` (visual styling), `bb3fef1`–`32b3020` + `cb8e8
 ### Dark Mode marketing control parity — 2026-09-28
 - Widget, sound toggle, volume, social controls, and navbar controls must use the same border/background/color treatment in Dark Mode as they do as a system in Light Mode.
 - Persistent controls remain transparent with the shared theme primary color; no separate dark card fill.
+
+### 29 September 2026 — Sisa brand lama pada layar dan email
+
+**Temuan:** beberapa jalur pembayaran/transaksi, halaman Undangan Fisik, panel Owner/Mitra, email verifikasi/reset/invoice, preview Zen Atelier, demo HTML Champagne Noir, dan dua renderer undangan masih menampilkan identitas DC Organizer setelah rebrand Undara.
+
+**Implementasi:** copy pengguna dan subjek/isi email memakai Undara; label kecil di kartu layanan dan undangan memakai konteks layanan/tema tanpa logo teks baru. Kredit lama pada footer Classic Invitation dihapus. Pesan awal tautan konsultasi WhatsApp memakai Undara; nomor tujuan tetap. Token font lama pada UI paket/Owner/Mitra/Undangan Fisik diarahkan ke tipografi aplikasi Undara, sedangkan tipografi artwork undangan dipertahankan. Identifier internal dan data tersimpan tidak dimigrasi. Area: `components/Marketing/PackageShowcase.tsx`, `components/Payments/PackageSelector.tsx`, `app/transactions/page.tsx`, `components/Owner/OwnerDashboard.tsx`, `components/Partner/PartnerDashboard.tsx`, `app/undangan-fisik/page.tsx`, `components/PublicInvitation/ClassicInvitationTemplate.tsx`, `components/PublicInvitation/InvitationThemeScenes.tsx`, `app/api/template-preview/zen-atelier/route.ts`, `public/templates/champagne-noir.html`, `app/api/auth/*`, `lib/notifications/email.ts`.
+
+**Validasi lokal:** audit source memastikan string DC Organizer tidak tersisa pada `app/`, `components/`, `lib/`, dan HTML publik. `tsc --noEmit`, production build webpack, lint terarah (dengan pengecualian dua pelanggaran `react-hooks/set-state-in-effect` yang sudah ada pada OwnerDashboard/PackageSelector), dan `git diff --check` lulus. Runner `pnpm test` terhalang izin socket `tsx` (`EPERM`); percobaan `node --experimental-strip-types --test` menjalankan 148 tes, 135 lulus dan 13 gagal pada area Studio/template/ekspektasi migrasi yang tidak diubah di sini. QA visual browser dan pengiriman email nyata belum dilakukan. Tidak ada migrasi database.
+
+### 29 September 2026 — Pulihkan styling Studio setelah migrasi namespace
+
+**Temuan:** CSS Studio dan tes sudah menggunakan kelas `undara-studio-*`, tetapi toolbar, footer zoom, daftar/layer inspector, inspector section, serta rail aksi masih merender `dc-studio-*`. Akibatnya layout/ukuran/fokus kontrol tersebut tidak mengikuti styling Undara walau stylesheet ada. Beberapa kontrol masih memakai variabel radius dan font `--dc-*` yang tidak ada pada sistem baru.
+
+**Implementasi:** seluruh kelas Studio yang tertinggal diselaraskan dengan selector `undara-studio-*` yang sudah ada, termasuk tipe drag layer `application/x-undara-layer` pada set/get. Radius field dan dialog memakai `--undara-control-radius`/`--undara-control-menu-radius`; judul Aset dan entry Studio memakai DM Serif Display, metadata memakai DM Mono melalui token Undara. Kontrol dialog dan kategori `/template-design` yang terkait Katalog juga memakai radius/font Undara. Form RSVP mewarisi font body tema undangan dan heading memakai font tema dengan fallback Undara; nama unduhan QR menjadi `undara-qr.png`. State, API, izin per role, data RSVP dan renderer template lain tidak diubah.
+
+**Area:** `components/InvitationStudio/` (toolbar, footer, layer list/inspector, section inspector/rail, AssetPanel, StudioEntrySection, StudioFinalPreviewDialog, RsvpPanels) serta `app/template-design/page.tsx`. **Validasi lokal:** tes Studio terarah 67/67 lulus. Empat kegagalan suite awal ditelusuri: assertion title case yang masih memakai input nama lama dan ekspektasi override Dark Mode yang sudah diganti token bersama diperbarui; font Cinzel/Fauna One template kini dimuat lazy di renderer dan tidak dipetakan ke font brand aplikasi; tombol buka undangan serta fallback heading template tidak lagi merujuk radius/font DC yang sudah tidak ada. Suite penuh `node --import tsx --test` kini 192/192 lulus. TypeScript, build produksi webpack, lint terarah dengan dua rule React Hooks lama pada `InvitationAssetLayers.tsx` dikecualikan, serta `git diff --check` lulus pada perubahan akhir. QA visual langsung di browser masih diperlukan.
+
+### 29 September 2026 — Tipografi Dashboard dan halaman terkait Undara
+
+**Temuan:** meskipun root sudah memuat DM Serif Display, Roboto, dan DM Mono Undara, beberapa bagian Dashboard serta alur staff/pembayaran masih memakai variabel `--font-dc-*`, `--font-cinzel`, `--font-fauna`, atau `--font-dm-mono` yang tidak lagi terdefinisi. Akibatnya judul, metadata, dan body bisa jatuh ke font fallback. Halaman konfirmasi Owner, permukaan Admin, serta denah meja masih membawa warna/surface aplikasi lama.
+
+**Implementasi:** heading UI memakai `--font-undara-heading`, body memakai `--font-undara-sans`, metadata memakai `--font-undara-mono` pada Dashboard customer, Admin, Owner, Designer, checkout, dan transaksi. Konfirmasi Owner memakai wordmark resmi dan surface semantic; panel Admin memakai card/border/primary semantic. Denah meja memakai pasangan Warm Ivory/Brown dan Brown/Champagne dengan warna teks terpisah untuk meja, nomor kursi, dan nama tamu agar kontras pada kedua mode. Template invitation tetap memakai font/palet art direction masing-masing. Tes tipografi baru mengaudit file route dan komponen seluruh panel terkait.
+
+**Area:** `components/Dashboard/`, `components/Admin/`, `components/Owner/`, `components/Designer/`, `components/Payments/`, `app/admin/`, `app/owner/account-confirmation/`, `app/transactions/`, `tests/undara-typography.test.mjs`. **Validasi lokal:** tes tipografi terarah 3/3 dan suite penuh `node --import tsx --test` 193/193 lulus. `tsc --noEmit` dan build webpack lulus; lint file terkait tanpa error dengan rule `react-hooks/set-state-in-effect` lama dikecualikan (tiga warning existing tetap terlihat). Kontras teks kursi terisi diperiksa terhadap palet Light/Dark, lalu build final dijalankan. QA visual browser masih diperlukan. Tidak ada perubahan data atau migrasi database.
+
+### 29 September 2026 — Hak ID Owner dalam satu tabel
+
+**Permintaan owner:** hak paket setiap ID yang dibuat dapat dilihat dan diatur dalam satu tabel memakai checklist serta tombol Edit/Simpan per ID.
+
+**Implementasi:** formulir Buat ID tetap ringkas di atas tabel; kolom Undangan Digital dan Guest Book menampilkan checklist setiap ID, dan mode Edit memungkinkan perubahan hak, email, role, serta permintaan password di baris yang sama. Tombol Simpan/Batal berlaku pada satu ID. Hak yang berasal dari pembelian tetap tercentang dan terkunci; grant Owner tetap terpisah dari penjualan. `components/Owner/OwnerDashboard.tsx` memakai `components/Owner/owner-account-access.ts` untuk status hak dan perubahan checklist; `tests/owner-account-access.test.mjs` menguji kombinasi pembelian dan grant. Tidak ada migrasi database.

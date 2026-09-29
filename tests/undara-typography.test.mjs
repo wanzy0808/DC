@@ -38,3 +38,17 @@ test("Undara application routes use the canonical typography system", () => {
     assert.doesNotMatch(source, /var\(--font-(?:cinzel|fauna)\)/i, `${file} still uses a retired application font token`);
   }
 });
+
+test("Dashboard, staff panels, and payment flows avoid retired font tokens", () => {
+  const appFolders = ["dashboard", "admin", "owner", "designer", "partner", "transactions", "checkout", "packages"];
+  const componentFolders = ["Dashboard", "Admin", "Owner", "Designer", "Partner", "Payments"];
+  const files = [
+    ...appFolders.flatMap((folder) => applicationRouteFiles(`app/${folder}`)),
+    ...componentFolders.flatMap((folder) => readdirSync(path(`components/${folder}`))
+      .filter((filename) => filename.endsWith(".tsx"))
+      .map((filename) => `components/${folder}/${filename}`)),
+  ];
+  for (const file of files) {
+    assert.doesNotMatch(read(file), /--font-(?:dc-[\w-]+|cinzel|fauna|dm-mono)\b/, `${file} still uses a retired font token`);
+  }
+});

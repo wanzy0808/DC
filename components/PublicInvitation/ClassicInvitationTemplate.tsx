@@ -338,9 +338,6 @@ export default function ClassicInvitationTemplate({
             <p className="mt-4 font-[Cormorant_Garamond,serif] text-2xl">
               {identityTitle || eventTitle}
             </p>
-            <p className="mt-6 font-sans text-[9px] uppercase tracking-[0.16em] text-stone-400">
-              DC Organizer
-            </p>
           </footer>
         </section>
       </div>
