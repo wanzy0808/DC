@@ -114,7 +114,7 @@ export default function MarketingDoorNavigator() {
     <nav
       ref={rootRef}
       aria-label={isEnglish ? "Explore Undara pages" : "Jelajahi halaman Undara"}
-      className="fixed bottom-[74px] left-2 z-[80] font-[family-name:var(--font-undara-body)] sm:bottom-auto sm:left-2 sm:top-1/2 sm:-translate-y-1/2 lg:left-3"
+      className="fixed bottom-[74px] left-[calc(5vw+10px)] z-[80] font-[family-name:var(--font-undara-body)] sm:bottom-auto sm:left-[35px] sm:top-1/2 sm:-translate-y-1/2 lg:left-[39px]"
     >
       <button
         ref={triggerRef}
