@@ -13,7 +13,22 @@ test("every live template catalog card renders the Cover/Hero rather than the en
   assert.match(featured, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
 });
 
-test("public template catalog uses phone-only cards with one preview interaction", () => {\n  assert.match(page, /aspect-\\[9\\/19\\.5\\]/);\n  assert.match(page, /aria-label=\\{`\\$\\{copy\\.previewLabel\\}: \\$\\{template\\.name\\}`\\}/);\n  assert.match(page, /<TemplateCardCanvas templateKey=\\{template\\.key\\} designKey=\\{template\\.designKey\\} phone \\/>/);\n  assert.doesNotMatch(page, /<Eye /);\n  assert.doesNotMatch(page, /<Button onClick=\\{\\(\\) => openPreview\\(template\\.key\\)\\}/);\n});\n\ntest("catalog popup starts at Cover without changing the original invitation opening", () => {
+test("public template catalog uses a phone wheel with centered preview and details below", () => {
+  assert.match(page, /data-template-wheel/);
+  assert.match(page, /data-template-wheel-details/);
+  assert.match(page, /\[perspective:1200px\]/);
+  assert.match(page, /rotateY\(\$\{rotation\}deg\)/);
+  assert.match(page, /stage\.addEventListener\("wheel", onWheel, \{ passive: false \}\)/);
+  assert.match(page, /onTouchStart=\{handleWheelTouchStart\}/);
+  assert.match(page, /if \(distance === 0\) openPreview\(template\.key\)/);
+  assert.match(page, /else setWheelIndex\(index\)/);
+  assert.match(page, /descriptionFor\(activeWheelTemplate\)/);
+  assert.match(page, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
+  assert.doesNotMatch(page, /<Eye /);
+  assert.doesNotMatch(page, /<Button onClick=\{\(\) => openPreview\(template\.key\)\}/);
+});
+
+test("catalog popup starts at Cover without changing the original invitation opening", () => {
   assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.sections, envelope: false \}\} \/>/);
   assert.match(gallery, /sections = defaultInvitationSections,/);
   assert.doesNotMatch(gallery, /Pratinjau template|Memuat pratinjau/);
