@@ -1944,3 +1944,15 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `dba2a96`, `26cd214`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Midnight Romance editability pass
+
+- Midnight Romance menjadi template keenam dalam audit satu-per-satu.
+- Inner photo viewport pada Cover sekarang menjadi native target terpisah dari photo frame/slot.
+- Starfield, moon, star, photo frame, heading, date, dan ornament tetap selectable/removable tanpa membuka business data.
+
+**Area:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `2cffb67`, `8772653`.
+
+**Validation:** source audit complete; CI observed separately.
