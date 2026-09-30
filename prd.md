@@ -1983,3 +1983,16 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
 
 **Validation:** regresi penuh 239/239, ESLint file terdampak, TypeScript, dan build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.
+
+## 30 September 2026 — Canonical template preview names
+
+- Semua template katalog/full preview sekarang memakai sample pasangan canonical **Una & Dara**.
+- Fixture preview bersama diperbarui dari Denny & Christine menjadi Una & Dara, sehingga seluruh template yang memakai renderer preview bersama ikut konsisten.
+- Data invitation customer tidak disentuh; perubahan hanya berlaku pada demo/preview fixture.
+- Regression test menjaga fixture preview agar tidak kembali memakai nama lama.
+
+**Area:** `data/templates/preview-invitation.ts`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `fd57d26`, `9fdea7b`.
+
+**Validation:** shared preview fixture updated; CI observed separately.
