@@ -1920,3 +1920,15 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `4a91bb6`, `4458871`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Modern Maroon editability pass
+
+- Modern Maroon menjadi template keempat dalam audit satu-per-satu.
+- Dekorasi `block-left`, `block-right`, dan `monogram` sekarang termasuk removable native decoration sehingga dapat di-hide/delete per invitation tanpa menyentuh nama, tanggal, foto, atau data event.
+- Media group, copy panel, photo frame, heading, dan data visual lainnya tetap menggunakan target Studio yang sudah ada.
+
+**Area:** `lib/templates/native-visual-transforms.ts`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `042488b`, `c47cd9c`.
+
+**Validation:** source audit complete; CI observed separately.
