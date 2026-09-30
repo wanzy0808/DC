@@ -12,6 +12,19 @@ Setiap template Undara adalah **website invitation responsif**. Studio boleh ter
 
 Elemen dekoratif dan visual bawaan boleh bebas dikomposisikan serta diberi edge bleed bila sesuai art direction, namun setiap objek tetap memiliki section/komponen pemilik yang jelas. RSVP, Maps, Countdown, Musik, Wishes, Gift, identitas, tanggal, venue, foto dan data tamu tetap komponen web nyata dan responsif; jangan bake data/fungsi tersebut menjadi gambar atau menggantinya dengan objek bebas. Template dinyatakan siap hanya bila komposisi hasil authoring tetap layak di desktop **dan** HP.
 
+### Kontrak editability elemen bawaan
+
+Setiap elemen visual yang terlihat pada master template harus memiliki ownership Studio yang jelas; jangan meninggalkan visual penting sebagai markup hardcoded yang tidak bisa dipilih. Gunakan salah satu kontrak berikut sesuai jenisnya:
+
+- **native object** untuk ornamen, panel, divider, icon, decorative group, visual text, dan elemen presentasi bawaan;
+- **photo slot** untuk foto customer/template yang memang dapat diganti atau dicrop;
+- **editable copy** untuk narasi yang pemilik boleh ubah dari menu Isi;
+- **protected native/system content** untuk data event seperti nama, tanggal, venue, rekening, countdown dan recipient line: isinya tetap dari data, tetapi styling/transform visualnya boleh diedit;
+- **protected functional element** untuk RSVP, Wishes, Gift, Maps, Music dan CTA sistem: fungsi/validasi/API tetap dikunci, tetapi presentation yang di-whitelist boleh diedit;
+- **section surface** untuk background/padding/layout section.
+
+Targetnya adalah **semua elemen visual penting dapat dipilih atau diatur melalui Studio tanpa mengubah business data atau merusak semantic web behavior**. Parent group boleh menjadi selectable target tambahan untuk memindahkan komposisi sekaligus, tetapi child target tetap dipertahankan untuk edit granular.
+
 Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
 ### Kebebasan komposisi: tidak wajib grid, boxy, atau simetris
