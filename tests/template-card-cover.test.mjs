@@ -99,3 +99,11 @@ test("Studio stage tracks opening the real envelope for every renderer", () => {
   assert.ok(studio.includes('sections={canvasStage === "cover" ? { ...design.sections, envelope: false } : design.sections}'));
   assert.doesNotMatch(studio, /<Dialog open=\\{preview\\}|setPreview\\(true\\)/);
 });
+
+test("all template previews use the canonical Una & Dara sample names", () => {
+  const fixture = readFileSync(new URL("../data/templates/preview-invitation.ts", import.meta.url), "utf8");
+  assert.match(fixture, /title: "Pernikahan Una & Dara"/);
+  assert.match(fixture, /groomName: "Una"/);
+  assert.match(fixture, /brideName: "Dara"/);
+  assert.doesNotMatch(fixture, /Denny|Christine/);
+});
