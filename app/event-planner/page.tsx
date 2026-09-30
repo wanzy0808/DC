@@ -297,7 +297,7 @@ export default function EventPlannerPage() {
                   <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
                     {en ? "Already using Undara?" : "Sudah pakai Undara?"}
                   </p>
-                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl">
                     {en ? "Digital invitations can stay separate." : "Undangan Digital tetap bisa dipakai terpisah."}
                   </h2>
                 </div>
@@ -347,7 +347,7 @@ export default function EventPlannerPage() {
                     <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
                       {en ? "Start here" : "Mulai dari sini"}
                     </p>
-                    <h2 className="mt-3 max-w-[22ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.03] text-primary md:text-6xl">
+                    <h2 className="mt-3 max-w-[22ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.03] tracking-[-0.025em] text-primary md:text-6xl">
                       {en ? "Send the event details you already have." : "Kirim detail acara yang sudah kamu punya."}
                     </h2>
                     <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
