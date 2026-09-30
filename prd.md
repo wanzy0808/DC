@@ -2234,3 +2234,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Validation:** source-level checks pass. GitHub exposes no combined CI statuses or PR workflow runs for the direct-push commit, so a full `next build` result is not claimed here.
 
+### 30 September 2026 — Remove template wheel hint and push corner copy outward
+
+**Owner request:** remove the “Scroll atau geser untuk memilih · klik HP di tengah untuk pratinjau” helper from `/template-design`, move the left editorial copy 5 cm farther left, and move the right editorial copy 5 cm farther right.
+
+**Implementation:** the wheel instruction copy was removed from both rendered markup and locale strings. Desktop corner copy keeps its current vertical distribution, while the left block adds a `-5cm` X translation and the right block adds a `+5cm` X translation. The center wheel and Search / Filter / Sort controls remain unchanged.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `44b48e923f1fd323ecf570658f139d296ca700e9`, `b869bb08314a02a8e74d14e1023c911878067d6d`, `e23082167e9592fc14c21e5f6b92125528ebbc48`.
+
