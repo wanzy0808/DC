@@ -2254,3 +2254,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `b55daa5e05ebcffebc28489f4ba1e94f214f8b16`, `cff8b2590f19bdd35dd3f9b732efcf5d499932d9`, `f4804d7c9097e6e46463497a7bece632381de960`.
 
+### 30 September 2026 — Template selector copy and landing ornament
+
+**Owner request:** replace the generic Invitation Studio supporting copy on `/template-design`, add an ornamental divider beneath it like the landing page, and tighten the spacing to the headline below.
+
+**Implementation:** the Indonesian supporting copy is now “Temukan desain yang paling terasa seperti ceritamu. Lihat setiap detailnya, lalu pilih yang paling pas untuk membuka hari istimewamu.” with an equivalent English line. The right-side editorial block reuses the landing page botanical ornament asset `/assets/landing/ornaments/botanical/branch-05.webp` as a masked divider directly below the copy. The active-choice headline is pulled closer to the ornament so the right-side text reads as one composition rather than separate fragments.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `044857f1ddd75995e0d8a5af3179036b1114a139`, `d73680cb7a90fada4ca949a68fe2bbdd1c08dff0`.
+
