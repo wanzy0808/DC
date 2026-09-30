@@ -459,7 +459,23 @@
 .undara-studio-mobile-view { display: none; }
 .undara-invitation-studio-shell[data-inspector=false] .undara-studio-workspace { grid-template-columns: 96px minmax(0, 1fr); }
 .undara-invitation-studio-shell[data-inspector=false] .undara-studio-inspector { display: none; }
-.undara-unlicensed-studio .undara-studio-preview-surface::after { content: "PREVIEW • UNDARA"; position: absolute; inset-inline: -18%; top: 340px; z-index: 40; transform: rotate(-24deg); padding: 14px 0; border-block: 1px solid currentColor; color: var(--primary); background: color-mix(in srgb, var(--background) 78%, transparent); font-family: var(--font-undara-mono); font-size: 12px; letter-spacing: .22em; text-align: center; pointer-events: none; user-select: none; }
+.undara-unlicensed-studio .undara-studio-preview-viewport { margin-bottom: 30px; }
+.undara-unlicensed-studio .undara-studio-preview-viewport::after {
+  content: "Undara · Copyright";
+  position: absolute;
+  top: calc(100% + 9px);
+  inset-inline: 0;
+  z-index: 40;
+  color: color-mix(in srgb, var(--foreground) 52%, transparent);
+  font-family: var(--font-undara-mono);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .08em;
+  line-height: 1.4;
+  text-align: center;
+  pointer-events: none;
+  user-select: none;
+}
 @media (min-width: 1280px) { .undara-invitation-editor { padding: 20px; } .undara-studio-workspace { grid-template-columns: 104px minmax(340px, 360px) minmax(0, 1fr); } .undara-invitation-studio-shell[data-inspector=false] .undara-studio-workspace { grid-template-columns: 104px minmax(0, 1fr); } }
 @media (max-width: 767px) {
   .undara-invitation-editor { padding: 6px; }
