@@ -2210,3 +2210,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `13a550e9367c2e33b04474c992274b5f891a8e34`, `3510b6bfbb24fa74f75f78ae1c53aaa7bdd2fbf1`.
 
+### 30 September 2026 — Distributed corner copy fills highlighted side zones
+
+**Owner request:** use the highlighted empty side zones around the template wheel more deliberately instead of merely nudging the existing text blocks.
+
+**Implementation:** the upper-left and lower-right supporting copy are now structured as tall editorial zones on desktop. The left zone uses a fixed-height flex column so the kicker anchors the top and the main title anchors the lower portion of the highlighted area. The right zone uses its own fixed-height flex column, distributing the description, divider/headline, and wheel hint across the vertical space. This fills the side areas visually while preserving a clear center stage for the rotating phone selector.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `398539e4a41c85b95381ae677482be8c7e998142`, `b1723044ad5dbb21d43ea90b7704cb20d52ac12d`.
+
