@@ -119,7 +119,7 @@ export default function EventPlannerPage() {
                   <p className="mt-7 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                     {en
                       ? "Send the event type, date, city, venue if available, and estimated guest count. Undara will help collect the initial requirements and connect you for the next discussion."
-                      : "Kirim jenis acara, tanggal, kota, venue kalau sudah ada, dan perkiraan jumlah tamu. Undara bantu menerima kebutuhan awal lalu menghubungkan kamu untuk pembahasan berikutnya."}
+                      : "Kirim jenis acara, tanggal, kota, tempat kalau sudah ada, dan perkiraan jumlah tamu. Undara membantu menerima kebutuhan awal lalu menghubungkan kamu untuk pembahasan berikutnya."}
                   </p>
 
                   <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -185,7 +185,7 @@ export default function EventPlannerPage() {
                       <p className="mt-2 max-w-lg font-[family-name:var(--font-undara-heading)] text-2xl leading-tight md:text-3xl">
                         {en
                           ? "Date, venue, guest count, and the kind of help you are looking for."
-                          : "Tanggal, venue, jumlah tamu, dan bantuan seperti apa yang sedang kamu cari."}
+                          : "Tanggal, tempat, jumlah tamu, dan bantuan seperti apa yang sedang kamu cari."}
                       </p>
                     </div>
                   </motion.div>
