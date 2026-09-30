@@ -227,7 +227,7 @@ export default function TermsAndConditionsPage() {
           className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <article className="undara-marketing-content flex flex-col gap-16 pb-16 pt-8 md:gap-20 md:pb-24 md:pt-12">
-            <header className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(56dvh,590px)] items-end gap-10 border-b border-primary/25 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
+            <header className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(56dvh,590px)] items-end gap-10 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
               <div>
                 <p className="undara-marketing-kicker">{en ? "Legal / Terms" : "Legal / Ketentuan"}</p>
                 <h1 className="mt-5 max-w-[13ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.2rem,6vw,6.5rem)] leading-[0.96] tracking-[-0.035em] text-primary">
@@ -250,7 +250,7 @@ export default function TermsAndConditionsPage() {
               </div>
             </header>
 
-            <section className="undara-marketing-section undara-editorial-offset-left border-y border-primary/25 py-12 md:py-16">
+            <section className="undara-marketing-section undara-editorial-offset-left py-12 md:py-16">
               <div className="grid gap-8 lg:grid-cols-[0.34fr_0.66fr] lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{copy.introduction}</p>
@@ -268,13 +268,13 @@ export default function TermsAndConditionsPage() {
               </div>
             </section>
 
-            <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail">
-              <div className="border-t border-primary/30">
+            <section className="undara-marketing-section undara-editorial-offset-right">
+              <div>
                 {copy.sections.map((section, index) => (
                   <section
                     key={index}
                     aria-labelledby={`undara-terms-section-${index}`}
-                    className={`border-b border-primary/20 py-9 md:py-12 ${index % 2 ? "lg:pl-[5%]" : "lg:pr-[4%]"}`}
+                    className={`py-9 md:py-12 ${index % 2 ? "lg:pl-[5%]" : "lg:pr-[4%]"}`}
                   >
                     <div>
                       <h2

@@ -34,7 +34,7 @@ export default function PackageShowcase({
 
   if (editorial) {
     return (
-      <section className="undara-marketing-section border-y border-primary/25 py-14 md:py-20">
+      <section className="undara-marketing-section py-14 md:py-20">
         <div className="grid gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:items-start lg:gap-20">
           <div className="max-w-xl lg:pt-6">
             <p className="undara-marketing-kicker">{eyebrow}</p>
@@ -51,13 +51,13 @@ export default function PackageShowcase({
             ) : null}
           </div>
 
-          <div className="border-t border-primary/30">
+          <div>
             {packages.map((item) => {
               if (!item) return null;
               return (
                 <article
                   key={item.key}
-                  className="relative grid gap-8 border-b border-primary/25 py-9 md:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] md:gap-10 md:py-12"
+                  className="relative grid gap-8 py-9 md:grid-cols-[minmax(0,0.86fr)_minmax(0,1.14fr)] md:gap-10 md:py-12"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-4">
@@ -80,7 +80,7 @@ export default function PackageShowcase({
                   <div className="flex min-w-0 flex-col">
                     <ul className="grid flex-1 gap-3 sm:grid-cols-2 sm:gap-x-7">
                       {item.features[locale].map((feature) => (
-                        <li key={feature} className="flex gap-3 border-t border-primary/15 pt-3 text-sm leading-6 text-foreground/85">
+                        <li key={feature} className="flex gap-3 pt-3 text-sm leading-6 text-foreground/85">
                           <Check className="mt-1 h-3.5 w-3.5 shrink-0 text-primary" />
                           <span>{feature}</span>
                         </li>
@@ -103,7 +103,7 @@ export default function PackageShowcase({
   }
 
   return (
-    <section className={`w-full border-y border-primary/25 py-14 md:py-20 ${wide ? "max-w-none" : ""}`}>
+    <section className={`w-full py-14 md:py-20 ${wide ? "max-w-none" : ""}`}>
       <div className={`grid gap-10 ${wide && packages.length === 1 ? "lg:grid-cols-[0.95fr_1.05fr] lg:gap-16" : ""}`}>
         <div className={`space-y-4 ${wide && packages.length === 1 ? "lg:pt-8" : "mx-auto max-w-3xl text-center"}`}>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">{eyebrow}</p>

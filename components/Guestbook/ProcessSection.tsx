@@ -54,7 +54,7 @@ export default function ProcessSection() {
       ];
 
   return (
-    <section className="undara-marketing-section border-y border-primary/25 py-14 md:py-20">
+    <section className="undara-marketing-section py-14 md:py-20">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
         <div>
           <p className="undara-marketing-kicker">{en ? "From list to arrival" : "Dari Daftar sampai Kedatangan"}</p>
@@ -69,11 +69,11 @@ export default function ProcessSection() {
         </p>
       </div>
 
-      <div className="relative mt-12 border-t border-primary/30">
+      <div className="relative mt-12">
         {steps.map(({ icon: Icon, title, text }, index) => (
           <article
             key={title}
-            className={`relative grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,0.92fr)_minmax(0,1.08fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
+            className={`relative grid gap-6 py-8 md:grid-cols-[84px_minmax(0,0.92fr)_minmax(0,1.08fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
           >
             <div className="relative z-10 flex items-center gap-4 md:block">
               <span className="grid h-11 w-11 place-items-center border border-primary/35 bg-background text-primary">

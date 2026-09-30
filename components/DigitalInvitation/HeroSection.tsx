@@ -54,7 +54,7 @@ export default function HeroSection({ ready }: { ready: boolean }) {
         };
 
   return (
-    <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full min-w-0 items-center gap-12 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,0.94fr)] lg:gap-14 lg:pb-16">
+    <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full min-w-0 items-center gap-12 overflow-hidden pb-14 lg:grid-cols-[minmax(0,1.06fr)_minmax(420px,0.94fr)] lg:gap-14 lg:pb-16">
       <div className="undara-invitation-hero-copy relative z-10 min-w-0 w-full max-w-none py-8 lg:py-12">
         <PuzzleAssemble ready={ready} direction="top" delay={0.04}>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.28em] text-primary">
@@ -83,7 +83,7 @@ export default function HeroSection({ ready }: { ready: boolean }) {
           </div>
         </PuzzleAssemble>
         <PuzzleAssemble ready={ready} direction="left" delay={0.38}>
-          <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 border-t border-primary/20 pt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+          <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 pt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
             {copy.tags.map((tag) => (
               <span key={tag}>{tag}</span>
             ))}
@@ -93,7 +93,6 @@ export default function HeroSection({ ready }: { ready: boolean }) {
 
       <div className="relative z-10 mx-auto w-full min-w-0 max-w-xl py-8 lg:py-10">
         <div aria-hidden="true" className="pointer-events-none absolute -right-[10%] top-[4%] h-[72%] w-[72%] rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.12),transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.10),transparent_68%)]" />
-        <div aria-hidden="true" className="pointer-events-none absolute left-[2%] top-[18%] hidden h-[62%] w-px bg-primary/25 lg:block" />
         <PuzzleAssemble ready={ready} direction="right" delay={0.15} className="relative mx-auto w-[min(100%,340px)] lg:translate-x-[8%]">
           <div className="relative aspect-[9/19.5] overflow-visible rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_34px_70px_rgba(17,17,17,0.2),inset_0_1px_0_rgba(255,255,255,0.9)] dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]">
             <div

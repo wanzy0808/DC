@@ -90,7 +90,7 @@ export default function EventPlannerPage() {
         >
           <div className="undara-marketing-content flex w-full max-w-none flex-col gap-24 py-8 md:gap-28 md:py-12">
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
+              <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -left-[8%] top-[2%] h-[62%] w-[48%] rounded-full bg-[radial-gradient(ellipse,rgba(112,59,59,0.10),transparent_68%)] blur-3xl dark:bg-[radial-gradient(ellipse,rgba(214,179,140,0.08),transparent_68%)]"
@@ -146,7 +146,7 @@ export default function EventPlannerPage() {
                     </Button>
                   </div>
 
-                  <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 border-t border-primary/20 pt-5">
+                  <div className="mt-10 flex max-w-3xl flex-wrap gap-x-7 gap-y-3 pt-5">
                     {scope.map((item) => (
                       <p
                         key={item}
@@ -209,7 +209,7 @@ export default function EventPlannerPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="relative mx-auto w-full max-w-[1500px] overflow-hidden border-y border-primary/25 py-12 md:py-16 lg:py-20">
+              <section className="relative mx-auto w-full max-w-[1500px] overflow-hidden py-12 md:py-16 lg:py-20">
                 <PlannerNote
                   src="/assets/note3.webp"
                   className="-right-[5%] top-[2%] h-[64%] w-[36%] rotate-6 opacity-[0.09] lg:opacity-[0.14] dark:opacity-[0.06]"
@@ -237,14 +237,14 @@ export default function EventPlannerPage() {
                   </p>
                 </div>
 
-                <div className="relative z-10 mt-10 border-t border-primary/30">
+                <div className="relative z-10 mt-10">
                   {plannerPackages.map((item, index) => {
                     const features = en ? item.featuresEn : item.features;
 
                     return (
                       <article
                         key={item.key}
-                        className={`grid gap-7 border-b border-primary/25 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[7%]"}`}
+                        className={`grid gap-7 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[7%]"}`}
                       >
                         <div className={index % 2 ? "md:order-2" : ""}>
                           <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl lg:text-4xl">
@@ -287,7 +287,7 @@ export default function EventPlannerPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="mx-auto grid w-full max-w-[1500px] gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16 lg:pb-16">
+              <section className="mx-auto grid w-full max-w-[1500px] gap-8 pb-14 lg:grid-cols-[1fr_1fr] lg:items-end lg:gap-16 lg:pb-16">
                 <div>
                   <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
                     {en ? "Already using Undara?" : "Sudah pakai Undara?"}
@@ -331,7 +331,7 @@ export default function EventPlannerPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="relative mx-auto mb-4 w-full max-w-[1500px] overflow-hidden border-y border-primary/30 py-14 md:py-20">
+              <section className="relative mx-auto mb-4 w-full max-w-[1500px] overflow-hidden py-14 md:py-20">
                 <div
                   aria-hidden="true"
                   className="pointer-events-none absolute -right-[8%] top-1/2 h-[34rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.11),transparent_68%)] blur-2xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.08),transparent_68%)]"

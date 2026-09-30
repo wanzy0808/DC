@@ -11,7 +11,7 @@ export default function HeroSection() {
   const en = locale === "en";
 
   return (
-    <section className="undara-marketing-section relative grid min-h-[calc(100dvh-170px)] items-center gap-12 overflow-hidden border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pb-16">
+    <section className="undara-marketing-section relative grid min-h-[calc(100dvh-170px)] items-center gap-12 overflow-hidden pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:pb-16">
       <div className="relative z-10 max-w-3xl py-8 lg:py-12">
         <p className="undara-marketing-kicker">
           {en ? "Digital Guestbook / Event Day" : "Buku Tamu Digital / Hari Acara"}
@@ -45,7 +45,7 @@ export default function HeroSection() {
           </Button>
         </div>
 
-        <div className="mt-10 grid max-w-2xl grid-cols-2 gap-5 border-t border-primary/20 pt-5 sm:grid-cols-4">
+        <div className="mt-10 grid max-w-2xl grid-cols-2 gap-5 pt-5 sm:grid-cols-4">
           {[
             [ScanLine, en ? "Official QR" : "QR Resmi"],
             [Users, en ? "Guest verification" : "Verifikasi Tamu"],

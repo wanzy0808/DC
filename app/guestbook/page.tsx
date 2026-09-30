@@ -49,7 +49,7 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <div className="undara-editorial-offset-left undara-editorial-rail undara-editorial-ambient undara-editorial-ambient-left">
+              <div className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-left">
                 <FeatureSection />
               </div>
             </ScrollReveal>
@@ -87,7 +87,7 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section undara-editorial-offset-right undara-editorial-rail grid gap-8 border-b border-primary/25 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
+              <section className="undara-marketing-section undara-editorial-offset-right grid gap-8 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{en ? "One event, one source" : "Satu Acara, Satu Sumber Data"}</p>
                   <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">

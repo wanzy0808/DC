@@ -6,7 +6,7 @@ export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
 
   return (
     <section className="space-y-10 md:space-y-12">
-      <div className="grid gap-6 border-b border-primary/25 pb-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-14">
+      <div className="grid gap-6 pb-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-14">
         <div>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
             {en ? "Before we connect you" : "Sebelum kami hubungkan"}
@@ -26,8 +26,7 @@ export default function ServicesSection({ locale }: { locale: "id" | "en" }) {
         </div>
       </div>
 
-      <div className="relative grid gap-5 border-b border-primary/20 pb-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:pb-14 lg:gap-x-16">
-        <div aria-hidden="true" className="pointer-events-none absolute bottom-0 left-1/2 top-0 hidden w-px bg-primary/20 md:block" />
+      <div className="relative grid gap-5 pb-8 md:grid-cols-2 md:gap-x-10 md:gap-y-12 md:pb-14 lg:gap-x-16">
         {plannerServices.map((service, index) => (
           <article
             key={service.title}

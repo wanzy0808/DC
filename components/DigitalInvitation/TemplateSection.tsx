@@ -79,8 +79,8 @@ export default function TemplateCollection() {
         };
 
   return (
-    <section className="undara-marketing-section space-y-14 border-y border-primary/25 py-14 md:space-y-16 md:py-20">
-      <div className="w-full border-b border-primary/30 pb-8">
+    <section className="undara-marketing-section space-y-14 py-14 md:space-y-16 md:py-20">
+      <div className="w-full pb-8">
         <div className="mx-auto flex w-full flex-col justify-between gap-6 sm:flex-row sm:items-end sm:gap-12">
           <div className="max-w-2xl">
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">

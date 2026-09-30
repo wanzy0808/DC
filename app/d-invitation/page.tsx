@@ -95,7 +95,7 @@ export default function DigitalInvitationPage() {
           >
             <HeroSection ready={assembleReady} />
             <div className="undara-invitation-other-sections flex flex-col gap-24 md:gap-28">
-              <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04} className="undara-editorial-offset-left undara-editorial-rail undara-editorial-ambient undara-editorial-ambient-left">
+              <PuzzleAssemble ready={assembleReady} direction="left" scrollRoot={scrollRoot} delay={0.04} className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-left">
                 <FeatureSection />
               </PuzzleAssemble>
               <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07} className="mx-auto w-full max-w-[1100px]">
@@ -116,7 +116,7 @@ export default function DigitalInvitationPage() {
                   note={copy.packageNote}
                 />
               </PuzzleAssemble>
-              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07} className="undara-editorial-offset-right undara-editorial-rail">
+              <PuzzleAssemble ready={assembleReady} direction="right" scrollRoot={scrollRoot} delay={0.07} className="undara-editorial-offset-right">
                 <ReviewsGrid
                   eyebrow={copy.reviewEyebrow}
                   title={copy.reviewTitle}

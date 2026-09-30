@@ -34,7 +34,7 @@ export default function FaqSection({
         description={description}
         align={editorial ? "left" : "center"}
       />
-      <div className={editorial ? "border-y border-primary/25" : "space-y-4"}>
+      <div className={editorial ? "space-y-3" : "space-y-4"}>
         {items.map((item, index) => {
           const isOpen = open === index;
           return (
@@ -42,7 +42,7 @@ export default function FaqSection({
               key={item.question}
               className={
                 editorial
-                  ? "border-b border-primary/20 last:border-b-0"
+                  ? "rounded-[20px] bg-primary/[0.045] px-5 md:px-7"
                   : "overflow-hidden rounded-[28px] border border-primary/70 bg-[var(--card)]/75 md:rounded-[32px]"
               }
             >

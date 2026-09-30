@@ -114,7 +114,7 @@ export default function FeatureSection() {
   const selected = features[active];
 
   return (
-    <section id="fitur-guestbook" className="undara-marketing-section scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
+    <section id="fitur-guestbook" className="undara-marketing-section scroll-mt-24 py-14 md:py-20">
       <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
         <div>
           <p className="undara-marketing-kicker">{en ? "Guest Arrival System" : "Sistem Kedatangan Tamu"}</p>
@@ -127,14 +127,14 @@ export default function FeatureSection() {
               : "Guestbook Digital dirancang dari kebutuhan nyata tim penerima tamu saat hari acara: verifikasi, check-in, arahkan meja, dan pantau kedatangan."}
           </p>
 
-          <div className="mt-10 border-t border-primary/30">
+          <div className="mt-10">
             {features.map((feature, index) => (
               <button
                 key={feature.title}
                 type="button"
                 onClick={() => setActive(index)}
                 aria-pressed={active === index}
-                className={`group flex w-full items-center gap-4 border-b border-primary/20 py-5 text-left transition-colors duration-200 ${active === index ? "text-primary" : "text-foreground/65 hover:text-primary"}`}
+                className={`group flex w-full items-center gap-4 py-5 text-left transition-colors duration-200 ${active === index ? "text-primary" : "text-foreground/65 hover:text-primary"}`}
               >
                 <span className="flex-1 font-[family-name:var(--font-undara-heading)] text-xl leading-tight md:text-2xl">
                   {feature.title}
@@ -162,7 +162,7 @@ export default function FeatureSection() {
               <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                 {selected.description}
               </p>
-              <ul className="mt-9 grid gap-3 border-t border-primary/25 pt-6 sm:grid-cols-3">
+              <ul className="mt-9 grid gap-3 pt-6 sm:grid-cols-3">
                 {selected.highlights.map((item) => (
                   <li key={item} className="border-l border-primary/25 pl-4 text-sm leading-6 text-foreground/80">
                     {item}

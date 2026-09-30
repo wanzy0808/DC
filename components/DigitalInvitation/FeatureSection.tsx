@@ -63,7 +63,7 @@ export default function FeatureSection() {
       ];
 
   return (
-    <section id="fitur" className="undara-marketing-section scroll-mt-24 border-y border-primary/25 py-14 md:py-20">
+    <section id="fitur" className="undara-marketing-section scroll-mt-24 py-14 md:py-20">
       <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
         <div className="lg:sticky lg:top-8 lg:self-start">
           <p className="undara-marketing-kicker">
@@ -81,11 +81,11 @@ export default function FeatureSection() {
           </p>
         </div>
 
-        <div className="border-t border-primary/30">
+        <div>
           {features.map(({ icon: Icon, title, description, note }, index) => (
             <article
               key={title}
-              className={`group grid gap-6 border-b border-primary/25 py-8 md:grid-cols-[84px_minmax(0,1fr)] md:gap-9 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[5%]"}`}
+              className={`group grid gap-6 py-8 md:grid-cols-[84px_minmax(0,1fr)] md:gap-9 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[5%]"}`}
             >
               <div className="flex items-start md:block">
                 <span className="grid h-11 w-11 place-items-center border border-primary/35 text-primary transition-transform duration-300 group-hover:-translate-y-1">

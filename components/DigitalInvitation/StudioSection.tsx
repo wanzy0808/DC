@@ -24,7 +24,7 @@ export default function StudioSection() {
       ] as const;
 
   return (
-    <section className="undara-marketing-section border-y border-primary/25 py-14 md:py-20">
+    <section className="undara-marketing-section py-14 md:py-20">
       <div className="grid gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-20">
         <div className="max-w-2xl">
           <div className="flex items-center gap-2">
@@ -62,7 +62,7 @@ export default function StudioSection() {
           <div aria-hidden="true" className="pointer-events-none absolute -right-[7%] top-[8%] h-[70%] w-[72%] rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.12),transparent_68%)] blur-3xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.10),transparent_68%)]" />
 
           <div className="undara-editorial-media absolute inset-[4%_3%_5%_8%] overflow-hidden bg-card/85">
-            <div className="flex h-14 items-center justify-between border-b border-primary/20 px-5 md:px-7">
+            <div className="flex h-14 items-center justify-between px-5 md:px-7">
               <div>
                 <p className="font-[family-name:var(--font-undara-heading)] text-lg text-primary">
                   {en ? "Your invitation" : "Undanganmu"}

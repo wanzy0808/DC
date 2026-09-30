@@ -88,3 +88,19 @@ test("marketing and legal surfaces have no decorative sequence labels", () => {
     assert.doesNotMatch(source, /(?:Private\s*\/\s*|>\s*)0[1-9]\s*(?:\/|—|<)/, file);
   }
 });
+
+test("marketing content uses space and surfaces without repeated divider rails", () => {
+  const paths = [
+    "app/d-invitation/page.tsx", "app/guestbook/page.tsx", "app/undangan-fisik/page.tsx",
+    "app/event-planner/page.tsx", "app/template-design/page.tsx", "app/help/page.tsx",
+    "app/privacy-policy/page.tsx", "app/terms-and-conditions/page.tsx",
+    "components/Marketing/PackageShowcase.tsx", "components/Marketing/FaqSection.tsx",
+    "components/DigitalInvitation/FeatureSection.tsx", "components/Guestbook/ProcessSection.tsx",
+  ];
+  for (const path of paths) {
+    const source = read(path);
+    assert.doesNotMatch(source, /undara-editorial-rail|border-y border-primary\//, path);
+  }
+  assert.match(read("components/Marketing/FaqSection.tsx"), /bg-primary\/\[0\.045\]/);
+  assert.doesNotMatch(read("app/globals.css"), /\.undara-editorial-rail::before/);
+});
