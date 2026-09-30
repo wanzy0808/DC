@@ -1475,6 +1475,8 @@ Pakai `ScrollReveal` berbasis panel scroll internal untuk opacity/translateY per
 
 **Model pemesanan Undangan Fisik (30 September 2026; koreksi owner):** Undangan cetak yang **digabung dengan Undangan Digital** boleh dipesan secara satuan sesuai kebutuhan, termasuk satu buah. Undangan fisik yang dipesan **terpisah** dari Undangan Digital atau sebagai produksi **bulk custom** memiliki minimum order **300 pcs**. Tidak ada harga tetap yang ditampilkan: penawaran bergantung terutama pada tingkat kesulitan desain dan spesifikasi cetak yang disepakati melalui konsultasi. Halaman `/undangan-fisik` menjelaskan kedua jalur ini dalam ID/EN dan mengarahkan pengunjung ke Undangan Digital atau WhatsApp. Tidak menyiratkan kalkulator harga, checkout satuan mandiri, atau janji produksi sebelum spesifikasi disepakati. Ketentuan ini menggantikan larangan mengubah konten Undangan Fisik pada paragraf lama di atas.
 
+Menu burger publik menampilkan **Undangan Fisik / Printed Invitation** di dalam submenu Layanan, di samping layanan marketing lain, dengan tautan langsung ke `/undangan-fisik` dan label mengikuti bahasa ID/EN.
+
 
 ---
 
@@ -1741,3 +1743,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `c039e63`, `e87d618`, `bb6e414`, `2816dfe`, `0c420dd`, `9040aee`, `279df9f`, `d427e5f`, `701a33d`, `48a2c32`, `a3588f2`, `21fad9e`, `2ec1f0d`.
 
 **Validation:** source sweep complete; CI observed separately.
+
+
+## 30 September 2026 — Undangan Fisik di menu burger
+
+**Permintaan owner:** halaman Undangan Fisik harus bisa dibuka dari menu burger publik.
+
+**Implementasi:** tautan `/undangan-fisik` ditambahkan ke submenu Layanan dengan ikon amplop dan label ID/EN dari kamus navigasi. Aturan navigasi dicatat di §16.1.
+
+**Area/commit:** `components/Layout/Navbar/BurgerMenuContent.tsx`, `lib/i18n.ts`, `prd.md` §16.1 dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint pada file kode yang berubah, TypeScript, 28 tes marketing/repo, dan `git diff --check` lulus. Browser visual belum diverifikasi; tidak ada migrasi database.
