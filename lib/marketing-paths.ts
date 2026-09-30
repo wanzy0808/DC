@@ -8,6 +8,8 @@ const MARKETING_PATHS = new Set([
   "/undangan-fisik",
   "/template-design",
   "/help",
+  "/privacy-policy",
+  "/terms-and-conditions",
 ]);
 
 const FRAMED_MARKETING_PATHS = new Set([
@@ -19,6 +21,8 @@ const FRAMED_MARKETING_PATHS = new Set([
   "/undangan-fisik",
   "/template-design",
   "/help",
+  "/privacy-policy",
+  "/terms-and-conditions",
 ]);
 
 export function isMarketingPath(pathname: string): boolean {
