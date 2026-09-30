@@ -249,6 +249,8 @@ test("template-authored supporting visuals remain directly selectable without se
   assert.match(rose, /object:\$\{section\}:heading-group/);
   assert.match(universal, /object:gallery:memory-panel/);
   assert.match(universal, /object:gallery:memory-symbols/);
+  assert.match(universal, /object:\$\{keyName\}:heading-group/);
+  assert.match(universal, /object:identity:\$\{slot\}-group/);
   assert.match(universal, /object:identity:\$\{slot\}-symbol/);
   assert.match(instance, /\[data-studio-native-object\]/);
   assert.match(instance, /\[data-studio-native-heading\]/);
@@ -491,4 +493,13 @@ test("theme scene cover branches do not keep unreachable envelope controls", () 
   assert.match(scenes, /if \(stage === "envelope"\) return <ThemeEnvelope/);
   assert.match(scenes, /object:envelope:open-button/);
   assert.doesNotMatch(scenes, /object:cover:open-button/);
+});
+
+test("Botanical Ivory keeps its leaf ornament directly editable while shared groups stay selectable", () => {
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  assert.match(universal, /key === "botanical-ivory" && <div aria-hidden data-studio-native-object=/);
+  assert.match(universal, /object:\$\{keyName\}:theme-leaf/);
+  assert.equal(nativeVisualCanHide("object:greeting:theme-leaf"), true);
+  assert.equal(nativeVisualCapabilities("object:greeting:heading-group").typography, false);
+  assert.equal(nativeVisualCapabilities("object:identity:personOne-group").typography, false);
 });
