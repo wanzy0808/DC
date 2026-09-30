@@ -108,6 +108,7 @@ test("marketing content uses space and surfaces without repeated divider rails",
 
 test("framed marketing section headings keep the stronger hierarchy", () => {
   const files = [
+    "app/event-planner/page.tsx",
     "app/guestbook/page.tsx",
     "app/undangan-fisik/page.tsx",
     "app/help/page.tsx",
