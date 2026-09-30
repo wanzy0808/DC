@@ -60,6 +60,8 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.match(page, /data-template-wheel-details[\s\S]*mt-4 max-w-2xl/);
   assert.doesNotMatch(page, /Scroll atau geser untuk memilih/);
   assert.doesNotMatch(page, /Scroll or swipe to choose/);
+  assert.match(page, /branch-05\.webp/);
+  assert.match(page, /Temukan desain yang paling terasa seperti ceritamu/);
 });
 
 test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
