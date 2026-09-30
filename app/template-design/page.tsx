@@ -284,7 +284,7 @@ export default function TemplateDesignPage() {
         >
           <section className="undara-marketing-content font-[family-name:var(--font-undara-body)]">
             <div className="undara-marketing-section relative min-h-[calc(100dvh-185px)] py-7 sm:py-8 lg:py-9 xl:py-10">
-              <aside className="relative z-20 max-w-[36rem] lg:absolute lg:-left-20 lg:top-0 xl:-left-28 2xl:-left-36">
+              <aside className="relative z-20 max-w-[34rem] lg:absolute lg:-left-24 lg:-top-1 xl:-left-32 2xl:-left-40">
                 <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.22em] text-primary md:text-[11px]">{copy.eyebrow}</p>
                 <h1 className="mt-4 max-w-[10.5ch] font-[family-name:var(--font-undara-heading)] text-[clamp(2.55rem,4.65vw,5.5rem)] font-normal leading-[0.96] tracking-[-0.035em] text-primary">
                   {copy.title}
@@ -292,8 +292,8 @@ export default function TemplateDesignPage() {
                 <p className="mt-4 max-w-[30ch] text-sm font-medium leading-7 text-foreground/75 lg:hidden">{copy.description}</p>
               </aside>
 
-              <div className="min-w-0 lg:pt-7 xl:pt-8">
-                <div className="relative z-40 mx-auto mb-3 flex w-full max-w-[940px] flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:mb-4 lg:mb-5">
+              <div className="min-w-0 lg:pt-2 xl:pt-3">
+                <div className="relative z-40 mx-auto mb-8 flex w-full max-w-[940px] flex-wrap items-center justify-center gap-x-6 gap-y-3 sm:mb-9 lg:mb-10">
                   <label className="relative min-w-[160px] flex-1 sm:max-w-[250px]">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/40" aria-hidden />
                     <span className="sr-only">{copy.searchLabel}</span>
@@ -436,7 +436,7 @@ export default function TemplateDesignPage() {
                           openPreview(activeWheelTemplate.key);
                         }
                       }}
-                      className="relative mx-auto h-[500px] w-full max-w-[1220px] touch-pan-y overflow-hidden outline-none [perspective:1450px] sm:h-[530px] lg:h-[560px] xl:h-[590px] focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="relative mx-auto h-[480px] w-full max-w-[1220px] touch-pan-y overflow-hidden outline-none [perspective:1450px] sm:h-[510px] lg:h-[535px] xl:h-[560px] focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[48%] h-[68%] w-[min(70vw,580px)] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(112,59,59,0.095),rgba(112,59,59,0.018)_56%,transparent_72%)]" />
                       <div aria-hidden="true" className="pointer-events-none absolute inset-x-[13%] bottom-[6%] h-px bg-gradient-to-r from-transparent via-primary/24 to-transparent" />
@@ -453,7 +453,7 @@ export default function TemplateDesignPage() {
                         return (
                           <div
                             key={template.key}
-                            className="group absolute left-1/2 top-[47%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(166px,22vw,250px)] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+                            className="group absolute left-1/2 top-[50%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(166px,22vw,250px)] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
                             style={{
                               transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(136px, 18vw, 236px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
                               opacity,
@@ -505,7 +505,7 @@ export default function TemplateDesignPage() {
                     </div>
 
                     {activeWheelTemplate && (
-                      <div data-template-wheel-details aria-live="polite" className="mx-auto mt-1 max-w-2xl pb-1 text-center lg:mt-2 lg:pb-2">
+                      <div data-template-wheel-details aria-live="polite" className="mx-auto -mt-1 max-w-2xl pb-1 text-center lg:mt-0 lg:pb-1">
                         <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/65">
                           {String(wheelIndex + 1).padStart(2, "0")} / {String(filteredTemplates.length).padStart(2, "0")} · {activeWheelTemplate.category}
                         </p>
@@ -525,11 +525,11 @@ export default function TemplateDesignPage() {
                 )}
               </div>
 
-              <aside className="hidden lg:absolute lg:-bottom-1 lg:-right-20 lg:z-20 lg:block lg:w-[30rem] xl:-right-28 xl:w-[34rem] 2xl:-right-36">
-                <p className="ml-auto max-w-[46ch] text-right text-[15px] font-semibold leading-7 text-foreground/82">{copy.description}</p>
-                <div className="ml-auto mt-5 w-[82%] border-t border-primary/35 pt-4">
-                  <p className="ml-auto mr-8 max-w-[22ch] text-right font-[family-name:var(--font-undara-heading)] text-[1.35rem] leading-snug text-primary xl:mr-12">{copy.chooseHint}</p>
-                  <p className="ml-auto mt-3 max-w-[42ch] translate-x-3 text-right text-[13px] font-semibold leading-6 text-foreground/72 xl:translate-x-6">{copy.wheelHint}</p>
+              <aside className="hidden lg:absolute lg:right-[-5rem] lg:top-[66%] lg:z-20 lg:block lg:w-[30rem] lg:-translate-y-1/2 xl:right-[-7rem] xl:w-[34rem] 2xl:right-[-9rem]">
+                <p className="ml-auto max-w-[48ch] text-right text-[15px] font-semibold leading-7 text-foreground/84">{copy.description}</p>
+                <div className="ml-auto mt-6 w-[78%] border-t border-primary/35 pt-5">
+                  <p className="ml-auto mr-4 max-w-[24ch] text-right font-[family-name:var(--font-undara-heading)] text-[1.45rem] leading-snug text-primary xl:mr-8">{copy.chooseHint}</p>
+                  <p className="ml-auto mt-4 max-w-[44ch] translate-x-2 text-right text-[13px] font-semibold leading-6 text-foreground/74 xl:translate-x-4">{copy.wheelHint}</p>
                 </div>
               </aside>
             </div>
