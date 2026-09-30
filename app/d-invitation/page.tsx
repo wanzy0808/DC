@@ -64,12 +64,12 @@ export default function DigitalInvitationPage() {
           packageNote:
             "WA Blast tidak termasuk. Tambahkan 50 kuota WA Blast ke acara aktif yang dipilih seharga Rp75.000 kapan pun dibutuhkan.",
           reviewEyebrow: "Cerita Klien",
-          reviewTitle: "Dibuat untuk lebih dari sekadar wedding",
+          reviewTitle: "Dibuat untuk lebih dari sekadar pernikahan",
           reviewDescription:
-            "Wedding, anniversary, baby shower, sampai perayaan lainnya dapat memiliki undangan, RSVP, dan data tamu masing-masing.",
+            "Pernikahan, ulang tahun pernikahan, syukuran kelahiran, dan perayaan lain dapat memiliki undangan, RSVP, serta data tamu masing-masing.",
           faqTitle: "Yang sering ditanyakan",
           faqDescription:
-            "Tentang harga per acara, template, RSVP, manajemen tamu, publikasi, dan add-on WA Blast.",
+            "Tentang harga per acara, tema undangan, RSVP, manajemen tamu, publikasi, dan tambahan kuota WA Blast.",
         };
 
   return (
