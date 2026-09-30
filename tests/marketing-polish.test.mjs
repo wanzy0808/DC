@@ -104,3 +104,30 @@ test("marketing content uses space and surfaces without repeated divider rails",
   assert.match(read("components/Marketing/FaqSection.tsx"), /bg-primary\/\[0\.045\]/);
   assert.doesNotMatch(read("app/globals.css"), /\.undara-editorial-rail::before/);
 });
+
+
+test("framed marketing section headings keep the stronger hierarchy", () => {
+  const files = [
+    "app/guestbook/page.tsx",
+    "app/undangan-fisik/page.tsx",
+    "app/help/page.tsx",
+    "components/DigitalInvitation/FeatureSection.tsx",
+    "components/DigitalInvitation/TemplateSection.tsx",
+    "components/DigitalInvitation/StudioSection.tsx",
+    "components/DigitalInvitation/ReviewsSection.tsx",
+    "components/EventPlanner/ServicesSection.tsx",
+    "components/Guestbook/FeatureSection.tsx",
+    "components/Guestbook/ProcessSection.tsx",
+    "components/Marketing/PackageShowcase.tsx",
+    "components/Marketing/SectionHeading.tsx",
+  ];
+  for (const file of files) {
+    const source = read(file);
+    assert.doesNotMatch(source, /<h2 className="[^"]*font-normal/, file);
+    assert.match(source, /<h2 className="[^"]*font-bold/, file);
+  }
+
+  const styles = read("app/globals.css");
+  assert.match(styles, /\.undara-marketing-section h2 \{[\s\S]*?font-weight: 700;/);
+  assert.match(styles, /\.undara-marketing-section h3 \{[\s\S]*?font-weight: 700;/);
+});
