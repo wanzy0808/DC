@@ -402,7 +402,7 @@ export default function UniversalInvitationTemplate({
         {key === "golden-art-deco" && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-diamond`} className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         {zen && <ZenSectionArtwork section={keyName} />}
         {pencil && <PencilSectionArt section={keyName} />}
-        <div className="relative">
+        <div data-studio-native-object={`object:${keyName}:heading-group`} className="relative">
           {!zen && !pencil && <p data-studio-native-object={`object:${keyName}:kicker`} className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{tr(headings[keyName][0])}</p>}
           <h2
             data-studio-native-heading=""
@@ -523,7 +523,7 @@ export default function UniversalInvitationTemplate({
               {couple ? (
                 <>
                   {([["personOne", displayTitleCase(invitation.groomName), media.personOne], ["personTwo", displayTitleCase(invitation.brideName), media.personTwo]] as const).map(([slot, name, url]) => (
-                    <div key={slot} className="min-w-0">
+                    <div key={slot} data-studio-native-object={`object:identity:${slot}-group`} className="min-w-0">
                       {usesPhotos && <div data-invitation-photo-slot={slot} className={`relative mx-auto overflow-hidden ${frame}`}>
                         {url ? <img src={url} alt={`Foto ${name || "mempelai"}`} loading="lazy" className="aspect-[3/4] w-full object-cover" style={photoCropStyle(media.assignment, slot)} /> : <div className="flex aspect-[3/4] items-center justify-center bg-black/5"><Heart className="h-8 w-8 opacity-40"/></div>}
                         {changePhoto(slot, name || "mempelai")}
