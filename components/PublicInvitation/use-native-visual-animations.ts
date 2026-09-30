@@ -7,7 +7,7 @@ import {
   parseNativeVisualTransforms,
 } from "@/lib/templates/native-visual-transforms";
 import { defaultNativeVisualTransform } from "@/lib/templates/native-visual-transforms";
-import { templateNativeMotion, templateNativeMotionForKey } from "@/lib/templates/template-motion";
+import { templateHasDefaultMotion, templateNativeMotion, templateNativeMotionForKey } from "@/lib/templates/template-motion";
 import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
 import { observeInvitationEntranceRoot, type InvitationEntranceTarget } from "@/components/PublicInvitation/entrance-animation-runtime";
 
@@ -58,6 +58,6 @@ export function useInvitationNativeVisualAnimations(
       }
       return Array.from(targets.values());
     };
-    return observeInvitationEntranceRoot(root, collect, { replay: template === "serein", preservePresentation: template === "serein" });
+    return observeInvitationEntranceRoot(root, collect, { replay: templateHasDefaultMotion(template), preservePresentation: templateHasDefaultMotion(template), waitForImages: template === "botanical-ivory" });
   }, [rootRef, designKey, revision, template, stylesKey]);
 }

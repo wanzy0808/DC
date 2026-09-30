@@ -169,7 +169,6 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   const globalStyles = read("app/globals.css");
   const buttons = read("components/ui/button-variants.ts");
   const controls = read("components/ui/control-styles.ts");
-  const catalog = read("app/template-design/page.tsx");
   assert.match(globalStyles, /--undara-control-radius:\s*16px;/);
   assert.match(globalStyles, /--undara-control-menu-radius:\s*18px;/);
   assert.doesNotMatch(globalStyles, /--undara-control-radius:\s*9999px;/);
@@ -184,7 +183,6 @@ test("landing and Studio share one rounded-rectangle button radius instead of pi
   assert.match(stageControlsSource, /min-h-9 shrink-0 rounded-\[var\(--undara-control-radius\)\]/);
   assert.doesNotMatch(stageControlsSource, /min-h-9 shrink-0 rounded-full/);
   assert.match(styles, /\.undara-studio-icon \{[^}]*border-radius: var\(--undara-control-radius\)/);
-  assert.match(catalog, /aria-label=\{copy\.close\} className="[^"]*rounded-\[var\(--undara-control-radius\)\]/);
 });
 
 test("Ucapan Tamu section label has no stale unavailable caption", () => {

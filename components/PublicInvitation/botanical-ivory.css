@@ -1,0 +1,133 @@
+.botanical-invitation {
+  container-type: inline-size;
+  border: 0;
+  border-radius: 0;
+  font-size: 15px;
+  line-height: 1.75;
+  overflow-wrap: anywhere;
+  scrollbar-color: var(--inv-accent) var(--inv-bg);
+}
+.botanical-invitation ::selection { background: var(--inv-accent); color: var(--bi-on-accent); }
+.botanical-invitation :is(button,a,input,textarea,select,[tabindex]):focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+.bi-art { position: relative; display: block; color: var(--inv-accent); }
+.bi-art-plate { position: relative; display: block; aspect-ratio: 2/3; isolation: isolate; transform: rotate(var(--bi-art-rotation,0deg)); }
+.bi-art-plate img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.bi-art-plate::after { content: ""; position: absolute; inset: 0; background: currentColor; mask: var(--bi-art-source) center/contain no-repeat; -webkit-mask: var(--bi-art-source) center/contain no-repeat; mix-blend-mode: color; pointer-events: none; }
+.bi-cover,.bi-envelope { position: relative; min-height: clamp(700px,195cqw,1080px); padding: clamp(52px,17cqw,98px) clamp(25px,7.5cqw,50px) 46px; color: var(--inv-ink); background: var(--inv-bg); }
+.bi-cover-intro { margin: 0 0 22px; font-size: clamp(12px,3.4cqw,18px); letter-spacing: .045em; }
+.bi-cover-names { margin: 0; font-family: var(--inv-heading); font-size: clamp(2.35rem,17cqw,6rem); font-weight: 400; line-height: 1.08; letter-spacing: -.035em; }
+.bi-name-first,.bi-name-second { display: block; min-width: 0; }
+.bi-name-second-line { display: flex; align-items: baseline; justify-content: flex-end; gap: 3cqw; margin-top: 6px; }
+.bi-name-second-line em { display: block; flex: 0 0 auto; font-family: Georgia,serif; font-weight: 400; font-size: .88em; font-style: italic; color: var(--inv-accent); opacity: .8; }
+.bi-name-second { max-width: 86%; }
+.bi-cover-single { font-size: clamp(2.2rem,12cqw,4.7rem); }
+.bi-cover-date { margin: 24px 0 0; text-align: center; font-size: clamp(13px,3.5cqw,18px); letter-spacing: .03em; }
+.bi-cover-botanical { width: clamp(170px,57cqw,305px); margin: 14px auto 0; }
+.bi-cover-caption { max-width: 24ch; margin: 4px auto 0; font-size: clamp(14px,3.7cqw,19px); line-height: 1.55; text-align: center; }
+.bi-envelope { display: flex; flex-direction: column; align-items: center; padding-top: clamp(55px,18cqw,110px); text-align: center; }
+.bi-envelope-names { width: 100%; margin: 0; font-family: var(--inv-heading); font-weight: 400; font-size: clamp(2rem,12.5cqw,4.5rem); line-height: 1.2; letter-spacing: -.025em; }
+.bi-envelope-names > span { display: block; }
+.bi-envelope-date { margin-top: 20px; font-size: clamp(12px,3.4cqw,17px); }
+.bi-stationery { position: relative; width: 100%; max-width: 460px; aspect-ratio: 1.55; margin: 98px 0 30px; perspective: 1000px; }
+.bi-envelope-back { position: absolute; inset: 0; background: var(--inv-surface); box-shadow: 0 20px 38px color-mix(in srgb,var(--inv-accent) 18%,transparent); }
+.bi-envelope-sprig { position: absolute; z-index: 6; width: 40%; top: -32%; left: 16%; --bi-art-rotation: 48deg; pointer-events: none; }
+.bi-letter-motion { position: absolute; z-index: 1; inset: 8% 9% 7%; }
+.bi-letter { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; height: 100%; padding: 16px; background: var(--inv-surface); outline: 1px solid var(--inv-soft); outline-offset: -8px; color: var(--bi-surface-ink); }
+.bi-letter > svg { width: 22px; height: 22px; margin: 0 0 10px; color: var(--inv-accent); }
+.bi-letter p { max-width: 90%; font-family: var(--inv-heading); font-size: clamp(13px,4cqw,21px); line-height: 1.4; }
+.bi-fold { position: absolute; z-index: 2; inset: 0; pointer-events: none; }
+.bi-fold-left { background: color-mix(in srgb,var(--inv-surface) 90%,var(--inv-soft)); clip-path: polygon(0 0,53% 51%,0 100%); }
+.bi-fold-right { background: var(--inv-surface); clip-path: polygon(100% 0,47% 51%,100% 100%); }
+.bi-fold-bottom { background: color-mix(in srgb,var(--inv-surface) 95%,var(--inv-accent)); clip-path: polygon(0 100%,50% 43%,100% 100%); }
+.bi-band-motion { position: absolute; z-index: 7; left: -2%; right: -2%; top: 53%; }
+.bi-belly-band { height: clamp(40px,12cqw,65px); background: var(--inv-accent); color: var(--bi-on-accent); box-shadow: 0 5px 10px color-mix(in srgb,var(--inv-accent) 16%,transparent); }
+.bi-seal { position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: clamp(48px,15cqw,78px); aspect-ratio: 1; border: 1px solid color-mix(in srgb,currentColor 38%,transparent); border-radius: 50%; background: var(--inv-accent); transform: translate(-50%,-50%); }
+.bi-seal > svg { width: 53%; height: 53%; }
+.bi-recipient { max-width: 30ch; margin: 0 0 24px; white-space: pre-line; font-size: 14px; line-height: 1.65; }
+.bi-action { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; gap: 14px; padding: 12px 24px; border: 0; border-radius: 12px; background: var(--inv-accent); color: var(--bi-on-accent); font-family: inherit; font-size: 14px; font-weight: 500; line-height: 1.4; text-decoration: none; transition: transform 140ms cubic-bezier(.23,1,.32,1), background-color 180ms ease; }
+.bi-action:active { transform: scale(.98); }
+.bi-action:disabled { cursor: wait; opacity: .65; }
+.bi-open { min-width: min(100%,250px); margin-top: auto; font-size: 16px; }
+.bi-open > svg { flex: 0 0 auto; }
+.bi-section { position: relative; padding-block: clamp(65px,18cqw,105px); padding-inline: clamp(25px,7.5cqw,50px); }
+.bi-section h2 { max-width: 18ch; margin: 0 0 28px; font-family: var(--inv-heading); font-size: clamp(1.75rem,8.7cqw,3.4rem); font-weight: 400; line-height: 1.16; letter-spacing: -.025em; }
+.bi-section-art { position: absolute; pointer-events: none; }
+.bi-art-greeting { right: 3%; bottom: 25px; width: 29%; opacity: .17; --bi-art-rotation: -12deg; }
+.bi-art-event { right: 6%; bottom: 24px; width: 25%; --bi-art-rotation: 8deg; }
+.bi-art-location { left: 7%; bottom: 35px; width: 20%; opacity: .65; --bi-art-rotation: -14deg; }
+.bi-art-closing { right: 4%; bottom: 28px; width: 34%; opacity: .2; --bi-art-rotation: 8deg; }
+.botanical-invitation [data-invitation-section="greeting"] { text-align: left; }
+.botanical-invitation [data-studio-native-object="object:greeting:copy-group"] { margin: 0; font-size: 15px; line-height: 1.95; opacity: 1; }
+.bi-identity { margin-top: 38px; }
+.bi-person { position: relative; display: grid; align-items: center; gap: 20px; min-height: 180px; }
+.bi-person-first { grid-template-columns: minmax(74px,26%) minmax(0,1fr); }
+.bi-person-second { grid-template-columns: minmax(0,1fr) minmax(80px,30%); margin-top: 45px; text-align: right; }
+.bi-person-second .bi-person-art { grid-column: 2; grid-row: 1; }
+.bi-person-second .bi-person-copy { grid-column: 1; grid-row: 1; }
+.bi-person-art { width: 100%; --bi-art-rotation: -5deg; }
+.bi-person-second .bi-person-art { --bi-art-rotation: 8deg; }
+.bi-person-name { margin: 0; font-family: var(--inv-heading); font-size: clamp(1.65rem,7.5cqw,2.8rem); line-height: 1.2; }
+.bi-person-parents { margin: 15px 0 0; font-size: 13px; line-height: 1.8; }
+.bi-identity-single { display: flex; align-items: center; gap: 24px; }
+.bi-single-art { flex: 0 0 26%; }
+.botanical-invitation [data-invitation-subsection="our-story"] { padding: 60px clamp(25px,7.5cqw,50px); }
+.botanical-invitation [data-invitation-subsection="our-story"] > div { max-width: none; text-align: left; }
+.botanical-invitation [data-studio-native-object="object:identity:our-story-heading"] { margin: 0 0 22px; font-size: clamp(26px,8cqw,42px); }
+.botanical-invitation [data-invitation-section="event"] h2 { max-width: 8ch; }
+.botanical-invitation [data-studio-native-object="object:event:details-group"] { max-width: 77%; margin: 0; font-size: 14px; line-height: 1.85; }
+.botanical-invitation [data-studio-native-object="object:event:event-title"] { font-size: clamp(21px,6cqw,32px); line-height: 1.3; }
+.botanical-invitation [data-invitation-section="dateTime"] { text-align: center; padding-bottom: 90px; }
+.botanical-invitation [data-invitation-section="dateTime"] h2 { margin-inline: auto; }
+.botanical-invitation [data-studio-native-object="object:dateTime:panel"] { margin-inline: auto; padding: 20px 0 0; border: 0; border-radius: 0; background: transparent; }
+.botanical-invitation [data-studio-native-object="object:dateTime:date"] { margin-top: 0; font-size: clamp(27px,9.5cqw,49px); line-height: 1.35; }
+.botanical-invitation [data-studio-native-object="object:dateTime:timezone"] { font-size: 12px; opacity: .85; }
+.bi-herbarium-track { position: relative; display: flex; align-items: stretch; gap: 20px; overflow-x: auto; padding: 18px 8px 26px; scroll-snap-type: x mandatory; scrollbar-width: none; }
+.bi-herbarium-track::-webkit-scrollbar { display: none; }
+.bi-herbarium-page { flex: 0 0 88%; min-width: 0; scroll-snap-align: start; scroll-snap-stop: always; }
+.bi-herbarium-sheet { height: 100%; margin: 0; padding: 20px 24px 24px; background: var(--inv-surface); box-shadow: 0 9px 22px color-mix(in srgb,var(--inv-accent) 12%,transparent); transform: rotate(-1.4deg); }
+.bi-herbarium-page:nth-child(2) .bi-herbarium-sheet { transform: rotate(1.4deg); }
+.bi-herbarium-art { width: 84%; max-width: 260px; margin: 0 auto 15px; }
+.bi-herbarium-sheet figcaption { margin: 0; font-family: var(--inv-heading); font-size: clamp(20px,5.5cqw,28px); text-align: center; line-height: 1.4; }
+.bi-herbarium-controls { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.bi-herbarium-controls > div { display: flex; gap: 10px; }
+.bi-herbarium-position { font-size: 13px; font-variant-numeric: tabular-nums; }
+.bi-gallery-arrow { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--inv-soft); border-radius: 12px; background: var(--inv-surface); color: inherit; transition: transform 120ms cubic-bezier(.23,1,.32,1),background-color 180ms ease; }
+.bi-gallery-arrow:active { transform: scale(.96); }
+.bi-gallery-arrow:disabled { opacity: .35; cursor: default; }
+.botanical-invitation :is(.bi-action,.bi-gallery-arrow):focus-visible:active { transform: none; }
+.bi-herbarium-copy { max-width: 29ch; margin: 32px 0 0; font-size: 15px; line-height: 1.8; }
+.botanical-invitation [data-invitation-section="countdown"] { text-align: center; }
+.botanical-invitation [data-invitation-section="countdown"] h2 { margin-inline: auto; }
+.botanical-invitation [data-studio-native-object="object:countdown:grid"] { gap: 6px; margin-top: 36px; }
+.botanical-invitation [data-studio-native-object="object:countdown:grid"] > div { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.botanical-invitation [data-studio-native-object^="object:countdown:"][data-studio-native-object$="-value"] { font-size: clamp(26px,10cqw,49px); line-height: 1.15; color: inherit; font-variant-numeric: tabular-nums; }
+.botanical-invitation [data-studio-native-object^="object:countdown:"][data-studio-native-object$="-label"] { margin-top: 13px; font-size: 12px; opacity: .9; }
+.botanical-invitation [data-invitation-section="location"] h2 { margin-left: auto; text-align: right; }
+.botanical-invitation [data-studio-native-object="object:location:details-group"] { max-width: 78%; margin-right: 0; text-align: right; }
+.botanical-invitation [data-studio-native-object="object:location:venue"] { font-size: clamp(22px,6cqw,35px); line-height: 1.35; }
+.botanical-invitation .bi-section :is(input,textarea,select) { caret-color: var(--inv-accent); font-size: 15px; }
+.botanical-invitation [data-studio-native-object="object:gift:panel"] { margin: 0; padding: 26px; border: 0; border-radius: 0; background: var(--inv-surface); text-align: left; }
+.botanical-invitation [data-studio-native-object="object:gift:bank-name"] { margin-top: 0; font-size: 14px; opacity: 1; }
+.botanical-invitation [data-studio-native-object="object:gift:account-number"] { margin-top: 12px; font-size: clamp(23px,7cqw,36px); font-variant-numeric: tabular-nums; }
+.botanical-invitation [data-studio-native-object="object:closing:copy-group"] { max-width: none; margin: 0; }
+.botanical-invitation [data-studio-native-object="object:closing:copy-group"] > p { margin-left: 0; max-width: 33ch; }
+.botanical-invitation [data-studio-native-object="object:closing:names"] { max-width: 90%; margin-top: 36px; font-size: clamp(27px,9cqw,48px); line-height: 1.3; }
+.bi-footer { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 24px 25px 30px; border-top: 0; background: var(--inv-bg); }
+.bi-footer > svg { width: 22px; height: 22px; color: var(--inv-accent); }
+.bi-footer-signature { font-size: 13px; letter-spacing: .04em; }
+@media (hover:hover) and (pointer:fine) {
+  .bi-action:hover { background: color-mix(in srgb,var(--inv-accent) 88%,var(--inv-ink)); }
+  .bi-gallery-arrow:hover:not(:disabled) { background: color-mix(in srgb,var(--inv-surface) 75%,var(--inv-soft)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .botanical-invitation .bi-action,.botanical-invitation .bi-gallery-arrow { transition: none; }
+  .botanical-invitation .bi-action:active,.botanical-invitation .bi-gallery-arrow:active { transform: none; }
+  .botanical-invitation .bi-herbarium-track { scroll-behavior: auto; }
+}
+@container (max-width:320px) {
+  .bi-cover,.bi-envelope,.bi-section { padding-inline: 20px; }
+  .bi-cover-names { font-size: 16cqw; }
+  .bi-person { gap: 14px; }
+  .bi-person-parents { font-size: 12px; }
+  .bi-herbarium-sheet { padding-inline: 18px; }
+}

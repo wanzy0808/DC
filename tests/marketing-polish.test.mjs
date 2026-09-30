@@ -33,7 +33,7 @@ test("public catalog and featured collection render localized descriptions", () 
   const catalogPage = read("app/template-design/page.tsx");
   const featured = read("components/DigitalInvitation/TemplateSection.tsx");
   assert.match(catalogPage, /template\.descriptionEn \?\? template\.description/);
-  assert.match(catalogPage, /descriptionFor\(selected\)/);
+  assert.match(catalogPage, /descriptionFor\(activeWheelTemplate\)/);
   assert.match(featured, /template\.descriptionEn \?\? template\.description/);
 });
 

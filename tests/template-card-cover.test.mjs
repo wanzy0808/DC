@@ -16,7 +16,7 @@ test("every live template catalog card renders the Cover/Hero rather than the en
 test("public template catalog uses a looping phone wheel with centered preview and details below", () => {
   assert.match(page, /data-template-wheel/);
   assert.match(page, /data-template-wheel-details/);
-  assert.match(page, /\[perspective:1200px\]/);
+  assert.match(page, /\[perspective:1450px\]/);
   assert.match(page, /rotateY\(\$\{rotation\}deg\)/);
   assert.match(page, /stage\.addEventListener\("wheel", onWheel, \{ passive: false \}\)/);
   assert.match(page, /onTouchStart=\{handleWheelTouchStart\}/);
@@ -49,10 +49,10 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.match(page, /max-w-\[1220px\]/);
   assert.match(page, /w-\[clamp\(166px,22vw,250px\)\]/);
   assert.match(page, /lg:absolute lg:-left-24 lg:top-14 lg:flex lg:h-\[16rem\].*lg:-translate-x-\[5cm\]/);
-  assert.match(page, /lg:right-\[-9rem\] lg:top-\[66%\].*lg:flex lg:h-\[15rem\].*lg:translate-x-\[5cm\]/);
+  assert.match(page, /lg:right-\[-9rem\] lg:top-\[66%\].*lg:flex lg:w-\[33rem\].*lg:translate-x-\[5cm\]/);
   assert.match(page, /lg:w-\[33rem\]/);
   assert.match(page, /text-\[15px\] font-bold/);
-  assert.match(page, /text-foreground\/82/);
+  assert.match(page, /text-foreground\/84/);
   assert.doesNotMatch(page, /\{filteredTemplates\.length\} \{copy\.available\}/);
   assert.match(page, /top-\[50%\] aspect-\[9\/19\.5\]/);
   assert.match(page, /mb-8 flex w-full max-w-\[940px\]/);

@@ -28,6 +28,7 @@ type SceneProps = {
   couple?: boolean;
   hashtag?: string | null;
   recipientLine?: string;
+  motionEnabled?: boolean;
 };
 const heading = { color: "inherit", fontFamily: "var(--inv-heading, var(--font-undara-heading)), Georgia, serif" };
 const caption = "text-[10px] uppercase tracking-[.3em]";
@@ -139,8 +140,9 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
 const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
 const SereinScene = dynamic(() => import("@/components/PublicInvitation/SereinScene"));
+const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,couple,hashtag,recipientLine}: SceneProps) {
+export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   if (theme === "blank-canvas") {
@@ -155,6 +157,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
   if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
+  if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
@@ -213,21 +216,6 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <Names className="relative mt-10 text-3xl">{names}</Names>
     <p data-studio-native-object="object:cover:date" className="mt-3 text-xs uppercase tracking-[.3em] text-[color:var(--inv-scene-text,#e5d5ac)]">{date}</p>
     <Lines studioObject="object:cover:ornament" className="mt-8"><Star className="h-4 w-4"/></Lines>
-  </section>;
-
-  if (theme === "botanical-ivory") return <section className={`${center} bg-[var(--inv-scene-bg,#faf7e9)] text-[color:var(--inv-scene-ink,#50634d)]`} data-invitation-section={stage}>
-    <BotanicalSprig studioObject="object:cover:sprig-left" /><BotanicalSprig mirrored studioObject="object:cover:sprig-right" />
-    <div aria-hidden data-studio-native-object="object:cover:corner-arc" className="absolute left-6 top-7 h-20 w-20 rounded-tl-[70px] border-l border-t border-[var(--inv-scene-accent,#879a77)]/50" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-12 text-[color:var(--inv-scene-text,#768968)]`}>Botanical • Ivory</p>
-    <div data-studio-native-object="object:cover:card" className="relative flex min-h-[370px] w-[min(77vw,300px)] flex-col items-center justify-center border border-[var(--inv-scene-accent,#8da080)] bg-[var(--inv-scene-surface,#fffdf3)] text-[color:var(--inv-scene-surface-ink)] px-6 py-10 shadow-[0_22px_0_#dfddc9,0_30px_50px_#5265481c]">
-      <span aria-hidden data-studio-native-object="object:cover:inner-border" className="absolute inset-3 border border-[var(--inv-scene-accent,#c5d1b4)]"/>
-      <Leaf aria-hidden data-studio-native-object="object:cover:leaf" className="relative mb-8 h-12 w-12 -rotate-45 text-[color:var(--inv-scene-text,#748c6b)]" strokeWidth={0.65}/>
-      <p data-studio-native-object="object:cover:subtitle" className={`${caption} relative mb-5 text-[color:var(--inv-scene-text,#809179)]`}>{content}</p>
-      <Names className="text-[27px]">{names}</Names>
-      <Lines studioObject="object:cover:inner-ornament" className="relative mt-7"><Leaf className="h-4 w-4"/></Lines>
-      <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs tracking-[.2em]">{date}</p>
-    </div>
-    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-12 max-w-xs text-sm leading-7">{tr("Kehadiran Anda adalah bagian dari cerita kami.")}</p>
   </section>;
 
   if (theme === "classic-pearl") return <section className={`${center} bg-[var(--inv-scene-bg,#f8f6ef)] text-[color:var(--inv-scene-ink,#37352f)]`} data-invitation-section={stage}>

@@ -532,7 +532,7 @@ test("native animation runtime uses validated selectors and shared reduced-motio
   assert.match(hook, /finalOpacity: config\.opacity/);
   assert.match(runtime, /finalOpacity\?: number/);
   assert.match(runtime, /frame\.opacity \* finalOpacity/);
-  assert.match(universal, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\), key === "serein"/);
+  assert.match(universal, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\), templateHasDefaultMotion\(key\)/);
   assert.match(rose, /useInvitationNativeVisualAnimations\(rootRef, activeDesignKey, String\(opened\)\)/);
   assert.match(inspector, /sectionAnimationGroups/);
   assert.match(inspector, /sectionAnimationPresets/);
@@ -552,8 +552,10 @@ test("theme scene cover branches do not keep unreachable envelope controls", () 
 
 test("Botanical Ivory keeps its leaf ornament directly editable while shared groups stay selectable", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
-  assert.match(universal, /key === "botanical-ivory" && <div aria-hidden data-studio-native-object=/);
-  assert.match(universal, /object:\$\{keyName\}:theme-leaf/);
+  const artwork = read("components/PublicInvitation/BotanicalIvoryArtwork.tsx");
+  assert.match(universal, /botanical && <BotanicalSectionArt section=\{keyName\}/);
+  assert.match(artwork, /object:\$\{section\}:theme-leaf/);
+  assert.match(artwork, /data-studio-native-object=\{objectKey\}/);
   assert.equal(nativeVisualCanHide("object:greeting:theme-leaf"), true);
   assert.equal(nativeVisualCapabilities("object:greeting:heading-group").typography, false);
   assert.equal(nativeVisualCapabilities("object:identity:personOne-group").typography, false);

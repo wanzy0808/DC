@@ -25,7 +25,8 @@ export default function OurStorySection({
   const rose = theme === "romantic-rose";
   const zen = theme === "zen-atelier";
   const pencil = theme === "pencil-reverie";
-  const left = theme === "modern-maroon" || theme === "golden-art-deco";
+  const botanical = theme === "botanical-ivory";
+  const left = theme === "modern-maroon" || theme === "golden-art-deco" || botanical;
   const storyText = story?.trim() || (preview ? invitationText(language, "Our Story belum diisi") : "");
   return (
     <section
@@ -39,9 +40,9 @@ export default function OurStorySection({
       style={rose ? undefined : { backgroundColor: "var(--inv-surface)" }}
     >
       <div className={`relative mx-auto max-w-md ${left || pencil || rose ? "text-left" : "text-center"}`}>
-        <p data-studio-native-object="object:identity:our-story-kicker" className={rose ? "sr-only" : "text-[10px] uppercase tracking-[.24em] text-[var(--inv-accent)]"}>
+        {!botanical && <p data-studio-native-object="object:identity:our-story-kicker" className={rose ? "sr-only" : "text-[10px] uppercase tracking-[.24em] text-[var(--inv-accent)]"}>
           {invitationText(language, "Our Story")}
-        </p>
+        </p>}
         <h2
           id="invitation-our-story-heading"
           data-studio-native-object="object:identity:our-story-heading"
@@ -50,11 +51,11 @@ export default function OurStorySection({
         >
           {invitationText(language, "Tentang Kami")}
         </h2>
-        <span
+        {!botanical && <span
           aria-hidden="true"
           data-studio-native-object="object:identity:our-story-divider"
           className={`my-6 block h-px ${rose ? "w-20 bg-[#a96b78]/55" : `w-12 ${left || pencil ? "" : "mx-auto"} bg-[var(--inv-accent)]`}`}
-        />
+        />}
         <p data-studio-copy-field="ourStory" className={`whitespace-pre-line break-words text-sm leading-8 ${rose ? "ml-auto max-w-[28rem] border-l border-[#c9a98d]/65 pl-6" : ""}`}><InvitationLayerTextContent text={storyText} unit={motionUnit} /></p>
       </div>
     </section>

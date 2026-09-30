@@ -50,14 +50,14 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: false,
     photoSlots: [],
-    preset: { layout: "botanical", palette: "pearl", font: "cinzelFauna" },
+    preset: { layout: "botanical", palette: "botanical", font: "rufinaAverage" },
     name: "Botanical Ivory",
     description:
-      "Ivory botanical bergaya editorial dengan susunan RSVP, Wishes, dan Gift seperti undangan mobile klasik.",
+      "Surat ivory, tangkai botanical, dan lembar herbarium dengan gerak lembut dalam undangan tanpa foto.",
     descriptionEn:
-      "An editorial ivory botanical theme with RSVP, Wishes, and Gift arranged like a classic mobile invitation.",
+      "Ivory stationery, botanical sprigs, and softly animated herbarium pages in a photo-free invitation.",
     previewImage:
-      "/assets/demo/invitation/couple-02.jpg",
+      "/templates/botanical-ivory/greenplant.webp",
     assetPath: "/templates/botanical-ivory",
   },
   {
