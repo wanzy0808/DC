@@ -1047,6 +1047,7 @@ Manual payment verification/backoffice boleh tetap tersedia melalui role Admin/F
 - Pelanggan memasukkan dan menyimpan satu kode aktif di Beranda Dashboard; kode tersebut terbawa ke pemilihan paket. Kode dapat diganti atau dihapus sebelum invoice dibuat. Checkout juga menyediakan input kode untuk pelanggan yang langsung memilih paket.
 - Pada invoice baru, kode aktif memberi diskon **30% untuk `INVITATION_BASIC`** dari harga katalog Rp150.000 (total Rp105.000), atau **15% untuk `GUESTBOOK_DIGITAL`** dari harga katalog Rp2.000.000 (total Rp1.700.000). Perhitungan jumlah bayar bersumber dari katalog aktif dan dilakukan ulang di server, bukan dari nominal yang dikirim browser. WA Blast serta produk lain tidak menerima diskon ini.
 - Setiap invoice yang menggunakan kode mengaitkan penjualan ke Mitra pemilik kode. Nilai invoice dan kode terkunci setelah pelanggan melaporkan pembayaran atau mengirim bukti transfer; invoice yang sudah terverifikasi tidak boleh dihitung ulang. Analitik Mitra/Owner menghitung order teratribusi terakhir dan omzet berdasarkan nominal invoice yang benar-benar dibayar.
+- Panel Mitra menampilkan setiap invoice berkode dengan harga awal, nominal diskon pelanggan, total bayar, kode, dan status. Ringkasan penjualan terverifikasi menghitung `harga awal − diskon = total dibayar` hanya dari order `PAID`; `PENDING` tetap terlihat beserta potongannya tetapi belum masuk omzet. Order batal/gagal tidak dihitung sebagai penjualan. Nilai diskon adalah potongan pelanggan, bukan komisi/pencairan Mitra; ketentuan komisi memerlukan keputusan produk tersendiri. Panel Owner menampilkan agregasi diskon terverifikasi dan omzet sesudah diskon per Mitra.
 - Kode dan pilihan pelanggan saat ini memakai riwayat `AuditLog` yang sudah ada, sehingga pekerjaan ini tidak memerlukan migrasi schema. Perubahan akun, kode, dan harga harus dibatasi oleh validasi role/server serta pemeriksaan origin untuk mutasi.
 
 ### 8.3 WA Blast add-on
@@ -1883,3 +1884,13 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `cde1f92`, `26810d9`, `09a8387`, `4ad4a10`, `8b6b0ce`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Rincian diskon pada perhitungan Mitra
+
+**Permintaan owner:** diskon dari kode referral ikut terlihat dalam perhitungan Mitra setiap kali pelanggan membuat order, dengan status pembayaran tetap jelas.
+
+**Implementasi:** laporan Mitra dan analitik Owner membaca harga awal yang disimpan saat atribusi invoice, membandingkannya dengan nominal order yang otoritatif, serta memperlihatkan diskon dan total bayar per invoice. Ringkasan PAID mengakumulasi harga awal, diskon pelanggan, dan omzet setelah diskon; order PENDING ditampilkan terpisah tanpa menambah omzet. Panel memuat ulang saat jendela aktif dan secara berkala saat terbuka. Atribusi lama tanpa snapshot harga tidak dipaksa memiliki diskon.
+
+**Area/commit:** `lib/partners/sales-summary.ts`, `app/api/partner/sales/route.ts`, `app/api/owner/analytics/route.ts`, `components/Partner/PartnerDashboard.tsx`, `components/Owner/OwnerBusinessInsights.tsx`, `tests/partner-sales-summary.test.mjs`, `prd.md` §8.2a/Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 231 tes regresi, `git diff --check`, dan build produksi lulus; data produksi dan browser belum diverifikasi. Tidak ada migrasi database.

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { createPartnerVoucher, getPartnerVoucherCodes } from "@/lib/partners/vouchers";
+import { saleAmounts, summarizePartnerSales } from "@/lib/partners/sales-summary";
 import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 type Metadata = Record<string, unknown>;
@@ -154,13 +155,14 @@ export async function GET() {
     designerMap.set(template.designerId, row);
   }
 
-  const latestAttribution = new Map<string, { code: string; partnerId: string }>();
+  const latestAttribution = new Map<string, { code: string; partnerId: string; regularPrice: unknown }>();
   for (const log of attributionLogs) {
     if (!log.entityId || latestAttribution.has(log.entityId)) continue;
     const data = metadata(log.metadata);
-    latestAttribution.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED" ? { code: "", partnerId: "" } : {
+    latestAttribution.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED" ? { code: "", partnerId: "", regularPrice: null } : {
       code: String(data.code ?? ""),
       partnerId: String(data.partnerId ?? ""),
+      regularPrice: data.regularPrice,
     });
   }
 
@@ -176,22 +178,20 @@ export async function GET() {
   const partnerRows = partners.map((partner) => {
     const partnerVouchers = vouchers.filter((voucher) => voucher.partnerId === partner.id);
     const partnerCodes = new Set(partnerVouchers.map((voucher) => voucher.code));
-    const orders: Array<{ order: NonNullable<ReturnType<typeof orderById.get>>; code: string }> = [];
+    const orders: Array<{ order: NonNullable<ReturnType<typeof orderById.get>>; code: string; regularPrice: number }> = [];
     for (const [orderId, value] of latestAttribution.entries()) {
       if (value.partnerId !== partner.id && !partnerCodes.has(value.code)) continue;
       const order = orderById.get(orderId);
-      if (order) orders.push({ order, code: value.code });
+      if (order) orders.push({ order, code: value.code, regularPrice: saleAmounts(order.amount, value.regularPrice).regularPrice });
     }
-    const paid = orders.filter((item) => item.order.status === "PAID");
+    const summary = summarizePartnerSales(orders.map((item) => ({ ...item.order, regularPrice: item.regularPrice })));
 
     return {
       id: partner.id,
       name: partner.firstName || partner.email,
       email: partner.email,
       vouchers: partnerVouchers.map((voucher) => voucher.code),
-      attributedOrders: orders.length,
-      paidSales: paid.length,
-      revenue: paid.reduce((sum, item) => sum + item.order.amount, 0),
+      ...summary,
     };
   });
 

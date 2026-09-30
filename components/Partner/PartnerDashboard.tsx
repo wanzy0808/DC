@@ -10,6 +10,8 @@ type Sale = {
   packageKey: string;
   status: string;
   amount: number;
+  regularPrice: number;
+  discount: number;
   createdAt: string;
   paidAt: string | null;
   voucherCode: string;
@@ -18,7 +20,7 @@ type Sale = {
 type Data = {
   partner: { email: string; name: string };
   vouchers: string[];
-  summary: { attributedOrders: number; paidSales: number; pendingSales: number; revenue: number };
+  summary: { attributedOrders: number; paidSales: number; pendingSales: number; gross: number; discountGiven: number; revenue: number; pendingDiscount: number };
   sales: Sale[];
 };
 
@@ -59,7 +61,16 @@ export default function PartnerDashboard() {
       .catch((error) => setMessage(error instanceof Error ? error.message : "Data belum dapat dimuat."));
   }
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    void load();
+    const refresh = () => { if (document.visibilityState === "visible") void load(); };
+    const timer = window.setInterval(refresh, 60_000);
+    window.addEventListener("focus", refresh);
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refresh);
+    };
+  }, []);
 
   async function createCode() {
     setCreating(true);
@@ -83,7 +94,7 @@ export default function PartnerDashboard() {
         <div>
           <p className="font-[family-name:var(--font-undara-mono)] text-xs uppercase tracking-[.2em] text-primary">Mitra Undara</p>
           <h1 className="mt-2 font-[family-name:var(--font-undara-heading)] text-3xl font-semibold">Dashboard Mitra</h1>
-          <p className="mt-2 text-sm text-muted-foreground">{data?.partner.email ?? "Pantau penjualan dari kode voucher kamu."}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{data?.partner.email ?? "Pantau pembelian dari kode referral kamu."}</p>
         </div>
         <SessionLogoutButton />
       </header>
@@ -93,9 +104,9 @@ export default function PartnerDashboard() {
           <div className="grid gap-4 sm:grid-cols-4">
             {[
               ["Order pakai kode", data.summary.attributedOrders],
-              ["Sudah PAID", data.summary.paidSales],
+              ["Terverifikasi", data.summary.paidSales],
               ["Menunggu", data.summary.pendingSales],
-              ["Nilai penjualan", rupiah(data.summary.revenue)],
+              ["Omzet setelah diskon", rupiah(data.summary.revenue)],
             ].map(([label, value]) => (
               <section key={String(label)} className="rounded-2xl border border-border bg-background p-5">
                 <p className="text-sm text-muted-foreground">{label}</p>
@@ -103,6 +114,17 @@ export default function PartnerDashboard() {
               </section>
             ))}
           </div>
+
+          <section className="rounded-2xl border border-primary/25 bg-background p-5">
+            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Perhitungan penjualan</h2>
+            <p className="mt-1 text-sm text-muted-foreground">Hanya pembayaran terverifikasi yang masuk total penjualan. Order menunggu tetap tercatat di daftar bawah.</p>
+            <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+              <div><dt className="text-sm text-muted-foreground">Harga awal terverifikasi</dt><dd className="mt-1 text-lg font-semibold tabular-nums">{rupiah(data.summary.gross)}</dd></div>
+              <div><dt className="text-sm text-muted-foreground">Total diskon pelanggan</dt><dd className="mt-1 text-lg font-semibold tabular-nums text-primary">−{rupiah(data.summary.discountGiven)}</dd></div>
+              <div><dt className="text-sm text-muted-foreground">Total dibayar</dt><dd className="mt-1 text-lg font-semibold tabular-nums">{rupiah(data.summary.revenue)}</dd></div>
+            </dl>
+            {!!data.summary.pendingDiscount && <p className="mt-4 text-xs text-muted-foreground">Potongan pada order yang masih menunggu: {rupiah(data.summary.pendingDiscount)}. Belum dihitung sebagai penjualan.</p>}
+          </section>
 
           <section className="rounded-2xl border border-border bg-background p-5">
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -121,11 +143,11 @@ export default function PartnerDashboard() {
 
           <section className="overflow-hidden rounded-2xl border border-border bg-background">
             <div className="border-b border-border p-5">
-              <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Penjualan dari kode voucher</h2>
-              <p className="mt-1 text-xs text-muted-foreground">Hanya transaksi dengan kode voucher milik akun ini yang ditampilkan.</p>
+              <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Pembelian dari kode referral</h2>
+              <p className="mt-1 text-xs text-muted-foreground">Setiap invoice yang menggunakan kode milik akun ini tampil di sini. Omzet dihitung setelah diskon dan verifikasi.</p>
             </div>
             {!data.sales.length ? (
-              <p className="p-5 text-sm text-muted-foreground">Belum ada order yang memakai kode voucher kamu.</p>
+              <p className="p-5 text-sm text-muted-foreground">Belum ada order yang memakai kode referral kamu.</p>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
@@ -135,7 +157,9 @@ export default function PartnerDashboard() {
                       <th className="px-5 py-3">Kode</th>
                       <th className="px-5 py-3">Paket</th>
                       <th className="px-5 py-3">Status</th>
-                      <th className="px-5 py-3">Nominal</th>
+                      <th className="px-5 py-3">Harga awal</th>
+                      <th className="px-5 py-3">Diskon</th>
+                      <th className="px-5 py-3">Total bayar</th>
                       <th className="px-5 py-3">Tanggal</th>
                     </tr>
                   </thead>
@@ -146,7 +170,9 @@ export default function PartnerDashboard() {
                         <td className="px-5 py-3 font-mono text-xs text-primary">{sale.voucherCode}</td>
                         <td className="px-5 py-3">{packageNames[sale.packageKey] ?? sale.packageKey}</td>
                         <td className="px-5 py-3">{sale.status === "PAID" ? "Terverifikasi" : sale.status === "PENDING" ? "Menunggu" : sale.status}</td>
-                        <td className="px-5 py-3">{rupiah(sale.amount)}</td>
+                        <td className="px-5 py-3 tabular-nums">{rupiah(sale.regularPrice)}</td>
+                        <td className="px-5 py-3 tabular-nums text-primary">{sale.discount ? `−${rupiah(sale.discount)}` : "—"}</td>
+                        <td className="px-5 py-3 font-semibold tabular-nums">{rupiah(sale.amount)}</td>
                         <td className="px-5 py-3 text-xs text-muted-foreground">{date(sale.paidAt ?? sale.createdAt)}</td>
                       </tr>
                     ))}

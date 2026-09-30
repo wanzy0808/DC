@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getPartnerVoucherCodes } from "@/lib/partners/vouchers";
+import { saleAmounts, summarizePartnerSales } from "@/lib/partners/sales-summary";
 
 function metadata(value: unknown) {
   return value && typeof value === "object" ? value as Record<string, unknown> : {};
@@ -20,13 +21,15 @@ export async function GET() {
     orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 
-  const latest = new Map<string, { code: string; partnerId: string }>();
+  const latest = new Map<string, { code: string; partnerId: string; regularPrice: unknown }>();
   for (const log of logs) {
     if (!log.entityId || latest.has(log.entityId)) continue;
     const data = metadata(log.metadata);
     const code = String(data.code ?? "");
     const partnerId = String(data.partnerId ?? "");
-    latest.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED" ? { code: "", partnerId: "" } : { code, partnerId });
+    latest.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED"
+      ? { code: "", partnerId: "", regularPrice: null }
+      : { code, partnerId, regularPrice: data.regularPrice });
   }
 
   const ids = [...latest.entries()].filter(([, value]) => value.partnerId === partner.id).map(([id]) => id);
@@ -49,18 +52,13 @@ export async function GET() {
   const sales = orders.map((order) => ({
     ...order,
     voucherCode: latest.get(order.id)?.code ?? "",
+    ...saleAmounts(order.amount, latest.get(order.id)?.regularPrice),
   }));
-  const paid = sales.filter((order) => order.status === "PAID");
 
   return NextResponse.json({
     partner: { email: partner.email, name: partner.firstName },
     vouchers: codes,
-    summary: {
-      attributedOrders: sales.length,
-      paidSales: paid.length,
-      pendingSales: sales.filter((order) => order.status === "PENDING").length,
-      revenue: paid.reduce((sum, order) => sum + order.amount, 0),
-    },
+    summary: summarizePartnerSales(sales),
     sales,
   });
 }

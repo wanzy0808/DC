@@ -21,6 +21,8 @@ type Partner = {
   attributedOrders: number;
   paidSales: number;
   revenue: number;
+  gross: number;
+  discountGiven: number;
 };
 
 function rupiah(value: number) {
@@ -85,6 +87,7 @@ export default function OwnerBusinessInsights() {
     designerSales: designers.reduce((sum, item) => sum + item.salesCount, 0),
     partnerSales: partners.reduce((sum, item) => sum + item.paidSales, 0),
     partnerRevenue: partners.reduce((sum, item) => sum + item.revenue, 0),
+    partnerDiscounts: partners.reduce((sum, item) => sum + item.discountGiven, 0),
   }), [designers, partners]);
 
   return (
@@ -98,7 +101,7 @@ export default function OwnerBusinessInsights() {
         <Button type="button" size="sm" onClick={() => void load()}>Muat ulang</Button>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <div className="rounded-xl border border-border p-4">
           <p className="text-xs text-muted-foreground">Template terjual</p>
           <p className="mt-2 text-2xl font-semibold">{totals.designerSales}</p>
@@ -108,8 +111,12 @@ export default function OwnerBusinessInsights() {
           <p className="mt-2 text-2xl font-semibold">{totals.partnerSales}</p>
         </div>
         <div className="rounded-xl border border-border p-4">
-          <p className="text-xs text-muted-foreground">Nilai order via mitra</p>
+          <p className="text-xs text-muted-foreground">Omzet setelah diskon via mitra</p>
           <p className="mt-2 text-xl font-semibold">{rupiah(totals.partnerRevenue)}</p>
+        </div>
+        <div className="rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Diskon pelanggan terverifikasi</p>
+          <p className="mt-2 text-xl font-semibold">{rupiah(totals.partnerDiscounts)}</p>
         </div>
       </div>
 
@@ -180,7 +187,7 @@ export default function OwnerBusinessInsights() {
                     )) : <span className="text-xs text-muted-foreground">Belum punya kode</span>}
                   </div>
                   <p className="mt-3 text-xs text-muted-foreground">
-                    {partner.paidSales} penjualan terverifikasi · {partner.attributedOrders} order memakai kode · {rupiah(partner.revenue)}
+                    {partner.paidSales} penjualan terverifikasi · {partner.attributedOrders} order memakai kode · {rupiah(partner.discountGiven)} diskon · {rupiah(partner.revenue)} setelah diskon
                   </p>
                 </article>
               ))}
