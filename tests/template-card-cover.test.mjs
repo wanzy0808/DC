@@ -48,11 +48,13 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.doesNotMatch(page, /max-w-\[940px\][\s\S]{0,180}border border-primary\/18 bg-background\/78/);
   assert.match(page, /max-w-\[1220px\]/);
   assert.match(page, /w-\[clamp\(166px,22vw,250px\)\]/);
-  assert.match(page, /lg:absolute lg:-left-20 lg:top-0/);
-  assert.match(page, /lg:absolute lg:-bottom-1 lg:-right-20/);
+  assert.match(page, /lg:absolute lg:-left-24 lg:-top-1/);
+  assert.match(page, /lg:right-\[-5rem\] lg:top-\[66%\]/);
   assert.match(page, /text-\[15px\] font-bold/);
   assert.match(page, /text-foreground\/82/);
   assert.doesNotMatch(page, /\{filteredTemplates\.length\} \{copy\.available\}/);
+  assert.match(page, /top-\[50%\] aspect-\[9\/19\.5\]/);
+  assert.match(page, /mb-8 flex w-full max-w-\[940px\]/);
 });
 
 test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
