@@ -3,19 +3,19 @@ export const digitalInvitationReviews = {
     {
       name: "Riko & Sarah",
       review:
-        "Kami pakai untuk wedding. RSVP masuk rapi, daftar tamu gampang dipantau, dan semua detail acara ada di satu link.",
+        "Kami pakai untuk pernikahan. RSVP masuk rapi, daftar tamu mudah dipantau, dan semua detail acara ada dalam satu tautan.",
       date: "2025",
     },
     {
       name: "Nadine",
       review:
-        "Untuk baby shower saya tinggal pilih template, isi detail acara, lalu bagikan. Respons tamu juga langsung terkumpul di workspace.",
+        "Untuk syukuran kelahiran saya tinggal pilih tema undangan, isi detail acara, lalu bagikan. Respons tamu juga langsung terkumpul di ruang kerja.",
       date: "2026",
     },
     {
       name: "Aurelia Studio",
       review:
-        "Kami butuh undangan untuk private celebration dan senang karena datanya tidak bercampur dengan event lain yang kami buat.",
+        "Kami butuh undangan untuk perayaan pribadi dan senang karena datanya tidak bercampur dengan acara lain yang kami buat.",
       date: "2026",
     },
   ],
@@ -46,27 +46,27 @@ export const digitalInvitationFaq = {
     {
       question: "Apakah Undangan Digital Undara hanya untuk pernikahan?",
       answer:
-        "Tidak. Undangan Digital dirancang per acara, jadi bisa digunakan untuk wedding, anniversary, baby shower, ulang tahun, private event, atau acara lain yang membutuhkan undangan, RSVP, dan manajemen tamu.",
+        "Tidak. Undangan Digital dirancang per acara, jadi bisa digunakan untuk pernikahan, ulang tahun pernikahan, syukuran kelahiran, ulang tahun, perayaan pribadi, atau acara lain yang membutuhkan undangan, RSVP, dan manajemen tamu.",
     },
     {
       question: "Apa yang didapat dari pembelian Rp150.000?",
       answer:
-        "Satu pembelian mengaktifkan satu acara: satu undangan digital, satu template, publikasi, RSVP, dan manajemen tamu untuk acara tersebut.",
+        "Satu pembelian mengaktifkan satu acara: satu undangan digital, satu tema undangan, publikasi, RSVP, dan manajemen tamu untuk acara tersebut.",
     },
     {
       question: "Berapa banyak undangan atau acara yang bisa saya buat?",
       answer:
-        "Jumlah acara tidak dibatasi. Setiap acara dibuat sebagai workspace terpisah dan diaktifkan sendiri seharga Rp150.000 per undangan, sehingga data RSVP dan tamunya tidak tercampur.",
+        "Jumlah acara tidak dibatasi. Setiap acara memiliki ruang kerja terpisah dan diaktifkan sendiri seharga Rp150.000 per undangan, sehingga data RSVP dan tamunya tidak tercampur.",
     },
     {
       question: "Apakah WA Blast termasuk dalam harga Undangan Digital?",
       answer:
-        "Tidak. WA Blast adalah add-on terpisah. Setiap pembelian Rp75.000 menambah 50 kuota WA Blast ke acara aktif yang dipilih dan dapat dibeli berulang sesuai kebutuhan.",
+        "Tidak. Kuota WA Blast dibeli terpisah. Setiap pembelian Rp75.000 menambah 50 kuota ke acara aktif yang dipilih dan dapat dibeli berulang sesuai kebutuhan.",
     },
     {
-      question: "Bagaimana jika saya membutuhkan QR check-in dan operasional hari acara?",
+      question: "Bagaimana jika saya membutuhkan pemindaian QR dan bantuan pada hari acara?",
       answer:
-        "Gunakan layanan Guestbook Digital untuk kebutuhan onsite seperti QR check-in, Usher App, perangkat, dan dukungan operasional. Undangan Digital tetap menjadi tempat publikasi, RSVP, dan manajemen tamu sebelum acara.",
+        "Pilih Buku Tamu Digital untuk pemindaian QR di lokasi, aplikasi penerima tamu, perangkat, dan dukungan operasional. Paket ini sudah mencakup Undangan Digital untuk acara yang sama.",
     },
   ],
   en: [
