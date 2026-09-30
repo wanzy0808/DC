@@ -400,10 +400,20 @@ aside nav > p { font-family: var(--font-undara-heading); }
   max-width: 19ch;
   font-family: var(--font-undara-heading);
   font-size: clamp(2.65rem, 5.5vw, 6rem);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 0.98;
   letter-spacing: -0.035em;
   color: var(--primary);
+}
+
+/* Marketing headings should scan decisively across all framed public pages.
+   Kicker/body copy remain lighter so section hierarchy is immediately obvious. */
+.undara-marketing-section h2 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+.undara-marketing-section h3 {
+  font-weight: 700;
 }
 .undara-marketing-copy {
   max-width: 42rem;
