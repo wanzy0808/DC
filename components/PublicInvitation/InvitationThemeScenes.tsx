@@ -281,12 +281,14 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:orbit-outer" className="absolute left-1/2 top-[18%] h-[420px] w-[420px] -translate-x-1/2 rounded-full border border-[var(--inv-scene-accent,#a4c0e1)]/40"/>
     <div aria-hidden data-studio-native-object="object:cover:orbit-middle" className="absolute left-1/2 top-[23%] h-[340px] w-[340px] -translate-x-1/2 rounded-full border border-[var(--inv-scene-accent,#a4c0e1)]/55"/>
     <div aria-hidden data-studio-native-object="object:cover:orbit-inner" className="absolute left-1/2 top-[29%] h-[260px] w-[260px] -translate-x-1/2 rounded-full border border-[var(--inv-scene-accent,#a4c0e1)]/50"/>
-    <Moon aria-hidden data-studio-native-object="object:cover:moon" className="relative mt-14 h-16 w-16 text-[color:var(--inv-scene-text,#b8cfea)]" strokeWidth={0.65}/>
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-8 text-[color:var(--inv-scene-text,#a3c8e5)]`}>{tr("Written in the stars")}</p>
-    <Names className="relative mt-12 max-w-xs text-3xl">{names}</Names>
-    <div aria-hidden data-studio-native-object="object:cover:star-cluster" className="relative mt-12 flex items-center gap-4"><Star className="h-4 w-4"/><Sparkles className="h-6 w-6"/><Star className="h-4 w-4"/></div>
-    <p data-studio-native-object="object:cover:date" className="relative mt-9 text-xs uppercase tracking-[.23em]">{date}</p>
-    <Lines studioObject="object:cover:ornament" className="mt-9"><Moon className="h-4 w-4"/></Lines>
+    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
+      <Moon aria-hidden data-studio-native-object="object:cover:moon" className="relative mt-14 h-16 w-16 text-[color:var(--inv-scene-text,#b8cfea)]" strokeWidth={0.65}/>
+      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-8 text-[color:var(--inv-scene-text,#a3c8e5)]`}>{tr("Written in the stars")}</p>
+      <Names className="relative mt-12 max-w-xs text-3xl">{names}</Names>
+      <div aria-hidden data-studio-native-object="object:cover:star-cluster" className="relative mt-12 flex items-center gap-4"><Star className="h-4 w-4"/><Sparkles className="h-6 w-6"/><Star className="h-4 w-4"/></div>
+      <p data-studio-native-object="object:cover:date" className="relative mt-9 text-xs uppercase tracking-[.23em]">{date}</p>
+      <Lines studioObject="object:cover:ornament" className="mt-9"><Moon className="h-4 w-4"/></Lines>
+    </div>
   </section>;
 
   return <section className={center} data-invitation-section={stage}>
