@@ -1791,3 +1791,17 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `tests/marketing-atmosphere-continuity.test.mjs`, `prd.md` §1.2/§16.0a dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Visual browser Light/Dark pada berbagai ukuran layar belum diverifikasi; tidak ada migrasi database.
+
+
+## 30 September 2026 — Restore shared marketing audio coverage
+
+- Shared marketing ambience dikembalikan ke track canonical `/assets/audio/a-himitsu-fragile.mp3`.
+- Semua framed marketing routes sekarang juga terdaftar sebagai marketing audio routes, termasuk `/privacy-policy` dan `/terms-and-conditions`.
+- Footer/audio controls tetap memakai satu `MarketingAudioProvider` global; tidak dibuat player terpisah per page.
+- Regression test menjaga track canonical dan memastikan setiap framed marketing route juga mengizinkan audio.
+
+**Area:** `components/Layout/MarketingAudio.tsx`, `lib/marketing-paths.ts`, `tests/marketing-polish.test.mjs`.
+
+**Commits:** `d79c691`, `83d2022`, `b88c003`.
+
+**Validation:** source inspection complete; CI observed separately.
