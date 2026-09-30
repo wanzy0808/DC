@@ -34,22 +34,22 @@ export default function ProcessSection() {
         {
           icon: ClipboardList,
           title: "Siapkan daftar tamu",
-          text: "Rapikan identitas tamu, WhatsApp, status RSVP, plus one, dan penempatan meja sebelum acara dimulai.",
+          text: "Rapikan identitas tamu, WhatsApp, status RSVP, tamu tambahan, dan penempatan meja sebelum acara dimulai.",
         },
         {
           icon: ScanLine,
           title: "Terbitkan akses QR resmi",
-          text: "Kirim QR kepada tamu. Jika seseorang datang tanpa QR, usher melakukan verifikasi terlebih dulu lalu menerbitkan QR resmi.",
+          text: "Kirim QR kepada tamu. Jika seseorang datang tanpa QR, petugas memverifikasi terlebih dulu lalu menerbitkan QR resmi.",
         },
         {
           icon: Armchair,
-          title: "Scan dan arahkan di venue",
-          text: "Scan yang valid mengonfirmasi kedatangan, lalu informasi tamu dan meja langsung membantu tim penerima memberi arahan.",
+          title: "Pindai dan arahkan di lokasi",
+          text: "Pemindaian yang valid mengonfirmasi kedatangan, lalu informasi tamu dan meja membantu tim penerima memberi arahan.",
         },
         {
           icon: BarChart3,
-          title: "Pantau attendance secara live",
-          text: "Tim acara dapat mengikuti kedatangan dan status tamu secara realtime dari data acara yang sama selama flow venue berjalan.",
+          title: "Pantau kehadiran langsung",
+          text: "Tim acara dapat mengikuti kedatangan dan status tamu dari data acara yang sama selama penerimaan berlangsung.",
         },
       ];
 
@@ -65,7 +65,7 @@ export default function ProcessSection() {
         <p className="max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
           {en
             ? "The system follows the way guests actually arrive: prepare the data, verify access, scan at the venue, then keep the team informed."
-            : "Sistem mengikuti cara tamu benar-benar datang: siapkan datanya, verifikasi akses, scan di venue, lalu jaga seluruh tim tetap mendapat informasi yang sama."}
+            : "Sistem mengikuti alur kedatangan tamu: siapkan data, verifikasi akses, pindai QR di lokasi, lalu pastikan seluruh tim mendapat informasi yang sama."}
         </p>
       </div>
 
