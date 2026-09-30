@@ -73,7 +73,7 @@ export default function PencilReverieScene({
         <PaperIllustration file="bingkai.webp" priority className="pr-letter-paper" studioObject="object:envelope:letter-art"/>
         <div className="pr-letter-copy" data-studio-native-object="object:envelope:copy-panel">
           <p data-studio-native-object="object:envelope:letter-kicker">{tr("Untuk momen istimewa")}</p>
-          {recipientLine && <p data-personal-envelope-address className="mt-2 break-words text-[10px] font-semibold leading-4">{recipientLine}</p>}
+          {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-2 break-words text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <h1 data-studio-native-heading="">{names}</h1>
           <span data-studio-native-object="object:envelope:date">{date}</span>
         </div>
@@ -83,7 +83,7 @@ export default function PencilReverieScene({
         <Play size={15} aria-hidden="true" fill="currentColor"/> {tr("Buka Undangan")}
       </button>
     </> : <>
-      <header className="pr-cover-heading">
+      <header className="pr-cover-heading" data-studio-native-object="object:cover:heading-group">
         <span className="pr-overline" data-studio-native-object="object:cover:kicker">{tr(isWedding ? "THE WEDDING OF" : "Sebuah Undangan")}</span>
       </header>
       <div className="pr-cover-illustration" data-studio-native-object="object:cover:illustration-group">
