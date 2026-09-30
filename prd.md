@@ -1466,7 +1466,7 @@ Guestbook marketing juga harus event-oriented.
 
 ### 16.0a Kontinuitas background dan tipografi marketing — 29 September 2026
 
-Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: kabut bronze/champagne, bayangan semak rendah yang memudar, glow halus, dan daun jatuh beragam dari `EventPlannerBotanicalAtmosphere`. Atmosfer berada sebagai sibling di belakang mainframe transparan, jadi header, body scroll, footer, dan bagian luar frame tetap tersambung secara visual. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan ranting panjang berdaun di kiri/kanan serta bunga/Rose glow lama.
+Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: lanskap hutan Light/Dark yang transparan dan memudar sebelum header/footer, kabut bronze/champagne, bayangan semak rendah, glow halus, dan daun jatuh beragam dari `EventPlannerBotanicalAtmosphere`. Atmosfer berada sebagai sibling di belakang mainframe transparan dan harus **terlihat di dalam mainframe sekaligus menyambung ke sisi luarnya**. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas dan teks mudah dibaca. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan ranting panjang berdaun di kiri/kanan serta bunga/Rose glow lama.
 
 Katalog dan seluruh chrome halaman marketing memakai shared typography tokens aktif; karya di dalam preview template tetap memakai font tema masing-masing. Copy produk, email, unduhan QR, dan dokumen baru memakai nama Undara. Nomor invoice lama serta ID teknis `dc-*` tetap dibaca untuk kompatibilitas; invoice baru memakai awalan `UND-`.
 
@@ -1805,3 +1805,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `d79c691`, `83d2022`, `b88c003`.
 
 **Validation:** source inspection complete; CI observed separately.
+
+
+## 30 September 2026 — Lanskap marketing terlihat menembus mainframe
+
+**Koreksi owner:** versi kabut/bayangan semak sebelumnya nyaris tak terlihat; suasana hutan harus terasa di dalam mainframe dan berlanjut ke luar bingkai.
+
+**Implementasi:** atmosfer bersama menampilkan lanskap Light/Dark yang sudah ada pada lebar viewport, di belakang mainframe transparan, dengan mask vertikal agar header/footer tetap jelas. Kabut, bayangan semak rendah, dan daun jatuh tetap mendampingi tekstur hutan tanpa menghidupkan kembali ranting SVG yang panjang.
+
+**Area/commit:** `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `prd.md` §16.0a dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. CSS keluaran build memuat kedua aset hutan. Browser lokal memblokir URL localhost, sehingga visual Light/Dark belum terverifikasi; tidak ada migrasi database.
