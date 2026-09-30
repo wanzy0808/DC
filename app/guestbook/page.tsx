@@ -35,7 +35,7 @@ export default function GuestbookPage() {
         <main
           ref={scrollRoot}
           tabIndex={0}
-          aria-label={en ? "Guestbook page content" : "Konten halaman Guestbook"}
+          aria-label={en ? "Guestbook page content" : "Konten halaman Buku Tamu Digital"}
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <MarketingTextReveal
@@ -63,7 +63,7 @@ export default function GuestbookPage() {
             <ScrollReveal scrollRoot={scrollRoot}>
               <div className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-right">
               <PackageShowcase
-                eyebrow={en ? "Digital Guestbook" : "Guestbook Digital"}
+                eyebrow={en ? "Digital Guestbook" : "Buku Tamu Digital"}
                 title={
                   en
                     ? "Event-day guest operations that stay organized."
@@ -72,15 +72,15 @@ export default function GuestbookPage() {
                 description={
                   en
                     ? "Digital Guestbook is a dedicated event-day service for official QR check-in, the Usher App, seating, guest displays, and attendance monitoring at the venue."
-                    : "Guestbook Digital berdiri sebagai layanan khusus hari acara untuk QR check-in resmi, Usher App, seating, tampilan tamu, dan monitoring attendance di venue."
+                    : "Buku Tamu Digital membantu penerimaan tamu di hari acara: pemindaian QR resmi, aplikasi penerima tamu, pengaturan meja, tampilan sapaan, dan pemantauan kehadiran di lokasi."
                 }
                 packageKeys={["GUESTBOOK_DIGITAL"]}
                 wide
                 editorial
                 note={
                   en
-                    ? "Digital Guestbook can be used for many event types. Digital Invitation remains a separate Rp150,000 per-event product when a public invitation page is also needed."
-                    : "Guestbook Digital dapat digunakan untuk berbagai jenis acara. Undangan Digital tetap merupakan produk terpisah Rp150.000 per event ketika halaman undangan publik juga dibutuhkan."
+                    ? "The package includes a Digital Invitation for this event at no extra charge. Physical QR printing, gift registry, and guest-group arrangements are discussed with our team."
+                    : "Paket ini sudah termasuk Undangan Digital untuk acara yang sama tanpa biaya tambahan. Cetak QR, daftar hadiah, dan pembagian kelompok tamu dibicarakan bersama tim kami."
                 }
               />
               </div>
@@ -97,7 +97,7 @@ export default function GuestbookPage() {
                 <p className="max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                   {en
                     ? "The usher verifies arrivals and scans valid QR codes while the event team follows attendance and seating from the same event-scoped data."
-                    : "Usher memverifikasi kedatangan dan memindai QR yang valid, sementara tim acara memantau attendance dan meja dari data event-scoped yang sama."}
+                    : "Petugas penerima tamu memverifikasi kedatangan dan memindai QR yang valid, sementara tim acara memantau kehadiran dan meja dari data acara yang sama."}
                 </p>
               </section>
             </ScrollReveal>
@@ -110,7 +110,7 @@ export default function GuestbookPage() {
                 description={
                   en
                     ? "Official check-in, usher verification, seating, and product boundaries are explained up front so the venue team can work with a predictable flow."
-                    : "Aturan check-in resmi, verifikasi usher, seating, dan batas layanan dijelaskan sejak awal agar tim venue bekerja dengan alur yang dapat diprediksi."
+                    : "Aturan pencatatan kedatangan, verifikasi petugas, pengaturan meja, dan cakupan layanan dijelaskan sejak awal agar tim di lokasi bekerja dengan alur yang jelas."
                 }
                 items={faqItems}
                 wide
