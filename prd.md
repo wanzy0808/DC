@@ -1473,6 +1473,8 @@ Halaman `/guestbook` dan `/undangan-fisik` menggunakan komposisi frame viewport 
 
 Pakai `ScrollReveal` berbasis panel scroll internal untuk opacity/translateY per section (`once:false`) dan `MarketingTextReveal` untuk animasi ulang teks hanya setelah keluar dari viewport panel lalu masuk kembali, dari arah scroll mana pun; kendali interaktif, animasi `prefers-reduced-motion` dan keyboard tetap berfungsi. Visual kartu mengikuti shared marketing surface, control geometry, dan typography tokens aktif. Pertahankan data fitur/check-in, review/FAQ/paket dan tautan pada Guestbook; pada Undangan Fisik pertahankan ilustrasi cetak, proses pemesanan, target anchor `#proses` / `#konsultasi` di dalam scroll panel serta tautan WhatsApp dan Digital Invitation. Kedua route tetap bisa dikunjungi dari widget Pintu kiri. Jangan mengubah konten, pintu landing, Dashboard atau undangan tamu.
 
+**Model pemesanan Undangan Fisik (30 September 2026; koreksi owner):** Undangan cetak yang **digabung dengan Undangan Digital** boleh dipesan secara satuan sesuai kebutuhan, termasuk satu buah. Undangan fisik yang dipesan **terpisah** dari Undangan Digital atau sebagai produksi **bulk custom** memiliki minimum order **300 pcs**. Tidak ada harga tetap yang ditampilkan: penawaran bergantung terutama pada tingkat kesulitan desain dan spesifikasi cetak yang disepakati melalui konsultasi. Halaman `/undangan-fisik` menjelaskan kedua jalur ini dalam ID/EN dan mengarahkan pengunjung ke Undangan Digital atau WhatsApp. Tidak menyiratkan kalkulator harga, checkout satuan mandiri, atau janji produksi sebelum spesifikasi disepakati. Ketentuan ini menggantikan larangan mengubah konten Undangan Fisik pada paragraf lama di atas.
+
 
 ---
 
@@ -1715,3 +1717,13 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commit:** `2a951f6`.
 
 **Validation:** regression guard penyebab failure telah diidentifikasi dari GitHub Actions log; rerun CI diperiksa terpisah.
+
+## 30 September 2026 — Opsi satuan dan custom Undangan Fisik
+
+**Permintaan owner:** tambah isi halaman Undangan Fisik agar model pesanannya jelas: cetak satuan tersedia bila digabung dengan Undangan Digital; pesanan terpisah atau bulk custom minimal 300 pcs; harga bergantung pada kesulitan desain dan dibicarakan saat konsultasi.
+
+**Implementasi:** hero menyebut kedua jalur, satu section pilihan menjelaskan syarat jumlah dan mengarahkan ke Undangan Digital atau WhatsApp custom, tahap konsultasi meminta jenis pesanan, dan CTA akhir menjelaskan cara penawaran harga tanpa nominal yang dibuat-buat. Copy ID/EN serta prefilled WhatsApp diselaraskan. Aturan produk ditambahkan ke §16.1; tidak ada perubahan pada checkout, paket Digital Invitation, minimum order server, atau template undangan.
+
+**Area/commit:** `app/undangan-fisik/page.tsx`, `prd.md` §16.1 dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus setelah rebase pada main terbaru. Build masih mencatat warning lama pada upload asset. QA visual browser lintas viewport belum dilakukan; tidak ada migrasi database.

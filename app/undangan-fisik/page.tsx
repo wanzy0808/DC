@@ -28,13 +28,13 @@ export default function UndanganFisikPage() {
 
   const steps = en
     ? [
-        ["Tell us about your event", "Share the event type, quantity, date, delivery city, and the visual direction you have in mind."],
+        ["Tell us about your event", "Let us know whether you are pairing it with a Digital Invitation or ordering separately, then share the quantity, date, delivery city, and design direction."],
         ["Choose the tactile details", "Discuss paper character, envelope treatment, color, print technique, and finishing touches."],
         ["Review the proof carefully", "Check names, wording, date, venue, layout, and production details before print approval."],
         ["Confirm production & delivery", "Production and delivery timing are confirmed around the final specification and order quantity."],
       ]
     : [
-        ["Ceritakan acaramu", "Bagikan jenis acara, jumlah undangan, tanggal, kota pengiriman, dan arah visual yang kamu bayangkan."],
+        ["Ceritakan acaramu", "Sampaikan apakah undangan fisik digabung dengan Undangan Digital atau dipesan terpisah, lalu bagikan jumlah, tanggal, kota pengiriman, dan arah desainnya."],
         ["Pilih detail yang terasa di tangan", "Diskusikan karakter kertas, amplop, warna, teknik cetak, dan sentuhan finishing."],
         ["Periksa proof dengan teliti", "Pastikan nama, isi, tanggal, lokasi, layout, dan detail produksi tepat sebelum persetujuan cetak."],
         ["Konfirmasi produksi & pengiriman", "Jadwal produksi dan pengiriman mengikuti spesifikasi final serta jumlah pesanan yang disepakati."],
@@ -53,8 +53,11 @@ export default function UndanganFisikPage() {
       ] as const;
 
   const waMessage = en
-    ? "Hi Undara, I would like to discuss printed invitations."
-    : "Halo Undara, aku ingin konsultasi undangan fisik.";
+    ? "Hi Undara, I would like to discuss printed invitations, either with a Digital Invitation or as a separate custom order."
+    : "Halo Undara, aku ingin konsultasi undangan fisik, baik bersama Undangan Digital maupun pesanan custom terpisah.";
+  const customWaMessage = en
+    ? "Hi Undara, I would like to discuss a standalone/custom printed invitation order of at least 300 pieces."
+    : "Halo Undara, aku ingin konsultasi pesanan undangan fisik terpisah/custom minimal 300 pcs.";
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
@@ -88,8 +91,8 @@ export default function UndanganFisikPage() {
 
                   <p className="mt-7 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                     {en
-                      ? "From paper character and envelope treatment to print finishing, create a physical invitation that feels considered before guests even open it."
-                      : "Dari karakter kertas dan perlakuan amplop sampai finishing cetak, buat undangan fisik yang terasa dipikirkan bahkan sebelum tamu membukanya."}
+                      ? "Pair it with a Digital Invitation and order printed copies individually, or make a separate custom order starting at 300 pieces. We will shape the design, paper, and finishing together."
+                      : "Gabungkan dengan Undangan Digital untuk memesan undangan cetak secara satuan, atau pesan terpisah secara custom mulai 300 pcs. Desain, kertas, dan finishing dibicarakan bersama."}
                   </p>
 
                   <div className="mt-8 flex flex-wrap gap-3">
@@ -220,25 +223,49 @@ export default function UndanganFisikPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <section className="undara-marketing-section undara-editorial-offset-right grid gap-10 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
-                <div>
-                  <p className="undara-marketing-kicker">{en ? "Digital companion" : "Pasangan Digital"}</p>
-                  <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
-                    {en ? "Need a digital invitation too?" : "Perlu Undangan Digital juga?"}
-                  </h2>
-                </div>
-                <div>
-                  <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
-                    {en
-                      ? "Digital invitations with RSVP and guest management remain available separately for each event."
-                      : "Undangan Digital dengan RSVP dan manajemen tamu tetap tersedia sebagai produk terpisah untuk setiap acara."}
-                  </p>
-                  <Button asChild variant="outline" className="mt-6">
-                    <Link href="/d-invitation">
+              <section className="undara-marketing-section undara-editorial-offset-right pb-14">
+                <p className="undara-marketing-kicker">{en ? "Ways to order" : "Pilihan Pemesanan"}</p>
+                <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+                  {en ? "A few keepsakes or a full print run." : "Beberapa untuk disimpan, atau satu produksi penuh."}
+                </h2>
+                <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                  {en
+                    ? "Choose how the printed invitation fits your event. The order size depends on whether it accompanies a Digital Invitation."
+                    : "Pilih cara undangan fisik melengkapi acaramu. Jumlah pemesanan bergantung pada apakah undangan cetak digabung dengan Undangan Digital."}
+                </p>
+
+                <div className="mt-10 grid gap-5 lg:grid-cols-2 lg:gap-8">
+                  <article className="flex flex-col rounded-[28px] bg-primary/[0.055] p-7 md:p-9">
+                    <p className="undara-marketing-kicker">{en ? "With Digital Invitation" : "Bersama Undangan Digital"}</p>
+                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary md:text-4xl">
+                      {en ? "Order individually." : "Bisa pesan satuan."}
+                    </h3>
+                    <p className="mt-5 flex-1 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                      {en
+                        ? "Add printed invitations alongside the digital invitation for your event. You can request the number of physical copies you need, even a single piece."
+                        : "Lengkapi undangan digital acaramu dengan undangan cetak. Kamu bisa menyesuaikan jumlah fisik yang dibutuhkan, termasuk satu buah."}
+                    </p>
+                    <Link href="/d-invitation" className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary hover:underline">
                       {en ? "Explore Digital Invitations" : "Lihat Undangan Digital"}
-                      <ArrowRight className="h-4 w-4" />
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </Link>
-                  </Button>
+                  </article>
+
+                  <article className="flex flex-col rounded-[28px] bg-background/55 p-7 shadow-[0_16px_44px_rgba(58,32,32,0.07)] md:p-9">
+                    <p className="undara-marketing-kicker">{en ? "Standalone / Custom" : "Terpisah / Custom"}</p>
+                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary md:text-4xl">
+                      {en ? "Minimum 300 pieces." : "Minimal 300 pcs."}
+                    </h3>
+                    <p className="mt-5 flex-1 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                      {en
+                        ? "For a separate printed invitation or a custom bulk order, production starts at 300 pieces. Tell us your design idea and quantity so we can discuss the right specification."
+                        : "Untuk undangan fisik yang dipesan terpisah atau produksi bulk custom, jumlah minimalnya 300 pcs. Ceritakan ide desain dan jumlahnya agar spesifikasinya bisa dibahas bersama."}
+                    </p>
+                    <a href={WHATSAPP + encodeURIComponent(customWaMessage)} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary hover:underline">
+                      {en ? "Discuss a custom order" : "Konsultasi Pesanan Custom"}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </article>
                 </div>
               </section>
             </ScrollReveal>
@@ -257,8 +284,8 @@ export default function UndanganFisikPage() {
                     </h2>
                     <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                       {en
-                        ? "Share the quantity, event date, delivery city, and visual direction. Pricing and production estimates follow the specification that is agreed together."
-                        : "Bagikan jumlah cetak, tanggal acara, kota pengiriman, dan arah visual. Harga serta estimasi produksi mengikuti spesifikasi yang disepakati bersama."}
+                        ? "There is no one fixed price: the quote depends on design complexity and the agreed print specifications. Share the order type, quantity, event date, and delivery city; we will discuss the price and production schedule with you."
+                        : "Tidak ada satu harga tetap: penawaran bergantung pada tingkat kesulitan desain dan spesifikasi cetak yang disepakati. Bagikan jenis pesanan, jumlah, tanggal acara, dan kota pengiriman; harga serta jadwal produksi dibahas saat konsultasi."}
                     </p>
                   </div>
                   <Button asChild size="lg" className="w-fit">
