@@ -2244,3 +2244,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `44b48e923f1fd323ecf570658f139d296ca700e9`, `b869bb08314a02a8e74d14e1023c911878067d6d`, `e23082167e9592fc14c21e5f6b92125528ebbc48`.
 
+### 30 September 2026 — Tighten corner-copy rhythm and separate active template details
+
+**Owner request:** tighten the top-to-bottom spacing inside the left and right editorial text zones, while adding a little more separation between the phone wheel and the active template name/details below it.
+
+**Implementation:** the left editorial zone height is reduced from 22/24rem to 16/18rem and the right zone from 22/24rem to 15/17rem, preserving the existing ±5cm horizontal offsets. The active-template details below the wheel now start with a small positive top margin instead of sitting flush against the device stage.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `b55daa5e05ebcffebc28489f4ba1e94f214f8b16`, `cff8b2590f19bdd35dd3f9b732efcf5d499932d9`, `f4804d7c9097e6e46463497a7bece632381de960`.
+
