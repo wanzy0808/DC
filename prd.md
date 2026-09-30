@@ -2144,3 +2144,17 @@ The selector now loops continuously in both directions. Moving forward from the 
 
 **Validation:** source guards confirm the larger wheel stage, larger phone clamp, wider desktop gaps, expanded side-copy measure and updated compact-control spacing.
 
+### 30 September 2026 — Floating editorial template selector
+
+**Owner request:** remove the block/panel behind Search / Filter / Sort, strengthen text readability, give the rotating phones more room on all sides, and stop reserving fixed left/right columns for supporting copy.
+
+**Implementation:** `/template-design` now uses a single full-width editorial selection field. Search, Filter and Sort remain grouped functionally but float freely above the wheel without an enclosing card/panel. Input/control typography and contrast were increased for readability. The title is positioned in the upper-left on desktop, while supporting copy is moved to the lower-right, so neither consumes a permanent side column. The wheel expands to a 1180px stage with a taller field and active phone up to 280px wide, with wider horizontal spacing and more vertical separation above and below. Active-template metadata also receives more breathing room and stronger contrast.
+
+Mobile retains normal document flow for the title and controls, while desktop uses the asymmetric corner composition.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `f23b62c0e00b4b6650e330922ba06150e96920b9`, `6ec8184b7a28605222aca55104be9d843b4ef938`.
+
+**Validation:** source guards confirm the removal of the 3-column layout and control-panel shell, floating upper-left/lower-right copy, stronger control text, larger wheel stage/phone dimensions, and preserved non-nested wheel interaction structure.
+
