@@ -63,51 +63,51 @@ export default function FeatureSection() {
     : [
         {
           icon: ScanLine,
-          title: "QR Check-in Resmi",
-          badge: "Akses Venue",
+          title: "Pemindaian QR Resmi",
+          badge: "Akses Lokasi",
           description:
-            "Setiap check-in resmi memakai QR yang valid, sehingga status kedatangan selalu terikat ke data tamu yang tepat dan bukan sekadar pencarian nama.",
-          highlights: ["QR unik per tamu", "Scan kamera atau input token", "Perlindungan double check-in"],
+            "Setiap kedatangan resmi memakai QR yang valid, sehingga status kehadiran terikat ke data tamu yang tepat dan bukan sekadar pencarian nama.",
+          highlights: ["QR unik per tamu", "Pindai kamera atau masukkan kode", "Cegah pencatatan ganda"],
         },
         {
           icon: Search,
           title: "Verifikasi Tamu",
-          badge: "Usher App",
+          badge: "Aplikasi Penerima Tamu",
           description:
-            "Saat tamu datang tanpa RSVP atau QR, usher dapat memverifikasi data tamu terlebih dulu sebelum menerbitkan QR resmi.",
-          highlights: ["Cari nama / WhatsApp", "Verifikasi akses", "Terbitkan QR lalu scan"],
+            "Saat tamu datang tanpa RSVP atau QR, petugas dapat memverifikasi data tamu terlebih dulu sebelum menerbitkan QR resmi.",
+          highlights: ["Cari nama / WhatsApp", "Verifikasi akses", "Terbitkan lalu pindai QR"],
         },
         {
           icon: BarChart3,
-          title: "Realtime Attendance",
-          badge: "Monitoring Live",
+          title: "Pantau Kehadiran Langsung",
+          badge: "Pemantauan Kedatangan",
           description:
-            "Pantau siapa yang sudah datang, siapa yang belum, dan attendance plus one dari data acara yang sama selama acara berlangsung.",
-          highlights: ["Attendance realtime", "Status RSVP + check-in", "Satu sumber data acara"],
+            "Pantau siapa yang sudah datang, siapa yang belum, dan kehadiran tamu tambahan dari data acara yang sama selama acara berlangsung.",
+          highlights: ["Kehadiran langsung", "Status RSVP dan kedatangan", "Satu sumber data acara"],
         },
         {
           icon: Armchair,
-          title: "Table & VIP Management",
-          badge: "Seating",
+          title: "Pengaturan Meja dan Tamu VIP",
+          badge: "Tempat Duduk",
           description:
             "Nama meja, kapasitas kursi, nomor meja tamu, dan informasi prioritas tetap terlihat jelas oleh tim penerima tamu.",
-          highlights: ["Identitas meja", "Kapasitas kursi", "Seating tamu + plus one"],
+          highlights: ["Identitas meja", "Kapasitas kursi", "Tempat duduk tamu tambahan"],
         },
         {
           icon: MonitorUp,
-          title: "Guest Greeting",
-          badge: "Experience",
+          title: "Sapaan Tamu",
+          badge: "Pengalaman Tamu",
           description:
-            "Buat momen kedatangan terasa lebih personal dengan menampilkan nama tamu dan greeting acara pada layar venue.",
-          highlights: ["Nama tamu", "Ucapan digital", "Tampilan venue custom"],
+            "Buat momen kedatangan terasa lebih personal dengan menampilkan nama tamu dan sapaan acara pada layar di lokasi.",
+          highlights: ["Nama tamu", "Ucapan digital", "Tampilan khusus di lokasi"],
         },
         {
           icon: Gift,
-          title: "Gift Corner & Giving",
+          title: "Pojok Hadiah dan Pemberian",
           badge: "Setelah Check-in",
           description:
-            "Catat kebutuhan gift corner dan pemberian agar tim acara memiliki jejak operasional yang lebih rapi setelah tamu datang.",
-          highlights: ["Gift tracking", "Catatan giving", "Riwayat terpusat"],
+            "Catat hadiah dan pemberian agar tim acara memiliki riwayat yang lebih rapi setelah tamu datang.",
+          highlights: ["Pencatatan hadiah", "Catatan pemberian", "Riwayat terpusat"],
         },
       ];
 
@@ -124,7 +124,7 @@ export default function FeatureSection() {
           <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
             {en
               ? "Digital Guestbook is designed around what the reception team actually needs on the event day: verify, check in, seat, and monitor."
-              : "Guestbook Digital dirancang dari kebutuhan nyata tim penerima tamu saat hari acara: verifikasi, check-in, arahkan meja, dan pantau kedatangan."}
+              : "Buku Tamu Digital dirancang untuk tim penerima tamu saat hari acara: verifikasi, catat kedatangan, arahkan ke meja, dan pantau kehadiran."}
           </p>
 
           <div className="mt-10">
