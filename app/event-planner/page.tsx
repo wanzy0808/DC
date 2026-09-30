@@ -223,7 +223,7 @@ export default function EventPlannerPage() {
                     <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary/80">
                       {en ? "Service Direction" : "Pilihan Layanan"}
                     </p>
-                    <h2 className="mt-4 max-w-[11ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.1rem,5.8vw,6.4rem)] font-bold leading-[0.94] tracking-[-0.035em] text-primary">
+                    <h2 className="mt-4 max-w-[13ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.1rem,5.8vw,6.4rem)] font-bold leading-[0.94] tracking-[-0.035em] text-primary">
                       {en ? "What can you ask about?" : "Apa yang bisa kamu tanyakan?"}
                     </h2>
                   </div>
