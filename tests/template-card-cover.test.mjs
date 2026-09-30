@@ -48,9 +48,9 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.doesNotMatch(page, /max-w-\[940px\][\s\S]{0,180}border border-primary\/18 bg-background\/78/);
   assert.match(page, /max-w-\[1220px\]/);
   assert.match(page, /w-\[clamp\(166px,22vw,250px\)\]/);
-  assert.match(page, /lg:absolute lg:-left-24 lg:top-8/);
-  assert.match(page, /lg:right-\[-7rem\] lg:top-\[71%\]/);
-  assert.match(page, /lg:w-\[32rem\]/);
+  assert.match(page, /lg:absolute lg:-left-24 lg:top-14/);
+  assert.match(page, /lg:right-\[-9rem\] lg:top-\[76%\]/);
+  assert.match(page, /lg:w-\[33rem\]/);
   assert.match(page, /text-\[15px\] font-bold/);
   assert.match(page, /text-foreground\/82/);
   assert.doesNotMatch(page, /\{filteredTemplates\.length\} \{copy\.available\}/);
