@@ -1867,3 +1867,19 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `lib/partners/`, `app/api/dashboard/referral`, `app/api/partner/codes`, `app/api/orders`, analitik Mitra/Owner, Beranda Dashboard, pemilihan paket, checkout, `tests/referral-pricing.test.mjs`, `prd.md` §8.2a/Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 229 tes regresi, `git diff --check`, dan build produksi lulus. Migrasi database tidak diperlukan; alur pembayaran/akun dengan database dan browser produksi belum diverifikasi.
+
+## 30 September 2026 — Template-by-template editability pass begins with Romantic Rose
+
+- Perbaikan template dilakukan satu per satu agar kualitas visual dan editability bisa diaudit dengan jelas tanpa mengubah banyak renderer sekaligus.
+- Romantic Rose dipakai sebagai baseline pertama karena sudah memakai section engine, native visual transforms, photo slots, editable copy, asset layers, RSVP/Wishes/Gift shared components, dan section instances.
+- Coverage Studio diperluas dengan selectable parent groups untuk envelope card stack, Cover content group, kedua identity person groups, dan heading group per section.
+- Recipient line pada Amplop sekarang menjadi protected native/system object: isi tetap berasal dari data Personal Invitation, tetapi styling/transform visualnya dapat diedit.
+- Native visual button objects sekarang dapat menerima typography controls, sehingga tombol bawaan seperti Buka Undangan dapat ditata tanpa membuka business behavior.
+- `template.md` sekarang mewajibkan setiap elemen visual penting pada master template memiliki ownership Studio yang eksplisit: native object, photo slot, editable copy, protected functional/system element, atau section surface.
+- Functional components tetap dilindungi; targetnya bukan membuat RSVP/Maps/Wishes/Gift menjadi objek bebas, tetapi membuat presentation-nya dapat diatur tanpa merusak API, data, semantics, atau responsive web behavior.
+
+**Area:** `components/PublicInvitation/RomanticRoseTemplate.tsx`, `lib/templates/native-visual-transforms.ts`, `tests/native-visual-transforms.test.mjs`, `template.md`.
+
+**Commits:** `cde1f92`, `26810d9`, `09a8387`, `4ad4a10`, `8b6b0ce`.
+
+**Validation:** source audit complete; CI observed separately.
