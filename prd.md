@@ -2180,3 +2180,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Validation:** source guards confirm the result count is gone, corner copy is pushed outward, controls are raised, the wheel stage is vertically compressed while retaining width, and the door navigator is positioned inside the shared frame.
 
+### 30 September 2026 — Rebalanced template selector spacing
+
+**Owner request:** fix the cramped `/template-design` composition seen in the latest desktop screenshot, especially the supporting copy that appeared too low/central instead of clearly occupying the right side.
+
+**Implementation:** the upper-left title is pushed slightly farther outward, Search / Filter / Sort are raised while receiving more separation before the wheel, and the wheel itself is shifted slightly lower inside a shorter stage so the composition stays within one framed page. Active-template metadata is pulled closer to the wheel to free lower-right space. The supporting copy no longer uses a negative bottom anchor; it now sits at roughly the right-middle/lower area (`top: 66%`) with a wider measure, keeping the text visibly on the right without colliding with the footer.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `e0f354f5d21438447733b78e8e3b7c04150d0251`, `2ca58f6abc58510d80739bb2ba715f016222cd9d`.
+
