@@ -1421,6 +1421,7 @@ User harus menerima warning sebelum permanent deletion. Financial record mengiku
 - Marketing memakai shared framed shell dengan navbar/footer bersama dan scroll area internal yang sudah ada di source.
 - Dashboard memakai satu mainframe dan panel besar; hindari frame di dalam frame serta tumpukan mini-card dekoratif.
 - Public page mengutamakan komposisi editorial, whitespace, hierarchy, asymmetry terkontrol, dan media/ornament yang menyatu dengan layout.
+- Section heading pada marketing harus terbaca tegas dalam satu kali scan: judul utama section memakai display heading yang lebih berat/bold, sementara kicker dan body tetap lebih ringan. Jangan membuat semua level teks memiliki bobot visual yang sama.
 - Garis tipis berulang sebagai pembatas dekoratif di marketing **tidak digunakan**. Gunakan spacing, perubahan komposisi, surface, atau ornament organik bila section perlu dipisahkan.
 - Layout desktop boleh lebih ekspresif; mobile harus kembali ke flow sederhana tanpa overflow horizontal.
 
@@ -1687,3 +1688,18 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commit:** `d8627b8`.
 
 **Validation:** source inspection complete; CI/build observed separately.
+
+
+## 30 September 2026 — Global marketing heading hierarchy
+
+- Ketebalan heading section Event Planner dijadikan baseline untuk framed marketing pages lain.
+- Shared `.undara-marketing-section` sekarang memberi bobot tegas pada `h2` dan `h3`, sementara kicker/body tetap ringan agar hierarchy cepat terbaca.
+- `.undara-marketing-display` juga dinaikkan ke bold untuk heading marketing yang memakai utility canonical.
+- `components/Marketing/SectionHeading.tsx` diselaraskan agar FAQ dan shared section title mendapat hierarchy yang sama meski tidak selalu berada langsung di wrapper marketing.
+- Hero/page title tidak dipaksa ke rule ini; tiap layanan tetap boleh mempertahankan art direction hero masing-masing.
+
+**Area:** `app/globals.css`, `components/Marketing/SectionHeading.tsx`.
+
+**Commits:** `fbb524d`, `7d149e1`.
+
+**Validation:** source review complete; CI/build observed separately.
