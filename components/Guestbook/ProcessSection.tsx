@@ -58,7 +58,7 @@ export default function ProcessSection() {
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
         <div>
           <p className="undara-marketing-kicker">{en ? "From list to arrival" : "Dari Daftar sampai Kedatangan"}</p>
-          <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+          <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
             {en ? "A clear sequence for the busiest part of the day." : "Urutan yang jelas untuk bagian hari yang paling sibuk."}
           </h2>
         </div>
@@ -80,7 +80,7 @@ export default function ProcessSection() {
                 <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden="true" />
               </span>
             </div>
-            <h3 className="max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl">
+            <h3 className="max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-2xl font-bold leading-[1.08] text-primary md:text-3xl lg:text-4xl">
               {title}
             </h3>
             <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
