@@ -530,3 +530,16 @@ test("Modern Maroon decorative blocks and monogram can be hidden without unlocki
   assert.equal(nativeVisualCanHide("object:cover:monogram"), true);
   assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
+
+test("Garden Light keeps rings sprigs seal and photo window editable", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  assert.match(scenes, /object:cover:ring-left/);
+  assert.match(scenes, /object:cover:ring-right/);
+  assert.match(scenes, /object:cover:sprig-left/);
+  assert.match(scenes, /object:cover:sprig-right/);
+  assert.match(scenes, /object:cover:photo-window/);
+  assert.match(scenes, /object:cover:seal/);
+  assert.equal(nativeVisualCanHide("object:cover:ring-left"), true);
+  assert.equal(nativeVisualCanHide("object:cover:sprig-left"), true);
+  assert.equal(nativeVisualCanHide("object:cover:seal"), true);
+});
