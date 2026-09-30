@@ -39,6 +39,7 @@ export function TemplateCanvas({
       eventTag={demo.weddingHashtag || ""}
       dressCode=""
       sections={sections}
+      allowEnvelopeOpen
     />
   );
 }

@@ -16,7 +16,7 @@ test("Zen Atelier references only artwork that exists in the public template ass
 });
 
 test("Zen Atelier opens using the direct user gesture and reuses the shared invitation renderer", () => {
-  assert.match(scene, /if \(preview\) return;[\s\S]*?setOpening\(true\);[\s\S]*?onOpen\(\)/);
+  assert.match(scene, /if \(preview && !allowEnvelopeOpen\) return;[\s\S]*?setOpening\(true\);[\s\S]*?onOpen\(\)/);
   assert.doesNotMatch(scene, /setTimeout\(onOpen/);
   const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
   assert.match(universal, /<InvitationMusic ref=\{musicRef\}/);

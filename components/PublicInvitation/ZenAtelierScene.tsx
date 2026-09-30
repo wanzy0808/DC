@@ -15,13 +15,14 @@ type ZenAtelierSceneProps = {
   stage: "envelope" | "cover";
   onOpen: () => void;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   isWedding?: boolean;
   hashtag?: string | null;
   recipientLine?: string;
 };
 const root = "/templates/Zen%20Atelier/";
 
-export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
+export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, allowEnvelopeOpen = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   const [opening, setOpening] = useState(false);
@@ -65,7 +66,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
           </div>
         </div>
         <button type="button" disabled={opening} className="zen-open" data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" onClick={() => {
-          if (preview) return;
+          if (preview && !allowEnvelopeOpen) return;
           setOpening(true);
           onOpen();
         }}>

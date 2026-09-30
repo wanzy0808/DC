@@ -24,6 +24,7 @@ type SceneProps = {
   onOpen: () => void;
   onEditPhoto?: () => void;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   isWedding?: boolean;
   couple?: boolean;
   hashtag?: string | null;
@@ -42,13 +43,13 @@ function Portrait({ src, alt, focus, crop, className = "" }: { src?: string; alt
     ? <img src={src} alt={alt} loading="lazy" className={`${photoClass} ${className}`} style={style} />
     : <div className={`flex h-full w-full items-center justify-center bg-black/10 ${className}`} role="img" aria-label="Foto belum ditambahkan"><Heart className="h-8 w-8 opacity-40" strokeWidth={1} /></div>;
 }
-function Open({ onClick, dark = false, children, preview = false, studioObject }: { onClick: () => void; dark?: boolean; children?: ReactNode; preview?: boolean; studioObject?: string }) {
+function Open({ onClick, dark = false, children, preview = false, allowEnvelopeOpen = false, studioObject }: { onClick: () => void; dark?: boolean; children?: ReactNode; preview?: boolean; allowEnvelopeOpen?: boolean; studioObject?: string }) {
   const language = useInvitationLanguage();
   return <button
     type="button"
     data-studio-native-object={studioObject}
     onClick={(event) => {
-      if (preview) {
+      if (preview && !allowEnvelopeOpen) {
         event.preventDefault();
         event.stopPropagation();
         return;
@@ -56,7 +57,7 @@ function Open({ onClick, dark = false, children, preview = false, studioObject }
       onClick();
     }}
     data-studio-system-action={preview ? "open-invitation" : undefined}
-    aria-label={preview ? "Tombol Buka Undangan — mode desain" : undefined}
+    aria-label={preview && !allowEnvelopeOpen ? "Tombol Buka Undangan — mode desain" : undefined}
     className={`relative z-20 mt-7 min-h-12 rounded-[var(--undara-control-radius)] border px-8 py-3 text-xs font-semibold tracking-[.15em] shadow-md transition duration-300 hover:-translate-y-1 focus-visible:outline-2 focus-visible:outline-offset-4 ${dark ? "border-white/55 bg-white text-[color:var(--inv-scene-text,#271f25)] hover:bg-[var(--inv-scene-soft,#f1dfd4)]" : "border-current/30 bg-[var(--inv-accent)] text-white hover:brightness-110"}`}
   >{children || invitationText(language, "Buka Undangan")}</button>;
 }
@@ -96,7 +97,7 @@ const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
-function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipientLine}: SceneProps) {
+function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEnvelopeOpen,recipientLine}: SceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   const original = envelopeVisuals[theme] || envelopeVisuals["botanical-ivory"];
@@ -133,7 +134,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
           </div>
         </div>
       </div>
-      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>{tr("Buka Undangan")}</Open>
+      <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} dark={theme === "modern-maroon" || theme === "midnight-romance" || theme === "golden-art-deco" || theme === "celestial-ink"}>{tr("Buka Undangan")}</Open>
     </section>
   );
 }
@@ -142,7 +143,7 @@ const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenA
 const SereinScene = dynamic(() => import("@/components/PublicInvitation/SereinScene"));
 const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
+export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   if (theme === "blank-canvas") {
@@ -154,11 +155,11 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
       />
     );
   }
-  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
-  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
-  if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
+  if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
+  if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
+  if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
-  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} recipientLine={recipientLine} />;
+  if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;

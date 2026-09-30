@@ -29,6 +29,7 @@ export function InvitationPreview({
   onEnvelopeOpened,
   previewRecipientLine,
   invitationLanguage = "ID",
+  allowEnvelopeOpen = false,
   designKey,
   musicUrl,
   selectedAssetLayerId,
@@ -64,6 +65,8 @@ export function InvitationPreview({
   /** Studio-only sample, never a Guest record or saved invitation content. */
   previewRecipientLine?: string;
   invitationLanguage?: InvitationLanguage;
+  /** Catalog demo interaction only; preview forms remain read-only. */
+  allowEnvelopeOpen?: boolean;
   designKey?: string;
   musicUrl?: string;
   selectedAssetLayerId?: string | null;
@@ -84,7 +87,7 @@ export function InvitationPreview({
   }
   const previewInvitation = { ...invitation, weddingHashtag: eventTag, dressCode, ...(musicUrl === undefined ? {} : { musicUrl }) };
   if (templateKey === "romantic-rose") {
-    return <InvitationLanguageProvider language={invitationLanguage}><RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview previewRecipientLine={previewRecipientLine} sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} /></InvitationLanguageProvider>;
+    return <InvitationLanguageProvider language={invitationLanguage}><RomanticRoseTemplate invitation={previewInvitation} designKey={designKey} preview allowEnvelopeOpen={allowEnvelopeOpen} previewRecipientLine={previewRecipientLine} sections={sections} coverUrl={decorUrl} photoAssignments={photoAssignments} activeCropSlot={activeCropSlot} onCropPhoto={onCropPhoto} onFinishCrop={onFinishCrop} onEditPhoto={onEditPhoto} onEnvelopeOpened={onEnvelopeOpened} selectedAssetLayerId={selectedAssetLayerId} selectedAssetLayerIds={selectedAssetLayerIds} onSelectAssetLayer={onSelectAssetLayer} onMoveAssetLayer={onMoveAssetLayer} onUpdateAssetLayer={onUpdateAssetLayer} selectedSectionInstanceId={selectedSectionInstanceId} onSelectSectionInstance={onSelectSectionInstance} onMoveSectionInstance={onMoveSectionInstance} onToggleSectionInstance={onToggleSectionInstance} onDuplicateSectionInstance={onDuplicateSectionInstance} onDeleteSectionInstance={onDeleteSectionInstance} editorMode={editorMode} /></InvitationLanguageProvider>;
   }
   return (
     <InvitationLanguageProvider language={invitationLanguage}><UniversalInvitationTemplate
@@ -92,6 +95,7 @@ export function InvitationPreview({
       templateKey={templateKey}
       designKey={designKey}
       preview
+      allowEnvelopeOpen={allowEnvelopeOpen}
       previewRecipientLine={previewRecipientLine}
       sections={sections}
       coverUrl={decorUrl}

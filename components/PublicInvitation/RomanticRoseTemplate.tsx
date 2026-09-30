@@ -143,6 +143,7 @@ export default function RomanticRoseTemplate({
   invitation,
   designKey,
   preview = false,
+  allowEnvelopeOpen = false,
   sections: sectionOverride,
   coverUrl,
   photoAssignments,
@@ -171,6 +172,7 @@ export default function RomanticRoseTemplate({
   designKey?: string;
   personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   previewRecipientLine?: string;
   sections?: InvitationSections;
   coverUrl?: string;
@@ -255,7 +257,7 @@ export default function RomanticRoseTemplate({
   const personalEnvelopeAddress = personalGuest ? formatPersonalEnvelopeAddress({ ...personalGuest, personalLanguage: language }) : preview ? previewRecipientLine ?? "" : "";
   const hasGift = Boolean(invitation.giftBankName && invitation.giftAccountNumber);
   const handleOpen = () => {
-    if (preview) return;
+    if (preview && !allowEnvelopeOpen) return;
     musicRef.current?.playOnOpen();
     setOpened(true);
     onEnvelopeOpened?.();

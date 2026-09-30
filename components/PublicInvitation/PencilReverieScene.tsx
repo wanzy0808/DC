@@ -17,6 +17,7 @@ type SceneProps = {
   isWedding?: boolean;
   hashtag?: string | null;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   recipientLine?: string;
 };
 
@@ -38,7 +39,7 @@ function HeartDoodle({ studioObject }: { studioObject?: string }) {
 }
 
 export default function PencilReverieScene({
-  stage, names, date, onOpen, isWedding = true, hashtag, preview = false, recipientLine,
+  stage, names, date, onOpen, isWedding = true, hashtag, preview = false, allowEnvelopeOpen = false, recipientLine,
 }: SceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
@@ -55,7 +56,7 @@ export default function PencilReverieScene({
   const couple = isWedding ? names.split(/\s*&\s*/).filter(Boolean) : [];
   const longName = names.length > 29 || couple.some((name) => name.length > 17);
   const handleOpen = () => {
-    if (preview || opening) return;
+    if ((preview && !allowEnvelopeOpen) || opening) return;
     setOpening(true);
     // The shared parent starts user-selected music synchronously with this click.
     onOpen();

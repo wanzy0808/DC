@@ -149,6 +149,7 @@ function eventCountdown(value: Date | string, now: number | null) {
 export default function UniversalInvitationTemplate({
   invitation,
   preview = false,
+  allowEnvelopeOpen = false,
   sections: sectionOverride,
   photoAssignments,
   activeCropSlot,
@@ -177,6 +178,7 @@ export default function UniversalInvitationTemplate({
   invitation: InvitationData;
   personalGuest?: PersonalRsvpGuest;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   previewRecipientLine?: string;
   sections?: InvitationSections;
   photoAssignments?: PhotoAssignments;
@@ -474,6 +476,7 @@ export default function UniversalInvitationTemplate({
           onCropChange={onCropPhoto ? (crop) => onCropPhoto("cover", crop) : undefined}
           onFinishCrop={onFinishCrop}
           stage="envelope"
+          allowEnvelopeOpen={allowEnvelopeOpen}
           onOpen={handleOpen}
           preview={preview}
           recipientLine={personalEnvelopeAddress}

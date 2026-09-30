@@ -70,8 +70,9 @@ test("template wheel trigger is a sibling overlay, not a button around live temp
   assert.doesNotMatch(page, /<button\s+key=\{template\.key\}[\s\S]*<TemplateCardCanvas/);
 });
 
-test("catalog popup is canvas-only and starts at Cover", () => {
-  assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.defaultInvitationSections, envelope: false \}\} \/>/);
+test("catalog popup is canvas-only and starts at the envelope while cards still show Cover", () => {
+  assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{defaultInvitationSections\} \/>/);
+  assert.doesNotMatch(page, /<TemplateCanvas[^>]*envelope: false/);
   assert.match(page, /className="absolute right-4 top-4 z-50 grid h-11 w-11/);
   assert.doesNotMatch(page, /<aside className="shrink-0 border-b border-border/);
   assert.doesNotMatch(page, /rememberTemplateSelection\(selected\.key\)/);
@@ -80,7 +81,7 @@ test("catalog popup is canvas-only and starts at Cover", () => {
   assert.doesNotMatch(gallery, /Pratinjau template|Memuat pratinjau/);
 });
 
-test("Studio can show and replay the envelope independently of Cover-only catalog popup", () => {
+test("Studio keeps its independent envelope and Cover editing stages", () => {
   const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
   assert.match(designer, /setCanvasStage\("envelope"\)/);
   assert.match(designer, /setCanvasStage\("cover"\)/);

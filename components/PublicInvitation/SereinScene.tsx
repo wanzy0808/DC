@@ -15,6 +15,7 @@ type Props = {
   stage: "envelope" | "cover";
   onOpen: () => void;
   preview?: boolean;
+  allowEnvelopeOpen?: boolean;
   isWedding?: boolean;
   couple?: boolean;
   recipientLine?: string;
@@ -33,7 +34,7 @@ export function SereinSprig({ objectKey, className = "" }: { objectKey: string; 
   return <span aria-hidden="true" data-studio-native-object={objectKey} className={`sr-sprig ${className}`}><span /></span>;
 }
 
-export default function SereinScene({ names, date, stage, onOpen, preview = false, isWedding, couple, recipientLine, cover, focus, crop, cropEditing, onCropChange, onFinishCrop, onEditPhoto, locale }: Props) {
+export default function SereinScene({ names, date, stage, onOpen, preview = false, allowEnvelopeOpen = false, isWedding, couple, recipientLine, cover, focus, crop, cropEditing, onCropChange, onFinishCrop, onEditPhoto, locale }: Props) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   const reduced = useReducedMotion();
@@ -69,7 +70,7 @@ export default function SereinScene({ names, date, stage, onOpen, preview = fals
     </div>
     {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="sr-recipient">{recipientLine}</p>}
     <button type="button" data-studio-native-object="object:envelope:open-button" data-studio-system-action={preview ? "open-invitation" : undefined} className="sr-action sr-open" disabled={opening} aria-disabled={opening} onClick={(event) => {
-      if (preview) { event.preventDefault(); event.stopPropagation(); return; }
+      if (preview && !allowEnvelopeOpen) { event.preventDefault(); event.stopPropagation(); return; }
       setOpening(true); onOpen();
     }}>{tr("Buka Undangan")}<ArrowRight size={17} strokeWidth={1.4} aria-hidden="true" /></button>
   </section>;
