@@ -210,7 +210,8 @@ test("homepage uses the dedicated woodland composition without cloud or petal am
   assert.match(woodland, /\/assets\/landing\/atmosphere\/lightbg\.webp/);
   assert.match(woodland, /\/assets\/landing\/atmosphere\/darkbg\.webp/);
   assert.match(woodland, /BODY_MASK/);
-  assert.match(woodland, /inset-x-\[4%\]/);
+  assert.match(woodland, /inset-x-0/);
+  assert.match(woodland, /linear-gradient\(to right, transparent, black 5%, black 95%, transparent\)/);
   assert.match(home, /dark:bg-\[#281414\]/);
   assert.match(canopy, /data-landing-canopy/);
   assert.equal(/\/assets\/landing\/ornaments\/botanical\/branch-0[1-6]\.png/.test(woodland), false);
