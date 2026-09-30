@@ -46,7 +46,7 @@ Arah visual utama Undara adalah **woodland / forest editorial**: hangat, tenang,
 
 - Motif utama: siluet hutan, canopy, ranting, daun, sulur/ukiran organik, kabut/fog lembut, cahaya halus, dan ruang kosong yang cukup.
 - Ornamen floral besar, bunga tempel, legacy petal ambience, kelopak beterbangan, dan dekorasi romantis generik **bukan bahasa visual global Undara**.
-- Halaman marketing selain homepage memakai kabut hangat, bayangan semak rendah, dan daun jatuh yang ringan sebagai atmosfer bersama. Jangan memakai ranting panjang berdaun yang menjulang di kedua sisi; ornamen sudut lain hanya dipakai bila benar-benar mendukung komposisi halaman.
+- Halaman marketing selain homepage memakai dua aset hutan khusus Light/Dark dengan siluet lembut di tepi dan ruang tengah yang luas, tenang, serta kontras rendah untuk teks. Jangan memakai ranting panjang berdaun di kedua sisi, lapisan kabut/glow bertumpuk, atau daun jatuh yang meramaikan konten.
 - Background harus mendukung hierarki konten. Dekorasi tidak boleh menabrak brand, navbar, heading, CTA, form, atau mengurangi keterbacaan.
 - Landing/Pintu boleh memiliki treatment atmosfer lebih kuat; halaman marketing lain memakai versi lebih restrained dari sistem woodland yang sama.
 - Ilustrasi woodland homepage mengisi lebar viewport melampaui outline mainframe. Sisi kiri/kanannya melebur lembut ke warna dasar halaman, tanpa batas persegi dari layer yang berhenti sebelum frame. Fade atas/bawah menjaga navbar dan footer tetap terbaca; bingkai serta Pintu tetap jelas di depan atmosfer.
@@ -1466,7 +1466,7 @@ Guestbook marketing juga harus event-oriented.
 
 ### 16.0a Kontinuitas background dan tipografi marketing — 29 September 2026
 
-Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: lanskap hutan Light/Dark yang transparan dan memudar sebelum header/footer, kabut bronze/champagne, bayangan semak rendah, glow halus, dan daun jatuh beragam dari `EventPlannerBotanicalAtmosphere`. Atmosfer berada sebagai sibling di belakang mainframe transparan dan harus **terlihat di dalam mainframe sekaligus menyambung ke sisi luarnya**. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas dan teks mudah dibaca. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan ranting panjang berdaun di kiri/kanan serta bunga/Rose glow lama.
+Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`, serta halaman publik lain yang memakai atmosfer bersama) menggunakan dua aset hutan khusus Light/Dark dari `EventPlannerBotanicalAtmosphere`. Detail hutan lembut berada di tepi; area tengah lapang dan rendah kontras agar heading, teks, CTA, dan kartu mudah dibaca. Aset memudar sebelum header/footer dan tetap terlihat di dalam mainframe sekaligus menyambung ke sisi luarnya. Jangan menumpuk radial glow, semak, daun jatuh, atau ranting panjang pada latar ini. Hanya panel `main` yang menggulir; bingkai tetap jelas. Homepage tetap memakai woodland khusus yang sudah disetujui.
 
 Katalog dan seluruh chrome halaman marketing memakai shared typography tokens aktif; karya di dalam preview template tetap memakai font tema masing-masing. Copy produk, email, unduhan QR, dan dokumen baru memakai nama Undara. Nomor invoice lama serta ID teknis `dc-*` tetap dibaca untuk kompatibilitas; invoice baru memakai awalan `UND-`.
 
@@ -1826,3 +1826,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 - Fix route coverage audio dari langkah sebelumnya tetap dipertahankan.
 
 **Area:** `components/Layout/MarketingAudio.tsx`, `tests/marketing-polish.test.mjs`, `prd.md`.
+
+
+## 30 September 2026 — Dua aset hutan tenang untuk marketing selain landing
+
+**Permintaan owner:** background halaman marketing terlalu ramai dan mengurangi keterbacaan; buat aset hutan Light dan Dark khusus di luar landing.
+
+**Implementasi:** dua lanskap hutan WebP baru dengan detail di tepi dan ruang tengah berkabut yang lapang menggantikan pemakaian aset landing di atmosfer marketing bersama. Lapisan gradient semak/glow dan daun jatuh dihapus dari komponen ini. Fade vertikal serta posisi di belakang mainframe dipertahankan; homepage tidak diubah.
+
+**Area/commit:** `public/assets/marketing/atmosphere/forest-light.webp`, `forest-dark.webp`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `components/Layout/PublicMarketingAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `prd.md` §1.2/§16.0a dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Pemeriksaan visual browser Light/Dark belum tersedia; tidak ada migrasi database.
