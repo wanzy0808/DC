@@ -1996,3 +1996,17 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `fd57d26`, `9fdea7b`.
 
 **Validation:** shared preview fixture updated; CI observed separately.
+
+## 30 September 2026 — Preview branding moved outside invitation artwork
+
+- Di Studio invitation yang belum berbayar, watermark diagonal `PREVIEW • UNDARA` dihapus.
+- Preview branding diganti menjadi teks kecil `Undara · Copyright` di bawah viewport undangan, bukan di dalam artwork/template.
+- Label hanya hidup pada wrapper Studio ketika `accessPaid === false` melalui class `undara-unlicensed-studio`.
+- Public/published invitation renderer tidak boleh memuat `Undara · Copyright`, watermark, trademark, atau branding Undara lain di dalam undangan customer.
+- Setelah invitation dipublish, output publik tetap bersih tanpa trademark/watermark Undara.
+
+**Area:** `components/InvitationStudio/studio.css`, `tests/studio-ui-cleanup.test.mjs`.
+
+**Commits:** `a1981a6`, `c5911ac`.
+
+**Validation:** source guard added; CI observed separately.
