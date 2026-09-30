@@ -32,7 +32,7 @@ export default function StudioSection() {
             <p className="undara-marketing-kicker">Invitation Studio</p>
           </div>
 
-          <h2 className="mt-5 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.02] text-primary md:text-5xl lg:text-6xl">
+          <h2 className="mt-5 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.02] text-primary md:text-5xl lg:text-6xl">
             {en
               ? "A creative workspace that stays out of the way."
               : "Ruang kreatif yang tidak ikut membuatmu pusing."}
