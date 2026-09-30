@@ -1727,3 +1727,17 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `app/undangan-fisik/page.tsx`, `prd.md` §16.1 dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus setelah rebase pada main terbaru. Build masih mencatat warning lama pada upload asset. QA visual browser lintas viewport belum dilakukan; tidak ada migrasi database.
+
+
+## 30 September 2026 — Marketing heading consistency sweep
+
+- Audit lintas marketing menemukan beberapa komponen masih memiliki `font-normal` eksplisit atau heading khusus di luar wrapper shared, sehingga rule global sebelumnya tidak selalu terlihat konsisten.
+- Explicit section headings pada Digital Invitation, Event Planner, Guestbook, Package, Help, Terms, dan Undangan Fisik diselaraskan ke bobot bold yang sama.
+- Hero utama, judul kartu template, dan judul di dalam mockup/preview tidak dipaksa mengikuti bobot section heading agar hierarchy internal tetap terjaga.
+- Regression test baru menjaga agar section heading inti tidak kembali memakai `font-normal` dan shared marketing CSS tetap mengunci `h2/h3` ke bobot tegas.
+
+**Area:** marketing components/pages terkait, `tests/marketing-polish.test.mjs`.
+
+**Commits:** `c039e63`, `e87d618`, `bb6e414`, `2816dfe`, `0c420dd`, `9040aee`, `279df9f`, `d427e5f`, `701a33d`, `48a2c32`, `a3588f2`, `21fad9e`, `2ec1f0d`.
+
+**Validation:** source sweep complete; CI observed separately.
