@@ -2010,3 +2010,17 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `a1981a6`, `c5911ac`.
 
 **Validation:** source guard added; CI observed separately.
+
+## 30 September 2026 — Remaining template editability passes completed
+
+- Classic Pearl, Golden Art Deco, dan Paper Cut Botanical yang sebelumnya sudah mendapat selectable cover composition kini dipertahankan sebagai bagian dari baseline editability dan dijaga oleh regression tests.
+- Pencil Reverie: recipient line Amplop sekarang protected native/system object; Cover heading memiliki selectable parent group; illustration/copy/heart tetap granular.
+- Zen Atelier: recipient line Amplop sekarang protected native/system object; shoji, mizuhiki, folds, blossom, mountains, branch/sun dan artwork dekoratif dapat dipilih dan di-hide sebagai decoration tanpa membuka isi data.
+- Celestial Ink: orbit layers tetap granular, sementara foreground Cover memiliki `content-group` untuk transform komposisi sekaligus; moon, kicker, names, star cluster, date, dan ornament tetap child targets.
+- Native removable-decoration vocabulary diperluas hanya untuk visual authored yang memang dekoratif (blossom, fold, heart, illustration, mizuhiki, mountains, shoji), bukan data event atau functional controls.
+
+**Area:** `components/PublicInvitation/PencilReverieScene.tsx`, `components/PublicInvitation/ZenAtelierScene.tsx`, `components/PublicInvitation/InvitationThemeScenes.tsx`, `lib/templates/native-visual-transforms.ts`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `ec0ba85`, `917f193`, `e6fc852`, `77d87e0`, `1ea87ce`.
+
+**Validation:** source audit complete; CI observed separately.
