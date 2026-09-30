@@ -195,6 +195,26 @@ test("Classic Pearl cover keeps a selectable composition and granular protected 
   assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
 });
 
+test("Golden Art Deco geometry and gem stay individually selectable inside its cover composition", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const deco = scenes.split('if (theme === "golden-art-deco") return <section')[1]
+    ?.split('if (theme === "paper-cut-botanical") return <section')[0];
+  assert.ok(deco, "Golden Art Deco cover branch must exist");
+  for (const object of [
+    "border-outer", "border-inner", "diamond-main", "diamond-top", "diamond-bottom",
+    "content-group", "kicker", "deco-bars", "deco-gem", "gem-ray-left",
+    "gem-icon", "gem-ray-right", "date", "ornament",
+  ]) assert.ok(deco.includes(`object:cover:${object}`), `missing Golden Art Deco ${object}`);
+  assert.match(deco, /data-studio-native-object=\{`object:cover:deco-bar-\$\{i\}`\}/);
+  assert.match(deco, /<Names[^>]*>\{names\}<\/Names>/);
+  assert.equal(nativeVisualSelector("object:cover:deco-bar-2"),
+    '[data-studio-native-object="object:cover:deco-bar-2"]');
+  assert.equal(nativeVisualCanHide("object:cover:deco-bar-2"), true);
+  assert.equal(nativeVisualCanHide("object:cover:gem-icon"), true);
+  assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
+});
+
 test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");

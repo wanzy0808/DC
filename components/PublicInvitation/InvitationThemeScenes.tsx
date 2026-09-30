@@ -249,12 +249,14 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:diamond-main" className="absolute left-1/2 top-0 h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/70" />
     <div aria-hidden data-studio-native-object="object:cover:diamond-top" className="absolute left-1/2 top-[-80px] h-52 w-52 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
     <div aria-hidden data-studio-native-object="object:cover:diamond-bottom" className="absolute bottom-[-105px] left-1/2 h-64 w-64 -translate-x-1/2 rotate-45 border border-[var(--inv-scene-accent,#bd9e59)]/40" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-20`}>{tr("A gilded celebration")}</p>
-    <div aria-hidden data-studio-native-object="object:cover:deco-bars" className="relative mt-10 flex items-center gap-2">{[0,1,2,3,4].map(i=><span key={i} className="h-8 w-4 border-x border-t border-[var(--inv-scene-accent,#bf9c4b)]" style={{height:`${33+Math.abs(2-i)*19}px`}}/>)}</div>
-    <Names className="relative mt-14 max-w-xs text-3xl tracking-[.09em]">{names}</Names>
-    <div aria-hidden data-studio-native-object="object:cover:deco-gem" className="relative mt-10 flex gap-3"><span className="h-14 w-px -rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/><Gem className="h-7 w-7"/><span className="h-14 w-px rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/></div>
-    <p data-studio-native-object="object:cover:date" className="relative mt-5 text-xs tracking-[.23em]">{date}</p>
-    <Lines studioObject="object:cover:ornament" className="mt-8"><Gem className="h-4 w-4"/></Lines>
+    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
+      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-20`}>{tr("A gilded celebration")}</p>
+      <div aria-hidden data-studio-native-object="object:cover:deco-bars" className="relative mt-10 flex items-center gap-2">{[0,1,2,3,4].map(i=><span key={i} data-studio-native-object={`object:cover:deco-bar-${i}`} className="h-8 w-4 border-x border-t border-[var(--inv-scene-accent,#bf9c4b)]" style={{height:`${33+Math.abs(2-i)*19}px`}}/>)}</div>
+      <Names className="relative mt-14 max-w-xs text-3xl tracking-[.09em]">{names}</Names>
+      <div aria-hidden data-studio-native-object="object:cover:deco-gem" className="relative mt-10 flex gap-3"><span data-studio-native-object="object:cover:gem-ray-left" className="h-14 w-px -rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/><Gem data-studio-native-object="object:cover:gem-icon" className="h-7 w-7"/><span data-studio-native-object="object:cover:gem-ray-right" className="h-14 w-px rotate-45 bg-[var(--inv-scene-soft,#bf9c4b)]"/></div>
+      <p data-studio-native-object="object:cover:date" className="relative mt-5 text-xs tracking-[.23em]">{date}</p>
+      <Lines studioObject="object:cover:ornament" className="mt-8"><Gem className="h-4 w-4"/></Lines>
+    </div>
   </section>;
 
   if (theme === "paper-cut-botanical") return <section className={`${center} bg-[var(--inv-scene-bg,#e9ead7)] text-[color:var(--inv-scene-ink,#435e45)]`} data-invitation-section={stage}>

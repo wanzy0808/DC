@@ -1965,3 +1965,12 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
 
 **Validation:** tes target native/template 40/40 dan regresi penuh 237/237, ESLint file terdampak, TypeScript, serta build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.
+
+## 30 September 2026 — Golden Art Deco editability pass
+
+- Golden Art Deco menjadi template kedelapan dalam audit satu per satu. Cover mempunyai target grup komposisi yang dapat ditata sekaligus, sementara kelima bar geometri, permata dan kedua ray, border, diamond, kicker, tanggal, serta ornamen tetap target masing-masing.
+- Ornamen individual dapat disembunyikan lewat kontrak native yang tervalidasi. Nama dan tanggal tetap menggunakan data acara dan tidak dapat dihapus sebagai dekorasi; Amplop, section konten, dan komponen bisnis tetap memakai engine bersama.
+
+**Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
+
+**Validation:** tes native 34/34, regresi penuh 238/238, ESLint file terdampak, TypeScript, dan build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.
