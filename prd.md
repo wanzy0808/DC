@@ -1932,3 +1932,15 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `042488b`, `c47cd9c`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Garden Light editability pass
+
+- Garden Light menjadi template kelima dalam audit satu-per-satu.
+- Cover sekarang mengekspos inner photo window sebagai native target terpisah dari photo frame/slot, sehingga frame dan viewport foto dapat ditata secara granular.
+- Ring kiri/kanan, sprig kiri/kanan, seal, kicker, heading, tanggal, ornament, dan photo frame tetap selectable/removable sesuai kontrak decorative native object.
+
+**Area:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `dba2a96`, `26cd214`.
+
+**Validation:** source audit complete; CI observed separately.
