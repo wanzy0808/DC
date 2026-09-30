@@ -62,9 +62,11 @@ export default function PackageShowcase({
                   <div>
                     <div className="flex items-center justify-between gap-4">
                       <span className="undara-editorial-index">{locale === "en" ? "Package" : "Paket"}</span>
-                      <span className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
-                        Undara
-                      </span>
+                      {item.key !== "GUESTBOOK_DIGITAL" && (
+                        <span className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-muted-foreground">
+                          Undara
+                        </span>
+                      )}
                     </div>
                     <h3 className="mt-5 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-[1.05] text-primary md:text-4xl">
                       {item.name[locale]}
