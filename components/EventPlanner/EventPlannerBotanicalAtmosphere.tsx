@@ -1,64 +1,15 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
 import FallingLeaves from "@/components/Layout/FallingLeaves";
 
-const sprigs = [
-  { x: 82, y: 653, angle: -39, scale: 1.2 },
-  { x: 122, y: 565, angle: 24, scale: 1.02 },
-  { x: 164, y: 478, angle: -34, scale: 1.13 },
-  { x: 212, y: 394, angle: 30, scale: 0.9 },
-  { x: 259, y: 315, angle: -29, scale: 1 },
-  { x: 305, y: 245, angle: 36, scale: 0.82 },
-  { x: 352, y: 169, angle: -20, scale: 0.72 },
-];
-
-function FoliageDrawing() {
-  return (
-    <svg viewBox="0 0 470 760" fill="none" aria-hidden="true" className="h-full w-full overflow-visible">
-      <defs>
-        <linearGradient id="planner-leaf" x1="0" y1="1" x2="1" y2="0">
-          <stop stopColor="#704A39" />
-          <stop offset="0.52" stopColor="#A77D54" />
-          <stop offset="1" stopColor="#D6B38C" />
-        </linearGradient>
-      </defs>
-      <path d="M-24 782 C62 665 72 551 182 440 S292 259 395 52 M-19 744 C18 682 70 667 157 638 M47 620 C92 577 159 577 214 543" stroke="#966F51" strokeWidth="3" strokeLinecap="round" />
-      {sprigs.map(({ x, y, angle, scale }, index) => (
-        <g key={index} transform={`translate(${x} ${y}) rotate(${angle}) scale(${scale})`}>
-          <path d="M0 0 Q48 -36 104 -68" stroke="#98704F" strokeWidth="2" />
-          <path d="M18 -12 C-3 -42 3 -67 24 -84 C41 -62 42 -37 18 -12 Z M43 -28 C28 -64 42 -91 66 -100 C77 -73 70 -48 43 -28 Z M66 -44 C65 -77 88 -97 108 -98 C110 -72 96 -52 66 -44 Z M80 -53 C96 -91 123 -96 147 -84 C134 -62 112 -51 80 -53 Z" fill="url(#planner-leaf)" stroke="#805D45" strokeWidth="1" />
-          <path d="M-8 4 C-30 -8 -44 -29 -37 -49 C-7 -45 9 -25 -8 4 Z M32 -23 C28 -44 18 -60 1 -67 M57 -37 C59 -60 57 -79 48 -90" stroke="#BE996F" strokeWidth="1" />
-        </g>
-      ))}
-      <g transform="translate(150 586) rotate(-25)">
-        <path d="M0 90 Q17 5 62 -58" stroke="#966F51" strokeWidth="3" />
-        <path d="M60 -55 C14 -70 -7 -104 -24 -142 C21 -136 51 -111 65 -77 C76 -124 108 -146 148 -157 C126 -108 100 -81 71 -66 C117 -82 148 -74 177 -53 C127 -43 94 -42 67 -61 C101 -26 104 1 94 30 C65 5 57 -23 60 -55 Z" fill="url(#planner-leaf)" stroke="#805D45" strokeWidth="1.5" />
-      </g>
-    </svg>
-  );
-}
-
-function BotanicalLayer({ className, x, y, duration, flipped = false }: { className: string; x: number; y: number; duration: number; flipped?: boolean }) {
-  const reduced = useReducedMotion();
-  return (
-    <motion.div
-      className={`pointer-events-none absolute ${className}`}
-      animate={reduced ? undefined : { x: [0, x, 0], y: [0, -y, 0], rotate: [0, x > 0 ? 1 : -1, 0] }}
-      transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
-    >
-      <div className={flipped ? "h-full w-full rotate-180" : "h-full w-full"}><FoliageDrawing /></div>
-    </motion.div>
-  );
-}
-
+/** Shared woodland ambience behind the marketing frame. */
 export default function EventPlannerBotanicalAtmosphere() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_8%_72%,rgba(178,139,94,0.065),transparent_42%),radial-gradient(ellipse_at_90%_25%,rgba(112,59,59,0.06),transparent_42%)] dark:bg-[radial-gradient(ellipse_at_8%_72%,rgba(214,179,140,0.055),transparent_42%),radial-gradient(ellipse_at_90%_25%,rgba(214,179,140,0.045),transparent_42%)]" />
-      <BotanicalLayer className="-bottom-[12%] -left-[4%] h-[82%] w-[30%] min-w-[210px] max-w-[520px] opacity-[0.25] dark:opacity-[0.20]" x={7} y={12} duration={18} />
-      <BotanicalLayer className="-right-[4%] -top-[14%] h-[78%] w-[30%] min-w-[210px] max-w-[520px] opacity-[0.23] dark:opacity-[0.19]" x={-6} y={9} duration={21} flipped />
-      <FallingLeaves embedded variety="forest" className="opacity-65" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_12%_78%,rgba(157,120,83,0.11),transparent_42%),radial-gradient(ellipse_at_88%_27%,rgba(140,100,71,0.09),transparent_43%)] dark:bg-[radial-gradient(ellipse_at_12%_78%,rgba(214,179,140,0.075),transparent_42%),radial-gradient(ellipse_at_88%_27%,rgba(214,179,140,0.06),transparent_43%)]" />
+      <div className="absolute -bottom-[12%] -left-[10%] h-[48%] w-[48%] rounded-[50%] bg-[radial-gradient(ellipse_at_32%_70%,rgba(116,91,66,0.19),transparent_67%),radial-gradient(ellipse_at_73%_82%,rgba(157,126,87,0.12),transparent_63%)] blur-3xl dark:bg-[radial-gradient(ellipse_at_32%_70%,rgba(30,20,18,0.24),transparent_67%),radial-gradient(ellipse_at_73%_82%,rgba(214,179,140,0.07),transparent_63%)]" />
+      <div className="absolute -bottom-[17%] -right-[9%] h-[43%] w-[43%] rounded-[50%] bg-[radial-gradient(ellipse_at_78%_70%,rgba(128,100,71,0.16),transparent_68%),radial-gradient(ellipse_at_27%_85%,rgba(176,138,94,0.10),transparent_62%)] blur-3xl dark:bg-[radial-gradient(ellipse_at_78%_70%,rgba(31,21,18,0.22),transparent_68%),radial-gradient(ellipse_at_27%_85%,rgba(214,179,140,0.06),transparent_62%)]" />
+      <FallingLeaves embedded variety="forest" className="opacity-50" />
     </div>
   );
 }
