@@ -2158,3 +2158,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Validation:** source guards confirm the removal of the 3-column layout and control-panel shell, floating upper-left/lower-right copy, stronger control text, larger wheel stage/phone dimensions, and preserved non-nested wheel interaction structure.
 
+### 30 September 2026 — Stronger floating copy and template controls
+
+**Owner request:** push the upper-left title and lower-right supporting copy farther toward the page edges, make the right-side text wider and less rigidly aligned, and improve readability of Search / Filter / Sort and dropdown text.
+
+**Implementation:** desktop copy is pushed farther outward using negative edge offsets within the marketing frame. The lower-right copy block is widened and intentionally staggered: the descriptive paragraph and interaction hint align right, while the editorial subheading offsets left within the same block so it no longer reads as a rigid text rectangle. Search, Filter, Sort, result count, dropdown headings, filter choices, category choices, reset action, and sort options now use stronger text weight, larger type, and higher contrast borders/text.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `3e3333d7fc5386ed0203177ad4f3640dec7b8f5d`, `3a9abf91a3f9565004c8596e57555b4a6bf8c12e`.
+
