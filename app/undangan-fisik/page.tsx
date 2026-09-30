@@ -35,9 +35,9 @@ export default function UndanganFisikPage() {
       ]
     : [
         ["Ceritakan acaramu", "Sampaikan apakah undangan fisik digabung dengan Undangan Digital atau dipesan terpisah, lalu bagikan jumlah, tanggal, kota pengiriman, dan arah desainnya."],
-        ["Pilih detail yang terasa di tangan", "Diskusikan karakter kertas, amplop, warna, teknik cetak, dan sentuhan finishing."],
-        ["Periksa proof dengan teliti", "Pastikan nama, isi, tanggal, lokasi, layout, dan detail produksi tepat sebelum persetujuan cetak."],
-        ["Konfirmasi produksi & pengiriman", "Jadwal produksi dan pengiriman mengikuti spesifikasi final serta jumlah pesanan yang disepakati."],
+        ["Pilih detail yang terasa di tangan", "Diskusikan karakter kertas, amplop, warna, teknik cetak, dan sentuhan akhir."],
+        ["Periksa contoh cetak dengan teliti", "Pastikan nama, isi, tanggal, lokasi, tata letak, dan detail produksi tepat sebelum persetujuan cetak."],
+        ["Konfirmasi produksi & pengiriman", "Jadwal produksi dan pengiriman mengikuti spesifikasi akhir serta jumlah pesanan yang disepakati."],
       ];
 
   const materials = en
@@ -47,17 +47,17 @@ export default function UndanganFisikPage() {
         [Sparkles, "Finishing", "Small production details can add contrast and character without making the invitation feel overly decorated."],
       ] as const
     : [
-        [Layers3, "Kertas", "Gramatur, tekstur, dan tone membentuk kesan pertama bahkan sebelum undangannya mulai dibaca."],
-        [Mail, "Amplop", "Amplop membingkai pengalaman dan dapat membawa warna, lining, seal, atau detail lain yang disepakati."],
-        [Sparkles, "Finishing", "Detail produksi kecil dapat memberi kontras dan karakter tanpa membuat undangan terasa terlalu ramai."],
+        [Layers3, "Kertas", "Gramatur, tekstur, dan nuansa warna membentuk kesan pertama bahkan sebelum undangannya mulai dibaca."],
+        [Mail, "Amplop", "Amplop membingkai pengalaman dan dapat membawa warna, lapisan dalam, segel, atau detail lain yang disepakati."],
+        [Sparkles, "Sentuhan Akhir", "Detail produksi kecil dapat memberi kontras dan karakter tanpa membuat undangan terasa terlalu ramai."],
       ] as const;
 
   const waMessage = en
     ? "Hi Undara, I would like to discuss printed invitations, either with a Digital Invitation or as a separate custom order."
-    : "Halo Undara, aku ingin konsultasi undangan fisik, baik bersama Undangan Digital maupun pesanan custom terpisah.";
+    : "Halo Undara, aku ingin konsultasi undangan fisik, baik bersama Undangan Digital maupun pesanan khusus terpisah.";
   const customWaMessage = en
     ? "Hi Undara, I would like to discuss a standalone/custom printed invitation order of at least 300 pieces."
-    : "Halo Undara, aku ingin konsultasi pesanan undangan fisik terpisah/custom minimal 300 pcs.";
+    : "Halo Undara, aku ingin konsultasi pesanan undangan fisik terpisah atau khusus minimal 300 lembar.";
 
   return (
     <div className="relative isolate flex min-h-dvh w-full flex-col overflow-hidden bg-background text-foreground">
@@ -92,7 +92,7 @@ export default function UndanganFisikPage() {
                   <p className="mt-7 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                     {en
                       ? "Pair it with a Digital Invitation and order printed copies individually, or make a separate custom order starting at 300 pieces. We will shape the design, paper, and finishing together."
-                      : "Gabungkan dengan Undangan Digital untuk memesan undangan cetak secara satuan, atau pesan terpisah secara custom mulai 300 pcs. Desain, kertas, dan finishing dibicarakan bersama."}
+                      : "Gabungkan dengan Undangan Digital untuk memesan undangan cetak secara satuan, atau pesan terpisah dengan desain khusus mulai 300 lembar. Desain, kertas, dan sentuhan akhir dibicarakan bersama."}
                   </p>
 
                   <div className="mt-8 flex flex-wrap gap-3">
@@ -111,7 +111,7 @@ export default function UndanganFisikPage() {
                   </div>
 
                   <p className="mt-10 pt-5 font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
-                    {en ? "Design / Paper / Envelope / Print / Finishing" : "Desain / Kertas / Amplop / Cetak / Finishing"}
+                    {en ? "Design / Paper / Envelope / Print / Finishing" : "Desain / Kertas / Amplop / Cetak / Sentuhan Akhir"}
                   </p>
                 </div>
 
@@ -154,7 +154,7 @@ export default function UndanganFisikPage() {
               <section className="undara-marketing-section undara-editorial-offset-right py-14 md:py-20">
                 <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-16">
                   <div>
-                    <p className="undara-marketing-kicker">{en ? "Tactile direction" : "Arah Tactile"}</p>
+                    <p className="undara-marketing-kicker">{en ? "Tactile direction" : "Arah Material"}</p>
                     <h2 className="mt-4 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
                       {en ? "The design is not only what guests see." : "Desainnya bukan hanya apa yang tamu lihat."}
                     </h2>
@@ -252,17 +252,17 @@ export default function UndanganFisikPage() {
                   </article>
 
                   <article className="flex flex-col rounded-[28px] bg-background/55 p-7 shadow-[0_16px_44px_rgba(58,32,32,0.07)] md:p-9">
-                    <p className="undara-marketing-kicker">{en ? "Standalone / Custom" : "Terpisah / Custom"}</p>
+                    <p className="undara-marketing-kicker">{en ? "Standalone / Custom" : "Terpisah / Khusus"}</p>
                     <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-tight text-primary md:text-4xl">
-                      {en ? "Minimum 300 pieces." : "Minimal 300 pcs."}
+                      {en ? "Minimum 300 pieces." : "Minimal 300 lembar."}
                     </h3>
                     <p className="mt-5 flex-1 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
                       {en
                         ? "For a separate printed invitation or a custom bulk order, production starts at 300 pieces. Tell us your design idea and quantity so we can discuss the right specification."
-                        : "Untuk undangan fisik yang dipesan terpisah atau produksi bulk custom, jumlah minimalnya 300 pcs. Ceritakan ide desain dan jumlahnya agar spesifikasinya bisa dibahas bersama."}
+                        : "Untuk undangan fisik yang dipesan terpisah atau produksi khusus dalam jumlah besar, jumlah minimalnya 300 lembar. Ceritakan ide desain dan jumlahnya agar spesifikasinya bisa dibahas bersama."}
                     </p>
                     <a href={WHATSAPP + encodeURIComponent(customWaMessage)} target="_blank" rel="noopener noreferrer" className="mt-7 inline-flex w-fit items-center gap-2 text-sm font-medium text-primary hover:underline">
-                      {en ? "Discuss a custom order" : "Konsultasi Pesanan Custom"}
+                      {en ? "Discuss a custom order" : "Konsultasi Pesanan Khusus"}
                       <ArrowRight className="h-4 w-4" aria-hidden="true" />
                     </a>
                   </article>
