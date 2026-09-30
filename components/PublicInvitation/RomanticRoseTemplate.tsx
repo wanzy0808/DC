@@ -273,12 +273,12 @@ export default function RomanticRoseTemplate({
           <div data-studio-native-object="object:envelope:ring-left" className="pointer-events-none absolute -left-20 top-10 h-56 w-56 rounded-full border border-white/60" />
           <div data-studio-native-object="object:envelope:ring-right" className="pointer-events-none absolute -right-20 bottom-10 h-64 w-64 rounded-full border border-white/70" />
           <p data-studio-native-object="object:envelope:kicker" className="mb-7 text-[10px] uppercase tracking-[0.3em] text-[#8e586d]">{tr("The wedding invitation")}</p>
-          <div className="relative w-full max-w-[300px] drop-shadow-[0_24px_40px_rgba(119,56,80,0.21)]">
+          <div data-studio-native-object="object:envelope:card-stack" className="relative w-full max-w-[300px] drop-shadow-[0_24px_40px_rgba(119,56,80,0.21)]">
             <div data-studio-native-object="object:envelope:top-fold" className="absolute inset-x-0 top-0 h-1/2 origin-top [clip-path:polygon(0_0,100%_0,50%_100%)] bg-[#d8a0b0] shadow-xl" />
             <div data-studio-native-object="object:envelope:letter-card" className="relative mt-2 flex min-h-[345px] flex-col items-center justify-center border border-[#dbadba] bg-[#fffdfb] p-5 shadow-[inset_0_0_0_7px_#f9e9ed]">
               <p data-studio-native-object="object:envelope:letter-kicker" className="text-[10px] uppercase tracking-[0.24em] text-[#ad7889]">{tr("Untuk yang terkasih")}</p>
               {personalEnvelopeAddress && (
-                <p data-personal-envelope-address className="mt-3 max-w-[250px] break-words text-xs font-semibold leading-5 text-[#713b50]">{personalEnvelopeAddress}</p>
+                <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-3 max-w-[250px] break-words text-xs font-semibold leading-5 text-[#713b50]">{personalEnvelopeAddress}</p>
               )}
               <span data-studio-native-object="object:envelope:heart" className="my-6 grid h-12 w-12 place-items-center rounded-full border border-[#d9a7b4] text-[#a76b80]"><Heart className="h-5 w-5" /></span>
               <h1 data-studio-native-heading="" className="break-words font-[family-name:var(--font-undara-heading)] text-2xl leading-relaxed text-[#713b50]">{displayName || tr("Undangan Pernikahan")}</h1>
@@ -298,7 +298,7 @@ export default function RomanticRoseTemplate({
             <section data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)} className="relative flex min-h-[680px] flex-col items-center justify-center overflow-hidden bg-[#f8eaec] px-7 pb-16 pt-14 text-center">
                         <div data-studio-native-object="object:cover:background-photo" className="absolute inset-0 opacity-30"><RosePhoto url={cover} alt="" cropStyle={photoCropStyle(assignment, "cover")} className="h-full w-full object-cover" /></div>
                         <div data-studio-native-object="object:cover:gradient-overlay" className="absolute inset-0 bg-gradient-to-b from-[#fff9f7]/85 via-[#fff9f7]/65 to-[#f8eaec]" />
-                        <div className="relative z-10 flex w-full flex-col items-center">
+                        <div data-studio-native-object="object:cover:content-group" className="relative z-10 flex w-full flex-col items-center">
                           <p data-studio-native-object="object:cover:kicker" className="text-[10px] uppercase tracking-[0.3em] text-[#835064]">{tr("The wedding of")}</p>
                           <h1 data-studio-native-heading="" className="mt-5 max-w-full break-words font-[family-name:var(--font-undara-heading)] text-3xl leading-relaxed text-[#66394b] sm:text-5xl">{displayName || displayTitleCase(invitation.title)}</h1>
                           <div data-invitation-photo-slot="cover" className="relative mt-9 w-[min(74vw,280px)] overflow-hidden rounded-t-[145px] rounded-b-xl border-[7px] border-white bg-white shadow-[0_20px_45px_rgba(121,67,84,0.22)]">
@@ -329,7 +329,7 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("identity", instanceId)}
                         <RoseHeading section="identity" eyebrow="The two of us">{tr("Mempelai")}</RoseHeading>
                         <div data-studio-native-object="object:identity:couple-group" className="grid grid-cols-2 gap-4">
-                          <div className="min-w-0 text-center">
+                          <div data-studio-native-object="object:identity:personOne-group" className="min-w-0 text-center">
                             <div data-invitation-photo-slot="personOne" className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={groomPhoto} alt="Foto mempelai pertama" cropStyle={photoCropStyle(assignment, "personOne")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personOne", "mempelai pertama")}
@@ -338,7 +338,7 @@ export default function RomanticRoseTemplate({
                             <h3 data-studio-native-object="object:identity:personOne-name" className="mt-5 break-words font-[family-name:var(--font-undara-heading)] text-base leading-relaxed text-[#713b50]">{displayTitleCase(invitation.groomName) || tr("Mempelai pertama")}</h3>
                             {groomParents && <p data-studio-native-object="object:identity:personOne-parents" className="mx-auto mt-2 max-w-[12rem] text-xs leading-5 text-[#765460]">{groomParents}</p>}
                           </div>
-                          <div className="min-w-0 text-center">
+                          <div data-studio-native-object="object:identity:personTwo-group" className="min-w-0 text-center">
                             <div data-invitation-photo-slot="personTwo" className="relative overflow-hidden rounded-t-full rounded-b-xl">
                               <RosePhoto url={bridePhoto} alt="Foto mempelai kedua" cropStyle={photoCropStyle(assignment, "personTwo")} className="mx-auto aspect-[3/4] w-full object-cover shadow-lg" />
                               {editPhoto("personTwo", "mempelai kedua")}
