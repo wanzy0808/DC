@@ -27,13 +27,13 @@ export default function HeroSection() {
         <p className="mt-7 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
           {en
             ? "Bring guest verification, official QR check-in, seating, and live attendance into one calm event-day flow for the reception team."
-            : "Satukan verifikasi tamu, QR check-in resmi, pengaturan meja, dan attendance realtime dalam satu alur yang tenang untuk tim penerima tamu."}
+            : "Satukan verifikasi tamu, pemindaian QR resmi, pengaturan meja, dan pemantauan kehadiran langsung dalam satu alur untuk tim penerima tamu."}
         </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           <Button asChild size="lg">
             <Link href="/packages">
-              {en ? "Explore Guestbook" : "Lihat Paket Guestbook"}
+              {en ? "Explore Guestbook" : "Lihat Paket Buku Tamu"}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </Button>
@@ -50,7 +50,7 @@ export default function HeroSection() {
             [ScanLine, en ? "Official QR" : "QR Resmi"],
             [Users, en ? "Guest verification" : "Verifikasi Tamu"],
             [Armchair, en ? "Seating" : "Meja"],
-            [BarChart3, en ? "Live attendance" : "Attendance"],
+            [BarChart3, en ? "Live attendance" : "Kehadiran"],
           ].map(([Icon, label]) => {
             const ItemIcon = Icon as typeof ScanLine;
             return (
@@ -95,7 +95,7 @@ export default function HeroSection() {
         <div className="absolute left-0 top-[16%] hidden w-[220px] border border-primary/25 bg-background/88 p-5 shadow-[0_18px_50px_rgba(58,32,32,0.11)] backdrop-blur-md md:block">
           <p className="undara-editorial-index">{en ? "Guest arrival" : "Kedatangan Tamu"}</p>
           <p className="mt-3 font-[family-name:var(--font-undara-heading)] text-xl leading-tight text-primary">
-            {en ? "Verify first. Check in with confidence." : "Verifikasi dulu. Check-in tanpa menebak."}
+            {en ? "Verify first. Check in with confidence." : "Verifikasi dulu. Catat kedatangan dengan yakin."}
           </p>
         </div>
       </div>
