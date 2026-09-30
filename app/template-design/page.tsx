@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type WheelEvent as ReactWheelEvent, type TouchEvent as ReactTouchEvent } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, Search, X } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
@@ -53,6 +53,7 @@ export default function TemplateDesignPage() {
         contentLabel: "Template gallery",
         previewLabel: "Preview",
         previewCanvasLabel: "Invitation preview",
+        wheelHint: "Scroll or swipe to choose · click the centered phone to preview",
         optionalLabels: { rsvp: "RSVP", wishes: "Guest wishes", gift: "Gift" },
       }
     : {
@@ -79,6 +80,7 @@ export default function TemplateDesignPage() {
         contentLabel: "Koleksi template undangan",
         previewLabel: "Pratinjau",
         previewCanvasLabel: "Contoh undangan",
+        wheelHint: "Scroll atau geser untuk memilih · klik HP di tengah untuk pratinjau",
         optionalLabels: { rsvp: "RSVP", wishes: "Ucapan", gift: "E-Angpao" },
       };
   const categories = useMemo(() => ["Semua", ...Array.from(new Set(catalog.map((item) => item.category)))], [catalog]);
@@ -91,6 +93,10 @@ export default function TemplateDesignPage() {
   const [sortOpen, setSortOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
+  const [wheelIndex, setWheelIndex] = useState(0);
+  const wheelLockRef = useRef(0);
+  const wheelTouchStartRef = useRef<number | null>(null);
+  const suppressWheelClickRef = useRef(false);
 
   const filteredTemplates = useMemo(() => {
     const result = catalog.filter((template) =>
@@ -104,12 +110,56 @@ export default function TemplateDesignPage() {
   }, [catalog, category, query, sort, photoFilter]);
 
   const selected = catalog.find((item) => item.key === selectedKey);
+  const activeWheelTemplate = filteredTemplates[wheelIndex] ?? null;
   const sortOptions = [
     { value: "Katalog", label: copy.catalog },
     { value: "NamaAsc", label: copy.nameAsc },
     { value: "NamaDesc", label: copy.nameDesc },
   ] as const;
   const sortLabel = sortOptions.find((option) => option.value === sort)?.label ?? copy.catalog;
+
+  useEffect(() => {
+    setWheelIndex(0);
+  }, [query, category, photoFilter, sort]);
+
+  useEffect(() => {
+    if (wheelIndex < filteredTemplates.length) return;
+    setWheelIndex(Math.max(0, filteredTemplates.length - 1));
+  }, [filteredTemplates.length, wheelIndex]);
+
+  function moveWheel(direction: -1 | 1) {
+    setWheelIndex((current) => Math.max(0, Math.min(filteredTemplates.length - 1, current + direction)));
+  }
+
+  function handleTemplateWheel(event: ReactWheelEvent<HTMLDivElement>) {
+    if (filteredTemplates.length < 2) return;
+    const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+    if (Math.abs(delta) < 8) return;
+    const direction: -1 | 1 = delta > 0 ? 1 : -1;
+    const canMove = direction > 0 ? wheelIndex < filteredTemplates.length - 1 : wheelIndex > 0;
+    if (!canMove) return;
+    event.preventDefault();
+    const now = performance.now();
+    if (now - wheelLockRef.current < 170) return;
+    wheelLockRef.current = now;
+    moveWheel(direction);
+  }
+
+  function handleWheelTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
+    wheelTouchStartRef.current = event.changedTouches[0]?.clientX ?? null;
+  }
+
+  function handleWheelTouchEnd(event: ReactTouchEvent<HTMLDivElement>) {
+    const startX = wheelTouchStartRef.current;
+    wheelTouchStartRef.current = null;
+    if (startX === null) return;
+    const endX = event.changedTouches[0]?.clientX ?? startX;
+    const distance = endX - startX;
+    if (Math.abs(distance) < 38) return;
+    suppressWheelClickRef.current = true;
+    moveWheel(distance < 0 ? 1 : -1);
+    window.setTimeout(() => { suppressWheelClickRef.current = false; }, 220);
+  }
 
   // Marketing cards deep-link to a specific preview. Public preview never opens Studio.
   useEffect(() => {
@@ -273,50 +323,106 @@ export default function TemplateDesignPage() {
           </div>
         </div>
 
-        <p className="mb-6 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
-        <div className="undara-template-catalog-grid grid grid-cols-2 justify-items-center gap-x-5 gap-y-12 pb-6 sm:grid-cols-3 sm:gap-x-7 md:gap-y-14 xl:grid-cols-4 xl:gap-x-9 xl:pb-12">
-          {filteredTemplates.map((template, index) => (
-            <article
-              key={template.key}
-              className={`group flex w-full min-w-0 max-w-[250px] flex-col items-center ${index % 4 === 1 ? "xl:translate-y-6" : index % 4 === 3 ? "xl:translate-y-10" : ""}`}
+        <p className="mb-5 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
+        {filteredTemplates.length > 0 && (
+          <div className="relative -mx-4 overflow-hidden px-4 pb-10 sm:-mx-8 sm:px-8">
+            <div
+              data-template-wheel
+              role="group"
+              aria-label={locale === "en" ? "Template selection wheel" : "Roda pilihan template"}
+              tabIndex={0}
+              onWheel={handleTemplateWheel}
+              onTouchStart={handleWheelTouchStart}
+              onTouchEnd={handleWheelTouchEnd}
+              onKeyDown={(event) => {
+                if (event.key === "ArrowLeft") {
+                  event.preventDefault();
+                  moveWheel(-1);
+                } else if (event.key === "ArrowRight") {
+                  event.preventDefault();
+                  moveWheel(1);
+                } else if (event.key === "Enter" && activeWheelTemplate) {
+                  event.preventDefault();
+                  openPreview(activeWheelTemplate.key);
+                }
+              }}
+              className="relative h-[470px] w-full touch-pan-y overflow-hidden outline-none sm:h-[525px] md:h-[555px] focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
-              <button
-                type="button"
-                onClick={() => openPreview(template.key)}
-                aria-label={`${copy.previewLabel}: ${template.name}`}
-                className="relative mx-auto aspect-[9/19.5] w-full max-w-[218px] rounded-[38px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_50px_rgba(17,17,17,0.18),inset_0_1px_0_rgba(255,255,255,0.9)] transition-transform duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary md:max-w-[228px] [@media(hover:hover)_and_(pointer:fine)]:group-hover:-translate-y-1.5 dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
-              >
-                <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-11 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
-                <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
-                <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
-                <span className="relative block h-full overflow-hidden rounded-[35px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
-                  <span className="pointer-events-none absolute inset-[7px] z-20 rounded-[29px] border border-white/10" aria-hidden="true" />
-                  <span className="relative block h-full overflow-hidden rounded-[28px] bg-[#f8f4f1] dark:bg-[#111111]">
-                    {template.ready ? (
-                      <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} phone />
-                    ) : (
-                      <img src={template.previewImage} alt="" loading="lazy" className="h-full w-full object-cover" />
-                    )}
-                  </span>
-                  <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 z-30 h-5 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]">
-                    <span className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#151515]" />
-                  </span>
-                  <span className="pointer-events-none absolute inset-x-8 bottom-5 z-30 translate-y-2 rounded-full bg-black/70 px-3 py-2 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-white opacity-0 transition-[opacity,transform] duration-200 ease-out [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-y-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100">
-                    {copy.previewLabel}
-                  </span>
-                </span>
-              </button>
-              <div className="mt-5 w-full max-w-[228px] text-center">
-                <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/45">
-                  {template.category}
+              <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[47%] h-[64%] w-[min(66vw,560px)] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(112,59,59,0.10),rgba(112,59,59,0.025)_52%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(214,179,140,0.12),rgba(214,179,140,0.025)_52%,transparent_72%)]" />
+              <div aria-hidden="true" className="pointer-events-none absolute inset-x-[12%] bottom-[5.5%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+              <div aria-hidden="true" className="pointer-events-none absolute left-1/2 bottom-[3.5%] h-8 w-[min(50vw,360px)] -translate-x-1/2 rounded-[50%] bg-black/10 blur-xl dark:bg-black/25" />
+
+              {filteredTemplates.map((template, index) => {
+                const distance = index - wheelIndex;
+                const depth = Math.abs(distance);
+                const visible = depth <= 3;
+                const scale = Math.max(0.56, 1 - depth * 0.16);
+                const opacity = visible ? Math.max(0.18, 1 - depth * 0.24) : 0;
+                const rotation = distance === 0 ? 0 : distance < 0 ? 13 : -13;
+                const translateY = depth * 18;
+                return (
+                  <button
+                    key={template.key}
+                    type="button"
+                    aria-current={distance === 0 ? "true" : undefined}
+                    aria-label={distance === 0 ? `${copy.previewLabel}: ${template.name}` : template.name}
+                    tabIndex={depth <= 1 ? 0 : -1}
+                    onClick={() => {
+                      if (suppressWheelClickRef.current) return;
+                      if (distance === 0) openPreview(template.key);
+                      else setWheelIndex(index);
+                    }}
+                    className="group absolute left-1/2 top-[46%] aspect-[9/19.5] w-[clamp(148px,22vw,224px)] rounded-[38px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_58px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+                    style={{
+                      transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(112px, 17vw, 190px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
+                      opacity,
+                      zIndex: 20 - depth,
+                      filter: distance === 0 ? "none" : `saturate(${Math.max(0.5, 1 - depth * 0.14)}) brightness(${Math.max(0.72, 1 - depth * 0.08)})`,
+                      pointerEvents: visible ? "auto" : "none",
+                    }}
+                  >
+                    <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-11 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                    <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                    <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                    <span className="relative block h-full overflow-hidden rounded-[35px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
+                      <span className="pointer-events-none absolute inset-[7px] z-20 rounded-[29px] border border-white/10" aria-hidden="true" />
+                      <span className="relative block h-full overflow-hidden rounded-[28px] bg-[#f8f4f1] dark:bg-[#111111]">
+                        {template.ready ? (
+                          <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} phone />
+                        ) : (
+                          <img src={template.previewImage} alt="" loading="lazy" className="h-full w-full object-cover" />
+                        )}
+                      </span>
+                      <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 z-30 h-5 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]">
+                        <span className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#151515]" />
+                      </span>
+                      {distance === 0 && (
+                        <span className="pointer-events-none absolute inset-x-7 bottom-5 z-30 rounded-full bg-black/72 px-3 py-2 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-white opacity-0 transition-opacity duration-200 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100">
+                          {copy.previewLabel}
+                        </span>
+                      )}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {activeWheelTemplate && (
+              <div data-template-wheel-details className="mx-auto -mt-2 max-w-2xl text-center">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-foreground/45">
+                  {String(wheelIndex + 1).padStart(2, "0")} / {String(filteredTemplates.length).padStart(2, "0")} · {activeWheelTemplate.category}
                 </p>
-                <h2 className="mt-1.5 truncate font-[family-name:var(--font-undara-heading)] text-lg font-normal text-primary">
-                  {template.name}
+                <h2 className="mt-3 font-[family-name:var(--font-undara-heading)] text-[clamp(1.9rem,4vw,3rem)] font-normal leading-tight text-primary">
+                  {activeWheelTemplate.name}
                 </h2>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-foreground/65">
+                  {descriptionFor(activeWheelTemplate)}
+                </p>
+                <p className="mt-4 text-[11px] text-foreground/40">{copy.wheelHint}</p>
               </div>
-            </article>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
         {filteredTemplates.length === 0 && (
           <div className="rounded-xl border border-dashed border-border px-6 py-20 text-center text-sm text-foreground/60">{copy.none}</div>
         )}
