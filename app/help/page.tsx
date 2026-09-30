@@ -150,7 +150,7 @@ export default function HelpPage() {
               <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{en ? "Next step" : "Langkah Berikutnya"}</p>
-                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-6xl">
+                  <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-6xl">
                     {en ? "Ready to continue your event setup?" : "Siap melanjutkan persiapan acaramu?"}
                   </h2>
                   <p className="mt-5 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
