@@ -1907,3 +1907,16 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `7ec513e`, `6b9299a`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Eternal Blossom editability pass
+
+- Eternal Blossom menjadi template ketiga dalam audit satu-per-satu.
+- Recipient line pada shared envelope sekarang menjadi protected native/system object sehingga styling dan transform dapat diedit tanpa membuka isi data tamu.
+- Cover Eternal Blossom mempertahankan target granular untuk flower kiri/kanan, photo frame, inner photo window, kicker, heading nama, tanggal, dan ornament.
+- Semua perubahan tetap memakai renderer web yang sama; tidak mengubah RSVP, Maps, Wishes, Gift, Countdown, Music, atau data event.
+
+**Area:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `4a91bb6`, `4458871`.
+
+**Validation:** source audit complete; CI observed separately.
