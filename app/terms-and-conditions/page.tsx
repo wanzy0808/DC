@@ -254,7 +254,7 @@ export default function TermsAndConditionsPage() {
               <div className="grid gap-8 lg:grid-cols-[0.34fr_0.66fr] lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{copy.introduction}</p>
-                  <h2 className="mt-4 max-w-[12ch] font-[family-name:var(--font-undara-heading)] text-3xl leading-[1.05] text-primary md:text-5xl">
+                  <h2 className="mt-4 max-w-[12ch] font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-[1.05] tracking-[-0.025em] text-primary md:text-5xl">
                     {en ? "Start with the general agreement." : "Mulai dari ketentuan umumnya."}
                   </h2>
                 </div>
@@ -279,7 +279,7 @@ export default function TermsAndConditionsPage() {
                     <div>
                       <h2
                         id={`undara-terms-section-${index}`}
-                        className="font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl"
+                        className="font-[family-name:var(--font-undara-heading)] text-2xl font-bold leading-[1.08] text-primary md:text-3xl lg:text-4xl"
                       >
                         {section.title}
                       </h2>
