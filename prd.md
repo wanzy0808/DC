@@ -2168,3 +2168,15 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `3e3333d7fc5386ed0203177ad4f3640dec7b8f5d`, `3a9abf91a3f9565004c8596e57555b4a6bf8c12e`.
 
+### 30 September 2026 — One-page template selector compression and door-widget placement
+
+**Owner request:** remove the “designs available” count, move the door navigator fully inside the marketing frame, raise Search / Filter / Sort, push the title farther left and the supporting copy farther right/down, and compress `/template-design` toward a single-frame desktop composition.
+
+**Implementation:** the result-count label was removed. Desktop title and supporting copy now sit farther toward the frame corners, with the right-side copy widened and arranged as a downward right-aligned cascade rather than a central block. The control row is raised by reducing its top offset and bottom gap. The wheel stays wide but its vertical stage is bounded so controls, phones and active-template metadata fit more tightly within the framed viewport. The shared `MarketingDoorNavigator` now uses frame-aware left offsets (`calc(5vw + 10px)` on mobile, 35px on small screens and 39px on desktop) so the widget sits fully inside the frame on all framed marketing pages instead of straddling the outer edge.
+
+**Area:** `app/template-design/page.tsx`, `components/Layout/MarketingDoorNavigator.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `b5d195227d231c94d08689cafb4c58e498b11f09`, `2e51e3517d31ac7c6ed75866e9b4830c016988cf`, `81404e89358a2119478c8fa9c9c5395e28acef42`.
+
+**Validation:** source guards confirm the result count is gone, corner copy is pushed outward, controls are raised, the wheel stage is vertically compressed while retaining width, and the door navigator is positioned inside the shared frame.
+
