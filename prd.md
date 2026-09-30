@@ -49,6 +49,7 @@ Arah visual utama Undara adalah **woodland / forest editorial**: hangat, tenang,
 - Bila membutuhkan dekorasi sudut marketing, prioritaskan **sulur/ukiran organik tipis** atau branch/canopy yang terasa menyatu dengan komposisi, bukan bunga besar.
 - Background harus mendukung hierarki konten. Dekorasi tidak boleh menabrak brand, navbar, heading, CTA, form, atau mengurangi keterbacaan.
 - Landing/Pintu boleh memiliki treatment atmosfer lebih kuat; halaman marketing lain memakai versi lebih restrained dari sistem woodland yang sama.
+- Ilustrasi woodland homepage mengisi lebar viewport melampaui outline mainframe. Sisi kiri/kanannya melebur lembut ke warna dasar halaman, tanpa batas persegi dari layer yang berhenti sebelum frame. Fade atas/bawah menjaga navbar dan footer tetap terbaca; bingkai serta Pintu tetap jelas di depan atmosfer.
 - Dark/Light mode harus mempertahankan karakter woodland yang sama, bukan berubah menjadi dua brand visual yang berbeda.
 - **Dark woodland boleh memakai lampion kecil di kedalaman hutan** sebagai ambience khusus malam: jumlah sedikit, ukuran kecil, cahaya hangat/redup, tersebar natural, dan selalu background-only. Lampion tidak boleh terasa seperti festival, tidak boleh memenuhi frame, dan tidak boleh bersaing dengan heading, CTA, Pintu, atau navigasi.
 - Light mode tidak wajib menampilkan lampion; karakter siangnya mengandalkan canopy, daun, kabut, cahaya alami, dan ruang kosong.
@@ -1768,3 +1769,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `lib/packages/catalog.ts`, `components/Marketing/PackageShowcase.tsx`, halaman dan sumber teks marketing terkait, `tests/event-planner-redesign.test.mjs`, `prd.md` §8.4 dan §16.1/Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint pada file kode yang berubah, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Browser visual serta pemenuhan operasional layanan manual belum diverifikasi; tidak ada migrasi database.
+
+
+## 30 September 2026 — Sambungan woodland landing melewati frame
+
+**Permintaan owner:** hilangkan kesan latar hutan yang patah di sisi kiri/kanan landing; pertimbangkan background mengisi hingga luar frame.
+
+**Implementasi:** lapisan woodland Light/Dark memakai lebar viewport, dengan pelembutan horizontal pada tepi layar. Fade vertikal, komposisi Pintu, navbar, footer, dan frame tidak diubah.
+
+**Area/commit:** `components/Landing/LandingWoodlandAtmosphere.tsx`, `tests/repo-file-naming.test.mjs`, `prd.md` §1.2 dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint komponen, TypeScript, 28 tes marketing/asset, dan `git diff --check` lulus. Visual browser belum diverifikasi; tidak ada migrasi database.
