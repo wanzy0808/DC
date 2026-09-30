@@ -517,3 +517,16 @@ test("Eternal Blossom envelope and cover keep granular Studio targets", () => {
   assert.equal(nativeVisualCanHide("object:cover:flower-right"), true);
   assert.equal(nativeVisualUsesSystemContent("object:envelope:address"), true);
 });
+
+test("Modern Maroon decorative blocks and monogram can be hidden without unlocking content", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  assert.match(scenes, /object:cover:block-left/);
+  assert.match(scenes, /object:cover:block-right/);
+  assert.match(scenes, /object:cover:monogram/);
+  assert.match(scenes, /object:cover:media-group/);
+  assert.match(scenes, /object:cover:copy-panel/);
+  assert.equal(nativeVisualCanHide("object:cover:block-left"), true);
+  assert.equal(nativeVisualCanHide("object:cover:block-right"), true);
+  assert.equal(nativeVisualCanHide("object:cover:monogram"), true);
+  assert.equal(nativeVisualCanHide("object:cover:date"), false);
+});
