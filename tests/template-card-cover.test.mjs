@@ -13,13 +13,17 @@ test("every live template catalog card renders the Cover/Hero rather than the en
   assert.match(featured, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
 });
 
-test("public template catalog uses a phone wheel with centered preview and details below", () => {
+test("public template catalog uses a looping phone wheel with centered preview and details below", () => {
   assert.match(page, /data-template-wheel/);
   assert.match(page, /data-template-wheel-details/);
   assert.match(page, /\[perspective:1200px\]/);
   assert.match(page, /rotateY\(\$\{rotation\}deg\)/);
   assert.match(page, /stage\.addEventListener\("wheel", onWheel, \{ passive: false \}\)/);
   assert.match(page, /onTouchStart=\{handleWheelTouchStart\}/);
+  assert.match(page, /const next = \(current \+ direction \+ total\) % total/);
+  assert.match(page, /function wheelDistance\(index: number\)/);
+  assert.match(page, /if \(distance > half\) distance -= total/);
+  assert.match(page, /if \(distance < -half\) distance \+= total/);
   assert.match(page, /if \(distance === 0\)\s*\{\s*openPreview\(template\.key\)/);
   assert.match(page, /wheelIndexRef\.current = index/);
   assert.match(page, /setWheelIndex\(index\)/);
@@ -27,6 +31,20 @@ test("public template catalog uses a phone wheel with centered preview and detai
   assert.match(page, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
   assert.doesNotMatch(page, /<Eye /);
   assert.doesNotMatch(page, /<Button onClick=\{\(\) => openPreview\(template\.key\)\}/);
+});
+
+test("template catalog keeps search filter and sort in one compact control bar", () => {
+  assert.match(page, /min-h-\[calc\(100dvh-170px\)\]/);
+  assert.match(page, /sm:max-w-\[230px\]/);
+  assert.match(page, /ref=\{filterMenuRef\}/);
+  assert.match(page, /<SlidersHorizontal/);
+  assert.match(page, /\{copy\.photoType\}/);
+  assert.match(page, /\{copy\.categoryLabel\}/);
+  assert.match(page, /max-h-40 flex-wrap gap-1\.5 overflow-y-auto/);
+  assert.match(page, /ref=\{sortMenuRef\}/);
+  assert.match(page, /setFilterOpen\(false\)/);
+  assert.match(page, /setSortOpen\(false\)/);
+  assert.doesNotMatch(page, /mt-10 flex flex-wrap gap-2.*Filter penggunaan foto/s);
 });
 
 test("catalog popup starts at Cover without changing the original invitation opening", () => {
