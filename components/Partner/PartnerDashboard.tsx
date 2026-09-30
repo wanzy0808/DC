@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import SessionLogoutButton from "@/components/Auth/SessionLogoutButton";
+import { Button } from "@/components/ui/button";
 
 type Sale = {
   id: string;
@@ -45,9 +46,10 @@ function date(value: string) {
 export default function PartnerDashboard() {
   const [data, setData] = useState<Data | null>(null);
   const [message, setMessage] = useState("Memuat data penjualan...");
+  const [creating, setCreating] = useState(false);
 
-  useEffect(() => {
-    fetch("/api/partner/sales", { cache: "no-store" })
+  async function load() {
+    return fetch("/api/partner/sales", { cache: "no-store" })
       .then(async (response) => {
         const payload = await response.json();
         if (!response.ok) throw new Error(payload.error ?? "Data belum dapat dimuat.");
@@ -55,7 +57,25 @@ export default function PartnerDashboard() {
         setMessage("");
       })
       .catch((error) => setMessage(error instanceof Error ? error.message : "Data belum dapat dimuat."));
-  }, []);
+  }
+
+  useEffect(() => { void load(); }, []);
+
+  async function createCode() {
+    setCreating(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/partner/codes", { method: "POST" });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error ?? "Kode belum dapat dibuat.");
+      await load();
+      setMessage(`Kode ${result.code} siap dibagikan.`);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Kode belum dapat dibuat.");
+    } finally {
+      setCreating(false);
+    }
+  }
 
   return (
     <main className="mx-auto w-[80vw] max-w-full space-y-8 px-5 py-8 font-[family-name:var(--font-undara-body)]">
@@ -85,11 +105,17 @@ export default function PartnerDashboard() {
           </div>
 
           <section className="rounded-2xl border border-border bg-background p-5">
-            <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Kode voucher saya</h2>
+            <div className="flex flex-wrap items-start justify-between gap-4">
+              <div>
+                <h2 className="font-[family-name:var(--font-undara-heading)] text-xl">Kode referral saya</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Pelanggan mendapat diskon 30% untuk Undangan Digital atau 15% untuk Buku Tamu Digital. Akun Mitra hanya dapat dibuat Owner.</p>
+              </div>
+              <Button type="button" disabled={creating || data.vouchers.length >= 20} onClick={createCode}>{creating ? "Membuat..." : "Buat kode referral"}</Button>
+            </div>
             <div className="mt-4 flex flex-wrap gap-2">
               {data.vouchers.length ? data.vouchers.map((code) => (
                 <span key={code} className="rounded-lg border border-primary/30 bg-primary/5 px-3 py-2 font-mono text-sm text-primary">{code}</span>
-              )) : <p className="text-sm text-muted-foreground">Belum ada kode voucher. Hubungi Owner untuk membuat kode.</p>}
+              )) : <p className="text-sm text-muted-foreground">Belum ada kode. Buat kode untuk dibagikan kepada pelanggan.</p>}
             </div>
           </section>
 

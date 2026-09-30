@@ -6,6 +6,7 @@ import { CheckCircle2 } from "lucide-react";
 import { servicePackages } from "@/lib/packages/catalog";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
+import { normalizeReferralCode, referralPrice } from "@/lib/partners/referral-pricing";
 
 type Props = {
   initialPackage?: string;
@@ -31,9 +32,25 @@ export default function PackageSelector({
   const [selected, setSelected] = useState(initial);
   const [message, setMessage] = useState("");
   const [voucherCode, setVoucherCode] = useState("");
+  const [appliedCode, setAppliedCode] = useState("");
+  const [referralLoaded, setReferralLoaded] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => setSelected(initial), [initial]);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/dashboard/referral", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const data = await response.json();
+        if (active) {
+          setVoucherCode(data.code ?? "");
+          setAppliedCode(data.active ? data.code : "");
+        }
+      })
+      .catch(() => undefined)
+      .finally(() => { if (active) setReferralLoaded(true); });
+    return () => { active = false; };
+  }, []);
 
   const copy =
     locale === "en"
@@ -47,8 +64,8 @@ export default function PackageSelector({
           preparing: "Preparing invoice…",
           fallbackError: "This product could not be selected yet.",
           eventContext: "Event-specific purchase",
-          voucher: "Partner voucher code",
-          voucherHint: "Optional. Used to attribute this sale to an Undara partner.",
+          voucher: "Partner referral code",
+          voucherHint: "Digital Invitation: 30% off. Digital Guestbook: 15% off. Apply before checkout.",
         }
       : {
           eyebrow: "Layanan",
@@ -60,18 +77,32 @@ export default function PackageSelector({
           preparing: "Menyiapkan invoice…",
           fallbackError: "Produk belum dapat dipilih.",
           eventContext: "Pembelian khusus acara",
-          voucher: "Kode voucher mitra",
-          voucherHint: "Opsional. Dipakai untuk mencatat penjualan ke mitra Undara.",
+          voucher: "Kode referral Mitra",
+          voucherHint: "Undangan Digital diskon 30%. Buku Tamu Digital diskon 15%. Pakai kode sebelum checkout.",
         };
 
   async function choosePackage() {
     setLoading(true);
     setMessage(copy.preparing);
     try {
+      let checkoutCode = appliedCode;
+      const enteredCode = normalizeReferralCode(voucherCode);
+      if (selected !== "WA_BLAST_50" && enteredCode !== appliedCode) {
+        const response = await fetch("/api/dashboard/referral", {
+          method: enteredCode ? "POST" : "DELETE",
+          headers: enteredCode ? { "Content-Type": "application/json" } : undefined,
+          body: enteredCode ? JSON.stringify({ code: enteredCode }) : undefined,
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error ?? copy.fallbackError);
+        checkoutCode = result.code ?? "";
+        setAppliedCode(checkoutCode);
+        setVoucherCode(checkoutCode);
+      }
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ packageKey: selected, invitationId, voucherCode: voucherCode.trim() || undefined }),
+        body: JSON.stringify({ packageKey: selected, invitationId, voucherCode: selected === "WA_BLAST_50" ? undefined : checkoutCode || undefined }),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -79,8 +110,8 @@ export default function PackageSelector({
         return;
       }
       router.push(data.invoiceUrl ?? `/checkout/${data.order.id}`);
-    } catch {
-      setMessage(copy.fallbackError);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : copy.fallbackError);
     } finally {
       setLoading(false);
     }
@@ -109,6 +140,7 @@ export default function PackageSelector({
         <div className="mx-auto grid w-full max-w-[1200px] justify-center gap-5 md:grid-cols-2 xl:grid-cols-3">
           {visiblePackages.map((item) => {
             const active = selected === item.key;
+            const pricing = appliedCode ? referralPrice(item.key, item.price) : null;
             return (
               <label
                 key={item.key}
@@ -137,8 +169,9 @@ export default function PackageSelector({
                     {item.name[locale]}
                   </span>
                   <span className="mt-2 block text-2xl font-semibold">
-                    Rp {item.price.toLocaleString("id-ID")}
+                    {pricing?.percent ? <><span className="mr-2 text-base font-normal text-muted-foreground line-through">Rp {item.price.toLocaleString("id-ID")}</span>Rp {pricing.amount.toLocaleString("id-ID")}</> : <>Rp {item.price.toLocaleString("id-ID")}</>}
                   </span>
+                  {!!pricing?.percent && <span className="mt-1 block text-xs font-medium text-primary">{locale === "en" ? `Referral discount ${pricing.percent}%` : `Diskon referral ${pricing.percent}%`}</span>}
                   <span className="mt-3 block font-[family-name:var(--font-undara-body)] text-sm leading-6 text-muted-foreground">
                     {item.description[locale]}
                   </span>
@@ -163,11 +196,30 @@ export default function PackageSelector({
               type="text"
               value={voucherCode}
               onChange={(event) => setVoucherCode(event.target.value.toUpperCase())}
+              maxLength={32}
               placeholder="MITRA-XXXXXXXX"
               className="mt-2 h-11 w-full rounded-[var(--dc-control-radius)] border border-border bg-background px-4 font-mono text-sm uppercase outline-none focus:border-primary"
             />
             <span className="mt-1 block text-xs text-muted-foreground">{copy.voucherHint}</span>
           </label>
+          {selected !== "WA_BLAST_50" && (
+            <div className="mb-4 flex flex-wrap items-center gap-3">
+              <Button type="button" size="sm" variant="outline" disabled={loading || !voucherCode.trim()} onClick={async () => {
+                setLoading(true);
+                setMessage("");
+                try {
+                  const response = await fetch("/api/dashboard/referral", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: voucherCode }) });
+                  const result = await response.json();
+                  if (!response.ok) throw new Error(result.error ?? copy.fallbackError);
+                  setVoucherCode(result.code);
+                  setAppliedCode(result.code);
+                  setMessage(locale === "en" ? "Code applied to eligible packages." : "Kode diterapkan pada paket yang memenuhi syarat.");
+                } catch (error) { setMessage(error instanceof Error ? error.message : copy.fallbackError); }
+                finally { setLoading(false); }
+              }}>{locale === "en" ? "Apply code" : "Pakai kode"}</Button>
+              {appliedCode && <span className="text-xs font-medium text-primary">{locale === "en" ? `Active: ${appliedCode}` : `Aktif: ${appliedCode}`}</span>}
+            </div>
+          )}
           {selected === "WA_BLAST_50" && (
             <p className="mb-4 rounded-xl border border-primary/10 bg-primary/[0.035] px-4 py-3 text-xs leading-5 text-muted-foreground">
               Add-on ini menambah 50 quota pada acara yang dipilih dan dapat dibeli kembali kapan pun dibutuhkan.
@@ -175,7 +227,7 @@ export default function PackageSelector({
           )}
           <Button
             type="button"
-            disabled={loading}
+            disabled={loading || !referralLoaded}
             onClick={choosePackage}
             size="lg"
             className="min-h-11 w-full"

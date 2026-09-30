@@ -1,7 +1,8 @@
-import { randomBytes } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { createPartnerVoucher, getPartnerVoucherCodes } from "@/lib/partners/vouchers";
+import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 type Metadata = Record<string, unknown>;
 
@@ -85,9 +86,9 @@ export async function GET() {
     }),
     activePartnerVouchers(),
     prisma.auditLog.findMany({
-      where: { action: "ORDER_PARTNER_ATTRIBUTED", entity: "PaymentOrder" },
-      select: { entityId: true, metadata: true, createdAt: true },
-      orderBy: { createdAt: "desc" },
+      where: { action: { in: ["ORDER_PARTNER_ATTRIBUTED", "ORDER_PARTNER_ATTRIBUTION_CLEARED"] }, entity: "PaymentOrder" },
+      select: { action: true, entityId: true, metadata: true, createdAt: true },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
     }),
   ]);
 
@@ -157,13 +158,13 @@ export async function GET() {
   for (const log of attributionLogs) {
     if (!log.entityId || latestAttribution.has(log.entityId)) continue;
     const data = metadata(log.metadata);
-    latestAttribution.set(log.entityId, {
+    latestAttribution.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED" ? { code: "", partnerId: "" } : {
       code: String(data.code ?? ""),
       partnerId: String(data.partnerId ?? ""),
     });
   }
 
-  const attributedOrderIds = [...latestAttribution.keys()];
+  const attributedOrderIds = [...latestAttribution.entries()].filter(([, value]) => value.partnerId).map(([id]) => id);
   const attributedOrders = attributedOrderIds.length
     ? await prisma.paymentOrder.findMany({
         where: { id: { in: attributedOrderIds } },
@@ -211,6 +212,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const owner = await requireOwner();
   if (!owner) return NextResponse.json({ error: "Akses Owner diperlukan." }, { status: 403 });
+  if (!isTrustedMutationOrigin(request)) return NextResponse.json({ error: "Origin permintaan tidak valid." }, { status: 403 });
 
   try {
     const body = await request.json();
@@ -224,30 +226,12 @@ export async function POST(request: Request) {
       select: { id: true, email: true },
     });
     if (!partner) return NextResponse.json({ error: "Mitra tidak ditemukan." }, { status: 404 });
-
-    let code = "";
-    for (let attempt = 0; attempt < 10; attempt += 1) {
-      const candidate = `MITRA-${randomBytes(4).toString("hex").toUpperCase()}`;
-      const exists = await prisma.auditLog.findFirst({
-        where: { entity: "PartnerVoucher", entityId: candidate },
-        select: { id: true },
-      });
-      if (!exists) {
-        code = candidate;
-        break;
-      }
+    if ((await getPartnerVoucherCodes(partner.id)).length >= 20) {
+      return NextResponse.json({ error: "Batas 20 kode referral aktif untuk Mitra ini sudah tercapai." }, { status: 409 });
     }
-    if (!code) return NextResponse.json({ error: "Kode belum dapat dibuat. Coba lagi." }, { status: 409 });
 
-    await prisma.auditLog.create({
-      data: {
-        actorId: owner.id,
-        action: "PARTNER_VOUCHER_CREATED",
-        entity: "PartnerVoucher",
-        entityId: code,
-        metadata: { partnerId: partner.id, partnerEmail: partner.email },
-      },
-    });
+    const code = await createPartnerVoucher(owner.id, partner);
+    if (!code) return NextResponse.json({ error: "Kode belum dapat dibuat. Coba lagi." }, { status: 409 });
 
     return NextResponse.json({ code, partnerId: partner.id }, { status: 201 });
   } catch (error) {

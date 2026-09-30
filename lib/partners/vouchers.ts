@@ -1,4 +1,7 @@
 import { prisma } from "@/lib/prisma";
+import { normalizeReferralCode } from "@/lib/partners/referral-pricing";
+import { randomBytes } from "node:crypto";
+import type { Prisma } from "@/generated/prisma/client";
 
 type Metadata = Record<string, unknown>;
 
@@ -7,7 +10,51 @@ function metadata(value: unknown): Metadata {
 }
 
 export function normalizeVoucherCode(value: unknown) {
-  return String(value ?? "").trim().toUpperCase().replace(/s+/g, "");
+  return normalizeReferralCode(value);
+}
+
+export async function createPartnerVoucher(actorId: string, partner: { id: string; email: string }) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    const code = `MITRA-${randomBytes(5).toString("hex").toUpperCase()}`;
+    const exists = await prisma.auditLog.findFirst({
+      where: { entity: "PartnerVoucher", entityId: code },
+      select: { id: true },
+    });
+    if (exists) continue;
+    await prisma.auditLog.create({
+      data: {
+        actorId,
+        action: "PARTNER_VOUCHER_CREATED",
+        entity: "PartnerVoucher",
+        entityId: code,
+        metadata: { partnerId: partner.id, partnerEmail: partner.email },
+      },
+    });
+    return code;
+  }
+  return null;
+}
+
+export async function getSelectedReferralCode(userId: string) {
+  const selected = await prisma.auditLog.findFirst({
+    where: { entity: "UserReferral", entityId: userId },
+    select: { action: true, metadata: true },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+  });
+  if (selected?.action !== "USER_REFERRAL_SELECTED") return "";
+  return normalizeVoucherCode(metadata(selected.metadata).code);
+}
+
+export async function setSelectedReferralCode(userId: string, code: string) {
+  return prisma.auditLog.create({
+    data: {
+      actorId: userId,
+      action: code ? "USER_REFERRAL_SELECTED" : "USER_REFERRAL_CLEARED",
+      entity: "UserReferral",
+      entityId: userId,
+      metadata: code ? { code } : {},
+    },
+  });
 }
 
 export async function getActivePartnerVoucher(rawCode: unknown) {
@@ -17,7 +64,7 @@ export async function getActivePartnerVoucher(rawCode: unknown) {
   const latest = await prisma.auditLog.findFirst({
     where: { entity: "PartnerVoucher", entityId: code },
     select: { action: true, metadata: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
   if (!latest || latest.action !== "PARTNER_VOUCHER_CREATED") return null;
 
@@ -37,21 +84,43 @@ export async function getActivePartnerVoucher(rawCode: unknown) {
 export async function attributeOrderToPartner(
   actorId: string,
   orderId: string,
-  voucher: { code: string; partner: { id: string; email: string } },
+  voucher: { code: string; partner: { id: string; email: string } } | null,
+  pricing?: { regularPrice: number; percent: number; discount: number },
+  db: Prisma.TransactionClient = prisma,
 ) {
-  return prisma.auditLog.create({
+  return db.auditLog.create({
     data: {
       actorId,
-      action: "ORDER_PARTNER_ATTRIBUTED",
+      action: voucher ? "ORDER_PARTNER_ATTRIBUTED" : "ORDER_PARTNER_ATTRIBUTION_CLEARED",
       entity: "PaymentOrder",
       entityId: orderId,
-      metadata: {
+      metadata: voucher ? {
         code: voucher.code,
         partnerId: voucher.partner.id,
         partnerEmail: voucher.partner.email,
-      },
+        ...(pricing ?? {}),
+      } : {},
     },
   });
+}
+
+export async function getOrderReferral(orderId: string, db: Prisma.TransactionClient = prisma) {
+  const latest = await db.auditLog.findFirst({
+    where: {
+      entity: "PaymentOrder",
+      entityId: orderId,
+      action: { in: ["ORDER_PARTNER_ATTRIBUTED", "ORDER_PARTNER_ATTRIBUTION_CLEARED"] },
+    },
+    select: { action: true, metadata: true },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+  });
+  if (latest?.action !== "ORDER_PARTNER_ATTRIBUTED") return null;
+  const data = metadata(latest.metadata);
+  return {
+    code: String(data.code ?? ""),
+    partnerId: String(data.partnerId ?? ""),
+    regularPrice: typeof data.regularPrice === "number" ? data.regularPrice : null,
+  };
 }
 
 export async function getPartnerVoucherCodes(partnerId: string) {
@@ -61,7 +130,7 @@ export async function getPartnerVoucherCodes(partnerId: string) {
       action: { in: ["PARTNER_VOUCHER_CREATED", "PARTNER_VOUCHER_DISABLED"] },
     },
     select: { action: true, entityId: true, metadata: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 
   const latest = new Map<string, typeof logs[number]>();

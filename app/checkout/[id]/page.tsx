@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getServicePackage } from "@/lib/packages/catalog";
 import CheckoutClient from "@/components/Payments/CheckoutClient";
+import { getOrderReferral } from "@/lib/partners/vouchers";
 
 export default async function CheckoutPage({ params }: { params: Promise<{ id: string }> }) {
   const user = await getCurrentUser();
@@ -25,6 +26,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
   const reportedAt = reportLog?.createdAt ?? (order.proofUrl ? order.updatedAt : null);
 
   const packageData = getServicePackage(order.packageKey);
+  const referral = await getOrderReferral(order.id);
   return (
     <CheckoutClient
       order={{
@@ -33,6 +35,8 @@ export default async function CheckoutPage({ params }: { params: Promise<{ id: s
         packageKey: order.packageKey,
         packageName: packageData?.name.id ?? order.packageKey,
         amount: order.amount,
+        regularPrice: referral?.regularPrice ?? packageData?.price ?? order.amount,
+        referralCode: referral?.code ?? null,
         status: order.status,
         proofUrl: order.proofUrl,
         note: order.note,

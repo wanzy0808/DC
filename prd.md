@@ -1040,6 +1040,15 @@ Entitlement wajib event-scoped. Pembelian Event A tidak membuka Event B.
 
 Manual payment verification/backoffice boleh tetap tersedia melalui role Admin/Finance sesuai implementation existing.
 
+### 8.2a Referral Mitra
+
+- Owner saja yang boleh membuat akun/ID Mitra (`SUPPORT`) dari panel Owner. Pendaftaran publik selalu membuat akun pelanggan; Mitra tidak dapat membuat akun Mitra lain.
+- Setelah login, setiap Mitra dapat membuat kode referral acak miliknya sendiri dari panel Mitra (maksimum 20 kode aktif per akun). Owner tetap dapat membuat kode atas nama Mitra dari analitik Owner. Kode harus unik, aktif, dan terikat ke akun Mitra yang masih berperan sebagai Mitra.
+- Pelanggan memasukkan dan menyimpan satu kode aktif di Beranda Dashboard; kode tersebut terbawa ke pemilihan paket. Kode dapat diganti atau dihapus sebelum invoice dibuat. Checkout juga menyediakan input kode untuk pelanggan yang langsung memilih paket.
+- Pada invoice baru, kode aktif memberi diskon **30% untuk `INVITATION_BASIC`** dari harga katalog Rp150.000 (total Rp105.000), atau **15% untuk `GUESTBOOK_DIGITAL`** dari harga katalog Rp2.000.000 (total Rp1.700.000). Perhitungan jumlah bayar bersumber dari katalog aktif dan dilakukan ulang di server, bukan dari nominal yang dikirim browser. WA Blast serta produk lain tidak menerima diskon ini.
+- Setiap invoice yang menggunakan kode mengaitkan penjualan ke Mitra pemilik kode. Nilai invoice dan kode terkunci setelah pelanggan melaporkan pembayaran atau mengirim bukti transfer; invoice yang sudah terverifikasi tidak boleh dihitung ulang. Analitik Mitra/Owner menghitung order teratribusi terakhir dan omzet berdasarkan nominal invoice yang benar-benar dibayar.
+- Kode dan pilihan pelanggan saat ini memakai riwayat `AuditLog` yang sudah ada, sehingga pekerjaan ini tidak memerlukan migrasi schema. Perubahan akun, kode, dan harga harus dibatasi oleh validasi role/server serta pemeriksaan origin untuk mutasi.
+
 ### 8.3 WA Blast add-on
 
 WA Blast bukan bagian dari Rp150.000 Digital Invitation.
@@ -1848,3 +1857,13 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `app/globals.css`, halaman marketing yang memakai helper editorial, `app/event-planner/page.tsx`, `app/undangan-fisik/page.tsx`, `app/help/page.tsx`, `prd.md` §16.0a/Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 227 tes regresi, `git diff --check`, dan build produksi lulus. Pemeriksaan visual browser belum tersedia; tidak ada migrasi database.
+
+## 30 September 2026 — Referral Mitra di Beranda dan checkout
+
+**Permintaan owner:** pelanggan dapat memasukkan kode referral di Beranda Dashboard; tiap Mitra dapat membuat kode sendiri, sedangkan hanya Owner yang membuat ID Mitra. Kode mengurangi Rp150.000 sebesar 30% dan Rp2.000.000 sebesar 15%.
+
+**Implementasi:** Beranda menyimpan pilihan kode aktif per pelanggan, halaman paket menampilkan harga diskon dan meneruskan kode ke order, serta invoice menampilkan harga awal/potongan/total. Server memvalidasi kode dan menghitung nominal dari katalog sebelum menyimpan order; setelah bukti/laporan pembayaran, nominal dan atribusi dikunci. Mitra membuat kode melalui panelnya sendiri, dan laporan Mitra/Owner membaca atribusi terakhir saat pending order berubah. Owner tetap mengelola akun Mitra dan dapat membuat kode dari panel analitiknya. Riwayat kode/pilihan/atribusi memakai `AuditLog` yang sudah tersedia.
+
+**Area/commit:** `lib/partners/`, `app/api/dashboard/referral`, `app/api/partner/codes`, `app/api/orders`, analitik Mitra/Owner, Beranda Dashboard, pemilihan paket, checkout, `tests/referral-pricing.test.mjs`, `prd.md` §8.2a/Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 229 tes regresi, `git diff --check`, dan build produksi lulus. Migrasi database tidak diperlukan; alur pembayaran/akun dengan database dan browser produksi belum diverifikasi.

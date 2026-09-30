@@ -35,6 +35,7 @@ import type {
   DashboardTable,
   DashboardTab,
 } from "@/components/Dashboard/dashboard-types";
+import ReferralCodePanel from "@/components/Dashboard/ReferralCodePanel";
 
 function formatEventDate(value: string, locale: "id" | "en" = "id") {
   const date = new Date(value);
@@ -102,6 +103,8 @@ export function WorkspaceOverview({
           />
         ))}
       </DashboardMetricGrid>
+
+      <ReferralCodePanel />
 
       <section className="mt-5 grid min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1.55fr)_minmax(320px,0.8fr)]">
         <DashboardSurface className="dc-dashboard-overview-events min-w-0 overflow-hidden">

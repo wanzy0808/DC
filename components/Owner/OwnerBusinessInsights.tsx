@@ -49,7 +49,20 @@ export default function OwnerBusinessInsights() {
     setMessage("");
   }
 
-  useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/owner/analytics", { cache: "no-store" })
+      .then(async (response) => {
+        const data = await response.json();
+        if (!active) return;
+        if (!response.ok) { setMessage(data.error ?? "Data bisnis belum dapat dimuat."); return; }
+        setDesigners(data.designers ?? []);
+        setPartners(data.partners ?? []);
+        setMessage("");
+      })
+      .catch(() => { if (active) setMessage("Data bisnis belum dapat dimuat."); });
+    return () => { active = false; };
+  }, []);
 
   async function generateVoucher(partnerId: string) {
     setBusyPartner(partnerId);
@@ -139,10 +152,10 @@ export default function OwnerBusinessInsights() {
 
         <div className="overflow-hidden rounded-xl border border-border">
           <div className="border-b border-border p-4">
-            <h3 className="font-[family-name:var(--font-undara-heading)] text-lg">Mitra & kode voucher</h3>
+            <h3 className="font-[family-name:var(--font-undara-heading)] text-lg">Mitra & kode referral</h3>
           </div>
           {!partners.length ? (
-            <p className="p-4 text-sm text-muted-foreground">Buat ID dengan role Mitra untuk mulai membuat kode voucher.</p>
+            <p className="p-4 text-sm text-muted-foreground">Buat ID Mitra dari panel Owner. Setelah masuk, Mitra dapat membuat kode referral sendiri.</p>
           ) : (
             <div className="divide-y divide-border">
               {partners.map((partner) => (

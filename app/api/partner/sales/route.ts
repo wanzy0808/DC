@@ -14,11 +14,10 @@ export async function GET() {
   }
 
   const codes = await getPartnerVoucherCodes(partner.id);
-  const codeSet = new Set(codes);
   const logs = await prisma.auditLog.findMany({
-    where: { action: "ORDER_PARTNER_ATTRIBUTED", entity: "PaymentOrder" },
-    select: { entityId: true, metadata: true, createdAt: true },
-    orderBy: { createdAt: "desc" },
+    where: { action: { in: ["ORDER_PARTNER_ATTRIBUTED", "ORDER_PARTNER_ATTRIBUTION_CLEARED"] }, entity: "PaymentOrder" },
+    select: { action: true, entityId: true, metadata: true, createdAt: true },
+    orderBy: [{ createdAt: "desc" }, { id: "desc" }],
   });
 
   const latest = new Map<string, { code: string; partnerId: string }>();
@@ -27,12 +26,10 @@ export async function GET() {
     const data = metadata(log.metadata);
     const code = String(data.code ?? "");
     const partnerId = String(data.partnerId ?? "");
-    if (partnerId === partner.id || codeSet.has(code)) {
-      latest.set(log.entityId, { code, partnerId });
-    }
+    latest.set(log.entityId, log.action === "ORDER_PARTNER_ATTRIBUTION_CLEARED" ? { code: "", partnerId: "" } : { code, partnerId });
   }
 
-  const ids = [...latest.keys()];
+  const ids = [...latest.entries()].filter(([, value]) => value.partnerId === partner.id).map(([id]) => id);
   const orders = ids.length
     ? await prisma.paymentOrder.findMany({
         where: { id: { in: ids } },

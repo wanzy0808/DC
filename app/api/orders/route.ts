@@ -6,7 +6,8 @@ import { getServicePackage } from "@/lib/packages/catalog";
 import { hasPaidDigitalInvitation } from "@/lib/packages/access";
 import { getOwnerPackageGrant } from "@/lib/packages/owner-grants";
 import { sendInvoiceEmail } from "@/lib/notifications/email";
-import { attributeOrderToPartner, getActivePartnerVoucher } from "@/lib/partners/vouchers";
+import { attributeOrderToPartner, getActivePartnerVoucher, getOrderReferral, getSelectedReferralCode, normalizeVoucherCode } from "@/lib/partners/vouchers";
+import { referralPrice } from "@/lib/partners/referral-pricing";
 import { isTrustedMutationOrigin } from "@/lib/security/request-origin";
 
 const allowedPackages = ["INVITATION_BASIC", "GUESTBOOK_DIGITAL", "WA_BLAST_50"] as const;
@@ -72,11 +73,14 @@ export async function POST(request: Request) {
     const ownerGrant = await getOwnerPackageGrant(user.id);
     const packageKey = String(body.packageKey ?? "") as AllowedPackage;
     const requestedInvitationId = String(body.invitationId ?? "").trim();
-    const voucherCode = String(body.voucherCode ?? "").trim();
+    const supportsReferral = packageKey === "INVITATION_BASIC" || packageKey === "GUESTBOOK_DIGITAL";
+    const voucherCode = supportsReferral
+      ? normalizeVoucherCode(body.voucherCode === undefined ? await getSelectedReferralCode(user.id) : body.voucherCode)
+      : "";
     const partnerVoucher = voucherCode ? await getActivePartnerVoucher(voucherCode) : null;
 
     if (voucherCode && !partnerVoucher) {
-      return NextResponse.json({ error: "Kode voucher mitra tidak valid atau sudah tidak aktif." }, { status: 400 });
+      return NextResponse.json({ error: "Kode referral Mitra tidak valid atau sudah tidak aktif." }, { status: 400 });
     }
 
     if (!allowedPackages.includes(packageKey)) {
@@ -114,7 +118,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Guest Book Digital untuk acara ini sudah aktif." }, { status: 409 });
     }
 
-    const amount = selected.price;
+    const pricing = partnerVoucher ? referralPrice(packageKey, selected.price) : null;
+    const amount = pricing?.amount ?? selected.price;
     const existingPending = await prisma.paymentOrder.findFirst({
       where: {
         userId: user.id,
@@ -125,16 +130,43 @@ export async function POST(request: Request) {
       orderBy: { createdAt: "desc" },
     });
 
-    const order = existingPending
-      ? await prisma.paymentOrder.update({
-          where: { id: existingPending.id },
-          data: {
-            amount,
-            proofUrl: String(body.proofUrl ?? "").trim() || null,
-            note: String(body.note ?? "").trim() || null,
+    const result = await prisma.$transaction(async (tx) => {
+      let priorReferral = null;
+      let order;
+      if (existingPending) {
+        // This row lock serializes repricing with the payment report/proof transaction.
+        const locked = await tx.paymentOrder.updateMany({
+          where: { id: existingPending.id, userId: user.id, status: "PENDING" },
+          data: { updatedAt: new Date() },
+        });
+        if (locked.count !== 1) return { order: null, conflict: "Invoice ini sudah diproses." };
+        const current = await tx.paymentOrder.findUniqueOrThrow({ where: { id: existingPending.id } });
+        priorReferral = await getOrderReferral(current.id, tx);
+        const reported = await tx.auditLog.findFirst({
+          where: {
+            entity: "PaymentOrder",
+            entityId: current.id,
+            action: { in: ["PAYMENT_REPORTED", "PAYMENT_PROOF_SUBMITTED"] },
           },
-        })
-      : await prisma.paymentOrder.create({
+          select: { id: true },
+        });
+        if (current.proofUrl || reported) {
+          if (current.amount !== amount || priorReferral?.code !== (partnerVoucher?.code ?? undefined)) {
+            return { order: null, conflict: "Invoice ini sudah dilaporkan. Kode referral dan nominalnya tidak dapat diubah." };
+          }
+          order = current;
+        } else {
+          order = await tx.paymentOrder.update({
+            where: { id: current.id },
+            data: {
+              amount,
+              proofUrl: String(body.proofUrl ?? "").trim() || null,
+              note: String(body.note ?? "").trim() || null,
+            },
+          });
+        }
+      } else {
+        order = await tx.paymentOrder.create({
           data: {
             invoiceNumber: invoiceNumber(),
             userId: user.id,
@@ -145,10 +177,18 @@ export async function POST(request: Request) {
             note: String(body.note ?? "").trim() || null,
           },
         });
+      }
 
-    if (partnerVoucher) {
-      await attributeOrderToPartner(user.id, order.id, partnerVoucher);
-    }
+      if (priorReferral?.code !== (partnerVoucher?.code ?? undefined) ||
+        (partnerVoucher && existingPending && existingPending.amount !== amount)) {
+        if (partnerVoucher || priorReferral) {
+          await attributeOrderToPartner(user.id, order.id, partnerVoucher, pricing ?? undefined, tx);
+        }
+      }
+      return { order, conflict: null };
+    });
+    if (!result.order) return NextResponse.json({ error: result.conflict }, { status: 409 });
+    const order = result.order;
 
     const invoiceUrl = `${process.env.APP_URL ?? "http://localhost:3000"}/checkout/${order.id}`;
     const email = await sendInvoiceEmail({
@@ -164,7 +204,7 @@ export async function POST(request: Request) {
       email,
       invoiceUrl,
       invitationId: invitation.id,
-      voucher: partnerVoucher ? { code: partnerVoucher.code, partner: partnerVoucher.partner.email } : null,
+      referral: partnerVoucher ? { code: partnerVoucher.code, percent: pricing?.percent, discount: pricing?.discount } : null,
     });
   } catch (error) {
     console.error("POST /api/orders failed", error);
