@@ -239,8 +239,14 @@ test("template-authored supporting visuals remain directly selectable without se
   assert.match(pencilGallery, /if \(preview\) \{ e\.preventDefault\(\); return; \}/);
   assert.match(pencilGallery, /!preview && index!==null/);
   assert.match(rose, /object:envelope:letter-card/);
+  assert.match(rose, /object:envelope:card-stack/);
+  assert.match(rose, /object:envelope:address/);
   assert.match(rose, /object:cover:background-photo/);
   assert.match(rose, /object:cover:gradient-overlay/);
+  assert.match(rose, /object:cover:content-group/);
+  assert.match(rose, /object:identity:personOne-group/);
+  assert.match(rose, /object:identity:personTwo-group/);
+  assert.match(rose, /object:\$\{section\}:heading-group/);
   assert.match(universal, /object:gallery:memory-panel/);
   assert.match(universal, /object:gallery:memory-symbols/);
   assert.match(universal, /object:identity:\$\{slot\}-symbol/);
@@ -354,6 +360,7 @@ test("native visual capabilities avoid duplicating protected component styling",
   assert.deepEqual(nativeVisualCapabilities("copy:greeting"), { opacity: true, colors: true, typography: true });
   assert.deepEqual(nativeVisualCapabilities("object:location:venue"), { opacity: true, colors: true, typography: true });
   assert.deepEqual(nativeVisualCapabilities("object:identity:our-story-heading"), { opacity: true, colors: true, typography: true });
+  assert.deepEqual(nativeVisualCapabilities("object:envelope:open-button"), { opacity: true, colors: true, typography: true });
   assert.deepEqual(nativeVisualCapabilities("object:cover:flower-left"), { opacity: true, colors: true, typography: false });
   assert.deepEqual(nativeVisualCapabilities("photo:cover"), { opacity: true, colors: false, typography: false });
   assert.deepEqual(nativeVisualCapabilities("element:gift:button"), { opacity: false, colors: false, typography: false });
@@ -362,6 +369,7 @@ test("native visual capabilities avoid duplicating protected component styling",
 
 test("system-backed invitation content stays content-locked while native styling remains available", () => {
   assert.equal(nativeVisualUsesSystemContent("object:event:venue"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:envelope:address"), true);
   assert.equal(nativeVisualUsesSystemContent("object:gift:account-number"), true);
   assert.equal(nativeVisualUsesSystemContent("object:countdown:hari"), true);
   assert.equal(nativeVisualUsesSystemContent("object:gift:empty-copy"), true);
