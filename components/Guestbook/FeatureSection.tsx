@@ -118,7 +118,7 @@ export default function FeatureSection() {
       <div className="grid gap-10 lg:grid-cols-[0.82fr_1.18fr] lg:gap-20">
         <div>
           <p className="undara-marketing-kicker">{en ? "Guest Arrival System" : "Sistem Kedatangan Tamu"}</p>
-          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.03] text-primary md:text-5xl lg:text-6xl">
+          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.03] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
             {en ? "One reception flow. Less room for confusion." : "Satu alur penerimaan. Lebih sedikit ruang untuk bingung."}
           </h2>
           <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -156,7 +156,7 @@ export default function FeatureSection() {
                 <span className="undara-marketing-kicker">{selected.badge}</span>
                 <selected.icon className="h-6 w-6 text-primary" strokeWidth={1.5} aria-hidden="true" />
               </div>
-              <h3 className="mt-8 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-3xl leading-[1.05] text-primary md:text-5xl">
+              <h3 className="mt-8 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-[1.05] text-primary md:text-5xl">
                 {selected.title}
               </h3>
               <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
