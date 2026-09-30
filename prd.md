@@ -1056,6 +1056,8 @@ WA Blast add-on hanya boleh dibeli/digunakan pada event yang memenuhi rule entit
 
 Guestbook Digital tetap produk/service onsite terpisah untuk QR check-in, Usher App, device, dan event-day support.
 
+Paket `GUESTBOOK_DIGITAL` **sudah mencakup entitlement Undangan Digital untuk acara yang sama** tanpa biaya paket Digital terpisah; pembelian untuk acara lain tetap event-scoped. Penawaran marketing mencakup undangan personal yang dikirim manual, revisi desain sebelum publikasi, RSVP/QR tamu, sapaan personal, musik, dasbor, angpao digital, file QR undangan, pengaturan meja/kursi, dua tablet, modem, kru teknis, durasi operasional empat jam, dan dukungan pelanggan 24 jam. Pembagian undangan menurut kelompok tamu, daftar hadiah, serta cetak QR fisik dibicarakan bersama tim sebagai layanan manual; **jangan menyajikannya sebagai kontrol otomatis di Dashboard atau fitur aplikasi yang sudah selesai**. Copy paket membedakan QR undangan yang dapat diunduh dari QR akses tamu dan QR angpao yang perlu disiapkan untuk cetak. Harga paket tetap berasal dari katalog aktif, tanpa perubahan entitlement, checkout, atau harga pada pekerjaan copy ini.
+
 Harga legacy yang pernah tertulis di PRD lama **bukan source of truth**. Jangan hardcode harga Guestbook hanya berdasarkan histori lama; package catalog/keputusan produk terbaru yang berlaku.
 
 ### 8.5 Event Planner
@@ -1477,6 +1479,8 @@ Pakai `ScrollReveal` berbasis panel scroll internal untuk opacity/translateY per
 
 Menu burger publik menampilkan **Undangan Fisik / Printed Invitation** di dalam submenu Layanan, di samping layanan marketing lain, dengan tautan langsung ke `/undangan-fisik` dan label mengikuti bahasa ID/EN.
 
+Copy halaman marketing berbahasa Indonesia memakai padanan Indonesia untuk istilah umum seperti pemindaian, kehadiran, tempat duduk, lokasi, anggaran, dan sentuhan akhir. Nama layanan/fitur yang memang merupakan identitas produk seperti Undara, RSVP, WhatsApp, Studio, dan WA Blast dapat dipertahankan. Paket Buku Tamu Digital dan FAQ publik harus konsisten menyebut Undangan Digital termasuk untuk acara yang sama.
+
 
 ---
 
@@ -1754,3 +1758,13 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/Layout/Navbar/BurgerMenuContent.tsx`, `lib/i18n.ts`, `prd.md` §16.1 dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint pada file kode yang berubah, TypeScript, 28 tes marketing/repo, dan `git diff --check` lulus. Browser visual belum diverifikasi; tidak ada migrasi database.
+
+## 30 September 2026 — Cakupan paket Buku Tamu dan copy marketing Indonesia
+
+**Permintaan owner:** perluas daftar manfaat paket Buku Tamu Digital, tampilkan Undangan Digital gratis beserta tautan detail, dan rapikan bahasa Inggris yang masih muncul di copy marketing Indonesia.
+
+**Implementasi:** katalog paket ID/EN, kartu paket dan tautan `/d-invitation`, FAQ Buku Tamu, FAQ Bantuan, serta copy layanan Digital, Fisik, Guestbook, dan Event Planner diselaraskan. Paket Guestbook sudah memberi akses Digital Invitation pada backend; copy lama yang menyebut pembelian tambahan dihapus. Manfaat yang membutuhkan penanganan manual dijelaskan sebagai bahan konsultasi, bukan kontrol aplikasi otomatis.
+
+**Area/commit:** `lib/packages/catalog.ts`, `components/Marketing/PackageShowcase.tsx`, halaman dan sumber teks marketing terkait, `tests/event-planner-redesign.test.mjs`, `prd.md` §8.4 dan §16.1/Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint pada file kode yang berubah, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Browser visual serta pemenuhan operasional layanan manual belum diverifikasi; tidak ada migrasi database.
