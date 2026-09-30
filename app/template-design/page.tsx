@@ -284,7 +284,7 @@ export default function TemplateDesignPage() {
         >
           <section className="undara-marketing-content font-[family-name:var(--font-undara-body)]">
             <div className="undara-marketing-section relative min-h-[calc(100dvh-185px)] py-7 sm:py-8 lg:py-9 xl:py-10">
-              <aside className="relative z-20 max-w-[34rem] lg:absolute lg:-left-24 lg:-top-1 xl:-left-32 2xl:-left-40">
+              <aside className="relative z-20 max-w-[34rem] lg:absolute lg:-left-24 lg:top-14 xl:-left-32 xl:top-16 2xl:-left-40 2xl:top-18">
                 <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.22em] text-primary md:text-[11px]">{copy.eyebrow}</p>
                 <h1 className="mt-4 max-w-[10.5ch] font-[family-name:var(--font-undara-heading)] text-[clamp(2.55rem,4.65vw,5.5rem)] font-normal leading-[0.96] tracking-[-0.035em] text-primary">
                   {copy.title}
@@ -525,9 +525,9 @@ export default function TemplateDesignPage() {
                 )}
               </div>
 
-              <aside className="hidden lg:absolute lg:right-[-5rem] lg:top-[66%] lg:z-20 lg:block lg:w-[30rem] lg:-translate-y-1/2 xl:right-[-7rem] xl:w-[34rem] 2xl:right-[-9rem]">
-                <p className="ml-auto max-w-[48ch] text-right text-[15px] font-semibold leading-7 text-foreground/84">{copy.description}</p>
-                <div className="ml-auto mt-6 w-[78%] border-t border-primary/35 pt-5">
+              <aside className="hidden lg:absolute lg:right-[-9rem] lg:top-[76%] lg:z-20 lg:block lg:w-[33rem] lg:-translate-y-1/2 xl:right-[-12rem] xl:top-[77%] xl:w-[37rem] 2xl:right-[-14rem] 2xl:w-[39rem]">
+                <p className="ml-auto max-w-[54ch] text-right text-[15px] font-semibold leading-7 text-foreground/84">{copy.description}</p>
+                <div className="ml-auto mt-6 w-[80%] border-t border-primary/35 pt-5">
                   <p className="ml-auto mr-4 max-w-[24ch] text-right font-[family-name:var(--font-undara-heading)] text-[1.45rem] leading-snug text-primary xl:mr-8">{copy.chooseHint}</p>
                   <p className="ml-auto mt-4 max-w-[44ch] translate-x-2 text-right text-[13px] font-semibold leading-6 text-foreground/74 xl:translate-x-4">{copy.wheelHint}</p>
                 </div>
