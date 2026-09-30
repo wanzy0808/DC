@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, Eye, Search, X } from "lucide-react";
+import { ArrowRight, ChevronDown, Search, X } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
@@ -273,29 +273,46 @@ export default function TemplateDesignPage() {
           </div>
         </div>
 
-        <p className="mb-4 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
-        <div className="undara-template-catalog-grid undara-editorial-offset-right grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:pb-10">
-          {filteredTemplates.map((template) => (
-            <article key={template.key} className="group min-w-0 overflow-hidden rounded-[32px_8px_32px_8px] border border-primary/25 bg-background/45 shadow-[0_14px_42px_rgba(80,45,58,0.07)] transition duration-300 hover:-translate-y-1.5 hover:border-primary/55 hover:shadow-[0_22px_55px_rgba(80,45,58,0.14)]">
-              <div className="relative w-full overflow-hidden text-left">
-                {template.ready ? <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} /> : (
-                  <div className="relative h-[340px] overflow-hidden bg-card"><img src={template.previewImage} alt={template.name} loading="lazy" className="h-full w-full object-cover" /></div>
-                )}
-                {template.ready && <div className="pointer-events-none absolute left-3 top-3 z-[11] rounded-full border border-white/35 bg-black/65 px-3 py-1.5 text-[11px] font-medium text-white">{template.usesPhotos ? copy.withPhoto : copy.withoutPhoto}</div>}
-                <div className="flex items-center justify-between gap-3 border-b border-primary/15 px-5 py-5">
-                  <div className="min-w-0">
-                    <p className="mb-1 font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.16em] text-primary">{template.category}</p>
-                    <h2 className="truncate font-[family-name:var(--font-undara-heading)] text-lg font-normal text-primary">{template.name}</h2>
-                  </div>
-                  <Eye className="h-5 w-5 shrink-0 text-primary" aria-hidden />
-                </div>
-                <button type="button" onClick={() => openPreview(template.key)} aria-label={`${copy.previewLabel} ${template.name}`} className="absolute inset-0 z-10 w-full focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary" />
-              </div>
-              <div className="px-5 pb-6 pt-4">
-                <p className="min-h-12 text-sm leading-6 text-foreground/65">{descriptionFor(template)}</p>
-                <Button onClick={() => openPreview(template.key)} size="sm" className={controlStyles.cta}>
-                  {template.ready ? copy.view : copy.viewImage} <ArrowRight className="h-4 w-4" aria-hidden />
-                </Button>
+        <p className="mb-6 text-xs text-foreground/55" role="status">{filteredTemplates.length} {copy.available}</p>
+        <div className="undara-template-catalog-grid grid grid-cols-2 justify-items-center gap-x-5 gap-y-12 pb-6 sm:grid-cols-3 sm:gap-x-7 md:gap-y-14 xl:grid-cols-4 xl:gap-x-9 xl:pb-12">
+          {filteredTemplates.map((template, index) => (
+            <article
+              key={template.key}
+              className={`group flex w-full min-w-0 max-w-[250px] flex-col items-center ${index % 4 === 1 ? "xl:translate-y-6" : index % 4 === 3 ? "xl:translate-y-10" : ""}`}
+            >
+              <button
+                type="button"
+                onClick={() => openPreview(template.key)}
+                aria-label={`${copy.previewLabel}: ${template.name}`}
+                className="relative mx-auto aspect-[9/19.5] w-full max-w-[218px] rounded-[38px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_50px_rgba(17,17,17,0.18),inset_0_1px_0_rgba(255,255,255,0.9)] transition-transform duration-200 ease-out focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary md:max-w-[228px] [@media(hover:hover)_and_(pointer:fine)]:group-hover:-translate-y-1.5 dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+              >
+                <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-11 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
+                <span className="relative block h-full overflow-hidden rounded-[35px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
+                  <span className="pointer-events-none absolute inset-[7px] z-20 rounded-[29px] border border-white/10" aria-hidden="true" />
+                  <span className="relative block h-full overflow-hidden rounded-[28px] bg-[#f8f4f1] dark:bg-[#111111]">
+                    {template.ready ? (
+                      <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} phone />
+                    ) : (
+                      <img src={template.previewImage} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    )}
+                  </span>
+                  <span aria-hidden="true" className="pointer-events-none absolute left-1/2 top-2.5 z-30 h-5 w-[34%] -translate-x-1/2 rounded-full bg-black shadow-[inset_0_1px_1px_rgba(255,255,255,0.08),0_1px_4px_rgba(0,0,0,0.4)]">
+                    <span className="absolute right-2 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-[#151515]" />
+                  </span>
+                  <span className="pointer-events-none absolute inset-x-8 bottom-5 z-30 translate-y-2 rounded-full bg-black/70 px-3 py-2 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-white opacity-0 transition-[opacity,transform] duration-200 ease-out [@media(hover:hover)_and_(pointer:fine)]:group-hover:translate-y-0 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100">
+                    {copy.previewLabel}
+                  </span>
+                </span>
+              </button>
+              <div className="mt-5 w-full max-w-[228px] text-center">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.14em] text-foreground/45">
+                  {template.category}
+                </p>
+                <h2 className="mt-1.5 truncate font-[family-name:var(--font-undara-heading)] text-lg font-normal text-primary">
+                  {template.name}
+                </h2>
               </div>
             </article>
           ))}
