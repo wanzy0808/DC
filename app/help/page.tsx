@@ -43,29 +43,29 @@ export default function HelpPage() {
       ]
     : [
         {
-          question: "Apa perbedaan Digital Invitation dan Guestbook Digital?",
+          question: "Apa perbedaan Undangan Digital dan Buku Tamu Digital?",
           answer:
-            "Digital Invitation berfokus pada halaman undangan publik, RSVP, publikasi, dan fitur undangan. Guestbook Digital berfokus pada penerimaan tamu di hari acara, QR check-in resmi, attendance realtime, seating, dan Usher App.",
+            "Undangan Digital berfokus pada halaman undangan publik, RSVP, dan publikasi. Buku Tamu Digital menambahkan penerimaan tamu di hari acara, pemindaian QR resmi, pemantauan kehadiran, pengaturan meja, dan aplikasi penerima tamu. Paket Buku Tamu sudah termasuk Undangan Digital untuk acara yang sama.",
         },
         {
           question: "Apakah saya bisa melihat template sebelum membeli paket?",
           answer:
-            "Bisa. Pratinjau template publik dapat dilihat sebelum pembelian. Publikasi dan asset pribadi acara mengikuti entitlement Digital Invitation yang aktif untuk event yang dipilih.",
+            "Bisa. Pratinjau tema undangan dapat dilihat sebelum pembelian. Publikasi dan foto acara tersedia setelah paket Undangan Digital atau Buku Tamu Digital aktif untuk acara yang dipilih.",
         },
         {
           question: "Bagaimana tamu masuk ke venue?",
           answer:
-            "QR yang valid adalah credential resmi untuk check-in. Jika tamu terdaftar datang tanpa RSVP atau QR, usher dapat memverifikasi data tamu di event, menerbitkan QR resmi melalui Usher App, lalu QR tersebut dipindai untuk check-in.",
+            "QR yang valid adalah bukti resmi untuk mencatat kedatangan. Jika tamu terdaftar datang tanpa RSVP atau QR, petugas dapat memverifikasi data tamu, menerbitkan QR resmi melalui aplikasi penerima tamu, lalu memindainya.",
         },
         {
           question: "Bagaimana cara memilih paket?",
           answer:
-            "Pilih layanan sesuai alur acara yang kamu butuhkan. Setelah pembayaran dikonfirmasi, entitlement yang sesuai akan aktif untuk event yang dipilih.",
+            "Pilih layanan sesuai kebutuhan acaramu. Setelah pembayaran dikonfirmasi, akses layanan yang sesuai aktif untuk acara yang dipilih.",
         },
         {
           question: "Saya mengalami masalah saat menggunakan dashboard, harus bagaimana?",
           answer:
-            "Pastikan akun sudah masuk dan paket yang dibutuhkan aktif untuk event yang dipilih. Jika masalah tetap terjadi, simpan pesan error atau detail layar yang relevan agar tim Undara dapat melakukan pengecekan dengan lebih akurat.",
+            "Pastikan akun sudah masuk dan paket yang dibutuhkan aktif untuk acara yang dipilih. Jika masalah tetap terjadi, simpan pesan kesalahan atau tangkapan layar agar tim Undara dapat memeriksanya.",
         },
       ];
 
