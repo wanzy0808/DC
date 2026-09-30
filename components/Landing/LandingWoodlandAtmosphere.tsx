@@ -14,7 +14,11 @@ export default function LandingWoodlandAtmosphere() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-[4%] bottom-[10%] top-[12%] z-0 overflow-visible"
+      className="pointer-events-none absolute inset-x-0 bottom-[10%] top-[12%] z-0 overflow-visible"
+      style={{
+        WebkitMaskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+        maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+      }}
     >
       {/* Forest stays behind the door area and fades before the header/footer.
           The canopy and page glow may still cross the frame outline. */}
