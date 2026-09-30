@@ -50,6 +50,8 @@ Arah visual utama Undara adalah **woodland / forest editorial**: hangat, tenang,
 - Background harus mendukung hierarki konten. Dekorasi tidak boleh menabrak brand, navbar, heading, CTA, form, atau mengurangi keterbacaan.
 - Landing/Pintu boleh memiliki treatment atmosfer lebih kuat; halaman marketing lain memakai versi lebih restrained dari sistem woodland yang sama.
 - Dark/Light mode harus mempertahankan karakter woodland yang sama, bukan berubah menjadi dua brand visual yang berbeda.
+- **Dark woodland boleh memakai lampion kecil di kedalaman hutan** sebagai ambience khusus malam: jumlah sedikit, ukuran kecil, cahaya hangat/redup, tersebar natural, dan selalu background-only. Lampion tidak boleh terasa seperti festival, tidak boleh memenuhi frame, dan tidak boleh bersaing dengan heading, CTA, Pintu, atau navigasi.
+- Light mode tidak wajib menampilkan lampion; karakter siangnya mengandalkan canopy, daun, kabut, cahaya alami, dan ruang kosong.
 - Aturan ini berlaku untuk **application/marketing shell**. Template undangan tetap boleh mempunyai tema floral, minimal, Jepang, hitam-putih, atau tema lain sesuai desain template.
 
 ---
@@ -1647,6 +1649,7 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 - Hex color dan nama font tidak lagi menjadi kontrak PRD. Detail implementasi mengikuti semantic theme tokens dan shared brand components di source.
 - Canonical public art direction ditegaskan sebagai **woodland / forest editorial**.
 - Bunga besar, floral cluster, dan rose-petal ambience dipensiunkan sebagai bahasa visual global; premium engraved vine/sulur, branch, canopy, leaves, fog, dan subtle glow menjadi motif yang dianjurkan.
+- Dark Mode boleh menambahkan lampion-lampion kecil yang tersembunyi di kedalaman woodland dengan glow hangat dan kepadatan rendah; Light Mode tetap tanpa kewajiban lampion.
 - Design System §15 ditulis ulang agar durable dan tidak mengunci detail kosmetik yang mudah berubah.
 - Appendix lama yang sangat panjang dipadatkan. Git history tetap menjadi sumber histori implementasi rinci.
 
