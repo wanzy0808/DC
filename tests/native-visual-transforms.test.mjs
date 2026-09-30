@@ -610,3 +610,41 @@ test("Midnight Romance keeps celestial decoration and photo viewport independent
   assert.equal(nativeVisualCanHide("object:cover:moon"), true);
   assert.equal(nativeVisualCanHide("object:cover:star"), true);
 });
+
+test("Pencil Reverie keeps protected recipient data and authored cover groups editable", () => {
+  const pencil = read("components/PublicInvitation/PencilReverieScene.tsx");
+  assert.match(pencil, /object:envelope:address/);
+  assert.match(pencil, /object:cover:heading-group/);
+  assert.match(pencil, /object:cover:illustration-group/);
+  assert.match(pencil, /object:cover:copy-panel/);
+  assert.match(pencil, /object:cover:heart/);
+  assert.equal(nativeVisualUsesSystemContent("object:envelope:address"), true);
+  assert.equal(nativeVisualCanHide("object:cover:heart"), true);
+  assert.equal(nativeVisualCanHide("object:cover:illustration-group"), true);
+});
+
+test("Zen Atelier keeps protected recipient data and Japanese decorations independently removable", () => {
+  const zen = read("components/PublicInvitation/ZenAtelierScene.tsx");
+  assert.match(zen, /object:envelope:address/);
+  assert.match(zen, /object:envelope:shoji/);
+  assert.match(zen, /object:envelope:mizuhiki/);
+  assert.match(zen, /object:cover:blossom/);
+  assert.match(zen, /object:cover:mountains/);
+  assert.equal(nativeVisualUsesSystemContent("object:envelope:address"), true);
+  assert.equal(nativeVisualCanHide("object:envelope:shoji"), true);
+  assert.equal(nativeVisualCanHide("object:envelope:mizuhiki"), true);
+  assert.equal(nativeVisualCanHide("object:cover:blossom"), true);
+  assert.equal(nativeVisualCanHide("object:cover:mountains"), true);
+});
+
+test("Celestial Ink keeps orbit layers granular while foreground content can move as one group", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const celestial = scenes.split('if (theme === "celestial-ink")')[1]?.split("return <section")[0] || scenes.split('if (theme === "celestial-ink") return <section')[1]?.split("return <section")[0] || scenes;
+  assert.match(scenes, /object:cover:orbit-outer/);
+  assert.match(scenes, /object:cover:orbit-middle/);
+  assert.match(scenes, /object:cover:orbit-inner/);
+  assert.match(scenes, /object:cover:content-group/);
+  assert.match(scenes, /object:cover:star-cluster/);
+  assert.equal(nativeVisualCanHide("object:cover:orbit-outer"), true);
+  assert.equal(nativeVisualCapabilities("object:cover:content-group").typography, false);
+});
