@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutDashboard, LayoutTemplate, LogIn, Package, UserPlus } from "lucide-react";
+import { BookOpen, CalendarCheck, ChevronDown, CircleHelp, Layers, LayoutDashboard, LayoutTemplate, LogIn, Mail, Package, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
 import { dashboardRouteForRole } from "@/lib/auth/dashboard-route";
@@ -63,6 +63,7 @@ export default function BurgerMenuContent({ onClose }: { onClose: () => void }) 
   const services = [
     { href: "/event-planner", label: nav.planner, icon: CalendarCheck },
     { href: "/d-invitation", label: nav.invitation, icon: LayoutTemplate },
+    { href: "/undangan-fisik", label: nav.physicalInvitation, icon: Mail },
     { href: "/guestbook", label: nav.guestbook, icon: BookOpen },
   ];
   const itemClass = "flex min-h-11 w-full items-center justify-start gap-3 rounded-[var(--undara-control-radius)] border border-primary/35 bg-card/60 px-4 py-2.5 text-left font-[family-name:var(--font-undara-body)] text-sm text-primary shadow-none transition-[background-color,border-color,transform] duration-200 hover:-translate-y-px hover:border-primary/70 hover:bg-primary/10 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary aria-[current=page]:border-primary aria-[current=page]:bg-primary/10 aria-[current=page]:text-primary dark:bg-card/60 dark:text-primary dark:hover:bg-primary/15 dark:hover:text-primary";
