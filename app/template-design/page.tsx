@@ -32,7 +32,7 @@ export default function TemplateDesignPage() {
     ? {
         eyebrow: "Invitation collection",
         title: "Find a design that feels like yours.",
-        description: "Explore the real designs available in Invitation Studio. Preview each invitation and choose your favorite.",
+        description: "Find the design that feels most like your story. Explore every detail, then choose the one that feels right for your celebration.",
         search: "Search templates...",
         searchLabel: "Search invitation templates",
         all: "All",
@@ -63,7 +63,7 @@ export default function TemplateDesignPage() {
     : {
         eyebrow: "Koleksi undangan",
         title: "Pilih desain yang terasa personal.",
-        description: "Jelajahi desain yang tersedia di Invitation Studio. Lihat isi undangannya sebelum menentukan pilihan.",
+        description: "Temukan desain yang paling terasa seperti ceritamu. Lihat setiap detailnya, lalu pilih yang paling pas untuk membuka hari istimewamu.",
         search: "Cari desain...",
         searchLabel: "Cari template undangan",
         all: "Semua",
@@ -525,12 +525,29 @@ export default function TemplateDesignPage() {
                 )}
               </div>
 
-              <aside className="hidden lg:absolute lg:right-[-9rem] lg:top-[66%] lg:z-20 lg:flex lg:h-[15rem] lg:w-[33rem] lg:translate-x-[5cm] lg:-translate-y-1/2 lg:flex-col lg:justify-between xl:right-[-12rem] xl:top-[67%] xl:h-[17rem] xl:w-[37rem] 2xl:right-[-14rem] 2xl:w-[39rem]">
+              <aside className="hidden lg:absolute lg:right-[-9rem] lg:top-[66%] lg:z-20 lg:flex lg:w-[33rem] lg:translate-x-[5cm] lg:-translate-y-1/2 lg:flex-col xl:right-[-12rem] xl:top-[67%] xl:w-[37rem] 2xl:right-[-14rem] 2xl:w-[39rem]">
                 <p className="ml-auto max-w-[54ch] text-right text-[15px] font-semibold leading-7 text-foreground/84">{copy.description}</p>
-                <div className="ml-auto w-[80%] border-t border-primary/35 pt-5">
+                <div
+                  aria-hidden="true"
+                  className="ml-auto mt-2 flex h-7 w-[250px] items-center justify-end text-primary/65 xl:w-[300px] dark:text-[#D6B38C]/72"
+                >
+                  <span
+                    className="block h-full w-full bg-current"
+                    style={{
+                      WebkitMaskImage: 'url("/assets/landing/ornaments/botanical/branch-05.webp")',
+                      maskImage: 'url("/assets/landing/ornaments/botanical/branch-05.webp")',
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskPosition: "right center",
+                      maskPosition: "right center",
+                      WebkitMaskSize: "contain",
+                      maskSize: "contain",
+                    }}
+                  />
+                </div>
+                <div className="ml-auto mt-1 w-[80%]">
                   <p className="ml-auto mr-4 max-w-[24ch] text-right font-[family-name:var(--font-undara-heading)] text-[1.45rem] leading-snug text-primary xl:mr-8">{copy.chooseHint}</p>
                 </div>
-                
               </aside>
             </div>
           </section>
