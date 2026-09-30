@@ -218,23 +218,28 @@ export default function EventPlannerPage() {
                   reduced={reduced}
                 />
 
-                <div className="relative z-10 grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end lg:gap-16">
+                <div className="relative z-10 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-20">
                   <div>
-                    <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">
-                      {en ? "What can you ask about?" : "Apa yang bisa kamu tanyakan?"}
+                    <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.2em] text-primary/80">
+                      {en ? "Service Direction" : "Pilihan Layanan"}
                     </p>
-                    <h2 className="mt-3 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
-                      {en
-                        ? "Start with the service that sounds closest to your event."
-                        : "Mulai dari layanan yang paling mendekati kebutuhan acaramu."}
+                    <h2 className="mt-4 max-w-[11ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.1rem,5.8vw,6.4rem)] font-bold leading-[0.94] tracking-[-0.035em] text-primary">
+                      {en ? "What can you ask about?" : "Apa yang bisa kamu tanyakan?"}
                     </h2>
                   </div>
 
-                  <p className="max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
-                    {en
-                      ? "You do not need to choose the final package before chatting. These categories are simply a starting point so your requirements are easier to understand."
-                      : "Kamu tidak harus menentukan paket final sebelum chat. Kategori ini hanya titik awal supaya kebutuhanmu lebih mudah dipahami."}
-                  </p>
+                  <div className="max-w-3xl pb-1 lg:pb-2">
+                    <p className="max-w-[22ch] font-[family-name:var(--font-undara-heading)] text-2xl font-bold leading-[1.08] text-foreground md:text-3xl lg:text-4xl">
+                      {en
+                        ? "Start with the service that feels closest to your event."
+                        : "Mulai dari layanan yang paling mendekati kebutuhan acaramu."}
+                    </p>
+                    <p className="mt-5 max-w-2xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
+                      {en
+                        ? "You do not need to choose the final package before chatting. These categories are simply a starting point so your requirements are easier to understand."
+                        : "Kamu tidak harus menentukan paket final sebelum chat. Kategori ini hanya titik awal supaya kebutuhanmu lebih mudah dipahami."}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="relative z-10 mt-10">
@@ -247,7 +252,7 @@ export default function EventPlannerPage() {
                         className={`grid gap-7 py-8 md:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] md:gap-12 md:py-10 lg:py-12 ${index % 2 ? "lg:pl-[7%]" : "lg:pr-[7%]"}`}
                       >
                         <div className={index % 2 ? "md:order-2" : ""}>
-                          <h3 className="font-[family-name:var(--font-undara-heading)] text-2xl leading-tight text-primary md:text-3xl lg:text-4xl">
+                          <h3 className="max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-[1.02] text-primary md:text-4xl lg:text-[2.75rem]">
                             {en ? item.nameEn : item.name}
                           </h3>
                           <p className="mt-3 max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
