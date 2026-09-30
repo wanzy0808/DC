@@ -191,7 +191,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <BotanicalSprig studioObject="object:cover:sprig-left" /><BotanicalSprig mirrored studioObject="object:cover:sprig-right" />
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-6 text-[color:var(--inv-scene-text,#68855d)]`}>{tr("In full bloom")}</p>
     <div data-studio-native-object="object:cover:photo-frame" className="relative mt-9 w-[min(73vw,290px)] rounded-t-[180px] rounded-b-[16px] border-[12px] border-[var(--inv-scene-accent,#f8faed)] bg-[var(--inv-scene-soft,#e1ebd9)] p-1 shadow-[0_20px_48px_#41593733]">
-      <div className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
+      <div data-studio-native-object="object:cover:photo-window" className="relative h-[320px] overflow-hidden rounded-t-[165px] rounded-b-[8px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
       <span aria-hidden data-studio-native-object="object:cover:seal" className="absolute -bottom-7 left-1/2 grid h-14 w-14 -translate-x-1/2 place-items-center rounded-full border-4 border-[var(--inv-scene-accent,#ecf0de)] bg-[var(--inv-scene-soft,#607c52)] text-white"><Leaf className="h-6 w-6" /></span>
     </div>
     <Names className="relative mt-14 text-3xl italic">{names}</Names>
