@@ -1,4 +1,5 @@
 export const invitationPalettes = {
+  serein: { name: "Serein", bg: "#f4eee5", surface: "#fcf8f1", ink: "#442936", accent: "#442936", soft: "#cab6a2" },
   rose: { name: "Rose", bg: "#fbf2f0", surface: "#fffaf8", ink: "#2d2020", accent: "#7a1c25", soft: "#e8b7b1" },
   blush: { name: "Blush", bg: "#fff4f6", surface: "#fffafb", ink: "#34242a", accent: "#a44f62", soft: "#e9a9b9" },
   sage: { name: "Sage", bg: "#f3f5ee", surface: "#fcfcf8", ink: "#273027", accent: "#65775f", soft: "#b8c9ae" },

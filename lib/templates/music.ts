@@ -16,6 +16,7 @@ export const invitationDefaultTracks: Record<string, { title: string; file: stri
   "celestial-ink": { title: "Fragile", file: "assets/audio/a-himitsu-fragile.mp3" },
   "pencil-reverie": { title: "Fragile", file: "assets/audio/a-himitsu-fragile.mp3" },
   "zen-atelier": { title: "Jikan Wa Mikata Da", file: "assets/audio/jikan-wa-mikata-da.mp3" },
+  "serein": { title: "Until We Meet Again", file: "assets/audio/arthur-vyncke-until-we-meet-again.mp3" },
 };
 
 export function getInvitationDefaultMusic(templateKey: string) {

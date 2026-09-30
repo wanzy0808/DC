@@ -195,6 +195,19 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewImage: "/assets/landing/ornaments/legacy/flower.webp",
     assetPath: "/templates/celestial-ink",
   },
+  {
+    key: "serein",
+    category: "Editorial",
+    previewType: "public",
+    usesPhotos: true,
+    photoSlots: ["cover", "personOne", "personTwo", "gallery"],
+    preset: { layout: "editorial", palette: "serein", font: "crimsonDmSans" },
+    name: "Serein",
+    description: "Surat bersegel, tipografi editorial, dan album foto hitam-putih di atas kertas ivory.",
+    descriptionEn: "Sealed stationery, editorial typography, and a monochrome photo album on ivory paper.",
+    previewImage: "/assets/demo/invitation/couple.jpg",
+    assetPath: "/templates/serein",
+  },
 ];
 
 export function getInvitationTemplate(key: string) {

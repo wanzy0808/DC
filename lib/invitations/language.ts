@@ -5,6 +5,21 @@ export type InvitationLanguage = "ID" | "EN";
 
 /** Text owned by the invitation product. Event data and customer-authored copy are never machine-translated. */
 const english: Record<string, string> = {
+  "Sebuah Undangan Untuk Anda": "An Invitation For You",
+  "Kami Mengundang Anda": "You Are Invited",
+  "Pernikahan Kami": "Our Wedding",
+  "Hari Istimewa": "A Special Day",
+  "Pilih Foto": "Select Photo",
+  "Buka Foto": "Open Photo",
+  "Tutup Foto": "Close Photo",
+  "Foto Sebelumnya": "Previous Photo",
+  "Foto Berikutnya": "Next Photo",
+  "Atur Foto Galeri": "Edit Gallery Photos",
+  "Atur Foto Sampul": "Edit Cover Photo",
+  "Di antara hari-hari yang datang dan pergi, ada satu yang ingin kami rayakan bersama Anda.": "Among the days that come and go, there is one we would love to celebrate with you.",
+  "Kami mengundang Anda untuk berbagi waktu, cerita, dan kebahagiaan pada hari istimewa ini.": "We invite you to share in the moments, stories, and joy of this special day.",
+  "Semoga langkah baru ini selalu dikelilingi kasih, kebaikan, dan doa yang tulus.": "May this new chapter be surrounded by love, kindness, and heartfelt wishes.",
+  "Terima kasih untuk setiap doa dan kehadiran yang menghangatkan hari kami. Sampai bertemu.": "Thank you for every wish and for the presence that warms our day. We look forward to seeing you.",
   "Buka Undangan": "Open Invitation",
   "Musik": "Music",
   "Musik tidak tersedia": "Music unavailable",

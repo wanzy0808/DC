@@ -734,6 +734,12 @@ Galeri publik dan pemilih template Studio menampilkan thumbnail scene visual yan
 
 **Kontrak palet/font pada Amplop Studio (24 September 2026):** Setiap template baru yang menyediakan kontrol warna/font di Studio **wajib menerapkan nilai yang sama pada Amplop Digital**, bukan hanya Cover dan section isi. Renderer bersama menyuplai `--inv-scene-bg`, `--inv-scene-surface`, `--inv-scene-ink`, `--inv-scene-surface-ink`, `--inv-scene-accent`, `--inv-scene-soft` saat palet custom, plus `--inv-heading` dan font body; implementasi tema memetakannya ke lapis kertas, lipatan, tulisan, segel/ornamen, dan warna tombol yang memang dapat disesuaikan. Preset menggunakan fallback artwork/palet asli; `color-mix` untuk shading, teks kontras untuk palet gelap. Perubahan terlihat langsung pada canvas Amplop, disimpan melalui Simpan Desain lalu identik pada undangan tamu; jangan membuat cache Studio-only/PNG tetap yang tak dapat diwarnai tetapi menampilkan kontrol seolah aktif. Toggle Amplop, pembuka musik lewat gestur, restart/Amplop–Cover, reduced motion, dan slot foto bila didukung tetap memakai sistem bersama. Tema yang **secara jelas mengunci** warna/font (Romantic Rose) tidak perlu pura-pura menyediakan kontrol. Rincian checklist produksi ada di `template.md` bagian Studio. **Zen Atelier:** amplop washi/mizuhiki yang sebelumnya memiliki banyak warna hardcode telah diperbaiki memakai enam token `--jp-*` dengan fallback preset Zen, termasuk lapis kertas, bayangan/lipatan, tulisan surat, ornamen vektor dan warna simpul mizuhiki. Cover dan section lain tidak ikut dirombak.
 
+### Serein — tema foto editorial (30 September 2026)
+
+Tema `serein` menambah katalog menjadi **13 tema: 7 dengan foto dan 6 tanpa foto**, melalui registry tunggal. Art direction diserahkan owner kepada asisten: kertas ivory, tinta plum, Crimson Pro + DM Sans, amplop surat berlipat dan segel inisial, sampul tipografi asimetris, identitas pasangan berselang-seling, dan album foto monokrom. Ilustrasi botanical WebP transparan khusus tema mengikuti palet melalui alpha mask; referensi gambar generated diperiksa, bukan ditempel sebagai UI.
+
+Semua 15 kontrol, narasi event-scoped/Our Story, photo roles/focus/crop, native visual ownership, form RSVP/Wishes, maps, gift, countdown dan musik tetap memakai engine bersama. Album publik menyediakan native dialog, Escape, panah keyboard, swipe dan pengembalian fokus; preview tidak membuka dialog atau mengirim data. Motion pembuka dan heading menghormati reduced motion serta motion override Studio. Save/public round-trip dan alur tamu berbayar tetap perlu validasi browser/database; registrasi renderer bukan bukti QA live tersebut sudah lulus.
+
 ### 7.2.3d — Standar produksi untuk semua template undangan (24 September 2026)
 
 Owner menetapkan `template.md` sebagai panduan **UNIVERSAL** untuk membuat semua template baru lewat ChatGPT; desain khusus Zen Atelier hanya salah satu contoh dan **tidak** menjadi palet/komposisi baku untuk tema lain. Alur produksi setiap template adalah brief → moodboard dan contoh setiap layar → audit aset → blueprint semua 15 komponen (amplop + 13 section + musik global) → review visual → coding terintegrasi Studio → pengujian.
@@ -2024,3 +2030,16 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `ec0ba85`, `917f193`, `e6fc852`, `77d87e0`, `1ea87ce`.
 
 **Validation:** source audit complete; CI observed separately.
+
+
+### 30 September 2026 — Serein editorial invitation
+
+**Owner request:** create one new invitation with assistant-led art direction, following repository rules, design skills and Library/resources. Continued the Serein work and generated section references already present in this session rather than discarding it.
+
+**Implementation:** registered `serein` once in the catalog, added its preset, copy defaults/English translations and existing music track. Lazy Serein envelope/cover and photo-album modules use the same universal web renderer. Added token-aware seal/paper/artwork, asymmetric cover, alternating identity portraits, typography/spacing for all sections, shared forms and functioning public lightbox controls. Studio section/native/copy/photo contracts are retained. No database migration or new business API. Asset brief: `public/templates/serein/README.md`.
+
+**Area:** `components/PublicInvitation/{SereinScene,SereinGallery,InvitationThemeScenes,UniversalInvitationTemplate}.tsx`, `serein.css`, `lib/templates/{catalog,design,editable-copy,music}.ts`, `lib/invitations/language.ts`, theme WebP and catalog regression fixture.
+
+**Commit:** the commit containing this Appendix entry (`feat(templates): add Serein editorial invitation`).
+
+**Observed validation:** TypeScript pass; production Next build pass; regression suite 244/244 pass via `node --import tsx --test`; scoped ESLint no errors (one pre-existing unused `onMoveAssetLayer` warning in Universal renderer); diff whitespace pass; Impeccable detector returned no findings for Serein files. Browser preview server starts when explicitly bound to loopback, but local Playwright capture is blocked by the missing Chromium executable and unsuccessful browser download. Therefore responsive screenshots, Studio palette/font/save/reload and public envelope/lightbox/paid-RSVP QA are **not claimed PASS**. Generated reference images are art direction evidence, not website screenshots.

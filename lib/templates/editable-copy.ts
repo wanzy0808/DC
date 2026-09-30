@@ -25,6 +25,12 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
+  if (templateKey === "serein") return {
+    greeting: eventDescription?.trim() || "Di antara hari-hari yang datang dan pergi, ada satu yang ingin kami rayakan bersama Anda.",
+    attendanceRequest: "Kami mengundang Anda untuk berbagi waktu, cerita, dan kebahagiaan pada hari istimewa ini.",
+    prayerWish: "Semoga langkah baru ini selalu dikelilingi kasih, kebaikan, dan doa yang tulus.",
+    closing: "Terima kasih untuk setiap doa dan kehadiran yang menghangatkan hari kami. Sampai bertemu.",
+  };
   return {
     greeting: eventDescription?.trim() ||
       (templateKey === "pencil-reverie"

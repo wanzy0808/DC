@@ -32,6 +32,7 @@ test("every active built-in template stays on the shared web-invitation renderer
     "pencil-reverie",
     "zen-atelier",
     "celestial-ink",
+    "serein",
   ]);
 
   const dispatcher = read("components/PublicInvitation/PublicInvitationRenderer.tsx");

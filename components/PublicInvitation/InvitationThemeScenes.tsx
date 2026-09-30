@@ -25,6 +25,7 @@ type SceneProps = {
   onEditPhoto?: () => void;
   preview?: boolean;
   isWedding?: boolean;
+  couple?: boolean;
   hashtag?: string | null;
   recipientLine?: string;
 };
@@ -137,8 +138,9 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
 }
 const PencilReverieScene = dynamic(() => import("@/components/PublicInvitation/PencilReverieScene"));
 const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenAtelierScene"));
+const SereinScene = dynamic(() => import("@/components/PublicInvitation/SereinScene"));
 
-export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,hashtag,recipientLine}: SceneProps) {
+export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,isWedding,couple,hashtag,recipientLine}: SceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   if (theme === "blank-canvas") {
@@ -152,6 +154,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   }
   if (theme === "pencil-reverie") return <PencilReverieScene stage={stage} names={names} date={date} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
   if (theme === "zen-atelier") return <ZenAtelierScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} isWedding={isWedding} hashtag={hashtag} recipientLine={recipientLine} />;
+  if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
