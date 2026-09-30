@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, type WheelEvent as ReactWheelEvent, type TouchEvent as ReactTouchEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from "react";
 import Link from "next/link";
 import { ArrowRight, ChevronDown, Search, X } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
@@ -94,6 +94,8 @@ export default function TemplateDesignPage() {
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
   const [wheelIndex, setWheelIndex] = useState(0);
+  const wheelStageRef = useRef<HTMLDivElement>(null);
+  const wheelIndexRef = useRef(0);
   const wheelLockRef = useRef(0);
   const wheelTouchStartRef = useRef<number | null>(null);
   const suppressWheelClickRef = useRef(false);
@@ -119,31 +121,46 @@ export default function TemplateDesignPage() {
   const sortLabel = sortOptions.find((option) => option.value === sort)?.label ?? copy.catalog;
 
   useEffect(() => {
+    wheelIndexRef.current = 0;
     setWheelIndex(0);
   }, [query, category, photoFilter, sort]);
 
   useEffect(() => {
     if (wheelIndex < filteredTemplates.length) return;
-    setWheelIndex(Math.max(0, filteredTemplates.length - 1));
+    const next = Math.max(0, filteredTemplates.length - 1);
+    wheelIndexRef.current = next;
+    setWheelIndex(next);
   }, [filteredTemplates.length, wheelIndex]);
 
   function moveWheel(direction: -1 | 1) {
-    setWheelIndex((current) => Math.max(0, Math.min(filteredTemplates.length - 1, current + direction)));
+    setWheelIndex((current) => {
+      const next = Math.max(0, Math.min(filteredTemplates.length - 1, current + direction));
+      wheelIndexRef.current = next;
+      return next;
+    });
   }
 
-  function handleTemplateWheel(event: ReactWheelEvent<HTMLDivElement>) {
-    if (filteredTemplates.length < 2) return;
-    const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
-    if (Math.abs(delta) < 8) return;
-    const direction: -1 | 1 = delta > 0 ? 1 : -1;
-    const canMove = direction > 0 ? wheelIndex < filteredTemplates.length - 1 : wheelIndex > 0;
-    if (!canMove) return;
-    event.preventDefault();
-    const now = performance.now();
-    if (now - wheelLockRef.current < 170) return;
-    wheelLockRef.current = now;
-    moveWheel(direction);
-  }
+  useEffect(() => {
+    const stage = wheelStageRef.current;
+    if (!stage || filteredTemplates.length < 2) return;
+    const onWheel = (event: WheelEvent) => {
+      const delta = Math.abs(event.deltaY) >= Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+      if (Math.abs(delta) < 8) return;
+      const direction: -1 | 1 = delta > 0 ? 1 : -1;
+      const current = wheelIndexRef.current;
+      const canMove = direction > 0 ? current < filteredTemplates.length - 1 : current > 0;
+      if (!canMove) return;
+      event.preventDefault();
+      const now = performance.now();
+      if (now - wheelLockRef.current < 170) return;
+      wheelLockRef.current = now;
+      const next = Math.max(0, Math.min(filteredTemplates.length - 1, current + direction));
+      wheelIndexRef.current = next;
+      setWheelIndex(next);
+    };
+    stage.addEventListener("wheel", onWheel, { passive: false });
+    return () => stage.removeEventListener("wheel", onWheel);
+  }, [filteredTemplates.length]);
 
   function handleWheelTouchStart(event: ReactTouchEvent<HTMLDivElement>) {
     wheelTouchStartRef.current = event.changedTouches[0]?.clientX ?? null;
@@ -327,11 +344,11 @@ export default function TemplateDesignPage() {
         {filteredTemplates.length > 0 && (
           <div className="relative -mx-4 overflow-hidden px-4 pb-10 sm:-mx-8 sm:px-8">
             <div
+              ref={wheelStageRef}
               data-template-wheel
               role="group"
               aria-label={locale === "en" ? "Template selection wheel" : "Roda pilihan template"}
               tabIndex={0}
-              onWheel={handleTemplateWheel}
               onTouchStart={handleWheelTouchStart}
               onTouchEnd={handleWheelTouchEnd}
               onKeyDown={(event) => {
@@ -346,7 +363,7 @@ export default function TemplateDesignPage() {
                   openPreview(activeWheelTemplate.key);
                 }
               }}
-              className="relative h-[470px] w-full touch-pan-y overflow-hidden outline-none sm:h-[525px] md:h-[555px] focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="relative h-[470px] w-full touch-pan-y overflow-hidden outline-none [perspective:1200px] sm:h-[525px] md:h-[555px] focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[47%] h-[64%] w-[min(66vw,560px)] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(112,59,59,0.10),rgba(112,59,59,0.025)_52%,transparent_72%)] dark:bg-[radial-gradient(ellipse_at_center,rgba(214,179,140,0.12),rgba(214,179,140,0.025)_52%,transparent_72%)]" />
               <div aria-hidden="true" className="pointer-events-none absolute inset-x-[12%] bottom-[5.5%] h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
@@ -372,7 +389,7 @@ export default function TemplateDesignPage() {
                       if (distance === 0) openPreview(template.key);
                       else setWheelIndex(index);
                     }}
-                    className="group absolute left-1/2 top-[46%] aspect-[9/19.5] w-[clamp(148px,22vw,224px)] rounded-[38px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_58px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+                    className="group absolute left-1/2 top-[46%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(148px,22vw,224px)] rounded-[38px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_28px_58px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
                     style={{
                       transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(112px, 17vw, 190px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
                       opacity,
