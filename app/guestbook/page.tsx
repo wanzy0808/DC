@@ -90,7 +90,7 @@ export default function GuestbookPage() {
               <section className="undara-marketing-section undara-editorial-offset-right grid gap-8 pb-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                 <div>
                   <p className="undara-marketing-kicker">{en ? "One event, one source" : "Satu Acara, Satu Sumber Data"}</p>
-                  <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+                  <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
                     {en ? "One guest list for the whole reception team." : "Satu daftar tamu untuk seluruh tim penerima."}
                   </h2>
                 </div>
