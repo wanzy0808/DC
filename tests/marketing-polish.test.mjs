@@ -132,3 +132,26 @@ test("framed marketing section headings keep the stronger hierarchy", () => {
   assert.match(styles, /\.undara-marketing-section h2 \{[\s\S]*?font-weight: 700;/);
   assert.match(styles, /\.undara-marketing-section h3 \{[\s\S]*?font-weight: 700;/);
 });
+
+
+test("marketing audio stays enabled across every framed route", () => {
+  const paths = read("lib/marketing-paths.ts");
+  const audio = read("components/Layout/MarketingAudio.tsx");
+
+  assert.match(audio, /\/assets\/audio\/a-himitsu-fragile\.mp3/);
+  for (const route of [
+    "/",
+    "/d-invitation",
+    "/event-planner",
+    "/wedding-planner",
+    "/guestbook",
+    "/undangan-fisik",
+    "/template-design",
+    "/help",
+    "/privacy-policy",
+    "/terms-and-conditions",
+  ]) {
+    const occurrences = paths.split(`"${route}"`).length - 1;
+    assert.ok(occurrences >= 2, `${route} must be both marketing and framed`);
+  }
+});
