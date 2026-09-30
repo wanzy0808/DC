@@ -9,11 +9,11 @@ const featured = readFileSync(new URL("../components/DigitalInvitation/TemplateS
 test("every live template catalog card renders the Cover/Hero rather than the envelope", () => {
   assert.match(gallery, /invitationSectionItems\.map\(\(\{ key \}\) => \[key, key === "cover"\]\)/);
   assert.match(gallery, /<TemplateCanvas templateKey=\{templateKey\} designKey=\{designKey\} sections=\{catalogCoverSections\} \/>/);
-  assert.match(page, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} \/>/);
+  assert.match(page, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
   assert.match(featured, /<TemplateCardCanvas templateKey=\{template\.key\} designKey=\{template\.designKey\} phone \/>/);
 });
 
-test("catalog popup starts at Cover without changing the original invitation opening", () => {
+test("public template catalog uses phone-only cards with one preview interaction", () => {\n  assert.match(page, /aspect-\\[9\\/19\\.5\\]/);\n  assert.match(page, /aria-label=\\{`\\$\\{copy\\.previewLabel\\}: \\$\\{template\\.name\\}`\\}/);\n  assert.match(page, /<TemplateCardCanvas templateKey=\\{template\\.key\\} designKey=\\{template\\.designKey\\} phone \\/>/);\n  assert.doesNotMatch(page, /<Eye /);\n  assert.doesNotMatch(page, /<Button onClick=\\{\\(\\) => openPreview\\(template\\.key\\)\\}/);\n});\n\ntest("catalog popup starts at Cover without changing the original invitation opening", () => {
   assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.sections, envelope: false \}\} \/>/);
   assert.match(gallery, /sections = defaultInvitationSections,/);
   assert.doesNotMatch(gallery, /Pratinjau template|Memuat pratinjau/);
