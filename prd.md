@@ -2058,3 +2058,15 @@ All event data, Personal Invitation recipient line, photo slots/crop controls, s
 
 **Validation:** source-level redesign completed; CI/build status observed separately. Browser desktop/mobile visual QA is not claimed until an actual rendered preview is inspected.
 
+### 30 September 2026 — Phone-only public template catalog
+
+**Owner request:** simplify `/template-design` so the catalog displays invitation designs as phone previews and removes repeated per-card buttons; clicking the phone itself opens Preview.
+
+**Implementation:** each catalog item now uses the existing 9:19.5 phone treatment and real Cover/Hero renderer. The previous large rounded card, photo badge, eye icon, description block and repeated “Lihat undangan/Lihat desain” CTA were removed from the listing. Template name/category remain as compact metadata below the phone. Search, photo/category filters and sorting remain because they are catalog navigation rather than per-template actions. The preview dialog and its authenticated “Buat Undangan” handoff remain unchanged.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `35c697ec69e9f6c65224906cc335f2c775399a1e`, `8faf1bdae6586aaa0c9dcafe7386e49145a6fb53`.
+
+**Validation:** source guard confirms the public catalog uses the shared phone Cover renderer and no longer renders the old per-card Eye/CTA interaction. CI/build status observed separately; browser visual QA is not claimed until rendered.
+
