@@ -44,7 +44,7 @@ export function MarketingAudioProvider({ children }: { children: ReactNode }) {
   }, [isMarketing]);
 
   useEffect(() => {
-    const player = new Audio("/assets/audio/a-himitsu-fragile.mp3");
+    const player = new Audio("/assets/audio/epic-spectrum-forgiveness.mp3");
     player.loop = true;
     player.preload = "auto";
     player.volume = volumeRef.current / 100;
