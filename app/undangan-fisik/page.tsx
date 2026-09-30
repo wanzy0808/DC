@@ -155,7 +155,7 @@ export default function UndanganFisikPage() {
                 <div className="grid gap-8 lg:grid-cols-[0.88fr_1.12fr] lg:items-end lg:gap-16">
                   <div>
                     <p className="undara-marketing-kicker">{en ? "Tactile direction" : "Arah Tactile"}</p>
-                    <h2 className="mt-4 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+                    <h2 className="mt-4 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
                       {en ? "The design is not only what guests see." : "Desainnya bukan hanya apa yang tamu lihat."}
                     </h2>
                   </div>
@@ -175,7 +175,7 @@ export default function UndanganFisikPage() {
                       <div className="flex items-center gap-4">
                         <Icon className="h-5 w-5 text-primary" strokeWidth={1.5} aria-hidden="true" />
                       </div>
-                      <h3 className="mt-8 font-[family-name:var(--font-undara-heading)] text-2xl text-primary md:text-3xl">
+                      <h3 className="mt-8 font-[family-name:var(--font-undara-heading)] text-2xl font-bold text-primary md:text-3xl">
                         {title}
                       </h3>
                       <p className="mt-4 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -192,7 +192,7 @@ export default function UndanganFisikPage() {
                 <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end lg:gap-16">
                   <div>
                     <p className="undara-marketing-kicker">{en ? "From idea to delivery" : "Dari Ide hingga Diterima"}</p>
-                    <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+                    <h2 className="mt-4 max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
                       {en ? "A slower process, for a more considered object." : "Proses yang lebih pelan untuk hasil yang lebih dipikirkan."}
                     </h2>
                   </div>
@@ -209,7 +209,7 @@ export default function UndanganFisikPage() {
                       key={title}
                       className={`grid gap-6 py-8 md:grid-cols-[minmax(0,0.88fr)_minmax(0,1.12fr)] md:items-center md:gap-9 md:py-11 ${index % 2 ? "lg:pl-[6%]" : "lg:pr-[5%]"}`}
                     >
-                      <h3 className="max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-2xl leading-[1.08] text-primary md:text-3xl lg:text-4xl">
+                      <h3 className="max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-2xl font-bold leading-[1.08] text-primary md:text-3xl lg:text-4xl">
                         {title}
                       </h3>
                       <p className="flex max-w-xl gap-3 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -225,7 +225,7 @@ export default function UndanganFisikPage() {
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="undara-marketing-section undara-editorial-offset-right pb-14">
                 <p className="undara-marketing-kicker">{en ? "Ways to order" : "Pilihan Pemesanan"}</p>
-                <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-5xl">
+                <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-5xl">
                   {en ? "A few keepsakes or a full print run." : "Beberapa untuk disimpan, atau satu produksi penuh."}
                 </h2>
                 <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -237,7 +237,7 @@ export default function UndanganFisikPage() {
                 <div className="mt-10 grid gap-5 lg:grid-cols-2 lg:gap-8">
                   <article className="flex flex-col rounded-[28px] bg-primary/[0.055] p-7 md:p-9">
                     <p className="undara-marketing-kicker">{en ? "With Digital Invitation" : "Bersama Undangan Digital"}</p>
-                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary md:text-4xl">
+                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-tight text-primary md:text-4xl">
                       {en ? "Order individually." : "Bisa pesan satuan."}
                     </h3>
                     <p className="mt-5 flex-1 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -253,7 +253,7 @@ export default function UndanganFisikPage() {
 
                   <article className="flex flex-col rounded-[28px] bg-background/55 p-7 shadow-[0_16px_44px_rgba(58,32,32,0.07)] md:p-9">
                     <p className="undara-marketing-kicker">{en ? "Standalone / Custom" : "Terpisah / Custom"}</p>
-                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl leading-tight text-primary md:text-4xl">
+                    <h3 className="mt-5 font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-tight text-primary md:text-4xl">
                       {en ? "Minimum 300 pieces." : "Minimal 300 pcs."}
                     </h3>
                     <p className="mt-5 flex-1 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -279,7 +279,7 @@ export default function UndanganFisikPage() {
                 <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-16">
                   <div>
                     <p className="undara-marketing-kicker">{en ? "Start with the specification" : "Mulai dari Spesifikasinya"}</p>
-                    <h2 className="mt-4 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.04] text-primary md:text-6xl">
+                    <h2 className="mt-4 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] tracking-[-0.025em] text-primary md:text-6xl">
                       {en ? "Tell us what you want guests to hold." : "Ceritakan apa yang ingin kamu letakkan di tangan tamu."}
                     </h2>
                     <p className="mt-5 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
