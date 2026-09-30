@@ -453,22 +453,9 @@ export default function TemplateDesignPage() {
                         const rotation = distance === 0 ? 0 : distance < 0 ? 13 : -13;
                         const translateY = depth * 17;
                         return (
-                          <button
+                          <div
                             key={template.key}
-                            type="button"
-                            aria-current={distance === 0 ? "true" : undefined}
-                            aria-label={distance === 0 ? `${copy.previewLabel}: ${template.name}` : template.name}
-                            tabIndex={depth <= 1 ? 0 : -1}
-                            onClick={() => {
-                              if (suppressWheelClickRef.current) return;
-                              if (distance === 0) {
-                                openPreview(template.key);
-                              } else {
-                                wheelIndexRef.current = index;
-                                setWheelIndex(index);
-                              }
-                            }}
-                            className="group absolute left-1/2 top-[47%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(140px,20vw,214px)] rounded-[36px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+                            className="group absolute left-1/2 top-[47%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(140px,20vw,214px)] rounded-[36px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
                             style={{
                               transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(104px, 15vw, 176px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
                               opacity,
@@ -498,7 +485,23 @@ export default function TemplateDesignPage() {
                                 </span>
                               )}
                             </span>
-                          </button>
+                            <button
+                              type="button"
+                              aria-current={distance === 0 ? "true" : undefined}
+                              aria-label={distance === 0 ? `${copy.previewLabel}: ${template.name}` : template.name}
+                              tabIndex={depth <= 1 ? 0 : -1}
+                              onClick={() => {
+                                if (suppressWheelClickRef.current) return;
+                                if (distance === 0) {
+                                  openPreview(template.key);
+                                } else {
+                                  wheelIndexRef.current = index;
+                                  setWheelIndex(index);
+                                }
+                              }}
+                              className="absolute inset-0 z-40 rounded-[36px] bg-transparent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                            />
+                          </div>
                         );
                       })}
                     </div>
