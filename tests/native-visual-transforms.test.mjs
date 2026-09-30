@@ -543,3 +543,15 @@ test("Garden Light keeps rings sprigs seal and photo window editable", () => {
   assert.equal(nativeVisualCanHide("object:cover:sprig-left"), true);
   assert.equal(nativeVisualCanHide("object:cover:seal"), true);
 });
+
+test("Midnight Romance keeps celestial decoration and photo viewport independently editable", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  assert.match(scenes, /object:cover:starfield/);
+  assert.match(scenes, /object:cover:moon/);
+  assert.match(scenes, /object:cover:photo-frame/);
+  assert.match(scenes, /object:cover:photo-window/);
+  assert.match(scenes, /object:cover:star/);
+  assert.equal(nativeVisualCanHide("object:cover:starfield"), true);
+  assert.equal(nativeVisualCanHide("object:cover:moon"), true);
+  assert.equal(nativeVisualCanHide("object:cover:star"), true);
+});
