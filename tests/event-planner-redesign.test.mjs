@@ -19,7 +19,7 @@ test("event planner is a connector-only Undara service", () => {
   assert.doesNotMatch(data, /\bDC\b|DC Organizer|Christine|plannerReviews|plannerPortfolio/);
 
   assert.match(page, /Butuh Event Planner\?/);
-  assert.match(page, /Undara bantu menerima kebutuhan awal lalu menghubungkan kamu/);
+  assert.match(page, /Undara membantu menerima kebutuhan awal lalu menghubungkan kamu/);
   assert.match(data, /Apa peran Undara untuk layanan Event Planner\?/);
   assert.match(data, /Siapa yang menangani pelaksanaan acaranya\?/);
   assert.match(data, /penyedia layanan yang relevan/);
