@@ -32,6 +32,6 @@ test("all framed marketing pages keep a visible outline over restrained ambience
   assert.match(home, /<LandingWoodlandAtmosphere \/>[\s\S]*data-undara-marketing-frame/);
   assert.doesNotMatch(home, /flex-col overflow-hidden rounded-\[14px\]/);
   const woodland = read("components/Landing/LandingWoodlandAtmosphere.tsx");
-  assert.match(woodland, /inset-x-\[4%\].*bottom-\[10%\].*top-\[12%\]/);
+  assert.match(woodland, /inset-x-0.*bottom-\[10%\].*top-\[12%\]/);
   assert.match(woodland, /BODY_MASK/);
 });
