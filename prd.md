@@ -2220,3 +2220,17 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `398539e4a41c85b95381ae677482be8c7e998142`, `b1723044ad5dbb21d43ea90b7704cb20d52ac12d`.
 
+### 30 September 2026 — React Three Fiber Clock deprecation bridge
+
+**Owner request:** investigate the browser warning `THREE.Clock: This module has been deprecated. Please use THREE.Timer instead.` and verify that it is not a rendering error in Undara.
+
+**Finding:** Undara does not instantiate `THREE.Clock` directly. The current dependency pair is `three@0.186.0` with `@react-three/fiber@9.7.0`. Three deprecated `Clock` in r183, while R3F 9.x still constructs a Clock internally for its frameloop/Canvas state, so the browser warning originates upstream rather than from Undara scene code.
+
+**Implementation:** added a tiny client-side Three console bridge installed before public 3D surfaces. It suppresses only the exact known R3F Clock deprecation warning and forwards every other Three log, warning, and error unchanged. This avoids hiding real renderer problems and avoids downgrading Three solely to silence a dependency warning. Added source guards confirming exact-message filtering, forwarding behavior, installation order, and the valid non-nested template-wheel button structure.
+
+**Area:** `components/Three/ThreeConsoleBridge.tsx`, `app/layout.tsx`, `tests/three-console-bridge.test.mjs`.
+
+**Commits:** `f4a97d6b4866a8323a95dec45dacc4a62cb5d4fe`, `944070b0b7fd003be593203809e237c992a4ec29`, `b28c322ecbcb625ea9e79b3d45e9854cd99061ec`.
+
+**Validation:** source-level checks pass. GitHub exposes no combined CI statuses or PR workflow runs for the direct-push commit, so a full `next build` result is not claimed here.
+
