@@ -33,8 +33,8 @@ test("public template catalog uses a looping phone wheel with centered preview a
   assert.doesNotMatch(page, /<Button onClick=\{\(\) => openPreview\(template\.key\)\}/);
 });
 
-test("template catalog keeps search filter and sort in one compact control bar", () => {
-  assert.match(page, /min-h-\[calc\(100dvh-145px\)\]/);
+test("template catalog keeps floating search filter sort controls and gives the wheel most of the room", () => {
+  assert.match(page, /min-h-\[calc\(100dvh-130px\)\]/);
   assert.match(page, /sm:max-w-\[250px\]/);
   assert.match(page, /ref=\{filterMenuRef\}/);
   assert.match(page, /<SlidersHorizontal/);
@@ -44,11 +44,14 @@ test("template catalog keeps search filter and sort in one compact control bar",
   assert.match(page, /ref=\{sortMenuRef\}/);
   assert.match(page, /setFilterOpen\(false\)/);
   assert.match(page, /setSortOpen\(false\)/);
-  assert.doesNotMatch(page, /mt-10 flex flex-wrap gap-2.*Filter penggunaan foto/s);
-  assert.match(page, /max-w-\[1040px\]/);
-  assert.match(page, /w-\[clamp\(154px,22vw,252px\)\]/);
-  assert.match(page, /xl:gap-16/);
-  assert.match(page, /max-w-\[32ch\] text-sm leading-7/);
+  assert.match(page, /max-w-\[900px\] flex-wrap items-center justify-center gap-x-5/);
+  assert.doesNotMatch(page, /max-w-\[900px\][\s\S]{0,180}border border-primary\/18 bg-background\/78/);
+  assert.match(page, /max-w-\[1180px\]/);
+  assert.match(page, /w-\[clamp\(166px,23vw,280px\)\]/);
+  assert.match(page, /lg:absolute lg:left-0 lg:top-4/);
+  assert.match(page, /lg:absolute lg:bottom-4 lg:right-0/);
+  assert.match(page, /text-sm font-semibold/);
+  assert.match(page, /text-foreground\/75/);
 });
 
 test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
