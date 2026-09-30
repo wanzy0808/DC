@@ -47,6 +47,12 @@ test("template catalog keeps search filter and sort in one compact control bar",
   assert.doesNotMatch(page, /mt-10 flex flex-wrap gap-2.*Filter penggunaan foto/s);
 });
 
+test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
+  assert.match(page, /<div\s+key=\{template\.key\}[\s\S]*className="group absolute left-1\/2/);
+  assert.match(page, /<button[\s\S]*aria-current=\{distance === 0 \? "true" : undefined\}[\s\S]*className="absolute inset-0 z-40/);
+  assert.doesNotMatch(page, /<button\s+key=\{template\.key\}[\s\S]*<TemplateCardCanvas/);
+});
+
 test("catalog popup starts at Cover without changing the original invitation opening", () => {
   assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.sections, envelope: false \}\} \/>/);
   assert.match(gallery, /sections = defaultInvitationSections,/);
