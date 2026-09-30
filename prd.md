@@ -2104,3 +2104,18 @@ The wheel uses a bounded 240ms transform/opacity/filter transition with a strong
 **Commit:** the commit containing this Appendix entry (`feat(serein): add Studio-native invitation motion`).
 
 **Observed validation:** TypeScript pass; production Next build pass after syncing main; regression suite 253/253 pass via `node --import tsx --test`. Eight new behavioral tests cover defaults/overrides, serialized OFF, section suppression, lazy discovery, viewport/Studio replay, image loading/cleanup, preserved transforms/opacity and reduced motion. Scoped ESLint outside InvitationDesigner has no errors (two existing unused-variable warnings); InvitationDesigner retains its four pre-existing effect-setState errors and six warnings, confirmed against the unchanged HEAD baseline. Diff whitespace pass; Impeccable detector returned no findings for motion/Serein targets. Source motion review passes; perceived timing, rendered desktop/mobile playback and authenticated save/public flow remain unverified because Chromium is unavailable locally. No browser PASS is claimed.
+
+### 30 September 2026 — Unified Template Design selection page
+
+**Owner request:** make `/template-design` feel like one complete page, keep the rotating phone selector as the center of attention, use empty side space for supporting copy, and simplify Search / Filter / Sort so the catalog stays easy to use as the number of templates grows.
+
+**Implementation:** the previous tall hero, standalone photo-filter row and standalone category row were consolidated into one viewport-oriented selection composition. On desktop, the title occupies the left rail, the looping phone wheel owns the wide center column, and explanatory copy uses the right rail; mobile collapses those pieces naturally above the selector. Search is now a compact field, while photo-use and category controls are grouped into one Filter dropdown with a scrollable category area and reset action. Sort remains a neighboring compact dropdown, so Search / Filter / Sort read as one control bar immediately above the wheel. The active template's category, position, name and localized description remain directly below the wheel.
+
+The selector now loops continuously in both directions. Moving forward from the last template returns to the first, moving backward from the first returns to the last, and the visual neighbor calculation also wraps so the first/last phones remain adjacent in the 3D wheel rather than disappearing at an artificial edge. Mouse/trackpad, swipe, keyboard and side-card centering keep the existing interaction model.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `49d7c75afbf9f67f2934627c3b58328edf6fc183`, `e5cc1bfb0c58325f312f7d315fb5e5434d8e4864`.
+
+**Validation:** source guards confirm the single viewport-oriented composition, compact search, grouped Filter dropdown, compact Sort dropdown, looping modulo navigation, circular visual distance and shared real phone Cover renderer. CI/build and rendered browser QA remain separate observations.
+
