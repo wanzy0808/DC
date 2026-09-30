@@ -75,6 +75,12 @@ export default function PackageShowcase({
                     <p className="mt-4 max-w-md text-sm leading-7 text-muted-foreground">
                       {item.description[locale]}
                     </p>
+                    {item.key === "GUESTBOOK_DIGITAL" && (
+                      <Link href="/d-invitation" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                        {locale === "en" ? "Digital Invitation included free · View details" : "Gratis Undangan Digital · Lihat detail"}
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
+                    )}
                   </div>
 
                   <div className="flex min-w-0 flex-col">
