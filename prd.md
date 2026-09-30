@@ -2119,3 +2119,16 @@ The selector now loops continuously in both directions. Moving forward from the 
 
 **Validation:** source guards confirm the single viewport-oriented composition, compact search, grouped Filter dropdown, compact Sort dropdown, looping modulo navigation, circular visual distance and shared real phone Cover renderer. CI/build and rendered browser QA remain separate observations.
 
+### 30 September 2026 — Template wheel hydration fix
+
+- Fixed invalid HTML in `/template-design`: the rotating phone item is no longer rendered as a `<button>` wrapper around the real invitation preview.
+- Real template previews can contain functional HTML controls such as RSVP submit buttons, so wrapping the preview in another button created `<button><button>...</button></button>` and caused a Next.js hydration warning/error.
+- The visual phone shell is now a neutral `<div>`. A transparent absolute-positioned button is rendered as a sibling overlay after the preview content and owns selection/preview interaction, keyboard focus, labels, and `aria-current`.
+- Wheel behavior, looping, swipe/scroll selection, center-preview action, and real Cover/Hero rendering remain unchanged.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `31802704417fb31291f4f7191fc15d1e67dbe01c`, `0f05143a8a55e3767fc94273823d6b2e431c490d`.
+
+**Validation:** source guard confirms there is no outer keyed button wrapping `TemplateCardCanvas`; the interactive overlay button is a sibling of the rendered preview.
+
