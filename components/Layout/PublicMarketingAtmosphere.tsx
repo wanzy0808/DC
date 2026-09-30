@@ -2,7 +2,7 @@
 
 import EventPlannerBotanicalAtmosphere from "@/components/EventPlanner/EventPlannerBotanicalAtmosphere";
 
-/** Every framed service page uses the same bronze foliage and varied falling leaves. */
+/** Framed marketing pages share a calm forest scene in both color modes. */
 export default function PublicMarketingAtmosphere() {
   return <EventPlannerBotanicalAtmosphere />;
 }
