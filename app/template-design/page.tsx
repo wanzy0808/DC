@@ -283,17 +283,17 @@ export default function TemplateDesignPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <section className="undara-marketing-content font-[family-name:var(--font-undara-body)]">
-            <div className="undara-marketing-section grid min-h-[calc(100dvh-145px)] items-center gap-8 py-10 lg:grid-cols-[minmax(180px,0.9fr)_minmax(0,3.3fr)_minmax(180px,0.9fr)] lg:gap-12 lg:py-12 xl:grid-cols-[minmax(210px,1fr)_minmax(0,3.6fr)_minmax(210px,1fr)] xl:gap-16">
-              <aside className="self-center lg:pr-6 xl:pr-10">
-                <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.22em] text-primary/75 md:text-[10px]">{copy.eyebrow}</p>
-                <h1 className="mt-4 max-w-[11ch] font-[family-name:var(--font-undara-heading)] text-[clamp(2.25rem,4vw,4.8rem)] font-normal leading-[0.98] tracking-[-0.035em] text-primary">
+            <div className="undara-marketing-section relative min-h-[calc(100dvh-130px)] py-12 sm:py-14 lg:py-16 xl:py-20">
+              <aside className="relative z-20 max-w-[34rem] lg:absolute lg:left-0 lg:top-4 xl:left-1 xl:top-6">
+                <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.22em] text-primary md:text-[11px]">{copy.eyebrow}</p>
+                <h1 className="mt-4 max-w-[11ch] font-[family-name:var(--font-undara-heading)] text-[clamp(2.45rem,4.4vw,5.25rem)] font-normal leading-[0.96] tracking-[-0.035em] text-primary">
                   {copy.title}
                 </h1>
-                <p className="mt-4 max-w-[28ch] text-xs leading-6 text-foreground/55 lg:hidden">{copy.description}</p>
+                <p className="mt-4 max-w-[30ch] text-sm font-medium leading-7 text-foreground/75 lg:hidden">{copy.description}</p>
               </aside>
 
-              <div className="min-w-0">
-                <div className="relative z-40 mx-auto mb-5 flex w-full max-w-[860px] flex-wrap items-center justify-center gap-3 rounded-[20px] border border-primary/18 bg-background/78 p-2 shadow-[0_10px_30px_rgba(70,45,50,0.06)] backdrop-blur-sm">
+              <div className="min-w-0 lg:pt-20 xl:pt-24">
+                <div className="relative z-40 mx-auto mb-10 flex w-full max-w-[900px] flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:mb-12 lg:mb-14">
                   <label className="relative min-w-[160px] flex-1 sm:max-w-[250px]">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-foreground/40" aria-hidden />
                     <span className="sr-only">{copy.searchLabel}</span>
@@ -302,7 +302,7 @@ export default function TemplateDesignPage() {
                       value={query}
                       onChange={(event) => setQuery(event.target.value)}
                       placeholder={copy.search}
-                      className="h-9 w-full rounded-[11px] border border-primary/20 bg-background/85 pl-9 pr-3 text-xs text-foreground outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-foreground/38 focus:border-primary/55 focus:ring-2 focus:ring-primary/10"
+                      className="h-10 w-full rounded-[11px] border border-primary/35 bg-background/70 pl-9 pr-3 text-sm font-medium text-foreground shadow-sm outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-foreground/52 focus:border-primary/70 focus:ring-2 focus:ring-primary/15"
                     />
                   </label>
 
@@ -315,7 +315,7 @@ export default function TemplateDesignPage() {
                         setFilterOpen((open) => !open);
                         setSortOpen(false);
                       }}
-                      className={`flex h-9 items-center gap-2 rounded-[11px] border px-3 text-xs transition-colors ${filterOpen || photoFilter !== "all" || category !== "Semua" ? "border-primary/55 bg-primary/10 text-primary" : "border-primary/20 bg-background/85 text-foreground/65 hover:border-primary/40"}`}
+                      className={`flex h-10 items-center gap-2 rounded-[11px] border px-4 text-sm font-semibold transition-colors ${filterOpen || photoFilter !== "all" || category !== "Semua" ? "border-primary/65 bg-primary/10 text-primary" : "border-primary/30 bg-background/55 text-foreground/85 hover:border-primary/55 hover:text-primary"}`}
                     >
                       <SlidersHorizontal className="h-3.5 w-3.5" aria-hidden />
                       {copy.filter}
@@ -385,7 +385,7 @@ export default function TemplateDesignPage() {
                         setSortOpen((open) => !open);
                         setFilterOpen(false);
                       }}
-                      className="flex h-9 items-center gap-2 rounded-[11px] border border-primary/20 bg-background/85 px-3 text-xs text-foreground/65 transition-colors hover:border-primary/40 hover:text-primary"
+                      className="flex h-10 items-center gap-2 rounded-[11px] border border-primary/30 bg-background/55 px-4 text-sm font-semibold text-foreground/85 transition-colors hover:border-primary/55 hover:text-primary"
                     >
                       <span className="hidden sm:inline">{copy.sort}:</span>
                       <span>{sortLabel}</span>
@@ -413,11 +413,11 @@ export default function TemplateDesignPage() {
                     )}
                   </div>
 
-                  <span className="hidden whitespace-nowrap px-1 text-[10px] text-foreground/40 md:inline">{filteredTemplates.length} {copy.available}</span>
+                  <span className="hidden whitespace-nowrap px-1 text-[11px] font-medium text-foreground/60 md:inline">{filteredTemplates.length} {copy.available}</span>
                 </div>
 
                 {filteredTemplates.length > 0 ? (
-                  <div className="relative -mx-5 overflow-hidden px-5 sm:-mx-8 sm:px-8">
+                  <div className="relative -mx-8 overflow-hidden px-8 sm:-mx-12 sm:px-12 lg:-mx-16 lg:px-16 xl:-mx-20 xl:px-20">
                     <div
                       ref={wheelStageRef}
                       data-template-wheel
@@ -438,7 +438,7 @@ export default function TemplateDesignPage() {
                           openPreview(activeWheelTemplate.key);
                         }
                       }}
-                      className="relative mx-auto h-[470px] w-full max-w-[1040px] touch-pan-y overflow-hidden outline-none [perspective:1350px] sm:h-[515px] lg:h-[555px] xl:h-[585px] focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                      className="relative mx-auto h-[520px] w-full max-w-[1180px] touch-pan-y overflow-hidden outline-none [perspective:1450px] sm:h-[570px] lg:h-[620px] xl:h-[670px] focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                     >
                       <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[48%] h-[68%] w-[min(70vw,580px)] -translate-x-1/2 -translate-y-1/2 rounded-[50%] bg-[radial-gradient(ellipse_at_center,rgba(112,59,59,0.095),rgba(112,59,59,0.018)_56%,transparent_72%)]" />
                       <div aria-hidden="true" className="pointer-events-none absolute inset-x-[13%] bottom-[6%] h-px bg-gradient-to-r from-transparent via-primary/24 to-transparent" />
@@ -451,13 +451,13 @@ export default function TemplateDesignPage() {
                         const scale = Math.max(0.56, 1 - depth * 0.16);
                         const opacity = visible ? Math.max(0.18, 1 - depth * 0.24) : 0;
                         const rotation = distance === 0 ? 0 : distance < 0 ? 13 : -13;
-                        const translateY = depth * 20;
+                        const translateY = depth * 22;
                         return (
                           <div
                             key={template.key}
-                            className="group absolute left-1/2 top-[47%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(154px,22vw,252px)] rounded-[40px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
+                            className="group absolute left-1/2 top-[47%] aspect-[9/19.5] [transform-style:preserve-3d] w-[clamp(166px,23vw,280px)] rounded-[42px] bg-gradient-to-br from-[#f8f8f8] via-[#a9a9aa] to-[#303032] p-[3px] shadow-[0_24px_52px_rgba(17,17,17,0.20),inset_0_1px_0_rgba(255,255,255,0.9)] transition-[transform,opacity,filter] duration-[240ms] ease-[cubic-bezier(0.23,1,0.32,1)] motion-reduce:transition-none dark:from-[#e4e4e4] dark:via-[#77777a] dark:to-[#121214]"
                             style={{
-                              transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(118px, 17vw, 206px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
+                              transform: `translate(-50%, -50%) translateX(calc(${distance} * clamp(132px, 18vw, 228px))) translateY(${translateY}px) rotateY(${rotation}deg) scale(${scale})`,
                               opacity,
                               zIndex: 20 - Math.round(depth),
                               filter: distance === 0 ? "none" : `saturate(${Math.max(0.5, 1 - depth * 0.14)}) brightness(${Math.max(0.72, 1 - depth * 0.08)})`,
@@ -467,9 +467,9 @@ export default function TemplateDesignPage() {
                             <span aria-hidden="true" className="absolute -right-[4px] top-[24%] h-11 w-[4px] rounded-r-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
                             <span aria-hidden="true" className="absolute -left-[4px] top-[21%] h-7 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
                             <span aria-hidden="true" className="absolute -left-[4px] top-[31%] h-10 w-[4px] rounded-l-full bg-[#4a4a4c] dark:bg-[#8b8b8e]" />
-                            <span className="relative block h-full overflow-hidden rounded-[37px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
-                              <span className="pointer-events-none absolute inset-[7px] z-20 rounded-[31px] border border-white/10" aria-hidden="true" />
-                              <span className="relative block h-full overflow-hidden rounded-[30px] bg-[#f8f4f1] dark:bg-[#111111]">
+                            <span className="relative block h-full overflow-hidden rounded-[39px] border border-black/70 bg-[#080808] p-[7px] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.16),inset_0_0_16px_rgba(0,0,0,0.95)] dark:border-white/20">
+                              <span className="pointer-events-none absolute inset-[7px] z-20 rounded-[33px] border border-white/10" aria-hidden="true" />
+                              <span className="relative block h-full overflow-hidden rounded-[32px] bg-[#f8f4f1] dark:bg-[#111111]">
                                 {template.ready ? (
                                   <TemplateCardCanvas templateKey={template.key} designKey={template.designKey} phone />
                                 ) : (
@@ -499,7 +499,7 @@ export default function TemplateDesignPage() {
                                   setWheelIndex(index);
                                 }
                               }}
-                              className="absolute inset-0 z-40 rounded-[40px] bg-transparent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                              className="absolute inset-0 z-40 rounded-[42px] bg-transparent focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
                             />
                           </div>
                         );
@@ -507,14 +507,14 @@ export default function TemplateDesignPage() {
                     </div>
 
                     {activeWheelTemplate && (
-                      <div data-template-wheel-details aria-live="polite" className="mx-auto mt-3 max-w-2xl pb-6 text-center lg:mt-5">
-                        <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.18em] text-foreground/42">
+                      <div data-template-wheel-details aria-live="polite" className="mx-auto mt-8 max-w-2xl pb-10 text-center lg:mt-10 lg:pb-14">
+                        <p className="font-[family-name:var(--font-undara-mono)] text-[10px] font-semibold uppercase tracking-[0.18em] text-foreground/65">
                           {String(wheelIndex + 1).padStart(2, "0")} / {String(filteredTemplates.length).padStart(2, "0")} · {activeWheelTemplate.category}
                         </p>
-                        <h2 className="mt-3 font-[family-name:var(--font-undara-heading)] text-[clamp(1.8rem,3.2vw,2.7rem)] font-normal leading-tight text-primary">
+                        <h2 className="mt-3 font-[family-name:var(--font-undara-heading)] text-[clamp(1.95rem,3.4vw,2.95rem)] font-normal leading-tight text-primary">
                           {activeWheelTemplate.name}
                         </h2>
-                        <p className="mx-auto mt-3 max-w-xl text-xs leading-6 text-foreground/58 sm:text-sm sm:leading-7">
+                        <p className="mx-auto mt-3 max-w-xl text-sm font-medium leading-7 text-foreground/75">
                           {descriptionFor(activeWheelTemplate)}
                         </p>
                       </div>
@@ -527,11 +527,11 @@ export default function TemplateDesignPage() {
                 )}
               </div>
 
-              <aside className="hidden self-center lg:block lg:pl-6 xl:pl-10">
-                <p className="max-w-[32ch] text-sm leading-7 text-foreground/58">{copy.description}</p>
-                <div className="mt-9 border-t border-primary/18 pt-7">
-                  <p className="max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-xl leading-snug text-primary">{copy.chooseHint}</p>
-                  <p className="mt-4 max-w-[32ch] text-xs leading-6 text-foreground/42">{copy.wheelHint}</p>
+              <aside className="hidden lg:absolute lg:bottom-4 lg:right-0 lg:z-20 lg:block lg:max-w-[22rem] lg:text-right xl:bottom-6 xl:right-1">
+                <p className="ml-auto max-w-[32ch] text-sm font-medium leading-7 text-foreground/76">{copy.description}</p>
+                <div className="mt-6 border-t border-primary/30 pt-5">
+                  <p className="ml-auto max-w-[17ch] font-[family-name:var(--font-undara-heading)] text-xl leading-snug text-primary">{copy.chooseHint}</p>
+                  <p className="ml-auto mt-4 max-w-[32ch] text-xs font-medium leading-6 text-foreground/60">{copy.wheelHint}</p>
                 </div>
               </aside>
             </div>
