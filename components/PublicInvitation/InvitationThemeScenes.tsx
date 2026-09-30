@@ -125,7 +125,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,recipie
           <div aria-hidden data-studio-native-object="object:envelope:seal" className="absolute left-1/2 top-[105px] z-20 flex h-14 w-14 -translate-x-1/2 items-center justify-center rounded-full border-4 text-3xl shadow-md" style={{borderColor:style.surface,backgroundColor:style.border,color:style.surface}}>{style.symbol}</div>
           <div data-studio-native-object="object:envelope:copy-panel" className="relative z-20 mt-8 w-full border-t pt-6 text-center" style={{borderColor:style.border}}>
             <p data-studio-native-object="object:envelope:letter-kicker" className="text-[9px] uppercase tracking-[.25em] opacity-70">Untuk momen istimewa</p>
-            {recipientLine && <p data-personal-envelope-address className="mt-3 break-words text-[11px] font-semibold leading-5">{recipientLine}</p>}
+            {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-3 break-words text-[11px] font-semibold leading-5">{recipientLine}</p>}
             <Names className="mt-3 text-xl">{names}</Names>
             <p data-studio-native-object="object:envelope:date" className="mt-3 text-xs opacity-75">{date}</p>
           </div>
@@ -163,7 +163,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <Flower2 aria-hidden data-studio-native-object="object:cover:flower-right" className="absolute -right-12 bottom-24 h-52 w-52 rotate-[20deg] text-[color:var(--inv-scene-text,#c45c7e)]/40" strokeWidth={0.6} />
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-6 text-[color:var(--inv-scene-text,#a45c75)]`}>Eternal Blossom</p>
     <div data-studio-native-object="object:cover:photo-frame" className="relative w-[min(70vw,290px)] rotate-[-4deg] rounded-t-full rounded-b-[100px] border-8 border-white bg-white p-2 shadow-[20px_20px_0_#dd9caf]">
-      <div className="relative h-[320px] overflow-hidden rounded-t-full rounded-b-[95px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
+      <div data-studio-native-object="object:cover:photo-window" className="relative h-[320px] overflow-hidden rounded-t-full rounded-b-[95px]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
     </div>
     <Names className="z-10 mt-9 text-3xl">{names}</Names>
     <p data-studio-native-object="object:cover:date" className="relative mt-3 text-xs tracking-[.25em]">{date}</p>
