@@ -86,7 +86,7 @@ export default function TemplateCollection() {
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.26em] text-primary">
               {copy.eyebrow}
             </p>
-            <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.04] text-primary md:text-5xl lg:text-6xl">
+            <h2 className="mt-4 max-w-[18ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.04] text-primary md:text-5xl lg:text-6xl">
               {copy.title}
             </h2>
             <p className="mt-3 max-w-xl font-[family-name:var(--font-undara-body)] text-sm leading-7 text-foreground/65">
