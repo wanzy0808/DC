@@ -48,6 +48,9 @@ test("event planner shares restrained woodland ambience across marketing pages",
   assert.doesNotMatch(page, /PublicMarketingAtmosphere|LandingFloralGlow/);
 
   assert.doesNotMatch(atmosphere, /<svg|FoliageDrawing|BotanicalLayer/);
+  assert.match(atmosphere, /data-undara-marketing-atmosphere/);
+  assert.match(atmosphere, /lightbg\.webp/);
+  assert.match(atmosphere, /darkbg\.webp/);
   assert.match(atmosphere, /radial-gradient\(ellipse_at_12%_78%/);
   assert.match(atmosphere, /-bottom-\[12%\]/);
   assert.doesNotMatch(atmosphere, /foliage-(left|right|floating)\.webp/);
