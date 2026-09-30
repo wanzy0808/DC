@@ -44,14 +44,14 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.match(page, /ref=\{sortMenuRef\}/);
   assert.match(page, /setFilterOpen\(false\)/);
   assert.match(page, /setSortOpen\(false\)/);
-  assert.match(page, /max-w-\[900px\] flex-wrap items-center justify-center gap-x-5/);
-  assert.doesNotMatch(page, /max-w-\[900px\][\s\S]{0,180}border border-primary\/18 bg-background\/78/);
+  assert.match(page, /max-w-\[940px\] flex-wrap items-center justify-center gap-x-6/);
+  assert.doesNotMatch(page, /max-w-\[940px\][\s\S]{0,180}border border-primary\/18 bg-background\/78/);
   assert.match(page, /max-w-\[1180px\]/);
   assert.match(page, /w-\[clamp\(166px,23vw,280px\)\]/);
-  assert.match(page, /lg:absolute lg:left-0 lg:top-4/);
-  assert.match(page, /lg:absolute lg:bottom-4 lg:right-0/);
-  assert.match(page, /text-sm font-semibold/);
-  assert.match(page, /text-foreground\/75/);
+  assert.match(page, /lg:absolute lg:-left-10 lg:top-2/);
+  assert.match(page, /lg:absolute lg:-bottom-1 lg:-right-10/);
+  assert.match(page, /text-\[15px\] font-bold/);
+  assert.match(page, /text-foreground\/82/);
 });
 
 test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
