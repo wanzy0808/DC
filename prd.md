@@ -1956,3 +1956,12 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `2cffb67`, `8772653`.
 
 **Validation:** source audit complete; CI observed separately.
+
+## 30 September 2026 — Classic Pearl editability pass
+
+- Classic Pearl menjadi template ketujuh dalam audit satu per satu. Isi Cover kini mempunyai satu target grup untuk menggeser dan menata komposisi utuh, sementara bingkai ganda, oval, crest, ornamen, teks visual, nama, dan tanggal tetap target granular.
+- Nama dan tanggal tetap berasal dari data acara; grup tidak dapat dihapus sebagai dekorasi. Amplop dan section konten tetap memakai renderer bersama dan fungsi terlindungi.
+
+**Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
+
+**Validation:** tes target native/template 40/40 dan regresi penuh 237/237, ESLint file terdampak, TypeScript, serta build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.

@@ -177,6 +177,24 @@ test("complex template compositions expose selectable group targets without repl
   assert.equal(nativeVisualUsesSystemContent("object:cover:copy-group"), false);
 });
 
+test("Classic Pearl cover keeps a selectable composition and granular protected content", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const classic = scenes.split('if (theme === "classic-pearl") return <section')[1]
+    ?.split('if (theme === "golden-art-deco") return <section')[0];
+  assert.ok(classic, "Classic Pearl cover branch must exist");
+  for (const object of [
+    "content-group", "border-outer", "border-inner", "kicker", "oval-frame",
+    "oval-inner", "gem", "ornament", "date", "closing-copy",
+  ]) assert.ok(classic.includes(`object:cover:${object}`), `missing Classic Pearl ${object}`);
+  assert.match(classic, /<Names[^>]*>\{names\}<\/Names>/);
+  assert.equal(nativeVisualSelector("object:cover:content-group"),
+    '[data-studio-native-object="object:cover:content-group"]');
+  assert.equal(nativeVisualCapabilities("object:cover:content-group").typography, false);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
+  assert.equal(nativeVisualCanHide("object:cover:border-outer"), true);
+  assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
+});
+
 test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");

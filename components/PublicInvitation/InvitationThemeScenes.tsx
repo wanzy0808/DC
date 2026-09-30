@@ -230,15 +230,17 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "classic-pearl") return <section className={`${center} bg-[var(--inv-scene-bg,#f8f6ef)] text-[color:var(--inv-scene-ink,#37352f)]`} data-invitation-section={stage}>
     <span aria-hidden data-studio-native-object="object:cover:border-outer" className="absolute inset-5 border border-[var(--inv-scene-accent,#b4a88c)]" />
     <span aria-hidden data-studio-native-object="object:cover:border-inner" className="absolute inset-8 border border-[var(--inv-scene-accent,#d8ceba)]" />
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-14 text-[color:var(--inv-scene-text,#8a7c62)]`}>Classic Pearl</p>
-    <div data-studio-native-object="object:cover:oval-frame" className="relative mt-10 flex h-[280px] w-[min(66vw,265px)] items-center justify-center rounded-full border border-[var(--inv-scene-accent,#baa989)]">
-      <div aria-hidden data-studio-native-object="object:cover:oval-inner" className="absolute inset-3 rounded-full border border-[var(--inv-scene-accent,#c9b99b)]" />
-      <Gem aria-hidden data-studio-native-object="object:cover:gem" className="absolute -top-5 h-10 w-10 bg-[var(--inv-scene-soft,#f8f6ef)] p-2 text-[color:var(--inv-scene-text,#917f5c)]" strokeWidth={0.8} />
-      <Names className="z-10 px-5 text-3xl">{names}</Names>
+    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
+      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-14 text-[color:var(--inv-scene-text,#8a7c62)]`}>Classic Pearl</p>
+      <div data-studio-native-object="object:cover:oval-frame" className="relative mt-10 flex h-[280px] w-[min(66vw,265px)] items-center justify-center rounded-full border border-[var(--inv-scene-accent,#baa989)]">
+        <div aria-hidden data-studio-native-object="object:cover:oval-inner" className="absolute inset-3 rounded-full border border-[var(--inv-scene-accent,#c9b99b)]" />
+        <Gem aria-hidden data-studio-native-object="object:cover:gem" className="absolute -top-5 h-10 w-10 bg-[var(--inv-scene-soft,#f8f6ef)] p-2 text-[color:var(--inv-scene-text,#917f5c)]" strokeWidth={0.8} />
+        <Names className="z-10 px-5 text-3xl">{names}</Names>
+      </div>
+      <Lines studioObject="object:cover:ornament" className="relative mt-10"><Gem className="h-4 w-4"/></Lines>
+      <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs uppercase tracking-[.22em]">{date}</p>
+      <p data-studio-native-object="object:cover:closing-copy" className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">{tr("WITH LOVE AND GRATITUDE")}</p>
     </div>
-    <Lines studioObject="object:cover:ornament" className="relative mt-10"><Gem className="h-4 w-4"/></Lines>
-    <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs uppercase tracking-[.22em]">{date}</p>
-    <p data-studio-native-object="object:cover:closing-copy" className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">{tr("WITH LOVE AND GRATITUDE")}</p>
   </section>;
 
   if (theme === "golden-art-deco") return <section className={`${center} bg-[var(--inv-scene-bg,#191b17)] text-[color:var(--inv-scene-ink,#e4c888)]`} data-invitation-section={stage}>
