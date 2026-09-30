@@ -1027,3 +1027,19 @@ test("Studio canvas click selection is resolved outside the large designer compo
   assert.match(canvasSelectionResolver, /data-studio-photo-crop/);
   assert.match(canvasSelectionResolver, /data-studio-design-object/);
 });
+
+test("unpaid Studio preview branding stays below the canvas and never enters public template renderers", () => {
+  const styles = read("components/InvitationStudio/studio.css");
+  const editor = read("components/InvitationStudio/InvitationEditorPage.tsx");
+  const publicRenderer = read("components/PublicInvitation/PublicInvitationRenderer.tsx");
+  const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
+  const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");
+  assert.match(editor, /previewOnly \? "undara-unlicensed-studio" : ""/);
+  assert.match(styles, /\.undara-unlicensed-studio \.undara-studio-preview-viewport::after/);
+  assert.match(styles, /content: "Undara · Copyright"/);
+  assert.doesNotMatch(styles, /PREVIEW • UNDARA/);
+  assert.doesNotMatch(styles, /rotate\(-24deg\)/);
+  for (const source of [publicRenderer, universal, rose]) {
+    assert.doesNotMatch(source, /Undara · Copyright|PREVIEW • UNDARA/);
+  }
+});
