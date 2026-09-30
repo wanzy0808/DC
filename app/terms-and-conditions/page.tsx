@@ -227,7 +227,7 @@ export default function TermsAndConditionsPage() {
           className="undara-marketing-scroll relative z-20 focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <article className="undara-marketing-content flex flex-col gap-16 pb-16 pt-8 md:gap-20 md:pb-24 md:pt-12">
-            <header className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(56dvh,590px)] items-end gap-10 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
+            <header className="undara-marketing-section grid min-h-[min(56dvh,590px)] items-end gap-10 pb-14 lg:grid-cols-[1.06fr_0.94fr] lg:gap-20">
               <div>
                 <p className="undara-marketing-kicker">{en ? "Legal / Terms" : "Legal / Ketentuan"}</p>
                 <h1 className="mt-5 max-w-[13ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3.2rem,6vw,6.5rem)] leading-[0.96] tracking-[-0.035em] text-primary">

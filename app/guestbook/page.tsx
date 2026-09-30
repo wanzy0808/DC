@@ -49,7 +49,7 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <div className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-left">
+              <div className="undara-editorial-offset-left">
                 <FeatureSection />
               </div>
             </ScrollReveal>
@@ -61,7 +61,7 @@ export default function GuestbookPage() {
             </ScrollReveal>
 
             <ScrollReveal scrollRoot={scrollRoot}>
-              <div className="undara-editorial-offset-left undara-editorial-ambient undara-editorial-ambient-right">
+              <div className="undara-editorial-offset-left">
               <PackageShowcase
                 eyebrow={en ? "Digital Guestbook" : "Buku Tamu Digital"}
                 title={

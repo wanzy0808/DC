@@ -1466,7 +1466,7 @@ Guestbook marketing juga harus event-oriented.
 
 ### 16.0a Kontinuitas background dan tipografi marketing — 29 September 2026
 
-Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`, serta halaman publik lain yang memakai atmosfer bersama) menggunakan dua aset hutan khusus Light/Dark dari `EventPlannerBotanicalAtmosphere`. Detail hutan lembut berada di tepi; area tengah lapang dan rendah kontras agar heading, teks, CTA, dan kartu mudah dibaca. Aset memudar sebelum header/footer dan tetap terlihat di dalam mainframe sekaligus menyambung ke sisi luarnya. Jangan menumpuk radial glow, semak, daun jatuh, atau ranting panjang pada latar ini. Hanya panel `main` yang menggulir; bingkai tetap jelas. Homepage tetap memakai woodland khusus yang sudah disetujui.
+Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`, serta halaman publik lain yang memakai atmosfer bersama) menggunakan dua aset hutan khusus Light/Dark dari `EventPlannerBotanicalAtmosphere`. Detail hutan lembut berada di tepi; area tengah lapang dan rendah kontras agar heading, teks, CTA, dan kartu mudah dibaca. Aset memudar sebelum header/footer dan tetap terlihat di dalam mainframe sekaligus menyambung ke sisi luarnya. Jangan menumpuk radial glow, semak, daun jatuh, atau ranting panjang pada latar ini maupun pada section halaman marketing; warna Champagne tetap boleh dipakai pada teks/kontrol sesuai tema. Hanya panel `main` yang menggulir; bingkai tetap jelas. Homepage tetap memakai woodland khusus yang sudah disetujui.
 
 Katalog dan seluruh chrome halaman marketing memakai shared typography tokens aktif; karya di dalam preview template tetap memakai font tema masing-masing. Copy produk, email, unduhan QR, dan dokumen baru memakai nama Undara. Nomor invoice lama serta ID teknis `dc-*` tetap dibaca untuk kompatibilitas; invoice baru memakai awalan `UND-`.
 
@@ -1837,3 +1837,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `public/assets/marketing/atmosphere/forest-light.webp`, `forest-dark.webp`, `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `components/Layout/PublicMarketingAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `prd.md` §1.2/§16.0a dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Pemeriksaan visual browser Light/Dark belum tersedia; tidak ada migrasi database.
+
+
+## 30 September 2026 — Hapus glow berwarna pada section marketing
+
+**Permintaan owner:** sejumlah halaman masih menunjukkan semburat glow kuning atau warna lain setelah aset hutan tenang dipasang.
+
+**Implementasi:** hapus pseudo-element glow radial dari helper editorial bersama serta lima lapisan glow per-section pada Event Planner, Undangan Fisik, dan Bantuan. Kelas helper glow yang tidak lagi dipakai dibersihkan dari halaman Undangan Digital, Guestbook, Undangan Fisik, Bantuan, Katalog, Privasi, dan Ketentuan. Overlay gelap di atas foto hero tetap untuk keterbacaan teks. Landing/Pintu dan aset hutan Light/Dark tetap.
+
+**Area/commit:** `app/globals.css`, halaman marketing yang memakai helper editorial, `app/event-planner/page.tsx`, `app/undangan-fisik/page.tsx`, `app/help/page.tsx`, `prd.md` §16.0a/Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 227 tes regresi, `git diff --check`, dan build produksi lulus. Pemeriksaan visual browser belum tersedia; tidak ada migrasi database.

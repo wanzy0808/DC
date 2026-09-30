@@ -91,11 +91,6 @@ export default function EventPlannerPage() {
           <div className="undara-marketing-content flex w-full max-w-none flex-col gap-24 py-8 md:gap-28 md:py-12">
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="undara-marketing-section relative mx-auto grid min-h-[calc(100dvh-170px)] w-full max-w-[1560px] items-center gap-10 overflow-hidden pb-14 lg:grid-cols-[0.92fr_1.08fr] lg:gap-16 lg:pb-16">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -left-[8%] top-[2%] h-[62%] w-[48%] rounded-full bg-[radial-gradient(ellipse,rgba(112,59,59,0.10),transparent_68%)] blur-3xl dark:bg-[radial-gradient(ellipse,rgba(214,179,140,0.08),transparent_68%)]"
-                />
-
                 <PlannerNote
                   src="/assets/note1.webp"
                   className="-right-[5%] top-[3%] h-[52%] w-[40%] opacity-[0.12] lg:opacity-[0.16] dark:opacity-[0.08]"
@@ -337,11 +332,6 @@ export default function EventPlannerPage() {
 
             <ScrollReveal scrollRoot={scrollRoot}>
               <section className="relative mx-auto mb-4 w-full max-w-[1500px] overflow-hidden py-14 md:py-20">
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-[8%] top-1/2 h-[34rem] w-[34rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgba(112,59,59,0.11),transparent_68%)] blur-2xl dark:bg-[radial-gradient(circle,rgba(214,179,140,0.08),transparent_68%)]"
-                />
-
                 <div className="relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end lg:gap-14">
                   <div>
                     <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">

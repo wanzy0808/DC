@@ -190,7 +190,7 @@ export default function TemplateDesignPage() {
           className="undara-marketing-scroll focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-primary"
         >
           <section className="undara-marketing-content pb-16 pt-8 font-[family-name:var(--font-undara-body)] md:pb-24 md:pt-12">
-        <div className="undara-marketing-section undara-editorial-ambient undara-editorial-ambient-left grid min-h-[min(64dvh,680px)] items-end gap-10 pb-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
+        <div className="undara-marketing-section grid min-h-[min(64dvh,680px)] items-end gap-10 pb-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-20">
           <div className="max-w-4xl">
             <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.22em] text-primary md:text-xs">{copy.eyebrow}</p>
             <h1 className="mt-5 max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-[clamp(3rem,6vw,6.6rem)] font-normal leading-[0.97] tracking-[-0.035em] text-primary">{copy.title}</h1>
