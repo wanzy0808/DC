@@ -2132,3 +2132,15 @@ The selector now loops continuously in both directions. Moving forward from the 
 
 **Validation:** source guard confirms there is no outer keyed button wrapping `TemplateCardCanvas`; the interactive overlay button is a sibling of the rendered preview.
 
+### 30 September 2026 — Roomier template selector composition
+
+**Owner request:** keep the current `/template-design` direction, but use the remaining empty space better: enlarge the phone selector, increase breathing room between the center wheel and left/right copy, and open up the vertical spacing around the compact controls and active-template details.
+
+**Implementation:** the selection room now uses wider desktop side rails and larger inter-column gaps, with additional left/right padding on supporting copy. The center wheel stage expands to 1040px with a taller viewport and larger active phone (up to 252px wide), wider card spacing, slightly stronger depth separation, and a larger perspective field. The Search / Filter / Sort bar remains compact but gets more breathing room above the wheel, while active template metadata moves lower with more separation from the device stage. Right-side explanatory copy is slightly larger and more relaxed. Mobile sizing remains bounded by responsive clamps.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `2819f404987d334b30c4f856f57487a8310a8717`, `bca61f450722204262c92e51d76d73856390fe51`.
+
+**Validation:** source guards confirm the larger wheel stage, larger phone clamp, wider desktop gaps, expanded side-copy measure and updated compact-control spacing.
+
