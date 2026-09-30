@@ -571,7 +571,7 @@ export default function TemplateDesignPage() {
             <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-primary/10 p-2 sm:p-4">
               <div className="mx-auto w-full max-w-[430px] overflow-hidden rounded-[26px] border-[5px] border-[#30272d] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
                 {selected.ready ? (
-                  <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...sections, envelope: false }} />
+                  <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...defaultInvitationSections, envelope: false }} />
                 ) : (
                   <div className="bg-[#fff9f7]"><img src={selected.previewImage} alt={selected.name} className="h-auto w-full object-contain" /></div>
                 )}
