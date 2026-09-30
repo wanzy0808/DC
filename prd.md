@@ -1795,7 +1795,7 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 
 ## 30 September 2026 — Restore shared marketing audio coverage
 
-- Shared marketing ambience dikembalikan ke track canonical `/assets/audio/a-himitsu-fragile.mp3`.
+- Shared marketing ambience memakai track terbaru yang dipilih owner: `/assets/audio/epic-spectrum-forgiveness.mp3`.
 - Semua framed marketing routes sekarang juga terdaftar sebagai marketing audio routes, termasuk `/privacy-policy` dan `/terms-and-conditions`.
 - Footer/audio controls tetap memakai satu `MarketingAudioProvider` global; tidak dibuat player terpisah per page.
 - Regression test menjaga track canonical dan memastikan setiap framed marketing route juga mengizinkan audio.
@@ -1816,3 +1816,13 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `prd.md` §16.0a dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. CSS keluaran build memuat kedua aset hutan. Browser lokal memblokir URL localhost, sehingga visual Light/Dark belum terverifikasi; tidak ada migrasi database.
+
+
+## 30 September 2026 — Correct marketing track rollback
+
+- Koreksi rollback sebelumnya: track marketing terbaru yang sudah dipilih owner adalah **Epic Spectrum – Forgiveness**, bukan A Himitsu – Fragile.
+- `MarketingAudioProvider` dikembalikan ke `/assets/audio/epic-spectrum-forgiveness.mp3`.
+- Regression test diperbarui agar tidak mengunci track lama lagi.
+- Fix route coverage audio dari langkah sebelumnya tetap dipertahankan.
+
+**Area:** `components/Layout/MarketingAudio.tsx`, `tests/marketing-polish.test.mjs`, `prd.md`.
