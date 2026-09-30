@@ -2070,3 +2070,17 @@ All event data, Personal Invitation recipient line, photo slots/crop controls, s
 
 **Validation:** source guard confirms the public catalog uses the shared phone Cover renderer and no longer renders the old per-card Eye/CTA interaction. CI/build status observed separately; browser visual QA is not claimed until rendered.
 
+### 30 September 2026 — DDR-style template selection wheel
+
+**Owner request:** change the `/template-design` phone listing from a flat grid into a wheel-like selector inspired by rhythm-game song selection, with the focused card in the middle and the template explanation below it.
+
+**Implementation:** the public template catalog now renders the same real phone Cover/Hero previews in a centered 3D selection wheel. The active phone is largest and front-facing; neighboring phones step outward with reduced scale/opacity, subtle Y offset and opposing Y-axis rotation. Mouse/trackpad wheel advances the focused template while the pointer is over the selector, but releases normal page scrolling at the first/last item. Touch users can swipe horizontally; Left/Right keyboard arrows also change selection. Clicking a side phone brings it to center; clicking the centered phone opens the existing Preview dialog. Only the active template's index/category, name, localized description and a short interaction hint appear below the wheel. No repeated per-card CTA buttons were reintroduced.
+
+The wheel uses a bounded 240ms transform/opacity/filter transition with a strong ease-out curve and disables transition motion under `prefers-reduced-motion`. Search, photo/category filters, sorting, Preview dialog and Studio handoff remain unchanged.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `83066317ab8d6b89f86155c23993116d1f5d3b39`, `478a653b8d66c21120dea2a1d7d62f877d17f2e3`, `db1c6da518b43b78e911ede292f5939b3ae1e10f`, `35af5d5f2d830462f94e48bf8d57707b3015e4b5`, `b6987431182622d58c72590b1aa59b57533e3c83`, `1febbbf2522d8d915e0f4dadeef06b1363ad5f0c`.
+
+**Validation:** source guards confirm the wheel markers, 3D transform, non-passive wheel handler, touch selection, center-only Preview action, active description and shared phone renderer. The test file has been checked to contain no literal escaped newline artifacts. CI/build and rendered desktop/mobile browser QA are not claimed until directly observed.
+
