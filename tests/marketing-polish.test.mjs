@@ -138,7 +138,7 @@ test("marketing audio stays enabled across every framed route", () => {
   const paths = read("lib/marketing-paths.ts");
   const audio = read("components/Layout/MarketingAudio.tsx");
 
-  assert.match(audio, /\/assets\/audio\/a-himitsu-fragile\.mp3/);
+  assert.match(audio, /\/assets\/audio\/epic-spectrum-forgiveness\.mp3/);
   for (const route of [
     "/",
     "/d-invitation",
