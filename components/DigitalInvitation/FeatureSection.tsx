@@ -43,21 +43,21 @@ export default function FeatureSection() {
           icon: Palette,
           title: "Mulai dari arah visual, bukan halaman kosong.",
           description:
-            "Pilih tema undangan yang sudah siap, lalu bentuk foto, nuansa, isi, musik, venue, dan detail acara agar terasa benar-benar milik perayaanmu.",
-          note: "Template → arah personal",
+            "Pilih tema undangan yang sudah siap, lalu sesuaikan foto, nuansa, isi, musik, lokasi, dan detail acara agar terasa milik perayaanmu.",
+          note: "Tema → sentuhan personal",
         },
         {
           icon: Sparkles,
           title: "Rapikan proses kreatif dalam satu ruang yang tenang.",
           description:
-            "Isi dan desain undangan tetap berada di Studio yang sama, sehingga setiap acara bisa dibentuk sendiri tanpa membuat prosesnya terasa seperti software desain yang rumit.",
-          note: "Studio → draft → publish",
+            "Isi dan desain undangan tetap berada di Studio yang sama, sehingga setiap acara bisa dibentuk sendiri tanpa proses yang rumit.",
+          note: "Studio → rancangan → terbit",
         },
         {
           icon: Users,
           title: "Biarkan undangan berlanjut sampai ke alur tamu.",
           description:
-            "RSVP, informasi plus one, dan manajemen tamu tetap terikat pada acara yang sama, jadi undangan tidak berhenti saat tamu selesai membacanya.",
+            "RSVP, informasi tamu tambahan, dan manajemen tamu tetap terikat pada acara yang sama, jadi undangan tidak berhenti saat tamu selesai membacanya.",
           note: "Undangan → RSVP → tamu",
         },
       ];
