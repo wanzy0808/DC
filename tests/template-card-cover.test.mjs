@@ -49,7 +49,7 @@ test("template catalog keeps floating search filter sort controls and gives the 
   assert.match(page, /max-w-\[1220px\]/);
   assert.match(page, /w-\[clamp\(166px,22vw,250px\)\]/);
   assert.match(page, /lg:absolute lg:-left-24 lg:top-14 lg:flex lg:h-\[16rem\].*lg:-translate-x-\[5cm\]/);
-  assert.match(page, /lg:right-\[-9rem\] lg:top-\[66%\].*lg:flex lg:h-\[16rem\].*lg:translate-x-\[5cm\]/);
+  assert.match(page, /lg:right-\[-9rem\] lg:top-\[66%\].*lg:flex lg:h-\[15rem\].*lg:translate-x-\[5cm\]/);
   assert.match(page, /lg:w-\[33rem\]/);
   assert.match(page, /text-\[15px\] font-bold/);
   assert.match(page, /text-foreground\/82/);
