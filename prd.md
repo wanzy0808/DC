@@ -2054,7 +2054,7 @@ All event data, Personal Invitation recipient line, photo slots/crop controls, s
 
 **Area:** `components/PublicInvitation/RomanticRoseTemplate.tsx`.
 
-**Commit:** `a55a2487303add4adc5d8f7a94b99c14b03b86c2`.
+**Commits:** `a55a2487303add4adc5d8f7a94b99c14b03b86c2`, `20d274677d7cb897b4a937bad60ee96434ca404f`.
 
 **Validation:** source-level redesign completed; CI/build status observed separately. Browser desktop/mobile visual QA is not claimed until an actual rendered preview is inspected.
 
