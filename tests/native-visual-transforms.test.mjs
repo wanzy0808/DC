@@ -503,3 +503,17 @@ test("Botanical Ivory keeps its leaf ornament directly editable while shared gro
   assert.equal(nativeVisualCapabilities("object:greeting:heading-group").typography, false);
   assert.equal(nativeVisualCapabilities("object:identity:personOne-group").typography, false);
 });
+
+test("Eternal Blossom envelope and cover keep granular Studio targets", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  assert.match(scenes, /object:envelope:flower/);
+  assert.match(scenes, /object:envelope:address/);
+  assert.match(scenes, /object:cover:flower-left/);
+  assert.match(scenes, /object:cover:flower-right/);
+  assert.match(scenes, /object:cover:photo-frame/);
+  assert.match(scenes, /object:cover:photo-window/);
+  assert.match(scenes, /object:cover:ornament/);
+  assert.equal(nativeVisualCanHide("object:cover:flower-left"), true);
+  assert.equal(nativeVisualCanHide("object:cover:flower-right"), true);
+  assert.equal(nativeVisualUsesSystemContent("object:envelope:address"), true);
+});
