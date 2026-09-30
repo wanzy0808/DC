@@ -2190,3 +2190,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `e0f354f5d21438447733b78e8e3b7c04150d0251`, `2ca58f6abc58510d80739bb2ba715f016222cd9d`.
 
+### 30 September 2026 — Outer-corner copy placement for template selector
+
+**Owner request:** move the upper-left title slightly lower beneath the logo and push the supporting copy farther right and lower so the center-top and center-bottom areas feel more open around the phone wheel.
+
+**Implementation:** the desktop title remains on the left edge but now starts lower (`top-8` to `top-12` across large breakpoints), while the supporting copy moves farther outward and down (`right: -7rem` to `-11rem`, around `top: 71%`) with a wider text measure. Search / Filter / Sort, phone wheel sizing, and active-template metadata remain unchanged.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `96a9daff45cda031a4e87ef89ae51bffc86db750`, `433c3763a79bd34693ea4c272495d0fc323802e6`.
+
