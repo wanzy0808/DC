@@ -345,7 +345,7 @@ export default function RomanticRoseTemplate({
         <div className="mx-auto flex max-w-2xl flex-col">
           {renderSectionInstances("cover", (instanceId) => (
             <section data-invitation-section="cover" style={invitationSectionStyleCss(sectionStyles.cover)} className="relative min-h-[720px] overflow-hidden bg-[#4b2632] text-[#fff8f3]">
-                        <div data-invitation-photo-slot="cover" className="absolute inset-0">
+                        <div data-studio-native-object="object:cover:background-photo" data-invitation-photo-slot="cover" className="absolute inset-0">
                           <RosePhoto url={cover} alt="Foto sampul pasangan" cropStyle={photoCropStyle(assignment, "cover")} className="h-full w-full object-cover" />
                           {editPhoto("cover", "cover utama")}
                           {cropOverlay("cover")}
@@ -439,7 +439,7 @@ export default function RomanticRoseTemplate({
                           {gallery.length ? <div data-studio-native-object="object:gallery:grid" className="grid auto-rows-[78px] grid-cols-12 grid-flow-dense gap-3">
                             {gallery.map((photo, index) => (
                               <div key={photo.id} data-invitation-photo-slot="gallery" data-studio-photo-id={photo.id} className={index === 0 ? "col-span-7 row-span-5 overflow-hidden rounded-[18px]" : index % 3 === 1 ? "col-span-5 row-span-3 overflow-hidden rounded-[18px]" : index % 3 === 2 ? "col-span-5 row-span-4 overflow-hidden rounded-[18px]" : "col-span-7 row-span-3 overflow-hidden rounded-[18px]"}>
-                                <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className="h-full w-full object-cover transition-transform duration-700 ease-out [@media(hover:hover)_and_(pointer:fine)]:hover:scale-[1.035]" />
+                                <RosePhoto url={photo.url} alt={"Foto pasangan " + (index + 1)} className="h-full w-full object-cover transition-transform duration-700 ease-out hover:scale-[1.035]" />
                               </div>
                             ))}
                           </div> : <p data-studio-native-object="object:gallery:empty-copy" className="text-sm text-[#906978]">{tr("Belum ada foto galeri.")}</p>}
