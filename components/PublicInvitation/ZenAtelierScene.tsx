@@ -39,7 +39,7 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
         <div className="zen-jp-intro" data-studio-native-object="object:envelope:intro-group">
           <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
           <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">{language === "EN" ? tr("Sebuah undangan untuk orang istimewa") : <>Sebuah undangan<br />untuk orang istimewa</>}</p>
-          {recipientLine && <p data-personal-envelope-address className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4">{recipientLine}</p>}
+          {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4">{recipientLine}</p>}
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
         </div>
         <div className="zen-jp-paper-stage" aria-hidden="true" data-studio-native-object="object:envelope:paper-stage">
