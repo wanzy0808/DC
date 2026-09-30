@@ -1894,3 +1894,16 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `lib/partners/sales-summary.ts`, `app/api/partner/sales/route.ts`, `app/api/owner/analytics/route.ts`, `components/Partner/PartnerDashboard.tsx`, `components/Owner/OwnerBusinessInsights.tsx`, `tests/partner-sales-summary.test.mjs`, `prd.md` §8.2a/Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint, TypeScript, 231 tes regresi, `git diff --check`, dan build produksi lulus; data produksi dan browser belum diverifikasi. Tidak ada migrasi database.
+
+## 30 September 2026 — Botanical Ivory editability pass
+
+- Botanical Ivory menjadi template kedua dalam audit satu-per-satu.
+- Shared generic renderer sekarang memberi selectable parent group pada heading block tiap section dan pada group host/person di Identity.
+- Ornament daun khas Botanical Ivory tetap child native object tersendiri sehingga dapat dipindah, ditransform, atau di-hide tanpa mengubah data section.
+- Perubahan shared ini sengaja hanya menambah Studio ownership dan tidak mengubah business logic, data, section order, atau art direction template generik lain.
+
+**Area:** `components/PublicInvitation/UniversalInvitationTemplate.tsx`, `tests/native-visual-transforms.test.mjs`.
+
+**Commits:** `7ec513e`, `6b9299a`.
+
+**Validation:** source audit complete; CI observed separately.
