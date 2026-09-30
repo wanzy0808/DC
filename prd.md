@@ -2043,3 +2043,18 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commit:** the commit containing this Appendix entry (`feat(templates): add Serein editorial invitation`).
 
 **Observed validation:** TypeScript pass; production Next build pass; regression suite 244/244 pass via `node --import tsx --test`; scoped ESLint no errors (one pre-existing unused `onMoveAssetLayer` warning in Universal renderer); diff whitespace pass; Impeccable detector returned no findings for Serein files. Browser preview server starts when explicitly bound to loopback, but local Playwright capture is blocked by the missing Chromium executable and unsuccessful browser download. Therefore responsive screenshots, Studio palette/font/save/reload and public envelope/lightbox/paid-RSVP QA are **not claimed PASS**. Generated reference images are art direction evidence, not website screenshots.
+
+### 30 September 2026 — Romantic Rose editorial redesign
+
+**Owner request:** redesign only the built-in `romantic-rose` invitation first, using the Undara design workflow/Library while preserving existing template rules, Studio editability and shared business engines.
+
+**Implementation:** Romantic Rose now uses a cohesive “rose editorial letter” art direction instead of alternating generic pink sections/cards. The envelope is a burgundy letter with ivory stationery and an R monogram seal; the Cover is full-bleed photography with editorial typography; Greeting, Couple, Event, Date & Time, Gallery, Countdown, Location, RSVP/Wishes wrappers, Gift, Closing and Footer use varied but coherent asymmetric compositions, stronger typography hierarchy, restrained borders and a burgundy–dusty rose–ivory–champagne palette. Gallery uses a denser editorial mosaic, countdown/date information no longer relies on repeated rounded cards, and primary actions have bounded press/focus behavior with reduced-motion handling.
+
+All event data, Personal Invitation recipient line, photo slots/crop controls, shared RSVP/Wishes/Gift/Maps/Music engines, 13 semantic sections, section instances, native Studio targets and asset overlays remain in the existing renderer contract. No database/API change and no other invitation theme was redesigned.
+
+**Area:** `components/PublicInvitation/RomanticRoseTemplate.tsx`.
+
+**Commit:** `a55a2487303add4adc5d8f7a94b99c14b03b86c2`.
+
+**Validation:** source-level redesign completed; CI/build status observed separately. Browser desktop/mobile visual QA is not claimed until an actual rendered preview is inspected.
+
