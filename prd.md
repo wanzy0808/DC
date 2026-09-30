@@ -1672,3 +1672,18 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `9867802`, `b93403c`, `b8053bd`.
 
 **Validation:** upstream skill paths diverifikasi terhadap repositori publik resmi; CI repository diperiksa terpisah.
+
+
+## 30 September 2026 — Event Planner service-section hierarchy
+
+- Section layanan Event Planner diperjelas agar tidak terasa seperti dua kolom copy dengan bobot visual yang sama.
+- `Apa yang bisa kamu tanyakan?` / `What can you ask about?` sekarang menjadi heading utama besar dan tebal.
+- `Mulai dari layanan yang paling mendekati kebutuhan acaramu.` menjadi supporting heading kuat di kolom kanan, diikuti body explanation yang lebih ringan.
+- Judul tiap layanan dinaikkan skala dan bobotnya agar alur baca kiri/kanan lebih mudah dipindai tanpa menambah kartu/dekorasi baru.
+- Scope hanya hierarchy dan typography pada section tersebut; data package, CTA WhatsApp, routing, dan behavior tidak berubah.
+
+**Area:** `app/event-planner/page.tsx`.
+
+**Commit:** `d8627b8`.
+
+**Validation:** source inspection complete; CI/build observed separately.
