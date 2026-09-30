@@ -2052,9 +2052,9 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 
 All event data, Personal Invitation recipient line, photo slots/crop controls, shared RSVP/Wishes/Gift/Maps/Music engines, 13 semantic sections, section instances, native Studio targets and asset overlays remain in the existing renderer contract. No database/API change and no other invitation theme was redesigned.
 
-**Area:** `components/PublicInvitation/RomanticRoseTemplate.tsx`.
+**Area:** `components/PublicInvitation/RomanticRoseTemplate.tsx`, `components/PublicInvitation/OurStorySection.tsx`.
 
-**Commits:** `a55a2487303add4adc5d8f7a94b99c14b03b86c2`, `20d274677d7cb897b4a937bad60ee96434ca404f`.
+**Commits:** `a55a2487303add4adc5d8f7a94b99c14b03b86c2`, `20d274677d7cb897b4a937bad60ee96434ca404f`, `817cc6ca0831a708d6eb9712308d67e32ae626a1`.
 
 **Validation:** source-level redesign completed; CI/build status observed separately. Browser desktop/mobile visual QA is not claimed until an actual rendered preview is inspected.
 
