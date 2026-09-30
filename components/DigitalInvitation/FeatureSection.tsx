@@ -69,7 +69,7 @@ export default function FeatureSection() {
           <p className="undara-marketing-kicker">
             {en ? "A complete invitation flow" : "Alur Undangan yang Utuh"}
           </p>
-          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.02] text-primary md:text-5xl lg:text-6xl">
+          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.02] text-primary md:text-5xl lg:text-6xl">
             {en
               ? "Beautiful first. Useful all the way through."
               : "Cantik saat dibuka. Berguna sampai acara berjalan."}
@@ -97,7 +97,7 @@ export default function FeatureSection() {
                 <p className="font-[family-name:var(--font-undara-mono)] text-[9px] uppercase tracking-[0.16em] text-muted-foreground">
                   {note}
                 </p>
-                <h3 className="mt-4 max-w-[21ch] font-[family-name:var(--font-undara-heading)] text-2xl font-normal leading-[1.08] text-primary md:text-3xl lg:text-4xl">
+                <h3 className="mt-4 max-w-[21ch] font-[family-name:var(--font-undara-heading)] text-2xl font-bold leading-[1.08] text-primary md:text-3xl lg:text-4xl">
                   {title}
                 </h3>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
