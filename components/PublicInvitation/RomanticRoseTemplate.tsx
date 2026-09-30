@@ -89,7 +89,7 @@ function readableDate(value: Date | string, timezone: string, language: "ID" | "
 function RoseHeading({ section, eyebrow, children, studioElement, style }: { section: InvitationSectionKey; eyebrow: string; children: React.ReactNode; studioElement?: string; style?: React.CSSProperties }) {
   const language = useInvitationLanguage();
   return (
-    <div className="mb-7 text-center">
+    <div data-studio-native-object={`object:${section}:heading-group`} className="mb-7 text-center">
       <p data-studio-native-object={`object:${section}:kicker`} className="mb-3 text-[10px] uppercase tracking-[0.32em] text-[#ad6b7e]">{invitationText(language, eyebrow)}</p>
       <h2 data-studio-native-heading="" data-studio-rsvp-element={studioElement} style={style} className="font-[family-name:var(--font-undara-heading)] text-2xl leading-snug text-[#613044] sm:text-3xl">{children}</h2>
       <span data-studio-native-object={`object:${section}:divider`} className="mx-auto mt-4 block h-px w-16 bg-[#d8a7b3]" />
