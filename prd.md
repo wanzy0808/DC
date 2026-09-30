@@ -1656,3 +1656,19 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area:** `prd.md`.
 
 **Validation:** documentation/source consistency review; tidak ada perubahan runtime pada langkah ini.
+
+
+## 30 September 2026 — Design skill orchestration & dark woodland lanterns
+
+- Dark Mode woodland boleh memiliki lampion kecil yang jarang dan redup di kedalaman hutan; treatment bersifat background-only dan tidak boleh berubah menjadi festival/string-light visual.
+- Repo menambahkan `.agents/skills/undara-design/SKILL.md` sebagai orchestrator lokal untuk design work.
+- `AGENTS.md` sekarang mewajibkan design task mengecek global/installed skills dan Library/shared resources sebelum membuat sistem baru.
+- Stack desain yang dipin: GPT Taste (`gpt-taste`), Emil Design Engineering + animation skills, dan Impeccable.
+- Jika skill global tidak diekspos runtime, agent wajib membaca upstream `SKILL.md` yang dipin di orchestrator dan tidak boleh mengklaim skill tersebut dieksekusi.
+- Impeccable tidak dicopy parsial ke repo karena skill tersebut bergantung pada reference/scripts lain; repo menyimpan orchestration + upstream path, sementara instalasi global lengkap tetap menjadi preferred runtime source.
+
+**Area:** `prd.md`, `AGENTS.md`, `.agents/skills/undara-design/SKILL.md`.
+
+**Commits:** `9867802`, `b93403c`, `b8053bd`.
+
+**Validation:** upstream skill paths diverifikasi terhadap repositori publik resmi; CI repository diperiksa terpisah.
