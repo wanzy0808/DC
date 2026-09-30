@@ -2264,3 +2264,13 @@ Mobile retains normal document flow for the title and controls, while desktop us
 
 **Commits:** `044857f1ddd75995e0d8a5af3179036b1114a139`, `d73680cb7a90fada4ca949a68fe2bbdd1c08dff0`.
 
+### 30 September 2026 — Canvas-only template preview
+
+**Owner request:** simplify `/template-design` Preview so it shows only the invitation itself, remove the explanatory sidebar, and move the exit control into the preview canvas.
+
+**Implementation:** the Preview dialog no longer renders the left information/sidebar panel, section toggles, or Studio CTA. The invitation canvas now occupies the full dialog and is slightly wider (up to 430px). The close button is a floating circular control inside the canvas area at the upper-right. Preview still starts at Cover by forcing `envelope: false` on the default invitation sections, and backdrop click / Escape behavior remain.
+
+**Area:** `app/template-design/page.tsx`, `tests/template-card-cover.test.mjs`.
+
+**Commits:** `d4f0d119eedb576977a10570eacfdd274f095216`, `2b71e9634a25f603da10a2dfd90582275bfaeeae`, `0ca43eac1e0c655976d85b3db57fc94681bb2244`.
+
