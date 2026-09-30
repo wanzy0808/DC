@@ -34,8 +34,8 @@ test("public template catalog uses a looping phone wheel with centered preview a
 });
 
 test("template catalog keeps search filter and sort in one compact control bar", () => {
-  assert.match(page, /min-h-\[calc\(100dvh-170px\)\]/);
-  assert.match(page, /sm:max-w-\[230px\]/);
+  assert.match(page, /min-h-\[calc\(100dvh-145px\)\]/);
+  assert.match(page, /sm:max-w-\[250px\]/);
   assert.match(page, /ref=\{filterMenuRef\}/);
   assert.match(page, /<SlidersHorizontal/);
   assert.match(page, /\{copy\.photoType\}/);
@@ -45,6 +45,10 @@ test("template catalog keeps search filter and sort in one compact control bar",
   assert.match(page, /setFilterOpen\(false\)/);
   assert.match(page, /setSortOpen\(false\)/);
   assert.doesNotMatch(page, /mt-10 flex flex-wrap gap-2.*Filter penggunaan foto/s);
+  assert.match(page, /max-w-\[1040px\]/);
+  assert.match(page, /w-\[clamp\(154px,22vw,252px\)\]/);
+  assert.match(page, /xl:gap-16/);
+  assert.match(page, /max-w-\[32ch\] text-sm leading-7/);
 });
 
 test("template wheel trigger is a sibling overlay, not a button around live template markup", () => {
