@@ -8,10 +8,10 @@ export const plannerPackages = [
     descriptionEn:
       "For couples whose preparation is mostly underway and who need coordination support leading up to and during the event day.",
     features: [
-      "Finalisasi rundown & technical meeting",
-      "Koordinasi vendor, venue, keluarga & PIC",
+      "Finalisasi susunan acara dan rapat teknis",
+      "Koordinasi penyedia jasa, lokasi, keluarga, dan penanggung jawab",
       "Kebutuhan tim operasional hari acara",
-      "Alur tamu, cue acara & rencana cadangan",
+      "Alur tamu, petunjuk acara, dan rencana cadangan",
     ],
     featuresEn: [
       "Final rundown & technical meeting",
@@ -27,13 +27,13 @@ export const plannerPackages = [
     name: "Wedding Planner",
     nameEn: "Wedding Planner",
     description:
-      "Untuk pasangan yang ingin pendampingan lebih awal, mulai dari konsep, budget, vendor, timeline, sampai persiapan hari acara.",
+      "Untuk pasangan yang ingin pendampingan lebih awal, mulai dari konsep, anggaran, penyedia jasa, jadwal, sampai persiapan hari acara.",
     descriptionEn:
       "For couples who want support from an earlier stage, covering concept, budget, vendors, timeline, and event-day preparation.",
     features: [
-      "Konsep & prioritas budget",
-      "Shortlist serta koordinasi vendor",
-      "Master timeline & progress meeting",
+      "Konsep dan prioritas anggaran",
+      "Pilihan serta koordinasi penyedia jasa",
+      "Jadwal utama dan rapat perkembangan",
       "Persiapan eksekusi hari acara",
     ],
     featuresEn: [
@@ -50,13 +50,13 @@ export const plannerPackages = [
     name: "Silver / Golden Wedding",
     nameEn: "Silver / Golden Wedding",
     description:
-      "Untuk perayaan anniversary 25 atau 50 tahun yang membutuhkan konsep, koordinasi keluarga, vendor, dan susunan acara yang lebih terarah.",
+      "Untuk perayaan ulang tahun pernikahan ke-25 atau ke-50 yang membutuhkan konsep, koordinasi keluarga, penyedia jasa, dan susunan acara yang lebih terarah.",
     descriptionEn:
       "For 25th or 50th anniversary celebrations that need support with concept, family coordination, vendors, and event flow.",
     features: [
-      "Konsep anniversary & cerita keluarga",
-      "Renewal moment / ceremony flow",
-      "Dekorasi, entertainment & vendor",
+      "Konsep hari jadi dan cerita keluarga",
+      "Momen pembaruan janji dan alur prosesi",
+      "Dekorasi, hiburan, dan penyedia jasa",
       "Alur tamu lintas generasi",
     ],
     featuresEn: [
@@ -73,13 +73,13 @@ export const plannerPackages = [
     name: "Baby Shower",
     nameEn: "Baby Shower",
     description:
-      "Untuk baby shower yang membutuhkan bantuan menyusun tema, aktivitas, vendor, konsumsi, dan kebutuhan hari acara.",
+      "Untuk syukuran kelahiran yang membutuhkan bantuan menyusun tema, aktivitas, penyedia jasa, konsumsi, dan kebutuhan hari acara.",
     descriptionEn:
       "For baby showers that need support with theme, activities, vendors, catering, and event-day requirements.",
     features: [
-      "Konsep tema & styling",
-      "Rundown, games & aktivitas",
-      "Vendor, dekorasi & konsumsi",
+      "Konsep tema dan penataan",
+      "Susunan acara, permainan, dan aktivitas",
+      "Penyedia jasa, dekorasi, dan konsumsi",
       "Dokumentasi & kebutuhan hari acara",
     ],
     featuresEn: [
@@ -98,7 +98,7 @@ export const plannerFaq = [
     question: "Apa peran Undara untuk layanan Event Planner?",
     questionEn: "What is Undara's role for Event Planner services?",
     answer:
-      "Undara membantu menerima kebutuhan awal, merangkum informasi dasar acara, lalu menghubungkan kamu ke layanan Event Planner yang relevan. Detail scope, ketersediaan, penawaran, dan pelaksanaan dibahas setelah konsultasi.",
+      "Undara membantu menerima kebutuhan awal, merangkum informasi dasar acara, lalu menghubungkan kamu ke layanan perencana acara yang relevan. Cakupan pekerjaan, ketersediaan, penawaran, dan pelaksanaan dibahas setelah konsultasi.",
     answerEn:
       "Undara helps collect your initial requirements, summarize the basic event information, and connect you with a relevant Event Planner service. Scope, availability, proposal, and execution details are discussed after consultation.",
   },
@@ -114,7 +114,7 @@ export const plannerFaq = [
     question: "Siapa yang menangani pelaksanaan acaranya?",
     questionEn: "Who handles the event execution?",
     answer:
-      "Kebutuhanmu akan diteruskan ke penyedia layanan yang relevan. Pihak yang menangani acara, pembagian scope, dan detail kerja akan dikonfirmasi saat konsultasi.",
+      "Kebutuhanmu akan diteruskan ke penyedia layanan yang relevan. Pihak yang menangani acara, pembagian cakupan pekerjaan, dan detail kerja akan dikonfirmasi saat konsultasi.",
     answerEn:
       "Your requirements will be forwarded to a relevant service provider. The event team, division of scope, and working details will be confirmed during consultation.",
   },
@@ -122,7 +122,7 @@ export const plannerFaq = [
     question: "Apakah harga Event Planner sudah tetap?",
     questionEn: "Are Event Planner prices fixed?",
     answer:
-      "Tidak. Harga bergantung pada jenis acara, tanggal, venue, jumlah tamu, lokasi, kebutuhan tim, dan scope pekerjaan. Penawaran dibahas setelah kebutuhan awal diketahui.",
+      "Tidak. Harga bergantung pada jenis acara, tanggal, tempat, jumlah tamu, lokasi, kebutuhan tim, dan cakupan pekerjaan. Penawaran dibahas setelah kebutuhan awal diketahui.",
     answerEn:
       "No. Pricing depends on the event type, date, venue, guest count, location, team requirements, and scope. A proposal is discussed after the initial requirements are understood.",
   },
@@ -130,7 +130,7 @@ export const plannerFaq = [
     question: "Apakah bisa untuk acara di luar kota?",
     questionEn: "Can I ask about an out-of-town event?",
     answer:
-      "Bisa ditanyakan. Ketersediaan untuk luar kota akan dikonfirmasi berdasarkan tanggal, lokasi, kebutuhan logistik, dan scope acara.",
+      "Bisa ditanyakan. Ketersediaan untuk luar kota akan dikonfirmasi berdasarkan tanggal, lokasi, kebutuhan logistik, dan cakupan acara.",
     answerEn:
       "Yes. Out-of-town availability will be confirmed based on the date, location, logistics, and event scope.",
   },
@@ -152,21 +152,21 @@ export const plannerServices = [
     textEn: "Tell us the type of event and the date you are planning. It does not need to be complete yet.",
   },
   {
-    title: "Venue & Jumlah Tamu",
+    title: "Tempat & Jumlah Tamu",
     titleEn: "Venue & Guest Count",
-    text: "Kalau sudah ada, sertakan venue, kota, dan perkiraan jumlah tamu.",
+    text: "Kalau sudah ada, sertakan tempat, kota, dan perkiraan jumlah tamu.",
     textEn: "If available, include the venue, city, and estimated guest count.",
   },
   {
     title: "Kebutuhan yang Dicari",
     titleEn: "Support You Need",
-    text: "Sampaikan apakah kamu mencari planner sejak awal, organizer hari acara, atau bantuan untuk jenis perayaan tertentu.",
+    text: "Sampaikan apakah kamu membutuhkan perencanaan sejak awal, koordinasi hari acara, atau bantuan untuk jenis perayaan tertentu.",
     textEn: "Tell us whether you need early-stage planning, event-day organization, or support for a specific type of celebration.",
   },
   {
     title: "Kami Hubungkan",
     titleEn: "We Connect You",
-    text: "Setelah kebutuhan dasarnya jelas, Undara membantu menghubungkan kamu untuk pembahasan scope, ketersediaan, dan penawaran.",
+    text: "Setelah kebutuhan dasarnya jelas, Undara membantu menghubungkan kamu untuk pembahasan cakupan pekerjaan, ketersediaan, dan penawaran.",
     textEn: "Once the basics are clear, Undara helps connect you for a discussion about scope, availability, and proposal.",
   },
 ] as const;
