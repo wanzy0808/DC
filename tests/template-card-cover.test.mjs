@@ -70,23 +70,14 @@ test("template wheel trigger is a sibling overlay, not a button around live temp
   assert.doesNotMatch(page, /<button\s+key=\{template\.key\}[\s\S]*<TemplateCardCanvas/);
 });
 
-test("catalog popup starts at Cover without changing the original invitation opening", () => {
-  assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.sections, envelope: false \}\} \/>/);
+test("catalog popup is canvas-only and starts at Cover", () => {
+  assert.match(page, /<TemplateCanvas key=\{selected\.key\} templateKey=\{selected\.key\} designKey=\{selected\.designKey\} sections=\{\{ \.\.\.defaultInvitationSections, envelope: false \}\} \/>/);
+  assert.match(page, /className="absolute right-4 top-4 z-50 grid h-11 w-11/);
+  assert.doesNotMatch(page, /<aside className="shrink-0 border-b border-border/);
+  assert.doesNotMatch(page, /rememberTemplateSelection\(selected\.key\)/);
+  assert.doesNotMatch(page, /href=\{`\/studio\?template=/);
   assert.match(gallery, /sections = defaultInvitationSections,/);
   assert.doesNotMatch(gallery, /Pratinjau template|Memuat pratinjau/);
-});
-
-test("create invitation routes through auth-protected Studio and keeps the selected theme", () => {
-  const studio = readFileSync(new URL("../app/studio/page.tsx", import.meta.url), "utf8");
-  const entry = readFileSync(new URL("../components/InvitationStudio/StudioEntrySection.tsx", import.meta.url), "utf8");
-  const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
-  assert.match(page, /href=\{\`\/studio\?template=\$\{encodeURIComponent\(selected\.key\)\}\`\}/);
-  assert.match(studio, /if \(!user\) redirect\(\`\/login\?next=\$\{encodeURIComponent\(studioUrl\)\}\`\)/);
-  assert.match(studio, /selectedTemplate=\{selectedTemplate\}/);
-  assert.ok(entry.includes('selectedTemplate ? `&template='));
-  assert.match(designer, /const requestedTheme = params\.get\("template"\)/);
-  assert.match(designer, /const canonicalSavedState = JSON\.stringify\(\[makeInvitationDesignStateKey\(loadedDesign\)/);
-  assert.match(designer, /setSavedState\(canonicalSavedState\)/);
 });
 
 test("Studio can show and replay the envelope independently of Cover-only catalog popup", () => {
@@ -106,7 +97,6 @@ test("pending template survives login and event creation without an automatic da
   const events = readFileSync(new URL("../components/Dashboard/EventPanel.tsx", import.meta.url), "utf8");
   const designer = readFileSync(new URL("../components/InvitationStudio/InvitationDesigner.tsx", import.meta.url), "utf8");
 
-  assert.match(page, /rememberTemplateSelection\(selected\.key\)/);
   assert.match(intent, /MAX_AGE_MS = 7 \* 24 \* 60 \* 60 \* 1000/);
   assert.match(intent, /window\.localStorage\.setItem\(STORAGE_KEY/);
   assert.match(intent, /document\.cookie = `\$\{PENDING_TEMPLATE_COOKIE\}/);
