@@ -1,23 +1,16 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type TouchEvent as ReactTouchEvent } from "react";
-import Link from "next/link";
-import { ArrowRight, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import Navbar from "@/components/Layout/Navbar/Navbar";
 import PublicMarketingAtmosphere from "@/components/Layout/PublicMarketingAtmosphere";
 import MarketingFrameFooter from "@/components/Layout/MarketingFrameFooter";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { Button } from "@/components/ui/button";
 import {
   defaultInvitationSections,
-  type InvitationSectionKey,
-  type InvitationSections,
 } from "@/lib/templates/sections";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { TemplateCanvas, TemplateCardCanvas } from "@/components/Templates/TemplateGalleryCanvas";
-import { rememberTemplateSelection } from "@/lib/templates/template-intent";
-
-const optionalSectionKeys: InvitationSectionKey[] = ["rsvp", "wishes", "gift"];
 
 export default function TemplateDesignPage() {
   const { locale } = useLanguage();
@@ -101,7 +94,6 @@ export default function TemplateDesignPage() {
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
-  const [sections, setSections] = useState<InvitationSections>({ ...defaultInvitationSections });
   const [wheelIndex, setWheelIndex] = useState(0);
   const wheelStageRef = useRef<HTMLDivElement>(null);
   const wheelIndexRef = useRef(0);
@@ -208,7 +200,6 @@ export default function TemplateDesignPage() {
   }, [catalog]);
 
   function openPreview(key: string) {
-    setSections({ ...defaultInvitationSections });
     setSelectedKey(key);
   }
 
@@ -565,41 +556,20 @@ export default function TemplateDesignPage() {
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="template-preview-title"
-            className="flex max-h-[95dvh] w-full max-w-[950px] min-w-0 flex-col overflow-hidden rounded-2xl bg-background shadow-2xl md:flex-row"
+            aria-label={`${copy.previewCanvasLabel} ${selected.name}`}
+            className="relative flex max-h-[96dvh] w-full max-w-[560px] min-w-0 flex-col overflow-hidden rounded-[28px] bg-transparent shadow-2xl"
           >
-            <aside className="shrink-0 border-b border-border p-4 md:w-[310px] md:border-b-0 md:border-r md:p-6">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <h2 id="template-preview-title" className="mt-2 break-words font-[family-name:var(--font-undara-heading)] text-xl text-primary">{selected.name}</h2>
-                </div>
-                <button autoFocus type="button" onClick={() => setSelectedKey(null)} aria-label={copy.close} className="grid h-10 w-10 shrink-0 place-items-center rounded-[var(--undara-control-radius)] border border-primary/50 text-primary hover:bg-primary/10">
-                  <X className="h-4 w-4" aria-hidden />
-                </button>
-              </div>
-              <p className="mt-3 hidden text-xs leading-6 text-foreground/60 md:block">{descriptionFor(selected)}</p>
-              {selected.ready && <div className="mt-4 flex flex-wrap gap-2 md:mt-7" aria-label={copy.toggle}>
-                {optionalSectionKeys.map((key) => (
-                  <label key={key} className="flex min-h-9 cursor-pointer items-center gap-2 rounded-[var(--undara-control-radius)] border border-border px-3 py-2 text-xs">
-                    <input
-                      type="checkbox"
-                      checked={sections[key]}
-                      onChange={(event) => setSections((current) => ({ ...current, [key]: event.target.checked }))}
-                      className="accent-primary"
-                    />
-                    {copy.optionalLabels[key as keyof typeof copy.optionalLabels]}
-                  </label>
-                ))}
-              </div>}
-              {!selected.ready && <p className="mt-3 text-xs font-medium text-foreground">{copy.designer}</p>}
-              {selected.ready && <div className="mt-4 flex flex-col gap-2 md:mt-8">
-                <Button asChild size="sm" className="rounded-xl text-xs">
-                  <Link href={`/studio?template=${encodeURIComponent(selected.key)}`} onClick={() => rememberTemplateSelection(selected.key)}>{copy.start} <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-                </Button>
-              </div>}
-            </aside>
-            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-primary/10 px-2 py-5 sm:px-5" aria-label={`${copy.previewCanvasLabel} ${selected.name}`}>
-              <div className="mx-auto w-full max-w-[390px] overflow-hidden rounded-[24px] border-[5px] border-[#30272d] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)]">
+            <button
+              autoFocus
+              type="button"
+              onClick={() => setSelectedKey(null)}
+              aria-label={copy.close}
+              className="absolute right-4 top-4 z-50 grid h-11 w-11 place-items-center rounded-full border border-white/30 bg-black/60 text-white shadow-lg backdrop-blur-md transition hover:bg-black/75 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              <X className="h-5 w-5" aria-hidden />
+            </button>
+            <div className="min-h-0 min-w-0 flex-1 overflow-y-auto overscroll-contain bg-primary/10 p-2 sm:p-4">
+              <div className="mx-auto w-full max-w-[430px] overflow-hidden rounded-[26px] border-[5px] border-[#30272d] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)]">
                 {selected.ready ? (
                   <TemplateCanvas key={selected.key} templateKey={selected.key} designKey={selected.designKey} sections={{ ...sections, envelope: false }} />
                 ) : (
