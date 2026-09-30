@@ -215,6 +215,23 @@ test("Golden Art Deco geometry and gem stay individually selectable inside its c
   assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
 });
 
+test("Paper Cut Botanical card composition is movable without swallowing its cutout layers", () => {
+  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
+  const paper = scenes.split('if (theme === "paper-cut-botanical") return <section')[1]
+    ?.split('if (theme === "celestial-ink") return <section')[0];
+  assert.ok(paper, "Paper Cut Botanical cover branch must exist");
+  for (const object of [
+    "paper-left", "paper-right", "leaf-left", "leaf-right", "content-group",
+    "kicker", "card", "sun", "subtitle", "date", "ornament",
+  ]) assert.ok(paper.includes(`object:cover:${object}`), `missing Paper Cut Botanical ${object}`);
+  assert.match(paper, /<Names[^>]*>\{names\}<\/Names>/);
+  assert.doesNotMatch(paper, /object:cover:art-group/);
+  assert.equal(nativeVisualCanHide("object:cover:paper-left"), true);
+  assert.equal(nativeVisualCanHide("object:cover:leaf-right"), true);
+  assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
+  assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
+});
+
 test("shared built-in display nodes expose Studio native-object markers without replacing business data", () => {
   const universal = read("components/PublicInvitation/UniversalInvitationTemplate.tsx");
   const rose = read("components/PublicInvitation/RomanticRoseTemplate.tsx");

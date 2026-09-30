@@ -264,14 +264,16 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <div aria-hidden data-studio-native-object="object:cover:paper-right" className="absolute -right-20 bottom-[-95px] h-[440px] w-72 rotate-[23deg] rounded-full border-[50px] border-[var(--inv-scene-accent,#9aaf88)] bg-[var(--inv-scene-soft,#c6d0aa)] shadow-[-15px_-15px_0_#d4dab4]" />
     <Leaf aria-hidden data-studio-native-object="object:cover:leaf-left" className="absolute -left-3 top-12 h-40 w-40 rotate-[-30deg] fill-[var(--inv-scene-soft,#b2c2a0)] text-[color:var(--inv-scene-text,#819975)]" strokeWidth={0.7}/>
     <Leaf aria-hidden data-studio-native-object="object:cover:leaf-right" className="absolute -right-4 bottom-20 h-44 w-44 rotate-[170deg] fill-[var(--inv-scene-soft,#a4b998)] text-[color:var(--inv-scene-text,#76926e)]" strokeWidth={0.7}/>
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-10 text-[color:var(--inv-scene-text,#687b57)]`}>{tr("Handcrafted in paper")}</p>
-    <div data-studio-native-object="object:cover:card" className="relative flex min-h-[350px] w-[min(77vw,300px)] flex-col items-center justify-center rounded-t-[155px] border-[9px] border-[var(--inv-scene-accent,#fdfcf1)] bg-[var(--inv-scene-surface,#f7f6e9)] text-[color:var(--inv-scene-surface-ink)] px-7 py-9 shadow-[12px_16px_0_#aabf92]">
-      <Sun aria-hidden data-studio-native-object="object:cover:sun" className="mb-7 h-10 w-10 text-[color:var(--inv-scene-text,#93a97c)]" strokeWidth={0.8}/>
-      <p data-studio-native-object="object:cover:subtitle" className={caption}>{content}</p>
-      <Names className="mt-6 text-3xl italic">{names}</Names>
-      <p data-studio-native-object="object:cover:date" className="mt-7 text-xs">{date}</p>
+    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
+      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-10 text-[color:var(--inv-scene-text,#687b57)]`}>{tr("Handcrafted in paper")}</p>
+      <div data-studio-native-object="object:cover:card" className="relative flex min-h-[350px] w-[min(77vw,300px)] flex-col items-center justify-center rounded-t-[155px] border-[9px] border-[var(--inv-scene-accent,#fdfcf1)] bg-[var(--inv-scene-surface,#f7f6e9)] text-[color:var(--inv-scene-surface-ink)] px-7 py-9 shadow-[12px_16px_0_#aabf92]">
+        <Sun aria-hidden data-studio-native-object="object:cover:sun" className="mb-7 h-10 w-10 text-[color:var(--inv-scene-text,#93a97c)]" strokeWidth={0.8}/>
+        <p data-studio-native-object="object:cover:subtitle" className={caption}>{content}</p>
+        <Names className="mt-6 text-3xl italic">{names}</Names>
+        <p data-studio-native-object="object:cover:date" className="mt-7 text-xs">{date}</p>
+      </div>
+      <Lines studioObject="object:cover:ornament" className="mt-12"><Leaf className="h-5 w-5"/></Lines>
     </div>
-    <Lines studioObject="object:cover:ornament" className="mt-12"><Leaf className="h-5 w-5"/></Lines>
   </section>;
 
   if (theme === "celestial-ink") return <section className={`${center} bg-[var(--inv-scene-bg,#101b32)] text-[color:var(--inv-scene-ink,#c9e2f0)]`} data-invitation-section={stage}>

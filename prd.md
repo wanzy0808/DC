@@ -1974,3 +1974,12 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
 
 **Validation:** tes native 34/34, regresi penuh 238/238, ESLint file terdampak, TypeScript, dan build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.
+
+## 30 September 2026 — Paper Cut Botanical editability pass
+
+- Paper Cut Botanical menjadi template kesembilan dalam audit satu per satu. Isi Cover memiliki target komposisi untuk memindahkan kartu, teks dan ornament sebagai grup tanpa kehilangan target granular pada tiap elemen.
+- Potongan kertas kiri/kanan serta daun kiri/kanan tetap objek terpisah yang bisa dipilih/disembunyikan. Latar tidak dijadikan grup seleksi sebesar section agar klik ruang kosong tetap memilih section. Nama dan tanggal masih bersumber dari data acara.
+
+**Area/commit:** `components/PublicInvitation/InvitationThemeScenes.tsx`, `tests/native-visual-transforms.test.mjs`, `prd.md` — commit perubahan ini.
+
+**Validation:** regresi penuh 239/239, ESLint file terdampak, TypeScript, dan build produksi lulus. Build menampilkan warning tracing filesystem upload route yang sudah ada; browser desktop/mobile belum diverifikasi pada pass ini.
