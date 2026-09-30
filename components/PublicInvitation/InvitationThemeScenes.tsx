@@ -204,7 +204,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     <Moon aria-hidden data-studio-native-object="object:cover:moon" className="absolute right-7 top-14 h-20 w-20 text-[color:var(--inv-scene-text,#e5d09e)]/45" strokeWidth={0.6} />
     <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-7 text-[color:var(--inv-scene-text,#e6cda0)]`}>Midnight Romance</p>
     <div data-studio-native-object="object:cover:photo-frame" className="relative h-[310px] w-[min(75vw,310px)] rounded-full border border-[var(--inv-scene-accent,#e1ca8f)] p-2 shadow-[0_0_0_7px_#e1ca8f20,0_0_0_20px_#e1ca8f0a]">
-      <div className="relative h-full w-full overflow-hidden rounded-full"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
+      <div data-studio-native-object="object:cover:photo-window" className="relative h-full w-full overflow-hidden rounded-full"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
       <Star aria-hidden data-studio-native-object="object:cover:star" className="absolute -right-5 top-8 h-9 w-9 text-[color:var(--inv-scene-text,#e6cda0)]" strokeWidth={0.7} />
     </div>
     <Names className="relative mt-10 text-3xl">{names}</Names>
