@@ -43,16 +43,15 @@ test("event planner uses planner notes as decoration and a wider body", () => {
   assert.match(page, /md:order-2/);
 });
 
-test("event planner uses its own animated bronze botanical atmosphere", () => {
+test("event planner shares restrained woodland ambience across marketing pages", () => {
   assert.match(page, /EventPlannerBotanicalAtmosphere/);
   assert.doesNotMatch(page, /PublicMarketingAtmosphere|LandingFloralGlow/);
 
-  assert.match(atmosphere, /<svg viewBox="0 0 470 760"/);
-  assert.match(atmosphere, /<FoliageDrawing \/>/);
+  assert.doesNotMatch(atmosphere, /<svg|FoliageDrawing|BotanicalLayer/);
+  assert.match(atmosphere, /radial-gradient\(ellipse_at_12%_78%/);
+  assert.match(atmosphere, /-bottom-\[12%\]/);
   assert.doesNotMatch(atmosphere, /foliage-(left|right|floating)\.webp/);
   assert.match(atmosphere, /FallingLeaves/);
-  assert.match(atmosphere, /useReducedMotion/);
-  assert.match(atmosphere, /repeat: Infinity/);
   assert.match(atmosphere, /absolute inset-0 z-0/);
   assert.match(atmosphere, /FallingLeaves embedded variety="forest"/);
   assert.match(page, /<EventPlannerBotanicalAtmosphere \/>\s*<div data-undara-marketing-frame/);
