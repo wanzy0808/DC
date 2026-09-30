@@ -64,7 +64,8 @@ export function nativeVisualCapabilities(key: string) {
   if (kind === "heading" || kind === "copy") return { opacity: true, colors: true, typography: true };
   if (kind === "object") {
     const objectId = parts[2] ?? "";
-    return { opacity: true, colors: true, typography: nativeTextObjectId.test(objectId) };
+    const groupObject = /(?:^|[-_])group$/i.test(objectId);
+    return { opacity: true, colors: true, typography: !groupObject && nativeTextObjectId.test(objectId) };
   }
   return { opacity: false, colors: false, typography: false };
 }
