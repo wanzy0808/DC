@@ -46,7 +46,7 @@ Arah visual utama Undara adalah **woodland / forest editorial**: hangat, tenang,
 
 - Motif utama: siluet hutan, canopy, ranting, daun, sulur/ukiran organik, kabut/fog lembut, cahaya halus, dan ruang kosong yang cukup.
 - Ornamen floral besar, bunga tempel, legacy petal ambience, kelopak beterbangan, dan dekorasi romantis generik **bukan bahasa visual global Undara**.
-- Bila membutuhkan dekorasi sudut marketing, prioritaskan **sulur/ukiran organik tipis** atau branch/canopy yang terasa menyatu dengan komposisi, bukan bunga besar.
+- Halaman marketing selain homepage memakai kabut hangat, bayangan semak rendah, dan daun jatuh yang ringan sebagai atmosfer bersama. Jangan memakai ranting panjang berdaun yang menjulang di kedua sisi; ornamen sudut lain hanya dipakai bila benar-benar mendukung komposisi halaman.
 - Background harus mendukung hierarki konten. Dekorasi tidak boleh menabrak brand, navbar, heading, CTA, form, atau mengurangi keterbacaan.
 - Landing/Pintu boleh memiliki treatment atmosfer lebih kuat; halaman marketing lain memakai versi lebih restrained dari sistem woodland yang sama.
 - Ilustrasi woodland homepage mengisi lebar viewport melampaui outline mainframe. Sisi kiri/kanannya melebur lembut ke warna dasar halaman, tanpa batas persegi dari layer yang berhenti sebelum frame. Fade atas/bawah menjaga navbar dan footer tetap terbaca; bingkai serta Pintu tetap jelas di depan atmosfer.
@@ -1466,7 +1466,7 @@ Guestbook marketing juga harus event-oriented.
 
 ### 16.0a Kontinuitas background dan tipografi marketing — 29 September 2026
 
-Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: foliage bronze/champagne dari `EventPlannerBotanicalAtmosphere`, glow halus, dan daun jatuh beragam. Atmosfer berada sebagai sibling di belakang mainframe transparan, jadi header, body scroll, footer, dan bagian luar frame tetap tersambung secara visual. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan bunga/Rose glow lama dan pengecualian foliage khusus Event Planner pada paragraf historis.
+Seluruh route marketing framed (`/d-invitation`, `/event-planner`, `/guestbook`, `/undangan-fisik`, `/template-design`, `/help`) memakai **satu bahasa background yang sama**: kabut bronze/champagne, bayangan semak rendah yang memudar, glow halus, dan daun jatuh beragam dari `EventPlannerBotanicalAtmosphere`. Atmosfer berada sebagai sibling di belakang mainframe transparan, jadi header, body scroll, footer, dan bagian luar frame tetap tersambung secara visual. Hanya panel `main` yang menggulir; bingkai tetap terlihat jelas. Homepage tetap memakai woodland khusus yang sudah disetujui. Ketentuan ini menggantikan ranting panjang berdaun di kiri/kanan serta bunga/Rose glow lama.
 
 Katalog dan seluruh chrome halaman marketing memakai shared typography tokens aktif; karya di dalam preview template tetap memakai font tema masing-masing. Copy produk, email, unduhan QR, dan dokumen baru memakai nama Undara. Nomor invoice lama serta ID teknis `dc-*` tetap dibaca untuk kompatibilitas; invoice baru memakai awalan `UND-`.
 
@@ -1780,3 +1780,14 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Area/commit:** `components/Landing/LandingWoodlandAtmosphere.tsx`, `tests/repo-file-naming.test.mjs`, `prd.md` §1.2 dan Appendix A — commit perubahan ini.
 
 **Validasi lokal:** ESLint komponen, TypeScript, 28 tes marketing/asset, dan `git diff --check` lulus. Visual browser belum diverifikasi; tidak ada migrasi database.
+
+
+## 30 September 2026 — Atmosfer marketing tanpa ranting panjang
+
+**Permintaan owner:** aksen kiri/kanan halaman marketing terasa tidak natural karena ranting berdaun terlalu panjang.
+
+**Implementasi:** hapus ilustrasi SVG batang diagonal dan susunan tujuh rumpun daun yang dicerminkan. Latar shared marketing memakai kabut bronze/champagne dan bayangan semak rendah yang memudar pada Light/Dark, dengan daun jatuh tetap halus. Perubahan berlaku pada service pages yang memakai atmosfer bersama; komposisi homepage tidak diubah.
+
+**Area/commit:** `components/EventPlanner/EventPlannerBotanicalAtmosphere.tsx`, `tests/event-planner-redesign.test.mjs`, `tests/marketing-atmosphere-continuity.test.mjs`, `prd.md` §1.2/§16.0a dan Appendix A — commit perubahan ini.
+
+**Validasi lokal:** ESLint, TypeScript, 225 tes regresi, `git diff --check`, dan build produksi lulus. Visual browser Light/Dark pada berbagai ukuran layar belum diverifikasi; tidak ada migrasi database.
