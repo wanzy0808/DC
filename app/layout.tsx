@@ -14,6 +14,7 @@ import { MarketingAudioProvider } from "@/components/Layout/MarketingAudio";
 import MarketingFloatingControls from "@/components/Layout/MarketingFloatingControls";
 import MarketingDoorNavigator from "@/components/Layout/MarketingDoorNavigator";
 import AuthDialogHost from "@/components/Auth/AuthDialogHost";
+import ThreeConsoleBridge from "@/components/Three/ThreeConsoleBridge";
 
 const dmSerifDisplay = DM_Serif_Display({
   subsets: ["latin"],
@@ -50,6 +51,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <LanguageProvider initialLocale={locale}>
           <ThemeProvider initialTheme={initialTheme}>
             <MarketingAudioProvider>
+              <ThreeConsoleBridge />
               <PortalTransition />
               <PublicAtmosphere />
               <Navbar />
