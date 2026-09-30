@@ -38,7 +38,7 @@ export default function PackageShowcase({
         <div className="grid gap-12 lg:grid-cols-[0.84fr_1.16fr] lg:items-start lg:gap-20">
           <div className="max-w-xl lg:pt-6">
             <p className="undara-marketing-kicker">{eyebrow}</p>
-            <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.03] text-primary md:text-5xl lg:text-6xl">
+            <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.03] tracking-[-0.025em] text-primary md:text-5xl lg:text-6xl">
               {title}
             </h2>
             <p className="mt-6 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
@@ -66,7 +66,7 @@ export default function PackageShowcase({
                         Undara
                       </span>
                     </div>
-                    <h3 className="mt-5 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-3xl leading-[1.05] text-primary md:text-4xl">
+                    <h3 className="mt-5 max-w-[16ch] font-[family-name:var(--font-undara-heading)] text-3xl font-bold leading-[1.05] text-primary md:text-4xl">
                       {item.name[locale]}
                     </h3>
                     <p className="mt-5 font-[family-name:var(--font-undara-heading)] text-4xl text-foreground md:text-5xl">
@@ -107,7 +107,7 @@ export default function PackageShowcase({
       <div className={`grid gap-10 ${wide && packages.length === 1 ? "lg:grid-cols-[0.95fr_1.05fr] lg:gap-16" : ""}`}>
         <div className={`space-y-4 ${wide && packages.length === 1 ? "lg:pt-8" : "mx-auto max-w-3xl text-center"}`}>
           <p className="font-[family-name:var(--font-undara-mono)] text-[10px] uppercase tracking-[0.2em] text-primary">{eyebrow}</p>
-          <h2 className="max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl leading-[1.05] text-primary md:text-5xl">{title}</h2>
+          <h2 className="max-w-[20ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.05] tracking-[-0.025em] text-primary md:text-5xl">{title}</h2>
           <p className="max-w-xl text-sm leading-7 text-muted-foreground md:text-base md:leading-8">{description}</p>
         </div>
         <div className={`grid w-full gap-6 ${packages.length === 2 ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
@@ -118,7 +118,7 @@ export default function PackageShowcase({
               <article key={item.key} className={`relative flex h-full w-full flex-col border p-7 md:p-10 ${roundedCard ? "rounded-[40px] border-primary/50 md:rounded-[48px]" : "rounded-3xl"} ${featured ? "border-primary bg-primary/[0.07]" : "bg-card/70"}`}>
                 {featured ? <span className="absolute right-5 top-5 rounded-full bg-[var(--primary)] px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-white">{featuredLabel}</span> : null}
                 <p className="text-xs font-[family-name:var(--font-undara-mono)] uppercase tracking-[0.18em] text-[var(--primary)]">Undara</p>
-                <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-undara-heading)] text-3xl text-primary">{item.name[locale]}</h3>
+                <h3 className="mt-3 max-w-[85%] font-[family-name:var(--font-undara-heading)] text-3xl font-bold text-primary">{item.name[locale]}</h3>
                 <p className="mt-4 text-2xl font-semibold">Rp {item.price.toLocaleString("id-ID")}</p>
                 <p className="mt-3 text-sm leading-6 text-[var(--muted-foreground)]">{item.description[locale]}</p>
                 <ul className="mt-6 flex-1 space-y-3">{item.features[locale].map((feature) => <li key={feature} className="flex gap-2 text-sm"><Check className="mt-0.5 h-4 w-4 shrink-0 text-[var(--primary)]" /><span>{feature}</span></li>)}</ul>
