@@ -7,6 +7,8 @@ import RsvpElementInspector from "@/components/InvitationStudio/RsvpElementInspe
 import SectionElementInspector from "@/components/InvitationStudio/SectionElementInspector";
 import SectionInspector from "@/components/InvitationStudio/SectionInspector";
 import StudioNativeVisualInspector from "@/components/InvitationStudio/StudioNativeVisualInspector";
+import { templatePhotoMotion, templateNativeMotionForKey } from "@/lib/templates/template-motion";
+import { defaultNativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import type { NativeVisualTransform } from "@/lib/templates/native-visual-transforms";
 import TextLayerInspector from "@/components/InvitationStudio/TextLayerInspector";
 import { assetLayerScopePosition, type AssetLayerPosition } from "@/components/InvitationStudio/designer-layer-order";
@@ -90,7 +92,7 @@ export default function StudioSelectionInspector({
     : { index: selectedAssetIndex, count: design.layers.length };
   const nativeControls = selectedNativeKey ? (
     <StudioNativeVisualInspector locale={locale} targetKey={selectedNativeKey}
-      value={design.nativeVisuals[selectedNativeKey]}
+      value={{ ...defaultNativeVisualTransform, ...templateNativeMotionForKey(design.template, selectedNativeKey, design.sectionStyles), ...design.nativeVisuals[selectedNativeKey] }}
       onChange={(value) => onUpdateNative(selectedNativeKey, value)}
       onClose={onCloseNative} />
   ) : null;
@@ -133,7 +135,7 @@ export default function StudioSelectionInspector({
       <PhotoSlotInspector
         locale={locale}
         slot={selectedPhotoSlot}
-        motion={design.photos.motion?.[selectedPhotoSlot]}
+        motion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles)[selectedPhotoSlot]}
         onUpdate={(patch) => onUpdatePhotoMotion(selectedPhotoSlot, patch)}
         onReset={() => onResetPhotoMotion(selectedPhotoSlot)}
         onClose={onClosePhoto}

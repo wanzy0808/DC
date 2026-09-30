@@ -78,7 +78,7 @@ export default function SereinScene({ names, date, stage, onOpen, preview = fals
     <p data-studio-native-object="object:cover:kicker" className="sr-cover-intro">{tr("Kami Mengundang Anda")}</p>
     <SereinSprig objectKey="object:cover:sprig-art" className="sr-cover-sprig" />
     <h1 data-studio-native-heading="" className={`sr-cover-names ${paired ? "" : "sr-cover-single"}`}>
-      {paired ? <><span data-studio-native-object="object:cover:personOne-name" className="sr-name-first">{first}</span><em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em><span data-studio-native-object="object:cover:personTwo-name" className="sr-name-second">{second}</span></> : names}
+      {paired ? <><span data-studio-native-object="object:cover:personOne-name" className="sr-name-first">{first}</span><em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em><span data-studio-native-object="object:cover:personTwo-name" className="sr-name-second">{second}</span></> : <span data-studio-native-object="object:cover:event-name">{names}</span>}
     </h1>
     <div className="sr-cover-bottom" data-studio-native-object="object:cover:composition-group">
       <div className="sr-cover-caption">

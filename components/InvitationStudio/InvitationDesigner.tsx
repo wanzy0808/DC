@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
 import { defaultPhotoAssignments, type CroppablePhotoSlot, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
+import { templatePhotoMotion } from "@/lib/templates/template-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
 import PhotoPanel from "@/components/InvitationStudio/PhotoPanel";
 import AssetPanel from "@/components/InvitationStudio/AssetPanel";
@@ -888,13 +889,13 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
   }
 
   function updatePhotoMotion(slot: PhotoSlot, patch: Partial<PhotoMotion>) {
-    const current = design.photos.motion?.[slot] ?? {};
+    const current = templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles)[slot] ?? {};
     const next: PhotoMotion = { ...current, ...patch };
     for (const [key, value] of Object.entries(next)) {
       if (value === undefined) delete (next as Record<string, unknown>)[key];
     }
     const motion = { ...(design.photos.motion ?? {}) };
-    if ((next.animation && next.animation !== "none") || (next.parallax ?? 0) > 0) motion[slot] = next;
+    if (next.animation !== undefined || next.parallax !== undefined) motion[slot] = next;
     else delete motion[slot];
     change({ photos: { ...design.photos, motion } });
   }

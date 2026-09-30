@@ -69,7 +69,7 @@ function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | und
   if (!value || typeof value !== "object" || Array.isArray(value)) return undefined;
   const source = value as Record<string, unknown>;
   const motion: PhotoMotion = {};
-  if (isInvitationSectionAnimation(source.animation) && source.animation !== "none") {
+  if (isInvitationSectionAnimation(source.animation)) {
     motion.animation = source.animation;
     if (source.animationDuration !== undefined) motion.animationDuration = bounded(source.animationDuration, 0.2, 2.5, 0.7);
     if (source.animationDelay !== undefined) motion.animationDelay = bounded(source.animationDelay, 0, 2, 0);

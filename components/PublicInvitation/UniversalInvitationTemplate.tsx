@@ -226,7 +226,7 @@ export default function UniversalInvitationTemplate({
   useInvitationSectionAnimations(rootRef, sectionStyles);
   usePremiumSectionTimelines(rootRef, sectionStyles, String(opened));
   useInvitationCopyAnimations(rootRef, copyMotions, editableCopy, String(opened));
-  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened));
+  useInvitationNativeVisualAnimations(rootRef, activeDesignKey, String(opened), key === "serein" ? { template: key, sectionStyles } : undefined);
   const rsvpConfig = parseInvitationRsvpConfig(activeDesignKey);
   const sectionElementStyles = parseSectionElementStyles(activeDesignKey);
   const sectionLayout = parseInvitationSectionLayout(activeDesignKey);
@@ -239,7 +239,7 @@ export default function UniversalInvitationTemplate({
     onDelete: onDeleteSectionInstance,
   } : undefined;
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
-  useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`);
+  useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`, key === "serein" ? { template: key, sectionStyles } : undefined);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
   const names = couple
@@ -333,22 +333,6 @@ export default function UniversalInvitationTemplate({
     });
     return () => observer.disconnect();
   }, [key, opened, sections.envelope, media.gallery.length, sectionStyles]);
-  useEffect(() => {
-    if (key !== "serein" || (!opened && sections.envelope !== false)) return;
-    if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
-        const node = entry.target as HTMLElement;
-        if (entry.isIntersecting) node.dataset.sereinVisible = "true";
-        else delete node.dataset.sereinVisible;
-      }
-    }, { threshold: .15 });
-    rootRef.current?.querySelectorAll<HTMLElement>(".sr-heading-motion").forEach((node) => {
-      const owner = node.closest<HTMLElement>("[data-invitation-section]")?.dataset.invitationSection as InvitationSectionKey;
-      if (sectionStyles[owner]?.animation === undefined && !sectionStyles[owner]?.timeline) observer.observe(node);
-    });
-    return () => observer.disconnect();
-  }, [key, opened, sections.envelope, sectionStyles]);
 
   const handleOpen = () => {
     musicRef.current?.playOnOpen();
@@ -430,7 +414,7 @@ export default function UniversalInvitationTemplate({
           <h2
             data-studio-native-heading=""
             data-studio-rsvp-element={keyName === "rsvp" ? "title" : undefined}
-            className={`${serein ? "sr-heading-motion" : ""} leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`}
+            className={`leading-snug ${zen ? "text-[29px] tracking-[-.03em]" : `mt-3 text-2xl ${left ? "uppercase tracking-[.04em]" : ""}`}`}
             style={{
               fontFamily: invitationFontFamily(font.heading),
               color: "inherit",
@@ -597,7 +581,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} animate={sectionStyles.gallery?.animation === undefined && !sectionStyles.gallery?.timeline && !media.assignment.motion?.gallery?.animation} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
+          {section("gallery", key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} preview={preview} />
           </> : (

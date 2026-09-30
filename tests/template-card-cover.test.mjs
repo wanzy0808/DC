@@ -20,7 +20,7 @@ test("public template catalog uses a phone wheel with centered preview and detai
   assert.match(page, /rotateY\(\$\{rotation\}deg\)/);
   assert.match(page, /stage\.addEventListener\("wheel", onWheel, \{ passive: false \}\)/);
   assert.match(page, /onTouchStart=\{handleWheelTouchStart\}/);
-  assert.match(page, /if \(distance === 0\) openPreview\(template\.key\)/);
+  assert.match(page, /if \(distance === 0\)\s*\{\s*openPreview\(template\.key\)/);
   assert.match(page, /wheelIndexRef\.current = index/);
   assert.match(page, /setWheelIndex\(index\)/);
   assert.match(page, /descriptionFor\(activeWheelTemplate\)/);

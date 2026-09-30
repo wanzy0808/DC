@@ -74,6 +74,7 @@ export default function StudioNativeVisualInspector({
       animation.cancel();
       animation.play();
     });
+    node?.dispatchEvent(new Event("invitation-replay-motion"));
   }
 
   const animationPreset = getSectionAnimationPreset(current.animation);
@@ -226,7 +227,7 @@ export default function StudioNativeVisualInspector({
                 const animation = event.currentTarget.value as InvitationSectionAnimation | "";
                 patch(animation
                   ? { animation, animationDuration: undefined }
-                  : { animation: undefined, animationDuration: undefined, animationDelay: undefined });
+                  : { animation: "none", animationDuration: undefined, animationDelay: undefined });
               }}
               className="h-10 w-full rounded-[var(--undara-control-radius)] border border-primary/30 bg-background px-2 text-sm outline-none"
             >

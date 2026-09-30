@@ -57,12 +57,11 @@ test("public legal pages use the shared marketing frame", () => {
 });
 
 
-test("template catalog keeps wide-screen editorial staggering without overriding hover transforms", () => {
+test("template catalog keeps wheel motion bounded and respects reduced motion", () => {
   const catalogPage = read("app/template-design/page.tsx");
-  const styles = read("app/globals.css");
-  assert.match(catalogPage, /undara-template-catalog-grid/);
-  assert.match(styles, /\.undara-template-catalog-grid > article:nth-child\(3n \+ 2\)/);
-  assert.match(styles, /margin-top: 2rem/);
+  assert.match(catalogPage, /data-template-wheel/);
+  assert.match(catalogPage, /transition-\[transform,opacity,filter\] duration-\[240ms\]/);
+  assert.match(catalogPage, /motion-reduce:transition-none/);
 });
 
 test("marketing and legal surfaces have no decorative sequence labels", () => {

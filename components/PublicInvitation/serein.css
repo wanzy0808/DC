@@ -58,9 +58,6 @@
 .sr-edit-photo:focus-visible { background: #0004; color: white; }
 .serein-section { padding: 72px 8%; text-align: left; }
 .serein-section h2 { margin: 0 0 32px; font-family: var(--inv-heading); font-size: clamp(32px, 10cqw, 62px); line-height: 1.05; letter-spacing: -.025em; }
-.sr-heading-motion { position: relative; }
-.sr-heading-motion[data-serein-visible='true'] { animation: sr-heading-in 650ms cubic-bezier(.22,1,.36,1) both; }
-@keyframes sr-heading-in { from { opacity: .6; translate: 0 12px; } to { opacity: 1; translate: 0 0; } }
 .serein-section [data-studio-copy-field] { font-size: 15px; line-height: 1.95; }
 .serein-section [data-studio-native-object='object:greeting:copy-group'] { margin-left: 16%; opacity: 1; }
 .serein-section[data-invitation-section='greeting'] { padding-top: 64px; padding-bottom: 86px; }
@@ -147,7 +144,6 @@
   .sr-album-page:nth-child(3n+2) { margin-top: -45px; }
 }
 @media (prefers-reduced-motion:reduce) {
-  .serein-invitation .sr-heading-motion { animation: none; }
   .serein-invitation .sr-action,.serein-invitation .sr-album-photo > img { transition: none; }
   .serein-invitation .sr-album-photo:hover > img,.serein-invitation .sr-action:hover { transform: none; }
 }

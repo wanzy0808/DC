@@ -2,7 +2,9 @@
 
 import { useEffect, type RefObject } from "react";
 import type { PhotoAssignments, PhotoMotionMap, PhotoSlot } from "@/lib/templates/photo-slots";
-import { observeInvitationEntrances } from "@/components/PublicInvitation/entrance-animation-runtime";
+import { templatePhotoMotion } from "@/lib/templates/template-motion";
+import type { InvitationSectionStyles } from "@/lib/templates/section-styles";
+import { observeInvitationEntranceRoot } from "@/components/PublicInvitation/entrance-animation-runtime";
 import { observePhotoParallax } from "@/components/PublicInvitation/photo-parallax-runtime";
 import { MAX_PHOTO_PARALLAX_TARGETS } from "@/lib/templates/motion-performance";
 
@@ -12,15 +14,18 @@ export function useInvitationPhotoAnimations(
   rootRef: RefObject<HTMLElement | null>,
   assignments: PhotoAssignments,
   revision = "",
+  theme?: { template: string; sectionStyles: InvitationSectionStyles },
 ) {
-  const motionKey = JSON.stringify(assignments.motion ?? {});
+  const motionKey = JSON.stringify(templatePhotoMotion(theme?.template ?? "", assignments.motion, theme?.sectionStyles));
+
+  const themed = theme?.template === "serein";
 
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const motion = JSON.parse(motionKey) as PhotoMotionMap;
 
-    const entranceTargets = slots.flatMap((slot) => {
+    const collect = () => slots.flatMap((slot) => {
       const config = motion[slot];
       if (!config?.animation || config.animation === "none") return [];
       const nodes = Array.from(root.querySelectorAll<HTMLElement>(
@@ -43,11 +48,11 @@ export function useInvitationPhotoAnimations(
       )).map((node) => ({ node, strength }));
     }).slice(0, MAX_PHOTO_PARALLAX_TARGETS);
 
-    const stopEntrance = observeInvitationEntrances(entranceTargets);
+    const stopEntrance = observeInvitationEntranceRoot(root, collect, { replay: themed, preservePresentation: themed, waitForImages: themed });
     const stopParallax = observePhotoParallax(parallaxTargets);
     return () => {
       stopEntrance();
       stopParallax();
     };
-  }, [rootRef, motionKey, revision]);
+  }, [rootRef, motionKey, revision, themed]);
 }

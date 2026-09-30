@@ -156,7 +156,7 @@ export function sanitizeNativeVisualTransforms(value: unknown): NativeVisualTran
       transform.lineHeight = optionalNumber(source.lineHeight, 0.7, 3);
       transform.fontFamily = optionalFontFamily(source.fontFamily);
     }
-    if (nativeVisualSupportsAnimation(key) && isInvitationSectionAnimation(source.animation) && source.animation !== "none") {
+    if (nativeVisualSupportsAnimation(key) && isInvitationSectionAnimation(source.animation)) {
       transform.animation = source.animation;
       transform.animationDuration = optionalNumber(source.animationDuration, 0.2, 2.5);
       transform.animationDelay = optionalNumber(source.animationDelay, 0, 2);

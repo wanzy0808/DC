@@ -49,7 +49,7 @@ export default function PhotoSlotInspector({
             const animation = event.target.value as InvitationSectionAnimation | "";
             onUpdate(animation
               ? { animation, animationDuration: undefined }
-              : { animation: undefined, animationDuration: undefined, animationDelay: undefined, animationStagger: undefined });
+              : { animation: "none", animationDuration: undefined, animationDelay: undefined, animationStagger: undefined });
           }}
         >
           <option value="">{en ? "No animation" : "Tanpa animasi"}</option>
@@ -80,6 +80,7 @@ export default function PhotoSlotInspector({
                   animation.cancel();
                   animation.play();
                 });
+                node.dispatchEvent(new Event("invitation-replay-motion"));
               });
             }}
           >

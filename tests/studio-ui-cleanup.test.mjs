@@ -798,7 +798,7 @@ test("Studio element layers reuse the shared animation catalog and persist timin
 
 test("Section and element entrance animations share one playback runtime", () => {
   const sectionHook = read("components/PublicInvitation/use-section-animations.ts");
-  assert.match(sectionHook, /observeInvitationEntrances\(targets\)/);
+  assert.match(sectionHook, /observeInvitationEntranceRoot\(root, collect\)/);
   assert.match(layerAnimationHook, /observeInvitationEntrances\(\[\{/);
   assert.match(entranceAnimationRuntime, /const animations = new Set<Animation>\(\)/);
   assert.match(entranceAnimationRuntime, /duration: Math\.round\(\(config\.duration \?\? preset\.duration\) \* 1000\)/);
@@ -852,7 +852,7 @@ test("Studio photo selection opens a visual-only right inspector", () => {
   assert.match(canvasSelectionResolver, /target\.closest<HTMLElement>\("\[data-invitation-photo-slot\]"\)/);
   assert.match(designer, /<StudioSelectionInspector/);
   assert.match(selectionInspector, /<PhotoSlotInspector/);
-  assert.match(selectionInspector, /motion=\{design\.photos\.motion\?\.\[selectedPhotoSlot\]\}/);
+  assert.match(selectionInspector, /motion=\{templatePhotoMotion\(design\.template, design\.photos\.motion, design\.sectionStyles\)\[selectedPhotoSlot\]\}/);
   assert.match(designer, /onUpdatePhotoMotion=\{updatePhotoMotion\}/);
   assert.match(selectionInspector, /onUpdate=\{\(patch\) => onUpdatePhotoMotion\(selectedPhotoSlot, patch\)\}/);
   assert.match(designer, /useStudioCanvasSelectionMarkers\(/);
@@ -868,7 +868,7 @@ test("Studio photo selection opens a visual-only right inspector", () => {
 });
 
 test("Photo slots and gallery use the shared entrance runtime without touching crop transforms", () => {
-  assert.match(photoAnimationHook, /observeInvitationEntrances\(entranceTargets\)/);
+  assert.match(photoAnimationHook, /observeInvitationEntranceRoot\(root, collect/);
   assert.match(photoAnimationHook, /slot === "gallery" \? \(config\.animationStagger \?\? 0\.08\) : 0/);
   assert.match(photoAnimationHook, /\(config\.animationDelay \?\? 0\) \+ index \* stagger/);
 
