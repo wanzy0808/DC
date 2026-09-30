@@ -1703,3 +1703,15 @@ Appendix ini hanya menyimpan **ringkasan keputusan yang masih membantu memahami 
 **Commits:** `fbb524d`, `7d149e1`.
 
 **Validation:** source review complete; CI/build observed separately.
+
+
+## 30 September 2026 — Event Planner layout-guard follow-up
+
+- Heading utama pada section layanan Event Planner tetap mempertahankan hierarchy besar/tebal, tetapi batas lebar diubah dari `11ch` menjadi `13ch` agar memenuhi regression guard existing dan menghindari wrapping terlalu sempit.
+- Perubahan ini tidak mengurangi rule global heading marketing pada commit sebelumnya.
+
+**Area:** `app/event-planner/page.tsx`.
+
+**Commit:** `2a951f6`.
+
+**Validation:** regression guard penyebab failure telah diidentifikasi dari GitHub Actions log; rerun CI diperiksa terpisah.
