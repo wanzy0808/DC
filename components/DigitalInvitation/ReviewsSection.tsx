@@ -26,7 +26,7 @@ export default function ReviewsSection({
       <div className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:gap-20">
         <div className="max-w-xl">
           <p className="undara-marketing-kicker">{eyebrow}</p>
-          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-normal leading-[1.02] text-primary md:text-5xl lg:text-6xl">
+          <h2 className="mt-4 max-w-[15ch] font-[family-name:var(--font-undara-heading)] text-4xl font-bold leading-[1.02] text-primary md:text-5xl lg:text-6xl">
             {title}
           </h2>
           <p className="mt-6 text-sm leading-7 text-muted-foreground md:text-base md:leading-8">
