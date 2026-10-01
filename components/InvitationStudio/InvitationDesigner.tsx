@@ -16,7 +16,7 @@ import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy"
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
-import { defaultPhotoAssignments, type CroppablePhotoSlot, type GallerySettings, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { defaultGallerySettings, defaultPhotoAssignments, type CroppablePhotoSlot, type GallerySettings, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
 import { templatePhotoMotion } from "@/lib/templates/template-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
@@ -892,7 +892,7 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
     change({
       photos: {
         ...design.photos,
-        gallerySettings: { ...design.photos.gallerySettings, ...patch },
+        gallerySettings: { ...defaultGallerySettings(), ...(design.photos.gallerySettings ?? {}), ...patch },
       },
     });
   }
