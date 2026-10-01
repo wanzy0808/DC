@@ -72,3 +72,9 @@ test("Garden Light viewport entrances are one-shot while explicit Studio replay 
   assert.match(photoMotion, /!\["modern-maroon", "garden-light"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeMotion, /waitForImages:[^\n]*garden-light/);
 });
+
+
+test("Garden Light section ink stays palette-aware instead of feeding CSS expressions into hex contrast math", () => {
+  assert.match(universal, /garden \? \(sectionStyles\[keyName\]\?\.background \? readableInk\(sectionStyles\[keyName\]\.background, palette\.ink\) : palette\.ink\)/);
+  assert.doesNotMatch(universal, /garden \? readableInk\(sectionStyles\[keyName\]\?\.background \|\| \(gardenBackdrop\[keyName\]/);
+});
