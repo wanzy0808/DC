@@ -12,6 +12,7 @@ import "./pencil-reverie.css";
 import "./serein.css";
 import "./botanical-ivory.css";
 import "./eternal-blossom.css";
+import "./modern-maroon.css";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import GuestWishes from "@/components/PublicInvitation/GuestWishes";
@@ -411,12 +412,18 @@ export default function UniversalInvitationTemplate({
     const serein = key === "serein";
     const botanical = key === "botanical-ivory";
     const blossom = key === "eternal-blossom";
+    const modern = key === "modern-maroon";
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
-    const backdrop = botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
-    const color = botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
+    const modernBackdrop: Partial<Record<keyof typeof headings, string>> = {
+      greeting: "var(--inv-surface)", identity: "#4a111b", event: "#f4dfd4", dateTime: "#2d0710",
+      gallery: "var(--inv-surface)", countdown: "#f4dfd4", location: "var(--inv-surface)", rsvp: "#4a111b",
+      wishes: "#f4dfd4", gift: "#4a111b", closing: "var(--inv-surface)",
+    };
+    const backdrop = modern ? (modernBackdrop[keyName] ?? "var(--inv-bg)") : botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
+    const color = modern ? (["identity", "dateTime", "rsvp", "gift"].includes(keyName) ? "#fff5ee" : "#371017") : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
       <>
-      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : "py-16"} ${left || serein || botanical || blossom ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || serein || botanical || blossom || modern ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
         {botanical && <BotanicalSectionArt section={keyName} />}
@@ -463,7 +470,7 @@ export default function UniversalInvitationTemplate({
     <main
       ref={rootRef}
       data-studio-preview-root={preview ? "true" : undefined}
-      className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} mx-auto min-h-[760px] w-full max-w-2xl ${preview ? "overflow-visible" : "overflow-hidden"} border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : key === "serein" ? "serein-invitation" : key === "botanical-ivory" ? "botanical-invitation" : key === "eternal-blossom" ? "eternal-invitation" : ""}`}
+      className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} mx-auto min-h-[760px] w-full max-w-2xl ${preview ? "overflow-visible" : "overflow-hidden"} border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : key === "serein" ? "serein-invitation" : key === "botanical-ivory" ? "botanical-invitation" : key === "eternal-blossom" ? "eternal-invitation" : key === "modern-maroon" ? "modern-maroon-invitation" : ""}`}
       style={css}
     >
       <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
@@ -516,6 +523,12 @@ export default function UniversalInvitationTemplate({
 
           {section("greeting", key === "pencil-reverie" ? (
             <div className="pr-greeting-copy">
+              <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
+              <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
+            </div>
+          ) : key === "modern-maroon" ? (
+            <div data-studio-native-object="object:greeting:copy-group" className="mm-greeting-copy">
+              <span aria-hidden="true" data-studio-native-object="object:greeting:flourish" className="mm-flourish ml-auto mb-5 text-[var(--inv-accent)]" />
               <p data-studio-copy-field="greeting" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.greeting ?? ""} unit={copyMotions.greeting?.unit} /></p>
               <p data-studio-copy-field="attendanceRequest" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.attendanceRequest ?? ""} unit={copyMotions.attendanceRequest?.unit} /></p>
             </div>
