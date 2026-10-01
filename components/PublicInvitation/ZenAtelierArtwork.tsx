@@ -1,13 +1,8 @@
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
-/**
- * Small, resolution-independent illustrations for the Zen Atelier presentation.
- * Source artwork lives in the template module, outside /public. This is NOT
- * secrecy: the project repository is public and rendered browser art is copyable.
- * No customer data, private master image or raw uploaded binary belongs here.
- */
 type ArtworkProps = { className?: string; style?: CSSProperties; studioObject?: string };
+const root = "/templates/zen-atelier/";
 
 export function EnsoSun({ className = "", style, studioObject }: ArtworkProps) {
   return (
@@ -63,27 +58,125 @@ export function InkMountains({ className = "", style, studioObject }: ArtworkPro
   );
 }
 
-/** Artwork-only gallery fallback. Never show demo people as the couple's own photos. */
-export function ZenMemoryArtwork() {
+function ArtShell({ section, children }: { section: string; children: ReactNode }) {
   return (
-    <div aria-hidden="true" data-studio-native-object="object:gallery:memory-art" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
-      <img src="/templates/zen-atelier/japanroom2.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-room" className="absolute inset-0 h-full w-full object-cover" />
-      <div data-studio-native-object="object:gallery:memory-gradient" className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
-      <img src="/templates/zen-atelier/japancup.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-cup" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
-      <span data-studio-native-object="object:gallery:memory-frame" className="absolute inset-3 border border-[#f7eee0]/60" />
+    <div aria-hidden="true" className={`zen-section-art zen-section-art-${section}`}>
+      {children}
     </div>
   );
 }
 
-/** Every motif is part of the user-supplied public/templates set; only the active
- * Zen template mounts this module. Decorative assets are never user photo slots. */
+/** Artwork-only gallery fallback. Never show demo people as the couple's own photos. */
+export function ZenMemoryArtwork() {
+  return (
+    <div aria-hidden="true" data-studio-native-object="object:gallery:memory-art" className="zen-memory-still-life relative mx-auto aspect-[4/5] max-w-sm overflow-hidden">
+      <img src={root + "japanroom2.webp"} alt="" loading="lazy" data-studio-native-object="object:gallery:memory-room" className="absolute inset-0 h-full w-full object-cover" />
+      <div data-studio-native-object="object:gallery:memory-gradient" className="absolute inset-0" />
+      <img src={root + "japancup.webp"} alt="" loading="lazy" data-studio-native-object="object:gallery:memory-cup" className="absolute bottom-[-2%] right-[-8%] h-[55%] w-[72%] object-contain object-bottom" />
+      <span data-studio-native-object="object:gallery:memory-frame" className="absolute inset-3" />
+      <span className="zen-memory-seal" lang="ja">記</span>
+    </div>
+  );
+}
+
+/**
+ * Section art deliberately alternates interiors, ink landscapes, bamboo, tea,
+ * blossom and enso imagery so Zen Atelier reads as a Japanese editorial journey
+ * rather than a repeated floral template. These are decorative template assets,
+ * never customer photo slots.
+ */
 export function ZenSectionArtwork({ section }: { section: string }) {
-  const root = "/templates/zen-atelier/";
-  if (["closing", "rsvp", "gallery"].includes(section)) {
-    return <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.webp"} alt="" aria-hidden="true" loading="lazy" className={`pointer-events-none absolute inset-x-0 h-auto w-full object-contain ${section === "gallery" ? "top-0 opacity-15" : "bottom-0 opacity-30"}`} data-studio-native-object={`object:${section}:theme-art`} />;
+  if (section === "greeting") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1122} height={1402} sizes="280px" src={root + "japanroom1.webp"} alt="" loading="lazy" className="zen-art-room" data-studio-native-object="object:greeting:room-art" />
+        <span className="zen-art-red-rule" data-studio-native-object="object:greeting:red-rule" />
+      </ArtShell>
+    );
   }
+
   if (section === "identity") {
-    return <Image width={1254} height={1254} sizes="250px" src={root + "bunga0004.webp"} alt="" aria-hidden="true" loading="lazy" className="pointer-events-none absolute -right-16 bottom-0 h-auto w-[48%] max-w-[250px] object-contain opacity-70" data-studio-native-object="object:identity:theme-art" />;
+    return (
+      <ArtShell section={section}>
+        <Image width={1254} height={1254} sizes="230px" src={root + "redsun1.webp"} alt="" loading="lazy" className="zen-art-sun" data-studio-native-object="object:identity:sun-art" />
+        <Image width={1254} height={1254} sizes="240px" src={root + "bunga0004.webp"} alt="" loading="lazy" className="zen-art-blossom" data-studio-native-object="object:identity:blossom-art" />
+      </ArtShell>
+    );
   }
+
+  if (section === "event") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1122} height={1402} sizes="180px" src={root + "japancup.webp"} alt="" loading="lazy" className="zen-art-cup" data-studio-native-object="object:event:cup-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "dateTime") {
+    return (
+      <ArtShell section={section}>
+        <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud1.webp"} alt="" loading="lazy" className="zen-art-cloud zen-art-cloud-high" data-studio-native-object="object:dateTime:cloud-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "gallery") {
+    return (
+      <ArtShell section={section}>
+        <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.webp"} alt="" loading="lazy" className="zen-art-cloud" data-studio-native-object="object:gallery:cloud-art" />
+        <Image width={1254} height={1254} sizes="190px" src={root + "ensostroke.webp"} alt="" loading="lazy" className="zen-art-enso" data-studio-native-object="object:gallery:enso-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "countdown") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1254} height={1254} sizes="200px" src={root + "ensostroke.webp"} alt="" loading="lazy" className="zen-art-enso zen-art-enso-countdown" data-studio-native-object="object:countdown:enso-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "location") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.webp"} alt="" loading="lazy" className="zen-art-mountain" data-studio-native-object="object:location:mountain-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "rsvp") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1024} height={1536} sizes="210px" src={root + "bamboo1.webp"} alt="" loading="lazy" className="zen-art-bamboo" data-studio-native-object="object:rsvp:bamboo-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "wishes") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1254} height={1254} sizes="220px" src={root + "bunga0003.webp"} alt="" loading="lazy" className="zen-art-wishes-blossom" data-studio-native-object="object:wishes:blossom-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "gift") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1122} height={1402} sizes="170px" src={root + "japancup.webp"} alt="" loading="lazy" className="zen-art-gift-cup" data-studio-native-object="object:gift:cup-art" />
+      </ArtShell>
+    );
+  }
+
+  if (section === "closing") {
+    return (
+      <ArtShell section={section}>
+        <Image width={1254} height={1254} sizes="260px" src={root + "redsun1.webp"} alt="" loading="lazy" className="zen-art-closing-sun" data-studio-native-object="object:closing:sun-art" />
+        <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.webp"} alt="" loading="lazy" className="zen-art-closing-cloud" data-studio-native-object="object:closing:cloud-art" />
+      </ArtShell>
+    );
+  }
+
   return null;
 }
