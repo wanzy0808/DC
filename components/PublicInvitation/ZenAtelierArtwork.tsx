@@ -67,9 +67,9 @@ export function InkMountains({ className = "", style, studioObject }: ArtworkPro
 export function ZenMemoryArtwork() {
   return (
     <div aria-hidden="true" data-studio-native-object="object:gallery:memory-art" className="relative mx-auto aspect-[4/5] max-w-sm overflow-hidden border border-[#938979]/40 bg-[#e9e7d9]">
-      <img src="/templates/Zen%20Atelier/japanroom2.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-room" className="absolute inset-0 h-full w-full object-cover" />
+      <img src="/templates/zen-atelier/japanroom2.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-room" className="absolute inset-0 h-full w-full object-cover" />
       <div data-studio-native-object="object:gallery:memory-gradient" className="absolute inset-0 bg-gradient-to-b from-[#f8f4e9]/10 via-transparent to-[#e8e1d0]/55" />
-      <img src="/templates/Zen%20Atelier/japancup.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-cup" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
+      <img src="/templates/zen-atelier/japancup.webp" alt="" loading="lazy" data-studio-native-object="object:gallery:memory-cup" className="absolute bottom-0 right-0 h-[58%] w-[72%] object-contain object-bottom" />
       <span data-studio-native-object="object:gallery:memory-frame" className="absolute inset-3 border border-[#f7eee0]/60" />
     </div>
   );
@@ -78,7 +78,7 @@ export function ZenMemoryArtwork() {
 /** Every motif is part of the user-supplied public/templates set; only the active
  * Zen template mounts this module. Decorative assets are never user photo slots. */
 export function ZenSectionArtwork({ section }: { section: string }) {
-  const root = "/templates/Zen%20Atelier/";
+  const root = "/templates/zen-atelier/";
   if (["closing", "rsvp", "gallery"].includes(section)) {
     return <Image width={2172} height={724} sizes="(max-width: 640px) 100vw, 672px" src={root + "darkcloud2.webp"} alt="" aria-hidden="true" loading="lazy" className={`pointer-events-none absolute inset-x-0 h-auto w-full object-contain ${section === "gallery" ? "top-0 opacity-15" : "bottom-0 opacity-30"}`} data-studio-native-object={`object:${section}:theme-art`} />;
   }

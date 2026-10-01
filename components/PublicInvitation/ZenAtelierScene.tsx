@@ -20,7 +20,7 @@ type ZenAtelierSceneProps = {
   hashtag?: string | null;
   recipientLine?: string;
 };
-const root = "/templates/Zen%20Atelier/";
+const root = "/templates/zen-atelier/";
 
 export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, allowEnvelopeOpen = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
   const language = useInvitationLanguage();

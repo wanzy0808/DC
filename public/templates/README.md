@@ -1,19 +1,25 @@
 # Invitation template assets
 
-Designer assets can be grouped by template key:
+Every invitation template has one canonical folder under `public/templates/<template-key>/`.
 
 ```text
 public/templates/
   eternal-blossom/
-    preview.jpg
-    hero.jpg
+    README.md
+    preview.webp
+    hero.webp
     music.mp3
   another-template/
-    preview.jpg
+    README.md
+    preview.webp
 ```
 
 Register each template in `lib/templates/catalog.ts`. The app uses one shared invitation renderer, so adding a template does not require duplicating dashboard or route files.
 
-## Shared vs template-owned assets
+## Rules
 
-Keep files here only when they belong to one invitation template. Global brand, landing, marketing, demo, payment and audio assets belong under `public/assets/` instead. Do not add new loose files to the `public/` root.
+- Keep template-specific artwork and its template README together in `public/templates/<template-key>/`.
+- Use lowercase kebab-case template keys and folder names; do not use spaces.
+- Browser-served raster artwork must use WebP. Do not add PNG/JPG/JPEG under `public/`.
+- Global brand, landing, marketing, demo, payment and audio assets belong under `public/assets/`.
+- Do not recreate a second root-level `assets/templates/` directory.

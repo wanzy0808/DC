@@ -16,6 +16,8 @@ const SKIP_DIRS = new Set([
   ".git", "node_modules", ".next", ".turbo", "coverage", "dist", "build",
 ]);
 
+const SOURCE_IMAGE_RE = /\.(png|jpe?g)$/i;
+
 const toPosix = (value) => value.split(path.sep).join("/");
 
 async function walk(dir) {
@@ -33,10 +35,32 @@ async function walk(dir) {
   return out;
 }
 
-async function convertPng(inputPath) {
-  const outputPath = inputPath.replace(/\.png$/i, ".webp");
+async function fileExists(file) {
+  try {
+    await fs.access(file);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function convertImage(inputPath) {
+  const outputPath = inputPath.replace(SOURCE_IMAGE_RE, ".webp");
+  const inputStat = await fs.stat(inputPath);
   const image = sharp(inputPath, { failOn: "warning" });
   const metadata = await image.metadata();
+
+  if (await fileExists(outputPath)) {
+    const outputStat = await fs.stat(outputPath);
+    return {
+      inputPath,
+      outputPath,
+      before: inputStat.size,
+      after: outputStat.size,
+      hasAlpha: Boolean(metadata.hasAlpha),
+      reusedExisting: true,
+    };
+  }
 
   const options = metadata.hasAlpha
     ? {
@@ -53,18 +77,15 @@ async function convertPng(inputPath) {
       };
 
   await image.webp(options).toFile(outputPath);
-
-  const [before, after] = await Promise.all([
-    fs.stat(inputPath),
-    fs.stat(outputPath),
-  ]);
+  const outputStat = await fs.stat(outputPath);
 
   return {
     inputPath,
     outputPath,
-    before: before.size,
-    after: after.size,
+    before: inputStat.size,
+    after: outputStat.size,
     hasAlpha: Boolean(metadata.hasAlpha),
+    reusedExisting: false,
   };
 }
 
@@ -76,27 +97,27 @@ async function updateTextReferences(conversions) {
 
   const replacements = [];
   for (const item of conversions) {
-    const publicRelativePng = toPosix(path.relative(publicDir, item.inputPath));
+    const publicRelativeSource = toPosix(path.relative(publicDir, item.inputPath));
     const publicRelativeWebp = toPosix(path.relative(publicDir, item.outputPath));
-    const repoRelativePng = `public/${publicRelativePng}`;
+    const repoRelativeSource = `public/${publicRelativeSource}`;
     const repoRelativeWebp = `public/${publicRelativeWebp}`;
-    const webPng = `/${publicRelativePng}`;
+    const webSource = `/${publicRelativeSource}`;
     const webWebp = `/${publicRelativeWebp}`;
 
-    const pngBase = path.basename(publicRelativePng);
+    const sourceBase = path.basename(publicRelativeSource);
     const webpBase = path.basename(publicRelativeWebp);
-    const escapedPngBase = pngBase.replace(/\.png$/i, "\\.png");
-    const escapedWebpBase = webpBase.replace(/\.webp$/i, "\\.webp");
+    const escapedSourceBase = sourceBase.replace(/\./g, "\\.");
+    const escapedWebpBase = webpBase.replace(/\./g, "\\.");
 
     replacements.push(
-      [repoRelativePng, repoRelativeWebp],
-      [webPng, webWebp],
-      [publicRelativePng, publicRelativeWebp],
-      [encodeURI(repoRelativePng), encodeURI(repoRelativeWebp)],
-      [encodeURI(webPng), encodeURI(webWebp)],
-      [encodeURI(publicRelativePng), encodeURI(publicRelativeWebp)],
-      [pngBase, webpBase],
-      [escapedPngBase, escapedWebpBase],
+      [repoRelativeSource, repoRelativeWebp],
+      [webSource, webWebp],
+      [publicRelativeSource, publicRelativeWebp],
+      [encodeURI(repoRelativeSource), encodeURI(repoRelativeWebp)],
+      [encodeURI(webSource), encodeURI(webWebp)],
+      [encodeURI(publicRelativeSource), encodeURI(publicRelativeWebp)],
+      [sourceBase, webpBase],
+      [escapedSourceBase, escapedWebpBase],
     );
   }
 
@@ -125,26 +146,27 @@ async function updateTextReferences(conversions) {
 }
 
 const publicFiles = await walk(publicDir);
-const pngFiles = publicFiles
-  .filter((file) => /\.png$/i.test(file))
+const sourceImages = publicFiles
+  .filter((file) => SOURCE_IMAGE_RE.test(file))
   .sort((a, b) => a.localeCompare(b));
 
-if (pngFiles.length === 0) {
-  console.log("No PNG assets found under public/. Nothing to convert.");
+if (sourceImages.length === 0) {
+  console.log("No PNG/JPG/JPEG assets found under public/. Nothing to convert.");
   process.exit(0);
 }
 
-console.log(`Converting ${pngFiles.length} public PNG assets to WebP...\n`);
+console.log(`Converting ${sourceImages.length} public raster assets to WebP...\n`);
 
 const conversions = [];
-for (const png of pngFiles) {
-  const result = await convertPng(png);
+for (const source of sourceImages) {
+  const result = await convertImage(source);
   conversions.push(result);
 
   const beforeMb = (result.before / 1024 / 1024).toFixed(2);
   const afterMb = (result.after / 1024 / 1024).toFixed(2);
-  const rel = toPosix(path.relative(root, png));
-  console.log(`✓ ${rel}  ${beforeMb} MB → ${afterMb} MB`);
+  const rel = toPosix(path.relative(root, source));
+  const note = result.reusedExisting ? " (existing WebP reused)" : "";
+  console.log(`✓ ${rel}  ${beforeMb} MB → ${afterMb} MB${note}`);
 }
 
 const changedFiles = await updateTextReferences(conversions);
@@ -159,7 +181,7 @@ const saved = beforeTotal - afterTotal;
 const percent = beforeTotal > 0 ? (saved / beforeTotal) * 100 : 0;
 
 console.log("\nConversion complete.");
-console.log(`Assets converted: ${conversions.length}`);
+console.log(`Assets normalized: ${conversions.length}`);
 console.log(`Text files updated: ${changedFiles}`);
 console.log(
   `Asset size: ${(beforeTotal / 1024 / 1024).toFixed(2)} MB → ${(

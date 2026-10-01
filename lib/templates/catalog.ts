@@ -180,7 +180,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     description: "Sampul ilustrasi sakura dan pegunungan tinta, potret pasangan editorial, dan galeri foto.",
     descriptionEn: "An illustrated sakura and ink-mountain cover with editorial couple portraits and a photo gallery.",
     previewImage: "/api/template-preview/zen-atelier",
-    assetPath: "assets/templates/zen-atelier",
+    assetPath: "/templates/zen-atelier",
   },
   {
     key: "celestial-ink",

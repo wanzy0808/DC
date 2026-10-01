@@ -1,4 +1,4 @@
-name: Convert public PNG assets to WebP
+name: Normalize public raster assets to WebP
 
 on:
   push:
@@ -6,6 +6,10 @@ on:
       - main
     paths:
       - "public/**/*.png"
+      - "public/**/*.jpg"
+      - "public/**/*.jpeg"
+      - "scripts/convert-public-png-to-webp.mjs"
+      - ".github/workflows/convert-png-to-webp.yml"
 
 permissions:
   contents: write
@@ -40,15 +44,15 @@ jobs:
         env:
           DATABASE_URL: postgresql://ci:ci@localhost:5432/dc_ci
 
-      - name: Convert PNG assets and update references
+      - name: Convert public raster assets and update references
         run: node scripts/convert-public-png-to-webp.mjs
 
-      - name: Verify no public PNG remains
+      - name: Verify public raster assets are WebP
         shell: bash
         run: |
           set -euo pipefail
-          count="$(find public -type f -iname '*.png' | wc -l | tr -d ' ')"
-          echo "Remaining public PNG files: $count"
+          count="$(find public -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l | tr -d ' ')"
+          echo "Remaining PNG/JPG/JPEG files under public/: $count"
           test "$count" = "0"
 
       - name: Source regression tests
@@ -57,7 +61,7 @@ jobs:
       - name: Verify application build
         run: pnpm build
 
-      - name: Commit converted assets
+      - name: Commit normalized assets
         shell: bash
         run: |
           set -euo pipefail
@@ -69,5 +73,5 @@ jobs:
           git config user.name "Undara Asset Bot"
           git config user.email "actions@users.noreply.github.com"
           git add -A
-          git commit -m "Convert public PNG assets to WebP"
+          git commit -m "Normalize public raster assets to WebP"
           git push origin HEAD:main

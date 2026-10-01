@@ -13,6 +13,6 @@ This directory is the canonical home for shared browser-served assets.
 - `payments/banks/` — bank/payment display marks.
 - `audio/` — bundled shared audio tracks.
 
-Template-specific artwork stays in `public/templates/<template>/`. Next.js metadata icons stay in `app/`.
+Template-specific artwork and template documentation stay together in `public/templates/<template-key>/`. There is no second root-level template asset directory.
 
-Use lowercase kebab-case, avoid spaces, and do not add new loose files to the `public/` root.
+Use lowercase kebab-case, avoid spaces, and keep browser-served raster images in WebP. PNG/JPG/JPEG files under `public/` are normalized automatically. Next.js metadata icons stay in `app/`, so `app/icon.png` is intentionally excluded.
