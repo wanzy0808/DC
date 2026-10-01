@@ -11,6 +11,7 @@ on:
       - "scripts/convert-public-png-to-webp.mjs"
       - ".github/workflows/convert-png-to-webp.yml"
       - "tests/repo-file-naming.test.mjs"
+      - "tests/zen-atelier-assets.test.mjs"
 
 permissions:
   contents: write
