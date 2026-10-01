@@ -33,9 +33,9 @@ test("Midnight Romance preserves real photo slots and shared invitation engines"
   assert.match(universal, /<GuestWishes[\s\S]*midnight-romance[\s\S]*\? "zen" : "default"/);
   assert.match(universal, /data-studio-section-element="location:button"/);
   assert.match(universal, /data-studio-section-element="gift:button"/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && <CalendarDays/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && <MapPin/);
-  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && <Gift/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <CalendarDays/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <MapPin/);
+  assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && key !== "golden-art-deco" && key !== "paper-cut-botanical" && <Gift/);
 });
 
 test("Midnight Romance maps all ten local WebP props and keeps them uncropped", () => {
