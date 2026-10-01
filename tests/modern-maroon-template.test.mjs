@@ -70,3 +70,11 @@ test("Modern Maroon defaults to its modern type pairing", () => {
   assert.match(catalog, /key: "modern-maroon"[\s\S]*preset: \{ layout: "maroon", palette: "maroon", font: "syneInter" \}/);
   assert.match(catalog, /Editorial maroon asimetris/);
 });
+
+
+test("Modern Maroon viewport entrances are one-shot to prevent scroll flicker", () => {
+  const nativeMotion = readFileSync(new URL("../components/PublicInvitation/use-native-visual-animations.ts", import.meta.url), "utf8");
+  const photoMotion = readFileSync(new URL("../components/PublicInvitation/use-photo-animations.ts", import.meta.url), "utf8");
+  assert.match(nativeMotion, /const replay = themed && template !== "modern-maroon"/);
+  assert.match(photoMotion, /const replay = themed && theme\?\.template !== "modern-maroon"/);
+});
