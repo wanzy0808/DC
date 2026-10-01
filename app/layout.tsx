@@ -31,6 +31,9 @@ const dmMono = DM_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "
 export const metadata: Metadata = {
   title: "Undara — Undangan & Acara",
   description: "Undara adalah platform undangan digital dan operasional acara untuk publikasi, RSVP, manajemen tamu, dan kebutuhan event.",
+  icons: {
+    icon: [{ url: "/icon.webp", type: "image/webp" }],
+  },
 };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
