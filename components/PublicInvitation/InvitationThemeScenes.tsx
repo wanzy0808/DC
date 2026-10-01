@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import dynamic from "next/dynamic";
-import { ArrowUpRight, Gem, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
+import { ArrowUpRight, Heart, Leaf, Moon, Sparkles, Sun, Star } from "lucide-react";
 import type { PhotoCrop } from "@/lib/templates/photo-slots";
 import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
