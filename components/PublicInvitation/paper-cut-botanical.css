@@ -1,0 +1,180 @@
+.paper-cut-botanical-invitation {
+  --pcb-clay: #c98670;
+  --pcb-cream: #fff8e9;
+  --pcb-shadow: rgba(68, 68, 49, .16);
+  container-type: inline-size;
+  border: 0;
+  border-radius: 0;
+  overflow-wrap: anywhere;
+  background: var(--inv-bg);
+  font-size: 15px;
+  line-height: 1.75;
+}
+.paper-cut-botanical-invitation ::selection { background: var(--inv-accent); color: var(--pcb-cream); }
+.paper-cut-botanical-invitation :is(button,a,input,textarea,select,[tabindex]):focus-visible { outline: 2px solid currentColor; outline-offset: 5px; }
+
+.pcb-art { position: relative; display: block; pointer-events: none; }
+.pcb-art img { display: block; width: 100%; height: auto; object-fit: contain; }
+
+.pcb-envelope,.pcb-cover {
+  position: relative;
+  min-height: clamp(810px,208cqw,1160px);
+  overflow: hidden;
+  color: var(--inv-ink);
+  background:
+    radial-gradient(circle at 12% 12%,color-mix(in srgb,var(--pcb-clay) 12%,transparent),transparent 22%),
+    radial-gradient(circle at 86% 84%,color-mix(in srgb,var(--inv-accent) 13%,transparent),transparent 27%),
+    var(--inv-bg);
+}
+.pcb-envelope { display:flex; flex-direction:column; align-items:center; padding:clamp(52px,13cqw,78px) clamp(22px,6.8cqw,44px) 46px; text-align:center; }
+.pcb-envelope-paper { position:absolute; pointer-events:none; box-shadow:0 18px 38px var(--pcb-shadow); }
+.pcb-envelope-paper-back { left:-16%; top:8%; width:74%; height:42%; rotate:-8deg; background:color-mix(in srgb,var(--inv-soft) 78%,var(--pcb-cream)); clip-path:polygon(0 8%,88% 0,100% 82%,14% 100%); }
+.pcb-envelope-paper-middle { right:-18%; top:20%; width:73%; height:37%; rotate:7deg; background:color-mix(in srgb,var(--pcb-clay) 48%,var(--inv-surface)); clip-path:polygon(7% 0,100% 10%,88% 100%,0 78%); }
+.pcb-envelope-ribbon { position:absolute; z-index:2; left:-14%; top:4%; width:clamp(170px,47cqw,270px); rotate:-18deg; opacity:.5; }
+.pcb-envelope-lantern { position:absolute; z-index:2; right:-3%; bottom:4%; width:clamp(90px,25cqw,142px); opacity:.52; }
+.pcb-envelope-kicker { position:relative; z-index:4; margin:clamp(82px,22cqw,128px) 0 0; color:var(--inv-accent); font-size:9px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; }
+.pcb-envelope-names { position:relative; z-index:4; max-width:88%; margin:17px 0 0; font-family:var(--inv-heading); font-size:clamp(2rem,10cqw,3.85rem); font-weight:400; line-height:.98; letter-spacing:.01em; }
+.pcb-envelope-date { position:relative; z-index:4; margin:15px 0 0; color:var(--pcb-clay); font-size:10px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; }
+.pcb-envelope-stage { position:relative; z-index:5; width:min(82cqw,410px); min-height:365px; margin:42px auto 24px; }
+.pcb-envelope-letter-motion { position:absolute; z-index:4; left:50%; top:2px; width:78%; translate:-50% 0; }
+.pcb-envelope-letter { position:relative; min-height:285px; overflow:hidden; border:1px solid color-mix(in srgb,var(--inv-accent) 28%,transparent); background:var(--pcb-cream); padding:54px 28px 30px; box-shadow:0 22px 42px var(--pcb-shadow); }
+.pcb-envelope-letter::after { content:""; position:absolute; inset:12px; border:1px dashed color-mix(in srgb,var(--inv-accent) 24%,transparent); pointer-events:none; }
+.pcb-envelope-ticket { position:absolute; z-index:0; right:-15%; top:-2%; width:54%; rotate:12deg; opacity:.14; }
+.pcb-letter-kicker,.pcb-recipient,.pcb-letter-names { position:relative; z-index:2; }
+.pcb-letter-kicker { margin:0; color:var(--inv-accent); font-size:8px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; }
+.pcb-recipient { max-width:28ch; margin:28px auto 0; white-space:pre-line; font-size:12px; line-height:1.8; }
+.pcb-letter-names { margin:24px 0 0; font-family:var(--inv-heading); font-size:clamp(1.35rem,6.2cqw,2.3rem); line-height:1.1; }
+.pcb-envelope-flap { position:absolute; z-index:5; left:5%; right:5%; bottom:6%; height:46%; transform-origin:50% 100%; background:color-mix(in srgb,var(--inv-soft) 80%,var(--pcb-cream)); clip-path:polygon(0 100%,50% 18%,100% 100%); filter:drop-shadow(0 -8px 12px rgba(67,70,47,.08)); }
+.pcb-envelope-seal { position:absolute; z-index:7; left:50%; bottom:12%; width:clamp(62px,17cqw,92px); translate:-50% 0; filter:drop-shadow(0 8px 10px rgba(70,66,45,.18)); }
+.pcb-action { display:inline-flex; min-height:44px; align-items:center; justify-content:center; gap:10px; border:1px solid color-mix(in srgb,var(--inv-accent) 42%,transparent); border-radius:var(--undara-control-radius); background:var(--inv-accent); color:white; padding:11px 22px; font-size:12px; font-weight:700; letter-spacing:.04em; text-decoration:none; box-shadow:5px 6px 0 color-mix(in srgb,var(--pcb-clay) 28%,transparent); transition:transform 150ms cubic-bezier(.23,1,.32,1),filter 170ms cubic-bezier(.23,1,.32,1); }
+.pcb-action:active { transform:translateY(1px) scale(.985); }
+.pcb-open { position:relative; z-index:8; margin-top:auto; min-width:min(100%,245px); }
+
+.pcb-cover { min-height:clamp(840px,218cqw,1210px); padding:clamp(44px,12cqw,72px) clamp(22px,6.5cqw,44px) 58px; }
+.pcb-cover-paper { position:absolute; pointer-events:none; box-shadow:0 28px 60px var(--pcb-shadow); }
+.pcb-cover-paper-back { z-index:1; left:-11%; top:7%; width:86%; height:67%; rotate:-5deg; background:color-mix(in srgb,var(--inv-soft) 72%,var(--pcb-cream)); clip-path:polygon(0 5%,93% 0,100% 80%,14% 100%); }
+.pcb-cover-paper-middle { z-index:2; right:-20%; bottom:8%; width:76%; height:63%; rotate:6deg; background:color-mix(in srgb,var(--pcb-clay) 42%,var(--inv-surface)); clip-path:polygon(12% 0,100% 8%,86% 100%,0 87%); }
+.pcb-cover-window { position:absolute; z-index:3; right:-5%; top:17%; width:58%; height:50%; border:18px solid var(--inv-surface); background:color-mix(in srgb,var(--inv-soft) 38%,transparent); clip-path:polygon(10% 0,94% 6%,100% 87%,13% 100%,0 19%); rotate:2.5deg; box-shadow:0 20px 34px rgba(68,68,49,.12); }
+.pcb-cover-ribbon { position:absolute; z-index:4; left:-16%; top:-1%; width:clamp(190px,52cqw,300px); rotate:-14deg; opacity:.58; }
+.pcb-cover-couple { position:absolute; z-index:4; right:-2%; top:19%; width:clamp(190px,51cqw,300px); filter:drop-shadow(0 18px 26px rgba(65,70,50,.12)); }
+.pcb-cover-ticket { position:absolute; z-index:5; left:2%; bottom:8%; width:clamp(118px,31cqw,175px); rotate:-10deg; opacity:.82; }
+.pcb-cover-seal { position:absolute; z-index:6; right:6%; bottom:4%; width:clamp(74px,20cqw,110px); rotate:8deg; }
+.pcb-cover-kicker { position:absolute; z-index:7; left:10%; top:14%; margin:0; color:var(--pcb-clay); font-size:9px; font-weight:700; letter-spacing:.24em; text-transform:uppercase; }
+.pcb-cover-copy { position:absolute; z-index:7; left:9%; top:25%; width:min(51%,310px); text-align:left; }
+.pcb-cover-names { margin:0; font-family:var(--inv-heading); font-size:clamp(2.35rem,11.2cqw,4.55rem); font-weight:400; line-height:.92; letter-spacing:.005em; }
+.pcb-cover-names>span { display:block; max-width:7.5ch; }
+.pcb-cover-name-second { margin-left:18%; }
+.pcb-cover-names em { display:block; width:max-content; margin:10px 0 10px 28%; color:var(--pcb-clay); font-family:Georgia,serif; font-size:.48em; font-style:italic; }
+.pcb-cover-caption { max-width:22ch; margin:25px 0 0; border-left:3px solid var(--pcb-clay); padding-left:14px; font-size:12px; line-height:1.8; opacity:.72; }
+.pcb-cover-date { position:absolute; z-index:7; right:3.5%; top:12%; margin:0; color:var(--inv-accent); font-size:9px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; writing-mode:vertical-rl; }
+
+.pcb-section { position:relative; min-height:clamp(450px,116cqw,700px); overflow:hidden; padding-block:clamp(78px,20cqw,120px); padding-inline:clamp(25px,7.5cqw,50px); }
+.pcb-section::before { content:""; position:absolute; z-index:0; left:-11%; top:9%; width:42%; height:26%; rotate:-5deg; background:color-mix(in srgb,var(--inv-soft) 18%,transparent); clip-path:polygon(0 8%,91% 0,100% 78%,10% 100%); pointer-events:none; }
+.pcb-section h2 { position:relative; z-index:3; max-width:12ch; margin:0 0 36px; font-family:var(--inv-heading); font-size:clamp(2rem,8.7cqw,3.55rem); font-weight:400; line-height:1.02; letter-spacing:.005em; }
+.pcb-section h2::after { content:""; display:block; width:42px; height:14px; margin-top:17px; rotate:-2deg; background:var(--pcb-clay); clip-path:polygon(0 20%,100% 0,94% 82%,6% 100%); opacity:.7; }
+.pcb-section-art { position:absolute; z-index:1; pointer-events:none; }
+.pcb-art-greeting { right:-7%; top:6%; width:41%; rotate:10deg; opacity:.38; }
+.pcb-art-event { right:-5%; bottom:7%; width:35%; rotate:9deg; opacity:.43; }
+.pcb-art-dateTime { left:-2%; bottom:2%; width:27%; opacity:.46; }
+.pcb-art-countdown { right:-2%; top:6%; width:26%; opacity:.36; }
+.pcb-art-location { left:-8%; bottom:0; width:43%; opacity:.38; }
+.pcb-art-rsvp { right:1%; top:8%; width:24%; opacity:.32; }
+.pcb-art-wishes { left:-5%; bottom:2%; width:34%; rotate:-7deg; opacity:.35; }
+.pcb-art-gift { right:-3%; bottom:1%; width:35%; opacity:.34; }
+.pcb-art-closing { right:-7%; bottom:-2%; width:42%; rotate:10deg; opacity:.31; }
+
+.paper-cut-botanical-invitation [data-invitation-section="greeting"] [data-studio-native-object="object:greeting:copy-group"] { position:relative; z-index:3; max-width:34ch; margin:0; text-align:left; font-size:15px; line-height:2; opacity:1; }
+
+.pcb-identity { position:relative; min-height:clamp(570px,146cqw,800px); padding:32px 0 28px; }
+.pcb-identity-paper { position:absolute; z-index:0; left:11%; top:9%; width:70%; height:64%; rotate:-4deg; background:color-mix(in srgb,var(--inv-surface) 82%,var(--inv-soft)); clip-path:polygon(2% 6%,96% 0,100% 87%,12% 100%); box-shadow:0 24px 45px var(--pcb-shadow); }
+.pcb-identity-couple { position:absolute; z-index:1; left:50%; top:10%; width:min(54%,290px); translate:-50% 0; opacity:.86; }
+.pcb-identity-ribbon { position:absolute; z-index:2; right:-8%; top:2%; width:40%; rotate:18deg; opacity:.42; }
+.pcb-person { position:relative; z-index:4; width:62%; background:var(--pcb-cream); box-shadow:7px 9px 0 color-mix(in srgb,var(--inv-soft) 44%,transparent); padding:18px 20px 20px; }
+.pcb-person-first { margin:250px auto 0 0; rotate:-2deg; text-align:left; }
+.pcb-person-second { margin:24px 0 0 auto; rotate:2deg; text-align:right; }
+.pcb-person-tab { display:block; margin-bottom:8px; color:var(--pcb-clay); font-size:8px; font-weight:700; letter-spacing:.18em; }
+.pcb-person-name { margin:0; font-family:var(--inv-heading); font-size:clamp(1.75rem,7.8cqw,3.25rem); line-height:1; }
+.pcb-person-parents { margin:12px 0 0; font-size:11px; line-height:1.75; opacity:.68; }
+.pcb-identity-amp { position:absolute; z-index:5; left:50%; top:66%; color:var(--inv-accent); font-family:Georgia,serif; font-size:clamp(34px,9cqw,52px); font-style:italic; translate:-50% -50%; }
+.pcb-identity-single { display:grid; place-items:center; text-align:center; }
+.pcb-identity-single .pcb-identity-paper { left:15%; width:70%; }
+.pcb-identity-book { position:relative; z-index:2; width:min(63%,330px); margin:80px auto 20px; opacity:.6; }
+.pcb-identity-single .pcb-person-name { position:relative; z-index:4; max-width:82%; }
+
+.paper-cut-botanical-invitation [data-invitation-subsection="our-story"] { background:linear-gradient(174deg,transparent 0 8%,color-mix(in srgb,var(--inv-surface) 86%,var(--inv-soft)) 8.2% 91%,transparent 91.2%),var(--inv-bg); }
+.paper-cut-botanical-invitation [data-invitation-subsection="our-story"]>div { text-align:left; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:identity:our-story-heading"] { max-width:12ch; font-family:var(--inv-heading); font-size:clamp(28px,8cqw,44px); line-height:1.05; }
+
+.paper-cut-botanical-invitation [data-studio-native-object="object:event:details-group"] { position:relative; z-index:3; width:66%; max-width:none; margin:0; border-left:3px solid var(--pcb-clay); background:color-mix(in srgb,var(--inv-surface) 78%,transparent); padding:24px 24px 25px; box-shadow:8px 10px 0 color-mix(in srgb,var(--inv-soft) 38%,transparent); rotate:-1deg; text-align:left; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:event:event-title"] { font-family:var(--inv-heading); font-size:clamp(23px,7cqw,38px)!important; line-height:1.08; }
+
+.paper-cut-botanical-invitation [data-invitation-section="dateTime"] h2,.paper-cut-botanical-invitation [data-invitation-section="location"] h2 { margin-left:auto; text-align:right; }
+.paper-cut-botanical-invitation [data-invitation-section="dateTime"] h2::after,.paper-cut-botanical-invitation [data-invitation-section="location"] h2::after { margin-left:auto; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:dateTime:panel"] { position:relative; z-index:3; width:72%; max-width:none; margin-left:auto; border:0; border-radius:0; background:var(--pcb-cream); padding:27px 25px; box-shadow:-9px 10px 0 color-mix(in srgb,var(--inv-soft) 42%,transparent); rotate:1.2deg; text-align:right; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:dateTime:calendar-icon"] { display:none; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:dateTime:date"] { margin-top:0; font-family:var(--inv-heading); font-size:clamp(24px,7.7cqw,42px); line-height:1.16; }
+
+.pcb-gallery { position:relative; z-index:3; padding:8px 0 18px; }
+.pcb-collage { position:relative; display:grid; align-items:center; min-height:clamp(250px,66cqw,375px); background:var(--pcb-cream); box-shadow:10px 12px 0 color-mix(in srgb,var(--inv-soft) 38%,transparent); padding:28px; }
+.pcb-collage+.pcb-collage { margin-top:34px; }
+.pcb-collage-keepsake { grid-template-columns:minmax(0,1fr) minmax(100px,.82fr); rotate:-1.4deg; }
+.pcb-collage-note { grid-template-columns:minmax(0,1.1fr) minmax(104px,.9fr); margin-left:7%; rotate:1.3deg; }
+.pcb-collage-journey { display:block; min-height:clamp(310px,80cqw,460px); overflow:hidden; background:color-mix(in srgb,var(--inv-soft) 58%,var(--pcb-cream)); rotate:-.6deg; }
+.pcb-tape { position:absolute; z-index:4; width:72px; height:20px; background:color-mix(in srgb,var(--pcb-clay) 56%,var(--pcb-cream)); opacity:.58; }
+.pcb-tape-one { left:18%; top:-9px; rotate:-7deg; }
+.pcb-collage-art { width:100%; }
+.pcb-ticket-art { rotate:8deg; opacity:.72; }
+.pcb-polaroid-art { rotate:6deg; opacity:.78; }
+.pcb-collage-copy { position:relative; z-index:3; }
+.pcb-collage-index { display:block; margin-bottom:14px; color:var(--pcb-clay); font-size:8px; font-weight:700; letter-spacing:.18em; }
+.pcb-collage h3 { max-width:10ch; margin:0; font-family:var(--inv-heading); font-size:clamp(1.65rem,7.1cqw,2.85rem); font-weight:400; line-height:1; }
+.pcb-collage p { max-width:27ch; margin:16px 0 0; font-size:12px; line-height:1.85; opacity:.72; }
+.pcb-balloon-art { position:absolute; right:-7%; bottom:-8%; width:53%; rotate:8deg; opacity:.5; }
+.pcb-collage-journey .pcb-collage-copy { width:62%; margin:24px 0 0; }
+
+.paper-cut-botanical-invitation [data-invitation-section="countdown"] { text-align:center; }
+.paper-cut-botanical-invitation [data-invitation-section="countdown"] h2 { max-width:14ch; margin-inline:auto; }
+.paper-cut-botanical-invitation [data-invitation-section="countdown"] h2::after { margin-inline:auto; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"] { position:relative; z-index:3; gap:8px; margin-top:32px; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"]>div { border:0; border-radius:0; background:var(--pcb-cream); padding:17px 2px; box-shadow:4px 5px 0 color-mix(in srgb,var(--inv-soft) 35%,transparent); }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"]>div:nth-child(1) { rotate:-1.3deg; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"]>div:nth-child(2) { rotate:.8deg; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"]>div:nth-child(3) { rotate:-1deg; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:countdown:grid"]>div:nth-child(4) { rotate:1.2deg; }
+.paper-cut-botanical-invitation [data-studio-native-object^="object:countdown:"][data-studio-native-object$="-value"] { color:inherit; font-family:var(--inv-heading); font-size:clamp(27px,9cqw,48px); line-height:1; }
+.paper-cut-botanical-invitation [data-studio-native-object^="object:countdown:"][data-studio-native-object$="-label"] { margin-top:10px; font-size:8px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.58; }
+
+.paper-cut-botanical-invitation [data-studio-native-object="object:location:details-group"] { position:relative; z-index:3; width:68%; max-width:none; margin-left:auto; background:var(--pcb-cream); padding:26px 24px; box-shadow:-8px 10px 0 color-mix(in srgb,var(--inv-soft) 40%,transparent); rotate:1deg; text-align:right; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:location:map-icon"] { display:none; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:location:venue"] { font-family:var(--inv-heading); font-size:clamp(21px,6.4cqw,34px); line-height:1.17; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:rsvp:intro"] { position:relative; z-index:3; max-width:32ch; margin-left:0; text-align:left; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:rsvp:form-group"],.paper-cut-botanical-invitation [data-studio-native-object="object:wishes:form-group"] { position:relative; z-index:3; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:gift:panel"] { position:relative; z-index:3; width:73%; max-width:none; margin:0; border:0; border-radius:0; background:var(--pcb-cream); padding:27px; box-shadow:9px 11px 0 color-mix(in srgb,var(--inv-soft) 40%,transparent); rotate:-1deg; text-align:left; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:gift:gift-icon"] { display:none; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:gift:account-number"] { font-size:clamp(21px,6.6cqw,33px); }
+.paper-cut-botanical-invitation [data-studio-native-object="object:closing:copy-group"] { position:relative; z-index:3; max-width:34ch; margin:0; text-align:left; }
+.paper-cut-botanical-invitation [data-studio-native-object="object:closing:names"] { margin-top:34px; font-family:var(--inv-heading); font-size:clamp(27px,8.6cqw,46px); line-height:1.06; }
+
+.pcb-footer { position:relative; display:flex; min-height:72px; align-items:center; justify-content:center; gap:11px; border-top:1px dashed color-mix(in srgb,var(--inv-accent) 34%,transparent); background:var(--inv-surface); padding:20px 24px 26px; }
+.pcb-footer-mark { display:block; width:20px; height:14px; rotate:-5deg; background:var(--inv-accent); clip-path:polygon(0 18%,100% 0,92% 82%,8% 100%); opacity:.7; }
+.pcb-footer-signature { font-size:9px; font-weight:700; letter-spacing:.18em; text-transform:uppercase; }
+
+@media (hover:hover) and (pointer:fine) {
+  .pcb-action:hover { transform:translateY(-1px); filter:brightness(1.05); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .paper-cut-botanical-invitation .pcb-action { transition:none; }
+  .paper-cut-botanical-invitation .pcb-action:active,.paper-cut-botanical-invitation .pcb-action:hover { transform:none; }
+}
+@container (max-width:330px) {
+  .pcb-envelope,.pcb-cover,.pcb-section { padding-inline:20px; }
+  .pcb-cover-copy { left:8%; top:26%; width:54%; }
+  .pcb-cover-couple { right:-7%; width:54%; }
+  .pcb-cover-ticket { left:-1%; width:29%; }
+  .pcb-cover-seal { right:2%; }
+  .pcb-person { width:69%; }
+  .pcb-person-first { margin-top:225px; }
+  .pcb-collage { padding:23px; }
+  .pcb-collage-note { margin-left:4%; }
+  .paper-cut-botanical-invitation [data-studio-native-object="object:event:details-group"],.paper-cut-botanical-invitation [data-studio-native-object="object:location:details-group"] { width:73%; }
+}
