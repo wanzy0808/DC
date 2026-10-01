@@ -142,6 +142,7 @@ const ZenAtelierScene = dynamic(() => import("@/components/PublicInvitation/ZenA
 const SereinScene = dynamic(() => import("@/components/PublicInvitation/SereinScene"));
 const EternalBlossomScene = dynamic(() => import("@/components/PublicInvitation/EternalBlossomScene"));
 const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
+const GardenLightScene = dynamic(() => import("@/components/PublicInvitation/GardenLightScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
@@ -160,6 +161,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
   if (theme === "eternal-blossom") return <EternalBlossomScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "garden-light") return <GardenLightScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
