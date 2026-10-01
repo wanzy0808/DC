@@ -48,7 +48,7 @@
   padding:clamp(58px,16cqw,96px) clamp(24px,7cqw,48px) 48px;
   text-align:center;
 }
-.mr-envelope-chandelier { position:absolute; z-index:2; left:50%; top:-1%; width:clamp(165px,48cqw,260px); translate:-50% 0; opacity:.78; }
+.mr-envelope-chandelier { position:absolute; z-index:2; left:50%; top:1%; width:clamp(165px,48cqw,260px); translate:-50% 0; opacity:.78; }
 .mr-envelope-lantern { position:absolute; z-index:2; right:4%; bottom:10%; width:clamp(82px,23cqw,128px); opacity:.72; }
 .mr-envelope-kicker,.mr-cover-kicker {
   position:relative;
@@ -114,7 +114,7 @@
 }
 .mr-cover-glow { opacity:.66; }
 .mr-cover-kicker { margin-left:4%; }
-.mr-cover-chandelier { position:absolute; z-index:2; left:50%; top:-1%; width:clamp(155px,45cqw,245px); translate:-50% 0; opacity:.74; }
+.mr-cover-chandelier { position:absolute; z-index:2; left:50%; top:1%; width:clamp(155px,45cqw,245px); translate:-50% 0; opacity:.74; }
 .mr-cover-arch { position:absolute; z-index:1; left:50%; top:8%; width:clamp(285px,87cqw,480px); translate:-50% 0; opacity:.92; }
 .mr-cover-garland { position:absolute; z-index:2; left:50%; bottom:5%; width:88%; translate:-50% 0; opacity:.48; }
 .mr-cover-media { position:relative; z-index:3; width:min(72%,370px); margin:clamp(130px,35cqw,190px) auto 0; }
@@ -202,8 +202,8 @@
 .midnight-romance-invitation [data-invitation-section="identity"] > div > [data-studio-native-object="object:identity:heading-group"] { position:relative; z-index:3; }
 .midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personOne-group"],
 .midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personTwo-group"] { position:relative; z-index:3; }
-.midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personOne-group"] { margin-top:28px; transform:translateY(-8px); }
-.midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personTwo-group"] { margin-top:74px; transform:translateY(12px); }
+.midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personOne-group"] { margin-top:28px; translate:0 -8px; }
+.midnight-romance-invitation [data-invitation-section="identity"] [data-studio-native-object="object:identity:personTwo-group"] { margin-top:74px; translate:0 12px; }
 .midnight-romance-invitation [data-invitation-photo-slot="personOne"],
 .midnight-romance-invitation [data-invitation-photo-slot="personTwo"] { position:relative; border:1px solid color-mix(in srgb,var(--inv-accent) 52%,transparent); border-radius:120px 120px 10px 10px; padding:5px; background:color-mix(in srgb,var(--inv-surface) 72%,transparent); box-shadow:0 18px 38px rgba(0,0,0,.28); }
 .midnight-romance-invitation [data-invitation-photo-slot="personOne"] img,
