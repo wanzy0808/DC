@@ -48,7 +48,7 @@ export function useInvitationPhotoAnimations(
       )).map((node) => ({ node, strength }));
     }).slice(0, MAX_PHOTO_PARALLAX_TARGETS);
 
-    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance"].includes(theme?.template ?? "");
+    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"].includes(theme?.template ?? "");
     const stopEntrance = observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,

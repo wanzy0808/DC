@@ -89,7 +89,6 @@ type EnvelopeVisual = {
 const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
   "botanical-ivory": { backdrop: "#f0efde", surface: "#fffdf2", flap: "#cbd6ba", border: "#849878", ink: "#50634d", symbol: "❧", effect: "rounded-[9px]" },
-  "classic-pearl": { backdrop: "#efebe1", surface: "#fffdf6", flap: "#dcd0b8", border: "#b3a181", ink: "#534a3d", symbol: "◇", effect: "rounded-t-[140px] rounded-b-[14px]" },
   "golden-art-deco": { backdrop: "#171912", surface: "#23271d", flap: "#a48b49", border: "#dfc482", ink: "#f1d99f", symbol: "◆", effect: "rounded-none" },
   "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
@@ -142,6 +141,7 @@ const EternalBlossomScene = dynamic(() => import("@/components/PublicInvitation/
 const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
 const GardenLightScene = dynamic(() => import("@/components/PublicInvitation/GardenLightScene"));
 const MidnightRomanceScene = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceScene"));
+const ClassicPearlScene = dynamic(() => import("@/components/PublicInvitation/ClassicPearlScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
@@ -162,6 +162,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "garden-light") return <GardenLightScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "midnight-romance") return <MidnightRomanceScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "classic-pearl") return <ClassicPearlScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
@@ -237,22 +238,6 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
   const content = tr("The Celebration");
-  if (theme === "classic-pearl") return <section className={`${center} bg-[var(--inv-scene-bg,#f8f6ef)] text-[color:var(--inv-scene-ink,#37352f)]`} data-invitation-section={stage}>
-    <span aria-hidden data-studio-native-object="object:cover:border-outer" className="absolute inset-5 border border-[var(--inv-scene-accent,#b4a88c)]" />
-    <span aria-hidden data-studio-native-object="object:cover:border-inner" className="absolute inset-8 border border-[var(--inv-scene-accent,#d8ceba)]" />
-    <div data-studio-native-object="object:cover:content-group" className="relative flex flex-col items-center">
-      <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mt-14 text-[color:var(--inv-scene-text,#8a7c62)]`}>Classic Pearl</p>
-      <div data-studio-native-object="object:cover:oval-frame" className="relative mt-10 flex h-[280px] w-[min(66vw,265px)] items-center justify-center rounded-full border border-[var(--inv-scene-accent,#baa989)]">
-        <div aria-hidden data-studio-native-object="object:cover:oval-inner" className="absolute inset-3 rounded-full border border-[var(--inv-scene-accent,#c9b99b)]" />
-        <Gem aria-hidden data-studio-native-object="object:cover:gem" className="absolute -top-5 h-10 w-10 bg-[var(--inv-scene-soft,#f8f6ef)] p-2 text-[color:var(--inv-scene-text,#917f5c)]" strokeWidth={0.8} />
-        <Names className="z-10 px-5 text-3xl">{names}</Names>
-      </div>
-      <Lines studioObject="object:cover:ornament" className="relative mt-10"><Gem className="h-4 w-4"/></Lines>
-      <p data-studio-native-object="object:cover:date" className="relative mt-7 text-xs uppercase tracking-[.22em]">{date}</p>
-      <p data-studio-native-object="object:cover:closing-copy" className="relative mt-9 max-w-xs text-xs leading-7 tracking-[.18em]">{tr("WITH LOVE AND GRATITUDE")}</p>
-    </div>
-  </section>;
-
   if (theme === "golden-art-deco") return <section className={`${center} bg-[var(--inv-scene-bg,#191b17)] text-[color:var(--inv-scene-ink,#e4c888)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:border-outer" className="absolute inset-4 border border-[var(--inv-scene-accent,#ba9a55)]/65" />
     <div aria-hidden data-studio-native-object="object:cover:border-inner" className="absolute inset-8 border border-[var(--inv-scene-accent,#ba9a55)]/30" />

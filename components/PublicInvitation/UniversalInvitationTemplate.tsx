@@ -15,6 +15,7 @@ import "./eternal-blossom.css";
 import "./modern-maroon.css";
 import "./garden-light.css";
 import "./midnight-romance.css";
+import "./classic-pearl.css";
 import InvitationThemeScenes from "@/components/PublicInvitation/InvitationThemeScenes";
 import RsvpForm from "@/components/InvitationStudio/RsvpForm";
 import GuestWishes from "@/components/PublicInvitation/GuestWishes";
@@ -63,6 +64,9 @@ const GardenLightGallery = dynamic(() => import("@/components/PublicInvitation/G
 const MidnightRomanceSectionArt = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceArtwork").then((module) => module.MidnightRomanceSectionArt));
 const MidnightRomanceGallery = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceGallery"));
 const ConfigurablePhotoGallery = dynamic(() => import("@/components/PublicInvitation/ConfigurablePhotoGallery"));
+const ClassicPearlSectionArt = dynamic(() => import("@/components/PublicInvitation/ClassicPearlArtwork").then((module) => module.ClassicPearlSectionArt));
+const ClassicPearlIdentity = dynamic(() => import("@/components/PublicInvitation/ClassicPearlArtwork").then((module) => module.ClassicPearlIdentity));
+const ClassicPearlGallery = dynamic(() => import("@/components/PublicInvitation/ClassicPearlGallery"));
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -299,7 +303,8 @@ export default function UniversalInvitationTemplate({
     "--bi-on-accent": readableInk(palette.accent, palette.surface),
     "--bi-surface-ink": readableInk(palette.surface, palette.ink),
     "--mr-on-accent": readableInk(palette.accent, palette.bg),
-    "--inv-ink": key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" ? readableInk(palette.bg, palette.ink) : palette.ink,
+    "--cp-on-accent": readableInk(palette.accent, palette.surface),
+    "--inv-ink": key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" ? readableInk(palette.bg, palette.ink) : palette.ink,
     "--inv-accent": palette.accent,
     "--inv-soft": palette.soft,
     color: palette.ink,
@@ -320,7 +325,7 @@ export default function UniversalInvitationTemplate({
       setOpened(true);
       setOpening(false);
       onEnvelopeOpened?.();
-    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance") ? 950 : key === "pencil-reverie" ? 1050 : 1350);
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl") ? 950 : key === "pencil-reverie" ? 1050 : 1350);
     return () => window.clearTimeout(timer);
   }, [opening, onEnvelopeOpened, key, sectionStyles]);
   useEffect(() => {
@@ -362,7 +367,7 @@ export default function UniversalInvitationTemplate({
   const handleOpen = (immediate = false) => {
     musicRef.current?.playOnOpen();
     if (immediate) { setOpened(true); onEnvelopeOpened?.(); return; }
-    if (key === "zen-atelier" || key === "pencil-reverie" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance") {
+    if (key === "zen-atelier" || key === "pencil-reverie" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl") {
       setOpening(true);
     } else {
       setOpened(true);
@@ -425,6 +430,7 @@ export default function UniversalInvitationTemplate({
     const modern = key === "modern-maroon";
     const garden = key === "garden-light";
     const midnight = key === "midnight-romance";
+    const classic = key === "classic-pearl";
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
     const modernDarkSection = ["identity", "dateTime", "rsvp", "gift"].includes(keyName);
     const modernSoftSection = ["event", "countdown", "wishes"].includes(keyName);
@@ -467,15 +473,29 @@ export default function UniversalInvitationTemplate({
       gift: "var(--inv-surface)",
       closing: "var(--inv-bg)",
     };
-    const backdrop = modern ? (modernBackdrop[keyName] ?? "var(--inv-bg)") : garden ? (gardenBackdrop[keyName] ?? "var(--inv-bg)") : midnight ? (midnightBackdrop[keyName] ?? "var(--inv-bg)") : botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
+    const classicBackdrop: Partial<Record<keyof typeof headings, string>> = {
+      greeting: "var(--inv-surface)",
+      identity: "var(--inv-bg)",
+      event: "color-mix(in srgb,var(--inv-surface) 72%,var(--inv-soft))",
+      dateTime: "var(--inv-bg)",
+      gallery: "var(--inv-surface)",
+      countdown: "color-mix(in srgb,var(--inv-soft) 22%,var(--inv-bg))",
+      location: "var(--inv-surface)",
+      rsvp: "var(--inv-bg)",
+      wishes: "color-mix(in srgb,var(--inv-surface) 80%,var(--inv-soft))",
+      gift: "var(--inv-bg)",
+      closing: "var(--inv-surface)",
+    };
+    const backdrop = modern ? (modernBackdrop[keyName] ?? "var(--inv-bg)") : garden ? (gardenBackdrop[keyName] ?? "var(--inv-bg)") : midnight ? (midnightBackdrop[keyName] ?? "var(--inv-bg)") : classic ? (classicBackdrop[keyName] ?? "var(--inv-bg)") : botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
     const color = modern
       ? readableInk(modernDarkSection ? palette.bg : modernSoftSection ? palette.surface : palette.surface, palette.ink)
       : garden ? (sectionStyles[keyName]?.background ? readableInk(sectionStyles[keyName].background, palette.ink) : palette.ink)
       : midnight ? (sectionStyles[keyName]?.background ? readableInk(sectionStyles[keyName].background, palette.ink) : palette.ink)
+      : classic ? (sectionStyles[keyName]?.background ? readableInk(sectionStyles[keyName].background, palette.ink) : palette.ink)
       : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
       <>
-      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : garden ? "gl-section" : midnight ? "mr-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || serein || botanical || blossom || garden || midnight || modern ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
+      <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : garden ? "gl-section" : midnight ? "mr-section" : classic ? "cp-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || serein || botanical || blossom || garden || midnight || classic || modern ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
         style={{ backgroundColor: backdrop, color, backgroundImage: zen ? "radial-gradient(circle at 10% 40%,rgba(112,100,81,.055),transparent 42%)" : undefined, ...invitationSectionStyleCss(sectionStyles[keyName]) }}
       >
         {botanical && <BotanicalSectionArt section={keyName} />}
@@ -483,14 +503,14 @@ export default function UniversalInvitationTemplate({
         {modern && <ModernMaroonSectionArt section={keyName} />}
         {garden && <GardenLightSectionArt section={keyName} />}
         {midnight && <MidnightRomanceSectionArt section={keyName} />}
-        {key === "classic-pearl" && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-border`} className="pointer-events-none absolute inset-3 border border-[#b4a88c]/35" />}
+        {classic && <ClassicPearlSectionArt section={keyName} />}
         {paper && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-circle`} className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[35px] border-[#a6bb90]/50" />}
         {celestial && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-orbit`} className="pointer-events-none absolute -left-12 -top-10 h-40 w-40 rounded-full border border-[#b5cce4]/35" />}
         {key === "golden-art-deco" && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-diamond`} className="pointer-events-none absolute left-1/2 top-0 h-16 w-16 -translate-x-1/2 rotate-45 border border-[#b69c5e]/35" />}
         {zen && <ZenSectionArtwork section={keyName} />}
         {pencil && <PencilSectionArt section={keyName} />}
         <div data-studio-native-object={`object:${keyName}:heading-group`} className="relative">
-          {!zen && !pencil && !serein && !botanical && !blossom && !garden && !midnight && <p data-studio-native-object={`object:${keyName}:kicker`} className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{tr(headings[keyName][0])}</p>}
+          {!zen && !pencil && !serein && !botanical && !blossom && !garden && !midnight && !classic && <p data-studio-native-object={`object:${keyName}:kicker`} className="text-[10px] uppercase tracking-[0.23em]" style={{color:contrast ? "inherit" : "var(--inv-accent)"}}>{tr(headings[keyName][0])}</p>}
           <h2
             data-studio-native-heading=""
             data-studio-rsvp-element={keyName === "rsvp" ? "title" : undefined}
@@ -503,9 +523,9 @@ export default function UniversalInvitationTemplate({
           >
             {keyName === "rsvp"
               ? tr(rsvpConfig.title || (zen ? zenHeadings.rsvp : headings.rsvp[1]))
-              : tr(zen ? zenHeadings[keyName] : botanical && keyName === "gallery" ? "Galeri Kisah" : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1])}
+              : tr(zen ? zenHeadings[keyName] : botanical && keyName === "gallery" ? "Galeri Kisah" : pencil && keyName === "gallery" ? "Galeri Cerita" : classic && keyName === "gallery" ? "Galeri Kenangan" : headings[keyName][1])}
           </h2>
-          {serein || botanical || blossom || garden || midnight ? null : zen || pencil ? <span aria-hidden="true" data-studio-native-object={`object:${keyName}:divider`} className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
+          {serein || botanical || blossom || garden || midnight || classic ? null : zen || pencil ? <span aria-hidden="true" data-studio-native-object={`object:${keyName}:divider`} className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
             <div data-studio-native-object={`object:${keyName}:divider`} className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
               <span className="h-px w-12 opacity-55" style={{ backgroundColor: contrast ? "currentColor" : "var(--inv-soft)" }} />
               {key === "celestial-ink" ? <Moon className="h-4 w-4" /> : key === "paper-cut-botanical" || key === "garden-light" || key === "botanical-ivory" ? <Leaf className="h-4 w-4" /> : key === "golden-art-deco" ? <Star className="h-4 w-4" /> : <Sparkles className="h-4 w-4" />}
@@ -525,7 +545,7 @@ export default function UniversalInvitationTemplate({
     <main
       ref={rootRef}
       data-studio-preview-root={preview ? "true" : undefined}
-      className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} mx-auto min-h-[760px] w-full max-w-2xl ${preview ? "overflow-visible" : "overflow-hidden"} border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : key === "serein" ? "serein-invitation" : key === "botanical-ivory" ? "botanical-invitation" : key === "eternal-blossom" ? "eternal-invitation" : key === "modern-maroon" ? "modern-maroon-invitation" : key === "garden-light" ? "garden-light-invitation" : key === "midnight-romance" ? "midnight-romance-invitation" : ""}`}
+      className={`relative isolate ${nativeVisualScopeClass(activeDesignKey)} mx-auto min-h-[760px] w-full max-w-2xl ${preview ? "overflow-visible" : "overflow-hidden"} border border-[var(--inv-soft)] text-[var(--inv-ink)] ${panel} ${key === "zen-atelier" ? "zen-invitation" : key === "pencil-reverie" ? "pr-invitation" : key === "serein" ? "serein-invitation" : key === "botanical-ivory" ? "botanical-invitation" : key === "eternal-blossom" ? "eternal-invitation" : key === "modern-maroon" ? "modern-maroon-invitation" : key === "garden-light" ? "garden-light-invitation" : key === "midnight-romance" ? "midnight-romance-invitation" : key === "classic-pearl" ? "classic-pearl-invitation" : ""}`}
       style={css}
     >
       <style>{nativeVisualStyleSheet(activeDesignKey)}</style>
@@ -617,6 +637,8 @@ export default function UniversalInvitationTemplate({
               {couple && <p className="zen-quote" data-studio-native-object="object:identity:quote">{tr("Dua jiwa, satu perjalanan, menuju selamanya.")}</p>}
               {(groomParents || brideParents) && <div className="zen-parents"><p data-studio-native-object="object:identity:personTwo-parents">{brideParents}</p><p data-studio-native-object="object:identity:personOne-parents">{groomParents}</p></div>}
             </div>
+          ) : key === "classic-pearl" ? (
+            <ClassicPearlIdentity couple={couple} first={displayTitleCase(invitation.groomName)} second={displayTitleCase(invitation.brideName)} firstParents={groomParents} secondParents={brideParents} names={names || eventTitle} emptyName={tr("Nama belum diisi")} />
           ) : key === "modern-maroon" ? (
             <div className={couple ? "mm-identity-layout" : "mx-auto max-w-sm"}>
               {couple ? (
@@ -704,7 +726,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:dateTime:panel" className={key === "pencil-reverie" ? "pr-date-scrap" : `mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-5 py-7 ${panel}`}>
-              {key !== "botanical-ivory" && key !== "midnight-romance" && <CalendarDays data-studio-native-object="object:dateTime:calendar-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <CalendarDays data-studio-native-object="object:dateTime:calendar-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
               <p data-studio-native-object="object:dateTime:date" className="mt-4 text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{date}</p>
               {invitation.ceremonyTime && <p data-studio-native-object="object:dateTime:start" className="mt-3 text-sm">{tr("Mulai")} · {invitation.ceremonyTime}</p>}
               {invitation.receptionTime && <p data-studio-native-object="object:dateTime:end" className="mt-1 text-sm">{tr("Selesai")} · {invitation.receptionTime === "END" ? tr("Selesai acara") : invitation.receptionTime}</p>}
@@ -712,7 +734,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", gallerySettings.presentation !== "template" ? <ConfigurablePhotoGallery photos={media.gallery} settings={gallerySettings} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
+          {section("gallery", usesPhotos && gallerySettings.presentation !== "template" ? <ConfigurablePhotoGallery photos={media.gallery} settings={gallerySettings} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "classic-pearl" ? <ClassicPearlGallery /> : key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} preview={preview} />
           </> : key === "modern-maroon" ? (
@@ -798,21 +820,21 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:location:details-group" className="mx-auto max-w-sm space-y-4">
-              {key !== "botanical-ivory" && key !== "midnight-romance" && <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <MapPin aria-hidden data-studio-native-object="object:location:map-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" />}
               <p data-studio-native-object="object:location:venue" className="text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.venue || tr("Lokasi belum ditentukan")}</p>
               {invitation.address && <p data-studio-native-object="object:location:address" className="text-sm leading-7 opacity-75">{invitation.address}</p>}
-              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "midnight-romance" ? "mr-action" : key === "garden-light" ? "gl-action" : key === "botanical-ivory" ? "bi-action" : key === "eternal-blossom" ? "eb-action" : key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>{tr("Lihat Lokasi")}</a>}
+              {maps && <a data-studio-section-element="location:button" style={sectionElementStyleCss(sectionElementStyles, "location", "button")} href={maps} target="_blank" rel="noopener noreferrer" onClick={preview ? (event) => event.preventDefault() : undefined} className={key === "classic-pearl" ? "cp-action" : key === "midnight-romance" ? "mr-action" : key === "garden-light" ? "gl-action" : key === "botanical-ivory" ? "bi-action" : key === "eternal-blossom" ? "eb-action" : key === "zen-atelier" ? "zen-action" : "inline-flex min-h-11 items-center justify-center rounded-[var(--undara-control-radius)] bg-[var(--inv-accent)] px-6 text-sm text-white"}>{tr("Lihat Lokasi")}</a>}
               {!maps && <p data-studio-native-object="object:location:empty-copy" className="text-xs opacity-55">{tr("Tautan lokasi belum tersedia.")}</p>}
             </div>
           ), 7)}
 
-          {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "modern-maroon" || key === "garden-light" || key === "midnight-romance" ? <>
+          {sections.rsvp && section("rsvp", key === "pencil-reverie" || key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "modern-maroon" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" ? <>
             <p data-studio-native-object="object:rsvp:intro" className="mx-auto mb-7 max-w-sm text-sm leading-7">{tr("Merupakan kebahagiaan bagi kami apabila Anda berkenan hadir.")}</p>
             <RsvpForm slug={invitation.slug} appearance="zen" preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />
           </> : <RsvpForm slug={invitation.slug} preview={preview} eventCategory={invitation.eventCategory} rsvpConfig={rsvpConfig} guestId={personalGuest?.id} guestName={personalGuest?.name} guestToken={personalGuest?.token} invitedPax={personalGuest?.invitedPax} eventDate={invitation.eventDate} venue={invitation.venue} title={eventTitle} start={invitation.ceremonyTime} description={invitation.description} />, 8)}
 
           {sections.wishes && section("wishes", (
-            <GuestWishes slug={invitation.slug} preview={preview} initialName={personalGuest?.name} appearance={key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "modern-maroon" || key === "garden-light" || key === "midnight-romance" ? "zen" : "default"} inputStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "input")} buttonStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "button")} />
+            <GuestWishes slug={invitation.slug} preview={preview} initialName={personalGuest?.name} appearance={key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "modern-maroon" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" ? "zen" : "default"} inputStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "input")} buttonStyle={sectionElementStyleCss(sectionElementStyles, "wishes", "button")} />
           ), 9)}
 
           {sections.gift && section("gift", hasGift ? (key === "modern-maroon" ? (
@@ -826,18 +848,18 @@ export default function UniversalInvitationTemplate({
             </div>
           ) : (
             <div data-studio-native-object="object:gift:panel" className={`mx-auto max-w-sm border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-6 py-7 text-sm ${key === "pencil-reverie" ? "pr-gift-panel" : panel}`}>
-              {key !== "botanical-ivory" && key !== "midnight-romance" && <Gift data-studio-native-object="object:gift:gift-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
+              {key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <Gift data-studio-native-object="object:gift:gift-icon" className="mx-auto h-6 w-6 text-[var(--inv-accent)]" aria-hidden />}
               <p data-studio-native-object="object:gift:bank-name" className="mt-4 text-xs opacity-70">{invitation.giftBankName}</p>
               {invitation.giftAccountName && <p data-studio-native-object="object:gift:account-name" className="mt-2 font-semibold">{invitation.giftAccountName}</p>}
               <p data-studio-native-object="object:gift:account-number" className="mt-2 break-all text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{invitation.giftAccountNumber}</p>
-              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className={key === "midnight-romance" ? "mr-action mt-5" : key === "garden-light" ? "gl-action mt-5" : key === "botanical-ivory" ? "bi-action mt-5" : key === "eternal-blossom" ? "eb-action mt-5" : "mt-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]"}>{tr("Salin Nomor Rekening")}</button>
+              <button data-studio-section-element="gift:button" style={sectionElementStyleCss(sectionElementStyles, "gift", "button")} type="button" onClick={async () => { if (preview || !invitation.giftAccountNumber) return; try { await navigator.clipboard.writeText(invitation.giftAccountNumber); setCopyMessage("Nomor rekening disalin."); } catch { setCopyMessage("Belum dapat menyalin. Silakan salin nomor secara manual."); } }} className={key === "classic-pearl" ? "cp-action mt-5" : key === "midnight-romance" ? "mr-action mt-5" : key === "garden-light" ? "gl-action mt-5" : key === "botanical-ivory" ? "bi-action mt-5" : key === "eternal-blossom" ? "eb-action mt-5" : "mt-5 min-h-10 rounded-[var(--undara-control-radius)] border border-[var(--inv-soft)] px-5 text-xs text-[var(--inv-accent)]"}>{tr("Salin Nomor Rekening")}</button>
               {copyMessage && <p role="status" className="mt-3 text-xs">{tr(copyMessage)}</p>}
             </div>
           )) : <p data-studio-native-object="object:gift:empty-copy" className="text-sm opacity-65">{tr("Informasi tanda kasih belum ditambahkan.")}</p>, 10)}
 
           {section("closing", (
             <div data-studio-native-object="object:closing:copy-group" className={key === "zen-atelier" ? "zen-closing-copy text-sm leading-8" : key === "pencil-reverie" ? "pr-closing-copy text-sm leading-8" : key === "modern-maroon" ? "mm-closing-copy text-sm leading-8" : "mx-auto max-w-sm text-sm leading-8"}>
-              {key === "modern-maroon" ? <><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p><span aria-hidden="true" data-studio-native-object="object:closing:flourish" className="mm-flourish ml-auto mt-6 text-[var(--inv-accent)]" /></> : key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p> : <><Heart aria-hidden data-studio-native-object="object:closing:heart" className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p></>}
+              {key === "modern-maroon" ? <><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p><span aria-hidden="true" data-studio-native-object="object:closing:flourish" className="mm-flourish ml-auto mt-6 text-[var(--inv-accent)]" /></> : key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" ? <p data-studio-copy-field="closing" className="mx-auto max-w-xs whitespace-pre-line text-[15px] leading-8"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p> : <><Heart aria-hidden data-studio-native-object="object:closing:heart" className="mx-auto mb-4 h-7 w-7 text-[var(--inv-accent)]" strokeWidth={1.3} /><p data-studio-copy-field="closing" className="whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.closing ?? ""} unit={copyMotions.closing?.unit} /></p></>}
               <p data-studio-native-object="object:closing:names" className="mt-7 break-words text-lg" style={{ fontFamily: invitationFontFamily(font.heading) }}>{names || eventTitle}</p>
               <p data-studio-copy-field="prayerWish" className={`whitespace-pre-line ${key === "pencil-reverie" ? "pr-prayer-copy" : key === "zen-atelier" ? "zen-quote mt-5" : "mt-5 opacity-80"}`}><InvitationLayerTextContent text={editableCopy.prayerWish ?? ""} unit={copyMotions.prayerWish?.unit} /></p>
               {key === "zen-atelier" && couple && <p data-studio-copy-field="zenQuote" className="zen-quote whitespace-pre-line"><InvitationLayerTextContent text={editableCopy.zenQuote ?? ""} unit={copyMotions.zenQuote?.unit} /></p>}
@@ -845,8 +867,8 @@ export default function UniversalInvitationTemplate({
           ), 11)}
 
           {renderSectionInstances("footer", (instanceId) => (
-            <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className={key === "midnight-romance" ? "mr-footer" : key === "garden-light" ? "gl-footer" : key === "botanical-ivory" ? "relative bi-footer" : key === "eternal-blossom" ? "relative eb-footer" : key === "modern-maroon" ? "relative mm-footer flex items-center" : "relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5"}>
-              {key === "midnight-romance" ? <><span aria-hidden="true" data-studio-native-object="object:footer:star" className="mr-footer-mark">✦</span><span data-studio-native-object="object:footer:signature" className="mr-footer-signature">Undara</span></> : key === "garden-light" ? <><span aria-hidden="true" data-studio-native-object="object:footer:star" className="gl-footer-mark">✦</span><span data-studio-native-object="object:footer:signature" className="gl-footer-signature">Undara</span></> : key === "botanical-ivory" ? <><span aria-hidden="true" data-studio-native-object="object:footer:monogram" className="bi-footer-mark">&amp;</span><span data-studio-native-object="object:footer:signature" className="bi-footer-signature">Undara</span></> : key === "eternal-blossom" ? <span data-studio-native-object="object:footer:flower-art" aria-hidden="true"><BlossomSymbol /></span> : <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />}
+            <footer data-invitation-section="footer" style={invitationSectionStyleCss(sectionStyles.footer)} className={key === "classic-pearl" ? "cp-footer" : key === "midnight-romance" ? "mr-footer" : key === "garden-light" ? "gl-footer" : key === "botanical-ivory" ? "relative bi-footer" : key === "eternal-blossom" ? "relative eb-footer" : key === "modern-maroon" ? "relative mm-footer flex items-center" : "relative flex items-center justify-center border-t border-[var(--inv-soft)] bg-[var(--inv-surface)] px-6 py-5"}>
+              {key === "classic-pearl" ? <><span aria-hidden="true" data-studio-native-object="object:footer:pearl" className="cp-footer-mark" /><span data-studio-native-object="object:footer:signature" className="cp-footer-signature">Undara</span></> : key === "midnight-romance" ? <><span aria-hidden="true" data-studio-native-object="object:footer:star" className="mr-footer-mark">✦</span><span data-studio-native-object="object:footer:signature" className="mr-footer-signature">Undara</span></> : key === "garden-light" ? <><span aria-hidden="true" data-studio-native-object="object:footer:star" className="gl-footer-mark">✦</span><span data-studio-native-object="object:footer:signature" className="gl-footer-signature">Undara</span></> : key === "botanical-ivory" ? <><span aria-hidden="true" data-studio-native-object="object:footer:monogram" className="bi-footer-mark">&amp;</span><span data-studio-native-object="object:footer:signature" className="bi-footer-signature">Undara</span></> : key === "eternal-blossom" ? <span data-studio-native-object="object:footer:flower-art" aria-hidden="true"><BlossomSymbol /></span> : <span aria-hidden="true" data-studio-native-object="object:footer:rule" className="h-px w-10 bg-[var(--inv-accent)] opacity-50" />}
               {objectOverlay("footer", instanceId)}
             </footer>
           ))}

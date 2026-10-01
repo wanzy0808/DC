@@ -177,22 +177,31 @@ test("complex template compositions expose selectable group targets without repl
   assert.equal(nativeVisualUsesSystemContent("object:cover:copy-group"), false);
 });
 
-test("Classic Pearl cover keeps a selectable composition and granular protected content", () => {
+test("Classic Pearl keeps heirloom artwork granular while protected event content stays protected", () => {
   const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
-  const classic = scenes.split('if (theme === "classic-pearl") return <section')[1]
-    ?.split('if (theme === "golden-art-deco") return <section')[0];
-  assert.ok(classic, "Classic Pearl cover branch must exist");
-  for (const object of [
-    "content-group", "border-outer", "border-inner", "kicker", "oval-frame",
-    "oval-inner", "gem", "ornament", "date", "closing-copy",
-  ]) assert.ok(classic.includes(`object:cover:${object}`), `missing Classic Pearl ${object}`);
-  assert.match(classic, /<Names[^>]*>\{names\}<\/Names>/);
-  assert.equal(nativeVisualSelector("object:cover:content-group"),
-    '[data-studio-native-object="object:cover:content-group"]');
-  assert.equal(nativeVisualCapabilities("object:cover:content-group").typography, false);
+  const classic = read("components/PublicInvitation/ClassicPearlScene.tsx");
+  const artwork = read("components/PublicInvitation/ClassicPearlArtwork.tsx");
+  assert.match(scenes, /ClassicPearlScene/);
+  assert.match(classic, /object:envelope:garland-art/);
+  assert.match(classic, /object:envelope:candelabra-art/);
+  assert.match(classic, /object:cover:ledger-line/);
+  assert.match(classic, /object:cover:chandelier-art/);
+  assert.match(classic, /object:cover:arch-art/);
+  assert.match(classic, /object:cover:garland-art/);
+  assert.match(classic, /object:cover:tiara-art/);
+  assert.match(classic, /object:cover:copy-panel/);
+  assert.match(classic, /object:cover:pearl-trail/);
+  assert.match(classic, /object:cover:date/);
+  assert.match(artwork, /object:identity:mirror-art/);
+  assert.match(artwork, /object:identity:tiara-art/);
+  assert.equal(nativeVisualCanHide("object:cover:ledger-line"), true);
+  assert.equal(nativeVisualCanHide("object:cover:arch-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:chandelier-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:garland-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:tiara-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:pearl-trail"), true);
   assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
-  assert.equal(nativeVisualCanHide("object:cover:border-outer"), true);
-  assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
+  assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
 test("Golden Art Deco geometry and gem stay individually selectable inside its cover composition", () => {

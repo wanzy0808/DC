@@ -10,6 +10,7 @@ export const invitationPalettes = {
   zen: { name: "Zen Atelier", bg: "#f4f0e6", surface: "#fbf8f0", ink: "#373c34", accent: "#a9513b", soft: "#c9bda9" },
   night: { name: "Night", bg: "#171318", surface: "#211b22", ink: "#f8f2ee", accent: "#e7a9b1", soft: "#9b7079" },
   pearl: { name: "Pearl", bg: "#f5f1ea", surface: "#fffdf8", ink: "#292522", accent: "#806a5a", soft: "#cdbba8" },
+  pearlAtelier: { name: "Classic Pearl", bg: "#f3efe6", surface: "#fffdf8", ink: "#322c28", accent: "#a18458", soft: "#d8cbbb" },
   terracotta: { name: "Terracotta", bg: "#f8eee8", surface: "#fff8f3", ink: "#38251f", accent: "#a9553f", soft: "#d9a28f" },
   olive: { name: "Olive", bg: "#f1f2e8", surface: "#fbfcf5", ink: "#292c22", accent: "#69734d", soft: "#b9c29b" },
   champagne: { name: "Champagne", bg: "#f6f0df", surface: "#fffaf0", ink: "#30291f", accent: "#a27b45", soft: "#d8c39b" },
@@ -65,6 +66,7 @@ export const invitationFonts = {
   yesevaJosefin: { name: "Yeseva One + Josefin Sans", heading: "Yeseva One", body: "Josefin Sans" },
   youngInstrument: { name: "Young Serif + Instrument Sans", heading: "Young Serif", body: "Instrument Sans" },
   bodoniManrope: { name: "Bodoni Moda + Manrope", heading: "Bodoni Moda", body: "Manrope" },
+  cormorantManrope: { name: "Cormorant Garamond + Manrope", heading: "Cormorant Garamond", body: "Manrope" },
 } as const;
 
 export type PaletteKey = keyof typeof invitationPalettes;
