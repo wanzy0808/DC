@@ -57,7 +57,7 @@ test("Paper Cut Botanical maps ten reused local WebP assets and keeps artwork co
     "09_love_balloon.webp",
     "10_garden_stroll.webp",
   ]) assert.match(artwork, new RegExp(asset.replace(".", "\\.")));
-  assert.match(css, /\.pcb-art img \{[\s\S]*?object-fit:contain/);
+  assert.match(css, /\.pcb-art img \{[\s\S]*?object-fit:\s*contain/);
 });
 
 test("Paper Cut Botanical varies section props instead of repeating a leaf badge", () => {
