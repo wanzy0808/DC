@@ -34,7 +34,7 @@ import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationL
 import { invitationFonts, invitationPalettes, parseDesignKey } from "@/lib/templates/design";
 import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
-import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveGallerySettings, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -258,6 +258,7 @@ export default function UniversalInvitationTemplate({
     onDelete: onDeleteSectionInstance,
   } : undefined;
   const media = resolveInvitationPhotos(invitation.assets, activeDesignKey, coverUrl, photoAssignments);
+  const gallerySettings = resolveGallerySettings(media.assignment);
   useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`, templateHasDefaultPhotoMotion(key) ? { template: key, sectionStyles } : undefined);
   const identity = getEventCategory(normalizeEventCategory(invitation.eventCategory));
   const couple = identity.nameMode === "couple";
@@ -711,7 +712,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", media.assignment.gallerySettings.presentation !== "template" ? <ConfigurablePhotoGallery photos={media.gallery} settings={media.assignment.gallerySettings} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
+          {section("gallery", gallerySettings.presentation !== "template" ? <ConfigurablePhotoGallery photos={media.gallery} settings={gallerySettings} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} preview={preview} />
           </> : key === "modern-maroon" ? (
