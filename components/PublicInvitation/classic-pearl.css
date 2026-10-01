@@ -31,6 +31,152 @@
 
 .cp-envelope,
 .cp-cover {
+  position: relative;
+  min-height: clamp(780px,202cqw,1120px);
+  overflow: hidden;
+  color: var(--inv-ink);
+}
+.cp-envelope {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(58px,16cqw,96px) clamp(24px,7cqw,48px) 48px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 2%, color-mix(in srgb,var(--inv-soft) 38%,transparent), transparent 32%),
+    linear-gradient(180deg, color-mix(in srgb,var(--inv-bg) 94%,white) 0%, var(--inv-bg) 63%, color-mix(in srgb,var(--inv-soft) 20%,var(--inv-bg)) 100%);
+}
+.cp-envelope::after {
+  content: "";
+  position: absolute;
+  inset: 18px;
+  border: 1px solid color-mix(in srgb,var(--inv-accent) 28%,transparent);
+  pointer-events: none;
+}
+.cp-envelope-garland {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 0;
+  width: 88%;
+  translate: -50% 0;
+  opacity: .62;
+}
+.cp-envelope-candelabra {
+  position: absolute;
+  z-index: 1;
+  right: 4%;
+  bottom: 9%;
+  width: clamp(84px,24cqw,132px);
+  opacity: .5;
+}
+.cp-envelope-kicker {
+  position: relative;
+  z-index: 3;
+  margin: clamp(88px,24cqw,130px) 0 0;
+  color: var(--inv-accent);
+  font-size: clamp(9px,2.6cqw,12px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+}
+.cp-envelope-names {
+  position: relative;
+  z-index: 3;
+  max-width: 95%;
+  margin: 19px 0 0;
+  font-family: var(--inv-heading);
+  font-size: clamp(2rem,10.5cqw,4rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+}
+.cp-envelope-date {
+  position: relative;
+  z-index: 3;
+  margin: 15px 0 0;
+  font-size: 11px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  opacity: .72;
+}
+.cp-envelope-stage {
+  position: relative;
+  z-index: 3;
+  width: min(82cqw,410px);
+  min-height: 365px;
+  margin: 48px auto 30px;
+}
+.cp-envelope-letter-motion {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  width: 74%;
+  translate: -50% 0;
+}
+.cp-envelope-letter {
+  position: relative;
+  min-height: 300px;
+  padding: 52px 26px 34px;
+  border: 1px solid color-mix(in srgb,var(--inv-accent) 36%,transparent);
+  background: color-mix(in srgb,var(--inv-surface) 92%,white);
+  box-shadow: 0 28px 58px color-mix(in srgb,var(--inv-ink) 12%,transparent);
+}
+.cp-envelope-letter::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border: 1px solid color-mix(in srgb,var(--inv-accent) 16%,transparent);
+  pointer-events: none;
+}
+.cp-letter-pearl {
+  display: block;
+  width: 9px;
+  aspect-ratio: 1;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: var(--inv-surface);
+  box-shadow: 0 0 0 1px color-mix(in srgb,var(--inv-accent) 42%,transparent), inset -2px -2px 4px color-mix(in srgb,var(--inv-soft) 52%,transparent);
+}
+.cp-letter-kicker {
+  margin: 0;
+  color: var(--inv-accent);
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+.cp-recipient {
+  max-width: 30ch;
+  margin: 32px auto 0;
+  white-space: pre-line;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.cp-letter-names {
+  margin: 28px 0 0;
+  font-family: var(--inv-heading);
+  font-size: clamp(1.4rem,6.2cqw,2.4rem);
+  line-height: 1.2;
+}
+.cp-envelope-seal {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 18%;
+  display: grid;
+  width: 54px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 4px solid var(--inv-bg);
+  border-radius: 50%;
+  background: var(--inv-accent);
+  color: var(--cp-on-accent);
+  font-family: var(--inv-heading);
+  font-size: 17px;
+  translate: -50% 0;
+  box-shadow: 0 8px 22px color-mix(in srgb,var(--inv-ink) 18%,transparent);
+}
+
+.cp-cover {
   min-height: clamp(820px,212cqw,1180px);
   padding: clamp(48px,13cqw,78px) clamp(22px,6.5cqw,44px) 58px;
   background:
@@ -83,7 +229,7 @@
   z-index: 4;
   left: 10%;
   top: 29%;
-  width: min(62%, 350px);
+  width: min(62%,350px);
   padding-left: clamp(18px,5cqw,30px);
   text-align: left;
 }
@@ -108,9 +254,7 @@
   font-style: italic;
   font-weight: 400;
 }
-.cp-cover-single {
-  font-size: clamp(2.15rem,10.2cqw,4.2rem);
-}
+.cp-cover-single { font-size: clamp(2.15rem,10.2cqw,4.2rem); }
 .cp-cover-single > span { max-width: 9ch; }
 .cp-cover-date {
   width: max-content;
@@ -118,10 +262,10 @@
   margin: clamp(34px,9cqw,52px) 0 0;
   padding-top: 14px;
   border-top: 1px solid color-mix(in srgb,var(--inv-accent) 45%,transparent);
+  color: var(--inv-accent);
   font-size: 10px;
   letter-spacing: .14em;
   text-transform: uppercase;
-  color: var(--inv-accent);
 }
 .cp-cover-caption {
   max-width: 25ch;
