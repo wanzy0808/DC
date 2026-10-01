@@ -55,6 +55,7 @@ const SereinGallery = dynamic(() => import("@/components/PublicInvitation/Serein
 const BotanicalIvoryGallery = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryGallery"));
 const BotanicalSectionArt = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryArtwork").then((module) => module.BotanicalSectionArt));
 const BotanicalIdentity = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryArtwork").then((module) => module.BotanicalIdentity));
+const ModernMaroonSectionArt = dynamic(() => import("@/components/PublicInvitation/ModernMaroonArtwork"));
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -428,6 +429,7 @@ export default function UniversalInvitationTemplate({
       >
         {botanical && <BotanicalSectionArt section={keyName} />}
         {blossom && <BlossomSectionArt section={keyName} />}
+        {modern && <ModernMaroonSectionArt section={keyName} />}
         {key === "classic-pearl" && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-border`} className="pointer-events-none absolute inset-3 border border-[#b4a88c]/35" />}
         {paper && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-circle`} className="pointer-events-none absolute -right-12 -top-12 h-36 w-36 rounded-full border-[35px] border-[#a6bb90]/50" />}
         {celestial && <div aria-hidden data-studio-native-object={`object:${keyName}:theme-orbit`} className="pointer-events-none absolute -left-12 -top-10 h-40 w-40 rounded-full border border-[#b5cce4]/35" />}
