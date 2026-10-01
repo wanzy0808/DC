@@ -116,8 +116,8 @@
 .gl-gallery { position:relative; z-index:3; }
 .gl-gallery-edit { margin-bottom:24px; background:transparent; color:var(--inv-accent); }
 .gl-gallery-garland { width:94%; margin:-16px auto 4px; opacity:.66; }
-.gl-gallery-grid { position:relative; display:grid; grid-template-columns:1.1fr .9fr; grid-template-rows:repeat(2,minmax(125px,auto)); gap:10px; align-items:stretch; }
-.gl-gallery-photo { position:relative; margin:0; overflow:hidden; background:var(--inv-soft); box-shadow:0 12px 26px color-mix(in srgb,var(--inv-ink) 10%,transparent); }
+.gl-gallery-grid { position:relative; display:grid; grid-template-columns:1.1fr .9fr; grid-template-rows:repeat(2,minmax(125px,auto)); grid-auto-rows:minmax(150px,auto); gap:10px; align-items:stretch; }
+.gl-gallery-photo { position:relative; min-height:150px; margin:0; overflow:hidden; background:var(--inv-soft); box-shadow:0 12px 26px color-mix(in srgb,var(--inv-ink) 10%,transparent); }
 .gl-gallery-photo img { width:100%; height:100%; object-fit:cover; }
 .gl-gallery-photo-1 { grid-row:1 / 3; min-height:340px; border-radius:140px 18px 18px 18px; }
 .gl-gallery-photo-2,.gl-gallery-photo-3 { min-height:165px; border-radius:18px 90px 18px 18px; }
