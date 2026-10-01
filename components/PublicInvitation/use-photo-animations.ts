@@ -48,7 +48,12 @@ export function useInvitationPhotoAnimations(
       )).map((node) => ({ node, strength }));
     }).slice(0, MAX_PHOTO_PARALLAX_TARGETS);
 
-    const stopEntrance = observeInvitationEntranceRoot(root, collect, { replay: themed, preservePresentation: themed, waitForImages: themed });
+    const replay = themed && theme?.template !== "modern-maroon";
+    const stopEntrance = observeInvitationEntranceRoot(root, collect, {
+      replay,
+      preservePresentation: themed,
+      waitForImages: themed,
+    });
     const stopParallax = observePhotoParallax(parallaxTargets);
     return () => {
       stopEntrance();
