@@ -58,6 +58,12 @@ export function useInvitationNativeVisualAnimations(
       }
       return Array.from(targets.values());
     };
-    return observeInvitationEntranceRoot(root, collect, { replay: templateHasDefaultMotion(template), preservePresentation: templateHasDefaultMotion(template), waitForImages: template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" });
+    const themed = templateHasDefaultMotion(template);
+    const replay = themed && template !== "modern-maroon";
+    return observeInvitationEntranceRoot(root, collect, {
+      replay,
+      preservePresentation: themed,
+      waitForImages: template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon",
+    });
   }, [rootRef, designKey, revision, template, stylesKey]);
 }
