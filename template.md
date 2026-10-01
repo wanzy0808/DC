@@ -27,6 +27,14 @@ Targetnya adalah **semua elemen visual penting dapat dipilih atau diatur melalui
 
 Setiap template harus punya identitas visual yang berbeda: pilihan komposisi, ritme ruang kosong, karakter tipografi, gaya foto/ilustrasi, ornamen, amplop, susunan galeri, dan motion. Jangan membuat semua tema sebagai satu kerangka identik yang hanya berbeda warna/font. Contoh Zen Atelier adalah referensi **hanya untuk Zen Atelier**; tema baru memakai brief dan moodboard yang disetujui untuk tema itu.
 
+### Font dan warna template tidak wajib mengikuti brand website
+
+**Template undangan adalah dunia visualnya sendiri.** Font dan warna setiap template **tidak wajib sama dengan website/aplikasi Undara**. Font brand Undara (mis. DM Serif Display + Roboto), warna brand utama, serta palette Light/Dark aplikasi berlaku untuk chrome produk seperti landing page, marketing page, Dashboard, Studio UI, navigasi, dan kontrol global; aturan itu **bukan preset visual wajib untuk isi template undangan**.
+
+Setiap template boleh menentukan pasangan font, warna dasar, accent, surface, tekstur, tone foto, dan treatment tipografi yang paling sesuai dengan art direction/moodboard tema. Tema Jepang, editorial, klasik, maroon, botanical, monochrome, playful, atau tema lain boleh memiliki palette dan font yang sama sekali berbeda dari UI Undara. Jangan memaksa warna brand `#703B3B` atau font website masuk ke template hanya demi konsistensi merek jika hal itu merusak karakter desain.
+
+Kebebasan ini tetap memiliki guardrail: font harus layak untuk web dan terbaca, kontras warna harus cukup untuk konten penting/form/CTA, fallback font harus aman, loading font tidak boleh merusak performa, dan palette harus tetap kompatibel dengan token/editability Studio yang memang dibuka untuk template tersebut. **Jangan biarkan global CSS brand Undara secara tidak sengaja mengoverride font atau palette bawaan template.** Branding Undara di footer/chrome produk boleh tetap mengikuti sistem brand, sedangkan badan undangan mengikuti identitas tema.
+
 ### Kebebasan komposisi: tidak wajib grid, boxy, atau simetris
 
 Desain undangan adalah karya visual, **bukan dashboard**. Jangan menjadikan grid dua kolom, deretan kartu, kotak berbingkai, teks serba rata tengah, dan pembagian ruang simetris sebagai kerangka wajib atau preset yang terus diulang. Pilih komposisi berdasarkan cerita dan moodboard setiap tema: editorial satu kolom, kolase scrapbook, tipografi di kiri atau kanan saja, split yang tidak sama besar, elemen menyilang, lapisan gambar, objek berputar/diagonal, susunan bebas, atau ruang kosong yang disengaja. Satu template boleh mencampur ritme rapi dan **sedikit chaotic yang terarah**: ukuran, jarak, orientasi, dan penempatan elemen tidak harus seragam selama ada titik fokus dan hirarki yang terasa alami.
