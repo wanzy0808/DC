@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/components/I18n/LanguageProvider";
-import { Check, ImagePlus, Upload } from "lucide-react";
+import { Check, ChevronDown, ChevronUp, GripVertical, ImagePlus, RotateCcw, Upload } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
-import { photoCropStyle, type PhotoAssignments, type PhotoCrop, type PhotoCropAspect, type PhotoFocus, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { sectionAnimationGroups, sectionAnimationPresets, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
+import { photoCropStyle, type GallerySettings, type PhotoAssignments, type PhotoCrop, type PhotoCropAspect, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 
 const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
   cover: { title: "Main Cover", description: "Main invitation photo." },
@@ -29,6 +30,11 @@ export default function PhotoPanel({
   onActiveSlotChange,
   onSetPhoto,
   onToggleGallery,
+  onReorderGallery,
+  onGallerySettings,
+  galleryMotion,
+  onGalleryMotion,
+  onResetGalleryMotion,
   onSetFocus,
   onSetCrop,
   onResetCrop,
@@ -41,6 +47,11 @@ export default function PhotoPanel({
   onActiveSlotChange: (slot: PhotoSlot) => void;
   onSetPhoto: (slot: "cover" | "personOne" | "personTwo", id: string | null) => void;
   onToggleGallery: (id: string) => void;
+  onReorderGallery: (sourceId: string, targetId: string) => void;
+  onGallerySettings: (patch: Partial<GallerySettings>) => void;
+  galleryMotion: PhotoMotion | undefined;
+  onGalleryMotion: (patch: Partial<PhotoMotion>) => void;
+  onResetGalleryMotion: () => void;
   onSetFocus: (slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) => void;
   onSetCrop: (slot: "cover" | "personOne" | "personTwo", crop: PhotoCrop) => void;
   onResetCrop: (slot: "cover" | "personOne" | "personTwo") => void;
@@ -52,7 +63,12 @@ export default function PhotoPanel({
   const pictures = photos.filter((asset) => asset.type === "IMAGE");
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [draggedGalleryId, setDraggedGalleryId] = useState<string | null>(null);
   const selectedGallery = assignments.gallery ?? pictures.map((photo) => photo.id);
+  const selectedGalleryPhotos = selectedGallery
+    .map((id) => pictures.find((photo) => photo.id === id))
+    .filter((photo): photo is InvitationDesignerInvitation["assets"][number] => Boolean(photo));
+  const slideshowGallery = assignments.gallerySettings.presentation === "carousel" || assignments.gallerySettings.presentation === "stack";
   const slotsAvailable = slots.length ? slots : (["cover"] as PhotoSlot[]);
   const selected = (slot: PhotoSlot) =>
     slot === "gallery" ? selectedGallery.length > 0 : Boolean(assignments[slot] && pictures.some((photo) => photo.id === assignments[slot]));
@@ -174,9 +190,212 @@ export default function PhotoPanel({
                     </div>
                   )}
                   {slot === "gallery" ? (
-                    <Button type="button" size="xs" onClick={() => onToggleGallery("*")} className="max-w-full whitespace-normal">
-                      {assignments.gallery === null ? (en ? "Clear Gallery Selection" : "Kosongkan Pilihan Galeri") : (en ? "Use All Photos" : "Gunakan Semua Foto")}
-                    </Button>
+                    <div className="space-y-5">
+                      <Button type="button" size="xs" onClick={() => onToggleGallery("*")} className="max-w-full whitespace-normal">
+                        {assignments.gallery === null ? (en ? "Clear Gallery Selection" : "Kosongkan Pilihan Galeri") : (en ? "Use All Photos" : "Gunakan Semua Foto")}
+                      </Button>
+
+                      <div className="space-y-2 border-t border-border pt-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-semibold">{en ? "Photo order" : "Urutan Foto"}</p>
+                          <span className="text-[11px] text-muted-foreground">{selectedGalleryPhotos.length}</span>
+                        </div>
+                        <p className="text-[11px] leading-5 text-muted-foreground">
+                          {en ? "Drag photos or use the arrows. The saved order is used by every gallery style." : "Drag foto atau gunakan panah. Urutan ini dipakai oleh semua gaya galeri."}
+                        </p>
+                        {selectedGalleryPhotos.length ? <div className="space-y-1.5">
+                          {selectedGalleryPhotos.map((photo, index) => (
+                            <div
+                              key={photo.id}
+                              draggable
+                              onDragStart={(event) => {
+                                setDraggedGalleryId(photo.id);
+                                event.dataTransfer.effectAllowed = "move";
+                                event.dataTransfer.setData("text/plain", photo.id);
+                              }}
+                              onDragEnd={() => setDraggedGalleryId(null)}
+                              onDragOver={(event) => {
+                                if (!draggedGalleryId || draggedGalleryId === photo.id) return;
+                                event.preventDefault();
+                                event.dataTransfer.dropEffect = "move";
+                              }}
+                              onDrop={(event) => {
+                                event.preventDefault();
+                                const sourceId = draggedGalleryId || event.dataTransfer.getData("text/plain");
+                                setDraggedGalleryId(null);
+                                if (sourceId && sourceId !== photo.id) onReorderGallery(sourceId, photo.id);
+                              }}
+                              className={`flex items-center gap-2 rounded-lg border bg-background p-2 ${draggedGalleryId === photo.id ? "border-primary/50 opacity-60" : "border-border"}`}
+                            >
+                              <GripVertical className="h-4 w-4 shrink-0 cursor-grab text-muted-foreground" aria-hidden="true" />
+                              <span className="w-5 shrink-0 text-center text-[10px] font-semibold text-muted-foreground">{index + 1}</span>
+                              <img src={photo.url} alt="" className="h-10 w-10 shrink-0 rounded-md object-cover" />
+                              <span className="min-w-0 flex-1 truncate text-[11px]">{photo.title || `${en ? "Photo" : "Foto"} ${index + 1}`}</span>
+                              <span className="flex shrink-0 gap-1">
+                                <button
+                                  type="button"
+                                  disabled={index === 0}
+                                  onClick={() => index > 0 && onReorderGallery(photo.id, selectedGalleryPhotos[index - 1].id)}
+                                  className="grid h-7 w-7 place-items-center rounded-md border border-border disabled:opacity-30"
+                                  aria-label={en ? "Move photo up" : "Naikkan foto"}
+                                ><ChevronUp size={13} /></button>
+                                <button
+                                  type="button"
+                                  disabled={index === selectedGalleryPhotos.length - 1}
+                                  onClick={() => index < selectedGalleryPhotos.length - 1 && onReorderGallery(photo.id, selectedGalleryPhotos[index + 1].id)}
+                                  className="grid h-7 w-7 place-items-center rounded-md border border-border disabled:opacity-30"
+                                  aria-label={en ? "Move photo down" : "Turunkan foto"}
+                                ><ChevronDown size={13} /></button>
+                              </span>
+                            </div>
+                          ))}
+                        </div> : <p className="rounded-lg border border-dashed border-border p-3 text-center text-[11px] text-muted-foreground">{en ? "Choose gallery photos first." : "Pilih foto galeri terlebih dahulu."}</p>}
+                      </div>
+
+                      <div className="space-y-3 border-t border-border pt-4">
+                        <p className="text-xs font-semibold">{en ? "Gallery behavior" : "Pengaturan Galeri"}</p>
+                        <label className="block">
+                          <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{en ? "Gallery style" : "Gaya galeri"}</span>
+                          <select
+                            value={assignments.gallerySettings.presentation}
+                            onChange={(event) => onGallerySettings({ presentation: event.target.value as GallerySettings["presentation"] })}
+                            className="min-h-10 w-full rounded-lg border border-border bg-background px-3 text-xs"
+                          >
+                            <option value="template">{en ? "Template default" : "Default template"}</option>
+                            <option value="carousel">{en ? "Carousel / slider" : "Carousel / slider"}</option>
+                            <option value="stack">{en ? "Stacked cards" : "Kartu bertumpuk"}</option>
+                            <option value="filmstrip">{en ? "Filmstrip swipe" : "Filmstrip swipe"}</option>
+                            <option value="masonry">{en ? "Masonry collage" : "Kolase masonry"}</option>
+                          </select>
+                        </label>
+
+                        <div className="flex min-h-11 items-center justify-between gap-3 rounded-lg border border-border px-3">
+                          <div>
+                            <p className="text-xs font-medium">Autoplay</p>
+                            <p className="text-[10px] text-muted-foreground">{slideshowGallery ? (en ? "Advance slides automatically." : "Foto berpindah otomatis.") : (en ? "Available for Carousel and Stack." : "Aktif untuk Carousel dan Kartu bertumpuk.")}</p>
+                          </div>
+                          <button
+                            type="button"
+                            role="switch"
+                            aria-checked={assignments.gallerySettings.autoplay && slideshowGallery}
+                            disabled={!slideshowGallery}
+                            onClick={() => onGallerySettings({ autoplay: !assignments.gallerySettings.autoplay })}
+                            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-35 ${assignments.gallerySettings.autoplay && slideshowGallery ? "bg-primary" : "bg-muted"}`}
+                          >
+                            <span className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${assignments.gallerySettings.autoplay && slideshowGallery ? "translate-x-6" : "translate-x-1"}`} />
+                          </button>
+                        </div>
+
+                        {slideshowGallery && assignments.gallerySettings.autoplay && <label className="block">
+                          <span className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
+                            <span>{en ? "Slide interval" : "Jeda slide"}</span>
+                            <output>{assignments.gallerySettings.interval.toFixed(1)}s</output>
+                          </span>
+                          <input
+                            type="range"
+                            min="2"
+                            max="12"
+                            step="0.5"
+                            value={assignments.gallerySettings.interval}
+                            onChange={(event) => onGallerySettings({ interval: Number(event.target.value) })}
+                            className="w-full"
+                          />
+                        </label>}
+
+                        {slideshowGallery && <>
+                          <label className="block">
+                            <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{en ? "Slide transition" : "Transisi slide"}</span>
+                            <select
+                              value={assignments.gallerySettings.transition}
+                              onChange={(event) => onGallerySettings({ transition: event.target.value as GallerySettings["transition"] })}
+                              className="min-h-10 w-full rounded-lg border border-border bg-background px-3 text-xs"
+                            >
+                              <option value="slide-left">{en ? "Enter from right" : "Masuk dari kanan"}</option>
+                              <option value="slide-right">{en ? "Enter from left" : "Masuk dari kiri"}</option>
+                              <option value="fade">Fade</option>
+                              <option value="zoom">Zoom</option>
+                              <option value="rise">{en ? "Rise" : "Naik dari bawah"}</option>
+                            </select>
+                          </label>
+                          <label className="block">
+                            <span className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
+                              <span>{en ? "Transition duration" : "Durasi transisi"}</span>
+                              <output>{assignments.gallerySettings.transitionDuration.toFixed(1)}s</output>
+                            </span>
+                            <input
+                              type="range"
+                              min="0.2"
+                              max="2"
+                              step="0.1"
+                              value={assignments.gallerySettings.transitionDuration}
+                              onChange={(event) => onGallerySettings({ transitionDuration: Number(event.target.value) })}
+                              className="w-full"
+                            />
+                          </label>
+                        </>}
+                      </div>
+
+                      <div className="space-y-3 border-t border-border pt-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <p className="text-xs font-semibold">{en ? "Entrance animation" : "Animasi Saat Muncul"}</p>
+                          <button type="button" onClick={onResetGalleryMotion} className="inline-flex items-center gap-1 text-[10px] text-muted-foreground hover:text-foreground"><RotateCcw size={11} />Reset</button>
+                        </div>
+                        <label className="block">
+                          <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{en ? "Animation" : "Animasi foto"}</span>
+                          <select
+                            value={galleryMotion?.animation && galleryMotion.animation !== "none" ? galleryMotion.animation : ""}
+                            onChange={(event) => {
+                              const animation = event.target.value as InvitationSectionAnimation | "";
+                              onGalleryMotion(animation
+                                ? { animation, animationDuration: undefined }
+                                : { animation: "none", animationDuration: undefined, animationDelay: undefined, animationStagger: undefined });
+                            }}
+                            className="min-h-10 w-full rounded-lg border border-border bg-background px-3 text-xs"
+                          >
+                            <option value="">{en ? "No entrance animation" : "Tanpa animasi masuk"}</option>
+                            {sectionAnimationGroups.map((group) => (
+                              <optgroup key={group.key} label={en ? group.labelEn : group.labelId}>
+                                {sectionAnimationPresets.filter((item) => item.group === group.key).map((item) => (
+                                  <option key={item.key} value={item.key}>{en ? item.labelEn : item.labelId}</option>
+                                ))}
+                              </optgroup>
+                            ))}
+                          </select>
+                        </label>
+                        {galleryMotion?.animation && galleryMotion.animation !== "none" && <div className="grid grid-cols-2 gap-2">
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] text-muted-foreground">{en ? "Duration" : "Durasi"}</span>
+                            <input
+                              type="number"
+                              min="0.2"
+                              max="2.5"
+                              step="0.1"
+                              value={galleryMotion.animationDuration ?? 0.7}
+                              onChange={(event) => {
+                                const value = event.currentTarget.valueAsNumber;
+                                if (Number.isFinite(value)) onGalleryMotion({ animationDuration: Math.min(2.5, Math.max(.2, value)) });
+                              }}
+                              className="min-h-9 w-full rounded-lg border border-border bg-background px-2 text-xs"
+                            />
+                          </label>
+                          <label className="block">
+                            <span className="mb-1 block text-[10px] text-muted-foreground">{en ? "Photo stagger" : "Jeda antar foto"}</span>
+                            <input
+                              type="number"
+                              min="0.01"
+                              max="0.2"
+                              step="0.01"
+                              value={galleryMotion.animationStagger ?? 0.08}
+                              onChange={(event) => {
+                                const value = event.currentTarget.valueAsNumber;
+                                if (Number.isFinite(value)) onGalleryMotion({ animationStagger: Math.min(.2, Math.max(.01, value)) });
+                              }}
+                              className="min-h-9 w-full rounded-lg border border-border bg-background px-2 text-xs"
+                            />
+                          </label>
+                        </div>}
+                      </div>
+                    </div>
                   ) : (
                     <>
                       <Button type="button" size="xs" onClick={() => onSetPhoto(slot, null)} className="max-w-full whitespace-normal">
