@@ -8,6 +8,7 @@ on:
       - "public/**/*.png"
       - "public/**/*.jpg"
       - "public/**/*.jpeg"
+      - "app/icon.png"
       - "scripts/convert-public-png-to-webp.mjs"
       - ".github/workflows/convert-png-to-webp.yml"
       - "tests/repo-file-naming.test.mjs"
@@ -49,12 +50,18 @@ jobs:
       - name: Convert public raster assets and update references
         run: node scripts/convert-public-png-to-webp.mjs
 
-      - name: Verify public raster assets are WebP
+      - name: Verify repository PNG assets are gone
         shell: bash
         run: |
           set -euo pipefail
-          count="$(find public -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) | wc -l | tr -d ' ')"
-          echo "Remaining PNG/JPG/JPEG files under public/: $count"
+          count="$(find . -type f -iname '*.png' \
+            -not -path './.git/*' \
+            -not -path './node_modules/*' \
+            -not -path './.next/*' \
+            -not -path './coverage/*' \
+            -not -path './dist/*' \
+            -not -path './build/*' | wc -l | tr -d ' ')"
+          echo "Remaining PNG files in repository source: $count"
           test "$count" = "0"
 
       - name: Source regression tests after normalization
