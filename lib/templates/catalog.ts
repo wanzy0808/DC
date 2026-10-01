@@ -53,9 +53,9 @@ export const invitationTemplates: InvitationTemplate[] = [
     preset: { layout: "botanical", palette: "botanical", font: "rufinaAverage" },
     name: "Botanical Ivory",
     description:
-      "Surat ivory, tangkai botanical, dan lembar herbarium dengan gerak lembut dalam undangan tanpa foto.",
+      "Stationery ivory romantis, tipografi editorial, simbol cincin dan pita, dengan aksen botanical yang ringan tanpa foto.",
     descriptionEn:
-      "Ivory stationery, botanical sprigs, and softly animated herbarium pages in a photo-free invitation.",
+      "Romantic ivory stationery, editorial typography, rings and ribbon motifs, with restrained botanical accents in a photo-free invitation.",
     previewImage:
       "/templates/botanical-ivory/greenplant.webp",
     assetPath: "/templates/botanical-ivory",
