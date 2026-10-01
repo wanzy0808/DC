@@ -6,7 +6,7 @@ import { Check, ChevronDown, ChevronUp, GripVertical, ImagePlus, RotateCcw, Uplo
 import { Button, buttonVariants } from "@/components/ui/button";
 import type { InvitationDesignerInvitation } from "@/components/InvitationStudio/designer-types";
 import { sectionAnimationGroups, sectionAnimationPresets, type InvitationSectionAnimation } from "@/lib/templates/section-animations";
-import { photoCropStyle, type GallerySettings, type PhotoAssignments, type PhotoCrop, type PhotoCropAspect, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { defaultGallerySettings, photoCropStyle, type GallerySettings, type PhotoAssignments, type PhotoCrop, type PhotoCropAspect, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 
 const englishLabels: Record<PhotoSlot, { title: string; description: string }> = {
   cover: { title: "Main Cover", description: "Main invitation photo." },
@@ -68,7 +68,8 @@ export default function PhotoPanel({
   const selectedGalleryPhotos = selectedGallery
     .map((id) => pictures.find((photo) => photo.id === id))
     .filter((photo): photo is InvitationDesignerInvitation["assets"][number] => Boolean(photo));
-  const slideshowGallery = assignments.gallerySettings.presentation === "carousel" || assignments.gallerySettings.presentation === "stack";
+  const gallerySettings = assignments.gallerySettings ?? defaultGallerySettings();
+  const slideshowGallery = gallerySettings.presentation === "carousel" || gallerySettings.presentation === "stack";
   const slotsAvailable = slots.length ? slots : (["cover"] as PhotoSlot[]);
   const selected = (slot: PhotoSlot) =>
     slot === "gallery" ? selectedGallery.length > 0 : Boolean(assignments[slot] && pictures.some((photo) => photo.id === assignments[slot]));
@@ -257,7 +258,7 @@ export default function PhotoPanel({
                         <label className="block">
                           <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{en ? "Gallery style" : "Gaya galeri"}</span>
                           <select
-                            value={assignments.gallerySettings.presentation}
+                            value={gallerySettings.presentation}
                             onChange={(event) => onGallerySettings({ presentation: event.target.value as GallerySettings["presentation"] })}
                             className="min-h-10 w-full rounded-lg border border-border bg-background px-3 text-xs"
                           >
@@ -277,26 +278,26 @@ export default function PhotoPanel({
                           <button
                             type="button"
                             role="switch"
-                            aria-checked={assignments.gallerySettings.autoplay && slideshowGallery}
+                            aria-checked={gallerySettings.autoplay && slideshowGallery}
                             disabled={!slideshowGallery}
-                            onClick={() => onGallerySettings({ autoplay: !assignments.gallerySettings.autoplay })}
-                            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-35 ${assignments.gallerySettings.autoplay && slideshowGallery ? "bg-primary" : "bg-muted"}`}
+                            onClick={() => onGallerySettings({ autoplay: !gallerySettings.autoplay })}
+                            className={`relative h-6 w-11 shrink-0 rounded-full transition-colors disabled:opacity-35 ${gallerySettings.autoplay && slideshowGallery ? "bg-primary" : "bg-muted"}`}
                           >
-                            <span className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${assignments.gallerySettings.autoplay && slideshowGallery ? "translate-x-6" : "translate-x-1"}`} />
+                            <span className={`absolute top-1 h-4 w-4 rounded-full bg-white shadow transition-transform ${gallerySettings.autoplay && slideshowGallery ? "translate-x-6" : "translate-x-1"}`} />
                           </button>
                         </div>
 
-                        {slideshowGallery && assignments.gallerySettings.autoplay && <label className="block">
+                        {slideshowGallery && gallerySettings.autoplay && <label className="block">
                           <span className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
                             <span>{en ? "Slide interval" : "Jeda slide"}</span>
-                            <output>{assignments.gallerySettings.interval.toFixed(1)}s</output>
+                            <output>{gallerySettings.interval.toFixed(1)}s</output>
                           </span>
                           <input
                             type="range"
                             min="2"
                             max="12"
                             step="0.5"
-                            value={assignments.gallerySettings.interval}
+                            value={gallerySettings.interval}
                             onChange={(event) => onGallerySettings({ interval: Number(event.target.value) })}
                             className="w-full"
                           />
@@ -306,7 +307,7 @@ export default function PhotoPanel({
                           <label className="block">
                             <span className="mb-1.5 block text-[11px] font-medium text-muted-foreground">{en ? "Slide transition" : "Transisi slide"}</span>
                             <select
-                              value={assignments.gallerySettings.transition}
+                              value={gallerySettings.transition}
                               onChange={(event) => onGallerySettings({ transition: event.target.value as GallerySettings["transition"] })}
                               className="min-h-10 w-full rounded-lg border border-border bg-background px-3 text-xs"
                             >
@@ -320,14 +321,14 @@ export default function PhotoPanel({
                           <label className="block">
                             <span className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-muted-foreground">
                               <span>{en ? "Transition duration" : "Durasi transisi"}</span>
-                              <output>{assignments.gallerySettings.transitionDuration.toFixed(1)}s</output>
+                              <output>{gallerySettings.transitionDuration.toFixed(1)}s</output>
                             </span>
                             <input
                               type="range"
                               min="0.2"
                               max="2"
                               step="0.1"
-                              value={assignments.gallerySettings.transitionDuration}
+                              value={gallerySettings.transitionDuration}
                               onChange={(event) => onGallerySettings({ transitionDuration: Number(event.target.value) })}
                               className="w-full"
                             />
