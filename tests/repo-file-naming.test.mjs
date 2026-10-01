@@ -45,7 +45,8 @@ test("the homepage uses the actual four-door production scene, not a misleading 
 test("old design lab routes stay retired without renaming customer media URLs", () => {
   assert.equal(existsSync(path("app/jiplak")), false);
   assert.equal(existsSync(path("app/pintu-lab")), false);
-  assert.equal(existsSync(path("public/templates/zen-atelier/amplop1.webp")), true);\n  assert.equal(existsSync(path("assets/templates")), false);
+  assert.equal(existsSync(path("public/templates/zen-atelier/amplop1.webp")), true);
+  assert.equal(existsSync(path("assets/templates")), false);
   assert.equal(existsSync(path("public/templates/pencil-reverie/bycicle.webp")), true);
 });
 
