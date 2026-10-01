@@ -139,6 +139,7 @@ const EternalBlossomScene = dynamic(() => import("@/components/PublicInvitation/
 const BotanicalIvoryScene = dynamic(() => import("@/components/PublicInvitation/BotanicalIvoryScene"));
 const GardenLightScene = dynamic(() => import("@/components/PublicInvitation/GardenLightScene"));
 const MidnightRomanceScene = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceScene"));
+const CelestialInkScene = dynamic(() => import("@/components/PublicInvitation/CelestialInkScene"));
 const ClassicPearlScene = dynamic(() => import("@/components/PublicInvitation/ClassicPearlScene"));
 const GoldenArtDecoScene = dynamic(() => import("@/components/PublicInvitation/GoldenArtDecoScene"));
 const PaperCutBotanicalScene = dynamic(() => import("@/components/PublicInvitation/PaperCutBotanicalScene"));
@@ -162,6 +163,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "garden-light") return <GardenLightScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "midnight-romance") return <MidnightRomanceScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "celestial-ink") return <CelestialInkScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "classic-pearl") return <ClassicPearlScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "golden-art-deco") return <GoldenArtDecoScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "paper-cut-botanical") return <PaperCutBotanicalScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
