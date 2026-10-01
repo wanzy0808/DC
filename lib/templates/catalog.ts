@@ -80,10 +80,10 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: true,
     photoSlots: ["cover", "personOne", "personTwo", "gallery"],
-    preset: { layout: "maroon", palette: "maroon", font: "cinzelFauna" },
+    preset: { layout: "maroon", palette: "maroon", font: "syneInter" },
     name: "Modern Maroon",
-    description: "Editorial modern dengan aksen berani untuk berbagai jenis acara.",
-    descriptionEn: "A modern editorial direction with bold accents for many kinds of celebrations.",
+    description: "Editorial maroon asimetris dengan potret berlapis, tipografi berani, dan galeri seperti halaman majalah.",
+    descriptionEn: "An asymmetric maroon editorial with layered portraits, bold typography, and a magazine-like gallery.",
     previewImage:
       "/assets/demo/invitation/couple-02.webp",
     assetPath: "/templates/modern-maroon",
