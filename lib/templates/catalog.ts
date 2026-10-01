@@ -188,7 +188,7 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: false,
     photoSlots: [],
-    preset: { layout: "midnight", palette: "night", font: "cinzelFauna" },
+    preset: { layout: "midnight", palette: "celestialIndigo", font: "cinzelFauna" },
     name: "Celestial Ink",
     description: "Paviliun seremoni malam tanpa foto dengan indigo pekat, moon gate asimetris, folding screen, drapery, lentera, dan komposisi editorial.",
     descriptionEn: "A photo-free moonlit ceremonial pavilion of deep indigo, an asymmetric moon gate, folding screens, drapery, lantern light, and editorial composition.",
