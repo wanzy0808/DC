@@ -8,7 +8,7 @@ const artwork = readFileSync(repoFile("components/PublicInvitation/ZenAtelierArt
 const source = scene + artwork;
 
 test("Zen Atelier references only artwork that exists in the public template assets", () => {
-  const files = [...source.matchAll(/(?:root \+ "|"\/templates\/Zen%20Atelier\/)([a-z0-9]+\.webp)/g)].map((match) => match[1]);
+  const files = [...source.matchAll(/(?:root \+ "|"\/templates\/zen-atelier\/)([a-z0-9]+\.webp)/g)].map((match) => match[1]);
   assert.ok(new Set(files).size >= 4, "expected the envelope, cover and section artwork");
   for (const file of new Set(files)) {
     assert.ok(existsSync(repoFile(`public/templates/zen-atelier/${file}`)), `missing artwork: ${file}`);
