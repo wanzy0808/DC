@@ -125,7 +125,7 @@
 
 .modern-maroon-invitation .mm-identity h2,
 .modern-maroon-invitation .mm-identity [data-studio-native-object$="kicker"] {
-  color: var(--mm-cream) !important;
+  color: inherit !important;
 }
 
 .modern-maroon-invitation .mm-identity-layout {
@@ -248,7 +248,7 @@
 
 .modern-maroon-invitation .mm-dateTime h2,
 .modern-maroon-invitation .mm-dateTime [data-studio-native-object$="kicker"] {
-  color: var(--mm-cream) !important;
+  color: inherit !important;
 }
 
 .modern-maroon-invitation .mm-date-poster {
@@ -445,7 +445,7 @@
 .modern-maroon-invitation .mm-gift h2,
 .modern-maroon-invitation .mm-rsvp [data-studio-native-object$="kicker"],
 .modern-maroon-invitation .mm-gift [data-studio-native-object$="kicker"] {
-  color: var(--mm-cream) !important;
+  color: inherit !important;
 }
 
 .modern-maroon-invitation .mm-rsvp form,
