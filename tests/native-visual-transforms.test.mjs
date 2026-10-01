@@ -588,17 +588,19 @@ test("Modern Maroon decorative blocks and monogram can be hidden without unlocki
   assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
-test("Garden Light keeps rings sprigs seal and photo window editable", () => {
-  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
-  assert.match(scenes, /object:cover:ring-left/);
-  assert.match(scenes, /object:cover:ring-right/);
-  assert.match(scenes, /object:cover:sprig-left/);
-  assert.match(scenes, /object:cover:sprig-right/);
-  assert.match(scenes, /object:cover:photo-window/);
-  assert.match(scenes, /object:cover:seal/);
-  assert.equal(nativeVisualCanHide("object:cover:ring-left"), true);
-  assert.equal(nativeVisualCanHide("object:cover:sprig-left"), true);
-  assert.equal(nativeVisualCanHide("object:cover:seal"), true);
+test("Garden Light keeps its illuminated props granular while photo content stays protected", () => {
+  const garden = read("components/PublicInvitation/GardenLightScene.tsx");
+  assert.match(garden, /object:envelope:hanging-lantern-art/);
+  assert.match(garden, /object:envelope:birdcage-art/);
+  assert.match(garden, /object:cover:arch-art/);
+  assert.match(garden, /object:cover:garland-art/);
+  assert.match(garden, /object:cover:lantern-art/);
+  assert.match(garden, /object:cover:photo-frame/);
+  assert.match(garden, /data-invitation-photo-slot="cover"/);
+  assert.equal(nativeVisualCanHide("object:cover:arch-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:garland-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:lantern-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
 test("Midnight Romance keeps celestial decoration and photo viewport independently editable", () => {
