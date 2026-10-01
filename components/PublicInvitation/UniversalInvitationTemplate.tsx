@@ -523,7 +523,7 @@ export default function UniversalInvitationTemplate({
           >
             {keyName === "rsvp"
               ? tr(rsvpConfig.title || (zen ? zenHeadings.rsvp : headings.rsvp[1]))
-              : tr(zen ? zenHeadings[keyName] : botanical && keyName === "gallery" ? "Galeri Kisah" : pencil && keyName === "gallery" ? "Galeri Cerita" : headings[keyName][1])}
+              : tr(zen ? zenHeadings[keyName] : botanical && keyName === "gallery" ? "Galeri Kisah" : pencil && keyName === "gallery" ? "Galeri Cerita" : classic && keyName === "gallery" ? "Galeri Kenangan" : headings[keyName][1])}
           </h2>
           {serein || botanical || blossom || garden || midnight || classic ? null : zen || pencil ? <span aria-hidden="true" data-studio-native-object={`object:${keyName}:divider`} className="mx-auto my-6 block h-px w-10 bg-[var(--inv-accent)]/75" /> : (
             <div data-studio-native-object={`object:${keyName}:divider`} className={`my-6 flex items-center gap-2 ${left ? "" : "justify-center"}`}>
