@@ -154,7 +154,7 @@ export default function ZenAtelierScene({
       <div aria-hidden="true" className="zen-cover-paper-shadow" data-studio-native-object="object:cover:paper-shadow" />
       <div aria-hidden="true" className="zen-cover-shoji" data-studio-native-object="object:cover:shoji" />
       <EnsoSun className="zen-cover-sun" studioObject="object:cover:sun" />
-      <BlossomBranch className="zen-cover-branch" studioObject="object:cover:branch" />
+      <BlossomBranch className="zen-cover-branch" studioObject="object:cover:blossom" />
 
       <div className="zen-cover-scroll" data-studio-native-object="object:cover:scroll-group">
         <span aria-hidden="true" className="zen-cover-scroll-rod zen-cover-scroll-rod-top" data-studio-native-object="object:cover:scroll-rod-top" />
