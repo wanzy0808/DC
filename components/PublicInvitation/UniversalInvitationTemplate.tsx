@@ -62,6 +62,7 @@ const GardenLightSectionArt = dynamic(() => import("@/components/PublicInvitatio
 const GardenLightGallery = dynamic(() => import("@/components/PublicInvitation/GardenLightGallery"));
 const MidnightRomanceSectionArt = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceArtwork").then((module) => module.MidnightRomanceSectionArt));
 const MidnightRomanceGallery = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceGallery"));
+const ConfigurablePhotoGallery = dynamic(() => import("@/components/PublicInvitation/ConfigurablePhotoGallery"));
 
 const PencilSectionArt = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilSectionArt));
 const PencilMemoryGallery = dynamic(() => import("@/components/PublicInvitation/PencilReverieArtwork").then((module) => module.PencilMemoryGallery));
@@ -710,7 +711,7 @@ export default function UniversalInvitationTemplate({
             </div>
           ), 4)}
 
-          {section("gallery", key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
+          {section("gallery", media.assignment.gallerySettings.presentation !== "template" ? <ConfigurablePhotoGallery photos={media.gallery} settings={media.assignment.gallerySettings} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "midnight-romance" ? <MidnightRomanceGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "garden-light" ? <GardenLightGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "botanical-ivory" ? <BotanicalIvoryGallery /> : key === "eternal-blossom" ? <SereinGallery appearance="blossom" photos={media.gallery} preview={preview} allowPhotoOpen={allowEnvelopeOpen} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "serein" ? <SereinGallery photos={media.gallery} preview={preview} onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined} /> : key === "pencil-reverie" ? <PencilMemoryGallery preview={preview} /> : key === "zen-atelier" ? <>
             {preview && onEditPhoto && <button type="button" className="zen-action mb-5" onClick={() => onEditPhoto("gallery")}>Atur Foto Galeri</button>}
             <ZenAtelierGallery photos={media.gallery} customMotion={Boolean(media.assignment.motion?.gallery?.animation)} preview={preview} />
           </> : key === "modern-maroon" ? (
