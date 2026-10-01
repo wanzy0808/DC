@@ -59,7 +59,7 @@ export function useInvitationNativeVisualAnimations(
       return Array.from(targets.values());
     };
     const themed = templateHasDefaultMotion(template);
-    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "celestial-ink"].includes(template) && template !== "paper-cut-botanical" && template !== "pencil-reverie";
+    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"].includes(template) && template !== "celestial-ink" && template !== "paper-cut-botanical" && template !== "pencil-reverie";
     return observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,
