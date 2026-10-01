@@ -70,8 +70,8 @@ test("Garden Light defaults to its own palette and editorial font pairing", () =
 test("Garden Light viewport entrances are one-shot while explicit Studio replay stays available", () => {
   const nativeMotion = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoMotion = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeMotion, /!\["modern-maroon", "garden-light"\]\.includes\(template\)/);
-  assert.match(photoMotion, /!\["modern-maroon", "garden-light"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeMotion, /!\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(template\)/);
+  assert.match(photoMotion, /!\["modern-maroon", "garden-light", "midnight-romance"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeMotion, /waitForImages:[^\n]*garden-light/);
 });
 
