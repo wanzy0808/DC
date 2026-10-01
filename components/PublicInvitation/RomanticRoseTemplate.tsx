@@ -19,7 +19,7 @@ import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationL
 import { parseEditableCopyMotions } from "@/lib/templates/editable-copy-motion";
 import { localizedWeddingParentLine } from "@/lib/invitations/language";
 import { formatPersonalEnvelopeAddress } from "@/lib/guests/personal-envelope";
-import { photoCropStyle, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { photoCropStyle, resolveGallerySettings, resolveInvitationPhotos, resolvePhotoCrop, type CroppablePhotoSlot, type PhotoAssignments, type PhotoCrop, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { parseInvitationSections, type InvitationSectionKey, type InvitationSections } from "@/lib/templates/sections";
 import { invitationSectionStyleCss, parseInvitationSectionStyles } from "@/lib/templates/section-styles";
 import { parseInvitationRsvpConfig, rsvpElementStyleCss } from "@/lib/templates/rsvp-config";
@@ -228,6 +228,7 @@ export default function RomanticRoseTemplate({
   const media = resolveInvitationPhotos(invitation.assets, invitation.templateKey, configuredCover, photoAssignments);
   useInvitationPhotoAnimations(rootRef, media.assignment, `${opened}-${media.gallery.length}`);
   const { cover, gallery, assignment } = media;
+  const gallerySettings = resolveGallerySettings(assignment);
   const groomPhoto = media.personOne;
   const bridePhoto = media.personTwo;
   const editPhoto = (slot: PhotoSlot, label: string) =>
@@ -439,10 +440,10 @@ export default function RomanticRoseTemplate({
                         {objectOverlay("gallery", instanceId)}
                           <RoseHeading section="gallery" eyebrow="Our memories" align="left">{tr("Galeri Foto")}</RoseHeading>
                           {preview && onEditPhoto && <button type="button" onClick={() => onEditPhoto("gallery")} className="mb-5 w-full rounded-[var(--undara-control-radius)] border border-[#dab0be] py-2 text-xs font-medium text-[#a65e69]">Atur foto galeri</button>}
-                          {assignment.gallerySettings.presentation !== "template" ? (
+                          {gallerySettings.presentation !== "template" ? (
                             <ConfigurablePhotoGallery
                               photos={gallery}
-                              settings={assignment.gallerySettings}
+                              settings={gallerySettings}
                               preview={preview}
                               onEdit={onEditPhoto ? () => onEditPhoto("gallery") : undefined}
                             />
