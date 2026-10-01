@@ -58,6 +58,6 @@ export function useInvitationNativeVisualAnimations(
       }
       return Array.from(targets.values());
     };
-    return observeInvitationEntranceRoot(root, collect, { replay: templateHasDefaultMotion(template), preservePresentation: templateHasDefaultMotion(template), waitForImages: template === "botanical-ivory" || template === "eternal-blossom" });
+    return observeInvitationEntranceRoot(root, collect, { replay: templateHasDefaultMotion(template), preservePresentation: templateHasDefaultMotion(template), waitForImages: template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" });
   }, [rootRef, designKey, revision, template, stylesKey]);
 }
