@@ -89,7 +89,6 @@ type EnvelopeVisual = {
 const envelopeVisuals: Record<string, EnvelopeVisual> = {
   "modern-maroon": { backdrop: "#380b19", surface: "#721d30", flap: "#a54c56", border: "#d9a29a", ink: "#ffe5df", symbol: "M.", effect: "rounded-none", photoPosition: "rotate-[5deg]" },
   "botanical-ivory": { backdrop: "#f0efde", surface: "#fffdf2", flap: "#cbd6ba", border: "#849878", ink: "#50634d", symbol: "❧", effect: "rounded-[9px]" },
-  "paper-cut-botanical": { backdrop: "#e7ead4", surface: "#f9faea", flap: "#aec39e", border: "#829b72", ink: "#465b42", symbol: "❦", effect: "rounded-[40px] -rotate-[3deg]" },
   "celestial-ink": { backdrop: "#0d1830", surface: "#1d304a", flap: "#365071", border: "#9bbfdf", ink: "#d5e5f0", symbol: "☾", effect: "rounded-t-[130px] rounded-b-[10px]" },
 };
 function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEnvelopeOpen,recipientLine}: SceneProps) {
@@ -107,7 +106,7 @@ function ThemeEnvelope({theme,names,date,cover,focus,crop,onOpen,preview,allowEn
   return (
     <section data-invitation-section="envelope" className={`${center} relative`} style={{backgroundColor:style.backdrop,color:style.ink}}>
       <div aria-hidden data-studio-native-object="object:envelope:frame-border" className="pointer-events-none absolute inset-5 border opacity-30" style={{borderColor:style.border}}/>
-      {theme === "botanical-ivory" || theme === "paper-cut-botanical" ? <>
+      {theme === "botanical-ivory" ? <>
         <BotanicalSprig studioObject="object:envelope:sprig-left"/><BotanicalSprig mirrored studioObject="object:envelope:sprig-right"/>
       </> : theme === "celestial-ink" ? <>
         <div aria-hidden data-studio-native-object="object:envelope:starfield" className="pointer-events-none absolute inset-0 opacity-55" style={{backgroundImage:"radial-gradient(circle,currentColor 1px,transparent 2px)",backgroundSize:"39px 56px"}}/>
@@ -142,6 +141,7 @@ const GardenLightScene = dynamic(() => import("@/components/PublicInvitation/Gar
 const MidnightRomanceScene = dynamic(() => import("@/components/PublicInvitation/MidnightRomanceScene"));
 const ClassicPearlScene = dynamic(() => import("@/components/PublicInvitation/ClassicPearlScene"));
 const GoldenArtDecoScene = dynamic(() => import("@/components/PublicInvitation/GoldenArtDecoScene"));
+const PaperCutBotanicalScene = dynamic(() => import("@/components/PublicInvitation/PaperCutBotanicalScene"));
 
 export default function InvitationThemeScenes({theme,names,date,cover,focus,crop,cropEditing,onCropChange,onFinishCrop,locale,stage,onOpen,onEditPhoto,preview,allowEnvelopeOpen,isWedding,couple,hashtag,recipientLine,motionEnabled}: SceneProps) {
   const language = useInvitationLanguage();
@@ -164,6 +164,7 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "midnight-romance") return <MidnightRomanceScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "classic-pearl") return <ClassicPearlScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "golden-art-deco") return <GoldenArtDecoScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "paper-cut-botanical") return <PaperCutBotanicalScene names={names} date={date} couple={couple} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "modern-maroon") {
     if (stage === "envelope") return (
       <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
