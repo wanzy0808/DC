@@ -48,7 +48,7 @@
 .pr-open-button{
  position:relative;z-index:8;display:inline-flex;min-height:46px;align-items:center;justify-content:center;gap:10px;
  margin-top:auto;border:1px solid color-mix(in srgb,var(--pr-rose) 48%,transparent);
- border-radius:var(--undara-control-radius);background:var(--pr-rose);color:#fff;padding:10px 23px;
+ border-radius:9px;background:var(--pr-rose);color:#fff;padding:10px 23px;
  font-size:12px;font-weight:700;letter-spacing:.02em;box-shadow:5px 6px 0 color-mix(in srgb,var(--pr-rule) 70%,transparent);
  transition:transform 150ms cubic-bezier(.23,1,.32,1),filter 170ms cubic-bezier(.23,1,.32,1)
 }
@@ -67,7 +67,8 @@
  box-shadow:0 22px 45px rgba(62,47,42,.12)
 }
 .pr-cover-sheet::before{content:"";position:absolute;left:10%;right:10%;top:46%;border-top:1px dashed color-mix(in srgb,var(--pr-rule) 74%,transparent)}
-.pr-cover-copy{position:absolute;z-index:7;left:13%;top:14%;width:54%;padding:0;text-align:left}
+.pr-cover-heading-group{position:absolute;z-index:7;left:13%;top:14%;width:54%}
+.pr-cover-copy{position:relative;width:100%;padding:0;text-align:left}
 .pr-cover-copy .pr-overline{display:block;margin-bottom:18px;color:var(--pr-rose)}
 .pr-cover-names{margin:0;font:clamp(2.5rem,12cqw,5rem)/.88 var(--inv-heading,Georgia,serif);letter-spacing:-.055em;text-wrap:balance}
 .pr-cover-names>span{display:block;max-width:7.5ch;overflow-wrap:anywhere}
@@ -75,7 +76,9 @@
 .pr-cover-names em{display:block;width:max-content;margin:8px 0 8px 29%;color:var(--pr-rose);font:italic .45em/1 Georgia,serif;letter-spacing:0}
 .pr-cover-date{margin:25px 0 0;border-left:3px solid var(--pr-rose);padding-left:12px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
 .pr-cover-hashtag{max-width:100%;margin-top:10px;font-size:10px;overflow-wrap:anywhere;opacity:.68}
-.pr-cover-couple{position:absolute;z-index:6;right:4%;bottom:8%;width:46%;filter:drop-shadow(0 14px 18px rgba(60,46,42,.11))}
+.pr-cover-illustration-group{position:absolute;z-index:2;inset:0;pointer-events:none}
+.pr-cover-main-art{position:absolute;z-index:6;right:4%;bottom:8%;width:46%}
+.pr-cover-couple{position:relative;width:100%;filter:drop-shadow(0 14px 18px rgba(60,46,42,.11))}
 .pr-cover-lamp{position:absolute;z-index:3;right:-7%;top:9%;width:30%;opacity:.58}
 .pr-cover-camera{position:absolute;z-index:5;left:-4%;bottom:3%;width:29%;rotate:-7deg;opacity:.78}
 .pr-cover-ticket{position:absolute;z-index:4;left:4%;top:51%;width:32%;rotate:-11deg;opacity:.64}
@@ -84,8 +87,8 @@
 .pr-cover-heart{left:62%;top:44%;width:28px}
 .pr-cover-end{position:absolute;z-index:7;left:13%;bottom:5%;max-width:24ch;margin:0;font:italic 13px/1.5 var(--inv-heading,Georgia,serif);opacity:.7}
 .pr-cover[data-pr-long=true] .pr-cover-names{font-size:clamp(2rem,9cqw,3.7rem);line-height:.96}
-.pr-cover[data-pr-long=true] .pr-cover-copy{width:60%}
-.pr-cover[data-pr-long=true] .pr-cover-couple{width:42%}
+.pr-cover[data-pr-long=true] .pr-cover-heading-group{width:60%}
+.pr-cover[data-pr-long=true] .pr-cover-main-art{width:42%}
 
 .pr-invitation .pr-section{
  position:relative;min-height:clamp(470px,124cqw,720px);overflow:hidden!important;
@@ -100,6 +103,7 @@
 .pr-section-art{position:absolute;z-index:1;inset:0;pointer-events:none}
 .pr-section-prop{position:absolute;display:block}
 .pr-section-prop img{width:100%;height:auto!important;object-fit:contain!important}
+.pr-section-whole-image{display:block;width:100%!important;height:auto!important;max-width:100%!important;object-fit:contain!important}
 .pr-section-sheet{opacity:.19;filter:saturate(.72)}
 .pr-section-object{opacity:.5}
 .pr-section-art[data-part=greeting] .pr-section-prop-1{right:-8%;top:8%;width:47%;rotate:5deg}
@@ -205,8 +209,8 @@
 @keyframes pr-clock-back{to{transform:rotate(-360deg)}}
 
 @container (max-width:350px){
- .pr-cover-copy{left:11%;width:58%}
- .pr-cover-couple{right:1%;width:48%}
+ .pr-cover-heading-group{left:11%;width:58%}
+ .pr-cover-main-art{right:1%;width:48%}
  .pr-cover-lamp{right:-10%;width:32%}
  .pr-cover-camera{width:27%}
  .pr-greeting-copy,.pr-invitation .pr-section[data-invitation-section=rsvp] [data-studio-native-object="object:rsvp:intro"],.pr-invitation .pr-section[data-invitation-section=closing] .pr-closing-copy{width:68%}
