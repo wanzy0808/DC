@@ -204,24 +204,33 @@ test("Classic Pearl keeps heirloom artwork granular while protected event conten
   assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
-test("Golden Art Deco geometry and gem stay individually selectable inside its cover composition", () => {
+test("Golden Art Deco poster artwork stays granular while protected event content remains protected", () => {
   const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
-  const deco = scenes.split('if (theme === "golden-art-deco") return <section')[1]
-    ?.split('if (theme === "paper-cut-botanical") return <section')[0];
-  assert.ok(deco, "Golden Art Deco cover branch must exist");
-  for (const object of [
-    "border-outer", "border-inner", "diamond-main", "diamond-top", "diamond-bottom",
-    "content-group", "kicker", "deco-bars", "deco-gem", "gem-ray-left",
-    "gem-icon", "gem-ray-right", "date", "ornament",
-  ]) assert.ok(deco.includes(`object:cover:${object}`), `missing Golden Art Deco ${object}`);
-  assert.match(deco, /data-studio-native-object=\{`object:cover:deco-bar-\$\{i\}`\}/);
-  assert.match(deco, /<Names[^>]*>\{names\}<\/Names>/);
-  assert.equal(nativeVisualSelector("object:cover:deco-bar-2"),
-    '[data-studio-native-object="object:cover:deco-bar-2"]');
-  assert.equal(nativeVisualCanHide("object:cover:deco-bar-2"), true);
-  assert.equal(nativeVisualCanHide("object:cover:gem-icon"), true);
-  assert.equal(nativeVisualCanHide("object:cover:content-group"), false);
+  const golden = read("components/PublicInvitation/GoldenArtDecoScene.tsx");
+  const artwork = read("components/PublicInvitation/GoldenArtDecoArtwork.tsx");
+  assert.match(scenes, /GoldenArtDecoScene/);
+  assert.match(golden, /object:envelope:rail-left/);
+  assert.match(golden, /object:envelope:rail-right/);
+  assert.match(golden, /object:envelope:ticket-stage/);
+  assert.match(golden, /object:envelope:fan-art/);
+  assert.match(golden, /object:cover:rail/);
+  assert.match(golden, /object:cover:steps/);
+  assert.match(golden, /object:cover:fan-art/);
+  assert.match(golden, /object:cover:garland-art/);
+  assert.match(golden, /object:cover:arch-art/);
+  assert.match(golden, /object:cover:champagne-art/);
+  assert.match(golden, /object:cover:copy-panel/);
+  assert.match(golden, /object:cover:date/);
+  assert.match(artwork, /object:identity:mirror-art/);
+  assert.match(artwork, /object:identity:chaise-art/);
+  assert.match(artwork, /object:identity:fan-art/);
+  assert.equal(nativeVisualCanHide("object:cover:rail"), true);
+  assert.equal(nativeVisualCanHide("object:cover:steps"), true);
+  assert.equal(nativeVisualCanHide("object:cover:fan-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:arch-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:champagne-art"), true);
   assert.equal(nativeVisualUsesSystemContent("object:cover:date"), true);
+  assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
 test("Paper Cut Botanical card composition is movable without swallowing its cutout layers", () => {
