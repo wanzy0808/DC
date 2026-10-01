@@ -25,6 +25,12 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
+  if (templateKey === "classic-pearl") return {
+    greeting: eventDescription?.trim() || "Dengan penuh syukur, kami mengundang Anda untuk hadir pada sebuah hari yang ingin kami kenang dengan hangat dan penuh makna.",
+    attendanceRequest: "Kehadiran Anda akan menjadi bagian berharga dari perayaan yang kami simpan dekat di hati.",
+    prayerWish: "Semoga langkah yang kami mulai bersama selalu dipenuhi kasih, keteguhan, dan kebaikan yang bertahan lama.",
+    closing: "Terima kasih atas doa, waktu, dan kehadiran yang menjadikan hari ini semakin berarti bagi kami. Sampai bertemu.",
+  };
   if (templateKey === "midnight-romance") return {
     greeting: eventDescription?.trim() || "Saat malam turun dan cahaya menjadi lebih pelan, kami mengundang Anda untuk hadir di satu perayaan yang kami simpan dekat di hati.",
     attendanceRequest: "Kehadiran Anda akan menjadi bagian hangat dari malam yang ingin kami kenang selamanya.",
