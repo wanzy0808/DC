@@ -63,6 +63,13 @@ const blossomNative: Record<string, TemplateNativeMotion> = {
 };
 
 const modernMaroonNative: Record<string, TemplateNativeMotion> = {
+  "object:envelope:background-art": { animation: "fade", animationDuration: .8 },
+  "object:envelope:fabric-art": { animation: "glide-right", animationDuration: .9, animationDelay: .08 },
+  "object:envelope:card-stage": { animation: "rise", animationDuration: .86, animationDelay: .1 },
+  "object:envelope:monogram": { animation: "soft-scale", animationDuration: .72 },
+  "object:cover:background-art": { animation: "fade", animationDuration: .8 },
+  "object:cover:gold-art": { animation: "reveal-left", animationDuration: .9, animationDelay: .04 },
+  "object:cover:flower-art": { animation: "glide-left", animationDuration: .9, animationDelay: .08 },
   "object:cover:monogram": { animation: "soft-scale", animationDuration: .75 },
   "object:cover:media-group": { animation: "reveal-left", animationDuration: .92, animationDelay: .06 },
   "object:cover:copy-panel": { animation: "rise", animationDuration: .82, animationDelay: .12 },
