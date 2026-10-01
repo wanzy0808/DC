@@ -60,6 +60,12 @@ test("Modern Maroon uses the shared ornament asset and its own motion choreograp
   assert.match(motion, /gallery: \{ animation: "tilt-in"/);
 });
 
+test("Modern Maroon preserves Studio palette customization", () => {
+  assert.match(universal, /color-mix\(in srgb, var\(--inv-surface\) 78%, var\(--inv-soft\)\)/);
+  assert.match(universal, /readableInk\(modernDarkSection \? palette\.bg/);
+  assert.match(css, /color: inherit !important/);
+});
+
 test("Modern Maroon defaults to its modern type pairing", () => {
   assert.match(catalog, /key: "modern-maroon"[\s\S]*preset: \{ layout: "maroon", palette: "maroon", font: "syneInter" \}/);
   assert.match(catalog, /Editorial maroon asimetris/);
