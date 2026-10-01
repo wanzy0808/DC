@@ -25,6 +25,12 @@ export function availableEditableCopyFields(templateKey: string, isWedding = tru
 }
 
 export function invitationCopyDefaults(templateKey: string, eventDescription?: string | null): EditableInvitationCopy {
+  if (templateKey === "paper-cut-botanical") return {
+    greeting: eventDescription?.trim() || "Selembar demi selembar, kami merangkai undangan ini untuk berbagi satu hari yang begitu berarti bagi kami.",
+    attendanceRequest: "Kehadiran Anda akan menjadi bagian hangat dari cerita yang sedang kami susun bersama.",
+    prayerWish: "Semoga langkah yang kami mulai selalu punya ruang untuk tumbuh, menguat, dan saling menjaga.",
+    closing: "Terima kasih telah membuka lembar ini, mendoakan, dan menjadi bagian dari hari yang ingin kami simpan lama.",
+  };
   if (templateKey === "golden-art-deco") return {
     greeting: eventDescription?.trim() || "Dengan hangat kami mengundang Anda ke sebuah malam yang dirangkai dalam cahaya, irama, dan kebersamaan.",
     attendanceRequest: "Kehadiran Anda akan menjadi bagian paling berharga dari perayaan yang ingin kami kenang.",
