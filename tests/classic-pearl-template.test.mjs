@@ -12,6 +12,7 @@ const css = read("components/PublicInvitation/classic-pearl.css");
 const motion = read("lib/templates/template-motion.ts");
 const catalog = read("lib/templates/catalog.ts");
 const design = read("lib/templates/design.ts");
+const nativeVisuals = read("lib/templates/native-visual-transforms.ts");
 
 test("Classic Pearl uses dedicated photo-free scenes and heirloom sections", () => {
   assert.match(scenes, /ClassicPearlScene/);
@@ -24,6 +25,20 @@ test("Classic Pearl uses dedicated photo-free scenes and heirloom sections", () 
   assert.match(universal, /<ClassicPearlIdentity/);
   assert.match(universal, /key === "classic-pearl" \? <ClassicPearlGallery/);
   assert.match(catalog, /key: "classic-pearl"[\s\S]*usesPhotos: false[\s\S]*photoSlots: \[\]/);
+});
+
+test("Classic Pearl cover is intentionally asymmetric instead of another centered framed hero", () => {
+  assert.match(scene, /object:cover:ledger-line/);
+  assert.match(scene, /object:cover:pearl-trail/);
+  assert.match(scene, /cp-cover-name-first/);
+  assert.match(scene, /cp-cover-name-second/);
+  assert.doesNotMatch(scene, /object:cover:pearl-rule/);
+  assert.doesNotMatch(scene, /object:cover:oval-frame/);
+  assert.match(css, /\.cp-cover-copy \{[^}]*left: 10%;[^}]*top: 29%;[^}]*text-align: left;/);
+  assert.match(css, /\.cp-cover-arch \{[^}]*right: 2%;[^}]*top: 13%;/);
+  assert.match(css, /\.cp-cover-chandelier \{[^}]*left: 3%;/);
+  assert.match(css, /\.cp-cover-tiara \{[^}]*right: 6%;[^}]*bottom: 6%;/);
+  assert.doesNotMatch(css, /\.cp-cover-copy \{[^}]*margin:[^;]*auto/);
 });
 
 test("Classic Pearl maps all ten local WebP heirloom assets without cropping them", () => {
@@ -42,13 +57,25 @@ test("Classic Pearl maps all ten local WebP heirloom assets without cropping the
   assert.match(css, /\.cp-art img \{[^}]*object-fit: contain/);
 });
 
+test("Classic Pearl varies section props instead of repeating one bridal ornament", () => {
+  assert.match(artwork, /greeting: "mirror"/);
+  assert.match(artwork, /event: "teaTable"/);
+  assert.match(artwork, /dateTime: "candelabra"/);
+  assert.match(artwork, /countdown: "chandelier"/);
+  assert.match(artwork, /location: "carriage"/);
+  assert.match(artwork, /rsvp: "garland"/);
+  assert.match(artwork, /wishes: "perfume"/);
+  assert.match(artwork, /gift: "tiara"/);
+  assert.match(artwork, /closing: "chaise"/);
+});
+
 test("Classic Pearl keeps event identity and shared functional engines protected", () => {
   assert.match(scene, /object:cover:date/);
   assert.match(artwork, /object:identity:personOne-name/);
   assert.match(artwork, /object:identity:personTwo-name/);
   assert.match(artwork, /object:identity:personOne-parents/);
   assert.match(artwork, /object:identity:personTwo-parents/);
-  assert.match(universal, /classic-pearl[\s\S]{0,800}<RsvpForm[^>]*appearance="zen"/);
+  assert.match(universal, /classic-pearl[\s\S]{0,900}<RsvpForm[^>]*appearance="zen"/);
   assert.match(universal, /<GuestWishes[\s\S]*classic-pearl[\s\S]*\? "zen" : "default"/);
   assert.match(universal, /data-studio-section-element="location:button"/);
   assert.match(universal, /data-studio-section-element="gift:button"/);
@@ -59,20 +86,23 @@ test("Classic Pearl replaces generic section icons with its themed object world"
   assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <CalendarDays/);
   assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <MapPin/);
   assert.match(universal, /key !== "botanical-ivory" && key !== "midnight-romance" && key !== "classic-pearl" && <Gift/);
-  assert.match(artwork, /event: "teaTable"/);
-  assert.match(artwork, /location: "carriage"/);
-  assert.match(artwork, /gift: "perfume"/);
 });
 
-test("Classic Pearl registers native motion without animating changing countdown values", () => {
+test("Classic Pearl registers restrained asymmetric motion without animating countdown values", () => {
   assert.match(motion, /const classicPearlNative/);
   assert.match(motion, /"classic-pearl": classicPearlNative/);
   const block = motion.slice(motion.indexOf("const classicPearlNative"), motion.indexOf("const midnightRomanceNative"));
   assert.doesNotMatch(block, /object:countdown:[^"]*-value/);
-  assert.match(block, /object:cover:arch-art/);
-  assert.match(block, /object:identity:mirror-art/);
-  assert.match(block, /object:gallery:keepsake-grid/);
+  assert.match(block, /"object:cover:ledger-line": \{ animation: "reveal-up"/);
+  assert.match(block, /"object:cover:chandelier-art": \{ animation: "glide-left"/);
+  assert.match(block, /"object:cover:arch-art": \{ animation: "glide-right"/);
+  assert.match(block, /"object:cover:pearl-trail": \{ animation: "reveal-left"/);
+  assert.match(block, /"object:gallery:promise-group": \{ animation: "tilt-in"/);
+  assert.match(block, /"object:gallery:memory-group": \{ animation: "tilt-in"/);
+  assert.match(block, /"object:gallery:reflection-group": \{ animation: "rise"/);
   assert.match(css, /@media \(prefers-reduced-motion:reduce\)/);
+  assert.match(scene, /animate=\{\{[\s\S]{0,180}transform:/);
+  assert.doesNotMatch(scene, /animate=\{\{\s*(?:x|y|scale|rotate):/);
 });
 
 test("Classic Pearl uses its atelier palette and Cormorant editorial pairing", () => {
@@ -88,16 +118,27 @@ test("Classic Pearl entrance motion is one-shot and waits for local artwork", ()
   assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(template\)/);
   assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeHook, /waitForImages:[^\n]*classic-pearl/);
-  assert.match(universal, /key === "classic-pearl"[\s\S]{0,300}sectionStyles\.envelope\?\.animation === "none"/);
+  assert.match(universal, /key === "classic-pearl"[\s\S]{0,350}sectionStyles\.envelope\?\.animation === "none"/);
 });
 
-test("Classic Pearl keepsake Gallery stays photo-free and romantic", () => {
+test("Classic Pearl keepsake Gallery stays photo-free and avoids repeated card architecture", () => {
   assert.doesNotMatch(gallery, /data-invitation-photo-slot/);
   assert.match(gallery, /Galeri Kenangan/);
+  assert.match(gallery, /object:gallery:promise-group/);
+  assert.match(gallery, /object:gallery:memory-group/);
+  assert.match(gallery, /object:gallery:reflection-group/);
   assert.match(gallery, /object:gallery:tiara-art/);
   assert.match(gallery, /object:gallery:perfume-art/);
   assert.match(gallery, /object:gallery:mirror-art/);
   assert.match(gallery, /Yang tetap tinggal/);
   assert.match(gallery, /Yang ingin dikenang/);
   assert.match(gallery, /Yang tumbuh bersama/);
+  assert.doesNotMatch(gallery, /cp-keepsake-card/);
+  assert.match(universal, /classic && keyName === "gallery" \? "Galeri Kenangan"/);
+});
+
+test("Classic Pearl pearl flourishes are removable Studio decoration while real date remains protected", () => {
+  assert.match(nativeVisuals, /illustration\|pearl/);
+  assert.match(scene, /object:cover:pearl-trail/);
+  assert.doesNotMatch(scene, /object:cover:pearl-rule/);
 });
