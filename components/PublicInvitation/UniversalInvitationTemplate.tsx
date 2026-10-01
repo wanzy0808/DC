@@ -415,13 +415,25 @@ export default function UniversalInvitationTemplate({
     const blossom = key === "eternal-blossom";
     const modern = key === "modern-maroon";
     const contrast = !customPalette && isInkTheme && index % 2 === 0;
+    const modernDarkSection = ["identity", "dateTime", "rsvp", "gift"].includes(keyName);
+    const modernSoftSection = ["event", "countdown", "wishes"].includes(keyName);
     const modernBackdrop: Partial<Record<keyof typeof headings, string>> = {
-      greeting: "var(--inv-surface)", identity: "#4a111b", event: "#f4dfd4", dateTime: "#2d0710",
-      gallery: "var(--inv-surface)", countdown: "#f4dfd4", location: "var(--inv-surface)", rsvp: "#4a111b",
-      wishes: "#f4dfd4", gift: "#4a111b", closing: "var(--inv-surface)",
+      greeting: "var(--inv-surface)",
+      identity: "var(--inv-bg)",
+      event: "color-mix(in srgb, var(--inv-surface) 78%, var(--inv-soft))",
+      dateTime: "color-mix(in srgb, var(--inv-bg) 84%, #000)",
+      gallery: "var(--inv-surface)",
+      countdown: "color-mix(in srgb, var(--inv-surface) 78%, var(--inv-soft))",
+      location: "var(--inv-surface)",
+      rsvp: "var(--inv-bg)",
+      wishes: "color-mix(in srgb, var(--inv-surface) 78%, var(--inv-soft))",
+      gift: "var(--inv-bg)",
+      closing: "var(--inv-surface)",
     };
     const backdrop = modern ? (modernBackdrop[keyName] ?? "var(--inv-bg)") : botanical || blossom ? keyName === "countdown" ? "var(--inv-accent)" : ["greeting", "wishes", "gallery"].includes(keyName) ? "var(--inv-surface)" : "var(--inv-bg)" : contrast ? (key === "golden-art-deco" ? "#191b17" : key === "celestial-ink" ? "#101b32" : "#080d20") : index % 2 ? "var(--inv-surface)" : "var(--inv-bg)";
-    const color = modern ? (["identity", "dateTime", "rsvp", "gift"].includes(keyName) ? "#fff5ee" : "#371017") : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
+    const color = modern
+      ? readableInk(modernDarkSection ? palette.bg : modernSoftSection ? palette.surface : palette.surface, palette.ink)
+      : botanical || blossom ? readableInk(sectionStyles[keyName]?.background || (keyName === "countdown" ? palette.accent : ["greeting", "wishes", "gallery"].includes(keyName) ? palette.surface : palette.bg), palette.ink) : customPalette ? readableInk(index % 2 ? palette.surface : palette.bg, palette.ink) : contrast ? (key === "celestial-ink" ? "#c9e2f0" : "#e7cfa4") : "var(--inv-ink)";
     return renderSectionInstances(keyName, (instanceId) => (
       <>
       <section data-invitation-section={keyName} className={`relative overflow-hidden px-6 sm:px-9 ${zen ? "zen-section" : pencil ? "pr-section" : serein ? "serein-section" : botanical ? "bi-section" : blossom ? "eb-section" : modern ? `mm-section mm-${keyName}` : "py-16"} ${left || serein || botanical || blossom || modern ? "text-left" : "text-center"} ${paper ? "rounded-t-[70px]" : ""}`}
