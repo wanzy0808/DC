@@ -334,23 +334,9 @@ export default function UniversalInvitationTemplate({
       setOpened(true);
       setOpening(false);
       onEnvelopeOpened?.();
-    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "pencil-reverie" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" || key === "golden-art-deco") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "pencil-reverie" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" || key === "golden-art-deco") ? 950 : 1350);
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "zen-atelier" || key === "pencil-reverie" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" || key === "golden-art-deco") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "zen-atelier" || key === "pencil-reverie" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" || key === "midnight-romance" || key === "classic-pearl" || key === "golden-art-deco") ? 950 : 1350);
     return () => window.clearTimeout(timer);
   }, [opening, onEnvelopeOpened, key, sectionStyles]);
-  useEffect(() => {
-    if (key !== "zen-atelier" || (!opened && sections.envelope !== false)) return;
-    if (!window.IntersectionObserver || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => entry.target.classList.toggle("zen-reveal", entry.isIntersecting));
-    }, { threshold: .12 });
-    rootRef.current?.querySelectorAll<HTMLElement>(".zen-section h2, .zen-couple-name, .zen-gallery-grid button, .zen-quote").forEach((node) => {
-      const sectionNode = node.closest<HTMLElement>("[data-invitation-section]");
-      const sectionKey = sectionNode?.dataset.invitationSection as InvitationSectionKey | undefined;
-      if (sectionKey && (sectionStyles[sectionKey]?.animation !== undefined || sectionStyles[sectionKey]?.timeline)) return;
-      observer.observe(node);
-    });
-    return () => observer.disconnect();
-  }, [key, opened, sections.envelope, media.gallery.length, sectionStyles]);
 
   const handleOpen = (immediate = false) => {
     musicRef.current?.playOnOpen();
@@ -610,6 +596,7 @@ export default function UniversalInvitationTemplate({
               stage="cover"
               onOpen={handleOpen}
               onEditPhoto={usesPhotos && preview && onEditPhoto ? () => onEditPhoto("cover") : undefined}
+              motionEnabled={sectionStyles.cover?.animation !== "none" && !sectionStyles.cover?.timeline}
             />{objectOverlay("cover", instanceId)}</div>
           ))}
 
