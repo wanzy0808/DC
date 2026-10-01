@@ -13,7 +13,7 @@ export default function GardenLightGallery({ photos, preview, onEdit }: { photos
     {preview && onEdit && <button type="button" onClick={onEdit} className="gl-action gl-gallery-edit">{tr("Atur Foto Galeri")}</button>}
     <GardenLightArt objectKey="object:gallery:garland-art" asset="garland" className="gl-gallery-garland" />
     {photos.length ? <div data-studio-native-object="object:gallery:grid" className="gl-gallery-grid">
-      {photos.slice(0, 5).map((asset, index) => <figure key={asset.id} data-invitation-photo-slot="gallery" data-studio-photo-id={asset.id} className={`gl-gallery-photo gl-gallery-photo-${index + 1}`}>
+      {photos.map((asset, index) => <figure key={asset.id} data-invitation-photo-slot="gallery" data-studio-photo-id={asset.id} className={`gl-gallery-photo gl-gallery-photo-${index + 1}`}>
         <img src={asset.url} alt={`${tr("Galeri foto")} ${index + 1}`} loading="lazy" />
       </figure>)}
       <GardenLightArt objectKey="object:gallery:parasol-art" asset="parasol" className="gl-gallery-parasol" />
