@@ -19,7 +19,14 @@ const blossomPhotos: PhotoMotionMap = {
   gallery: { animation: "tilt-in", animationDuration: .75, animationStagger: .07 },
 };
 
-const photoDefaults: Record<string, PhotoMotionMap> = { serein: sereinPhotos, "eternal-blossom": blossomPhotos };
+const modernMaroonPhotos: PhotoMotionMap = {
+  cover: { animation: "reveal-left", animationDuration: .9, animationDelay: .08 },
+  personOne: { animation: "glide-left", animationDuration: .82 },
+  personTwo: { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
+  gallery: { animation: "tilt-in", animationDuration: .72, animationStagger: .055, parallax: .045 },
+};
+
+const photoDefaults: Record<string, PhotoMotionMap> = { serein: sereinPhotos, "eternal-blossom": blossomPhotos, "modern-maroon": modernMaroonPhotos };
 
 export function templateHasDefaultPhotoMotion(template: string) {
   return Object.hasOwn(photoDefaults, template);
@@ -53,6 +60,36 @@ const blossomNative: Record<string, TemplateNativeMotion> = {
   "heading:closing": { animation: "rise" },
   "object:closing:flower-art": { animation: "soft-scale", animationDuration: .85 },
   "object:closing:names": { animation: "rise", animationDelay: .07 },
+};
+
+const modernMaroonNative: Record<string, TemplateNativeMotion> = {
+  "object:cover:monogram": { animation: "soft-scale", animationDuration: .75 },
+  "object:cover:media-group": { animation: "reveal-left", animationDuration: .92, animationDelay: .06 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .82, animationDelay: .12 },
+  "heading:greeting": { animation: "slide-left", animationDuration: .72 },
+  "object:greeting:copy-group": { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
+  "object:greeting:flourish": { animation: "reveal-left", animationDuration: .8, animationDelay: .12 },
+  "heading:identity": { animation: "rise", animationDuration: .7 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .86 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .86, animationDelay: .09 },
+  "heading:event": { animation: "slide-left", animationDuration: .72 },
+  "object:event:details-group": { animation: "rise", animationDuration: .8, animationDelay: .08 },
+  "heading:dateTime": { animation: "fade", animationDuration: .7 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .88, animationDelay: .07 },
+  "heading:gallery": { animation: "slide-left", animationDuration: .7 },
+  "object:gallery:flourish": { animation: "reveal-left", animationDuration: .8 },
+  "heading:countdown": { animation: "fade", animationDuration: .65 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+  "heading:location": { animation: "slide-left", animationDuration: .72 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
+  "heading:rsvp": { animation: "rise", animationDuration: .72 },
+  "heading:wishes": { animation: "slide-left", animationDuration: .72 },
+  "heading:gift": { animation: "fade", animationDuration: .7 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .84, animationDelay: .08 },
+  "heading:closing": { animation: "rise", animationDuration: .74 },
+  "object:closing:copy-group": { animation: "glide-right", animationDuration: .86, animationDelay: .07 },
+  "object:closing:flourish": { animation: "reveal-left", animationDuration: .8, animationDelay: .11 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .78, animationDelay: .13 },
 };
 
 const sereinNative: Record<string, TemplateNativeMotion> = {
@@ -112,6 +149,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   serein: sereinNative,
   "botanical-ivory": botanicalNative,
   "eternal-blossom": blossomNative,
+  "modern-maroon": modernMaroonNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
