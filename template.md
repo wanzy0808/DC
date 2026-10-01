@@ -278,3 +278,17 @@ Untuk **setiap template baru yang bisa dikustomisasi**, amplop bukan PNG tetap a
 
 **Cara pakai di chat selanjutnya:** “Buat template [nama tema] mengikuti template.md; mulai brief, moodboard, contoh 15 komponen, dan aset satu per satu sebelum coding.”  
 **Penting:** dokumen ini adalah standar produksi; keberadaan checklist bukan bukti setiap template sudah memenuhi semua poin.
+
+### Kontrak Gallery Settings lintas template — 1 October 2026
+
+Template dengan slot foto `gallery` harus mendukung konfigurasi Gallery event-scoped tanpa kehilangan identitas visual master. Mode default adalah **`template`**, sehingga layout Gallery authored milik masing-masing tema tetap digunakan. Bila pengguna memilih renderer bersama dari Studio, opsi yang didukung adalah **Carousel / slider, Kartu bertumpuk, Filmstrip swipe, dan Kolase masonry**. Pergantian mode hanya mengubah presentasi; sumber foto, ID asset, urutan, crop/transform per foto, hak akses event, dan data undangan tetap memakai engine bersama.
+
+Urutan foto yang dipilih harus stabil dan disimpan berdasarkan asset ID, bukan posisi DOM sementara. Carousel/Stack dapat memakai autoplay dengan interval tersimpan, transisi tersimpan, Pause/Resume, navigasi manual dan swipe. Reduced Motion menonaktifkan perpindahan otomatis serta menghilangkan transisi gerak. Animasi entrance foto tetap memakai motion engine shared dan harus dipisahkan dari state visibility slideshow agar slide nonaktif tidak muncul akibat `opacity/transform` inline.
+
+Tambahan checklist Gallery:
+- [ ] Mode `Default template` menghasilkan Gallery yang sama seperti sebelum custom setting dipilih.
+- [ ] Reorder tersimpan setelah refresh/Save dan sama pada Studio final preview serta renderer publik.
+- [ ] Carousel/Stack diuji autoplay ON/OFF, interval minimum/maksimum, Pause/Resume, arrow/dot, swipe, keyboard focus, dan Reduced Motion.
+- [ ] Filmstrip dan Masonry tetap menampilkan seluruh foto yang dipilih tanpa slicing tersembunyi.
+- [ ] Entrance animation + stagger tidak mengubah visibility slide dan tidak mengganggu selection identity `data-studio-photo-id`.
+
