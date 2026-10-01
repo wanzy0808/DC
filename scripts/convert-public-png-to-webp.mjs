@@ -44,8 +44,7 @@ async function fileExists(file) {
   }
 }
 
-async function convertImage(inputPath) {
-  const outputPath = inputPath.replace(SOURCE_IMAGE_RE, ".webp");
+async function convertImage(inputPath, outputPath = inputPath.replace(SOURCE_IMAGE_RE, ".webp")) {
   const inputStat = await fs.stat(inputPath);
   const image = sharp(inputPath, { failOn: "warning" });
   const metadata = await image.metadata();
@@ -146,30 +145,49 @@ async function updateTextReferences(conversions) {
 }
 
 const publicFiles = await walk(publicDir);
-const sourceImages = publicFiles
+const publicSourceImages = publicFiles
   .filter((file) => SOURCE_IMAGE_RE.test(file))
   .sort((a, b) => a.localeCompare(b));
 
-if (sourceImages.length === 0) {
-  console.log("No PNG/JPG/JPEG assets found under public/. Nothing to convert.");
+const appIconPng = path.join(root, "app", "icon.png");
+const sourceJobs = publicSourceImages.map((inputPath) => ({
+  inputPath,
+  outputPath: inputPath.replace(SOURCE_IMAGE_RE, ".webp"),
+}));
+
+if (await fileExists(appIconPng)) {
+  sourceJobs.push({
+    inputPath: appIconPng,
+    // Next.js app/icon file convention does not support WebP, so keep the
+    // converted favicon in public/ and reference it through Metadata.icons.
+    outputPath: path.join(publicDir, "icon.webp"),
+  });
+}
+
+if (sourceJobs.length === 0) {
+  console.log("No PNG/JPG/JPEG assets found to normalize. Nothing to convert.");
   process.exit(0);
 }
 
-console.log(`Converting ${sourceImages.length} public raster assets to WebP...\n`);
+console.log(`Converting ${sourceJobs.length} raster assets to WebP...\n`);
 
 const conversions = [];
-for (const source of sourceImages) {
-  const result = await convertImage(source);
+for (const { inputPath, outputPath } of sourceJobs) {
+  const result = await convertImage(inputPath, outputPath);
   conversions.push(result);
 
   const beforeMb = (result.before / 1024 / 1024).toFixed(2);
   const afterMb = (result.after / 1024 / 1024).toFixed(2);
-  const rel = toPosix(path.relative(root, source));
+  const rel = toPosix(path.relative(root, inputPath));
+  const out = toPosix(path.relative(root, outputPath));
   const note = result.reusedExisting ? " (existing WebP reused)" : "";
-  console.log(`✓ ${rel}  ${beforeMb} MB → ${afterMb} MB${note}`);
+  console.log(`✓ ${rel} → ${out}  ${beforeMb} MB → ${afterMb} MB${note}`);
 }
 
-const changedFiles = await updateTextReferences(conversions);
+const publicConversions = conversions.filter((item) =>
+  item.inputPath.startsWith(publicDir + path.sep),
+);
+const changedFiles = await updateTextReferences(publicConversions);
 
 for (const item of conversions) {
   await fs.unlink(item.inputPath);
@@ -190,4 +208,3 @@ console.log(
     1024
   ).toFixed(2)} MB (${percent.toFixed(1)}% smaller)`,
 );
-console.log("app/icon.png is intentionally untouched because it is a Next.js metadata icon.");
