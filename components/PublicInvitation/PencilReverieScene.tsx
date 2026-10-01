@@ -150,39 +150,45 @@ export default function PencilReverieScene({
       <span aria-hidden className="pr-cover-desk" data-studio-native-object="object:cover:desk-field" />
       <span aria-hidden className="pr-cover-sheet" data-studio-native-object="object:cover:paper-sheet" />
 
-      <header className="pr-cover-copy" data-studio-native-object="object:cover:copy-panel">
-        <span className="pr-overline" data-studio-native-object="object:cover:kicker">
-          {tr(isWedding ? "THE WEDDING OF" : "Sebuah Undangan")}
-        </span>
-        <h1 className="pr-cover-names" data-studio-native-heading="">
-          {couple.length === 2 ? (
-            <>
-              <span data-studio-native-object="object:cover:personOne-name">{couple[0]}</span>
-              <em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em>
-              <span data-studio-native-object="object:cover:personTwo-name">{couple[1]}</span>
-            </>
-          ) : (
-            <span data-studio-native-object="object:cover:event-name">{names}</span>
-          )}
-        </h1>
-        <p className="pr-cover-date" data-studio-native-object="object:cover:date">{date}</p>
-        {hashtag?.trim() && <p className="pr-cover-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
-      </header>
+      <div className="pr-cover-heading-group" data-studio-native-object="object:cover:heading-group">
+        <header className="pr-cover-copy" data-studio-native-object="object:cover:copy-panel">
+          <span className="pr-overline" data-studio-native-object="object:cover:kicker">
+            {tr(isWedding ? "THE WEDDING OF" : "Sebuah Undangan")}
+          </span>
+          <h1 className="pr-cover-names" data-studio-native-heading="">
+            {couple.length === 2 ? (
+              <>
+                <span data-studio-native-object="object:cover:personOne-name">{couple[0]}</span>
+                <em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em>
+                <span data-studio-native-object="object:cover:personTwo-name">{couple[1]}</span>
+              </>
+            ) : (
+              <span data-studio-native-object="object:cover:event-name">{names}</span>
+            )}
+          </h1>
+          <p className="pr-cover-date" data-studio-native-object="object:cover:date">{date}</p>
+          {hashtag?.trim() && <p className="pr-cover-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
+        </header>
+      </div>
 
-      <PaperIllustration
-        file={isWedding ? "couplesitting.webp" : "bookstack.webp"}
-        width={isWedding ? 1122 : 1254}
-        height={isWedding ? 1402 : 1254}
-        priority
-        className="pr-cover-couple"
-        studioObject="object:cover:couple-art"
-      />
-      <PaperIllustration file="streetlamp.webp" width={1086} height={1448} priority className="pr-cover-lamp" studioObject="object:cover:lamp-art" />
-      <PaperIllustration file="camera1.webp" width={1254} height={1254} priority className="pr-cover-camera" studioObject="object:cover:camera-art" />
-      <PaperIllustration file="loveticket.webp" width={1448} height={1086} priority className="pr-cover-ticket" studioObject="object:cover:ticket-art" />
-      <PaperIllustration file="polaroidlove.webp" width={1254} height={1254} priority className="pr-cover-polaroid" studioObject="object:cover:polaroid-art" />
-      <PaperIllustration file="ribbon.webp" width={1254} height={1254} priority className="pr-cover-ribbon" studioObject="object:cover:ribbon-art" />
-      <HeartDoodle studioObject="object:cover:heart" className="pr-cover-heart" />
+      <div className="pr-cover-illustration-group" data-studio-native-object="object:cover:illustration-group">
+        <span className="pr-cover-main-art" data-studio-native-object="object:cover:main-art">
+          <PaperIllustration
+            file={isWedding ? "couplesitting.webp" : "bookstack.webp"}
+            width={isWedding ? 1122 : 1254}
+            height={isWedding ? 1402 : 1254}
+            priority
+            className="pr-cover-couple"
+            studioObject="object:cover:couple-art"
+          />
+        </span>
+        <PaperIllustration file="streetlamp.webp" width={1086} height={1448} priority className="pr-cover-lamp" studioObject="object:cover:lamp-art" />
+        <PaperIllustration file="camera1.webp" width={1254} height={1254} priority className="pr-cover-camera" studioObject="object:cover:camera-art" />
+        <PaperIllustration file="loveticket.webp" width={1448} height={1086} priority className="pr-cover-ticket" studioObject="object:cover:ticket-art" />
+        <PaperIllustration file="polaroidlove.webp" width={1254} height={1254} priority className="pr-cover-polaroid" studioObject="object:cover:polaroid-art" />
+        <PaperIllustration file="ribbon.webp" width={1254} height={1254} priority className="pr-cover-ribbon" studioObject="object:cover:ribbon-art" />
+        <HeartDoodle studioObject="object:cover:heart" className="pr-cover-heart" />
+      </div>
 
       <p className="pr-cover-end" data-studio-native-object="object:cover:ending">{tr("Every little moment matters.")}</p>
     </section>
