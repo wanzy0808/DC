@@ -122,12 +122,12 @@ export const invitationTemplates: InvitationTemplate[] = [
     previewType: "public",
     usesPhotos: false,
     photoSlots: [],
-    preset: { layout: "classic", palette: "pearl", font: "playfairLora" },
+    preset: { layout: "classic", palette: "pearlAtelier", font: "cormorantManrope" },
     name: "Classic Pearl",
-    description: "Clean classic dengan kesan timeless dan fleksibel untuk banyak tema acara.",
-    descriptionEn: "A clean classic theme with a timeless feel that adapts to many event styles.",
+    description: "Atelier klasik tanpa foto dengan porcelain ivory, champagne gold, mutiara, detail bridal, dan komposisi heirloom.",
+    descriptionEn: "A photo-free classic atelier of porcelain ivory, champagne gold, pearls, bridal details, and heirloom compositions.",
     previewImage:
-      "/assets/demo/invitation/couple-02.webp",
+      "/templates/classic-pearl/08_ivory_gold_wedding_arch.webp",
     assetPath: "/templates/classic-pearl",
   },
   {
