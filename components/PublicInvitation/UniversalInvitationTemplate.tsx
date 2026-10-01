@@ -706,27 +706,34 @@ export default function UniversalInvitationTemplate({
             )
           ), 5)}
 
-          {section("countdown", countdown ? (key === "modern-maroon" ? (
-            <div data-studio-native-object="object:countdown:group">
-              <div data-studio-native-object="object:countdown:grid" className="mm-countdown-grid">
-                {countdown.map(([label, value]) => (
-                  <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className="mm-countdown-cell">
-                    <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="mm-countdown-value">{String(value).padStart(2, "0")}</p>
-                    <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mm-countdown-label">{tr(label)}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (<div data-studio-native-object="object:countdown:group" className={key === "pencil-reverie" ? "pr-countdown-canvas" : ""}>{key === "pencil-reverie" && <PencilBackwardClock />}
-            <div data-studio-native-object="object:countdown:grid" className="grid grid-cols-4 gap-2">
-              {countdown.map(([label, value]) => (
-                <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
-                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
-                  <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] opacity-65">{tr(label)}</p>
+          {section("countdown", countdown ? (
+            key === "modern-maroon" ? (
+              <div data-studio-native-object="object:countdown:group">
+                <div data-studio-native-object="object:countdown:grid" className="mm-countdown-grid">
+                  {countdown.map(([label, value]) => (
+                    <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className="mm-countdown-cell">
+                      <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="mm-countdown-value">{String(value).padStart(2, "0")}</p>
+                      <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mm-countdown-label">{tr(label)}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div></div>))
-          ) : <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">{tr("Tanggal acara belum tersedia.")}</p>, 6)}
+              </div>
+            ) : (
+              <div data-studio-native-object="object:countdown:group" className={key === "pencil-reverie" ? "pr-countdown-canvas" : ""}>
+                {key === "pencil-reverie" && <PencilBackwardClock />}
+                <div data-studio-native-object="object:countdown:grid" className="grid grid-cols-4 gap-2">
+                  {countdown.map(([label, value]) => (
+                    <div key={label} data-studio-native-object={`object:countdown:${label.toLowerCase()}`} className={`border border-[var(--inv-soft)] bg-[var(--inv-bg)] px-1 py-3 ${panel}`}>
+                      <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-value`} className="text-xl text-[var(--inv-accent)]" style={{ fontFamily: invitationFontFamily(font.heading) }}>{String(value).padStart(2, "0")}</p>
+                      <p data-studio-native-object={`object:countdown:${label.toLowerCase()}-label`} className="mt-1 text-[10px] opacity-65">{tr(label)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          ) : (
+            <p data-studio-native-object="object:countdown:empty-copy" className="text-sm opacity-65">{tr("Tanggal acara belum tersedia.")}</p>
+          ), 6)}
 
           {section("location", key === "modern-maroon" ? (
             <div data-studio-native-object="object:location:details-group" className="mm-location-card">
