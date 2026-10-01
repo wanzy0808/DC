@@ -139,12 +139,9 @@ export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) 
             data-memory-index={i + 1}
             data-studio-native-object={`object:gallery:memory-${i + 1}`}
             aria-label={preview ? `Pilih ilustrasi ${i + 1}` : "Perbesar: " + item.caption}
-            onClick={(event) => {
-              if (preview) {
-                event.preventDefault();
-                return;
-              }
-              open(i, event.currentTarget);
+            onClick={(e) => {
+              if (preview) { e.preventDefault(); return; }
+              open(i, e.currentTarget);
             }}
           >
             <span className="pr-polaroid-sheet">
@@ -163,7 +160,7 @@ export function PencilMemoryGallery({ preview = false }: { preview?: boolean }) 
         ))}
       </div>
 
-      {!preview && index !== null && (
+      {!preview && index!==null && (
         <div
           className="pr-lightbox"
           role="dialog"
