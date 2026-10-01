@@ -293,7 +293,7 @@ export default function UniversalInvitationTemplate({
     "--blossom-surface-ink": readableInk(palette.surface, palette.ink),
     "--bi-on-accent": readableInk(palette.accent, palette.surface),
     "--bi-surface-ink": readableInk(palette.surface, palette.ink),
-    "--inv-ink": key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" ? readableInk(palette.bg, palette.ink) : palette.ink,
+    "--inv-ink": key === "zen-atelier" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light" ? readableInk(palette.bg, palette.ink) : palette.ink,
     "--inv-accent": palette.accent,
     "--inv-soft": palette.soft,
     color: palette.ink,
@@ -314,7 +314,7 @@ export default function UniversalInvitationTemplate({
       setOpened(true);
       setOpening(false);
       onEnvelopeOpened?.();
-    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "botanical-ivory" || key === "eternal-blossom") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "botanical-ivory" || key === "eternal-blossom") ? 950 : key === "pencil-reverie" ? 1050 : 1350);
+    }, window.matchMedia("(prefers-reduced-motion: reduce)").matches || ((key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light") && (sectionStyles.envelope?.animation === "none" || sectionStyles.envelope?.timeline)) ? 0 : (key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light") ? 950 : key === "pencil-reverie" ? 1050 : 1350);
     return () => window.clearTimeout(timer);
   }, [opening, onEnvelopeOpened, key, sectionStyles]);
   useEffect(() => {
@@ -356,7 +356,7 @@ export default function UniversalInvitationTemplate({
   const handleOpen = (immediate = false) => {
     musicRef.current?.playOnOpen();
     if (immediate) { setOpened(true); onEnvelopeOpened?.(); return; }
-    if (key === "zen-atelier" || key === "pencil-reverie" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom") {
+    if (key === "zen-atelier" || key === "pencil-reverie" || key === "serein" || key === "botanical-ivory" || key === "eternal-blossom" || key === "garden-light") {
       setOpening(true);
     } else {
       setOpened(true);
