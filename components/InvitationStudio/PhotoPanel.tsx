@@ -236,14 +236,14 @@ export default function PhotoPanel({
                                 <button
                                   type="button"
                                   disabled={index === 0}
-                                  onClick={() => index > 0 && onReorderGallery(photo.id, selectedGalleryPhotos[index - 1].id)}
+                                  onClick={() => { const target = selectedGalleryPhotos[index - 1]; if (target) onReorderGallery(photo.id, target.id); }}
                                   className="grid h-7 w-7 place-items-center rounded-md border border-border disabled:opacity-30"
                                   aria-label={en ? "Move photo up" : "Naikkan foto"}
                                 ><ChevronUp size={13} /></button>
                                 <button
                                   type="button"
                                   disabled={index === selectedGalleryPhotos.length - 1}
-                                  onClick={() => index < selectedGalleryPhotos.length - 1 && onReorderGallery(photo.id, selectedGalleryPhotos[index + 1].id)}
+                                  onClick={() => { const target = selectedGalleryPhotos[index + 1]; if (target) onReorderGallery(photo.id, target.id); }}
                                   className="grid h-7 w-7 place-items-center rounded-md border border-border disabled:opacity-30"
                                   aria-label={en ? "Move photo down" : "Turunkan foto"}
                                 ><ChevronDown size={13} /></button>
