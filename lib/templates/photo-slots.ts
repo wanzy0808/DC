@@ -22,6 +22,26 @@ export type PhotoMotion = {
 };
 export type PhotoMotionMap = Partial<Record<PhotoSlot, PhotoMotion>>;
 
+export type GalleryPresentation = "template" | "carousel" | "stack" | "filmstrip" | "masonry";
+export type GalleryTransition = "slide-left" | "slide-right" | "fade" | "zoom" | "rise";
+export type GallerySettings = {
+  presentation: GalleryPresentation;
+  autoplay: boolean;
+  /** Seconds each slide remains visible before advancing. */
+  interval: number;
+  transition: GalleryTransition;
+  /** Seconds used by the visual transition between slides. */
+  transitionDuration: number;
+};
+
+export const defaultGallerySettings = (): GallerySettings => ({
+  presentation: "template",
+  autoplay: false,
+  interval: 4,
+  transition: "slide-left",
+  transitionDuration: 0.6,
+});
+
 export type PhotoAssignments = {
   cover: string | null;
   personOne: string | null;
@@ -30,6 +50,7 @@ export type PhotoAssignments = {
   focus: Record<CroppablePhotoSlot, PhotoFocus>;
   crop: Record<CroppablePhotoSlot, PhotoCrop | null>;
   motion?: PhotoMotionMap;
+  gallerySettings?: GallerySettings;
 };
 
 export const defaultPhotoAssignments = (): PhotoAssignments => ({
@@ -40,10 +61,13 @@ export const defaultPhotoAssignments = (): PhotoAssignments => ({
   focus: { cover: "center", personOne: "center", personTwo: "center" },
   crop: { cover: null, personOne: null, personTwo: null },
   motion: {},
+  gallerySettings: defaultGallerySettings(),
 });
 
 const focusValues = new Set<PhotoFocus>(["top", "center", "bottom"]);
 const cropAspectValues = new Set<PhotoCropAspect>(["template", "original", "1:1", "4:5", "3:4", "16:9"]);
+const galleryPresentationValues = new Set<GalleryPresentation>(["template", "carousel", "stack", "filmstrip", "masonry"]);
+const galleryTransitionValues = new Set<GalleryTransition>(["slide-left", "slide-right", "fade", "zoom", "rise"]);
 const sanitizeId = (id: unknown) =>
   typeof id === "string" && id.length > 0 && id.length <= 100 && /^[a-zA-Z0-9_-]+$/.test(id)
     ? id
@@ -63,6 +87,23 @@ function sanitizeCrop(value: unknown): PhotoCrop | null {
   };
   if (cropAspectValues.has(source.aspect as PhotoCropAspect) && source.aspect !== "template") crop.aspect = source.aspect as PhotoCropAspect;
   return crop.x === 50 && crop.y === 50 && crop.zoom === 1 && !crop.aspect ? null : crop;
+}
+
+function sanitizeGallerySettings(value: unknown): GallerySettings {
+  const defaults = defaultGallerySettings();
+  if (!value || typeof value !== "object" || Array.isArray(value)) return defaults;
+  const source = value as Record<string, unknown>;
+  return {
+    presentation: galleryPresentationValues.has(source.presentation as GalleryPresentation)
+      ? source.presentation as GalleryPresentation
+      : defaults.presentation,
+    autoplay: source.autoplay === true,
+    interval: bounded(source.interval, 2, 12, defaults.interval),
+    transition: galleryTransitionValues.has(source.transition as GalleryTransition)
+      ? source.transition as GalleryTransition
+      : defaults.transition,
+    transitionDuration: bounded(source.transitionDuration, 0.2, 2, defaults.transitionDuration),
+  };
 }
 
 function sanitizePhotoMotion(value: unknown, gallery = false): PhotoMotion | undefined {
@@ -123,6 +164,7 @@ export function parsePhotoAssignments(designKey: string): PhotoAssignments {
         personTwo: sanitizeCrop(c.personTwo),
       },
       motion: sanitizePhotoMotions(value.motion),
+      gallerySettings: sanitizeGallerySettings(value.gallerySettings),
     };
   } catch {
     return defaultPhotoAssignments();
@@ -135,9 +177,14 @@ export function withPhotoAssignments(designKey: string, assignments: PhotoAssign
     ...assignments,
     crop: assignments.crop ?? { cover: null, personOne: null, personTwo: null },
     motion: sanitizePhotoMotions(assignments.motion),
+    gallerySettings: sanitizeGallerySettings(assignments.gallerySettings),
   };
   if (JSON.stringify(normalized) === JSON.stringify(defaultPhotoAssignments())) return parts.join("::");
   return `${parts.join("::")}::photos=${encodeURIComponent(JSON.stringify(normalized))}`;
+}
+
+export function resolveGallerySettings(assignments: Pick<PhotoAssignments, "gallerySettings">): GallerySettings {
+  return sanitizeGallerySettings(assignments.gallerySettings);
 }
 
 export function resolvePhotoCrop(

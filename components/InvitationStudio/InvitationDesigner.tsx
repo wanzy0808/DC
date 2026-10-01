@@ -16,7 +16,7 @@ import type { EditableInvitationCopyField } from "@/lib/templates/editable-copy"
 import type { EditableCopyMotion } from "@/lib/templates/editable-copy-motion";
 import { Button } from "@/components/ui/button";
 import { useTemplateCatalog } from "@/lib/templates/use-template-catalog";
-import { defaultPhotoAssignments, type CroppablePhotoSlot, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
+import { defaultGallerySettings, defaultPhotoAssignments, type CroppablePhotoSlot, type GallerySettings, type PhotoCrop, type PhotoFocus, type PhotoMotion, type PhotoSlot } from "@/lib/templates/photo-slots";
 import { getEventCategory } from "@/lib/events/catalog";
 import { templatePhotoMotion } from "@/lib/templates/template-motion";
 import { getInvitationTemplate } from "@/lib/templates/catalog";
@@ -874,6 +874,27 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
       ? design.photos.gallery === null ? [] : null
       : current.includes(id) ? current.filter((item) => item !== id) : [...current, id];
     change({ photos: { ...design.photos, gallery } });
+  }
+
+  function reorderGalleryPhoto(sourceId: string, targetId: string) {
+    if (sourceId === targetId) return;
+    const allIds = (invitation?.assets ?? []).filter((asset) => asset.type === "IMAGE").map((asset) => asset.id);
+    const current = [...(design.photos.gallery ?? allIds)];
+    const sourceIndex = current.indexOf(sourceId);
+    const targetIndex = current.indexOf(targetId);
+    if (sourceIndex < 0 || targetIndex < 0) return;
+    const [moved] = current.splice(sourceIndex, 1);
+    current.splice(targetIndex, 0, moved);
+    change({ photos: { ...design.photos, gallery: current } });
+  }
+
+  function updateGallerySettings(patch: Partial<GallerySettings>) {
+    change({
+      photos: {
+        ...design.photos,
+        gallerySettings: { ...defaultGallerySettings(), ...(design.photos.gallerySettings ?? {}), ...patch },
+      },
+    });
   }
 
   function setPhotoFocus(slot: "cover" | "personOne" | "personTwo", focus: PhotoFocus) {
@@ -1911,6 +1932,11 @@ export default function InvitationDesigner({ mode = "invitation", allowBlankCanv
               onActiveSlotChange={setActivePhotoSlot}
               onSetPhoto={setPhoto}
               onToggleGallery={toggleGalleryPhoto}
+              onReorderGallery={reorderGalleryPhoto}
+              onGallerySettings={updateGallerySettings}
+              galleryMotion={templatePhotoMotion(design.template, design.photos.motion, design.sectionStyles).gallery}
+              onGalleryMotion={(patch) => updatePhotoMotion("gallery", patch)}
+              onResetGalleryMotion={() => resetPhotoMotion("gallery")}
               onSetFocus={setPhotoFocus}
               onSetCrop={setPhotoCrop}
               onResetCrop={resetPhotoCrop}
