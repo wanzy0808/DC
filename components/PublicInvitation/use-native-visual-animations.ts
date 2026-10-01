@@ -59,11 +59,11 @@ export function useInvitationNativeVisualAnimations(
       return Array.from(targets.values());
     };
     const themed = templateHasDefaultMotion(template);
-    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"].includes(template) && template !== "paper-cut-botanical" && template !== "pencil-reverie";
+    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco", "celestial-ink"].includes(template) && template !== "paper-cut-botanical" && template !== "pencil-reverie";
     return observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,
-      waitForImages: template === "pencil-reverie" || template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" || template === "garden-light" || template === "midnight-romance" || template === "classic-pearl" || template === "golden-art-deco" || template === "paper-cut-botanical",
+      waitForImages: template === "pencil-reverie" || template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" || template === "garden-light" || template === "midnight-romance" || template === "classic-pearl" || template === "golden-art-deco" || template === "celestial-ink" || template === "paper-cut-botanical",
     });
   }, [rootRef, designKey, revision, template, stylesKey]);
 }
