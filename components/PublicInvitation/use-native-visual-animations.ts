@@ -59,11 +59,11 @@ export function useInvitationNativeVisualAnimations(
       return Array.from(targets.values());
     };
     const themed = templateHasDefaultMotion(template);
-    const replay = themed && !["modern-maroon", "garden-light"].includes(template);
+    const replay = themed && !["modern-maroon", "garden-light", "midnight-romance"].includes(template);
     return observeInvitationEntranceRoot(root, collect, {
       replay,
       preservePresentation: themed,
-      waitForImages: template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" || template === "garden-light",
+      waitForImages: template === "botanical-ivory" || template === "eternal-blossom" || template === "modern-maroon" || template === "garden-light" || template === "midnight-romance",
     });
   }, [rootRef, designKey, revision, template, stylesKey]);
 }
