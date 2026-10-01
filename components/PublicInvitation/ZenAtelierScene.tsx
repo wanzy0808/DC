@@ -3,6 +3,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { MailOpen } from "lucide-react";
+import type { PhotoCrop } from "@/lib/templates/photo-slots";
+import StudioPhotoCropOverlay from "@/components/InvitationStudio/StudioPhotoCropOverlay";
 import { displayTitleCase } from "@/lib/text/display-title-case";
 import { useInvitationLanguage } from "@/components/PublicInvitation/InvitationLanguage";
 import { invitationText } from "@/lib/invitations/language";
@@ -12,37 +14,95 @@ import "./zen-atelier.css";
 type ZenAtelierSceneProps = {
   names: string;
   date: string;
+  cover?: string;
+  focus?: "top" | "center" | "bottom";
+  crop?: PhotoCrop | null;
+  cropEditing?: boolean;
+  onCropChange?: (crop: PhotoCrop) => void;
+  onFinishCrop?: () => void;
+  locale?: string;
   stage: "envelope" | "cover";
-  onOpen: () => void;
+  onOpen: (immediate?: boolean) => void;
+  onEditPhoto?: () => void;
   preview?: boolean;
   allowEnvelopeOpen?: boolean;
   isWedding?: boolean;
   hashtag?: string | null;
   recipientLine?: string;
+  motionEnabled?: boolean;
 };
+
 const root = "/templates/zen-atelier/";
 
-export default function ZenAtelierScene({ names, date, stage, onOpen, preview = false, allowEnvelopeOpen = false, isWedding = true, hashtag, recipientLine }: ZenAtelierSceneProps) {
+export default function ZenAtelierScene({
+  names,
+  date,
+  cover,
+  focus = "center",
+  crop,
+  cropEditing = false,
+  onCropChange,
+  onFinishCrop,
+  locale,
+  stage,
+  onOpen,
+  onEditPhoto,
+  preview = false,
+  allowEnvelopeOpen = false,
+  isWedding = true,
+  hashtag,
+  recipientLine,
+  motionEnabled = true,
+}: ZenAtelierSceneProps) {
   const language = useInvitationLanguage();
   const tr = (text: string) => invitationText(language, text);
   const [opening, setOpening] = useState(false);
   const title = displayTitleCase(names);
   const couple = isWedding ? title.split(/\s*&\s*/).filter(Boolean) : [];
-  return (
-    <section data-invitation-section={stage} className={`zen-scene zen-${stage}`} data-opening={opening || undefined}>
-      {stage === "envelope" ? <>
+  const photoStyle = crop
+    ? {
+        objectPosition: `${crop.x}% ${crop.y}%`,
+        transform: crop.zoom === 1 ? undefined : `scale(${crop.zoom})`,
+        transformOrigin: `${crop.x}% ${crop.y}%`,
+      }
+    : { objectPosition: `center ${focus}` };
+  const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
+    ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
+    : null;
+
+  if (stage === "envelope") {
+    return (
+      <section
+        data-invitation-section="envelope"
+        className="zen-scene zen-envelope"
+        data-opening={opening && motionEnabled ? "true" : undefined}
+      >
         <div className="zen-jp-atmosphere" aria-hidden="true" data-studio-native-object="object:envelope:atmosphere-group">
           <div className="zen-jp-shoji" data-studio-native-object="object:envelope:shoji" />
           <EnsoSun className="zen-jp-sun" studioObject="object:envelope:sun" />
           <BlossomBranch className="zen-jp-branch" studioObject="object:envelope:branch" />
           <InkMountains className="zen-jp-mountains" studioObject="object:envelope:mountains" />
         </div>
+
         <div className="zen-jp-intro" data-studio-native-object="object:envelope:intro-group">
-          <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">{isWedding ? "結婚式のご案内" : "ご招待"}</span>
-          <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">{language === "EN" ? tr("Sebuah undangan untuk orang istimewa") : <>Sebuah undangan<br />untuk orang istimewa</>}</p>
-          {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4">{recipientLine}</p>}
+          <span className="zen-jp-kicker" lang="ja" data-studio-native-object="object:envelope:kicker">
+            {isWedding ? "結婚式のご案内" : "ご招待"}
+          </span>
+          <p className="zen-envelope-greeting" data-studio-native-object="object:envelope:greeting">
+            {language === "EN" ? tr("Sebuah undangan untuk orang istimewa") : <>Sebuah undangan<br />untuk orang istimewa</>}
+          </p>
+          {recipientLine && (
+            <p
+              data-personal-envelope-address
+              data-studio-native-object="object:envelope:address"
+              className="mt-3 max-w-[250px] break-words text-center text-[10px] font-semibold leading-4"
+            >
+              {recipientLine}
+            </p>
+          )}
           <span className="zen-envelope-rule" aria-hidden="true" data-studio-native-object="object:envelope:intro-rule" />
         </div>
+
         <div className="zen-jp-paper-stage" aria-hidden="true" data-studio-native-object="object:envelope:paper-stage">
           <div className="zen-jp-envelope-shell" data-studio-native-object="object:envelope:shell" />
           <div className="zen-jp-letter" data-studio-native-object="object:envelope:letter">
@@ -65,24 +125,90 @@ export default function ZenAtelierScene({ names, date, stage, onOpen, preview = 
             <span className="zen-jp-seal" lang="ja" data-studio-native-object="object:envelope:seal">{isWedding ? "寿" : "和"}</span>
           </div>
         </div>
-        <button type="button" disabled={opening} className="zen-open" data-studio-system-action={preview ? "open-invitation" : undefined} data-studio-native-object="object:envelope:open-button" onClick={() => {
-          if (preview && !allowEnvelopeOpen) return;
-          setOpening(true);
-          onOpen();
-        }}>
+
+        <button
+          type="button"
+          disabled={opening}
+          className="zen-open"
+          data-studio-system-action={preview ? "open-invitation" : undefined}
+          data-studio-native-object="object:envelope:open-button"
+          onClick={() => {
+            if (preview && !allowEnvelopeOpen) return;
+            if (!motionEnabled) {
+              onOpen(true);
+              return;
+            }
+            setOpening(true);
+            onOpen();
+          }}
+        >
           <span className="zen-envelope-action-icon" aria-hidden="true"><MailOpen size={17} strokeWidth={1.35} /></span>
           <span>{tr("Buka Undangan")}</span>
         </button>
-      </> : <>
-        <Image width={1254} height={1254} sizes="(max-width: 640px) 75vw, 420px" src={root + "bunga0001.webp"} alt="" aria-hidden="true" fetchPriority="high" className="zen-cover-blossom" data-studio-native-object="object:cover:blossom" />
-        <div className="zen-cover-copy" data-studio-native-object="object:cover:copy-group">
-          <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{tr(isWedding ? "The Wedding Of" : "Sebuah Undangan")}</p>
-          <h1 data-studio-native-heading="">{couple.length === 2 ? <><span>{couple[0]}</span><em>&amp;</em><span>{couple[1]}</span></> : <span>{title}</span>}</h1>
-          <p className="zen-cover-date" data-studio-native-object="object:cover:date">{date}</p>
-          {hashtag?.trim() && <p className="zen-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
+      </section>
+    );
+  }
+
+  return (
+    <section data-invitation-section="cover" className="zen-scene zen-cover">
+      <div aria-hidden="true" className="zen-cover-paper-shadow" data-studio-native-object="object:cover:paper-shadow" />
+      <div aria-hidden="true" className="zen-cover-shoji" data-studio-native-object="object:cover:shoji" />
+      <EnsoSun className="zen-cover-sun" studioObject="object:cover:sun" />
+      <BlossomBranch className="zen-cover-branch" studioObject="object:cover:branch" />
+
+      <div className="zen-cover-scroll" data-studio-native-object="object:cover:scroll-group">
+        <span aria-hidden="true" className="zen-cover-scroll-rod zen-cover-scroll-rod-top" data-studio-native-object="object:cover:scroll-rod-top" />
+        <div className="zen-cover-photo-frame" data-studio-native-object="object:cover:photo-frame">
+          <span data-invitation-photo-slot="cover" className="zen-cover-photo-slot">
+            {cover ? (
+              <img src={cover} alt={tr("Foto utama undangan")} className="zen-cover-photo" style={photoStyle} />
+            ) : (
+              <Image
+                src={root + "japanroom1.webp"}
+                alt=""
+                aria-hidden="true"
+                width={1122}
+                height={1402}
+                sizes="(max-width: 640px) 62vw, 360px"
+                className="zen-cover-photo zen-cover-photo-fallback"
+              />
+            )}
+            {onEditPhoto && !cropEditing && (
+              <button type="button" onClick={onEditPhoto} className="zen-cover-edit-photo" aria-label={tr("Atur foto cover")}>
+                {tr("Atur foto")}
+              </button>
+            )}
+            {cropEditor}
+          </span>
         </div>
-        <Image width={1122} height={1402} sizes="(max-width: 640px) 100vw, 672px" src={root + "inkmountain.webp"} alt="" aria-hidden="true" className="zen-cover-mountain" data-studio-native-object="object:cover:mountains" />
-      </>}
+        <span aria-hidden="true" className="zen-cover-scroll-rod zen-cover-scroll-rod-bottom" data-studio-native-object="object:cover:scroll-rod-bottom" />
+      </div>
+
+      <div className="zen-cover-copy" data-studio-native-object="object:cover:copy-group">
+        <span className="zen-cover-seal" lang="ja" data-studio-native-object="object:cover:seal">{isWedding ? "縁" : "和"}</span>
+        <p className="zen-kicker" data-studio-native-object="object:cover:kicker">{tr(isWedding ? "The Wedding Of" : "Sebuah Undangan")}</p>
+        <h1 data-studio-native-heading="">
+          {couple.length === 2 ? (
+            <>
+              <span data-studio-native-object="object:cover:personOne-name">{couple[0]}</span>
+              <em data-studio-native-object="object:cover:ampersand-symbol">&amp;</em>
+              <span data-studio-native-object="object:cover:personTwo-name">{couple[1]}</span>
+            </>
+          ) : (
+            <span data-studio-native-object="object:cover:event-name">{title}</span>
+          )}
+        </h1>
+        <div className="zen-cover-date-block" data-studio-native-object="object:cover:date">
+          <span aria-hidden="true" />
+          <p>{date}</p>
+        </div>
+        {hashtag?.trim() && <p className="zen-hashtag" data-studio-native-object="object:cover:hashtag">{hashtag}</p>}
+      </div>
+
+      <InkMountains className="zen-cover-mountain" studioObject="object:cover:mountains" />
+      <p aria-hidden="true" className="zen-cover-vertical-word" lang="ja" data-studio-native-object="object:cover:vertical-word">
+        静かな祝福
+      </p>
     </section>
   );
 }
