@@ -568,6 +568,72 @@ const botanicalNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "soft-scale", animationDuration: .78, animationDelay: .08 },
 };
 
+const celestialInkNative: Record<string, TemplateNativeMotion> = {
+  "object:envelope:sky-field": { animation: "fade", animationDuration: .7 },
+  "object:envelope:drapery-art": { animation: "reveal-left", animationDuration: .84, animationDelay: .03 },
+  "object:envelope:pillars-art": { animation: "reveal-up", animationDuration: .86, animationDelay: .06 },
+  "object:envelope:calligraphy-art": { animation: "glide-right", animationDuration: .8, animationDelay: .09 },
+  "object:envelope:kicker": { animation: "fade", animationDuration: .62, animationDelay: .08 },
+  "object:envelope:letter-paper": { animation: "rise", animationDuration: .82, animationDelay: .1 },
+  "object:envelope:seal": { animation: "soft-scale", animationDuration: .64, animationDelay: .16 },
+
+  "object:cover:sky-field": { animation: "fade", animationDuration: .72 },
+  "object:cover:drapery-art": { animation: "reveal-left", animationDuration: .86, animationDelay: .03 },
+  "object:cover:screen-art": { animation: "glide-left", animationDuration: .88, animationDelay: .05 },
+  "object:cover:moon-gate-art": { animation: "glide-right", animationDuration: .92, animationDelay: .08 },
+  "object:cover:lantern-art": { animation: "reveal-up", animationDuration: .78, animationDelay: .11 },
+  "object:cover:orbit-line": { animation: "soft-scale", animationDuration: .8, animationDelay: .12 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .8, animationDelay: .1 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .74, animationDelay: .13 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .6, animationDelay: .17 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .74, animationDelay: .2 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .76, animationDelay: .14 },
+  "object:cover:date": { animation: "fade", animationDuration: .62, animationDelay: .22 },
+  "object:cover:closing-copy": { animation: "fade", animationDuration: .66, animationDelay: .25 },
+
+  "heading:greeting": { animation: "slide-left", animationDuration: .68 },
+  "object:greeting:celestial-art": { animation: "glide-right", animationDuration: .82, animationDelay: .08 },
+  "heading:identity": { animation: "rise", animationDuration: .68 },
+  "object:identity:mirror-art": { animation: "soft-scale", animationDuration: .82, animationDelay: .05 },
+  "object:identity:chaise-art": { animation: "reveal-up", animationDuration: .8, animationDelay: .09 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .78, animationDelay: .1 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .78, animationDelay: .16 },
+
+  "heading:event": { animation: "slide-left", animationDuration: .68 },
+  "object:event:details-group": { animation: "rise", animationDuration: .76, animationDelay: .06 },
+  "object:event:celestial-art": { animation: "glide-right", animationDuration: .82, animationDelay: .1 },
+
+  "heading:dateTime": { animation: "slide-right", animationDuration: .68 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .78, animationDelay: .06 },
+  "object:dateTime:celestial-art": { animation: "glide-left", animationDuration: .8, animationDelay: .1 },
+
+  "heading:gallery": { animation: "slide-left", animationDuration: .68 },
+  "object:gallery:toast-group": { animation: "tilt-in", animationDuration: .76, animationDelay: .05 },
+  "object:gallery:rhythm-group": { animation: "tilt-in", animationDuration: .76, animationDelay: .11 },
+  "object:gallery:reflection-group": { animation: "tilt-in", animationDuration: .76, animationDelay: .17 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .64 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .72, animationDelay: .06 },
+  "object:countdown:celestial-art": { animation: "soft-scale", animationDuration: .76, animationDelay: .1 },
+
+  "heading:location": { animation: "slide-right", animationDuration: .68 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .78, animationDelay: .06 },
+  "object:location:celestial-art": { animation: "glide-left", animationDuration: .84, animationDelay: .1 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .68 },
+  "object:rsvp:celestial-art": { animation: "reveal-up", animationDuration: .76, animationDelay: .08 },
+  "heading:wishes": { animation: "slide-left", animationDuration: .68 },
+  "object:wishes:celestial-art": { animation: "glide-left", animationDuration: .82, animationDelay: .08 },
+  "heading:gift": { animation: "rise", animationDuration: .68 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .76, animationDelay: .06 },
+  "object:gift:celestial-art": { animation: "glide-right", animationDuration: .8, animationDelay: .1 },
+
+  "heading:closing": { animation: "rise", animationDuration: .7 },
+  "object:closing:copy-group": { animation: "rise", animationDuration: .76, animationDelay: .06 },
+  "object:closing:celestial-art": { animation: "soft-scale", animationDuration: .82, animationDelay: .09 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .72, animationDelay: .12 },
+};
+
 const zenAtelierNative: Record<string, TemplateNativeMotion> = {
   "object:envelope:atmosphere-group": { animation: "fade", animationDuration: .72 },
   "object:envelope:sun": { animation: "soft-scale", animationDuration: .72, animationDelay: .03 },
@@ -648,6 +714,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   "midnight-romance": midnightRomanceNative,
   "classic-pearl": classicPearlNative,
   "golden-art-deco": goldenArtDecoNative,
+  "celestial-ink": celestialInkNative,
   "paper-cut-botanical": paperCutBotanicalNative,
   "pencil-reverie": pencilReverieNative,
   "zen-atelier": zenAtelierNative,
