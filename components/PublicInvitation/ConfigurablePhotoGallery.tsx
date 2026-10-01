@@ -110,11 +110,13 @@ export default function ConfigurablePhotoGallery({
       if (settings.autoplay && !event.currentTarget.contains(event.relatedTarget as Node | null)) setInteractionPaused(false);
     }}
     onTouchStart={(event) => {
-      if (event.touches.length === 1) touch.current = event.touches[0].clientX;
+      const point = event.touches[0];
+      if (event.touches.length === 1 && point) touch.current = point.clientX;
     }}
     onTouchEnd={(event) => {
-      if (touch.current === null || !event.changedTouches[0]) return;
-      const delta = event.changedTouches[0].clientX - touch.current;
+      const point = event.changedTouches[0];
+      if (touch.current === null || !point) return;
+      const delta = point.clientX - touch.current;
       touch.current = null;
       if (Math.abs(delta) > 48) move(delta < 0 ? 1 : -1);
     }}
