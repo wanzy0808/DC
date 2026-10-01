@@ -133,6 +133,77 @@ const sereinNative: Record<string, TemplateNativeMotion> = {
   "object:closing:names": { animation: "rise", animationDelay: .08 },
 };
 
+const classicPearlNative: Record<string, TemplateNativeMotion> = {
+  "heading:envelope": { animation: "rise", animationDuration: .72 },
+  "object:envelope:garland-art": { animation: "reveal-left", animationDuration: .88 },
+  "object:envelope:candelabra-art": { animation: "glide-right", animationDuration: .84, animationDelay: .06 },
+  "object:envelope:kicker": { animation: "fade", animationDuration: .62 },
+  "object:envelope:date": { animation: "fade", animationDelay: .08 },
+  "object:envelope:stationery-group": { animation: "rise", animationDuration: .86, animationDelay: .08 },
+  "object:envelope:seal": { animation: "soft-scale", animationDuration: .66, animationDelay: .12 },
+
+  "object:cover:chandelier-art": { animation: "reveal-up", animationDuration: .9 },
+  "object:cover:arch-art": { animation: "soft-scale", animationDuration: .86, animationDelay: .04 },
+  "object:cover:garland-art": { animation: "fade", animationDuration: .78, animationDelay: .08 },
+  "object:cover:tiara-art": { animation: "rise", animationDuration: .76, animationDelay: .1 },
+  "object:cover:copy-panel": { animation: "rise", animationDuration: .82, animationDelay: .12 },
+  "object:cover:personOne-name": { animation: "slide-left", animationDuration: .8 },
+  "object:cover:personTwo-name": { animation: "slide-right", animationDuration: .8, animationDelay: .07 },
+  "object:cover:ampersand-symbol": { animation: "fade", animationDuration: .62, animationDelay: .1 },
+  "object:cover:event-name": { animation: "rise", animationDuration: .82 },
+  "object:cover:pearl-rule": { animation: "reveal-left", animationDuration: .74, animationDelay: .1 },
+  "object:cover:date": { animation: "fade", animationDelay: .14 },
+  "object:cover:closing-copy": { animation: "fade", animationDelay: .16 },
+
+  "heading:greeting": { animation: "slide-left", animationDuration: .72 },
+  "object:greeting:pearl-art": { animation: "glide-right", animationDuration: .84, animationDelay: .06 },
+
+  "heading:identity": { animation: "rise", animationDuration: .72 },
+  "object:identity:mirror-art": { animation: "soft-scale", animationDuration: .84, animationDelay: .06 },
+  "object:identity:tiara-art": { animation: "rise", animationDuration: .76, animationDelay: .08 },
+  "object:identity:personOne-group": { animation: "glide-left", animationDuration: .84 },
+  "object:identity:personTwo-group": { animation: "glide-right", animationDuration: .84, animationDelay: .08 },
+  "object:identity:ampersand": { animation: "fade", animationDuration: .64, animationDelay: .1 },
+
+  "heading:event": { animation: "slide-left", animationDuration: .72 },
+  "object:event:details-group": { animation: "rise", animationDuration: .8, animationDelay: .07 },
+  "object:event:pearl-art": { animation: "glide-right", animationDuration: .86, animationDelay: .08 },
+
+  "heading:dateTime": { animation: "slide-right", animationDuration: .72 },
+  "object:dateTime:panel": { animation: "reveal-up", animationDuration: .84, animationDelay: .06 },
+  "object:dateTime:pearl-art": { animation: "fade", animationDuration: .76, animationDelay: .1 },
+
+  "heading:gallery": { animation: "slide-left", animationDuration: .72 },
+  "object:gallery:garland-art": { animation: "reveal-left", animationDuration: .84 },
+  "object:gallery:keepsake-grid": { animation: "rise", animationDuration: .8, animationDelay: .06 },
+  "object:gallery:tiara-art": { animation: "soft-scale", animationDuration: .78, animationDelay: .08 },
+  "object:gallery:perfume-art": { animation: "soft-scale", animationDuration: .78, animationDelay: .12 },
+  "object:gallery:mirror-art": { animation: "soft-scale", animationDuration: .82, animationDelay: .16 },
+
+  "heading:countdown": { animation: "fade", animationDuration: .68 },
+  "object:countdown:grid": { animation: "rise", animationDuration: .74, animationDelay: .06 },
+  "object:countdown:pearl-art": { animation: "fade", animationDuration: .8, animationDelay: .1 },
+
+  "heading:location": { animation: "slide-right", animationDuration: .72 },
+  "object:location:details-group": { animation: "glide-right", animationDuration: .84, animationDelay: .08 },
+  "object:location:pearl-art": { animation: "glide-left", animationDuration: .88, animationDelay: .08 },
+
+  "heading:rsvp": { animation: "rise", animationDuration: .72 },
+  "object:rsvp:pearl-art": { animation: "fade", animationDuration: .78, animationDelay: .08 },
+
+  "heading:wishes": { animation: "slide-left", animationDuration: .72 },
+  "object:wishes:pearl-art": { animation: "glide-left", animationDuration: .84, animationDelay: .08 },
+
+  "heading:gift": { animation: "rise", animationDuration: .72 },
+  "object:gift:panel": { animation: "reveal-up", animationDuration: .84, animationDelay: .06 },
+  "object:gift:pearl-art": { animation: "fade", animationDuration: .78, animationDelay: .1 },
+
+  "heading:closing": { animation: "rise", animationDuration: .74 },
+  "object:closing:copy-group": { animation: "glide-right", animationDuration: .84, animationDelay: .07 },
+  "object:closing:pearl-art": { animation: "soft-scale", animationDuration: .86, animationDelay: .08 },
+  "object:closing:names": { animation: "soft-scale", animationDuration: .78, animationDelay: .12 },
+};
+
 const midnightRomanceNative: Record<string, TemplateNativeMotion> = {
   "heading:envelope": { animation: "rise", animationDuration: .72 },
   "object:envelope:night-glow": { animation: "fade", animationDuration: .9 },
@@ -295,6 +366,7 @@ const nativeDefaults: Record<string, Record<string, TemplateNativeMotion>> = {
   "modern-maroon": modernMaroonNative,
   "garden-light": gardenLightNative,
   "midnight-romance": midnightRomanceNative,
+  "classic-pearl": classicPearlNative,
 };
 
 export function templateHasDefaultMotion(template: string) {
