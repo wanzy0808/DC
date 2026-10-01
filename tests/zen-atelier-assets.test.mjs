@@ -94,3 +94,29 @@ test("Zen artwork is a feature component with preserved lazy loading", () => {
   assert.match(artwork, /export function ZenSectionArtwork\(/);
   assert.match(artwork, /export function ZenMemoryArtwork\(/);
 });
+
+
+test("Zen Atelier cover is an asymmetric kakemono photo composition with Studio-native motion", () => {
+  const css = readFileSync(repoFile("components/PublicInvitation/zen-atelier.css"), "utf8");
+  const themes = readFileSync(repoFile("components/PublicInvitation/InvitationThemeScenes.tsx"), "utf8");
+  const universal = readFileSync(repoFile("components/PublicInvitation/UniversalInvitationTemplate.tsx"), "utf8");
+  const motion = readFileSync(repoFile("lib/templates/template-motion.ts"), "utf8");
+
+  assert.match(scene, /className="zen-cover-scroll"/);
+  assert.match(scene, /data-invitation-photo-slot="cover"/);
+  assert.match(scene, /className="zen-cover-copy"/);
+  assert.match(scene, /object:cover:personOne-name/);
+  assert.match(scene, /object:cover:personTwo-name/);
+  assert.match(scene, /object:cover:vertical-word/);
+  assert.match(scene, /StudioPhotoCropOverlay/);
+  assert.doesNotMatch(css, /\.zen-cover-blossom/);
+
+  assert.match(themes, /theme === "zen-atelier"[\s\S]*?cover=\{cover\}[\s\S]*?cropEditing=\{cropEditing\}[\s\S]*?motionEnabled=\{motionEnabled\}/);
+  assert.match(motion, /const zenAtelierPhotos: PhotoMotionMap/);
+  assert.match(motion, /"zen-atelier": zenAtelierPhotos/);
+  assert.match(motion, /const zenAtelierNative: Record<string, TemplateNativeMotion>/);
+  assert.match(motion, /"zen-atelier": zenAtelierNative/);
+  assert.match(motion, /"object:cover:scroll-group": \{ animation: "reveal-up"/);
+  assert.match(motion, /"object:rsvp:bamboo-art": \{ animation: "glide-left"/);
+  assert.doesNotMatch(universal, /key !== "zen-atelier"[\s\S]*?IntersectionObserver/);
+});
