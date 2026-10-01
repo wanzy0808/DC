@@ -120,7 +120,7 @@ test("Undara shared assets stay centralized", () => {
     "public/assets/demo/invitation/couple.webp",
     "public/assets/payments/banks/bca.webp",
     "public/assets/audio/a-himitsu-fragile.mp3",
-    "app/icon.png",
+    "public/icon.webp",
   ];
   for (const file of expected) assert.equal(existsSync(path(file)), true, file);
 
@@ -134,6 +134,7 @@ test("Undara shared assets stay centralized", () => {
     "public/bca.webp",
     "public/A Himitsu - Fragile.mp3",
     "app/Undara Door icon.png",
+    "app/icon.png",
     "assets/templates/landing page/branch1.png",
   ];
   for (const file of retired) assert.equal(existsSync(path(file)), false, file);
