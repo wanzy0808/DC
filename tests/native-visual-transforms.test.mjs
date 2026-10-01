@@ -606,16 +606,22 @@ test("Garden Light keeps its illuminated props granular while photo content stay
   assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
-test("Midnight Romance keeps celestial decoration and photo viewport independently editable", () => {
-  const scenes = read("components/PublicInvitation/InvitationThemeScenes.tsx");
-  assert.match(scenes, /object:cover:starfield/);
-  assert.match(scenes, /object:cover:moon/);
-  assert.match(scenes, /object:cover:photo-frame/);
-  assert.match(scenes, /object:cover:photo-window/);
-  assert.match(scenes, /object:cover:star/);
-  assert.equal(nativeVisualCanHide("object:cover:starfield"), true);
-  assert.equal(nativeVisualCanHide("object:cover:moon"), true);
-  assert.equal(nativeVisualCanHide("object:cover:star"), true);
+test("Midnight Romance keeps night-salon artwork granular while photo content stays protected", () => {
+  const midnight = read("components/PublicInvitation/MidnightRomanceScene.tsx");
+  assert.match(midnight, /object:envelope:night-glow/);
+  assert.match(midnight, /object:envelope:chandelier-art/);
+  assert.match(midnight, /object:envelope:lantern-art/);
+  assert.match(midnight, /object:cover:night-glow/);
+  assert.match(midnight, /object:cover:arch-art/);
+  assert.match(midnight, /object:cover:chandelier-art/);
+  assert.match(midnight, /object:cover:garland-art/);
+  assert.match(midnight, /object:cover:photo-frame/);
+  assert.match(midnight, /data-invitation-photo-slot="cover"/);
+  assert.equal(nativeVisualCanHide("object:cover:night-glow"), true);
+  assert.equal(nativeVisualCanHide("object:cover:arch-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:chandelier-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:garland-art"), true);
+  assert.equal(nativeVisualCanHide("object:cover:date"), false);
 });
 
 test("Pencil Reverie keeps protected recipient data and authored cover groups editable", () => {
