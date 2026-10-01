@@ -115,8 +115,8 @@ test("Classic Pearl uses its atelier palette and Cormorant editorial pairing", (
 test("Classic Pearl entrance motion is one-shot and waits for local artwork", () => {
   const nativeHook = read("components/PublicInvitation/use-native-visual-animations.ts");
   const photoHook = read("components/PublicInvitation/use-photo-animations.ts");
-  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(template\)/);
-  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl"\]\.includes\(theme\?\.template \?\? ""\)/);
+  assert.match(nativeHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(template\)/);
+  assert.match(photoHook, /!\["modern-maroon", "garden-light", "midnight-romance", "classic-pearl", "golden-art-deco"\]\.includes\(theme\?\.template \?\? ""\)/);
   assert.match(nativeHook, /waitForImages:[^\n]*classic-pearl/);
   assert.match(universal, /key === "classic-pearl"[\s\S]{0,350}sectionStyles\.envelope\?\.animation === "none"/);
 });
