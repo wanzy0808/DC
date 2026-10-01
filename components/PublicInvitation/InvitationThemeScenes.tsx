@@ -160,26 +160,76 @@ export default function InvitationThemeScenes({theme,names,date,cover,focus,crop
   if (theme === "serein") return <SereinScene names={names} date={date} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} stage={stage} onOpen={onOpen} onEditPhoto={onEditPhoto} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} isWedding={isWedding} couple={couple} recipientLine={recipientLine} />;
   if (theme === "eternal-blossom") return <EternalBlossomScene names={names} date={date} couple={couple} cover={cover} focus={focus} crop={crop} cropEditing={cropEditing} onCropChange={onCropChange} onFinishCrop={onFinishCrop} locale={locale} onEditPhoto={onEditPhoto} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
   if (theme === "botanical-ivory") return <BotanicalIvoryScene names={names} date={date} stage={stage} onOpen={onOpen} preview={preview} couple={couple} recipientLine={recipientLine} motionEnabled={motionEnabled} />;
+  if (theme === "modern-maroon") {
+    if (stage === "envelope") return (
+      <section data-invitation-section="envelope" className="relative flex min-h-[760px] flex-col overflow-hidden bg-[#2d0710] px-6 py-12 text-[#fff5ee]">
+        <div aria-hidden data-studio-native-object="object:envelope:block-left" className="absolute inset-y-0 left-0 w-[7%] bg-[#d8b98d]" />
+        <div aria-hidden data-studio-native-object="object:envelope:block-right" className="absolute bottom-0 right-0 h-[33%] w-[45%] bg-[#7b1f2b]" />
+        <span aria-hidden data-studio-native-object="object:envelope:monogram" className="absolute -right-4 top-5 text-[9rem] font-black leading-none text-[#fff5ee]/[.055]">M</span>
+
+        <p data-studio-native-object="object:envelope:kicker" className="relative ml-[10%] mt-5 text-[9px] font-semibold uppercase tracking-[.34em] text-[#d8b98d]">{tr("A personal invitation")}</p>
+
+        <div data-studio-native-object="object:envelope:card-stage" className="relative z-10 mx-auto mt-14 w-[min(82vw,340px)]">
+          <div data-studio-native-object="object:envelope:card" className="relative min-h-[425px] overflow-visible bg-[#fff5ee] px-7 pb-8 pt-9 text-[#371017] shadow-[20px_24px_0_rgba(123,31,43,.42)]">
+            <div aria-hidden data-studio-native-object="object:envelope:flap" className="absolute -left-4 top-12 h-[1px] w-[46%] bg-[#b96069]" />
+            <div aria-hidden data-studio-native-object="object:envelope:seal" className="absolute -left-5 top-[58px] grid h-10 w-10 place-items-center rounded-full border border-[#7b1f2b]/30 bg-[#7b1f2b] text-xs font-semibold text-[#fff5ee]">M</div>
+
+            <div data-studio-native-object="object:envelope:copy-panel" className="relative z-10 w-[58%] pt-10">
+              <p data-studio-native-object="object:envelope:letter-kicker" className="text-[8px] uppercase tracking-[.28em] text-[#7b1f2b]/70">{tr("Untuk momen istimewa")}</p>
+              {recipientLine && <p data-personal-envelope-address data-studio-native-object="object:envelope:address" className="mt-5 break-words text-[11px] font-semibold leading-5">{recipientLine}</p>}
+              <Names className="mt-8 text-[1.75rem] leading-[1.02]">{names}</Names>
+              <p data-studio-native-object="object:envelope:date" className="mt-6 text-[10px] uppercase tracking-[.2em] text-[#7b1f2b]/75">{date}</p>
+            </div>
+
+            <div data-studio-native-object="object:envelope:photo-frame" className="absolute -right-5 bottom-8 h-[285px] w-[48%] overflow-hidden border border-[#d8b98d] bg-[#ead5cc] shadow-[-10px_12px_0_rgba(216,185,141,.28)]">
+              <span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama pada amplop undangan" /></span>
+            </div>
+          </div>
+        </div>
+
+        <div className="relative z-20 mt-auto flex flex-col items-center pt-12">
+          <span aria-hidden data-studio-native-object="object:envelope:ornament" className="mm-flourish mb-2 text-[#d8b98d]" />
+          <Open studioObject="object:envelope:open-button" onClick={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} dark>{tr("Buka Undangan")}</Open>
+        </div>
+      </section>
+    );
+
+    const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
+      ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
+      : null;
+    return (
+      <section className="relative min-h-[760px] overflow-hidden bg-[var(--inv-scene-bg,#4a111b)] text-[color:var(--inv-scene-ink,#fff5ee)]" data-invitation-section={stage}>
+        <div aria-hidden data-studio-native-object="object:cover:block-left" className="absolute inset-y-0 left-0 w-[7%] bg-[var(--inv-scene-soft,#d8b98d)]" />
+        <div aria-hidden data-studio-native-object="object:cover:block-right" className="absolute bottom-0 right-0 h-[30%] w-[48%] bg-[var(--inv-scene-accent,#7b1f2b)]" />
+        <span aria-hidden data-studio-native-object="object:cover:monogram" className="absolute -left-3 top-6 text-[9.5rem] font-black leading-none text-[color:var(--inv-scene-text,#fff5ee)]/[.055]">M</span>
+
+        <div data-studio-native-object="object:cover:media-group" className="absolute right-[-8%] top-[11%] h-[500px] w-[70%]">
+          <div data-studio-native-object="object:cover:photo-frame" className="relative h-full w-full overflow-hidden border border-[var(--inv-scene-soft,#d8b98d)] shadow-[-18px_22px_0_rgba(216,185,141,.14)]">
+            <span data-invitation-photo-slot="cover" className="relative block h-full w-full">
+              <Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" className="saturate-[.82] contrast-[1.03]" />
+              <Edit onClick={cropEditing ? undefined : onEditPhoto} />
+              {cropEditor}
+            </span>
+          </div>
+          <p data-studio-native-object="object:cover:side-label" className="absolute -left-8 top-8 [writing-mode:vertical-rl] rotate-180 text-[8px] uppercase tracking-[.4em] text-[#d8b98d]">{tr("Selected events")}</p>
+        </div>
+
+        <div data-studio-native-object="object:cover:copy-panel" className="absolute bottom-[8%] left-[12%] z-20 w-[57%] max-w-[310px] bg-[#2d0710]/88 px-5 py-6 backdrop-blur-[2px]">
+          <p data-studio-native-object="object:cover:kicker" className="text-[8px] font-semibold uppercase tracking-[.34em] text-[#d8b98d]">{tr("The Celebration")}</p>
+          <Names className="mt-5 text-[clamp(2.1rem,9vw,3.65rem)] leading-[.94] tracking-[-.035em]">{names}</Names>
+          <div className="mt-6 flex items-center gap-4 border-t border-[#fff5ee]/20 pt-4">
+            <p data-studio-native-object="object:cover:date" className="text-[10px] uppercase tracking-[.18em] text-[#fff5ee]/75">{date}</p>
+            <span aria-hidden data-studio-native-object="object:cover:ornament" className="h-px flex-1 bg-[#d8b98d]/55" />
+          </div>
+        </div>
+      </section>
+    );
+  }
   if (stage === "envelope") return <ThemeEnvelope theme={theme} names={names} date={date} cover={cover} focus={focus} crop={crop} stage={stage} onOpen={onOpen} preview={preview} allowEnvelopeOpen={allowEnvelopeOpen} recipientLine={recipientLine} />;
   const cropEditor = cropEditing && crop && onCropChange && onFinishCrop
     ? <StudioPhotoCropOverlay crop={crop} onChange={onCropChange} onDone={onFinishCrop} locale={locale} />
     : null;
   const content = tr("The Celebration");
-  if (theme === "modern-maroon") return <section className={`${center} bg-[var(--inv-scene-bg,#4b0f1e)] text-[color:var(--inv-scene-ink,#ffe4dd)]`} data-invitation-section={stage}>
-    <div aria-hidden data-studio-native-object="object:cover:block-left" className="absolute left-0 top-0 h-full w-[20%] bg-[var(--inv-scene-soft,#d77e6d)]" />
-    <div aria-hidden data-studio-native-object="object:cover:block-right" className="absolute right-0 top-0 h-full w-[12%] bg-[var(--inv-scene-soft,#7d2030)]" />
-    <span aria-hidden data-studio-native-object="object:cover:monogram" className="absolute left-[13%] top-6 text-[110px] font-black leading-none text-[color:var(--inv-scene-text,#f9b6a3)]/20">M.</span>
-    <p data-studio-native-object="object:cover:kicker" className={`${caption} relative mb-7 self-start text-[color:var(--inv-scene-text,#f8af99)]`}>{content}</p>
-    <div data-studio-native-object="object:cover:media-group" className="relative flex w-full max-w-[370px] items-start justify-center gap-3">
-      <div data-studio-native-object="object:cover:photo-frame" className="relative h-[340px] w-[66%] -skew-y-[3deg] overflow-hidden border-4 border-[var(--inv-scene-accent,#e7a79a)] shadow-[14px_14px_0_#7d2030]"><span data-invitation-photo-slot="cover" className="relative block h-full w-full"><Portrait src={cover} focus={focus} crop={crop} alt="Foto utama undangan" /><Edit onClick={cropEditing ? undefined : onEditPhoto}/>{cropEditor}</span></div>
-      <p data-studio-native-object="object:cover:side-label" className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[.4em]">{tr("Selected events")}</p>
-    </div>
-    <div data-studio-native-object="object:cover:copy-panel" className="relative mt-8 w-full max-w-[370px] border-t border-[var(--inv-scene-accent,#e7a79a)]/55 pt-6 text-left">
-      <Names className="text-3xl">{names}</Names><p data-studio-native-object="object:cover:date" className="mt-3 text-xs tracking-[.2em]">{date}</p>
-    </div>
-    <Lines studioObject="object:cover:ornament" className="mt-9" />
-  </section>;
-
   if (theme === "garden-light") return <section className={`${center} bg-[var(--inv-scene-bg,#ecf0de)] text-[color:var(--inv-scene-ink,#465c3a)]`} data-invitation-section={stage}>
     <div aria-hidden data-studio-native-object="object:cover:ring-left" className="absolute -left-24 top-20 h-72 w-72 rounded-full border-[18px] border-[var(--inv-scene-accent,#a6be92)]/40" />
     <div aria-hidden data-studio-native-object="object:cover:ring-right" className="absolute -right-28 bottom-20 h-80 w-80 rounded-full border-[18px] border-[var(--inv-scene-accent,#acc89b)]/40" />
